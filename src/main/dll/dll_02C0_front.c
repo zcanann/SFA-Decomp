@@ -1165,21 +1165,13 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     }
     xb = (int)*(f32*)(lbl_803A9FE4 + 0xc);
     yb = (int)*(f32*)(lbl_803A9FE4 + 0x1c);
-    a = lbl_803DD9C0;
-    if (lbl_803DD9C8 > lbl_803E22F8)
-    {
-        a = 0xff;
-    }
+    a = (lbl_803DD9C8 > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
     drawTexture(lbl_803A9F98[1], (f32)(int)(xb - 0x18),
                 (f32)(int)(yb - ((Texture*)lbl_803A9F98[1])->height + 3), 0xff, 0xff);
     drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
     xb = (int)*(f32*)(lbl_803A9FE4 + 0xc);
     yb = (int)*(f32*)(lbl_803A9FE4 + 0x1c);
-    a = lbl_803DD9C0;
-    if (lbl_803DD9C8 > lbl_803E22F8)
-    {
-        a = 0xff;
-    }
+    a = (lbl_803DD9C8 > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
     drawTexture(lbl_803A9F98[2], (f32)(int)(xb - 0x18),
                 lbl_803E22FC + lbl_803E2300 * lbl_803DD9C8 + (f32)(int)yb, 0xff, 0xff);
     drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1),
