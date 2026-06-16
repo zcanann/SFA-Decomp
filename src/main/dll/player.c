@@ -11343,10 +11343,9 @@ int fn_802957B4(int obj)
     sub = inner->unk7F0;
     if ((void*)sub != NULL)
     {
-        /* target uses 3-deref (lwz r5,104; lwz r5,0(r5); lwz r12,60(r5)) -- correct form is
-           *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c); blocked by #108 remat cascade
-           (3-deref alone nets -0.4pp here); apply 3-deref + #108 fix together when #108 lands. */
-        (*(void (*)(int, int))(*(int*)(*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
+        /* 3-deref vtable dispatch: lwz r5,104; lwz r5,0(r5); lwz r12,60(r5). Residual is a
+           #108 within-class reg/order scramble in the flags-clear block (pragmas inert). */
+        (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
         ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
