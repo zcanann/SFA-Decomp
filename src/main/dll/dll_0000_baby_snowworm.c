@@ -3784,6 +3784,7 @@ void fn_8012C000(void)
 {
     extern int fn_802972A8(void* player); /* #57 */
     extern int objIsCurModelNotZero(void); /* #57 */
+    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     u8 flag;
     u8 k;
     u8 last;
