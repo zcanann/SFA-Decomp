@@ -238,7 +238,7 @@ void dll_19B_update(int obj)
         near = ObjGroup_FindNearestObject(0xe, player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
-            dy = *(f32*)(near + 0x14) - *(f32*)(player + 0x14);
+            dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             if (dy <= lbl_803E5198)
             {
                 if (dy < lbl_803E5198)
@@ -393,7 +393,7 @@ void dll_19B_init(u8* obj, u8* params)
     void* res;
 
     sub = ((GameObject*)obj)->extra;
-    *(s16*)obj = 0;
+    ((GameObject*)obj)->anim.rotX = 0;
     *(s16*)sub = 0xa;
     if (*(s16*)(params + 0x1a) > 0)
     {
