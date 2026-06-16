@@ -700,22 +700,27 @@ void arwsquadron_update(int obj)
                 {
                     enable = 0;
                 }
-                else if (setupL->gameBit > 0)
-                {
-                    enable = GameBit_Get(setupL->gameBit);
-                }
                 else
                 {
-                    f32 thr2 = state->exitDistance;
-                    int aim2 = getArwing();
-                    f32 d2;
-                    int inRange2;
-                    if ((u32)aim2 == 0)
-                        aim2 = Obj_GetPlayerObject();
-                    d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
-                    inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
-                    if (!inRange2)
-                        enable = GameBit_Get(setupL->gameBit);
+                    int useGameBit;
+                    if (setupL->gameBit > 0)
+                    {
+                        useGameBit = 1;
+                    }
+                    else
+                    {
+                        f32 thr2 = state->exitDistance;
+                        int aim2 = getArwing();
+                        f32 d2;
+                        int inRange2;
+                        if ((u32)aim2 == 0)
+                            aim2 = Obj_GetPlayerObject();
+                        d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
+                        inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
+                        useGameBit = !inRange2;
+                    }
+                    if (useGameBit)
+                        enable = GameBit_Get(setupL->gameBit) ? 1 : 0;
                     else
                         enable = 1;
                 }
