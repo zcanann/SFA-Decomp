@@ -75,7 +75,7 @@ void dll_19A_update(int obj)
             *(u8*)(newObj + 0x27) = 1;
             *(s16*)(newObj + 0x18) = 0x1e7;
             *(s16*)(newObj + 0x30) = 0xffff;
-            *(s8*)(newObj + 0x2a) = *(s16*)obj >> 8;
+            *(s8*)(newObj + 0x2a) = ((GameObject*)obj)->anim.rotX >> 8;
             *(u8*)(newObj + 0x2b) = 2;
             if (GameBit_Get(0x1ce) != 0)
             {
@@ -127,7 +127,7 @@ int dll_19A_getObjectTypeId(void) { return 0x0; }
 void dll_19A_init(int obj, s8* def)
 {
     int* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)def[0x1E] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
     ((GameObject*)obj)->unkF8 = 0;
     *(s16*)state = 100;
     ((Dll199State*)state)->unk2 = 0;
