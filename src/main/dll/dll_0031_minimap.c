@@ -490,32 +490,32 @@ int Minimap_update(void)
                     fv = lbl_803E221C;
                     lbl_803DD954 = fv;
                     lbl_803DD950 = fv;
-                    c1 = lbl_803DD958 * mathSinf(lbl_803E2220 * (f32) * (s16*)player / lbl_803E2224);
-                    s1 = lbl_803DD958 * mathCosf(lbl_803E2220 * (f32) * (s16*)player / lbl_803E2224);
+                    c1 = lbl_803DD958 * mathSinf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
+                    s1 = lbl_803DD958 * mathCosf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
                     c2 = lbl_803DD954 *
-                        mathSinf(lbl_803E2220 * (f32)(*(s16*)player + 0x6000) / lbl_803E2224);
+                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
                     s2 = lbl_803DD954 *
-                        mathCosf(lbl_803E2220 * (f32)(*(s16*)player + 0x6000) / lbl_803E2224);
+                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
                     c3 = lbl_803DD950 *
-                        mathSinf(lbl_803E2220 * (f32)(*(s16*)player - 0x6000) / lbl_803E2224);
+                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
                     s3 = lbl_803DD950 *
-                        mathCosf(lbl_803E2220 * (f32)(*(s16*)player - 0x6000) / lbl_803E2224);
+                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
                     cwTri1 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
                     ((u8*)&col)[3] = (u8)lbl_803DD932;
                     ((u8*)&col)[0] = 0xff;
                     ((u8*)&col)[1] = 0xff;
                     ((u8*)&col)[2] = 0;
-                    c1 = lbl_803E2228 * mathSinf(lbl_803E2220 * (f32) * (s16*)player / lbl_803E2224);
-                    s1 = lbl_803E2228 * mathCosf(lbl_803E2220 * (f32) * (s16*)player / lbl_803E2224);
+                    c1 = lbl_803E2228 * mathSinf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
+                    s1 = lbl_803E2228 * mathCosf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
                     c2 = lbl_803E222C *
-                        mathSinf(lbl_803E2220 * (f32)(*(s16*)player + 0x6000) / lbl_803E2224);
+                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
                     s2 = lbl_803E222C *
-                        mathCosf(lbl_803E2220 * (f32)(*(s16*)player + 0x6000) / lbl_803E2224);
+                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
                     c3 = lbl_803E222C *
-                        mathSinf(lbl_803E2220 * (f32)(*(s16*)player - 0x6000) / lbl_803E2224);
+                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
                     s3 = lbl_803E222C *
-                        mathCosf(lbl_803E2220 * (f32)(*(s16*)player - 0x6000) / lbl_803E2224);
+                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
                     cwTri2 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
                 }
