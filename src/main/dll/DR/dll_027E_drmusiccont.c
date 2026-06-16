@@ -1,3 +1,17 @@
+/*
+ * drmusiccont (DLL 0x27E) - an invisible music/ambience controller for
+ * its map.
+ *
+ * update overrides the cloud position, runs a one-shot env-fx and sky
+ * setup the first frame, and drives several game-bit latches
+ * (SCGameBitLatch_*). It watches two quads of "switch" game bits and a
+ * third quad: completing the first two quads sets a progress bit and
+ * plays a stinger, any change within a quad plays a mutter cue, and a
+ * change in the third quad arms a short countdown (unk4) that fires a
+ * one-shot sfx on expiry. It also toggles a map restart point based on
+ * two more game bits. State: a f32 countdown at 0x4 and the
+ * DrMusicContFlags cache at 0x8.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -5,7 +19,7 @@
 typedef struct DrmusiccontState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 stingerTimer; /* 0x04 */
 } DrmusiccontState;
 
 
@@ -38,32 +52,32 @@ void drmusiccont_initialise(void)
 void drmusiccont_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    DrMusicContFlags* f = (DrMusicContFlags*)(state + 0x8);
+    DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
 
-    f->b_e30 = (u8)GameBit_Get(0xe30);
-    f->b_e31 = (u8)GameBit_Get(0xe31);
-    f->b_e32 = (u8)GameBit_Get(0xe32);
-    f->b_e33 = (u8)GameBit_Get(0xe33);
-    f->b_e9c = (u8)GameBit_Get(0xe9c);
-    f->b_e38 = (u8)GameBit_Get(0xe38);
-    f->b_e3c = (u8)GameBit_Get(0xe3c);
-    f->b_e3d = (u8)GameBit_Get(0xe3d);
-    f->b_e3e = (u8)GameBit_Get(0xe3e);
-    f->b_e39 = (u8)GameBit_Get(0xe39);
-    f->b_9e0 = (u8)GameBit_Get(0x9e0);
-    f->b_9e1 = (u8)GameBit_Get(0x9e1);
-    f->b_9e2 = (u8)GameBit_Get(0x9e2);
-    f->b_9e7 = (u8)GameBit_Get(0x9e7);
+    flags->b_e30 = (u8)GameBit_Get(0xe30);
+    flags->b_e31 = (u8)GameBit_Get(0xe31);
+    flags->b_e32 = (u8)GameBit_Get(0xe32);
+    flags->b_e33 = (u8)GameBit_Get(0xe33);
+    flags->b_e9c = (u8)GameBit_Get(0xe9c);
+    flags->b_e38 = (u8)GameBit_Get(0xe38);
+    flags->b_e3c = (u8)GameBit_Get(0xe3c);
+    flags->b_e3d = (u8)GameBit_Get(0xe3d);
+    flags->b_e3e = (u8)GameBit_Get(0xe3e);
+    flags->b_e39 = (u8)GameBit_Get(0xe39);
+    flags->b_9e0 = (u8)GameBit_Get(0x9e0);
+    flags->b_9e1 = (u8)GameBit_Get(0x9e1);
+    flags->b_9e2 = (u8)GameBit_Get(0x9e2);
+    flags->b_9e7 = (u8)GameBit_Get(0x9e7);
 }
 
 void drmusiccont_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    DrMusicContFlags* f = (DrMusicContFlags*)(state + 0x8);
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
+    DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
+    u32 bit0;
+    u32 bit1;
+    u32 bit2;
+    u32 bit3;
 
     cloudSetOverridePosition(obj, lbl_803E6BCC, lbl_803E6BD0, lbl_803E6BD4);
     if (((GameObject*)obj)->unkF4 == 0)
@@ -84,76 +98,76 @@ void drmusiccont_update(int obj)
     SCGameBitLatch_UpdateInverted(state, 1, -1, -1, 0xe26, 0xb8);
     SCGameBitLatch_Update(state, 4, -1, -1, 0xcbb, 0xc4);
 
-    a = (u8)GameBit_Get(0xe30);
-    b = (u8)GameBit_Get(0xe31);
-    c = (u8)GameBit_Get(0xe32);
-    d = (u8)GameBit_Get(0xe33);
-    if (f->b_e9c == 0 && a && b && c && d)
+    bit0 = (u8)GameBit_Get(0xe30);
+    bit1 = (u8)GameBit_Get(0xe31);
+    bit2 = (u8)GameBit_Get(0xe32);
+    bit3 = (u8)GameBit_Get(0xe33);
+    if (flags->b_e9c == 0 && bit0 && bit1 && bit2 && bit3)
     {
-        f->b_e9c = 1;
+        flags->b_e9c = 1;
         GameBit_Set(0xe9c, 1);
         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     }
-    else if (a != f->b_e30 || b != f->b_e31 || c != f->b_e32 || d != f->b_e33)
+    else if (bit0 != flags->b_e30 || bit1 != flags->b_e31 || bit2 != flags->b_e32 || bit3 != flags->b_e33)
     {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
-    f->b_e30 = a;
-    f->b_e31 = b;
-    f->b_e32 = c;
-    f->b_e33 = d;
+    flags->b_e30 = bit0;
+    flags->b_e31 = bit1;
+    flags->b_e32 = bit2;
+    flags->b_e33 = bit3;
 
-    a = (u8)GameBit_Get(0xe38);
-    b = (u8)GameBit_Get(0xe3c);
-    c = (u8)GameBit_Get(0xe3d);
-    d = (u8)GameBit_Get(0xe3e);
-    if (f->b_e39 == 0 && a && b && c && d)
+    bit0 = (u8)GameBit_Get(0xe38);
+    bit1 = (u8)GameBit_Get(0xe3c);
+    bit2 = (u8)GameBit_Get(0xe3d);
+    bit3 = (u8)GameBit_Get(0xe3e);
+    if (flags->b_e39 == 0 && bit0 && bit1 && bit2 && bit3)
     {
-        f->b_e39 = 1;
+        flags->b_e39 = 1;
         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     }
-    else if (a != f->b_e38 || b != f->b_e3c || c != f->b_e3d || d != f->b_e3e)
+    else if (bit0 != flags->b_e38 || bit1 != flags->b_e3c || bit2 != flags->b_e3d || bit3 != flags->b_e3e)
     {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
-    f->b_e38 = a;
-    f->b_e3c = b;
-    f->b_e3d = c;
-    f->b_e3e = d;
+    flags->b_e38 = bit0;
+    flags->b_e3c = bit1;
+    flags->b_e3d = bit2;
+    flags->b_e3e = bit3;
 
-    a = (u8)GameBit_Get(0x9e0);
-    b = (u8)GameBit_Get(0x9e1);
-    c = (u8)GameBit_Get(0x9e2);
-    d = (u8)GameBit_Get(0x9e7);
-    if (!(a && b && c && d))
+    bit0 = (u8)GameBit_Get(0x9e0);
+    bit1 = (u8)GameBit_Get(0x9e1);
+    bit2 = (u8)GameBit_Get(0x9e2);
+    bit3 = (u8)GameBit_Get(0x9e7);
+    if (!(bit0 && bit1 && bit2 && bit3))
     {
-        if (a != f->b_9e0 || b != f->b_9e1 || c != f->b_9e2 || d != f->b_9e7)
+        if (bit0 != flags->b_9e0 || bit1 != flags->b_9e1 || bit2 != flags->b_9e2 || bit3 != flags->b_9e7)
         {
-            ((DrmusiccontState*)state)->unk4 = lbl_803E6BDC;
+            ((DrmusiccontState*)state)->stingerTimer = lbl_803E6BDC;
         }
     }
     {
         f32 zero = lbl_803E6BD8;
-        if (((DrmusiccontState*)state)->unk4 > zero)
+        if (((DrmusiccontState*)state)->stingerTimer > zero)
         {
-            ((DrmusiccontState*)state)->unk4 = ((DrmusiccontState*)state)->unk4 - timeDelta;
-            if (((DrmusiccontState*)state)->unk4 <= zero)
+            ((DrmusiccontState*)state)->stingerTimer = ((DrmusiccontState*)state)->stingerTimer - timeDelta;
+            if (((DrmusiccontState*)state)->stingerTimer <= zero)
             {
                 Sfx_PlayFromObject(0, 0x4bd);
             }
         }
     }
-    f->b_9e0 = a;
-    f->b_9e1 = b;
-    f->b_9e2 = c;
-    f->b_9e7 = d;
+    flags->b_9e0 = bit0;
+    flags->b_9e1 = bit1;
+    flags->b_9e2 = bit2;
+    flags->b_9e7 = bit3;
 
-    if (f->b_state != 0)
+    if (flags->b_state != 0)
     {
         if ((u32)GameBit_Get(0x9f0) == 0 || (u32)GameBit_Get(0x632) != 0)
         {
             (*gMapEventInterface)->clearRestartPoint();
-            f->b_state = 0;
+            flags->b_state = 0;
         }
     }
     else
@@ -165,7 +179,7 @@ void drmusiccont_update(int obj)
             vec[1] = lbl_803E6BE4;
             vec[2] = lbl_803E6BE8;
             (*gMapEventInterface)->restartPoint(vec, 0x7fff, 0, 0);
-            f->b_state = 1;
+            flags->b_state = 1;
         }
     }
 }
