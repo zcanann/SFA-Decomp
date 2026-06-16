@@ -1854,7 +1854,7 @@ void trickyFn_80148d8c(int obj, int state)
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 0;
         *(u32*)&((GameObject*)obj)->unkF4 = 1;
-        if (((ObjPlacement*)setup)->mapId == -1)
+        if ((u32)((ObjPlacement*)setup)->mapId == 0xffffffff)
         {
             Obj_FreeObject(obj);
         }
