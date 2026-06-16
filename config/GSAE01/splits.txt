@@ -497,9 +497,6 @@ main/dll/dll_00A9_dlla9func0.c:
 main/dll/dll_00AA_dllaafunc0.c:
 	.text       start:0x801002C0 end:0x80100550
 
-main/dll/modanimeflash1.c:
-	.text       start:0x80100550 end:0x80100550
-
 main/dll/dll_00AB_projdummy.c:
 	.text       start:0x80100550 end:0x80100588
 
@@ -575,83 +572,8 @@ main/dll/dll_00C2_projdfp1r.c:
 main/dll/dll_8b.c:
 	.text       start:0x80100A90 end:0x80100AA4
 
-main/dll/dll_8c.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_8d.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_8f.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_90.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_92.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_93.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_95.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_96.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_98.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_99.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_9b.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_9c.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_9e.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_9f.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_a1.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_a2.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_a4.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
-main/dll/dll_a5.c:
-	.text       start:0x80100AA4 end:0x80100AA4
-
 main/dll/dll_a6.c:
 	.text       start:0x80100AA4 end:0x80100C90
-
-main/dll/dll_a7.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_a8.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_aa.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_ab.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_ad.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_ae.c:
-	.text       start:0x80100C90 end:0x80100C90
-
-main/dll/dll_b1.c:
-	.text       start:0x80100C90 end:0x80100C90
 
 main/dll/dll_b2.c:
 	.text       start:0x80100C90 end:0x80100DCC
@@ -677,15 +599,6 @@ main/dll/dll_bb.c:
 main/dll/dll_bc.c:
 	.text       start:0x8010210C end:0x8010224C
 
-main/dll/dll_bd.c:
-	.text       start:0x8010224C end:0x8010224C
-
-main/dll/dll_bf.c:
-	.text       start:0x8010224C end:0x8010224C
-
-main/dll/dll_c4.c:
-	.text       start:0x8010224C end:0x8010224C
-
 main/dll/dll_0001_camcontrol.c:
 	.text       start:0x8010224C end:0x80103524
 
@@ -694,9 +607,6 @@ main/dll/cutcam.c:
 
 main/dll/dll_0042_unk.c:
 	.text       start:0x801046F4 end:0x80106654
-
-main/dll/dll_53.c:
-	.text       start:0x80106654 end:0x80106654
 
 main/dll/pathcam.c:
 	.text       start:0x80106654 end:0x8010684C
@@ -724,9 +634,6 @@ main/dll/dll_8010a104.c:
 
 main/dll/camshipbattle5c.c:
 	.text       start:0x8010A590 end:0x8010AEA8
-
-main/dll/attentioncam.c:
-	.text       start:0x8010AEA8 end:0x8010AEA8
 
 main/dll/dll_0047_cameramodeteststrength.c:
 	.text       start:0x8010AEA8 end:0x8010BF08
@@ -806,14 +713,8 @@ dolphin/ax/AX.c:
 main/dll/n_options.c:
 	.text       start:0x80117668 end:0x8011846C
 
-main/dll/n_pausemenu.c:
-	.text       start:0x8011846C end:0x8011846C
-
 main/dll/dll_3e.c:
 	.text       start:0x8011846C end:0x80118C88
-
-main/dll/dll_40.c:
-	.text       start:0x80118C88 end:0x80118C88
 
 main/dll/attractmovie.c:
 	.text       start:0x80118C88 end:0x80119000
@@ -830,20 +731,8 @@ main/dll/dll_43.c:
 main/dll/dll_0035_saveselectscreen.c:
 	.text       start:0x8011A0DC end:0x8011B5D4
 
-main/dll/dll_48.c:
-	.text       start:0x8011B5D4 end:0x8011B5D4
-
-main/dll/dll_49.c:
-	.text       start:0x8011B5D4 end:0x8011B5D4
-
 main/dll/dll_0036_entersavenamescreen.c:
 	.text       start:0x8011B5D4 end:0x8011BFC8
-
-main/dll/dll_4b.c:
-	.text       start:0x8011BFC8 end:0x8011BFC8
-
-main/dll/swaphol.c:
-	.text       start:0x8011BFC8 end:0x8011BFC8
 
 main/dll/dll_4e.c:
 	.text       start:0x8011BFC8 end:0x8011C5CC
@@ -929,17 +818,11 @@ main/dll/mmp_cratercritter.c:
 main/dll/mmp_critterspit.c:
 	.text       start:0x8013DB3C end:0x8013DC88
 
-main/dll/staff.c:
-	.text       start:0x8013DC88 end:0x8013DC88
-
 main/dll/tumbleweedbush.c:
 	.text       start:0x8013DC88 end:0x8013E0D0
 
 main/dll/animobjd2.c:
 	.text       start:0x8013E0D0 end:0x8013F100
-
-main/dll/dll_d3.c:
-	.text       start:0x8013F100 end:0x8013F100
 
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
@@ -1340,9 +1223,6 @@ main/dll/dll_012F_barrelpad.c:
 
 main/dll/CF/dll_0131_cfdoorlight.c:
 	.text       start:0x80191D00 end:0x80191F2C
-
-main/dll/holopoint.c:
-	.text       start:0x80191F2C end:0x80191F2C
 
 main/dll/dll_0134_texscroll2.c:
 	.text       start:0x80191F2C end:0x801922E4
@@ -1764,9 +1644,6 @@ main/dll/dll_0190_ecshcup.c:
 main/dll/dll_0195_dbshshrine.c:
 	.text       start:0x801C8EBC end:0x801C9660
 
-main/dll/colrise.c:
-	.text       start:0x801C9660 end:0x801C9660
-
 main/dll/dll_0196_dbshsymbol.c:
 	.text       start:0x801C9660 end:0x801C9E54
 
@@ -1775,9 +1652,6 @@ main/dll/dll_0197_dll197.c:
 
 main/dll/NW/dll_0198_nwshlevcon.c:
 	.text       start:0x801CA718 end:0x801CA9C0
-
-main/dll/symbol.c:
-	.text       start:0x801CA9C0 end:0x801CA9C0
 
 main/dll/dll_0199_dll199.c:
 	.text       start:0x801CA9C0 end:0x801CB7A8
@@ -1827,9 +1701,6 @@ main/dll/dll_801d0828.c:
 main/dll/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
 
-main/dll/dll_1dc.c:
-	.text       start:0x801D1BFC end:0x801D1BFC
-
 main/dll/DIM/dim_boss.c:
 	.text       start:0x801D1BFC end:0x801D1BFC
 
@@ -1853,12 +1724,6 @@ main/dll/SH/dll_01AC_shqueenearthwalker.c:
 
 main/dll/dll_1e7.c:
 	.text       start:0x801D4CD0 end:0x801D5174
-
-main/dll/lily.c:
-	.text       start:0x801D5174 end:0x801D5174
-
-main/dll/dll_1e8.c:
-	.text       start:0x801D5174 end:0x801D5174
 
 main/dll/SH/shthorntail.c:
 	.text       start:0x801D5174 end:0x801D58E4
@@ -1920,12 +1785,6 @@ main/dll/SC/dll_01BC_sctotemstrength.c:
 main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC
 
-main/dll/draghead.c:
-	.text       start:0x801DF4AC end:0x801DF4AC
-
-main/dll/lavaflow.c:
-	.text       start:0x801DF4AC end:0x801DF4AC
-
 main/dll/dll_0143_feseqobject.c:
 	.text       start:0x801DF4AC end:0x801DF934
 
@@ -1935,23 +1794,8 @@ main/dll/dll_0142_felevcontrol.c:
 main/dll/dll_0144_dll144.c:
 	.text       start:0x801DF9AC end:0x801DFA28
 
-main/dll/dbpointmum.c:
-	.text       start:0x801DFA28 end:0x801DFA28
-
-main/dll/dbwaterflow.c:
-	.text       start:0x801DFA28 end:0x801DFA28
-
-main/dll/dblightgo.c:
-	.text       start:0x801DFA28 end:0x801DFA28
-
-main/dll/dbbullet.c:
-	.text       start:0x801DFA28 end:0x801DFA28
-
 main/dll/dbprotection.c:
 	.text       start:0x801DFA28 end:0x801E1588
-
-main/dll/dbdustgeezer.c:
-	.text       start:0x801E1588 end:0x801E1588
 
 main/dll/SB/dll_01E8_sbgalleon.c:
 	.text       start:0x801E1588 end:0x801E2570
@@ -2060,9 +1904,6 @@ main/dll/WM/dll_01F9_wmobjcreator.c:
 	.text       start:0x801EF360 end:0x801EFF7C
 	.data       start:0x803286C0 end:0x803286E4
 	.sdata2     start:0x803E5CE0 end:0x803E5CE8
-
-main/dll/wcdial.c:
-	.text       start:0x801EFF7C end:0x801EFF7C
 
 main/dll/WM/dll_01F8_wmgalleon.c:
 	.text       start:0x801EFF7C end:0x801F06D8
