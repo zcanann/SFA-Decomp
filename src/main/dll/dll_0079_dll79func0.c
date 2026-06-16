@@ -721,9 +721,9 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         GfxCmd entries[32];
     } buf;
     u8* base = (u8*)(int)lbl_80314AF0;
+    int ret = 0;
     GfxCmd* entries = buf.entries;
     GfxCmd* e = entries;
-    int ret = 0;
     if (variant == 0)
     {
         e[0].layer = 0;

@@ -1,8 +1,13 @@
 /* DLL 0x0042 — attention / camera-control objects [801046F4-801049B0) */
+#include "main/dll/CAM/attention.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
+#include "main/dll/CAM/camslide.h"
 #include "main/camera_interface.h"
+#include "main/camera_object.h"
 #include "main/dll/CAM/firstperson.h"
+#include "main/game_object.h"
 #include "main/mm.h"
 #include "string.h"
 
@@ -40,6 +45,7 @@ extern f32 lbl_803E16EC;
 extern f32 lbl_803E16F0;
 extern f32 lbl_803E16F4;
 extern f32 timeDelta;
+extern undefined4 FUN_800068f4();
 extern f32 lbl_803E1710;
 extern f32 lbl_803E1714;
 extern f32 PSVECMag(f32 * vec);
@@ -47,6 +53,9 @@ extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
 extern f32 lbl_803E1708;
 extern f32 lbl_803E170C;
+extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
+extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
+extern void camcontrol_updateModeSettings(int camera);
 extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float* out);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
@@ -64,9 +73,9 @@ extern f32 lbl_803E1738;
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
                                      float* lowerBound)
 {
-    float zB;
     float zLim;
     float pt0;
+    float zB;
     float diff;
     float bestUpper;
     float bestLower;
@@ -970,8 +979,8 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
                                        *(int*)&cam->anim.parent);
-        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, gCamcontrolModeSettings->targetHeight, 0);
+        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, 0, gCamcontrolModeSettings->targetHeight);
         vOutB = cam->anim.localPosY - (target->anim.localPosY + gCamcontrolModeSettings->targetHeight);
         cam->anim.rotY = getAngle(vOutB, vOutD);
         cam->anim.rotZ = 0;
@@ -1025,7 +1034,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             }
             gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
             gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
-            *(u8*)&cam->letterboxTargetOffset = data[7];
+            cam->letterboxTargetOffset = data[7];
         }
         else
         {
