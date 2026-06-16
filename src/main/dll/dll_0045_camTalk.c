@@ -284,16 +284,16 @@ void firstPersonExit(CameraObject* camera)
     fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
     if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
-        if (lbl_803DD548->yawCurve.start >= lbl_803E17C4)
+        if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
+        {
+            lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
+        }
+        else
         {
             if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
             {
                 lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
             }
-        }
-        else
-        {
-            lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
         }
     }
     lbl_803DD548->pitchCurve.start = (float)(int)self->anim.rotY;
@@ -304,16 +304,16 @@ void firstPersonExit(CameraObject* camera)
     fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
     if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
-        if (lbl_803DD548->pitchCurve.start >= lbl_803E17C4)
+        if (lbl_803DD548->pitchCurve.start < lbl_803E17C4)
+        {
+            lbl_803DD548->pitchCurve.start = lbl_803DD548->pitchCurve.start + lbl_803E17D0;
+        }
+        else
         {
             if (lbl_803DD548->pitchCurve.end < lbl_803E17C4)
             {
                 lbl_803DD548->pitchCurve.end = lbl_803DD548->pitchCurve.end + lbl_803E17D0;
             }
-        }
-        else
-        {
-            lbl_803DD548->pitchCurve.start = lbl_803DD548->pitchCurve.start + lbl_803E17D0;
         }
     }
     curvesMove(&lbl_803DD548->viewCurve);
