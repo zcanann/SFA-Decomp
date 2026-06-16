@@ -1,4 +1,4 @@
-/* DLL 0x0042 — attention / camera-control objects [801046F4-801049B0) */
+/* DLL 0x0042 - attention / camera-control objects [801046F4-801049B0) */
 #include "main/dll/CAM/attention.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/cutCam.h"
@@ -1034,7 +1034,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             }
             gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
             gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
-            cam->letterboxTargetOffset = data[7];
+            *(u8*)&cam->letterboxTargetOffset = data[7];
         }
         else
         {
