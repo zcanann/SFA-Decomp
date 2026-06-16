@@ -747,10 +747,9 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int pa
     entries[1].mode = 2;
     if (sourceObj != 0)
     {
-        f32 s = ((GameObject*)sourceObj)->anim.rootMotionScale;
-        entries[1].x = lbl_803E0A04 * s;
-        entries[1].y = lbl_803E0A08 * s;
-        entries[1].z = lbl_803E0A04 * s;
+        entries[1].x = lbl_803E0A04 * ((GameObject*)sourceObj)->anim.rootMotionScale;
+        entries[1].y = lbl_803E0A08 * ((GameObject*)sourceObj)->anim.rootMotionScale;
+        entries[1].z = lbl_803E0A04 * ((GameObject*)sourceObj)->anim.rootMotionScale;
     }
     else
     {
