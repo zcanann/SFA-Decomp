@@ -1,4 +1,8 @@
-/* DLL 0x017B — DFSH_LaserBeam / dfsh_objcreator group. TU: 0x801C3E3C–0x801C3EB8. */
+/*
+ * DragonRock Shrine laser beam (DLL 0x17B; "DFSH_LaserBeam") - the shrine's
+ * sweeping/pulsing laser-beam hazard: it tracks the player, animates beam
+ * geometry and texture, drives sfx channels and proximity damage.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/resource.h"
@@ -15,7 +19,6 @@ extern void textureFree(void* tex);
 extern undefined4 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
@@ -86,8 +89,6 @@ void DFSH_LaserBeam_hitDetect(void)
 
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
 int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
-
-/* segment pragma-stack balance (re-split): */
 
 typedef struct DFSHLaserBeamConfig
 {
@@ -408,7 +409,7 @@ void DFSH_LaserBeam_update(uint objAddr)
 }
 
 /*
- * Object setup: initializes the rotating DarkIce Mines shrine laser beam state.
+ * Object setup: initializes the rotating DragonRock Shrine laser beam state.
  */
 void DFSH_LaserBeam_free(void* objArg, void* configArg)
 {
@@ -526,7 +527,7 @@ void fn_801C4664(void* objArg)
 }
 
 /*
- * Drives the shrine sway controller used by MMSH shrine sequences.
+ * Drives the DragonRock Shrine laser-beam sway controller.
  */
 int fn_801C49B8(void* objArg)
 {
