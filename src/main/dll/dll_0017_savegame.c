@@ -1540,7 +1540,7 @@ f32 SaveGame_gplayGetTime(int id)
         if (*(int*)(p + 0x6f0) == id)
         {
             p = gSaveGameData;
-            return *(f32*)(p + i * 8 + 0x6f4) - ((SaveGameData*)p)->playTime;
+            return ((SaveGameTimeEntry*)(p + 0x6f0))[i].time - ((SaveGameData*)p)->playTime;
         }
         p += 8;
     }
