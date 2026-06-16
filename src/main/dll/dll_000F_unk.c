@@ -153,6 +153,7 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
     }
 }
 
+#pragma optimization_level 1
 void player_findCurve(int* obj, int* state, int p3)
 {
     f32 px = ((GameObject*)obj)->anim.localPosX;
@@ -162,6 +163,7 @@ void player_findCurve(int* obj, int* state, int p3)
         (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344),
                                     px, py, pz);
 }
+#pragma optimization_level reset
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
 {
