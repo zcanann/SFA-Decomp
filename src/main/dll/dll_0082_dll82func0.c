@@ -1,3 +1,7 @@
+/*
+ * dll82func0 (DLL 0x82) - a foodbag-family modgfx effect builder.
+ * dll_82_func03 is the effect spawn; func00/func01 are the DLL's empty slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -18,7 +22,7 @@ void dll_82_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315770;
-    FbCmd* e;
+    FbCmd* e; /* decl split from init below is load-bearing for codegen */
     if (variant == 1 || variant == 4)
     {
         *(s16*)(base + 0x1fc) = 0x50;
@@ -72,7 +76,7 @@ void dll_82_func03(int sourceObj, int variant, int posSource, uint flags)
     e[5].z = lbl_803E0EB0;
     e[6].layer = 2;
     e[6].flags = 0x1e;
-    e[6].tex = (void*)0;
+    e[6].tex = NULL;
     e[6].mode = 0x20000;
     e[6].x = lbl_803E0EBC;
     e[6].y = lbl_803E0EB0;
@@ -121,7 +125,7 @@ void dll_82_func03(int sourceObj, int variant, int posSource, uint flags)
     e[12].z = lbl_803E0EB0;
     e[13].layer = 3;
     e[13].flags = 0x1e;
-    e[13].tex = (void*)0;
+    e[13].tex = NULL;
     e[13].mode = 0x20000;
     e[13].x = lbl_803E0EBC;
     e[13].y = lbl_803E0EB0;
