@@ -187,12 +187,10 @@ void wcfloortile_update(int obj)
 void arwarwing_clampToFlightBounds(int obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
-    f32 cx = arwing->homeX;
-    f32 hx = cx + arwing->flightHalfWidth;
-    f32 lx = cx - arwing->flightHalfWidth;
-    f32 cy = arwing->homeY;
-    f32 hy = cy + arwing->flightUpperHeight;
-    f32 ly = cy - arwing->flightLowerHeight;
+    f32 hx = arwing->homeX + arwing->flightHalfWidth;
+    f32 lx = arwing->homeX - arwing->flightHalfWidth;
+    f32 hy = arwing->homeY + arwing->flightUpperHeight;
+    f32 ly = arwing->homeY - arwing->flightLowerHeight;
     if (((GameObject*)obj)->anim.localPosX > hx)
     {
         ((GameObject*)obj)->anim.localPosX = hx;
