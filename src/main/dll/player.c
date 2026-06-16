@@ -13675,7 +13675,7 @@ void fn_802AA8D0(int obj)
         f32 y;
         f32 z;
     } buf;
-    f32 div = lbl_803E7ED8;
+    f32 div;
     f32 base = lbl_803E80C4;
     f32 dy;
     int i;
@@ -13694,6 +13694,7 @@ void fn_802AA8D0(int obj)
     }
     lbl_803DE478 = base;
     buf.y = dy + ((GameObject*)obj)->anim.localPosY;
+    div = lbl_803E7ED8;
     for (i = 0; i < 10; i++)
     {
         buf.x = ((GameObject*)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / div;
