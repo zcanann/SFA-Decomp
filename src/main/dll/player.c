@@ -12353,19 +12353,17 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
 
 void fn_802B4C18(int obj, int state, f32 fv)
 {
-    ObjHitsPriorityState *hitState;
     u8 buf[0x40];
 
-    hitState = Player_GetObjHitsState(obj);
     ((PlayerState*)state)->baddie.gravity = lbl_803E7EB4;
     ((PlayerState*)state)->baddie.moveInputX = *(f32*)((char*)state + 0x6dc);
     ((PlayerState*)state)->baddie.moveInputZ = *(f32*)((char*)state + 0x6d8);
     *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
     *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
-    hitState->hitVolumePriority = 0;
-    hitState->hitVolumeId = 0;
-    hitState->objectPairPriority = 0;
-    hitState->objectPairHitVolume = 0;
+    Player_GetObjHitsState(obj)->hitVolumePriority = 0;
+    Player_GetObjHitsState(obj)->hitVolumeId = 0;
+    Player_GetObjHitsState(obj)->objectPairPriority = 0;
+    Player_GetObjHitsState(obj)->objectPairHitVolume = 0;
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
