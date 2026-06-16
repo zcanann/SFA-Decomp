@@ -93,6 +93,7 @@ void dbegg_processMessages(int obj)
     extern int gameBitIncrement(int);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
+    extern int ObjMsg_Pop(void*, u32*, uint*, uint*);
     extern f32 lbl_803E61C8;
     extern f32 lbl_803E61CC;
 
