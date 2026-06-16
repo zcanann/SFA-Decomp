@@ -362,8 +362,9 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
     int i;
     SaveScoreFile* file;
 
+    rank = 0;
     file = (SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE);
-    for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
+    for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
     {
         if (score > file->entries[rank].score)
         {
