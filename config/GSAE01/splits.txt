@@ -1164,9 +1164,6 @@ main/dll/dll_00F9_projectileswitch.c:
 main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
 
-main/dll/dll_147.c:
-	.text       start:0x8017AC2C end:0x8017AC2C
-
 main/dll/dll_00FB_pressureswitchfb.c:
 	.text       start:0x8017AC2C end:0x8017B5C8
 
