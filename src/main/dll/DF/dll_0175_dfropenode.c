@@ -1,3 +1,8 @@
+/*
+ * DragonRock rope node (DLL 0x175; "DFropenode") - a node in the DragonRock
+ * rope/cradle: it syncs the rope geometry between its endpoints, renders the
+ * rope/cradle model and plays creak sfx.
+ */
 #include "main/game_object.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/objlib.h"
@@ -210,31 +215,11 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * DF/SC/SH corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/DF/dll_195.c
- * - 0x801C1BCC-0x801C1BF4
- *
- * Nearby corridor context:
- * - previous split: main/dll/DF/dll_194.c
- * - next split: main/dll/DF/dll_196.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
 #pragma scheduling on
 #pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)
 {
-    int* p = (int*)((GameObject*)obj)->extra;
+    int* p = (int*)obj[0xb8 / 4];
     out[0] = *(f32*)((char*)p + 0x1c);
     out[1] = *(f32*)((char*)p + 0x20);
     out[2] = *(f32*)((char*)p + 0x24);
@@ -396,13 +381,13 @@ typedef struct DfropenodePlacement
     u8 pad1E[0x20 - 0x1E];
 } DfropenodePlacement;
 
-typedef struct DFWhirlpoolRenderState
+typedef struct DfropenodeRenderState
 {
     undefined4 objAndParam;
     u8 red;
     u8 green;
     u8 blue;
-} DFWhirlpoolRenderState;
+} DfropenodeRenderState;
 
 void dfropenode_render(int obj, int p2, int p3)
 {
@@ -414,7 +399,7 @@ void dfropenode_render(int obj, int p2, int p3)
     u32 oldAlpha;
     DFRopeNode* node;
     s16 segment;
-    DFWhirlpoolRenderState renderState;
+    DfropenodeRenderState renderState;
     s16 matrix[0x30];
     f32 originalScale;
 
