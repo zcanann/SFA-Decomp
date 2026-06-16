@@ -1404,7 +1404,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    if (((TreasureChestState*)state)->targetObj != 0 &&
+    if ((void*)((TreasureChestState*)state)->targetObj != NULL &&
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
