@@ -391,19 +391,8 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         delta = lbl_803E6C88 + delta;
     }
     delta *= rate;
-    if (delta < lbl_803E6C90)
-    {
-        clamped = lbl_803E6C90;
-    }
-    else if (delta > lbl_803E6C94)
-    {
-        clamped = lbl_803E6C94;
-    }
-    else
-    {
-        clamped = delta;
-    }
-    *(s16*)(a + 0) = *(s16*)(a + 0) + (int)clamped;
+    clamped = (delta < lbl_803E6C90) ? lbl_803E6C90 : ((delta > lbl_803E6C94) ? lbl_803E6C94 : delta);
+    *(s16*)(a + 0) += (int)clamped;
 
     if (d != lbl_803E6C38)
     {
@@ -433,7 +422,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             delta = lbl_803E6C88 + delta;
         }
-        *(s16*)(a + 2) = *(s16*)(a + 2) + (int)(delta * rate);
+        *(s16*)(a + 2) += (int)(delta * rate);
     }
 }
 
