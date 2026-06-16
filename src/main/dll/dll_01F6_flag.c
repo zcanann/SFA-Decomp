@@ -91,7 +91,7 @@ void Flag_init(int* obj, int* def)
 {
     if (((GameObject*)obj)->anim.seqId != 0x803)
     {
-        *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5998, 0);
     }
 }
