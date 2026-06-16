@@ -2033,10 +2033,8 @@ void gameTextLoadForCurMap(int sourceId)
         return;
     }
 
-    dirId = (int)curGameTextDir;
-    languageId = curLanguage;
-    lbl_803DC9D8 = dirId;
-    lbl_803DC9E0 = languageId;
+    lbl_803DC9D8 = dirId = (int)curGameTextDir;
+    lbl_803DC9E0 = languageId = curLanguage;
     if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT ||
         languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT)
     {
@@ -2072,11 +2070,10 @@ void gameTextLoadForCurMap(int sourceId)
     }
     while (i-- != 0);
 
-    request = (GameTextLoadRequest*)(gameTextBase + GAMETEXT_LOAD_REQUESTS_OFFSET +
-        sourceId * sizeof(GameTextLoadRequest));
-    request->state = 1;
-    request->dirId = (u8)curGameTextDir;
-    request->languageId = (u8)curLanguage;
+    request = (GameTextLoadRequest*)(gameTextBase + sourceId * sizeof(GameTextLoadRequest));
+    *(int*)((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
+    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
+    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = (u8)curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)
@@ -2099,8 +2096,8 @@ void gameTextLoadForCurMap(int sourceId)
 
     if (freeSlot != NULL)
     {
-        dirId = request->dirId;
-        languageId = request->languageId;
+        dirId = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8);
+        languageId = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9);
         freeSlot->state = 1;
         freeSlot->dirId = (u8)dirId;
         freeSlot->languageId = (u8)languageId;
@@ -2113,8 +2110,8 @@ void gameTextLoadForCurMap(int sourceId)
             loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
                                 &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
-        request->dirId = GAMETEXT_INVALID_DIR;
-        request->languageId = GAMETEXT_INVALID_LANGUAGE;
+        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = GAMETEXT_INVALID_DIR;
+        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = GAMETEXT_INVALID_LANGUAGE;
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
