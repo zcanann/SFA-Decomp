@@ -163,8 +163,8 @@ void SaveSelectScreen_release(void)
     void* zero;
 
     i = 0;
-    p = lbl_803A8658;
     zero = NULL;
+    p = lbl_803A8658;
     do
     {
         mm_free(*p);
@@ -451,7 +451,7 @@ void saveSelectScreenFree(int param_1)
     }
     if (lbl_803DD6B8 != NULL)
     {
-        ((void (**)(void))gTitleMenuItemInterface->vtable)[4]();
+        ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](lbl_803DD6B8);
         lbl_803DD6B8 = NULL;
     }
 }
