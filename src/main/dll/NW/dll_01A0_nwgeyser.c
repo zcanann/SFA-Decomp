@@ -1,3 +1,17 @@
+/*
+ * nwgeyser (DLL 0x1A0) - the erupting geyser of SnowHorn Wastes (map
+ * 'nwastes', 0x0A).
+ *
+ * The geyser plays a pair of looped object sounds and continuously runs
+ * its trigger sequence; once GAMEBIT_GEYSER_OFF is set it hides, drops
+ * its sounds and collision, and reports completion (GameBit 0x398). Its
+ * SeqFn scrolls the geyser texture each frame.
+ *
+ * This TU also hosts two helpers shared with the SnowHorn mammoth (DLL
+ * 0x1A1): nw_mammoth_SeqFn (fn_801CDE7C), which drives the mammoth's
+ * looped audio / path state, and fn_801CDF94, which feeds the mammoth's
+ * look-at target into the character eye-animation update.
+ */
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -12,19 +26,25 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
                                 void* scratch, f32 scaleX, f32 scaleZ);
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-
-void fn_801CDF94(int obj, int state, int flag);
-
-extern f32 lbl_803E5200;
-extern f32 timeDelta;
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
 extern void fn_8003A230(int obj, void* p, f32 f);
 extern void characterDoEyeAnims(int obj, void* p);
 extern u8 lbl_803268B4[];
+extern f32 timeDelta;
+extern f32 lbl_803E5200;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5210;
 extern f32 lbl_803E5214;
+
+void fn_801CDF94(int obj, int state, int flag);
+
+/* GameBit that erupts/retires the geyser (hides it, drops its sounds). */
+#define GAMEBIT_GEYSER_OFF 0xa
+
+/* looped object sounds played while the geyser is active */
+#define SFX_GEYSER_LOOP_A 0x372
+#define SFX_GEYSER_LOOP_B 0x373
 
 void nw_geyser_init(int obj)
 {
@@ -41,19 +61,19 @@ void nw_geyser_free(int* obj)
 
 void nw_geyser_update(int obj)
 {
-    if (GameBit_Get(0xa) != 0)
+    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
     {
         ((GameObject*)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
-        Sfx_RemoveLoopedObjectSound(obj, 0x372);
-        Sfx_RemoveLoopedObjectSound(obj, 0x373);
+        Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
+        Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
         ObjHits_DisableObject((u32)obj);
         GameBit_Set(0x398, 1);
     }
     else
     {
-        Sfx_AddLoopedObjectSound(obj, 0x372);
-        Sfx_AddLoopedObjectSound(obj, 0x373);
+        Sfx_AddLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
+        Sfx_AddLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         ObjHits_EnableObject((u32)obj);
     }
@@ -65,7 +85,7 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     u8* animUpdateBytes;
 
     animUpdateBytes = (u8*)animUpdate;
-    if (GameBit_Get(0xa) != 0)
+    if (GameBit_Get(GAMEBIT_GEYSER_OFF) != 0)
     {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
