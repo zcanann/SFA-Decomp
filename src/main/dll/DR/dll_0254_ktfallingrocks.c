@@ -21,6 +21,10 @@ typedef struct KtfallingrocksPlacement
     u8 pad26[0x28 - 0x26];
 } KtfallingrocksPlacement;
 
+STATIC_ASSERT(offsetof(KtfallingrocksPlacement, effectId) == 0x20);
+STATIC_ASSERT(offsetof(KtfallingrocksPlacement, triggerBit) == 0x24);
+STATIC_ASSERT(sizeof(KtfallingrocksPlacement) == 0x28);
+
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
@@ -47,6 +51,7 @@ void ktfallingrocks_free(u8* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
+/* renders nothing; the rocks are spawned as particle effects in update */
 void ktfallingrocks_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     if (visible != 0)
