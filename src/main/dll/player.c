@@ -16950,8 +16950,9 @@ int fn_802A16CC(int obj, int state, f32 fv)
             if (f3 < f30)
             {
                 f32 ed4 = lbl_803E7ED4;
+                f32 prod = ed4 * (lbl_803DE498 * lbl_803DE498 / (ed4 * f30));
                 ((GameObject*)obj)->anim.velocityY =
-                    -sqrtf(ed4 * (lbl_803DE498 * lbl_803DE498 / (ed4 * f30)) * f3);
+                    -sqrtf(prod * f3);
                 if (((GameObject*)obj)->anim.velocityY >= lbl_803E7FEC)
                 {
                     u8 anim = inner->curAnimId;
