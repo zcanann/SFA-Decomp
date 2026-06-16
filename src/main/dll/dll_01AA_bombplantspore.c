@@ -319,7 +319,7 @@ void bombplantspore_update(void* obj)
         {
             state->unk2a0 = lbl_803E5394;
         }
-        *(s16*)obj += *(u16*)&state->yawStep;
+        *(s16*)obj += state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
         if (lbl_803E53E4 > ((GameObject*)obj)->anim.velocityY)
         {
