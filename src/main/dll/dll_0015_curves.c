@@ -807,7 +807,8 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             {
                 collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
                 collision->traceStart[pointIndex][1] =
-                    raisedPointOffset + collision->points[pointIndex][1] + collision->segmentRadii[pointIndex];
+                    raisedPointOffset +
+                    (collision->points[pointIndex][1] + collision->segmentRadii[pointIndex]);
                 collision->traceStart[pointIndex][2] = collision->points[pointIndex][2];
             }
         }
