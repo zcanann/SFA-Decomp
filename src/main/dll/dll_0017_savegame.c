@@ -160,10 +160,8 @@ extern int lbl_803DD48C;
 #define SAVEGAME_TRANSIENT_MAP_BIT_COUNT 20
 #define SAVEGAME_TRANSIENT_MAP_BIT_TTL 3
 #define SAVEGAME_CHARACTER_POSITION(save)                                                     \
-    ((SaveGameCharacterPosition *)((save) +                                                     \
-                                  (save)[SAVEGAME_CURRENT_CHARACTER_OFFSET] *                  \
-                                      sizeof(SaveGameCharacterPosition) +                       \
-                                  SAVEGAME_CHARACTER_POSITION_OFFSET))
+    (&((SaveGameCharacterPosition *)((save) + SAVEGAME_CHARACTER_POSITION_OFFSET))             \
+         [(save)[SAVEGAME_CURRENT_CHARACTER_OFFSET]])
 
 typedef struct SaveGameObjectPosition
 {
