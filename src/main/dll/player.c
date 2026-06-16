@@ -18487,8 +18487,9 @@ void playerProcessQueuedItemCommand(int obj, int state)
 void fn_802AAD44(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    u8* vp = lbl_803DAF08;
-    f32* src = lbl_802C2BF0;
+    u8* base;
+    u8* vp;
+    f32* src;
     int i;
     f32 height;
     f32 v;
@@ -18500,6 +18501,7 @@ void fn_802AAD44(int obj)
     } xf;
     f32 mtx[12];
 
+    vp = base = lbl_803DAF08;
     height = *(f32*)((char*)state + 0x7d0);
     setTextColor((undefined4*)0, 0xff, 0xff, 0xff, 0x80);
     textureSetupFn_800799c0();
@@ -18508,6 +18510,7 @@ void fn_802AAD44(int obj)
     fn_80078740();
     GXSetColorUpdate(0);
 
+    src = lbl_802C2BF0;
     v = lbl_803E7FA4 * (lbl_803E80C4 - height);
     for (i = 0; i < 8; i++)
     {
@@ -18547,7 +18550,7 @@ void fn_802AAD44(int obj)
     setMatrixFromObjectTransposed(&xf, mtx);
     PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
     GXLoadPosMtxImm(mtx, 0);
-    drawFn_8005cf8c(lbl_803DAF08, lbl_802C2B30, 0xc);
+    drawFn_8005cf8c(base, lbl_802C2B30, 0xc);
 
     if (*(f32*)((char*)state + 0x7d0) >= lbl_803E80E0)
     {
