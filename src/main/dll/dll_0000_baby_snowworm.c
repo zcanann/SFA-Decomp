@@ -2788,6 +2788,7 @@ void pauseMenuFn_80129ee0(void)
     extern int objIsCurModelNotZero(void); /* #57 */
     extern int GameBit_Set(u32 eventId, u32 value); /* #57 */
     extern u32 GameBit_Get(u32); /* #57 */
+    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     PauseTbl* tbl = &lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
