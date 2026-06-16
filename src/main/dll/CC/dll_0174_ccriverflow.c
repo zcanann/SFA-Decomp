@@ -1,22 +1,22 @@
+/*
+ * ccriverflow - Crystal Caves river-flow object (DLL 0x0174). A presence
+ * object that joins/leaves render group CCRIVERFLOW_OBJECT_GROUP depending
+ * on its placement gameBit: while the bit is clear the flow is shown, once
+ * set it is removed. A gameBit of -1 means "always on". init also derives
+ * the surface height from the model base height plus a placement offset.
+ */
 #include "main/objlib.h"
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 
 extern uint GameBit_Get(int eventId);
 
-extern f32 lbl_803E4DD0;
-extern f32 lbl_803E4DD4;
+extern f32 lbl_803E4DD0; /* height-offset scale */
+extern f32 lbl_803E4DD4; /* minimum surface height */
 
 int ccriverflow_getExtraSize(void)
 {
-    return 1;
+    return sizeof(CCriverflowState);
 }
 
 void ccriverflow_free(CCriverflowObject* obj)
@@ -25,7 +25,6 @@ void ccriverflow_free(CCriverflowObject* obj)
     {
         ObjGroup_RemoveObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
     }
-    return;
 }
 
 void ccriverflow_render(void)
@@ -57,7 +56,6 @@ void ccriverflow_update(CCriverflowObject* obj)
             ObjGroup_AddObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
         }
     }
-    return;
 }
 
 void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
@@ -69,8 +67,7 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
     }
     obj->angle = (u16)params->angleByte << 8;
     obj->height = obj->model->baseHeight;
-    obj->height = (f32)(u32)
-    params->heightOffset * lbl_803E4DD0 + obj->height;
+    obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0 + obj->height;
     if (obj->height < lbl_803E4DD4)
     {
         obj->height = *(f32*)&lbl_803E4DD4;
@@ -79,6 +76,4 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
     {
         params->speedByte = CCRIVERFLOW_DEFAULT_SPEED;
     }
-    return;
 }
-
