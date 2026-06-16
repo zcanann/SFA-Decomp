@@ -1,16 +1,36 @@
-/* DLL 0x0042 - attention / camera-control objects [801046F4-801049B0) */
-#include "main/dll/CAM/attention.h"
+/*
+ * DLL 0x0042 - camera mode-control objects [801046F4-801049B0).
+ *
+ * Implements the per-frame logic for the "normal"/follow camera and a
+ * handful of related modes (slide, first-person, path/cutscene). Each
+ * routine reads and mutates the shared CamcontrolModeSettings block held
+ * in cameraMtxVar57:
+ *   - camcontrol_updateVerticalBounds: collision-probes around the camera
+ *     and derives upper/lower world-Y bounds from the hit results.
+ *   - camslide_update: lateral slide + height tracking that follows the
+ *     target (classId 1 = the player).
+ *   - firstperson_updatePitch / firstperson_updatePosition: aim and
+ *     distance handling for the first-person view.
+ *   - firstperson_loadSettings / pathcam_loadSettings: load a settings
+ *     blob into the mode-settings block (pathcam dispatches on a mode id
+ *     0..4) and snapshot/restore the saved camera state.
+ *   - camstatic_update: the main per-frame driver tying the above together
+ *     plus wall-avoidance and collision-probe timers.
+ *   - CameraModeNormal_func0A / _free and the mode-settings alloc/free.
+ *
+ * cameraMtxVar57 is the live CamcontrolModeSettings; classId 1 marks the
+ * player target throughout.
+ */
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
-#include "main/dll/CAM/camslide.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
-#include "main/dll/CAM/firstperson.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "string.h"
 
+/* hit-detection / collision helpers (home TUs: hitdetect, objBbox) */
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* hitsOut, int pointCount,
@@ -20,22 +40,38 @@ extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, 
 extern void hitDetectFn_800691c0(int obj, uint* bounds, int mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
-extern f32 lbl_803E1688;
-extern f32 lbl_803E16AC;
-extern f32 lbl_803E16B4;
-extern f32 lbl_803E16D0;
-extern f32 lbl_803E16D4;
 
 extern void mtxRotateByVec3s(void* matrix, void* angles);
 extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
 extern f32 mathSinf(f32 x);
-extern f32 fn_802966F4(GameObject * obj);
+extern f32 PSVECMag(f32* vec);
+extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance scalar */
+extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
+extern int EmissionController_IsLingering(int obj);
+extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
+
+/* sibling camcontrol TUs */
+extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
+extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
+extern void camcontrol_updateModeSettings(int camera);
+
 extern u8 framesThisStep;
+extern f32 timeDelta;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+
+/* float pool constants (.sdata2) */
+extern f32 lbl_803DD52C;
+extern f32 lbl_803E1688;
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
 extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
+extern f32 lbl_803E16AC;
+extern f32 lbl_803E16B4;
 extern f32 lbl_803E16B8;
+extern f32 lbl_803E16D0;
+extern f32 lbl_803E16D4;
 extern f32 lbl_803E16D8;
 extern f32 lbl_803E16DC;
 extern f32 lbl_803E16E0;
@@ -44,22 +80,12 @@ extern f32 lbl_803E16E8;
 extern f32 lbl_803E16EC;
 extern f32 lbl_803E16F0;
 extern f32 lbl_803E16F4;
-extern f32 timeDelta;
-extern undefined4 FUN_800068f4();
-extern f32 lbl_803E1710;
-extern f32 lbl_803E1714;
-extern f32 PSVECMag(f32 * vec);
 extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
 extern f32 lbl_803E1708;
 extern f32 lbl_803E170C;
-extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
-extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
-extern void camcontrol_updateModeSettings(int camera);
-extern int EmissionController_IsLingering(int obj);
-extern void fn_8029656C(int obj, float* out);
-extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
-extern f32 lbl_803DD52C;
+extern f32 lbl_803E1710;
+extern f32 lbl_803E1714;
 extern f32 lbl_803E1718;
 extern f32 lbl_803E171C;
 extern f32 lbl_803E1720;
@@ -178,37 +204,38 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
                              float* lowerHeightOffsetOut, float* upperHeightOffsetOut,
                              float* targetHeightOut)
 {
-    *minDistanceOut = cameraMtxVar57->minDistance;
-    *maxDistanceOut = cameraMtxVar57->maxDistance;
-    if (lowerHeightOffsetOut != (float*)0x0)
+    *minDistanceOut = gCamcontrolModeSettings->minDistance;
+    *maxDistanceOut = gCamcontrolModeSettings->maxDistance;
+    if (lowerHeightOffsetOut != NULL)
     {
-        *lowerHeightOffsetOut = cameraMtxVar57->lowerHeightOffset;
+        *lowerHeightOffsetOut = gCamcontrolModeSettings->lowerHeightOffset;
     }
-    if (upperHeightOffsetOut != (float*)0x0)
+    if (upperHeightOffsetOut != NULL)
     {
-        *upperHeightOffsetOut = cameraMtxVar57->upperHeightOffset;
+        *upperHeightOffsetOut = gCamcontrolModeSettings->upperHeightOffset;
     }
-    if (targetHeightOut != (float*)0x0)
+    if (targetHeightOut != NULL)
     {
-        *targetHeightOut = cameraMtxVar57->targetHeight;
+        *targetHeightOut = gCamcontrolModeSettings->targetHeight;
     }
-    return;
 }
-
-#define gCamcontrolModeSettings cameraMtxVar57
 
 typedef struct CamSlideRot
 {
     s16 angles[4];
-    f32 unkA4;
-    f32 unkA0;
-    f32 unk9C;
-    f32 unk98;
+    f32 unk08;
+    f32 unk0C;
+    f32 unk10;
+    f32 unk14;
 } CamSlideRot;
+
+STATIC_ASSERT(offsetof(CamSlideRot, angles) == 0x00);
+STATIC_ASSERT(offsetof(CamSlideRot, unk08) == 0x08);
+STATIC_ASSERT(offsetof(CamSlideRot, unk14) == 0x14);
 
 typedef struct CamSlideObjectState
 {
-    u8 pad00[0x1A4];
+    u8 unk00[0x1A4];
     f32 vectorX;
     f32 vectorY;
     f32 vectorZ;
@@ -264,10 +291,10 @@ void camslide_update(CameraObject* camera, GameObject* target)
         rot.angles[0] = (s16)(0x8000 - angle);
         rot.angles[1] = 0;
         rot.angles[2] = 0;
-        rot.unkA4 = lbl_803E16A4;
-        rot.unkA0 = lbl_803E16AC;
-        rot.unk9C = lbl_803E16AC;
-        rot.unk98 = lbl_803E16AC;
+        rot.unk08 = lbl_803E16A4;
+        rot.unk0C = lbl_803E16AC;
+        rot.unk10 = lbl_803E16AC;
+        rot.unk14 = lbl_803E16AC;
         mtxRotateByVec3s(mtx, rot.angles);
         Matrix_TransformPoint(mtx, (f64)state->vectorX, (f64)state->vectorY,
                               (f64)state->vectorZ, &outX, &outY, &outZ);
@@ -470,24 +497,10 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
     camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
 }
 
-#define gCamcontrolModeSettings cameraMtxVar57
-
-static inline f64 FirstPerson_U32AsDouble(u32 value)
-{
-    u64 bits = CONCAT44(0x43300000, value);
-    return *(f64*)&bits;
-}
-
-static inline f64 FirstPerson_S32AsDouble(s32 value)
-{
-    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
-    return *(f64*)&bits;
-}
-
 void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
 {
     extern f32 interpolate(f32 delta, f32 rate, f32 dt);
-    extern f32 sqrtf();
+    extern f32 sqrtf(f32 x);
     f32 dx;
     f32 dz;
     f32 dy;
@@ -622,39 +635,32 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     fval = (f32)settings->targetHeight;
     gCamcontrolModeSettings->targetHeight = fval;
     gCamcontrolModeSettings->targetTargetHeight = fval;
-    fval = (f32)(u32)
-    settings->lowerHeightOffset;
+    fval = (f32)(u32)settings->lowerHeightOffset;
     gCamcontrolModeSettings->lowerHeightOffset = fval;
     gCamcontrolModeSettings->baseLowerHeightOffset = fval;
     gCamcontrolModeSettings->targetLowerHeightOffset = fval;
-    fval = (f32)(u32)
-    settings->upperHeightOffset;
+    fval = (f32)(u32)settings->upperHeightOffset;
     gCamcontrolModeSettings->upperHeightOffset = fval;
     gCamcontrolModeSettings->baseUpperHeightOffset = fval;
     gCamcontrolModeSettings->targetUpperHeightOffset = fval;
-    fval = (f32)(u32)
-    settings->minDistance;
+    fval = (f32)(u32)settings->minDistance;
     gCamcontrolModeSettings->minDistance = fval;
     gCamcontrolModeSettings->targetMinDistance = fval;
-    fval = (f32)(u32)
-    settings->maxDistance;
+    fval = (f32)(u32)settings->maxDistance;
     gCamcontrolModeSettings->maxDistance = fval;
     gCamcontrolModeSettings->targetMaxDistance = fval;
     fval = (f32)settings->fov;
     camera->fov = fval;
     gCamcontrolModeSettings->fov = fval;
-    fval = (f32)(u32)
-    settings->slideRightAmount;
+    fval = (f32)(u32)settings->slideRightAmount;
     gCamcontrolModeSettings->slideRightAmount = fval;
     gCamcontrolModeSettings->targetSlideRightAmount = fval;
-    fval = (f32)(u32)
-    settings->slideLeftAmount;
+    fval = (f32)(u32)settings->slideLeftAmount;
     gCamcontrolModeSettings->slideLeftAmount = fval;
     gCamcontrolModeSettings->targetSlideLeftAmount = fval;
     if (settings->distanceAdjustRate != 0)
     {
-        fval = (f32)(u32)
-        settings->distanceAdjustRate / lbl_803E1710;
+        fval = (f32)(u32)settings->distanceAdjustRate / lbl_803E1710;
         gCamcontrolModeSettings->distanceAdjustRate = fval;
         gCamcontrolModeSettings->targetDistanceAdjustRate = fval;
     }
@@ -664,8 +670,7 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     }
     if (settings->heightAdjustRate != 0)
     {
-        fval = (f32)(u32)
-        settings->heightAdjustRate / lbl_803E1710;
+        fval = (f32)(u32)settings->heightAdjustRate / lbl_803E1710;
         gCamcontrolModeSettings->heightAdjustRate = fval;
         gCamcontrolModeSettings->targetHeightAdjustRate = fval;
     }
@@ -679,16 +684,14 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
 
 void CameraModeNormal_free(CameraObject* camera)
 {
-    cameraMtxVar57->savedWorldX = camera->anim.worldPosX;
-    cameraMtxVar57->savedWorldY = camera->anim.worldPosY;
-    cameraMtxVar57->savedWorldZ = camera->anim.worldPosZ;
-    cameraMtxVar57->savedRotX = camera->anim.rotX;
-    cameraMtxVar57->savedRotY = camera->anim.rotY;
-    cameraMtxVar57->savedRotZ = camera->anim.rotZ;
-    cameraMtxVar57->wallAvoidanceFlags.b6 = 0;
+    gCamcontrolModeSettings->savedWorldX = camera->anim.worldPosX;
+    gCamcontrolModeSettings->savedWorldY = camera->anim.worldPosY;
+    gCamcontrolModeSettings->savedWorldZ = camera->anim.worldPosZ;
+    gCamcontrolModeSettings->savedRotX = camera->anim.rotX;
+    gCamcontrolModeSettings->savedRotY = camera->anim.rotY;
+    gCamcontrolModeSettings->savedRotZ = camera->anim.rotZ;
+    gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
 }
-
-#define gCamcontrolModeSettings cameraMtxVar57
 
 void camstatic_update(CameraObject* camera)
 {
@@ -702,7 +705,7 @@ void camstatic_update(CameraObject* camera)
     float dx;
     float dy;
     float dz;
-    undefined auStack_13c[4];
+    u8 relPosScratch[4];
     float dx2;
     float aimX;
     float aimY;
@@ -710,8 +713,8 @@ void camstatic_update(CameraObject* camera)
     float aimX2;
     float aimY2;
     float aimZ2;
-    undefined auStack_11c[112];
-    undefined auStack_ac[116];
+    u8 probeTraceScratch[112];
+    u8 wallTraceScratch[116];
 
     target = (GameObject*)camera->anim.targetObj;
     if (target == NULL)
@@ -824,7 +827,7 @@ void camstatic_update(CameraObject* camera)
                 aimZ2 = target->anim.worldPosZ;
             }
             camcontrol_traceMove(&aimX2, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_ac, 3, 1, 1, lbl_803E1688);
+                                 &camera->anim.worldPosX, wallTraceScratch, 3, 1, 1, lbl_803E1688);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -854,7 +857,7 @@ void camstatic_update(CameraObject* camera)
                 aimZ = target->anim.worldPosZ;
             }
             camcontrol_traceMove(&aimX, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_11c, 3, 1, 1, lbl_803E1688);
+                                 &camera->anim.worldPosX, probeTraceScratch, 3, 1, 1, lbl_803E1688);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -862,7 +865,7 @@ void camstatic_update(CameraObject* camera)
         }
     }
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx2, (f32*)auStack_13c, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
+        (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
@@ -891,7 +894,6 @@ void camstatic_update(CameraObject* camera)
                                    (u32)camera->anim.parent);
 }
 
-#define gCamcontrolModeSettings cameraMtxVar57
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 {
     extern int getAngle(f32 dx, f32 dz);
@@ -922,13 +924,11 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             fVal = (f32)(u32) * (u16*)(data + 0x1a);
             gCamcontrolModeSettings->maxDistance = fVal;
             gCamcontrolModeSettings->targetMaxDistance = fVal;
-            fVal = (f32)(u32)
-            data[0x1f];
+            fVal = (f32)(u32)data[0x1f];
             gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
             gCamcontrolModeSettings->lowerHeightOffset = fVal;
             gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)
-            data[0x1f];
+            fVal = (f32)(u32)data[0x1f];
             gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
             gCamcontrolModeSettings->upperHeightOffset = fVal;
             gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
@@ -970,8 +970,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         cam->anim.rotZ = 0;
         if (data != NULL)
         {
-            cam->fov = (f32)(u32)
-            data[0x19];
+            cam->fov = (f32)(u32)data[0x19];
         }
         break;
     case 4:
@@ -997,23 +996,17 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
         if (data != NULL)
         {
             gCamcontrolModeSettings->targetTargetHeight = lbl_803E16F0;
-            fVal = (f32)(u32)
-            data[6];
+            fVal = (f32)(u32)data[6];
             gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
             gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)
-            data[8];
+            fVal = (f32)(u32)data[8];
             gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
             gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
-            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)
-            data[3];
-            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)
-            data[4];
+            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)data[3];
+            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)data[4];
             gCamcontrolModeSettings->fov = (f32) * (s8*)(data + 2);
-            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)
-            data[9];
-            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)
-            data[0xa];
+            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)data[9];
+            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)data[0xa];
             uVal = data[0xb];
             if (uVal != 0)
             {
@@ -1110,13 +1103,12 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 
 void camcontrol_releaseModeSettings(void)
 {
-    mm_free(cameraMtxVar57);
-    cameraMtxVar57 = 0;
+    mm_free(gCamcontrolModeSettings);
+    gCamcontrolModeSettings = 0;
 }
 
 void camcontrol_initialiseModeSettings(void)
 {
-    cameraMtxVar57 = (CamcontrolModeSettings*)mmAlloc(sizeof(CamcontrolModeSettings), 0xf, 0);
-    memset(cameraMtxVar57, 0, sizeof(CamcontrolModeSettings));
-    return;
+    gCamcontrolModeSettings = (CamcontrolModeSettings*)mmAlloc(sizeof(CamcontrolModeSettings), 0xf, 0);
+    memset(gCamcontrolModeSettings, 0, sizeof(CamcontrolModeSettings));
 }
