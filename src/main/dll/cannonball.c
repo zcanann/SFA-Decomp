@@ -1,3 +1,21 @@
+/*
+ * cannonball - Tricky's rolling cannonball, a baddie that follows a
+ * rom-curve route. trickyFn_80141290 is the per-frame update.
+ *
+ * Before init (init-done byte 0x0a == 0): the ball homes onto its curve
+ * (CANNONBALL_CURVE). Once the owner and the ball share a walk group it
+ * picks the route direction by comparing owner-to-endpoint distances,
+ * binds the route walker to the chosen segment, steps it, seeds the sfx
+ * timer and marks init done.
+ *
+ * After init: at each segment end it gathers the valid branch nodes
+ * (gated by the node-set's per-branch mask byte), picks the nearest to
+ * the current owner, retargets the walker, then accelerates/decays the
+ * roll speed toward CANNONBALL_SFX_TIMER limits, advances and moves the
+ * ball. Off the walk grid it sets CANNONBALL_HIDE_FLAG. The sfx timer
+ * periodically plays the rolling sound (0x29b) on object channel 0x10
+ * when the current move is outside the 0x29..0x2f window.
+ */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/skeetla.h"
@@ -17,11 +35,16 @@
 #define CANNONBALL_HIDE_FLAG 0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 
+/* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
+   Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
+   trickyFn_8013b368: dll_DF (block-scope signature override of dll_DF.h's
+   int(u8*,f32,u8*) for this TU's codegen, recipe #57).
+   lbl_803E2*: this DLL's f32 route/speed constants. */
 extern double getXZDistance(float* a, float* b);
 extern u32 randomGetRange(int min, int max);
-extern void objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int param5, int param6);
-extern int Objfsa_GetWalkGroupIndexAtPoint(float *pos, void *flag);
-extern void trickyMove(int obj, void *moveState);
+extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
+extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
+extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 extern f32 timeDelta;
@@ -77,6 +100,7 @@ void trickyFn_80141290(int obj, int ball)
         }
         else if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->atSegmentEnd == 0)
         {
+            /* distinct locals required: reusing the outer node/nodeSet/mask changes register coloring */
             int node2;
             int nodeSet2;
             u32 mask2;
@@ -111,7 +135,7 @@ void trickyFn_80141290(int obj, int ball)
                 }
             }
 
-            curveFn_800da23c(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void *)targetNode);
+            curveFn_800da23c(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void*)targetNode);
         }
 
         speed = *(float*)(ball + CANNONBALL_SPEED);
@@ -144,9 +168,9 @@ void trickyFn_80141290(int obj, int ball)
         trickyAdvanceRouteTargetAhead(obj, ((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), *(float*)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void*)(ball + CANNONBALL_MOVE_STATE));
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, (void*)0) != 0)
+        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) != 0)
         {
-            *(u32*)(ball + CANNONBALL_FLAGS) &= ~0x10LL;
+            *(u32*)(ball + CANNONBALL_FLAGS) &= ~(u64)CANNONBALL_HIDE_FLAG;
         }
         else
         {
@@ -156,13 +180,12 @@ void trickyFn_80141290(int obj, int ball)
         *(float*)(ball + CANNONBALL_SFX_TIMER) -= timeDelta;
         if (*(float*)(ball + CANNONBALL_SFX_TIMER) < lbl_803E23DC)
         {
-            *(float*)(ball + CANNONBALL_SFX_TIMER) = (f32)(int)
-            randomGetRange(200, 600);
+            *(float*)(ball + CANNONBALL_SFX_TIMER) = (f32)(int)randomGetRange(200, 600);
 
             sfxState = *(int*)&((GameObject*)obj)->extra;
             if (((u32)(*(u8*)(sfxState + 0x58) >> 6 & 1) == 0) &&
                 ((((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
-                    !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
+                 !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
             {
                 objAudioFn_800393f8(obj, (void*)(sfxState + 0x3a8), 0x29b, 0x1000, -1, 0);
             }
@@ -171,9 +194,9 @@ void trickyFn_80141290(int obj, int ball)
     else
     {
         trickyFn_8013b368(obj, ball, lbl_803E2488);
-        walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)(*(int*)(ball + CANNONBALL_CURVE) + 8), (void*)0);
+        walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)(*(int*)(ball + CANNONBALL_CURVE) + 8), NULL);
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, (void*)0) == walkGroup)
+        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) == walkGroup)
         {
             curve = *(int*)(ball + CANNONBALL_CURVE);
 
@@ -202,8 +225,9 @@ void trickyFn_80141290(int obj, int ball)
                 ((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse = 1;
             }
 
-            fn_800DA980(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void *)curve, (void *)fromNode, (void *)targetNode);
-            if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse != 0) {
+            fn_800DA980(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), (void*)curve, (void*)fromNode, (void*)targetNode);
+            if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->reverse != 0)
+            {
                 RomCurve_stepClamped(((RomCurveWalker*)(ball + CANNONBALL_ROUTE)), lbl_803E250C);
             }
             else
