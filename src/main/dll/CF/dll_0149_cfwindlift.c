@@ -388,7 +388,7 @@ void windlift_update(int* obj)
         sub->timer = t + 1;
         if (t < 0x3c && GameBit_Get(sub->seqId) == 0)
         {
-            *(s16*)obj -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
+            ((GameObject*)obj)->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
             Obj_SetActiveModelIndex(obj, 0);
             return;
         }
@@ -396,7 +396,7 @@ void windlift_update(int* obj)
         gb2 = GameBit_Get(sub->delay);
         {
             int m = (u16)framesThisStep * 0xb6;
-            *(s16*)obj -= m * ((gb2 << 2) + 0xe);
+            ((GameObject*)obj)->anim.rotX -= m * ((gb2 << 2) + 0xe);
         }
         pull = (f32)((WindliftPlacement*)def)->unk1A;
         player = (char*)Obj_GetPlayerObject();
