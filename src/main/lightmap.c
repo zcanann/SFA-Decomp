@@ -122,6 +122,7 @@ extern f32 fn_802943F4(f32 v);
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void updateVisibleGeometry(void)
 {
     u8* cam;
@@ -204,6 +205,7 @@ void updateVisibleGeometry(void)
     n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
+#pragma opt_common_subs reset
 
 undefined4 FUN_8005af70(int idx)
 {
