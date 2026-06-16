@@ -1,3 +1,12 @@
+/*
+ * dll83func0 (DLL 0x83) - a foodbag-family modgfx effect builder.
+ * dll_83_func03 fills a 20-entry FbCmd draw list (textures sourced from
+ * lbl_80315998, layers 0..4) plus the FbBuf header, then spawns the effect
+ * through gModgfxInterface. When flags bit 0 is set the effect position is
+ * offset by the source object's (sourceObj+0x18) or, when absent, the
+ * posSource (posSource+0xc) world position. func00 and func01 are empty
+ * no-op slots; func03 is the main entry point.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -66,7 +75,7 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags)
     e[4].z = lbl_803E0EE4;
     e[5].layer = 0;
     e[5].flags = 0x0;
-    e[5].tex = (void*)0;
+    e[5].tex = NULL;
     e[5].mode = 0x400000;
     e[5].x = lbl_803E0EE8;
     e[5].y = lbl_803E0EEC;
@@ -115,7 +124,7 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags)
     e[11].z = lbl_803E0EE4;
     e[12].layer = 2;
     e[12].flags = 0x0;
-    e[12].tex = (void*)0;
+    e[12].tex = NULL;
     e[12].mode = 0x400000;
     e[12].x = lbl_803E0F08;
     e[12].y = lbl_803E0F0C;
@@ -210,6 +219,7 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags)
             buf.pos[2] = lbl_803E0EE4 + *(f32*)(posSource + 0x14);
         }
     }
+    /* base32[variant + 0xb7]: per-variant texture-asset id from the resource blob */
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)lbl_80315998, 0x10, base + 0x168, base32[variant + 0xb7],
                                      0);
 }
@@ -222,5 +232,3 @@ void dll_83_func01_nop(void)
 void dll_83_func00_nop(void)
 {
 }
-
-void dll_84_func01_nop(void);
