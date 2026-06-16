@@ -63,13 +63,13 @@ void vfpstatueball_hitDetect(void)
 
 void vfpstatueball_update(int* obj)
 {
-    VfpStatueBallPlacement* setup;
+    int* setup;
     VfpStatueBallState* state;
     int* hitObj;
     int hitType;
     int variant;
 
-    setup = *(VfpStatueBallPlacement**)&((GameObject*)obj)->anim.placementData;
+    setup = *(int**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     hitObj = 0;
 
@@ -88,7 +88,7 @@ void vfpstatueball_update(int* obj)
 
     state->timer -= (s16)timeDelta;
 
-    variant = setup->variant;
+    variant = ((VfpStatueBallPlacement*)setup)->variant;
     if (variant == 0)
     {
         objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
@@ -114,7 +114,7 @@ void vfpstatueball_update(int* obj)
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
             (((GameObject*)hitObj)->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
         {
-            if ((u8)fn_8016F16C(hitObj) == setup->variant)
+            if ((u8)fn_8016F16C(hitObj) == ((VfpStatueBallPlacement*)setup)->variant)
             {
                 state->active = (u8)(1 - state->active);
             }
@@ -124,7 +124,7 @@ void vfpstatueball_update(int* obj)
             }
         }
 
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + ((s32)timeDelta * 0x82));
+        *(s16*)obj = (s16)(*(s16*)obj + ((s32)timeDelta * 0x82));
     }
 
     if ((state->active != 0) && (state->playActivateSfx != 0))
@@ -177,20 +177,19 @@ void vfpstatueball_free(int obj)
 
 void vfpstatueball_init(int* obj, u8* init)
 {
-    VfpStatueBallPlacement* placement = (VfpStatueBallPlacement*)init;
     VfpStatueBallState* state = ((GameObject*)obj)->extra;
-    state->gameBit = placement->gameBit;
+    state->gameBit = *(s16*)((char*)init + 0x1e);
     state->timer = 0x19;
     ((GameObject*)obj)->objectFlags |= 0x4000;
-    if (placement->variant > 2)
+    if (*(s16*)((char*)init + 0x1a) > 2)
     {
-        placement->variant = 2;
+        *(s16*)((char*)init + 0x1a) = 2;
     }
-    if (placement->modelScale > 1)
+    if (*(s16*)((char*)init + 0x1c) > 1)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)placement->modelScale;
+            ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)*(s16*)((char*)init + 0x1c);
     }
-    Obj_SetActiveModelIndex((int)obj, placement->variant);
+    Obj_SetActiveModelIndex((int)obj, *(s16*)((char*)init + 0x1a));
     state->active = (u8)GameBit_Get(state->gameBit);
 }
