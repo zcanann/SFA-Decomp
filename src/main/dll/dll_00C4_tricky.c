@@ -531,15 +531,15 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             *(u8*)(state + 0xb) = 0;
         }
-        if (((*(byte*)(state + 8) == 8) || (*(byte*)(state + 8) == 0xd)) ||
-            ((*(byte*)(state + 8) == 0xe && (*(byte*)(state + 10) == 1))))
+        if (((((TrickyState*)state)->unk08 == 8) || (((TrickyState*)state)->unk08 == 0xd)) ||
+            ((((TrickyState*)state)->unk08 == 0xe && (((TrickyState*)state)->substate == 1))))
         {
             promptA = true;
             commandMask |= 0x10;
         }
         else
         {
-            ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), 1, lbl_803E2524);
+            ref = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, 1, lbl_803E2524);
             if (ref != 0)
             {
                 promptA = true;
@@ -548,7 +548,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         if (*(u8*)(state + 0xb) != 0)
         {
-            for (i = 0; i < *(byte*)(state + 0x798); i = i + 1)
+            for (i = 0; i < ((TrickyState*)state)->unk798; i = i + 1)
             {
                 ref = state + (uint)i * 8;
                 cmdByte = *(char*)(ref + 0x74c);
@@ -572,7 +572,7 @@ int Tricky_updateSideCommandPrompts(int obj)
             ref = fn_80296240(ref);
             if ((ref != 0) && (bitVal = GameBit_Get(0xd00), bitVal == 0))
             {
-                if (fn_80296448(*(int*)(state + 4)) == 0)
+                if (fn_80296448(((TrickyState*)state)->playerObj) == 0)
                 {
                     commandMask |= 0x20;
                 }
