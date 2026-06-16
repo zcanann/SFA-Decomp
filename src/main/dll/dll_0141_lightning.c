@@ -95,6 +95,7 @@ void lightning_update(u8* obj)
     int objectIndex;
     int spawnLightning;
     int handle;
+    u16 delay;
 
     state = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -146,9 +147,10 @@ void lightning_update(u8* obj)
                 return;
             }
 
+            delay = (u16)(state[0x1c] + randomGetRange(-5, 5));
             handle = lightningCreate((float*)(obj + 0x0c), (float*)(objects[objectIndex] + 0x0c),
                                      *(f32*)(state + 0x08), ((MmpMoonrockState*)state)->baseY,
-                                     (u16)(state[0x1c] + randomGetRange(-5, 5)), state[0x1d],
+                                     delay, state[0x1d],
                                      (u8)(((LightningFlags*)(state + 0x25))->style ? 1 : 0));
             *(int*)state = handle;
             *(f32*)(state + 0x04) = lbl_803E4088;
