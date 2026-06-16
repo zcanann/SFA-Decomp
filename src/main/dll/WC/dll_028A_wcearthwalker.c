@@ -50,12 +50,10 @@ void earthwalker_update(int obj)
     int state = (int)ewObj->state;
     EarthWalkerState* ewState = (EarthWalkerState*)state;
     int prevAnim;
-    int hitOut;
 
-    hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
-                                &ewState->hitReactStepScale);
-    ewState->hitReactState = hitOut;
-    if ((u8)hitOut != 0)
+    ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1,
+                                                ewState->hitReactState, &ewState->hitReactStepScale);
+    if (ewState->hitReactState != 0)
     {
         return;
     }
