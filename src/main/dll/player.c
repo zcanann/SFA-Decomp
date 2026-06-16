@@ -18163,8 +18163,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
             {
                 d += 0xffff;
             }
-            *(s16*)((char*)inner + 0x478) =
-                *(s16*)((char*)inner + 0x478) + (d * (int)fv >> 3);
+            *(s16*)((char*)inner + 0x478) += (d * (int)fv >> 3);
             inner->yaw = *(s16*)((char*)inner + 0x478);
         }
         break;
@@ -18198,8 +18197,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
             {
                 d += 0xffff;
             }
-            *(s16*)((char*)inner + 0x478) =
-                *(s16*)((char*)inner + 0x478) + (d * (int)fv >> 3);
+            *(s16*)((char*)inner + 0x478) += (d * (int)fv >> 3);
             inner->yaw = *(s16*)((char*)inner + 0x478);
         }
         break;
