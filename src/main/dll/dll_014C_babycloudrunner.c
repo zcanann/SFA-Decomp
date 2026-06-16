@@ -665,7 +665,7 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
  * move, otherwise start or speed-scale the turn move by the delta. */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
+#pragma peephole on
 void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
