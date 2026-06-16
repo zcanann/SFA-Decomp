@@ -70,7 +70,7 @@ STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
 STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
 STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
 STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTileSetup, base . posY) == 0x0c);
+STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0x0c);
 STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
 

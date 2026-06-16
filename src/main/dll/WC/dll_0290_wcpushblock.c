@@ -117,7 +117,7 @@ STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, initialTile) == WCPUSHBLOCK_STAT
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, moveResult) == WCPUSHBLOCK_STATE_MOVE_RESULT);
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, flags) == WCPUSHBLOCK_STATE_FLAGS);
 STATIC_ASSERT(sizeof(WCPushBlockSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCPushBlockSetup, base . posY) == 0xc);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, base.posY) == 0xc);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == WCPUSHBLOCK_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TILE_OFFSET);
 
