@@ -712,13 +712,18 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
 {
     FrustumPlane* plane;
     u8 i;
-    for (i = 0; i < 5; i++)
+    f32 offZ;
+    f32 offX;
+    i = 0;
+    offZ = playerMapOffsetZ;
+    offX = playerMapOffsetX;
+    for (; i < 5; i++)
     {
         float dot;
         plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
         dot = plane->distance
-            + (plane->normalZ * (center[2] - playerMapOffsetZ)
-                + (center[1] * plane->normalY + plane->normalX * (center[0] - playerMapOffsetX)));
+            + (plane->normalZ * (center[2] - offZ)
+                + (center[1] * plane->normalY + plane->normalX * (center[0] - offX)));
         if (radius + dot < *(f32*)&lbl_803DEBCC) return 0;
     }
     return 1;
