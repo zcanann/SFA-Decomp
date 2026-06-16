@@ -1076,7 +1076,7 @@ void babycloudrunner_update(int* obj)
                 f32 speed = sub->curveSpeed;
                 Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
-                Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)obj + 0x24, 0x1e, lbl_803E4238, lbl_803E4254);
+                Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
                 if (sub->runnerState == 1)
                 {
@@ -1093,7 +1093,7 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near != NULL && Vec_distance((char*)near + 0x18, (char*)sub + 0x18) < lbl_803DBE38)
+                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < lbl_803DBE38)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
                         if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) > lbl_803DBE3C)
