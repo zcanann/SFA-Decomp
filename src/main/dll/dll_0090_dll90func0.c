@@ -1,3 +1,16 @@
+/*
+ * dll90func0 (DLL 0x90) - one of the foodbag effect-spawner DLLs.
+ *
+ * dll_90_func03 builds a fixed 21-entry FbCmd display list on the stack
+ * (textures resolved as offsets into the lbl_80316E30 resource block, all
+ * coordinates pulled from the lbl_803E11A0.. float pool) plus the
+ * surrounding FbBuf header, then hands it to the modgfx interface's
+ * spawnEffect. When the low flag bit is set the effect is anchored to a
+ * world position: from sourceObj+0x18 if a source object was given,
+ * otherwise from posSource+0xc.
+ *
+ * func00/func01 are nops in this DLL.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -217,7 +230,7 @@ void dll_90_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316E30, 0x10, base + 0xb4, 0x45, 0);
 }
 
-void dll_7C_func01_nop(void);
+void dll_91_func01_nop(void);
 
 void dll_90_func01_nop(void)
 {
