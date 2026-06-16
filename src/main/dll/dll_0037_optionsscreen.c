@@ -254,7 +254,7 @@ int OptionsScreen_run(void)
                 break;
             default:
                 saveFileStruct_setCheatActive(3,
-                                              !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(
+                                              (u8)!(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(
                                                   lbl_803A87D0[item]));
                 break;
             }
