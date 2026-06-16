@@ -2238,7 +2238,8 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
         }
         else
         {
-            *ptr += 1;
+            u8* p = ptr;
+            *p += 1;
         }
         return ptr;
     }
