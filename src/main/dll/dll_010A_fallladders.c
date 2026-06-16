@@ -417,7 +417,7 @@ void Fall_Ladders_update(int obj)
 void Fall_Ladders_init(int* obj, s8* def)
 {
     s16* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
     state[3] = ((FallLaddersObjectDef*)def)->unk20;
     state[2] = ((FallLaddersObjectDef*)def)->unk1E;
     *(f32*)state = (f32)(s32)((FallLaddersObjectDef*)def)->unk1A;
