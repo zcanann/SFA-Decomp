@@ -13142,17 +13142,14 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
         idx = inner->unk8CE;
         if (idx != -1)
         {
-            *flags |= ((EmitElem*)(inner->moveSlots +
-                inner->moveSlotIndex * 0xb0))->a8[idx];
-            *p6 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a70[inner->unk8CE];
-            *p7 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a7c[inner->unk8CE];
-            *p5 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a94[inner->unk8CE];
+            *flags |= *(int*)(inner->moveSlots +
+                inner->moveSlotIndex * 0xb0 + 8 + idx * 4);
+            *p6 = *(f32*)(inner->moveSlots +
+                inner->moveSlotIndex * 0xb0 + 0x70 + inner->unk8CE * 4);
+            *p7 = *(f32*)(inner->moveSlots +
+                inner->moveSlotIndex * 0xb0 + 0x7c + inner->unk8CE * 4);
+            *p5 = *(f32*)(inner->moveSlots +
+                inner->moveSlotIndex * 0xb0 + 0x94 + inner->unk8CE * 4);
         }
         if (*(u8*)(inner->moveSlots +
             inner->moveSlotIndex * 0xb0 + 0x88) & 2)
