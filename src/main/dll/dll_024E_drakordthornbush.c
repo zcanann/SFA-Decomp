@@ -185,7 +185,8 @@ void drakord_thornbush_hitDetect(int obj)
     if (((DrakordThornbushState*)inner)->unk0 != 0)
     {
         flag = timerCountDown((f32*)((char*)inner + 0x10));
-        if ((hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2)) != 0)
+        hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2);
+        if (hit != 0)
         {
             if (*(s16*)((char*)hitObj + 0x46) != 0x35f &&
                 *(void**)&((DrakordThornbushState*)inner)->unk8 != (void*)hitObj &&
