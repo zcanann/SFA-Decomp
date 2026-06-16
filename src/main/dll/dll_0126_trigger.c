@@ -1179,10 +1179,9 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk88 = *(s16*)(params + 0x4e);
         ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
         break;
-    case 0x51:
-        break;
     case 0xf4:
         break;
+    case 0x51:
     default:
         break;
     }
