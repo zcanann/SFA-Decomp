@@ -1,76 +1,47 @@
+/*
+ * babycloudrunner (DLL 0xFC) - a follower object that latches onto the
+ * nearest object of a placement-named group and mirrors its position and
+ * rotation every frame. Once latched (mode 1) it watches a gate game bit
+ * and, when the player triggers it (INTERACT_FLAG_ACTIVATED), fires a
+ * trigger sequence and advances/remembers state through two placement
+ * game bits.
+ *
+ * State machine (BabyCloudRunnerState.mode):
+ *   0 = uninitialised (no target yet)
+ *   1 = latched and interactive
+ *   2 = waiting for the gate game bit to be set again
+ *   3 = finished (remembered bit was already set, or flags bit 1 holds it)
+ *
+ * Placement flags (BabyCloudRunnerPlacement.flags):
+ *   0x1 = remembered-bit set means "already done" -> go straight to mode 3
+ *   0x2 = clear the gate game bit when the sequence fires
+ *   0x4 = pick the trigger sequence id randomly in [triggerIdMin..Max]
+ */
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 
-extern f32 lbl_803E3848;
-extern void objRenderFn_8003b8f4(f32);
-extern void dll_FC_initialise_nop(void);
-extern void dll_FC_release_nop(void);
-extern void dll_FC_init(int obj, int objDef);
-extern void dll_FC_update(int obj);
-extern void dll_FC_hitDetect(int* obj);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E384C;
-
-void dll_FC_free_nop(void)
-{
-}
-
-int dll_FC_getExtraSize_ret_8(void) { return 0x8; }
-int dll_FC_getObjectTypeId(void) { return 0x0; }
-
-void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3848);
-}
-
-void dll_FC_hitDetect(int* obj)
-{
-    extern void objRenderFn_80041018(int* obj); /* #57 */
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    if ((objAnim->modelInstance->flags & 1u) == 0u) return;
-    if (objAnim->hitVolumeTransforms == NULL) return;
-    objRenderFn_80041018(obj);
-}
-
-ObjectDescriptor gDllFCObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dll_FC_initialise_nop,
-    (ObjectDescriptorCallback)dll_FC_release_nop,
-    0,
-    (ObjectDescriptorCallback)dll_FC_init,
-    (ObjectDescriptorCallback)dll_FC_update,
-    (ObjectDescriptorCallback)dll_FC_hitDetect,
-    (ObjectDescriptorCallback)dll_FC_render,
-    (ObjectDescriptorCallback)dll_FC_free_nop,
-    (ObjectDescriptorCallback)dll_FC_getObjectTypeId,
-    dll_FC_getExtraSize_ret_8,
-};
-
 typedef struct BabyCloudRunnerPlacement
 {
     ObjPlacement base;
-    s16 gateGameBit;
-    s16 rememberedGameBit;
-    u8 targetGroup;
-    u8 triggerIdMin;
-    u8 triggerIdMax;
-    u8 flags;
-    u8 pad20[0x24 - 0x20];
+    s16 gateGameBit;        /* 0x18: -1 = none */
+    s16 rememberedGameBit;  /* 0x1A: -1 = none */
+    u8 targetGroup;         /* 0x1C: object group to follow */
+    u8 triggerIdMin;        /* 0x1D */
+    u8 triggerIdMax;        /* 0x1E */
+    u8 flags;               /* 0x1F: BABYCLOUDRUNNER_FLAG_* */
+    u8 pad20[4];
 } BabyCloudRunnerPlacement;
 
 typedef struct BabyCloudRunnerState
 {
-    u8 mode;
-    u8 triggerId;
-    u8 rememberedGameBitValue;
+    u8 mode;                    /* 0x00 */
+    u8 triggerId;               /* 0x01: trigger sequence index */
+    u8 rememberedGameBitValue;  /* 0x02 */
     u8 pad03;
-    GameObject* target;
+    GameObject* target;         /* 0x04: followed object */
 } BabyCloudRunnerState;
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
@@ -83,29 +54,88 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
 STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 
+/* BabyCloudRunnerPlacement.flags bits */
+#define BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE 0x1
+#define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT 0x2
+#define BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER 0x4
+
+extern f32 lbl_803E3848; /* render distance constant */
+extern f32 lbl_803E384C; /* initial max-distance for the nearest-object search */
+extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_80041018(int* obj);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern u32 randomGetRange(int min, int max);
+
+void dll_FC_initialise_nop(void);
+void dll_FC_release_nop(void);
+void dll_FC_init(int obj, int objDef);
+void dll_FC_update(int obj);
+void dll_FC_hitDetect(int* obj);
+
+void dll_FC_free_nop(void)
+{
+}
+
+int dll_FC_getExtraSize_ret_8(void) { return sizeof(BabyCloudRunnerState); }
+int dll_FC_getObjectTypeId(void) { return 0x0; }
+
+void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 isVisible = visible;
+    if (isVisible != 0) objRenderFn_8003b8f4(lbl_803E3848);
+}
+
+void dll_FC_hitDetect(int* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    if ((objAnim->modelInstance->flags & 1u) == 0u) return;
+    if (objAnim->hitVolumeTransforms == NULL) return;
+    objRenderFn_80041018(obj);
+}
+
+ObjectDescriptor gDllFCObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_FC_initialise_nop,
+    (ObjectDescriptorCallback)dll_FC_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_FC_init,
+    (ObjectDescriptorCallback)dll_FC_update,
+    (ObjectDescriptorCallback)dll_FC_hitDetect,
+    (ObjectDescriptorCallback)dll_FC_render,
+    (ObjectDescriptorCallback)dll_FC_free_nop,
+    (ObjectDescriptorCallback)dll_FC_getObjectTypeId,
+    dll_FC_getExtraSize_ret_8,
+};
+
+/* obj stays int (cast in-body) to match the original param register classing. */
 void dll_FC_update(int obj)
 {
     BabyCloudRunnerPlacement* placement;
     BabyCloudRunnerState* state;
-    uint bitVal;
-    float local8;
+    u32 gameBitValue;
+    u32 randomTrigger;
+    f32 maxDist;
 
-    local8 = lbl_803E384C;
+    maxDist = lbl_803E384C;
     placement = (BabyCloudRunnerPlacement*)((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
 
-    if ((u32)state->target == 0)
+    if (state->target == NULL)
     {
-        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &local8);
-        if ((u32)state->target == 0) goto end;
+        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &maxDist);
+        if (state->target == NULL) goto end;
         if ((int)placement->rememberedGameBit == -1)
         {
             state->rememberedGameBitValue = 0;
         }
         else
         {
-            bitVal = GameBit_Get((int)placement->rememberedGameBit);
-            state->rememberedGameBitValue = (byte)bitVal;
+            gameBitValue = GameBit_Get((int)placement->rememberedGameBit);
+            state->rememberedGameBitValue = (u8)gameBitValue;
         }
         state->mode = 1;
     }
@@ -122,22 +152,22 @@ void dll_FC_update(int obj)
     case 3:
         break;
     case 1:
-        if ((state->rememberedGameBitValue != 0) && ((placement->flags & 1) == 0))
+        if ((state->rememberedGameBitValue != 0) && ((placement->flags & BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE) == 0))
         {
-            *(u8*)&state->target->anim.resetHitboxMode &= ~0x20;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            state->target->anim.resetHitboxFlags &= ~0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->mode = 3;
         }
         else if (((int)placement->gateGameBit != -1) &&
             (GameBit_Get((int)placement->gateGameBit) == 0))
         {
-            *(u8*)&state->target->anim.resetHitboxMode &= ~0x20;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            state->target->anim.resetHitboxFlags &= ~0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->mode = 2;
         }
-        else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+        else if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            if ((placement->flags & 2) != 0)
+            if ((placement->flags & BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT) != 0)
             {
                 GameBit_Set((int)placement->gateGameBit, 0);
             }
@@ -145,10 +175,10 @@ void dll_FC_update(int obj)
             {
                 GameBit_Set((int)placement->rememberedGameBit, 1);
             }
-            if ((placement->flags & 4) != 0)
+            if ((placement->flags & BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER) != 0)
             {
-                bitVal = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
-                state->triggerId = (byte)bitVal;
+                randomTrigger = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
+                state->triggerId = (u8)randomTrigger;
             }
             else
             {
@@ -158,14 +188,14 @@ void dll_FC_update(int obj)
                     state->triggerId = placement->triggerIdMin;
                 }
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->rememberedGameBitValue = 1;
             (*gObjectTriggerInterface)->runSequence(state->triggerId, (void*)obj, -1);
         }
         else
         {
-            *(u8*)&state->target->anim.resetHitboxMode |= 0x20;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
+            state->target->anim.resetHitboxFlags |= 0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
         break;
     case 2:
@@ -189,7 +219,6 @@ void dll_FC_init(int obj, int objDef)
     state->mode = 0;
     state->triggerId = placement->triggerIdMax;
     ((GameObject*)obj)->objectFlags |= 0x4000;
-    return;
 }
 
 void dll_FC_release_nop(void)
@@ -199,5 +228,3 @@ void dll_FC_release_nop(void)
 void dll_FC_initialise_nop(void)
 {
 }
-
-int dll_14D_getObjectTypeId(void);
