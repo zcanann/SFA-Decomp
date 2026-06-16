@@ -1,450 +1,25 @@
+/*
+ * effect20 (DLL 0x2D) - a particle-effect spawn table DLL.
+ *
+ * Effect20_func04 is the workhorse: given an effect id (0x79E..), a source
+ * object, optional PartFxSpawnParams / extra-arg vectors and spawn flags, it
+ * fills a PartFxSpawn request (position, velocity, scale, lifetime, texture,
+ * colors, behavior/render flags) per-id and hands it to
+ * gExpgfxInterface->spawnEffect. Most parameters are randomized via
+ * randomGetRange and scaled by the lbl_803Exxxx float constants in this DLL's
+ * data; vecRotateZXY orients velocity into the source's frame.
+ *
+ * Effect20_func05 advances this DLL's shared animation phases each step
+ * (lbl_803DB888/88C scroll accumulators wrapped at 1.0, and the
+ * lbl_803DD400/404 sine sweeps clamped to 0x7FFF).
+ *
+ * The remaining FUN_/fn_ entry points are uncalled drift duplicates of
+ * helpers that live in the sibling effect DLLs.
+ */
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
 extern u32 randomGetRange(int min, int max);
-
-extern undefined4 DAT_8039d0b8;
-extern undefined4 DAT_8039d0bc;
-extern undefined4 DAT_803de090;
-extern f32 lbl_803DC4B0;
-extern f32 lbl_803DC4B4;
-extern f32 lbl_803E0E38;
-extern f32 lbl_803E0E3C;
-extern f32 lbl_803E0E40;
-extern f32 lbl_803E0E44;
-extern f32 lbl_803E0E48;
-extern f32 lbl_803E0E4C;
-extern f32 lbl_803E0E50;
-extern f32 lbl_803E0E54;
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
-extern f32 lbl_803E0E78;
-extern f32 lbl_803E0E7C;
-extern f32 lbl_803E0E80;
-extern f32 lbl_803E0E84;
-extern f32 lbl_803E0E88;
-extern f32 lbl_803E0E8C;
-
-undefined4
-FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint spawnFlags, u8 modelId,
-             int useWorldOffset)
-{
-    undefined4 result;
-    uint rngRoll;
-    int cfg[3];
-    undefined2 srcRotX;
-    undefined2 srcRotY;
-    undefined2 srcRotZ;
-    undefined4 srcScale;
-    float srcPosX;
-    float srcPosY;
-    float srcPosZ;
-    float velX;
-    float velY;
-    float velZ;
-    float startPosX;
-    float startPosY;
-    float startPosZ;
-    float scale;
-    undefined2 linkGroup;
-    undefined2 textureId;
-    uint behaviorFlags;
-    undefined4 renderFlags;
-    undefined4 overrideColor0;
-    uint overrideColor1;
-    uint overrideColor2;
-    undefined2 colorWord0;
-    undefined2 colorWord1;
-    undefined2 colorWord2;
-    u8 effectIdByte;
-    u8 initialAlpha;
-    u8 textureSetupFlags;
-    u8 modelIdByte;
-    undefined4 local_30;
-    uint rngTmp0;
-    undefined4 local_28;
-    uint rngTmp1;
-    undefined4 local_20;
-    uint rngTmp2;
-    undefined4 local_18;
-    uint rngTmp3;
-
-    lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
-    if (lbl_803E0E40 < lbl_803DC4B0)
-    {
-        lbl_803DC4B0 = lbl_803E0E3C;
-    }
-    lbl_803DC4B4 = lbl_803DC4B4 + lbl_803E0E44;
-    if (lbl_803E0E40 < lbl_803DC4B4)
-    {
-        lbl_803DC4B4 = lbl_803E0E48;
-    }
-    if (sourceObj == 0)
-    {
-        result = 0xffffffff;
-    }
-    else
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
-            if (spawnParams == (undefined2*)0x0)
-            {
-                return 0xffffffff;
-            }
-            srcPosX = ((PartFxSpawnParams*)spawnParams)->posX;
-            srcPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-            srcPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-            srcScale = *(undefined4*)&((PartFxSpawnParams*)spawnParams)->scale;
-            srcRotZ = ((PartFxSpawnParams*)spawnParams)->unk4;
-            srcRotY = ((PartFxSpawnParams*)spawnParams)->unk2;
-            srcRotX = *spawnParams;
-            modelIdByte = modelId;
-        }
-        behaviorFlags = 0;
-        renderFlags = 0;
-        effectIdByte = (undefined)effectId;
-        startPosX = lbl_803E0E4C;
-        startPosY = lbl_803E0E4C;
-        startPosZ = lbl_803E0E4C;
-        velX = lbl_803E0E4C;
-        velY = lbl_803E0E4C;
-        velZ = lbl_803E0E4C;
-        scale = lbl_803E0E4C;
-        cfg[2] = 0;
-        cfg[1] = 0xffffffff;
-        initialAlpha = 0xff;
-        textureSetupFlags = 0;
-        textureId = 0;
-        colorWord0 = 0xffff;
-        colorWord1 = 0xffff;
-        colorWord2 = 0xffff;
-        overrideColor0 = 0xffff;
-        overrideColor1 = 0xffff;
-        overrideColor2 = 0xffff;
-        linkGroup = 0;
-        cfg[0] = sourceObj;
-        switch (effectId)
-        {
-        case 0x73a:
-            rngTmp0 = randomGetRange(8, 10);
-            velY = lbl_803E0E50 * (f32)(s32)
-            rngTmp0;
-            rngRoll = randomGetRange(0, 0x28);
-            if (rngRoll == 0)
-            {
-                rngTmp0 = randomGetRange(0x15, 0x29);
-                scale = lbl_803E0E38 *
-                    (f32)(s32)
-                rngTmp0;
-                cfg[2] = 0x1cc;
-            }
-            else
-            {
-                rngTmp0 = randomGetRange(8, 0x14);
-                scale = lbl_803E0E38 *
-                    (f32)(s32)
-                rngTmp0;
-                cfg[2] = randomGetRange(0x5a, 0x78);
-            }
-            behaviorFlags = 0x80180200;
-            renderFlags = 0x1000020;
-            textureId = 0xc0b;
-            initialAlpha = 0x7f;
-            colorWord2 = 0x3fff;
-            colorWord1 = 0x3fff;
-            colorWord0 = 0x3fff;
-            overrideColor2 = 0xffff;
-            overrideColor1 = 0xffff;
-            overrideColor0 = 0xffff;
-            startPosY = lbl_803E0E54;
-            break;
-        case 0x73b:
-            rngTmp0 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E50 * (f32)(s32)
-            rngTmp0;
-            rngTmp1 = randomGetRange(8, 0x14);
-            velY = lbl_803E0E50 * (f32)(s32)
-            rngTmp1;
-            rngTmp2 = randomGetRange(0xffffffec, 0x14);
-            velZ = lbl_803E0E50 * (f32)(s32)
-            rngTmp2;
-            scale = lbl_803E0E58;
-            cfg[2] = 0x32;
-            behaviorFlags = 0x3000200;
-            renderFlags = 0x200020;
-            textureId = 0x33;
-            initialAlpha = 0xff;
-            colorWord0 = 0xffff;
-            colorWord1 = 0xffff;
-            colorWord2 = 0xffff;
-            overrideColor0 = 0xffff;
-            overrideColor1 = randomGetRange(0, 0x8000);
-            startPosY = lbl_803E0E5C;
-            overrideColor2 = overrideColor1;
-            break;
-        default:
-            return 0xffffffff;
-        case 0x73d:
-            rngTmp2 = randomGetRange(0xfffffff6, 10);
-            startPosX = lbl_803E0E3C * (f32)(s32)
-            rngTmp2;
-            rngTmp1 = randomGetRange(0xfffffff6, 100);
-            startPosY = lbl_803E0E50 * (f32)(s32)
-            rngTmp1;
-            rngTmp0 = randomGetRange(0xfffffff6, 10);
-            startPosZ = lbl_803E0E3C * (f32)(s32)
-            rngTmp0;
-            rngTmp3 = randomGetRange(7, 9);
-            scale = lbl_803E0E60 *
-                lbl_803E0E64 * (f32)(s32)
-            rngTmp3;
-            cfg[2] = 0x3c;
-            behaviorFlags = 0x80100;
-            textureSetupFlags = 0x10;
-            textureId = 0xde;
-            break;
-        case 0x73e:
-            rngTmp3 = randomGetRange(0xfffffff6, 10);
-            startPosX = lbl_803E0E3C * (f32)(s32)
-            rngTmp3;
-            rngTmp2 = randomGetRange(0xfffffff6, 100);
-            startPosY = lbl_803E0E50 * (f32)(s32)
-            rngTmp2;
-            rngTmp1 = randomGetRange(0xfffffff6, 10);
-            startPosZ = lbl_803E0E3C * (f32)(s32)
-            rngTmp1;
-            rngTmp0 = randomGetRange(7, 9);
-            scale = lbl_803E0E60 *
-                lbl_803E0E64 * (f32)(s32)
-            rngTmp0;
-            cfg[2] = 0x3c;
-            behaviorFlags = 0x80100;
-            textureSetupFlags = 0x10;
-            textureId = 0xdf;
-            break;
-        case 0x73f:
-            if (useWorldOffset == 0)
-            {
-                rngTmp3 = randomGetRange(0xfffffff6, 10);
-                startPosX = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp3;
-                rngTmp2 = randomGetRange(0xfffffff6, 100);
-                startPosY = lbl_803E0E50 *
-                    (f32)(s32)
-                rngTmp2;
-                rngTmp1 = randomGetRange(0xfffffff6, 10);
-                rngTmp1 = rngTmp1 ^ 0x80000000;
-                startPosZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp1;
-            }
-            else
-            {
-                rngTmp3 = randomGetRange(0xfffffff6, 10);
-                startPosX = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp3 +
-                    lbl_803E0E68;
-                rngTmp2 = randomGetRange(0xfffffff6, 100);
-                startPosY = lbl_803E0E50 *
-                    (f32)(s32)
-                rngTmp2 +
-                    lbl_803E0E6C;
-                rngTmp1 = randomGetRange(0xfffffff6, 10);
-                rngTmp1 = rngTmp1 ^ 0x80000000;
-                startPosZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp1 +
-                    lbl_803E0E70;
-            }
-            local_28 = 0x43300000;
-            rngTmp3 = randomGetRange(7, 9);
-            scale = lbl_803E0E74 *
-                lbl_803E0E64 * (f32)(s32)
-            rngTmp3;
-            cfg[2] = 0x3c;
-            behaviorFlags = 0x80100;
-            textureSetupFlags = 0x10;
-            textureId = 0xde;
-            break;
-        case 0x740:
-            if (useWorldOffset == 0)
-            {
-                rngTmp3 = randomGetRange(0xfffffff6, 10);
-                startPosX = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp3;
-                rngTmp2 = randomGetRange(0xfffffff6, 100);
-                startPosY = lbl_803E0E50 *
-                    (f32)(s32)
-                rngTmp2;
-                rngTmp1 = randomGetRange(0xfffffff6, 10);
-                rngTmp1 = rngTmp1 ^ 0x80000000;
-                startPosZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp1;
-            }
-            else
-            {
-                rngTmp3 = randomGetRange(0xfffffff6, 10);
-                startPosX = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp3 +
-                    lbl_803E0E68;
-                rngTmp2 = randomGetRange(0xfffffff6, 100);
-                startPosY = lbl_803E0E50 *
-                    (f32)(s32)
-                rngTmp2 +
-                    lbl_803E0E6C;
-                rngTmp1 = randomGetRange(0xfffffff6, 10);
-                rngTmp1 = rngTmp1 ^ 0x80000000;
-                startPosZ = lbl_803E0E3C *
-                    (f32)(s32)
-                rngTmp1 +
-                    lbl_803E0E70;
-            }
-            local_28 = 0x43300000;
-            rngTmp3 = randomGetRange(7, 9);
-            scale = lbl_803E0E74 *
-                lbl_803E0E64 * (f32)(s32)
-            rngTmp3;
-            cfg[2] = 0x3c;
-            behaviorFlags = 0x80100;
-            textureSetupFlags = 0x10;
-            textureId = 0xdf;
-            break;
-        case 0x741:
-            if (spawnParams != (undefined2*)0x0)
-            {
-                startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
-            }
-            scale = lbl_803E0E78;
-            cfg[2] = randomGetRange(0, 0x1e);
-            cfg[2] = cfg[2] + 0x50;
-            initialAlpha = 0x60;
-            behaviorFlags = 0x80110;
-            textureId = 0x7b;
-            textureSetupFlags = 0x20;
-            break;
-        case 0x742:
-            velZ = lbl_803E0E7C;
-            rngTmp3 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E80 * (f32)(s32)
-            rngTmp3;
-            rngTmp2 = randomGetRange(0xffffffec, 0x14);
-            velY = lbl_803E0E80 * (f32)(s32)
-            rngTmp2;
-            scale = lbl_803E0E84;
-            cfg[2] = randomGetRange(0x46, 0x50);
-            initialAlpha = 0xff;
-            behaviorFlags = 0x82000104;
-            renderFlags = 0x400;
-            textureId = 0x3f4;
-            break;
-        case 0x743:
-            velZ = lbl_803E0E7C;
-            rngTmp3 = randomGetRange(0xffffffec, 0x14);
-            velX = lbl_803E0E80 * (f32)(s32)
-            rngTmp3;
-            rngTmp2 = randomGetRange(0xffffffec, 0x14);
-            velY = lbl_803E0E80 * (f32)(s32)
-            rngTmp2;
-            scale = lbl_803E0E84;
-            cfg[2] = randomGetRange(0x46, 0x50);
-            initialAlpha = 0xff;
-            behaviorFlags = 0x82000104;
-            renderFlags = 0x400;
-            textureId = 0x500;
-            break;
-        case 0x744:
-            rngRoll = randomGetRange(0, 4);
-            if (rngRoll == 4)
-            {
-                scale = lbl_803E0E88;
-                initialAlpha = 0x9b;
-                behaviorFlags = 0x480000;
-                cfg[2] = randomGetRange(0x1e, 0x28);
-            }
-            else
-            {
-                scale = lbl_803E0E8C;
-                initialAlpha = 0x7d;
-                behaviorFlags = 0x180000;
-                cfg[2] = 0x50;
-            }
-            renderFlags = 0x2000000;
-            textureId = 0x88;
-        }
-        behaviorFlags = behaviorFlags | spawnFlags;
-        if (((behaviorFlags & 1) != 0) && ((behaviorFlags & 2) != 0))
-        {
-            behaviorFlags = behaviorFlags ^ 2;
-        }
-        if ((behaviorFlags & 1) != 0)
-        {
-            if ((spawnFlags & 0x200000) == 0)
-            {
-                if (cfg[0] != 0)
-                {
-                    startPosX = startPosX + *(float*)(cfg[0] + 0x18);
-                    startPosY = startPosY + *(float*)(cfg[0] + 0x1c);
-                    startPosZ = startPosZ + *(float*)(cfg[0] + 0x20);
-                }
-            }
-            else
-            {
-                startPosX = startPosX + srcPosX;
-                startPosY = startPosY + srcPosY;
-                startPosZ = startPosZ + srcPosZ;
-            }
-        }
-        result = (*gExpgfxInterface)->spawnEffect(cfg, 0xffffffff, effectId, 0);
-    }
-    return result;
-}
-
-undefined4 FUN_800c9030(uint key, int* outIndex)
-{
-    int hi;
-    int lo;
-    int mid;
-
-    *outIndex = -1;
-    if ((int)key < 0)
-    {
-        return 0;
-    }
-    hi = DAT_803de090 + -1;
-    lo = 0;
-    while (true)
-    {
-        while (true)
-        {
-            if (hi < lo)
-            {
-                *outIndex = -1;
-                return 0;
-            }
-            mid = hi + lo >> 1;
-            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
-            lo = mid + 1;
-        }
-        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
-        hi = mid + -1;
-    }
-    *outIndex = mid;
-    return (&DAT_8039d0bc)[mid * 2];
-}
-
-extern s16 lbl_803DD414;
-extern s16 lbl_803DD416;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -468,20 +43,6 @@ extern f32 lbl_803E0348;
 extern f32 mathCosf(f32 x);
 
 #pragma dont_inline off
-
-void fn_800D6584(void)
-{
-    extern u32 lbl_803DD418; /* #57 */
-    extern u32 lbl_803DD41C; /* #57 */
-    u32 tmp = lbl_803DD418;
-    lbl_803DD418 = lbl_803DD41C;
-    lbl_803DD41C = tmp;
-    lbl_803DD414 = lbl_803DD416;
-    lbl_803DD416 = 0;
-}
-
-/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
- * NOTE: stuck at ~78% ? instruction scheduling differs. */
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -598,7 +159,7 @@ extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 extern void vecRotateZXY(void* params, f32* vec);
-extern int randFn_80080100(int range);
+extern void randFn_80080100();
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, f32* extraArgs)
@@ -1645,7 +1206,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosY = lbl_803E03E8 * spawnParams->scale;
             cfg.lifetimeFrames = randomGetRange(0x28, 0x50);
             cfg.textureId = 0xc10;
-            cfg.initialAlpha = '@';
+            cfg.initialAlpha = 0x40;
             cfg.behaviorFlags = 0x80104;
             cfg.renderFlags = 0x4800808;
         }
@@ -1955,7 +1516,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.renderFlags = 0x4040800;
         }
         break;
-    case 1999:
+    case 0x7cf:
         if (spawnParams != NULL)
         {
             cfg.startPosX = spawnParams->posX;
@@ -1979,7 +1540,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             }
         }
         break;
-    case 2000:
+    case 0x7d0:
         if (spawnParams != NULL)
         {
             if (extraArgs == NULL)
@@ -2236,7 +1797,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.overrideColor0 = 0x7fff;
         cfg.overrideColor1 = 0x7fff;
         cfg.overrideColor2 = 0xff4b;
-        cfg.initialAlpha = ',';
+        cfg.initialAlpha = 0x2c;
         cfg.behaviorFlags = 0x80004;
         cfg.renderFlags = 0x420820;
         if (spawnParams != NULL)
@@ -2261,7 +1822,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.scale = lbl_803E0330 * spawnParams->scale;
         cfg.lifetimeFrames = 10;
         cfg.textureId = spawnParams->unk6;
-        cfg.initialAlpha = '@';
+        cfg.initialAlpha = 0x40;
         cfg.behaviorFlags = 0x80104;
         cfg.renderFlags = 0x880;
         break;
@@ -2563,7 +2124,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             if (spawnParams->unk4 != 0)
             {
                 cfg.behaviorFlags |= 0x800000LL;
-                cfg.initialAlpha = 'A';
+                cfg.initialAlpha = 0x41;
             }
             cfg.sourceVecX = randomGetRange(0, 0xffff);
             cfg.sourceVecY = randomGetRange(0, 0xffff);
@@ -2698,7 +2259,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.overrideColor0 = 0;
         cfg.overrideColor1 = 0xffff;
         cfg.overrideColor2 = 0x4000;
-        cfg.initialAlpha = '@';
+        cfg.initialAlpha = 0x40;
         break;
     case 0x7e8:
         if (spawnParams != NULL)
@@ -2710,7 +2271,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.scale = lbl_803E0330 * spawnParams->scale;
         cfg.lifetimeFrames = 10;
         cfg.textureId = spawnParams->unk6;
-        cfg.initialAlpha = '@';
+        cfg.initialAlpha = 0x40;
         cfg.behaviorFlags = 0x80100;
         cfg.renderFlags = 0x800;
         break;
@@ -2822,7 +2383,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.overrideColor0 = 0x7fff;
         cfg.overrideColor1 = 0x7fff;
         cfg.overrideColor2 = 0xff4b;
-        cfg.initialAlpha = ',';
+        cfg.initialAlpha = 0x2c;
         cfg.behaviorFlags = 0x200c0004;
         cfg.renderFlags = 0x420820;
         if (spawnParams != NULL)
@@ -2928,7 +2489,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.behaviorFlags = 0x80180000;
         cfg.renderFlags = 0x5440820;
         cfg.textureId = 0xc0b;
-        cfg.initialAlpha = '@';
+        cfg.initialAlpha = 0x40;
         cfg.colorWord0 = 0;
         cfg.colorWord1 = 0xffff;
         cfg.colorWord2 = 0xffff;
@@ -3047,7 +2608,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.overrideColor1 = (uint)cfg.colorWord1;
             cfg.overrideColor2 = (uint)cfg.colorWord2;
         }
-        cfg.initialAlpha = ',';
+        cfg.initialAlpha = 0x2c;
         cfg.behaviorFlags = 0x80002;
         cfg.renderFlags = 0x420820;
         break;
@@ -3431,7 +2992,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.overrideColor1 = 50000;
             cfg.overrideColor2 = 0;
         }
-        cfg.initialAlpha = ',';
+        cfg.initialAlpha = 0x2c;
         cfg.behaviorFlags = 0x80004;
         cfg.renderFlags = 0x420820;
         cfg.velocityX = *extraArgs;
@@ -3594,8 +3155,6 @@ void Effect20_func05(void)
     lbl_803DD408 = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
 }
 
-void Effect16_func03_nop(void);
-
 void Effect20_func03_nop(void)
 {
 }
@@ -3607,8 +3166,6 @@ void Effect20_release(void)
 void Effect20_initialise(void)
 {
 }
-
-int Checkpoint_func09_ret_1(void);
 
 #pragma dont_inline reset
 #pragma dont_inline reset
