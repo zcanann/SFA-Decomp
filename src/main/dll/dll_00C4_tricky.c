@@ -2685,7 +2685,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
                 *(s8*)&((TrickyState*)state)->surfaceFlags |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
                 *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 nearestSpecialDelta = absDy;
-                if (lbl_803E25A0 < ((TrickyState*)state)->unk1B8)
+                if (((TrickyState*)state)->unk1B8 > lbl_803E25A0)
                 {
                     ((TrickyState*)state)->flags2DC |= 0x10100000LL;
                 }
