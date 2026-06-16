@@ -15814,7 +15814,7 @@ void fn_802AE650(int obj, int state, int p3)
     u32 b;
     f32 hi;
 
-    (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
+    (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, timeDelta, 1);
     hi = lbl_803E7EE0;
     if (((GameObject*)obj)->anim.currentMoveProgress >=
         hi - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
@@ -15837,18 +15837,15 @@ void fn_802AE650(int obj, int state, int p3)
         Sfx_PlayFromObject(obj, 0x3cd);
         *(u16*)((char*)state + 0x8d8) |= 4;
     }
-    *(f32*)((char*)state + 0x428) = lbl_803E7FA4;
-    *(f32*)((char*)state + 0x430) = lbl_803E7FA4;
+    *(f32*)((char*)state + 0x428) = *(f32*)((char*)state + 0x430) = lbl_803E7FA4;
     b = (*(u8*)((char*)state + 0x3f1) >> 4) & 1;
     if (b != 0)
     {
-        *(f32*)((char*)state + 0x42c) = lbl_803E7EA4;
-        *(f32*)((char*)state + 0x434) = lbl_803E7EA4;
+        *(f32*)((char*)state + 0x42c) = *(f32*)((char*)state + 0x434) = lbl_803E7EA4;
     }
     else
     {
-        *(f32*)((char*)state + 0x42c) = lbl_803E7ED4;
-        *(f32*)((char*)state + 0x434) = lbl_803E7ED4;
+        *(f32*)((char*)state + 0x42c) = *(f32*)((char*)state + 0x434) = lbl_803E7ED4;
     }
     *(f32*)((char*)state + 0x7a4) = lbl_803E80E4;
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7EE0)
