@@ -221,7 +221,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     {
         dx = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
-    targetObj = *(int*)(state + 0x29c);
+    targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = *(f32*)(targetObj + 0xc);
     targetPos[1] = lbl_803E2A08 + *(f32*)(targetObj + 0x10);
     targetPos[2] = *(f32*)(targetObj + 0x14);
@@ -313,7 +313,7 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     {
         dxA = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
-    curve = *(int*)(state + 0x29c);
+    curve = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = *(f32*)(curve + 0xc);
     targetPos[1] = lbl_803E2A08 + *(f32*)(curve + 0x10);
     targetPos[2] = *(f32*)(curve + 0x14);
