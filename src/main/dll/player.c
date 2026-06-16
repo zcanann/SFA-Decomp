@@ -1126,7 +1126,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             *(s16*)((char*)setup + 0x1a) = 1;
         }
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if (setup == 0)
+        if ((void*)setup == NULL)
         {
             return;
         }
