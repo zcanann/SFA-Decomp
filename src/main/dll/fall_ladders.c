@@ -79,23 +79,23 @@ void FUN_801540a0(undefined4 obj, int state)
     float fa;
     float fb;
 
-    *(float*)(state + 0x2ac) = lbl_803E35BC;
-    *(undefined4*)(state + 0x2e4) = 1;
-    *(float*)(state + 0x308) = lbl_803E358C;
-    *(float*)(state + 0x300) = lbl_803E35C0;
-    *(float*)(state + 0x304) = lbl_803E35C4;
+    ((BaddieState*)state)->speedScale = lbl_803E35BC;
+    ((BaddieState*)state)->unk2E4 = 1;
+    ((BaddieState*)state)->unk308 = lbl_803E358C;
+    ((BaddieState*)state)->unk300 = lbl_803E35C0;
+    ((BaddieState*)state)->unk304 = lbl_803E35C4;
     *(undefined*)(state + 800) = 0;
     fb = lbl_803E35A8;
-    *(float*)(state + 0x314) = lbl_803E35A8;
+    *(f32*)&((BaddieState*)state)->eventFlags = lbl_803E35A8;
     *(undefined*)(state + 0x321) = 7;
     fa = lbl_803E35A4;
-    *(float*)(state + 0x318) = lbl_803E35A4;
+    ((BaddieState*)state)->unk318 = lbl_803E35A4;
     *(undefined*)(state + 0x322) = 0;
-    *(float*)(state + 0x31c) = fb;
+    ((BaddieState*)state)->unk31C = fb;
     *(undefined*)(state + 0x33a) = 0;
     *(undefined*)(state + 0x33b) = 0;
     *(float*)(state + 0x324) = lbl_803E35C8;
-    *(float*)(state + 0x2fc) = fa;
+    ((BaddieState*)state)->pathStep = fa;
     return;
 }
 
@@ -121,7 +121,7 @@ void fn_801540A0(int obj, void* pp)
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
     {
-        fn_8014CF7C(obj, p, *(f32*)(*(int*)(p + 0x29c) + 0xc), *(f32*)(*(int*)(p + 0x29c) + 0x14), 0x3c, 0);
+        fn_8014CF7C(obj, p, *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0xc), *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0x14), 0x3c, 0);
     }
     else
     {
@@ -150,8 +150,8 @@ void fn_801540A0(int obj, void* pp)
         fn_8014CF7C(obj, p, *(f32*)(*(int*)(p + 0x29c) + 0xc), *(f32*)(*(int*)(p + 0x29c) + 0x14), 1, 0);
         Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
     }
-    ((GameObject*)obj)->anim.rotY = *(s16*)(p + 0x19c);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(p + 0x19e);
+    ((GameObject*)obj)->anim.rotY = ((BaddieState*)p)->spawnRotY;
+    ((GameObject*)obj)->anim.rotZ = ((BaddieState*)p)->spawnRotZ;
     if (*(u8*)(p + 0x33b) != 0)
     {
         *(u8*)(p + 0x33b) -= 1;
@@ -171,7 +171,7 @@ void fn_80154584(int obj, int p)
     hitState->suppressOutgoingHits = 0;
     if ((*(u32*)(p + 0x2dc) & 0x2000) != 0)
     {
-        if ((Curve_AdvanceAlongPath(curve, *(f32*)(p + 0x2fc)) != 0 || curve->atSegmentEnd != 0) &&
+        if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)p)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
             (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)p, (void*)obj, lbl_803E29B0,
                                              (int*)&lbl_803DBCD0, -1) != 0)
@@ -209,12 +209,12 @@ void fn_80154584(int obj, int p)
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
                 Sfx_PlayFromObject(obj, 0x24b);
-                *(f32*)(p + 0x308) = lbl_803E29D0;
+                ((BaddieState*)p)->unk308 = lbl_803E29D0;
             }
             else
             {
                 Sfx_PlayFromObject(obj, 0x24c);
-                *(f32*)(p + 0x308) = lbl_803E29D4;
+                ((BaddieState*)p)->unk308 = lbl_803E29D4;
             }
         }
     }
@@ -309,7 +309,7 @@ void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8
     }
     else
     {
-        param_2 = (double)*(float*)(*(int*)(state + 0x29c) + 0x14);
+        param_2 = (double)*(float*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14);
         FUN_8014d3d0(obj, state, 0x3c, 0);
     }
     if (done)
@@ -331,8 +331,8 @@ void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_8014d3d0(obj, state, 1, 0);
         FUN_80006824((uint)obj, SFXfox_healthgasp2);
     }
-    obj[1] = *(short*)(state + 0x19c);
-    obj[2] = *(short*)(state + 0x19e);
+    obj[1] = ((BaddieState*)state)->spawnRotY;
+    obj[2] = ((BaddieState*)state)->spawnRotZ;
     if (*(char*)(state + 0x33b) != '\0')
     {
         *(char*)(state + 0x33b) = *(char*)(state + 0x33b) + -1;
