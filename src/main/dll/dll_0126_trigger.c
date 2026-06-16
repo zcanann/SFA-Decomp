@@ -1022,8 +1022,8 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                         else if (0x4a < seqType)
                         {
                             allSet = true;
-                            if (((int)*(short*)(state + 0x82) != 0xffffffff) &&
-                                (mode = FUN_80017690((int)*(short*)(state + 0x82)), mode == 0))
+                            if (((int)((TriggerState*)state)->unk82 != 0xffffffff) &&
+                                (mode = FUN_80017690((int)((TriggerState*)state)->unk82), mode == 0))
                             {
                                 allSet = false;
                             }
