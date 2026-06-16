@@ -309,61 +309,61 @@ void fn_801EC870(int p1, register int p2_int)
     f32 fz, fa, fb, fc;
     DRcradleSnowBikeFlags* flags;
     *(f32*)(p2_int + 0x52c) = lbl_803E5C34;
-    *(f32*)(p2_int + 0x530) = lbl_803E5C38;
-    *(f32*)(p2_int + 0x534) = lbl_803E5BF4;
+    ((SnowBikeState*)p2_int)->unk530 = lbl_803E5C38;
+    ((SnowBikeState*)p2_int)->unk534 = lbl_803E5BF4;
     fz = lbl_803E5AE8;
     ((SnowBikeSetTypeState*)p2_int)->unk414 = fz;
-    *(f32*)(p2_int + 0x584) = fz;
-    *(f32*)(p2_int + 0x548) = lbl_803E5BFC;
-    *(f32*)(p2_int + 0x54c) = lbl_803E5BE4;
-    *(f32*)(p2_int + 0x540) = lbl_803E5B20;
-    *(f32*)(p2_int + 0x544) = lbl_803E5AF8;
-    *(f32*)(p2_int + 0x558) = lbl_803E5BA8;
-    *(f32*)(p2_int + 0x56c) = lbl_803E5C00;
+    ((SnowBikeState*)p2_int)->unk584 = fz;
+    ((SnowBikeState*)p2_int)->unk548 = lbl_803E5BFC;
+    ((SnowBikeState*)p2_int)->unk54C = lbl_803E5BE4;
+    ((SnowBikeState*)p2_int)->unk540 = lbl_803E5B20;
+    ((SnowBikeState*)p2_int)->unk544 = lbl_803E5AF8;
+    ((SnowBikeState*)p2_int)->unk558 = lbl_803E5BA8;
+    ((SnowBikeState*)p2_int)->unk56C = lbl_803E5C00;
     flags = (DRcradleSnowBikeFlags*)(p2_int + 0x428);
     flags->resetLatch = 0;
-    *(f32*)(p2_int + 0x430) = fz;
-    fa = *(f32*)(p2_int + 0x470);
-    *(f32*)(p2_int + 0x464) = fa;
-    *(f32*)(p2_int + 0x47c) = fa;
-    fb = *(f32*)(p2_int + 0x474);
-    *(f32*)(p2_int + 0x468) = fb;
-    *(f32*)(p2_int + 0x480) = fb;
-    fc = *(f32*)(p2_int + 0x478);
-    *(f32*)(p2_int + 0x46c) = fc;
-    *(f32*)(p2_int + 0x484) = fc;
+    ((SnowBikeState*)p2_int)->unk430 = fz;
+    fa = ((SnowBikeState*)p2_int)->unk470;
+    ((SnowBikeState*)p2_int)->unk464 = fa;
+    ((SnowBikeState*)p2_int)->unk47C = fa;
+    fb = ((SnowBikeState*)p2_int)->unk474;
+    ((SnowBikeState*)p2_int)->unk468 = fb;
+    ((SnowBikeState*)p2_int)->unk480 = fb;
+    fc = ((SnowBikeState*)p2_int)->unk478;
+    ((SnowBikeState*)p2_int)->unk46C = fc;
+    ((SnowBikeState*)p2_int)->unk484 = fc;
     flags->pathActive = 0;
     flags->impulseLatch = 0;
     *(u32*)(p2_int + 0x42c) = 0;
-    *(f32*)(p2_int + 0x3e4) = fz;
-    *(f32*)(p2_int + 0x3e0) = lbl_803E5AEC;
+    ((SnowBikeState*)p2_int)->collisionFxTimer = fz;
+    ((SnowBikeState*)p2_int)->collisionFxDamping = lbl_803E5AEC;
 }
 #pragma dont_inline reset
 
 void fn_801EC928(int p1, int p2)
 {
     f32 fa, fz;
-    *(f32*)(p2 + 0x4b0) = lbl_803E5C3C;
-    *(f32*)(p2 + 0x530) = lbl_803E5C38;
-    *(f32*)(p2 + 0x534) = lbl_803E5BF4;
-    *(f32*)(p2 + 0x538) = lbl_803E5B74;
+    ((SnowBikeState*)p2)->unk4B0 = lbl_803E5C3C;
+    ((SnowBikeState*)p2)->unk530 = lbl_803E5C38;
+    ((SnowBikeState*)p2)->unk534 = lbl_803E5BF4;
+    ((SnowBikeState*)p2)->unk538 = lbl_803E5B74;
     *(f32*)(p2 + 0x53c) = lbl_803E5C14;
-    *(f32*)(p2 + 0x548) = lbl_803E5BFC;
-    *(f32*)(p2 + 0x54c) = lbl_803E5BE4;
-    *(f32*)(p2 + 0x540) = lbl_803E5B20;
-    *(f32*)(p2 + 0x544) = lbl_803E5AF8;
+    ((SnowBikeState*)p2)->unk548 = lbl_803E5BFC;
+    ((SnowBikeState*)p2)->unk54C = lbl_803E5BE4;
+    ((SnowBikeState*)p2)->unk540 = lbl_803E5B20;
+    ((SnowBikeState*)p2)->unk544 = lbl_803E5AF8;
     fa = lbl_803E5C40;
-    *(f32*)(p2 + 0x57c) = fa;
-    *(f32*)(p2 + 0x580) = fa;
+    ((SnowBikeState*)p2)->unk57C = fa;
+    ((SnowBikeState*)p2)->unk580 = fa;
     *(f32*)(p2 + 0x554) = lbl_803E5C44;
     *(f32*)(p2 + 0x550) = lbl_803E5C10;
     *(f32*)(p2 + 0x570) = lbl_803E5BB8;
     fz = lbl_803E5BA8;
-    *(f32*)(p2 + 0x558) = fz;
-    *(f32*)(p2 + 0x578) = lbl_803E5B8C;
-    *(f32*)(p2 + 0x574) = lbl_803E5BB0;
-    *(f32*)(p2 + 0x56c) = lbl_803E5C00;
-    *(f32*)(p2 + 0x4ac) = fz;
+    ((SnowBikeState*)p2)->unk558 = fz;
+    ((SnowBikeState*)p2)->unk578 = lbl_803E5B8C;
+    ((SnowBikeState*)p2)->unk574 = lbl_803E5BB0;
+    ((SnowBikeState*)p2)->unk56C = lbl_803E5C00;
+    ((SnowBikeState*)p2)->unk4AC = fz;
 }
 
 void SnowBike_setType(int obj, int type)
