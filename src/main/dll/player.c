@@ -13115,29 +13115,25 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
         idx = inner->unk8CE;
         if (idx != -1)
         {
-            *flags |= ((EmitElem*)(inner->moveSlots +
-                inner->moveSlotIndex * 0xb0))->a8[idx];
-            *p6 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a70[inner->unk8CE];
-            *p7 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a7c[inner->unk8CE];
-            *p5 = ((EmitElem*)(inner->moveSlots +
-                    inner->moveSlotIndex * 0xb0))
-                ->a94[inner->unk8CE];
+            *flags |= *(int*)((inner->moveSlots + 8) +
+                (u32)inner->moveSlotIndex * 0xb0 + idx * 4);
+            *p6 = *(f32*)((inner->moveSlots + 0x70) +
+                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
+            *p7 = *(f32*)((inner->moveSlots + 0x7c) +
+                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
+            *p5 = *(f32*)((inner->moveSlots + 0x94) +
+                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
         }
-        if (*(u8*)(inner->moveSlots +
-            inner->moveSlotIndex * 0xb0 + 0x88) & 2)
+        if (*(u8*)((inner->moveSlots + 0x88) +
+            (u32)inner->moveSlotIndex * 0xb0) & 2)
         {
             if (inner->unk8AB < inner->unk8AC)
             {
-                *p6 = lbl_803E7EA4;
-                *p7 = lbl_803E7EA4;
+                *p6 = *p7 = lbl_803E7EA4;
             }
         }
-        if ((*(u8*)(inner->moveSlots +
-                inner->moveSlotIndex * 0xb0 + 0x88) & 1) &&
+        if ((*(u8*)((inner->moveSlots + 0x88) +
+                (u32)inner->moveSlotIndex * 0xb0) & 1) &&
             inner->unk820 >= lbl_803E7EF0)
         {
             *flags |= 0x80;
