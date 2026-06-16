@@ -150,7 +150,7 @@ void trickyFlame(int p1, int p2)
     {
     case 0:
         trickyDebugPrint(strBase + 0x700);
-        *(int*)(p2 + 0x71c) = Objfsa_FindNearestCurveType24((float*)(*(int*)(p2 + 0x24) + 0x18), -1, 4);
+        *(int*)(p2 + 0x71c) = Objfsa_FindNearestCurveType24((float*)((int)((TrickyRuntime*)p2)->homeObj + 0x18), -1, 4);
         if (*(u8*)(*(int*)(p2 + 0x71c) + 0x3) != 0)
         {
             newTarget = *(int*)(p2 + 0x71c) + 0x8;
@@ -158,7 +158,7 @@ void trickyFlame(int p1, int p2)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
-                *(u16*)(p2 + 0xd2) = 0;
+                ((TrickyRuntime*)p2)->targetTurnTimer = 0;
             }
             *(u8*)(p2 + 0xa) = 1;
         }
@@ -171,7 +171,7 @@ void trickyFlame(int p1, int p2)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
-                *(u16*)(p2 + 0xd2) = 0;
+                ((TrickyRuntime*)p2)->targetTurnTimer = 0;
             }
             *(u8*)(p2 + 0xa) = 3;
         }
@@ -262,7 +262,7 @@ void trickyFlame(int p1, int p2)
             else
             {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
-                if (cb != NULL && cb(*(int*)(p2 + 0x24), 1) == 0)
+                if (cb != NULL && cb((int)((TrickyRuntime*)p2)->homeObj, 1) == 0)
                 {
                     dieFlag = 1;
                 }
@@ -316,7 +316,7 @@ void trickyFlame(int p1, int p2)
             }
             else if (r == 2)
             {
-                *(u8*)(p2 + 0x8) = 1;
+                ((TrickyRuntime*)p2)->growlLatState = 1;
                 *(u8*)(p2 + 0xa) = 0;
                 fz = lbl_803E23DC;
                 *(f32*)(p2 + 0x71c) = fz;
@@ -327,7 +327,7 @@ void trickyFlame(int p1, int p2)
         break;
     case 2:
         trickyDebugPrint(strBase + 0x764);
-        target = (void*)(*(int*)(p2 + 0x24) + 0x18);
+        target = (void*)((int)((TrickyRuntime*)p2)->homeObj + 0x18);
         trickyUpdateApproachSpeed(p1, p2, lbl_803E2418, target, 1);
         if (trickyMove(p1, target) == 0)
         {
@@ -363,7 +363,7 @@ void trickyFlame(int p1, int p2)
             else
             {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
-                if (cb != NULL && cb(*(int*)(p2 + 0x24), 1) == 0)
+                if (cb != NULL && cb((int)((TrickyRuntime*)p2)->homeObj, 1) == 0)
                 {
                     dieFlag = 1;
                 }
@@ -402,7 +402,7 @@ void trickyFlame(int p1, int p2)
         }
         if (dieFlag == 0)
         {
-            *(u8*)(p2 + 0x8) = 1;
+            ((TrickyRuntime*)p2)->growlLatState = 1;
             *(u8*)(p2 + 0xa) = 0;
             fz = lbl_803E23DC;
             *(f32*)(p2 + 0x71c) = fz;
@@ -420,7 +420,7 @@ void trickyFlame(int p1, int p2)
             trickyMove(p1, target);
             if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, (void*)0x0) != 0)
             {
-                *(u8*)(p2 + 0x8) = 1;
+                ((TrickyRuntime*)p2)->growlLatState = 1;
                 *(u8*)(p2 + 0xa) = 0;
                 fz = lbl_803E23DC;
                 *(f32*)(p2 + 0x71c) = fz;
