@@ -271,7 +271,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj)
         center = ((GameObject*)obj)->anim.localPosZ;
         lo = (center - lbl_803E683C) - *(f32*)((char*)lbl_803DDD50 + 0x28);
         hi = (lbl_803E683C + center) - *(f32*)((char*)lbl_803DDD50 + 0x28);
-        if (!(lo > lbl_803E6840) && hi >= lbl_803E6840)
+        if (!(lo > lbl_803E6840) && !(hi < lbl_803E6840))
         {
             return 1;
         }
