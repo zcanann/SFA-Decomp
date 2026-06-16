@@ -1,3 +1,14 @@
+/*
+ * drshackle (DLL 0x26E) - the swinging chain/shackle that hangs from a
+ * path point. drshackle_setScale orients the chain along the segment
+ * between two model joints, drshackle_update binds the per-slot path
+ * objects (ObjGroup 0x17) the chain rides, and drshackle_hitDetect plays
+ * a distance-scaled footstep-style rattle when active.
+ *
+ * The 0x1A flag byte is a BitFlags8 whose b0 = "active" (chain visible
+ * and rattling); the matching attachment logic lives in the separate
+ * drshackle.c build unit (DRshackle.h).
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -6,31 +17,42 @@
 typedef struct DrshacklePlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 posX;          /* 0x0C */
+    f32 posY;          /* 0x10 */
+    f32 posZ;          /* 0x14 */
     u8 pad18[0x19 - 0x18];
-    s8 unk19;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s8 unk19;          /* 0x19: reported by drshackle_func0B */
+    s16 pathObjGroupBase; /* 0x1A: base id of the path objects this chain binds */
+    s16 quarterTurns;  /* 0x1C: rotZ in quarter turns; ==1 also selects two slots */
+    s16 activeGameBit; /* 0x1E: game bit that keeps the chain active */
 } DrshacklePlacement;
 
 
 typedef struct DrshackleState
 {
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
+    u8 pad0[0x8 - 0x0]; /* 0x00: path-object pointer slots (one per slot) */
+    f32 savedPosX;      /* 0x08 */
+    f32 savedPosY;      /* 0x0C */
+    f32 savedPosZ;      /* 0x10 */
+    s32 slotCount;      /* 0x14: number of path slots (1 or 2) */
     u8 pad18[0x19 - 0x18];
-    s8 unk19;
-    u8 pad1A[0x1B - 0x1A];
-    u8 unk1B;
-    u8 unk1C;
+    s8 unk19;           /* 0x19 */
+    u8 pad1A[0x1B - 0x1A]; /* 0x1A: BitFlags8 active flag */
+    u8 pathPointA;      /* 0x1B: path-point index of slot 0 */
+    u8 pathPointB;      /* 0x1C: path-point index of slot 1 */
     u8 pad1D[0x20 - 0x1D];
 } DrshackleState;
+
+STATIC_ASSERT(offsetof(DrshacklePlacement, posX) == 0x0C);
+STATIC_ASSERT(offsetof(DrshacklePlacement, unk19) == 0x19);
+STATIC_ASSERT(offsetof(DrshacklePlacement, pathObjGroupBase) == 0x1A);
+STATIC_ASSERT(offsetof(DrshacklePlacement, quarterTurns) == 0x1C);
+STATIC_ASSERT(offsetof(DrshacklePlacement, activeGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(DrshackleState, savedPosX) == 0x08);
+STATIC_ASSERT(offsetof(DrshackleState, slotCount) == 0x14);
+STATIC_ASSERT(offsetof(DrshackleState, pathPointA) == 0x1B);
+STATIC_ASSERT(offsetof(DrshackleState, pathPointB) == 0x1C);
+STATIC_ASSERT(sizeof(DrshackleState) == 0x20);
 
 
 static inline int* DrShackle_GetActiveModel(void* obj)
@@ -69,9 +91,9 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     {
         return 1;
     }
-    ((DrshackleState*)p)->unk8 = ((GameObject*)obj)->anim.localPosX;
-    ((DrshackleState*)p)->unkC = ((GameObject*)obj)->anim.localPosY;
-    ((DrshackleState*)p)->unk10 = ((GameObject*)obj)->anim.localPosZ;
+    ((DrshackleState*)p)->savedPosX = ((GameObject*)obj)->anim.localPosX;
+    ((DrshackleState*)p)->savedPosY = ((GameObject*)obj)->anim.localPosY;
+    ((DrshackleState*)p)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
 
     joint1 = *(s8*)((char*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24) + objAnim->bankIndex + 0x12);
     model = DrShackle_GetActiveModel((void*)a);
@@ -84,10 +106,10 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
                                   parentPos);
     PSVECSubtract(parentPos, jointPos, jointPos);
 
-    if (((DrshacklePlacement*)q)->unk1C != 0)
+    if (((DrshacklePlacement*)q)->quarterTurns != 0)
     {
         ((GameObject*)obj)->anim.rotZ =
-            (s16)((((DrshacklePlacement*)q)->unk1C << 14) + getAngle(jointPos[2], jointPos[0]));
+            (s16)((((DrshacklePlacement*)q)->quarterTurns << 14) + getAngle(jointPos[2], jointPos[0]));
         ((GameObject*)obj)->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
     }
     else
@@ -105,7 +127,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     objRenderFn_8003b8f4((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
 
     ptr = (int*)p;
-    for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
+    for (i = 0; i < ((DrshackleState*)p)->slotCount; i++)
     {
         char* entry = *(char**)ptr;
         if (entry != NULL)
@@ -134,16 +156,16 @@ void drshackle_init(int obj, char* arg)
     char* p = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
     ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(*(s16*)(arg + 0x1e)) == 0);
-    ((DrshackleState*)p)->unk1B = (s8)arg[0x18] % 2;
+    ((DrshackleState*)p)->pathPointA = (s8)arg[0x18] % 2;
     ((GameObject*)obj)->animEventCallback = (void*)drshackle_toggleEventCallback;
     if (*(s16*)(arg + 0x1c) == 1)
     {
-        ((DrshackleState*)p)->unk14 = 2;
-        ((DrshackleState*)p)->unk1C = 1 - ((DrshackleState*)p)->unk1B;
+        ((DrshackleState*)p)->slotCount = 2;
+        ((DrshackleState*)p)->pathPointB = 1 - ((DrshackleState*)p)->pathPointA;
     }
     else
     {
-        ((DrshackleState*)p)->unk14 = 1;
+        ((DrshackleState*)p)->slotCount = 1;
     }
 }
 
@@ -181,7 +203,7 @@ void drshackle_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
     if (((BitFlags8*)(p + 0x1a))->b0 == 0 && visible != 0)
     {
         objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
-        for (i = 0; i < ((DrshackleState*)p)->unk14; i++)
+        for (i = 0; i < ((DrshackleState*)p)->slotCount; i++)
         {
             int* entry = ((int**)p)[i];
             if (entry != 0)
@@ -201,15 +223,15 @@ void drshackle_update(int obj)
     int sub;
     int j;
     int* list;
-    if (((DrshacklePlacement*)q)->unk1A != 0 && *(void**)p == 0)
+    if (((DrshacklePlacement*)q)->pathObjGroupBase != 0 && *(void**)p == 0)
     {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0)
         {
             sub = *(int*)(*list + 0x4c);
-            for (j = 0; j < ((DrshackleState*)p)->unk14; j++)
+            for (j = 0; j < ((DrshackleState*)p)->slotCount; j++)
             {
-                if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)q)->unk1A + j * 4)
+                if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)q)->pathObjGroupBase + j * 4)
                 {
                     *(int*)(p + j * 4) = *list;
                     (*gObjectTriggerInterface)
@@ -221,7 +243,7 @@ void drshackle_update(int obj)
     }
     if (((BitFlags8*)(p + 0x1a))->b0 != 0)
     {
-        ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)q)->unk1E) == 0);
+        ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)q)->activeGameBit) == 0);
     }
 }
 
