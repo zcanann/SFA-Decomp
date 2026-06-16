@@ -108,19 +108,17 @@ void fn_80194964(int obj, int state, int block)
             for (; (int)triangle < (int)(uint)blockEnd; triangle++)
             {
                 mapBlock = (ushort*)fn_800606DC((int*)block, triangle);
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint) * mapBlock * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 2) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 4) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint)mapBlock[1] * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 6) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 8) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 10) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint)mapBlock[2] * 6);
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0xc) = vtx->x;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0xe) = vtx->y;
-                *(s16*)(*(int*)(state + 0xc) + edgeOffset + 0x10) = vtx->z;
-                edgeOffset += 0x12;
+                edge = edgeOffset;
+                for (blockLayer = 3; blockLayer != 0; blockLayer--)
+                {
+                    vtx = (VertexS16*)(*(int*)(block + 0x58) + (uint) * mapBlock * 6);
+                    *(s16*)(*(int*)(state + 0xc) + edge) = vtx->x;
+                    *(s16*)(*(int*)(state + 0xc) + edge + 2) = vtx->y;
+                    *(s16*)(*(int*)(state + 0xc) + edge + 4) = vtx->z;
+                    edge += 6;
+                    mapBlock++;
+                }
+                edgeOffset = edge;
                 triangleOffset += 0x12;
             }
         }
