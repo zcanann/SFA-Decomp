@@ -1,3 +1,13 @@
+/*
+ * shswaplift / warpstonelift (DLL 0x1AF) - the WarpStone lift platform.
+ *
+ * The platform tracks whether a relevant character is standing in range
+ * (scanning the per-object proximity list), then runs a small state
+ * machine: while a character is present it offers the WarpStone (item /
+ * bit 0xC7C) via the Y-button menu, and once the trigger fires it sets
+ * the progress bits and locks into the "swapped" state. Out of range it
+ * disables its hit volume.
+ */
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(u32 id);
@@ -5,9 +15,9 @@ extern void GameBit_Set(u32 id, u32 value);
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E54C8;
+extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
 
-extern s32 lbl_803DC058[2];
-extern void getYButtonItem(s16 * out);
+extern void getYButtonItem(s16* out);
 extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
@@ -30,13 +40,12 @@ void warpstonelift_initialise(void)
 
 int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_getObjectTypeId(void) { return 0x0; }
-int sh_staff_getExtraSize(void);
 
 void warpstonelift_init(int obj, s8* def)
 {
     int* state = ((GameObject*)obj)->extra;
     int i;
-    *(s16*)obj = (s16)((s32)def[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
     ((GameObject*)obj)->unkF4 = 0;
     for (i = 0; i < 2; i++)
     {
@@ -61,21 +70,21 @@ void warpstonelift_update(u8* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     int off;
-    char* p;
+    char* list;
     int found = 0;
     int count;
     int i;
     s16 item;
 
-    p = *(char**)(obj + 0x58);
-    count = *(s8*)(p + 0x10F);
+    list = *(char**)(obj + 0x58);
+    count = *(s8*)(list + 0x10F);
     if (count > 0)
     {
         off = 0;
         for (i = 0; i < count; i++)
         {
-            char* o = *(char**)(p + off + 0x100);
-            if (((GameObject*)o)->anim.classId == 1)
+            char* other = *(char**)(list + off + 0x100);
+            if (((GameObject*)other)->anim.classId == 1)
             {
                 found = 1;
             }
@@ -84,7 +93,7 @@ void warpstonelift_update(u8* obj)
     }
     if (found)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
         switch (*state)
         {
         case 0:
@@ -120,7 +129,7 @@ void warpstonelift_update(u8* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
     }
 }
 
@@ -129,5 +138,3 @@ void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E54C8);
 }
-
-void sh_staff_free(int* obj, int p2);
