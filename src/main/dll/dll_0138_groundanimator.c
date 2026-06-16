@@ -561,9 +561,9 @@ void groundanimator_update(int* obj)
                         if (*(f32*)((char*)g->falloffBuf + foff) > lbl_803E3FB0)
                         {
                             void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
-                            f32 fv = (f32) * (s16*)((char*)g->heightBuf + hoff);
                             fn_800605F0(cell, &vbuf[1]);
-                            vbuf[0] = fv - (g->lastDepth / lbl_803E3F98) *
+                            vbuf[0] = (f32) * (s16*)((char*)g->heightBuf + hoff) -
+                                (g->lastDepth / lbl_803E3F98) *
                                 *(f32*)((char*)g->falloffBuf + foff);
                             fn_8006058C(cell, &vbuf[1]);
                         }
