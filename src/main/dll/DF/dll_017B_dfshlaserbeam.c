@@ -447,6 +447,7 @@ void DFSH_LaserBeam_initialise(void)
 /*
  * Advances the ambient laser-beam bob, aim, and player proximity alpha.
  */
+#pragma opt_common_subs off
 void fn_801C4664(void* objArg)
 {
     DFSHLaserBeamObject* obj;
@@ -525,6 +526,7 @@ void fn_801C4664(void* objArg)
         obj->alpha = 0xFF;
     }
 }
+#pragma opt_common_subs reset
 
 /*
  * Drives the DragonRock Shrine laser-beam sway controller.
