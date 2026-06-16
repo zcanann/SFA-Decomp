@@ -248,7 +248,7 @@ void lightfoot_update(int obj)
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             Lightfoot_ResetScriptedPosition(obj);
             ((GameObject*)obj)->unkF8 = 0;
-            ((GroundBaddieState*)inner)->flags400 &= ~0x4;
+            ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & 0x800))
