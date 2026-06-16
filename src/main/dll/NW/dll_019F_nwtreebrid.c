@@ -1,3 +1,15 @@
+/*
+ * nwtreebrid (DLL 0x19F) - a path-bound bird object in SnowHorn Wastes
+ * (map 'nwastes', 0x0A).
+ *
+ * On its animation events it emits bursts of particle fx (the burst id
+ * varies with the active sequence and trigger variant). Each frame it
+ * samples a point along its object path and drags a linked target object
+ * to that world position. It runs its trigger sequence either when armed
+ * by an immediate trigger (set once its game bit is found set at init)
+ * or directly once its game bit becomes set, after first locating a
+ * nearby object in object group 4.
+ */
 #include "main/dll/dll_019F_nwtreebrid.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -12,13 +24,23 @@ extern f32 lbl_803E51FC;
 
 typedef struct TreeBirdState
 {
-    s16 gameBit;
-    s16 triggerId;
-    s16 immediateTrigger;
-    u8 triggerLatched;
-    u8 searchDelay;
-    void* targetObj;
+    s16 gameBit;            /* 0x00: game bit that arms / fires the trigger */
+    s16 triggerId;          /* 0x02: which trigger sequence to run */
+    s16 immediateTrigger;   /* 0x04: preempt trigger id, set if already armed */
+    u8 triggerLatched;      /* 0x06: trigger has fired; stop re-firing */
+    u8 searchDelay;         /* 0x07: frames left to keep searching for target */
+    void* targetObj;        /* 0x08: object dragged along the path each frame */
 } TreeBirdState;
+
+typedef struct NwTreeBirdMapData
+{
+    u8 pad00[0x18];
+    s8 rotXByte;            /* 0x18: rotX in 1/256 turns */
+    s8 triggerVariant;      /* 0x19: selects particle / trigger variant */
+    s16 rotY;              /* 0x1A */
+    s16 rotZ;              /* 0x1C */
+    s16 gameBit;            /* 0x1E */
+} NwTreeBirdMapData;
 
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
@@ -170,27 +192,20 @@ void treebird_update(int obj)
     }
 }
 
-#include "main/game_object.h"
-#include "main/objseq.h"
-#include "main/dll/dll_019F_nwtreebrid.h"
-
-
 void treebird_init(int obj, int setup)
 {
     TreeBirdState* state;
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)TreeBird_SeqFn;
-    *(s16*)obj = (s16)((s8) * (u8*)(setup + 0x18) << 8);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1a);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1c);
-    state->triggerId = (s16)(s8) * (u8*)(setup + 0x19);
-    state->gameBit = *(s16*)(setup + 0x1e);
+    ((GameObject*)obj)->anim.rotX = (s16)(((NwTreeBirdMapData*)setup)->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = ((NwTreeBirdMapData*)setup)->rotY;
+    ((GameObject*)obj)->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;
+    state->triggerId = ((NwTreeBirdMapData*)setup)->triggerVariant;
+    state->gameBit = ((NwTreeBirdMapData*)setup)->gameBit;
     if (GameBit_Get((int)state->gameBit) != 0)
     {
         state->immediateTrigger = 0x154;
     }
     state->searchDelay = 4;
 }
-
-char* fn_801CDE70(int* obj);
