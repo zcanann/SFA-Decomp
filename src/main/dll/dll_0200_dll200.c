@@ -432,13 +432,13 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
         }
         break;
     case 0:
-        return 0;
+        break;
     case 2:
-        return 0;
+        break;
     case 3:
-        return 0;
+        break;
     case 5:
-        return 0;
+        break;
     }
     return 0;
 }
