@@ -9562,7 +9562,7 @@ int fn_8029F6E4(int obj, int state)
         }
         ObjAnim_SetCurrentMove(obj, *(s16*)(inner->unk6E8 + 0x2),
                                lbl_803E7EA4, 0);
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7EA4, lbl_803E7EA4, NULL);
+        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7EA4, *(f32*)&lbl_803E7EA4, NULL);
     }
     if ((inner->unk6EC & 0x4) != 0)
     {
