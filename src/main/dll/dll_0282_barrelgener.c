@@ -224,9 +224,11 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
+        s16 angInt;
         d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
+        angInt = (s16)getAngle(d[0], d[2]);
+        ang = lbl_803E6C60 * (f32)(-angInt) / lbl_803E6C64;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -269,9 +271,11 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
+        s16 angInt;
         d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
+        angInt = (s16)getAngle(d[0], d[2]);
+        ang = lbl_803E6C60 * (f32)(-angInt) / lbl_803E6C64;
         ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk28C = scale * -mathCosf(ang);
     }
