@@ -1586,7 +1586,8 @@ void SaveGame_gplayAddTime(int id, f32 time)
         (*(s16*)(base + 0x6ec))++;
     }
     base = gSaveGameData;
-    p = base + i * 8;
+    p = base;
+    p += i * 8;
     *(int*)(p + 0x6f0) = id;
     *(f32*)(p + 0x6f4) = total;
 }

@@ -24,10 +24,9 @@ void sh_staff_free(int* obj, int p2)
 
     if (p2 != 0) return;
 
-    for (idx = 0; idx < 8; idx += 4)
+    for (idx = 0, p = (char*)state; idx < 8; idx += 4, p += 20)
     {
         int* child;
-        p = (char*)state + (idx << 2) + idx;
         child = *(int**)(p + 56);
         if (child != NULL)
         {
