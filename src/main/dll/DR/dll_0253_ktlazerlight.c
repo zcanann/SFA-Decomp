@@ -1,11 +1,21 @@
+/*
+ * ktlazerlight (DLL 0x253) - the point light cast by a SharpClaw laser
+ * fence/wall (see ktlazerwall, DLL 0x252).
+ *
+ * On init it spawns a model light at the placement's position. Each
+ * update tick two placement game bits decide whether the light is on and
+ * how far it reaches: the first bit's value scales the distance falloff
+ * (defaulting to 0x10 when set but zero), the second bit just keeps the
+ * light lit. The light is freed when the object is destroyed.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
 typedef struct KtlazerlightPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
+    s16 onIntensityBit;  /* 0x1A: game bit; value scales distance falloff */
+    s16 onStayLitBit;    /* 0x1C: game bit; keeps the light lit */
     u8 pad1E[0x20 - 0x1E];
 } KtlazerlightPlacement;
 
@@ -32,44 +42,44 @@ void ktlazerlight_render(void)
 
 void ktlazerlight_free(int obj)
 {
-    void* p = ((GameObject*)obj)->extra;
-    void* m = *(void**)((char*)p + 0x4);
-    if (m != 0)
+    void* extra = ((GameObject*)obj)->extra;
+    void* light = *(void**)((char*)extra + 0x4);
+    if (light != 0)
     {
-        ModelLightStruct_free(m);
+        ModelLightStruct_free(light);
     }
 }
 
-void ktlazerlight_init(int obj, char* arg)
+void ktlazerlight_init(int obj, char* placement)
 {
-    char* p = ((GameObject*)obj)->extra;
-    *(void**)(p + 0x4) = objCreateLight(0, 1);
-    if (*(void**)(p + 0x4) != 0)
+    char* extra = ((GameObject*)obj)->extra;
+    *(void**)(extra + 0x4) = objCreateLight(0, 1);
+    if (*(void**)(extra + 0x4) != 0)
     {
-        modelLightStruct_setLightKind(*(void**)(p + 0x4), 2);
-        modelLightStruct_setPosition(*(void**)(p + 0x4), *(f32*)(arg + 0x8), *(f32*)(arg + 0xc), *(f32*)(arg + 0x10));
-        modelLightStruct_setAffectsAabbLightSelection(*(void**)(p + 0x4), 1);
+        modelLightStruct_setLightKind(*(void**)(extra + 0x4), 2);
+        modelLightStruct_setPosition(*(void**)(extra + 0x4), *(f32*)(placement + 0x8), *(f32*)(placement + 0xc), *(f32*)(placement + 0x10));
+        modelLightStruct_setAffectsAabbLightSelection(*(void**)(extra + 0x4), 1);
     }
 }
 
 void ktlazerlight_update(int obj)
 {
-    int q = *(int*)&((GameObject*)obj)->anim.placementData;
-    char* p = ((GameObject*)obj)->extra;
-    s16 v;
-    void* light = *(void**)(p + 0x4);
-    v = (s16)GameBit_Get(((KtlazerlightPlacement*)q)->unk1A);
-    if (v >= 1 || GameBit_Get(((KtlazerlightPlacement*)q)->unk1C) != 0)
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* extra = ((GameObject*)obj)->extra;
+    s16 intensity;
+    void* light = *(void**)(extra + 0x4);
+    intensity = (s16)GameBit_Get(((KtlazerlightPlacement*)placement)->onIntensityBit);
+    if (intensity >= 1 || GameBit_Get(((KtlazerlightPlacement*)placement)->onStayLitBit) != 0)
     {
-        if (v == 0)
+        if (intensity == 0)
         {
-            v = 0x10;
+            intensity = 0x10;
         }
         if (light != 0)
         {
             modelLightStruct_setEnabled(light, 1, lbl_803E68C0);
             modelLightStruct_setDiffuseColor(light, 0x64, 0x6e, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation(*(void**)(p + 0x4), (f32)(v * 0x1a), (f32)(v * 0x1a + 0x14));
+            modelLightStruct_setDistanceAttenuation(*(void**)(extra + 0x4), (f32)(intensity * 0x1a), (f32)(intensity * 0x1a + 0x14));
         }
     }
     else
