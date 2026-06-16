@@ -156,7 +156,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject*)obj)->anim.rotZ = (s32)(lbl_803E2618 * (waveA + waveB));
 
     waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
         lbl_803E2620
@@ -166,7 +166,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject*)obj)->anim.rotY = (s32)(lbl_803E2618 * (waveA + waveB));
 
     accel = lbl_803E2624;
     if ((*flags & 2) != 0)
