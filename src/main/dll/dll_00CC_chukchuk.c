@@ -74,9 +74,9 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     undefined8 msgResult;
 
     zero = lbl_803E3A60;
-    if (*(char*)(state + 0x27b) == '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB == '\0')
     {
-        if (*(char*)(state + 0x346) != '\0')
+        if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
         {
             msgResult = ObjMsg_SendToObjects(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0, 3,
                                          obj, 0xe0000, obj, in_r8, in_r9, in_r10);
@@ -94,9 +94,9 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         *vec = lbl_803E3A60;
         vec[1] = zero;
         (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 6);
-        *(undefined4*)(state + 0x2d0) = 0;
-        *(undefined*)(state + 0x25f) = 0;
-        *(undefined*)(state + 0x349) = 0;
+        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
+        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
+        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         ObjHits_DisableObject(obj);
         *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
             8;
@@ -118,17 +118,17 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     double zeroD;
 
     extra = *(int*)&((GameObject*)obj)->extra;
-    *(undefined*)(state + 0x34d) = 3;
-    *(float*)(state + 0x2a0) = lbl_803E3A64;
+    ((GroundBaddieState*)state)->baddie.unk34D = 3;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3A64;
     zero = lbl_803E3A60;
     zeroD = (double)lbl_803E3A60;
-    *(float*)(state + 0x280) = lbl_803E3A60;
-    *(float*)(state + 0x284) = zero;
-    if (*(char*)(state + 0x27a) != '\0')
+    ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3A60;
+    ((GroundBaddieState*)state)->baddie.animSpeedB = zero;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8(zeroD, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj, 1, 0, param_12,
                      param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if ((*(byte*)(state + 0x356) & 1) == 0)
     {
@@ -378,11 +378,11 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     int extra;
 
     extra = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0xe, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if (lbl_803E3A7C < ((GameObject*)obj)->anim.currentMoveProgress)
     {
@@ -395,14 +395,14 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(float*)(state + 0x2a0) = lbl_803E3A70;
         *(float*)(state + 0x280) = lbl_803E3A60;
     }
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         FUN_80017698((int)*(short*)(extra + 0x3f4), 0);
         FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined4*)(state + 0x2d0) = 0;
-        *(undefined*)(state + 0x25f) = 0;
-        *(undefined*)(state + 0x349) = 0;
+        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
+        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
+        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         *(undefined2*)(extra + 0x402) = 0;
         if ((*(byte*)(light + 9) & 2) == 0)
         {
@@ -465,14 +465,14 @@ FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 para
     if (*(int*)(state + 0x2d0) == 0)
     {
         (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 0);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     else
     {
         (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 1);
         c = lbl_803E3B00;
-        *(float*)(state + 0x290) = lbl_803E3B00;
-        *(float*)(state + 0x28c) = c;
+        ((GroundBaddieState*)state)->baddie.moveInputX = lbl_803E3B00;
+        ((GroundBaddieState*)state)->baddie.moveInputZ = c;
         FUN_80003494(extra + 0x35c, &((GameObject*)obj)->anim.localPosX, 0xc);
         mtx = FUN_80003494(extra + 0x368, *(int*)(state + 0x2d0) + 0xc, 0xc);
         FUN_80006a54(mtx, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
@@ -508,7 +508,7 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     undefined4 result;
     ObjHitsPriorityState* hitState;
 
-    if (*(char*)(state + 0x27b) == '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB == '\0')
     {
         player = FUN_80017a98();
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player, 0xe0000,
@@ -526,9 +526,9 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     else
     {
         (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 3);
-        *(undefined4*)(state + 0x2d0) = 0;
-        *(undefined*)(state + 0x25f) = 0;
-        *(undefined*)(state + 0x349) = 0;
+        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
+        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
+        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
@@ -547,18 +547,18 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 animId;
 
     animId = *(undefined4*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(undefined*)(state + 0x25f) = 1;
-    *(undefined2*)&((GameObject*)obj)->anim.rotZ = *(undefined2*)(state + 0x19e);
-    *(undefined2*)&((GameObject*)obj)->anim.rotY = *(undefined2*)(state + 0x19c);
+    ((GroundBaddieState*)state)->baddie.physicsActive = 1;
+    *(undefined2*)&((GameObject*)obj)->anim.rotZ = *(undefined2*)&((GroundBaddieState*)state)->baddie.spawnRotZ;
+    *(undefined2*)&((GameObject*)obj)->anim.rotY = *(undefined2*)&((GroundBaddieState*)state)->baddie.spawnRotY;
     (**(code**)(*DAT_803dd738 + 0x10))
         ((double)lbl_803E3B24, (double)lbl_803E3B28, obj, state, animId);
-    *(float*)(state + 0x2a0) = lbl_803E3B2C * *(float*)(state + 0x280);
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B2C * ((GroundBaddieState*)state)->baddie.animSpeedA;
     return 0;
 }
 
@@ -588,12 +588,12 @@ FUN_801615d4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     undefined4 result;
 
-    if (*(char*)(state + 0x27b) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB != '\0')
     {
         (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 8);
-        *(undefined4*)(state + 0x2d0) = 0;
-        *(undefined*)(state + 0x25f) = 0;
-        *(undefined*)(state + 0x349) = 0;
+        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
+        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
+        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         param_1 = ObjHits_DisableObject(obj);
         *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
             8;
@@ -626,13 +626,13 @@ FUN_80161c08(undefined8 param_1, double param_2, double param_3, undefined8 para
     int extra;
 
     extra = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(float*)(state + 0x2a0) = lbl_803E3B80;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B80;
     if ((*(uint*)(state + 0x314) & 0x200) != 0)
     {
         FUN_80006824(obj, SFXdoor_creak);
@@ -670,20 +670,20 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     roll = randomGetRange(0, 100);
     if ((int)roll < 0x32)
     {
-        if (*(char*)(state + 0x27a) != '\0')
+        if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
         {
             FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          obj, 1, 0, param_12, param_13, param_14, param_15, param_16);
-            *(undefined*)(state + 0x346) = 0;
+            ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
     }
-    else if (*(char*)(state + 0x27a) != '\0')
+    else if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 4, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(float*)(state + 0x2a0) = lbl_803E3B88;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B88;
     (**(code**)(*DAT_803dd70c + 0x20))(param_1, obj, state, 1);
     flip = *(char*)(light + 0x45) * -2 + 1U ^ 0x80000000;
     bZ[1] = 176.0;
@@ -717,7 +717,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     aX = (float)dist;
     angleStep = FUN_80017730();
     ((GameObject*)obj)->anim.rotY = (short)angleStep * ((short)((int)*(char*)(light + 0x45) << 1) + -1);
-    if (*(char*)(state + 0x346) == '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone == '\0')
     {
         result = 0;
     }
