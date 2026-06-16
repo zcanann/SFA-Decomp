@@ -353,7 +353,13 @@ int fn_8017DCD4(int p, int state, f32 y)
                     nb = -b;
                     r = (nb - q) / t;
                     r2 = (nb + q) / t;
-                    r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
+                    if (r > *(f32*)&lbl_803E37D4)
+                    {
+                    }
+                    else
+                    {
+                        r = r2;
+                    }
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
                 ((AppleOnTreeState*)state)->unk2C = ((AppleOnTreeState*)state)->unk2C - ((AppleOnTreeState*)state)->
@@ -409,7 +415,13 @@ int fn_8017DCD4(int p, int state, f32 y)
                     nb = -b;
                     r = (nb - q) / t;
                     r2 = (nb + q) / t;
-                    r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
+                    if (r > *(f32*)&lbl_803E37D4)
+                    {
+                    }
+                    else
+                    {
+                        r = r2;
+                    }
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
                 ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->unk2C;
