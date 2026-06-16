@@ -66,12 +66,12 @@ void nw_levcontrol_update(int objArg)
         }
     }
     mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (mode != '\x01')
+    if (mode != 1)
     {
         (*gMapEventInterface)->setMapAct((int)((GameObject*)obj)->anim.mapEventSlot, 1);
     }
     mode = (*gMapEventInterface)->getMapAct(7);
-    if (mode == '\x01')
+    if (mode == 1)
     {
         (*gMapEventInterface)->setMapAct(7, 2);
         GameBit_Set(0xf22, 1);
@@ -117,7 +117,7 @@ void nw_levcontrol_update(int objArg)
     SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, (int*)0xaf);
     bitVal = GameBit_Get(0x398);
     if ((bitVal != 0) &&
-        (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == '\0')
+        (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == 0)
     )
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
@@ -188,8 +188,8 @@ void nw_levcontrol_update(int objArg)
                 }
                 else if ((bitVal2 & 4) != 0)
                 {
-                    *((uint*)state + 2) = bitVal2 & 0xfffffffd;
-                    *((uint*)state + 2) = *((uint*)state + 2) & 0xfffffffb;
+                    *((uint*)state + 2) = bitVal2 & ~2;
+                    *((uint*)state + 2) = *((uint*)state + 2) & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
                     GameBit_Set(0x19f, 1);
@@ -221,8 +221,6 @@ void nw_levcontrol_update(int objArg)
     }
     return;
 }
-
-int sh_tricky_getExtraSize(void);
 
 void nw_levcontrol_init(int* obj)
 {
