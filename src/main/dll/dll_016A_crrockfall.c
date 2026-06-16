@@ -442,7 +442,7 @@ void crrockfall_update(int* obj)
             {
                 frac = lbl_803E46E8;
             }
-            height = lbl_803E4708 - frac;
+            height = (*(f32*)&lbl_803E4708) - frac;
             player = (int*)Obj_GetPlayerObject();
             if (player != NULL)
             {
