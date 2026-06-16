@@ -961,6 +961,7 @@ int fn_802A36EC(int obj, int state)
 int fn_802A3B04(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
+    int flagsBase;
     f32 fz;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -988,8 +989,9 @@ int fn_802A3B04(int obj, int state)
     }
     fz = lbl_803E7EA4;
     ((PlayerState*)inner)->unk778 = fz;
-    *(u32*)((char*)((GameObject*)obj)->extra + 0x360) &= ~2LL;
-    *(u32*)((char*)inner + 0x360) |= 0x2000LL;
+    flagsBase = *(int*)&((GameObject*)obj)->extra;
+    *(u32*)((char*)flagsBase + 0x360) &= ~2LL;
+    *(u32*)((char*)flagsBase + 0x360) |= 0x2000LL;
     *(int*)((char*)state + 4) |= 0x100000;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
     ((PlayerState*)state)->baddie.animSpeedB = fz;
