@@ -506,10 +506,7 @@ void warpstone_update(int obj)
         yawDelta = yawDelta - lbl_803DDBF0;
         {
             int mag = yawDelta - 0x8000;
-            if (mag < 0)
-            {
-                mag = -mag;
-            }
+            mag = (mag >= 0) ? mag : -mag;
             if (mag > 0x18e3)
         {
             if (yawDelta > 0)
