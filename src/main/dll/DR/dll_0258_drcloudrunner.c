@@ -67,6 +67,15 @@ STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBB4) == 0xBB4);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBC4) == 0xBC4);
 STATIC_ASSERT(sizeof(DRCloudRunnerState) == 0xBC8);
 
+typedef struct
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3x;
+
+#define CLOUDRUNNER_ONCLOUD_GAMEBIT 0xed7 /* set while mounted/on cloudrunner */
+
 int DR_CloudRunner_defaultStateHandler(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void)
@@ -338,11 +347,11 @@ void DR_CloudRunner_func17(int obj, int param)
     }
     if (param == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
-        GameBit_Set(0xed7, 1);
+        GameBit_Set(CLOUDRUNNER_ONCLOUD_GAMEBIT, 1);
     }
     else
     {
-        GameBit_Set(0xed7, 0);
+        GameBit_Set(CLOUDRUNNER_ONCLOUD_GAMEBIT, 0);
     }
 }
 
@@ -433,18 +442,11 @@ void DR_CloudRunner_init(int obj, int p2)
     ((ByteFlags*)((char*)inner + 0xbc0))->b01 = 0;
 }
 
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} Vec3x;
-
 int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {
     u8* base = (u8*)lbl_803356F0;
     u32 idx;
-    int flag = 0;
+    int needMove = 0;
     CloudRunnerState * inner;
     int moveId;
     struct
@@ -480,7 +482,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     {
         ((ByteFlags*)&inner->flagsBC0)->b80 = 0;
         ((ByteFlags*)&inner->flagsBC0)->b08 = 0;
-        flag = 1;
+        needMove = 1;
     }
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(s8*)&((CloudRunnerState*)p2)->baddie.moveJustStartedA != 0)
@@ -503,7 +505,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
             ((GameObject*)obj)->anim.velocityY = fz;
             ((GameObject*)obj)->anim.velocityZ = fz;
         }
-        flag = 1;
+        needMove = 1;
         ((ByteFlags*)&inner->flagsBC0)->b80 = 1;
         inner->lastPosX = ((GameObject*)obj)->anim.localPosX;
         inner->lastPosY = ((GameObject*)obj)->anim.localPosY;
@@ -704,7 +706,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         Sfx_PlayFromObject(obj, 0x11d);
         ((ByteFlags*)&inner->flagsBC0)->b80 = 1;
         speed = lbl_803E83A4;
-        flag = 1;
+        needMove = 1;
     }
     if (*(int*)((char*)p2 + 0) & 0x400000)
     {
@@ -762,10 +764,10 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         moveId = 0x20d;
         animSpd = lbl_803E83F0;
         ((ByteFlags*)&inner->flagsBC0)->b08 = 1;
-        flag = 1;
+        needMove = 1;
         speed = lbl_803E83A4;
     }
-    if (flag != 0)
+    if (needMove != 0)
     {
         if (moveId == -1)
         {
@@ -1070,7 +1072,7 @@ void DR_CloudRunner_update(int obj)
     Obj_GetPlayerObject();
     inner = ((GameObject*)obj)->extra;
     inner->unkBAE = 5;
-    fn_80137948(sOnCloudFormat, GameBit_Get(0xed7));
+    fn_80137948(sOnCloudFormat, GameBit_Get(CLOUDRUNNER_ONCLOUD_GAMEBIT));
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
