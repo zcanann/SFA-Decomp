@@ -1,3 +1,22 @@
+/*
+ * moveLib (DLL 0x2E) - shared movement helpers for baddie/object DLLs.
+ * Exports (dll_2E_func*) drive scripted curve traversal and homing:
+ *   - func05/06/09 prime and refresh a movement-state block laid out at
+ *     state+0x1c.. (path-relative start offset, blend factors, anim
+ *     channel tables) keyed off the per-object curve point;
+ *   - func0A/0B/0C resolve a ROM curve point into a position + packed
+ *     facing angle, optionally aiming at the nearest group-8 object;
+ *   - func0D homes an object toward a target at a given speed, snapping
+ *     when close and easing the yaw, pacing a walk move;
+ *   - func0E advances the object along its movement curve, snapping to
+ *     ground and easing yaw toward the path direction;
+ *   - func03/07 + objAnimFn_80115650 run the object-sequence scripted
+ *     move steps (movementState 4 arms, 5 walks the sub-phases at
+ *     state+0x600) and the turn/lead-anim arbitration.
+ * func0F_ret_0/release_nop/initialise_nop are object-descriptor stubs.
+ * The persistent movement-state byte fields live at state+0x600 (phase),
+ * +0x601 (needs-reinit), +0x610 (point count), +0x611 (mode bits).
+ */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -6,19 +25,8 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/FRONT/POST.h"
 
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_80017748();
 extern int ObjGroup_FindNearestObjectToPoint();
-extern void* FUN_80039518();
-extern undefined4 FUN_8003a9c8();
-extern undefined4 FUN_8003ac24();
-extern undefined8 FUN_8003ad08();
 extern int objAnimFn_80115650();
-
-extern f32 lbl_803E290C;
-extern f32 lbl_803E2910;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E294C;
 
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
@@ -50,9 +58,6 @@ extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern f32 sqrtf(f32 value);
 extern f32 lbl_803E1CA4;
 extern f32 lbl_803E1CD0;
 extern f32 lbl_803E1CD4;
@@ -60,13 +65,8 @@ extern f32 lbl_803E1CD8;
 extern f32 lbl_803E1CDC;
 extern f32 lbl_803E1CE0;
 
-void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
-{
-}
-
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {
-    extern f32 lbl_803E1C90;
     f32 prev_x, prev_y, prev_z;
     f32 cur_x, cur_y, cur_z;
     f32 dx, dy, dz;
@@ -118,10 +118,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 {
     extern void vecRotateYXZ(int, int);
     extern f32 fn_80114224(int, int, int, int, int);
-    extern u8 framesThisStep;
-    extern f32 lbl_803E1C90;
     extern f32 lbl_803E1CA0;
-    extern f32 lbl_803E1CA4;
     int ret = 0;
 
     if ((void*)p2 != NULL)
@@ -147,7 +144,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     {
         *(f32*)p4 = *(f32*)p4 + p5 * (f32)(u32)
         framesThisStep / *(f32*)(p3 + 0x34);
-        if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4)
+        if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4) /* #81 launder: flips the reload FP reg pair */
         {
             ret = 1;
             *(f32*)p4 = lbl_803E1CA4;
@@ -175,98 +172,19 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     return ret;
 }
 
-void FUN_801149b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, float* param_11, short param_12,
-                  undefined2 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+void FUN_801149b8(u64 param_1, double param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9, u32 param_10, float* param_11, short param_12,
+                  u16 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
 }
-
-#pragma scheduling on
-#pragma peephole on
-void FUN_801149bc(short* param_1, int param_2, int param_3)
-{
-    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
-    float blendScale;
-    float blendWeight;
-    uint* seqHandle;
-    ushort negRotZ;
-    short negRotY;
-    short negRotX;
-    float p0x;
-    undefined4 p0y;
-    float p0z;
-    float p1x;
-    undefined4 p1y;
-    float p1z[4];
-
-    if (*(char*)(param_2 + 0x601) != '\0')
-    {
-        seqHandle = FUN_80039518();
-        FUN_8003ac24((int)param_1, seqHandle, (uint) * (byte*)(param_2 + 0x610));
-        ObjPath_GetPointWorldPosition(param_1, param_3, &p0x, &p0y, &p0z, 0);
-        ObjPath_GetPointWorldPosition(param_1, param_3 + 1, &p1x, &p1y, p1z, 0);
-        blendWeight = lbl_803E294C;
-        blendScale = lbl_803E2948;
-        *(float*)(param_2 + 4) = (lbl_803E2948 * p0x + p1x) * lbl_803E294C;
-        *(undefined4*)(param_2 + 8) = p0y;
-        *(float*)(param_2 + 0xc) = (blendScale * p0z + p1z[0]) * blendWeight;
-        *(float*)(param_2 + 4) = *(float*)(param_2 + 4) - ((GameObject*)param_1)->anim.localPosX;
-        *(float*)(param_2 + 8) = *(float*)(param_2 + 8) - ((GameObject*)param_1)->anim.localPosY;
-        *(float*)(param_2 + 0xc) = *(float*)(param_2 + 0xc) - ((GameObject*)param_1)->anim.localPosZ;
-        negRotZ = -((GameObject*)param_1)->anim.rotZ;
-        negRotY = -((GameObject*)param_1)->anim.rotY;
-        negRotX = -((GameObject*)param_1)->anim.rotX;
-        FUN_80017748(&negRotZ, (float*)(param_2 + 4));
-        *(u8*)(param_2 + 0x601) = 0;
-    }
-    ObjPath_GetPointWorldPosition(param_1, param_3, &p0x, &p0y, &p0z, 0);
-    *(float*)(param_2 + 0x10) = p0x;
-    *(undefined4*)(param_2 + 0x14) = p0y;
-    *(float*)(param_2 + 0x18) = p0z;
-    return;
-}
-
-void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefined2 param_4, int param_5)
-{
-    float initVal;
-    uint* seqHandle;
-
-    *(undefined2*)(param_2 + 0x183) = param_3;
-    *(undefined2*)((int)param_2 + 0x60e) = param_4;
-    *(char*)(param_2 + 0x184) = (char)param_5;
-    param_2[0x17f] = 0;
-    initVal = lbl_803E2910;
-    *param_2 = lbl_803E2910;
-    param_2[0x17e] = 0;
-    param_2[0x181] = 0;
-    param_2[0x182] = 0;
-    param_2[0x185] = lbl_803E290C;
-    *(u8*)(param_2 + 0x180) = 0;
-    *(u8*)((int)param_2 + 0x601) = 1;
-    param_2[1] = initVal;
-    param_2[2] = initVal;
-    param_2[3] = initVal;
-    param_2[0x186] = 0xffffffff;
-    seqHandle = FUN_80039518();
-    FUN_8003ac24(param_1, seqHandle, param_5);
-    seqHandle = FUN_80039518();
-    FUN_8003ad08(param_1, seqHandle, param_5, (int)(param_2 + 7));
-    FUN_8003a9c8((int)(param_2 + 7), (uint) * (byte*)(param_2 + 0x184), 0, 0);
-    FUN_80003494((uint)(param_2 + 0x16f), 0x8031ad30, (uint) * (byte*)(param_2 + 0x184) << 1);
-    FUN_80003494((int)param_2 + 0x5da, 0x8031ad30, (uint) * (byte*)(param_2 + 0x184) << 1);
-    return;
-}
-
-void dll_19_func04_nop(void);
 
 int dll_2E_func0F_ret_0(void) { return 0x0; }
-
-f32 dll_19_func0B(int* obj);
 
 void fn_80113F94(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int* p, int v) { *(int*)((char*)p + 0x608) = v; }
 
+/* #1: global scheduling/peephole off for the remainder of the TU. */
 #pragma scheduling off
 #pragma peephole off
 void dll_2E_func08(int obj, int v1, int v2)
@@ -275,8 +193,6 @@ void dll_2E_func08(int obj, int v1, int v2)
     *(int*)(obj + 0x61c) = v2;
     *(int*)(obj + 0x620) = v1;
 }
-
-u16 dll_19_func0A(int obj);
 
 void dll_2E_func09(int obj, void* src1, void* src2)
 {
@@ -410,7 +326,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 void dll_2E_func06(int obj, char* st, int point)
 {
     extern void* seqFn_800394a0(void); /* #57 */
-    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
+    extern int ObjPath_GetPointWorldPosition(int obj, int point, f32* x, f32* y, f32* z, int flags); /* #57 */
     extern void fn_8003AC14(int obj, void* types, int count); /* #57 */
     struct
     {
@@ -690,29 +606,29 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-static uint projGetLockTarget(int state, ushort* obj, ProjNearSearch* sv)
+static u32 projGetLockTarget(int state, u16* obj, ProjNearSearch* sv)
 {
-    uint t = *(uint*)(state + 0x608);
+    u32 t = *(u32*)(state + 0x608);
     if (t != 0) return t;
     return ObjGroup_FindNearestObject(8, obj, sv);
 }
 
-void dll_2E_func03(ushort* obj, int state, undefined4 unused)
+void dll_2E_func03(u16* obj, int state, int unused)
 {
     extern int fn_8003A8B4(); /* #57 */
-    extern undefined4 objMathFn_8003a380(ushort* obj, uint target, float* pos, int pathState, short* turnState, float targetYaw, int mode, short yawLimit); /* #57 */
-    extern undefined4 fn_80038F1C(int a, int b); /* #57 */
+    extern int objMathFn_8003a380(u16* obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw, int mode, short yawLimit); /* #57 */
+    extern int fn_80038F1C(int a, int b); /* #57 */
     extern void* seqFn_800394a0(); /* #57 */
-    extern undefined4 objFn_8003acfc(); /* #57 */
-    extern undefined4 fn_8003AC14(); /* #57 */
-    extern undefined4 fn_8003A9C0(); /* #57 */
-    extern undefined4 Obj_GetPlayerObject(); /* #57 */
+    extern int objFn_8003acfc(); /* #57 */
+    extern int fn_8003AC14(); /* #57 */
+    extern int fn_8003A9C0(); /* #57 */
+    extern int Obj_GetPlayerObject(void); /* #57 */
     register int yawDelta;
     register int seqHandle;
-    register uint target;
+    register u32 target;
     int bit1;
     int ival;
-    uint hitReact;
+    u32 hitReact;
     float dist;
     float blendA;
     float blendB;
@@ -725,50 +641,50 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
     targetYaw = lbl_803E1CD0;
     yawDelta = 0;
     seqHandle = (int)seqFn_800394a0();
-    Obj_GetPlayerObject();
+    (void)Obj_GetPlayerObject();
     if (*(u8*)(state + 0x601) == 0)
     {
         bit1 = *(u8*)(state + 0x611) & 1;
         if (bit1 != 0 && *(u8*)(state + 0x600) != 8)
         {
             *(u8*)(state + 0x600) = 8;
-            if ((*(byte*)(state + 0x611) & 8) == 0)
+            if ((*(u8*)(state + 0x611) & 8) == 0)
             {
-                objFn_8003acfc((int)obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
-                *(undefined4*)(state + 0x5f8) = 0x50;
-                fn_8003A9C0(state + 0x1c, (uint) * (byte*)(state + 0x610), 0, 0);
+                objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
+                *(u32*)(state + 0x5f8) = 0x50;
+                fn_8003A9C0(state + 0x1c, (u32) * (u8*)(state + 0x610), 0, 0);
             }
             else
             {
-                fn_8003AC14((int)obj, seqFn_800394a0(), (uint) * (byte*)(state + 0x610));
+                fn_8003AC14((int)obj, seqFn_800394a0(), (u32) * (u8*)(state + 0x610));
             }
         }
         else if (bit1 == 0 && *(u8*)(state + 0x600) == 8)
         {
             *(u8*)(state + 0x600) = 0;
-            if ((*(byte*)(state + 0x611) & 8) == 0)
+            if ((*(u8*)(state + 0x611) & 8) == 0)
             {
-                objFn_8003acfc((int)obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
-                *(undefined4*)(state + 0x5f8) = 0x50;
+                objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
+                *(u32*)(state + 0x5f8) = 0x50;
             }
         }
         if (*(u8*)(state + 0x600) > 1)
         {
-            if (*(int*)(state + 0x5f8) != 0 && (*(byte*)(state + 0x611) & 8) == 0)
+            if (*(int*)(state + 0x5f8) != 0 && (*(u8*)(state + 0x611) & 8) == 0)
             {
-                *(uint*)(state + 0x5f8) =
-                    !fn_8003A8B4(obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
+                *(u32*)(state + 0x5f8) =
+                    !fn_8003A8B4(obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
             }
             else
             {
-                fn_8003AC14((int)obj, seqFn_800394a0(), (uint) * (byte*)(state + 0x610));
+                fn_8003AC14((int)obj, seqFn_800394a0(), (u32) * (u8*)(state + 0x610));
             }
         }
         else
         {
             if ((target = projGetLockTarget(state, obj, &sv)) != 0)
             {
-                if ((*(byte*)(state + 0x611) & 0x20) != 0)
+                if ((*(u8*)(state + 0x611) & 0x20) != 0)
                 {
                     sv.dx = *(float*)(state + 0x10) - ((GameObject*)target)->anim.localPosX;
                     sv.dy = *(float*)(state + 0x14) - ((GameObject*)target)->anim.localPosY;
@@ -790,44 +706,44 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                             *(float*)(state + 0x18) * blendA + ((GameObject*)obj)->anim.localPosZ * blendB;
                     }
                 }
-                if ((*(int*)(state + 0x618) != -1) && (target == *(uint*)(state + 0x604)))
+                if ((*(int*)(state + 0x618) != -1) && (target == *(u32*)(state + 0x604)))
                 {
-                    ival = -(uint)framesThisStep + *(int*)(state + 0x620);
+                    ival = -(u32)framesThisStep + *(int*)(state + 0x620);
                     *(int*)(state + 0x620) = ival;
-                    if ((ival <= 0) && (0 < (int)(*(int*)(state + 0x620) + (uint)framesThisStep)))
+                    if ((ival <= 0) && (0 < (int)(*(int*)(state + 0x620) + (u32)framesThisStep)))
                     {
-                        objFn_8003acfc((int)obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
-                        *(undefined4*)(state + 0x5f8) = 0x50;
-                        fn_8003A9C0(state + 0x1c, (uint) * (byte*)(state + 0x610), 0, 0);
-                        *(undefined*)(state + 0x600) = 0;
-                        goto LAB_801158cc;
+                        objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
+                        *(u32*)(state + 0x5f8) = 0x50;
+                        fn_8003A9C0(state + 0x1c, (u32) * (u8*)(state + 0x610), 0, 0);
+                        *(u8*)(state + 0x600) = 0;
+                        return;
                     }
                     if (*(int*)(state + 0x5f8) != 0)
                     {
-                        *(uint*)(state + 0x5f8) =
-                            !fn_8003A8B4(obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
+                        *(u32*)(state + 0x5f8) =
+                            !fn_8003A8B4(obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
                     }
                     if (*(int*)(state + 0x620) < -*(int*)(state + 0x61c))
                     {
-                        *(uint*)(state + 0x620) =
+                        *(u32*)(state + 0x620) =
                             randomGetRange(*(int*)(state + 0x61c), *(int*)(state + 0x618));
                     }
-                    if (*(int*)(state + 0x620) < 0) goto LAB_801158cc;
+                    if (*(int*)(state + 0x620) < 0) return;
                 }
                 else
                 {
                     *(int*)(state + 0x620) = *(int*)(state + 0x618);
                 }
-                if ((target != *(uint*)(state + 0x604)) && (target != 0))
+                if ((target != *(u32*)(state + 0x604)) && (target != 0))
                 {
-                    hitReact = (uint)((GameObject*)target)->anim.hitReactState;
+                    hitReact = (u32)((GameObject*)target)->anim.hitReactState;
                     if (hitReact != 0)
                     {
-                        if ((*(byte*)(hitReact + 0x62) & 2) != 0)
+                        if ((*(u8*)(hitReact + 0x62) & 2) != 0)
                         {
                             targetYaw = lbl_803E1CDC * (float)(int)*(short*)(hitReact + 0x5e);
                         }
-                        else if ((*(byte*)(hitReact + 0x62) & 1) != 0)
+                        else if ((*(u8*)(hitReact + 0x62) & 1) != 0)
                         {
                             targetYaw = (float)(int)*(short*)(hitReact + 0x5a);
                         }
@@ -843,9 +759,9 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                 }
                 if (target != 0)
                 {
-                    yawDelta = Obj_GetYawDeltaToObject(obj, target, (float*)0x0);
+                    yawDelta = Obj_GetYawDeltaToObject(obj, target, NULL);
                 }
-                if ((*(byte*)(state + 0x611) & 0x10) != 0)
+                if ((*(u8*)(state + 0x611) & 0x10) != 0)
                 {
                     fn_80038F1C(0, 1);
                     yawDelta = yawDelta + -0x8000;
@@ -856,56 +772,44 @@ void dll_2E_func03(ushort* obj, int state, undefined4 unused)
                     (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) > *(float*)(state + 0x614)))
                 {
                     if ((*(u8*)(state + 0x600) != 0) ||
-                        ((target == 0 && (*(uint*)(state + 0x604) != 0))))
+                        ((target == 0 && (*(u32*)(state + 0x604) != 0))))
                     {
-                        objFn_8003acfc((int)obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
-                        *(undefined4*)(state + 0x5f8) = 10;
-                        fn_8003A9C0(state + 0x1c, (uint) * (byte*)(state + 0x610), 0, 0);
-                        *(undefined*)(state + 0x600) = 0;
+                        objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
+                        *(u32*)(state + 0x5f8) = 10;
+                        fn_8003A9C0(state + 0x1c, (u32) * (u8*)(state + 0x610), 0, 0);
+                        *(u8*)(state + 0x600) = 0;
                     }
                 }
                 else
                 {
-                    if ((target != *(uint*)(state + 0x604)) || (*(u8*)(state + 0x600) == 0))
+                    if ((target != *(u32*)(state + 0x604)) || (*(u8*)(state + 0x600) == 0))
                     {
-                        objFn_8003acfc((int)obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
-                        *(undefined4*)(state + 0x5f8) = 1;
+                        objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
+                        *(u32*)(state + 0x5f8) = 1;
                     }
-                    if ((*(byte*)(state + 0x611) & 8) != 0)
+                    if ((*(u8*)(state + 0x611) & 8) != 0)
                     {
-                        *(undefined4*)(state + 0x5f8) = 0;
+                        *(u32*)(state + 0x5f8) = 0;
                     }
                     objMathFn_8003a380(obj, target, (float*)(state + 0x10),
                                        (*(int*)(state + 0x5f8) != 0) ? state + 0x1c : 0,
                                        (short*)(state + 0x5bc), targetYaw, 8,
                                        *(short*)(state + 0x60c));
-                    *(undefined*)(state + 0x600) = 1;
+                    *(u8*)(state + 0x600) = 1;
                 }
-                *(uint*)(state + 0x604) = target;
+                *(u32*)(state + 0x604) = target;
                 if (*(int*)(state + 0x5f8) == 0)
                 {
-                    *(undefined4*)(state + 0x608) = 0;
+                    *(u32*)(state + 0x608) = 0;
                 }
-                if (((*(byte*)(state + 0x611) & 8) == 0) && (*(int*)(state + 0x5f8) != 0))
+                if (((*(u8*)(state + 0x611) & 8) == 0) && (*(int*)(state + 0x5f8) != 0))
                 {
-                    *(uint*)(state + 0x5f8) =
-                        !fn_8003A8B4(obj, seqHandle, (uint) * (byte*)(state + 0x610), state + 0x1c);
+                    *(u32*)(state + 0x5f8) =
+                        !fn_8003A8B4(obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
                 }
             }
         }
     }
-LAB_801158cc:
-    return;
-}
-
-void FUN_801150ac(void)
-{
-    undefined8 ctx;
-
-    ctx = FUN_80286840();
-    dll_2E_func03((ushort*)((ulonglong)ctx >> 0x20), (int)ctx, 0);
-    FUN_8028688c();
-    return;
 }
 
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning,
@@ -919,7 +823,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     PostMotionTarget* motion;
     s16 hitResult;
     int turnAmount;
-    uint ret;
+    u32 ret;
     double distance;
     void* secondary;
 
@@ -944,7 +848,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         distance = (double)lbl_803E1CD0;
     }
 
-    yawDelta = Obj_GetYawDeltaToObject((ushort*)objAnim, (int)obj, (float*)0);
+    yawDelta = Obj_GetYawDeltaToObject((u16*)objAnim, (int)obj, NULL);
     if ((control->flags & 0x10) != 0)
     {
         fn_80038F1C(0, 1);
@@ -956,7 +860,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
                                    control->events, distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
-        control->blocked = (uint)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim,
+        control->blocked = (u32)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim,
                                                       control->secondary)) >> 5;
     }
     control->blocked = 0;
@@ -974,7 +878,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         {
             *turnSpeed = lbl_803E1CC4;
             *turning = 0;
-            return (uint)__cntlzw((int)hitResult) >> 5;
+            return (u32)__cntlzw((int)hitResult) >> 5;
         }
     }
 
@@ -1026,7 +930,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         }
 
         objAnim->yaw += yawDelta;
-        ret = (uint)(s16)yawDelta;
+        ret = (u32)(s16)yawDelta;
         if ((int)ret < 0)
         {
             ret = -ret;
