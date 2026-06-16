@@ -1,3 +1,21 @@
+/*
+ * dll_0257_drearthwarrior - the EarthWarrior, a large rideable creature
+ * (DLL 0x257, object type 0x43). Once tamed it can be mounted and steered:
+ * while ridden (sub.unk98E == 2) DR_EarthWarrior_update feeds player stick
+ * and button input into the shared BaddieState (fn_802BE6E8) and drives an
+ * on-screen air/stamina meter (gGameUIInterface air-meter calls); otherwise
+ * the movement inputs are zeroed and it idles.
+ *
+ * Per-object data lives in the extra block (DR_EarthWarrior_getExtraSize ==
+ * 0x14fc, EarthWarriorState); its combat/locomotion sub-block hangs off
+ * state+0xb58 (EarthWarriorSub). Behavior runs through a 4-entry state
+ * handler table (DR_EarthWarrior_stateHandler00..03, installed by
+ * DR_EarthWarrior_initialise) dispatched from fn_802BE6E8 via
+ * gPlayerInterface, plus the animEventCallback fn_802BDBE8 which translates
+ * animation events into hit-shape and path-control updates. fn_802BCA10
+ * drives the head/neck look-at bone angles; a tail sim model chain
+ * (tailSimHandle) trails the body.
+ */
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -317,8 +335,7 @@ int DR_EarthWarrior_func14(int obj)
 void DR_EarthWarrior_func18(int obj, f32* a, int* b)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    *a = (f32)(s32)
-    inner->sub.unk4D4;
+    *a = (f32)(s32)inner->sub.unk4D4;
     *b = inner->sub.unk4D6;
 }
 
@@ -548,10 +565,8 @@ void fn_802BE6E8(int obj, int t, int p3)
     *(int*)((char*)inner + 0) &= ~0x8000;
     if (*(u8*)((char*)inner + 0x14e6) == 2)
     {
-        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)
-        padGetStickX(0);
-        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)(s8)
-        padGetStickY(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)padGetStickX(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk31C = getButtonsJustPressed(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk318 = getButtonsHeld(0);
         ((EarthWarriorState*)inner)->baddie.cameraYaw = *(s16*)slot;
@@ -1221,12 +1236,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                     GameObject*)obj)->anim.previousWorldPosX);
                 ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject*)obj)->anim.worldPosZ - ((
                     GameObject*)obj)->anim.previousWorldPosZ);
-                vcos = mathSinf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320
-                )
-                ;
-                vsin = mathCosf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320
-                )
-                ;
+                vcos = mathSinf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320);
+                vsin = mathCosf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320);
                 inner->baddie.animSpeedA = -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.
                     velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
