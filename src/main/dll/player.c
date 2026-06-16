@@ -12911,7 +12911,6 @@ void fn_802AF7F8(int obj, int state)
 {
     int inner;
     u8 result;
-    int r35c;
     void** p;
     int i;
     int v;
@@ -12997,15 +12996,18 @@ void fn_802AF7F8(int obj, int state)
         ((PlayerState*)state)->unk854 = ((PlayerState*)state)->unk854 - timeDelta;
         if (((PlayerState*)state)->unk854 <= lbl_803E7EA4)
         {
-            r35c = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
-            v = *(s16*)((char*)r35c + 4);
-            if (v < 0)
+            int r35c = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
+            if (*(s16*)((char*)r35c + 4) < 0)
             {
                 v = 0;
             }
-            else if (v > *(s16*)((char*)r35c + 6))
+            else if (*(s16*)((char*)r35c + 4) > *(s16*)((char*)r35c + 6))
             {
                 v = *(s16*)((char*)r35c + 6);
+            }
+            else
+            {
+                v = *(s16*)((char*)r35c + 4);
             }
             *(s16*)((char*)r35c + 4) = v;
             ((PlayerState*)state)->unk854 = lbl_803E7EDC;
@@ -13019,12 +13021,11 @@ void fn_802AF7F8(int obj, int state)
             p = lbl_80332ED4;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (p[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)p[i]);
+                    p[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
