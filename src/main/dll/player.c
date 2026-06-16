@@ -13135,7 +13135,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
         {
             if (inner->unk8AB < inner->unk8AC)
             {
-                *p6 = *p7 = lbl_803E7EA4;
+                *p7 = *p6 = lbl_803E7EA4;
             }
         }
         if ((*(u8*)((inner->moveSlots + 0x88) +
