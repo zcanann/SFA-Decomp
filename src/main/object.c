@@ -1762,7 +1762,7 @@ void Obj_UpdateObject(u8* obj)
     {
         if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
         {
-            if (((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState != 0)
+            if (((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState != NULL)
             {
                 ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->lastHitObject = 0;
                 ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->priorityHitCount = 0;
