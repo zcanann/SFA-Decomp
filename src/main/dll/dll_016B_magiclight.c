@@ -1,3 +1,21 @@
+/*
+ * magiclight (DLL 0x16B) - proximity-triggered "magic light" object, plus
+ * the sibling event objects that share this translation unit (dll_16C
+ * map-event proxy, imicemountain, crrockfall).
+ *
+ * magiclight: seqId 0x172 is a render-only variant (draws a glow each
+ * visible frame). The other variants carry a MagicLightState: at init a
+ * random lifetime is rolled and, for seqId 0x16B, the placement subtype
+ * picks an enter/leave L-action pair and a trigger radius preset. Each
+ * tick (magiclight_SeqFn) the distance to the player is measured: crossing
+ * inside triggerRadius fires the enter action, crossing back outside the
+ * radius plus hysteresis fires the leave action. magiclight_update kicks
+ * off trigger sequence 0 once, on the first update.
+ *
+ * The FUN_* functions are still-raw Ghidra output banked pending cleanup:
+ * FUN_801ac248 = imicemountain_updateEventState, FUN_801ad984 = dll_16C_SeqFn,
+ * FUN_801adca0 = dll_16C_render, FUN_801addec = dll_16C_update.
+ */
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
@@ -25,25 +43,13 @@ typedef struct IMIceMountainState
 
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
-/*
- * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
- */
-
+/* MagicLightState (magiclightstate_struct.h): magiclight_getExtraSize == 0x14. */
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
-/*
- * Per-object extra state for the dll_16C map-event boulder proxy
- * (dll_16C_getExtraSize == 0x24).
- */
-
+/* Dll16CState (dll16cstate_struct.h): dll_16C_getExtraSize == 0x24. */
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
+/* CrRockfallState (crrockfall_types.h): crrockfall_getExtraSize == 0x14. */
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern undefined4 getLActions();
@@ -72,12 +78,14 @@ extern f32 lbl_803E4738;
 extern void warpToMap(int mapId, int flags);
 extern void Music_Trigger(int track, int flag);
 
+/* TODO raw Ghidra stub; target is imicemountain_updateEventState (0x801AC248). */
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
 }
 
+/* TODO raw Ghidra; target is dll_16C_SeqFn (0x801AD930). */
 undefined4
 FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -115,6 +123,7 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return 0;
 }
 
+/* TODO raw Ghidra; target is dll_16C_render (0x801ADBAC). */
 void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
@@ -153,6 +162,7 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
     return;
 }
 
+/* TODO raw Ghidra; target is dll_16C_update (0x801ADDB0). */
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -243,15 +253,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY
-
 void magiclight_hitDetect(void)
 {
 }
@@ -264,14 +265,15 @@ void magiclight_initialise(void)
 {
 }
 
-/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
- * for the non-172 variants pick a random lifetime and, for type 0x16b, map
- * the spawn subtype to a light-pair / intensity preset. */
+/* Seed obj header + per-tick callback. For the non-render variants roll a
+ * random lifetime and, for seqId 0x16b, map the placement subtype to an
+ * enter/leave L-action pair and a trigger-radius preset.
+ * obj kept int* (not GameObject*): the param-pool classing matches the target. */
 #pragma scheduling off
 #pragma peephole off
 void magiclight_init(int* obj, u8* params)
 {
-    MagicLightState* sub;
+    MagicLightState* state;
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)magiclight_SeqFn;
@@ -279,40 +281,40 @@ void magiclight_init(int* obj, u8* params)
     {
         return;
     }
-    sub = ((GameObject*)obj)->extra;
-    sub->lifetime = (s16)randomGetRange(0xc8, 0x258);
-    sub->subtype = (s8) * (s16*)(params + 0x1a);
-    sub->inRange = 0;
+    state = ((GameObject*)obj)->extra;
+    state->lifetime = (s16)randomGetRange(0xc8, 0x258);
+    state->subtype = (s8) * (s16*)(params + 0x1a);
+    state->inRange = 0;
     if (((GameObject*)obj)->anim.seqId == 0x16b)
     {
-        switch (sub->subtype)
+        switch (state->subtype)
         {
         case 0:
-            sub->enterAction = 0x90;
-            sub->leaveAction = 0x91;
-            sub->triggerRadius = lbl_803E4740;
+            state->enterAction = 0x90;
+            state->leaveAction = 0x91;
+            state->triggerRadius = lbl_803E4740;
             break;
         case 1:
-            sub->enterAction = 0x92;
-            sub->leaveAction = 0x93;
-            sub->triggerRadius = lbl_803E4740;
+            state->enterAction = 0x92;
+            state->leaveAction = 0x93;
+            state->triggerRadius = lbl_803E4740;
             break;
         default:
-            sub->enterAction = 0x94;
-            sub->leaveAction = 0x95;
-            sub->triggerRadius = lbl_803E4744;
+            state->enterAction = 0x94;
+            state->leaveAction = 0x95;
+            state->triggerRadius = lbl_803E4744;
             break;
         case 3:
-            sub->enterAction = 0x187;
-            sub->leaveAction = 0x5;
-            sub->triggerRadius = lbl_803E4740;
+            state->enterAction = 0x187;
+            state->leaveAction = 0x5;
+            state->triggerRadius = lbl_803E4740;
             break;
         }
-        sub->unk10 = 0x12d;
+        state->unk10 = 0x12d;
     }
     else
     {
-        sub->unk10 = 0x12d;
+        state->unk10 = 0x12d;
     }
 }
 
@@ -327,18 +329,15 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma scheduling off
 void magiclight_free(int obj)
 {
-    MagicLightState* inner = ((GameObject*)obj)->extra;
+    MagicLightState* state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId != 0x172)
     {
-        if ((s8)inner->inRange != 0)
+        if ((s8)state->inRange != 0)
         {
-            getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
+            getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
         }
         (*gExpgfxInterface)->freeSource2((u32)obj);
     }
@@ -370,7 +369,7 @@ int magiclight_SeqFn(int* obj)
     int* player;
     f32 dist;
 
-    if (((GameObject*)obj)->anim.seqId == 370) return 0;
+    if (((GameObject*)obj)->anim.seqId == 0x172) return 0;
 
     state = ((GameObject*)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
@@ -388,9 +387,3 @@ int magiclight_SeqFn(int* obj)
     }
     return 0;
 }
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
