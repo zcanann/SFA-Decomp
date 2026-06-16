@@ -502,9 +502,9 @@ void cmbsrc_init(int obj, u8* setup)
         lightVariant = 0;
         break;
     }
-    cmbsrc->objAnim.rotZ = (s16)(mapData->rotZ << 8);
-    cmbsrc->objAnim.rotY = (s16)(mapData->rotY << 8);
-    cmbsrc->objAnim.rotX = (s16)(mapData->rotX << 8);
+    cmbsrc->objAnim.rotZ = (s16)((u8)mapData->rotZ << 8);
+    cmbsrc->objAnim.rotY = (s16)((u8)mapData->rotY << 8);
+    cmbsrc->objAnim.rotX = (s16)((u8)mapData->rotX << 8);
     state->active = 1;
     state->hitCharge = CMBSRC_MAX_HIT_CHARGE;
     if (mapData->inactiveSeconds == 0)
@@ -530,7 +530,8 @@ void cmbsrc_init(int obj, u8* setup)
     if (mapData->flags & CMBSRC_MAP_CREATE_LIGHT)
     {
         u8* colorTbl;
-        int ci;
+        u8* colorTbl1;
+        u8* colorTbl2;
         f32 sunTime;
 
         if (state->light == NULL)
@@ -549,11 +550,14 @@ void cmbsrc_init(int obj, u8* setup)
                 modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
             }
             colorTbl = &lbl_8032BD50[lightVariant * 0x30];
-            ci = mapData->colorIndex * 3;
-            modelLightStruct_setDiffuseColor(state->light, colorTbl[ci], colorTbl[ci + 1],
-                                             colorTbl[ci + 2], 0xff);
-            modelLightStruct_setSpecularColor(state->light, colorTbl[ci], colorTbl[ci + 1],
-                                              colorTbl[ci + 2], 0xff);
+            colorTbl1 = colorTbl + 1;
+            colorTbl2 = colorTbl + 2;
+            modelLightStruct_setDiffuseColor(state->light, colorTbl[mapData->colorIndex * 3],
+                                             colorTbl1[mapData->colorIndex * 3],
+                                             colorTbl2[mapData->colorIndex * 3], 0xff);
+            modelLightStruct_setSpecularColor(state->light, colorTbl[mapData->colorIndex * 3],
+                                              colorTbl1[mapData->colorIndex * 3],
+                                              colorTbl2[mapData->colorIndex * 3], 0xff);
             {
                 int n = (int)((mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0)
                     * cmbsrc->objAnim.rootMotionScale);
@@ -573,15 +577,15 @@ void cmbsrc_init(int obj, u8* setup)
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
             modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)colorTbl[mapData->colorIndex * 3]),
                 (int)
             (lbl_803E7368 * (f32)(u32)
-            colorTbl[ci + 1]
+            colorTbl1[mapData->colorIndex * 3]
             )
             ,
             (int)
             (lbl_803E7368 * (f32)(u32)
-            colorTbl[ci + 2]
+            colorTbl2[mapData->colorIndex * 3]
             )
             ,
             0xff
@@ -595,13 +599,15 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 if (mapData->flags & CMBSRC_MAP_GLOW_LARGE)
                 {
-                    modelLightStruct_setupGlow(state->light, 0, colorTbl[ci], colorTbl[ci + 1],
-                                               colorTbl[ci + 2], 0x87, lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(state->light, 0, colorTbl[mapData->colorIndex * 3],
+                                               colorTbl1[mapData->colorIndex * 3],
+                                               colorTbl2[mapData->colorIndex * 3], 0x87, lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
-                    modelLightStruct_setupGlow(state->light, 0, colorTbl[ci], colorTbl[ci + 1],
-                                               colorTbl[ci + 2], 0x87, lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(state->light, 0, colorTbl[mapData->colorIndex * 3],
+                                               colorTbl1[mapData->colorIndex * 3],
+                                               colorTbl2[mapData->colorIndex * 3], 0x87, lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
             {
