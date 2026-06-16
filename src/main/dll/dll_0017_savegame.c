@@ -609,11 +609,7 @@ int saveSelect_getInfo(void* outPtr)
         }
 
         info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
-        if (info->valid == 0)
-        {
-            memset(info, 0, sizeof(SaveSelectInfo));
-        }
-        else
+        if (save[SAVEGAME_NEW_FILE_FLAG_OFFSET] != 0)
         {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
@@ -687,6 +683,10 @@ int saveSelect_getInfo(void* outPtr)
             }
             info->active = 0;
             info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        }
+        else
+        {
+            memset(info, 0, sizeof(SaveSelectInfo));
         }
 
         info++;
