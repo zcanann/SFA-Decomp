@@ -1922,7 +1922,7 @@ void sky2_update(int a, int b, u8* cfg)
         }
         else
         {
-            *(u16*)((&lbl_803DD184)[b1] + 4) = flags58 | 0x100;
+            *(u16*)((&lbl_803DD184)[b1] + 4) = ((Sky2Config*)cfg)->unk58 | 0x100;
             (&lbl_803DD184)[b1][0x315] = 1;
             *(f32*)((&lbl_803DD184)[b1] + 0x304) = lbl_803DF108;
             for (i = 0; i < 0xb; i++)

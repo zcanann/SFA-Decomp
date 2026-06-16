@@ -500,6 +500,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
 
 int Tricky_updateSideCommandPrompts(int obj)
 {
+    int state;
     char cmdByte;
     ushort promptId;
     u8 promptA;
@@ -513,7 +514,6 @@ int Tricky_updateSideCommandPrompts(int obj)
     undefined2* setup;
     undefined4 spawnedObj;
     byte i;
-    int state;
     char flagsA[4];
     char flagsB[4];
     undefined4 promptTable[4];
@@ -2480,7 +2480,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     Vec delta;
     u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
     s16 baseAngle;
-    int i;
+    u16 i;
     u8 visible;
     f32 angle;
     f32 angleScale;
@@ -2552,11 +2552,11 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
         }
         if (visible != 0)
         {
-            ((TrickyState*)state)->flags2DC |= visibilityBits[i];
+            ((TrickyState*)state)->flags2DC |= *(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
         }
         else
         {
-            ((TrickyState*)state)->flags2DC &= ~visibilityBits[i];
+            ((TrickyState*)state)->flags2DC &= ~*(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
         }
     }
 }
@@ -2648,11 +2648,11 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     f32* hit;
     f32 hitY;
     f32 dy;
-    f32 absDy;
     f32 defaultY;
-    f32 nearestFloorDelta;
     f32 nearestSpecialDelta;
-    f32 zero;
+    f32 nearestFloorDelta;
+    f32 absDy;
+    f32 threshold;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
@@ -2664,8 +2664,8 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     nearestFloorDelta = lbl_803E25C8;
     nearestSpecialDelta = nearestFloorDelta;
     ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
-    zero = lbl_803E2574;
-    ((TrickyState*)state)->unk1B8 = zero;
+    threshold = lbl_803E2574;
+    ((TrickyState*)state)->unk1B8 = threshold;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
     for (i = 0; i < hitCount; i++)
     {
@@ -2673,7 +2673,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
         hitY = hit[0];
         dy = hitY - ((GameObject*)obj)->anim.localPosY;
         absDy = dy;
-        if (dy < zero)
+        if (dy < threshold)
         {
             absDy = -dy;
         }
@@ -2940,6 +2940,7 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
 
+#pragma optimization_level 1
 int trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
@@ -2982,6 +2983,7 @@ int trickyFn_801451d8(int obj, int state)
         return ret;
     }
 }
+#pragma optimization_level reset
 
 void Tricky_func11(int* obj)
 {

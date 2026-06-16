@@ -1,3 +1,14 @@
+/*
+ * drcloudper (DLL 0x280) - a cloud-perimeter trigger plane.
+ *
+ * init derives a vertical clip plane (normal + distance) from the
+ * placement yaw byte and the object's position, joins the trigger and
+ * surface object groups, and enables this cloud's map anim event if it
+ * is the currently selected active cloud. setScale arms the cloud (when
+ * its placement game bit is set) by recording it as the active cloud and
+ * running the enable sequence; selectActiveCloud switches the active
+ * cloud and runs the select sequence.
+ */
 #include "main/dll/dll_80220608_shared.h"
 
 typedef struct DrCloudPerState
@@ -33,6 +44,12 @@ typedef struct DrCloudPerSetup
     u8 pad1A[0x1e - 0x1a];
     s16 gameBit;
 } DrCloudPerSetup;
+
+STATIC_ASSERT(offsetof(DrCloudPerObject, posX) == 0x0c);
+STATIC_ASSERT(offsetof(DrCloudPerObject, setup) == 0x4c);
+STATIC_ASSERT(offsetof(DrCloudPerObject, mapDir) == 0xac);
+STATIC_ASSERT(offsetof(DrCloudPerObject, flagsB0) == 0xb0);
+STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
 
 #define DRCLOUDPER_GROUP_TRIGGER 0x13
 #define DRCLOUDPER_GROUP_SURFACE 0x39

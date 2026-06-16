@@ -1996,8 +1996,9 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
     n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
     if (n != 0)
     {
-        best = val - *(f32*)arr[0];
-        best = best >= __AR_Callback ? best : -best;
+        cur = val - *(f32*)arr[0];
+        cur = cur >= __AR_Callback ? cur : -cur;
+        best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
@@ -2029,8 +2030,9 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
     n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, f);
     if (n != 0)
     {
-        best = val - *(f32*)arr[0];
-        best = best >= __AR_Callback ? best : -best;
+        cur = val - *(f32*)arr[0];
+        cur = cur >= __AR_Callback ? cur : -cur;
+        best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {

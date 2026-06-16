@@ -187,7 +187,7 @@ typedef struct WCLevelContInterface {
                               WCLevelContInterface *iface);
     void (*getSolvedTileXYA)(int value, s16 *outTileX, s16 *outTileY,
                              WCLevelContInterface *iface);
-    int (*traceMoveA)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
+    u8 (*traceMoveA)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
                       int dy, WCLevelContInterface *iface);
     void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
                             WCLevelContInterface *iface);
@@ -199,7 +199,7 @@ typedef struct WCLevelContInterface {
                               WCLevelContInterface *iface);
     void (*getSolvedTileXYB)(int value, s16 *outTileX, s16 *outTileY,
                              WCLevelContInterface *iface);
-    int (*traceMoveB)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
+    u8 (*traceMoveB)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
                       int dy, WCLevelContInterface *iface);
 } WCLevelContInterface;
 

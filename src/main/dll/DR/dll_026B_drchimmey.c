@@ -1,3 +1,10 @@
+/*
+ * drchimmey (DLL 0x26B) - a chimney/altar that accepts a number of
+ * offerings. Each Tricky interaction decrements offeringsRemaining
+ * (drchimmey_countdownCallback); once it reaches zero the event fires,
+ * the completion game bit is set and a countdown timer resets the
+ * altar back to its idle state.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/obj_placement.h"
 
@@ -101,6 +108,7 @@ void drchimmey_update(DRChimmeyObject* obj)
             {
                 if ((obj->renderFlags & 4) != 0)
                 {
+                    /* Tricky interface method call (vtable slot 0x28 via tricky+0x68) */
                     (*(void (**)(int*, int, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x28))(
                         tricky, (int)obj, 1, 4);
                 }

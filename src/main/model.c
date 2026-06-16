@@ -1048,7 +1048,8 @@ void ObjModel_ApplyBlendChannels(u8* model)
             else
             {
                 t = w * lbl_803DE840;
-                r = (lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t)) * lbl_803DE840;
+                r = lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t);
+                r = r * lbl_803DE840;
             }
             arg1 = *(int*)(model + ((((ObjModel*)model)->bufferFlags >> 1) & 1) * 4 + 0x1c);
             modelApplyBoneTransforms(arg0, arg1, ((ModelFileHeader*)hdr)->vertexCount, boneA, boneB,
@@ -2591,12 +2592,13 @@ extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
 extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 
 #pragma peephole on
+#pragma peephole off
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
     int off;
     int i;
 
-    if (*(u8*)(p + 0x1a) != 0)
+    if (p[0x1a] != 0)
     {
         i = 0;
         off = 0;
@@ -2621,6 +2623,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         *(u8*)(p + 0x19) = 1;
     }
 }
+#pragma peephole reset
 
 typedef struct
 {

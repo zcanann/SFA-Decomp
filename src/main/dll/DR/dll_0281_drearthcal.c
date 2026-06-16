@@ -1,9 +1,27 @@
+/*
+ * drearthcal (DLL 0x281) - an interactive "earth caller" trigger.
+ *
+ * update presents one of two A-button prompts and runs the matching
+ * trigger sequence depending on whether fn_802972A8 reports the special
+ * actor present: when present it offers prompt 0x15 / sequence 1; when
+ * absent it offers prompt 0x14 / sequence 2, but suppresses interaction
+ * while the player is in the object's contact list or no nearby group-0xA
+ * object is found. When the object's 0x800 flag is set it also emits an
+ * arced particle burst each frame. init seeds the spawn rotation from the
+ * placement yaw byte and sets the standard init object flags.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_OBJECT_FLAGS_B0 0xb0
 #define DREARTHCAL_INIT_FLAGS 0x6000
+
+/* resetHitboxMode interact bits */
+#define DREARTHCAL_HITBOX_ACTIVATED 0x4   /* prompt active this frame */
+#define DREARTHCAL_HITBOX_OUTOFRANGE 0x8  /* special actor absent */
+#define DREARTHCAL_HITBOX_NONENEAR 0x10   /* no nearby group-0xA object */
+#define DREARTHCAL_HITBOX_SUPPRESS (DREARTHCAL_HITBOX_OUTOFRANGE | DREARTHCAL_HITBOX_NONENEAR)
 
 int drearthcal_setScale(void) { return 1; }
 
@@ -40,8 +58,8 @@ void drearthcal_update(int obj)
     searchDist = lbl_803E6C08;
     if (fn_802972A8() != NULL)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x18;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0)
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~DREARTHCAL_HITBOX_SUPPRESS;
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & DREARTHCAL_HITBOX_ACTIVATED) != 0)
         {
             setAButtonIcon(0x15);
         }
@@ -52,7 +70,8 @@ void drearthcal_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= DREARTHCAL_HITBOX_OUTOFRANGE;
+        /* obj+0x58 = contact list ptr; 0x10f = entry count; entries base at +0x100 (index +0x40 as void*) */
         if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
         {
             i = 0;
@@ -60,20 +79,20 @@ void drearthcal_update(int obj)
             {
                 if (((void**)*(int*)(obj + 0x58))[i + 0x40] == (void*)player)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~DREARTHCAL_HITBOX_OUTOFRANGE;
                 }
                 i++;
             }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= DREARTHCAL_HITBOX_NONENEAR;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~DREARTHCAL_HITBOX_NONENEAR;
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & DREARTHCAL_HITBOX_ACTIVATED) != 0)
         {
             setAButtonIcon(0x14);
         }

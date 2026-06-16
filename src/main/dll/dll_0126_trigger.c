@@ -132,7 +132,7 @@ extern void gameFlagFn_8005cd24(int v);
 extern void timeOfDayFn_80055000(void);
 extern void timeOfDayFn_80055038(void);
 extern int getSkyStructField24C(void);
-extern void skyFn_80088e54(f32 a, int b);
+extern void skyFn_80088e54(int b, f32 a);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int ObjList_GetObjects(int* first, int* count);
 extern int getTablesBinEntry(int idx);
@@ -1393,13 +1393,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         }
                         break;
                     case 9:
-                        skyFn_80088e54((f32)(u32)p[3], getSkyStructField24C() ^ 1);
+                        skyFn_80088e54(getSkyStructField24C() ^ 1, (f32)(u32)p[3]);
                         break;
                     case 10:
-                        skyFn_80088e54((f32)(u32)p[3], 0);
+                        skyFn_80088e54(0, (f32)(u32)p[3]);
                         break;
                     case 0xb:
-                        skyFn_80088e54((f32)(u32)p[3], 1);
+                        skyFn_80088e54(1, (f32)(u32)p[3]);
                         break;
                     }
                     break;
@@ -1411,7 +1411,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 10:
                     getEnvfxAct(obj, p2, (u16)((p[2] << 8) | p[3]), p4);
-                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (u16)((p[2] << 8) | p[3]), p4);
+                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], p4);
                     break;
                 case 0xd:
                     getLActions(obj, p2, (u16)((p[2] << 8) | p[3]), p3, p4, 0);
@@ -1450,22 +1450,24 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         d = *(s16*)tbl;
                         if (d == 0x54)
                         {
-                        match:
-                            if (*(s16*)((char*)tbl + 0x38) == id)
-                            {
-                                objInterpretSeq(t2, p2, p3, p4);
-                            }
+                            goto match;
                         }
-                        else if (d < 0x54)
+                        if (d > 0x54)
                         {
-                            if (d < 0x51 && d >= 0x4b)
+                            if (d == 0x230)
                             {
                                 goto match;
                             }
+                            continue;
                         }
-                        else if (d == 0x230)
+                        if (d >= 0x51 || d < 0x4b)
                         {
-                            goto match;
+                            continue;
+                        }
+                    match:
+                        if (*(s16*)((char*)tbl + 0x38) == id)
+                        {
+                            objInterpretSeq(t2, p2, p3, p4);
                         }
                     }
                     break;
@@ -1583,11 +1585,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     d = *(s16*)obj - (u16) * (s16*)t;
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (d - 0x10000) + 1;
                     }
                     if (d < -0x8000)
                     {
-                        d += 0xffff;
+                        d = (d + 0x10000) - 1;
                     }
                     ang = d;
                     if (ang < 0)
@@ -1649,11 +1651,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             break;
                         case 2:
                             t2 = ObjGroup_FindNearestObject(0x32, t, 0);
-                            if (t2 == 0)
+                            if ((void*)t2 == NULL)
                             {
                                 t2 = ObjGroup_FindNearestObject(0x31, t, 0);
                             }
-                            if (t2 != 0)
+                            if ((void*)t2 != NULL)
                             {
                                 (*(code*)(**(int**)(t + 0x68) + 0x38))(t);
                             }

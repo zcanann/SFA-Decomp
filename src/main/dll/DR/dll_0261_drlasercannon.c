@@ -1,3 +1,21 @@
+/*
+ * drlasercannon (DLL 0x261) - a wall-mounted laser turret.
+ *
+ * On init it spawns a warning marker object, optionally links to a
+ * nearby firepipe (group 0x4a), and reads its placement setup
+ * (initial yaw, reload cadence, target range, beam speed, plus the two
+ * game bits that mark it destroyed / silence its warning).
+ *
+ * Each update it picks a target (Tricky when commanded, otherwise the
+ * nearest non-hidden player/companion via drlasercannon_getTrackedTarget),
+ * aims toward it (drlasercannon_aimAtTarget yaw/pitch-slews the model,
+ * pitch inverted for the flipped placement type 0x417), and once aimed
+ * and reloaded fires a beam object (type 0x429) from the muzzle toward
+ * the predicted hit point. The cannon bobs vertically (mathSinf on
+ * bobPhase) and rides a ROM curve path. hitDetect docks health from
+ * incoming hits, plays sfx/explosion fx, and on death sets the
+ * destroyed game bit and hides the object.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -198,10 +216,8 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     dp[1] = target->anim.localPosY - eyePos[1];
     dp[2] = target->anim.localPosZ - eyePos[2];
     horiz = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
-    yaw = (s16)(int)
-    getAngle(dp[0], dp[2]);
-    pitch = (s16)(int)
-    getAngle(dp[1], horiz);
+    yaw = (s16)(int)getAngle(dp[0], dp[2]);
+    pitch = (s16)(int)getAngle(dp[1], horiz);
     if (self->anim.seqId == DR_LASERCANNON_PITCH_FLIP_TYPE)
     {
         pitch = (s16) - pitch;

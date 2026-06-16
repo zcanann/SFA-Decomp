@@ -850,7 +850,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    PSMTXScale(scaleMtx, 1.0f, 1.0f, 1.0f);
     scaleMtx[1][2] = -fA;
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
@@ -1037,8 +1037,8 @@ void screenImageDraw(u8 alpha)
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx_30;
     Mtx mtx_60;
+    Mtx mtx_30;
     int handle;
     f32 fA;
     f32 fB;
@@ -1056,7 +1056,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    PSMTXScale(mtx_60, lbl_803DEEE8, lbl_803DEEE8, lbl_803DEEE4);
+    PSMTXScale(mtx_60, lbl_803DEEE8, *(f32 *)&lbl_803DEEE8, lbl_803DEEE4);
     mtx_60[1][3] = -fA;
     GXLoadTexMtxImm(mtx_60, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
@@ -1080,12 +1080,12 @@ void screenImageDraw(u8 alpha)
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA70, -3);
-    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 1);
 
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, lbl_8030EA88, -3);
-    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 1);
 
     GXSetTevOrder(1, 0xFF, 0xFF, 8);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
@@ -1122,8 +1122,8 @@ void screenImageDraw(u8 alpha)
     GXSetTevAlphaOp(4, 1, 0, 1, 1, 2);
 
     GXSetTevKColorSel(5, 0xE);
-    GXSetTevDirect(5);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
+    GXSetTevDirect(5);
     GXSetTevColorIn(5, 0xF, 0xE, 0, 0xF);
     GXSetTevAlphaIn(5, 1, 7, 7, 2);
     GXSetTevSwapMode(5, 0, 0);
@@ -2098,12 +2098,12 @@ int modelCb_80073d04(u8 *obj, int *objB)
     extern int textureIdxToPtr(int idx);
     extern void selectTexture(int tex, int slot);
     extern void fn_8006C5CC(int* out);
-    GXColor colorB;
-    GXColor colorK;
     int handle;
+    GXColor colorK;
+    GXColor colorB;
     Mtx texMtx;
-    int model;
     int tex;
+    int model;
 
     colorB = lbl_803DEEB4;
     model = objB[0];
@@ -3579,8 +3579,7 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     m58[0][0] = lbl_803DEEDC;
     m58[0][1] = lbl_803DEEDC;
     d = z - depth;
-    q = z - d;
-    m58[0][2] = lbl_803DEEE4 / q;
+    m58[0][2] = lbl_803DEEE4 / (q = z - d);
     m58[0][3] = z / q;
     m58[1][0] = lbl_803DEEDC;
     m58[1][1] = lbl_803DEEDC;
@@ -5320,7 +5319,7 @@ void fn_8007C664(int texHandle)
     newshadows_getReflectionScrollOffsets(&sOff, &tOff);
     GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
     GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
-    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    PSMTXScale(scaleMtx, 1.0f, 1.0f, 1.0f);
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
     indMtx[0] = lbl_803DEEDC;
@@ -5413,7 +5412,7 @@ void fn_8007CAF4(void)
     newshadows_getReflectionScrollOffsets(&sOff, &tOff);
     GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
     GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
-    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    PSMTXScale(scaleMtx, 1.0f, 1.0f, 1.0f);
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
     indMtx[0] = lbl_803DEEEC;
@@ -5646,9 +5645,9 @@ void fn_8007D670(void)
 {
     f32* base = (f32*)&lbl_803967C0;
     Mtx tmp;
-    PSMTXConcat((void*)(base + 36), (void*)base, tmp);
+    PSMTXConcat((void*)(base + 36), (void*)(int)base, tmp);
     GXLoadTexMtxImm(tmp, 0x1E, GX_MTX3x4);
-    PSMTXConcat((void*)(base + 24), (void*)base, tmp);
+    PSMTXConcat((void*)(base + 24), (void*)(int)base, tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
 

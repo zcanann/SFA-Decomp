@@ -308,11 +308,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }
@@ -395,11 +391,7 @@ void snowFreeSnowCloud(int cloudId)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }
@@ -1420,11 +1412,7 @@ void snowReposSnowCloud(int cloudId)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }

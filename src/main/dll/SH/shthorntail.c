@@ -1,3 +1,14 @@
+/*
+ * shthorntail - the ThornTail Hollow herd-dinosaur behaviour driver.
+ *
+ * SHthorntail_updateState runs the per-frame behaviour state machine
+ * (idle, wandering moves, the close-attack combo, and the tail-swing
+ * sequence). The two root-control entry points pick the locomotion
+ * impact-sfx table for the current movement mode and apply the
+ * level-script overrides (root-control mode 2 = scripted/event-driven,
+ * mode 3 = the SnowHorn area's gated locomotion set) before delegating
+ * to the shared state machine.
+ */
 #include "dolphin/os.h"
 #include "main/dll/SH/SHthorntail.h"
 #include "main/gameplay_runtime.h"

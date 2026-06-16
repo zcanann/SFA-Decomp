@@ -218,21 +218,23 @@ void Link_copy(u8* srcArg)
 }
 #pragma scheduling reset
 #pragma scheduling off
+#pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    extern u8 lbl_803DD911; /* #57 */
+    extern s8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* src;
     int i;
 
     src = (LinkMenuItemDB*)srcArg;
-    for (i = 0; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < lbl_803DD911; i++)
     {
         lbl_803A9458[i].field00 = src[i].field00;
         lbl_803A9458[i].itemId = src[i].itemId;
         lbl_803A9458[i].field38 = 2;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
 
@@ -829,12 +831,12 @@ void linkDrawFn_801302c0(void)
     LinkMenuItemDB* sel;
     LinkMenuItemDB* p;
     void* tex;
+    int i;
     int selLeft;
     int selRight;
     int itemLeft;
     int itemRight;
     int w;
-    int i;
 
     sel = &lbl_803A9458[(s8)linkSelected];
     sel->field38 = 4;
@@ -864,8 +866,9 @@ void linkDrawFn_801302c0(void)
         selLeft = sel->field06 - 2;
     }
     selRight = selLeft + w;
+    i = 0;
     p = lbl_803A9458;
-    for (i = 0; i < (s8)lbl_803DD911; i++)
+    for (; i < (s8)lbl_803DD911; i++)
     {
         if (i != (s8)linkSelected)
         {

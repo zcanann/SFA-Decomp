@@ -12,9 +12,9 @@ extern f32 lbl_803E64E8;
 extern f32 lbl_803E64F8;
 extern f32 lbl_803E64FC;
 extern f32 lbl_803E6500;
-extern f32 lbl_803E6504;
+extern const f32 lbl_803E6504;
 extern f32 lbl_803E6508;
-extern f32 lbl_803E650C;
+extern const f32 lbl_803E650C;
 
 static inline DfpLightniState* dfplightni_getState(DfpLightniObject* obj)
 {
@@ -196,7 +196,6 @@ void dfplightni_update(DfpLightniObject* obj)
 void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
 {
     DfpLightniState* state;
-    f32 radiusMax;
     int randomValue;
 
     if (obj != 0)
@@ -214,16 +213,13 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
             mapData->radiusY = 1;
         }
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
-        state->triggerTime = (f32)randomValue + lbl_803E6508;
-        radiusMax = lbl_803E6504;
-        state->radiusX = ((f32)(s32)
-        mapData->radiusX / lbl_803E650C
-        )
-        *radiusMax;
-        state->radiusY = ((f32)(s32)
-        mapData->radiusY / lbl_803E650C
-        )
-        *radiusMax;
+        {
+            f32 t = (f32)randomValue;
+            t = lbl_803E6508 + t;
+            state->triggerTime = t;
+        }
+        state->radiusX = ((f32)(s32)mapData->radiusX / lbl_803E650C) * lbl_803E6504;
+        state->radiusY = ((f32)(s32)mapData->radiusY / lbl_803E650C) * lbl_803E6504;
         state->angleIndex = mapData->angleIndex;
         state->delayFrames = mapData->delayTicks * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
         state->eventId = mapData->eventId;
