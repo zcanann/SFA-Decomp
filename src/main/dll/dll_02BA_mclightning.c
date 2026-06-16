@@ -83,9 +83,6 @@ void mclightning_init(int obj, u8* setup)
 
 void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6,
-                                            f32 f2, int p8, int p9);
-    extern void hitDetectFn_80097070(int obj, f32 c, int a, int b, int d, int e);
     McLightningState* state = ((GameObject*)obj)->extra;
     u32 mode = state->flags.phase;
     if (mode == 5)
@@ -114,20 +111,26 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)
             {
+                extern void hitDetectFn_80097070(int obj, f32 c, int a, int b, int d, int e);
                 hitDetectFn_80097070(obj, state->hitEffectScale, 1, 7, 0x1e, 0);
             }
-            foundState = (McLightningState*)*(int*)&((GameObject*)objs[i])->extra;
+            foundState = (McLightningState*)*(int*)(objs[i] + 0xb8);
             if (foundState->flags.spawnFlags & 1)
             {
+                extern void hitDetectFn_80097070(int obj, f32 c, int a, int b, int d, int e);
                 hitDetectFn_80097070(objs[i], foundState->hitEffectScale, 1, 7, 0x1e, 0);
             }
             if (state->flags.spawnFlags & 2)
             {
+                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5,
+                                                        int p6, f32 f2, void* p8, int p9);
                 objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64,
                                             lbl_803E7454, 0, 0);
             }
             if (foundState->flags.spawnFlags & 2)
             {
+                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5,
+                                                        int p6, f32 f2, void* p8, int p9);
                 objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
                                             lbl_803E7454, 0, 0);
             }
