@@ -1188,7 +1188,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                      (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - (f64)lbl_803DD9C8)));
     gameTextShow(0x3da);
     drawTexture(lbl_803A9F98[3], (f32)(int)((int)*(f32*)(lbl_803A9FE4 + 0xc) - 0x32),
-                (f32)(int)(0xfe - (((Texture*)lbl_803A9F98[3])->width >> 1)), 0xff, 0xff);
+                (f32)(int)(0xfe - ((u32)((Texture*)lbl_803A9F98[3])->width >> 1)), 0xff, 0xff);
     if (lbl_803DD9C8 >= lbl_803E2338 && (p2 & 0xff) == 0)
     {
         xb = (int)*(f32*)(lbl_803A9FE4 + 0xc);
