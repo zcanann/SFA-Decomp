@@ -1785,8 +1785,10 @@ void initFn_8006d020(void)
     u8 collide;
     f32* e;
     int* th;
+    f32 padFix;
 
     saved = testAndSet_onlyUseHeap3(1);
+    padFix = __PADFixBits;
     placed = 0;
     attempts = 0;
     e = lbl_80391978;
@@ -1853,8 +1855,8 @@ void initFn_8006d020(void)
                             (f32)row * 0.015625f,
                             (f32)col * 0.015625f,
                             (f32)tex);
-                hi = (int)(__PADFixBits * o2);
-                lo = (int)(__PADFixBits * o1);
+                hi = (int)(padFix * o2);
+                lo = (int)(padFix * o1);
                 *dst = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }
