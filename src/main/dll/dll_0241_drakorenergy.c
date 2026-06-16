@@ -417,7 +417,7 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 undefined4
-FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+FUN_80202004(double refValue, double turnRate, undefined8 param_3, double divisor, ushort* obj,
              int target)
 {
     int yawDelta;
@@ -429,13 +429,13 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
 
     control = *(int*)(obj + 0x5c);
     yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
-    if ((double)lbl_803E6F40 == param_4)
+    if ((double)lbl_803E6F40 == divisor)
     {
         result = 0;
     }
     else
     {
-        signedDist = (double)(float)((double)(float)((double)info[0] - param_1) / param_4);
+        signedDist = (double)(float)((double)(float)((double)info[0] - refValue) / divisor);
         absDist = signedDist;
         if (signedDist < (double)lbl_803E6F40)
         {
@@ -445,11 +445,11 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
         {
             if (signedDist < (double)lbl_803E6F40)
             {
-                param_2 = -param_2;
+                turnRate = -turnRate;
             }
             *(float*)(control + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
+                ((float)(turnRate *
                     (double)(lbl_803E6F60 -
                         (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
                             DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(control + 0x280)) +
@@ -468,7 +468,7 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
 undefined4
-FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+FUN_80202130(double refValue, double turnRate, undefined8 param_3, double divisor, ushort* obj,
              int target)
 {
     int yawDelta;
@@ -480,9 +480,9 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
     if ((obj != (ushort*)0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
-        if ((double)lbl_803E6F40 != param_4)
+        if ((double)lbl_803E6F40 != divisor)
         {
-            if ((double)info[0] < param_1)
+            if ((double)info[0] < refValue)
             {
                 absDy = (double)(((GameObject *)obj)->anim.rootMotionScale - *(float*)(target + 0x10));
                 if (absDy < (double)lbl_803E6F40)
@@ -496,7 +496,7 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
             }
             *(float*)(control + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
+                ((float)(turnRate *
                     (double)(lbl_803E6F60 -
                         (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
                             DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(control + 0x280)) +
@@ -509,11 +509,11 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
 
 int dbstealerworm_stateHandlerA05(int obj, int p);
 
-void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void FUN_80204320(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }
