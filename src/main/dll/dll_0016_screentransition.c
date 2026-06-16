@@ -28,7 +28,6 @@ void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
 extern f32 lbl_803E0558;
 u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
 
-
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
 extern f32 lbl_803E055C;
@@ -91,29 +90,11 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 #pragma scheduling off
 #pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 typedef struct
 {
     u8 r;
@@ -130,6 +111,7 @@ extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma opt_common_subs off
+/* p1/p2/p3 are only forwarded to screenRectFn_800d7568 (case 3); the signature is required for the calling convention. */
 void screenTransition_do2(int p1, int p2, int p3)
 {
     if (lbl_803DD42E != 0)
@@ -250,8 +232,18 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     int sw;
     int sh;
     HudColor col;
-    uint halfSpan, cur, span, edge, hiEdge, step1, loEdge, inset, step0, H;
-    u8 step, a8;
+    uint halfSpan;
+    uint cur;
+    uint span;
+    uint edge;
+    uint hiEdge;
+    uint hStep;
+    uint loEdge;
+    uint inset;
+    uint maxAlpha;
+    uint H;
+    u8 step;
+    u8 fadeAlpha;
     int screenX;
     f32 conv;
 
@@ -261,12 +253,12 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     H = (vb - vy) & 0xffff;
     if (screenTransitionAlpha > lbl_803E0540)
     {
-        step0 = 0xff;
+        maxAlpha = 0xff;
         inset = (int)(screenTransitionAlpha - lbl_803E0540);
     }
     else
     {
-        step0 = (int)(lbl_803E0544 * screenTransitionAlpha);
+        maxAlpha = (int)(lbl_803E0544 * screenTransitionAlpha);
         inset = 0;
     }
     halfSpan = (span >> 1) & 0xffff;
@@ -298,20 +290,20 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = step0;
+        col.a = maxAlpha;
         hudDrawRect(vx + edge + 1, vy, vx + hiEdge, vb, col);
         step = (int)loEdge / ((int)halfSpan / 6);
         if (step == 0)
         {
             step = 1;
         }
-        a8 = step0;
-        for (step1 = 0; cur = step1 & 0xffff, (int)cur < (int)(loEdge - step); step1 += step)
+        fadeAlpha = maxAlpha;
+        for (hStep = 0; cur = hStep & 0xffff, (int)cur < (int)(loEdge - step); hStep += step)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
+            col.a = ((int)(fadeAlpha * (halfSpan - cur)) / (int)halfSpan) & 0xff;
             screenX = vx + (hiEdge & 0xffff);
             hudDrawRect(screenX, vy, step + screenX, vb, col);
             screenX = vx + (edge & 0xffff);
@@ -322,7 +314,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
+        col.a = ((int)(fadeAlpha * (halfSpan - cur)) / (int)halfSpan) & 0xff;
         hudDrawRect(vx + (hiEdge & 0xffff), vy, vr, vb, col);
         hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
         edge = (H >> 1) & 0xffff;
@@ -334,19 +326,19 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = step0;
+        col.a = maxAlpha;
         hudDrawRect(vx, vy + inset + 1, vr, vy + loEdge, col);
         step = (int)halfSpan / (int)(edge >> 3);
         if (step == 0)
         {
             step = 1;
         }
-        for (step0 = 0; hiEdge = step0 & 0xffff, (int)hiEdge < (int)(halfSpan - step); step0 += step)
+        for (maxAlpha = 0; hiEdge = maxAlpha & 0xffff, (int)hiEdge < (int)(halfSpan - step); maxAlpha += step)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
+            col.a = ((int)(fadeAlpha * (edge - hiEdge)) / (int)edge) & 0xff;
             screenX = vy + (loEdge & 0xffff);
             hudDrawRect(vx, screenX, vr, step + screenX, col);
             screenX = vy + (inset & 0xffff);
@@ -357,76 +349,12 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
+        col.a = ((int)(fadeAlpha * (edge - hiEdge)) / (int)edge) & 0xff;
         hudDrawRect(vx, vy + (loEdge & 0xffff), vr, vb, col);
         hudDrawRect(vx, vy, vr, vy + (inset & 0xffff) + 1, col);
         GXSetScissor(sx, sy, sw, sh);
     }
 }
 
-
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
 #pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-
-
-/* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
- * deref-cleanup wave; curves.h re-exports it). */
-
-static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling on
-#pragma peephole on
-
-#pragma scheduling off
-
-#pragma scheduling on
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole on
-
-#pragma peephole off
-
-#pragma scheduling on
-#pragma peephole on
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling on
-#pragma peephole on
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole on
-
-#pragma peephole off
-
-#pragma peephole on
-
-#pragma peephole off
-
-#pragma scheduling on
-#pragma peephole on
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma scheduling on
-
-#pragma scheduling off
+#pragma scheduling reset
