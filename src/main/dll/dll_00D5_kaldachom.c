@@ -330,7 +330,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
             ((GameObject*)control->spawnedDustObj)->anim.alpha = rnd;
             *(s16*)((u8*)control->spawnedDustObj + 4) = ((GameObject*)obj)->anim.rotZ;
             *(s16*)((u8*)control->spawnedDustObj + 2) = ((GameObject*)obj)->anim.rotY;
-            *(s16*)control->spawnedDustObj = *(s16*)obj;
+            *(s16*)control->spawnedDustObj = ((GameObject*)obj)->anim.rotX;
             control->hitFlashTimer = control->hitFlashTimer - lbl_803E30C4 * timeDelta;
         }
     }
@@ -340,7 +340,7 @@ void kaldachom_func0B(void)
 {
 }
 
-s16 kaldachom_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
+s16 kaldachom_setScale(int* obj) { return *(s16*)((char*)((GameObject*)obj)->extra + 0x274); }
 int kaldachom_getExtraSize(void) { return sizeof(CampfireState); }
 int kaldachom_getObjectTypeId(void) { return 0x49; }
 
@@ -348,7 +348,7 @@ void kaldachom_free(int obj)
 {
     undefined4 state;
 
-    state = *(undefined4*)(obj + 0xb8);
+    state = *(undefined4*)&((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     (*(code*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
     return;
