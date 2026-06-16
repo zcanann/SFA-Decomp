@@ -208,6 +208,9 @@ typedef struct EarthWarriorState
 STATIC_ASSERT(sizeof(EarthWarriorState) == 0x14fc);
 STATIC_ASSERT(offsetof(EarthWarriorState, sub) == 0xb58);
 
+#define EARTHWARRIOR_YAW_STEP 0xb6      /* per-tick yaw increment */
+#define EARTHWARRIOR_FRAME_THRESHOLD 0x96 /* frameCounter charge threshold */
+
 typedef struct
 {
     s16 v[5];
@@ -608,7 +611,7 @@ int fn_802BC830(int obj, int p2, int p3)
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
         ((BaddieState*)p3)->animSpeedC > *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x1c) - GXInit_WhiteColor &&
         *(f32*)((char*)p3 + 0x298) > lbl_803E82FC &&
-        ((EarthWarriorSub*)p2)->frameCounter >= 0x96)
+        ((EarthWarriorSub*)p2)->frameCounter >= EARTHWARRIOR_FRAME_THRESHOLD)
     {
         ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 1;
         ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 = 0;
@@ -661,7 +664,7 @@ void fn_802BCA10(int obj, int q, int p2)
     {
         d = v;
     }
-    d = d * 0xb6 - (u16)((EarthWarriorSub*)q)->unk4D4;
+    d = d * EARTHWARRIOR_YAW_STEP - (u16)((EarthWarriorSub*)q)->unk4D4;
     if (d > 0x8000)
     {
         d -= 0xffff;
@@ -783,7 +786,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     ((EarthWarriorSub*)q)->unk404 = lbl_803E82E8;
     if (*(s8*)&((EarthWarriorState*)p2)->baddie.moveJustStartedA != 0)
     {
-        ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * 0xb6;
+        ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * EARTHWARRIOR_YAW_STEP;
         ((EarthWarriorSub*)q)->frameCounter = 0;
         ((EarthWarriorSub*)q)->unk48C = 0;
     }
@@ -861,7 +864,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     if (!((ByteFlags*)((char*)inner + 0x14ec))->b01 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 &&
         ((EarthWarriorState*)p2)->baddie.animSpeedC > lbl_803E8340 + *(f32*)(((EarthWarriorSub*)q)->configRow + 0x14) &&
-        (((EarthWarriorSub*)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub*)q)->frameCounter >= 0x96))
+        (((EarthWarriorSub*)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub*)q)->frameCounter >= EARTHWARRIOR_FRAME_THRESHOLD))
     {
         ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 = 1;
         *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
@@ -871,7 +874,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
     {
-        if (((EarthWarriorSub*)q)->frameCounter < 0x96)
+        if (((EarthWarriorSub*)q)->frameCounter < EARTHWARRIOR_FRAME_THRESHOLD)
         {
             f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->unk47C, lbl_803E8338 / ((EarthWarriorSub*)q)->unk428,
                                 timeDelta);
@@ -886,7 +889,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             }
             ((EarthWarriorSub*)q)->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
         }
-        if (((EarthWarriorSub*)q)->frameCounter < 0x96)
+        if (((EarthWarriorSub*)q)->frameCounter < EARTHWARRIOR_FRAME_THRESHOLD)
         {
             f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->frameCounter,
                                 lbl_803E8338 / ((EarthWarriorSub*)q)->unk430, timeDelta);
@@ -905,7 +908,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         else if (((EarthWarriorState*)p2)->baddie.animSpeedC <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0x4) &&
             ((EarthWarriorState*)p2)->baddie.animSpeedA <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
         {
-            ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * 0xb6;
+            ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->unk48C * EARTHWARRIOR_YAW_STEP;
         }
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04)
@@ -914,7 +917,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                             ((EarthWarriorSub*)q)->unk438, timeDelta);
         f32 r = lbl_803E834C * timeDelta;
         r = (v < r) ? r : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
-        if (((EarthWarriorSub*)q)->frameCounter >= 0x96 && r > lbl_803E8304)
+        if (((EarthWarriorSub*)q)->frameCounter >= EARTHWARRIOR_FRAME_THRESHOLD && r > lbl_803E8304)
         {
             r = lbl_803E8314 * -r;
         }
