@@ -10004,6 +10004,7 @@ int fn_80299BB0(int obj, int p2)
             state29 ^= state30;
             state30 ^= state29;
             break;
+        case 0:
         default:
             inner->unk8AA = (u8)(inner->unk8AA ^ 1);
             if (inner->unk8AA != 0)
