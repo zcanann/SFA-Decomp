@@ -266,7 +266,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
     d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
     d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
-    if (flag == 0)
+    if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
