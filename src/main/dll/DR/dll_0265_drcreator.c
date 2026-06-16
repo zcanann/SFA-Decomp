@@ -86,7 +86,7 @@ void drcreator_render(void)
 void drcreator_init(int obj, char* arg)
 {
     char* p = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s8)arg[0x1e] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x1e] << 8);
     ((DrcreatorState*)p)->gameBitId = *(s16*)(arg + 0x18);
     ((DrcreatorState*)p)->unk6 = *(s16*)(arg + 0x1c);
     ((DrcreatorState*)p)->spawnTimer = (s16)randomGetRange(0, ((DrcreatorState*)p)->unk6);
@@ -141,9 +141,9 @@ void drcreator_update(int obj)
                     if (p != NULL)
                     {
                         ((DrcreatorState*)p)->unk2 = 0;
-                        *(s16*)p = (s16)randomGetRange(0, 65535);
+                        ((GameObject*)p)->anim.rotX = (s16)randomGetRange(0, 65535);
                         ((DrcreatorState*)p)->velocityX = lbl_803E69B8 * (lbl_803E69BC * ((f32) * (int*)runtime * -
-                            mathSinf((lbl_803E69C0 * (f32) * (s16*)obj) / lbl_803E69C4)));
+                            mathSinf((lbl_803E69C0 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E69C4)));
                         ((DrcreatorState*)p)->velocityY = lbl_803E69B8 * ((f32) * (int*)runtime * (lbl_803E69C8 * (f32)(
 int)
                         randomGetRange(0, 1000)
@@ -151,7 +151,7 @@ int)
                         )
                         ;
                         ((DrcreatorState*)p)->velocityZ = lbl_803E69B8 * (lbl_803E69BC * ((f32) * (int*)runtime * -
-                            mathCosf((lbl_803E69C0 * (f32) * (s16*)obj) / lbl_803E69C4)));
+                            mathCosf((lbl_803E69C0 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E69C4)));
                         ((DrcreatorState*)p)->creatorObj = obj;
                     }
                     ((DrcreatorState*)runtime)->spawnTimer = ((DrcreatorState*)runtime)->unk6 + randomGetRange(
@@ -198,7 +198,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
                 if ((void*)p != NULL)
                 {
                     ((DrcreatorState*)p)->unk2 = 0;
-                    *(s16*)p = (s16)randomGetRange(0, 65535);
+                    ((GameObject*)p)->anim.rotX = (s16)randomGetRange(0, 65535);
                     ((DrcreatorState*)p)->velocityX = lbl_803E69A8 * (f32)(int)
                     randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,
                                    ((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA);
