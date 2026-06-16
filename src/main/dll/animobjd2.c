@@ -1,3 +1,29 @@
+/*
+ * Tricky companion "circle the enemy" combat behaviour (part of the
+ * tricky AI module; operates on TrickyState, the per-object scratch at
+ * GameObject.extra).
+ *
+ * trickyFindCirclingTarget       - picks the object Tricky should circle:
+ *                                   the current follow target if it is the
+ *                                   special seqId 0x6a3 actor, else the
+ *                                   player's lock-on target, validated
+ *                                   against ObjGroup 3 by a triangle-
+ *                                   inequality distance test.
+ * trickyUpdateCirclingTargetPosition
+ *                                - orbits Tricky around followObj: picks a
+ *                                   random spin direction once, advances the
+ *                                   orbit angle while it stays near the seed
+ *                                   heading, and writes the desired
+ *                                   x/y/z onto the state; trickyFn_8013b368
+ *                                   then steers toward it.
+ * fn_8013E0D0                    - the circling state machine, dispatched on
+ *                                   substate st[0xa] (0 acquire, 1 approach,
+ *                                   2/3/4 the special charge/spawn/finish
+ *                                   path, 5 orbit-and-pick-best). It spawns
+ *                                   helper objects (ids 0x17b, 0x4f0),
+ *                                   plays/loops bark and effect sounds, and
+ *                                   drives the shared TRICKY_* state macros.
+ */
 #include "main/dll/tricky_state.h"
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
@@ -11,19 +37,14 @@ extern f32 fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void trickyReportError(const char* fmt, ...);
 
-extern f32 lbl_803E23F8;
-extern f32 lbl_803E24D4;
-extern f32 lbl_803E2488;
-extern const char sTrickyShouldNeverStopCirclingError[];
-
-#pragma dont_inline on
-#pragma opt_common_subs off
 extern void trickyDebugPrint(char* fmt, ...);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int id);
 extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
+/* Sfx_* use int* obj / int sfx (not engine_shared.h's u32/u16) so the int* obj
+   passed at the call sites needs no cast; including the header would conflict. */
 extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
@@ -31,22 +52,31 @@ extern void objSetAnimSpeedTo1(int o);
 extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
 extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
 extern f32 getXZDistance(void* a, void* b);
-extern char lbl_8031D2E8[];
+
+extern char lbl_8031D2E8[]; /* tricky debug format-string table */
+extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 timeDelta;
+
+/* tricky tuning constants (.sdata2) */
 extern f32 lbl_803E23DC;
+extern f32 lbl_803E23F8;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E243C;
 extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
+extern f32 lbl_803E2488;
 extern f32 lbl_803E24A8;
+extern f32 lbl_803E24D4;
 extern f32 lbl_803E24D8;
 extern f32 lbl_803E24DC;
 extern f32 lbl_803E24E0;
 extern f32 lbl_803E24E4;
 extern f32 lbl_803E24E8;
 
+#pragma dont_inline on
+#pragma opt_common_subs off
 void* trickyFindCirclingTarget(void* obj, void* arg2)
 {
     void* target;
@@ -142,13 +172,13 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
     }
 }
 
-typedef struct
+typedef struct TrickyPackedSlots
 {
     u8 a : 2;
     u8 b : 2;
     u8 c : 2;
     u8 d : 2;
-} TrickyPack;
+} TrickyPackedSlots;
 
 typedef struct
 {
@@ -158,6 +188,10 @@ typedef struct
 } TrickyCfgBits;
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
+#define TRICKY_STATE_FLAG_4 0x4
+#define TRICKY_STATE_FLAG_800 0x800
+#define TRICKY_STATE_FLAG_1000 0x1000
+#define TRICKY_STATE_FLAG_8000000 0x8000000
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400LL
 #define TRICKY_STATE_RESET_FLAG_10 0x00000010LL
 #define TRICKY_STATE_RESET_FLAG_10000 0x00010000LL
@@ -194,7 +228,7 @@ typedef struct
     { \
         u8 *cfg = *(u8 **)((char *)(obj) + 0xb8); \
         if (!((TrickyCfgBits *)(cfg + 0x58))->b) { \
-            s16 a0 = *(s16 *)((char *)(obj) + 0xa0); \
+            s16 a0 = ((GameObject *)(obj))->anim.currentMove; \
             if (a0 >= 0x30 || a0 < 0x29) { \
                 if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) { \
                     objAudioFn_800393f8(obj, cfg + 0x3a8, snd, p4, -1, 0); \
@@ -329,7 +363,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                         *(int*)(st + 0x728) = 0;
                         if (Obj_IsLoadingLocked() != 0)
                         {
-                            *(u32*)(st + 0x54) |= 4;
+                            *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_4;
                             TRICKY_RESET(st);
                             if (*(int*)(st + 0x7b8) == 0)
                             {
@@ -341,15 +375,15 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 slots[2] = -1;
                                 if (*(int*)(st + 0x7a8) != 0)
                                 {
-                                    slots[((TrickyPack*)(st + 0x7bc))->a] = 1;
+                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->a] = 1;
                                 }
                                 if (*(int*)(st + 0x7b0) != 0)
                                 {
-                                    slots[((TrickyPack*)(st + 0x7bc))->b] = 1;
+                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->b] = 1;
                                 }
                                 if (*(int*)(st + 0x7b8) != 0)
                                 {
-                                    slots[((TrickyPack*)(st + 0x7bc))->c] = 1;
+                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->c] = 1;
                                 }
                                 if (slots[0] == -1)
                                 {
@@ -371,10 +405,10 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 {
                                     free_ = -1;
                                 }
-                                ((TrickyPack*)(st + 0x7bc))->c = free_;
+                                ((TrickyPackedSlots*)(st + 0x7bc))->c = free_;
                                 *(int*)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1,
                                                                       *(int*)&((GameObject*)obj)->anim.parent);
-                                ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPack*)(st + 0x7bc))->c);
+                                ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPackedSlots*)(st + 0x7bc))->c);
                                 *(f32*)(st + 0x7c0) = lbl_803E23DC;
                                 *(f32*)(st + 0x7c4) = lbl_803E23DC;
                                 *(f32*)(st + 0x7c8) = lbl_803E23DC;
@@ -425,7 +459,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             if (go != 0 && ok != 1)
             {
                 objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
-                *(u32*)(st + 0x54) |= 0x10;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= 0x10;
                 st[0xa] = 3;
                 *(int*)(st + 0x728) = 0;
             }
@@ -440,7 +474,7 @@ void fn_8013E0D0(int* obj, register u8* st)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                *(u32*)(st + 0x54) |= 0x800;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_800;
                 {
                     int i = 0;
                     u8* p = st;
@@ -466,11 +500,11 @@ void fn_8013E0D0(int* obj, register u8* st)
         {
             u32 fl;
             trickyDebugPrint(str + 0x5e4);
-            fl = *(u32*)(st + 0x54);
-            if (fl & 0x8000000)
+            fl = *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET);
+            if (fl & TRICKY_STATE_FLAG_8000000)
             {
-                *(u32*)(st + 0x54) = fl & ~0x800;
-                *(u32*)(st + 0x54) |= 0x1000;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) = fl & ~TRICKY_STATE_FLAG_800;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_1000;
                 {
                     int i = 0;
                     u8* p = st;
@@ -482,7 +516,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                 }
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
                 TRICKY_BARK(obj, 0x29d, 0);
-                *(u32*)(st + 0x54) &= ~0x10;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10;
                 st[0xa] = 0;
             }
             break;
