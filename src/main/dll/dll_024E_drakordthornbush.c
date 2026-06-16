@@ -188,7 +188,7 @@ void drakord_thornbush_hitDetect(int obj)
         hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2);
         if (hit != 0)
         {
-            if (*(s16*)((char*)hitObj + 0x46) != 0x35f &&
+            if (((GameObject*)hitObj)->anim.seqId != 0x35f &&
                 *(void**)&((DrakordThornbushState*)inner)->unk8 != (void*)hitObj &&
                 arrayIndexOf(((DrakordThornbushState*)inner)->unk6C, 2) != -1)
             {
