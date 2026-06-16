@@ -1,3 +1,16 @@
+/*
+ * arwsquadron (DLL 0x2A6) - the enemy/obstacle squadron objects in the
+ * on-rails Arwing sections. One DLL covers three variants chosen at init
+ * from the placement objectId / seqId: enemy FIGHTERs that fly a curve path
+ * and fire timed projectile volleys, drifting ASTEROIDs, and large SHIPs.
+ * Members can either follow a ROM curve path (arwsquadron_followPath, with
+ * embedded path commands that adjust speed / banking / firing) or formate on
+ * a leader object (arwsquadron_followLeader, with a sinusoidal sway/roll
+ * offset). They take damage and flash on hit (arwsquadron_handleDamage),
+ * emit damage smoke / fire / muzzle-light fx (arwsquadron_emitEffects) and
+ * award score on death. The state machine runs through WAITING -> ACTIVE,
+ * then DEAD / DISABLED once it dies or flies out of range.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
