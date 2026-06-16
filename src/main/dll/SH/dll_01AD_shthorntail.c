@@ -1,4 +1,18 @@
-/* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
+/*
+ * dll_01AD_shthorntail (DLL 0x1AD) - the level-controlled ThornTail
+ * dinosaur (the large herd creature in ThornTail Hollow), the half of
+ * the SHthorntail behaviour that owns the GameObject hooks.
+ *
+ * SHthorntail_update is the per-frame driver: it runs the hit-reaction
+ * pass, dispatches to the active control mode (level 0/1 = scripted by
+ * the map-event act, root 2/3 = the shared root-control handlers in
+ * shthorntail.c) and then advances the current animation move, applies
+ * root motion, fires trigger sfx and runs path control. The two
+ * level-control modes pick the locomotion impact-sfx table and run the
+ * tail-swing / idle state machine. SHthorntail_init wires up path control
+ * and the level-control anim-event callback; render samples the path
+ * points for the trailing dust/effect points.
+ */
 #include "main/audio/sfx.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
@@ -57,9 +71,9 @@ extern f32 lbl_803E545C;
 void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern int Obj_GetPlayerObject(); /* #57 */
-    extern u32 randomGetRange(int min, int max); /* #57 */
-    extern f32 getXZDistance(int posA, int posB); /* #57 */
+    extern int Obj_GetPlayerObject();
+    extern u32 randomGetRange(int min, int max);
+    extern f32 getXZDistance(int posA, int posB);
     int playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
@@ -174,7 +188,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runt
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern u32 randomGetRange(int min, int max);
     int linkedEventPending;
     uint gameBit;
     int randomIdleWait;
@@ -260,7 +274,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern u32 randomGetRange(int min, int max);
     SHthorntailRuntime* runtime;
     int randomIdleWait;
     int impactHandled;
@@ -365,8 +379,8 @@ typedef struct SHthorntailTailSwingEffectScratch
 
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
-    extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
+    extern int randomGetRange(int min, int max);
+    extern f32 getXZDistance(f32 * posA, f32 * posB);
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     byte byteVal;
@@ -608,7 +622,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int min, int max);
     SHthorntailRuntime* runtime;
     uint randomTime;
     int moveScratch;
