@@ -1,3 +1,19 @@
+/*
+ * wcbeacon (DLL 0x28E) - a Tricky-activated beacon puzzle prop in the
+ * Walled City (WC).
+ *
+ * The beacon advances through WCBEACON_PHASE_*:
+ *  - IDLE: waits until its armBit game bit is set, then runs the arm
+ *    trigger sequence and moves to WAITING_FOR_TRICKY.
+ *  - WAITING_FOR_TRICKY: blocks the player and waits for Tricky (the
+ *    companion) to take ownership and accept the prompt; the A-button
+ *    callback marks acceptedInteraction and sets solvedBit. If the arm
+ *    bit clears or Tricky leaves, it runs the release sequence and falls
+ *    back to IDLE. Once accepted it plays the lift sfx and goes ACTIVATING.
+ *  - ACTIVATING: counts the timer up by timeDelta, then goes ACTIVE.
+ *  - ACTIVE: emits the active particle fx and fires the final trigger
+ *    sequence once.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
