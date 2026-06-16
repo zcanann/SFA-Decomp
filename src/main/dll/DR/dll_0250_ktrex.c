@@ -1689,10 +1689,13 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
-    ((KTRexArenaState*)gKTRexState)->unk4 -= timeDelta;
-    if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
     {
-        ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
+        f32 t = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->unk4 = t;
+        if (t <= lbl_803E67B8)
+        {
+            ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
+        }
     }
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->unk0C == phase &&
@@ -1701,7 +1704,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
-            int cond;
+            u8 cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->unk101 += 1;
             GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
@@ -1750,8 +1753,9 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         else
         {
-            int push = 2;
+            int push;
             ((KTRexArenaState*)gKTRexState)->unk101 -= 1;
+            push = 2;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
