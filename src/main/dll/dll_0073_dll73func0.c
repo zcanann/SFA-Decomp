@@ -879,9 +879,9 @@ void dll_73_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     {
         if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.localPosX;
+            buf.pos[1] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.localPosY;
+            buf.pos[2] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.localPosZ;
         }
         else
         {
