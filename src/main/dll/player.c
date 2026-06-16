@@ -5810,7 +5810,7 @@ int fn_8029EBCC(int obj, int state)
     f32 v7b8, v7bc;
     int res, halfW, halfH;
 
-    inner->flags360 &= 0xFFFFFFFD;
+    *(u32*)&inner->flags360 &= ~2LL;
     ObjHits_EnableObject(obj);
     sub = *(void**)((char*)inner + 0x7f0);
     if (sub == NULL)
@@ -5930,7 +5930,7 @@ int fn_8029EBCC(int obj, int state)
         (int)((f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta));
     inner->bodyLeanHalf = (int)(lbl_803E7FB0 * inner->unk7B8);
     inner->bodyLeanAngle = (s16)(inner->bodyLeanHalf >> 1);
-    inner->flags360 &= 0xFFFFFBFF;
+    *(u32*)&inner->flags360 &= ~0x400LL;
     v7bc = inner->unk7BC;
     v7b8 = inner->unk7B8;
     res = getScreenResolution();
