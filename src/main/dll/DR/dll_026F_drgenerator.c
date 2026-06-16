@@ -1,9 +1,10 @@
 /*
  * drgenerator (DLL 0x26F) - a destructible generator/power node. It
- * takes hits until its hit count (unk19A) reaches zero, then explodes,
- * sets its completion game bit (placement unk1E) and either extends a
- * nearby timer object or disables itself. It can also be enabled or
- * disabled at runtime from the placement's watch game bit (unk20).
+ * takes hits until its hit count (hitsRemaining) reaches zero, then
+ * explodes, sets its completion game bit (placement completionGameBit)
+ * and either extends a nearby timer object or disables itself. It can
+ * also be enabled or disabled at runtime from the placement's watch
+ * game bit (watchGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
@@ -11,10 +12,14 @@
 typedef struct DrgeneratorPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E; /* 0x1E: completion game bit set when destroyed */
-    s16 unk20; /* 0x20: game bit toggling the generator enabled state */
+    s16 completionGameBit; /* 0x1E: completion game bit set when destroyed */
+    s16 watchGameBit;      /* 0x20: game bit toggling the generator enabled state */
     u8 pad22[0x28 - 0x22];
 } DrgeneratorPlacement;
+
+STATIC_ASSERT(offsetof(DrgeneratorPlacement, completionGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(DrgeneratorPlacement, watchGameBit) == 0x20);
+STATIC_ASSERT(sizeof(DrgeneratorPlacement) == 0x28);
 
 
 typedef struct DrgeneratorState
@@ -22,10 +27,14 @@ typedef struct DrgeneratorState
     u8 pad0[0x124 - 0x0];
     f32 unk124;
     u8 pad128[0x198 - 0x128];
-    s16 unk198;  /* 0x198: timer duration handed to a linked timer object */
-    u8 unk19A;   /* 0x19A: remaining hit count */
+    s16 timerDuration; /* 0x198: timer duration handed to a linked timer object */
+    u8 hitsRemaining;  /* 0x19A: remaining hit count */
     u8 pad19B[0x19C - 0x19B];
 } DrgeneratorState;
+
+STATIC_ASSERT(offsetof(DrgeneratorState, timerDuration) == 0x198);
+STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
+STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);
 
 
 int drgenerator_getExtraSize(void) { return 0x19c; }
@@ -84,7 +93,7 @@ void drgenerator_init(int obj, char* arg)
             t->textureId = 0x100;
         }
     }
-    ((DrgeneratorState*)p)->unk19A = 2;
+    ((DrgeneratorState*)p)->hitsRemaining = 2;
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
     {
@@ -104,9 +113,9 @@ void drgenerator_init(int obj, char* arg)
             duration = 0x14;
             break;
         }
-        ((DrgeneratorState*)p)->unk198 = (s16)duration;
+        ((DrgeneratorState*)p)->timerDuration = (s16)duration;
     }
-    ((DrgeneratorState*)p)->unk198 = ((DrgeneratorState*)p)->unk198 * 0x3c;
+    ((DrgeneratorState*)p)->timerDuration = ((DrgeneratorState*)p)->timerDuration * 0x3c;
     ((DrgeneratorState*)p)->unk124 = lbl_803E6B68;
     if (GameBit_Get(0x9b9) != 0)
     {
@@ -158,11 +167,11 @@ void drgenerator_hitDetect(int obj)
         }
     }
     ((BitFlags8*)(p + 0x19b))->b0 = 1;
-    GameBit_Set(((DrgeneratorPlacement*)placement)->unk1E, 1);
+    GameBit_Set(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if (((GameObject*)obj)->anim.seqId == 0x716 &&
         (found = (void*)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL)
     {
-        timer_addDuration((int)found, ((DrgeneratorState*)p)->unk198);
+        timer_addDuration((int)found, ((DrgeneratorState*)p)->timerDuration);
     }
     else
     {
@@ -187,7 +196,7 @@ void drgenerator_update(int obj)
     {
         goto enable;
     }
-    if (GameBit_Get(((DrgeneratorPlacement*)placement)->unk20) != 0)
+    if (GameBit_Get(((DrgeneratorPlacement*)placement)->watchGameBit) != 0)
     {
         goto enable;
     }
@@ -204,7 +213,7 @@ enable:
     {
         goto loop;
     }
-    if (GameBit_Get(((DrgeneratorPlacement*)placement)->unk20) == 0)
+    if (GameBit_Get(((DrgeneratorPlacement*)placement)->watchGameBit) == 0)
     {
         goto loop;
     }
