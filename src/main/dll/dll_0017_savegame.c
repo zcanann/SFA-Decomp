@@ -591,10 +591,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 int saveSelect_getInfo(void* outPtr)
 {
     u8 save[SAVEGAME_ACTIVE_SIZE];
+    SaveSelectInfo* info;
     int slot;
     int i;
-    SaveSelectInfo* info;
-    u8 completion;
     u8* taskIds;
 
     slot = 0;
@@ -615,54 +614,53 @@ int saveSelect_getInfo(void* outPtr)
         {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
-            completion = save[0x55d];
-            info->percentComplete = (u8)((completion * 100) / 0xbb);
-            if (completion > 0xb3)
+            info->percentComplete = (u8)((save[0x55d] * 100) / 0xbb);
+            if (save[0x55d] > 0xb3)
             {
                 info->rankA = 6;
                 info->rankB = 4;
             }
-            else if (completion > 0xb0)
+            else if (save[0x55d] > 0xb0)
             {
                 info->rankA = 5;
                 info->rankB = 4;
             }
-            else if (completion > 0xa1)
+            else if (save[0x55d] > 0xa1)
             {
                 info->rankA = 4;
                 info->rankB = 4;
             }
-            else if (completion > 0x8a)
+            else if (save[0x55d] > 0x8a)
             {
                 info->rankA = 4;
                 info->rankB = 3;
             }
-            else if (completion > 0x81)
+            else if (save[0x55d] > 0x81)
             {
                 info->rankA = 3;
                 info->rankB = 3;
             }
-            else if (completion > 0x71)
+            else if (save[0x55d] > 0x71)
             {
                 info->rankA = 3;
                 info->rankB = 2;
             }
-            else if (completion > 0x62)
+            else if (save[0x55d] > 0x62)
             {
                 info->rankA = 2;
                 info->rankB = 2;
             }
-            else if (completion > 0x48)
+            else if (save[0x55d] > 0x48)
             {
                 info->rankA = 2;
                 info->rankB = 1;
             }
-            else if (completion > 0x3d)
+            else if (save[0x55d] > 0x3d)
             {
                 info->rankA = 1;
                 info->rankB = 1;
             }
-            else if (completion > 8)
+            else if (save[0x55d] > 8)
             {
                 info->rankA = 1;
                 info->rankB = 0;
