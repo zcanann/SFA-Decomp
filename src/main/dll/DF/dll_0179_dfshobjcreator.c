@@ -137,7 +137,7 @@ void dfsh_objcreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1A = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
-        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(*(s16*)obj >> 8);
+        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(((GameObject*)obj)->anim.rotX >> 8);
         ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
         if (GameBit_Get(0xfc) != 0)
         {
@@ -168,7 +168,7 @@ void dfsh_objcreator_initialise(void)
 void dfsh_objcreator_init(int obj, s8* def)
 {
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)def[0x1E] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
     ((GameObject*)obj)->unkF8 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
