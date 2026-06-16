@@ -294,7 +294,7 @@ void vortex_update(int obj)
             }
         }
     }
-    else
+    if (state->flags.active == 0)
     {
         f32 lim = lbl_803E73D0;
         if (state->alpha > lim)
