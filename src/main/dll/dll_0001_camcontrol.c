@@ -1,3 +1,26 @@
+/*
+ * camcontrol (DLL 0x0001) - the global gameplay camera controller.
+ *
+ * Owns the single camera state record (pCamera / CAMCONTROL_CAMERA) and
+ * drives it each frame from Camera_update: it caches the focus object's
+ * local/world position, optionally overrides the world position, keeps
+ * the camera's local frame in sync with the focus object's parent, runs
+ * the active handler's update vtable callback, applies queued actions,
+ * and (when no game text is up) picks the current target.
+ *
+ * camcontrol_updateTargetFeedback runs the lock-on / context-action
+ * reticle: it plays the acquire/lose SFX per target kind, glows the
+ * A-button, fades the reticle in/out via its ObjAnim move progress, and
+ * picks a per-objType reticle distance (with a baddie-control-interface
+ * fallback) to pulse the button glow as the target nears.
+ *
+ * camcontrol_loadTriggeredCamAction loads a triggered cam action record
+ * from the CAM .bin/.tab (CAMCONTROL_ACTION_FILE_ID) and dispatches it
+ * through Camera_setMode or the default handler's actionCallback.
+ *
+ * Target kinds, action ids, trigger kinds, reticle states and the
+ * camera/target flag bits are named in dll_0001_camcontrol.h.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "dolphin/os.h"
@@ -12,11 +35,11 @@
 #include "string.h"
 
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern int dll_19_func1B();
+extern int dll_19_func1B(); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern int isTalkingToNpc();
 extern int gameTextFn_80134be8(void);
-extern f32 fn_8014C5D0(int obj);
-extern f32 fn_80183204(int obj);
+extern f32 fn_8014C5D0(int obj); /* target reticle distance for the enemy objType group */
+extern f32 fn_80183204(int obj); /* target reticle distance for the largecrate objType group */
 extern f32 sqrtf(f32 x);
 
 extern u8 gCamcontrolStateStorage[];
@@ -45,7 +68,7 @@ void camcontrol_updateTargetFeedback(void)
 {
     uint targetKind;
     s16 objType;
-    float alphaScale;
+    f32 alphaScale;
     CamcontrolTargetObject* target;
     ObjAnimComponent* reticle;
     u8 buttonPressed;
@@ -132,14 +155,14 @@ void camcontrol_updateTargetFeedback(void)
         else
         {
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, gCamcontrolReticleFadeOutStep, timeDelta,
-                                                                        (ObjAnimEventList*)0x0);
+                                                                        NULL);
         }
     }
     else if (((uint)CAMCONTROL_CAMERA->targetReticleFocus == (uint)target) ||
         (reticle->currentMoveProgress < gCamcontrolNormalizedMax))
     {
         ObjAnim_AdvanceCurrentMove(gCamcontrolReticleFadeInStep, timeDelta, (int)reticle,
-                                   (ObjAnimEventList*)0x0);
+                                   NULL);
     }
     else
     {
@@ -171,90 +194,90 @@ void camcontrol_updateTargetFeedback(void)
     {
         CAMCONTROL_CAMERA->targetReticleFocus = 0;
     }
-    if ((gCamcontrolTargetState != CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE) ||
-        ((uint)CAMCONTROL_CAMERA->targetReticleFocus == 0))
-        goto LAB_80102ab4;
-    target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus;
-    if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) != 0)
+    if ((gCamcontrolTargetState == CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE) &&
+        ((uint)CAMCONTROL_CAMERA->targetReticleFocus != 0))
     {
-        CAMCONTROL_CAMERA->targetFlags =
-            CAMCONTROL_CAMERA->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
-    }
-    else
-    {
-        CAMCONTROL_CAMERA->targetFlags =
-            CAMCONTROL_CAMERA->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
-    }
-    objType = target->objType;
-    switch (objType)
-    {
-    case 0x11:
-    case 0xd8:
-    case 0x13a:
-    case 0x251:
-    case 0x25d:
-    case 0x281:
-    case 0x369:
-    case 0x3fe:
-    case 0x427:
-    case 0x457:
-    case 0x458:
-    case 0x4ac:
-    case 0x4d7:
-    case 0x58b:
-    case 0x5b7:
-    case 0x5b8:
-    case 0x5b9:
-    case 0x5e1:
-    case 0x613:
-    case 0x642:
-    case 0x6a2:
-    case 0x6a3:
-    case 0x6a4:
-    case 0x6a5:
-    case 0x842:
-    case 0x84b:
-    case 0x851:
-        targetDistance = fn_8014C5D0((int)target);
-        break;
-    case 0x3de:
-    case 0x49f:
-        targetDistance = fn_80183204((int)target);
-        break;
-    case 0x31:
-        targetDistance = gCamcontrolNormalizedMax;
-        break;
-    default:
-        result = dll_19_func1B((int)target);
-        if (result == 0)
+        target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus;
+        if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) != 0)
         {
-            targetDistance = gCamcontrolNormalizedMax;
+            CAMCONTROL_CAMERA->targetFlags =
+                CAMCONTROL_CAMERA->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
         }
         else
         {
-            targetDistance =
-                camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
+            CAMCONTROL_CAMERA->targetFlags =
+                CAMCONTROL_CAMERA->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
         }
-        break;
+        objType = target->objType;
+        switch (objType)
+        {
+        case 0x11:
+        case 0xd8:
+        case 0x13a:
+        case 0x251:
+        case 0x25d:
+        case 0x281:
+        case 0x369:
+        case 0x3fe:
+        case 0x427:
+        case 0x457:
+        case 0x458:
+        case 0x4ac:
+        case 0x4d7:
+        case 0x58b:
+        case 0x5b7:
+        case 0x5b8:
+        case 0x5b9:
+        case 0x5e1:
+        case 0x613:
+        case 0x642:
+        case 0x6a2:
+        case 0x6a3:
+        case 0x6a4:
+        case 0x6a5:
+        case 0x842:
+        case 0x84b:
+        case 0x851:
+            targetDistance = fn_8014C5D0((int)target);
+            break;
+        case 0x3de:
+        case 0x49f:
+            targetDistance = fn_80183204((int)target);
+            break;
+        case 0x31:
+            targetDistance = gCamcontrolNormalizedMax;
+            break;
+        default:
+            result = dll_19_func1B((int)target);
+            if (result == 0)
+            {
+                targetDistance = gCamcontrolNormalizedMax;
+            }
+            else
+            {
+                targetDistance =
+                    camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
+            }
+            break;
+        }
+        if (targetDistance <= gCamcontrolNormalizedMin && CAMCONTROL_CAMERA->targetDistance > gCamcontrolNormalizedMin)
+        {
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
+        }
+        else if (targetDistance <= gCamcontrolTargetDistanceTier1 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier1)
+        {
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
+        }
+        else if (targetDistance <= gCamcontrolTargetDistanceTier2 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier2)
+        {
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
+        }
+        else if (targetDistance <= gCamcontrolTargetDistanceTier3 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier3)
+        {
+            objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
+        }
+        CAMCONTROL_CAMERA->targetDistance = targetDistance;
     }
-    if (targetDistance <= gCamcontrolNormalizedMin && CAMCONTROL_CAMERA->targetDistance > gCamcontrolNormalizedMin)
-    {
-        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
-    }
-    else if (targetDistance <= gCamcontrolTargetDistanceTier1 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier1)
-    {
-        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
-    }
-    else if (targetDistance <= gCamcontrolTargetDistanceTier2 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier2)
-    {
-        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
-    }
-    else if (targetDistance <= gCamcontrolTargetDistanceTier3 && CAMCONTROL_CAMERA->targetDistance > gCamcontrolTargetDistanceTier3)
-    {
-        objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 4);
-    }
-    CAMCONTROL_CAMERA->targetDistance = targetDistance;
-LAB_80102ab4:
     alphaScale = gCamcontrolReticleAlphaScale * reticle->currentMoveProgress;
     if (alphaScale < gCamcontrolNormalizedMin)
     {
@@ -296,8 +319,8 @@ int Camera_getOverrideTarget(void)
     return CAMCONTROL_CAMERA->overrideTarget;
 }
 
-void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, float* outX, float* outY,
-                                    float* outZ, float* outDistanceXZ, int useLocalPosition)
+void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, f32* outX, f32* outY,
+                                    f32* outZ, f32* outDistanceXZ, int useLocalPosition)
 {
     ObjAnimComponent* focusObj;
     ObjAnimComponent* target;
@@ -316,7 +339,7 @@ void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, float* outX
         *outY = target->worldPosY - (focusObj->worldPosY + heightOffset);
         *outZ = target->worldPosZ - focusObj->worldPosZ;
     }
-    if (outDistanceXZ != (float*)0x0)
+    if (outDistanceXZ != NULL)
     {
         *outDistanceXZ = *outX * *outX + *outZ * *outZ;
         if (*outDistanceXZ > gCamcontrolNormalizedMin)
@@ -325,13 +348,13 @@ void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, float* outX
         }
         if (*outDistanceXZ < gCamcontrolMinTargetDistance)
         {
-            *outDistanceXZ = *(f32*)&gCamcontrolMinTargetDistance;
+            *outDistanceXZ = *(f32*)&gCamcontrolMinTargetDistance; /* #81 launder: reload not CSE */
         }
     }
     return;
 }
 
-void camcontrol_initialise(float* dst, f32 numerator, f32 denominator, f32 minValue, f32 y, f32 z)
+void camcontrol_initialise(f32* dst, f32 numerator, f32 denominator, f32 minValue, f32 y, f32 z)
 {
     f32 x;
 
@@ -370,12 +393,29 @@ void Camera_setFocus(void* target)
     CAMCONTROL_CAMERA->focusObj = target;
 }
 
-void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int triggerMode)
+static inline CamcontrolHandlerEntry* camcontrol_findDefaultHandler(void)
 {
     int handlerCount;
     int handlerIndex;
-    CamcontrolHandlerEntry* defaultHandler;
     register CamcontrolHandlerEntry** handlerEntry;
+
+    handlerIndex = 0;
+    handlerEntry = gCamcontrolHandlerEntries;
+    for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--)
+    {
+        if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT)
+        {
+            return gCamcontrolHandlerEntries[handlerIndex];
+        }
+        handlerEntry++;
+        handlerIndex++;
+    }
+    return NULL;
+}
+
+void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int triggerMode)
+{
+    CamcontrolHandlerEntry* defaultHandler;
     int blendFrames;
     CamcontrolTriggeredAction* camAction;
     int actionOffset;
@@ -428,18 +468,18 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
     {
         if (actionNo == CAMCONTROL_ACTION_NO_NONE)
         {
-            camAction = (CamcontrolTriggeredAction*)0x0;
+            camAction = NULL;
         }
         else
         {
             camAction = (CamcontrolTriggeredAction*)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE, CAMCONTROL_ACTION_HEAP, 0);
-            if (camAction != (CamcontrolTriggeredAction*)0x0)
+            if (camAction != NULL)
             {
                 actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
                 getTabEntry(camAction, CAMCONTROL_ACTION_FILE_ID, actionOffset, CAMCONTROL_ACTION_RECORD_SIZE);
             }
         }
-        if (camAction == (CamcontrolTriggeredAction*)0x0)
+        if (camAction == NULL)
         {
             return;
         }
@@ -450,21 +490,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
                 ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
             ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2))
         {
-            handlerIndex = 0;
-            handlerEntry = gCamcontrolHandlerEntries;
-            for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
-                 handlerCount = handlerCount - 1)
-            {
-                if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT)
-                {
-                    defaultHandler = gCamcontrolHandlerEntries[handlerIndex];
-                    goto LAB_80102f3c;
-                }
-                handlerEntry = handlerEntry + 1;
-                handlerIndex++;
-            }
-            defaultHandler = NULL;
-        LAB_80102f3c:
+            defaultHandler = camcontrol_findDefaultHandler();
             defaultHandler->handler->vtable->actionCallback(camAction, CAMCONTROL_ACTION_RECORD_SIZE);
         }
         else
@@ -488,12 +514,12 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
     {
         OSReport(sCamcontrolTriggeredCamActionLoadWarning, actionNo);
         camAction = (CamcontrolTriggeredAction*)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE, CAMCONTROL_ACTION_HEAP, 0);
-        if (camAction != (CamcontrolTriggeredAction*)0x0)
+        if (camAction != NULL)
         {
             getTabEntry(camAction, CAMCONTROL_ACTION_FILE_ID, CAMCONTROL_FALLBACK_ACTION_FILE_OFFSET,
                         CAMCONTROL_ACTION_RECORD_SIZE);
         }
-        if (camAction == (CamcontrolTriggeredAction*)0x0)
+        if (camAction == NULL)
         {
             return;
         }
@@ -504,21 +530,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
                 ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
             ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2))
         {
-            handlerIndex = 0;
-            handlerEntry = gCamcontrolHandlerEntries;
-            for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
-                 handlerCount = handlerCount - 1)
-            {
-                if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT)
-                {
-                    defaultHandler = gCamcontrolHandlerEntries[handlerIndex];
-                    goto LAB_80102f3c_b;
-                }
-                handlerEntry = handlerEntry + 1;
-                handlerIndex++;
-            }
-            defaultHandler = NULL;
-        LAB_80102f3c_b:
+            defaultHandler = camcontrol_findDefaultHandler();
             defaultHandler->handler->vtable->actionCallback(camAction, CAMCONTROL_ACTION_RECORD_SIZE);
         }
         else
@@ -547,10 +559,10 @@ CamcontrolTriggeredAction* Camera_getCamActionsBinEntry(int actionNo)
 
     if (actionNo == CAMCONTROL_ACTION_NO_NONE)
     {
-        return 0;
+        return NULL;
     }
     camAction = mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE, CAMCONTROL_ACTION_HEAP, 0);
-    if (camAction != 0)
+    if (camAction != NULL)
     {
         getTabEntry(camAction, CAMCONTROL_ACTION_FILE_ID,
                     (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE, CAMCONTROL_ACTION_RECORD_SIZE);
@@ -582,22 +594,22 @@ void camcontrol_queueSavedAction(int blendFrames, u8 queueMode)
 void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, void* data,
                     int blendFrames, u8 queueMode)
 {
-    if (gCamcontrolQueuedActionData != (void*)0x0)
+    if (gCamcontrolQueuedActionData != NULL)
     {
         mm_free(gCamcontrolQueuedActionData);
-        gCamcontrolQueuedActionData = (void*)0x0;
+        gCamcontrolQueuedActionData = NULL;
         gCamcontrolQueuedActionPending = 0;
     }
     gCamcontrolQueuedActionId = actionId;
     gCamcontrolQueuedActionBlendFrames = blendFrames;
-    if (data != (void*)0x0)
+    if (data != NULL)
     {
         gCamcontrolQueuedActionData = mmAlloc(dataSize, CAMCONTROL_ACTION_HEAP, 0);
         memcpy(gCamcontrolQueuedActionData, data, dataSize);
     }
     else
     {
-        gCamcontrolQueuedActionData = (void*)0x0;
+        gCamcontrolQueuedActionData = NULL;
     }
     if (actionId == CAMCONTROL_ACTION_DEFAULT)
     {
@@ -629,7 +641,7 @@ void Camera_update(void)
         textActive = 0;
     }
     focus = camera->focusObj;
-    if (focus == (ObjAnimComponent*)0x0)
+    if (focus == NULL)
     {
         camera->currentTarget = 0;
         camera->overrideTarget = 0;
@@ -669,7 +681,7 @@ void Camera_update(void)
                                            (u32)focus->parent);
             camera->localFrameObj = focus->parent;
         }
-        if (focus->parent != (void*)0x0)
+        if (focus->parent != NULL)
         {
             focus->rotX += ((ObjAnimComponent*)focus->parent)->rotX;
         }
@@ -708,7 +720,7 @@ void Camera_update(void)
         focus->worldPosX = gCamcontrolSavedFocusWorldX;
         focus->worldPosY = gCamcontrolSavedFocusWorldY;
         focus->worldPosZ = gCamcontrolSavedFocusWorldZ;
-        if (focus->parent != (void*)0x0)
+        if (focus->parent != NULL)
         {
             focus->rotX -= ((ObjAnimComponent*)focus->parent)->rotX;
         }
