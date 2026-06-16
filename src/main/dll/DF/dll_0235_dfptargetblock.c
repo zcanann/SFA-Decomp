@@ -109,14 +109,14 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
 }
 
 static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
-                                               DfpTargetBlockAudioState* state, f32 threshold)
+                                               DfpTargetBlockAudioState* state, const f32* threshold)
 {
     f32 dx;
     f32 dz;
 
     dx = obj->x - lbl_803DDCF8;
     dz = obj->z - lbl_803DDCFC;
-    if (((lbl_803E648C == dx) && (lbl_803E648C == dz)) || (sqrtf(dx * dx + dz * dz) < threshold))
+    if (((lbl_803E648C == dx) && (lbl_803E648C == dz)) || (sqrtf(dx * dx + dz * dz) < *threshold))
     {
         state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
     }
@@ -237,7 +237,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
-        dfptargetblock_checkSettled(obj, state, lbl_803E64B0);
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64B0);
     }
     else if (mode == 2)
     {
@@ -260,7 +260,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
                                                  &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
             }
         }
-        dfptargetblock_checkSettled(obj, state, lbl_803E64C0);
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64C0);
     }
 }
 
