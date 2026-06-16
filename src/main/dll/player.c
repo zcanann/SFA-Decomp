@@ -12788,8 +12788,9 @@ int fn_802AB1D0(int obj)
     }
     best = 0;
     objs = (int)ObjGroup_GetObjects(8, &count);
+    i = 0;
     bestDist = lbl_803E7EA4;
-    for (i = 0; i < count;)
+    for (; i < count;)
     {
         int kind;
         cur = ((int*)objs)[i++];
