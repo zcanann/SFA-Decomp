@@ -1,3 +1,19 @@
+/*
+ * dfbarrelanim - rope/chain physics construction and helpers for the
+ * DragonRock (DF) rope-node objects (dll_0175_dfropenode).
+ *
+ * DFRope_Create lays out a single mmAlloc block holding the DFRope header,
+ * its per-node array and the inter-node link array, seeds node positions
+ * evenly between the start and end points, pins the two endpoint nodes
+ * (locked), and wires each link to its node pair via DFRopeLink_AttachNodes.
+ * The lbl_803E4DF8..803E4E18 constants tune the simulation (rest step,
+ * damping, slack, link stiffness/max-length scale).
+ *
+ * The dfropenode_func0F..func13 accessors read/write the DFropenodeExtra
+ * state (angle, hidden flag with its linked-object mirror, ground minY,
+ * linked object). fn_801C1698 projects a point onto the start->end segment
+ * (clamped to the endpoints) and returns the projection parameter t.
+ */
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 
@@ -61,7 +77,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     rope->step = lbl_803E4DF8;
     if (rope->step * length > lbl_803E4E04)
     {
-        rope->step = *(f32*)&lbl_803E4E04 / length;
+        rope->step = *(f32*)&lbl_803E4E04 / length; /* launder forces a reload (no CSE with the guard above) */
     }
     rope->maxSlack = lbl_803E4E08;
     rope->stepPerTick = rope->step / tickScale;
@@ -127,12 +143,12 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
 
 void dfropenode_func12(int obj, float value)
 {
-    ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->minY = value;
+    ((DFropenodeObject*)obj)->extra->minY = value;
 }
 
 int dfropenode_func11(int obj)
 {
-    DFropenodeExtra* extra = (DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra;
+    DFropenodeExtra* extra = ((DFropenodeObject*)obj)->extra;
 
     return (s16)(extra->hidden == 0);
 }
@@ -144,26 +160,26 @@ void dfropenode_func10(int obj, int value)
     DFropenodeExtra* extra;
     void* linkedObj;
 
-    extra = (DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra;
+    extra = ((DFropenodeObject*)obj)->extra;
     bit = (value == 0);
     bitByte = bit;
     extra->hidden = bitByte;
     linkedObj = (void*)extra->linkedObj;
     if (linkedObj != NULL)
     {
-        extra = (DFropenodeExtra*)*(int*)&((GameObject*)linkedObj)->extra;
+        extra = ((DFropenodeObject*)linkedObj)->extra;
         extra->hidden = bitByte;
     }
 }
 
 void dfropenode_func13(int obj)
 {
-    ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->linkedObj = 0;
+    ((DFropenodeObject*)obj)->extra->linkedObj = 0;
 }
 
 int dfropenode_func0F(int obj)
 {
-    return ((DFropenodeExtra*)*(int*)&((GameObject*)obj)->extra)->angle;
+    return ((DFropenodeObject*)obj)->extra->angle;
 }
 
 f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32* x, f32* y,
@@ -185,7 +201,7 @@ f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ
     {
         t = (dx * (*x - startX) + dz * (*z - startZ)) / (dx * dx + dz * dz);
     }
-    if (t < *(f32*)&lbl_803E4DFC)
+    if (t < *(f32*)&lbl_803E4DFC) /* launder forces a reload of the constant (load-bearing for the match) */
     {
         *x = startX;
         *y = startY;
