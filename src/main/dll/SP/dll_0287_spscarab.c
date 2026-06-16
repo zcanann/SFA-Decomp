@@ -46,12 +46,16 @@ extern f32 lbl_803E5A8C;
 extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94; /* base horizontal speed scale */
 
+/* init() reads the placement raw off def: rotX byte (0x18), kind (0x19),
+   vendorObj (int, 0x14) and groundY (s16, 0x1a). */
 typedef struct SpscarabPlacement
 {
     u8 pad0[0x19 - 0x0];
-    s8 kind; /* 0x19: scarab variant (0 / 1); also read raw from def+0x14/0x18/0x1a in init */
+    s8 kind; /* 0x19: scarab variant (0 / 1) */
     u8 pad1A[0x20 - 0x1A];
 } SpscarabPlacement;
+
+STATIC_ASSERT(sizeof(SpscarabPlacement) == 0x20);
 
 typedef struct SpscarabState
 {

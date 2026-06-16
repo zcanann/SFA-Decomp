@@ -247,8 +247,7 @@ void shopkeeper_init(int obj)
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->animEventCallback = (void*)fn_801E76A0;
     ((GameObject*)obj)->anim.modelState->flags |= 0x810;
-    ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)
-    randomGetRange(0xF, 0x23);
+    ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState*)state)->opacity = 0xFF;
     ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;

@@ -50,6 +50,8 @@ typedef struct SpdrapeObjectDef
     u8 pad1C[0x20 - 0x1C];
 } SpdrapeObjectDef;
 
+STATIC_ASSERT(sizeof(SpdrapeObjectDef) == 0x20);
+
 typedef struct SpdrapeState
 {
     f32 animSpeed;    /* 0x00: move-advance speed */

@@ -35,6 +35,8 @@ typedef struct SpitembeamPlacement
     u8 pad1C[0x20 - 0x1C];
 } SpitembeamPlacement;
 
+STATIC_ASSERT(sizeof(SpitembeamPlacement) == 0x20);
+
 void spitembeam_init(int obj)
 {
     ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
