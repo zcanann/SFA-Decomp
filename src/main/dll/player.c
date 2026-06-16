@@ -11328,7 +11328,7 @@ int fn_802957B4(int obj)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sub;
 
-    if (obj == 0)
+    if ((void*)obj == NULL)
     {
         return 0;
     }
@@ -11336,26 +11336,26 @@ int fn_802957B4(int obj)
     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
     sub = inner->unk7F0;
-    if (sub == 0)
+    if ((void*)sub != NULL)
     {
-        return 0;
+        /* target uses 3-deref (lwz r5,104; lwz r5,0(r5); lwz r12,60(r5)) -- correct form is
+           *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c); blocked by #108 remat cascade
+           (3-deref alone nets -0.4pp here); apply 3-deref + #108 fix together when #108 lands. */
+        (*(void (*)(int, int))(*(int*)(*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
+        (*gCameraInterface)->setFocus((void*)obj, 0);
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
+        ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
+        inner->unk7F0 = 0;
+        ((GameObject*)obj)->anim.activeMove = -1;
+        (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
+        *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
+        Music_Trigger(0x1f, 0);
+        Music_Trigger(0x97, 0);
+        Music_Trigger(0xe6, 0);
+        Music_Trigger(0xd5, 0);
+        return 1;
     }
-    /* target uses 3-deref (lwz r5,104; lwz r5,0(r5); lwz r12,60(r5)) -- correct form is
-       *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c); blocked by #108 remat cascade
-       (3-deref alone nets -0.4pp here); apply 3-deref + #108 fix together when #108 lands. */
-    (*(void (*)(int, int))(*(int*)(*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
-    (*gCameraInterface)->setFocus((void*)obj, 0);
-    ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
-    ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-    inner->unk7F0 = 0;
-    ((GameObject*)obj)->anim.activeMove = -1;
-    (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
-    *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
-    Music_Trigger(0x1f, 0);
-    Music_Trigger(0x97, 0);
-    Music_Trigger(0xe6, 0);
-    Music_Trigger(0xd5, 0);
-    return 1;
+    return 0;
 }
 
 int fn_8029BC4C(int obj, int state, f32 fv)
