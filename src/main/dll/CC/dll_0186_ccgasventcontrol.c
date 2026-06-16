@@ -21,8 +21,9 @@
 #include "main/objseq.h"
 
 #define CCGASVENT_GROUP 0x3f
-#define GAMEBIT_GAS_ACTIVE 0x1c0    /* gas filling the room */
+#define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
+#define GAMEBIT_GAS_INTRO_TRIGGER 0x3ec /* fires the intro sequence once the vents exist */
 
 typedef struct CcgasventcontrolState
 {
@@ -127,7 +128,7 @@ void ccgasventcontrol_update(int obj)
             break;
         }
     case 1:
-        if (GameBit_Get(0x3ec) != 0)
+        if (GameBit_Get(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             *(u8*)ex = 2;

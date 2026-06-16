@@ -34,17 +34,20 @@ extern f32 lbl_803E46C4; /* squared activation distance */
 
 typedef struct SharpClawPadParticleArgs
 {
-    u8 pad00[0xc];
-    f32 offset[3];
+    u8 pad00[0xc];   /* 0x00: filled in by objfx_spawnArcedBurst, not written here */
+    f32 offset[3];   /* 0x0C: emitter offset x/y/z */
 } SharpClawPadParticleArgs;
+
+STATIC_ASSERT(offsetof(SharpClawPadParticleArgs, offset) == 0xC);
+STATIC_ASSERT(sizeof(SharpClawPadParticleArgs) == 0x18);
 
 int ccsharpclawpad_getExtraSize(void) { return 0x4; }
 
 #pragma scheduling off
 #pragma peephole off
-void ccsharpclawpad_init(int* obj, int* def)
+void ccsharpclawpad_init(int* obj, int* placement)
 {
-    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 24) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 
@@ -84,7 +87,7 @@ void ccsharpclawpad_update(int obj)
         }
         if (*state > lbl_803E46B0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
             {
                 *state = lbl_803E46B0;
             }

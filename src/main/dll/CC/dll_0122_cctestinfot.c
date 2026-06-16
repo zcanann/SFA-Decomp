@@ -27,6 +27,7 @@ typedef struct CctestinfotState
     u8 pad05[3];
 } CctestinfotState;
 
+STATIC_ASSERT(offsetof(CctestinfotState, disguised) == 0x4);
 STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
 
 int cctestinfot_getExtraSize(void) { return sizeof(CctestinfotState); }
@@ -67,7 +68,7 @@ void cctestinfot_update(int *obj)
     }
     if (state->holdTimer > lbl_803E3C8C)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             state->holdTimer = lbl_803E3C8C;
         }

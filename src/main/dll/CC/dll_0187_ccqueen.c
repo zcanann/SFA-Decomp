@@ -29,13 +29,19 @@ extern f32 lbl_803E4660; /* render scale */
 extern f32 lbl_803E4664; /* squared trigger distance */
 extern f32 lbl_803E4668; /* move advance rate */
 
+#define GAMEBIT_QUEEN_LATCHED 0x1c2   /* player got close once the gas puzzle was done */
+#define GAMEBIT_QUEEN_RETIRED 0x1c3   /* queen leaves: hidden + hits disabled */
+#define GAMEBIT_GAS_PUZZLE_DONE 0xa3
+
 typedef struct
 {
     s16 v[3];
-} _S16x3;
+} Vec3s;
 
-extern _S16x3 lbl_803E4650;
-extern _S16x3 lbl_803E4658;
+STATIC_ASSERT(sizeof(Vec3s) == 0x6);
+
+extern Vec3s lbl_803E4650; /* eye-anim setup vector A */
+extern Vec3s lbl_803E4658; /* eye-anim setup vector B */
 
 int ccqueen_getExtraSize(void) { return 0x654; }
 
@@ -48,37 +54,37 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma scheduling off
 #pragma peephole off
-void ccqueen_init(int* obj, u8* def)
+void ccqueen_init(int* obj, u8* placement)
 {
-    u8* sub;
-    _S16x3 buf2;
-    _S16x3 buf1;
-    sub = ((GameObject*)obj)->extra;
+    u8* charState;
+    Vec3s buf2;
+    Vec3s buf1;
+    charState = ((GameObject*)obj)->extra;
     buf2 = lbl_803E4650;
     buf1 = lbl_803E4658;
-    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1a] << 8);
-    dll_2E_func05(obj, sub, 0x71c7, 0x3555, 3);
-    dll_2E_func08(sub, 0x258, 0xf0);
-    dll_2E_func09(sub, &buf1, &buf2, 3);
-    sub[0x611] = (u8)(sub[0x611] | 0xa);
+    ((GameObject*)obj)->anim.rotX = (s16)(placement[0x1a] << 8);
+    dll_2E_func05(obj, charState, 0x71c7, 0x3555, 3);
+    dll_2E_func08(charState, 0x258, 0xf0);
+    dll_2E_func09(charState, &buf1, &buf2, 3);
+    charState[0x611] = (u8)(charState[0x611] | 0xa);
 }
 
 void ccqueen_update(int* obj)
 {
-    u8* sub;
+    u8* charState;
     int* player;
 
-    sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0)
+    charState = ((GameObject*)obj)->extra;
+    if (GameBit_Get(GAMEBIT_QUEEN_LATCHED) == 0 && GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         player = (int*)Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             lbl_803E4664)
         {
-            GameBit_Set(0x1c2, 1);
+            GameBit_Set(GAMEBIT_QUEEN_LATCHED, 1);
         }
     }
-    if (GameBit_Get(0x1c3) != 0)
+    if (GameBit_Get(GAMEBIT_QUEEN_RETIRED) != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
@@ -87,7 +93,7 @@ void ccqueen_update(int* obj)
     else
     {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4668, timeDelta, NULL);
-        dll_2E_func03(obj, sub);
-        characterDoEyeAnims((int)obj, sub + 0x624);
+        dll_2E_func03(obj, charState);
+        characterDoEyeAnims((int)obj, charState + 0x624);
     }
 }

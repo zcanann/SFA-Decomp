@@ -1,11 +1,17 @@
-/* DLL 0x0188 (cclightfoot) — CloudRunner Lightfoot object [0x801AA734-0x801AB468).
+/* DLL 0x0188 (cclightfoot) - CloudRunner Lightfoot object.
  * The LightFoot enemies in the CloudRunner capture/escape encounter (they
- * chase the player; target actors 0x45d7d/0x45d7f). GameBit 9 is the
- * per-encounter latch: the first creature to reach state 0xc sets it (when its
- * ObjTrigger fires), and on (re)spawn any creature that sees GameBit 9 already
- * set despawns immediately (state 0 -> 0xe). GameBit 0x24 marks full
- * completion. Nothing else in the game writes GameBit 9. */
+ * chase the player; target actors CCLIGHTFOOT_TARGET_ACTOR_A/B).
+ * GAMEBIT_LIGHTFOOT_TRIGGERED is the per-encounter latch: the first creature
+ * to reach state 0xC sets it (when its ObjTrigger fires), and on (re)spawn any
+ * creature that sees it already set despawns immediately (state 0 -> 0xE).
+ * GAMEBIT_CC_COMPLETE marks full completion. Nothing else in the game writes
+ * the trigger latch. */
 #include "main/dll/DIM/dimlogfire.h"
+
+#define GAMEBIT_LIGHTFOOT_TRIGGERED 9
+#define GAMEBIT_CC_COMPLETE 0x24
+#define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
+#define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -69,36 +75,36 @@ extern f32 lbl_803E467C;
 
 #pragma dont_inline on
 #pragma scheduling on
-void fn_801AA878(u8* p1, int* p2, f32 v)
+void fn_801AA878(u8* state, int* targetObj, f32 dist)
 {
-    s16 t;
-    if (lbl_803E4674 == v)
+    s16 move;
+    if (lbl_803E4674 == dist)
     {
-        p1[16] = 12;
+        state[16] = 12;
         return;
     }
-    if ((p1[17] & 2) != 0)
+    if ((state[17] & 2) != 0)
     {
-        p1[16] = 1;
+        state[16] = 1;
         return;
     }
-    if (v < lbl_803E4678)
+    if (dist < lbl_803E4678)
     {
-        t = ((GameObject*)p2)->anim.currentMove;
-        if (t == 24 && ((GameObject*)p2)->anim.currentMoveProgress > lbl_803E467C)
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
-            p1[16] = 8;
+            state[16] = 8;
             return;
         }
-        if (t == 25)
+        if (move == 25)
         {
-            p1[16] = 5;
+            state[16] = 5;
             return;
         }
-        p1[16] = 11;
+        state[16] = 11;
         return;
     }
-    p1[16] = 2;
+    state[16] = 2;
 }
 #pragma dont_inline reset
 
@@ -138,7 +144,6 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 
 extern int playerIsDisguised(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
 extern f32 lbl_803E4680;
@@ -161,10 +166,12 @@ extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 
 typedef struct LightfootAnimTable
 {
-    u8 stateFlags[0x10];
-    u8 animIds[0x10];
-    f32 animSpeeds[15];
+    u8 stateFlags[0x10]; /* 0x00: per-state flag bits (bit 0 = active hitbox, bit 1 = blend in) */
+    u8 animIds[0x10];    /* 0x10: per-state anim/move id */
+    f32 animSpeeds[15];  /* 0x20: per-state advance speed */
 } LightfootAnimTable;
+
+STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 
 void cclightfoot_update(int obj)
 {
@@ -367,7 +374,7 @@ void cclightfoot_update(int obj)
     switch (*((u8*)state + 0x10))
     {
     case 0:
-        if (GameBit_Get(9) != 0)
+        if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
             *((u8*)state + 0x10) = 0xe;
         }
@@ -380,8 +387,8 @@ void cclightfoot_update(int obj)
                 ObjLink_AttachChild(obj, state[0], 0);
             }
             state[1] = (int)Obj_GetPlayerObject();
-            state[2] = ObjList_FindObjectById(0x45d7d);
-            state[3] = ObjList_FindObjectById(0x45d7f);
+            state[2] = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
+            state[3] = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
             *((u8*)state + 0x10) = 1;
             *(f32*)(state + 5) = (f32)(int)
             randomGetRange(0xb4, 0x12c);
@@ -504,9 +511,9 @@ void cclightfoot_update(int obj)
         fn_801AA878((u8*)state, (int*)targetObj, dist);
         break;
     case 0xc:
-        if (GameBit_Get(9) != 0)
+        if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
-            if (GameBit_Get(0x24) != 0)
+            if (GameBit_Get(GAMEBIT_CC_COMPLETE) != 0)
             {
                 *((u8*)state + 0x10) = 0xe;
             }
@@ -515,7 +522,7 @@ void cclightfoot_update(int obj)
         {
             if (ObjTrigger_IsSet(obj) != 0)
             {
-                GameBit_Set(9, 1);
+                GameBit_Set(GAMEBIT_LIGHTFOOT_TRIGGERED, 1);
             }
             else if (*((u8*)state + 0x11) & 2)
             {

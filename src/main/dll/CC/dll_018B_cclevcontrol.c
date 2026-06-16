@@ -48,7 +48,7 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 void cclevcontrol_free(void)
 {
     envFxActFn_800887f8(0);
-    Music_Trigger(200, 0);
+    Music_Trigger(0xc8, 0);
 }
 
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -88,8 +88,8 @@ void cclevcontrol_update(int obj)
     extern void* getTrickyObject(void);
     int* state = ((GameObject*)obj)->extra;
     int* tricky;
-    u32 a;
-    u32 b;
+    u32 collectBitA;
+    u32 collectBitB;
 
     if (*(f32*)state > lbl_803E46D0)
     {
@@ -166,9 +166,9 @@ void cclevcontrol_update(int obj)
             (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);
         }
     }
-    a = GameBit_Get(0x3f0);
-    b = GameBit_Get(0xaf7);
-    if (b + a == 4 && GameBit_Get(0xf26) == 0)
+    collectBitA = GameBit_Get(0x3f0);
+    collectBitB = GameBit_Get(0xaf7);
+    if (collectBitB + collectBitA == 4 && GameBit_Get(0xf26) == 0)
     {
         Sfx_PlayFromObject(obj, 0x7e);
         GameBit_Set(0xf26, 1);
