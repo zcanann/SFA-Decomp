@@ -258,7 +258,7 @@ void bombplantspore_update(void* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    if ((state->stateFlags >> 6 & 1) != 0)
+    if ((state->stateFlags >> 6 & 1) != 0u)
     {
         detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
@@ -280,7 +280,7 @@ void bombplantspore_update(void* obj)
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
             }
         }
-        if ((state->stateFlags >> 6 & 1) != 0)
+        if ((state->stateFlags >> 6 & 1) != 0u)
         {
             return;
         }
