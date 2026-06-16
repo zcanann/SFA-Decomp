@@ -755,21 +755,25 @@ extern f32 lbl_803DE864;
 
 ObjModelChain* ObjModelChain_Alloc(void* models, int count)
 {
-    int i;
     int** p;
+    int off;
     ObjModelChain* state;
+    int i;
 
     state = mmAlloc(0x1c, 0x1a, 0);
     state->count = count;
     state->unk19 = 0;
     state->updateFlag = 0;
     state->entries = mmAlloc(count * 0xc, 0x1a, 0);
-    for (i = 0, p = (int**)models; i < count; i++)
+    p = (int**)models;
+    off = 0;
+    for (i = 0; i < count; i++)
     {
-        state->entries[i].model = *p;
-        state->entries[i].frameCount = (*p)[1];
-        state->entries[i].frameBuffer = mmAlloc((state->entries[i].frameCount + 1) * 0x54, 0x1a, 0);
+        *(int**)((char*)state->entries + off + 4) = *p;
+        *(int*)((char*)state->entries + off + 8) = (*p)[1];
+        *(void**)((char*)state->entries + off) = mmAlloc((*(int*)((char*)state->entries + off + 8) + 1) * 0x54, 0x1a, 0);
         p++;
+        off += 0xc;
     }
     state->originX = lbl_803DE858;
     state->originY = lbl_803DE85C;
