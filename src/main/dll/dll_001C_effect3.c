@@ -1,3 +1,19 @@
+/*
+ * effect3 (DLL 0x1C) - a particle-effect spawner object.
+ *
+ * The live entry point is Effect3_func04: a spawn dispatcher keyed on
+ * effectId (0x1F4..0x20E). For each id it fills a PartFxSpawn request -
+ * texture, lifetime, scale, start position, velocity, color, behavior and
+ * render flags, mostly randomized via randomGetRange - then hands it to
+ * gExpgfxInterface->spawnEffect. Behavior-flag bit 0 means "offset start
+ * position by the attached source"; spawnFlags bit 0x200000 selects an
+ * explicit PartFxSpawnParams source over the attached object. The object's
+ * vtable (projgfx_funcs) is otherwise all nop/unsupported callbacks.
+ *
+ * The modgfx_ and projgfx_spawnPresetEffect bodies above are Ghidra drift
+ * duplicates of modgfx.c/expgfx symbols (text < this unit's range); they
+ * do not link here and only the named-symbol scope keeps them present.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -191,8 +207,8 @@ void modgfx_releaseExpgfxPools(void)
     do
     {
         FUN_80017814(*slotPoolBases);
-        slotPoolBases = slotPoolBases + 1;
-        poolIndex = poolIndex + 1;
+        slotPoolBases++;
+        poolIndex++;
     }
     while (poolIndex < EXPGFX_POOL_COUNT);
     return;
@@ -244,7 +260,7 @@ void modgfx_allocExpgfxPools(void)
         poolActiveMasks = poolActiveMasks + 8;
         poolActiveCounts = poolActiveCounts + 8;
         poolSlotTypeIds = poolSlotTypeIds + 8;
-        groupCount = groupCount + -1;
+        groupCount--;
     }
     while (groupCount != 0);
     slotPoolBases = gExpgfxSlotPoolBases;
@@ -254,8 +270,8 @@ void modgfx_allocExpgfxPools(void)
         *slotPoolBases = allocatedPool;
         FUN_800033a8(*slotPoolBases, 0, EXPGFX_POOL_BYTES);
         FUN_802420e0(*slotPoolBases, EXPGFX_POOL_BYTES);
-        slotPoolBases = slotPoolBases + 1;
-        poolIndex = poolIndex + 1;
+        slotPoolBases++;
+        poolIndex++;
     }
     while (poolIndex < EXPGFX_POOL_COUNT);
     FUN_800033a8(-0x7fc63ec8, 0, 0x500);
@@ -308,7 +324,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
     wrapCountS = 0;
     wrapCountT = 0;
-    for (i = 0; i < state->vertexCount; i = i + 1)
+    for (i = 0; i < state->vertexCount; i++)
     {
         activeVertexData->texCoordS = inactiveVertexData->texCoordS;
         activeVertexData->texCoordT = inactiveVertexData->texCoordT;
@@ -330,11 +346,11 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
         {
             wrapCountT = wrapCountT + 1 & 0xff;
         }
-        activeVertexData = activeVertexData + 1;
-        inactiveVertexData = inactiveVertexData + 1;
+        activeVertexData++;
+        inactiveVertexData++;
     }
     activeVertexData = modgfx_getActiveVertexBuffer(state);
-    for (i = 0; i < state->vertexCount; i = i + 1)
+    for (i = 0; i < state->vertexCount; i++)
     {
         if (wrapCountS == (int)state->vertexCount)
         {
@@ -360,7 +376,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
                 activeVertexData->texCoordT = coord + -0x100;
             }
         }
-        activeVertexData = activeVertexData + 1;
+        activeVertexData++;
     }
     return;
 }
@@ -377,7 +393,7 @@ void modgfx_resetBaseVertexState(int stateArg)
     state = (ModgfxState*)stateArg;
     inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
     baseVertexData = state->baseVertexData;
-    for (i = 0; one = lbl_803E00B4, i < state->vertexCount; i = i + 1)
+    for (i = 0; one = lbl_803E00B4, i < state->vertexCount; i++)
     {
         baseVertexData->posX = inactiveVertexData->posX;
         baseVertexData->posY = inactiveVertexData->posY;
@@ -386,8 +402,8 @@ void modgfx_resetBaseVertexState(int stateArg)
         baseVertexData->colorG = inactiveVertexData->colorG;
         baseVertexData->colorB = inactiveVertexData->colorB;
         baseVertexData->alpha = inactiveVertexData->alpha;
-        baseVertexData = baseVertexData + 1;
-        inactiveVertexData = inactiveVertexData + 1;
+        baseVertexData++;
+        inactiveVertexData++;
     }
     state->scaleChannels[0].cur[0] = lbl_803E00B4;
     state->scaleChannels[0].cur[1] = one;
@@ -511,7 +527,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
         ((ModgfxState*)state)->blendColorB = lbl_803E00B0;
     }
     idxOff = 0;
-    for (i = 0; i < ((ModgfxVertexGroupCmd*)command)->indexCount; i = i + 1)
+    for (i = 0; i < ((ModgfxVertexGroupCmd*)command)->indexCount; i++)
     {
         *(char*)(vtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff) * 0x10 + 0xc) =
             (char)(int)((ModgfxState*)state)->blendColorR;
@@ -519,7 +535,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
             (char)(int)((ModgfxState*)state)->blendColorG;
         *(char*)(vtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff) * 0x10 + 0xe) =
             (char)(int)((ModgfxState*)state)->blendColorB;
-        idxOff = idxOff + 2;
+        idxOff += 2;
     }
     return;
 }
@@ -650,13 +666,13 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
         if ((int)((ModgfxState*)state)->blendFrameCount == 0)
         {
             work1 = 0;
-            for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
+            for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0++)
             {
                 *(char*)(baseVtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 0xf) =
                     (char)(int)targetAlpha;
                 work2 = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 0xf;
                 *(undefined*)(curVtxData + work2) = *(undefined*)(baseVtxData + work2);
-                work1 = work1 + 2;
+                work1 += 2;
             }
             return;
         }
@@ -688,13 +704,13 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
         *(float*)(work0 + 0xb0) = lbl_803E00B0;
     }
     work0 = 0;
-    for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2 = work2 + 1)
+    for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2++)
     {
         *(char*)(curVtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work0) * 0x10 + 0xf) =
             (char)(int)*(float*)(state + work1 + 0xb0);
         vtxOff = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work0) * 0x10 + 0xf;
         *(undefined*)(baseVtxData + vtxOff) = *(undefined*)(curVtxData + vtxOff);
-        work0 = work0 + 2;
+        work0 += 2;
     }
     return;
 }
@@ -726,7 +742,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
             work2 = (int)((ModgfxState*)state)->baseVertexData;
             vtxBufA = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
             work1 = 0;
-            for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
+            for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0++)
             {
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10;
                 *(short*)(work2 + off) =
@@ -747,7 +763,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
                 *(undefined2*)(vtxBufA + off) = *(undefined2*)(work2 + off);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 4;
                 *(undefined2*)(vtxBufA + off) = *(undefined2*)(work2 + off);
-                work1 = work1 + 2;
+                work1 += 2;
             }
             return;
         }
@@ -770,7 +786,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
     vtxBufA = (int)((ModgfxState*)state)->baseVertexData;
     work1 = *(int*)(state + (uint) * (byte*)(state + 0x130) * 4 + 0x78);
     off = 0;
-    for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2 = work2 + 1)
+    for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2++)
     {
         if (targetX != *(float*)(work0 + 0x30))
         {
@@ -793,7 +809,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
             *(short*)(work1 + vtxOff) =
                 (short)(int)(*(float*)(work0 + 0x38) * (float)(convB - DOUBLE_803e00c8));
         }
-        off = off + 2;
+        off += 2;
     }
     return;
 }
@@ -808,7 +824,7 @@ void modgfx_restoreActiveVertexState(int stateArg)
     state = (ModgfxState*)stateArg;
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     baseVertexData = state->baseVertexData;
-    for (i = 0; i < state->vertexCount; i = i + 1)
+    for (i = 0; i < state->vertexCount; i++)
     {
         activeVertexData->posX = baseVertexData->posX;
         activeVertexData->posY = baseVertexData->posY;
@@ -817,8 +833,8 @@ void modgfx_restoreActiveVertexState(int stateArg)
         activeVertexData->colorG = baseVertexData->colorG;
         activeVertexData->colorB = baseVertexData->colorB;
         activeVertexData->alpha = baseVertexData->alpha;
-        activeVertexData = activeVertexData + 1;
-        baseVertexData = baseVertexData + 1;
+        activeVertexData++;
+        baseVertexData++;
     }
     return;
 }
@@ -861,7 +877,7 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
             param_1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
-        i = i + 1;
+        i++;
     }
     while (i < MODGFX_ACTIVE_EFFECT_COUNT);
     return;
@@ -899,7 +915,7 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
             param_1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
-        i = i + 1;
+        i++;
     }
     while (i < MODGFX_ACTIVE_EFFECT_COUNT);
     return;
@@ -924,7 +940,7 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
     modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                       0, 1);
     activeEffects = modgfx_getActiveEffectRegistry();
-    for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i = i + 1)
+    for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i++)
     {
         activeEffects[i] = (ModgfxActiveEffect*)0x0;
     }
@@ -936,19 +952,12 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
         do
         {
             *tailEffects = (ModgfxActiveEffect*)0x0;
-            tailEffects = tailEffects + 1;
-            i = i + -1;
+            tailEffects++;
+            i--;
         }
         while (i != 0);
     }
     return;
-}
-
-undefined4
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
 }
 
 undefined4
@@ -1275,25 +1284,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-undefined4
-FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
-FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-
-
-
-
-
 void Effect3_func05_nop(void)
 {
 }
@@ -1309,11 +1299,6 @@ void Effect3_release(void)
 void Effect3_initialise(void)
 {
 }
-
-void Effect4_func03_nop(void);
-
-
-
 
 
 ObjectDescriptor11 projgfx_funcs = {
@@ -1344,9 +1329,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 extern void Sfx_PlayFromObject(void* obj, int id);
 
 extern f32 mathSinf(f32);
-
-extern f32 lbl_803DF878;
-extern f32 lbl_803DFCE0;
+extern f32 mathCosf(f32);
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -1356,69 +1339,6 @@ extern f32 lbl_803DFCE0;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
-extern FxNode9 lbl_8039C398;
-
-#define FILL9() do {                            \
-    lbl_8039C398.posX = 0.0f;             \
-    lbl_8039C398.posY = 0.0f;            \
-    lbl_8039C398.posZ = 0.0f;            \
-    lbl_8039C398.scale = 1.0f;             \
-    lbl_8039C398.unk0 = 0;                         \
-    lbl_8039C398.unk2 = 0;                         \
-    lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C398;             \
-  } while (0)
-
-#undef FILL9
-
-extern FxNode9 lbl_8039C380;
-
-#define FILL8() do {                            \
-    lbl_8039C380.posX = 0.0f;             \
-    lbl_8039C380.posY = 0.0f;            \
-    lbl_8039C380.posZ = 0.0f;            \
-    lbl_8039C380.scale = 1.0f;             \
-    lbl_8039C380.unk0 = 0;                         \
-    lbl_8039C380.unk2 = 0;                         \
-    lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C380;             \
-  } while (0)
-
-#undef FILL8
-
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-
-#define FILL338() do {                          \
-    lbl_8039C338.posX = lbl_803DF884;             \
-    lbl_8039C338.posY = lbl_803DF884;            \
-    lbl_8039C338.posZ = lbl_803DF884;            \
-    lbl_8039C338.scale = lbl_803DF878;             \
-    lbl_8039C338.unk0 = 0;                         \
-    lbl_8039C338.unk2 = 0;                         \
-    lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C338;             \
-  } while (0)
-
-#undef FILL338
-
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
-
-#define FILL368() do {                          \
-    lbl_8039C368.posX = lbl_803DFCEC;             \
-    lbl_8039C368.posY = lbl_803DFCEC;            \
-    lbl_8039C368.posZ = lbl_803DFCEC;            \
-    lbl_8039C368.scale = lbl_803DFCE0;             \
-    lbl_8039C368.unk0 = 0;                         \
-    lbl_8039C368.unk2 = 0;                         \
-    lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C368;             \
-  } while (0)
-
-#undef FILL368
-
-extern f32 mathCosf(f32);
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
@@ -2049,26 +1969,3 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL350
-
-
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
-// VERIFY lbl_803DF730 may already exist in modgfx.c
-extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
-
-/* ===== (2) FILL macro ===== */
-#define FILL320() do {                          \
-    lbl_8039C320.posX = 0.0f;             \
-    lbl_8039C320.posY = 0.0f;            \
-    lbl_8039C320.posZ = 0.0f;            \
-    lbl_8039C320.scale = 1.0f;             \
-    lbl_8039C320.unk0 = 0;                         \
-    lbl_8039C320.unk2 = 0;                         \
-    lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
-  } while (0)
-
-#undef FILL320
