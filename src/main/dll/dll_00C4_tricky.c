@@ -198,8 +198,6 @@ extern f32 lbl_803E30D0;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3188;
-extern f32 lbl_803E24F8;
-extern undefined4 lbl_803E23C8;
 extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
@@ -500,7 +498,6 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
 
 int Tricky_updateSideCommandPrompts(int obj)
 {
-    int state;
     char cmdByte;
     ushort promptId;
     u8 promptA;
@@ -514,6 +511,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     undefined2* setup;
     undefined4 spawnedObj;
     byte i;
+    int state;
     char flagsA[4];
     char flagsB[4];
     undefined4 promptTable[4];
@@ -524,7 +522,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     promptA = false;
     promptB = false;
     promptC = false;
-    promptTable[0] = lbl_803E23C8;
+    promptTable[0] = DAT_803e3058;
     bitVal = GameBit_Get(0x4e4);
     if (bitVal != 0)
     {
@@ -595,7 +593,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         *(u8*)(state + 0xb) = 0;
         if ((cond) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7b4) = lbl_803E24F8;
+            *(float*)(state + 0x7b4) = lbl_803E3188;
             if ((*(int*)(state + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 1);
@@ -603,7 +601,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
                     (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
+                        (cond = FUN_800067f0(objVal, 0x10), !cond))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
@@ -652,15 +650,15 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else if (*(int*)(state + 0x7b0) != 0)
         {
-            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
-            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
+            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - lbl_803DC074;
+            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E306C)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
             }
         }
         if ((promptA) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7ac) = lbl_803E24F8;
+            *(float*)(state + 0x7ac) = lbl_803E3188;
             if ((*(int*)(state + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 3);
@@ -671,7 +669,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                                (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
+                                (cond = FUN_800067f0(objVal, 0x10), !cond))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
@@ -679,7 +677,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(byte*)(ref + 0x58) >> 6 & 1) == 0)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
-                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))
+                        (cond = FUN_800067f0(objVal, 0x10), !cond))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
@@ -728,8 +726,8 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else if (*(int*)(state + 0x7a8) != 0)
         {
-            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
-            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
+            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - lbl_803DC074;
+            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E306C)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8));
             }
@@ -1854,7 +1852,7 @@ void trickyFn_80148d8c(int obj, int state)
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 0;
         *(u32*)&((GameObject*)obj)->unkF4 = 1;
-        if ((u32)((ObjPlacement*)setup)->mapId == 0xffffffff)
+        if ((u32)((ObjPlacement*)setup)->mapId == 0xFFFFFFFF)
         {
             Obj_FreeObject(obj);
         }
@@ -2371,7 +2369,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             if (((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter != 0)
             {
-                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter -= 1;
+                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter--;
             }
         }
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xfffffdc7;
@@ -2480,7 +2478,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     Vec delta;
     u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
     s16 baseAngle;
-    u16 i;
+    int i;
     u8 visible;
     f32 angle;
     f32 angleScale;
@@ -2552,11 +2550,11 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
         }
         if (visible != 0)
         {
-            ((TrickyState*)state)->flags2DC |= *(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
+            ((TrickyState*)state)->flags2DC |= visibilityBits[i];
         }
         else
         {
-            ((TrickyState*)state)->flags2DC &= ~*(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
+            ((TrickyState*)state)->flags2DC &= ~visibilityBits[i];
         }
     }
 }
@@ -2648,11 +2646,10 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     f32* hit;
     f32 hitY;
     f32 dy;
-    f32 defaultY;
-    f32 nearestSpecialDelta;
-    f32 nearestFloorDelta;
     f32 absDy;
-    f32 threshold;
+    f32 defaultY;
+    f32 nearestFloorDelta;
+    f32 nearestSpecialDelta;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
@@ -2664,8 +2661,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     nearestFloorDelta = lbl_803E25C8;
     nearestSpecialDelta = nearestFloorDelta;
     ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
-    threshold = lbl_803E2574;
-    ((TrickyState*)state)->unk1B8 = threshold;
+    ((TrickyState*)state)->unk1B8 = lbl_803E2574;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
     for (i = 0; i < hitCount; i++)
     {
@@ -2673,7 +2669,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
         hitY = hit[0];
         dy = hitY - ((GameObject*)obj)->anim.localPosY;
         absDy = dy;
-        if (dy < threshold)
+        if (dy < lbl_803E2574)
         {
             absDy = -dy;
         }
@@ -2768,8 +2764,8 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
 
 void Tricky_hitDetect(int obj)
 {
-    f32 dy;
     f32 y;
+    f32 dy;
     int* objects;
     int i;
     void* firepipeObj;
@@ -2940,7 +2936,6 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
 
-#pragma optimization_level 1
 int trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
@@ -2983,7 +2978,6 @@ int trickyFn_801451d8(int obj, int state)
         return ret;
     }
 }
-#pragma optimization_level reset
 
 void Tricky_func11(int* obj)
 {

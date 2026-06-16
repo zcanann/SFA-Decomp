@@ -106,7 +106,7 @@ extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u8 lbl_803AB118[];
-extern s16 lbl_803DDA40;
+extern u16 lbl_803DDA40;
 extern u32 lbl_803DDA3C;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
@@ -332,7 +332,6 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000LL;
     }
 }
-
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
     extern f32 getXZDistance(f32 * a, f32 * b);
@@ -388,11 +387,10 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 
     {
         u8* targetPos = ((TrickyState*)state)->followObj + 0x18;
-        u32 pathMask = 0xfffffbff;
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & pathMask;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0xfffffbff;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
@@ -480,10 +478,7 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     v = ((GameObject*)obj)->anim.currentMove;
     if (v < 48)
     {
-        if (v >= 41)
-        {
-            return 0;
-        }
+        if (v >= 41) return 0;
     }
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
@@ -599,8 +594,9 @@ void fn_801375A0(void)
 }
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
- * the rlwimi only uses bit 0 of r4. No C form found to force it. */
+ * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides under peephole on
+ * (needed for rlwimi). The global nopeephole expands the expression too much.
+ * Best C approximation with peephole on (missing only the leading clrlwi). */
 #pragma scheduling on
 #pragma peephole on
 void fn_80138908(int* obj, u8 v)
@@ -854,8 +850,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < lbl_803E23DC)
             {
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
                 *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23DC;
             }
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
             {
@@ -1105,7 +1101,7 @@ int fn_80136A40(int p1, int c)
         gxDebugTextureFn_80078c1c();
         sc = lbl_803DD9EC;
         textRenderChar(px << 2, py << 2,
-                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
+                       (int)(*(f32*)&lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
                        (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + (f32)lbl_803DD9E1) + (f32)py)),
                        (f32)(first << 5) * sc,
                        lbl_803E23A0,

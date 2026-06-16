@@ -521,7 +521,6 @@ extern void Obj_FreeObject(int* obj);
 
 void gameUiResetMenuState(void)
 {
-    int i;
     cMenuEnabled = 0;
     curGameText = 0xffff;
     lbl_803DD8D0 = 0;
@@ -533,16 +532,17 @@ void gameUiResetMenuState(void)
     lbl_803DD770 = 0;
     lbl_803DD760 = lbl_803E1E3C;
     {
-        int** p = (int**)lbl_803A9410;
-        for (i = 0; i < 4; p++, i++)
+        int** arr = (int**)lbl_803A9410;
+        int j;
+        for (j = 0; j < 4; j++)
         {
-            if (*p != NULL)
+            if (arr[j] != NULL)
             {
-                ((int*)(*p)[0x19])[1] = 0;
-                ((int*)(*p)[0x19])[2] = 0;
-                if ((u32)(*p)[0x13] > 0x90000000) (*p)[0x13] = 0;
-                Obj_FreeObject(*p);
-                *p = NULL;
+                ((int*)arr[j][0x19])[1] = 0;
+                ((int*)arr[j][0x19])[2] = 0;
+                if ((u32)arr[j][0x13] > 0x90000000) arr[j][0x13] = 0;
+                Obj_FreeObject(arr[j]);
+                arr[j] = NULL;
             }
         }
     }
@@ -624,13 +624,14 @@ void hudDrawTimedElement(int unused, int* e)
     }
     else
     {
-        if (hudElementOpacity != *(f32*)((char*)e + 0x8))
+        f32 op = hudElementOpacity;
+        if (op != *(f32*)((char*)e + 0x8))
         {
             *(f32*)((char*)e + 0x8) = lbl_803E1FA0 * (f32)(u32)
             framesThisStep + *(f32*)((char*)e + 0x8);
-            if (*(f32*)((char*)e + 0x8) > hudElementOpacity)
+            if (*(f32*)((char*)e + 0x8) > op)
             {
-                *(f32*)((char*)e + 0x8) = hudElementOpacity;
+                *(f32*)((char*)e + 0x8) = op;
             }
         }
     }
@@ -818,7 +819,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
 
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
 {
-    f32 sx, sy, u0, v0, u1, v1;
+    f32 u1, u0, v0, sy, sx, v1;
     u32 w, h;
     pauseMenuMapFn_8011de20(this, p5, (s16)p4, 0);
     sx = lbl_803E1E80 * f1;
@@ -930,6 +931,7 @@ extern f32 lbl_803E1E90, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 
+#pragma opt_propagation off
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
 {
     char* base = lbl_803A87F0;
@@ -987,6 +989,7 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)lbl_803DD860[1])->anim.rotY = (s16)b;
     ((GameObject*)lbl_803DD860[1])->anim.rotX = (s16)c;
 }
+#pragma opt_propagation reset
 
 extern char hudTextures[];
 extern s16 lbl_803DD76C;
@@ -1046,11 +1049,14 @@ void fearTestMeterDraw(void)
     col.g = 0;
     col.b = 0;
     col.a = (u8)lbl_803DD76C;
-    hudDrawRect((fearTestMeterMarkerX + 0x140) - (u8)lbl_803DBAEF,
-                (u8)lbl_803DBAEE + 0x32,
-                (u8)lbl_803DBAEF + (fearTestMeterMarkerX + 0x140),
-                (hgt + 0x32) - (u8)lbl_803DBAEE,
-                col);
+    {
+        int half = (u8)lbl_803DBAEF;
+        hudDrawRect((fearTestMeterMarkerX + 0x140) - half,
+                    (u8)lbl_803DBAEE + 0x32,
+                    half + (fearTestMeterMarkerX + 0x140),
+                    (hgt + 0x32) - (u8)lbl_803DBAEE,
+                    col);
+    }
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 

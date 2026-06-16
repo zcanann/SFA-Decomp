@@ -247,9 +247,7 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
         ((CameraArwingWork*)lbl_803A43C0)->unk10 = *(f32*)((char*)a4 + 0x1C);
         ((CameraArwingWork*)lbl_803A43C0)->unk14 = *(f32*)((char*)a4 + 0x20);
     }
-    base = (char*)lbl_803A43C0;
-    p = (f32*)(base + 48);
-    *p = lbl_803E1BA4;
+    *(p = (f32*)((base = (char*)lbl_803A43C0) + 48)) = lbl_803E1BA4;
     *(f32*)(base + 52) = lbl_803E1BC0;
     *(f32*)(base + 56) = lbl_803E1BC4;
     PSVECAdd(&((GameObject*)a4)->anim.worldPosX, p, &((GameObject*)obj)->anim.worldPosX);

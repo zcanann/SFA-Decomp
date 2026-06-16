@@ -234,8 +234,8 @@ void* Obj_GetActiveModel(u8* obj)
 
 void Obj_ClearModelColorFadeRecursive(u8* obj)
 {
-    int i;
     u8* childScan;
+    int i;
 
     ((GameObject*)obj)->colorFadeFrames = 0;
     ((GameObject*)obj)->colorFadeFlags &= ~0x6;
@@ -337,8 +337,8 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
 #pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
-    int i;
     u8* childScan;
+    int i;
 
     if (enabled != 0)
     {
@@ -1594,7 +1594,7 @@ void objFreeObjDef(void* objp, int flag)
     {
         for (i = 0; i < lbl_803DCB84; i++)
         {
-            if (((GameObject**)lbl_803DCB88)[i]->pendingParentObj == obj)
+            if ((int)((GameObject**)lbl_803DCB88)[i]->pendingParentObj == (int)obj)
             {
                 ((GameObject**)lbl_803DCB88)[i]->pendingParentObj = 0;
             }
@@ -1762,21 +1762,18 @@ void Obj_UpdateObject(u8* obj)
     {
         if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
         {
-            t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
-            if (t != 0)
+            if (((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState != 0)
             {
-                childHitState = (ObjHitsPriorityState*)t;
-                childHitState->lastHitObject = 0;
-                childHitState->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->lastHitObject = 0;
+                ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->priorityHitCount = 0;
             }
         }
-        hitState = (ObjHitsPriorityState*)object->hitReactState;
-        if (hitState == NULL)
+        if (object->hitReactState == NULL)
         {
             return;
         }
-        hitState->lastHitObject = 0;
-        hitState->priorityHitCount = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
         return;
     }
     if ((object->flags & 8) == 0)
@@ -1831,21 +1828,18 @@ void Obj_UpdateObject(u8* obj)
         Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
     }
 skip:
-    hitState = (ObjHitsPriorityState*)object->hitReactState;
-    if (hitState != NULL)
+    if (object->hitReactState != NULL)
     {
         if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
         {
-            t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
-            if (t != 0)
+            if (((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState != 0)
             {
-                childHitState = (ObjHitsPriorityState*)t;
-                childHitState->lastHitObject = 0;
-                childHitState->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->lastHitObject = 0;
+                ((ObjHitsPriorityState*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState)->priorityHitCount = 0;
             }
         }
-        hitState->lastHitObject = 0;
-        hitState->priorityHitCount = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
     }
     if (*(void**)(obj + 0x58) != NULL)
     {
@@ -2281,15 +2275,14 @@ void Obj_RegisterObject(u8* obj, int flags)
     object->previousLocalPosY = object->localPosY;
     object->previousLocalPosZ = object->localPosZ;
     Obj_RunInitCallback(obj, (int)object->placementData, 0);
-    hitState = (ObjHitsPriorityState*)object->hitReactState;
-    if (hitState != NULL)
+    if (object->hitReactState != NULL)
     {
-        hitState->localPosX = object->localPosX;
-        hitState->localPosY = object->localPosY;
-        hitState->localPosZ = object->localPosZ;
-        hitState->worldPosX = object->localPosX;
-        hitState->worldPosY = object->localPosY;
-        hitState->worldPosZ = object->localPosZ;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosZ = object->localPosZ;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosZ = object->localPosZ;
     }
     id = object->modelInstance->mapLoadObjectId;
     if (id > -1)

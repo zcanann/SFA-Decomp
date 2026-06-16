@@ -286,6 +286,7 @@ void arwingandrossstuff_update(int obj)
     }
 }
 
+#pragma opt_common_subs off
 void arwprojectile_createLinkedEffect(int obj, u8 enable)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
@@ -321,6 +322,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable)
     }
     modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
 }
+#pragma opt_common_subs reset
 
 void fn_8022ED74(int obj, int v)
 {

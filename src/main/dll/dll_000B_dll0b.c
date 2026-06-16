@@ -1466,7 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
@@ -1639,11 +1639,11 @@ void fn_800A02DC(ModgfxState* state, f32* in)
         cur->texCoordS = prev->texCoordS;
         cur->texCoordT = prev->texCoordT;
         cur->texCoordS = (s16)(cur->texCoordS + dx);
-        if ((s32)cur->texCoordS > 0x100) ovx = (u8)(ovx + 1);
-        if ((s32)cur->texCoordS < -0x100) ovx = (u8)(ovx + 1);
+        if ((s32)cur->texCoordS > 0x100) ovx++;
+        if ((s32)cur->texCoordS < -0x100) ovx++;
         cur->texCoordT = (s16)(cur->texCoordT + dy);
-        if ((s32)cur->texCoordT > 0x100) ovy = (u8)(ovy + 1);
-        if ((s32)cur->texCoordT < -0x100) ovy = (u8)(ovy + 1);
+        if ((s32)cur->texCoordT > 0x100) ovy++;
+        if ((s32)cur->texCoordT < -0x100) ovy++;
         cur++;
         prev++;
     }
@@ -1750,17 +1750,18 @@ void fn_800A081C(int p1, int p2, int mode)
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                s16 buf[6];
-                f32* fbuf = (f32*)&buf[2];
-                s16 v = *((ModgfxState*)p1)->unk04;
+                s16 buf[12];
+                f32* fbuf = (f32*)&buf[4];
+                s16 v;
                 f32 fill = lbl_803DF430;
-                fbuf[3] = fill;
-                fbuf[2] = fill;
                 fbuf[1] = fill;
+                fbuf[2] = fill;
+                fbuf[3] = fill;
                 fbuf[0] = lbl_803DF434;
-                buf[2] = v;
-                buf[1] = v;
+                v = *((ModgfxState*)p1)->unk04;
                 buf[0] = v;
+                buf[1] = v;
+                buf[2] = v;
                 vecRotateZXY(buf, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
@@ -2046,7 +2047,10 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
             gModgfxSpawnContext.posZ += ((ExpgfxSourceObject*)a)->localPosZ;
         }
     }
-    gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
+    {
+        extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+        gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
+    }
 }
 
 extern f32 lbl_803DF460;

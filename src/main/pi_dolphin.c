@@ -5270,6 +5270,7 @@ typedef struct
 } PiColorS10;
 
 extern int WidthTable_803DEAB0;
+extern int CharsInSheet_803DEAB4;
 extern int lbl_803DEAB8;
 extern int lbl_803DEABC;
 extern int lbl_803DEAC0;
@@ -5340,7 +5341,8 @@ void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
         GXSetTevSwapMode(lbl_803DCD90 + 4, 0, 0);
         GXSetTevKColorSel(lbl_803DCD90 + 4, 6);
         lbl_803DCD30 = 1;
-        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
+        cs10.a = WidthTable_803DEAB0;
+        cs10.b = CharsInSheet_803DEAB4;
         GXSetTevColorS10(1, &cs10);
         ck1 = lbl_803DEAB8;
         GXSetTevKColor(lbl_803DCD74, &ck1);
@@ -5386,6 +5388,9 @@ extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
 void fn_8004DA54(char* p1)
 {
     f32 mtxf4[3][4];
@@ -5506,7 +5511,7 @@ void fn_8004DA54(char* p1)
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
-    ((u8*)&lbl_803DB5EC)[0] = (int)(lbl_803DEB18 * f31v);
+    ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
     ((u8*)&lbl_803DB5EC)[1] = 0;
     ((u8*)&lbl_803DB5EC)[2] = 0;
     kc = lbl_803DB5EC;
@@ -5546,6 +5551,9 @@ void fn_8004DA54(char* p1)
     lbl_803DCD70 = 0xd;
     lbl_803DCD6C = 0x1d;
 }
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
 
 typedef struct
 {
@@ -6127,16 +6135,16 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     {
         void* texptr;
         u32 div;
-        p2 = (p3 & 0xf) * 4 + 1;
+        int p2v = (p3 & 0xf) * 4 + 1;
         texptr = textureIdxToPtr(p4);
-        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2);
+        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2v);
         if (div != 0)
         {
             GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
         }
         else
         {
-            result = (u8)p2;
+            result = p2v & 0xff;
         }
     }
     else
@@ -6727,6 +6735,8 @@ extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 
+#pragma scheduling off
+#pragma opt_common_subs off
 void fn_8004D230(void)
 {
     f32 mtx1[4][4];
@@ -6835,11 +6845,16 @@ void fn_8004D230(void)
     lbl_803DCD69 += 2;
 }
 
+#pragma opt_common_subs reset
+#pragma scheduling reset
+
 extern int lbl_803DCD84;
-extern f32 bootThisDol;
+extern f32 bootThisDol_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 
+#pragma scheduling off
+#pragma opt_common_subs off
 void fn_8004CE0C(void* viewMtx)
 {
     f32 mtx40[3][4];
@@ -6883,8 +6898,8 @@ void fn_8004CE0C(void* viewMtx)
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
-    mtx70[0][0] = bootThisDol;
-    mtx70[1][1] = bootThisDol;
+    mtx70[0][0] = bootThisDol_803DEAE8;
+    mtx70[1][1] = bootThisDol_803DEAE8;
     GXLoadTexMtxImm(mtx70, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 0, 0x21, 0, 0x7d);
     GXSetIndTexOrder(0, 2, 2);
@@ -6937,6 +6952,9 @@ void fn_8004CE0C(void* viewMtx)
     lbl_803DCD69 = 4;
     lbl_803DCD68 = 1;
 }
+
+#pragma opt_common_subs reset
+#pragma scheduling reset
 
 extern u32 getButtonsJustPressed(int set);
 extern void printHeapStats(int a);
@@ -7552,6 +7570,8 @@ void videoSwapFrameBuffers(void)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
 void videoFn_800499e8(void)
 {
     char peek[8];
@@ -7602,6 +7622,8 @@ void videoFn_800499e8(void)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 void logGpuHang(void)

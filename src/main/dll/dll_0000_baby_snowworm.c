@@ -729,26 +729,22 @@ void pauseMenuInit(void)
     extern void Music_Trigger(s32, s32); /* #57 */
     void* obj = Obj_GetPlayerObject();
     int i = 0;
-    void** slot = lbl_803A9410;
-    void** type = lbl_8031BF90;
 
     for (; i < 6; i++)
     {
-        if (i < 4 && *slot == NULL)
+        if (i < 4 && lbl_803A9410[i] == NULL)
         {
-            *slot = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *type), 4, -1, -1, 0);
-            ((f32*)*slot)[3] = 0.0f;
-            ((f32*)*slot)[4] = -5.0f;
-            ((f32*)*slot)[5] = -5.0f;
-            *(s16*)*slot = 0x7447;
-            ((f32*)*slot)[2] = 0.0f;
+            lbl_803A9410[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
+            ((f32*)lbl_803A9410[i])[3] = 0.0f;
+            ((f32*)lbl_803A9410[i])[4] = -5.0f;
+            ((f32*)lbl_803A9410[i])[5] = -5.0f;
+            *(s16*)lbl_803A9410[i] = 0x7447;
+            ((f32*)lbl_803A9410[i])[2] = 0.0f;
             {
-                void* p = *slot;
+                void* p = lbl_803A9410[i];
                 if (((u32*)p)[0x13] > 0x90000000U) ((u32*)p)[0x13] = 0;
             }
         }
-        slot++;
-        type++;
     }
     lbl_803DD786 = 0;
     lbl_803DD784 = 0;
@@ -1136,7 +1132,7 @@ void pauseMenuFn_8012b77c(void)
     f32 v = speed * timeDelta + lbl_803DD760;
 
     *(volatile f32*)&lbl_803DD760 = v;
-    v = (v > lbl_803E2160) ? v : lbl_803E2160;
+    v = (v < lbl_803E2160) ? lbl_803E2160 : v;
     *(volatile f32*)&lbl_803DD760 = v;
     v = (v < lbl_803E1F60) ? v : lbl_803E1F60;
     *(volatile f32*)&lbl_803DD760 = v;
@@ -1553,7 +1549,7 @@ void timeListDraw(void)
                 gameTextShow(0x2fa);
             }
             mins = v / 6000;
-            sprintf(buf, sBabySnowwormTimerFormat, mins, v / 100 - mins * 60, v - (v / 100) * 100);
+            sprintf(buf, sBabySnowwormTimerFormat, mins, v / 100 - mins * 60, v - (int)((long)v / 100) * 100);
             gameTextShowTimeStr(buf);
             p++;
         }
@@ -1664,25 +1660,25 @@ void pauseMenuRunSubmenu(u8 p1)
     lbl_803DD8A4 = btn;
     if (lbl_803DD75C != 0)
     {
-        s16 v;
+        int v;
         if (btn & 0x300)
         {
             Sfx_PlayFromObject(0, 0x41c);
             buttonDisable(0, 0x300);
             lbl_803DD75E = -0x28;
         }
-        v = (s16)(lbl_803DD75C + lbl_803DD75E);
-        lbl_803DD75C = v;
-        if (v > 0x200)
+        v = lbl_803DD75C + lbl_803DD75E;
+        *(volatile s16*)&lbl_803DD75C = v;
+        if ((s16)v > 0x200)
         {
             v = 0x200;
         }
-        lbl_803DD75C = v;
-        if (v < 0)
+        *(volatile s16*)&lbl_803DD75C = v;
+        if ((s16)v < 0)
         {
             v = 0;
         }
-        lbl_803DD75C = v;
+        *(volatile s16*)&lbl_803DD75C = v;
     }
     else
     {
@@ -2012,8 +2008,7 @@ void cMenuRun(void)
     {
         int open;
         if ((s8)cMenuOpen == 0) open = 0;
-        else if (lbl_803DD8D6 == lbl_803DBA66) open = 1;
-        else open = 0;
+        else open = (lbl_803DD8D6 != lbl_803DBA66) ? 0 : 1;
         if (open)
         {
             s16 cur = lbl_803DD8B4;
@@ -2146,8 +2141,7 @@ void cMenuRun(void)
                     {
                         int open2;
                         if ((s8)cMenuOpen == 0) open2 = 0;
-                        else if (lbl_803DD8D6 == lbl_803DBA66) open2 = 1;
-                        else open2 = 0;
+                        else open2 = (lbl_803DD8D6 != lbl_803DBA66) ? 0 : 1;
                         if (open2)
                         {
                             u8 matched = 0;
@@ -2299,6 +2293,7 @@ void fn_80128A7C(u8 i, int p2, int p3);
 /* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
+#pragma opt_common_subs off
 void fn_80128470(int p1)
 {
     extern u8 hudTextures[0x198]; /* #57 */
@@ -2417,6 +2412,7 @@ void fn_80128470(int p1)
     }
     gameTextSetDrawFunc(0);
 }
+#pragma opt_common_subs reset
 
 extern f32 fsin16Approx(u16 angle);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
@@ -2788,6 +2784,7 @@ void pauseMenuFn_80129ee0(void)
     extern int objIsCurModelNotZero(void); /* #57 */
     extern int GameBit_Set(u32 eventId, u32 value); /* #57 */
     extern u32 GameBit_Get(u32); /* #57 */
+    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     PauseTbl* tbl = &lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
@@ -3784,6 +3781,7 @@ void fn_8012C000(void)
 {
     extern int fn_802972A8(void* player); /* #57 */
     extern int objIsCurModelNotZero(void); /* #57 */
+    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     u8 flag;
     u8 k;
     u8 last;
@@ -4748,8 +4746,7 @@ void GameUI_update(void)
                 }
                 if (lbl_803DD796 != 0) goto camCheck;
                 if (cMenuOpen != 0) closed = 0;
-                else if (lbl_803DD8D6 == lbl_803DBA66) closed = 1;
-                else closed = 0;
+                else closed = (lbl_803DD8D6 != lbl_803DBA66) ? 0 : 1;
                 if (!closed) goto camCheck;
                 {
                     int absAng = (s16)angDelta < 0 ? -(s16)angDelta : (s16)angDelta;

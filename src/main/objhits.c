@@ -623,13 +623,15 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
                                               float tipRadius, float length, float* out)
 {
     float invLength;
+    float zero;
     float axisDir[3];
     float surfacePoint[3];
 
-    if (axial < gObjHitsScalarZero)
+    zero = gObjHitsScalarZero;
+    if (axial < zero)
     {
         out[0] = point[0] - base[0];
-        out[1] = gObjHitsScalarZero;
+        out[1] = zero;
         out[2] = point[2] - base[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + baseRadius;
@@ -644,7 +646,7 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
     if (axial > length)
     {
         out[0] = point[0] - tip[0];
-        out[1] = gObjHitsScalarZero;
+        out[1] = zero;
         out[2] = point[2] - tip[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + tipRadius;
@@ -1535,6 +1537,8 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
     uint bufIndex;
     uint mask;
     u8 result;
+    extern int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB,
+                                       uint mask, int skelMask);
 
     stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
@@ -1868,7 +1872,14 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
             weightB = gObjHitsScalarZero;
         }
         sum = weightA + weightB;
-        blend = (sum > gObjHitsScalarZero) ? weightB / sum : gObjHitsScalarZero;
+        if (sum > gObjHitsScalarZero)
+        {
+            blend = weightB / sum;
+        }
+        else
+        {
+            blend = gObjHitsScalarZero;
+        }
         animA->localPosX = animA->localPosX - localAx * blend;
         animA->localPosY = animA->localPosY - localAy * blend;
         animA->localPosZ = animA->localPosZ - localAz * blend;
@@ -1973,7 +1984,7 @@ void ObjHits_DetectObjectPair(int objA, int objB)
         dy = gObjHitsScalarZero;
         vertical = 1;
     }
-    dist = dy * dy + dx * dx + dz * dz;
+    dist = dx * dx + dy * dy + dz * dz;
     if (dist != gObjHitsScalarZero)
     {
         dist = sqrtf(dist);

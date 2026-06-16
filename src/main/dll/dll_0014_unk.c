@@ -1366,8 +1366,8 @@ static inline int Objfsa_FindRomCurveById(int curveId)
         return 0;
     }
 
-    lo = 0;
     hi = nRomCurves - 1;
+    lo = 0;
     id = (u32)curveId;
     while (hi >= lo)
     {
@@ -2611,7 +2611,7 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     }
     c2 = Objfsa_FindRomCurveById(linkId);
 
-    if (c2 == 0)
+    if ((void*)c2 == NULL)
     {
         *outX = *(f32*)(curve + 8);
         *outY = *(f32*)(curve + 0xc);
@@ -3558,6 +3558,7 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
     int i;
     int neighborId;
     int neighborCurve;
+    int curveCursor;
     int slot;
     float dx;
     float dy;
@@ -3573,13 +3574,14 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
     segment.startY = *(f32*)(curve + 0xc);
     segment.startZ = *(f32*)(curve + 0x10);
 
-    for (i = 0; i < 4; i++, curve += 4)
+    curveCursor = curve;
+    for (i = 0; i < 4; i++, curveCursor += 4)
     {
-        neighborId = *(int*)(curve + 0x1c);
+        neighborId = *(int*)(curveCursor + 0x1c);
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
-            if (neighborCurve != 0)
+            if ((void*)neighborCurve != NULL)
             {
                 segment.endX = *(f32*)(neighborCurve + 0x8);
                 segment.endY = *(f32*)(neighborCurve + 0xc);
@@ -3589,12 +3591,12 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
                 dx = segment.nearestX - x;
                 dy = segment.nearestY - y;
                 dz = segment.nearestZ - z;
-                distance = dz * dz + dx * dx + dy * dy;
-                slot = (preferredNeighborId == neighborId);
+                distance = dx * dx + dy * dy + dz * dz;
+                slot = (neighborId == preferredNeighborId);
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
-                    bestNeighborIds[slot] = *(int*)(curve + 0x1c);
+                    bestNeighborIds[slot] = *(int*)(curveCursor + 0x1c);
                 }
             }
         }
@@ -5427,8 +5429,9 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     int curveIndex;
     int typeIndex;
 
-    bestActionDistance = bestDistance = lbl_803E0664;
+    bestDistance = lbl_803E0664;
     bestCurve = NULL;
+    bestActionDistance = bestDistance;
     bestActionCurve = NULL;
     point[0] = x;
     point[1] = y;

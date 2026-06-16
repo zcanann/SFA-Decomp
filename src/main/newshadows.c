@@ -1572,9 +1572,8 @@ extern void GXPreLoadEntireTexture(void* obj, void* region);
 
 void drawReflectionTexture(void)
 {
-    void* texture;
+    void* texture = lbl_803DCF7C;
     f32 scale = lbl_803DED28;
-    texture = lbl_803DCF7C;
     drawTexture(texture, scale, scale, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, 4, 0);
@@ -1684,19 +1683,19 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 extern u8 lbl_803DCF78;
 extern int* lbl_803DCFE8;
 extern char lbl_8038E2A8[];
-extern f32 Ydchuff_803DED80[];
+extern f32 Ydchuff_803DED80;
 
+extern const double TokenCB_803DED58;
+extern const double DrawDone_803DED60;
 extern inline float sqrtf(float x)
 {
-    static const double _half = .5;
-    static const double _three = 3.0;
     volatile float y;
-    if (x > 0.0f)
+    if (x > lbl_803DED28)
     {
         double guess = __frsqrte((double)x);
-        guess = _half * guess * (_three - guess * guess * x);
-        guess = _half * guess * (_three - guess * guess * x);
-        guess = _half * guess * (_three - guess * guess * x);
+        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
+        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
+        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
         y = (float)(x * guess);
         return y;
     }
@@ -1704,7 +1703,9 @@ extern inline float sqrtf(float x)
 }
 
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
-extern f32 Vdchuff_803DEDC0[2];
+extern f32 Vdchuff_803DEDC0;
+extern f32 Udchuff_803DEDA0;
+extern f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
 void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
@@ -1759,13 +1760,13 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 g = sqrtf(g);
                 acc5 = s0 * g + acc5;
                 acc6 = acc6 + over / depth;
-                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDC0[4]) + acc6;
+                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * (&Vdchuff_803DEDC0)[4]) + acc6;
             }
         }
     }
     if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
     if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
-    *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDC0[5];
+    *out1 = __GXCurrentThread_803DED40 * acc6 + (&Vdchuff_803DEDC0)[5];
     *out2 = acc5;
 }
 
@@ -1891,7 +1892,6 @@ extern void DCInvalidateRange(void*, int);
 extern void fn_80069EB8();
 extern void GXTexModeSync(void);
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
-extern f32 Udchuff_803DEDA0[2], Uachuff_803DEE00[2];
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
 {
@@ -2217,11 +2217,11 @@ void allocLotsOfTextures(void)
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x60) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)CPUFifo_803DED38 & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x68) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE00[5] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[5] & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x70) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE00[6] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[6] & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x78) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE00[7] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[7] & 0xff));
     }
     DCFlushRange((void*)(lbl_803DCF94 + 0x60), *(int*)(lbl_803DCF94 + 0x44));
 
@@ -2285,7 +2285,7 @@ void shadowCreate(int* obj)
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
                 *(u8*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
-                *(f32*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+                *(f32*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = (&Ydchuff_803DED80)[4];
             }
         }
         else
@@ -2316,7 +2316,6 @@ extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
 extern int* Camera_GetCurrentViewSlot(void);
 extern u8 framesThisStep;
-extern f32 Udchuff_803DEDA0[2];
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
 extern u8 isHeavyFogEnabled(void);
@@ -2357,42 +2356,41 @@ void maybeHudFn_8006c91c(void)
 
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
 extern f32 playerMapOffsetX, playerMapOffsetZ;
-extern f32 lbl_803DED0C, lbl_803DED10, lbl_803DED14, Chan_803DED18;
+extern f32 lbl_803DED0C, lbl_803DED10;
+extern const f32 lbl_803DED14, Chan_803DED18;
 extern f32 Enabled_803DED20, BarnacleEnabled_803DED24, lbl_803DED2C;
-extern void Camera_ProjectWorldSphere(f32* a, f32* b, f32* c, f32* d, f32* e, f32* f,
-                                      f32 x, f32 y, f32 z, f32 r);
+extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 r,
+                                      f32* a, f32* b, f32* c, f32* d, f32* e, f32* f);
 extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
 extern int* Obj_GetActiveModel(int* obj);
 extern void Camera_ApplyFullViewport(void);
-#pragma peephole off
 void shadowRenderFn_8006b558(int* obj)
 {
     f32 mtx[12];
     f32 vA, vB, vC, vD, vE, vF;
-    f32 sc, objScale, nx, ny, m;
-    f32* o64;
+    f32 sc, objScale, saved, nx, ny, m;
     Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-    Camera_ProjectWorldSphere(&vA, &vB, &vC, &vD, &vE, &vF,
-                              ((GameObject*)obj)->anim.localPosX - playerMapOffsetX,
+    Camera_ProjectWorldSphere(((GameObject*)obj)->anim.localPosX - playerMapOffsetX,
                               ((GameObject*)obj)->anim.localPosY,
                               ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
-                              1.3f * (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
-    vD = 320.0f * vD + 8.0f;
-    vE = Chan_803DED18 * vE + 8.0f;
+                              lbl_803DED0C * (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
+                              &vA, &vB, &vC, &vD, &vE, &vF);
+    vD = lbl_803DED14 * vD + lbl_803DED10;
+    vE = Chan_803DED18 * vE + lbl_803DED10;
     if (vD > vE) m = vD;
     else m = vE;
     sc = Dev_803DED1C / m;
     objScale = ((GameObject*)obj)->anim.rootMotionScale * sc;
     nx = -vA;
     ny = vB;
-    GXSetViewport(320.0f * nx, Chan_803DED18 * ny, Enabled_803DED20,
-                  BarnacleEnabled_803DED24, 0.0f, 1.0f);
-    if (vC < 0.0f)
+    GXSetViewport(lbl_803DED14 * nx, Chan_803DED18 * ny, Enabled_803DED20,
+                  BarnacleEnabled_803DED24, lbl_803DED28, lbl_803DED2C);
+    if (vC < lbl_803DED28)
     {
-        f32 saved = ((GameObject*)obj)->anim.rootMotionScale;
         int* model;
+        saved = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = objScale;
         set_shadowFlag_803dcc29(1);
         objRender(0, 0, 0, 0, obj, 1);
@@ -2405,20 +2403,19 @@ void shadowRenderFn_8006b558(int* obj)
         GXSetTexCopyDst(0x80, 0x80, 0x2a, 0);
         GXCopyTex((void*)(lbl_8038E1DC[lbl_803DCF8C] + 0x60), 1);
         fn_8006A028((u8*)lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
-        *(f32*)obj[0x64 / 4] = 1.0f / sc;
+        *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
     }
     else
     {
-        *(f32*)obj[0x64 / 4] = vE;
+        *(f32*)obj[0x64 / 4] = lbl_803DED28;
     }
     Camera_ApplyFullViewport();
-    o64 = (f32*)obj[0x64 / 4];
-    o64[5] = 320.0f * vA;
-    o64[6] = Chan_803DED18 * -vB;
-    o64[5] = o64[5] + 320.0f;
-    o64[6] = o64[6] + Chan_803DED18;
-    o64[5] = o64[5] - Dev_803DED1C * o64[0];
-    o64[6] = o64[6] - Dev_803DED1C * o64[0];
+    ((f32*)obj[0x64 / 4])[5] = lbl_803DED14 * (-nx);
+    ((f32*)obj[0x64 / 4])[6] = Chan_803DED18 * (-ny);
+    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] + lbl_803DED14;
+    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] + Chan_803DED18;
+    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
+    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
 }
 
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
@@ -2429,26 +2426,26 @@ void fn_8006CB50(void)
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
-        f32 fy = (f32)y - Udchuff_803DEDA0[3];
+        f32 fy = (f32)y - (&Udchuff_803DEDA0)[3];
         for (x = 0; x < 0x100; x++)
         {
             char* addr = (char*)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = (f32)x - Udchuff_803DEDA0[3];
+            f32 fx = (f32)x - (&Udchuff_803DEDA0)[3];
             f32 dist = sqrtf(fy * fy + fx * fx);
             f32 ny = fy / dist;
             f32 nx = fx / dist;
             f32 s;
-            if (dist <= Udchuff_803DEDA0[6])
+            if (dist <= (&Udchuff_803DEDA0)[6])
             {
-                s = lbl_803DED34 * (Udchuff_803DEDA0[4] - GXOverflowSuspendInProgress_803DED48 * dist) * Udchuff_803DEDA0[5];
+                s = lbl_803DED34 * ((&Udchuff_803DEDA0)[4] - GXOverflowSuspendInProgress_803DED48 * dist) * (&Udchuff_803DEDA0)[5];
             }
             else
             {
                 s = lbl_803DED28;
             }
             {
-                f32 py = Vdchuff_803DEDC0[0] * (ny * s) + Udchuff_803DEDA0[7];
-                f32 px = Vdchuff_803DEDC0[0] * (nx * s) + Udchuff_803DEDA0[7];
+                f32 py = Vdchuff_803DEDC0 * (ny * s) + (&Udchuff_803DEDA0)[7];
+                f32 px = Vdchuff_803DEDC0 * (nx * s) + (&Udchuff_803DEDA0)[7];
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
         }
@@ -2770,7 +2767,7 @@ void renderShadows(void)
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        Camera_SetAspectRatio(Ydchuff_803DED80[0]);
+        Camera_SetAspectRatio(Ydchuff_803DED80);
         Camera_UpdateProjection(0, 0);
     }
     else

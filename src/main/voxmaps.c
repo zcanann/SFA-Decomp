@@ -62,8 +62,7 @@ void Queue_Pop(RingBufferQueue* queue, void* dst)
     s16 readIndex;
 
     memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
-    readIndex = queue->readIndex + 1;
-    queue->readIndex = readIndex;
+    readIndex = ++queue->readIndex;
     if (readIndex == queue->capacity)
     {
         queue->readIndex = 0;
@@ -76,8 +75,7 @@ void Queue_Push(RingBufferQueue* queue, void* src)
     s16 writeIndex;
 
     memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
-    writeIndex = queue->writeIndex + 1;
-    queue->writeIndex = writeIndex;
+    writeIndex = ++queue->writeIndex;
     if (writeIndex == queue->capacity)
     {
         queue->writeIndex = 0;
@@ -120,8 +118,7 @@ void Stack_Push(RingBufferQueue* stack, void* src)
     s16 writeIndex;
 
     memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
-    writeIndex = stack->writeIndex + 1;
-    stack->writeIndex = writeIndex;
+    writeIndex = ++stack->writeIndex;
     if (writeIndex == stack->capacity)
     {
         stack->writeIndex = 0;
@@ -214,13 +211,19 @@ void voxmaps_worldToGrid(f32* in, s16* out)
 
 void voxmaps_resetLoadedMaps(void)
 {
-    VoxMapSlotOrigin* slotOrigin = lbl_803387A0.slotOrigin;
-    u8* b = lbl_803DC8D0;
-    int* timer = lbl_803387A0.timer;
-    int* blockId = lbl_803387A0.blockId;
-    void** mapBuffer = lbl_803387A0.mapBuffer;
+    void** mapBuffer;
+    int* blockId;
+    int* timer;
+    u8* b;
+    VoxMapSlotOrigin* slotOrigin;
     int i;
-    for (i = 0; i < 6; i++)
+    slotOrigin = lbl_803387A0.slotOrigin;
+    i = 0;
+    mapBuffer = lbl_803387A0.mapBuffer;
+    blockId = lbl_803387A0.blockId;
+    timer = lbl_803387A0.timer;
+    b = lbl_803DC8D0;
+    for (; i < 6; i++)
     {
         if (*mapBuffer != NULL)
         {
@@ -371,10 +374,10 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
     u8 first;
     VoxPos cur = *start;
     VoxPos found;
-    u8* routeNode;
+    unsigned int skip;
     int stepX, stepY;
     int dx, dy, dz;
-    unsigned int skip;
+    u8* routeNode;
 
     stepX = 1;
     dx = end->x - cur.x;
@@ -404,8 +407,7 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
     errXZ = dz - dx;
     twiceDz = dz * 2;
     errYZ = dy - dz;
-    stepsRemaining = dy + dz;
-    stepsRemaining += dx;
+    stepsRemaining = dx + dy + dz;
 
     voxmaps_updateActiveMap(&cur);
 

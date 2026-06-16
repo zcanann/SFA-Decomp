@@ -326,15 +326,15 @@ s32 dataRemoveCurve(u16 sid)
 
 s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
+    SDIR_TAB* p;
     s32 i;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     SDIR_DATA* s;
     u16 n;
     u16 j;
     u16 k;
-    long idx;
 
-    for (i = 0; i < dataSmpSDirNum && t->sdir[i].data != sdir; ++i);
+    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++i, ++p);
 
     if (i == dataSmpSDirNum)
     {
@@ -369,10 +369,10 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
                 }
             }
 
-            idx = dataSmpSDirNum;
-            t->sdir[idx].data = sdir;
-            t->sdir[idx].numSmp = n;
-            t->sdir[idx].base = smp_data;
+            i = dataSmpSDirNum;
+            t->sdir[i].data = sdir;
+            t->sdir[i].numSmp = n;
+            t->sdir[i].base = smp_data;
             ++dataSmpSDirNum;
             sndEnd();
             return 1;
@@ -447,7 +447,6 @@ s32 dataRemoveSampleReference(u16 sid)
 s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 {
     long i;
-    long idx;
     FX_GROUP* g;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
 
@@ -459,10 +458,10 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
     if (i == dataFXGroupNum && dataFXGroupNum < 128)
     {
         sndBegin();
-        idx = dataFXGroupNum;
-        t->fxGroup[idx].gid = gid;
-        t->fxGroup[idx].fxNum = fxNum;
-        t->fxGroup[idx].fxTab = fx;
+        i = dataFXGroupNum;
+        t->fxGroup[i].gid = gid;
+        t->fxGroup[i].fxNum = fxNum;
+        t->fxGroup[i].fxTab = fx;
 
         for (i = 0; i < fxNum; ++i, ++fx)
         {

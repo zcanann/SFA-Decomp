@@ -47,6 +47,7 @@ extern f32 lbl_803E05BC;
 extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern u8 lbl_803DD450;
+extern f64 lbl_803E0598;
 extern f32 lbl_803E05C0;
 extern f32 lbl_803E05C4;
 extern f32 lbl_803DD444;
@@ -580,6 +581,8 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
+/* segment pragma-stack balance (re-split): */
+
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 
@@ -856,10 +859,10 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     lbl_803DD44E = 0;
 
     attachment = *(int*)(state + 0x2d0);
-    if (attachment != 0)
+    if ((void*)attachment != NULL)
     {
-        dx = *(f32*)(attachment + 0xc) - ((GameObject*)pos)->anim.localPosX;
-        dz = *(f32*)(attachment + 0x14) - ((GameObject*)pos)->anim.localPosZ;
+        dx = *(f32*)(attachment + 0xc) - *(f32*)(pos + 0xc);
+        dz = *(f32*)(attachment + 0x14) - *(f32*)(pos + 0x14);
         ((BaddieState*)state)->targetDistance = sqrtf(dx * dx + dz * dz);
     }
     else
@@ -867,7 +870,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         ((BaddieState*)state)->targetDistance = lbl_803E0570;
     }
 
-    if ((*(u32*)state & 0x8000) != 0 && *(int*)(pos + 0xc0) == 0)
+    if ((*(int*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
     {
         fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
         ((BaddieState*)state)->unk32E = (s16)((f32) * (s16*)(state + 0x32e) + dt);
@@ -881,9 +884,9 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if (*(int*)(state + 0x27c) != 0)
     {
-        localTransform.rotX = ((GameObject*)pos)->anim.rotX;
-        localTransform.rotY = ((GameObject*)pos)->anim.rotY;
-        localTransform.rotZ = ((GameObject*)pos)->anim.rotZ;
+        localTransform.rotX = *(s16*)(pos + 0);
+        localTransform.rotY = *(s16*)(pos + 2);
+        localTransform.rotZ = *(s16*)(pos + 4);
         localTransform.scale = lbl_803E0588;
         localTransform.x = lbl_803E0570;
         localTransform.y = lbl_803E0570;
@@ -901,7 +904,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
                               (f32*)(attachment + 0x1c), (f32*)(attachment + 0x20), (f32*)(attachment + 0x24));
     }
 
-    if ((*(u32*)state & 0x1000000) == 0)
+    if ((*(int*)state & 0x1000000) == 0)
     {
         fn_800D8414(pos, state);
     }
@@ -921,30 +924,30 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         *(s16*)(state + 0x338) = 10000;
     }
 
-    lbl_803DD448 = ((GameObject*)pos)->anim.localPosX;
-    lbl_803DD444 = ((GameObject*)pos)->anim.localPosZ;
-    mapBlock = objPosToMapBlockIdx(((GameObject*)pos)->anim.worldPosX, ((GameObject*)pos)->anim.worldPosY, ((GameObject*)pos)->anim.worldPosZ);
-    if (mapBlock == -1 && *(int*)(pos + 0x30) == 0)
+    lbl_803DD448 = *(f32*)(pos + 0xc);
+    lbl_803DD444 = *(f32*)(pos + 0x14);
+    mapBlock = objPosToMapBlockIdx(*(f32*)(pos + 0x18), *(f32*)(pos + 0x1c), *(f32*)(pos + 0x20));
+    if (mapBlock == -1 && *(void**)(pos + 0x30) == NULL)
     {
         *(u32*)state |= 0x200000;
         keepPathControls = 0;
     }
 
-    if ((*(u32*)state & 0x1000000) == 0)
+    if ((*(int*)state & 0x1000000) == 0)
     {
         player_applyVelocityStep(pos, state, dt);
     }
 
     overrideObj = playerOverride;
-    if (overrideObj != 0)
+    if ((void*)overrideObj != NULL)
     {
         dx = *(f32*)(overrideObj + 0xc) - lbl_803DD448;
         dz = *(f32*)(overrideObj + 0x14) - lbl_803DD444;
         dist = sqrtf(dx * dx + dz * dz);
         if (dist < lbl_803E05BC)
         {
-            limit = sqrtf((((GameObject*)pos)->anim.localPosX - lbl_803DD448) * (((GameObject*)pos)->anim.localPosX - lbl_803DD448) +
-                (((GameObject*)pos)->anim.localPosZ - lbl_803DD444) * (((GameObject*)pos)->anim.localPosZ - lbl_803DD444));
+            limit = sqrtf((*(f32*)(pos + 0xc) - lbl_803DD448) * (*(f32*)(pos + 0xc) - lbl_803DD448) +
+                (*(f32*)(pos + 0x14) - lbl_803DD444) * (*(f32*)(pos + 0x14) - lbl_803DD444));
             if (limit < lbl_803E05B4)
             {
                 limit = lbl_803E05B4;
@@ -952,8 +955,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
             if (dist < lbl_803E0588)
             {
-                ((GameObject*)pos)->anim.localPosX = *(f32*)(overrideObj + 0xc);
-                ((GameObject*)pos)->anim.localPosZ = *(f32*)(overrideObj + 0x14);
+                *(f32*)(pos + 0xc) = *(f32*)(overrideObj + 0xc);
+                *(f32*)(pos + 0x14) = *(f32*)(overrideObj + 0x14);
             }
             else
             {
@@ -961,15 +964,15 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
                 {
                     limit = dist;
                 }
-                ((GameObject*)pos)->anim.localPosX = dx / dist * limit + lbl_803DD448;
-                ((GameObject*)pos)->anim.localPosZ = dz / dist * limit + lbl_803DD444;
+                *(f32*)(pos + 0xc) = dx / dist * limit + lbl_803DD448;
+                *(f32*)(pos + 0x14) = dz / dist * limit + lbl_803DD444;
             }
         }
     }
 
     playerOverride = 0;
 
-    if ((*(u32*)state & 0x1000000) == 0 && (*(u32*)state & 0x400000) == 0 && keepPathControls != 0)
+    if ((*(int*)state & 0x1000000) == 0 && (*(int*)state & 0x400000) == 0 && keepPathControls != 0)
     {
         (*gPathControlInterface)->update(pos, state + 0x4, dt);
         (*gPathControlInterface)->apply(pos, state + 0x4);
@@ -984,12 +987,12 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
             *(u32*)state |= 0x40000;
         }
 
-        if ((*(u32*)state & 0x800000) != 0)
+        if ((*(int*)state & 0x800000) != 0)
         {
             if (((s32) * (s8*)(state + 0x264) & 2) != 0 || *(u8*)(state + 0x262) != 0)
             {
-                ((GameObject*)pos)->anim.velocityX = (((GameObject*)pos)->anim.localPosX - *(f32*)(*(int*)(pos + 0x54) + 0x10)) / dt;
-                ((GameObject*)pos)->anim.velocityZ = (((GameObject*)pos)->anim.localPosZ - *(f32*)(*(int*)(pos + 0x54) + 0x18)) / dt;
+                *(f32*)(pos + 0x24) = (*(f32*)(pos + 0xc) - *(f32*)(*(int*)(pos + 0x54) + 0x10)) / dt;
+                *(f32*)(pos + 0x2c) = (*(f32*)(pos + 0x14) - *(f32*)(*(int*)(pos + 0x54) + 0x18)) / dt;
             }
             *(u32*)state &= 0xff7fffff;
         }

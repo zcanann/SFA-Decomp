@@ -94,6 +94,7 @@ extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern f32 lbl_803DEC6C;
 extern f32 lbl_803DEC70;
+extern f32 lbl_803DEC74;
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803879B0[];
@@ -1319,7 +1320,7 @@ extern char gViewFrustumPlanes[];
 void queueGlowRender(ModelLightStruct* light)
 {
     u8 i;
-    u8 visible;
+    int visible;
     u8 idx;
 
     if (lbl_803DCE06 >= 100) return;
@@ -1330,8 +1331,8 @@ void queueGlowRender(ModelLightStruct* light)
         f32 dot = light->worldY * plane->normalY
             + plane->normalX * (light->worldX - playerMapOffsetX)
             + plane->normalZ * (light->worldZ - playerMapOffsetZ)
-            + plane->distance;
-        if (lbl_803DEBCC + dot < lbl_803DEBCC)
+            + plane->distance + lbl_803DEBCC;
+        if (dot < lbl_803DEBCC)
         {
             visible = 0;
             goto check;
@@ -1339,13 +1340,15 @@ void queueGlowRender(ModelLightStruct* light)
     }
     visible = 1;
 check:
-    if (visible == 0 && light->glowAlpha == 0) return;
-    if (visible == 0)
     {
-        light->glowAlphaStep = -0x10;
+        u8 vis = (u8)visible;
+        if (vis == 0 && light->glowAlpha == 0) return;
+        if (vis == 0)
+        {
+            light->glowAlphaStep = -0x10;
+        }
     }
-    idx = lbl_803DCE06;
-    lbl_803DCE06 = (u8)(idx + 1);
+    idx = lbl_803DCE06++;
     lbl_80382038[idx] = (int)light;
 }
 
@@ -1431,7 +1434,7 @@ extern void memcpy(void* dst, void* src, int n);
 void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
-    s16 segCount;
+    u8 segCount;
     int seg;
     u8* sp;
     int li;
@@ -1459,7 +1462,7 @@ void intersectModLineBuild(int* obj)
         line[2] = sp[0xe];
         *(s8*)(line + 2) = *(s8*)(line + 2) ^ 0x10;
         *(s16*)(line + 0xc) = *(s16*)(sp + 0x10);
-        for (i = 0; i < 3; i++)
+        for (i = 0; i < 2; i++)
         {
             f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
             f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
@@ -1472,7 +1475,8 @@ void intersectModLineBuild(int* obj)
     for (li = 0; li < lbl_803DCF5E; li++)
     {
         u8* L = (u8*)lbl_803DCF34 + li * 0x10;
-        s16* e0 = &link[*(s16*)(L + 4) * 2];
+        int t0 = *(s16*)(L + 4) * 2;
+        s16* e0 = &link[t0];
         s16* e1;
         if (e0[0] > -1 && e0[0] != li)
             *(s16*)(L + 8) = e0[0];
@@ -1480,7 +1484,10 @@ void intersectModLineBuild(int* obj)
             *(s16*)(L + 8) = e0[1];
         else
             *(s16*)(L + 8) = -1;
-        e1 = &link[*(s16*)(L + 6) * 2];
+        {
+            int t1 = *(s16*)(L + 6) * 2;
+            e1 = &link[t1];
+        }
         if (e1[0] > -1 && e1[0] != li)
             *(s16*)(L + 0xa) = e1[0];
         else if (e1[1] > -1 && e1[1] != li)
@@ -1883,7 +1890,7 @@ void fn_8006058C(short* out, float* vec)
 }
 
 #pragma dont_inline on
-void vecGetRanges(f32* pts, f32* base, int* out, f32 scale)
+void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
 {
     int i;
 
@@ -1914,7 +1921,7 @@ int objShadowFn_80062378(void* obj, u8 param)
 {
     int lo;
     int hi;
-    f32 t;
+    f32 inv;
     void* p;
 
     p = ((GameObject*)obj)->anim.modelInstance;
@@ -1928,21 +1935,21 @@ int objShadowFn_80062378(void* obj, u8 param)
         lo = 400;
         hi = 500;
     }
-    t = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX,
-                                              ((GameObject*)obj)->anim.worldPosY,
-                                              ((GameObject*)obj)->anim.worldPosZ) -
+    inv = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX,
+                                                ((GameObject*)obj)->anim.worldPosY,
+                                                ((GameObject*)obj)->anim.worldPosZ) -
             (f32)lo) /
         (f32)(hi - lo);
-    if (t < 0.0f)
+    if (inv < 0.0f)
     {
-        t = 0.0f;
+        inv = 0.0f;
     }
-    else if (t > 1.0f)
+    else if (inv > 1.0f)
     {
-        t = 1.0f;
+        inv = 1.0f;
     }
+    inv = 1.0f - inv;
     {
-        f32 inv = 1.0f - t;
         int n = (int)((f32)param * inv);
         return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
     }
@@ -1960,10 +1967,12 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
     n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
     if (n != 0)
     {
+        void** arrp;
         best = val - *(f32*)arr[0];
-        for (i = 1; i < n; i++)
+        arrp = arr + 1;
+        for (i = 1; i < n; i++, arrp++)
         {
-            cur = val - *(f32*)arr[i];
+            cur = val - *(f32*)*arrp;
             if (cur >= *(f32*)&__AR_Callback)
             {
                 if (best < *(f32*)&__AR_Callback || cur < best)
@@ -2256,7 +2265,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
         xf.rotY = 0x2000;
     }
     xf.rotX = getAngle(vec[0], vec[2]);
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++, out += 3)
     {
         out[0] = lbl_8038D7DC[i * 3 + 0];
         if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
@@ -2269,7 +2278,6 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
         }
         out[2] = lbl_8038D7DC[i * 3 + 2];
         vecRotateZXY(&xf, out);
-        out += 3;
     }
 }
 #pragma dont_inline reset
@@ -2329,9 +2337,9 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
 #pragma opt_strength_reduction off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
-    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
     int i = 0;
     int outCount = 0;
+    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
     int n;
 
     lbl_803DCEF2 = 0;
@@ -2413,7 +2421,7 @@ void fn_8006135C(s16* out, void* obj)
     PSVECScale(b, b, scale);
     PSVECScale(c, c, scale);
     nd = -dist;
-    s = (&lbl_803DEC70)[1];
+    s = lbl_803DEC74;
     z = lbl_803DEC58;
     out[0] = (s * ((z - b[0]) - c[0]));
     out[1] = (s * ((nd - b[1]) - c[1]));
@@ -2522,7 +2530,7 @@ int objShadowFn_80062498(int* obj, int param2)
         base[0] = ((GameObject*)obj)->anim.worldPosX;
         base[1] = ((GameObject*)obj)->anim.worldPosY + yOff;
         base[2] = ((GameObject*)obj)->anim.worldPosZ;
-        vecGetRanges((f32*)buf48, base, ranges, modelState->shadowScale);
+        vecGetRanges((f32*)buf48, base, modelState->shadowScale, ranges);
 
         hitDetectFn_800691c0(obj, ranges, 0x81, 0);
         fn_80069958((void**)&vtx);
@@ -2650,15 +2658,14 @@ int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8
     int grp = 0;
     int outOff = 0;
     int total;
-    int mask;
 
     j = 0;
     total = 0;
-    mask = p9 ? 4 : 8;
+    p9 = p9 ? 4 : 8;
     for (; d < end; d += 0x18)
     {
-        int id = *(int*)d;
-        if (id == 0 || id == *(int*)&((GameObject*)obj)->anim.parent)
+        u32 id = *(u32*)d;
+        if (id == 0 || id == *(u32*)&((GameObject*)obj)->anim.parent)
         {
             f32 fx = ((GameObject*)obj)->anim.localPosX;
             f32 fz = ((GameObject*)obj)->anim.localPosZ;
@@ -2673,7 +2680,7 @@ int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8
             outA = (f32*)((char*)p5 + outOff);
             while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
             {
-                if (mask & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                if (p9 & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
                 {
                     ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10)) - fx;
                     ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16)) - ((GameObject*)obj)
@@ -2723,7 +2730,7 @@ int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8
             outA = (f32*)((char*)p5 + outOff);
             while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
             {
-                if (mask & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                if (p9 & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
                 {
                     ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10));
                     ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16));
@@ -3412,8 +3419,8 @@ extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
     f32 initB, initA;
-    f32* fp;
     void** pp;
+    f32* fp;
     s16 i;
     u8 hitCount;
     u8* tbl = (u8*)gTrackBlockDescriptors;

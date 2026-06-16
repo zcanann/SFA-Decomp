@@ -1335,8 +1335,7 @@ char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer suppo
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
-typedef struct PlayerShadowParams { u32 w[4]; } PlayerShadowParams;
-extern PlayerShadowParams lbl_802C2160;
+extern u32 lbl_802C2160[];
 extern f32 lbl_803DF46C;
 extern f32 lbl_803DF488;
 extern f32 lbl_803DF48C;
@@ -1361,10 +1360,19 @@ void playerShadow_setMode(u8 v)
     }
 }
 
+struct PlayerShadowParamsBlob
+{
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+};
+
 #pragma scheduling off
 void playerShadow_renderObject(void* obj)
 {
-    PlayerShadowParams params;
+    u32* defaults;
+    u32 params[4];
     int* tileInfo;
     int hitTable;
     int hitCount;
@@ -1381,7 +1389,8 @@ void playerShadow_renderObject(void* obj)
     f32 minZ;
     f32 maxZ;
 
-    params = lbl_802C2160;
+    defaults = lbl_802C2160;
+    *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
     hitTable = 0;
 
     if (gPlayerShadowMode == 0)
@@ -1458,7 +1467,7 @@ void playerShadow_renderObject(void* obj)
     verts[7][1] = bottomY;
     verts[7][2] = minZ;
 
-    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], &params, 4);
+    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
     hitDetectFn_800691c0(obj, hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
@@ -1595,7 +1604,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
     BoneSpawnData data;
     void* cam;
-    u8 found;
+    int found;
     int i;
     f32 dx;
     f32 dy;
@@ -1633,7 +1642,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
             lbl_8030FDE8[0] = dx;
             lbl_8030FDE8[1] = dy;
             lbl_8030FDE8[2] = dz;
-            len = sqrtf(dx * dx + dy * dy + dz * dz);
+            len = sqrtf(dy * dy + dx * dx + dz * dz);
             sc = lbl_803DF468 * len;
             if (lbl_803DF46C != len)
             {

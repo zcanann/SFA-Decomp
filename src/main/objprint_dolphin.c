@@ -3163,6 +3163,8 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 }
 #pragma dont_inline reset
 
+#pragma scheduling off
+#pragma opt_common_subs off
 void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 {
     u8 blend;
@@ -3285,6 +3287,8 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         }
     }
 }
+#pragma opt_common_subs reset
+#pragma scheduling reset
 
 extern void modelMtxFn_8003be38(u8* hdr, int* model, f32* mtx, f32* m1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
@@ -3735,7 +3739,9 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                 u8 use;
                 if (t == 4 && i == 0)
                 {
-                    if (lbl_803DCC5C != 0)
+                    int b;
+                    int a;
+                    if (lbl_803DCC5C == 0 || (modelLightStruct_getProjectionTevModes(lbl_803DCC64, &a, &b), a != 0))
                     {
                         int b;
                         int a;
@@ -3751,7 +3757,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                     }
                     else
                     {
-                        use = 0;
+                        use = 1;
                     }
                 }
                 else if (i < lbl_803DCC5C && p5 == 0)
