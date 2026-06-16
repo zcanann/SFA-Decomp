@@ -27,17 +27,12 @@ STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 typedef struct DrcreatorPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 unk1A; /* 0x1A */
     u8 pad1C[0x20 - 0x1C];
 } DrcreatorPlacement;
 
-
-typedef struct DrcreatorSpawnProjectileCallbackPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} DrcreatorSpawnProjectileCallbackPlacement;
+STATIC_ASSERT(offsetof(DrcreatorPlacement, unk1A) == 0x1A);
+STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x20);
 
 
 typedef struct DrcreatorSpawnProjectileCallbackState
@@ -53,18 +48,25 @@ typedef struct DrcreatorSpawnProjectileCallbackState
 typedef struct DrcreatorState
 {
     u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 gameBitId;
-    s16 unk6;
-    s16 spawnTimer;
-    s16 timerVariance;
+    s16 unk2;          /* 0x2 */
+    s16 gameBitId;     /* 0x4 */
+    s16 unk6;          /* 0x6 */
+    s16 spawnTimer;    /* 0x8 */
+    s16 timerVariance; /* 0xA */
     u8 padC[0x24 - 0xC];
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
+    f32 velocityX;     /* 0x24 */
+    f32 velocityY;     /* 0x28 */
+    f32 velocityZ;     /* 0x2C */
     u8 pad30[0xC4 - 0x30];
-    s32 creatorObj;
+    s32 creatorObj;    /* 0xC4 */
 } DrcreatorState;
+
+STATIC_ASSERT(offsetof(DrcreatorState, gameBitId) == 0x4);
+STATIC_ASSERT(offsetof(DrcreatorState, spawnTimer) == 0x8);
+STATIC_ASSERT(offsetof(DrcreatorState, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(DrcreatorState, velocityY) == 0x28);
+STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
+STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
 
 
 void drcreator_free(void)
@@ -93,14 +95,14 @@ void drcreator_render(void)
 
 void drcreator_init(int obj, char* arg)
 {
-    char* p = ((GameObject*)obj)->extra;
+    char* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x1e] << 8);
-    ((DrcreatorState*)p)->gameBitId = *(s16*)(arg + 0x18);
-    ((DrcreatorState*)p)->unk6 = *(s16*)(arg + 0x1c);
-    ((DrcreatorState*)p)->spawnTimer = (s16)randomGetRange(0, ((DrcreatorState*)p)->unk6);
-    ((DrcreatorState*)p)->timerVariance = (s8)arg[0x1f];
-    *(int*)p = (u8)arg[0x20];
-    ((BitFlags8*)(p + 0x18))->b0 = 1;
+    ((DrcreatorState*)state)->gameBitId = *(s16*)(arg + 0x18);
+    ((DrcreatorState*)state)->unk6 = *(s16*)(arg + 0x1c);
+    ((DrcreatorState*)state)->spawnTimer = (s16)randomGetRange(0, ((DrcreatorState*)state)->unk6);
+    ((DrcreatorState*)state)->timerVariance = (s8)arg[0x1f];
+    *(int*)state = (u8)arg[0x20];
+    ((BitFlags8*)(state + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
     ((GameObject*)obj)->animEventCallback = (void*)drcreator_spawnProjectileCallback;
 }
@@ -188,7 +190,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        switch (((DrcreatorSpawnProjectileCallbackPlacement*)placement)->unk1A)
+        switch (((DrcreatorPlacement*)placement)->unk1A)
         {
         case 3:
         case 4:
