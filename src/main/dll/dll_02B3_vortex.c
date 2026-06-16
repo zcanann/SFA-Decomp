@@ -65,7 +65,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             else
             {
-                texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73D4 * dt));
+                texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73D4 * dt));
                 if (texture->offsetS >= 10000)
                 {
                     texture->offsetS = (s16)(texture->offsetS - 10000);
@@ -111,9 +111,9 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73E4 * dt));
+            texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s16)(int)(lbl_803E73D4 * dt));
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
         if (texture->offsetS >= 10000)
         {
             texture->offsetS = (s16)(texture->offsetS - 10000);
@@ -145,9 +145,9 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            texture->offsetS = (s16)(texture->offsetS + (s16)(int)(lbl_803E73E4 * dt));
+            texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s16)(int)(lbl_803E73D4 * dt));
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
         if (texture->offsetS >= 10000)
         {
             texture->offsetS = (s16)(texture->offsetS - 10000);
