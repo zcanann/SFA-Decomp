@@ -227,7 +227,7 @@ void groundanimator_free(int* obj, int flag)
     int midoff;
     int innoff;
     int* cell;
-    f32 local[2];
+    f32 local[4];
     w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r21 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     if (flag == 0)
