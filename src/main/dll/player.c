@@ -13669,6 +13669,7 @@ void fn_802AA8D0(int obj)
         f32 y;
         f32 z;
     } buf;
+    f32 div = lbl_803E7ED8;
     f32 base = lbl_803E80C4;
     f32 dy;
     int i;
@@ -13689,8 +13690,8 @@ void fn_802AA8D0(int obj)
     buf.y = dy + ((GameObject*)obj)->anim.localPosY;
     for (i = 0; i < 10; i++)
     {
-        buf.x = ((GameObject*)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
-        buf.z = ((GameObject*)obj)->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+        buf.x = ((GameObject*)obj)->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / div;
+        buf.z = ((GameObject*)obj)->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / div;
         (*gPartfxInterface)->spawnObject(
             (void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject(
