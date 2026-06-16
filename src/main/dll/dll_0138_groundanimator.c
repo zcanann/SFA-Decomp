@@ -253,7 +253,7 @@ void groundanimator_free(int* obj, int flag)
                             cell = (int*)((char*)((MapBlockData*)block)->unk58 +
                                 *(u16*)vtx * 6);
                             fn_800605F0(cell, local);
-                            if (w->heightBuf != 0)
+                            if (*(void**)&w->heightBuf != NULL)
                             {
                                 local[1] = (f32) * (s16*)((char*)w->heightBuf + innoff);
                                 fn_8006058C(cell, local);
@@ -268,7 +268,7 @@ void groundanimator_free(int* obj, int flag)
             }
         }
     }
-    if (w->falloffBuf != 0)
+    if (*(void**)&w->falloffBuf != NULL)
     {
         mm_free((void*)w->falloffBuf);
     }
