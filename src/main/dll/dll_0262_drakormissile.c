@@ -357,6 +357,7 @@ void drakormissile_free(int obj)
 
 void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
+    char* m;
     char* p = ((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     if (visible != 0 && *(u8*)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT)
@@ -366,11 +367,11 @@ void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
         f32 sv8 = ((GameObject*)obj)->anim.rootMotionScale;
         int i;
         int* model;
-        char* m;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
+        i = 0;
         m = p;
-        for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
+        for (; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
         {
             *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) +=
                 *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
