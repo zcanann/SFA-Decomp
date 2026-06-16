@@ -1,12 +1,10 @@
+/*
+ * DragonRock Palace perch switch (DLL 0x234; "DFP_PerchSw") - a legacy
+ * object whose init/update are stubbed out: they only log
+ * "<dfperchwitch Init>No Longer supported". The DLL also exports the
+ * statue1 descriptor (gDfpstatue1ObjDescriptor) as a sibling object.
+ */
 #include "main/dll/crate2.h"
-
-
-
-
-
-
-
-
 
 extern void OSReport(const char* fmt, ...);
 
