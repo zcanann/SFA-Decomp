@@ -283,14 +283,15 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 {
     void* p;
     int i;
+    int j;
 
     if (flag == 0)
     {
         if (cloudId == -1)
         {
-            for (i = 0; i < 8; i++)
+            for (j = 0; j < 8; j++)
             {
-                snowFreeSnowCloud(i);
+                snowFreeSnowCloud(j);
             }
         }
         else

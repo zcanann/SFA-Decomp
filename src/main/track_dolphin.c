@@ -2265,19 +2265,19 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
         xf.rotY = 0x2000;
     }
     xf.rotX = getAngle(vec[0], vec[2]);
-    for (i = 0; i < 8; i++, out += 3)
+    for (i = 0; i < 8; i++)
     {
-        out[0] = lbl_8038D7DC[i * 3 + 0];
+        out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
         if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
         {
-            out[1] = lbl_8038D7DC[i * 3 + 1];
+            out[i * 3 + 1] = lbl_8038D7DC[i * 3 + 1];
         }
         else
         {
-            out[1] = scale * lbl_8038D7DC[i * 3 + 1];
+            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
         }
-        out[2] = lbl_8038D7DC[i * 3 + 2];
-        vecRotateZXY(&xf, out);
+        out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
+        vecRotateZXY(&xf, &out[i * 3]);
     }
 }
 #pragma dont_inline reset
@@ -2337,7 +2337,6 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
 #pragma opt_strength_reduction off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
-    int i = 0;
     int outCount = 0;
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
     int n;
@@ -2346,6 +2345,7 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
     for (n = 0; n < count; n++)
     {
         int vis = 1;
+        int i = n * 3;
         f32 dot = modelState->shadowOffsetX * input[0] +
             modelState->shadowOffsetY * input[1] +
             modelState->shadowOffsetZ * input[2];
@@ -2379,7 +2379,6 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
                 return 0;
             }
         }
-        i += 3;
         input += 5;
     }
     return lbl_803DCEF2 > 0;

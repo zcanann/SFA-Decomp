@@ -9355,8 +9355,9 @@ int fn_802A1114(int obj, int state)
     fn_802A13F4(obj, state);
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
+        f32 z = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.animSpeedA = z;
+        ((PlayerState*)state)->baddie.animSpeedB = z;
         inner->targetYaw =
             (s16)getAngle(*(f32*)((char*)inner + 0x56c), inner->unk574);
         inner->yaw = inner->targetYaw;
@@ -9381,9 +9382,12 @@ int fn_802A1114(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = lbl_803E7EA4;
-        inner->unk560 = buf1[1];
-        inner->unk568 = lbl_803E7EA4;
+        {
+            f32 z2 = lbl_803E7EA4;
+            inner->unk564 = z2;
+            inner->unk560 = buf1[1];
+            inner->unk568 = z2;
+        }
         pos[0] = inner->unk54C;
         pos[1] = inner->unk550;
         ic = inner->curAnimId;
@@ -11622,7 +11626,11 @@ void fn_80295CF4(int obj, int a)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
 
-    if ((void*)lbl_803DE44C == NULL || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
+    if ((void*)lbl_803DE44C == NULL)
+    {
+        return;
+    }
+    if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
     {
         return;
     }
@@ -11631,25 +11639,25 @@ void fn_80295CF4(int obj, int a)
         if ((void*)lbl_803DE44C != NULL)
         {
             *(s16*)((char*)lbl_803DE44C + 6) |= 0x4000;
+            if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            {
+                inner->unk8B4 = 1;
+                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+            }
+            GameBit_Set(0x96b, 1);
+            GameBit_Set(0x961, 1);
+            GameBit_Set(0x969, 1);
+            GameBit_Set(0x964, 1);
+            GameBit_Set(0x965, 1);
+            GameBit_Set(0x986, 1);
+            GameBit_Set(0x960, 1);
         }
-        if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
-        {
-            inner->unk8B4 = 1;
-            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
-        }
-        GameBit_Set(0x96b, 1);
-        GameBit_Set(0x961, 1);
-        GameBit_Set(0x969, 1);
-        GameBit_Set(0x964, 1);
-        GameBit_Set(0x965, 1);
-        GameBit_Set(0x986, 1);
-        GameBit_Set(0x960, 1);
     }
     else
     {
         if ((void*)lbl_803DE44C != NULL)
         {
-            if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
                 inner->unk8B4 = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
@@ -13255,13 +13263,12 @@ void fn_802AABE4(int obj)
     f32* outp;
     int model;
     short i;
-    PlayerState* inner = ((GameObject*)obj)->extra;
     f32 out2[2];
     f32 out1[5];
 
-    model = (int)Player_GetActiveModel(obj);
+    model = (int)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
 
-    ObjAnim_SetCurrentMove(obj, *(s16*)inner->unk3F8, lbl_803E7EA4, 0);
+    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->unk3F8, lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
     lbl_803DAF88[0] = out1[1];
 

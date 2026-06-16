@@ -1327,7 +1327,10 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
     f32 fa;
 
     hdr = *(u8**)b;
-    px = ((int*)(b + (*(u16*)(b + 0x18) & 1) * 4))[3];
+    {
+        u8* pb = b + 12;
+        px = *(int*)(pb + (*(u16*)(b + 0x18) & 1) * 4);
+    }
     *(f32*)(c + 4) = e * *(f32*)(c + 0x14);
     fl = 0;
     if (*(u16*)(hdr + 2) & 8)
@@ -2769,7 +2772,8 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     hdr = *(u8**)b;
     {
         u32 sel = *(u16*)(b + 0x18) & 1;
-        px = ((MdlSelBufs*)b)->bufs[sel];
+        u8* pb = b + 12;
+        px = *(int*)(pb + sel * 4);
     }
     if ((u8)h & 0x10)
     {
@@ -3011,21 +3015,29 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
         ch = *(u8**)&((ObjModel*)model)->animStateA;
     }
     saved = *(int*)(ch + 0x34);
-    *(int*)(ch + 0x34) = ((int*)(ch + idx * 4))[0xd];
+    {
+        u8* p = ch + 0x34;
+        *(int*)(ch + 0x34) = *(int*)(p + idx * 4);
+    }
     if (*(u16*)(*(u8**)model + 2) & 0x40)
     {
         if (idx > 1)
         {
-            anim = ((u8**)(ch + ((u16*)(ch + idx * 2))[0x22] * 4))[9] + 0x80;
+            u8* q = ch + 36;
+            u8* p = ch + 0x44;
+            anim = *(u8**)(q + *(u16*)(p + idx * 2) * 4) + 0x80;
         }
         else
         {
-            anim = ((u8**)(ch + ((u16*)(ch + idx * 2))[0x22] * 4))[7] + 0x80;
+            u8* q = ch + 28;
+            u8* p = ch + 0x44;
+            anim = *(u8**)(q + *(u16*)(p + idx * 2) * 4) + 0x80;
         }
     }
     else
     {
-        anim = ((u8**)*(int*)(*(u8**)model + 0x64))[((u16*)(ch + idx * 2))[0x22]];
+        u8* p = ch + 0x44;
+        anim = ((u8**)*(int*)(*(u8**)model + 0x64))[*(u16*)(p + idx * 2)];
     }
     *(f32*)(ch + 4) = t * *(f32*)(ch + 0x14);
     {
@@ -3111,15 +3123,15 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     {
         idx = 0;
     }
-    bankSel = model + ((*(u16*)(model + 0x18) & 1) << 2);
-    PSMTXCopy(*(f32**)(bankSel + 0xc) + idx * 0x10, tmp);
+    bankSel = model + 0xc;
+    PSMTXCopy(*(f32**)(bankSel + ((*(u16*)(model + 0x18) & 1) << 2)) + idx * 0x10, tmp);
     idx = (*(int***)(chain + 4))[0][0];
     if (idx >= boneBlendSlotLimit(model))
     {
         idx = 0;
     }
-    bankSel = model + ((*(u16*)(model + 0x18) & 1) << 2);
-    m = *(f32**)(bankSel + 0xc) + idx * 0x10;
+    bankSel = model + 0xc;
+    m = *(f32**)(bankSel + ((*(u16*)(model + 0x18) & 1) << 2)) + idx * 0x10;
     cap = lbl_803DE838;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {

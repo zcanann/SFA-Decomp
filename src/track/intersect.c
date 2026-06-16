@@ -5160,29 +5160,16 @@ void fn_8007BD8C(int handle1, int handle2)
             &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
     }
 
-    *(u32*)&temp = (lbl_803DB690 & 0xFFFFFF00) | (*(u32*)&temp & 0xFFFFFFFF);
-    {
-        GXColor c0;
-        *(u32*)&c0 = lbl_803DB690;
-        GXSetTevKColor(0, c0);
-    }
+    GXSetTevKColor(0, *(GXColor*)&lbl_803DB690);
     GXSetTevKColorSel(0, 0xC);
-    {
-        GXColor c1;
-        *(u32*)&c1 = lbl_803DB694;
-        GXSetTevKColor(1, c1);
-    }
+    GXSetTevKColor(1, *(GXColor*)&lbl_803DB694);
     GXSetTevKColorSel(1, 0xD);
-    {
-        GXColor c2;
-        *(u32*)&c2 = lbl_803DB698;
-        GXSetTevKColor(2, c2);
-    }
+    GXSetTevKColor(2, *(GXColor*)&lbl_803DB698);
     GXSetTevKColorSel(2, 0xE);
 
-    ((u8*)&temp)[0] = (u8)((s8)((u8*)&temp)[0] >> 2);
-    ((u8*)&temp)[1] = (u8)((s8)((u8*)&temp)[1] >> 2);
-    ((u8*)&temp)[2] = (u8)((s8)((u8*)&temp)[2] >> 2);
+    ((u8*)&temp)[0] = (u8)((int)((u8*)&temp)[0] >> 2);
+    ((u8*)&temp)[1] = (u8)((int)((u8*)&temp)[1] >> 2);
+    ((u8*)&temp)[2] = (u8)((int)((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
     ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
@@ -5713,7 +5700,7 @@ int cardLoadFn_8007d72c(void)
     } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
         if (res == 0) {
-            u64 cache = (u64)lbl_803DD048 << 32 | lbl_803DD04C;
+            u64 cache = lbl_803DD04C | (u64)lbl_803DD048 << 32;
             if (cache == 0 || cache != serial) {
                 res = -0x55;
                 lbl_803DB700 = 0xB;
@@ -5749,7 +5736,7 @@ int cardLoadFn_8007d72c(void)
             lbl_803DD050 = 0;
             return 1;
         default:
-            return 0;
+            break;
     }
     return 0;
 }
@@ -5917,9 +5904,9 @@ void showMemCardError(u8 err)
     u8 submenu;
     int timer;
     u8 held;
+    int y;
     int i;
     int j;
-    int y;
     int yy;
     char *t;
     int v;
