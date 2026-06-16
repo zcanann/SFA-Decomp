@@ -552,7 +552,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                 if (*(void**)&state->trackedObject == NULL)
                 {
                     short* cfg = *(short**)&((GameObject*)obj)->anim.placementData;
-                    if (tw2 != NULL && *(s16*)((char*)tw2 + 0x46) == 0x3fb)
+                    if (tw2 != NULL && ((GameObject*)tw2)->anim.seqId == 0x3fb)
                     {
                         if (getXZDistance((char*)obj + 0x18, (char*)tw2 + 0x18) < (f32)(s32)(cfg[0xc] * cfg[0xc]))
                         {
@@ -617,7 +617,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000) && state->airMeterValue >= lbl_803E5234)
+        if (!(((GameObject*)*(char**)&state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= lbl_803E5234)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -628,7 +628,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0x12:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000))
+        if (!(((GameObject*)*(char**)&state->playerObject)->objectFlags & 0x1000))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
