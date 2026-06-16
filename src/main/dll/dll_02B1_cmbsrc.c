@@ -437,7 +437,7 @@ int cmbsrc_update(int obj)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj,
-                                               lbl_8032BD00[setup->colorIndex]);
+                                               lbl_8032BD00[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
             if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
                 *(u8*)((int)state->light + 0x4c) != 0)
