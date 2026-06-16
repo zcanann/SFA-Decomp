@@ -1160,25 +1160,25 @@ void DBstealerwo_setFuncPtrs_80203c78(void);
 void fn_80203000(int obj, int param2)
 {
     int i;
-    int state = *(int*)(param2 + 0x40c);
-    if ((*(u8*)(state + 0x14) & 1) && *(void**)&((GroundBaddieState*)param2)->baddie.targetObj != 0)
+    DbStealerwormControl* state = (DbStealerwormControl*)((GroundBaddieState*)param2)->control;
+    if ((state->flags14 & 1) && *(void**)&((GroundBaddieState*)param2)->baddie.targetObj != 0)
     {
         fn_80202EF0(obj, param2);
     }
-    if (*(u8*)(state + 0x14) & 2)
+    if (state->flags14 & 2)
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x345, NULL, 2, -1, NULL);
     }
-    if (*(u8*)(state + 0x14) & 4)
+    if (state->flags14 & 4)
     {
         for (i = 0; i < 0xa; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x343, NULL, 1, -1, NULL);
         }
     }
-    *(u8*)(state + 0x14) = 0;
+    state->flags14 = 0;
 }
 #pragma dont_inline reset
 
