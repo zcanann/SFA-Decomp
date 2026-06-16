@@ -1,3 +1,23 @@
+/*
+ * dbprotection - protection-spirit phase handlers for the SB_Galleon boss.
+ * Runs on the SB_Galleon object (extra == SBGalleonState) alongside the
+ * SB_Galleon handlers in DBstealerworm.c.
+ *
+ * fn_801DFA28 is the per-step movement/flight driver: it locates the
+ * "tricky" target object (seqId 0x8C), runs the wander/drift bob in phase
+ * 0, the flight-pattern approach in phase 1, and the swooping attack sweep
+ * in phases 2-8, finally fading the screen out (kind 0x41) and refreshing
+ * trigger sequence 0 when the run completes.
+ *
+ * DBprotection_updateShield drives the screen transition (game bits 0x9f /
+ * 0xa0 / 0x91c arm-use-ready), the envfx game-bit cycle, the cloud action
+ * interface and the shield-impact sfx (latched on the sine of shieldAngle).
+ * DBprotection_updateEnvfxGameBits toggles the A/B envfx cycle game bits
+ * (0xa3c-0xa3f), swapping envfxIndex and replaying actions from the
+ * SBGalleonState envfx table. DBprotection_getCameraState exposes the
+ * boss's cameraState byte to other DLLs; DBprotection_storeHomePosition
+ * latches the object's local position as the home position.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -19,17 +39,30 @@
 #define DBPROTECTION_ENVFX_B 0x467e8
 #define DBPROTECTION_PLAYER_ENVFX_FLASH 0x96
 #define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
+#define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
-extern undefined4 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
+extern void ObjHits_DisableObject(int obj);
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
+extern int ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void getEnvfxAct(int effectObj, int playerObj, int action, int unused);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern void setMatrixFromObjectPos(f32* matrix, void* objPos);
+extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
+extern int fn_801E2570(void);
 
+extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
@@ -42,33 +75,6 @@ extern f32 lbl_803E57D4;
 extern f32 lbl_803E57D8;
 extern f32 lbl_803E57DC;
 extern f32 lbl_803E57E0;
-
-#define SCREEN_TRANSITION_FADE(kind, value) \
-  (*gScreenTransitionInterface)->start((kind), (value))
-#define SCREEN_TRANSITION_START(kind, value) \
-  (*gScreenTransitionInterface)->step((kind), (value))
-#define SCREEN_TRANSITION_READY() \
-  (*gScreenTransitionInterface)->isFinished()
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-  (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define CLOUD_ACTION_SET(a, b) \
-  (*gCloudActionInterface)->func12Nop((a), (b))
-#define CLOUD_ACTION_ENABLE(flag) \
-  (*gCloudActionInterface)->func10Nop((flag))
-
-extern u8 framesThisStep;
-extern f32 sqrtf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
-extern int ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
-extern int fn_801E2570(void);
-extern void setMatrixFromObjectPos(f32* matrix, void* objPos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-
 extern f32 lbl_803E56C8;
 extern f32 lbl_803E56D0;
 extern f32 lbl_803E56D4;
@@ -128,18 +134,26 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
+#define SCREEN_TRANSITION_FADE(kind, value) \
+  (*gScreenTransitionInterface)->start((kind), (value))
+#define SCREEN_TRANSITION_START(kind, value) \
+  (*gScreenTransitionInterface)->step((kind), (value))
+#define SCREEN_TRANSITION_READY() \
+  (*gScreenTransitionInterface)->isFinished()
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
+  (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define CLOUD_ACTION_SET(a, b) \
+  (*gCloudActionInterface)->func12Nop((a), (b))
+#define CLOUD_ACTION_ENABLE(flag) \
+  (*gCloudActionInterface)->func10Nop((flag))
 #define DBPROT_CAMERA_SHAKE(amount, arg) \
   (*gCameraInterface)->releaseAction((amount), (arg))
 #define DBPROT_MAP_EVENT(layer, a, b) \
   (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
-#define DBPROT_SCREEN_FADE(kind, value) \
-  (*gScreenTransitionInterface)->start((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \
   (*gCloudActionInterface)->func10Nop((flag))
 #define DBPROT_CLOUD_SET_B(flag) \
   (*gCloudActionInterface)->func11Nop((flag))
-#define DBPROT_CLOUD_SET_RANGE(a, b) \
-  (*gCloudActionInterface)->func12Nop((a), (b))
 
 void fn_801DFA28(u8* obj)
 {
@@ -370,7 +384,7 @@ void fn_801DFA28(u8* obj)
                 ((SBGalleonState*)state)->phaseCounter = 0;
                 *(s8*)&((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->headingLatch = 200;
-                GameBit_Set(0xF1E, 1);
+                GameBit_Set(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 1);
                 break;
             }
         }
@@ -419,7 +433,7 @@ void fn_801DFA28(u8* obj)
             {
                 ((SBGalleonState*)state)->headingLatch = 200;
             }
-            Sfx_IsPlayingFromObjectChannel((int)obj, 2);
+            Sfx_IsPlayingFromObjectChannel((int)obj, 2); /* called for side-effect; result discarded in target */
             break;
         case 1:
             tx = ((SBGalleonState*)state)->homeX - lbl_803E5710;
@@ -570,7 +584,7 @@ void fn_801DFA28(u8* obj)
             sfxObj = fn_801E2570();
             Sfx_StopFromObject(sfxObj, 0x2C6);
             Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
-            GameBit_Set(0xF1E, 0);
+            GameBit_Set(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }
         else if (((SBGalleonState*)state)->phaseCounter >= 4)
         {
@@ -719,7 +733,7 @@ void fn_801DFA28(u8* obj)
         ((GameObject*)obj)->anim.rotY = *(s16*)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
         dx = ((SBGalleonState*)state)->homeX - ((GameObject*)obj)->anim.localPosX;
         dz = ((SBGalleonState*)state)->homeZ - ((GameObject*)obj)->anim.localPosZ;
-        sqrtf(dx * dx + dz * dz);
+        sqrtf(dx * dx + dz * dz); /* match: dead sqrt present in target */
         t = ((GameObject*)obj)->anim.rotZ;
         iv = (int)(lbl_803E57A0 * (f32)((SBGalleonState*)state)->turnRate);
         dv = (iv - t) >> 3;
@@ -767,8 +781,8 @@ void fn_801DFA28(u8* obj)
         {
             if (((SBGalleonState*)state)->fadeTimer == 0)
             {
-                ObjHits_DisableObject(obj);
-                DBPROT_SCREEN_FADE(0x41, 1);
+                ObjHits_DisableObject((int)obj);
+                SCREEN_TRANSITION_FADE(0x41, 1);
             }
             ((SBGalleonState*)state)->fadeTimer += framesThisStep;
             if (((SBGalleonState*)state)->fadeTimer > 0x41)
@@ -777,7 +791,7 @@ void fn_801DFA28(u8* obj)
                 ((SBGalleonState*)state)->phase = 6;
                 DBPROT_CLOUD_SET_A(0);
                 DBPROT_CLOUD_SET_B(0);
-                DBPROT_CLOUD_SET_RANGE(lbl_803E56CC, lbl_803E5760);
+                CLOUD_ACTION_SET(lbl_803E56CC, lbl_803E5760);
                 if (((SBGalleonState*)state)->unk80 == 0)
                 {
                     ((SBGalleonState*)state)->unk80 = 1;
