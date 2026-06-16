@@ -1,3 +1,16 @@
+/*
+ * lgtprojectedlight (DLL 0x2AB) - a placeable projected (gobo/spot) light.
+ *
+ * init creates a ModelLight of kind PROJECTED, points it from the placement
+ * record and loads its projection texture (falling back to
+ * PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET when none is given). It then sets up
+ * either an orthographic frustum (PROJECTEDLIGHT_PROJECTION_ORTHO, with the
+ * half-extents derived from projectionWidth/Height and the near/far depth from
+ * the two nibbles of orthoDepthNibbles) or a perspective frustum (fovY plus the
+ * width/height aspect), configures the projection TEV modes, near/far Z, colour
+ * fade and target colour. update just spins the light by its per-axis rotation
+ * speeds.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -151,49 +164,46 @@ void projectedlight_init(int obj, int setup)
 
         if (setupData->projectionMode == PROJECTEDLIGHT_PROJECTION_ORTHO)
         {
-            f32 a = (f32)(u32)
-            setupData->projectionHeight / lbl_803E7274;
-            f32 b;
-            f32 lo, hi;
-            if (a < lbl_803E7260)
+            f32 halfHeight = (f32)(u32)setupData->projectionHeight / lbl_803E7274;
+            f32 halfWidth;
+            f32 nearDepth, farDepth;
+            if (halfHeight < lbl_803E7260)
             {
-                a = lbl_803E7260;
+                halfHeight = lbl_803E7260;
             }
-            b = (f32)(u32)
-            setupData->projectionWidth / lbl_803E7274;
-            if (b < lbl_803E7260)
+            halfWidth = (f32)(u32)setupData->projectionWidth / lbl_803E7274;
+            if (halfWidth < lbl_803E7260)
             {
-                b = lbl_803E7260;
+                halfWidth = lbl_803E7260;
             }
             if (setupData->orthoDepthNibbles != 0)
             {
-                u8 v = setupData->orthoDepthNibbles;
-                lo = (f32)(v & 0xf);
-                hi = (f32)((v >> 4) & 0xf);
+                u8 depth = setupData->orthoDepthNibbles;
+                nearDepth = (f32)(depth & 0xf);
+                farDepth = (f32)((depth >> 4) & 0xf);
             }
             else
             {
-                lo = lbl_803E7260;
-                hi = lo;
+                nearDepth = lbl_803E7260;
+                farDepth = nearDepth;
             }
-            modelLightStruct_setupOrthoProjection(state->light, b, -b, -a, a, lo, hi);
+            modelLightStruct_setupOrthoProjection(state->light, halfWidth, -halfWidth,
+                                                  -halfHeight, halfHeight, nearDepth, farDepth);
         }
         else
         {
-            f32 c = (f32)(u32)
-            setupData->projectionHeight / lbl_803E7274;
-            f32 d;
-            if (c < lbl_803E7260)
+            f32 height = (f32)(u32)setupData->projectionHeight / lbl_803E7274;
+            f32 width;
+            if (height < lbl_803E7260)
             {
-                c = lbl_803E7260;
+                height = lbl_803E7260;
             }
-            d = (f32)(u32)
-            setupData->projectionWidth / lbl_803E7274;
-            if (d < lbl_803E7260)
+            width = (f32)(u32)setupData->projectionWidth / lbl_803E7274;
+            if (width < lbl_803E7260)
             {
-                d = lbl_803E7260;
+                width = lbl_803E7260;
             }
-            modelLightStruct_setupPerspectiveProjection(state->light, (f32)(u32)setupData->fovY, c / d);
+            modelLightStruct_setupPerspectiveProjection(state->light, (f32)(u32)setupData->fovY, height / width);
         }
 
         modelLightStruct_setProjectionTevModes(state->light, setupData->tevModeA, setupData->tevModeB);
