@@ -288,12 +288,12 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0)
         {
-            state->countValue = state->countValue - 1;
+            state->countValue--;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         else if ((s8)stickLo > 0)
         {
-            state->countValue = state->countValue + 1;
+            state->countValue++;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         if (state->countValue > state->maxCount)
@@ -389,16 +389,16 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             state->nudgeCount = state->nudgeCount + 1;
         }
-        return ((s8)nudge == 0) ? 1 : 0;
+        return (s8)nudge == 0;
     case DR_LASERTURRET_PROMPT_NUDGE:
         if ((s8)nudge == 1)
         {
             int* target = state->linkedTarget;
             (**(code***)((char*)target + 0x68))[0x48 / 4](target);
         }
-        return ((s8)nudge == 1) ? 1 : 0;
+        return (s8)nudge == 1;
     case DR_LASERTURRET_PROMPT_MAX_NUDGE:
-        return ((s8)nudge == 2) ? 1 : 0;
+        return (s8)nudge == 2;
     }
     return 0;
 }
