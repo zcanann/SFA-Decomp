@@ -144,7 +144,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
     GameObject* best;
     u8* setup;
     s16 yaw;
-    int pitch;
+    s16 pitch;
     s16 roll;
     f32 dx;
     f32 dy;
