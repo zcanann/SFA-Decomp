@@ -1,12 +1,23 @@
-#include "main/game_object.h"
+/*
+ * dfpulley - per-node spring/constraint integration step for the DF
+ * (Dinosaur Forest) rope simulation. Sibling of dfbarrel
+ * (DFRope_UpdateSimulation), which calls this once per solver tick.
+ *
+ * For each unlocked rope node it sums the spring forces from every
+ * attached link (added when the node is the link's first endpoint,
+ * subtracted otherwise), clamps the resulting force magnitude to the
+ * rope's maxSlack, scales by stepPerTick, then advances the node's
+ * velocity and position by the rope's step / inverseTicks factors
+ * (semi-implicit Euler).
+ */
+#include "main/dll/DF/DFbarrel.h"
 #include "dolphin/mtx.h"
 
-extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4DFC; /* 0.0f, dfbarrel TU */
 
-void DFPulley_integrateLinks(u8* self)
+void DFPulley_integrateLinks(DFRope* self)
 {
-    u8* linkPtr;
-    u8* part;
+    DFRopeNode* part;
     int j;
     int i;
     Vec accel;
@@ -15,44 +26,43 @@ void DFPulley_integrateLinks(u8* self)
     f32 mag;
     f32 zero;
 
-    part = (u8*)*(int*)(self + 0);
+    part = self->nodes;
     i = 0;
     zero = lbl_803E4DFC;
-    for (; i < (int)self[0x8]; i++, part += 0x34)
+    for (; i < (int)self->count; i++, part++)
     {
-        *(f32*)((u8*)&accel + 8) = zero;
-        *(f32*)((u8*)&accel + 4) = zero;
-        *(f32*)((u8*)&accel + 0) = zero;
+        accel.z = zero;
+        accel.y = zero;
+        accel.x = zero;
 
-        if (part[0x30] == 0)
+        if (part->locked == 0)
         {
-            for (j = 0, linkPtr = part; j < (int)part[0x24]; j++)
+            for (j = 0; j < (int)part->linkCount; j++)
             {
-                u8* link = (u8*)*(u32*)(linkPtr + 0x28);
-                if ((u32)part == *(u32*)(link + 4))
+                DFRopeLink* link = part->links[j];
+                if (part == link->a)
                 {
-                    PSVECAdd(&accel, (Vec*)(link + 0x18), &accel);
+                    PSVECAdd(&accel, (Vec*)link->force, &accel);
                 }
                 else
                 {
-                    PSVECSubtract(&accel, (Vec*)(link + 0x18), &accel);
+                    PSVECSubtract(&accel, (Vec*)link->force, &accel);
                 }
-                linkPtr += 4;
             }
             mag = PSVECMag(&accel);
-            if (mag > ((GameObject *)self)->anim.velocityZ)
+            if (mag > self->maxSlack)
             {
-                PSVECScale(&accel, &accel, ((GameObject *)self)->anim.velocityZ / mag);
+                PSVECScale(&accel, &accel, self->maxSlack / mag);
             }
-            PSVECScale(&accel, &accel, *(f32*)(self + 0x40));
-            PSVECAdd(&accel, (Vec*)(part + 0x18), &accel);
-            PSVECAdd((Vec*)(part + 0xC), &accel, (Vec*)(part + 0xC));
-            PSVECScale((Vec*)(part + 0xC), &velscaled, *(f32*)(self + 0x38));
-            PSVECSubtract((Vec*)(part + 0xC), &velscaled, (Vec*)(part + 0xC));
-            *(f32*)(part + 0x10) = *(f32 *)&((GameObject *)self)->anim.parent * *(f32*)(self + 0x3C)
-                + *(f32*)(part + 0x10);
-            PSVECScale((Vec*)(part + 0xC), &scaled, *(f32 *)&((GameObject *)self)->anim.parent);
-            PSVECAdd((Vec*)part, &scaled, (Vec*)part);
+            PSVECScale(&accel, &accel, self->stepPerTick);
+            PSVECAdd(&accel, (Vec*)part->force, &accel);
+            PSVECAdd((Vec*)part->velocity, &accel, (Vec*)part->velocity);
+            PSVECScale((Vec*)part->velocity, &velscaled, self->damping);
+            PSVECSubtract((Vec*)part->velocity, &velscaled, (Vec*)part->velocity);
+            part->velocity[1] = self->step * self->inverseTicks
+                + part->velocity[1];
+            PSVECScale((Vec*)part->velocity, &scaled, self->step);
+            PSVECAdd((Vec*)part->pos, &scaled, (Vec*)part->pos);
         }
     }
 }
