@@ -125,7 +125,7 @@ void ring_init(int obj, int setup)
         f->bit20 = 1;
     else
         f->bit20 = 0;
-    *(s16*)obj = -32768;
+    ((GameObject*)obj)->anim.rotX = -32768;
     if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
     {
         f->bit10 = 1;
