@@ -13908,9 +13908,8 @@ int fn_802A418C(int obj, int state, f32 fv)
     }
     else if ((s8)c == inner->unk8C2)
     {
-        int n = *(u8*)((char*)inner + 0x8c3) + 1;
-        inner->unk8C3 = n;
-        if ((u8)n > 200)
+        inner->unk8C3++;
+        if (inner->unk8C3 > 200)
         {
             inner->unk8C3 = 200;
         }
