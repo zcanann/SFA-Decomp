@@ -5483,7 +5483,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     {
         lbl_803DE459 = 0;
         changed = 1;
-        inner->flags360 &= ~0x40;
+        *(u32*)&inner->flags360 &= ~0x40LL;
         Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         {
             f32 z = lbl_803E7EA4;
@@ -5701,7 +5701,20 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         while (n != 0);
     }
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
-    if (*(s8*)&((PlayerState*)state)->baddie.moveDone == 0)
+    if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
+    {
+        Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
+        if (((PlayerState*)state)->baddie.targetObj != NULL)
+        {
+            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
+            return 0x25;
+        }
+        inner->unk3F1 = (inner->unk3F1 & 0x7f) | 0x80;
+        inner->flags360 |= 0x800000;
+        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
+        return 2;
+    }
+    else
     {
         if (((GameObject*)obj)->anim.currentMoveProgress >=
             *(f32*)((inner->moveSlots + 0x2c) + (u32)inner->moveSlotIndex * 0xb0))
@@ -5737,19 +5750,6 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
         }
         return 0;
-    }
-    else
-    {
-        Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
-        if (((PlayerState*)state)->baddie.targetObj == NULL)
-        {
-            inner->unk3F1 = (inner->unk3F1 & 0x7f) | 0x80;
-            inner->flags360 |= 0x800000;
-            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
-            return 2;
-        }
-        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
-        return 0x25;
     }
 }
 
