@@ -1247,7 +1247,6 @@ void textureFree(u8* tex)
 {
     u8* iter;
     u8* next;
-    int count;
     if (tex == gLoadedTextures[0].texture) return;
     if (tex == NULL)
     {
@@ -1267,8 +1266,7 @@ void textureFree(u8* tex)
     if (((Texture*)tex)->refCount != 0) return;
     {
         int i;
-        count = gLoadedTextureCount;
-        for (i = 0; count > 0; i++, count--)
+        for (i = 0; i < gLoadedTextureCount; i++)
         {
             if (gLoadedTextures[i].texture == tex)
             {
@@ -1276,7 +1274,7 @@ void textureFree(u8* tex)
                 while (iter != NULL)
                 {
                     if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) iter = NULL;
-                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) iter = NULL;
+                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) { iter = NULL; continue; }
                     if (iter == NULL) break;
                     next = *(u8**)iter;
                     if (iter[72] != 0) findSomething(*(int*)(iter + 64));
@@ -1959,7 +1957,7 @@ void fn_80053C40(u8* tex, u8* obj)
     else
     {
         GXInitTexObjLOD(obj, ((Texture*)tex)->minFilter, ((Texture*)tex)->magFilter,
-                        lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
+                        0.0f, 0.0f, 0.0f, 0, 0, 0);
     }
 }
 
@@ -2398,7 +2396,7 @@ int objShouldUnload(u8* obj)
         tp = gMapBlockLayerTables;
         for (k = 0; k < 5; k++)
         {
-            if (*(s8*)(*tp + bx) >= 0)
+            if (*(s8*)(bx + *tp) >= 0)
             {
                 found = 1;
             }

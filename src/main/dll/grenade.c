@@ -203,9 +203,9 @@ void trickyDigTunnel(u8* obj, u8* state)
                 if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
                 {
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
+                    ptr = ((TrickyState*)state)->unk704 + 0x1c;
                     ((TrickyState*)state)->unk704 =
-                        (u8*)(*gRomCurveInterface)->getById(
-                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
+                        (u8*)(*gRomCurveInterface)->getById(*(int*)(ptr + idx * 4));
                     break;
                 }
                 off += 4;
@@ -238,9 +238,9 @@ void trickyDigTunnel(u8* obj, u8* state)
                 if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
                 {
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
+                    ptr = ((TrickyState*)state)->unk704 + 0x1c;
                     ((TrickyState*)state)->unk704 =
-                        (u8*)(*gRomCurveInterface)->getById(
-                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
+                        (u8*)(*gRomCurveInterface)->getById(*(int*)(ptr + idx * 4));
                     break;
                 }
                 off += 4;
@@ -692,10 +692,10 @@ int trickyFn_80142a14(int obj, int state)
 
 int trickyFlameFn_80142b6c(u8* obj, u8* state)
 {
-    int i;
-    u8* p;
     u8* ptr;
     u8* e;
+    int i;
+    u8* p;
 
     switch (((GameObject*)obj)->anim.currentMove)
     {
@@ -706,8 +706,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             if (Obj_IsLoadingLocked() != 0)
             {
                 ((TrickyState*)state)->stateFlags |= 0x800;
-                p = state;
-                for (i = 0; i < 7; i++)
+                for (i = 0, p = state; i < 7; i++)
                 {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
@@ -727,8 +726,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             {
                 ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
-                p = state;
-                for (i = 0; i < 7; i++)
+                for (i = 0, p = state; i < 7; i++)
                 {
                     objSetAnimSpeedTo1(*(u8**)(p + 0x700));
                     p += 4;
@@ -765,7 +763,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
@@ -798,7 +796,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
 skip:
     if (lbl_803E23DC == ((TrickyState*)state)->unk720)
     {
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
         ((TrickyState*)state)->substate = 0;
     }
     if ((u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1)
@@ -1473,10 +1471,10 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
 void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
-    u8* found;
-    u8* ptr;
     u8 lo;
     u8 hi;
+    u8* found;
+    u8* ptr;
     int sv;
     f32 ang;
 
@@ -1602,7 +1600,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     u8 c;
     u8 d;
     u32 n;
-    u8 cnt;
+    u32 cnt;
     u8 g;
     int inWater;
     s16 item[4];
@@ -1664,17 +1662,17 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-                    ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
+                    ((FlagByte728*)&((TrickyState*)b)->unk82E)->bf5 = 1;
                 }
                 else
                 {
                     d = c - a;
-                    cnt = (u32)d >> 2;
+                    cnt = (u8)((u32)d >> 2);
                     if (d % 4)
                     {
                         cnt += 1;
                     }
-                    if (n < cnt)
+                    if (cnt > n)
                     {
                         ((TrickyState*)state)->unk82D = a + (n << 2);
                         GameBit_Set(0xc1, 0);
@@ -1684,7 +1682,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         ((TrickyState*)state)->unk82D = a + (cnt << 2);
                         GameBit_Set(0xc1, n - cnt);
                     }
-                    if (*(*(u8**)state + 1) < ((TrickyState*)state)->unk82D)
+                    if (((TrickyState*)state)->unk82D > *(*(u8**)state + 1))
                     {
                         ((TrickyState*)state)->unk82D = *(*(u8**)state + 1);
                     }
@@ -1719,8 +1717,8 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-                    ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
-                    ((TrickyState*)state)->stateFlags |= 0x40000000;
+                    ((FlagByte728*)&((TrickyState*)b)->unk82E)->bf5 = 1;
+                    ((TrickyState*)state)->stateFlags |= 0x40000000LL;
                 }
                 buttonDisable(0, 0x100);
                 return 1;
@@ -1775,7 +1773,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                     trickyDebugPrint(lbl_8031D478);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, obj, -1);
-                ((TrickyByte82E*)&((TrickyState*)b)->unk82E)->b5 = 1;
+                ((FlagByte728*)&((TrickyState*)b)->unk82E)->bf5 = 1;
                 buttonDisable(0, 0x100);
                 return 1;
             }

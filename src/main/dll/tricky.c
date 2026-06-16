@@ -624,13 +624,14 @@ void hudDrawTimedElement(int unused, int* e)
     }
     else
     {
-        if (hudElementOpacity != *(f32*)((char*)e + 0x8))
+        f32 op = hudElementOpacity;
+        if (op != *(f32*)((char*)e + 0x8))
         {
             *(f32*)((char*)e + 0x8) = lbl_803E1FA0 * (f32)(u32)
             framesThisStep + *(f32*)((char*)e + 0x8);
-            if (*(f32*)((char*)e + 0x8) > hudElementOpacity)
+            if (*(f32*)((char*)e + 0x8) > op)
             {
-                *(f32*)((char*)e + 0x8) = hudElementOpacity;
+                *(f32*)((char*)e + 0x8) = op;
             }
         }
     }
@@ -818,7 +819,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
 
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
 {
-    f32 sx, sy, u0, v0, u1, v1;
+    f32 u1, u0, v0, sy, sx, v1;
     u32 w, h;
     pauseMenuMapFn_8011de20(this, p5, (s16)p4, 0);
     sx = lbl_803E1E80 * f1;
@@ -1048,11 +1049,14 @@ void fearTestMeterDraw(void)
     col.g = 0;
     col.b = 0;
     col.a = (u8)lbl_803DD76C;
-    hudDrawRect((fearTestMeterMarkerX + 0x140) - (u8)lbl_803DBAEF,
-                (u8)lbl_803DBAEE + 0x32,
-                (u8)lbl_803DBAEF + (fearTestMeterMarkerX + 0x140),
-                (hgt + 0x32) - (u8)lbl_803DBAEE,
-                col);
+    {
+        int half = (u8)lbl_803DBAEF;
+        hudDrawRect((fearTestMeterMarkerX + 0x140) - half,
+                    (u8)lbl_803DBAEE + 0x32,
+                    half + (fearTestMeterMarkerX + 0x140),
+                    (hgt + 0x32) - (u8)lbl_803DBAEE,
+                    col);
+    }
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 

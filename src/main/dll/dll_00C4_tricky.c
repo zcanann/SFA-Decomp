@@ -439,7 +439,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             **(u8**)&((TrickyState*)state)->progressPtr = ((TrickyState*)state)->unk82D;
             break;
         case 0x2b:
-            ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
+            ((GameObject*)obj)->anim.modelState->flags &= ~(u64)OBJ_MODEL_STATE_SHADOW_VISIBLE;
             break;
         case 0x2c:
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
@@ -2369,7 +2369,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             if (((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter != 0)
             {
-                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter -= 1;
+                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter--;
             }
         }
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xfffffdc7;
@@ -2681,7 +2681,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
                 *(s8*)&((TrickyState*)state)->surfaceFlags |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
                 *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 nearestSpecialDelta = absDy;
-                if (lbl_803E25A0 < ((TrickyState*)state)->unk1B8)
+                if (((TrickyState*)state)->unk1B8 > lbl_803E25A0)
                 {
                     ((TrickyState*)state)->flags2DC |= 0x10100000LL;
                 }

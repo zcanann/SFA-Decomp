@@ -1500,7 +1500,6 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
     extern f32 lbl_803E62B8;
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&((GameObject*)obj)->extra)->control;
     BaddieState* bs = (BaddieState*)p2;
-    int q;
     int tmp;
     f32 v;
     f32 d;
@@ -1528,23 +1527,23 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E62EC
         && *(f32*)(*(int*)&bs->targetObj + 0x10) - lbl_803E62F8 <= ((GameObject*)obj)->anim.localPosY)
     {
-        q = sub->msgStack;
+        obj = sub->msgStack;
         stk.msg9[0] = 9;
         stk.msg9[1] = 0;
         stk.msg9[2] = 0x24;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(obj) == 0)
         {
-            Stack_Push(q, stk.msg9);
+            Stack_Push(obj, stk.msg9);
         }
         sub->unk34 = 1;
         tmp = *(int*)&bs->targetObj;
-        q = sub->msgStack;
+        obj = sub->msgStack;
         stk.msg7[0] = 7;
         stk.msg7[1] = 1;
         stk.msg7[2] = tmp;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(obj) == 0)
         {
-            Stack_Push(q, stk.msg7);
+            Stack_Push(obj, stk.msg7);
         }
         sub->unk34 = 1;
     }
@@ -1560,13 +1559,13 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
         if (sqrtf(stk.pos[2] * stk.pos[2] + (stk.pos[0] * stk.pos[0] + stk.pos[1] * stk.pos[1])) < lbl_803E62B8)
         {
             tmp = *(int*)&bs->targetObj;
-            q = sub->msgStack;
+            obj = sub->msgStack;
             stk.msgE[0] = 0xe;
             stk.msgE[1] = 1;
             stk.msgE[2] = tmp;
-            if (Stack_IsFull(q) == 0)
+            if (Stack_IsFull(obj) == 0)
             {
-                Stack_Push(q, stk.msgE);
+                Stack_Push(obj, stk.msgE);
             }
             sub->unk34 = 1;
         }
@@ -1814,10 +1813,9 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     state->animSpeedB = state->animSpeedB + (accX * sinv - accZ * cosv);
     state->animSpeedA = state->animSpeedA + (-accZ * sinv - accX * cosv);
     v = state->animSpeedA;
-    neg = -limit;
-    if (v < neg)
+    if (v < -limit)
     {
-        v = neg;
+        v = -limit;
     }
     else if (v > limit)
     {
@@ -1825,7 +1823,7 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     }
     state->animSpeedA = v;
     v = state->animSpeedB;
-    state->animSpeedB = (v < neg) ? neg : (v > limit) ? limit : v;
+    state->animSpeedB = (v < -limit) ? -limit : (v > limit) ? limit : v;
     return 0;
 }
 

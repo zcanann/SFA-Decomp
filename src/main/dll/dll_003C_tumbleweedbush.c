@@ -669,18 +669,17 @@ int TitleMenuItem_isChanged(TitleMenuItem* item);
 #pragma peephole off
 void Link_release(void)
 {
-    u8* p;
     int i;
 
-    for (i = 0, p = linkTextures; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        textureFree(*(void**)p);
-        p += 8;
+        textureFree(((LinkTextureSlot*)linkTextures)[i].texture);
     }
     fn_8001BDD4(3);
 }
 #pragma peephole reset
 
+#pragma peephole off
 void Link_initialise(void)
 {
     int i;
@@ -697,6 +696,7 @@ void Link_initialise(void)
     linkIsRotated = 0;
     linkFlag_803dd8f8 = 1;
 }
+#pragma peephole reset
 
 #pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
@@ -911,7 +911,6 @@ void linkDrawFn_80130484(void)
 {
     extern s8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
-    LinkMenuItemDB* p;
     void* tex;
     int i;
     int minX;
@@ -923,21 +922,20 @@ void linkDrawFn_80130484(void)
     minX = 480;
     maxX = 0;
     i = 0;
-    p = lbl_803A9458;
     for (; i < (s8)lbl_803DD911; i++)
     {
-        if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
+        if (((lbl_803A9458[i].field16 & 4) != 0) && ((s8)lbl_803A9458[i].slots[0] != -1))
         {
-            tex = *(void**)(linkTextures + (s8)p->slots[0] * 8);
+            tex = *(void**)(linkTextures + (s8)lbl_803A9458[i].slots[0] * 8);
         }
         else
         {
-            tex = p->texture;
+            tex = lbl_803A9458[i].texture;
         }
         if (tex != NULL)
         {
             w = *(u16*)((char*)tex + 12);
-            x = p->field0C;
+            x = lbl_803A9458[i].field0C;
         }
         else
         {
@@ -949,7 +947,7 @@ void linkDrawFn_80130484(void)
             {
                 w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
             }
-            x = p->field06 - 2;
+            x = lbl_803A9458[i].field06 - 2;
         }
         right = x + w;
         if (x < minX)
@@ -960,7 +958,6 @@ void linkDrawFn_80130484(void)
         {
             maxX = right;
         }
-        p++;
     }
 }
 #pragma peephole reset
