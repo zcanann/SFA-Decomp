@@ -1,7 +1,13 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-int vortex_getExtraSize(void) { return 0x28; }
+#define VORTEX_SEQ_SWIRL_A 0x835
+#define VORTEX_SEQ_SWIRL_B 0x838
+#define VORTEX_SEQ_TALL 0x83d
+#define VORTEX_SEQ_INACTIVE_A 0x29a
+#define VORTEX_SEQ_INACTIVE_B 0x829
+
+int vortex_getExtraSize(void) { return sizeof(VortexState); }
 
 int vortex_getObjectTypeId(void) { return 0; }
 
@@ -45,7 +51,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x835 || ((GameObject*)obj)->anim.seqId == 0x838)
+    if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_SWIRL_A || ((GameObject*)obj)->anim.seqId == VORTEX_SEQ_SWIRL_B)
     {
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
@@ -106,7 +112,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject*)obj)->anim.rotX = objRotY;
         ((GameObject*)obj)->anim.localPosY = objZ;
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x83d)
+    else if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_TALL)
     {
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
@@ -114,6 +120,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
+        /* texture guaranteed non-NULL at this seqId */
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
@@ -148,6 +155,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
+        /* texture guaranteed non-NULL at this seqId */
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
@@ -186,6 +194,7 @@ void vortex_hitDetect(void)
 {
 }
 
+/* initData carries a VortexSetup*; kept int (matches obj) for register coloring */
 void vortex_init(int obj, int initData)
 {
     f32* base = lbl_8032BE20;
@@ -198,7 +207,7 @@ void vortex_init(int obj, int initData)
     {
         state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
     }
-    if (((GameObject*)obj)->anim.seqId == 0x835)
+    if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_SWIRL_A)
     {
         for (i = 0; i < 2; i++)
         {
@@ -207,7 +216,7 @@ void vortex_init(int obj, int initData)
             state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x838)
+    else if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_SWIRL_B)
     {
         for (i = 0; i < 2; i++)
         {
@@ -216,7 +225,7 @@ void vortex_init(int obj, int initData)
             state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x83d)
+    else if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_TALL)
     {
         for (i = 0; i < 3; i++)
         {
@@ -262,7 +271,7 @@ void vortex_update(int obj)
         state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x29a || ((GameObject*)obj)->anim.seqId == 0x829)
+    if (((GameObject*)obj)->anim.seqId == VORTEX_SEQ_INACTIVE_A || ((GameObject*)obj)->anim.seqId == VORTEX_SEQ_INACTIVE_B)
     {
         if (state->flags.active != 0)
         {
