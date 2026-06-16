@@ -1,3 +1,16 @@
+/*
+ * Texture-resource cache for the expgfx (explosion/effect graphics) system.
+ * EXPGFX_RUNTIME_DATA->resourceTable holds EXPGFX_RESOURCE_TABLE_COUNT entries,
+ * each caching one loaded texture by resourceId.
+ *
+ * expgfx_updateResourceEntries ages every live entry by framesThisStep and
+ * frees it (via textureFree, guarded by gExpgfxTextureFreeInProgress) once its
+ * eviction score hits zero. expgfx_acquireResourceEntry returns the slot index
+ * for a resource: it reuses a matching live entry, else loads into a free slot,
+ * else - only while loading is locked (Obj_IsLoadingLocked) - evicts the
+ * lowest-scoring entry and reloads. A texture whose refCount has reached
+ * EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT is treated as busy and rejected.
+ */
 #include "main/engine_shared.h"
 #include "main/expgfx_internal.h"
 #include "main/texture.h"
