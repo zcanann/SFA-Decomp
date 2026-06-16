@@ -173,6 +173,12 @@ typedef struct SaveGameObjectPosition
     f32 z;
 } SaveGameObjectPosition;
 
+typedef struct SaveGameTimeEntry
+{
+    int objId;
+    f32 time;
+} SaveGameTimeEntry;
+
 typedef struct SaveGameRomListPosition
 {
     u8 pad0[0x8];
@@ -1506,10 +1512,9 @@ void SaveGame_updateTimes(void)
     {
         if (((SaveGameData*)base)->playTime > *(f32*)(p + 0x6f4))
         {
-            cnt = *(s16*)(base + 0x6ec) - 1;
-            *(s16*)(base + 0x6ec) = cnt;
-            *(int*)(p + 0x6f0) = *(int*)(base + cnt * 8 + 0x6f0);
-            *(f32*)(p + 0x6f4) = *(f32*)(base + *(s16*)(base + 0x6ec) * 8 + 0x6f4);
+            cnt = (*(s16*)(base + 0x6ec) -= 1);
+            *(int*)(p + 0x6f0) = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
+            *(f32*)(p + 0x6f4) = ((SaveGameTimeEntry*)(base + 0x6f0))[*(s16*)(base + 0x6ec)].time;
         }
         else
         {
