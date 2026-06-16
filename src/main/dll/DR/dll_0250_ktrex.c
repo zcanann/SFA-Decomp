@@ -1328,7 +1328,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         }
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x52])
         {
-            int cond;
+            u8 cond;
             u8 fe = ((KTRexArenaState*)gKTRexState)->unkFE;
             if (fe == 1)
             {
