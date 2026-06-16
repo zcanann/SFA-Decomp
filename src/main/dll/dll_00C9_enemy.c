@@ -1685,13 +1685,9 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
         }
         else
         {
-            s32 step = (s32)(oneOverTimeDelta * (delta_f * fa));
-            ((GameObject*)node)->anim.rotZ = (s16)step;
-            {
-                s16 v = ((GameObject*)node)->anim.rotZ;
-                if (v > 0x2000) ((GameObject*)node)->anim.rotZ = 0x2000;
-                else if (v < -0x2000) ((GameObject*)node)->anim.rotZ = -0x2000;
-            }
+            ((GameObject*)node)->anim.rotZ = (s32)(oneOverTimeDelta * (delta_f * fa));
+            if (((GameObject*)node)->anim.rotZ > 0x2000) ((GameObject*)node)->anim.rotZ = 0x2000;
+            else if (((GameObject*)node)->anim.rotZ < -0x2000) ((GameObject*)node)->anim.rotZ = -0x2000;
         }
     }
 

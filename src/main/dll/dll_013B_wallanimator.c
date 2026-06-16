@@ -256,8 +256,9 @@ void wallanimator_update(int obj)
 
 void wallanimator_init(s16* obj, s16* p2)
 {
-    register int* state = ((GameObject*)obj)->extra;
+    int* state;
 
+    state = ((GameObject*)obj)->extra;
     *obj = (s16)p2[0x24 / 2];
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);

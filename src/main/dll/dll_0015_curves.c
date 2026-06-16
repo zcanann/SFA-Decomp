@@ -243,6 +243,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     }
 }
 
+#pragma scheduling off
 void fn_800E56A4(int obj, CurvesCollisionState* collision)
 {
     RomCurvePoint* point;
@@ -317,6 +318,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
         ObjHits_AddContactObject(collision->contactObj, obj);
     }
 }
+#pragma scheduling reset
 
 void fn_800E58FC(int obj, CurvesCollisionState* collision)
 {

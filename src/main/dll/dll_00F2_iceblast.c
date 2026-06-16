@@ -184,7 +184,10 @@ void iceblast_update(int* obj)
     {
         return;
     }
-    ObjHits_SetHitVolumeSlot((u32)obj, 0x10, ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1, 0);
+    {
+        int slot = ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1;
+        ObjHits_SetHitVolumeSlot((u32)obj, 0x10, slot, 0);
+    }
     state[0] = state[0] - timeDelta;
     {
         f32 zero = lbl_803E3604;
