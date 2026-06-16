@@ -646,7 +646,8 @@ void fn_802BCA10(int obj, int q, int p2)
     {
         d = v;
     }
-    d = d * 0xb6 - (u16)((EarthWarriorSub*)q)->unk4D4;
+    d = d * 0xb6;
+    d -= (u16)((EarthWarriorSub*)q)->unk4D4;
     if (d > 0x8000)
     {
         d -= 0xffff;
@@ -668,20 +669,9 @@ void fn_802BCA10(int obj, int q, int p2)
     ((EarthWarriorSub*)q)->unk4D2 = ((EarthWarriorSub*)q)->unk4D4 / 2;
     {
         f32 ph = (f32)(s32)((BaddieState*)p2)->spawnRotY / lbl_803E8328;
-        f32 t;
-        if (ph < lbl_803E8334)
-        {
-            t = lbl_803E8334;
-        }
-        else if (ph > lbl_803E8338)
-        {
-            t = lbl_803E8338;
-        }
-        else
-        {
-            t = ph;
-        }
-        d = (int)(lbl_803E832C * (lbl_803E8330 * -t)) - (u16)((EarthWarriorSub*)q)->unk4D6;
+        f32 t = (ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
+        d = (int)(lbl_803E832C * (lbl_803E8330 * -t));
+        d -= (u16)((EarthWarriorSub*)q)->unk4D6;
     }
     if (d > 0x8000)
     {
