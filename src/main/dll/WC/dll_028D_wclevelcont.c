@@ -398,6 +398,7 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
     }
 }
 
+#pragma scheduling off
 void wclevelcont_init(int obj)
 {
     WcLevelControlState* state = ((GameObject*)obj)->extra;
@@ -435,6 +436,7 @@ void wclevelcont_init(int obj)
     state->dialogueFlags.b20 = GameBit_Get(0xc59);
     state->dialogueFlags.b18 = GameBit_Get(0xc5a);
 }
+#pragma scheduling reset
 
 void wclevelcont_release(void)
 {
