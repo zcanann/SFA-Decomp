@@ -1,3 +1,15 @@
+/*
+ * vfpminifire (DLL 0x218, VFP_MiniFire) - a short-lived fiery ember /
+ * spark projectile in the Volcano Force Point Temple.
+ *
+ * On the first update it ray-casts straight down to record the ground
+ * height beneath it (baseY becomes the fall distance to the floor). Each
+ * tick it applies gravity, integrates its velocity into position, and
+ * spawns smoke/spark particle puffs (randomly, and biased along its
+ * motion). When it strikes something or drops below the recorded floor
+ * it fires a burst of flame particles, fades its alpha out, and frees
+ * itself once it falls past the floor.
+ */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -8,6 +20,7 @@ extern f32 lbl_803E6098;
 extern f32 lbl_803E60A0;
 extern void hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flags);
 
+#define VFPMINIFIRE_PERSIST_EFFECT 0x38c
 #define VFPMINIFIRE_SMOKE_EFFECT 0x38a
 #define VFPMINIFIRE_SPARK_EFFECT 0x38b
 #define VFPMINIFIRE_BURST_EFFECT 0x38e
@@ -16,9 +29,9 @@ extern void hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int fla
 
 typedef struct VfpMinifireState
 {
-    f32 baseY;
+    f32 baseY;        /* 0x00: floor height below spawn, then fall distance */
     u8 pad4[6];
-    u8 burstStarted;
+    u8 burstStarted;  /* 0x0A: flame burst has fired; fading out */
 } VfpMinifireState;
 
 typedef struct VfpMinifirePartfxArgs
@@ -70,7 +83,9 @@ void vfpminifire_free(int obj)
 
 void vfpminifire_update(int obj)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
+    /* local override: this TU treats randomGetRange's result as signed
+       (vf_shared declares it u32); the int return is load-bearing. */
+    extern int randomGetRange(int min, int max);
     VfpMinifireState* state = ((GameObject*)obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;
@@ -171,7 +186,7 @@ void vfpminifire_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.velocityY = lbl_803E6090;
     ((GameObject*)obj)->anim.localPosY = lbl_803E60A4 + *(f32*)((char*)init + 0xc);
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E609C;
-    (*gPartfxInterface)->spawnObject(obj, 0x38c, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, VFPMINIFIRE_PERSIST_EFFECT, NULL, 2, -1, NULL);
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
