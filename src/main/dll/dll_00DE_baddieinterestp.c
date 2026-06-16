@@ -1693,12 +1693,12 @@ void baddieinterestp_update(int* obj)
         if (count > 0)
         {
             u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->unk1C << 16;
-            u32 i;
+            u16 i;
             u8 found;
             id |= (u16)((BaddieinterestpPlacement*)params)->unk1A;
-            for (i = 0; (int)(i & 0xffff) < count; i++)
+            for (i = 0; (int)i < count; i++)
             {
-                int* other = (int*)objs[i & 0xffff];
+                int* other = (int*)objs[i];
                 int* otherParams = *(int**)&((GameObject*)other)->anim.placementData;
                 if (otherParams != NULL)
                 {
@@ -1729,7 +1729,7 @@ void baddieinterestp_update(int* obj)
                                 case 0:
                                     {
                                         int kind = b & 0xf;
-                                        int* target = (int*)objs[i & 0xffff];
+                                        int* target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
@@ -1752,7 +1752,7 @@ void baddieinterestp_update(int* obj)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
-                                        int* target = (int*)objs[i & 0xffff];
+                                        int* target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
@@ -1775,7 +1775,7 @@ void baddieinterestp_update(int* obj)
                                     {
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
-                                        int* target = (int*)objs[i & 0xffff];
+                                        int* target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
@@ -1799,7 +1799,7 @@ void baddieinterestp_update(int* obj)
                         }
                         found = 1;
                     }
-                    i = count & 0xffff;
+                    i = count;
                 }
             }
             if (found == 0)
