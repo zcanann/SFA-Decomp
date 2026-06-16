@@ -1,4 +1,4 @@
-/* DLL 0x43 — camera path/climb control [80106F78-801070FC) */
+/* DLL 0x43 - camera path/climb control [80106F78-801070FC) */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
