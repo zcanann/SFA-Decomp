@@ -1,3 +1,27 @@
+/*
+ * DLL 0x0015 "curves" - terrain/ROM-curve collision driver and the
+ * save-file settings shim for the main game.
+ *
+ * Two responsibilities live in this object:
+ *  1. Per-frame collision against the level's ROM curve set
+ *     (CurvesCollisionState). dll_15_func08 is the dispatcher: by
+ *     state->subtype (OBJECT / POINT / NONE) it transforms an object's
+ *     local sample points and segments into world space, traces them
+ *     against the curves via the hitDetect helpers, and writes back
+ *     world position, surface normal, tilt (pitch/roll) and water/floor/
+ *     ceiling results. updateMode selects the segment resolver
+ *     (random-point averaging, single trace, snap-to-hit, or the default
+ *     averaging path). curves_getCurves caches the last queried object's
+ *     hit list. The clamp at +/-0x3400 limits object rot Y/Z.
+ *  2. Save-file/options access: loadSaveSettings pushes the persisted
+ *     widescreen/subtitle/rumble/sound-mode/volume/HUD/camera settings to
+ *     their subsystems, and the saveFileStruct_* helpers register, enable
+ *     and query the debug/cheat option bitmask in SaveData.
+ *
+ * CurvesCollisionState->flags is a bitset of CURVES_COLLISION_STATE_*
+ * features; pointCounts packs the local-point count (low nibble) and the
+ * segment count (high nibble, CURVES_POINT_COUNT_SEGMENT_SHIFT).
+ */
 #include "dolphin/os.h"
 #include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"
@@ -9,26 +33,37 @@
 
 extern uint GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void mtxRotateByVec3s(float* outMtx, short* angles);
 extern void Matrix_TransformPoint(float* mtx, double x, double y, double z, float* ox, float* oy, float* oz);
 extern void setMatrixFromObjectPos(float* mtx, void* obj);
-extern u8 framesThisStep;
-extern f32 lbl_803E0668;
-extern f32 lbl_803E066C;
-extern f32 lbl_803E068C;
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               s8 p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount,
                                 void* hitResults, int arg6);
+extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
 extern f32 sqrtf(f32 x);
 
+extern void setWidescreen(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void setRumbleEnabled(u8 value);
+extern void audioSetSoundMode(u8 mode, u8 secondary);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+
+extern u8 framesThisStep;
+extern SaveData saveData;
+extern u8 gSaveGameData[];
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
+
+extern f32 lbl_803E0668;
+extern f32 lbl_803E066C;
+extern f32 lbl_803E068C;
 extern f32 lbl_803E0678;
 extern f32 lbl_803E067C;
 extern f32 lbl_803E0680;
@@ -43,6 +78,7 @@ extern f32 lbl_803E06B0;
 extern f32 lbl_803E06B4;
 extern f32 lbl_803E06B8;
 extern f32 lbl_803E06BC;
+extern f32 lbl_803E06C0;
 
 typedef struct CurvesHitScratch
 {
@@ -62,17 +98,6 @@ typedef struct CurvesTransformScratch
     f32 y;
     f32 z;
 } CurvesTransformScratch;
-
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-extern f32 lbl_803E06C0;
-extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
-extern SaveData saveData;
-extern void setWidescreen(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
-extern void setRumbleEnabled(u8 value);
-extern void audioSetSoundMode(u8 mode, u8 secondary);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
-extern u8 gSaveGameData[];
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
 {
@@ -118,9 +143,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
 
     return NULL;
 }
-
-int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
-                                          f32 z, f32 unusedW);
 
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {
@@ -206,7 +228,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
                             sum2 = sum2 + point->z;
                             sum3 = sum3 + point->w;
                             sum0 = sum0 + pointY;
-                            count = count + 1;
+                            count++;
                             found1 = 1;
                         }
                     }
@@ -376,7 +398,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
 
         if ((s32)(collision->flags & 0x8600) != 0)
         {
-        transform.angles[0] = -((GameObject*)obj)->anim.rotX;
+            transform.angles[0] = -((GameObject*)obj)->anim.rotX;
             transform.angles[1] = -((GameObject*)obj)->anim.rotY;
             transform.angles[2] = -((GameObject*)obj)->anim.rotZ;
             transform.scale = scale;
@@ -411,7 +433,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             {
                 angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                                  (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
-            ((GameObject*)obj)->anim.rotX += (s16)(angle - 0x8000) >> 2;
+                ((GameObject*)obj)->anim.rotX += (s16)(angle - 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
             {
@@ -444,20 +466,20 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
-    float normalZ;
+    f32 normalZ;
     short pitch;
     short angle;
-    float dy;
-    float dx;
-    float dz;
+    f32 dy;
+    f32 dx;
+    f32 dz;
     short outVec[4];
-    float matrixBuf[20];
+    f32 matrixBuf[20];
 
     collision = (CurvesCollisionState*)state;
     if (((s8)collision->surfaceFlags & 0x10) != 0)
     {
         outVec[0] = -*obj;
-        if (*(short**)(obj + 0x18) != (short*)0x0)
+        if (*(short**)(obj + 0x18) != NULL)
         {
             outVec[0] = outVec[0] - **(short**)(obj + 0x18);
         }
@@ -497,7 +519,6 @@ void fn_800E5CBC(short* obj, int state)
         collision->surfaceNormalY = lbl_803E068C;
         collision->surfaceNormalZ = normalZ;
     }
-    return;
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
@@ -1109,7 +1130,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                     (ObjHits_IsObjectEnabled(*(int*)(curveObj + 0x18)) != 0))
                 {
                     Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) +
-                                          (*(byte*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10,
+                                          (*(u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10,
                                           ((GameObject*)curveObj)->anim.localPosX, ((GameObject*)curveObj)->anim.localPosY, ((GameObject*)curveObj)->anim.localPosZ,
                                           (f32*)(curveObj + 0xc), (f32*)(curveObj + 0xe), (f32*)(curveObj + 0x10));
                 }
@@ -1233,7 +1254,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
         if ((s32)(state->flags & 0x40000) == 0)
         {
             linked = *(int*)(curveObj + 0x2a);
-            if ((linked == 0) || ((*(ushort*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
+            if ((linked == 0) || ((*(u16*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
             {
                 ((GameObject*)curveObj)->anim.velocityY =
                     (f32)((f64)invStep * (f64)(((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48)));
@@ -1377,7 +1398,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
         if ((*(void**)(*(int*)(curveObj + 0x18) + 0x58) != NULL) &&
             (ObjHits_IsObjectEnabled(*(int*)(curveObj + 0x18)) != 0))
         {
-            outOff = (uint) * (byte*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
+            outOff = (uint) * (u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
             Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) + outOff,
                                   ((GameObject*)curveObj)->anim.worldPosX, ((GameObject*)curveObj)->anim.worldPosY, ((GameObject*)curveObj)->anim.worldPosZ,
                                   (f32*)(curveObj + 6), (f32*)(curveObj + 8), (f32*)(curveObj + 10));
@@ -1438,7 +1459,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             if ((*(void**)(*(int*)&obj->anim.parent + 0x58) != NULL) &&
                 (ObjHits_IsObjectEnabled(*(int*)&obj->anim.parent) != 0))
             {
-                idx3 = (*(byte*)(*(int*)(*(int*)&obj->anim.parent + 0x58) + 0x10c) + 2) * 0x10;
+                idx3 = (*(u8*)(*(int*)(*(int*)&obj->anim.parent + 0x58) + 0x10c) + 2) * 0x10;
                 Matrix_TransformPoint((f32*)(*(int*)(*(int*)&obj->anim.parent + 0x58)) + idx3,
                                       obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
                                       &obj->anim.worldPosX, &obj->anim.worldPosY, &obj->anim.worldPosZ);
@@ -1649,7 +1670,6 @@ void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int s
     state->flags = flags | CURVES_COLLISION_STATE_ACTIVE;
     state->updateMode = (u8)updateMode;
     state->heightPadding = 5;
-    return;
 }
 
 uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
@@ -1686,8 +1706,6 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
     }
 }
 
-void RomCurve_initialise(void);
-
 void dll_15_release_nop(void)
 {
 }
@@ -1708,8 +1726,6 @@ void loadSaveSettings(void)
     audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
     audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
 }
-
-void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut);
 
 void* getSaveFileStruct(void) { return &saveData; }
 
@@ -1758,8 +1774,6 @@ int pushable_savePos(int obj)
     return 0;
 }
 
-void* RomCurve_getCurves(int* outCount);
-
 void saveFileStruct_resetVolumes(void)
 {
     saveData.musicVolume = 0x7f;
@@ -1797,7 +1811,3 @@ int saveFileStruct_isCheatActive(u8 idx)
     }
     return 0;
 }
-
-/* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
- * Returns 1 if the segment between (x, z) and the origin in the xz-plane
- * crosses the segment between a and b. */
