@@ -56,9 +56,9 @@ void fn_801EC1AC(int obj, int state)
     target = lbl_803E5AE8;
     if (flags->b6 != 0)
     {
-        target = *(f32*)(state + 0x538);
+        target = ((DRPickupState*)state)->unk538;
     }
-    rate = (target - *(f32*)(state + 0x430)) * lbl_803E5C28;
+    rate = (target - ((DRPickupState*)state)->unk430) * lbl_803E5C28;
     clampedRate = (rate < lbl_803E5C2C)
                       ? lbl_803E5C2C
                       : ((rate > lbl_803E5B8C) ? lbl_803E5B8C : rate);
@@ -67,8 +67,8 @@ void fn_801EC1AC(int obj, int state)
     target = lbl_803E5AE8;
     if (flags->b4 != 0)
     {
-        f32 vy53c = *(f32*)(state + 0x53c);
-        f32 v49c = *(f32*)(state + 0x49c);
+        f32 vy53c = ((DRPickupState*)state)->unk53C;
+        f32 v49c = ((DRPickupState*)state)->unk49C;
         if (v49c >= target)
         {
             f32 nv = -vy53c;
@@ -119,10 +119,10 @@ void fn_801EC1AC(int obj, int state)
        angular velocity through 0x410 with overflow normalization. */
     {
         f32 newF = (f32)(s32) * (s16*)(state + 0x40e) +
-            *(f32*)(state + 0x414) * timeDelta;
+            ((DRPickupState*)state)->angVel414 * timeDelta;
         s32 delta;
         *(s16*)(state + 0x40e) = newF;
-        delta = (s32)(*(f32*)(state + 0x414) * *(f32*)(state + 0x550));
+        delta = (s32)(((DRPickupState*)state)->angVel414 * ((DRPickupState*)state)->unk550);
         delta -= (s32)(u16) * (u32*)(state + 0x410);
         if (delta > 0x8000)
         {
@@ -133,7 +133,7 @@ void fn_801EC1AC(int obj, int state)
             delta = delta + 0xFFFF;
         }
         *(u32*)(state + 0x410) =
-            (u32)(s32)((f32)delta * *(f32*)(state + 0x554) +
+            (u32)(s32)((f32)delta * ((DRPickupState*)state)->unk554 +
                 (f32)(s32) * (u32*)((int)state + 0x410));
     }
     {
@@ -146,7 +146,7 @@ void fn_801EC1AC(int obj, int state)
         {
             delta = delta + 0xFFFF;
         }
-        *(s16*)(state + 0x40c) = (s16)((f32)delta * *(f32*)(state + 0x558) +
+        *(s16*)(state + 0x40c) = (s16)((f32)delta * ((DRPickupState*)state)->unk558 +
             (f32)(s32) * (s16*)((int)state + 0x40c));
     }
 
