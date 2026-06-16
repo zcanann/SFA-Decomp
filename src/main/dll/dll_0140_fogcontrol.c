@@ -96,14 +96,14 @@ void fogcontrol_init(u8* obj, u8* params)
             st->full = 1;
             st->on = 1;
             st->blend = lbl_803E4074;
-            t = st->blend * ((f32) * (s16*)(params + 0x1c) - (f32) * (s16*)(params + 0x20)) +
-                (f32) * (s16*)(params + 0x20);
-            t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(params[0x1a] & 1, t,
+            t = ((GameObject*)obj)->anim.localPosY +
+            (st->blend * ((f32) * (s16*)(params + 0x1c) - (f32) * (s16*)(params + 0x20)) +
+                (f32) * (s16*)(params + 0x20));
+            enableHeavyFog(t,
                            ((f32) * (s16*)(params + 0x1e) + t) - (f32) * (s16*)(params + 0x1c),
                            (f32) * (s16*)(params + 0x24),
                            (f32) * (s16*)(params + 0x22) / lbl_803E4078,
-                           lbl_803E407C);
+                           lbl_803E407C, params[0x1a] & 1);
         }
     }
 }
