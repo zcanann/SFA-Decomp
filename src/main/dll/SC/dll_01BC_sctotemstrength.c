@@ -417,7 +417,7 @@ void sc_totemstrength_update(u8* obj)
                 ((GameObject*)obj)->anim.localPosY = st->savedPosY;
                 ((GameObject*)obj)->anim.localPosZ = st->savedPosZ;
                 st->linkedObject = 0;
-                *(s16*)obj = -0x2900;
+                ((GameObject*)obj)->anim.rotX = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 flags = st->flags;
                 if ((flags & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0)
@@ -440,7 +440,7 @@ void sc_totemstrength_update(u8* obj)
             step = st->transitionStep;
             if (step == 0)
             {
-                *(s16*)obj = -0x2900;
+                ((GameObject*)obj)->anim.rotX = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 st->prevTrackOffset = st->currentTrackOffset;
                 zero = lbl_803E5678;
