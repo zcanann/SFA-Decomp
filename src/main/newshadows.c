@@ -2386,7 +2386,7 @@ void shadowRenderFn_8006b558(int* obj)
     objScale = ((GameObject*)obj)->anim.rootMotionScale * sc;
     nx = -vA;
     ny = vB;
-    GXSetViewport(lbl_803DED14 * nx, Chan_803DED18 * ny, Enabled_803DED20,
+    GXSetViewport(*(f32*)&lbl_803DED14 * nx, *(f32*)&Chan_803DED18 * ny, Enabled_803DED20,
                   BarnacleEnabled_803DED24, lbl_803DED28, lbl_803DED2C);
     if (vC < lbl_803DED28)
     {
