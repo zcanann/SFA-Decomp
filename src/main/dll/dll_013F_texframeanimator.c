@@ -90,7 +90,7 @@ void texframeanimator_update(int* obj)
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
                                                 ((GameObject*)obj)->anim.localPosY,
                                                 ((GameObject*)obj)->anim.localPosZ));
-        if ((block != NULL) && ((((MapBlockData*)block)->unk4 & 8) != 0))
+        if ((block != NULL) && (((MapBlockData*)block)->unk4 & 8))
         {
             textureHit = return0_80056694(block, state->textureSlot);
             if (textureHit != NULL)
