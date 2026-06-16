@@ -273,8 +273,7 @@ void saveSelectGoToChapterSelect(void)
     {
         lbl_803DB9FB = 4;
         panel = &lbl_8031A7BC[4];
-        off = 0;
-        for (i = 0; i < 6; i++)
+        for (i = 0, off = 0; i < 6; i++)
         {
             if (i > *(u8*)((char*)saveFileSelect_saveSlots +
                 (s8)saveFileSelect_currentSlotIndex * 36 + 33))
