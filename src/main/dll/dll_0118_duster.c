@@ -192,10 +192,9 @@ void duster_update(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             GameBit_Set(state->completeGameBit, 1);
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
+            next = mapState->collectedCount + 1;
             mapState->collectedCount =
-                (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
-                    ? next
-                    : mapState->maxCollectedCount;
+                (mapState->maxCollectedCount >= next) ? next : mapState->maxCollectedCount;
             state->complete = 1;
             break;
         }
