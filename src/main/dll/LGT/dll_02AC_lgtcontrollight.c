@@ -1,3 +1,14 @@
+/*
+ * lgtcontrollight (DLL 0x2AC) - a switch object that drives nearby point
+ * lights from a game bit.
+ *
+ * It owns no light of its own. Each frame update reads its gameBit; when the
+ * bit's value changes it walks LGT_POINTLIGHT_GROUP and, for every point light
+ * within `radius`, calls pointlight_setEffectState with the new bit value
+ * (CONTROLLIGHT_MODE_DIRECT) or its inverse (CONTROLLIGHT_MODE_INVERTED). The
+ * last-seen bit is cached so the sweep only runs on a transition; lastBit
+ * starts at CONTROLLIGHT_LAST_BIT_INVALID to force the first update.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
