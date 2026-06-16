@@ -272,7 +272,7 @@ void s3dAllocateRoomStudios(void)
                 SndSpatialEntry* evictedEntry;
                 u32 studioCount;
                 f32 distanceSq;
-                int listenerOwned;
+                u8 listenerOwned;
                 struct
                 {
                     f32 x, y, z;
