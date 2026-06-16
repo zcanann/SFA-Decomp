@@ -13,6 +13,9 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
+#define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
@@ -597,7 +600,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 promptId = *(ushort*)((int)promptTable + bitVal * 2);
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
-                    (((0x2f < ((GameObject*)objVal)->anim.currentMove || (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
+                    (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                         (cond = FUN_800067f0(objVal, 0x10), !cond))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
@@ -640,7 +643,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
                 *(byte*)(state + 0x7bc) =
                     (byte)((bitVal & 0xff) << 4) & 0x30 | *(byte*)(state + 0x7bc) & 0xcf;
-                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
+                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
                 *(undefined4*)(state + 0x7b0) = spawnedObj;
                 ObjLink_AttachChild(objVal, *(int*)(state + 0x7b0), *(byte*)(state + 0x7bc) >> 4 & 3);
             }
@@ -665,7 +668,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     {
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
-                            (((0x2f < ((GameObject*)objVal)->anim.currentMove || (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
+                            (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                                 (cond = FUN_800067f0(objVal, 0x10), !cond))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
@@ -673,7 +676,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     }
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(byte*)(ref + 0x58) >> 6 & 1) == 0)) &&
-                            ((0x2f < ((GameObject*)objVal)->anim.currentMove || (((GameObject*)objVal)->anim.currentMove < 0x29)))) &&
+                            ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
                         (cond = FUN_800067f0(objVal, 0x10), !cond))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
@@ -716,7 +719,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     bitVal = 0xffffffff;
                 }
                 *(byte*)(state + 0x7bc) = (byte)((bitVal & 0xff) << 6) | *(byte*)(state + 0x7bc) & 0x3f;
-                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
+                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
                 *(undefined4*)(state + 0x7a8) = spawnedObj;
                 ObjLink_AttachChild(objVal, *(int*)(state + 0x7a8), (ushort)(*(byte*)(state + 0x7bc) >> 6));
             }
@@ -861,9 +864,9 @@ extern void fn_8003A230(int obj, void* p, f32 f);
   *(s8 *)((state) + 0xd) = -1
 
 #define TRICKY_VOICE(obj, st, sfx, vol) \
-  st = *(int *)&((GameObject *)(obj))->extra; \
+  st = *(int *)((obj) + 0xb8); \
   if ((((TrickyByteFlags *)(st + 0x58))->bit6 == 0) && \
-     (((((GameObject *)(obj))->anim.currentMove >= 0x30 || (((GameObject *)(obj))->anim.currentMove < 0x29)) && \
+     (((*(short *)((obj) + 0xa0) >= 0x30 || (*(short *)((obj) + 0xa0) < 0x29)) && \
       (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing)))) { \
     objAudioFn_800393f8((obj), (void *)(st + 0x3a8), (sfx), (vol), 0xffffffff, 0); \
   }
@@ -1419,21 +1422,21 @@ void Tricky_update(int obj)
             {
                 if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff))
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + diff;
+                    *(s16*)obj = *(s16*)obj + diff;
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + step;
+                    *(s16*)obj = *(s16*)obj + step;
                 }
             }
             else
             {
-                ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + step;
+                *(s16*)obj = *(s16*)obj + step;
             }
         }
         else
         {
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + diff;
+            *(s16*)obj = *(s16*)obj + diff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & 0x40) != 0)
@@ -1849,7 +1852,7 @@ void trickyFn_80148d8c(int obj, int state)
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 0;
         *(u32*)&((GameObject*)obj)->unkF4 = 1;
-        if ((u32)((ObjPlacement*)setup)->mapId == 0xFFFFFFFF)
+        if (((ObjPlacement*)setup)->mapId == -1)
         {
             Obj_FreeObject(obj);
         }
@@ -2161,7 +2164,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             {
                 if (hitEffects != 0)
                 {
-                    if (((GameObject*)attacker)->anim.classId == 1 || ((GameObject*)attacker)->anim.classId == 0x2d)
+                    if (*(s16*)(attacker + 0x44) == 1 || *(s16*)(attacker + 0x44) == 0x2d)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x200) != 0)
                         {
@@ -2348,7 +2351,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
             proj = *(u8**)&((TrickyState*)state)->actionTargetObj;
-            if (proj != NULL && ((GameObject*)proj)->anim.classId == 1)
+            if (proj != NULL && *(s16*)(proj + 0x44) == 1)
             {
                 fn_802961FC(proj, result);
             }
@@ -2491,11 +2494,11 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     voxmaps_worldToGrid(&probe, baseGrid);
     if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
     {
-        baseAngle = ((GameObject*)obj)->anim.rotX + **(s16**)&((GameObject*)obj)->anim.parent;
+        baseAngle = *(s16*)obj + **(s16**)&((GameObject*)obj)->anim.parent;
     }
     else
     {
-        baseAngle = ((GameObject*)obj)->anim.rotX;
+        baseAngle = *(s16*)obj;
     }
     angleScale = lbl_803E25B4;
     angleDivisor = lbl_803E25B8;
@@ -2647,7 +2650,6 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     f32 defaultY;
     f32 nearestFloorDelta;
     f32 nearestSpecialDelta;
-    f32 zeroThreshold;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
@@ -2659,8 +2661,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     nearestFloorDelta = lbl_803E25C8;
     nearestSpecialDelta = nearestFloorDelta;
     ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
-    zeroThreshold = lbl_803E2574;
-    ((TrickyState*)state)->unk1B8 = zeroThreshold;
+    ((TrickyState*)state)->unk1B8 = lbl_803E2574;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
     for (i = 0; i < hitCount; i++)
     {
@@ -2668,7 +2669,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
         hitY = hit[0];
         dy = hitY - ((GameObject*)obj)->anim.localPosY;
         absDy = dy;
-        if (dy < zeroThreshold)
+        if (dy < lbl_803E2574)
         {
             absDy = -dy;
         }
@@ -2680,7 +2681,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
                 *(s8*)&((TrickyState*)state)->surfaceFlags |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
                 *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 nearestSpecialDelta = absDy;
-                if (((TrickyState*)state)->unk1B8 > lbl_803E25A0)
+                if (lbl_803E25A0 < ((TrickyState*)state)->unk1B8)
                 {
                     ((TrickyState*)state)->flags2DC |= 0x10100000LL;
                 }
@@ -2820,10 +2821,10 @@ void Tricky_hitDetect(int obj)
                 }
                 if (dy < lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)&((GameObject*)*objects)->anim.placementData + 0x14);
+                    ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)(*objects + 0x4c) + 0x14);
                 }
             }
-            if (((TrickyState*)state)->heightTrackObjId == *(u32*)(*(int*)&((GameObject*)*objects)->anim.placementData + 0x14))
+            if (((TrickyState*)state)->heightTrackObjId == *(u32*)(*(int*)(*objects + 0x4c) + 0x14))
             {
                 if ((((TrickyState*)state)->trackedHeight == lbl_803E23DC) ||
                     (((TrickyState*)state)->trackedHeight != height))
