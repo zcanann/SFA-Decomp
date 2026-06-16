@@ -91,7 +91,7 @@ void vfpstatueball_update(int* obj)
     {
         hitType = ObjHits_GetPriorityHit((int)obj, (int*)&hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
-            (*(s16*)((char*)hitObj + 0x46) == 0x14b))
+            (((GameObject*)hitObj)->anim.seqId == 0x14b))
         {
             if ((u8)fn_8016F16C(hitObj) == ((VfpstatueballPlacement*)setup)->unk1A)
             {
