@@ -546,7 +546,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 promptC = true;
             }
         }
-        if (*(char*)(state + 0xb) != '\0')
+        if (*(u8*)(state + 0xb) != 0)
         {
             for (i = 0; i < *(byte*)(state + 0x798); i = i + 1)
             {
