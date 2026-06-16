@@ -12,19 +12,17 @@
 
 #include "main/audio/sfx_ids.h"
 
-typedef struct CageControlInitPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 armGameBit; /* 0x1E: game bit that pre-opens the cage at init */
-} CageControlInitPlacement;
-
 typedef struct CageControlPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 armGameBit;    /* 0x1E */
+    s16 armGameBit;    /* 0x1E: game bit that pre-opens the cage */
     s16 watchGameBit;  /* 0x20: drives the pickup sfx + completion */
     u8 pad22[0x28 - 0x22];
 } CageControlPlacement;
+
+STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
+STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
 
 void cagecontrol_free(void)
 {
@@ -77,7 +75,7 @@ void cagecontrol_update(int obj)
     {
         return;
     }
-    if (*(int*)state == 0 && GameBit_Get(((CageControlInitPlacement*)placement)->armGameBit) != 0)
+    if (*(int*)state == 0 && GameBit_Get(((CageControlPlacement*)placement)->armGameBit) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b1 = 1;
         *(int*)state = 2;
