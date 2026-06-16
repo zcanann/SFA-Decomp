@@ -520,7 +520,15 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     {
         blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        moveData = ObjAnim_GetCurrentBlendMoveData(animDef, state);
+        if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
+        {
+            moveData = (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] +
+                OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        }
+        else
+        {
+            moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
+        }
         if (moveData->rootCurveOffset != 0)
         {
             blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
@@ -545,7 +553,15 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         }
     }
 
-    moveData = ObjAnim_GetCurrentMoveData(animDef, state);
+    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
+    {
+        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
+            OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    }
+    else
+    {
+        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+    }
     if (moveData->rootCurveOffset == 0)
     {
         return 0;
