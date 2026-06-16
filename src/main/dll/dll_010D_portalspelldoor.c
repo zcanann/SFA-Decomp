@@ -121,7 +121,7 @@ int portalspelldoor_getObjectTypeId(void) { return 0x0; }
 void portalspelldoor_init(u8* obj, u8* data)
 {
     PortalSpellDoorState* sub = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8)data[0x18] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32) * (s16*)(data + 0x1c) << 8);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3A8C;
     {
