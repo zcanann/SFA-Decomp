@@ -1,3 +1,17 @@
+/*
+ * saveselectscreen (DLL 0x35) - the front-end save-file / save-slot
+ * screen reached from the title menu.
+ *
+ * It drives several sub-panels selected by the current panel index
+ * lbl_803DB9FB (0 = choose-slot, 1 = open-file, 2 = slot-action,
+ * 3 = confirm/erase prompt, 4 = chapter-select), each backed by an
+ * entry in the lbl_8031A7BC panel table. _initialise allocates the
+ * save-slot buffers and textures, _run polls menu input and dispatches
+ * to the per-panel handlers, _render draws the panel text with a
+ * transition-driven fade, and _release/_Free tear the screen down.
+ * Selecting a slot can start a new game, load/save, or hand off to
+ * other UI DLLs via loadUiDll.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/dll/FRONT/frontend_control.h"
@@ -55,8 +69,8 @@ extern s16 lbl_803DBA04;
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 void saveSelectGoToChooseSlot(int arg);
-extern undefined8 n_attractmode_releaseMovieBuffers();
-extern undefined4 saveSelectSetSlot();
+extern void n_attractmode_releaseMovieBuffers(void);
+extern void saveSelectSetSlot(int slot, int value);
 
 extern void mm_free(void* p);
 extern void* lbl_803A8658[10];
@@ -67,8 +81,6 @@ extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 extern int sprintf(char* dst, const char* fmt, ...);
-
-#pragma dont_inline on
 extern void gameTextSetDrawFunc(void* fn);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
@@ -96,11 +108,13 @@ extern char* loadFileByPath(char* path, int a, int b);
 extern void* memcpy(void* dst, void* src, int n);
 extern void fn_80296B70(int arg);
 extern void titleScreenFn_801368d4(void);
+/* single-pointer spelling (canonical is MapEventInterface**) is intentional for matching: one lwz to vtable, not two */
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 extern char sFrontendFoxName;
 extern char sSaveGameBinPathFormat[];
 
+#pragma dont_inline on
 void saveSelectOpenFile(int sel, int slot)
 {
     TitleMenuTextEntry** pp;
@@ -176,24 +190,24 @@ void SaveSelectScreen_release(void)
 }
 
 #pragma dont_inline on
-void saveFileSelect_init(int param_1, int param_2)
+void saveFileSelect_init(int sel, int slot)
 {
     int i;
 
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
-    if (param_1 == 0)
+    if (sel == 0)
     {
         Sfx_PlayFromObject(0, SFXsp_snrot1_c);
         (*gScreenTransitionInterface)->start(20, 5);
         lbl_803DD6CF = 0x23;
         lbl_803DD6CC = 1;
     }
-    else if (param_1 != -1)
+    else if (sel != -1)
     {
-        if (param_1 == 1)
+        if (sel == 1)
         {
-            saveFileSelect_currentSlotIndex = (s8)param_2;
-            i = (s8)(u8)(s8)param_2;
+            saveFileSelect_currentSlotIndex = (s8)slot;
+            i = (s8)(u8)(s8)slot;
             if (saveFileSelect_saveSlots[i].isOccupied == 0)
             {
                 loadUiDll(6);
@@ -225,7 +239,7 @@ void saveFileSelect_init(int param_1, int param_2)
     }
 }
 #pragma dont_inline reset
-void saveSelectSetupMenuItems(void** p)
+void saveSelectSetupMenuItems(SaveSelectPanel* p)
 {
     int off1;
     int off2;
@@ -235,23 +249,23 @@ void saveSelectSetupMenuItems(void** p)
     i = 0;
     off1 = 0;
     off2 = off1;
-    while (i < (int)*(u8*)((char*)p + 0x4))
+    while (i < (int)p->count)
     {
         base = (char*)saveFileSelect_saveSlotsBase;
         saveFileSelect_saveSlots = (FrontendSaveSlot*)base;
         if (*(u8*)(base + off1 + 0x20) == 0)
         {
-            *(u16*)((char*)*p + off2) = 0x39d;
-            *(u16*)((char*)*p + off2 + 0x16) = (u16)(*(u16*)((char*)*p + off2 + 0x16) & ~0x1);
-            *(u16*)((char*)*p + off2 + 0x16) = (u16)(*(u16*)((char*)*p + off2 + 0x16) | 0x2);
-            *(int*)((char*)*p + off2 + 0x10) = -1;
+            *(u16*)((char*)p->entries + off2) = 0x39d;
+            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) & ~0x1);
+            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) | 0x2);
+            *(int*)((char*)p->entries + off2 + 0x10) = -1;
         }
         else
         {
-            *(u16*)((char*)*p + off2) = (u16)i;
-            *(u16*)((char*)*p + off2 + 0x16) = (u16)(*(u16*)((char*)*p + off2 + 0x16) & ~0x2);
-            *(u16*)((char*)*p + off2 + 0x16) = (u16)(*(u16*)((char*)*p + off2 + 0x16) | 0x1);
-            *(int*)((char*)*p + off2 + 0x10) = -1;
+            *(u16*)((char*)p->entries + off2) = (u16)i;
+            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) & ~0x2);
+            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) | 0x1);
+            *(int*)((char*)p->entries + off2 + 0x10) = -1;
         }
         off1 += 0x24;
         off2 += 0x3c;
@@ -371,7 +385,7 @@ void saveSelectGoToChooseSlot(int arg)
     }
 
     saveSelectFn_8011a70c();
-    saveSelectSetupMenuItems((void**)p);
+    saveSelectSetupMenuItems(p);
 
     for (i = 0; i < 1; i++)
     {
@@ -401,7 +415,7 @@ void saveSelectGoToChooseSlot(int arg)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void saveSelectScreenFree(int param_1)
+void saveSelectScreenFree(int runExitCallback)
 {
     void** p;
     int i;
@@ -445,7 +459,7 @@ void saveSelectScreenFree(int param_1)
     while (i < 4);
 
     textureFree(lbl_803DD6C8);
-    if (param_1 != 0)
+    if (runExitCallback != 0)
     {
         doNothing_onSaveSelectScreenExit();
     }
