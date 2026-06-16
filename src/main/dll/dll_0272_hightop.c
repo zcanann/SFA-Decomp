@@ -1199,18 +1199,15 @@ int hightop_stateHandler10(int obj, int p)
     {
         if (randFn_80080100(500) != 0)
         {
-            int* weights;
             int* weight;
 
             r = randomGetRange(0, 100);
+            weight = lbl_8032AB3C;
             i = 0;
-            weights = lbl_8032AB3C;
-            weight = weights;
             while (*weight < r)
             {
                 weight++;
-                r -= weights[i];
-                i++;
+                r -= lbl_8032AB3C[i++];
             }
             (*gObjectTriggerInterface)
                 ->runSequence(lbl_8032AB30[i], (void*)obj, -1);
