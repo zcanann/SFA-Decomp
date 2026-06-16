@@ -15418,8 +15418,6 @@ int fn_8029FA24(int obj, int state, f32 fv)
                 sel = 6;
                 break;
             case 2:
-                sel = 7;
-                break;
             default:
                 sel = 7;
                 break;
