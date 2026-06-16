@@ -53,12 +53,17 @@ void drearthcal_update(int obj)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
-        for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+        if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
         {
-            if (*(void**)(0x100 + i * 4 + *(int*)(obj + 0x58)) == (void*)player)
+            i = 0;
+            do
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-            }
+                if (((void**)*(int*)(obj + 0x58))[i + 0x40] == (void*)player)
+                {
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                }
+                i++;
+            } while (i < *(s8*)(*(int*)(obj + 0x58) + 0x10f));
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
         {
