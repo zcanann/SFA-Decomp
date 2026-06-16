@@ -239,7 +239,7 @@ void shopitem_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->animEventCallback = (void*)fn_801E86F4;
     objAnim->bankIndex = (s8) * (s8*)(data + 0x18);
-    *(s16*)obj = (s16)((*(u8*)(data + 0x1A)) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)(data + 0x1A)) << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((*(u8*)(data + 0x1B)) << 8);
     if ((s32)objAnim->bankIndex >= (s32)objAnim->modelInstance->modelCount)
     {
