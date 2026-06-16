@@ -151,7 +151,7 @@ void dfropenode_func10(int obj, int value)
     linkedObj = (void*)extra->linkedObj;
     if (linkedObj != NULL)
     {
-        extra = (DFropenodeExtra*)*(int*)((u8*)linkedObj + 0xb8);
+        extra = (DFropenodeExtra*)*(int*)&((GameObject*)linkedObj)->extra;
         extra->hidden = bitByte;
     }
 }
