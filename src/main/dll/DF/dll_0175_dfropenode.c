@@ -162,7 +162,7 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
     *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
 }
 
-void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
+void dfropenode_modelMtxFn(int obj, float* phase, f32 distance)
 {
     int extra;
     s32 raw;
