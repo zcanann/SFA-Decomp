@@ -72,9 +72,9 @@ void CameraModeBike_update(CameraObject* camera)
     float cosYaw;
     float cosPitch;
     float sinPitch;
-    float posX;
-    float posY;
     float posZ;
+    float posY;
+    float posX;
     CamTalkTransformInput xformIn;
     float mtxBuf[17];
     longlong local_a0;
@@ -115,7 +115,7 @@ void CameraModeBike_update(CameraObject* camera)
         setMatrixFromObjectPos(mtxBuf, &xformIn);
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
                               &posZ, &posY, &posX);
-        camera->anim.rotX = -0x8000 - target->anim.rotX;
+        camera->anim.rotX = 0x8000 - target->anim.rotX;
         lbl_803DD540->smoothedYawOffset =
             lbl_803E1790 *
             (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
