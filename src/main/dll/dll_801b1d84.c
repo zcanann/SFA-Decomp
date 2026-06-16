@@ -62,9 +62,12 @@ void DIMwooddoor_updateFallingDebris(int* obj)
             f32 grav = lbl_803E48A4 * -lbl_803DBEF0;
             ObjHitsPriorityState* hitState;
             ((GameObject*)obj)->anim.velocityY = grav * timeDelta + oldvy;
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                    lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY) * timeDelta,
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            {
+                f32 dyProduct = lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY);
+                objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                        dyProduct * timeDelta,
+                        ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            }
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState*)
                 extra)->rotZRate * 10;
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((DIMwooddoorUpdateFallingDebrisState*)
