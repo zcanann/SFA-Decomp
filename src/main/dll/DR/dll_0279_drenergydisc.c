@@ -1,3 +1,14 @@
+/*
+ * drenergydisc (DLL 0x279) - an energy-disc dressing object whose
+ * activation is driven by two placement game bits.
+ *
+ * While the "active" game bit (placement 0x20) is set the disc plays a
+ * one-shot servo whir on its first frame active, forces its texture to
+ * the energised id and scrolls the texture's T coordinate each step.
+ * When the "move" game bit (placement 0x1E) is set the disc switches to
+ * animation move lbl_803E6BB0. init seeds the spawn rotation from the
+ * placement and primes the activated/texture state from the active bit.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -6,8 +17,8 @@
 typedef struct DrenergydiscPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
+    s16 moveGameBit;   /* 0x1E */
+    s16 activeGameBit; /* 0x20 */
     u8 pad22[0x28 - 0x22];
 } DrenergydiscPlacement;
 
@@ -33,7 +44,7 @@ void drenergydisc_update(int obj)
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
 
-    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->unk20) != 0)
+    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         if (state->activated == 0)
         {
@@ -58,7 +69,7 @@ void drenergydisc_update(int obj)
         }
     }
 
-    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->unk1E) != 0)
+    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->moveGameBit) != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
     }
@@ -68,10 +79,10 @@ void drenergydisc_init(u8* obj, u8* setup)
 {
     ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = ((GameObject*)obj)->extra;
-    s16 objType;
+    s16 spawnRotX;
 
-    objType = (s16)((s8)setup[0x18] << 8);
-    *(s16*)obj = objType;
+    spawnRotX = (s16)((s8)setup[0x18] << 8);
+    *(s16*)obj = spawnRotX;
     if ((u32)GameBit_Get(*(s16*)(setup + 0x20)) != 0)
     {
         state->activated = 1;
