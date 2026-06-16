@@ -1,8 +1,19 @@
-/* DLL 0x56 — camera mode arwing [8010DB7C-8010DD58) */
-#include "main/mm.h"
-
-extern s16 getAngle(f32 dx, f32 dz);
-
+/*
+ * DLL 0x56 — camera mode "arwing" [80110E30-801115E4)
+ *
+ * Camera mode that follows the Arwing flight vehicle. Shared work state lives
+ * in the global lbl_803A43C0 (CameraArwingWork): _init seeds the camera offset
+ * and the per-axis input scales from the lbl_803E1Bxx constant table; _update
+ * positions the camera from the scaled control input each frame, easing yaw,
+ * pitch and roll toward their targets by timeDelta, with special handling when
+ * the followed object is dead (aim at the nearest target) or exploding/warping
+ * (spin the roll out). _copyToCurrent patches the live work state from an
+ * external setter, dispatched on a value kind (position / input angles / one
+ * float / two floats).
+ *
+ * The remaining bodies are the empty camera-mode vtable slots (release / free /
+ * initialise / per-mode nops) this DLL leaves unimplemented.
+ */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
@@ -19,7 +30,8 @@ typedef struct CameraArwingWork
     f32 xScale;
     f32 yScale;
     f32 unk2C;
-    u8 pad30[0x38 - 0x30];
+    f32 unk30;
+    f32 unk34;
     f32 unk38;
     f32 unk3C;
     f32 unk40;
@@ -37,30 +49,16 @@ typedef struct CameraArwingWork
     u8 pad5F[0x60 - 0x5F];
 } CameraArwingWork;
 
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-
-extern undefined4 DAT_802c2910;
-extern undefined4 DAT_802c2914;
-extern undefined4 DAT_802c2918;
-extern float* DAT_803de1fc;
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
-
 #pragma scheduling on
 #pragma peephole on
 extern f32 timeDelta;
 extern f32 lbl_803A43C0[];
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA4;
+extern f32 lbl_803E1BA8;
+extern f32 lbl_803E1BAC;
+extern f32 lbl_803E1BB0;
 extern f32 lbl_803E1BC0;
 extern f32 lbl_803E1BC4;
 extern f32 lbl_803E1BC8;
@@ -69,102 +67,11 @@ extern f32 lbl_803E1BD0;
 extern f32 lbl_803E1BD4;
 extern f32 lbl_803E1BD8;
 extern f32 lbl_803E1BDC;
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
+
+extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern int arwarwing_isDead(int state);
 extern int arwarwing_isExplodingOrWarping(int state);
-extern f32 lbl_803E1BA0;
-extern f32 lbl_803E1BA8;
-extern f32 lbl_803E1BAC;
-extern f32 lbl_803E1BB0;
 extern s16 getAngle(f32 x, f32 z);
-
-void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
-{
-    float fVar1;
-    float* pfVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    undefined8 uVar9;
-
-    uVar9 = FUN_8028683c();
-    pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((ulonglong)uVar9 >> 0x20);
-    dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
-    dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
-    dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
-    FUN_80017730();
-    dVar8 = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *pfVar2);
-    dVar6 = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + pfVar2[2]);
-    dVar5 = (double)FUN_80293f90();
-    dVar7 = (double)FUN_80294964();
-    if (dVar4 < (double)DAT_803de1fc[0x10])
-    {
-        dVar4 = (double)DAT_803de1fc[0x10];
-    }
-    fVar1 = DAT_803de1fc[4];
-    *(float*)uVar9 = (float)(dVar5 * (double)(float)(dVar4 + (double)fVar1) + dVar8);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(iVar3 + 0x1c)) - pfVar2[1]) -
-        (*(float*)(iVar3 + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dVar4 + (double)fVar1) + dVar6);
-    FUN_80286888();
-    return;
-}
-
-void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9, int param_10)
-{
-    uint uVar1;
-    undefined2* puVar2;
-    undefined4 uVar3;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined2 uStack_1a;
-    undefined4 local_18;
-    undefined4 local_14;
-    undefined2 local_10;
-
-    local_18 = DAT_802c2910;
-    local_14 = DAT_802c2914;
-    local_10 = DAT_802c2918;
-    if ((*(char*)(param_10 + 0x407) != *(char*)(param_10 + 0x409)) &&
-        (((GameObject*)param_9)->anim.alpha != 0))
-    {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
-        {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)&((GameObject*)param_9)->childObjs[0] = 0;
-        }
-        uVar1 = FUN_80017ae8();
-        if ((uVar1 & 0xff) == 0)
-        {
-            *(u8*)(param_10 + 0x409) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)(param_10 + 0x407))
-            {
-                puVar2 = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(param_10 + 0x407)]);
-                uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
-                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
-                                     in_r10);
-                *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                ((GameObject*)*(int*)&((GameObject*)param_9)->childObjs[0])->objectFlags =
-                    ((GameObject*)param_9)->objectFlags & 7;
-            }
-            *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
-        }
-    }
-    return;
-}
-
-void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -176,19 +83,13 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void CameraModeForceBehind_release(void);
-
 void fn_801101E4(void)
 {
 }
 
-void CameraModeCloudRunner_release(void);
-
 void fn_80110C80(void)
 {
 }
-
-void CameraModePerv_release(void);
 
 void fn_80110EC0(void)
 {
@@ -201,8 +102,6 @@ void CameraModeArwing_release(void)
 void CameraModeArwing_initialise(void)
 {
 }
-
-void CameraModeTitle_release(void);
 
 void CameraModeArwing_free(void)
 {
@@ -279,8 +178,6 @@ void fn_801101E8(void)
     mm_free((u32)lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
-
-void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
