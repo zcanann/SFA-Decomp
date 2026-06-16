@@ -194,8 +194,15 @@ void SpiritPrize_update(int obj)
 
     params = *(u8**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    if (params == NULL || ((SpiritPrizePlacement*)params)->unk18 == -1 || ((SpiritPrizePlacement*)params)->unk14 ==
-        0x4ca62)
+    if (params == NULL)
+    {
+        return;
+    }
+    if (((SpiritPrizePlacement*)params)->unk18 == -1)
+    {
+        return;
+    }
+    if (((SpiritPrizePlacement*)params)->unk14 == 0x4ca62)
     {
         return;
     }
