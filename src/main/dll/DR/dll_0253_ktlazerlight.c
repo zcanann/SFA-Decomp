@@ -19,6 +19,10 @@ typedef struct KtlazerlightPlacement
     u8 pad1E[0x20 - 0x1E];
 } KtlazerlightPlacement;
 
+STATIC_ASSERT(offsetof(KtlazerlightPlacement, onIntensityBit) == 0x1A);
+STATIC_ASSERT(offsetof(KtlazerlightPlacement, onStayLitBit) == 0x1C);
+STATIC_ASSERT(sizeof(KtlazerlightPlacement) == 0x20);
+
 
 int ktlazerlight_getExtraSize(void) { return 0x14; }
 
