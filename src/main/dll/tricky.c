@@ -930,6 +930,7 @@ extern f32 lbl_803E1E90, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 
+#pragma opt_propagation off
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
 {
     char* base = lbl_803A87F0;
@@ -987,6 +988,7 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)lbl_803DD860[1])->anim.rotY = (s16)b;
     ((GameObject*)lbl_803DD860[1])->anim.rotX = (s16)c;
 }
+#pragma opt_propagation reset
 
 extern char hudTextures[];
 extern s16 lbl_803DD76C;
