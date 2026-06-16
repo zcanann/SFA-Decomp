@@ -603,7 +603,7 @@ void fn_80138908(int* obj, u8 v)
 {
     u8* x = ((GameObject*)obj)->extra;
     u8 b = *(u8*)(x + 0x58);
-    *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v << 6) & 0x40));
+    *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v & 1) << 6));
 }
 
 void titlescreen_free(u8* obj);
