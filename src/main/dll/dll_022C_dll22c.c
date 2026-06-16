@@ -506,11 +506,11 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
 
 int dbstealerworm_stateHandlerA05(int obj, int p);
 
-void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void FUN_80204320(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }
