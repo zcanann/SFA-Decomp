@@ -1,7 +1,18 @@
-/* DLL 0x01A3 - NW animated-ice objects [801CF78C-801CF7E8) */
+/*
+ * nwanimice (DLL 0x1A3) - the animated ice blocks of SnowHorn Wastes
+ * (map 'nwastes', 0x0A).
+ *
+ * These are the moving "source" ice objects: each one registers in the
+ * NW_ANIMICE object group so that the static nwice objects (DLL 0x1A4)
+ * can find and follow it. The object itself has no per-frame behaviour
+ * here - update/render/hitDetect are all stubs; the work lives in nwice.
+ */
 #include "main/objlib.h"
 
 #include "main/game_object.h"
+
+/* object group joined at init so nwice instances can locate this block */
+#define NW_ANIMICE_GROUP_ID 0x3d
 
 void nw_animice_render(void)
 {
@@ -23,19 +34,15 @@ void nw_animice_initialise(void)
 {
 }
 
-void nw_ice_render(void);
-
 int nw_animice_SeqFn(void) { return 0x0; }
 int nw_animice_getExtraSize(void) { return 0x0; }
 int nw_animice_getObjectTypeId(void) { return 0x0; }
-int nw_ice_getExtraSize(void);
 
-void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
-void nw_ice_free(int x);
+void nw_animice_free(int obj) { ObjGroup_RemoveObject(obj, NW_ANIMICE_GROUP_ID); }
 
 void nw_animice_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = (void*)nw_animice_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    ObjGroup_AddObject((u32)obj, 0x3d);
+    ObjGroup_AddObject((u32)obj, NW_ANIMICE_GROUP_ID);
 }
