@@ -2455,9 +2455,15 @@ void setLanguageFn_8001ad64(void* reqp)
     old = *(u16**)(req + 0x3c);
     delta = (int)newBuf - (int)old;
     n = size >> 1;
-    for (i = 0; i < n; i++)
     {
-        newBuf[i] = old[i];
+        u16* d = newBuf;
+        u16* s = old;
+        for (i = 0; i < n; i++)
+        {
+            *d = *s;
+            d++;
+            s++;
+        }
     }
     cs->strings = cs->strings + delta;
     cs->entries = cs->entries + delta;
