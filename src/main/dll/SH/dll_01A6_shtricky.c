@@ -1,10 +1,16 @@
+/*
+ * shtricky (DLL 0x1A6) - SnowHorn-area scripted-state object that
+ * watches Tricky's progress and toggles the related game bits.
+ *
+ * The single state byte (obj->extra[0]) drives a small sequence: it
+ * waits on a trigger bit, hands control to Tricky, then polls a Tricky
+ * vtable method until Tricky reports the task done, and finally watches
+ * for the completion bit to flip the result bits back.
+ */
 #include "main/game_object.h"
-
-extern uint GameBit_Get();
-extern undefined4 GameBit_Set();
+#include "main/gamebits.h"
 
 extern int* getTrickyObject(void);
-extern uint GameBit_Get(int id);
 
 int sh_tricky_getExtraSize(void)
 {
@@ -56,8 +62,6 @@ void sh_tricky_update(int* obj)
         break;
     }
 }
-
-int EdibleMushroom_SeqFn(int* obj);
 
 void sh_tricky_init(int* obj)
 {
