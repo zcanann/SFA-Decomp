@@ -196,7 +196,7 @@ void blasted_update(int obj)
                 }
                 else
                 {
-                    state->damageStep = state->damageStep + 1;
+                    state->damageStep++;
                     Obj_SetActiveModelIndex(obj, state->damageStep);
                 }
             }
