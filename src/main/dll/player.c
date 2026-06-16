@@ -4762,8 +4762,8 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
 
 void fn_80296EB4(int obj, int newParent)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
     int oldParent = *(int*)&((GameObject*)obj)->anim.parent;
+    PlayerState* inner = ((GameObject*)obj)->extra;
     struct
     {
         f32 wp0[3];
@@ -4784,16 +4784,16 @@ void fn_80296EB4(int obj, int newParent)
     }
     if ((void*)oldParent != NULL)
     {
-        Obj_TransformLocalPointToWorld(&s.wp[0], &s.wp[1], &s.wp[2], oldParent,
+        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
                                        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                       ((GameObject*)obj)->anim.localPosZ);
-        Obj_TransformLocalPointToWorld(&s.wp2[0], &s.wp2[1], &s.wp2[2], oldParent,
+                                       ((GameObject*)obj)->anim.localPosZ, &s.wp[0], &s.wp[1], &s.wp[2], oldParent);
+        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
                                        ((GameObject*)obj)->anim.previousLocalPosX,
                                        ((GameObject*)obj)->anim.previousLocalPosY,
-                                       ((GameObject*)obj)->anim.previousLocalPosZ);
-        Obj_TransformLocalVectorToWorld(&s.wv[0], &s.wv[1], &s.wv[2], oldParent,
+                                       ((GameObject*)obj)->anim.previousLocalPosZ, &s.wp2[0], &s.wp2[1], &s.wp2[2], oldParent);
+        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalVectorToWorld)(
                                         ((GameObject*)obj)->anim.velocityX, lbl_803E7EA4,
-                                        ((GameObject*)obj)->anim.velocityZ);
+                                        ((GameObject*)obj)->anim.velocityZ, &s.wv[0], &s.wv[1], &s.wv[2], oldParent);
         a0 = Angle_AddWrappedS16(((GameObject*)obj)->anim.rotX, oldParent);
         a1 = Angle_AddWrappedS16(inner->targetYaw, oldParent);
         a2 = Angle_AddWrappedS16(inner->yaw, oldParent);
