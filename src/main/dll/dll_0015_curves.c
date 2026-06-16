@@ -1741,8 +1741,8 @@ int pushable_savePos(int obj)
         if (objectId == *(u32*)((u8*)&position->objectId + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
             if ((((GameObject*)obj)->anim.localPosX ==
-                    (savedX = *(f32*)((u8*)&(slot = (CurvesSaveGameObjectPosition*)(gSaveGameData +
-                        i * sizeof(CurvesSaveGameObjectPosition)))->x + SAVEGAME_OBJECT_POSITION_OFFSET))) &&
+                    (savedX = *(f32*)((u8*)&(slot = &((CurvesSaveGameObjectPosition*)gSaveGameData)[i])->x
+                        + SAVEGAME_OBJECT_POSITION_OFFSET))) &&
                 (((GameObject*)obj)->anim.localPosY == *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET)) &&
                 (((GameObject*)obj)->anim.localPosZ == *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET)))
             {
