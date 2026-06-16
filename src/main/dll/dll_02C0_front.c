@@ -1133,10 +1133,10 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     f32 m;
     f32 sc3;
 
-    lbl_803DD9C4 = lbl_803DD9C4 + timeDelta;
-    if (lbl_803DD9C4 > lbl_803E22F0)
+    m = (lbl_803DD9C4 = lbl_803DD9C4 + timeDelta);
+    if (m > lbl_803E22F0)
     {
-        lbl_803DD9C4 = lbl_803DD9C4 - lbl_803E22F0;
+        lbl_803DD9C4 = m - lbl_803E22F0;
     }
     lbl_803DD9C0 = lbl_803E232C *
         mathCosf(lbl_803E2330 * (lbl_803E2334 * lbl_803DD9C4) / lbl_803E22F0) +
