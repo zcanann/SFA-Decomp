@@ -66,6 +66,7 @@ void controllight_init(int obj, int setup)
 #pragma optimization_level 1
 void controllight_update(int obj)
 {
+    extern void pointlight_setEffectState(int obj, u8 enabled);
     ControlLightState* state = ((GameObject*)obj)->extra;
     u8 bit = (u8)GameBit_Get(state->gameBit);
 
@@ -97,7 +98,7 @@ void controllight_update(int obj)
                 f32 radius = state->radius;
                 int count;
                 int i;
-                u8 invBit;
+                int invBit;
                 GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
                 GameObject** p;
                 invBit = !bit;
