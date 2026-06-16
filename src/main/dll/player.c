@@ -9360,8 +9360,9 @@ int fn_802A1114(int obj, int state)
     fn_802A13F4(obj, state);
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
+        f32 zero = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.animSpeedA = zero;
+        ((PlayerState*)state)->baddie.animSpeedB = zero;
         inner->targetYaw =
             (s16)getAngle(*(f32*)((char*)inner + 0x56c), inner->unk574);
         inner->yaw = inner->targetYaw;
