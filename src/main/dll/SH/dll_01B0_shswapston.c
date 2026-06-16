@@ -1,3 +1,14 @@
+/*
+ * shswapston / WarpStone (DLL 0x1B0) - the talking WarpStone hub object.
+ *
+ * It runs the WarpStone's idle/look-at-target animation behaviour
+ * (warpstone_update), drives the warp menu sequence object that lets the
+ * player pick a destination (warpstone_updateMenuAnimObj +
+ * warpstone_handleMenuOptionInput, keyed off analog stick / button input
+ * and the player's Krazoa-spirit count), and renders the player model
+ * standing on the stone during the menu. Map loads/locks and warps are
+ * issued through the map-event interface.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -61,7 +72,7 @@ extern f32 lbl_803E54A0;
 
 void warpstone_hitDetect(int obj)
 {
-    extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d); /* #57 */
+    extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d);
     int* state = ((GameObject*)obj)->extra;
     f32 pos[3];
     f32 lightPos[3];
@@ -237,7 +248,7 @@ extern f32 timeDelta;
 
 int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
-    extern int playerFn_801d6d58(void); /* #57 */
+    extern int playerFn_801d6d58(void);
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
     int child;
@@ -388,8 +399,6 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     return 0;
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
 #include "main/dll/SC/SClantern.h"
 
 typedef struct WarpstoneState
@@ -435,7 +444,7 @@ typedef struct WarpstoneFlags
 
 void warpstone_update(int obj)
 {
-    extern void objAudioFn_800393f8(int obj, void* state, int sfxId, int a, int b, int c); /* #57 */
+    extern void objAudioFn_800393f8(int obj, void* state, int sfxId, int a, int b, int c);
     int state;
     int child;
     int advanceResult;
