@@ -11352,7 +11352,7 @@ int fn_802957B4(int obj)
         (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
-        ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
+        ((GameObject*)obj)->anim.modelState->flags = ((GameObject*)obj)->anim.modelState->flags & ~0x1000;
         inner->unk7F0 = 0;
         ((GameObject*)obj)->anim.activeMove = -1;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
