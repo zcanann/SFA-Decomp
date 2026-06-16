@@ -1,9 +1,27 @@
+/*
+ * wcfloortile (DLL 0x298) - a collapsing floor tile in the Walled City
+ * (WC). The tile sits flush until armed: once its arm game bit is set it
+ * watches its map block's hit entries for a triggering entry, then enters a
+ * shake-and-fall phase (jittering rotY/rotZ, accelerating down velocityY)
+ * while fading alpha toward zero with the drop distance. state->phase: 0
+ * idle/armed-watch, 1 shaking/falling/fading, 2 fallen (alpha 0, collision
+ * off), 3 restored (a second game bit snaps the tile back to its placement
+ * Y, fades alpha back in and re-enables collision). On each phase change it
+ * reports to the level controller. state->flags: 1|2 bookkeeping, 4 armed.
+ *
+ * NOTE: this object's TU text range (0x8022A298-0x8022B998) also contains
+ * the arwarwing_* Arwing flight helpers (readControls, updateFlightPhysics,
+ * updateBombFire, spawnBomb, updateThrusters, updateBarrelRoll,
+ * clampToFlightBounds). They are compiled into this object in retail and
+ * are called from the Arwing DLL (dll_029A_arwarwing); they are not part of
+ * the floor tile and must not be moved or removed.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 
 #include "main/audio/sfx_ids.h"
-/* wcfloortile_getExtraSize == 0x8. */
+
 typedef struct WcFloorTileState
 {
     f32 shakeTime;
@@ -27,7 +45,7 @@ STATIC_ASSERT(offsetof(WcFloorTileState, phase) == 0x06);
 STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
 
 STATIC_ASSERT(sizeof(WcFloorTileSetup) == 0x24);
-STATIC_ASSERT(offsetof(WcFloorTileSetup, base . posY) == 0x0C);
+STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 int wcfloortile_getExtraSize(void) { return 8; }
