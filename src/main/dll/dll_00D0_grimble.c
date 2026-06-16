@@ -379,6 +379,7 @@ void fn_801627F4(int obj)
             f = ((GrimbleControl*)sub)->targetProgress;
             if (f > lbl_803E2EBC)
             {
+                f = f;
             }
             else
             {
@@ -388,6 +389,7 @@ void fn_801627F4(int obj)
             f = ((GrimbleControl*)sub)->targetProgress;
             if (f < lbl_803E2F0C)
             {
+                f = f;
             }
             else
             {
