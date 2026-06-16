@@ -323,7 +323,7 @@ void fn_801C8B68(int obj)
 
     if ((((GameObject*)self)->anim.flags & 0x4000) != 0)
     {
-        *(short*)self = 0;
+        ((GameObject*)self)->anim.rotX = 0;
         ((GameObject*)self)->anim.localPosY = *(float*)(state2 + 0xc);
         return;
     }
@@ -356,11 +356,11 @@ void fn_801C8B68(int obj)
         float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
         float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
         int ang = (int)getAngle(dx, dz);
-        delta = (int)(u16)ang - (int)(u16) * (short*)self;
+        delta = (int)(u16)ang - (int)(u16)((GameObject*)self)->anim.rotX;
         if (delta > 0x8000) delta -= 0xffff;
         if (delta < -0x8000) delta += 0xffff;
-        *(short*)self = (short)(
-            (int)*(short*)self
+        ((GameObject*)self)->anim.rotX = (short)(
+            (int)((GameObject*)self)->anim.rotX
             + (int)((f32)delta * timeDelta / lbl_803E50C0));
     }
     dist = Vec_xzDistance(&((GameObject*)self)->anim.worldPosX, &player->anim.worldPosX);
