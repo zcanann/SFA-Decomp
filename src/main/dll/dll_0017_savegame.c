@@ -501,8 +501,8 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 {
     SaveGameMapState* s = &gSaveGameMapState;
     u8 createTransient = 0;
-    u32 oldStatus;
     u32 newStatus;
+    u32 oldStatus;
     u32 bit;
     int i;
     MapBitTransient* transient;
@@ -533,8 +533,8 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         }
         else
         {
-            bit = 1 << shift;
-            newStatus = newStatus & ~bit;
+            bit = ~(1 << shift);
+            newStatus = newStatus & bit;
         }
 
         GameBit_Set(lbl_80311810[idx], newStatus);
@@ -544,7 +544,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         groupStatuses = s->groupStatuses;
         if (value != 0)
         {
-            if ((oldStatus & (u32)(1 << shift)) == 0)
+            if (((int)oldStatus & (1 << shift)) == 0)
             {
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
