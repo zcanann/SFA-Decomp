@@ -896,6 +896,7 @@ void ktrex_init(int obj, char* arg, int flag)
     ObjfsaRomCurveDef* cp;
     int spawnFlags;
     KTRexRuntime* rt;
+    s16 yaw;
     int* base = (int*)lbl_8032A510;
     int* pA;
     int* pB;
@@ -924,8 +925,9 @@ void ktrex_init(int obj, char* arg, int flag)
     }
     gKTRexState = ((KTRexRuntime*)gKTRexRuntime)->arena;
     ((KTRexArenaState*)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);
-    *(s16*)obj = (s16)((s8)arg[0x2a] << 8);
-    ((KTRexArenaState*)gKTRexState)->homeYaw = (s16)((s8)arg[0x2a] << 8);
+    yaw = (s16)((s8)arg[0x2a] << 8);
+    *(s16*)obj = yaw;
+    ((KTRexArenaState*)gKTRexState)->homeYaw = yaw;
     pA = base + 0x4c / 4;
     pB = base + 0x3c / 4;
     pC = base + 0x6c / 4;
