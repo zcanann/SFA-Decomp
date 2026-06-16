@@ -521,14 +521,7 @@ void Effect17_func05(void)
 
 void Effect18_func05(void);
 
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
+/* colorWord0..2 are u16 here; effectIdByte/modelIdByte written but ignored by the consumer */
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, s16* extraArgs)
 {
