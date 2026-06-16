@@ -3158,6 +3158,7 @@ void expgfx_release(void)
     return;
 }
 
+#pragma ppc_unroll_factor_limit 1
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
