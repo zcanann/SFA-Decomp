@@ -747,7 +747,8 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             eventTableIndex = *(u8*)(state + 0x33c) * 0xc;
             row = eventRows + eventTableIndex;
-            Baddie_SetMove(obj, state, row[8], *(f32*)(eventRows + eventTableIndex), 0,
+            Baddie_SetMove(obj, state, row[8],
+                        *(f32*)(eventRows + *(u8*)(state + 0x33c) * 0xc), 0,
                         *(u32*)(row + 4) & 0xff);
             ObjAnim_SetMoveProgress(
                 *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4),
