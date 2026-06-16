@@ -345,7 +345,7 @@ void fn_801627F4(int obj)
                 ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48, (f32*)(sub + 0x1c), (f32*)(sub + 0x20),
                 (f32*)(sub + 0x24));
             ((GrimbleControl*)sub)->baseRotX =
-                (*(int (**)(int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x34))(
+                (*(s16 (**)(int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x34))(
                     ((GrimbleControl*)sub)->pathObj);
             ((GrimbleControl*)sub)->unk4C = ((GrimbleControl*)sub)->unk48;
             ((GrimbleControl*)sub)->unk46 = 0;
