@@ -10687,9 +10687,9 @@ void Lightfoot_RecordCompletedChallengeTargetHit(int obj, int inner, int animSta
 void fn_802A96D8(void)
 {
     void** p;
-    s8 i;
-    int obj;
     int idx3;
+    int obj;
+    s8 i;
 
     if (!Obj_IsLoadingLocked()) return;
     idx3 = 0;
