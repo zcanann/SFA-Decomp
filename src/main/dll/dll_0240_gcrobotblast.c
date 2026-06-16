@@ -6,6 +6,7 @@
 #include "main/dll/dbeggstate_struct.h"
 #include "main/dll/drakorenergystate_struct.h"
 #include "main/dll/dbstealerwormcontrol_struct.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
 
@@ -129,29 +130,29 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     int control;
 
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) | 4;
-    *(float*)(state + 0x2a0) = lbl_803E6F80;
-    if (*(char*)(state + 0x27a) != '\0')
+    control = *(int*)&((GroundBaddieState*)((GameObject*)obj)->extra)->control;
+    *(byte*)&((DbStealerwormControl*)control)->flags14 = *(byte*)&((DbStealerwormControl*)control)->flags14 | 2;
+    *(byte*)&((DbStealerwormControl*)control)->flags15 = *(byte*)&((DbStealerwormControl*)control)->flags15 | 4;
+    *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(undefined*)(state + 0x34d) = 0x1f;
-    if (*(char*)(state + 0x27a) != '\0')
+    *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
-        *(undefined4*)(control + 0x18) = *(undefined4*)(state + 0x2d0);
-        *(undefined2*)(control + 0x1c) = 0x24;
-        *(undefined4*)(control + 0x2c) = 0;
+        *(undefined4*)&((DbStealerwormControl*)control)->linkedObj = *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj;
+        *(undefined2*)&((DbStealerwormControl*)control)->unk1C = 0x24;
+        *(undefined4*)&((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            *(int*)(control + 0x18), 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+                            *(int*)&((DbStealerwormControl*)control)->linkedObj, 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
     }
     return 0;
 }
@@ -181,32 +182,32 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     float dy;
     float dz;
 
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) & 0xfb;
+    control = *(int*)&((GroundBaddieState*)((GameObject*)obj)->extra)->control;
+    *(byte*)&((DbStealerwormControl*)control)->flags14 = *(byte*)&((DbStealerwormControl*)control)->flags14 | 2;
+    *(byte*)&((DbStealerwormControl*)control)->flags15 = *(byte*)&((DbStealerwormControl*)control)->flags15 & 0xfb;
     speedDiv = lbl_803E6F88;
-    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
-    *(float*)(state + 0x284) = *(float*)(state + 0x284) / speedDiv;
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(state + 0x27a) != '\0')
+    *(float*)&((GroundBaddieState*)state)->baddie.animSpeedA = *(float*)&((GroundBaddieState*)state)->baddie.animSpeedA / lbl_803E6F88;
+    *(float*)&((GroundBaddieState*)state)->baddie.animSpeedB = *(float*)&((GroundBaddieState*)state)->baddie.animSpeedB / speedDiv;
+    *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(undefined*)(state + 0x34d) = 0x1f;
+    *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
     if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)obj)->anim.localPosY < *(float*)(*(int*)(state + 0x2d0) + 0x10) - lbl_803E6F90))
+        (((GameObject*)obj)->anim.localPosY < *(float*)(*(int*)&((GroundBaddieState*)state)->baddie.targetObj + 0x10) - lbl_803E6F90))
     {
-        target = *(int*)(state + 0x2d0);
+        target = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
         dx = *(float*)(target + 0xc) - ((GameObject*)obj)->anim.localPosX;
         dy = *(float*)(target + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
         dz = *(float*)(target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
         dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
         if (dist < (double)lbl_803E6F50)
         {
-            msgWord40 = *(undefined4*)(state + 0x2d0);
-            msgQueue = *(short**)(control + 0x24);
+            msgWord40 = *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj;
+            msgQueue = *(short**)&((DbStealerwormControl*)control)->msgStack;
             msgWord48 = 0xe;
             msgWord44 = 1;
             busy = FUN_80006ab8(msgQueue);
@@ -214,12 +215,12 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 FUN_80006ac4(msgQueue, (uint) & msgWord48);
             }
-            *(undefined*)(control + 0x34) = 1;
+            *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
         }
     }
     else
     {
-        msgQueue = *(short**)(control + 0x24);
+        msgQueue = *(short**)&((DbStealerwormControl*)control)->msgStack;
         msgWord30 = 9;
         msgWord2c = 0;
         msgWord28 = 0x24;
@@ -228,9 +229,9 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(msgQueue, (uint) & msgWord30);
         }
-        *(undefined*)(control + 0x34) = 1;
-        msgWord34 = *(undefined4*)(state + 0x2d0);
-        msgQueue = *(short**)(control + 0x24);
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
+        msgWord34 = *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj;
+        msgQueue = *(short**)&((DbStealerwormControl*)control)->msgStack;
         msgWord3c = 7;
         msgWord38 = 1;
         busy = FUN_80006ab8(msgQueue);
@@ -238,7 +239,7 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(msgQueue, (uint) & msgWord3c);
         }
-        *(undefined*)(control + 0x34) = 1;
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
     }
     return 0;
 }
@@ -257,21 +258,21 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 msgWord24;
     undefined4 msgWord20;
 
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    if (*(char*)(state + 0x27a) != '\0')
+    control = *(int*)&((GroundBaddieState*)((GameObject*)obj)->extra)->control;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
-        *(undefined4*)(state + 0x2d0) = 0;
+        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
         if (*(int*)(control + 0x18) != 0)
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                 *(int*)(control + 0x18), 0x11, obj, 0x10, param_13, param_14, param_15, param_16);
-            *(undefined4*)(control + 0x18) = 0;
+            *(undefined4*)&((DbStealerwormControl*)control)->linkedObj = 0;
         }
         playerInjured = FUN_80017a98();
         playerInjured = (**(code**)(**(int**)(*(int*)(playerInjured + 200) + 0x68) + 0x44))();
@@ -285,23 +286,23 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
             sfxIdx = randomGetRange(3, 4);
             FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + sfxIdx * 4));
         }
-        msgWord20 = *(undefined4*)(control + 0x30);
-        msgWord24 = *(undefined4*)(control + 0x2c);
-        msgQueue = *(short**)(control + 0x24);
-        msgWord28 = *(undefined4*)(control + 0x28);
+        msgWord20 = *(undefined4*)&((DbStealerwormControl*)control)->unk30;
+        msgWord24 = *(undefined4*)&((DbStealerwormControl*)control)->unk2C;
+        msgQueue = *(short**)&((DbStealerwormControl*)control)->msgStack;
+        msgWord28 = *(undefined4*)&((DbStealerwormControl*)control)->unk28;
         sfxIdx = FUN_80006ab8(msgQueue);
         if (sfxIdx == 0)
         {
             FUN_80006ac4(msgQueue, (uint) & msgWord28);
         }
-        *(undefined4*)(control + 0x3c) = 0;
+        *(undefined4*)&((DbStealerwormControl*)control)->unk3C = 0;
     }
-    *(undefined*)(state + 0x34d) = 0x10;
-    *(float*)(state + 0x2a0) = lbl_803E6FD8;
-    *(float*)(state + 0x280) = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 0x10;
+    *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6FD8;
+    *(float*)&((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
     }
     return 0;
 }
@@ -318,30 +319,30 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     int control;
 
     control = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(state + 0x27a) != '\0')
+    *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 10, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(undefined*)(state + 0x34d) = 1;
-    control = *(int*)(control + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    if ((*(uint*)(state + 0x314) & 1) != 0)
+    *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 1;
+    control = *(int*)&((GroundBaddieState*)control)->control;
+    *(byte*)&((DbStealerwormControl*)control)->flags14 = *(byte*)&((DbStealerwormControl*)control)->flags14 | 2;
+    if ((*(uint*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
-        *(uint*)(state + 0x314) = *(uint*)(state + 0x314) & ~1;
-        *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 1;
+        *(uint*)&((GroundBaddieState*)state)->baddie.eventFlags = *(uint*)&((GroundBaddieState*)state)->baddie.eventFlags & ~1;
+        *(byte*)&((DbStealerwormControl*)control)->flags14 = *(byte*)&((DbStealerwormControl*)control)->flags14 | 1;
     }
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
     }
     return 0;
 }
@@ -358,20 +359,20 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
     undefined4 noMove;
 
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(state + 0x27a) != '\0')
+    *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 5, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(undefined*)(state + 0x34d) = 1;
+    *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 1;
     return 0;
 }
 
@@ -389,43 +390,43 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     int control;
 
     extra = *(int*)&((GameObject*)obj)->extra;
-    control = *(int*)(extra + 0x40c);
-    if (*(char*)(state + 0x27a) != '\0')
+    control = *(int*)&((GroundBaddieState*)extra)->control;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         ObjHits_EnableObject(obj);
     }
     noMove = 0xffffffff;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    if (*(char*)(state + 0x27a) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         pick = randomGetRange(0, 1);
         if (pick == 0)
         {
-            if (*(char*)(state + 0x27a) != '\0')
+            if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                              obj, 7, 0, noMove, param_13, param_14, param_15, param_16);
-                *(undefined*)(state + 0x346) = 0;
+                *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
             }
         }
-        else if (*(char*)(state + 0x27a) != '\0')
+        else if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          obj, 6, 0, noMove, param_13, param_14, param_15, param_16);
-            *(undefined*)(state + 0x346) = 0;
+            *(undefined*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
-        *(undefined*)(state + 0x34d) = 1;
-        *(float*)(state + 0x2a0) =
+        *(undefined*)&((GroundBaddieState*)state)->baddie.unk34D = 1;
+        *(float*)&((GroundBaddieState*)state)->baddie.moveSpeed =
             lbl_803E6FDC +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e6f78) /
+            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)&((GroundBaddieState*)extra)->aggression) - DOUBLE_803e6f78) /
             lbl_803E6FE0;
     }
-    *(float*)(state + 0x280) = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    *(float*)&((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(undefined*)&((DbStealerwormControl*)control)->unk34 = 1;
     }
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
+    *(byte*)&((DbStealerwormControl*)control)->flags14 = *(byte*)&((DbStealerwormControl*)control)->flags14 | 2;
     return 0;
 }
 
