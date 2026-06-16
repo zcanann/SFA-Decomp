@@ -1,3 +1,17 @@
+/*
+ * RollingBarrel (DLL 0x17D) - a barrel obstacle that rolls along a ROM
+ * curve path while bouncing vertically under gravity and wobbling its
+ * roll/yaw rotation each frame. It explodes (state machine: ROLLING ->
+ * EXPLODED_WAIT -> RESPAWN_WAIT -> CLEANUP) when its path is blocked, when
+ * it hits the player object, or on certain priority-hit results; the
+ * explosion shakes the camera and rumbles within lbl_803E4470 range of the
+ * player. Barrels register in object group ROLLINGBARREL_GROUP_ID; the
+ * special descriptor type ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE selects a
+ * speed-limited path advance plus a floor offset. lbl_803DDB20 is a shared
+ * count of barrels currently in the exploded phase (gates the chained-
+ * explosion variant in fn_801A5D88). The lbl_803E44xx globals are tuning
+ * constants (speeds, gravity, bounce damping, timers, shake amounts).
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/objfsa.h"
@@ -28,18 +42,17 @@ extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int 
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
 
-extern void objRenderFn_8003b8f4(f32 v);
+extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
 
 extern f32 timeDelta;
 extern s16 lbl_803DDB20;
 
 typedef struct { int a; int b; } RollingBarrelCurveSeed;
 extern RollingBarrelCurveSeed lbl_803E4460;
-extern int lbl_803E4464;
 extern f32 lbl_803E4468;
 extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
-extern f32 lbl_803E4474;
+extern f32 lbl_803E4474; /* dual-use: render scale arg and shake falloff base */
 extern f32 lbl_803E4478;
 extern const f32 lbl_803E447C;
 extern f32 lbl_803E4480;
@@ -65,8 +78,7 @@ void RollingBarrel_release(void)
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
-void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
-
+void RollingBarrel_initialise(void) { lbl_803DDB20 = 0; }
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -76,9 +88,8 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         return;
     }
 
-    ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
+    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E4474);
 }
-
 
 void RollingBarrel_free(int obj)
 {
@@ -86,11 +97,11 @@ void RollingBarrel_free(int obj)
     int count;
     int* arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
-    u32 a;
+    u32 entry;
     for (i = 0; i < count; i++)
     {
-        a = (u32)arr[i];
-        if (a == (u32)obj)
+        entry = (u32)arr[i];
+        if (entry == (u32)obj)
         {
             ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
             break;
@@ -128,7 +139,6 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, (int*)&tmp, -1);
 }
 
-
 #pragma peephole off
 void RollingBarrel_update(int obj)
 {
@@ -141,17 +151,17 @@ void RollingBarrel_update(int obj)
     int hitB;
     u32 hitC;
     int hitResult;
-    u32 r;
-    u8 bVar1;
+    u32 randomIndex;
+    u8 currentState;
 
     state = ((GameObject*)obj)->extra;
     hitInfo = 0;
-    descriptor = *(RollingBarrelMapData**)&((GameObject*)obj)->anim.placementData;
+    descriptor = (RollingBarrelMapData*)((GameObject*)obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
-    bVar1 = state->state;
+    currentState = state->state;
 
-    switch (bVar1)
+    switch (currentState)
     {
     case ROLLINGBARREL_STATE_ROLLING:
         {
@@ -214,7 +224,7 @@ void RollingBarrel_update(int obj)
             }
             ((GameObject*)obj)->anim.localPosX = state->curve.posX;
             ((GameObject*)obj)->anim.localPosZ = state->curve.posZ;
-            *(s16*)obj = (s16)getAngle(state->curve.tangentX, state->curve.tangentZ);
+            ((GameObject*)obj)->anim.rotX = (s16)getAngle(state->curve.tangentX, state->curve.tangentZ);
 
             if (state->pitchRising != 0)
             {
@@ -251,15 +261,15 @@ void RollingBarrel_update(int obj)
                 {
                     state->hitVolumeSlot = 5;
                 }
-                r = randomGetRange(0, 2);
-                fn_801A5D88(obj, (int)r);
+                randomIndex = randomGetRange(0, 2);
+                fn_801A5D88(obj, (int)randomIndex);
             }
         }
         break;
     case ROLLINGBARREL_STATE_EXPLODED_WAIT:
         state->timer += timeDelta;
         {
-            f32 respawnDelay = lbl_803E44B0;
+            f32 respawnDelay = lbl_803E44B0; /* per-arm local; not shared with RESPAWN_WAIT */
             if (state->timer >= respawnDelay)
             {
                 state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
@@ -273,11 +283,11 @@ void RollingBarrel_update(int obj)
             f32 respawnDelay = lbl_803E44B0;
             if (state->timer >= respawnDelay)
             {
-            state->hitVolumeSlot = 0;
-            state->state = ROLLINGBARREL_STATE_CLEANUP;
-            state->timer -= respawnDelay;
-            ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
-            lbl_803DDB20 -= 1;
+                state->hitVolumeSlot = 0;
+                state->state = ROLLINGBARREL_STATE_CLEANUP;
+                state->timer -= respawnDelay;
+                ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
+                lbl_803DDB20 -= 1;
             }
         }
         break;
@@ -302,13 +312,13 @@ void RollingBarrel_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, state->hitVolumeSlot, 0, 0);
     }
 }
+#pragma reset
 
 #pragma peephole off
-void fn_801A5D88(int obj, int explosionVariant)
+void fn_801A5D88(int obj, int unused)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
-    u32 r;
-    u32 r2;
+    u32 variant;
     int player;
     f32 dist;
     f32 falloff;
@@ -316,13 +326,13 @@ void fn_801A5D88(int obj, int explosionVariant)
     Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1)
     {
-        r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        variant = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, (int)variant, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
-        r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        variant = randomGetRange(0, 1) & 0xff;
+        spawnExplosion(obj, 1, 1, 0, (int)variant, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
@@ -341,3 +351,4 @@ void fn_801A5D88(int obj, int explosionVariant)
         }
     }
 }
+#pragma reset
