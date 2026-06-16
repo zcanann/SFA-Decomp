@@ -1091,14 +1091,7 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near == NULL || Vec_distance((char*)near + 0x18, (char*)sub + 0x18) >= lbl_803DBE38)
-                    {
-                        if (near != NULL)
-                        {
-                            fn_8014C66C(near, Obj_GetPlayerObject());
-                        }
-                    }
-                    else
+                    if (near != NULL && Vec_distance((char*)near + 0x18, (char*)sub + 0x18) < lbl_803DBE38)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
                         if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) <= lbl_803DBE3C)
@@ -1114,6 +1107,13 @@ void babycloudrunner_update(int* obj)
                             }
                             ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
                                 (int)obj, lbl_803E422C, timeDelta, 0);
+                        }
+                    }
+                    else
+                    {
+                        if (near != NULL)
+                        {
+                            fn_8014C66C(near, Obj_GetPlayerObject());
                         }
                     }
                     fn_8019E3F4(obj);
