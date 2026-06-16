@@ -1541,8 +1541,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
-                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-                    if (tbl != NULL)
+                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
@@ -1554,8 +1553,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x16:
-                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-                    if (tbl != NULL)
+                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
