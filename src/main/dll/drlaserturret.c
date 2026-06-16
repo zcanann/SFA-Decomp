@@ -1,3 +1,20 @@
+/*
+ * drlaserturret - the laser-turret shop/minigame controller.
+ *
+ * While the shop is closed (DR_LASERTURRET_GAMEBIT_SHOP_OPEN unset) the
+ * turret idles, vertically bobbing on bobPhase, and re-pushes its idle
+ * state onto the shared state stack. Once the shop is open it faces the
+ * player (shopKeeperRotateFn) and, in the tracking state, periodically
+ * plays an alert/tracking animation and offers a purchase prompt: if the
+ * player has money it enables the accept button, otherwise it runs a
+ * brush-off trigger sequence.
+ *
+ * handlePromptChoice drives the on-model digit readout (ones/tens/
+ * hundreds texture slots) while the player dials a count or digit-count
+ * value with the analog stick, then dispatches accept/cancel through the
+ * prompt-state ids. startTimedChallenge arms the game timer and HUD and
+ * commands the linked target object to begin the challenge.
+ */
 #include "main/dll/DR/DRlaserturret.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -23,12 +40,17 @@ extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern float mathSinf(double);
 extern int playerGetMoney(void* playerObj);
 
+/* DLLs link the gameloop-published Copy of the interface, aliased for readable call sites */
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern u8 framesThisStep;
 extern f32 timeDelta;
+
+/* tracking-state animation/step-scale lookup tables (indexed 0..1) */
 extern s16 lbl_803DC0A0[1];
 __declspec(section ".sdata") extern f32 lbl_803DC0A4[3];
+
+/* unresolved float constants in .sdata2 (bob phase, aimBlend rate/clamp, distance-scan seed) */
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
 extern f32 lbl_803E59E4;
@@ -47,8 +69,8 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
 {
     void* playerObj;
     DRLaserTurretState* state;
-    void* psStack;
-    int v;
+    void* stack;
+    int pushState;
     int sum;
     int rng;
 
@@ -64,11 +86,11 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     obj->hitFlags &= ~DR_LASERTURRET_HITFLAG_CLEAR_PROMPT;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {
-        v = DR_LASERTURRET_STATE_PUSH_IDLE;
-        psStack = state->stateStack;
-        if (Stack_IsFull(psStack) == 0)
+        pushState = DR_LASERTURRET_STATE_PUSH_IDLE;
+        stack = state->stateStack;
+        if (Stack_IsFull(stack) == 0)
         {
-            Stack_Push(psStack, &v);
+            Stack_Push(stack, &pushState);
         }
         return DR_LASERTURRET_STATE_CONTINUE;
     }
@@ -111,15 +133,21 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
 {
     void* playerObj;
     DRLaserTurretState* state;
-    void* psStack;
-    int v;
+    void* stack;
+    int pushState;
     int sum;
     int rng;
-    float fmin;
-    float fdist;
+    float minDist;
+    float dist;
     int count;
     int idx;
     void** arr;
+    double t;
+    float rate;
+    float target;
+    float d;
+    float zero;
+    float bias;
 
     playerObj = Obj_GetPlayerObject();
     state = obj->state;
@@ -138,14 +166,14 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
                 if (animState->animStepScale > lbl_803E59DC)
                 {
                     ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, lbl_803E59DC, 0);
-                    goto L_DE8;
+                    goto action_done;
                 }
             }
             if (obj->currentMove != 0)
             {
                 ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
-        L_DE8:
+        action_done:
             animState->animStepScale = lbl_803E59E4;
             state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
@@ -180,53 +208,47 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     }
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {
-        v = DR_LASERTURRET_STATE_PUSH_TRACKING;
-        psStack = state->stateStack;
-        if (Stack_IsFull(psStack) == 0)
+        pushState = DR_LASERTURRET_STATE_PUSH_TRACKING;
+        stack = state->stateStack;
+        if (Stack_IsFull(stack) == 0)
         {
-            Stack_Push(psStack, &v);
+            Stack_Push(stack, &pushState);
         }
         return DR_LASERTURRET_STATE_CONTINUE;
     }
+    t = shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
+    rate = lbl_803E5A10;
+    if (t > lbl_803E5A18)
     {
-        double t = shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
-        float rate = lbl_803E5A10;
-        float target;
-        if (t > lbl_803E5A18)
-        {
-            target = lbl_803E5A14;
-        }
-        else
-        {
-            target = lbl_803E59DC;
-        }
-        {
-            float d = rate * (target - animState->aimBlend);
-            animState->aimBlend = d * timeDelta + animState->aimBlend;
-        }
-        if (animState->aimBlend > lbl_803E5A1C)
-        {
-            animState->aimBlend = lbl_803E59DC;
-        }
+        target = lbl_803E5A14;
+    }
+    else
+    {
+        target = lbl_803E59DC;
+    }
+    d = rate * (target - animState->aimBlend);
+    animState->aimBlend = d * timeDelta + animState->aimBlend;
+    if (animState->aimBlend > lbl_803E5A1C)
+    {
         animState->aimBlend = lbl_803E59DC;
     }
+    /* retail unconditionally zeroes aimBlend here; the blend above is computed but discarded */
+    animState->aimBlend = lbl_803E59DC;
     count = hitDetectFn_80065e50(obj, obj->x, obj->y, obj->z, &arr, 0, 0);
-    fmin = lbl_803E5A20;
+    minDist = lbl_803E5A20;
+    zero = lbl_803E59DC;
+    bias = lbl_803E59E0;
+    for (idx = 0; idx < count; idx++)
     {
-        float zero = lbl_803E59DC;
-        float bias = lbl_803E59E0;
-        for (idx = 0; idx < count; idx++)
+        dist = *(f32*)arr[idx] - obj->y;
+        if (dist < zero)
         {
-            fdist = *(f32*)arr[idx] - obj->y;
-            if (fdist < zero)
-            {
-                fdist = -fdist;
-            }
-            if (fdist < fmin)
-            {
-                state->bobBaseY = bias + *(f32*)arr[idx];
-                fmin = fdist;
-            }
+            dist = -dist;
+        }
+        if (dist < minDist)
+        {
+            state->bobBaseY = bias + *(f32*)arr[idx];
+            minDist = dist;
         }
     }
     obj->y =
@@ -254,19 +276,18 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
 int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
 {
     DRLaserTurretState* state;
-    int v;
 
     state = obj->state;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_READY) == 0)
     {
         return 0;
     }
-    v = (int)GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_STARTED);
-    if (v == 0)
+    if ((int)GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_STARTED) == 0)
     {
         int* target;
         GameBit_Set(DR_LASERTURRET_GAMEBIT_LINK_STARTED, 1);
         target = state->linkedTarget;
+        /* linked target vtable (at +0x68), slot 0x24 */
         (**(code***)((char*)target + 0x68))[0x24 / 4](target, 1, 2);
     }
     return DR_LASERTURRET_STATE_LINKED_TARGET;
@@ -394,6 +415,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         if ((s8)nudge == 1)
         {
             int* target = state->linkedTarget;
+            /* linked target vtable (at +0x68), slot 0x48 */
             (**(code***)((char*)target + 0x68))[0x48 / 4](target);
         }
         return (s8)nudge == 1;
@@ -416,7 +438,9 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
         hudFn_8011f6f0(1);
         GameBit_Set(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
         target = state->linkedTarget;
+        /* linked target vtable (at +0x68), slot 0x4c */
         (**(code***)((char*)target + 0x68))[0x4c / 4](target, state->digitCount);
+        /* gTitleMenuControlInterface vtable, slot 0x4 */
         (*(code**)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
     }
     else
