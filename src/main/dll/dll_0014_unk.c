@@ -5249,8 +5249,8 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = startZ - z;
         sqZ = diffZ * diffZ;
         diffX = startX - x;
-        diffY = startY - y;
         sqX = diffX * diffX;
+        diffY = startY - y;
         sqY = diffY * diffY;
         distance = -((sqX + sqY) + sqZ);
     }
@@ -5265,8 +5265,8 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = endZ - z;
         sqZ = diffZ * diffZ;
         diffX = endX - x;
-        diffY = endY - y;
         sqX = diffX * diffX;
+        diffY = endY - y;
         sqY = diffY * diffY;
         distance = -((sqX + sqY) + sqZ);
     }
@@ -5281,8 +5281,8 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
         diffZ = nearestZ - z;
         sqZ = diffZ * diffZ;
         diffX = nearestX - x;
-        diffY = nearestY - y;
         sqX = diffX * diffX;
+        diffY = nearestY - y;
         sqY = diffY * diffY;
         distance = (sqX + sqY) + sqZ;
     }
