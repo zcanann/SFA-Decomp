@@ -1,3 +1,15 @@
+/*
+ * drearthcal (DLL 0x281) - an interactive "earth caller" trigger.
+ *
+ * update presents one of two A-button prompts and runs the matching
+ * trigger sequence depending on whether fn_802972A8 reports the special
+ * actor present: when present it offers prompt 0x15 / sequence 1; when
+ * absent it offers prompt 0x14 / sequence 2, but suppresses interaction
+ * while the player is in the object's contact list or no nearby group-0xA
+ * object is found. When the object's 0x800 flag is set it also emits an
+ * arced particle burst each frame. init seeds the spawn rotation from the
+ * placement yaw byte and sets the standard init object flags.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
