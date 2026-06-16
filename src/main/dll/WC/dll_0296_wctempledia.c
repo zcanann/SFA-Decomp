@@ -143,8 +143,8 @@ void wctempledia_hitDetect(void)
 
 void wctempledia_update(int obj)
 {
-    WCTempleDiaState* state = ((GameObject*)obj)->extra;
     WCTempleDiaSetup* setup = (WCTempleDiaSetup*)((GameObject*)obj)->anim.placementData;
+    WCTempleDiaState* state = ((GameObject*)obj)->extra;
     int stage;
     int priorStage;
     int resetStage;
