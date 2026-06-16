@@ -1,9 +1,18 @@
+/*
+ * dll8afunc0 (DLL 0x8A) - one of the foodbag modgfx effect spawners
+ * (dll_NN_func03 family, see foodbag.h). func03 builds a single-command
+ * FbBuf from the effect's resource table (lbl_80316650) and hands it to
+ * the modgfx interface to spawn a bone particle effect; flag bit 0 sources
+ * the spawn position either from sourceObj (offsets 0x18/0x1c/0x20) or, when
+ * sourceObj is null, from posSource (offsets 0xc/0x10/0x14). func00/func01
+ * are unused stub slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316650[];
+extern u8 lbl_80316650[]; /* effect resource table: tex blob + halfword params */
 extern f32 lbl_803E1050;
 extern f32 lbl_803E1054;
 extern f32 lbl_803E1058;
@@ -64,7 +73,6 @@ void dll_8A_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_80316650, 0xc, base + 0x50, 0x1fd, 0);
 }
-
 
 void dll_8A_func01_nop(void)
 {
