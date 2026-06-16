@@ -176,7 +176,24 @@ void magicdust_update(int obj)
         }
         ((MagicDustState*)state)->burstTimer = ((MagicDustState*)state)->burstTimer - timeDelta;
         flagsByte = ((MagicDustState*)state)->flags27A;
-        if ((flagsByte & 1) == 0)
+        if ((flagsByte & 1) != 0)
+        {
+            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+            {
+                ((MagicDustState*)state)->flags27A = flagsByte & 0xfe;
+                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
+                ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
+                ((GameObject*)obj)->anim.alpha = 0xff;
+            }
+            if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj,
+                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj,
+                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
+            }
+        }
+        else
         {
             if ((flagsByte & 4) == 0)
             {
@@ -206,23 +223,6 @@ void magicdust_update(int obj)
             }
             objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
-        }
-        else
-        {
-            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
-            {
-                ((MagicDustState*)state)->flags27A = flagsByte & 0xfe;
-                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
-                ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
-                ((GameObject*)obj)->anim.alpha = 0xff;
-            }
-            if (*(int*)&((GameObject*)obj)->anim.parent == 0)
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj,
-                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj,
-                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
-            }
         }
         if ((((MagicDustState*)state)->flags27A & 3) == 0)
         {
