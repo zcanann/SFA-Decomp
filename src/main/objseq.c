@@ -4458,20 +4458,23 @@ void objSeq_onMapSetup(void)
         }
     }
 
-    for (; i < 0x55; i++)
     {
-        base[i + 0x3b9c] = 0;
-        base[i + 0x3b44] = 0;
-        *(s16*)(base + i * 2 + 0x3a98) = 0;
-        base[i + 0x3c4c] = 0;
-        base[i + 0x3bf4] = 0;
-        base[i + 0x3a40] = 0;
-        base[i + 0x39e8] = 0;
-        *(f32*)(base + i * 4 + 0x3894) = lbl_803DEFB0;
-        *(f32*)(base + i * 4 + 0x3740) = lbl_803DEFF0;
-        base[i + 0x3590] = 0;
-        *(int*)(base + i * 4 + 0x33e4) = 0;
-        base[i + 0x338c] = 0;
+        u8* b = lbl_80396918;
+        for (; i < 0x55; i++)
+        {
+            b[i + 0x3b9c] = 0;
+            b[i + 0x3b44] = 0;
+            *(s16*)(b + i * 2 + 0x3a98) = 0;
+            b[i + 0x3c4c] = 0;
+            b[i + 0x3bf4] = 0;
+            b[i + 0x3a40] = 0;
+            b[i + 0x39e8] = 0;
+            *(f32*)(b + i * 4 + 0x3894) = lbl_803DEFB0;
+            *(f32*)(b + i * 4 + 0x3740) = lbl_803DEFF0;
+            b[i + 0x3590] = 0;
+            *(int*)(b + i * 4 + 0x33e4) = 0;
+            b[i + 0x338c] = 0;
+        }
     }
 
     lbl_803DD124 = 0;
