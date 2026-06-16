@@ -803,7 +803,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     {
         v24 = 0;
     }
-    p2[852] = (s8)(p2[852] - v24);
+    *(s8*)(p2 + 852) = (s8)(p2[852] - v24);
     if ((s8)p2[852] < 1)
     {
         *(u16*)(state + 1024) = *(u16*)(state + 1024) | 0x20;
@@ -816,7 +816,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     {
         if (v24 != 0)
         {
-            if (*(int*)(p2 + 720) == 0)
+            if (*(void**)(p2 + 720) == NULL)
             {
                 if (fn_80295A04(player, 1) != 0)
                 {
@@ -834,7 +834,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                     *(s16*)(p2 + 624) = p7;
                 }
             }
-            p2[847] = (s8)hit;
+            *(s8*)(p2 + 847) = (s8)hit;
         }
         Sfx_StopObjectChannel((int*)p1, 16);
         ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
