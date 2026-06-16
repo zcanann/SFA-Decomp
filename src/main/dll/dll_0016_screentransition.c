@@ -132,11 +132,6 @@ extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma opt_common_subs off
 void screenTransition_do2(int p1, int p2, int p3)
 {
-    int sx;
-    int sy;
-    int sw;
-    int sh;
-    HudColor col;
     if (lbl_803DD42E != 0)
     {
         lbl_803DD42E--;
@@ -182,6 +177,12 @@ void screenTransition_do2(int p1, int p2, int p3)
     switch (lbl_803DD42C)
     {
     case 1:
+    {
+        HudColor col;
+        int sh;
+        int sw;
+        int sy;
+        int sx;
         GXGetScissor(&sx, &sy, &sw, &sh);
         GXSetScissor(0, 0, 0x280, 0x1e0);
         col.b = 0;
@@ -191,7 +192,14 @@ void screenTransition_do2(int p1, int p2, int p3)
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
+    }
     case 2:
+    {
+        HudColor col;
+        int sh;
+        int sw;
+        int sy;
+        int sx;
         GXGetScissor(&sx, &sy, &sw, &sh);
         GXSetScissor(0, 0, 0x280, 0x1e0);
         col.r = 0xff;
@@ -201,10 +209,17 @@ void screenTransition_do2(int p1, int p2, int p3)
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
+    }
     case 3:
         screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
         break;
     case 4:
+    {
+        HudColor col;
+        int sh;
+        int sw;
+        int sy;
+        int sx;
         GXGetScissor(&sx, &sy, &sw, &sh);
         GXSetScissor(0, 0, 0x280, 0x1e0);
         col.r = 0xff;
@@ -214,6 +229,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
+    }
     }
 }
 #pragma opt_common_subs reset
