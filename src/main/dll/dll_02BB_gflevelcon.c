@@ -308,7 +308,7 @@ void fn_8023A268(int p1, int p2, int p3)
         if ((void*)proj != NULL)
         {
             arwprojectile_setLifetime(proj, lbl_803DC4DC);
-            arwprojectile_placeForward(proj, (f32)(u32)lbl_803DC4D8);
+            arwprojectile_placeForward(proj, (f32)(int)lbl_803DC4D8);
         }
     }
 }
