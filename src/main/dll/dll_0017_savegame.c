@@ -505,14 +505,12 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     int i;
     MapBitTransient* transient;
     u32* groupStatuses;
-    u16* eventIds;
 
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
         idx = s->extendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
     }
-    eventIds = lbl_80311810;
-    if (idx < SAVEGAME_MAP_COUNT && eventIds[idx] != 0)
+    if (idx < SAVEGAME_MAP_COUNT && lbl_80311810[idx] != 0)
     {
         if (value == -1)
         {
@@ -524,7 +522,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             createTransient = 1;
         }
 
-        newStatus = GameBit_Get(eventIds[idx]);
+        newStatus = GameBit_Get(lbl_80311810[idx]);
         oldStatus = newStatus;
         if (value != 0)
         {
@@ -537,18 +535,18 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             newStatus = newStatus & ~bit;
         }
 
-        GameBit_Set(eventIds[idx], newStatus);
+        GameBit_Set(lbl_80311810[idx], newStatus);
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = newStatus;
 
         groupStatuses = s->groupStatuses;
         if (value != 0)
         {
-            if ((oldStatus & (u32)(1 << shift)) == 0)
+            if ((int)(oldStatus & (1 << shift)) == 0)
             {
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
-                    if (eventIds[i] == eventIds[idx])
+                    if (lbl_80311810[i] == lbl_80311810[idx])
                     {
                         groupStatuses[i] |= (u32)(1 << shift);
                     }
@@ -559,7 +557,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         {
             for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
             {
-                if (eventIds[i] == eventIds[idx])
+                if (lbl_80311810[i] == lbl_80311810[idx])
                 {
                     groupStatuses[i] &= ~(u32)(1 << shift);
                 }

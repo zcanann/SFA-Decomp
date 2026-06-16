@@ -252,7 +252,7 @@ int fn_801CE078(int* obj, u8* st)
     cv = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
     if (*(s8*)(st + 0x45b) != 0)
     {
-        snd = !*(s8*)(st + 0x453);
+        snd = *(s8*)(st + 0x453) == 0;
     }
     else
     {
