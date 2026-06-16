@@ -394,6 +394,7 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
 
 void fn_801EB634(int obj, int stateRaw)
 {
+    extern int ObjHits_IsObjectEnabled(int obj); /* #11 */
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     int hitKind;
     int hitReact;
