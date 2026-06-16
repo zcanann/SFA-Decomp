@@ -562,7 +562,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     handleOffset = (ringIndex & 0xff) * 8;
     handles = gSfxplayerEffectHandles;
-    if (*(void**)((int)handles + handleOffset) == NULL)
+    if (*(void**)((char*)handles + handleOffset) == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
         ((SfxplayerRingVisualSetup*)setup)->base.unk04[2] = 0xff;
@@ -594,7 +594,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk20 = lbl_803E6478;
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
-        *(int*)((int)handles + handleOffset) =
+        *(int*)((char*)handles + handleOffset) =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
                             ((GameObject*)obj)->anim.mapEventSlot, -1,
                             *(int*)&((GameObject*)obj)->anim.parent);
