@@ -831,6 +831,7 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag)
 {
+    int ni;
     HeapItem* base;
     int oldSize;
     while (size % 32 != 0)
@@ -845,7 +846,7 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     if (oldSize > size)
     {
         s16 oldNext;
-        int ni = base[gMmRegionTable[region].f4++].stack;
+        ni = base[gMmRegionTable[region].f4++].stack;
         base[idx].type = newType;
         while ((oldSize - size) % 32 != 0)
         {
