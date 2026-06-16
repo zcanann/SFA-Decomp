@@ -207,7 +207,7 @@ void wcpressures_update(int obj)
     }
     {
         WCPressuresState* s2 = *(WCPressuresState**)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
-        int found = 0;
+        u8 found = 0;
 
         for (j = 0; (u8)j < WCPRESSURES_TRACKED_COUNT; j++)
         {
@@ -226,7 +226,7 @@ void wcpressures_update(int obj)
                 }
             }
         }
-        if (found)
+        if ((int)found != 0)
             state->pressTimer = WCPRESSURES_FOUND_TIMER;
     }
     thr = setup->y - (f32)(u32)
