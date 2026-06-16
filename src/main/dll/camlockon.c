@@ -1,3 +1,12 @@
+/*
+ * camlockon - camera lock-on path builder.
+ * Builds the set of intermediate 3D points that define the spline path
+ * a lock-on camera follows between its base position and a target.
+ * camcontrol_buildPathAngles recursively subdivides an angular range into
+ * a sorted array of angles; camcontrol_buildPathPoints rotates the
+ * base→target delta by each angle to produce the gCamcontrolPathState
+ * points array used by the curve evaluator.
+ */
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 
@@ -26,7 +35,7 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
     u16 angleCount;
     s16 rot[3];
     f32 vec[3];
-    s16 pathAngles[20];
+    s16 pathAngles[CAMCONTROL_PATH_POINT_CAPACITY];
     s16 absAngleRange;
     f32 deltaX;
     f32 deltaY;

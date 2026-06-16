@@ -1,3 +1,11 @@
+/*
+ * dfbarrel - rope/pulley physics simulation for the DF (Dinosaur Forest) area.
+ * DFRope_UpdateSimulation applies sway to mid-rope nodes, then iterates
+ * spring-constraint integration via DFPulley_integrateLinks, and finally
+ * zeroes each node's accumulated force.
+ * DFRopeLink_AttachNodes wires a link between two nodes, storing back-pointers
+ * in both nodes' link arrays.
+ */
 #include "main/dll/DF/DFbarrel.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"

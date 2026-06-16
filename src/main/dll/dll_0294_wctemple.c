@@ -1,13 +1,16 @@
+/*
+ * wctemple (DLL 0x294) - a temple door/aperture object in the CloudRunner
+ * Fortress (WC) area. Each instance counts down a timer and toggles between
+ * two trigger sequences (closed→open, open→closed) when the player activates
+ * the hitbox interaction flag. The 'type' field from placement sets the
+ * object's X rotation.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
-#define WCTEMPLE_SETUP_TYPE_OFFSET 0x18
-#define WCTEMPLE_STATE_TIMER 0x00
-#define WCTEMPLE_STATE_TRIGGER_SLOT 0x04
-#define WCTEMPLE_ACTIVATION_FLAG 1
 #define WCTEMPLE_SEQUENCE_SLOT_CLOSED 0
-#define WCTEMPLE_SEQUENCE_SLOT_OPEN 1
+#define WCTEMPLE_SEQUENCE_SLOT_OPEN   1
 #define WCTEMPLE_SEQUENCE_INVALID_ARG -1
 
 typedef struct WCTempleSetup
@@ -21,14 +24,14 @@ typedef struct WCTempleState
 {
     f32 timer;
     u8 triggerSlot;
-    u8 pad05[WCTEMPLE_EXTRA_SIZE - 0x05];
+    u8 pad05[3];
 } WCTempleState;
 
 STATIC_ASSERT(sizeof(WCTempleState) == WCTEMPLE_EXTRA_SIZE);
 STATIC_ASSERT(sizeof(WCTempleSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTempleState, timer) == WCTEMPLE_STATE_TIMER);
-STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == WCTEMPLE_STATE_TRIGGER_SLOT);
-STATIC_ASSERT(offsetof(WCTempleSetup, type) == WCTEMPLE_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleState, timer) == 0x00);
+STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == 0x04);
+STATIC_ASSERT(offsetof(WCTempleSetup, type) == 0x18);
 
 int wctemple_getExtraSize(void) { return WCTEMPLE_EXTRA_SIZE; }
 
@@ -62,7 +65,7 @@ void wctemple_update(int obj)
 
     if (state->triggerSlot == WCTEMPLE_SEQUENCE_SLOT_CLOSED)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & WCTEMPLE_ACTIVATION_FLAG) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_CLOSED, (void*)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
@@ -71,7 +74,7 @@ void wctemple_update(int obj)
     }
     else
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & WCTEMPLE_ACTIVATION_FLAG) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_OPEN, (void*)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);

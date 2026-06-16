@@ -1,3 +1,11 @@
+/*
+ * barrelpad (DLL 0x12F) - the barrel-launcher pad object. Spawns
+ * arced-burst particle effects when the barrel's seqId indicates an
+ * active launch (0x79) or a secondary launch state (0x748). init reads
+ * rotation and rootMotionScale from the placement record and enables the
+ * object in the engine (objectFlags |= 0x2000). This TU also contains
+ * the cf_doorlight object (DLL 0x131).
+ */
 #include "main/game_object.h"
 
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
@@ -9,14 +17,6 @@ typedef struct BarrelPadParticleArgs
     u8 pad00[0xc];
     f32 offset[3];
 } BarrelPadParticleArgs;
-
-/*
- * Recovered: large switch on params[20] (32-bit id) that sets bits in
- * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
- * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
- * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
- * obj->_af |= 8 (redundant with the unconditional prologue store).
- */
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F00;

@@ -1,3 +1,9 @@
+/*
+ * pathcam - camera path sampling shared by the path-following camera modes
+ * (DLL 0x42 / 0x43). camcontrol_samplePathState projects the target onto the
+ * active Hermite path, advances the curve, and writes the resulting world
+ * X/Z sample back to the caller.
+ */
 #include "main/dll/CAM/pathcam.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_path_state.h"

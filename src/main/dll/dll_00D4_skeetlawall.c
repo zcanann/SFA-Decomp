@@ -1,11 +1,29 @@
+/*
+ * skeetlawall (DLL 0x00D4) - an axis-aligned bounding-box wall/trigger
+ * object used in the Skeetla arena level.  Each instance stores six
+ * per-axis extents (in unsigned world units) and an optional shape flag;
+ * skeetlawall_setScale unpacks these into a float[6] min/max array for
+ * the engine's collision layer.  The render function delegates to
+ * objRenderFn_8003b8f4 only when unkF4 == 0 (default/inactive shape).
+ */
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 
-extern void objRenderFn_8003b8f4(f32);
-
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E3058;
 
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
+
+typedef struct SkeetlaWallState
+{
+    u8 negXExtent;
+    u8 posXExtent;
+    u8 posZExtent;
+    u8 negZExtent;
+    u8 posYExtent;
+    u8 negYExtent;
+    u8 shapeFlag;
+} SkeetlaWallState;
 
 void skeetlawall_free(void)
 {
@@ -29,17 +47,6 @@ void skeetlawall_initialise(void)
 
 int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_getObjectTypeId(void) { return 0x0; }
-
-typedef struct SkeetlaWallState
-{
-    u8 negXExtent;
-    u8 posXExtent;
-    u8 posZExtent;
-    u8 negZExtent;
-    u8 posYExtent;
-    u8 negYExtent;
-    u8 shapeFlag;
-} SkeetlaWallState;
 
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -1,3 +1,13 @@
+/*
+ * felevcontrol (DLL 0x142) - floating elevator control object for the
+ * CloudRunner Fortress / Dinosaur Planet elevator sequences.
+ *
+ * This TU owns the FElevControl object descriptor and shares the static
+ * FEseqobject_spawnEffect / FEseqobject_findControlObject helpers with
+ * sibling DLLs 0x143 (feseqobject) and 0x144 (dll144). The render
+ * function passes lbl_803E56B8 (the elevator's render scale / distance
+ * threshold) to the common objRenderFn_8003b8f4.
+ */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"
@@ -58,11 +68,8 @@ void FElevControl_initialise(void)
 {
 }
 
-void dll_144_free(void);
-
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_getObjectTypeId(void) { return 0x0; }
-int dll_144_getExtraSize(void);
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -70,33 +77,7 @@ void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56B8);
 }
 
-void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
-
-/*
- * Function: FEseqobject_init
- * EN v1.0 Address: 0x801DF8F4
- * EN v1.0 Size: 56b
- */
-
-/*
- * Function: FEseqobject_update
- * EN v1.0 Address: 0x801DF894
- * EN v1.0 Size: 96b
- */
-
-/*
- * Function: dll_144_SeqFn
- * EN v1.0 Address: 0x801DF9AC
- * EN v1.0 Size: 16b
- */
-
-/*
- * Function: dll_144_init
- * EN v1.0 Address: 0x801DFA08
- * EN v1.0 Size: 24b
- */
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

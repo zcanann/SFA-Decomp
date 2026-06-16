@@ -1,3 +1,12 @@
+/*
+ * sclantern - hanging lantern objects used in SharpClaw-themed areas.
+ * SClantern_advanceAnimEvents drives the animation each frame: it fires
+ * spark particle SFX at left/right attachment points (path points 0 and 1)
+ * on events 1-4, and plays a swing SFX on event 9. Sparks are suppressed
+ * during the early frames of move SCLANTERN_SPARK_SUPPRESS_MOVE (0x1b).
+ * playerFn_801d6d58 probes the current player's anim-state flags and is
+ * referenced externally.
+ */
 #include "main/dll/SC/SClantern.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -58,7 +67,7 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
             pointIndex = 2;
             break;
         case SCLANTERN_EVENT_LANTERN_SWING:
-            Sfx_PlayFromObject(obj,SCLANTERN_SWING_SFX_ID);
+            Sfx_PlayFromObject(obj, SCLANTERN_SWING_SFX_ID);
             break;
         case 0:
         case 5:
@@ -76,7 +85,7 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
         if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
             (lantern->anim.currentMoveProgress < lbl_803E5498)))
         {
-            Sfx_PlayAtPositionFromObject(obj, posX, posY, posZ,SCLANTERN_SPARK_SFX_ID);
+            Sfx_PlayAtPositionFromObject(obj, posX, posY, posZ, SCLANTERN_SPARK_SFX_ID);
         }
     }
     return advanceResult;

@@ -1,3 +1,13 @@
+/*
+ * attractmovie (DLL 0x44) - THP video playback for the attract / title-screen
+ * demo movie.  The player singleton (lbl_803A5D60) is populated by
+ * AttractMovie_OpenFile (not in this TU).  This TU owns the three exported
+ * entry-points called by the front-end after the file is opened:
+ *   AttractMovie_AssignBuffers - hand caller-allocated read, texture and audio
+ *     buffers to the player; also the THP decompressor work area.
+ *   AttractMovie_GetBufferSizes - query how large each caller buffer must be.
+ *   AttractMovie_CloseFile      - close the DVD file handle when playback ends.
+ */
 #include "main/dll/FRONT/dll_44.h"
 
 extern void DCInvalidateRange(void* start, u32 nBytes);

@@ -1,20 +1,29 @@
+/*
+ * mmshwaterspike (DLL 0x18E) - rising water-spike hazard in Mushroom Mountain
+ * (mmsh). Each instance tracks an XYZ-animator object by packed ID (stored at
+ * unkF8) to read its current height; if the animator is missing it falls back to
+ * hit-detect against nearby water surfaces. The spike rises toward a placement-
+ * defined ceiling (maxHeight) and spawns a waterfx ripple when it surfaces.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
+/* placement block read via anim.placementData */
 typedef struct MmshWaterspikePlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 unkC;
+    f32 maxHeight;          /* 0x0C: Y ceiling the spike cannot exceed */
     u8 pad10[0x14 - 0x10];
-    s32 unk14;
+    s32 xyzAnimId;          /* 0x14: ID of the XYZ-animator driving height (printed on miss) */
 } MmshWaterspikePlacement;
 
+/* object-def layout; unk1A/unk1C pack into the 32-bit XYZ-animator object ID */
 typedef struct MmshWaterspikeObjectDef
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
+    s16 xyzAnimIdLow;       /* 0x1A: low 16 bits of the animator object ID */
+    s16 xyzAnimIdHigh;      /* 0x1C: high 16 bits of the animator object ID */
     u8 pad1E[0x24 - 0x1E];
     u8 unk24;
     u8 pad25[0x28 - 0x25];
@@ -65,9 +74,9 @@ void mmsh_waterspike_update(int obj)
     f32 maxY;
     f32 dist;
     int* list;
-    int state;
+    int placement;
 
-    state = *(int*)&((GameObject*)obj)->anim.placementData;
+    placement = *(int*)&((GameObject*)obj)->anim.placementData;
     ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
     o = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
     if (o != NULL)
@@ -76,7 +85,7 @@ void mmsh_waterspike_update(int obj)
     }
     else
     {
-        fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)state)->unk14);
+        fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
         n = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
                                  ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
@@ -100,7 +109,7 @@ void mmsh_waterspike_update(int obj)
         }
     }
     newY = ((GameObject*)obj)->anim.localPosY + dist;
-    maxY = ((MmshWaterspikePlacement*)state)->unkC;
+    maxY = ((MmshWaterspikePlacement*)placement)->maxHeight;
     if (newY > maxY)
     {
         ((GameObject*)obj)->anim.localPosY = maxY;
@@ -130,8 +139,8 @@ void mmsh_waterspike_init(int obj, s16* def)
     register u32 lowEventId;
     ObjHits_EnableObject(obj);
     ((GameObject*)obj)->unkF4 = 0;
-    packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef*)def)->unk1C << 16;
-    lowEventId = (u32)(u16)((MmshWaterspikeObjectDef*)def)->unk1A;
+    packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdHigh << 16;
+    lowEventId = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdLow;
     packedEventIds |= lowEventId;
     *(u32*)&((GameObject*)obj)->unkF8 = packedEventIds;
 }

@@ -1,3 +1,11 @@
+/*
+ * TrickyCurve (DLL 0xEC) - axis-aligned box trigger that applies a random
+ * velocity kick to the player when they enter the volume. Used for the
+ * "Tricky curve" current-like push zone. The box half-extents are stored in
+ * TrickyCurveState; the object's world position is the centre. On each update
+ * the function counts how many of the three axis intervals contain the player
+ * (requires all three = axisCount 3) then fires a random horizontal nudge.
+ */
 #include "main/dll/infopoint.h"
 
 extern void* Obj_GetPlayerObject(void);

@@ -1,3 +1,10 @@
+/*
+ * cameramodedebug (DLL 0x46) - free-orbit debug camera.
+ * The player holds Z (bit 3) to zoom in and R (bit 2) to zoom out;
+ * the C-stick pans yaw/pitch; pressing B (bit 1) exits back to the
+ * default camcontrol action (0x42).  Orbit radius is spring-damped.
+ * CameraModeStatic symbols at the end are co-linked with this DLL.
+ */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camdebug_state.h"
 #include "main/dll/CAM/camstatic_state.h"
@@ -5,11 +12,16 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
+/* pad.h declares getButtonsJustPressed as u32; the u16 override in
+   CameraModeDebug_update is load-bearing for the mask comparison. */
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
+
+/* camera mode id to restore on B-press exit */
+#define CAMCONTROL_ACTION_DEFAULT 0x42
 
 extern CameraModeDebugState* lbl_803DD550;
 extern f32 lbl_803E1840;
@@ -25,7 +37,7 @@ extern f32 lbl_803E1870;
 
 void CameraModeDebug_update(short* camObj)
 {
-    extern u16 getButtonsJustPressed(int port); /* #57 */
+    extern u16 getButtonsJustPressed(int port); /* u16 override: & 2 must produce cmplwi, not cmpwi */
     u8* cam = (u8*)camObj;
     u8* state;
     u16 held;
@@ -40,7 +52,7 @@ void CameraModeDebug_update(short* camObj)
     held = getButtonsHeld(0);
     if ((getButtonsJustPressed(0) & 2) != 0)
     {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+        (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         return;
     }
     if ((held & 8) != 0)

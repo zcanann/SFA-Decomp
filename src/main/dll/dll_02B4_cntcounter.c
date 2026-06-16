@@ -1,3 +1,10 @@
+/*
+ * cntcounter (DLL 0x2B4) - a generic countdown object.
+ * Reads an initial count and two game bits from placement data: one bit
+ * that, when set, decrements the counter (the bit's value is used as the
+ * decrement amount and then cleared), and one bit set when the counter
+ * reaches zero. Optionally shows the current count on the HUD.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/cntcounter_state.h"
