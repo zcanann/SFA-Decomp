@@ -1,3 +1,25 @@
+/*
+ * cutcam - shared camera collision/avoidance helpers used by the camera
+ * mode DLLs (dll_0042..dll_0052).
+ *
+ * camcontrol_traceMove runs a swept-sphere/bbox trace from one point to
+ * another through the world hit-detect system and reports whether the
+ * line of sight is clear. camcontrol_traceFromTarget and
+ * camcontrol_getTargetPosition build the trace endpoints from a target
+ * object's world position (using cameraGetPrevPos2 for class 1 = the
+ * player) plus the active CamcontrolModeSettings (cameraMtxVar57) and
+ * return the desired camera position / yaw.
+ *
+ * cameraFn_80103b40 and camMoveFn_80104040 sweep candidate camera
+ * positions in fan steps around the target to slide the camera around
+ * walls, writing the resulting yaw nudge into
+ * cameraMtxVar57->avoidanceYawOffset.
+ *
+ * camcontrol_updateTargetAction polls the pad and switches camera modes
+ * (modes 0x43/0x44/0x49) on lock-on / button input.
+ * camcontrol_updateModeSettings interpolates every mode setting along a
+ * Hermite curve during a mode transition.
+ */
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
@@ -14,27 +36,31 @@ extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints,
                                             float* radii, int pointCount);
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2();
-extern int fn_80295C0C(int);
-extern int objFn_802962b4(int);
-extern int objFn_80296700(int);
+/* lock-on / mode-switch eligibility predicates (return nonzero to switch mode) */
+extern int fn_80295C0C(int);     /* gates mode 0x49 (with objFn_80296700) */
+extern int objFn_802962b4(int);  /* gates mode 0x44 */
+extern int objFn_80296700(int);  /* gates mode 0x49 (with fn_80295C0C) */
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f64 sqrtf(f64 x);
 extern int getAngle(f32 dx, f32 dy);
+extern u32 OSGetTick(void);
 
-extern u8 lbl_803DD528;
+/* collision/trace scratch globals (home TU dll_0042) */
+extern u8 lbl_803DD528;       /* last bbox-hit result */
 extern u8 framesThisStep;
-extern f32 lbl_803E1688;
+extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
+
+extern f32 lbl_803E1688;      /* collision probe / trace radius */
+/* DEG2RAD scale: lbl_803E168C / lbl_803E1690 */
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
+/* tuning constants below */
 extern f32 lbl_803E1694;
-extern f32 lbl_803E16A4;
-extern f32 lbl_803E16AC;
-
-#pragma dont_inline on
-extern u32 OSGetTick(void);
 extern f32 lbl_803E16A0;
+extern f32 lbl_803E16A4;
 extern f32 lbl_803E16A8;
+extern f32 lbl_803E16AC;
 extern f32 lbl_803E16B0;
 extern f32 lbl_803E16B4;
 extern f32 lbl_803E16B8;
@@ -43,18 +69,18 @@ extern f32 lbl_803E16C0;
 extern f32 lbl_803E16C4;
 extern f32 lbl_803E16C8;
 extern f32 lbl_803E16CC;
-extern f32 lbl_803DD52C;
 
+#pragma dont_inline on
 int
 camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
                      char traceMode, u8 runTrace, u8 runBbox, float radius)
 {
     u8 blocked;
-    undefined4 clear;
+    int clear;
     float endTmp[3];
     uint sweptBounds[9];
 
-    if (outPos == (float*)0x0)
+    if (outPos == NULL)
     {
         outPos = endTmp;
     }
@@ -64,26 +90,26 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     *(float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET) = radius;
     *(s8*)(traceWork + CAMCONTROL_TRACE_BBOX_HIT_OFFSET) = -1;
     *(s8*)(traceWork + CAMCONTROL_TRACE_MODE_OFFSET) = traceMode;
-    *(undefined2*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
-    blocked = '\0';
-    if (runBbox != '\0')
+    *(s16*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
+    blocked = 0;
+    if (runBbox != 0)
     {
         blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
     }
     else
     {
-        blocked = '\0';
+        blocked = 0;
     }
     lbl_803DD528 = blocked;
-    if (runTrace != '\0')
+    if (runTrace != 0)
     {
         hitDetect_calcSweptSphereBounds(sweptBounds, fromPos, outPos,
                                         (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
-        hitDetectFn_800691c0(0, sweptBounds, 0x240, '\x01');
+        hitDetectFn_800691c0(0, sweptBounds, 0x240, 1);
     }
     hitDetectFn_80067958(0, fromPos, outPos, 1, (int)traceWork, 0);
     clear = 0;
-    if ((lbl_803DD528 == '\0') && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
+    if ((lbl_803DD528 == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
     {
         clear = 1;
     }
@@ -91,10 +117,10 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
 }
 #pragma dont_inline reset
 
-undefined camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
+u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
 {
     float targetPos[3];
-    undefined traceRec[111];
+    u8 traceRec[111];
 
     if (target->anim.classId == 1)
     {
@@ -163,7 +189,7 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     {
         d = d + 0xffff;
     }
-    if (outRotY != (s16*)0x0)
+    if (outRotY != NULL)
     {
         *outRotY = camera->anim.rotY + d;
     }
@@ -195,16 +221,12 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         }
         if ((camera->targetFlags & 2) != 0)
         {
-            goto action_49;
+        action_49:
+            cameraSetInterpMode(1);
+            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         }
-        goto check_action_44;
-    action_49:
-        cameraSetInterpMode(1);
-        (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
-        goto done;
-    check_action_44:
-        if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
-            (cond = objFn_802962b4((int)target), cond != 0))
+        else if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+                 (cond = objFn_802962b4((int)target), cond != 0))
         {
             action44Payload.distance = cameraMtxVar57->minDistance;
             action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
@@ -224,11 +246,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
                 (*gCameraInterface)->setMode(0x43, 1, 0, 4, &action43Payload, 0, 0xff);
             }
         }
-        goto done;
-    done:
-        ;
     }
-    return;
 }
 
 int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
@@ -265,7 +283,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     f32 t;
     f32 v;
 
-    OSGetTick();
+    OSGetTick();      /* timing probe; return value intentionally unused */
     result = 0;
     (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)cam,
                                              &spinB, &spinC, &spinD, &spinA, 0);
@@ -305,11 +323,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
             dx = spinD;
             dz = spinB;
             tgt = *(int*)&((CameraObject*)cam)->anim.targetObj;
-            rad = (lbl_803E168C * (f32)(s16)
-            ang
-            )
-            /
-            lbl_803E1690;
+            rad = (lbl_803E168C * (f32)(s16)ang) / lbl_803E1690;
             cosv = mathSinf(rad);
             sinv = mathCosf(rad);
             t = dz * sinv - dx * cosv;
@@ -321,7 +335,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
             pA[3] = probe[0];
             pA[4] = probe[1];
             pA[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, (float*)0x0, box, 7, '\0', '\0', lbl_803E16A0) != 0)
+            if (camcontrol_traceMove(prev, pp, NULL, box, 7, '\0', '\0', lbl_803E16A0) != 0)
             {
                 found1 = i;
             }
@@ -343,14 +357,14 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
             pB[3] = probe[0];
             pB[4] = probe[1];
             pB[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, (float*)0x0, box, 7, '\0', '\0', lbl_803E16A0) != 0)
+            if (camcontrol_traceMove(prev, pp, NULL, box, 7, '\0', '\0', lbl_803E16A0) != 0)
             {
                 found2 = i;
             }
         }
         pA = pA + 3;
         pB = pB + 3;
-        i = i + 1;
+        i++;
         ang = ang + 0xaaa;
         s = s + 0xf;
     }
@@ -360,9 +374,9 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     }
     else
     {
-        for (i = 0; i <= found1; i = i + 1)
+        for (i = 0; i <= found1; i++)
         {
-            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, (float*)0x0, box, 7,
+            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, NULL, box, 7,
                                      '\0', '\0', lbl_803E16A0) == 0)
             {
                 found1 = 6;
@@ -377,9 +391,9 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     }
     else
     {
-        for (i = 0; i <= found2; i = i + 1)
+        for (i = 0; i <= found2; i++)
         {
-            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, (float*)0x0, box, 7,
+            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, NULL, box, 7,
                                      '\0', '\0', lbl_803E16A0) == 0)
             {
                 found2 = 6;
@@ -507,11 +521,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     kB = lbl_803E1690;
     do
     {
-        rad = (kA * (f32)(s16)
-        ang
-        )
-        /
-        kB;
+        rad = (kA * (f32)(s16)ang) / kB;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
@@ -534,7 +544,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         i = i + 2;
     }
     while (i <= 0xc);
-    for (j = 0; j <= 0xc; j = j + 1)
+    for (j = 0; j <= 0xc; j++)
     {
         endPts[j * 3] = prev[0];
         endPts[j * 3 + 1] = prev[1];
@@ -543,7 +553,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     }
     hitDetect_calcSweptSphereBounds(bounds, (float*)path, endPts, radii, 0xd);
     hitDetectFn_800691c0(0, bounds, 0x248, 1);
-    trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, (float*)0x0, box, 7,
+    trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, NULL, box, 7,
                                  '\0', '\0', lbl_803E16A0);
     blocked = 0;
     if (trace == 0)
@@ -561,8 +571,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     }
     if (lbl_803E16AC != cameraMtxVar57->avoidanceYawOffset)
     {
-        spin = (s16)(int)
-        cameraMtxVar57->avoidanceYawOffset;
+        spin = (s16)(int)cameraMtxVar57->avoidanceYawOffset;
         if ((spin < -0x1e) || (0x1e < spin))
         {
             rad = (lbl_803E168C * (f32)spin) / lbl_803E1690;
@@ -601,13 +610,12 @@ void camcontrol_updateModeSettings(int camera)
         }
         ratio = (f32)(cameraMtxVar57->transitionDuration -
                 cameraMtxVar57->transitionTimer) /
-            (f32)(s32)
-        cameraMtxVar57->transitionDuration;
+            (f32)(s32)cameraMtxVar57->transitionDuration;
         curve[0] = lbl_803E16AC;
         curve[1] = lbl_803E16A4;
         curve[2] = lbl_803E16AC;
         curve[3] = lbl_803E16AC;
-        blend = Curve_EvalHermite(ratio, curve, (float*)0x0);
+        blend = Curve_EvalHermite(ratio, curve, NULL);
         cameraMtxVar57->targetHeight =
             blend * (cameraMtxVar57->targetTargetHeight - cameraMtxVar57->savedTargetHeight) +
             cameraMtxVar57->savedTargetHeight;
@@ -644,7 +652,6 @@ void camcontrol_updateModeSettings(int camera)
         ((CameraObject*)camera)->fov =
             blend * (cameraMtxVar57->fov - cameraMtxVar57->savedFov) + cameraMtxVar57->savedFov;
     }
-    return;
 }
 
 void doNothing_80103660(int unused)
