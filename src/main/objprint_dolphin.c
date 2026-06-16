@@ -3037,6 +3037,7 @@ typedef struct
     int pos;
 } MtxBitStream;
 
+#pragma optimization_level 2
 void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = getCache();
@@ -3105,6 +3106,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     }
 }
 
+#pragma optimization_level reset
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(int id);
@@ -3289,6 +3291,7 @@ extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void OSReport(char* fmt, ...);
 
+#pragma optimization_level 2
 void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
     u8* tbl = lbl_802CAED0;
@@ -3393,6 +3396,7 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
         }
     }
 }
+#pragma optimization_level reset
 
 typedef union
 {
@@ -5244,6 +5248,7 @@ extern void* memcpy(void*, void*, int);
 extern int mmSetFreeDelay(int);
 extern int getHeapItemSize(void*);
 
+#pragma optimization_level 2
 void defragMemory(int mode)
 {
     u8* base = lbl_80345E10;
@@ -5450,6 +5455,7 @@ void defragMemory(int mode)
     }
     texFlagFn_80023cbc(0);
 }
+#pragma optimization_level reset
 
 void* getCurrentDataFile(int id)
 {

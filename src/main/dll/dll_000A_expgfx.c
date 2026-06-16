@@ -2006,7 +2006,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if (frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
+            if ((u8)frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
                                                 poolBounds->maxX - playerMapOffsetX,
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
@@ -2478,7 +2478,7 @@ void renderParticles(void)
             (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if (frustumTestAabbWithPlaneOffsets((double)(poolBounds->minX - playerMapOffsetX),
+            if ((u8)frustumTestAabbWithPlaneOffsets((double)(poolBounds->minX - playerMapOffsetX),
                                                 (double)(poolBounds->maxX - playerMapOffsetX),
                                                 (double)poolBounds->minY, (double)poolBounds->maxY,
                                                 (double)(poolBounds->minZ - playerMapOffsetZ),

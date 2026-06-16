@@ -1140,10 +1140,10 @@ typedef struct
 void renderObjects(s8* arg0)
 {
     int i;
+    u32 flags;
     int idx;
     u8* obj;
     u8* state;
-    u32 flags;
     int* p;
     int slot;
     int* objects;
@@ -1723,6 +1723,8 @@ void sceneDraw(void)
     f32 skyA;
     f32 skyB;
     GXColor8 ccopy;
+    u32* base8;
+    u32* base12;
     s8 buf[616];
 
     q = (char*)lbl_8037E0C0;
@@ -1834,16 +1836,18 @@ void sceneDraw(void)
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    ((u32*)(q + 8))[lbl_803DCE30 * 4] = 0x78000000;
-    ((u32*)(q + 12))[lbl_803DCE30 * 4] = 8;
+    base8 = (u32*)(q + 8);
+    base8[lbl_803DCE30 * 4] = 0x78000000;
+    base12 = (u32*)(q + 12);
+    base12[lbl_803DCE30 * 4] = 8;
     lbl_803DCE30++;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    ((u32*)(q + 8))[lbl_803DCE30 * 4] = 0x50000000;
-    ((u32*)(q + 12))[lbl_803DCE30 * 4] = 9;
+    base8[lbl_803DCE30 * 4] = 0x50000000;
+    base12[lbl_803DCE30 * 4] = 9;
     lbl_803DCE30++;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
@@ -2015,8 +2019,6 @@ typedef union
 
 void renderSceneGeometry(int* p1, s8* order)
 {
-    F64Cvt cv;
-    F64Cvt cv2;
     u8 map[256];
     int box0[4];
     int box1[4];
@@ -2120,9 +2122,7 @@ void renderSceneGeometry(int* p1, s8* order)
         for (; oi < 16; oi++)
         {
             row = *op;
-            cv.u.lo = row ^ 0x80000000;
-            cv.u.hi = hi;
-            rowF = ws * (f32)(cv.d - bias);
+            rowF = ws * (f32)row;
             ii = 0;
             ip = order;
             for (; ii < 16; ii++)
@@ -2146,13 +2146,9 @@ void renderSceneGeometry(int* p1, s8* order)
                 if (idx > -1 && mapRectFn_8005a728(row, col, blk) != 0)
                 {
                     lbl_803DCE58 = rowF;
-                    cv.u.lo = col ^ 0x80000000;
-                    cv.u.hi = 0x43300000;
-                    colF = gMapBlockWorldSize * (f32)(cv.d - lbl_803DEBC0);
+                    colF = gMapBlockWorldSize * (f32)col;
                     lbl_803DCE54 = colF;
-                    cv2.u.lo = (int)*(s16*)(blk + 0x8e) ^ 0x80000000;
-                    cv2.u.hi = 0x43300000;
-                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(cv2.d - lbl_803DEBC0), colF);
+                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)*(s16*)(blk + 0x8e), colF);
                     renderMapBlock(blk, p1);
                 }
             next:
@@ -2218,7 +2214,7 @@ void getVisibleObjects(s8* opacity)
     int* p;
     u8* o;
     int i;
-    int key;
+    u32 key;
     int depthInt;
     s8* cur;
     u8* sub;
@@ -2309,7 +2305,7 @@ void getVisibleObjects(s8* opacity)
                         t1000 = 1000 - (depthInt & 0xffff);
                         if ((tf & 0x800000) != 0 && (((GameObject*)o)->colorFadeFlags & 2) == 0)
                         {
-                            key |= 0x40000000;
+                            key |= 0x40000000LL;
                             key |= (((GameObject*)o)->anim.seqId & 0x3ff) << 20;
                         }
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
@@ -2370,8 +2366,8 @@ void getVisibleObjects(s8* opacity)
 
 void sortVisibleObjectKeysDescending(u32* arr, int n)
 {
-    int gap = 1;
     int i, j;
+    int gap = 1;
     u32 tmp;
     while (gap <= n / 9)
         gap = gap * 3 + 1;

@@ -5120,13 +5120,14 @@ void fn_80051528(void* p1, void* mtx)
         int id = lbl_803DCD8C;
         if (p1 != 0)
         {
+            void* obj = (char*)p1 + 0x20;
             if (*(u8*)((char*)p1 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded((char*)p1 + 0x20, *(void**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj((char*)p1 + 0x20, id);
+                GXLoadTexObj(obj, id);
             }
         }
     }
@@ -6127,16 +6128,16 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     {
         void* texptr;
         u32 div;
-        p2 = (p3 & 0xf) * 4 + 1;
+        int m = (p3 & 0xf) * 4 + 1;
         texptr = textureIdxToPtr(p4);
-        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2);
+        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * m);
         if (div != 0)
         {
             GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
         }
         else
         {
-            result = (u8)p2;
+            result = (u8)m;
         }
     }
     else
@@ -6241,6 +6242,7 @@ void fn_8004D6D8(void)
 
 extern void fn_8006C540(u8 * *out);
 
+#pragma peephole on
 void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
@@ -6502,6 +6504,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
+#pragma peephole off
 
 extern void fn_8006C5B8(void* out);
 
@@ -6750,7 +6753,7 @@ void fn_8004D230(void)
     GXSetTevSwapMode(lbl_803DCD90, 1, 1);
     if (lbl_803DCD90 == 0)
     {
-        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xf);
     }
     else
     {
@@ -7062,12 +7065,12 @@ int fileLoadToBuffer(int id, void* buffer)
 int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
 {
     u8 fileInfo[0x3c];
-    void* tmp;
     int asize;
+    void* tmp;
     if (size == 0) return 0;
     if (lbl_8035F3E8[id] != 0)
     {
-        memcpy(buffer, (void*)(lbl_8035F3E8[id] + offset), size);
+        memcpy(buffer, (void*)((char*)lbl_8035F3E8[id] + offset), size);
         DCStoreRange(buffer, size);
         return size;
     }
@@ -7496,13 +7499,13 @@ extern void* displayFrameBuffer;
 #pragma peephole on
 void videoSwapFrameBuffers(void)
 {
-    u16 sync;
+    int sync;
     int tok[3];
     char fifo[140];
 
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
-    if (sync == (u16)(lbl_803DCCAA + 1))
+    if ((u16)sync == (u16)(lbl_803DCCAA + 1))
     {
         lbl_803DCCAA = sync;
         if (displayFrameBuffer == externalFrameBuffer0)
@@ -7553,9 +7556,9 @@ void videoFn_800499e8(void)
 {
     char peek[8];
     int tok[3];
-    int i;
     u16* src;
     u16* dst;
+    int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
     {

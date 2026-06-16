@@ -1001,8 +1001,8 @@ extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 
 void fearTestMeterDraw(void)
 {
-    int sc0, sc1, sc2, sc3;
     GXColor col;
+    int sc0, sc1, sc2, sc3;
     void* texB = *(void**)(hudTextures + 0x180);
     u16 hgt = ((Texture*)texB)->height;
     int gap = (u8)fearTestMeterOuterHalfWidth - (u8)fearTestMeterInnerHalfWidth;
