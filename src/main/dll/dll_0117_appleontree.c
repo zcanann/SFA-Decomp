@@ -86,7 +86,6 @@ extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
 extern undefined4 FUN_80017a78();
-extern undefined4 FUN_8002fc3c();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern undefined4 FUN_80039520();
@@ -693,11 +692,11 @@ void appleontree_update(int objArg)
                 {
                     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                     {
-                        FUN_8002fc3c(lbl_803E3804, timeDelta);
+                        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3804, timeDelta, 0);
                     }
                     else
                     {
-                        FUN_8002fc3c(lbl_803E3808, timeDelta);
+                        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3808, timeDelta, 0);
                     }
                 }
             }
@@ -706,7 +705,7 @@ void appleontree_update(int objArg)
             if (frac > ((GroundBaddieState*)state)->baddie.posY)
             {
                 val = *(int*)(obj + 0x5c);
-                modelIdxPtrW = (undefined4*)FUN_80039520((int)obj, 0);
+                modelIdxPtrW = (undefined4*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtrW = 0;
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
@@ -722,7 +721,7 @@ void appleontree_update(int objArg)
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
                 fa = fa * fa * fa * fa;
                 state = (int)((fa * fa) / *(float*)(val + 0x54));
-                modelIdxPtr = (int*)FUN_80039520((int)obj, 0);
+                modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtr = 0x100 - state;
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4) * *(float*)(val + 0x24);
@@ -788,7 +787,7 @@ void appleontree_update(int objArg)
                     obj[1] = (f32) * (s16*)(state + 0x4a) * fb;
                     obj[2] = (f32) * (s16*)(state + 0x4c) * fb;
                 }
-                modelIdxPtr = (int*)FUN_80039520((int)obj, 0);
+                modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtr = (int)(lbl_803E380C * frac);
                 FUN_8017de58((uint)obj);
             }
