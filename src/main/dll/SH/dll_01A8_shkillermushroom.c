@@ -1,4 +1,14 @@
-/* DLL 0x1A8 — SH killer mushroom (edible mushroom enemy) [801D1BFC-801D1E24) */
+/*
+ * shkillermushroom (DLL 0x1A8) - the edible/killer mushroom enemy that
+ * grows out of the ground in ThornTail Hollow.
+ *
+ * It cycles through a dormant -> rise -> inflate -> chase -> deflate ->
+ * regrow state machine (EnemyMushroomState.stateId): once inflated it
+ * records a contact hit against the player within its growing hit radius,
+ * pops (state 9) when struck, then resets to its spawn point and regrows.
+ * The per-state animation move and advance rate come from the
+ * lbl_80326C78 / lbl_80326C90 tables.
+ */
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -106,7 +116,7 @@ void enemymushroom_free(EnemyMushroomObject* obj)
 
 void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
+    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
     void* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
@@ -126,10 +136,10 @@ typedef struct EnemymushroomPlacement
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    u16 unk18;
+    u16 regrowDelay; /* 0x18: frames before a deflated mushroom regrows */
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
-    u8 unk1E;
+    s16 popGameBit; /* 0x1C: game bit set when popped (-1 = none) */
+    u8 detectRange; /* 0x1E: proximity-detection range scale */
     u8 pad1F[0x20 - 0x1F];
 } EnemymushroomPlacement;
 
@@ -141,12 +151,12 @@ void enemymushroom_initialise(void)
 {
 }
 
-/* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
- * block, clamps the spin period, offsets the spawn height, flags the model,
- * optionally resets to spawn, and registers in object group 3. */
+/* Constructor: seeds the state block, clamps the regrow period, offsets the
+ * spawn height, flags the model, optionally resets to spawn, and registers
+ * in object group 3. */
 void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag)
 {
-    extern void ObjGroup_AddObject(int* obj, int group); /* #57 */
+    extern void ObjGroup_AddObject(int* obj, int group);
     EnemyMushroomState* state = obj->state;
     f32 z = lbl_803E52FC;
 
@@ -170,24 +180,17 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     ObjGroup_AddObject((int*)obj, 3);
 }
 
-/* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
- * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-
-/* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
- * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
- * the loop sfx alive, jitters the fuse, and fires the spark particle. */
-
 typedef struct
 {
     f32 unk[3];
     f32 x, y, z;
 } MushHitInfo;
 
-/* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
- * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
+/* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,
+ * hit reaction, pop and respawn. */
 void enemymushroom_update(int* obj)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
+    extern f32 Vec_distance(f32 * a, f32 * b);
     char* state = ((GameObject*)obj)->extra;
     u8* player;
     int* src;
@@ -200,7 +203,7 @@ void enemymushroom_update(int* obj)
     player = (u8*)Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
     ObjHits_ClearHitVolumes((int)obj);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+    ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
     ((EnemyMushroomState*)state)->stateFlags |= 0x4;
 
     if (objIsFrozen(obj))
@@ -282,7 +285,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 3:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9c);
         if (((EnemyMushroomState*)state)->stateFlags & 0x2)
         {
@@ -290,7 +293,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 4:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
         ((EnemyMushroomState*)state)->hitRadius = lbl_803E5320 * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(((EnemyMushroomState*)state)->stateFlags & 0x1))
@@ -329,9 +332,9 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 5:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-        if (((EnemyMushroomState*)state)->timer > (f32)((EnemymushroomPlacement*)src)->unk18)
+        if (((EnemyMushroomState*)state)->timer > (f32)((EnemymushroomPlacement*)src)->regrowDelay)
         {
             if (((EnemyMushroomState*)state)->stateFlags & 0x2)
             {
@@ -391,8 +394,8 @@ void enemymushroom_update(int* obj)
                                                      NULL);
                     ((EnemyMushroomState*)state)->effectTimer = lbl_803E5334;
                 }
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+                ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
+                    ((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
             }
         }
         break;
@@ -407,14 +410,14 @@ void enemymushroom_update(int* obj)
         }
         break;
     default:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
             f32 dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             if ((u16)(int)
                 sqrtf(dx * dx + dy * dy + dz * dz) <
-                    (u16)(int)(lbl_803E5338 * (f32)((EnemymushroomPlacement*)src)->unk1E)
+                    (u16)(int)(lbl_803E5338 * (f32)((EnemymushroomPlacement*)src)->detectRange)
             )
             {
                 if (fn_8029610C(player) >= lbl_803E533C)
@@ -448,9 +451,9 @@ void enemymushroom_update(int* obj)
                     Sfx_PlayFromObject(obj, 0x9d);
                 }
                 ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x1);
-                if (((EnemymushroomPlacement*)src)->unk1C != -1)
+                if (((EnemymushroomPlacement*)src)->popGameBit != -1)
                 {
-                    GameBit_Set(((EnemymushroomPlacement*)src)->unk1C, 1);
+                    GameBit_Set(((EnemymushroomPlacement*)src)->popGameBit, 1);
                 }
                 ((EnemyMushroomState*)state)->stateId = 9;
                 ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
