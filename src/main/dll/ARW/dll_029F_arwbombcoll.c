@@ -1,3 +1,15 @@
+/*
+ * arwbombcoll (DLL 0x29F) - the in-flight pickups and rings collected by
+ * the Arwing in the on-rails sections. A pickup fades in once the Arwing is
+ * close ahead, can oscillate along the X or Y axis (route modes 1/3 and
+ * 4/5), spins, and watches for the Arwing passing through it. The reward on
+ * collection depends on the object's seqId (shield, max-shield, score,
+ * ring, laser upgrade, bomb, and the 0x6D8-0x6DB collectibles) and on the
+ * pickup's "mode" (handled in arwbombcoll_handleArwingHit). Rings also feed
+ * the ring-count gate driven by arwlevelcon. Collision is checked two ways:
+ * an axis-aligned proximity test (flag bit10) or a plane-crossing test that
+ * compares the Arwing's current and previous Z against the pickup's Z.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
