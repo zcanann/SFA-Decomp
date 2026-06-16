@@ -498,6 +498,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
 
 int Tricky_updateSideCommandPrompts(int obj)
 {
+    int state;
     char cmdByte;
     ushort promptId;
     u8 promptA;
@@ -511,7 +512,6 @@ int Tricky_updateSideCommandPrompts(int obj)
     undefined2* setup;
     undefined4 spawnedObj;
     byte i;
-    int state;
     char flagsA[4];
     char flagsB[4];
     undefined4 promptTable[4];
