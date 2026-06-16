@@ -1,3 +1,11 @@
+/*
+ * drcagewith (DLL 0x26C) - a hanging cage with a winch rope. On first
+ * hit it spawns its linked rope/winch object and, while unlocked,
+ * integrates a damped angular velocity (unk24) from the object's
+ * horizontal motion, driving the rope segments' rotZ and the linked
+ * object. The placement supplies setup flags (unk5) and the game bit
+ * that marks the cage already opened (unk1E).
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -6,7 +14,7 @@ typedef struct DrcagewithPlacement
     u8 pad0[0x5 - 0x0];
     u8 unk5;
     u8 pad6[0x1E - 0x6];
-    s16 unk1E;
+    s16 unk1E; /* 0x1E: game bit set when this cage is opened */
 } DrcagewithPlacement;
 
 
@@ -44,7 +52,7 @@ void drcagewith_update(void)
 
 void drcagewith_hitDetect(int obj)
 {
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     u8* p;
     BitFlags8* bf31;
     f32 maxDist;
@@ -80,7 +88,7 @@ void drcagewith_hitDetect(int obj)
             spawned = Obj_AllocObjectSetup(32, 1143);
             *(u8*)(spawned + 4) = 2;
             *(u8*)(spawned + 5) = 1;
-            *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)q)->unk5 & 0x18));
+            *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->unk5 & 0x18));
             ((GameObject*)spawned)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)spawned)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
             ((GameObject*)spawned)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
@@ -147,7 +155,7 @@ void drcagewith_hitDetect(int obj)
             px = ((GameObject*)obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14)
             {
-                GameBit_Set(((DrcagewithPlacement*)q)->unk1E, 1);
+                GameBit_Set(((DrcagewithPlacement*)placement)->unk1E, 1);
             }
             else
             {
