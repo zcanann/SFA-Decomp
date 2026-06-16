@@ -29,59 +29,9 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8008112c();
-
-extern f32 lbl_803E530C;
-extern f32 lbl_803E5310;
-extern f32 lbl_803E5314;
-extern f32 lbl_803E5360;
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801aaa6c(double param_1, int param_2, int param_3)
-{
-    if ((double)lbl_803E530C == param_1)
-    {
-        *(u8*)(param_2 + 0x10) = 0xc;
-        return;
-    }
-    if ((*(byte*)(param_2 + 0x11) & 2) != 0)
-    {
-        *(u8*)(param_2 + 0x10) = 1;
-        return;
-    }
-    if ((double)lbl_803E5310 <= param_1)
-    {
-        *(u8*)(param_2 + 0x10) = 2;
-        return;
-    }
-    if ((((GameObject*)param_3)->anim.currentMove == 0x18) && (lbl_803E5314 < ((GameObject*)param_3)->anim.currentMoveProgress))
-    {
-        *(u8*)(param_2 + 0x10) = 8;
-        return;
-    }
-    if (((GameObject*)param_3)->anim.currentMove == 0x19)
-    {
-        *(u8*)(param_2 + 0x10) = 5;
-        return;
-    }
-    *(u8*)(param_2 + 0x10) = 0xb;
-    return;
-}
-
-undefined4
-FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
-             undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    if (animUpdate->eventCount != 0)
-    {
-        FUN_8008112c((double)lbl_803E5360, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 1, 1, 0, 1, 1, 1, 0);
-    }
-    return 0;
-}
-
 int cclightfoot_getExtraSize(void) { return 0x18; }
 
 #pragma scheduling off
@@ -153,22 +103,6 @@ void fn_801AA878(u8* p1, int* p2, f32 v)
 #pragma dont_inline reset
 
 
-/* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
- * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
- * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
- * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
- * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
- * clear, sets the obj[0xaf] 0x10 flag instead. */
-
-extern int ObjTrigger_IsSet(int obj);
-
-/* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
- * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
- * sets bit 8 again and selects model 0; if clear, selects model 1 and
- * (when the obj's pending trigger is asserted) fires vtable[0x12] with
- * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
- * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
- * match target's layout. */
 extern f32 lbl_803E4670;
 
 #pragma scheduling off
@@ -220,8 +154,6 @@ extern int getAngle(f32 dx, f32 dz);
 extern f32 fn_8014C5D0(int obj);
 extern void fn_8014C66C(int obj, int target);
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern int Obj_FreeObject(int o);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);
