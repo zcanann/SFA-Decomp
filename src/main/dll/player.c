@@ -1318,6 +1318,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int r;
+    f32 timer;
     struct
     {
         u8 pad[6];
@@ -1357,8 +1358,9 @@ int fn_8029A76C(int obj, int state, f32 fv)
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        inner->unk854 = inner->unk854 - timeDelta;
-        if (inner->unk854 <= lbl_803E7EA4)
+        timer = inner->unk854 - timeDelta;
+        inner->unk854 = timer;
+        if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 1;
@@ -4925,6 +4927,7 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
 int fn_8029ABD8(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
+    f32 timer;
     struct
     {
         u8 pad[6];
@@ -4938,8 +4941,9 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        inner->unk854 = inner->unk854 - timeDelta;
-        if (inner->unk854 <= lbl_803E7EA4)
+        timer = inner->unk854 - timeDelta;
+        inner->unk854 = timer;
+        if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 1;
@@ -5006,7 +5010,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             (yitem == 1 && (item == 0x2d || item == 0x5ce)))
         {
             buttonDisable(0, 0x900);
-            *(s16*)((char*)inner + 0x6e2) = inner->buttonsJustPressed & ~0x900;
+            *(u16*)((char*)inner + 0x6e2) = inner->buttonsJustPressed & ~0x900;
             lbl_803DE4B2 = item;
             if (item != inner->animState)
             {
