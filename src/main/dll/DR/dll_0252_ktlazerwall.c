@@ -1,3 +1,16 @@
+/*
+ * ktlazerwall (DLL 0x252) - a SharpClaw laser fence/wall whose intensity
+ * is driven by a placement game bit (see ktlazerlight, DLL 0x253, for the
+ * point light it pairs with).
+ *
+ * Each tick a status game bit's value is compared against a threshold to
+ * decide whether the wall is "firing". On the rising edge it sets its
+ * active game bit, spawns an energy arc plus particle bursts, and seeds a
+ * lightning bolt that the render pass animates (drifting its position and
+ * advancing its lifetime) until it expires. A flags byte at extra[0]
+ * tracks the firing/lightning state, with extra[1] holding the previous
+ * frame's flags so sfx fire on edges.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -6,19 +19,21 @@
 typedef struct KtlazerwallPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 intensityBit;    /* 0x1A: game bit; its value is the wall's intensity */
+    s16 fireThreshold;   /* 0x1C: intensity at/above which the wall fires */
+    s16 activeBit;       /* 0x1E: game bit set while the lightning arc is live */
 } KtlazerwallPlacement;
 
 
+/* overlays the object's extra block; the low flags byte lives at offset 0
+   (pad0) and is accessed as a u8 array elsewhere. */
 typedef struct KtlazerwallState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
+    f32 reloadTimer;     /* 0x04: counts down between arc-snap sfx */
+    f32 driftTimer;      /* 0x08: render-side bolt reposition timer */
+    f32 driftSpeed;      /* 0x0C: signed bolt drift speed */
+    s32 bolt;            /* 0x10: lightning bolt allocation (pointer) */
 } KtlazerwallState;
 
 int ktlazerwall_getExtraSize(void) { return 0x14; }
@@ -39,55 +54,54 @@ void ktlazerwall_release(void)
 
 void ktlazerwall_free(int obj)
 {
-    char* p = ((GameObject*)obj)->extra;
-    void* m = *(void**)&((KtlazerwallState*)p)->unk10;
-    if (m != 0)
+    char* extra = ((GameObject*)obj)->extra;
+    void* bolt = *(void**)&((KtlazerwallState*)extra)->bolt;
+    if (bolt != 0)
     {
-        mm_free(m);
-        *(void**)&((KtlazerwallState*)p)->unk10 = 0;
+        mm_free(bolt);
+        *(void**)&((KtlazerwallState*)extra)->bolt = 0;
     }
 }
 
-void ktlazerwall_init(int obj, char* arg)
+void ktlazerwall_init(int obj, char* placement)
 {
-    char* p = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s8)arg[0x18] << 8);
-    ((KtlazerwallState*)p)->unk4 = lbl_803E6898;
-    ((KtlazerwallState*)p)->unkC = lbl_803E68BC * (f32)(int)
-    randomGetRange(0x50, 0x78);
+    char* extra = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)((s8)placement[0x18] << 8);
+    ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898;
+    ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0)
     {
-        ((KtlazerwallState*)p)->unkC = -((KtlazerwallState*)p)->unkC;
+        ((KtlazerwallState*)extra)->driftSpeed = -((KtlazerwallState*)extra)->driftSpeed;
     }
 }
 
 void ktlazerwall_update(int obj)
 {
-    int q = *(int*)&((GameObject*)obj)->anim.placementData;
-    u8* runtime = ((GameObject*)obj)->extra;
-    int cur;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    u8* flags = ((GameObject*)obj)->extra;
+    int intensity;
     int mode;
     int i;
-    runtime[1] = runtime[0];
-    runtime[0] &= ~3;
-    cur = (s16)GameBit_Get(((KtlazerwallPlacement*)q)->unk1A);
-    if (cur >= ((KtlazerwallPlacement*)q)->unk1C)
+    flags[1] = flags[0];
+    flags[0] &= ~3;
+    intensity = (s16)GameBit_Get(((KtlazerwallPlacement*)placement)->intensityBit);
+    if (intensity >= ((KtlazerwallPlacement*)placement)->fireThreshold)
     {
-        runtime[0] |= 4;
+        flags[0] |= 4;
     }
     else
     {
-        runtime[0] &= ~4;
-        if (GameBit_Get(((KtlazerwallPlacement*)q)->unk1E) == 0)
+        flags[0] &= ~4;
+        if (GameBit_Get(((KtlazerwallPlacement*)placement)->activeBit) == 0)
         {
             return;
         }
     }
     ((GameObject*)obj)->anim.rotZ += 910;
-    if (cur >= 15 && (runtime[0] & 9) == 0)
+    if (intensity >= 15 && (flags[0] & 9) == 0)
     {
-        GameBit_Set(((KtlazerwallPlacement*)q)->unk1E, 1);
-        runtime[0] |= 9;
+        GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 1);
+        flags[0] |= 9;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8, 120);
         (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);
         for (i = 10; i != 0; i--)
@@ -95,41 +109,40 @@ void ktlazerwall_update(int obj)
             mode = 2;
             (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         }
-        ((KtlazerwallState*)runtime)->unk4 = (f32)(int)
-        randomGetRange(1, 60);
+        ((KtlazerwallState*)flags)->reloadTimer = (f32)(int)randomGetRange(1, 60);
     }
-    if (runtime[0] & 4)
+    if (flags[0] & 4)
     {
         mode = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         mode = 1;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
-        if ((runtime[1] & 4) == 0)
+        if ((flags[1] & 4) == 0)
         {
             Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap3);
         }
     }
-    if (runtime[0] & 8)
+    if (flags[0] & 8)
     {
         mode = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         mode = 2;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
     }
-    if ((runtime[0] & 8) == 0 && (runtime[1] & 8) != 0)
+    if ((flags[0] & 8) == 0 && (flags[1] & 8) != 0)
     {
         Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
     }
     {
-        f32 timer = ((KtlazerwallState*)runtime)->unk4;
+        f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
         f32 limit = lbl_803E6898;
         if (timer > limit)
         {
-            ((KtlazerwallState*)runtime)->unk4 = timer - timeDelta;
-            if (((KtlazerwallState*)runtime)->unk4 <= limit)
+            ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
+            if (((KtlazerwallState*)flags)->reloadTimer <= limit)
             {
                 Sfx_PlayFromObject(obj, SFXmv_bflconc1);
-                ((KtlazerwallState*)runtime)->unk4 = lbl_803E6898;
+                ((KtlazerwallState*)flags)->reloadTimer = lbl_803E6898;
             }
         }
     }
@@ -138,34 +151,33 @@ void ktlazerwall_update(int obj)
 #pragma scheduling off
 void ktlazerwall_render(int obj)
 {
-    char* p = ((GameObject*)obj)->extra;
-    int q = *(int*)&((GameObject*)obj)->anim.placementData;
-    int m;
-    if (*(void**)&((KtlazerwallState*)p)->unk10 != 0)
+    char* extra = ((GameObject*)obj)->extra;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    int bolt;
+    if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
     {
-        ((KtlazerwallState*)p)->unk8 -= timeDelta;
-        if (((KtlazerwallState*)p)->unk8 <= lbl_803E6898)
+        ((KtlazerwallState*)extra)->driftTimer -= timeDelta;
+        if (((KtlazerwallState*)extra)->driftTimer <= lbl_803E6898)
         {
-            f32 t = lbl_803E68B0 * ((KtlazerwallState*)p)->unkC;
-            m = ((KtlazerwallState*)p)->unk10;
-            *(f32*)(m + 0x10) -= t * lbl_803E68B4;
-            ((KtlazerwallState*)p)->unk8 = (f32)(int)
-            randomGetRange(0xa, 0x78);
+            f32 kick = lbl_803E68B0 * ((KtlazerwallState*)extra)->driftSpeed;
+            bolt = ((KtlazerwallState*)extra)->bolt;
+            *(f32*)(bolt + 0x10) -= kick * lbl_803E68B4;
+            ((KtlazerwallState*)extra)->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
         }
         else
         {
-            m = ((KtlazerwallState*)p)->unk10;
-            *(f32*)(m + 0x10) += ((KtlazerwallState*)p)->unkC * timeDelta;
+            bolt = ((KtlazerwallState*)extra)->bolt;
+            *(f32*)(bolt + 0x10) += ((KtlazerwallState*)extra)->driftSpeed * timeDelta;
         }
-        lightningRender(*(void**)&((KtlazerwallState*)p)->unk10);
-        *(u16*)(((KtlazerwallState*)p)->unk10 + 0x20) += framesThisStep;
-        m = ((KtlazerwallState*)p)->unk10;
-        if (*(u16*)(m + 0x20) >= *(u16*)(m + 0x22))
+        lightningRender(*(void**)&((KtlazerwallState*)extra)->bolt);
+        *(u16*)(((KtlazerwallState*)extra)->bolt + 0x20) += framesThisStep;
+        bolt = ((KtlazerwallState*)extra)->bolt;
+        if (*(u16*)(bolt + 0x20) >= *(u16*)(bolt + 0x22))
         {
-            mm_free((void*)m);
-            ((KtlazerwallState*)p)->unk10 = 0;
-            *(u8*)p &= ~8;
-            GameBit_Set(((KtlazerwallPlacement*)q)->unk1E, 0);
+            mm_free((void*)bolt);
+            ((KtlazerwallState*)extra)->bolt = 0;
+            *(u8*)extra &= ~8;
+            GameBit_Set(((KtlazerwallPlacement*)placement)->activeBit, 0);
         }
     }
 }
