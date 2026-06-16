@@ -323,7 +323,7 @@ void fn_8026CF78(int secIndex)
     {
         while (((SynthMasterTrackEvent*)section->masterTrackCursor)->time != 0xFFFFFFFF)
         {
-            if (((SynthMasterTrackEvent*)section->masterTrackCursor)->time > section->time[section->timeIndex].high)
+            if (*(volatile u32*)section->masterTrackCursor > section->time[section->timeIndex].high)
             {
                 break;
             }
