@@ -125,7 +125,7 @@ void effectbox_update(int obj)
         sinX = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
         cosX = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
         extX = (f32)((EffectboxPlacement*)def)->extentX;
-        extYNeg = (f32) - (((EffectboxPlacement*)def)->extentY << 1);
+        extYNeg = (f32)(((EffectboxPlacement*)def)->extentY << 1);
         extZ = (f32)((EffectboxPlacement*)def)->extentZ;
         switch (((EffectboxPlacement*)def)->targetMode)
         {
