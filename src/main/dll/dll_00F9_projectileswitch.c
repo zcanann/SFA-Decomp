@@ -127,7 +127,7 @@ void ProjectileSwitch_hitDetect(int obj)
     if (hitId != 0xe && hitId != 0xf) return;
 
     isSpecial = 0;
-    if (*(short*)(hitObj + 0x46) == 0x14b)
+    if (((GameObject*)hitObj)->anim.seqId == 0x14b)
     {
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)hitObj)->anim.hitReactState;
         if ((hitState->contactFlags & 2) != 0)
