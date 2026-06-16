@@ -1,41 +1,63 @@
+/*
+ * mmp_critterspit - Tricky's "is this critter worth eating?" decision.
+ *
+ * trickyFoodFn_8013db3c is queried with Tricky (arg1) and a candidate
+ * critter (arg2). It returns:
+ *   0 - not interested,
+ *   1 - interested (critter is valid prey here),
+ *   2 - interested AND within eating range.
+ *
+ * A critter is rejected outright while another object of group 0x53 is
+ * nearby. Otherwise critters of type != 3 are accepted depending on the
+ * level object's map cell: cell 0x38 gates acceptance behind a set of
+ * game bits, any other cell flags the critter's per-instance cooldown
+ * (the 4-bit mode field packed at byte 0x58) and accepts it. The final
+ * range test promotes a "1" result to "2" when the critter sits within
+ * lbl_803E24C4 squared units of Tricky.
+ */
 #include "main/dll/baddie/MMP_critterspit.h"
 
-extern f32 lbl_803E242C;
-extern f32 lbl_803E24C4;
+extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
+extern f32 lbl_803E24C4; /* squared eating-range threshold */
 
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
 extern uint GameBit_Get(int bit);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
-int trickyFoodFn_8013db3c(u8* arg1, u8* arg2)
+/* per-critter packed flags at byte 0x58; bits 27..30 hold a countdown mode */
+struct CritterFlags
+{
+    uint pad_high : 3;
+    uint mode : 4;
+    uint pad_low : 1;
+};
+
+int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
 {
     int result = 0;
     f32 dist = lbl_803E242C;
-    struct CritterByte
-    {
-        uint pad_high : 3;
-        uint mode : 4;
-        uint pad_low : 1;
-    }* bf = (struct CritterByte*)&arg2[0x58];
+    struct CritterFlags* flags = (struct CritterFlags*)&critter[0x58];
 
-    if (bf->mode != 0)
+    if (flags->mode != 0)
     {
-        bf->mode--;
+        flags->mode--;
         result = 1;
     }
 
-    if (ObjGroup_FindNearestObject(0x53, arg1, &dist) != NULL)
+    if (ObjGroup_FindNearestObject(0x53, tricky, &dist) != NULL)
     {
         return 0;
     }
 
-    if ((s8)arg2[0xD] != 3)
+    if ((s8)critter[0xD] != 3)
     {
-        if ((*(u16*)((u8*)*(u32*)(arg2 + 4) + 0xB0) & 0x1000) != 0)
+        u8* levelObj = (u8*)*(u32*)(critter + 4);
+
+        if ((*(u16*)(levelObj + 0xB0) & 0x1000) != 0)
         {
-            if (coordsToMapCell((u8*)*(u32*)(arg2 + 4), *(f32*)(arg1 + 0xC),
-                                *(f32*)(arg1 + 0x14)) == 0x38)
+            if (coordsToMapCell(levelObj, *(f32*)(tricky + 0xC),
+                                *(f32*)(tricky + 0x14)) == 0x38)
             {
                 if ((GameBit_Get(0x385) == 0) && (GameBit_Get(0x384) != 0))
                 {
@@ -47,7 +69,7 @@ int trickyFoodFn_8013db3c(u8* arg1, u8* arg2)
             }
             else
             {
-                bf->mode = 0x1F;
+                flags->mode = 0x1F;
                 result = 1;
             }
         }
@@ -55,8 +77,10 @@ int trickyFoodFn_8013db3c(u8* arg1, u8* arg2)
 
     if (result == 1)
     {
-        if (vec3f_distanceSquared((f32*)((u8*)*(u32*)(arg2 + 4) + 0x18),
-                                  (f32*)(arg1 + 0x18)) < lbl_803E24C4)
+        u8* levelObj = (u8*)*(u32*)(critter + 4);
+
+        if (vec3f_distanceSquared((f32*)(levelObj + 0x18),
+                                  (f32*)(tricky + 0x18)) < lbl_803E24C4)
         {
             return 2;
         }
