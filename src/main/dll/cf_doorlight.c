@@ -1,3 +1,20 @@
+/*
+ * cf_doorlight (dll_131) - the "Kaldachom" door creature.
+ *
+ * A chompy baddie embedded in a locked door/wall: it pulls itself up,
+ * lunges/bites at the player, and on death frees itself or returns to a
+ * placement slot. Behaviour is driven entirely as gPlayerInterface
+ * actor-control state handlers (kaldachom_stateHandler{A07,B00..B05}),
+ * each returning the next requested control state (0 = stay).
+ *
+ * State record is the obj extra block (CfDoorlightState) whose tail holds
+ * a KaldaChomControl (timers + soundFlags one-shots). The creature reads
+ * its per-instance gate game bits (gameBitA/gameBitB) and an aggro chance
+ * (placement unk2F vs randomGetRange) to pick its reaction.
+ *
+ * soundFlags one-shots: SOUNDFLAG_PULLUP_BURST = climb/attack/unlock burst played,
+ * SOUNDFLAG_DOOR_CREAK = door-creak played once currentMoveProgress passes lbl_803E3088.
+ */
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
@@ -11,16 +28,30 @@
 typedef struct KaldachomPlacement
 {
     u8 pad0[0x2F - 0x0];
-    u8 unk2F;
+    u8 aggroChance; /* 0x2F: 0..99 chance to lunge instead of return */
 } KaldachomPlacement;
 
 extern u32 randomGetRange(int min, int max);
 
+/* lbl_803E30xx live in this DLL's .sdata2 float pool. */
 extern f32 timeDelta;
-extern f32 lbl_803E3060;
-extern int* gBaddieControlInterface;
-
+extern f32 lbl_803E3060; /* 0.0f */
+extern f32 lbl_803E3078;
+extern f32 lbl_803E307C;
 extern f32 lbl_803E3080;
+extern f32 lbl_803E3084;
+extern f32 lbl_803E3088;
+extern f32 lbl_803E308C;
+extern int* gBaddieControlInterface; /* main/dll/player_80295318_shared.h */
+extern void Obj_FreeObject(int obj);
+
+#define BADDIE_CONTROL_MODE_PULLUP 2
+#define BADDIE_CONTROL_MODE_RETURN 6
+
+#define SOUNDFLAG_PULLUP_BURST 0x1
+#define SOUNDFLAG_DOOR_CREAK 0x2
+
+#define AGGRO_CHANCE_RANGE 0x63
 
 int kaldachom_stateHandlerB05(int obj, int p)
 {
@@ -30,7 +61,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
 
     state = *(int*)&((GameObject*)obj)->extra;
     control = ((CfDoorlightState*)state)->control;
-    if (((GroundBaddieState*)p)->baddie.controlMode == 2)
+    if (((GroundBaddieState*)p)->baddie.controlMode == BADDIE_CONTROL_MODE_PULLUP)
     {
         control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
         if (control->pullupSfxTimer <= lbl_803E3060)
@@ -46,14 +77,13 @@ int kaldachom_stateHandlerB05(int obj, int p)
             return 5;
         }
         def = *(int*)&((GameObject*)obj)->anim.placementData;
-        if ((int)randomGetRange(0, 0x63) < (int)((KaldachomPlacement*)def)->unk2F)
+        if ((int)randomGetRange(0, AGGRO_CHANCE_RANGE) < (int)((KaldachomPlacement*)def)->aggroChance)
         {
             (*gPlayerInterface)->setState((void*)obj, (void*)p, 3);
         }
         else
         {
-            control->pullupSfxTimer = (f32)(int)
-            randomGetRange(0x12c, 0x258);
+            control->pullupSfxTimer = (f32)(int)randomGetRange(0x12c, 0x258);
             (*gPlayerInterface)->setState((void*)obj, (void*)p, 2);
         }
     }
@@ -83,17 +113,11 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState* state)
 
 int kaldachom_stateHandlerA07(int obj, int p)
 {
-    extern int* gBaddieControlInterface;
-    extern f32 lbl_803E3060;
-    extern f32 lbl_803E3078;
-    extern f32 lbl_803E3084;
-    extern f32 lbl_803E3088;
-    extern f32 lbl_803E308C;
-    int b8;
+    int state;
     KaldaChomControl* control;
 
-    b8 = *(int*)&((GameObject*)obj)->extra;
-    *(s8*)&((GroundBaddieState*)p)->baddie.unk34D = 3;
+    state = *(int*)&((GameObject*)obj)->extra;
+    *(u8*)&((GroundBaddieState*)p)->baddie.unk34D = 3;
     ((GroundBaddieState*)p)->baddie.moveSpeed = lbl_803E3084;
     {
         f32 fz = lbl_803E3060;
@@ -113,36 +137,36 @@ int kaldachom_stateHandlerA07(int obj, int p)
             kaldachompme_setLinkedMouthMode((u8*)obj, 2);
         }
     }
-    control = ((CfDoorlightState*)b8)->control;
-    if ((control->soundFlags & 0x1) == 0)
+    control = ((CfDoorlightState*)state)->control;
+    if ((control->soundFlags & SOUNDFLAG_PULLUP_BURST) == 0)
     {
         Sfx_PlayFromObject(obj, SFXkr_climb2);
         Sfx_PlayFromObject(obj, SFXsc_attack01);
         Sfx_PlayFromObject(obj, SFXdoor_unlocked);
-        control->soundFlags |= 0x1;
+        control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
-            char* r;
-            if (((CfDoorlightState*)b8)->unk3F0 != 0)
+            char* linkedObj;
+            if (((CfDoorlightState*)state)->unk3F0 != 0)
             {
-                r = ((char *(*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
+                linkedObj = ((char *(*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
             }
             else
             {
-                r = NULL;
+                linkedObj = NULL;
             }
-            if (r != NULL)
+            if (linkedObj != NULL)
             {
                 f32 fz = lbl_803E3060;
-                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(r + 0x68)) + 0x2c))(r, fz, lbl_803E3078, fz);
+                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz, lbl_803E3078, fz);
             }
         }
     }
-    if ((control->soundFlags & 0x2) == 0)
+    if ((control->soundFlags & SOUNDFLAG_DOOR_CREAK) == 0)
     {
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3088)
         {
             Sfx_PlayFromObject(obj, SFXdoor_creak);
-            control->soundFlags |= 0x2;
+            control->soundFlags |= SOUNDFLAG_DOOR_CREAK;
         }
     }
     ((GameObject*)obj)->anim.alpha =
@@ -153,7 +177,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
 int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
     KaldaChomControl* control = ((CfDoorlightState*)((GameObject*)obj)->extra)->control;
-    if (state->baddie.controlMode == 6)
+    if (state->baddie.controlMode == BADDIE_CONTROL_MODE_RETURN)
     {
         f32 zero;
         f32 timer;
@@ -204,13 +228,9 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
 
 int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
 {
-    extern void Obj_FreeObject(int);
-    extern f32 lbl_803E3078;
-    extern f32 lbl_803E307C;
     int sub = *(int*)&((GameObject*)obj)->extra;
 
-    if ((s32)(s8)p2->baddie.moveJustStartedB != 0
-    )
+    if ((s32)(s8)p2->baddie.moveJustStartedB != 0)
     {
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
         (*gPlayerInterface)->setState((void*)obj, p2, 7);
@@ -220,9 +240,7 @@ int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
         ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
     }
-    else
-    if ((s32)(s8)p2->baddie.moveDone != 0
-    )
+    else if ((s32)(s8)p2->baddie.moveDone != 0)
     {
         if (((GameObject*)obj)->anim.placementData == NULL)
         {
