@@ -521,7 +521,6 @@ extern void Obj_FreeObject(int* obj);
 
 void gameUiResetMenuState(void)
 {
-    int i;
     cMenuEnabled = 0;
     curGameText = 0xffff;
     lbl_803DD8D0 = 0;
@@ -533,16 +532,17 @@ void gameUiResetMenuState(void)
     lbl_803DD770 = 0;
     lbl_803DD760 = lbl_803E1E3C;
     {
-        int** p = (int**)lbl_803A9410;
-        for (i = 0; i < 4; p++, i++)
+        int** arr = (int**)lbl_803A9410;
+        int j;
+        for (j = 0; j < 4; j++)
         {
-            if (*p != NULL)
+            if (arr[j] != NULL)
             {
-                ((int*)(*p)[0x19])[1] = 0;
-                ((int*)(*p)[0x19])[2] = 0;
-                if ((u32)(*p)[0x13] > 0x90000000) (*p)[0x13] = 0;
-                Obj_FreeObject(*p);
-                *p = NULL;
+                ((int*)arr[j][0x19])[1] = 0;
+                ((int*)arr[j][0x19])[2] = 0;
+                if ((u32)arr[j][0x13] > 0x90000000) arr[j][0x13] = 0;
+                Obj_FreeObject(arr[j]);
+                arr[j] = NULL;
             }
         }
     }
