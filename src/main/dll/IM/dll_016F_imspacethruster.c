@@ -272,7 +272,7 @@ void imspacethruster_init(int* obj, u8* param2)
     ImSpaceThrusterState* sub = ((GameObject*)obj)->extra;
     int* model;
     objAnim = (ObjAnimComponent*)obj;
-    *(s16*)obj = (s16)((s8)param2[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)param2[0x18] << 8);
     ((GameObject*)obj)->anim.rotY = *(s16*)((char*)param2 + 0x1a);
     objAnim->bankIndex = (s8) * (s16*)((char*)param2 + 0x1c);
     sub->kind = param2[0x19];
