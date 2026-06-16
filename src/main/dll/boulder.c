@@ -1,12 +1,9 @@
-#include "main/dll/boulder.h"
+#include "global.h"
 
 extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E5ED8;
 
-/* Per-boulder shake record: three position-history rings (X/Y/Z, four
- * f32 deep) that scroll toward the live position triple at 0x34/0x38/0x3c
- * each tick, plus a randomized amplitude at 0x44. */
 typedef struct BoulderShakeRec
 {
     u8 pad0[0x04 - 0x00];
@@ -37,19 +34,19 @@ STATIC_ASSERT(offsetof(BoulderShakeRec, amplitude) == 0x44);
 
 void fn_801F4ECC(int obj, u8* rec)
 {
-    ((BoulderShakeRec*)rec)->histX0 = ((BoulderShakeRec*)rec)->histX1;
-    ((BoulderShakeRec*)rec)->histY0 = ((BoulderShakeRec*)rec)->histY1;
-    ((BoulderShakeRec*)rec)->histZ0 = ((BoulderShakeRec*)rec)->histZ1;
-    ((BoulderShakeRec*)rec)->histX1 = ((BoulderShakeRec*)rec)->histX2;
-    ((BoulderShakeRec*)rec)->histY1 = ((BoulderShakeRec*)rec)->histY2;
-    ((BoulderShakeRec*)rec)->histZ1 = ((BoulderShakeRec*)rec)->histZ2;
-    ((BoulderShakeRec*)rec)->histX2 = ((BoulderShakeRec*)rec)->histX3;
-    ((BoulderShakeRec*)rec)->histY2 = ((BoulderShakeRec*)rec)->histY3;
-    ((BoulderShakeRec*)rec)->histZ2 = ((BoulderShakeRec*)rec)->histZ3;
-    ((BoulderShakeRec*)rec)->amplitude =
-        lbl_803E5ED8 * (f32)(s32)
-    randomGetRange(0xa0, 0xb4);
-    ((BoulderShakeRec*)rec)->histX3 = ((BoulderShakeRec*)rec)->liveX;
-    ((BoulderShakeRec*)rec)->histY3 = ((BoulderShakeRec*)rec)->liveY;
-    ((BoulderShakeRec*)rec)->histZ3 = ((BoulderShakeRec*)rec)->liveZ;
+    BoulderShakeRec* r = (BoulderShakeRec*)rec;
+
+    r->histX0 = r->histX1;
+    r->histY0 = r->histY1;
+    r->histZ0 = r->histZ1;
+    r->histX1 = r->histX2;
+    r->histY1 = r->histY2;
+    r->histZ1 = r->histZ2;
+    r->histX2 = r->histX3;
+    r->histY2 = r->histY3;
+    r->histZ2 = r->histZ3;
+    r->amplitude = lbl_803E5ED8 * (f32)(s32)randomGetRange(0xa0, 0xb4);
+    r->histX3 = r->liveX;
+    r->histY3 = r->liveY;
+    r->histZ3 = r->liveZ;
 }
