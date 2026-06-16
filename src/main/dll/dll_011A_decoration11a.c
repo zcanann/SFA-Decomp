@@ -29,7 +29,7 @@ extern f32 PSVECMag(f32 * v);
 
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, undefined4 param_10
              , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
@@ -47,8 +47,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 extraout_f1_03;
     undefined8 uVar8;
 
-    def = *(int*)&((GameObject*)param_9)->anim.placementData;
-    state = *(int*)&((GameObject*)param_9)->extra;
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    state = *(int*)&((GameObject*)obj)->extra;
     eventIndex = 0;
     scratch = (int)animUpdate;
     do
