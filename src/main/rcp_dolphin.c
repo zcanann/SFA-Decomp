@@ -1229,9 +1229,11 @@ void textureFn_80053d58(void* vobj)
     }
     GXInitTexObjUserData(texObj, obj);
     {
+        u16 w;
+        u16 h;
         int fmt = GXGetTexObjFmt(texObj);
-        u16 w = GXGetTexObjWidth(texObj);
-        u16 h = GXGetTexObjHeight(texObj);
+        w = GXGetTexObjWidth(texObj);
+        h = GXGetTexObjHeight(texObj);
         *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
