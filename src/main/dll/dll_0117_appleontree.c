@@ -862,12 +862,12 @@ void appleontree_init(int obj, int def)
     ((CrackAnimState*)state)->elapsed = (f32)((AppleontreeObjectDef*)def)->elapsed;
     {
         ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->unk20 / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd1 = ((CrackAnimState*)state)->stageEnd0 + (f32)((AppleontreeObjectDef*)def)->
-            unk21 / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd2 = ((CrackAnimState*)state)->stageEnd1 + (f32)((AppleontreeObjectDef*)def)->
-            unk22 / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd3 = ((CrackAnimState*)state)->stageEnd2 + (f32)((AppleontreeObjectDef*)def)->
-            unk23 / lbl_803E3828;
+        progress = (f32)((AppleontreeObjectDef*)def)->unk21 / lbl_803E3828;
+        ((CrackAnimState*)state)->stageEnd1 = progress + ((CrackAnimState*)state)->stageEnd0;
+        progress = (f32)((AppleontreeObjectDef*)def)->unk22 / lbl_803E3828;
+        ((CrackAnimState*)state)->stageEnd2 = progress + ((CrackAnimState*)state)->stageEnd1;
+        progress = (f32)((AppleontreeObjectDef*)def)->unk23 / lbl_803E3828;
+        ((CrackAnimState*)state)->stageEnd3 = progress + ((CrackAnimState*)state)->stageEnd2;
         ((CrackAnimState*)state)->unk20 = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
         ((CrackAnimState*)state)->unk28 = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
         ((CrackAnimState*)state)->unk28 = ((CrackAnimState*)state)->unk28 * lbl_803E37DC;
@@ -881,7 +881,8 @@ void appleontree_init(int obj, int def)
         timeScale = ((CrackAnimState*)state)->duration * ((CrackAnimState*)state)->stageEnd2;
         timeScale *= timeScale;
         timeScale *= timeScale;
-        ((CrackAnimState*)state)->unk54 = (timeScale * timeScale) * lbl_803E3830;
+        timeScale = timeScale * timeScale;
+        ((CrackAnimState*)state)->unk54 = timeScale * lbl_803E3830;
 
         ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;

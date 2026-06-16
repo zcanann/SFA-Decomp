@@ -5225,15 +5225,9 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     f32 diffZ;
     f32 distance;
 
-    endX = segment->endX;
-    startX = segment->startX;
-    deltaX = endX - startX;
-    endY = segment->endY;
-    startY = segment->startY;
-    deltaY = endY - startY;
-    endZ = segment->endZ;
-    startZ = segment->startZ;
-    deltaZ = endZ - startZ;
+    deltaX = (endX = segment->endX) - (startX = segment->startX);
+    deltaY = (endY = segment->endY) - (startY = segment->startY);
+    deltaZ = (endZ = segment->endZ) - (startZ = segment->startZ);
     if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ))
     {
         projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
