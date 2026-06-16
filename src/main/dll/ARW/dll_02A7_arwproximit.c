@@ -1,3 +1,14 @@
+/*
+ * arwproximit (DLL 0x2A7) - a proximity mine in the on-rails Arwing
+ * sections. It spins in place and walks through a small phase machine
+ * (state->phase): dormant until the Arwing approaches (phase 0), then it
+ * spawns a glowing green light and fades in (phase 1); when the Arwing gets
+ * closer the light turns red and a warning countdown starts (phase 2); on
+ * timeout or a direct hit it detonates and arms its blast hitbox (phase 3),
+ * then disables and frees the light (phase 4). It can also be destroyed
+ * early by a player shot. The placement's textVariant selects which warning
+ * / taunt text lines are shown.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
