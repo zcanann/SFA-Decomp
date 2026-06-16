@@ -101,7 +101,7 @@ void softbody_update(int obj)
         {
             lbl_803DDDA0 -= lbl_803E7288;
         }
-        lbl_803DDD9C = lbl_803E7290 * timeDelta + lbl_803DDD9C;
+        lbl_803DDD9C = lbl_803E7290 * timeDelta + lbl_803DDD9C;  /* CSE timeDelta */
         while (lbl_803DDD9C > lbl_803E7288)
         {
             lbl_803DDD9C -= lbl_803E7288;
