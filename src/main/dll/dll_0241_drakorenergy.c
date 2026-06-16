@@ -591,7 +591,7 @@ void drakorenergy_update(int obj)
     extern void playerAddHealth(int, int);
     extern void Sfx_PlayFromObject(int, int);
     extern f32 mathSinf(f32);
-    extern void fn_80221C18(int, int, f32*, f32);
+    extern void fn_80221C18(int, f32, f32*, f32*);
     extern void PSVECSubtract(f32*, f32*, f32*);
     extern void PSVECNormalize(f32*, f32*);
     extern void PSVECScale(f32*, f32*, f32);
@@ -682,7 +682,7 @@ void drakorenergy_update(int obj)
         else
         {
             spd = lbl_803DC16C;
-            fn_80221C18(player, obj + 0xc, v1, spd / lbl_803E6294);
+            fn_80221C18(player, spd / lbl_803E6294, (f32*)(obj + 0xc), v1);
             PSVECSubtract(v1, (f32*)(obj + 0xc), v2);
             PSVECNormalize(v2, v2);
             if (dist < spd)

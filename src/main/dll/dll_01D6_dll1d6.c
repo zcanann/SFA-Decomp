@@ -392,7 +392,7 @@ void dll_1D6_update(int* obj)
                 int* row;
                 f32 lim;
                 model = DIM2snowball_GetActiveModel(obj);
-                row = *(int**)((char*)model + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4 + 4);
+                row = ((int**)((char*)model + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4))[1];
                 lim = ((GameObject*)obj)->anim.rootMotionScale *
                     (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
                 if (lx <= lim)

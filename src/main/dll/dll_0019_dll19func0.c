@@ -781,7 +781,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         return 0;
     }
     hit = ObjHits_GetPriorityHitWithPosition(p1, &hitId, &v28, &v24, &posX, &posY, &posZ);
-    state[1034] = (s8)v28;
+    *(s8*)(state + 1034) = (s8)v28;
     if (hit == 0)
     {
         return hit;
@@ -794,9 +794,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     }
     if (p6 != NULL)
     {
-        if ((s8) * (s8*)(p6 + hit - 2) != -1)
+        if ((s8)(p6 + hit)[-2] != -1)
         {
-            v24 = (s8) * (s8*)(p6 + hit - 2);
+            v24 = (s8)(p6 + hit)[-2];
         }
     }
     else
