@@ -2764,8 +2764,8 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
 
 void Tricky_hitDetect(int obj)
 {
-    f32 y;
     f32 dy;
+    f32 y;
     int* objects;
     int i;
     void* firepipeObj;
