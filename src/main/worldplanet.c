@@ -163,7 +163,7 @@ void worldplanet_init(int obj)
     unlockLevel(0, 0, 1);
     mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
     layer = getCurMapLayer();
-    (*gMapEventInterface)->savePoint(obj + 0xc, 0, 0, layer);
+    (*gMapEventInterface)->savePoint((int)&((GameObject*)obj)->anim.localPosX, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
     lbl_803DDD0A = WORLDPLANET_COUNTDOWN_FRAMES;
     GameBit_Set(lbl_8032A1B4[2], 1);
