@@ -1,5 +1,21 @@
+/*
+ * playershadow (DLL 0x000D) - the player's projected ground shadow / footfall fx.
+ *
+ * The TU proper is small: a gPlayerShadowMode setter (playerShadow_setMode,
+ * which only accepts 0 or values >= 0xa) and playerShadow_renderObject, which
+ * builds an 8-corner swept-sphere box (radius/height chosen per shadow mode,
+ * modes 0xb..0x11) around the object, runs it through the terrain hit-detect
+ * pipeline, then hands the resulting tri hits to fn_800A3AF0. fn_800A3AF0
+ * walks those hits and, for surface types 0x10-0x17, scatters bone/foot
+ * particle effects (partfx ids 0x72/0x73/0x190) at random barycentric points
+ * on the struck triangles relative to the camera.
+ *
+ * Everything above fn_800A3AF0 (the modgfx_*, projgfx_*, expgfx pool helpers
+ * and the FUN_8xxxxxxx stubs) is Ghidra drift: verbatim copies of symbols that
+ * actually live in modgfx.c / the expgfx TUs and link there; they are not part
+ * of this object's address range (0x800A3AF0..0x800A4338).
+ */
 #include "main/dll/bonespawndata_struct.h"
-#include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -14,14 +30,7 @@ STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
 STATIC_ASSERT(offsetof(ModgfxState, rotStepZ) == 0x100);
 STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
-static inline int* Modgfx_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
-#define PARTFX_STAGE_COUNT 7
 
 STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
@@ -30,109 +39,9 @@ STATIC_ASSERT(offsetof(ModgfxSpawnContext, sequenceParams) == 0x46);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, flags) == 0x54);
 STATIC_ASSERT(offsetof(ModgfxSpawnContext, pendingSpawnCount) == 0x5D);
 
-typedef struct PartfxEffectState
-{
-    void* instanceObject;
-    void* sourceObject;
-    void* auxSequenceBuffer;
-    s16 sourceRotX;
-    s16 sourceRotY;
-    s16 sourceRotZ;
-    f32 sourceScale;
-    f32 sourcePosX;
-    f32 sourcePosY;
-    f32 sourcePosZ;
-    f32 posStepX;
-    f32 posStepY;
-    f32 posStepZ;
-    ModgfxScaleChannel scaleChannels[2];
-    f32 drawPosX;
-    f32 drawPosY;
-    f32 drawPosZ;
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    void* vertexBuffers[3];
-    void* colorBuffers[3];
-    void* baseVertexBuffer;
-    void* baseColorBuffer;
-    void* textureResource;
-    void* emitterCommands;
-    void* auxAllocation;
-    u32 flags;
-    s32 initialDelayFrames;
-    ModgfxAlphaChannel alphaChannels[2];
-    f32 blendColorR;
-    f32 blendColorG;
-    f32 blendColorB;
-    f32 blendColorStepR;
-    f32 blendColorStepG;
-    f32 blendColorStepB;
-    f32 renderScale;
-    u8 padD8[0xE6 - 0xD8];
-    s16 soundHandle;
-    u8 padE8[0xEA - 0xE8];
-    s16 vertexCount;
-    s16 colorVertexCount;
-    s16 stageDurations[PARTFX_STAGE_COUNT];
-    s16 currentStage;
-    s16 stageFrameCountdown;
-    u8 pad100[0x106 - 0x100];
-    s16 rotOffsetZ;
-    s16 rotOffsetY;
-    s16 rotOffsetX;
-    s16 sequenceId;
-    s16 nextStage;
-    s16 stageTimer;
-    u8 pad112[0x114 - 0x112];
-    int word114;
-    int word118;
-    int word11C;
-    s16 vec120;
-    s16 vec122;
-    s16 vec124;
-    s8 byte126;
-    u8 pad127[0x12C - 0x127];
-    void* inlineData;
-    u8 activeVertexBufferIndex;
-    u8 textureFrame;
-    u8 textureFrameTimer;
-    u8 textureFrameStep;
-    u8 textureFrameFadeStep;
-    s8 sourceYawIndex;
-    u8 drawGroupCount;
-    u8 drawGroupStride;
-    u8 initialStateByte;
-    s8 emitterCount;
-    u8 releaseRequested;
-    char byte13B;
-    u8 requestedStage;
-    u8 byte13D;
-    u8 frameUpdated;
-    u8 textureIsBorrowed;
-} PartfxEffectState;
-
-STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
-STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);
-STATIC_ASSERT(offsetof(PartfxEffectState, textureResource) == 0x98);
-STATIC_ASSERT(offsetof(PartfxEffectState, flags) == 0xA4);
-STATIC_ASSERT(offsetof(PartfxEffectState, drawPosX) == 0x60);
-STATIC_ASSERT(offsetof(PartfxEffectState, velocityX) == 0x6C);
-STATIC_ASSERT(offsetof(PartfxEffectState, alphaChannels) == 0xAC);
-STATIC_ASSERT(offsetof(PartfxEffectState, blendColorR) == 0xBC);
-STATIC_ASSERT(offsetof(PartfxEffectState, renderScale) == 0xD4);
-STATIC_ASSERT(offsetof(PartfxEffectState, vertexCount) == 0xEA);
-STATIC_ASSERT(offsetof(PartfxEffectState, colorVertexCount) == 0xEC);
-STATIC_ASSERT(offsetof(PartfxEffectState, stageDurations) == 0xEE);
-STATIC_ASSERT(offsetof(PartfxEffectState, sequenceId) == 0x10C);
-STATIC_ASSERT(offsetof(PartfxEffectState, inlineData) == 0x12C);
-STATIC_ASSERT(offsetof(PartfxEffectState, activeVertexBufferIndex) == 0x130);
-STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
-STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
-
 #define gModgfxActiveEffectRegistry DAT_8039ce58
 
-extern ModgfxActiveEffect*gModgfxActiveEffectRegistry[];
+extern ModgfxActiveEffect* gModgfxActiveEffectRegistry[];
 
 static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 {
@@ -148,7 +57,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 {
     return gModgfxActiveEffectRegistry;
 }
-
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
@@ -265,12 +173,11 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;
-    ushort setupValue;
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
-    gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
+    gExpgfxSpawnConfig.colorByte0.value = (u8)setupWord;
+    gExpgfxSpawnConfig.behaviorFlags = setupWord & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosY.value = lbl_803E00B0;
@@ -528,7 +435,7 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     ModgfxState* state;
     double biasS;
     ushort rotAngle0;
-    ushort rotAngle1;
+    ushort rotAngle1; /* dead stores: reproduce coloring */
     ushort rotAngle2;
     float unusedW;
     float unusedX;
@@ -927,6 +834,7 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
     {
         activeEffects[i] = (ModgfxActiveEffect*)0x0;
     }
+    /* redundant tail re-zero: reproduces the target's unrolled trailing stores */
     i = 2;
     {
         ModgfxActiveEffect** tailEffects;
@@ -941,13 +849,6 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
         while (i != 0);
     }
     return;
-}
-
-undefined4
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
 }
 
 undefined4
@@ -1274,25 +1175,7 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-undefined4
-FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
-FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-
-
-
-
-
+/* in-range ObjectDescriptor stubs: 0x800A432C / 0x800A4330 / 0x800A4334 */
 void playerShadow_func03_nop(void)
 {
 }
@@ -1304,10 +1187,6 @@ void playerShadow_release_nop(void)
 void playerShadow_initialise_nop(void)
 {
 }
-
-void boneParticleEffect_func08_nop(void);
-
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1336,7 +1215,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
 extern u32 lbl_802C2160[];
-extern f32 lbl_803DF46C;
+extern f32 lbl_803DF46C; /* 0.0f */
 extern f32 lbl_803DF488;
 extern f32 lbl_803DF48C;
 extern f32 lbl_803DF490;
@@ -1476,119 +1355,6 @@ void playerShadow_renderObject(void* obj)
                 ((GameObject*)obj)->anim.localPosX - (f32)tileInfo[0],
                 ((GameObject*)obj)->anim.localPosZ - (f32)tileInfo[2]);
 }
-
-
-extern f32 lbl_803DF878;
-extern f32 lbl_803DFCE0;
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-extern FxNode9 lbl_8039C398;
-
-#define FILL9() do {                            \
-    lbl_8039C398.posX = 0.0f;             \
-    lbl_8039C398.posY = 0.0f;            \
-    lbl_8039C398.posZ = 0.0f;            \
-    lbl_8039C398.scale = 1.0f;             \
-    lbl_8039C398.unk0 = 0;                         \
-    lbl_8039C398.unk2 = 0;                         \
-    lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C398;             \
-  } while (0)
-
-#undef FILL9
-
-extern FxNode9 lbl_8039C380;
-
-#define FILL8() do {                            \
-    lbl_8039C380.posX = 0.0f;             \
-    lbl_8039C380.posY = 0.0f;            \
-    lbl_8039C380.posZ = 0.0f;            \
-    lbl_8039C380.scale = 1.0f;             \
-    lbl_8039C380.unk0 = 0;                         \
-    lbl_8039C380.unk2 = 0;                         \
-    lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C380;             \
-  } while (0)
-
-#undef FILL8
-
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-
-#define FILL338() do {                          \
-    lbl_8039C338.posX = lbl_803DF884;             \
-    lbl_8039C338.posY = lbl_803DF884;            \
-    lbl_8039C338.posZ = lbl_803DF884;            \
-    lbl_8039C338.scale = lbl_803DF878;             \
-    lbl_8039C338.unk0 = 0;                         \
-    lbl_8039C338.unk2 = 0;                         \
-    lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C338;             \
-  } while (0)
-
-#undef FILL338
-
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
-
-#define FILL368() do {                          \
-    lbl_8039C368.posX = lbl_803DFCEC;             \
-    lbl_8039C368.posY = lbl_803DFCEC;            \
-    lbl_8039C368.posZ = lbl_803DFCEC;            \
-    lbl_8039C368.scale = lbl_803DFCE0;             \
-    lbl_8039C368.unk0 = 0;                         \
-    lbl_8039C368.unk2 = 0;                         \
-    lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C368;             \
-  } while (0)
-
-#undef FILL368
-
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-
-#define FILL350() do {                          \
-    lbl_8039C350.posX = lbl_803DF9D0;             \
-    lbl_8039C350.posY = lbl_803DF9D0;            \
-    lbl_8039C350.posZ = lbl_803DF9D0;            \
-    lbl_8039C350.scale = lbl_803DF9D4;             \
-    lbl_8039C350.unk0 = 0;                         \
-    lbl_8039C350.unk2 = 0;                         \
-    lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C350;             \
-  } while (0)
-
-#undef FILL350
-
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
-// VERIFY lbl_803DF730 may already exist in modgfx.c
-extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
-
-/* ===== (2) FILL macro ===== */
-#define FILL320() do {                          \
-    lbl_8039C320.posX = 0.0f;             \
-    lbl_8039C320.posY = 0.0f;            \
-    lbl_8039C320.posZ = 0.0f;            \
-    lbl_8039C320.scale = 1.0f;             \
-    lbl_8039C320.unk0 = 0;                         \
-    lbl_8039C320.unk2 = 0;                         \
-    lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (s16 *)&lbl_8039C320;             \
-  } while (0)
-
-#undef FILL320
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
