@@ -106,14 +106,14 @@ void arwblocker_update(int obj)
         arwing = Obj_GetPlayerObject();
     if (Vec_distance((int)&objAnim->worldPosX, (int)&((GameObject*)arwing)->anim.worldPosX) < lbl_803E721C)
     {
-        int a = (int)
+        int alpha = (int)
         (lbl_803E7220 * timeDelta + (f32)(u32)
         objAnim->alpha
         )
         ;
-        if (a > 0xff)
-            a = 0xff;
-        objAnim->alpha = a;
+        if (alpha > 0xff)
+            alpha = 0xff;
+        objAnim->alpha = alpha;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
         if (((GameObject*)obj)->unkF4 == 0)
