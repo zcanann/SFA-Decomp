@@ -1143,7 +1143,7 @@ int hightop_stateHandler09(int obj, int p)
     {
         if (timerCountDown((char*)state + 0xc2c) != 0)
         {
-            state->unkC4B = -1;
+            *(s8*)&state->unkC4B = -1;
             (*gObjectTriggerInterface)->runSequence(lbl_8032AB30[state->unkC42], (void*)obj, -1);
         }
     }
