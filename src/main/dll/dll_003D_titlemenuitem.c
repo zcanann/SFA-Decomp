@@ -167,6 +167,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
     s16 gatedMove;
     s16 sliderDelta;
     s16 previewVolume;
+    int clampHi;
 
     if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
     {
@@ -239,11 +240,8 @@ void TitleMenuItem_update(TitleMenuItem* item)
         if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
         {
             previewVolume = item->value;
-            if (previewVolume > 0x7f)
-            {
-                previewVolume = 0x7f;
-            }
-            if (previewVolume < 0)
+            clampHi = (previewVolume > 0x7f) ? 0x7f : previewVolume;
+            if (clampHi < 0)
             {
                 previewVolume = 0;
             }
