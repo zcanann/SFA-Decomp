@@ -1,24 +1,37 @@
-
-extern void* Obj_GetPlayerObject(void);
-
+/*
+ * cctestinfot - Crystal Caves "test info" help-prompt object (DLL 0x0122;
+ * descriptor gCCTestInfotObjDescriptor lives in CFtoggleswitch.h). The
+ * object only reacts while the player is disguised: it caches the disguise
+ * state, drives the model's hint-text index / active model from it, and -
+ * once its ObjTrigger fires - shows help text from the model's helpTextIds
+ * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
+ */
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
+extern void *Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet();
-
 extern void objSetHintTextIdx(int obj, int idx);
 extern int playerIsDisguised(void);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
 extern u8 fn_801334E0(void);
 extern void showHelpText(s16 id);
 extern f32 timeDelta;
-extern f32 lbl_803E3C88;
-extern f32 lbl_803E3C8C;
+extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
+extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
 
-int cctestinfot_getExtraSize(void) { return 0x8; }
+typedef struct CctestinfotState
+{
+    f32 holdTimer;  /* 0x00: counts down while help text is shown */
+    u8 disguised;   /* 0x04: cached playerIsDisguised() result, hint-text index */
+    u8 pad05[3];
+} CctestinfotState;
 
-void cctestinfot_init(int obj, s8* def)
+STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
+
+int cctestinfot_getExtraSize(void) { return sizeof(CctestinfotState); }
+
+void cctestinfot_init(int obj, s8 *def)
 {
     u32 v;
     v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
@@ -28,41 +41,40 @@ void cctestinfot_init(int obj, s8* def)
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
 }
 
-void cctestinfot_update(int* obj)
+void cctestinfot_update(int *obj)
 {
-    extern void*Obj_GetPlayerObject(void);
-    u8* sub = ((GameObject*)obj)->extra;
+    CctestinfotState *state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    if (sub[4] != 0)
+    if (state->disguised != 0)
     {
         if (playerIsDisguised() == 0)
         {
-            sub[4] = 0;
+            state->disguised = 0;
         }
     }
     else
     {
         if (playerIsDisguised() != 0)
         {
-            sub[4] = 1;
+            state->disguised = 1;
         }
     }
-    objSetHintTextIdx((int)obj, sub[4]);
-    Obj_SetActiveModelIndex(obj, sub[4]);
+    objSetHintTextIdx((int)obj, state->disguised);
+    Obj_SetActiveModelIndex(obj, state->disguised);
     if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0)
     {
-        *(f32*)sub = lbl_803E3C88;
+        state->holdTimer = lbl_803E3C88;
     }
-    if (*(f32*)sub > lbl_803E3C8C)
+    if (state->holdTimer > lbl_803E3C8C)
     {
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
         {
-            *(f32*)sub = lbl_803E3C8C;
+            state->holdTimer = lbl_803E3C8C;
         }
         else
         {
-            *(f32*)sub = *(f32*)sub - timeDelta;
-            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[sub[4]]);
+            state->holdTimer = state->holdTimer - timeDelta;
+            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[state->disguised]);
         }
     }
 }
