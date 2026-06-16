@@ -1,12 +1,14 @@
+/*
+ * camDebug (DLL 0x4C) - "fixed" camera mode.
+ *
+ * A static/debug camera mode object: most of its lifecycle hooks are
+ * no-ops (copyToCurrent/free/update/release/init-pass). CameraModeFixed_init
+ * snapshots a source camera into this one - copying world position,
+ * deriving the local-space position relative to the source's parent, and
+ * cloning the orientation and field of view - then holds that pose fixed.
+ */
 #include "main/camera_object.h"
-#include "main/game_object.h"
 #include "main/object_transform.h"
-
-
-
-
-
-
 
 void CameraModeFixed_copyToCurrent_nop(void)
 {
@@ -20,7 +22,7 @@ void CameraModeFixed_update(void)
 {
 }
 
-void CameraModeFixed_init(CameraObject* camera, undefined4 param_2, CameraObject* src)
+void CameraModeFixed_init(CameraObject* camera, int unused, CameraObject* src)
 {
     if (src != NULL)
     {
@@ -29,7 +31,7 @@ void CameraModeFixed_init(CameraObject* camera, undefined4 param_2, CameraObject
         camera->anim.worldPosZ = src->anim.worldPosZ;
         Obj_TransformWorldPointToLocal(src->anim.worldPosX, src->anim.worldPosY, src->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                       *(s32*)&camera->anim.parent);
+                                       (u32)camera->anim.parent);
         camera->anim.rotX = src->anim.rotX;
         camera->anim.rotY = src->anim.rotY;
         camera->anim.rotZ = src->anim.rotZ;
@@ -44,7 +46,3 @@ void CameraModeFixed_release(void)
 void CameraModeFixed_initialise(void)
 {
 }
-
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
-
-
