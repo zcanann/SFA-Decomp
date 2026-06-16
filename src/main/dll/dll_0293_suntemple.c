@@ -1,11 +1,35 @@
+/*
+ * suntemple (DLL 0x293) - an interactive sun-temple prop driven by the
+ * object trigger/sequence system.
+ *
+ * Each instance carries a SunTempleSetup placement record: rotation
+ * bytes, an activation game bit, a "ready" UI event id, a trigger slot,
+ * a model bank index, an optional gate game bit, and a preempt sequence
+ * id, all gated by the SUNTEMPLE_FLAG_* bits.
+ *
+ * Until its activation bit latches, suntemple_update watches the
+ * engine-written INTERACT_FLAG_ACTIVATED bit in anim.resetHitboxFlags
+ * and, when the player interacts, runs the configured trigger
+ * sequence - choosing an alternate "+2" slot for the WarpStone-inventory
+ * sequence (SUNTEMPLE_SEQ_WC_INV_USE) based on map-event mode and the
+ * inventory game bits. Activation either clears a gate bit or latches the
+ * activation bit and swaps the texture (SUNTEMPLE_TEXTURE_LATCHED). Once
+ * latched it can preempt/run a sequence and is otherwise inert. The
+ * SUNTEMPLE_SEQ_TIMER_LOCKOUT sequence disables the hitbox while the game
+ * timer is running.
+ *
+ * suntemple_interactCallback handles the sequence event ids fired during
+ * a trigger sequence: latch the activation bit + swap texture (1),
+ * yield to a preempt sequence (2), and place a restart point (3).
+ *
+ * suntemple_hitDetect only runs hit detection while the model instance is
+ * visible (modelInstance->flags & 1) - a guard absent from the generic
+ * hitDetect helper.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define SUNTEMPLE_STATE_SIZE 2
-
-#define SUNTEMPLE_RESET_HITBOX_FLAG 0x08
-#define SUNTEMPLE_DISABLE_HITBOX_FLAG 0x10
-#define SUNTEMPLE_INTERACT_FLAG 0x01
+/* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
 #define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE 0x01
 #define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT 0x04
@@ -18,8 +42,8 @@
 #define SUNTEMPLE_SEQUENCE_INVALID -1
 #define SUNTEMPLE_SEQ_WC_INV_USE 0x526
 #define SUNTEMPLE_SEQ_TIMER_LOCKOUT 0x830
-#define SUNTEMPLE_TEXTURE_LATCHED 0x100
-#define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100
+#define SUNTEMPLE_TEXTURE_LATCHED 0x100    /* coincidentally equal to SUNTEMPLE_BUTTON_DISABLE_MASK */
+#define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100 /* coincidentally equal to SUNTEMPLE_TEXTURE_LATCHED */
 #define SUNTEMPLE_GAMEBIT_WC_INV_A 0x25a
 #define SUNTEMPLE_GAMEBIT_WC_INV_B 0x25b
 #define SUNTEMPLE_GAMEBIT_WC_INV_C 0x202
@@ -38,7 +62,6 @@ typedef struct SunTempleSetup
     s8 bankIndex;
     s16 gateGameBit;
     s16 preemptSequenceId;
-    s16 pad26;
 } SunTempleSetup;
 
 typedef struct SunTempleState
@@ -56,9 +79,9 @@ STATIC_ASSERT(offsetof(SunTempleSetup, bankIndex) == 0x21);
 STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
 STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
-STATIC_ASSERT(sizeof(SunTempleState) == SUNTEMPLE_STATE_SIZE);
+STATIC_ASSERT(sizeof(SunTempleState) == 2);
 
-int suntemple_getExtraSize(void) { return SUNTEMPLE_STATE_SIZE; }
+int suntemple_getExtraSize(void) { return sizeof(SunTempleState); }
 
 int suntemple_getObjectTypeId(void) { return 0; }
 
@@ -76,8 +99,8 @@ void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void suntemple_hitDetect(int obj)
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    if ((objAnim->modelInstance->flags & 1) != 0 && objAnim->hitVolumeTransforms != NULL)
+    GameObject* gameObj = (GameObject*)obj;
+    if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
     {
         objRenderFn_80041018(obj);
     }
@@ -85,33 +108,35 @@ void suntemple_hitDetect(int obj)
 
 int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    SunTempleSetup* setup = (SunTempleSetup*)((GameObject*)obj)->anim.placementData;
+    GameObject* gameObj = (GameObject*)obj;
+    SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;
     int i;
-    SunVec3 vec = *(SunVec3*)lbl_802C25D8;
+    SunVec3 restartPos = *(SunVec3*)lbl_802C25D8;
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= SUNTEMPLE_RESET_HITBOX_FLAG;
+    gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
+        /* event id 1 and any unrecognised id share this latch path */
         case 1:
         default:
-            if (setup->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)
+            if (cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)
             {
                 ObjTextureRuntimeSlot* tex;
-                GameBit_Set(setup->activationGameBit, 1);
+                GameBit_Set(cfg->activationGameBit, 1);
                 tex = objFindTexture((void*)obj, 0, 0);
                 if (tex != NULL)
                     tex->textureId = SUNTEMPLE_TEXTURE_LATCHED;
             }
             break;
         case 2:
-            if (setup->preemptSequenceId != 0)
-                (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, setup->preemptSequenceId);
+            if (cfg->preemptSequenceId != 0)
+                (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, cfg->preemptSequenceId);
             break;
         case 3:
-            if (((ObjAnimComponent*)obj)->bankIndex == 1)
-                (*gMapEventInterface)->restartPoint(&vec, -0x4000, getCurMapLayer(), 0);
+            if (gameObj->anim.bankIndex == 1)
+                (*gMapEventInterface)->restartPoint(&restartPos, -0x4000, getCurMapLayer(), 0);
             break;
         }
     }
@@ -120,27 +145,25 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
 
 void suntemple_init(u8* obj, u8* setup)
 {
-    ObjAnimComponent* objAnim;
-    SunTempleSetup* setupData;
+    GameObject* gameObj = (GameObject*)obj;
+    SunTempleSetup* cfg = (SunTempleSetup*)setup;
     SunTempleState* state;
 
-    objAnim = (ObjAnimComponent*)obj;
-    setupData = (SunTempleSetup*)setup;
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(setupData->rotYByte << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)(setupData->rotZByte << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)suntemple_interactCallback;
-    objAnim->bankIndex = setupData->bankIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    gameObj->anim.rotX = (s16)(cfg->rotXByte << 8);
+    gameObj->anim.rotY = (s16)(cfg->rotYByte << 8);
+    gameObj->anim.rotZ = (s16)(cfg->rotZByte << 8);
+    gameObj->animEventCallback = (void*)suntemple_interactCallback;
+    gameObj->anim.bankIndex = cfg->bankIndex;
+    if (gameObj->anim.bankIndex >= gameObj->anim.modelInstance->modelCount)
     {
-        objAnim->bankIndex = 0;
+        gameObj->anim.bankIndex = 0;
     }
-    state = ((GameObject*)obj)->extra;
-    state->activationLatched = (u8)GameBit_Get(setupData->activationGameBit);
-    state->mapEventMode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    if ((setupData->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
+    state = gameObj->extra;
+    state->activationLatched = (u8)GameBit_Get(cfg->activationGameBit);
+    state->mapEventMode = (*gMapEventInterface)->getMapAct(gameObj->anim.mapEventSlot);
+    if ((cfg->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
     {
-        ((GameObject*)obj)->anim.alpha = 0;
+        gameObj->anim.alpha = 0;
     }
     if (state->activationLatched != 0)
     {
@@ -173,34 +196,34 @@ void suntemple_update(int obj)
         gameObj->anim.localPosX = cfg->base.posX;
         gameObj->anim.localPosY = cfg->base.posY;
         gameObj->anim.localPosZ = cfg->base.posZ;
-        *(u8*)&gameObj->anim.resetHitboxMode &= ~SUNTEMPLE_RESET_HITBOX_FLAG;
+        gameObj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 
         if (cfg->gateGameBit != -1)
         {
             if ((u32)GameBit_Get(cfg->gateGameBit) != 0)
             {
-                *(u8*)&gameObj->anim.resetHitboxMode &= ~SUNTEMPLE_DISABLE_HITBOX_FLAG;
+                gameObj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
             else
             {
-                *(u8*)&gameObj->anim.resetHitboxMode |= SUNTEMPLE_DISABLE_HITBOX_FLAG;
+                gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                 if ((cfg->flags & SUNTEMPLE_FLAG_GATE_REENABLES_HITBOX) != 0)
                 {
-                    *(u8*)&gameObj->anim.resetHitboxMode |= SUNTEMPLE_RESET_HITBOX_FLAG;
+                    gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 }
             }
         }
         else
         {
-            *(u8*)&gameObj->anim.resetHitboxMode &= ~SUNTEMPLE_DISABLE_HITBOX_FLAG;
+            gameObj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
 
         if (gameObj->anim.seqId == SUNTEMPLE_SEQ_TIMER_LOCKOUT && gameTimerIsRunning() != 0)
         {
-            *(u8*)&gameObj->anim.resetHitboxMode |= SUNTEMPLE_DISABLE_HITBOX_FLAG;
+            gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
 
-        if ((*(u8*)&gameObj->anim.resetHitboxMode & SUNTEMPLE_INTERACT_FLAG) != 0)
+        if ((gameObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             if (cfg->readyEventId == -1 ||
                 (*gGameUIInterface)->isEventReady(cfg->readyEventId) != 0)
@@ -251,7 +274,7 @@ void suntemple_update(int obj)
                 else
                 {
                     state->activationLatched = 1;
-                    gameObj->unkF4 = 1;
+                    gameObj->unkF4 = 1; /* latches "post-activate"; gates the preempt path below */
                 }
                 buttonDisable(0, SUNTEMPLE_BUTTON_DISABLE_MASK);
             }
@@ -278,7 +301,7 @@ void suntemple_update(int obj)
             }
             (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot, (void*)obj, flags);
         }
-        *(u8*)&gameObj->anim.resetHitboxMode |= SUNTEMPLE_RESET_HITBOX_FLAG;
+        gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     gameObj->unkF4 = 1;
 }
