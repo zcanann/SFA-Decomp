@@ -3,6 +3,14 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+typedef struct KTRexMsg4
+{
+    int a;
+    int b;
+    int c;
+    int d;
+} KTRexMsg4;
+
 typedef struct KTRexWork
 {
     s16 unk0;
@@ -1196,10 +1204,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     int hit;
     f32* contactPoints;
     f32* pt;
-    msg[0] = lbl_802C2550[0];
-    msg[1] = lbl_802C2550[1];
-    msg[2] = lbl_802C2550[2];
-    msg[3] = lbl_802C2550[3];
+    *(KTRexMsg4*)msg = *(KTRexMsg4*)lbl_802C2550;
     if (lbl_803DDD4C != 0)
     {
         lbl_803DDD4C -= 1;
