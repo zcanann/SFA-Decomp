@@ -1,140 +1,66 @@
-/* DLL 0x0173 (linklevcontrol) — Link level control object [0x801AF568-0x801AF9E4). */
+/*
+ * linklevcontrol (DLL 0x0173) - per-area level-control object for the
+ * LinkLevel maps. One instance lives in each map-event area cell; the
+ * object's anim.mapEventSlot identifies which cell (0x45..0x49).
+ *
+ * link_levcontrol_update tracks the player's current map cell (via
+ * coordsToMapCell on the player world XZ): on first entry to this
+ * object's cell it runs the one-shot enter effects (sky / env-fx /
+ * music cues), and while the player stays in the cell it drives the
+ * looping area music. The cell's music selection branches on sky sun
+ * position and a couple of story game bits, edge-latched through the
+ * object's musicTrack field and a SCGameBitLatch record.
+ *
+ * The object descriptor exported here is gIMIcePillarObjDescriptor; its
+ * callbacks (imicepillar_*) live in sibling TUs. The two leading
+ * FUN_801ae* functions are drift stubs from neighbouring objects that
+ * the linker still resolves by their v1.0 names - left untouched.
+ */
 #include "main/dll/linklevcontrolstate_struct.h"
-#include "main/dll/lavaball1bfstate_struct.h"
-#include "main/dll/imspacethrusterstate_struct.h"
-#include "main/dll/lavaball1bestate_struct.h"
-#include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/dll16cstate_struct.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
-#include "main/objseq.h"
+#include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/sky_interface.h"
 
-/*
- * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
- */
-typedef struct IMIceMountainState
+/* Area cells handled by this controller (GameObject::anim.mapEventSlot). */
+enum
 {
-    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
-    u8 pad01[3];
-    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
-    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
-    u8 pad09;
-    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
-    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
-    u8 pad0D[3];
-    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
-} IMIceMountainState;
-
-STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
-
-/*
- * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
- */
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-
-/*
- * Per-object extra state for the dll_16C map-event boulder proxy
- * (dll_16C_getExtraSize == 0x24).
- */
-
-STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
-
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
+    AREA_CELL_45 = 0x45,
+    AREA_CELL_46 = 0x46,
+    AREA_CELL_47 = 0x47,
+    AREA_CELL_48 = 0x48,
+    AREA_CELL_49 = 0x49
+};
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_80017ac8();
-
-/* Trivial 4b 0-arg blr leaves. */
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY
-
-void imicepillar_free(void);
-
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
-
-extern void warpToMap(int mapId, int flags);
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-
-/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
- * through jumptable_80323698 (states 1..7; state 0 idles). */
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-
-
-/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
- * from a small id table, then run the map-event sub-object state callbacks. */
-
-/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
- * extra block, optionally re-issuing a move on the sub-object first. */
-
 extern void Music_Trigger(int track, int flag);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
+extern int getSaveGameLoadStatus(void);
+extern void* Obj_GetPlayerObject(void);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern u8 lbl_803239F0[];
 
-/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
- * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-
-/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
- * its move and fade opacity by distance to the player. */
-
-
-/* crrockfall_init: derive the per-rock scale from the placement params, size the
- * capsule hitbox from the sub-object bounds, set up render flags, and pick the
- * state-table variant by object type. */
-
-/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
- * height/distance, trigger the fall when the player is in range, integrate the
- * fall, then shatter (sfx + explosion) on impact. */
-
-#include "main/game_object.h"
-#include "main/dll/DIM/DIMcannon.h"
-#include "main/objseq.h"
-
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-
+/* Drift stubs resolved by v1.0 name; bodies recovered from target asm. */
+extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern void* Obj_GetPlayerObject(void);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
-extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
-extern void envFxActFn_800887f8(int id);
-extern u8 lbl_803239F0[];
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
+void imicepillar_render(void);
+void imicepillar_hitDetect(void);
+void imicepillar_update(void);
+void imicepillar_init(void);
+void imicepillar_release(void);
+void imicepillar_initialise(void);
+void imicepillar_free(void);
+int imicepillar_getExtraSize(void);
+int imicepillar_getObjectTypeId(void);
+
+void link_levcontrol_updateAreaMusic(int* obj);
+void link_levcontrol_applyEnterAreaEffects(int* obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -149,16 +75,15 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 pa
         FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      *(int*)&((GameObject*)param_9)->childObjs[0]);
     }
-    return;
 }
 
 void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, char param_6)
 {
-    extern undefined4 FUN_801adca0(); /* #57 */
-    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
+    extern undefined4 FUN_801adca0();
+    extern undefined4 ObjPath_GetPointWorldPosition();
     u8 savedByte;
-    bool active;
+    int active;
     undefined2* obj;
     uint bit;
     int status;
@@ -180,11 +105,11 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         {
             data = *(undefined4**)(obj + 0x5c);
             subObj = (undefined2*)*data;
-            active = false;
+            active = 0;
             if ((subObj != (undefined2*)0x0) &&
                 (status = (**(code**)(**(int**)(subObj + 0x34) + 0x38))(subObj), status == 2))
             {
-                active = true;
+                active = 1;
             }
             if (active)
             {
@@ -212,18 +137,7 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         }
     }
     FUN_8028687c();
-    return;
 }
-
-void imicepillar_hitDetect(void);
-
-void imicepillar_update(void);
-
-void imicepillar_init(void);
-
-void imicepillar_release(void);
-
-void imicepillar_initialise(void);
 
 ObjectDescriptor gIMIcePillarObjDescriptor = {
     0,
@@ -242,8 +156,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-int link_levcontrol_getExtraSize(void) { return 0x10; }
-
+int link_levcontrol_getExtraSize(void) { return sizeof(LinkLevControlState); }
 
 #pragma scheduling off
 #pragma peephole off
@@ -251,10 +164,10 @@ void link_levcontrol_free(int obj)
 {
     switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
     {
-    case 0x45: Music_Trigger(0xda, 0);
+    case AREA_CELL_45: Music_Trigger(0xda, 0);
         break;
-    case 0x48:
-    case 0x49: Music_Trigger(0x36, 0);
+    case AREA_CELL_48:
+    case AREA_CELL_49: Music_Trigger(0x36, 0);
         break;
     }
 }
@@ -285,67 +198,66 @@ void link_levcontrol_update(int* obj)
 
 void link_levcontrol_updateAreaMusic(int* obj)
 {
-    LinkLevControlState* sub = ((GameObject*)obj)->extra;
+    LinkLevControlState* inner = ((GameObject*)obj)->extra;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
-    case 0x47:
+    case AREA_CELL_47:
         if ((*gSkyInterface)->getSunPosition(0) != 0)
         {
-            if (sub->musicTrack != 0x2d)
+            if (inner->musicTrack != 0x2d)
             {
-                sub->musicTrack = 0x2d;
+                inner->musicTrack = 0x2d;
                 Music_Trigger(0x2d, 1);
             }
         }
         else
         {
-            if (sub->musicTrack != 0x33)
+            if (inner->musicTrack != 0x33)
             {
-                sub->musicTrack = 0x33;
+                inner->musicTrack = 0x33;
                 Music_Trigger(0x33, 1);
             }
         }
         break;
-    case 0x48:
+    case AREA_CELL_48:
         if (GameBit_Get(0xe1e) == 0)
         {
             if (GameBit_Get(0xb72) != 0)
             {
-                if (sub->musicTrack != 0x95)
+                if (inner->musicTrack != 0x95)
                 {
-                    sub->musicTrack = 0x95;
+                    inner->musicTrack = 0x95;
                     Music_Trigger(0x95, 1);
                 }
             }
             else if ((*gSkyInterface)->getSunPosition(0) != 0)
             {
-                if (sub->musicTrack != 0x2d)
+                if (inner->musicTrack != 0x2d)
                 {
-                    sub->musicTrack = 0x2d;
+                    inner->musicTrack = 0x2d;
                     Music_Trigger(0x2d, 1);
                 }
             }
             else
             {
-                if (sub->musicTrack != 0x33)
+                if (inner->musicTrack != 0x33)
                 {
-                    sub->musicTrack = 0x33;
+                    inner->musicTrack = 0x33;
                     Music_Trigger(0x33, 1);
                 }
             }
         }
-        SCGameBitLatch_Update(&sub->latch, 1, -1, -1, 0xe1e, 0x36);
+        SCGameBitLatch_Update(&inner->latch, 1, -1, -1, 0xe1e, 0x36);
         break;
     }
 }
 
 void link_levcontrol_applyEnterAreaEffects(int* obj)
 {
-    extern void getEnvfxAct(int a, int b, int c, int d); /* #57 */
     u8* tbl = lbl_803239F0;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
-    case 0x47:
+    case AREA_CELL_47:
         fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
         if (((GameObject*)obj)->unkF4 == 2)
         {
@@ -361,7 +273,7 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         Music_Trigger(0xdb, 0);
         Music_Trigger(0xf2, 0);
         break;
-    case 0x45:
+    case AREA_CELL_45:
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
         getEnvfxAct(0, 0, 0x13e, 0);
@@ -369,13 +281,13 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         getEnvfxAct(0, 0, 0x13f, 0);
         Music_Trigger(0xda, 1);
         break;
-    case 0x49:
+    case AREA_CELL_49:
         Music_Trigger(0x36, 1);
         break;
-    case 0x48:
+    case AREA_CELL_48:
         Music_Trigger(0xc8, 0);
         break;
-    case 0x46:
+    case AREA_CELL_46:
         Music_Trigger(0xe1, 0);
         Music_Trigger(0x96, 1);
         break;
