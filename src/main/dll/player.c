@@ -11214,7 +11214,7 @@ void fn_8029A4A8(int obj, int p2)
     void** p;
     int i;
 
-    if (sel == 0x2a || sel == 0x2e || sel == 0x2f || sel == 0x2c) return;
+    if (sel == 0x2a || sel == 0x2e || sel == 0x2c || sel == 0x2f) return;
 
     *(u32*)((char*)inner + 0x360) |= 0x800000LL;
     inner->animState = -1;
