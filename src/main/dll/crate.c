@@ -1,11 +1,36 @@
+/*
+ * sfxplayer object - animation-sequence event handler.
+ *
+ * Bound as an object's animEventCallback; each tick it walks the
+ * pending sequence-event list (animUpdate->eventIds) and drives the
+ * effect's audio game bits off the object's effectSfxBaseId:
+ *   ACTIVATE   -> sets bit (base + 5)
+ *   DEACTIVATE -> clears bit (base + 5) and flags the effect finished
+ *   VARIANT    -> for the four known base ids (0x672..0x675) sets the
+ *                 paired variant bit and arms a 0x96-frame variant timer
+ * Each event is consumed (zeroed) as it is processed.
+ */
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
+#include "main/dll/sfxplayer.h"
 #include "main/dll/crate.h"
 
 #define SFXPLAYER_EVENT_ACTIVATE 1
 #define SFXPLAYER_EVENT_DEACTIVATE 2
 #define SFXPLAYER_EVENT_VARIANT 3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
+
+#define SFXPLAYER_BASE_VARIANT_A 0x672
+#define SFXPLAYER_BASE_VARIANT_B 0x673
+#define SFXPLAYER_BASE_VARIANT_C 0x674
+#define SFXPLAYER_BASE_VARIANT_D 0x675
+
+#define GAMEBIT_SFXPLAYER_VARIANT_A 0x66e
+#define GAMEBIT_SFXPLAYER_VARIANT_B 0x66f
+#define GAMEBIT_SFXPLAYER_VARIANT_C 0x670
+#define GAMEBIT_SFXPLAYER_VARIANT_D 0x9f5
+
 undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
 {
     int event;
@@ -15,8 +40,7 @@ undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState*
     state = ((GameObject*)obj)->extra;
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    i = 0;
-    while (i < (int)animUpdate->eventCount)
+    for (i = 0; i < (int)animUpdate->eventCount; i++)
     {
         event = animUpdate->eventIds[i];
         switch (event)
@@ -31,27 +55,26 @@ undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState*
         case SFXPLAYER_EVENT_VARIANT:
             switch (state->effectSfxBaseId)
             {
-            case 0x672:
-                GameBit_Set(0x66e, 1);
+            case SFXPLAYER_BASE_VARIANT_A:
+                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_A, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
-            case 0x673:
-                GameBit_Set(0x66f, 1);
+            case SFXPLAYER_BASE_VARIANT_B:
+                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_B, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
-            case 0x674:
-                GameBit_Set(0x670, 1);
+            case SFXPLAYER_BASE_VARIANT_C:
+                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_C, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
-            case 0x675:
-                GameBit_Set(0x9f5, 1);
+            case SFXPLAYER_BASE_VARIANT_D:
+                GameBit_Set(GAMEBIT_SFXPLAYER_VARIANT_D, 1);
                 state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
                 break;
             }
             break;
         }
         animUpdate->eventIds[i] = 0;
-        i++;
     }
     return 0;
 }
