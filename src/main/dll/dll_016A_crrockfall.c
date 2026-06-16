@@ -317,8 +317,8 @@ f32 fn_801ACCFC(int obj)
     bestIdx = -1;
     for (i = 0; i < count; i++)
     {
-        f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)list[i];
-        if (dy > lbl_803E4704 && dy < bestDist)
+        f32 dy;
+        if ((dy = ((GameObject*)obj)->anim.localPosY - *(f32*)list[i]) > lbl_803E4704 && dy < bestDist)
         {
             bestDist = dy;
             bestIdx = i;
