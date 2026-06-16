@@ -1110,7 +1110,8 @@ int hightop_stateHandler09(int obj, int p)
     }
     if (ObjTrigger_IsSetById(obj, 0xaf7) != 0)
     {
-        int total = GameBit_Get(0x3f0) + GameBit_Get(0xaf7);
+        int total = GameBit_Get(0x3f0);
+        total = total + GameBit_Get(0xaf7);
         GameBit_Set(0x3f0, total);
         GameBit_Set(0xaf7, 0);
         if (randFn_80080100(5 - total) != 0)
