@@ -760,6 +760,7 @@ int hintTextMapFn_800ea264(void)
     return r;
 }
 
+#pragma opt_common_subs off
 void gameBitFn_800ea2e0(u8 id)
 {
     u8* texts;
@@ -841,6 +842,7 @@ void gameBitFn_800ea2e0(u8 id)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void* fn_800E888C(u8 a, u8 b);
 
