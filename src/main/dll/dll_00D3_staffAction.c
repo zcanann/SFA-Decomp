@@ -1341,10 +1341,11 @@ void dll_D3_update(int* obj)
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            *(int*)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius);
-            if (extra->boundsObj != NULL)
+            hits = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius);
+            *(int*)&extra->boundsObj = hits;
+            if (hits != 0)
             {
-                (*(void (**)(int, int, int))(*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
+                (*(void (**)(int, int, int))(*(int**)(*(int*)(*(int*)&extra->boundsObj + 0x68)) + 0x20 / 4))(
                     *(int*)&extra->boundsObj,
                     (int)&extra->boundsMinX,
                     (int)&extra->bounceFlags);
@@ -1367,14 +1368,17 @@ void dll_D3_update(int* obj)
     }
 
     rc = ((int (*)(int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
-    if (rc == 0u) return;
+    if (rc == 0) return;
 
     if ((extra->flags92 >> 1 & 1) == 0u)
     {
         if (ObjContact_AddCallback(obj, (int)player, fn_80167550) != 0)
         {
-            extra->flags92 =
-                (u8)((extra->flags92 & 0xfd) | 2);
+            struct StaffFlag92b
+            {
+                u8 b80 : 1, b40 : 1, b20 : 1, b10 : 1, b08 : 1, b04 : 1, b02 : 1, b01 : 1;
+            };
+            ((struct StaffFlag92b*)&extra->flags92)->b02 = 1;
         }
     }
 
@@ -1383,7 +1387,7 @@ void dll_D3_update(int* obj)
     if (((TreasureChestState*)state)->targetState != 1)
     {
         rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
-            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040),
+            (f32)(u32)((TreasureChestState*)state)->aggroRange,
             obj, state, 0x18000);
         if (rc != 0u)
         {
@@ -1404,7 +1408,7 @@ void dll_D3_update(int* obj)
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
-            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040))
+            (f32)(u32)((TreasureChestState*)state)->aggroRange)
         {
             ((TreasureChestState*)state)->targetState = 1;
         }
