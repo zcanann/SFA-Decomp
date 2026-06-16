@@ -147,11 +147,14 @@ void WaterFallSpray_init(u8* obj, u8* data)
     *(u32*)&((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->animEventCallback = (void*)WaterFallSpray_SeqFn;
     v = *(int*)((char*)(*(u8**)&((GameObject*)obj)->anim.placementData) + 0x14);
-    if (v < WATERFALLSPRAY_ALT_SFX_DEF_END && v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
+    if (v < WATERFALLSPRAY_ALT_SFX_DEF_END)
     {
-        ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_ALT_SFX_A;
-        ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_ALT_SFX_B;
-        return;
+        if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
+        {
+            ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_ALT_SFX_A;
+            ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_ALT_SFX_B;
+            return;
+        }
     }
     ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_DEFAULT_SFX_A;
     ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_DEFAULT_SFX_B;

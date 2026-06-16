@@ -292,9 +292,8 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     obj->angleY = data->initialAngleY;
     obj->angleZ = data->initialAngleZ;
 
-    d1 = lbl_803E4400;
     obj->velocityX = (f32)(s32)
-    data->initialVelocityX / d1;
+    data->initialVelocityX / (d1 = lbl_803E4400);
     obj->velocityY = (f32)(s32)
     data->initialVelocityY / d1;
     obj->velocityZ = (f32)(s32)
