@@ -1,5 +1,20 @@
-/* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
-#include "main/dll/CAM/camnpcspeak_state.h"
+/*
+ * DLL 0x0019 (dll19) - baddie movement / combat-control helper library.
+ *
+ * Exposes the dll_19_func* call table used by the baddie-control state
+ * machine: target acquisition with line-of-sight tracing (func14/16),
+ * range/health/visibility gating (func0E/13), homing and scripted-move
+ * steps along a path-control curve (func0F/18), yaw turning and the
+ * four-direction walkability probe (func06/07/08), follow-point
+ * constraint against the facing plane (func05), child-object spawning
+ * (func15/19) and ObjMsg-driven attack handling (func17). Distances and
+ * angles run through getAngle/sqrtf/mathSinf/mathCosf; per-frame steps
+ * scale by timeDelta/framesThisStep.
+ *
+ * The CameraMode*_release / *_nop / fn_801101E* entries are address-only
+ * drift mirrors of the camera-mode DLLs that share this code region; the
+ * scheduling/peephole pragmas reproduce their per-function optimizer state.
+ */
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
@@ -9,30 +24,16 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern float mathCosf(float x);
 
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
-
 #include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
-#include "main/camera_object.h"
 #include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
-#include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
-#include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
-#include "main/objanim.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct Dll19Placement
@@ -49,12 +50,13 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
-extern undefined4 GameBit_Set(int eventId, int value);
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
+STATIC_ASSERT(offsetof(Dll19Placement, unk22) == 0x22);
+STATIC_ASSERT(offsetof(Dll19Placement, unk32) == 0x32);
+STATIC_ASSERT(offsetof(Dll19Placement, unk3E8) == 0x3E8);
+STATIC_ASSERT(offsetof(Dll19Placement, unk400) == 0x400);
+STATIC_ASSERT(sizeof(Dll19Placement) == 0x408);
+
+extern void GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -63,26 +65,11 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_802c2910;
-extern undefined4 DAT_802c2914;
-extern undefined4 DAT_802c2918;
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern float* DAT_803de1fc;
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
 
-#pragma scheduling on
-#pragma peephole on
 extern void* memset(void* dst, int val, u32 n);
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
@@ -96,13 +83,10 @@ extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
-extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
-extern f32 lbl_803E1AC0;
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
@@ -130,102 +114,11 @@ extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];
 extern u32 lbl_803DB9E0;
 extern u32 lbl_803DD5E0;
-extern f32 lbl_803E1AD0;
-extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
-extern s16 getAngle(f32 x, f32 z);
-extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern f32 mathCosf(f32 x);
 extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
 extern u8 framesThisStep;
-
-void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
-{
-    float fVar1;
-    float* pfVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    undefined8 uVar9;
-
-    uVar9 = FUN_8028683c();
-    pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((ulonglong)uVar9 >> 0x20);
-    dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
-    dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
-    dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
-    FUN_80017730();
-    dVar8 = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *pfVar2);
-    dVar6 = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + pfVar2[2]);
-    dVar5 = (double)FUN_80293f90();
-    dVar7 = (double)FUN_80294964();
-    if (dVar4 < (double)DAT_803de1fc[0x10])
-    {
-        dVar4 = (double)DAT_803de1fc[0x10];
-    }
-    fVar1 = DAT_803de1fc[4];
-    *(float*)uVar9 = (float)(dVar5 * (double)(float)(dVar4 + (double)fVar1) + dVar8);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(iVar3 + 0x1c)) - pfVar2[1]) -
-        (*(float*)(iVar3 + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dVar4 + (double)fVar1) + dVar6);
-    FUN_80286888();
-    return;
-}
-
-void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int obj, int state)
-{
-    uint spawnActive;
-    undefined2* spawnArgs;
-    undefined4 childObj;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined2 uStack_1a;
-    undefined4 local_18;
-    undefined4 local_14;
-    undefined2 local_10;
-
-    local_18 = DAT_802c2910;
-    local_14 = DAT_802c2914;
-    local_10 = DAT_802c2918;
-    if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
-        (((GameObject*)obj)->anim.alpha != 0))
-    {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
-        {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)obj)->childObjs[0]);
-            *(undefined4*)&((GameObject*)obj)->childObjs[0] = 0;
-        }
-        spawnActive = FUN_80017ae8();
-        if ((spawnActive & 0xff) == 0)
-        {
-            *(u8*)(state + 0x409) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)(state + 0x407))
-            {
-                spawnArgs = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(state + 0x407)]);
-                childObj = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnArgs,
-                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
-                                     in_r10);
-                *(undefined4*)&((GameObject*)obj)->childObjs[0] = childObj;
-                *(ushort*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0xb0) = ((GameObject*)obj)->objectFlags &
-                    7;
-            }
-            *(u8*)(state + 0x409) = *(u8*)(state + 0x407);
-        }
-    }
-    return;
-}
 
 void CameraModeNpcSpeak_release(void);
 
@@ -475,7 +368,7 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
 
 int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 {
-    extern f32 lbl_803E1C68; /* #57 */
+    extern const f32 lbl_803E1C68; /* #57 */
     extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
     int player = Obj_GetPlayerObject();
     int result = 0;
@@ -519,7 +412,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
 int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int* p8)
 {
-    extern f32 lbl_803E1C68; /* #57 */
+    extern const f32 lbl_803E1C68; /* #57 */
     f32 dx, dz, dist;
     f32 zero;
 
@@ -615,7 +508,7 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
 
 int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 {
-    extern f32 lbl_803E1C68; /* #57 */
+    extern const f32 lbl_803E1C68; /* #57 */
     extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
     extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e); /* #57 */
     f32 bboxOut[20];
@@ -1114,17 +1007,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 
 int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
 {
-    extern int* gPlayerInterface;
     extern f32 lbl_803DD5D8;
     extern s8 lbl_803DD5DC;
-    extern f32 lbl_803E1C2C;
     extern f32 lbl_803E1C70;
     extern f32 lbl_803E1C74;
-    extern const f32 lbl_803E1C6C;
-    extern f32 lbl_803E1C5C;
-    extern f32 timeDelta;
-    extern f32 sqrtf(f32 x);
-    extern u8 framesThisStep;
     f32 dist;
     f32 nx;
     f32 nz;
@@ -1365,7 +1251,7 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
 {
     extern const f32 lbl_803E1C68; /* #57 */
     extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e); /* #57 */
-    extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b); /* #57 */
+    extern int voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b); /* #57 */
     u16 i;
     u8 mask;
     u8 hitFlag;
