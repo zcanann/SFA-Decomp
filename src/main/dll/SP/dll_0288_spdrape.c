@@ -209,7 +209,7 @@ void spdrape_init(int* obj, u8* def)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->objectFlags |= 0x4000;
-    *(s16*)obj = (s16)((s32)((SpdrapeObjectDef*)def)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((SpdrapeObjectDef*)def)->unk18 << 8);
     if (((SpdrapeObjectDef*)def)->unk1A != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = (f32)(s32)((SpdrapeObjectDef*)def)->unk1A / lbl_803E5AC4 *
