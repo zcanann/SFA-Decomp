@@ -356,6 +356,7 @@ int trySaveGame(int slot)
     return loaded;
 }
 
+#pragma optimization_level 2
 int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 {
     int rank;
@@ -390,6 +391,7 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 
     return -1;
 }
+#pragma optimization_level reset
 
 int gplayNewGame(char* name, int slot)
 {
