@@ -16875,7 +16875,7 @@ void fn_802ADE80(int obj, int inner, int state)
         }
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
-    loopCount = (*(f32*)((char*)inner + 0x83c) - v.mat[2] > lbl_803E7F10);
+    loopCount = (*(f32*)((char*)inner + 0x83c) - v.mat[2] > lbl_803E7F10) ? 1 : 0;
     {
         f32 div0 = lbl_803E7FA4;
         f32 div1 = lbl_803E808C;
