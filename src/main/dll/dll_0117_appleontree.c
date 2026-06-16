@@ -93,7 +93,7 @@ extern undefined4 FUN_80039520();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern f32 lbl_803E3828;
+extern const f32 lbl_803E3828;
 extern f32 lbl_803E382C;
 extern f32 lbl_803E3830;
 extern f32 lbl_803E3834;
@@ -856,16 +856,15 @@ void appleontree_init(int obj, int def)
     ((CrackAnimState*)state)->duration = (f32)((AppleontreeObjectDef*)def)->duration;
     ((CrackAnimState*)state)->elapsed = (f32)((AppleontreeObjectDef*)def)->elapsed;
     {
-        f32 scale = lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->unk20 / scale;
+        ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->unk20 / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd1 = ((CrackAnimState*)state)->stageEnd0 + (f32)((AppleontreeObjectDef*)def)->
-            unk21 / scale;
+            unk21 / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd2 = ((CrackAnimState*)state)->stageEnd1 + (f32)((AppleontreeObjectDef*)def)->
-            unk22 / scale;
+            unk22 / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd3 = ((CrackAnimState*)state)->stageEnd2 + (f32)((AppleontreeObjectDef*)def)->
-            unk23 / scale;
-        ((CrackAnimState*)state)->unk20 = (f32)((AppleontreeObjectDef*)def)->unk24 / scale;
-        ((CrackAnimState*)state)->unk28 = (f32)((AppleontreeObjectDef*)def)->unk25 / scale;
+            unk23 / lbl_803E3828;
+        ((CrackAnimState*)state)->unk20 = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
+        ((CrackAnimState*)state)->unk28 = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
         ((CrackAnimState*)state)->unk28 = ((CrackAnimState*)state)->unk28 * lbl_803E37DC;
         ((CrackAnimState*)state)->unk24 = lbl_803E37C8;
         ((CrackAnimState*)state)->unk38 = 0;
