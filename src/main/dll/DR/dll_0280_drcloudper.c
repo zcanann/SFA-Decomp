@@ -94,7 +94,6 @@ int drcloudper_selectActiveCloud(int obj)
     return 0;
 }
 
-#pragma peephole on
 void drcloudper_init(int obj, int setup)
 {
     DrCloudPerObject* cloud;
