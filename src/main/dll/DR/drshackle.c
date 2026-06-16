@@ -1,3 +1,19 @@
+/*
+ * drshackle swing/attachment math (part of the DR shackle object; the
+ * object's lifecycle callbacks live in dll_026E_drshackle.c).
+ *
+ * drshackle_updateAttachedPosition rides the shackle along its checkpoint
+ * route while it tracks the player: on first contact it anchors to the
+ * route (snapping yaw, seeding swing accel and floor offset), thereafter
+ * it advances the route and blends the swing each frame.
+ * drshackle_updateSwingBlend computes the per-frame swing-blend factor
+ * from the yaw delta between the object and its anchor, clamps it, and
+ * decides the return direction.
+ *
+ * `state` is a raw byte base; field offsets are spelled via the
+ * DRSHACKLE_*_OFFSET macros. Several `lbl_803E5Bxx` are plain float
+ * constants (see the inline value comments).
+ */
 #include "main/dll/DR/DRshackle.h"
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
