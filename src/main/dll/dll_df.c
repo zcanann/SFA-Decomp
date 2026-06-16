@@ -143,10 +143,10 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     {
         ((TrickyState*)state)->unkD0 = wg;
         ((TrickyState*)state)->stateFlags &= ~0x400LL;
-        *(u16*)(state + 0x98) = 0;
-        *(u16*)(state + 0x9a) = 0;
-        *(u16*)(state + 0x9c) = 0;
-        *(u16*)(state + 0x9e) = 0;
+        ((TrickyState*)state)->patch[0] = 0;
+        ((TrickyState*)state)->patch[1] = 0;
+        ((TrickyState*)state)->patch[2] = 0;
+        ((TrickyState*)state)->patch[3] = 0;
     }
     targetWg = Objfsa_GetWalkGroupIndexAtPoint((f32*)target, &wgi);
     if (((wg != 0) && (targetWg == 0)) &&
@@ -252,10 +252,10 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             {
                 *(s16*)&((TrickyState*)state)->unkD0 = ulink;
                 ((TrickyState*)state)->stateFlags &= ~0x400LL;
-                *(u16*)(state + 0x98) = 0;
-                *(u16*)(state + 0x9a) = 0;
-                *(u16*)(state + 0x9c) = 0;
-                *(u16*)(state + 0x9e) = 0;
+                ((TrickyState*)state)->patch[0] = 0;
+                ((TrickyState*)state)->patch[1] = 0;
+                ((TrickyState*)state)->patch[2] = 0;
+                ((TrickyState*)state)->patch[3] = 0;
             }
         }
         else if (((TrickyState*)state)->unk09 < 5)
