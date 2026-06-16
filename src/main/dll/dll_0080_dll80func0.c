@@ -1,3 +1,15 @@
+/*
+ * dll80func0 (DLL 0x80) - a foodbag-family modgfx effect builder.
+ *
+ * dll_80_func03 fills a stack FbBuf with a fixed list of FbCmd draw
+ * entries (textures taken from the `lbl_80315468` texture data array) and hands it
+ * to ModgfxInterface::spawnEffect. The `variant` arg only swaps the
+ * second entry's offsets/scale (lbl_803E0E60/64 vs lbl_803E0E68/6C); the
+ * low bit of the merged flag word selects whether the effect position is
+ * read from the source object (+0x18..) or the posSource transform
+ * (+0xc..). The two trailing _nop entry points are the DLL's empty
+ * func00/func01 slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -19,7 +31,6 @@ void dll_80_func03(int sourceObj, int variant, int posSource, uint flags)
     u8* base = lbl_80315468;
     FbCmd* e = buf.entries;
     FbCmd* p;
-    u32 fl;
 
     e[0].layer = 0;
     e[0].flags = 9;
@@ -94,11 +105,9 @@ void dll_80_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.hw[5] = *(s16*)(base + 0xba);
     buf.hw[6] = *(s16*)(base + 0xbc);
     buf.cmds = (FbCmd*)((u8*)&buf + 0x60);
-    fl = 0x4000010;
-    buf.flags = fl;
-    fl |= flags;
-    buf.flags = fl;
-    if (fl & 1)
+    buf.flags = 0x4000010;
+    buf.flags |= flags;
+    if ((buf.flags & 1) != 0)
     {
         if ((uint)sourceObj != 0)
         {
