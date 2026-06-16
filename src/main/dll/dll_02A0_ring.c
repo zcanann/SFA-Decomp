@@ -200,7 +200,7 @@ void ring_update(int obj)
         {
         case RING_ROUTE_MOVING_SHOT_A:
         case RING_ROUTE_MOVING_SHOT_B:
-            if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (hit = hitA) != 0 &&
+            if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (void*)(hit = hitA) != NULL &&
                 (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A || ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
@@ -217,7 +217,7 @@ void ring_update(int obj)
             arwbombcoll_updateMovingAxis(obj, state);
             break;
         case RING_ROUTE_STATIONARY_SHOT:
-            if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (hit = hitB) != 0 &&
+            if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (void*)(hit = hitB) != NULL &&
                 (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A || ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
@@ -251,7 +251,7 @@ void ring_update(int obj)
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > lbl_803E70A0)
         {
-            if (arwing != 0)
+            if ((void*)arwing != NULL)
             {
                 ((GameObject*)obj)->anim.velocityX =
                     oneOverTimeDelta * (*(f32*)(arwing + 0xc) - ((GameObject*)obj)->anim.localPosX);
@@ -348,7 +348,6 @@ void ring_update(int obj)
         }
         break;
     case 3:
-    case 4:
         break;
     }
 
