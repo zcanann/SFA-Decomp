@@ -1,23 +1,27 @@
+/*
+ * minimap (DLL 0x31) - the in-world minimap / compass HUD.
+ *
+ * Minimap_update() resolves the player's current map cell against
+ * gMinimapCellTable, picks the texture asset to display, animates the
+ * box open/close and fade, and renders one of three view modes (the
+ * view-mode selector: 0 = scrollable map texture, 1 = radar/blip
+ * view, 2 = area-name text). The per-frame input handler toggles the
+ * map (event 0xC8D), cycles the view mode with D-pad left/right, drives
+ * zoom (modes via powfCoreFast) and the compass blip, and plays the
+ * associated UI sfx.
+ *
+ * The HUD is suppressed (and faded out) when the camera is in mode
+ * 0x44, the viewport is letterboxed, the player model is hidden, or the
+ * pause menu is up. Minimap_initialise()/Minimap_release() own the
+ * texture buffers (minimapTexture, the compass at lbl_803DD940) and the
+ * 2-slot live-objects table at lbl_803DBBC8.
+ */
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
-
-extern int ObjGroup_FindNearestObject();
-extern undefined8 FUN_80053754();
-extern undefined4 FUN_80246dcc();
-
-extern undefined4 DAT_803dc818;
-extern undefined4 DAT_803de5a8;
-extern undefined4 DAT_803de5c4;
-extern undefined4 DAT_803de62b;
-extern undefined4 DAT_803de6b4;
-extern undefined4 DAT_803de6b8;
-extern undefined4 DAT_803de6bc;
-extern undefined4 DAT_803de6c0;
-extern f32 FLOAT_803e3098;
 
 typedef struct MinimapRow
 {
@@ -39,6 +43,9 @@ typedef struct MinimapMapEntry
 
 extern MinimapMapEntry gMinimapCellTable[];
 
+void fn_80133718(void);
+void fn_8013351C(void);
+
 extern int coordsToMapCell(f32 x, f32 z);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
@@ -59,8 +66,6 @@ extern void gameTextSetCursor(int a, int b, int c);
 extern void gameTextResetCursor(int n);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int a, int b);
-void fn_80133718(void);
-void fn_8013351C(void);
 
 extern u8 lbl_803DBBB0;
 extern u8 lbl_803DD7BA;
@@ -123,17 +128,12 @@ extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
-extern void* debugLogEnd;
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
 extern f32 lbl_803E2284;
 extern f32 lbl_803E2288;
 extern f32 lbl_803E228C;
 extern f32 lbl_803E2290;
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
-extern f32 lbl_803E22A0;
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void viewFn_80129c74(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -143,7 +143,6 @@ extern u8 lbl_803DD92A;
 extern f32 lbl_803E2278;
 extern f32 lbl_803E227C;
 extern f32 lbl_803E2280;
-extern void* lbl_803DD960;
 extern f32 timeDelta;
 extern void Sfx_StopFromObject(int obj, int id);
 extern u32 lbl_803E2200;
@@ -190,7 +189,7 @@ int Minimap_update(void)
     u16 hw;
     int cs;
     u32 texW, texH;
-    int bw, bh;
+    int boxW, boxH;
     f32 fx, fz;
     f32 ox, oy;
     f32 xrel, yrel;
@@ -408,10 +407,10 @@ int Minimap_update(void)
                     texW = ((Texture*)minimapTexture)->width;
                     texH = ((Texture*)minimapTexture)->height;
                     lbl_803DBBEC = (f32)texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
-                    bw = lbl_803DBBC0;
-                    a = (f32)bw / (f32)texW;
-                    bh = lbl_803DBBC4;
-                    b = (f32)bh / (f32)texH;
+                    boxW = lbl_803DBBC0;
+                    a = (f32)boxW / (f32)texW;
+                    boxH = lbl_803DBBC4;
+                    b = (f32)boxH / (f32)texH;
                     a = (a < b) ? a : b;
                     a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
                     lbl_803DBBB8 = a;
@@ -425,12 +424,12 @@ int Minimap_update(void)
                         xrel = -((GameObject*)player)->anim.worldPosX + (f32)lbl_803DD948;
                         yrel = -((GameObject*)player)->anim.worldPosZ + (f32)lbl_803DD94A;
                     }
-                    e = (f32)bw - (f32)texW * lbl_803DBBB4;
+                    e = (f32)boxW - (f32)texW * lbl_803DBBB4;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
                     panx = -t;
-                    e = (f32)bh - (f32)texH * lbl_803DBBB4;
+                    e = (f32)boxH - (f32)texH * lbl_803DBBB4;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
@@ -438,18 +437,18 @@ int Minimap_update(void)
                     t = 0.0f;
                     if (t == panx)
                     {
-                        a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
+                        a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(boxW / 2);
                         t = (t > a) ? t : a;
-                        b = (f32)texW * lbl_803DBBB4 - (f32)bw;
+                        b = (f32)texW * lbl_803DBBB4 - (f32)boxW;
                         t = (t < b) ? t : b;
                         ox = t;
                     }
                     t = *(f32*)&lbl_803E2208;
                     if (t == pany)
                     {
-                        a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
+                        a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(boxH / 2);
                         t = (t > a) ? t : a;
-                        b = (f32)texH * lbl_803DBBB4 - (f32)bh;
+                        b = (f32)texH * lbl_803DBBB4 - (f32)boxH;
                         t = (t < b) ? t : b;
                         oy = t;
                     }
@@ -463,25 +462,18 @@ int Minimap_update(void)
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
-                    hudDrawRect(0x32, lbl_803DD938, bw + 0x32, lbl_803DD938 + bh, &cwRect);
+                    hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
                     fv = lbl_803DBBB4 * (vq - (f32)vv);
                     drawPartialTexture(minimapTexture,
                                        (lbl_803E2210 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
-                        (u8)lbl_803DD932,
-                        (int)(lbl_803E2214 * *(f32*)&lbl_803DBBB4),
-                        texW - u, texH - vv, u, vv
-                    )
-                    ;
+                                       (u8)lbl_803DD932,
+                                       (int)(lbl_803E2214 * *(f32*)&lbl_803DBBB4),
+                                       texW - u, texH - vv, u, vv);
                     cx = 0.5f +
                         ((lbl_803DBBB4 * (xrel * lbl_803DBBEC) + lbl_803E2210) - ox - panx);
                     cy = 0.5f +
-                        ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)
-                    lbl_803DD938
-                    )
-                    -oy - pany
-                    )
-                    ;
+                        ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)lbl_803DD938) - oy - pany);
                     ((u8*)&col)[3] = (u8)lbl_803DD932;
                     ((u8*)&col)[0] = 0;
                     ((u8*)&col)[1] = 0;
@@ -637,97 +629,10 @@ int Minimap_update(void)
     return 0;
 }
 
-#pragma scheduling on
-#pragma peephole on
-void FUN_80132034(void)
-{
-    bool bVar1;
-
-    bVar1 = false;
-    if ((DAT_803de5c4 == '\x02') && (DAT_803dc818 != '\0'))
-    {
-        bVar1 = true;
-    }
-    if (!bVar1)
-    {
-        return;
-    }
-    DAT_803de5a8 = 5;
-    return;
-}
-
-void FUN_801334d4(void)
-{
-    FUN_80053754();
-    FUN_80053754();
-    return;
-}
-
-void FUN_80134bc4(void)
-{
-    DAT_803de62b = 0;
-    return;
-}
-
-void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  char* param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-}
-
-void FUN_80135814(void)
-{
-    return;
-}
-
-void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)
-{
-    DAT_803de6b4 = param_4;
-    DAT_803de6b8 = param_3;
-    DAT_803de6bc = param_2;
-    DAT_803de6c0 = param_1;
-    FUN_80246dcc(-0x7fc54288);
-    return;
-}
-
-void FUN_80135c84(int param_1, uint param_2)
-{
-    *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
-        (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) & 0xbf;
-    return;
-}
-
-void FUN_8013651c(int param_1)
-{
-    int iVar1;
-
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    *(uint*)(iVar1 + 0x54) = *(uint*)(iVar1 + 0x54) | 0x80000000;
-    *(float*)(iVar1 + 0x808) = FLOAT_803e3098;
-    return;
-}
-
-/* ===== EN v1.0 retargeted leaves ========================================= */
-
-/* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
-/* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
-
-/* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
-
-/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
-/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 (u32). */
-/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
-/* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
-
-/* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 int titlescreen_getExtraSize(void);
-
-/* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
 void titlescreen_hitDetect(void);
-
 int titlescreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
@@ -751,8 +656,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 };
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_80133818(void)
 {
     f32 e;
@@ -782,40 +685,6 @@ void fn_80133818(void)
     }
 }
 #pragma dont_inline reset
-
-__declspec(section ".sdata") extern char lbl_803DBBF0[];
-
-void fn_80133F70(void* obj)
-{
-    char buf[12];
-    f32 threshold;
-    int a;
-    int b;
-    int c;
-    void* player;
-    void* nearest;
-
-    threshold = lbl_803E22A0;
-    a = 0;
-    b = 0;
-    c = 0;
-    if (gameTimerIsRunning())
-    {
-        gameTimerRun(obj);
-    }
-    player = (void*)Obj_GetPlayerObject();
-    nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
-    if (nearest != NULL)
-    {
-        ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
-    }
-    b = c - (b - a);
-    if (b < 0)
-    {
-        b = 0;
-    }
-    sprintf(buf, lbl_803DBBF0, b);
-}
 
 void fn_80133718(void)
 {
@@ -849,11 +718,6 @@ void fn_80133718(void)
     viewFn_80129c74();
 }
 
-/* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
- * the buffers at minimapTexture and lbl_803DD940 (the first only if
- * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
- * tearing down each non-null entry via Obj_FreeObject. Both buffer
- * pointers are zeroed at the end. */
 #pragma scheduling off
 #pragma peephole off
 void Minimap_release(void)
@@ -880,8 +744,7 @@ void Minimap_release(void)
 }
 #pragma peephole on
 
-/* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
- * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
+/* Load the compass texture and reset the box y-coordinate. */
 #pragma scheduling off
 void Minimap_initialise(void)
 {
@@ -889,34 +752,6 @@ void Minimap_initialise(void)
     lbl_803DD938 = 340;
 }
 
-/* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
- * via textureFree. */
-void dll_3F_release(void);
-
-/* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
-
-/* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
- * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
-
-/* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
- * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */
-
-/* EN v1.0 0x80138EF8  size: 28b  Set bit 0x80000000 of obj->_b8->_54
- * and store lbl_803E2408 into obj->_b8->_808. */
-
-/* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
- * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
-
-/* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
- * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
- * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
-
-/* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
- * from getCurUiDll is in {2..6} or equals 7, else 0. */
-
-/* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
- * minimapTexture is non-null, release via textureFree and zero both
- * minimapTexture and lbl_803DD92C. */
 #pragma scheduling on
 void fn_80133934(void)
 {
@@ -927,16 +762,6 @@ void fn_80133934(void)
         lbl_803DD92C = NULL;
     }
 }
-
-/* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
- * debugLogEnd to the start of the buffer and reload the print x/y
- * coordinates from saved values. */
-
-/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
- * the rlwimi only uses bit 0 of r4. No C form found to force it. */
-
-void titlescreen_free(u8* obj);
 
 #pragma scheduling off
 #pragma peephole off
