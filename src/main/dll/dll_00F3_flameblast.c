@@ -1,42 +1,66 @@
+/*
+ * flameblast (DLL 0xF3) - Tricky's fire-breath projectile, a member of
+ * the pushable/transporter object family (shares the FUN_80176920 /
+ * FUN_801778d0 / FUN_801778e0 sequence helpers with pushable, warppoint,
+ * invhit and iceblast).
+ *
+ * Spawned by Tricky (getTrickyObject), the blast flies along the rotated
+ * fire direction: fn_8017805C seeds the velocity from Tricky's heading and
+ * the path/queued-particle origin, and flameblast_update integrates the
+ * launch position over a per-frame timer while arming the damage hit
+ * volume once the timer passes a threshold. The object frees itself when
+ * Tricky is gone or its free flag (state.freeRequested) is set.
+ */
 #include "main/game_object.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/objhits.h"
 
 typedef struct FlameblastState
 {
-    u8 pad0[0x10 - 0x0];
-    u8 unk10;
-    u8 unk11;
+    f32 timer;          /* 0x00: per-frame flight timer */
+    f32 launchPosX;     /* 0x04: launch origin used by the localPos integration */
+    f32 launchPosY;     /* 0x08 */
+    f32 launchPosZ;     /* 0x0C */
+    u8 freeRequested;   /* 0x10: set externally to free the object next tick */
+    u8 hitVolumeDelay;  /* 0x11: frames to delay before clearing hit volumes */
     u8 pad12[0x14 - 0x12];
 } FlameblastState;
 
+STATIC_ASSERT(offsetof(FlameblastState, freeRequested) == 0x10);
+STATIC_ASSERT(offsetof(FlameblastState, hitVolumeDelay) == 0x11);
+STATIC_ASSERT(sizeof(FlameblastState) == 0x14);
+
+/* shared transporter-family helpers (also live in the sibling TUs) */
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
-extern void Obj_FreeObject(int* obj);
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
+
+extern void Obj_FreeObject(int* obj);
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+int fn_8017805C(int* obj, f32* state);
+extern void vecRotateZXY(void* in, void* out);
+extern s16* getTrickyObject(void);
+extern int fn_80138F90(void);
+extern f32* trickyGetQueuedPathParticlePos(s16* tricky);
+extern f32 timeDelta;
+
+/* animation/flight tuning floats */
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern f32 lbl_803E3618;
+extern f32 lbl_803E361C;
 extern f32 lbl_803E3620;
+extern f32 lbl_803E3624;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
-extern f32 timeDelta;
 extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
-extern int fn_8017805C(int* obj, f32* state);
-extern void vecRotateZXY(void* in, void* out);
 extern f32 lbl_803E3638;
-extern s16* getTrickyObject(void);
-extern int fn_80138F90(void);
-extern f32* trickyGetQueuedPathParticlePos(s16 * tricky);
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3624;
 
 static inline int* Transporter_GetActiveModel(void* obj)
 {
@@ -65,7 +89,7 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void FUN_801778d0(int param_1)
 {
-    *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
+    ((FlameblastState*)((GameObject*)param_1)->extra)->freeRequested = 1;
     return;
 }
 
@@ -74,46 +98,46 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
              int param_10)
 {
-    float fVar1;
-    short* psVar2;
+    f32 reach;
+    s16* tricky;
     undefined4 uVar3;
-    int iVar4;
-    float* pfVar5;
-    ushort local_28;
-    short local_26;
-    short local_24;
-    float local_20;
-    float local_1c;
-    float local_18;
-    float local_14;
+    int dirAdjust;
+    f32* origin;
+    u16 dirX;
+    s16 dirY;
+    s16 dirZ;
+    f32 posW;
+    f32 zero;
+    f32 posY;
+    f32 posZ;
 
-    psVar2 = (short*)FUN_80017a90();
-    local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != (short*)0x0))
+    tricky = (s16*)FUN_80017a90();
+    zero = lbl_803E42B0;
+    if ((*(char*)(param_10 + 0x10) == '\0') && (tricky != (s16*)0x0))
     {
-        *(float*)(param_9 + 0x24) = lbl_803E42B0;
-        *(float*)(param_9 + 0x28) = local_1c;
-        *(float*)(param_9 + 0x2c) = lbl_803E42B4;
-        local_18 = local_1c;
-        local_14 = local_1c;
-        local_20 = lbl_803E42B8;
-        local_24 = psVar2[2];
-        local_26 = psVar2[1];
-        iVar4 = FUN_801365ac((int)psVar2);
-        local_28 = *psVar2 + (short)iVar4;
-        FUN_80017748(&local_28, (float*)(param_9 + 0x24));
-        if ((psVar2[0x58] & 0x800U) == 0)
+        *(f32*)(param_9 + 0x24) = lbl_803E42B0;
+        *(f32*)(param_9 + 0x28) = zero;
+        *(f32*)(param_9 + 0x2c) = lbl_803E42B4;
+        posY = zero;
+        posZ = zero;
+        posW = lbl_803E42B8;
+        dirZ = tricky[2];
+        dirY = tricky[1];
+        dirAdjust = FUN_801365ac((int)tricky);
+        dirX = *tricky + (s16)dirAdjust;
+        FUN_80017748(&dirX, (f32*)(param_9 + 0x24));
+        if ((tricky[0x58] & 0x800U) == 0)
         {
-            pfVar5 = (float*)(psVar2 + 6);
+            origin = (f32*)(tricky + 6);
         }
         else
         {
-            pfVar5 = (float*)FUN_801365b8((int)psVar2);
+            origin = (f32*)FUN_801365b8((int)tricky);
         }
-        fVar1 = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *pfVar5);
-        *(float*)(param_10 + 8) = -(fVar1 * *(float*)(param_9 + 0x28) - pfVar5[1]);
-        *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
+        reach = lbl_803E42BC;
+        *(f32*)(param_10 + 4) = -(lbl_803E42BC * *(f32*)(param_9 + 0x24) - *origin);
+        *(f32*)(param_10 + 8) = -(reach * *(f32*)(param_9 + 0x28) - origin[1]);
+        *(f32*)(param_10 + 0xc) = -(reach * *(f32*)(param_9 + 0x2c) - origin[2]);
         if (*(char*)(param_10 + 0x11) == '\0')
         {
             ObjHits_ClearHitVolumes(param_9);
@@ -133,69 +157,66 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 }
 
 
-int flameblast_getExtraSize(void) { return 0x14; }
+int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
 
 #pragma scheduling off
 void flameblast_render(int* obj)
 {
-    f32 vec[3];
-    f32 f = lbl_803E362C * *(f32*)((GameObject*)obj)->extra + lbl_803E3628;
-    vec[0] = lbl_803E3618;
-    vec[1] = lbl_803E3620;
-    vec[2] = lbl_803E3618;
-    fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
+    f32 color[3];
+    f32 scale = lbl_803E362C * ((FlameblastState*)((GameObject*)obj)->extra)->timer + lbl_803E3628;
+    color[0] = lbl_803E3618;
+    color[1] = lbl_803E3620;
+    color[2] = lbl_803E3618;
+    fn_80098B18((int)obj, scale, 2, 0, 0, (int)color);
 }
 
 void objSetAnimSpeedTo1(int* obj)
 {
-    u8 v = 0x1;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x10) = v;
+    ((FlameblastState*)((GameObject*)obj)->extra)->freeRequested = 1;
 }
 
 #pragma peephole off
 void flameblast_update(int* obj)
 {
-    f32* state = ((GameObject*)obj)->extra;
-    state[0] = state[0] + timeDelta;
-    if (state[0] > lbl_803E3630)
+    FlameblastState* state = ((GameObject*)obj)->extra;
+    state->timer = state->timer + timeDelta;
+    if (state->timer > lbl_803E3630)
     {
-        state[0] = state[0] - lbl_803E3630;
-        if (fn_8017805C(obj, state) == 0)
+        state->timer = state->timer - lbl_803E3630;
+        if (fn_8017805C(obj, (f32*)state) == 0)
         {
             return;
         }
     }
     else
     {
-        if (state[0] > lbl_803E3634)
+        if (state->timer > lbl_803E3634)
         {
-            if (((FlameblastState*)state)->unk11 == 0)
+            if (state->hitVolumeDelay == 0)
             {
                 ObjHits_SetHitVolumeSlot((u32)obj, 0x1a, 1, 0);
             }
         }
     }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state[0] + state[1];
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state[0] + state[2];
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state[0] + state[3];
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * state->timer + state->launchPosX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * state->timer + state->launchPosY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state->timer + state->launchPosZ;
 }
 
 void flameblast_init(int* obj, u8* def)
 {
-    f32* state = ((GameObject*)obj)->extra;
-    fn_8017805C(obj, state);
-    state[0] = lbl_803E3638 * (f32)(s32) * (s16*)((char*)def + 0x1a);
-    ((FlameblastState*)state)->unk11 = 2;
+    FlameblastState* state = ((GameObject*)obj)->extra;
+    fn_8017805C(obj, (f32*)state);
+    state->timer = lbl_803E3638 * (f32)(s32) * (s16*)(def + 0x1a);
+    state->hitVolumeDelay = 2;
 }
-
-void WarpPoint_init(int* obj, u8* def);
 
 #pragma opt_common_subs off
 int fn_8017805C(int* obj, f32* state)
 {
     s16* tricky;
-    f32* pf;
-    f32 k;
+    f32* origin;
+    f32 reach;
     struct
     {
         s16 dir[3];
@@ -204,19 +225,19 @@ int fn_8017805C(int* obj, f32* state)
     } vec;
 
     tricky = getTrickyObject();
-    if (*(u8*)((char*)state + 0x10) != 0 || tricky == NULL)
+    if (((FlameblastState*)state)->freeRequested != 0 || tricky == NULL)
     {
         Obj_FreeObject(obj);
         return 0;
     }
     {
-        f32 f = lbl_803E3618;
-        ((GameObject*)obj)->anim.velocityX = f;
-        ((GameObject*)obj)->anim.velocityY = f;
+        f32 zero = lbl_803E3618;
+        ((GameObject*)obj)->anim.velocityX = zero;
+        ((GameObject*)obj)->anim.velocityY = zero;
         ((GameObject*)obj)->anim.velocityZ = lbl_803E361C;
-        vec.pos[1] = f;
-        vec.pos[2] = f;
-        vec.pos[3] = f;
+        vec.pos[1] = zero;
+        vec.pos[2] = zero;
+        vec.pos[3] = zero;
         vec.pos[0] = lbl_803E3620;
     }
     vec.dir[2] = tricky[2];
@@ -225,19 +246,19 @@ int fn_8017805C(int* obj, f32* state)
     vecRotateZXY(&vec, &((GameObject*)obj)->anim.velocityX);
     if ((((GameObject*)tricky)->objectFlags & 0x800) != 0)
     {
-        pf = trickyGetQueuedPathParticlePos(tricky);
+        origin = trickyGetQueuedPathParticlePos(tricky);
     }
     else
     {
-        pf = &((GameObject*)tricky)->anim.localPosX;
+        origin = &((GameObject*)tricky)->anim.localPosX;
     }
-    k = lbl_803E3624;
-    state[1] = -(k * ((GameObject*)obj)->anim.velocityX - pf[0]);
-    state[2] = -(k * ((GameObject*)obj)->anim.velocityY - pf[1]);
-    state[3] = -(k * ((GameObject*)obj)->anim.velocityZ - pf[2]);
-    if (*(u8*)((char*)state + 0x11) != 0)
+    reach = lbl_803E3624;
+    state[1] = -(reach * ((GameObject*)obj)->anim.velocityX - origin[0]);
+    state[2] = -(reach * ((GameObject*)obj)->anim.velocityY - origin[1]);
+    state[3] = -(reach * ((GameObject*)obj)->anim.velocityZ - origin[2]);
+    if (((FlameblastState*)state)->hitVolumeDelay != 0)
     {
-        *(u8*)((char*)state + 0x11) -= 1;
+        ((FlameblastState*)state)->hitVolumeDelay -= 1;
     }
     else
     {
@@ -245,8 +266,4 @@ int fn_8017805C(int* obj, f32* state)
     }
     return 1;
 }
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-
 #pragma opt_common_subs reset
