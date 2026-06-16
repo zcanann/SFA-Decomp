@@ -75,9 +75,9 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     undefined8 msgResult;
 
     val = lbl_803E3A60;
-    if (*(char*)(state + 0x27b) == '\0')
+    if (*(char*)&((BaddieState*)state)->moveJustStartedB == '\0')
     {
-        if (*(char*)(state + 0x346) != '\0')
+        if (*(char*)&((BaddieState*)state)->moveDone != '\0')
         {
             msgResult = ObjMsg_SendToObjects(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0, 3,
                                          param_9, 0xe0000, param_9, in_r8, in_r9, in_r10);
@@ -95,9 +95,9 @@ FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         *extraData = lbl_803E3A60;
         extraData[1] = val;
         (**(code**)(*DAT_803dd70c + 0x14))(param_9, state, 6);
-        *(undefined4*)(state + 0x2d0) = 0;
-        *(undefined*)(state + 0x25f) = 0;
-        *(undefined*)(state + 0x349) = 0;
+        *(undefined4*)&((BaddieState*)state)->targetObj = 0;
+        *(undefined*)&((BaddieState*)state)->physicsActive = 0;
+        *(undefined*)&((BaddieState*)state)->hasTarget = 0;
         ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
@@ -119,17 +119,17 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     double startVal;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
-    *(undefined*)(param_10 + 0x34d) = 3;
-    *(float*)(param_10 + 0x2a0) = lbl_803E3A64;
+    *(undefined*)&((BaddieState*)param_10)->unk34D = 3;
+    ((BaddieState*)param_10)->moveSpeed = lbl_803E3A64;
     val = lbl_803E3A60;
     startVal = (double)lbl_803E3A60;
-    *(float*)(param_10 + 0x280) = lbl_803E3A60;
-    *(float*)(param_10 + 0x284) = val;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ((BaddieState*)param_10)->animSpeedA = lbl_803E3A60;
+    ((BaddieState*)param_10)->animSpeedB = val;
+    if (*(char*)&((BaddieState*)param_10)->moveJustStartedA != '\0')
     {
         FUN_800305f8(startVal, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9, 1, 0, param_12,
                      param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
     if ((*(byte*)(param_10 + 0x356) & 1) == 0)
     {
@@ -150,7 +150,7 @@ FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         FUN_80006824(param_9, SFXdoor_creak);
         *(byte*)(param_10 + 0x356) = *(byte*)(param_10 + 0x356) | 2;
-        (**(code**)(*DAT_803dd738 + 0x4c))(param_9, (int)*(short*)(extra + 0x3f0), 0xffffffff, 0);
+        (**(code**)(*DAT_803dd738 + 0x4c))(param_9, (int)((GroundBaddieState*)extra)->unk3F0, 0xffffffff, 0);
     }
     return 0;
 }
@@ -288,14 +288,14 @@ FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 para
     (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairPriority = 10;
     (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
-    *(float*)(param_10 + 0x2a0) = lbl_803E3A70;
+    ((BaddieState*)param_10)->moveSpeed = lbl_803E3A70;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 5, 0, noTarget, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 1;
+    *(undefined*)&((BaddieState*)param_10)->unk34D = 1;
     return 0;
 }
 
@@ -351,13 +351,13 @@ FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 para
                          param_9, 6, 0, vtable, param_13, param_14, param_15, param_16);
             *(undefined*)(param_10 + 0x346) = 0;
         }
-        *(undefined*)(param_10 + 0x34d) = 1;
-        *(float*)(param_10 + 0x2a0) =
+        *(undefined*)&((BaddieState*)param_10)->unk34D = 1;
+        ((BaddieState*)param_10)->moveSpeed =
             lbl_803E3A74 +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e3a58) /
+            (float)((double)CONCAT44(0x43300000, (uint)((GroundBaddieState*)extra)->aggression) - DOUBLE_803e3a58) /
             lbl_803E3A78;
     }
-    *(float*)(param_10 + 0x280) = lbl_803E3A60;
+    ((BaddieState*)param_10)->animSpeedA = lbl_803E3A60;
     return 0;
 }
 
@@ -387,18 +387,18 @@ FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 para
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         ObjHits_DisableObject(param_9);
-        *(float*)(param_10 + 0x2a0) = lbl_803E3A70;
-        *(float*)(param_10 + 0x280) = lbl_803E3A60;
+        ((BaddieState*)param_10)->moveSpeed = lbl_803E3A70;
+        ((BaddieState*)param_10)->animSpeedA = lbl_803E3A60;
     }
-    if (*(char*)(param_10 + 0x346) != '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveDone != '\0')
     {
-        FUN_80017698((int)*(short*)(extra + 0x3f4), 0);
+        FUN_80017698((int)((GroundBaddieState*)extra)->gameBitB, 0);
         FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined4*)(param_10 + 0x2d0) = 0;
-        *(undefined*)(param_10 + 0x25f) = 0;
-        *(undefined*)(param_10 + 0x349) = 0;
-        *(undefined2*)(extra + 0x402) = 0;
+        *(undefined4*)&((BaddieState*)param_10)->targetObj = 0;
+        *(undefined*)&((BaddieState*)param_10)->physicsActive = 0;
+        *(undefined*)&((BaddieState*)param_10)->hasTarget = 0;
+        *(undefined2*)&((GroundBaddieState*)extra)->targetState = 0;
         if ((*(byte*)(subObj + 9) & 2) == 0)
         {
             *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.
@@ -588,21 +588,21 @@ FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined8 copyResult;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
-    if (*(int*)(param_10 + 0x2d0) == 0)
+    if (*(int*)&((BaddieState*)param_10)->targetObj == 0)
     {
         (**(code**)(*DAT_803dd70c + 0x14))(param_9, param_10, 0);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
     else
     {
         (**(code**)(*DAT_803dd70c + 0x14))(param_9, param_10, 1);
         val = lbl_803E3B00;
-        *(float*)(param_10 + 0x290) = lbl_803E3B00;
-        *(float*)(param_10 + 0x28c) = val;
-        FUN_80003494(extra + 0x35c, param_9 + 0xc, 0xc);
+        ((BaddieState*)param_10)->moveInputX = lbl_803E3B00;
+        ((BaddieState*)param_10)->moveInputZ = val;
+        FUN_80003494(((GroundBaddieState*)extra)->route35C, param_9 + 0xc, 0xc);
         copyResult = FUN_80003494(extra + 0x368, *(int*)(param_10 + 0x2d0) + 0xc, 0xc);
         FUN_80006a54(copyResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-        if ((*(float*)(param_10 + 0x2c0) < lbl_803E3B04) && (*(char*)(extra + 0x405) == '\x02'))
+        if ((((BaddieState*)param_10)->targetDistance < lbl_803E3B04) && (*(char*)&((GroundBaddieState*)extra)->unk405 == '\x02'))
         {
             return 5;
         }
@@ -633,7 +633,7 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     int player;
     undefined4 result;
 
-    if (*(char*)(param_10 + 0x27b) == '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveJustStartedB == '\0')
     {
         player = FUN_80017a98();
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player, 0xe0000,
@@ -651,9 +651,9 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     else
     {
         (**(code**)(*DAT_803dd70c + 0x14))(param_9, param_10, 3);
-        *(undefined4*)(param_10 + 0x2d0) = 0;
-        *(undefined*)(param_10 + 0x25f) = 0;
-        *(undefined*)(param_10 + 0x349) = 0;
+        *(undefined4*)&((BaddieState*)param_10)->targetObj = 0;
+        *(undefined*)&((BaddieState*)param_10)->physicsActive = 0;
+        *(undefined*)&((BaddieState*)param_10)->hasTarget = 0;
         (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
@@ -671,18 +671,18 @@ FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 sound;
 
     sound = *(undefined4*)&((GameObject*)param_9)->extra;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
-    *(undefined*)(param_10 + 0x25f) = 1;
-    *(undefined2*)(param_9 + 4) = *(undefined2*)(param_10 + 0x19e);
-    *(undefined2*)(param_9 + 2) = *(undefined2*)(param_10 + 0x19c);
+    *(undefined*)&((BaddieState*)param_10)->physicsActive = 1;
+    *(undefined2*)(param_9 + 4) = *(undefined2*)&((BaddieState*)param_10)->spawnRotZ;
+    *(undefined2*)(param_9 + 2) = *(undefined2*)&((BaddieState*)param_10)->spawnRotY;
     (**(code**)(*DAT_803dd738 + 0x10))
         ((double)lbl_803E3B24, (double)lbl_803E3B28, param_9, param_10, sound);
-    *(float*)(param_10 + 0x2a0) = lbl_803E3B2C * *(float*)(param_10 + 0x280);
+    ((BaddieState*)param_10)->moveSpeed = lbl_803E3B2C * ((BaddieState*)param_10)->animSpeedA;
     return 0;
 }
 
@@ -712,12 +712,12 @@ FUN_801615d4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     undefined4 result;
 
-    if (*(char*)(param_10 + 0x27b) != '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveJustStartedB != '\0')
     {
         (**(code**)(*DAT_803dd70c + 0x14))(param_9, param_10, 8);
-        *(undefined4*)(param_10 + 0x2d0) = 0;
-        *(undefined*)(param_10 + 0x25f) = 0;
-        *(undefined*)(param_10 + 0x349) = 0;
+        *(undefined4*)&((BaddieState*)param_10)->targetObj = 0;
+        *(undefined*)&((BaddieState*)param_10)->physicsActive = 0;
+        *(undefined*)&((BaddieState*)param_10)->hasTarget = 0;
         param_1 = ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
@@ -750,18 +750,18 @@ FUN_80161c08(undefined8 param_1, double param_2, double param_3, undefined8 para
     int extra;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveJustStartedA != '\0')
     {
         FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
-    *(float*)(param_10 + 0x2a0) = lbl_803E3B80;
+    ((BaddieState*)param_10)->moveSpeed = lbl_803E3B80;
     if ((*(uint*)(param_10 + 0x314) & 0x200) != 0)
     {
         FUN_80006824(param_9, SFXdoor_creak);
         *(uint*)(param_10 + 0x314) = *(uint*)(param_10 + 0x314) & 0xfffffdff;
-        (**(code**)(*DAT_803dd738 + 0x4c))(param_9, (int)*(short*)(extra + 0x3f0), 0xffffffff, 1);
+        (**(code**)(*DAT_803dd738 + 0x4c))(param_9, (int)((GroundBaddieState*)extra)->unk3F0, 0xffffffff, 1);
     }
     return 0;
 }
@@ -796,21 +796,21 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          param_9, 1, 0, param_12, param_13, param_14, param_15, param_16);
-            *(undefined*)(param_10 + 0x346) = 0;
+            *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
         }
     }
     else if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 4, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(undefined*)&((BaddieState*)param_10)->moveDone = 0;
     }
-    *(float*)(param_10 + 0x2a0) = lbl_803E3B88;
+    ((BaddieState*)param_10)->moveSpeed = lbl_803E3B88;
     (**(code**)(*DAT_803dd70c + 0x20))(param_1, param_9, param_10, 1);
     dir = *(char*)(subObj + 0x45) * -2 + 1U ^ 0x80000000;
     bZ[1] = 176.0;
     (**(code**)(**(int**)(*(int*)(subObj + 0x38) + 0x68) + 0x28))
-        ((double)(*(float*)(param_10 + 0x280) *
+        ((double)(((BaddieState*)param_10)->animSpeedA *
              (f32)(s32)dir),
         *(int*)(subObj + 0x38), subObj + 0x48
     )
@@ -839,7 +839,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     aX = (float)dist;
     angle = FUN_80017730();
     ((GameObject*)param_9)->anim.rotY = (short)angle * ((short)((int)*(char*)(subObj + 0x45) << 1) + -1);
-    if (*(char*)(param_10 + 0x346) == '\0')
+    if (*(char*)&((BaddieState*)param_10)->moveDone == '\0')
     {
         result = 0;
     }
