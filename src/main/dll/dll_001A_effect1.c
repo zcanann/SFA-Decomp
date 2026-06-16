@@ -106,7 +106,7 @@ typedef struct PartfxEffectState
     u8 initialStateByte;
     s8 emitterCount;
     u8 releaseRequested;
-    char byte13B;
+    u8 byte13B;
     u8 requestedStage;
     u8 byte13D;
     u8 frameUpdated;
@@ -133,7 +133,7 @@ STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 #define gModgfxActiveEffectRegistry DAT_8039ce58
 
-extern ModgfxActiveEffect*gModgfxActiveEffectRegistry[];
+extern ModgfxActiveEffect* gModgfxActiveEffectRegistry[];
 
 static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 {
@@ -149,7 +149,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 {
     return gModgfxActiveEffectRegistry;
 }
-
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
@@ -1307,9 +1306,6 @@ void Effect1_initialise(void)
 }
 
 void Effect2_func03_nop(void);
-
-
-
 
 
 ObjectDescriptor11 projgfx_funcs = {
