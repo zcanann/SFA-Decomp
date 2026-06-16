@@ -1,3 +1,14 @@
+/*
+ * wctrexstatu (DLL 0x292) - a T-Rex statue prop in the Walled City (WC).
+ *
+ * The statue starts lowered and is "raised" by a map event: at init, if
+ * the object's map-event act is already RAISED (and we are not restoring
+ * from a save), it is nudged up by a fixed height. Once triggered - either
+ * because its raisedBit game bit is already set at init, or via anim event
+ * WCTREXSTATU_CALLBACK_TRIGGER - it swaps to the triggered texture and sets
+ * unkF4, after which hitDetect periodically emits a dust particle effect.
+ * getObjectTypeId picks the render model from the placement's modelIndex.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -120,10 +131,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
         objAnim->bankIndex = 0;
     }
 
-    {
-        int yawTmp = setupData->type << 8;
-        *(s16*)obj = (s16)yawTmp;
-    }
+    ((GameObject*)obj)->anim.rotX = (s16)(setupData->type << 8);
     if (fromLoad == 0)
     {
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
