@@ -5236,12 +5236,11 @@ int fn_8029AF9C(int obj, int state)
                     p = lbl_80332ED4;
                     for (; i < 7; i++)
                     {
-                        if (*p != NULL)
+                        if (p[i] != NULL)
                         {
-                            Obj_FreeObject((int)*p);
-                            *p = NULL;
+                            Obj_FreeObject((int)p[i]);
+                            p[i] = NULL;
                         }
-                        p++;
                     }
                     if (lbl_803DE454 != NULL)
                     {
