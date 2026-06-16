@@ -1,6 +1,18 @@
+/*
+ * dll94func0 (DLL 0x94) - a one-shot modgfx effect spawner.
+ *
+ * dll_94_func03 builds a fixed nine-command GfxBuf on the stack (a small
+ * layered effect that varies between two presets selected by `variant`),
+ * derives its world position from the source/position objects when the
+ * positioning flag is set, then hands the whole buffer to the modgfx
+ * interface's spawnEffect. The four *_nop entry points and the dll_95
+ * forward decl exist to align this object's function set with the v1.0
+ * asm. Sibling of dll_0093 (same GfxCmd/GfxBuf layout and func03 shape).
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 
+/* GfxCmd/GfxBuf are duplicated from dll_0093; should be unified in a shared header. */
 typedef struct
 {
     u32 mode; /* +0x00 */
@@ -12,12 +24,12 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u8 lbl_803DB938[8];
+extern u8 lbl_803DB938[8]; /* texture/resource handle */
 extern f32 lbl_803E1270;
 extern f32 lbl_803E1278;
 extern u8 lbl_80317488[];
 extern f32 lbl_803E1268;
-extern f32 lbl_803E126C;
+extern f32 lbl_803E126C; /* 0.0f */
 extern f32 lbl_803E1274;
 extern f32 lbl_803E127C;
 extern f32 lbl_803E1280;
@@ -34,11 +46,7 @@ void dll_94_func00_nop(void)
 {
 }
 
-void dll_95_func01_nop(void);
-
-/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
- * the same large-struct + vtable-call pattern as foodbag's func03s; matching
- * bodies needs proper struct recovery as follow-up. */
+void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */
 
 typedef struct
 {
@@ -53,20 +61,21 @@ typedef struct
     s16 v44; /* +0x44 */
     s16 hw[7]; /* +0x46 */
     u32 flags; /* +0x54 */
-    u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
+    u8 v58, v59, v5a, v5b; /* +0x58..+0x5b */
+    u8 pad5c[1]; /* +0x5c layout-only; never written by dll_93/94 */
     s8 count; /* +0x5d */
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-void dll_94_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs
-)
+void dll_94_func03(int sourceObj, int variant, int posSource, uint flags, int arg5,
+                   f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* e;
     u8* base = lbl_80317488;
     f32 s = lbl_803E1268;
-    if (extraArgs != (f32*)0)
+    if (extraArgs != NULL)
     {
         s = *extraArgs;
     }
@@ -161,7 +170,7 @@ void dll_94_func03(int sourceObj, int variant, int posSource, uint flags, undefi
     buf.v59 = 6;
     buf.v5a = 0;
     buf.v5b = 0;
-    buf.count = (GfxCmd*)((u8*)e + 0xd8) - e;
+    buf.count = (GfxCmd*)((u8*)e + 0xd8) - e; /* 9 entries; pointer-diff form is load-bearing for matching */
     buf.hw[0] = *(s16*)(base + 0x6c);
     buf.hw[1] = *(s16*)(base + 0x6e);
     buf.hw[2] = *(s16*)(base + 0x70);
