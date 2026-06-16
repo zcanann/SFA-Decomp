@@ -110,9 +110,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
     if (mag != lbl_803E695C)
     {
-        dir[0] = dir[0] / mag;
-        dir[1] = dir[1] / mag;
-        dir[2] = dir[2] / mag;
+        *(f32*)&dir[0] = dir[0] / mag;
+        *(f32*)&dir[1] = dir[1] / mag;
+        *(f32*)&dir[2] = dir[2] / mag;
     }
     ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)from + 0xc);
     ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)from + 0x10);
