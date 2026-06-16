@@ -197,35 +197,35 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
 int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
 {
     int result;
-    RomCurveWalker* route;
+
     f32 d[3];
     f32 dist, ang, scale;
 
     result = 0;
     scale = c;
-    route = (RomCurveWalker*)routePtr;
-    d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
-    d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
+
+    d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+    d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b)
     {
-        if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(((RomCurveWalker*)routePtr), a) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
         {
-            if ((*gRomCurveInterface)->goNextPoint(route) != 0)
+            if ((*gRomCurveInterface)->goNextPoint(((RomCurveWalker*)routePtr)) != 0)
                 result = -1;
             else
-                result = (s8) * (u8*)((int)route->node9C + 0x18);
+                result = (s8) * (u8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
         }
         scale = lbl_803E6C78 * a;
     }
-    d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
-    d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
-    d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
+    d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
+    d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
+    d[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
-        d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
-        d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
+        d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+        d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
