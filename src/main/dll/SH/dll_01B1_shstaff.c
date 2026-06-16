@@ -1,6 +1,16 @@
-/* DLL 0x1B1 — SH staff object [801D9B1C-801D9BDC) */
+/*
+ * shstaff (DLL 0x1B1) - the Krazoa Staff pickup object and its trailing
+ * ring of light orbs.
+ *
+ * sh_staff_render positions the staff (carried, attached to the player's
+ * hand matrix in the carry phases) and animates up to ten light-orb child
+ * objects spread along the staff's two path points. sh_staff_SeqFn spawns
+ * the orbs on demand and consumes the carry/HUD animation events;
+ * sh_staff_update runs the pickup proximity / map-load state machine
+ * (phase 0 idle -> 1 carried -> 2 done). fn_801DA4A8 hides the staff and
+ * releases the orbs.
+ */
 #include "main/game_object.h"
-#include "main/dll/beaconflags_types.h"
 #include "main/dll/player_objects.h"
 
 int sh_staff_getExtraSize(void) { return 0x74; }
@@ -50,7 +60,6 @@ void sh_staff_free(int* obj, int p2)
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
 #include "main/game_ui_interface.h"
-#include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 
@@ -69,7 +78,6 @@ typedef struct ShStaffPlacement
     u8 pad1A[0x20 - 0x1A];
 } ShStaffPlacement;
 
-STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -100,7 +108,7 @@ extern f32 lbl_803E54F8;
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
+    extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
     ShStaffState* state;
     int player;
     int i;
@@ -330,10 +338,6 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int sh_beacon_getExtraSize(void);
-
-/* TODO stubs to align function set with v1.0 asm. Bodies are large
- * state-machine and animation logic; filling them is a follow-up task. */
 extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int* setup);
@@ -450,7 +454,7 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | 8);
 
     if (clearChildren != 0)
     {
@@ -591,6 +595,5 @@ end:
     }
 }
 
-void sh_beacon_init(int obj, int defData);
 
 extern int GameBit_Set(int eventId, int value);
