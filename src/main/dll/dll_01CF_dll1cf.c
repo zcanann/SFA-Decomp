@@ -1,3 +1,19 @@
+/*
+ * dll_1CF (dll1cf) - a small placement-driven object DLL. Only the
+ * dll_1CF_* class entry points and the trigger-init FUN_801b7314 are
+ * actually defined here; the surrounding STATIC_ASSERTs lock the shared
+ * struct-pool layouts this re-split TU compiles against (sizes verified
+ * against each class's getExtraSize), and GXWGFifo is the GX write-gather
+ * FIFO mapping.
+ *
+ * dll_1CF_init reads its placement def (Dll1CFObjectDef): a gate game bit
+ * at +0x1E arms the rotY setup, rotX comes from the +0x18 byte, and the
+ * object flags get the 0xE000 bits. FUN_801b7314 is a trigger-init that
+ * latches a marker into the extra block and, for placement mapId 0x49B23,
+ * arbitrates the 0xC5B/0xC5C game-bit pair to pick the sign of the two
+ * output floats.
+ */
+
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -9,28 +25,12 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
+#include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
-/*
- * Per-object extra state for the dimwooddoor2 burnable door
- * (dimwooddoor2_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-/*
- * Per-object extra state for the dll_1CE hatch door
- * (dll_1CE_getExtraSize == 0xC).
- */
-
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-
-/*
- * Per-object extra state for the dimmagicbridge flame bridge
- * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
- * variants in dimmagicbridge.c use their own layout.
- */
-
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -39,127 +39,120 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
-
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
+STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
+STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
+STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
+STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
+/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
+ * tables filled by the RomCurve interface). */
+STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
+
+/* extra[4] latch value: denormal float whose bit pattern is 0x14. */
+#define DLL1CF_TRIGGERED_MARKER 2.8026e-44
+
+/* GameObject extra[] block slots used by FUN_801b7314. */
+#define EXTRA_OUT_X 0
+#define EXTRA_OUT_Y 1
+#define EXTRA_TRIGGERED_MARKER 4
+
+/* Placement mapId values arbitrated in FUN_801b7314. */
+#define DLL1CF_MAP_GAMEBIT_PAIR 0x49b23
+#define DLL1CF_MAP_PASSTHROUGH  0x1ea9
+
+/* Game bits arbitrated in FUN_801b7314 (sign-of-output pair). */
+#define GAMEBIT_DLL1CF_A 0xc5b
+#define GAMEBIT_DLL1CF_B 0xc5c
+
+/* FUN_800067c0 trigger event id, and the objectFlags bits set in dll_1CF_init. */
+#define DLL1CF_TRIGGER_EVENT 0xdf
+#define DLL1CF_OBJECT_FLAGS  0xe000
+
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
+extern void FUN_800067c0(int* param, int value);
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4A30;
 
-/* dimwooddoor2 variant: trigger-init that loads a different float into the
- * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
-
+/* GX write-gather pipe FIFO. */
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-/* segment pragma-stack balance (re-split): */
-
-#include "main/game_object.h"
 
 typedef struct Dll1CFObjectDef
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s8 unk18;
+    s32 mapId;          /* 0x14: ObjPlacement mapId */
+    s8 rotXByte;        /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1A - 0x19];
-    s16 unk1A;
+    s16 rotYRaw;        /* 0x1A: scaled into rotY when the gate bit is set */
     s16 unk1C;
-    s16 unk1E;
+    s16 gateGameBit;    /* 0x1E: game bit that enables the rotY setup */
 } Dll1CFObjectDef;
 
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
- * tables filled by the RomCurve interface). */
-
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
-extern undefined4 FUN_800067c0();
-extern f32 lbl_803E4A30;
-
+/* load-bearing for this re-split TU's codegen - removing it shifts the .o. */
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
+/* These two fns intentionally compile with both passes ON / OFF respectively;
+ * the off/on blocks scope exactly FUN_801b7314 and the entry points below them,
+ * and the surrounding TU state is the default - no reset pair is needed. */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
+/* obj is taken as int (not GameObject*) for param coloring (CLAUDE.md #126). */
+void FUN_801b7314(int obj, undefined4 unused, float* outX, float* outY)
 {
-    uint bitValue;
-    int typeId;
+    uint bit;
+    int mapId;
     float* extra;
 
-    extra = ((GameObject*)param_1)->extra;
-    if (extra[4] == 0.0)
+    extra = ((GameObject*)obj)->extra;
+    if (extra[EXTRA_TRIGGERED_MARKER] == 0.0)  /* first trigger only */
     {
-        FUN_800067c0((int*)0xdf, 1);
+        FUN_800067c0((int*)DLL1CF_TRIGGER_EVENT, 1);
     }
-    extra[4] = 2.8026e-44;
-    typeId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    if (typeId == 0x49b23)
+    extra[EXTRA_TRIGGERED_MARKER] = DLL1CF_TRIGGERED_MARKER;  /* mark as triggered (denormal = bit pattern 0x14) */
+    mapId = ((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId;
+    if (mapId == DLL1CF_MAP_GAMEBIT_PAIR)
     {
-        bitValue = GameBit_Get(0xc5c);
-        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5b), bitValue == 0))
+        bit = GameBit_Get(GAMEBIT_DLL1CF_B);
+        if ((bit != 0) && (bit = GameBit_Get(GAMEBIT_DLL1CF_A), bit == 0))
         {
-            *param_3 = *extra;
-            *param_4 = extra[1];
+            *outX = extra[EXTRA_OUT_X];
+            *outY = extra[EXTRA_OUT_Y];
         }
-        bitValue = GameBit_Get(0xc5b);
-        if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5c), bitValue == 0))
+        bit = GameBit_Get(GAMEBIT_DLL1CF_A);
+        if ((bit != 0) && (bit = GameBit_Get(GAMEBIT_DLL1CF_B), bit == 0))
         {
-            *param_3 = -*extra;
-            *param_4 = -extra[1];
+            *outX = -extra[EXTRA_OUT_X];
+            *outY = -extra[EXTRA_OUT_Y];
         }
-        bitValue = GameBit_Get(0xc5b);
-        if (bitValue != 0)
+        bit = GameBit_Get(GAMEBIT_DLL1CF_A);
+        if (bit != 0)
         {
-            GameBit_Set(0xc5c, 0);
+            GameBit_Set(GAMEBIT_DLL1CF_B, 0);
         }
-        bitValue = GameBit_Get(0xc5b);
-        if (bitValue == 0)
+        bit = GameBit_Get(GAMEBIT_DLL1CF_A);
+        if (bit == 0)
         {
-            GameBit_Set(0xc5c, 1);
+            GameBit_Set(GAMEBIT_DLL1CF_B, 1);
         }
     }
-    else if ((typeId < 0x49b23) && (typeId == 0x1ea9))
+    /* the (mapId < ...) clause is redundant logically but load-bearing: it
+     * emits the binary-search compare the target dispatch is built on. */
+    else if ((mapId < DLL1CF_MAP_GAMEBIT_PAIR) && (mapId == DLL1CF_MAP_PASSTHROUGH))
     {
-        *param_3 = *extra;
-        *param_4 = extra[1];
+        *outX = extra[EXTRA_OUT_X];
+        *outY = extra[EXTRA_OUT_Y];
     }
     else
     {
-        *param_3 = *extra;
-        *param_4 = extra[1];
+        *outX = extra[EXTRA_OUT_X];
+        *outY = extra[EXTRA_OUT_Y];
     }
-    return;
 }
 
 #pragma scheduling off
@@ -184,30 +177,21 @@ void dll_1CF_initialise(void)
 {
 }
 
-void dim_tricky_free(void);
-
 int dll_1CF_getExtraSize(void) { return 0x0; }
 int dll_1CF_getObjectTypeId(void) { return 0x0; }
-int dim_tricky_getExtraSize(void);
 
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(f32);
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30);
+    s32 visibleInt = visible; /* widen to s32 for cmpwi */
+    if (visibleInt != 0) objRenderFn_8003b8f4(lbl_803E4A30);
 }
 
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
- * return 1 if the signed result dropped to or below 0. */
-
-void dll_1CF_init(int* obj, int* def)
+void dll_1CF_init(GameObject* obj, Dll1CFObjectDef* def)
 {
-    if ((u32)GameBit_Get(((Dll1CFObjectDef*)def)->unk1E) != 0u)
+    if ((u32)GameBit_Get(def->gateGameBit) != 0u)
     {
-        ((GameObject*)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef*)def)->unk1A << 13) / 45);
+        obj->anim.rotY = (s16)(((s32)def->rotYRaw << 13) / 45);
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
+    obj->anim.rotX = (s16)((s32)def->rotXByte << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | DLL1CF_OBJECT_FLAGS);
 }
