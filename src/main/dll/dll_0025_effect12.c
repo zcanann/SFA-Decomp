@@ -1,7 +1,24 @@
+/*
+ * effect12 (DLL 0x25) - one of the numbered particle-effect DLLs.
+ * Its single worker, Effect12_func04, fills an EffectSpawnParams request
+ * for one of a fixed set of effect ids (0x47e..0x48c) and hands it to
+ * gExpgfxInterface->spawnEffect. Per-id it sets the particle kind,
+ * lifetime (count), alpha, behaviour/render flags and a randomised
+ * position/velocity/scale (via randomGetRange and the lbl_803DFF.. float
+ * constants); id 0x48c additionally rotates a velocity by the model's
+ * rotX (vecRotateZXY).
+ *
+ * flags bit 0x200000 means the caller supplied an explicit EffectSrcParams
+ * source (copied into the request); behaviour-flag bit 1 then adds either
+ * that source position or the model's world position (model+0x18..0x20)
+ * to the spawn position.
+ */
 #include "main/game_object.h"
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
+
+#define EFFECT_FLAG_HAS_SRC 0x200000
 
 extern u32 randomGetRange(int min, int max);
 
@@ -29,7 +46,7 @@ extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
 
-int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
+int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* auxParam)
 {
   EffectSrcParams local;
   EffectSpawnParams p;
@@ -39,7 +56,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   {
     return -1;
   }
-  hasOffset = flags & 0x200000;
+  hasOffset = flags & EFFECT_FLAG_HAS_SRC;
   if (hasOffset != 0)
   {
     if (src == NULL)
@@ -88,6 +105,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
     p.kind = 0x159;
     break;
   case 0x483:
+    /* default src params (repeated verbatim in cases 0x484/0x485/0x48c) */
     if (src == NULL)
     {
       lbl_8039C3E0.x = lbl_803DFFA8;
@@ -172,13 +190,13 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
     p.flagsB = 0x908;
     break;
   case 0x487:
-    if (p6 == NULL)
+    if (auxParam == NULL)
     {
       return 0;
     }
-    p.velX = *p6;
-    p.velY = p6[1];
-    p.velZ = p6[2];
+    p.velX = *auxParam;
+    p.velY = auxParam[1];
+    p.velZ = auxParam[2];
     p.scale = lbl_803DFFD4;
     p.alpha = 0x40;
     p.count = 100;
@@ -250,11 +268,12 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
       lbl_8039C3E0.rot1 = 0;
       lbl_8039C3E0.rot2 = 0;
     }
-    if (p6 == NULL)
+    if (auxParam == NULL)
     {
       return -1;
     }
-    if (*(int*)p6 == 0)
+    /* auxParam[0] selects the mode: 0 = sparkle, 1 = smoke, else = directed burst */
+    if (*(int*)auxParam == 0)
     {
       p.scale = lbl_803DFFEC * (f32)(int)randomGetRange(8, 0x11);
       p.count = randomGetRange(5, 10);
@@ -262,7 +281,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
       p.flagsA = 0x80110;
       p.flagsB = 0x4000800;
     }
-    else if (*(int*)p6 == 1)
+    else if (*(int*)auxParam == 1)
     {
       p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
       p.velY = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
@@ -300,7 +319,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
   {
-    p.flagsA ^= 2LL;
+    p.flagsA ^= 2LL; /* LL forces a materialized XOR (li;xor) - recipe #74 */
   }
   if ((p.flagsA & 1) != 0)
   {
@@ -312,9 +331,9 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
     }
     else if (p.model != NULL)
     {
-      p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
-      p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
-      p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
+      p.posX = p.posX + ((GameObject*)p.model)->anim.worldPosX;
+      p.posY = p.posY + ((GameObject*)p.model)->anim.worldPosY;
+      p.posZ = p.posZ + ((GameObject*)p.model)->anim.worldPosZ;
     }
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
@@ -336,4 +355,5 @@ void Effect12_initialise(void)
 {
 }
 
+/* defined in dll_0027_effect14; declared here to anchor linker symbol order */
 void Effect14_func05_nop(void);
