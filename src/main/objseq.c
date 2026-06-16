@@ -256,11 +256,11 @@ int objSeqFindConditional(u8* seq, u8* seqState)
 
 void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
 {
+    u8* sourceModel;
     int callbackResult;
     s8 actionSlot;
     int movementState;
     int flags;
-    u8* sourceModel;
 
     (void)action;
 
@@ -4801,14 +4801,14 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
+    f32 z;
+    f32 y;
+    f32 x;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 angleSin;
     f32 angleCos;
-    f32 x;
-    f32 y;
-    f32 z;
 
     base = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (base == NULL)

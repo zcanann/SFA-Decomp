@@ -7499,13 +7499,13 @@ extern void* displayFrameBuffer;
 #pragma peephole on
 void videoSwapFrameBuffers(void)
 {
-    u16 sync;
+    int sync;
     int tok[3];
     char fifo[140];
 
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
-    if (sync == (u16)(lbl_803DCCAA + 1))
+    if ((u16)sync == (u16)(lbl_803DCCAA + 1))
     {
         lbl_803DCCAA = sync;
         if (displayFrameBuffer == externalFrameBuffer0)
