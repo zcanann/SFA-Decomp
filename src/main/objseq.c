@@ -357,6 +357,7 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     }
 }
 
+#pragma opt_common_subs off
 void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
 {
     void* result;
@@ -429,6 +430,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
     }
     return result;
 }
+#pragma opt_common_subs reset
 
 void ObjSeq_run(void)
 {
