@@ -1745,7 +1745,7 @@ void fn_800A081C(int p1, int p2, int mode)
 
     if (mode == 1)
     {
-        if (((ModgfxState*)p1)->channelFrames[((ModgfxState*)p1)->activeChannel] == 0)
+        if (((s16*)((char*)p1 + 238))[((ModgfxState*)p1)->activeChannel] == 0)
         {
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
