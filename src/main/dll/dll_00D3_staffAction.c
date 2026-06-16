@@ -1343,7 +1343,7 @@ void dll_D3_update(int* obj)
         {
             hits = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius);
             *(int*)&extra->boundsObj = hits;
-            if (hits != 0)
+            if ((void*)hits != NULL)
             {
                 (*(void (**)(int, int, int))(*(int**)(*(int*)(*(int*)&extra->boundsObj + 0x68)) + 0x20 / 4))(
                     *(int*)&extra->boundsObj,
@@ -1362,7 +1362,7 @@ void dll_D3_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->unk10;
-        (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement*)trans)->unk2E, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(s8*)((char*)trans + 0x2e), obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
