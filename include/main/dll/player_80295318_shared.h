@@ -1138,7 +1138,7 @@ void fn_802AB38C(int a, int b, int c);
 void fn_802AB5A4(int obj, int p2, int flags);
 void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player);
 int fn_802ABAE8(int obj, int state, int inner, f32 fv);
-int fn_802ABFBC(int obj, int state, int inner);
+void fn_802ABFBC(int obj, int state, int inner);
 void fn_802AC32C(int p1, int p2, int p3);
 void fn_802AD204(int p1, int obj);
 int fn_802ADC08(int obj, int inner, int p3);
