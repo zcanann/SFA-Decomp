@@ -333,9 +333,7 @@ s8 fn_801631C8(int* obj)
     count = 0;
     while (idx < outCount)
     {
-        int j = idx;
-        idx = j + 1;
-        if (siblingType == *(s16*)((char*)list[j] + 0x46)) count++;
+        if (siblingType == *(s16*)((char*)list[idx++] + 0x46)) count++;
     }
     if (count >= 7) return -1;
     if (Obj_IsLoadingLocked() == 0) return -1;
@@ -378,7 +376,7 @@ s8 fn_801631C8(int* obj)
                                      ((GameObject*)obj)->anim.parent);
         u8* slotBase = state + freeSlot * 4;
         *(int**)(slotBase + 0xc) = setup;
-        ((void(*)(f64, f64))*(int*)(*(int*)(*(int*)((char*)*(int**)(slotBase + 0xc) + 0x68)) + 0x24))(
+        ((void(*)(f64, f64))*(int*)(*(int*)(*(int*)((char*)setup + 0x68)) + 0x24))(
             (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
     }
     *(u16*)(state + 0x4e) += 1;
