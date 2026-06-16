@@ -1,3 +1,15 @@
+/*
+ * Firefly orbit-record helpers (compiled just ahead of dll_020B_firefly).
+ *
+ * A LgtFireFlyRec drives one firefly's hovering motion. fn_801F4C28 seeds the
+ * record from the object's spawn position - the four src slots and pos all
+ * start at the object's local position - and picks a random initial angle and
+ * per-frame angular step plus the orbit radius bounds. fn_801F4D54 advances the
+ * record one frame: it re-rolls the vertical bob (offY) and outward radius
+ * (offZ), spins the orbit angle and rotates a unit offset by it through
+ * vecRotateZXY, then re-bases the resulting offset onto pos. fn_801F4C04 is the
+ * object think callback, forwarding to the firefly update in dll_020B_firefly.
+ */
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
 
@@ -14,6 +26,17 @@ extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EC8;
 
 extern void FireFlyFn_801f4f88(int* obj);
+
+/* per-frame angular step bounds (1/65536-turn units) */
+#define FIREFLY_ANGLE_STEP_MIN 0x1f4
+#define FIREFLY_ANGLE_STEP_MAX 0x5dc
+/* angle advance applied each update */
+#define FIREFLY_ANGLE_ADVANCE_MIN 0xbb8
+#define FIREFLY_ANGLE_ADVANCE_MAX 0x1388
+/* vertical bob amplitude ceiling */
+#define FIREFLY_AMP_MAX 0x3c
+/* minimum inward margin when re-rolling the orbit radius */
+#define FIREFLY_RADIUS_MARGIN 0x14
 
 int fn_801F4C04(int* obj)
 {
@@ -40,9 +63,10 @@ void fn_801F4C28(u8* obj, u8* rec)
     ((LgtFireFlyRec*)rec)->baseZ = lbl_803E5EB4;
     ((LgtFireFlyRec*)rec)->unk68 = 0;
     ((LgtFireFlyRec*)rec)->unk67 = 0;
-    ((LgtFireFlyRec*)rec)->angleStep = (s16)randomGetRange(0x1f4, 0x5dc);
+    ((LgtFireFlyRec*)rec)->angleStep =
+        (s16)randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
     ((LgtFireFlyRec*)rec)->angle = (s16)randomGetRange(0, 0xfde8);
-    ((LgtFireFlyRec*)rec)->ampMax = 0x3c;
+    ((LgtFireFlyRec*)rec)->ampMax = FIREFLY_AMP_MAX;
     ((LgtFireFlyRec*)rec)->unk66 = 4;
     ((LgtFireFlyRec*)rec)->radiusMin = lbl_803E5EB8;
     ((LgtFireFlyRec*)rec)->radius = lbl_803E5EBC;
@@ -86,9 +110,11 @@ void fn_801F4D54(int obj, u8* rec)
     {
         ((LgtFireFlyRec*)rec)->offZ =
             ((LgtFireFlyRec*)rec)->radius -
-            (f32)(s32)(randomGetRange(0x14, (s16)(s32)((LgtFireFlyRec*)rec)->radius));
+            (f32)(s32)(randomGetRange(FIREFLY_RADIUS_MARGIN,
+                                      (s16)(s32)((LgtFireFlyRec*)rec)->radius));
     }
-    ((LgtFireFlyRec*)rec)->angle += (s16)randomGetRange(0xbb8, 0x1388);
+    ((LgtFireFlyRec*)rec)->angle +=
+        (s16)randomGetRange(FIREFLY_ANGLE_ADVANCE_MIN, FIREFLY_ANGLE_ADVANCE_MAX);
     locals.z0 = lbl_803E5EC4;
     locals.z1 = lbl_803E5EC4;
     locals.z2 = lbl_803E5EC4;
