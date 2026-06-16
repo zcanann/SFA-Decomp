@@ -175,7 +175,7 @@ void dll_224_update(void* param_1);
 int dbegg_setScale(int obj)
 {
     u8* inner = ((GameObject*)obj)->extra;
-    return inner[0x118] != 3 ? 1 : 0;
+    return ((DbEggState*)inner)->mode != 3 ? 1 : 0;
 }
 
 #pragma scheduling off
@@ -244,7 +244,7 @@ void dbegg_setupFromDef(int obj, u8* state)
 int dbegg_func0B(int obj, f32* v)
 {
     char* inner = ((GameObject*)obj)->extra;
-    if (*(u8*)(inner + 0x118) == 0xb)
+    if (((DbEggState*)inner)->mode == 0xb)
     {
         *(f32*)(inner + 0x10c) = v[0];
         *(f32*)(inner + 0x110) = v[1];
@@ -260,7 +260,7 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     u8* inner = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        u32 t = inner[0x118];
+        u32 t = ((DbEggState*)inner)->mode;
         if (t != 0xc && t != 4 && t != 0xb)
         {
             ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E61CC);
@@ -549,9 +549,9 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(undefined*)(param_10 + 0x34d) = 0x1f;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        *(undefined4*)(control + 0x18) = *(undefined4*)(param_10 + 0x2d0);
-        *(undefined2*)(control + 0x1c) = 0x24;
-        *(undefined4*)(control + 0x2c) = 0;
+        *(int*)(control + 0x18) = *(undefined4*)(param_10 + 0x2d0);
+        ((DbStealerwormControl*)control)->unk1C = 0x24;
+        ((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                             *(int*)(control + 0x18), 0x11, param_9, 0x12, param_13, param_14, param_15, param_16);
         FUN_80006824(param_9, SFXfoot_ice_run_3);
@@ -678,7 +678,7 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                 *(int*)(control + 0x18), 0x11, obj, 0x10, param_13, param_14, param_15, param_16);
-            *(undefined4*)(control + 0x18) = 0;
+            *(int*)(control + 0x18) = 0;
         }
         playerInjured = FUN_80017a98();
         playerInjured = (**(code**)(**(int**)(*(int*)(playerInjured + 200) + 0x68) + 0x44))();
@@ -692,16 +692,16 @@ FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 para
             sfxIdx = randomGetRange(3, 4);
             FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + sfxIdx * 4));
         }
-        msgWord20 = *(undefined4*)(control + 0x30);
-        msgWord24 = *(undefined4*)(control + 0x2c);
+        msgWord20 = ((DbStealerwormControl*)control)->unk30;
+        msgWord24 = ((DbStealerwormControl*)control)->unk2C;
         msgQueue = *(short**)(control + 0x24);
-        msgWord28 = *(undefined4*)(control + 0x28);
+        msgWord28 = ((DbStealerwormControl*)control)->unk28;
         sfxIdx = FUN_80006ab8(msgQueue);
         if (sfxIdx == 0)
         {
             FUN_80006ac4(msgQueue, (uint) & msgWord28);
         }
-        *(undefined4*)(control + 0x3c) = 0;
+        ((DbStealerwormControl*)control)->unk3C = 0;
     }
     *(undefined*)(state + 0x34d) = 0x10;
     *(float*)(state + 0x2a0) = lbl_803E6FD8;
