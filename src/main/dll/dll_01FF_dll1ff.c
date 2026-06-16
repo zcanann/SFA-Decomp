@@ -1,3 +1,15 @@
+/*
+ * dll1ff (DLL 0x1FF) - a grabbable object the player can hang from.
+ *
+ * While free (grabPhase 0) the object falls (velocityY integrated by
+ * timeDelta) and probes nearby surfaces with hitDetectFn_80065e50; on
+ * contact it snaps to the surface top and registers itself in that
+ * surface owner's slot list. When the player grabs it (resetHitboxMode
+ * bit 1, unkF8 toggles) it disables its own hit volume, latches a
+ * pending message (msgHi/msgLo), and on the action button (0x100)
+ * releases and forwards the message via ObjMsg_SendToObject. Render
+ * gates model-state shadow fade-out on the active trigger sequence.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
@@ -13,7 +25,6 @@ STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
 /* wmtorch_getExtraSize == 0x10. */
 
-/* lightsource_getExtraSize == 0x1c. */
 typedef struct LightSourceState
 {
     void* light;
@@ -27,7 +38,7 @@ typedef struct LightSourceState
     u8 lit; /* 0x17 */
     u8 litPrev;
     u8 sparks; /* 0x19 */
-    u8 loopFlags; /* 0x1a: LightSourceFlagByte */
+    u8 loopFlags; /* 0x1a: bit0 = looped */
     u8 pad1B;
 } LightSourceState;
 
@@ -46,6 +57,24 @@ typedef struct Dll1FFState
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
+typedef struct Dll1FFSlot
+{
+    int obj;
+} Dll1FFSlot;
+
+/* registry on the landed surface owner: up to 3 grabbed-object slots */
+typedef struct Dll1FFSlots
+{
+    u8 pad[0x100];
+    Dll1FFSlot slots[3];
+    u8 pad2[3];
+    u8 count;
+} Dll1FFSlots;
+
+#define DLL1FF_BUTTON_ACTION 0x100  /* action-button mask (button-just-pressed / disable) */
+#define DLL1FF_MSG_GRAB 0x100008    /* ObjMsg kind sent on release */
+
+/* grab/release plumbing (obj hit volume + button + message routing) */
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006ba8();
@@ -57,6 +86,9 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800632f4();
 
+/* float constants for the byte-parity twins FUN_801f1634/FUN_801f2b94;
+   distinct addresses from dll_1FF_update's lbl_803E5D8x set (own symbols,
+   not the same globals - cannot be consolidated). */
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
@@ -64,50 +96,52 @@ extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
 extern f32 timeDelta;
-extern void objRenderFn_8003b8f4(f32);
-extern int GameBit_Get(int id);
-extern int Obj_GetPlayerObject(void);
 extern f32 lbl_803E5D80;
 
+/* Byte-parity twin of dll_1FF_update: the raw casts (undefined types,
+   (int)state + N byte offsets, CONCAT22) are load-bearing - rewriting
+   the state accesses as Dll1FFState struct fields changes codegen and
+   breaks the match, so this is kept verbatim. param_9 is the GameObject;
+   the leading params are forwarded to ObjMsg_SendToObject. */
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
 {
-    char c;
-    float entryY;
-    float band;
-    float riseVel;
-    int iVar5;
-    u8 phase;
-    float* entry;
+    char count;
+    float surfTop;
+    float snapBand;
+    float riseSpeed;
+    int hit;
+    u8 grabPhase;
+    float* surf;
     uint buttons;
-    int idx;
-    float found;
+    int off;
+    float surface;
     int i;
-    undefined4 in_r7;
+    undefined4 in_r7; /* trailing varargs forwarded to ObjMsg_SendToObject */
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    undefined2* b;
+    undefined2* state;
     undefined8 player;
-    int local_18[3];
+    int hitList[3];
 
-    b = ((GameObject*)param_9)->extra;
-    iVar5 = FUN_80017a98();
-    if (*(char*)((int)b + 5) == '\0')
+    state = ((GameObject*)param_9)->extra;
+    hit = FUN_80017a98();
+    if (*(char*)((int)state + 5) == '\0')
     {
-        phase = 0;
+        grabPhase = 0;
         if (((*(byte*)&((GameObject*)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject*)param_9)->unkF8 == 0))
         {
-            *b = 0;
-            b[1] = 0x28;
-            FUN_80006ba8(0, 0x100);
-            phase = 1;
+            *state = 0;
+            state[1] = 0x28;
+            FUN_80006ba8(0, DLL1FF_BUTTON_ACTION);
+            grabPhase = 1;
         }
-        *(u8*)((int)b + 5) = phase;
-        if (*(char*)((int)b + 5) != '\0')
+        *(u8*)((int)state + 5) = grabPhase;
+        if (*(char*)((int)state + 5) != '\0')
         {
-            *(u8*)(b + 3) = 1;
+            *(u8*)(state + 3) = 1;
         }
         if (((GameObject*)param_9)->unkF8 == 0)
         {
@@ -118,42 +152,42 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                 velocityY);
             ((GameObject*)param_9)->anim.localPosY =
                 ((GameObject*)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosY;
-            iVar5 = FUN_800632f4((double)((GameObject*)param_9)->anim.localPosX,
-                                 (double)((GameObject*)param_9)->anim.localPosY,
-                                 (double)((GameObject*)param_9)->anim.localPosZ, param_9, local_18, 0, 1);
-            riseVel = lbl_803E6A24;
-            band = lbl_803E6A20;
-            found = 0.0;
+            hit = FUN_800632f4((double)((GameObject*)param_9)->anim.localPosX,
+                               (double)((GameObject*)param_9)->anim.localPosY,
+                               (double)((GameObject*)param_9)->anim.localPosZ, param_9, hitList, 0, 1);
+            riseSpeed = lbl_803E6A24;
+            snapBand = lbl_803E6A20;
+            surface = 0.0;
             i = 0;
-            idx = 0;
-            if (0 < iVar5)
+            off = 0;
+            if (0 < hit)
             {
                 do
                 {
-                    entry = *(float**)(local_18[0] + idx);
-                    if (*(char*)(entry + 5) != '\x0e')
+                    surf = *(float**)(hitList[0] + off);
+                    if (*(char*)(surf + 5) != '\x0e')
                     {
-                        entryY = *entry;
-                        if ((((GameObject*)param_9)->anim.localPosY < entryY) &&
-                            ((entryY - band < ((GameObject*)param_9)->anim.localPosY || (i == 0))))
+                        surfTop = *surf;
+                        if ((((GameObject*)param_9)->anim.localPosY < surfTop) &&
+                            ((surfTop - snapBand < ((GameObject*)param_9)->anim.localPosY || (i == 0))))
                         {
-                            found = entry[4];
-                            ((GameObject*)param_9)->anim.localPosY = entryY;
-                            ((GameObject*)param_9)->anim.velocityY = riseVel;
+                            surface = surf[4];
+                            ((GameObject*)param_9)->anim.localPosY = surfTop;
+                            ((GameObject*)param_9)->anim.velocityY = riseSpeed;
                         }
                     }
-                    idx = idx + 4;
+                    off = off + 4;
                     i = i + 1;
-                    iVar5 = iVar5 + -1;
+                    hit = hit + -1;
                 }
-                while (iVar5 != 0);
+                while (hit != 0);
             }
-            if (found != 0.0)
+            if (surface != 0.0)
             {
-                iVar5 = *(int*)((int)found + 0x58);
-                c = *(char*)(iVar5 + 0x10f);
-                *(char*)(iVar5 + 0x10f) = c + '\x01';
-                *(uint*)(iVar5 + c * 4 + 0x100) = param_9;
+                hit = *(int*)((int)surface + 0x58);
+                count = *(char*)(hit + 0x10f);
+                *(char*)(hit + 0x10f) = count + '\x01';
+                *(uint*)(hit + count * 4 + 0x100) = param_9;
             }
         }
     }
@@ -163,29 +197,33 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
         buttons = FUN_80006c00(0);
-        if ((buttons & 0x100) != 0)
+        if ((buttons & DLL1FF_BUTTON_ACTION) != 0)
         {
-            *(u8*)(b + 3) = 0;
-            player = FUN_80006ba8(0, 0x100);
+            *(u8*)(state + 3) = 0;
+            player = FUN_80006ba8(0, DLL1FF_BUTTON_ACTION);
         }
         if (((GameObject*)param_9)->unkF8 == 1)
         {
-            *(u8*)((int)b + 5) = 2;
+            *(u8*)((int)state + 5) = 2;
         }
-        if ((*(char*)((int)b + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
+        if ((*(char*)((int)state + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
         {
-            *(u8*)((int)b + 5) = 0;
-            *(u8*)(b + 3) = 0;
+            *(u8*)((int)state + 5) = 0;
+            *(u8*)(state + 3) = 0;
         }
-        if (*(char*)(b + 3) != '\0')
+        if (*(char*)(state + 3) != '\0')
         {
-            ObjMsg_SendToObject(player, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar5, 0x100008,
-                                param_9,CONCAT22(b[1], *b), in_r7, in_r8, in_r9, in_r10);
+            ObjMsg_SendToObject(player, param_2, param_3, param_4, param_5, param_6, param_7, param_8, hit, DLL1FF_MSG_GRAB,
+                                param_9, CONCAT22(state[1], *state), in_r7, in_r8, in_r9, in_r10);
         }
     }
-    return;
 }
 
+/* proximity check against the player: when out of range play the
+   release effect, otherwise emit the eggylaugh sfx. The short* param and
+   its raw byte offsets (param_1 + 0x5c, + 0xc) are the byte-parity form -
+   retyping to a struct pointer rescales the arithmetic and breaks the
+   match, so it is kept raw. */
 void FUN_801f2b94(short* param_1)
 {
     int handle;
@@ -203,9 +241,8 @@ void FUN_801f2b94(short* param_1)
     }
     else
     {
-        FUN_80006824((uint)param_1,SFXmn_eggylaugh216);
+        FUN_80006824((uint)param_1, SFXmn_eggylaugh216);
     }
-    return;
 }
 
 void dll_1FF_free_nop(void)
@@ -225,7 +262,6 @@ void dll_1FF_initialise_nop(void)
 }
 
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
-int dll_200_getExtraSize_ret_40(void);
 
 int dll_1FF_getObjectTypeId(int* obj)
 {
@@ -233,20 +269,14 @@ int dll_1FF_getObjectTypeId(int* obj)
     return 0x0;
 }
 
-void LaserBeam_release(void);
-
 void dll_1FF_init(s16* a, s8* b)
 {
     a[0] = (s16)((s32)b[0x18] << 8);
     a[1] = -0x8000;
 }
 
-void WM_colrise_init(s16* a, s8* b);
-
-/* dll_1FF_render: when obj->_f8 implies
- * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
- * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-
+/* visible is -1 while held (unkF8 set), otherwise a 0/non-0 flag; gate
+   shadow fade-out on whether a trigger sequence is active. */
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
@@ -275,38 +305,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
 
-/* dll_200_render: when visible != 0 and
- * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
- * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-
-void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
-
-/* dll_200_init: write a function pointer
- * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
- * fixed bytes, the three float position-quaternion from arg+8/c/10,
- * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
 #pragma opt_strength_reduction off
-
-#pragma opt_strength_reduction off
-
-typedef struct LightSourceFlagByte
-{
-    u8 looped : 1;
-} LightSourceFlagByte;
-
-typedef struct Dll1FFSlot
-{
-    int obj;
-} Dll1FFSlot;
-
-typedef struct Dll1FFSlots
-{
-    u8 pad[0x100];
-    Dll1FFSlot slots[3];
-    u8 pad2[3];
-    u8 count;
-} Dll1FFSlots;
 
 void dll_1FF_update(int obj)
 {
@@ -319,32 +318,32 @@ void dll_1FF_update(int obj)
     extern const f32 lbl_803E5D88;
     extern const f32 lbl_803E5D8C;
     void* player;
-    Dll1FFState* b;
-    int flag;
+    Dll1FFState* state;
+    int grab;
     int count;
-    char* found;
+    char* landed;
     int i;
-    char* t;
-    u8 c;
-    char* p;
-    int stk[2];
+    u8 slot;
+    char* surf;
+    int hitList[2];
 
-    b = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (b->grabPhase == 0)
+    /* resetHitboxMode is s8; the *(u8*)& reads/writes it unsigned for the bit ops. */
+    if (state->grabPhase == 0)
     {
-        flag = 0;
+        grab = 0;
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
-            b->msgLo = (s16)flag;
-            b->msgHi = 0x28;
-            buttonDisable(0, 0x100);
-            flag = 1;
+            state->msgLo = (s16)grab;
+            state->msgHi = 0x28;
+            buttonDisable(0, DLL1FF_BUTTON_ACTION);
+            grab = 1;
         }
-        b->grabPhase = (s8)flag;
-        if (b->grabPhase != 0)
+        state->grabPhase = (s8)grab;
+        if (state->grabPhase != 0)
         {
-            b->sendFlag = 1;
+            state->sendFlag = 1;
         }
         if (((GameObject*)obj)->unkF8 == 0)
         {
@@ -355,30 +354,30 @@ void dll_1FF_update(int obj)
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
                 anim.localPosY;
             count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                         ((GameObject*)obj)->anim.localPosZ, stk, 0, 1);
-            found = NULL;
+                                         ((GameObject*)obj)->anim.localPosZ, hitList, 0, 1);
+            landed = NULL;
             for (i = 0; i < count; i++)
             {
-                p = ((char**)stk[0])[i];
-                if (*(s8*)(p + 0x14) != 14)
+                surf = ((char**)hitList[0])[i];
+                if (*(s8*)(surf + 0x14) != 14)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < *(f32*)p)
+                    if (((GameObject*)obj)->anim.localPosY < *(f32*)surf)
                     {
-                        if (((GameObject*)obj)->anim.localPosY > *(f32*)p - lbl_803E5D88 || i == 0)
+                        if (((GameObject*)obj)->anim.localPosY > *(f32*)surf - lbl_803E5D88 || i == 0)
                         {
-                            found = *(char**)(p + 0x10);
-                            ((GameObject*)obj)->anim.localPosY = *(f32*)p;
+                            landed = *(char**)(surf + 0x10);
+                            ((GameObject*)obj)->anim.localPosY = *(f32*)surf;
                             ((GameObject*)obj)->anim.velocityY = lbl_803E5D8C;
                         }
                     }
                 }
             }
-            if (found != NULL)
+            if (landed != NULL)
             {
-                Dll1FFSlots* ts = *(Dll1FFSlots**)(found + 0x58);
-                c = ts->count;
+                Dll1FFSlots* ts = *(Dll1FFSlots**)(landed + 0x58);
+                slot = ts->count;
                 ts->count += 1;
-                ts->slots[(s8)c].obj = obj;
+                ts->slots[(s8)slot].obj = obj;
             }
         }
     }
@@ -386,27 +385,24 @@ void dll_1FF_update(int obj)
     {
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        if ((getButtonsJustPressed(0) & 0x100) != 0)
+        if ((getButtonsJustPressed(0) & DLL1FF_BUTTON_ACTION) != 0)
         {
-            b->sendFlag = 0;
-            buttonDisable(0, 0x100);
+            state->sendFlag = 0;
+            buttonDisable(0, DLL1FF_BUTTON_ACTION);
         }
         if (((GameObject*)obj)->unkF8 == 1)
         {
-            b->grabPhase = 2;
+            state->grabPhase = 2;
         }
-        if (b->grabPhase == 2 && ((GameObject*)obj)->unkF8 == 0)
+        if (state->grabPhase == 2 && ((GameObject*)obj)->unkF8 == 0)
         {
-            b->grabPhase = 0;
-            b->sendFlag = 0;
+            state->grabPhase = 0;
+            state->sendFlag = 0;
         }
-        if (*(s8*)&b->sendFlag != 0)
+        if (*(s8*)&state->sendFlag != 0)
         {
-            ObjMsg_SendToObject(player, 0x100008, obj,
-                                ((int)b->msgHi << 16) | ((int)b->msgLo & 0xffff));
+            ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, obj,
+                                ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
         }
     }
 }
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
