@@ -1,32 +1,34 @@
-/* DLL 0x0057 — camera mode: title screen [8010DB7C-8010DD58) */
+/*
+ * DLL 0x0057 - CameraModeTitle: the title-screen camera.
+ *
+ * Holds the camera on one of a fixed table of authored poses (lbl_80319FB8,
+ * pose index 4 = the resting title pose). moveCam latches the previous pose
+ * and starts a transition; update eases the camera from the saved start pose
+ * (lbl_803A4420) to the target pose over titleScreenCamProgress, applying an
+ * ease curve and shortest-arc angle interpolation on each of yaw/pitch/roll.
+ * Entering or leaving pose 4 cross-fades the title music tracks and the movie
+ * volume against the saved-file music-volume byte (save[10]).
+ *
+ * Also hosts the shared no-op release/free/copy callbacks the sibling
+ * camera-mode DLLs reference. The trailing comments document the v1.0
+ * curve/movement helpers that live in the wider camera-mode address range.
+ */
 #include "main/dll/cameramodetitlepose_struct.h"
 
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/game_object.h"
-
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern u8* getSaveFileStruct();
-extern void Movie_SetVolumeFade();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-
-extern undefined4 DAT_802c2910;
-extern undefined4 DAT_802c2914;
-extern undefined4 DAT_802c2918;
-extern float* DAT_803de1fc;
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern u8* getSaveFileStruct(void);
+
+/* title-screen music tracks crossfaded as pose 4 is entered/left */
+#define MUSIC_TITLE_TRACK_A 0xbe
+#define MUSIC_TITLE_TRACK_B 0xc1
+
+/* lbl_80319FB8 pose index of the resting title pose */
+#define TITLE_CAM_REST_POSE 4
+
 extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern CameraModeTitlePose lbl_80319FB8[];
 extern u8 lbl_803DD5D2;
@@ -46,92 +48,6 @@ extern f32 lbl_803E1BF4;
 extern f32 lbl_803E1BF8;
 extern f32 lbl_803E1BFC;
 extern f32 lbl_803E1C00;
-
-void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
-{
-    float fVar1;
-    float* pfVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    undefined8 uVar9;
-
-    uVar9 = FUN_8028683c();
-    pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((ulonglong)uVar9 >> 0x20);
-    dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
-    dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
-    dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
-    FUN_80017730();
-    dVar8 = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *pfVar2);
-    dVar6 = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + pfVar2[2]);
-    dVar5 = (double)FUN_80293f90();
-    dVar7 = (double)FUN_80294964();
-    if (dVar4 < (double)DAT_803de1fc[0x10])
-    {
-        dVar4 = (double)DAT_803de1fc[0x10];
-    }
-    fVar1 = DAT_803de1fc[4];
-    *(float*)uVar9 = (float)(dVar5 * (double)(float)(dVar4 + (double)fVar1) + dVar8);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(iVar3 + 0x1c)) - pfVar2[1]) -
-        (*(float*)(iVar3 + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dVar4 + (double)fVar1) + dVar6);
-    FUN_80286888();
-    return;
-}
-
-void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9, int param_10)
-{
-    uint uVar1;
-    undefined2* puVar2;
-    undefined4 uVar3;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined2 uStack_1a;
-    undefined4 local_18;
-    undefined4 local_14;
-    undefined2 local_10;
-
-    local_18 = DAT_802c2910;
-    local_14 = DAT_802c2914;
-    local_10 = DAT_802c2918;
-    if ((*(char*)(param_10 + 0x407) != *(char*)(param_10 + 0x409)) &&
-        (((GameObject*)param_9)->anim.alpha != 0))
-    {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
-        {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)&((GameObject*)param_9)->childObjs[0] = 0;
-        }
-        uVar1 = FUN_80017ae8();
-        if ((uVar1 & 0xff) == 0)
-        {
-            *(u8*)(param_10 + 0x409) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)(param_10 + 0x407))
-            {
-                puVar2 = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(param_10 + 0x407)]);
-                uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
-                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
-                                     in_r10);
-                *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                *(ushort*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
-                    7;
-            }
-            *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
-        }
-    }
-    return;
-}
 
 void CameraModeNpcSpeak_release(void);
 
@@ -188,12 +104,12 @@ void dll_4F_init(void);
 
 void CameraModeTitle_init(CameraObject* camera)
 {
-    lbl_803DD5D2 = 4;
-    lbl_803DD5D1 = 4;
+    lbl_803DD5D2 = TITLE_CAM_REST_POSE;
+    lbl_803DD5D1 = TITLE_CAM_REST_POSE;
     titleScreenCamProgress = lbl_803E1BE0;
     lbl_803DD5D0 = 0;
 
-    camera->anim.localPosX = lbl_80319FB8[4].x;
+    camera->anim.localPosX = lbl_80319FB8[TITLE_CAM_REST_POSE].x;
     camera->anim.localPosY = lbl_80319FB8[lbl_803DD5D2].y;
     camera->anim.localPosZ = lbl_80319FB8[lbl_803DD5D2].z;
     camera->anim.rotX = lbl_80319FB8[lbl_803DD5D2].yaw;
@@ -205,7 +121,7 @@ void CameraModeTitle_moveCam(u8 newCam)
 {
     u32 cam = newCam;
     if (cam == lbl_803DD5D2) return;
-    if (lbl_803DD5D1 == 4)
+    if (lbl_803DD5D1 == TITLE_CAM_REST_POSE)
     {
         if (lbl_803E1BE0 != titleScreenCamProgress)
         {
@@ -215,8 +131,8 @@ void CameraModeTitle_moveCam(u8 newCam)
         }
         else
         {
-            Music_Trigger(190, 1);
-            Music_Trigger(193, 1);
+            Music_Trigger(MUSIC_TITLE_TRACK_A, 1);
+            Music_Trigger(MUSIC_TITLE_TRACK_B, 1);
         }
     }
     lbl_803DD5D1 = lbl_803DD5D2;
@@ -261,34 +177,34 @@ void CameraModeTitle_update(CameraObject* camera)
         titleScreenCamProgress = titleScreenCamProgress + lbl_803E1BE8;
         if (titleScreenCamProgress >= lbl_803E1BE0)
         {
-            if (lbl_803DD5D2 == 4)
+            if (lbl_803DD5D2 == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade(100, 1);
                 audioSetVolumes(0, 10, 1, 0, 0);
-                Music_Trigger(0xbe, 0);
-                Music_Trigger(0xc1, 0);
+                Music_Trigger(MUSIC_TITLE_TRACK_A, 0);
+                Music_Trigger(MUSIC_TITLE_TRACK_B, 0);
             }
-            else if (lbl_803DD5D1 == 4)
+            else if (lbl_803DD5D1 == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade(0, 1);
-                audioSetVolumes(*(u8*)(save + 10), 10, 1, 0, 0);
+                audioSetVolumes(save[10], 10, 1, 0, 0);
             }
             titleScreenCamProgress = lbl_803E1BE0;
             lbl_803DD5D1 = lbl_803DD5D2;
         }
         else
         {
-            if (lbl_803DD5D2 == 4)
+            if (lbl_803DD5D2 == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade((s32)(lbl_803E1BEC * titleScreenCamProgress), 1);
                 audioSetVolumes(
-                    (s32)((f32)(u32) * (u8*)(save + 10) * (lbl_803E1BE0 - titleScreenCamProgress)), 10, 1, 0,
+                    (s32)((f32)(u32)save[10] * (lbl_803E1BE0 - titleScreenCamProgress)), 10, 1, 0,
                     0);
             }
-            else if (lbl_803DD5D1 == 4)
+            else if (lbl_803DD5D1 == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - titleScreenCamProgress)), 1);
-                audioSetVolumes((s32)((f32)(u32) * (u8*)(save + 10) * titleScreenCamProgress), 10, 1, 0, 0);
+                audioSetVolumes((s32)((f32)(u32)save[10] * titleScreenCamProgress), 10, 1, 0, 0);
             }
         }
 
