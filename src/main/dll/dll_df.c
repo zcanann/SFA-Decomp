@@ -1344,7 +1344,8 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
     dist = getXZDistance(targetPos, (f32*)(obj + 0x18));
     if (dist < distSq)
     {
-        candidate = lbl_803E241C * timeDelta + ((TrickyState*)state)->speed;
+        candidate = ((TrickyState*)state)->speed;
+        candidate = lbl_803E241C * timeDelta + candidate;
         ((TrickyState*)state)->speed =
             (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
         return;
