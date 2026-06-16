@@ -93,7 +93,7 @@ void warpstonelift_update(u8* obj)
     }
     if (found)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         switch (*state)
         {
         case 0:
@@ -129,7 +129,7 @@ void warpstonelift_update(u8* obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
 }
 

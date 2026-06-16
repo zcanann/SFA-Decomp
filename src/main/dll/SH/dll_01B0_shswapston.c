@@ -19,7 +19,7 @@
 typedef struct WarpstoneUpdateMenuAnimObjState
 {
     u8 pad0[0x8 - 0x0];
-    u8 unk8;
+    u8 pathPointIndex; /* 0x8: path point used to seat the player on the stone */
     u8 unk9;        /* 0x9: toggled bit0 on event 0xa */
     u8 flagsA;      /* 0xa: input/hit flags (bit0 player, bit1 hit) */
     u8 padB[0xE - 0xB];
@@ -119,7 +119,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             model = Obj_GetActiveModel((int)player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->unk8, &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z, 0);
             fn_80295B2C((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
@@ -324,11 +324,11 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             break;
 
         case 3:
-            ((WarpstoneUpdateMenuAnimObjState*)state)->unk8 = 0;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex = 0;
             break;
 
         case 4:
-            ((WarpstoneUpdateMenuAnimObjState*)state)->unk8 = 1;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex = 1;
             break;
 
         case 6:
@@ -406,7 +406,7 @@ typedef struct WarpstoneState
     u8 pad0[0xC - 0x0];
     u8 unkC;
     u8 padD[0xE - 0xD];
-    s16 unkE;
+    s16 gameBitE;   /* 0xe: GameBit id stored at init */
     s16 unk10;
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
@@ -436,9 +436,9 @@ extern f32 lbl_803E54AC;
 typedef struct WarpstoneFlags
 {
     u8 b7 : 1;
-    u8 b6 : 1;
+    u8 lookAtPlayer : 1;
     u8 b5 : 1;
-    u8 b4 : 1;
+    u8 sfxFired : 1;
     u8 lo : 4;
 } WarpstoneFlags;
 
@@ -479,15 +479,15 @@ void warpstone_update(int obj)
     {
         if (randFn_80080100(lbl_803DC038) != 0)
         {
-            ((WarpstoneFlags*)(state + 0xd5))->b6 = (((WarpstoneFlags*)(state + 0xd5))->b6 == 0);
+            ((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer = (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer == 0);
         }
-        if (((WarpstoneFlags*)(state + 0xd5))->b6 == 0)
+        if (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer == 0)
         {
-            ((WarpstoneFlags*)(state + 0xd5))->b6 = GameBit_Get(0xa45);
+            ((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer = GameBit_Get(0xa45);
         }
     }
 
-    if (((WarpstoneFlags*)(state + 0xd5))->b6 != 0)
+    if (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer != 0)
     {
         target = Obj_GetPlayerObject();
     }
@@ -510,7 +510,7 @@ void warpstone_update(int obj)
 
     if (advanceResult != 0)
     {
-        ((WarpstoneFlags*)(state + 0xd5))->b4 = 0;
+        ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 0;
         yawDelta = Obj_GetYawDeltaToObject(obj, target, 0);
         yawDelta = yawDelta - lbl_803DDBF0;
         {
@@ -573,7 +573,7 @@ void warpstone_update(int obj)
     {
         ((WarpstoneState*)state)->unkC = 0;
     }
-    if (((WarpstoneFlags*)(state + 0xd5))->b4 != 0)
+    if (((WarpstoneFlags*)(state + 0xd5))->sfxFired != 0)
     {
         return;
     }
@@ -585,7 +585,7 @@ void warpstone_update(int obj)
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
         {
             Sfx_PlayFromObject(obj, 0x2f1);
-            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+            ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
     case 0x16:
@@ -593,21 +593,21 @@ void warpstone_update(int obj)
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
-            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+            ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
     case 0x1a:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54A8)
         {
             Sfx_PlayFromObject(obj, 0x417);
-            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+            ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
     case 0x1b:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54AC)
         {
             Sfx_PlayFromObject(obj, 0x2f4);
-            ((WarpstoneFlags*)(state + 0xd5))->b4 = 1;
+            ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
     }
@@ -630,7 +630,7 @@ void warpstone_init(int obj, u8* setup)
     setupYaw = (s16)(setup[0x1a] << 8);
     ((GameObject*)obj)->anim.rotX = setupYaw;
     ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
-    ((WarpstoneState*)state)->unkE = 0x15a;
+    ((WarpstoneState*)state)->gameBitE = 0x15a;
     ((WarpstoneState*)state)->unk10 = 0x886;
     ObjHits_EnableObject((u32)obj);
     if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0)

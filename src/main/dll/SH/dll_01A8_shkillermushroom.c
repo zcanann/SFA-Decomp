@@ -182,7 +182,7 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
 
 typedef struct
 {
-    f32 unk[3];
+    f32 particleParams[3];
     f32 x, y, z;
 } MushHitInfo;
 

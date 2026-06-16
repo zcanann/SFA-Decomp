@@ -73,8 +73,8 @@ typedef struct ShStaffPlacement
     u8 pad6[0x7 - 0x6];
     u8 unk7;
     u8 pad8[0x18 - 0x8];
-    u8 unk18;
-    u8 unk19;
+    u8 rotZByte; /* 0x18: rotZ in 1/256 turns */
+    u8 rotYByte; /* 0x19: rotY in 1/256 turns */
     u8 pad1A[0x20 - 0x1A];
 } ShStaffPlacement;
 
@@ -522,8 +522,8 @@ void sh_staff_update(int obj)
             int loadResult;
             fn_80295CF4((int)player, 0);
             ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent*)obj);
-            ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->unk19 << 8);
-            ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->unk18 << 8);
+            ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
+            ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
             ((GameObject*)obj)->animEventCallback = (void*)sh_staff_SeqFn;
             state->phase = 1;
             if (Obj_IsLoadingLocked() == 0)

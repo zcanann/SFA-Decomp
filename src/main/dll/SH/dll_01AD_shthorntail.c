@@ -404,7 +404,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     runtime = obj->runtime;
     config = obj->config;
     ref = (int)config;
-    if (runtime->behaviorState == '\f')
+    if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING)
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {

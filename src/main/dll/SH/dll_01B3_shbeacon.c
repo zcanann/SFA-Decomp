@@ -92,10 +92,10 @@ void sh_beacon_init(int obj, int defData)
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 
-    ((ShBeaconState*)state)->mode = (u8)GameBit_Get(*(s16*)(defData + 0x1e));
+    ((ShBeaconState*)state)->mode = (u8)GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
     if (((ShBeaconState*)state)->mode == 0)
     {
-        if (GameBit_Get(*(s16*)(defData + 0x20)) != 0)
+        if (GameBit_Get(((ShBeaconPlacement*)defData)->igniteGameBit) != 0)
         {
             ((ShBeaconState*)state)->mode = 2;
         }
@@ -130,7 +130,7 @@ void sh_beacon_update(int obj)
     switch (((ShBeaconState*)state)->mode)
     {
     case 0:
-        if (((((GameObject*)obj)->anim.resetHitboxFlags & 1) != 0) &&
+        if (((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) &&
             ((*gGameUIInterface)->isEventReady(0x194) != 0))
         {
             gameBitDecrement(0x194);
@@ -190,21 +190,21 @@ void sh_beacon_update(int obj)
     }
     if (((ShBeaconState*)state)->mode != 1)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~8;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (((ShBeaconState*)state)->mode == 2)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
         else if ((((ShBeaconState*)state)->mode == 0) && (GameBit_Get(0x194) == 0))
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= 0x10;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x10;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         tmp = (int)getTrickyObject();
-        if (((void*)tmp != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & 4) != 0))
+        if (((void*)tmp != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
         {
             (*(code*)(*(int*)(*(int*)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
         }
@@ -213,11 +213,11 @@ void sh_beacon_update(int obj)
     {
         if ((GameBit_Get(0x193) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= 8;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
         else
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= 0x10;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
     if (((ShBeaconState*)state)->fadeTimer > lbl_803E5538)

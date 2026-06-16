@@ -62,7 +62,7 @@ void sh_queenearthwalker_update(void* obj)
     void* player;
     void* target;
     u8 action;
-    s8 actionParam;
+    s8 mapSlot;
     u8 stateFlags;
     u8 eventIndex;
     int currentMove;
@@ -70,8 +70,8 @@ void sh_queenearthwalker_update(void* obj)
 
     state = ((GameObject*)obj)->extra;
     ((QueenEarthWalkerState*)state)->flags &= ~0x20;
-    actionParam = ((GameObject*)obj)->anim.mapEventSlot;
-    action = (*gMapEventInterface)->getMapAct(actionParam);
+    mapSlot = ((GameObject*)obj)->anim.mapEventSlot;
+    action = (*gMapEventInterface)->getMapAct(mapSlot);
 
     if ((((QueenEarthWalkerState*)state)->flags & 0x1) != 0)
     {
