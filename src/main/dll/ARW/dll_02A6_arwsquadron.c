@@ -702,7 +702,7 @@ void arwsquadron_update(int obj)
                 }
                 else if (setupL->gameBit > 0)
                 {
-                    enable = GameBit_Get(setupL->gameBit) != 0;
+                    enable = GameBit_Get(setupL->gameBit);
                 }
                 else
                 {
@@ -715,7 +715,7 @@ void arwsquadron_update(int obj)
                     d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
                     inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                     if (!inRange2)
-                        enable = GameBit_Get(setupL->gameBit) != 0;
+                        enable = GameBit_Get(setupL->gameBit);
                     else
                         enable = 1;
                 }
@@ -764,7 +764,7 @@ void arwsquadron_update(int obj)
                 }
                 else if (setupL->gameBit > 0)
                 {
-                    disable = GameBit_Get(setupL->gameBit) != 0;
+                    disable = GameBit_Get(setupL->gameBit);
                 }
                 else
                 {
@@ -777,7 +777,7 @@ void arwsquadron_update(int obj)
                     d2 = ((GameObject*)leader)->anim.localPosZ - ((GameObject*)aim2)->anim.localPosZ;
                     inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                     if (!inRange2)
-                        disable = GameBit_Get(setupL->gameBit) != 0;
+                        disable = GameBit_Get(setupL->gameBit);
                     else
                         disable = 1;
                 }
