@@ -915,7 +915,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         char* pp = (char*)Obj_GetPlayerObject();
         u8* def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
-        if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
+        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32) * (s16*)(def2 + 0x1a)
             && sub2->runnerState == 3
             && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
         {
