@@ -95,7 +95,7 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (parent->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) return;
     }
     vis = visible;
-    if (vis == 0 || state[0xc] == 0 || ((u8*)state)[0xd] == 0) return;
+    if (vis == 0 || state[0xc] == 0 || ((SBShipGunState*)state)->active == 0) return;
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
 }
 
@@ -200,7 +200,7 @@ void SB_ShipGun_update(int obj)
     if (((GameObject*)((GameObject*)obj)->anim.parent)->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
     {
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        *(u8*)((int)state + 0xd) = 0;
+        ((SBShipGunState*)state)->active = 0;
     }
     else
     {
@@ -230,7 +230,7 @@ void SB_ShipGun_update(int obj)
             galleonPhase = 0;
             *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
         }
-        *(u8*)((int)state + 0xd) = 1;
+        ((SBShipGunState*)state)->active = 1;
         phase = *(char*)((int)state + 10);
         switch (phase)
         {
@@ -353,8 +353,8 @@ void SB_ShipGun_update(int obj)
                     Camera_EnableViewYOffset();
                     CameraShake_SetAllMagnitudes(lbl_803E58A4);
                     Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
-                    *(u8*)((int)state + 0xe) += 1;
-                    if (*(u8*)((int)state + 0xe) == SB_SHIPGUN_VOLLEY_SIZE)
+                    ((SBShipGunState*)state)->volleyCount += 1;
+                    if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
                     {
                         if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
                         {
@@ -366,7 +366,7 @@ void SB_ShipGun_update(int obj)
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                             *(short*)(state + 2) = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
                         }
-                        *(u8*)((int)state + 0xe) = 0;
+                        ((SBShipGunState*)state)->volleyCount = 0;
                     }
                     else if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
                     {
