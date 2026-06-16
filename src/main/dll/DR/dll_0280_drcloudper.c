@@ -45,6 +45,12 @@ typedef struct DrCloudPerSetup
     s16 gameBit;
 } DrCloudPerSetup;
 
+STATIC_ASSERT(offsetof(DrCloudPerObject, posX) == 0x0c);
+STATIC_ASSERT(offsetof(DrCloudPerObject, setup) == 0x4c);
+STATIC_ASSERT(offsetof(DrCloudPerObject, mapDir) == 0xac);
+STATIC_ASSERT(offsetof(DrCloudPerObject, flagsB0) == 0xb0);
+STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
+
 #define DRCLOUDPER_GROUP_TRIGGER 0x13
 #define DRCLOUDPER_GROUP_SURFACE 0x39
 #define DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT 0x7a9
