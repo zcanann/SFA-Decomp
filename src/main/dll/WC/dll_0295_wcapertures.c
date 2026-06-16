@@ -1,3 +1,16 @@
+/*
+ * wcapertures (DLL 0x295) - a glowing aperture / portal panel in the
+ * Walled City (WC) that opens when the player frames it through a specific
+ * camera. setup->armBit / openBit are game bits that persist and restore
+ * state->mode across loads. state->mode: CLOSED waits for armBit; ARMED
+ * waits until the camera mode and player state match, then fades the panel
+ * to opaque, and if the FOV is tight enough and the object carries the
+ * accept flag it sets openBit and goes OPEN. Alpha eases toward
+ * state->targetAlpha each tick. A ModelLightStruct glow is created at init
+ * and enabled while alpha is high; while OPEN, hitDetect spawns a partfx.
+ * The ARM mode is also raised by interactCallback. Camera/player/partfx
+ * numeric meanings are inferred.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

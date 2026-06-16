@@ -1,3 +1,24 @@
+/*
+ * wcpushblock (DLL 0x290) - the sliding push-block puzzle object in the
+ * Walled City (WC). Two block variants (anim.bankIndex: VARIANT_A vs B)
+ * ride a shared tile grid owned by a separate level-controller object,
+ * found via ObjGroup_FindNearestObject on controller group
+ * WCPUSHBLOCK_CONTROLLER_GROUP; the controller's WCLevelContInterface
+ * (vtable at controller+0x68) does all tile<->world mapping, move tracing
+ * and tile-occupancy writes (A/B method pairs).
+ *
+ * Per-frame phase machine: INIT_MOVE places the block at its initial tile;
+ * IDLE fades in, polls the player push and traces a move; SLIDING eases
+ * toward the target tile with a looped sliding sfx and clamps; FADE_OUT/
+ * FADE_IN reset to the initial cell when a move is rejected; LOCKED/SOLVED
+ * swap to the locked texture. A vertical bob is applied each frame. Per-
+ * variant solved/fade/count game bits drive the puzzle; reaching
+ * WCPUSHBLOCK_REQUIRED_LOCK_COUNT latches the solved bit.
+ *
+ * wcpushblock_updateLevelControlState / fn_802251B4 are the WC level
+ * controller's own mode machine (timers, save points, map gating, music),
+ * co-located in this TU. Offsets/bit values inferred from code.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"

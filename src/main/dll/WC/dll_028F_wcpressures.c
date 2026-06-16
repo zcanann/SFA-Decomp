@@ -1,3 +1,17 @@
+/*
+ * wcpressures (DLL 0x28F) - a weighted pressure plate in the Walled City
+ * (WC). The plate lowers while something heavy rests on it and rises again
+ * when the weight is removed, latching a "solved" game bit while pressed.
+ * Each update scans the object's hit list for entities standing higher than
+ * triggerHeight above the plate, tracks up to WCPRESSURES_TRACKED_COUNT of
+ * them with their saved XZ positions, and counts the plate pressed while any
+ * tracked entity stays put. A 4-mode machine (RAISED -> LOWERING -> PRESSED
+ * -> RISING) animates localPosY between the setup Y and Y - pressDepth,
+ * plays a sfx at the transitions, sets/clears solvedBit and swaps the plate
+ * texture while down. activateBit, when set, gates the whole object inert.
+ * The animEventCallback snapshots tracked-tile positions or resets the
+ * object and clears solvedBit.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

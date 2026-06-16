@@ -1,3 +1,16 @@
+/*
+ * wctemplebri (DLL 0x297) - a temple bridge in the Walled City (WC) that
+ * materializes when triggered. While active it fades alpha up to opaque,
+ * latches FLAG_SOLVED, sets its placement solvedBit and enables collision;
+ * while inactive it fades out and disables collision. Each frame it scrolls
+ * two texture layers (wrapping at the warp limit) and advances two wave
+ * phase accumulators, then runs a per-vertex sine deformation that pushes
+ * each vertex by a wave indexed on its height. A global "bridge active"
+ * game bit is set/cleared from update and also cleared when the player is
+ * beyond a threshold distance. Two model variants select the render type
+ * id. Some init bookkeeping (the sortedOffsets sort, partFlags/partAlpha
+ * arrays) appears only partly wired; behavior is inferred.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

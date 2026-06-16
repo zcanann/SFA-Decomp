@@ -1,3 +1,16 @@
+/*
+ * wctempledia (DLL 0x296) - a rotating temple dial puzzle in the Walled
+ * City (WC). The dial spins about Z, easing currentSpeed toward
+ * targetSpeed, and drives a looped roar sfx whose volume/pitch track the
+ * spin ratio. It is a 3-stage ordered lock: each stage's game bit must
+ * light in order, and setting a later stage while an earlier one is unset
+ * clears all three bits, plays the reset sfx and drops back to the base
+ * speed. Clearing the stages in order steps targetSpeed up through the
+ * table. Solving all three sets the placement solvedBit, latches
+ * FLAG_SOLVED and freezes the dial. Two model variants select distinct
+ * game-bit/target-table pairs at init; syncPartVisibility toggles per-stage
+ * texture overrides to reveal solved segments.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"

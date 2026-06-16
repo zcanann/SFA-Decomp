@@ -1,3 +1,17 @@
+/*
+ * wctile (DLL 0x291) - one cell of a sliding-tile grid puzzle in the
+ * Walled City (WC). On its first update it has no controller, so it
+ * locates the nearest level-controller object (ObjGroup group
+ * WCTILE_CONTROLLER_GROUP) and caches it in state->controller; all grid
+ * queries then route through the controller's WCLevelContInterface (the
+ * vtable shared with wcpushblock / wcbouncycra). setup->modelIndex picks
+ * the model bank and the A/B tile family (bankIndex == WCTILE_VARIANT_A
+ * uses the "A" accessors, else "B"). The tile spins continuously and runs
+ * a small alpha state machine (state->mode): INIT_MOVE snaps to its
+ * initialTile cell and fades in; SOLID drops to INACTIVE when its target
+ * tile stops matching; the A/B hide/fade game bits force HIDDEN/FADE_OUT;
+ * FADE_OUT -> FADE_IN re-snaps the position. Bit meanings inferred.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
