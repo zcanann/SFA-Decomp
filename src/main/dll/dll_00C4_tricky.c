@@ -2478,7 +2478,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     Vec delta;
     u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
     s16 baseAngle;
-    int i;
+    u16 i;
     u8 visible;
     f32 angle;
     f32 angleScale;
@@ -2550,11 +2550,11 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
         }
         if (visible != 0)
         {
-            ((TrickyState*)state)->flags2DC |= visibilityBits[i];
+            ((TrickyState*)state)->flags2DC |= *(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
         }
         else
         {
-            ((TrickyState*)state)->flags2DC &= ~visibilityBits[i];
+            ((TrickyState*)state)->flags2DC &= ~*(u32*)((char*)visibilityBits + (((u32)i & 0xffff) << 2));
         }
     }
 }
