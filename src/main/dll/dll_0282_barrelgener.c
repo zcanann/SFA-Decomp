@@ -196,10 +196,10 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
 
 int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
 {
+    int result;
     RomCurveWalker* route;
     f32 d[3];
     f32 dist, ang, scale;
-    int result;
 
     result = 0;
     scale = c;
