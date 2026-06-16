@@ -315,19 +315,19 @@ void FUN_8017db40(uint obj, int dir)
         mode = 0;
     }
 LAB_8017de10:
-    *(undefined2*)(state + 0x38) = mode;
-    *(u8*)(state + 0x3a) = 4;
+    *(undefined2*)&((AppleOnTreeState*)state)->healthRestore = mode;
+    *(u8*)&((AppleOnTreeState*)state)->unk3A = 4;
     *(float*)&((GroundAnimatorState*)state)->linkedObj = lbl_803DC074;
     ((GroundAnimatorState*)state)->sinkDepth = lbl_803DC074;
     rnd = randomGetRange(0xffff8000, 0x7fff);
-    *(short*)(state + 0x48) = (short)rnd;
+    *(short*)&((AppleOnTreeState*)state)->rotX = (short)rnd;
     rnd = randomGetRange(0xffff8000, 0x7fff);
-    *(short*)(state + 0x4a) = (short)rnd;
-    *(undefined2*)(state + 0x4c) = 0x2000;
+    *(short*)&((AppleOnTreeState*)state)->rotY = (short)rnd;
+    *(undefined2*)&((AppleOnTreeState*)state)->rotZ = 0x2000;
     px = (double)((GameObject*)obj)->anim.localPosX;
     py = (double)((GameObject*)obj)->anim.localPosY;
     pz = (double)((GameObject*)obj)->anim.localPosZ;
-    groundResult = FUN_800632d8(px, py, pz, obj, (float*)(state + 0x30), 0);
+    groundResult = FUN_800632d8(px, py, pz, obj, (float*)&((AppleOnTreeState*)state)->unk30, 0);
     if (groundResult == 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;
@@ -337,7 +337,7 @@ LAB_8017de10:
             {
                 ObjHits_DisableObject(obj);
             }
-            *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
+            *(byte*)&((AppleOnTreeState*)state)->unk5A = *(byte*)(state + 0x5a) | 2;
         }
         else
         {
@@ -346,7 +346,7 @@ LAB_8017de10:
     }
     else
     {
-        px = (double)*(float*)(state + 0x40);
+        px = (double)*(float*)&((AppleOnTreeState*)state)->unk40;
         py = FUN_80293900(-(double)((float)((double)lbl_803E4470 * px) *
             *(float*)(state + 0x30) - lbl_803E446C));
         pz = (double)(float)((double)lbl_803E4474 * px);
@@ -368,24 +368,24 @@ LAB_8017de10:
         {
             px = (double)lbl_803E4460;
         }
-        *(float*)(state + 0x50) = (float)px;
-        if (lbl_803E446C <= *(float*)(state + 0x28))
+        *(float*)&((AppleOnTreeState*)state)->unk50 = (float)px;
+        if (lbl_803E446C <= *(float*)&((AppleOnTreeState*)state)->unk28)
         {
             py = (double)lbl_803E4480;
             *(float*)(state + 0x30) =
-                (float)(py * (double)(lbl_803E4470 * *(float*)(state + 0x24)) +
+                (float)(py * (double)(lbl_803E4470 * *(float*)&((AppleOnTreeState*)state)->unk24) +
                     (double)*(float*)(state + 0x30));
         }
         else
         {
             py = (double)lbl_803E4470;
             *(float*)(state + 0x30) =
-                -(float)(py * (double)*(float*)(state + 0x24) - (double)*(float*)(state + 0x30));
+                -(float)(py * (double)*(float*)&((AppleOnTreeState*)state)->unk24 - (double)*(float*)(state + 0x30));
         }
         if ((double)lbl_803E446C < (double)*(float*)(state + 0x30))
         {
-            *(undefined4*)(state + 0x2c) = *(undefined4*)(obj + 0x10);
-            *(float*)(state + 0x34) = ((GameObject*)obj)->anim.localPosY - *(float*)(state + 0x30);
+            *(undefined4*)&((AppleOnTreeState*)state)->unk2C = *(undefined4*)(obj + 0x10);
+            *(float*)&((AppleOnTreeState*)state)->unk34 = ((GameObject*)obj)->anim.localPosY - *(float*)(state + 0x30);
             if (*(int*)&((GameObject*)obj)->anim.hitReactState != 0)
             {
                 ObjHits_DisableObject(obj);
@@ -401,7 +401,7 @@ LAB_8017de10:
                 {
                     ObjHits_DisableObject(obj);
                 }
-                *(byte*)(groundResult + 0x5a) = *(byte*)(groundResult + 0x5a) | 2;
+                *(byte*)&((AppleOnTreeState*)groundResult)->unk5A = *(byte*)(groundResult + 0x5a) | 2;
             }
             else
             {
@@ -438,18 +438,18 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
         if (bit == 0)
         {
             msgTarget = (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
-            *(undefined2*)(state + 0x5c) = 0xffff;
-            *(undefined2*)(state + 0x5e) = 0;
-            *(float*)(state + 0x60) = lbl_803E4460;
+            *(undefined2*)&((AppleOnTreeState*)state)->unk5C = 0xffff;
+            *(undefined2*)&((AppleOnTreeState*)state)->unk5E = 0;
+            *(float*)&((AppleOnTreeState*)state)->unk60 = lbl_803E4460;
             ObjMsg_SendToObject(msgTarget, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player, 0x7000a,
                                 obj, state + 0x5c, in_r7, in_r8, in_r9, in_r10);
             GameBit_Set(0x90f, 1);
-            *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 4;
+            *(byte*)&((AppleOnTreeState*)state)->unk5A = *(byte*)(state + 0x5a) | 4;
         }
         else
         {
             FUN_80294d60(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player,
-                         (uint) * (ushort*)(state + 0x38));
+                         (uint) * (ushort*)&((AppleOnTreeState*)state)->healthRestore);
             FUN_80081118((double)lbl_803E4460, obj, 0xff, 0x28);
             msgTarget = FUN_80006824(obj, SFXen_waterblock_stop);
             player = *(int*)&((GameObject*)obj)->extra;
@@ -459,7 +459,7 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
                 {
                     ObjHits_DisableObject(obj);
                 }
-                *(byte*)(player + 0x5a) = *(byte*)(player + 0x5a) | 2;
+                *(byte*)&((AppleOnTreeState*)player)->unk5A = *(byte*)(player + 0x5a) | 2;
             }
             else
             {
@@ -487,14 +487,14 @@ undefined4 FUN_8017e15c(double yPos, undefined2* out, int state)
 
     fzero = lbl_803E446C;
     disc = (double)lbl_803E446C;
-    depth = (double)*(float*)(state + 0x40);
+    depth = (double)*(float*)&((AppleOnTreeState*)state)->unk40;
     if (disc == depth)
     {
         result = 1;
     }
     else
     {
-        fa = *(float*)(state + 0x30);
+        fa = *(float*)&((AppleOnTreeState*)state)->unk30;
         if (disc <= (double)(fa - (float)((double)*(float*)(state + 0x2c) - yPos)))
         {
             *(float*)(out + 8) = (float)yPos;
@@ -502,7 +502,7 @@ undefined4 FUN_8017e15c(double yPos, undefined2* out, int state)
         }
         else
         {
-            amp = (double)*(float*)(state + 0x44);
+            amp = (double)*(float*)&((AppleOnTreeState*)state)->bounceVel;
             if (disc == amp)
             {
                 disc = FUN_80293900((double)(float)(amp * amp -
@@ -524,24 +524,24 @@ undefined4 FUN_8017e15c(double yPos, undefined2* out, int state)
                         fb = fa;
                     }
                 }
-                *(float*)(state + 0xc) = *(float*)(state + 0xc) - fb;
-                *(float*)(state + 0x2c) = *(float*)(state + 0x2c) - *(float*)(state + 0x30);
-                *(float*)(state + 0x30) = lbl_803E446C;
-                *(undefined4*)(out + 8) = *(undefined4*)(state + 0x2c);
-                *out = *(undefined2*)(state + 0x48);
-                out[1] = *(undefined2*)(state + 0x4a);
-                out[2] = *(undefined2*)(state + 0x4c);
-                *(float*)(state + 0x44) = -*(float*)(state + 0x28);
-                if ((*(byte*)(state + 0x5a) & 8) == 0)
+                *(float*)&((AppleOnTreeState*)state)->unk0C = *(float*)&((AppleOnTreeState*)state)->unk0C - fb;
+                *(float*)&((AppleOnTreeState*)state)->unk2C = *(float*)&((AppleOnTreeState*)state)->unk2C - *(float*)&((AppleOnTreeState*)state)->unk30;
+                *(float*)&((AppleOnTreeState*)state)->unk30 = lbl_803E446C;
+                *(undefined4*)(out + 8) = *(undefined4*)&((AppleOnTreeState*)state)->unk2C;
+                *out = *(undefined2*)&((AppleOnTreeState*)state)->rotX;
+                out[1] = *(undefined2*)&((AppleOnTreeState*)state)->rotY;
+                out[2] = *(undefined2*)&((AppleOnTreeState*)state)->rotZ;
+                *(float*)&((AppleOnTreeState*)state)->bounceVel = -*(float*)&((AppleOnTreeState*)state)->unk28;
+                if ((*(byte*)&((AppleOnTreeState*)state)->unk5A & 8) == 0)
                 {
                     FUN_80006824((uint)out, 0x407);
-                    *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 8;
+                    *(byte*)&((AppleOnTreeState*)state)->unk5A = *(byte*)&((AppleOnTreeState*)state)->unk5A | 8;
                 }
                 result = 1;
             }
             else if ((double)lbl_803E448C <= amp)
             {
-                depth = (double)(float)(depth + (double)*(float*)(state + 0x3c));
+                depth = (double)(float)(depth + (double)*(float*)&((AppleOnTreeState*)state)->unk3C);
                 disc = FUN_80293900((double)(float)(amp * amp -
                     (double)((float)((double)lbl_803E4470 * depth) * fa
                     )));
@@ -561,16 +561,16 @@ undefined4 FUN_8017e15c(double yPos, undefined2* out, int state)
                         fb = fa;
                     }
                 }
-                *(float*)(state + 0xc) = *(float*)(state + 0xc) - fb;
-                *(undefined4*)(out + 8) = *(undefined4*)(state + 0x2c);
-                *(float*)(state + 0x44) = *(float*)(state + 0x44) * lbl_803E4490;
+                *(float*)&((AppleOnTreeState*)state)->unk0C = *(float*)&((AppleOnTreeState*)state)->unk0C - fb;
+                *(undefined4*)(out + 8) = *(undefined4*)&((AppleOnTreeState*)state)->unk2C;
+                *(float*)&((AppleOnTreeState*)state)->bounceVel = *(float*)&((AppleOnTreeState*)state)->bounceVel * lbl_803E4490;
                 result = 0;
             }
             else
             {
                 *(float*)(out + 8) = *(float*)(state + 0x2c);
-                *(float*)(state + 0x40) = fzero;
-                *(float*)(state + 0x44) = fzero;
+                *(float*)&((AppleOnTreeState*)state)->unk40 = fzero;
+                *(float*)&((AppleOnTreeState*)state)->bounceVel = fzero;
                 result = 1;
             }
         }
@@ -591,15 +591,15 @@ undefined4 FUN_8017e3c0(double yPos, undefined2* out, int state)
     if (lbl_803E446C == *(float*)(state + 0x3c))
     {
         if (lbl_803E446C <
-            *(float*)(state + 0x30) - (float)((double)*(float*)(state + 0x2c) - yPos))
+            *(float*)(state + 0x30) - (float)((double)*(float*)&((AppleOnTreeState*)state)->unk2C - yPos))
         {
             *(float*)(out + 8) = (float)yPos;
             result = 1;
         }
         else
         {
-            depth = (double)*(float*)(state + 0x40);
-            amp = (double)*(float*)(state + 0x44);
+            depth = (double)*(float*)&((AppleOnTreeState*)state)->unk40;
+            amp = (double)*(float*)&((AppleOnTreeState*)state)->bounceVel;
             disc = FUN_80293900((double)(float)(amp * amp -
                 (double)((float)((double)lbl_803E4470 * depth) *
                     *(float*)(state + 0x30))));
@@ -619,34 +619,34 @@ undefined4 FUN_8017e3c0(double yPos, undefined2* out, int state)
                     fc = fb;
                 }
             }
-            *(float*)(state + 0xc) = *(float*)(state + 0xc) - fc;
-            *(float*)(state + 0x2c) = *(float*)(state + 0x2c) - *(float*)(state + 0x30);
-            *(float*)(state + 0x30) = lbl_803E446C;
-            *(undefined4*)(out + 8) = *(undefined4*)(state + 0x2c);
-            *out = *(undefined2*)(state + 0x48);
-            out[1] = *(undefined2*)(state + 0x4a);
-            out[2] = *(undefined2*)(state + 0x4c);
-            *(float*)(state + 0x44) =
-                lbl_803E4474 * *(float*)(state + 0x40) * fc + *(float*)(state + 0x44);
-            *(undefined4*)(state + 0x3c) = *(undefined4*)(state + 0x28);
+            *(float*)&((AppleOnTreeState*)state)->unk0C = *(float*)&((AppleOnTreeState*)state)->unk0C - fc;
+            *(float*)&((AppleOnTreeState*)state)->unk2C = *(float*)&((AppleOnTreeState*)state)->unk2C - *(float*)&((AppleOnTreeState*)state)->unk30;
+            *(float*)&((AppleOnTreeState*)state)->unk30 = lbl_803E446C;
+            *(undefined4*)(out + 8) = *(undefined4*)&((AppleOnTreeState*)state)->unk2C;
+            *out = *(undefined2*)&((AppleOnTreeState*)state)->rotX;
+            out[1] = *(undefined2*)&((AppleOnTreeState*)state)->rotY;
+            out[2] = *(undefined2*)&((AppleOnTreeState*)state)->rotZ;
+            *(float*)&((AppleOnTreeState*)state)->bounceVel =
+                lbl_803E4474 * *(float*)&((AppleOnTreeState*)state)->unk40 * fc + *(float*)&((AppleOnTreeState*)state)->bounceVel;
+            *(undefined4*)&((AppleOnTreeState*)state)->unk3C = *(undefined4*)&((AppleOnTreeState*)state)->unk28;
             (**(code**)(*DAT_803dd718 + 0x10))
-            ((double)*(float*)(out + 6), (double)*(float*)(state + 0x34),
+            ((double)*(float*)(out + 6), (double)*(float*)&((AppleOnTreeState*)state)->unk34,
              (double)*(float*)(out + 10), out);
             result = 0;
         }
     }
-    else if ((float)(yPos - (double)*(float*)(state + 0x2c)) < lbl_803E446C)
+    else if ((float)(yPos - (double)*(float*)&((AppleOnTreeState*)state)->unk2C) < lbl_803E446C)
     {
         *(float*)(out + 8) = (float)yPos;
         result = 1;
     }
     else
     {
-        amp = (double)(*(float*)(state + 0x40) + *(float*)(state + 0x3c));
-        depth = (double)*(float*)(state + 0x44);
+        amp = (double)(*(float*)&((AppleOnTreeState*)state)->unk40 + *(float*)(state + 0x3c));
+        depth = (double)*(float*)&((AppleOnTreeState*)state)->bounceVel;
         disc = FUN_80293900((double)(float)(depth * depth -
             (double)((float)((double)lbl_803E4470 * amp) *
-                *(float*)(state + 0x30))));
+                *(float*)&((AppleOnTreeState*)state)->unk30)));
         fa = (float)((double)lbl_803E4474 * amp);
         fb = fa;
         if (fa < lbl_803E446C)
@@ -663,10 +663,10 @@ undefined4 FUN_8017e3c0(double yPos, undefined2* out, int state)
                 fc = fb;
             }
         }
-        *(float*)(state + 0xc) = *(float*)(state + 0xc) - fc;
-        *(undefined4*)(out + 8) = *(undefined4*)(state + 0x2c);
-        *(float*)(state + 0x3c) = lbl_803E4494;
-        *(float*)(state + 0x44) = lbl_803E4498;
+        *(float*)&((AppleOnTreeState*)state)->unk0C = *(float*)&((AppleOnTreeState*)state)->unk0C - fc;
+        *(undefined4*)(out + 8) = *(undefined4*)&((AppleOnTreeState*)state)->unk2C;
+        *(float*)&((AppleOnTreeState*)state)->unk3C = lbl_803E4494;
+        *(float*)&((AppleOnTreeState*)state)->bounceVel = lbl_803E4498;
         result = 0;
     }
     return result;
