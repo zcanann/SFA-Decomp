@@ -330,7 +330,7 @@ void CameraModeTestStrength_update(short* cam)
             {
                 d += 0xffff;
             }
-            cam[1] = cam[1] + ((int)(d * (u32)framesThisStep) >> 3);
+            cam[1] += ((int)(d * (u32)framesThisStep) >> 3);
         }
         if (m4 != 0)
         {
@@ -343,7 +343,7 @@ void CameraModeTestStrength_update(short* cam)
             {
                 d += 0xffff;
             }
-            cam[2] = cam[2] + ((int)(d * (u32)framesThisStep) >> 3);
+            cam[2] += ((int)(d * (u32)framesThisStep) >> 3);
         }
         if (lbl_803DD560->linkedObject != NULL)
         {
