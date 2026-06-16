@@ -409,13 +409,13 @@ int gplayNewGame(char* name, int slot)
     *(u16*)(save + 6) = 0x19;
     *(u16*)(save + 4) = 0;
     save[0xa] = 1;
-    save[0x692] = -1;
+    *(s8*)(save + 0x692) = -1;
     save[0xc] = 0xc;
     save[0xd] = 0xc;
     *(u16*)(save + 0x12) = 0x19;
     *(u16*)(save + 0x10) = 0;
     save[0x16] = 1;
-    save[0x6a2] = -1;
+    *(s8*)(save + 0x6a2) = -1;
     save[0x19] = 0x14;
     *(s16*)(save + 0x6a4) = -1;
     *(f32*)(save + 0x6a8) = lbl_803E06C8;
@@ -426,9 +426,9 @@ int gplayNewGame(char* name, int slot)
     *(s16*)(save + 0x6b6) = -1;
     *(s16*)(save + 0x6b8) = -1;
     *(s16*)(save + 0x6ba) = -1;
-    save[0x6e9] = -1;
-    save[0x6ea] = -1;
-    save[0x6eb] = -1;
+    *(s8*)(save + 0x6e9) = -1;
+    *(s8*)(save + 0x6ea) = -1;
+    *(s8*)(save + 0x6eb) = -1;
     save[0x6e8] = 9;
     save[0x23] = 0;
     save[SAVEGAME_NEW_FILE_FLAG_OFFSET] = 1;
@@ -452,17 +452,17 @@ int gplayNewGame(char* name, int slot)
     SaveGame_gplaySetObjGroupStatus(0x13, 0x16, 1);
     GameBit_Set(0x967, 1);
 
-    *(f32*)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+    *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
         SAVEGAME_CHARACTER_POSITION_OFFSET) = defaultPos.x;
-    *(f32*)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+    *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
         SAVEGAME_CHARACTER_POSITION_OFFSET + 4) = defaultPos.y;
-    *(f32*)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+    *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
         SAVEGAME_CHARACTER_POSITION_OFFSET + 8) = defaultPos.z;
-    save[0x55d] = 1;
+    gSaveGameData[0x55d] = 1;
 
     if (name != NULL)
     {
-        dst = save + SAVEGAME_PLAYER_NAME_OFFSET;
+        dst = gSaveGameData + SAVEGAME_PLAYER_NAME_OFFSET;
         do
         {
             c = (u8) * name++;
@@ -472,23 +472,22 @@ int gplayNewGame(char* name, int slot)
     }
     else
     {
-        save[SAVEGAME_PLAYER_NAME_OFFSET + 0] = 'F';
-        save[SAVEGAME_PLAYER_NAME_OFFSET + 1] = 'O';
-        save[SAVEGAME_PLAYER_NAME_OFFSET + 2] = 'X';
-        save[SAVEGAME_PLAYER_NAME_OFFSET + 3] = '\0';
+        gSaveGameData[SAVEGAME_PLAYER_NAME_OFFSET + 0] = 'F';
+        gSaveGameData[SAVEGAME_PLAYER_NAME_OFFSET + 1] = 'O';
+        gSaveGameData[SAVEGAME_PLAYER_NAME_OFFSET + 2] = 'X';
+        gSaveGameData[SAVEGAME_PLAYER_NAME_OFFSET + 3] = '\0';
     }
 
-    memcpy(lbl_803DD498, save, SAVEGAME_ACTIVE_SIZE);
-    if ((s8)slot == -1)
+    memcpy(lbl_803DD498, gSaveGameData, SAVEGAME_ACTIVE_SIZE);
+    if ((s8)slot != -1)
     {
-        return 0;
+        lbl_803DB890 = (s8)slot;
+        if (name != NULL)
+        {
+            return _saveGame((u8)slot, (int)lbl_803DD498, (int)saveData);
+        }
     }
-    lbl_803DB890 = (s8)slot;
-    if (name == NULL)
-    {
-        return 0;
-    }
-    return _saveGame((u8)slot, (int)lbl_803DD498, (int)saveData);
+    return 0;
 }
 
 void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
