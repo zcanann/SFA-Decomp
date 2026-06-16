@@ -247,7 +247,7 @@ typedef struct FogColor
 
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern int snowPrintSnowCloud(int arg, int x);
-extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a0, u8 a1);
+extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
 extern f32 lbl_8039A8F0[];
 extern int lbl_803DF198;
 
@@ -270,8 +270,8 @@ void dll_07_func07(int arg)
     }
     if (lbl_803DD198 != 0)
     {
-        drawFn_80079e64(lbl_803DD190, lbl_803DB764, lbl_803DB768, lbl_803DD198,
-                        lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
+        drawFn_80079e64(lbl_803DD190, lbl_803DD198, lbl_8039A8F0, lbl_803DB764,
+                        lbl_803DD199, lbl_803DD19A, lbl_803DB768);
     }
 }
 
