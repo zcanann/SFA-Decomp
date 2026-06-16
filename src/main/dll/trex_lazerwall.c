@@ -83,8 +83,8 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
             if ((s8) * (u8*)(hit + 0x19) == 0xc)
             {
-                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 pushKindA = 1;
+                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 if (Stack_IsFull(playerObj) == 0)
                 {
                     Stack_Push(playerObj, &pushKindA);
@@ -92,8 +92,8 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
             }
             else
             {
-                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 pushKindB = 2;
+                playerObj = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
                 if (Stack_IsFull(playerObj) == 0)
                 {
                     Stack_Push(playerObj, &pushKindB);
