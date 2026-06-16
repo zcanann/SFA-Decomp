@@ -301,6 +301,9 @@ void ring_update(int obj)
                             (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f0,
                                                              spawnBuf, RING_PARTFX_FLAGS, -1,
                                                              (void*)(obj + 0x24));
+                            (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f0,
+                                                             spawnBuf, RING_PARTFX_FLAGS, -1,
+                                                             (void*)(obj + 0x24));
                         }
                     }
                     state->flags.bit40 = 1;

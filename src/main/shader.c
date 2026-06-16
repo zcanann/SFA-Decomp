@@ -705,6 +705,7 @@ extern f32 lbl_803DEBCC;
 extern f32 retraceCount;
 extern f32 flushFlag;
 extern f32 retraceQueue;
+extern f32 PreCB;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
@@ -1057,8 +1058,9 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     if (i == count)
     {
-        lbl_803DCE98 = *(volatile u8*)&lbl_803DCE98 + 1;
-        if (*(volatile u8*)&lbl_803DCE98 == 0x40)
+        int cnt;
+        lbl_803DCE98 = cnt = *(volatile u8*)&lbl_803DCE98 + 1;
+        if ((u8)cnt == 0x40)
         {
             OSReport(sTrackLoadBlockOverrunError);
         }
@@ -1951,8 +1953,8 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     else
     {
-        y0 = (&lbl_803DEBCC)[8];
-        y1 = (&lbl_803DEBCC)[9];
+        y0 = (&retraceQueue)[1];
+        y1 = PreCB;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++)

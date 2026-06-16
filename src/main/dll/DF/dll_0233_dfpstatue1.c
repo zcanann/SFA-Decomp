@@ -1,8 +1,15 @@
+/*
+ * DragonRock Palace statue (DLL 0x233; "DFP_Statue1") - a sound-emitting
+ * statue. While its loop game bit and 0xedf are set it runs trigger
+ * sequence 0 and keeps a looped object sound alive; once stateFlags is
+ * raised it runs sequence 1 and stops. A stop timer clears one of a set
+ * of related game bits per loopSfxId. The DLL also exports the perchwitch
+ * stub descriptor as a sibling object.
+ */
 #include "main/dll/crate2.h"
+#include "main/gamebits.h"
 
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitState);
 
 extern f32 timeDelta;
@@ -98,13 +105,6 @@ void dfpstatue1_release(void)
 void dfpstatue1_initialise(void)
 {
 }
-
-
-
-
-
-
-
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

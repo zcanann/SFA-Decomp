@@ -854,6 +854,7 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
     slot->z = z;
 }
 
+#pragma optimization_level 2
 void Camera_UpdateViewMatrices(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
@@ -913,6 +914,7 @@ void Camera_UpdateViewMatrices(void)
     *(f32*)(base + 5632 + 28) = lbl_803DE60C;
     *(f32*)(base + 5632 + 44) = lbl_803DE60C;
 }
+#pragma optimization_level reset
 
 void Camera_ApplyFullViewport(void)
 {

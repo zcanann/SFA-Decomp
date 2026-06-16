@@ -83,6 +83,7 @@ void softbody_initialise(void)
     lbl_803DDD9C = lbl_803E7298;
 }
 
+#pragma opt_common_subs off
 void softbody_update(int obj)
 {
     GameObject* object = (GameObject*)obj;
@@ -117,3 +118,4 @@ void softbody_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
     }
 }
+#pragma opt_common_subs reset

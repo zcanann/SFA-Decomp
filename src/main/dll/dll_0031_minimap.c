@@ -854,7 +854,7 @@ void fn_80133718(void)
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
-#pragma scheduling on
+#pragma scheduling off
 #pragma peephole off
 void Minimap_release(void)
 {
@@ -868,10 +868,10 @@ void Minimap_release(void)
     null = NULL;
     while ((u32)i < 2)
     {
-        if (slots[i] != NULL)
+        if (slots[(u8)i] != NULL)
         {
-            Obj_FreeObject(slots[i]);
-            slots[i] = null;
+            Obj_FreeObject(slots[(u8)i]);
+            slots[(u8)i] = null;
         }
         i++;
     }

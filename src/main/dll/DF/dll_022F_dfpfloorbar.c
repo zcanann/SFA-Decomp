@@ -1,4 +1,11 @@
-/* DLL 0x22F — DFP floor bar object [80206474-8020652C) */
+/*
+ * DragonRock Palace floor bar (DLL 0x22F; "DFP_floorbar") - a rising/
+ * falling floor bar in the spell puzzle. It links to the puzzle
+ * controller object (seqId 0x431) to read the per-mode required score
+ * table, lowers itself while sequence game bits are set, and raises when
+ * the player stands in the correct scoring zone (matched against
+ * requiredScore); a wrong zone trips game bit 0x5e5 to reset.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
@@ -29,10 +36,8 @@ void dfpfloorbar_free(int* obj)
     return;
 }
 
-/* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 int dfpfloorbar_SeqFn(void) { return 0; }
 
-/* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
 int dfpfloorbar_getObjectTypeId(void) { return 0; }
 
 int dfpfloorbar_getExtraSize(void)
@@ -40,19 +45,15 @@ int dfpfloorbar_getExtraSize(void)
     return 0xc;
 }
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
- * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
- */
-void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
+void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 t = p6;
+    s32 t = visible;
     if (t != 0)
     {
         objRenderFn_8003b8f4(lbl_803E6408);
     }
 }
 
-/* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
 void dfpfloorbar_hitDetect(int* obj)
 {
     int* x;
@@ -85,7 +86,7 @@ void dfpfloorbar_update(int obj)
     s16 score = -1;
     int mode;
     u8 active;
-    u32 r27;
+    u32 sequenceValue;
     u8* playerObj;
     f32 yDelta;
     f32 xMid;
@@ -113,12 +114,12 @@ void dfpfloorbar_update(int obj)
         break;
     }
 
-    r27 = (u8)GameBit_Get(0x5e4);
-    if (GameBit_Get(0x5e5) != 0 || r27 != state->lastSequenceValue)
+    sequenceValue = (u8)GameBit_Get(0x5e4);
+    if (GameBit_Get(0x5e5) != 0 || sequenceValue != state->lastSequenceValue)
     {
         state->active = 0;
     }
-    state->lastSequenceValue = (u8)r27;
+    state->lastSequenceValue = (u8)sequenceValue;
 
     if (state->linkedObject == NULL)
     {
@@ -233,7 +234,6 @@ void dfpfloorbar_init(int obj, int params)
     }
 }
 
-/* EN v1.0 0x8020692C  size: 60b */
 void dfpfloorbar_initialise(void)
 {
     u8* modeRow = gDfpfloorbarModeTable;

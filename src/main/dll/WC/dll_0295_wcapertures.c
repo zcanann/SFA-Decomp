@@ -212,6 +212,9 @@ void wcapertures_update(int obj)
     state->targetAlpha = 0;
     switch (state->mode)
     {
+    case WCAPERTURES_MODE_OPEN:
+        state->targetAlpha = 0;
+        break;
     case WCAPERTURES_MODE_CLOSED:
         if ((u32)GameBit_Get(setup->armBit) != 0)
         {
@@ -229,9 +232,6 @@ void wcapertures_update(int obj)
                 state->mode = WCAPERTURES_MODE_OPEN;
             }
         }
-        break;
-    case WCAPERTURES_MODE_OPEN:
-        state->targetAlpha = 0;
         break;
     }
     alpha = objAnim->alpha;

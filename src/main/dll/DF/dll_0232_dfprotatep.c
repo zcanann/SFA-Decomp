@@ -1,3 +1,8 @@
+/*
+ * DragonRock Palace rotating platform (DLL 0x232; "DFP_RotateP"),
+ * implemented on the shared TrickyCurve state machine and sfxplayer: a
+ * curve-driven moving platform with per-state update handlers and ring fx.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -99,6 +104,7 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
+void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -486,7 +492,6 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma opt_common_subs off
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
@@ -537,7 +542,6 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
 }
-#pragma opt_common_subs reset
 
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 {

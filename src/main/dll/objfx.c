@@ -1287,7 +1287,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
     case 13:
     case 14:
         mode = 0;
-        if (count != 0)
+        if ((u8)count != 0)
         {
             count = 8;
         }

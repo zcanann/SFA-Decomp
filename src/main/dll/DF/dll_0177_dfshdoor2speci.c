@@ -1,3 +1,9 @@
+/*
+ * DragonRock Shrine special door (DLL 0x177; "DFSH_Door2Speci", shared by
+ * Door3S/Door4S). A door whose texture fades in and then pulses: state 0
+ * waits for its gamebit, state 1 ramps the texture alpha up to 0x100, and
+ * state 2 drives a cosine pulse of the texture id.
+ */
 #include "main/game_object.h"
 #include "main/objtexture.h"
 
@@ -6,7 +12,7 @@ typedef struct DFSHDoor2SpeciPlacement
     u8 pad0[0x1B - 0x0];
     u8 unk1B;
     u8 pad1C[0x22 - 0x1C];
-    s16 unk22;
+    s16 gameBit;
     u8 pad24[0x28 - 0x24];
 } DFSHDoor2SpeciPlacement;
 
@@ -27,7 +33,6 @@ extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
 
-extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(f32);
 
 int DFSH_Door2Speci_SeqFn(int obj)
@@ -44,7 +49,7 @@ int DFSH_Door2Speci_SeqFn(int obj)
     switch (extra->state)
     {
     case 0:
-        if (GameBit_Get(((DFSHDoor2SpeciPlacement*)objDef)->unk22) != 0)
+        if (GameBit_Get(((DFSHDoor2SpeciPlacement*)objDef)->gameBit) != 0)
         {
             extra->state = 1;
         }

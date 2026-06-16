@@ -206,20 +206,17 @@ extern void* gameTextGet(s32);
 #pragma peephole off
 void titlescreen_release(void)
 {
-    register void** p;
     int i;
     textureFree(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
     i = 0;
-    p = lbl_803A9F98;
     do
     {
-        if (*p != NULL)
+        if (lbl_803A9F98[i] != NULL)
         {
-            textureFree(*p);
-            *p = NULL;
+            textureFree(lbl_803A9F98[i]);
+            lbl_803A9F98[i] = NULL;
         }
-        p++;
         i++;
     }
     while (i < 19);

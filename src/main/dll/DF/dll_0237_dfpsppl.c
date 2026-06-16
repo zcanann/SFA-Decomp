@@ -1,10 +1,8 @@
 /*
- * Ocean Force Point (DFP) spellstone placement slot (DLL 0x237; "DFPSpPl").
- * A LaserObjectMapData spellplace: enabled while activationGameBit is set, and
- * when the placement sequence completes it sets completionGameBit and clears
- * the activation bit. For the water spellstone the completionGameBit is 0x5f3,
- * so placing the stone is what flags the LightFoot Village to advance from
- * mode 1 to 2 (0x5f3 is read by sclevelcontrol). Sibling of vfpspellplace.
+ * DragonRock Palace spellstone placement slot (DLL 0x237; "DFPSpPl").
+ * A LaserObject spellplace: enabled while its activationGameBit is set; when
+ * the placement sequence event completes it sets completionGameBit, clears the
+ * activation bit, and disables itself. Sibling of vfpspellplace (VFP).
  */
 #include "main/dll/CF/laser.h"
 #include "main/gameplay_runtime.h"

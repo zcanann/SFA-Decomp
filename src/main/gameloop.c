@@ -249,6 +249,7 @@ extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 #pragma scheduling on
 #pragma peephole on
 #pragma scheduling off
+#pragma peephole off
 void* loadAsset(void* reqVoid)
 {
     u8 tmp[0x10];
@@ -288,6 +289,7 @@ void* loadAsset(void* reqVoid)
         break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1320,6 +1322,7 @@ extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
 
 #pragma peephole off
+#pragma optimization_level 2
 void askProgressiveScanMode(void)
 {
     u32 counter;
@@ -1417,7 +1420,7 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     VIWaitForRetrace();
     counter = 0;
-    showId = sel;
+    showId = (u32)sel;
     do
     {
         counter++;
@@ -1441,6 +1444,7 @@ void askProgressiveScanMode(void)
     }
     while (counter < 0xf0);
 }
+#pragma optimization_level reset
 
 extern u32 getNewInputs(int pad);
 extern void AISetStreamVolLeft(int vol);

@@ -1,3 +1,9 @@
+/*
+ * DragonRock Shrine object creator (DLL 0x179; "DFSH_ObjCreator") - a
+ * spawner that, once its gamebit arms, builds a SpiritPrize object setup
+ * (object id 0x11) from its placement template and periodically spawns it
+ * while loading is locked, playing the gem-run sfx.
+ */
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -6,19 +12,6 @@
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-typedef struct DfshShrinePlacement
-{
-    ObjPlacement base;
-    s8 initialYaw;
-    u8 pad19;
-    s16 startDelay;
-    u8 pad1C[0x24 - 0x1C];
-} DfshShrinePlacement;
-
-STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
 extern f32 lbl_803E4EB8;
 extern u8 Obj_IsLoadingLocked(void);
@@ -68,7 +61,6 @@ void dfsh_objcreator_hitDetect(void)
 {
 }
 
-int SpiritPrize_getExtraSize(void);
 int dfsh_objcreator_getExtraSize(void) { return 0x4; }
 int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
@@ -77,10 +69,6 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4EB8);
 }
-
-void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-/* segment pragma-stack balance (re-split): */
 
 typedef struct DfshObjCreatorState
 {
@@ -137,7 +125,7 @@ void dfsh_objcreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1A = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
-        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(((GameObject*)obj)->anim.rotX >> 8);
+        ((DfshObjCreatorSetup*)spawnSetup)->unk2A = (s8)(*(s16*)obj >> 8);
         ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
         if (GameBit_Get(0xfc) != 0)
         {
@@ -168,7 +156,7 @@ void dfsh_objcreator_initialise(void)
 void dfsh_objcreator_init(int obj, s8* def)
 {
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
+    *(s16*)obj = (s16)((s32)def[0x1E] << 8);
     ((GameObject*)obj)->unkF8 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;

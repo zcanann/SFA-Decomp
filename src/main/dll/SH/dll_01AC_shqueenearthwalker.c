@@ -54,7 +54,7 @@ void sh_queenearthwalker_update(void* obj)
     s8 actionParam;
     u8 stateFlags;
     u8 eventIndex;
-    s16 currentMove;
+    int currentMove;
     s16 targetMove;
 
     state = ((GameObject*)obj)->extra;

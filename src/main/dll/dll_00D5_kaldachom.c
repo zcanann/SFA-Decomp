@@ -487,24 +487,24 @@ void kaldachom_update(int obj)
 
 void kaldachom_init(int obj, int data, int skip_alloc)
 {
-    int initMode;
-    KaldaChomControl* control;
     int state;
+    KaldaChomControl* control;
     int player;
+    u8 initMode;
 
     state = *(int*)&((GameObject*)obj)->extra;
     initMode = 6;
     if (skip_alloc != 0)
     {
-        initMode = 7;
+        initMode = initMode | 1;
     }
-    (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
+    (*(code*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
     ((GameObject*)obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
     *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-    (**(code**)(*gPlayerInterface + 0x14))(obj, state, 0);
+    (*(code*)(*gPlayerInterface + 0x14))(obj, state, 0);
     *(undefined2*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;

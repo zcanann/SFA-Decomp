@@ -229,6 +229,7 @@ void expgfxRemoveAll(void)
     ExpgfxTableEntry* expTabEntry;
     u32 activeBit;
     u32 inactiveBitMask;
+    int expTabIndex;
     int poolIndex;
     int slotIndex;
 
@@ -248,14 +249,15 @@ void expgfxRemoveAll(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
+                expTabIndex = Expgfx_GetSlotTableIndex(slot);
+                expTabEntry = Expgfx_GetTableEntry(expTabIndex);
+                if (expTabEntry->resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
+                    textureFree((void*)expTabEntry->resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                expTabEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
                 if (expTabEntry->refCount != 0)
                 {
                     expTabEntry->refCount--;
@@ -1851,12 +1853,14 @@ foundFirst:
 int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey, s16 resourceId)
 {
     ExpgfxTableEntry* entry;
+    ExpgfxTableEntry* freeScan;
     u16* refCount;
     int tableIndex;
     int freeIndex;
 
     tableIndex = 0;
-    entry = gExpgfxTableEntries;
+    freeScan = gExpgfxTableEntries;
+    entry = freeScan;
     for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++)
     {
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
@@ -1873,9 +1877,9 @@ int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey,
         }
     }
 
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++)
     {
-        if (gExpgfxTableEntries[freeIndex].refCount == 0)
+        if (freeScan->refCount == 0)
         {
             gExpgfxTableEntries[freeIndex].refCount = 1;
             gExpgfxTableEntries[freeIndex].resource = resourceHandle;
@@ -2006,7 +2010,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if ((u8)frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
+            if (frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
                                                 poolBounds->maxX - playerMapOffsetX,
                                                 poolBounds->minY, poolBounds->maxY,
                                                 poolBounds->minZ - playerMapOffsetZ,
@@ -2478,7 +2482,7 @@ void renderParticles(void)
             (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-            if ((u8)frustumTestAabbWithPlaneOffsets((double)(poolBounds->minX - playerMapOffsetX),
+            if (frustumTestAabbWithPlaneOffsets((double)(poolBounds->minX - playerMapOffsetX),
                                                 (double)(poolBounds->maxX - playerMapOffsetX),
                                                 (double)poolBounds->minY, (double)poolBounds->maxY,
                                                 (double)(poolBounds->minZ - playerMapOffsetZ),
