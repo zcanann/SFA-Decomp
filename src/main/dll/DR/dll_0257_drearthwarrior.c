@@ -1350,9 +1350,9 @@ void DR_EarthWarrior_update(int obj)
             s16 angles[4];
             f32 mat[4];
         } w;
+        int p;
         int i;
         int j;
-        int p;
         f32 c8338;
         f32 c835c;
         vecA[0] = lbl_803E833C * ((GameObject*)obj)->anim.velocityX;
