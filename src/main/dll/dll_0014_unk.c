@@ -3628,9 +3628,10 @@ int RomCurve_func16(double x, double y, double z)
     int* p;
     u32* end;
 
+    i = 0;
     candidateCount = 0;
     curveList = (int*)romCurves;
-    for (i = 0; i < nRomCurves && candidateCount < 20; i++)
+    for (; i < nRomCurves && candidateCount < 20; i++)
     {
         curve = *curveList;
         if (*(s8*)(curve + 0x19) == 0x17)
