@@ -26,7 +26,8 @@ typedef struct
     s16 v44; /* +0x44 */
     s16 hw[7]; /* +0x46 */
     u32 flags; /* +0x54 */
-    u8 v58, v59, v5a, v5b, v5c, count; /* +0x58..+0x5d */
+    u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
+    s8 count; /* +0x5d */
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
@@ -182,7 +183,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
             buf.pos[2] = lbl_803E13F8 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[212], 0x46c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80318038, 0x18, &tab[212], 0x46c, 0);
 }
 
 
