@@ -346,7 +346,7 @@ void drlasercannon_init(int obj, char* arg)
     ObjGroup_AddObject(obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;
     state->flags.b3 = 0;
-    *(s16*)obj = (s16)(setup->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->initialYaw << 8);
     state->trickyCooldown = DR_LASERCANNON_TRICKY_COOLDOWN;
     state->animStepScale = lbl_803E6920;
     if (GameBit_Get(setup->destroyedGameBit) != 0)
@@ -411,7 +411,7 @@ void drlasercannon_hitDetect(int obj)
                                              &hitPosY, &hitPosZ);
     if (state->flags.b6 != 0)
     {
-        if (hit != 0 && *(s16 *)(hitObject + 0x46) != state->hitExcludeType &&
+        if (hit != 0 && ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType &&
             (void *)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
@@ -419,7 +419,7 @@ void drlasercannon_hitDetect(int obj)
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
              (void *)state->lastHitObject != (void *)hitObject &&
-             *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
+             ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType)
     {
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
@@ -538,7 +538,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v;
-            *(s16*)obj += lbl_803DC2AC;
+            ((GameObject*)obj)->anim.rotX += lbl_803DC2AC;
             v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
             v[0] = (s16)(v[0] >> 1);
         }
@@ -621,7 +621,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
-            *(s16*)spawned = (s16)((f32) * (s16*)obj + lbl_803DDD68);
+            ((GameObject*)spawned)->anim.rotX = (s16)((f32)((GameObject*)obj)->anim.rotX + lbl_803DDD68);
             ((GameObject*)spawned)->anim.rotY = v[0];
         }
     }
