@@ -359,7 +359,7 @@ extern void Obj_FreeObject(int obj);
 void landed_arwing_free(int obj)
 {
     int o = obj;
-    int* p = ((int**)o)[0xb8 / 4];
+    int* p = (int*)((GameObject*)o)->extra;
     if (*(void**)&p[0x10 / 4] != NULL)
     {
         Obj_FreeObject(p[0x10 / 4]);
@@ -683,14 +683,14 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             child = state->childObject;
             if ((void*)child != NULL)
             {
-                *(s16*)(child + 6) &= ~0x4000;
+                ((GameObject*)child)->anim.flags &= ~0x4000;
             }
             break;
         case 0x19:
             child = state->childObject;
             if ((void*)child != NULL)
             {
-                *(s16*)(child + 6) |= 0x4000;
+                ((GameObject*)child)->anim.flags |= 0x4000;
             }
             break;
         }
@@ -723,7 +723,7 @@ void landed_arwing_update(int obj)
             {
                 ObjLink_AttachChild(obj, state->childObject, 0);
                 fn_8022F270(state->childObject, 0xaf);
-                *(s16*)(state->childObject + 6) |= 0x4000;
+                ((GameObject*)state->childObject)->anim.flags |= 0x4000;
             }
         }
     }
@@ -803,7 +803,7 @@ void infopoint_update(int obj);
 
 void landed_arwing_init(int obj, int param)
 {
-    int* p = ((int**)obj)[0xb8 / 4];
+    int* p = (int*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
     *(s8*)((char*)p + 0x16) = 1;
     if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0)
