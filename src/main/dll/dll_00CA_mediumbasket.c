@@ -1812,10 +1812,9 @@ void fn_8015CE68(int obj, int state)
     {
         scale = lbl_803E2D2C;
     }
-    if (((GroundBaddieState*)state)->baddie.animSpeedA >= scale)
-    {
-        scale = ((GroundBaddieState*)state)->baddie.animSpeedA;
-    }
+    scale = (((GroundBaddieState*)state)->baddie.animSpeedA >= scale)
+                ? ((GroundBaddieState*)state)->baddie.animSpeedA
+                : scale;
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
         ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
