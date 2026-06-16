@@ -1007,7 +1007,7 @@ void DR_CloudRunner_hitDetect(int obj)
     }
 }
 
-void fn_802C11BC(int obj, int p2, f32 f)
+void fn_802C11BC(int obj, f32 f, int p2)
 {
     CloudRunnerState * inner;
     int flag;
@@ -1077,13 +1077,13 @@ void DR_CloudRunner_update(int obj)
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        fn_802C11BC(obj, -1, timeDelta);
+        fn_802C11BC(obj, timeDelta, -1);
         ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000LL;
     }
     else
     {
         inner->baddie.physicsActive = 0;
-        fn_802C11BC(obj, -1, timeDelta);
+        fn_802C11BC(obj, timeDelta, -1);
         ((ObjAnimComponent*)obj)->modelInstance->flags &= ~0x200000LL;
     }
     if (inner->cooldownTimer != 0)
