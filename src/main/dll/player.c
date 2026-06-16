@@ -395,8 +395,9 @@ int fn_802974A0(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E7EA4, 1);
     }
     {
-        f32 v = (lbl_803E7EE0 + inner->unk784) * lbl_803E7E98;
+        f32 v = lbl_803E7EE0 + inner->unk784;
         f32 clamped;
+        v = v * lbl_803E7E98;
         if (v < lbl_803E7EA4)
         {
             clamped = lbl_803E7EA4;
