@@ -98,11 +98,9 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 int DR_CloudRunner_stateHandler07(int obj)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
-    u8 v;
     if (inner->airTimeRemaining == 0)
     {
-        v = ((GameObject*)obj)->anim.alpha;
-        ((GameObject*)obj)->anim.alpha = v - framesThisStep;
+        ((GameObject*)obj)->anim.alpha -= framesThisStep;
     }
     return 0;
 }
