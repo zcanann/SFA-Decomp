@@ -139,6 +139,8 @@ int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animU
         {
             state->objects[i] = 0;
         }
+        /* sic: setup->x is stored to the Z slot and overwritten just below,
+           so localPosX (obj+0xc) is left unrestored - faithful to retail */
         *(f32*)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->x;
         *(f32*)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = setup->y;
         *(f32*)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->z;
@@ -318,7 +320,7 @@ void wcpressures_init(u8* obj, u8* setup)
     }
 
     ObjGroup_AddObject((int)obj, 0x31);
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++)
     {
         state->objects[i] = 0;
     }
