@@ -15355,10 +15355,10 @@ int fn_8029FA24(int obj, int state, f32 fv)
         f32 j1[3];
         f32 j0[3];
 
-        if (lbl_803DE44C != NULL && (inner->unk3F4 >> 6 & 1) != 0)
+        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
             inner->unk8B4 = 1;
-            inner->unk3F4 |= 8;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         switch (*(s16*)((char*)sub + 0x46))
         {
