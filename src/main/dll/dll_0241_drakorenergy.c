@@ -635,10 +635,7 @@ void drakorenergy_update(int obj)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E6280 * -((GameObject*)obj)->anim.velocityY;
             dist = ((GameObject*)obj)->anim.velocityY;
-            if (dist >= v)
-            {
-                dist = -dist;
-            }
+            dist = (dist >= v) ? -dist : dist;
             if (dist < lbl_803E6284)
             {
                 ((DrakorEnergyState*)blob)->mode = 2;
