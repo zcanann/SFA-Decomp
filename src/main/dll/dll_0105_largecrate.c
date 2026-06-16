@@ -188,8 +188,8 @@ int fn_801833E4(int obj, int player, int state)
         ;
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
+        randomGetRange(0, 0x19)
         )
         ;
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
@@ -243,8 +243,8 @@ int fn_801833E4(int obj, int player, int state)
         ;
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
+        randomGetRange(0, 0x19)
         )
         ;
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
@@ -298,8 +298,8 @@ int fn_801833E4(int obj, int player, int state)
         ;
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
+        randomGetRange(0, 0x19)
         )
         ;
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
