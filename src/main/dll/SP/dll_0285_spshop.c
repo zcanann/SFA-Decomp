@@ -5,7 +5,7 @@
  * scarab coins and item beams query through object group 9.
  *
  * init() randomizes each item's current price from its price tier, opens
- * the shop (music + GAMEBIT_SHOP_OPEN + sky), and drives the spirit-vision
+ * the shop (music + GAMEBIT_SHOP_LOADED + sky), and drives the spirit-vision
  * style env fx from gamebit 0xd21. buyItem() applies an item's effect
  * (health / money / inventory gamebits) and marks it bought. The remaining
  * small accessors are the object's interface vtable slots used by the
@@ -19,7 +19,7 @@
 #define SHOP_ITEM_COUNT 0x3c
 #define SHOP_OBJGROUP 9
 #define SHOP_MUSIC_ID 0x90
-#define GAMEBIT_SHOP_OPEN 0xefe /* set while the shop is loaded (init / free) */
+#define GAMEBIT_SHOP_LOADED 0xefe /* set while the shop is loaded (init / free) */
 
 extern void* Obj_GetPlayerObject(void);
 extern void objRenderFn_8003b8f4(f32);
@@ -150,7 +150,7 @@ void shop_free(int* obj)
     skyFn_80088c94(7, 0);
     ObjGroup_RemoveObject(obj, SHOP_OBJGROUP);
     Music_Trigger(SHOP_MUSIC_ID, 0);
-    GameBit_Set(GAMEBIT_SHOP_OPEN, 0);
+    GameBit_Set(GAMEBIT_SHOP_LOADED, 0);
 }
 
 void shop_func0B(int* obj, int v, int p3)
@@ -240,7 +240,7 @@ void shop_init(int obj, int objDef)
     }
     Music_Trigger(SHOP_MUSIC_ID, 1);
     ((GameObject*)obj)->unkF8 = 0;
-    GameBit_Set(GAMEBIT_SHOP_OPEN, 1);
+    GameBit_Set(GAMEBIT_SHOP_LOADED, 1);
 }
 
 /* 1 unless the item's availability GameBit (availBit) is present and unset

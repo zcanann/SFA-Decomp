@@ -25,7 +25,7 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Camera_GetCurrentViewSlot(void);
 extern f32 timeDelta;
-extern byte framesThisStep;
+extern u8 framesThisStep;
 extern f32 lbl_803DC0B0; /* swing-left move-id table */
 extern f32 lbl_803DC0B4; /* swing-right move-id table */
 extern f32 lbl_803E5AA0;
@@ -104,7 +104,7 @@ void spdrape_update(int obj)
         if ((s16)(((SpdrapeState*)state)->sfxTimer -= framesThisStep) <= 0)
         {
             Sfx_PlayFromObject(obj, 0x13f);
-            ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 300);
+            ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
         }
         if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5AA4)
         {

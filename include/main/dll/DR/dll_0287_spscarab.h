@@ -6,8 +6,8 @@
 
 extern ObjectDescriptor gSPScarabObjDescriptor;
 
-void spscarab_update(int param_1);
-void spscarab_init(int param_1, int param_2);
+void spscarab_update(int obj);
+void spscarab_init(int obj, int def);
 void spscarab_release(void);
 void spscarab_initialise(void);
 

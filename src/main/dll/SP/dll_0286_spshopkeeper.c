@@ -15,7 +15,6 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/obj_placement.h"
-#include "main/dll/DR/DRpushcart.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -156,15 +155,15 @@ void fn_801E7DC8(int p1, int p2, int count)
 
 void shopkeeper_free(int obj)
 {
-    Stack_Free(*(undefined4*)(*(int*)&((GameObject*)obj)->extra + 0x9b0));
+    Stack_Free(*(u32*)(*(int*)&((GameObject*)obj)->extra + 0x9b0));
     return;
 }
 
 void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    float local_18[4];
-    local_18[0] = lbl_803E59D8;
+    f32 fxParams[4];
+    fxParams[0] = lbl_803E59D8;
     if (*(s16*)(state + 0x274) != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
@@ -173,7 +172,7 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     if ((*(u8*)(state + 0x9d4) & SHOPKEEPER_FLAG_TICK) != 0)
     {
-        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, local_18, 0x50, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, fxParams, 0x50, NULL);
     }
 }
 
