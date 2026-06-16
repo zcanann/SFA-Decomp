@@ -314,7 +314,7 @@ void vfplift_init(int* obj, VFPLiftPlacement* init)
 {
     VFPLiftState* st = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)vfplift_SeqFn;
-    *(s16*)obj = (s16)(init->yawByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(init->yawByte << 8);
     st->mode = 0;
     st->hitDisableGameBit = init->hitDisableGameBit;
     st->toggleGameBit = init->toggleGameBit;
