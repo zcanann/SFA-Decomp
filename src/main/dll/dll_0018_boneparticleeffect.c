@@ -268,7 +268,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;
-    ushort setupValue;
+    ushort setupValue; /* target reads this uninitialised (callee-saved r30) and stores it; load-bearing */
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
@@ -530,7 +530,7 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
 {
     ModgfxState* state;
     double biasS;
-    ushort rotAngle0;
+    ushort rotAngle0; /* &rotAngle0 outparam to FUN_80017748; siblings are live frame slots */
     ushort rotAngle1;
     ushort rotAngle2;
     float unusedW;
@@ -931,7 +931,7 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
         activeEffects[i] = (ModgfxActiveEffect*)0x0;
     }
     i = 2;
-    {
+    { /* target re-nulls the last two slots; load-bearing (matches the original double-clear) */
         ModgfxActiveEffect** tailEffects;
 
         tailEffects = &activeEffects[MODGFX_ACTIVE_EFFECT_COUNT - 2];
@@ -1335,11 +1335,11 @@ ObjectDescriptor11 projgfx_funcs = {
 };
 
 char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
+static u8 sProjgfxStringPad0[] = {0, 0, 0}; /* alignment pad */
 char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
+static u8 sProjgfxStringPad1[] = {0, 0, 0}; /* alignment pad */
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
+static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0}; /* alignment pad */
 
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
@@ -1350,6 +1350,8 @@ extern void* lbl_803DD2A8;
 extern void mm_free(void* p);
 extern void textureFree(void* resource);
 
+/* scheduling-off intentionally stays in effect through end-of-file (release/update/initialise/
+   spawnAtBones); peephole is re-enabled at boneParticleEffect_spawnAtBones below. Do not close. */
 #pragma scheduling off
 #pragma peephole off
 void boneParticleEffect_release(void)
@@ -1393,9 +1395,9 @@ typedef u8 BoneFxJRow[16];
 
 typedef struct BoneFxVtx
 {
-    u16 e0;
-    u16 de;
-    u16 dc;
+    u16 unk00;
+    u16 unk02;
+    u16 unk04;
     u16 pad;
     f32 w;
     f32 vx;
@@ -1492,9 +1494,9 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                 s.vy = 0.0f;
                 s.vz = 0.0f;
                 s.w = 1.0f;
-                s.dc = 0;
-                s.de = 0;
-                s.e0 = 0;
+                s.unk04 = 0;
+                s.unk02 = 0;
+                s.unk00 = 0;
                 id = *(u8*)(base + lbl_803DD2B4 * 5 + j + 0x5b4);
                 jb = (u8*)((int*)m)[(*(u16*)((u8*)m + 0x18) & 1) + 3];
                 mtx = (u8*)((BoneFxJRow*)jb + (id << 4));
@@ -1505,7 +1507,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                 dy = dy - ((GameObject*)o)->anim.localPosY;
                 dz = dz - ((GameObject*)o)->anim.localPosZ;
                 dx = dx * 20.02f;
-                if (id == 0x1d || id == 0x1d)
+                if (id == 0x1d || id == 0x1d) /* duplicate term is load-bearing: emits target's beq;bne pair */
                 {
                     dy = 20.02f * (lbl_803DF4C0 + dy);
                 }
@@ -1621,10 +1623,10 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
 
 typedef struct
 {
-    s16 a, b, c;
+    s16 unk00, unk02, unk04;
     u16 pad;
-    s16 d, e;
-    u8 f, g, h, alpha;
+    s16 unk08, unk0A;
+    u8 unk0C, unk0D, unk0E, alpha;
 } ParticleSlot;
 
 extern ParticleSlot gBoneParticleInitData[];
@@ -1649,14 +1651,14 @@ void boneParticleEffect_initialise(void)
     {
         for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++)
         {
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].a = gBoneParticleInitData[j].a;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].b = gBoneParticleInitData[j].b;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].c = gBoneParticleInitData[j].c;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].d = gBoneParticleInitData[j].d;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].e = gBoneParticleInitData[j].e;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].f = gBoneParticleInitData[j].f;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].g = gBoneParticleInitData[j].g;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].h = gBoneParticleInitData[j].h;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk00 = gBoneParticleInitData[j].unk00;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk02 = gBoneParticleInitData[j].unk02;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk04 = gBoneParticleInitData[j].unk04;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk08 = gBoneParticleInitData[j].unk08;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0A = gBoneParticleInitData[j].unk0A;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0C = gBoneParticleInitData[j].unk0C;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0D = gBoneParticleInitData[j].unk0D;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].unk0E = gBoneParticleInitData[j].unk0E;
             ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
         }
     }
