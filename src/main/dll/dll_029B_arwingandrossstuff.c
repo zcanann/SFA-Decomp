@@ -160,7 +160,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     src.pos[0] = lbl_803E7008;
     src.pos[1] = lbl_803E7008;
     src.pos[2] = lbl_803E7008;
-    src.rot[0] = *(s16*)obj;
+    src.rot[0] = ((GameObject*)obj)->anim.rotX;
     src.rot[1] = ((GameObject*)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E701C;
@@ -168,7 +168,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     Matrix_TransformPoint(mtx, lbl_803E7008, *(f32*)&lbl_803E7008, state->deflectSpeedScale,
                           &((GameObject*)obj)->anim.velocityX, &((GameObject*)obj)->anim.velocityY,
                           &((GameObject*)obj)->anim.velocityZ);
-    *(s16*)obj += 0x8000;
+    ((GameObject*)obj)->anim.rotX += 0x8000;
     ((GameObject*)obj)->anim.rotY = -((GameObject*)obj)->anim.rotY;
 }
 
@@ -179,7 +179,7 @@ void arwingandrossstuff_init(int obj, u8* setup)
     ArwProjectileSetup* mapData = (ArwProjectileSetup*)setup;
     ObjHitsPriorityState* hitState;
 
-    *(s16*)obj = (s16)(mapData->rotX << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
     ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
     ((GameObject*)obj)->anim.alpha = 1;
     switch (((GameObject*)obj)->anim.seqId)
@@ -338,7 +338,7 @@ void fn_8022ECE0(int obj, f32 param)
     src.pos[0] = lbl_803E7044;
     src.pos[1] = lbl_803E7044;
     src.pos[2] = lbl_803E7044;
-    src.rot[0] = *(s16*)obj;
+    src.rot[0] = ((GameObject*)obj)->anim.rotX;
     src.rot[1] = ((GameObject*)obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E704C;
