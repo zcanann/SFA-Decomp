@@ -15214,13 +15214,13 @@ int fn_802A2918(int obj, int state, f32 fv)
         s16* tbl;
         s16* t;
         int sel;
-        f32 vx, vy, vz;
+        f32 v[3];
         f32 sp1c;
         ObjHits_MarkObjectPositionDirty(obj);
         if (lbl_803DE44C != NULL && (inner->unk3F4 >> 6 & 1) != 0)
         {
             inner->unk8B4 = 1;
-            inner->unk3F4 |= 8;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
@@ -15229,18 +15229,18 @@ int fn_802A2918(int obj, int state, f32 fv)
         sp1c = lbl_803E7EA4;
         if (flag)
         {
-            vx = -inner->unk50C;
-            vy = -inner->unk514;
-            vz = -inner->unk518;
+            v[0] = -inner->unk50C;
+            v[1] = -inner->unk514;
+            v[2] = -inner->unk518;
         }
         else
         {
-            vx = inner->unk50C;
-            vy = inner->unk514;
-            vz = inner->unk518;
+            v[0] = inner->unk50C;
+            v[1] = inner->unk514;
+            v[2] = inner->unk518;
         }
         {
-            int delta = (u16)getAngle(vx, vy) - inner->targetYaw;
+            int delta = (u16)getAngle(v[0], v[1]) - inner->targetYaw;
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -15260,7 +15260,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         tbl = flag ? lbl_80332F88 : lbl_80332F78;
         t = tbl + sel;
         inner->unk544 =
-            fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)&vx,
+            fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)v,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
