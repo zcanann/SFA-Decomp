@@ -2938,6 +2938,7 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
 
+#pragma optimization_level 1
 int trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
@@ -2980,6 +2981,7 @@ int trickyFn_801451d8(int obj, int state)
         return ret;
     }
 }
+#pragma optimization_level reset
 
 void Tricky_func11(int* obj)
 {
