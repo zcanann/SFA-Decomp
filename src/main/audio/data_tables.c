@@ -165,8 +165,11 @@ s32 dataInsertLayer(u16 cid, void* layerdata, u16 size)
         {
             if (dataLayerNum < 256)
             {
-                for (j = dataLayerNum - 1; j >= i; --j)
-                    t->layer[j + 1] = t->layer[j];
+                {
+                    LAYER_TAB* layer = t->layer;
+                    for (j = dataLayerNum - 1; j >= i; --j)
+                        layer[j + 1] = layer[j];
+                }
                 ++dataLayerNum;
             }
             else
