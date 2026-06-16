@@ -1151,6 +1151,7 @@ void fn_802BF4D8(int obj)
     f32 gC[2];
     f32 pos[3];
     f32 diff[3];
+    f32* pdiff = diff;
     f32 dir[3];
     struct
     {
@@ -1207,7 +1208,7 @@ void fn_802BF4D8(int obj)
         diff[0] = pos[0] - ((GameObject*)newObj)->anim.localPosX;
         diff[1] = pos[1] - ((GameObject*)newObj)->anim.localPosY;
         diff[2] = pos[2] - ((GameObject*)newObj)->anim.localPosZ;
-        dist = sqrtf(diff[2] * diff[2] + (diff[0] * diff[0] + diff[1] * diff[1]));
+        dist = sqrtf(pdiff[2] * pdiff[2] + (pdiff[0] * pdiff[0] + pdiff[1] * pdiff[1]));
     }
     else
     {
