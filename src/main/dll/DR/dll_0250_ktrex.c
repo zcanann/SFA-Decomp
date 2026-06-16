@@ -562,6 +562,7 @@ void ktrex_update(int obj)
     void* runtime;
     void* player;
     f32 d[3];
+    f32* pd = d;
     u32 tmp;
     u8 maskA;
     u8 maskB;
@@ -593,7 +594,7 @@ void ktrex_update(int obj)
         d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         d[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         d[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(pd[2] * pd[2] + (pd[0] * pd[0] + pd[1] * pd[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
     maskA = 0;
