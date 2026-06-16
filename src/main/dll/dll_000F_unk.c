@@ -1,3 +1,16 @@
+/*
+ * dll_000F: the shared "player_*" movement controller used by the
+ * follow / escort objects (BaddieState-driven). It runs a small per-object
+ * state machine (playerRunStateMachine / fn_800D915C step a table of state
+ * functions + their substates), does curve following (player_followCurve /
+ * player_updateCurve through gRomCurveInterface), input-magnitude yaw
+ * steering (fn_800D8414), gravity + matrix-relative velocity integration
+ * (player_applyVelocityStep / objMove), per-move animation-event sound
+ * triggers (player_playSoundFn0F/10) and particle/projectile gfx spawns
+ * (player_updateParticles / player_doProjGfx). Most tuning values live in
+ * cross-TU .sdata2 floats (lbl_803Exxxx); the lbl_803DD4xx globals are
+ * per-frame scratch carrying yaw/position between the update sub-passes.
+ */
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/effect_interfaces.h"
@@ -6,70 +19,56 @@
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
 
-extern undefined4 DAT_803de0af;
-
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
-
-#pragma scheduling on
-#pragma peephole on
-extern u32 lbl_803DD43C;
-extern u32 lbl_803DD438;
-extern f32 lbl_803E0570;
+extern void* memset(void* dst, int val, u32 n);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern f32 lbl_803E0588;
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
-extern f32 lbl_803E05B4;
-extern f32 lbl_803E05B8;
+extern void setMatrixFromObjectPos(f32* mtx, void* desc);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
+extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+/* per-frame scratch globals shared across the update sub-passes */
+extern u32 lbl_803DD438;
+extern u32 lbl_803DD43C;
+extern u8 lbl_803DD434;
+extern u8 lbl_803DD440;
+extern s16 lbl_803DD44C;
+extern u8 lbl_803DD44E;
+extern u8 lbl_803DD44F;
+extern u8 lbl_803DD450;
+extern f32 lbl_803DD444;
+extern f32 lbl_803DD448;
+extern u32 playerOverride;
+extern f32 timeDelta;
+
+/* tuning constants (.sdata2, shared with sibling player TUs) */
+extern f32 lbl_803E0570;
 extern f32 lbl_803E0574;
 extern f32 lbl_803E0578;
 extern f32 lbl_803E057C;
 extern f32 lbl_803E0580;
 extern f32 lbl_803E0584;
-extern u8 lbl_803DD434;
+extern f32 lbl_803E0588;
+extern f32 lbl_803E058C;
+extern f32 lbl_803E0590;
+extern f32 lbl_803E0594;
+extern f32 lbl_803E05A0;
 extern f32 lbl_803E05A4;
 extern f32 lbl_803E05A8;
 extern f32 lbl_803E05AC;
 extern f32 lbl_803E05B0;
-extern f32 timeDelta;
-extern f32 lbl_803E058C;
-extern void setMatrixFromObjectPos(f32* mtx, void* desc);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
-extern f32 lbl_803E0590;
-extern f32 lbl_803E0594;
-extern s16 lbl_803DD44C;
-extern f32 lbl_803E05A0;
-extern u8 lbl_803DD440;
-extern u32 playerOverride;
-extern void* memset(void* dst, int val, u32 n);
+extern f32 lbl_803E05B4;
+extern f32 lbl_803E05B8;
 extern f32 lbl_803E05BC;
-extern u8 lbl_803DD44E;
-extern u8 lbl_803DD44F;
-extern u8 lbl_803DD450;
-extern f64 lbl_803E0598;
 extern f32 lbl_803E05C0;
 extern f32 lbl_803E05C4;
-extern f32 lbl_803DD444;
-extern f32 lbl_803DD448;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-
-void FUN_800d7780(undefined param_1)
-{
-    DAT_803de0af = param_1;
-    return;
-}
-
-void Checkpoint_release(void);
 
 void dll_0F_func19_nop(void)
 {
 }
-
-int Dummy04_func24_ret_0(void);
 
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 {
@@ -89,6 +88,7 @@ void player_clearXZvel(int* obj, int* state)
 
 #pragma scheduling off
 #pragma peephole off
+/* identical body to player_playSoundFn10 - two distinct symbols required by the binary (0x800D8D08 / 0x800D8CBC) */
 void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
     register int flags;
@@ -162,14 +162,6 @@ void player_findCurve(int* obj, int* state, int p3)
         (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344),
                                     px, py, pz);
 }
-
-void screenTransitionFn_800d7b04(int duration, int type);
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
 {
@@ -292,7 +284,7 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 }
 #pragma opt_common_subs reset
 
-#pragma peephole on
+#pragma peephole reset
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
 {
     while (count != 0 && p1 != NULL)
@@ -335,9 +327,6 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
     Resource_Release(res);
 }
 
-#pragma opt_common_subs off
-void Checkpoint_remove(int* obj);
-#pragma opt_common_subs reset
 #pragma opt_common_subs off
 #pragma peephole off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
@@ -579,24 +568,14 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 }
 #pragma opt_common_subs reset
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-/* segment pragma-stack balance (re-split): */
-
-/* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
- * deref-cleanup wave; curves.h re-exports it). */
-
-static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
-
 typedef struct PlayerMoveBuf
 {
     f32 a;
     f32 b;
     f32 c;
-    u8 padC[2];
+    u8 pad_0C[2];
     s16 angleDelta;
-    u8 pad10[2];
+    u8 pad_10[2];
     u8 flag;
     s8 ids[8];
     s8 count;
@@ -676,10 +655,8 @@ void player_setScale(short* moveState, uint* obj, f32 dt, int flags)
     lbl_803DD440 = 1;
 }
 
-undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
-
-#pragma scheduling on
-#pragma peephole on
+#pragma scheduling reset
+#pragma peephole reset
 void player_release(void)
 {
 }
@@ -704,8 +681,6 @@ void player_init(int unused, void* obj, int a, int b)
     *(s32*)((char*)obj + 0x340) = -1;
     *(u8*)((char*)obj + 0x358) = 0;
 }
-
-int fn_800D9F38(void* a, void* b);
 
 void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 {
@@ -834,8 +809,10 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 
 void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
 {
-    extern void player_applyVelocityStep(char* pos, char* state, f32 dt); /* #57 */
-    extern void fn_800D8414(char* pos, char* state); /* #57 */
+    /* #57: char* param spelling here is load-bearing for this caller's codegen;
+     * the file-scope defs use int* - per-file extern type controls arg setup */
+    extern void player_applyVelocityStep(char* pos, char* state, f32 dt);
+    extern void fn_800D8414(char* pos, char* state);
     struct
     {
         s16 rotX;
@@ -1002,8 +979,10 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
 void player_updateVel(char* p, char* obj, int unused)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    /* #57: this site needs the double-param spelling (fmul+frsp setup) to match;
+     * dll_0F_func13 needs the f32-param spelling - asymmetry is load-bearing per call site */
+    extern float mathCosf(double x);
+    extern float mathSinf(double angle);
     float fcos, fsin;
     if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
     {
@@ -1033,8 +1012,6 @@ void player_updateVel(char* p, char* obj, int unused)
     }
 }
 
-void RomCurve_setA4(void* a, void* b);
-
 void player_setState(void* ctx, void* p, int new_state)
 {
     void* q;
@@ -1060,8 +1037,6 @@ end:
     q = *(void**)((char*)ctx + 0x54);
     if (q != 0) *(u8*)((char*)q + 0x70) = 0;
 }
-
-void walkPath_writeU16LE(u32 v, u8* dst);
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
 {
