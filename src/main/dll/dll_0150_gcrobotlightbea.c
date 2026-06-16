@@ -618,7 +618,7 @@ void gcrobotlightbea_initialise(void)
  * and lands inside the beacon's bounding box. */
 #pragma scheduling off
 #pragma peephole off
-void gcrobotlightbea_hitDetect(int* obj)
+void gcrobotlightbea_hitDetect(int obj)
 {
     float out[22];
     f32 vec[3];
@@ -626,7 +626,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
     if (((GameObject*)obj)->ownerObj == NULL) return;
-    if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0)
+    if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) == 0)
     {
         hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
         if (hit == NULL) return;
@@ -638,7 +638,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)((int)obj + 0xc, vec, lbl_803E429C, 0, out, (int)obj, 4, -1, 0, 0) == 0)
+        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, lbl_803E429C, 0, out, obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
