@@ -3067,8 +3067,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
             ((BaddieState*)p2)->animSpeedB *= k;
         }
         target = *(int*)&((BaddieState*)p2)->targetObj;
-        tmpA = sub->unk30;
         tmpB = sub->unk2C;
+        tmpA = sub->unk30;
         q = sub->msgStack;
         msgA[0] = sub->unk28;
         msgA[1] = tmpB;
