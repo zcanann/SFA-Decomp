@@ -1,3 +1,14 @@
+/*
+ * spshopkeeper (DLL 0x286) - the SnowHorn shopkeeper vendor character.
+ *
+ * He latches onto the nearest shop stall (object group 9, vendorObj), turns
+ * to face the player and runs the purchase flow via his animEventCallback
+ * (fn_801E76A0): reading the shop's current item price through the stall's
+ * interface vtable, pushing the three price digits into his number-texture
+ * slots, and handling buy/cancel through the screen-transition + UI dll.
+ * fn_801E7DC8 scatters the paid scarab coins (object type 1151). Per-frame
+ * look-at and eye animation run through the shared dll_2E (moveLib) blocks.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
@@ -33,17 +44,24 @@ STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ShopkeeperSpawnSetup, unk1A) == 0x1A);
 STATIC_ASSERT(sizeof(ShopkeeperSpawnSetup) == 0x24);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+/* object type id of the scarab coins the shopkeeper scatters (DLL 0x287) */
+#define OBJTYPE_SPSCARAB 1151
+
+/* ShopkeeperState.flags9D4 bits */
+enum
+{
+    SHOPKEEPER_FLAG_PURCHASED = 0x02, /* purchase event fired */
+    SHOPKEEPER_FLAG_FACING = 0x04,    /* turn to face the player */
+    SHOPKEEPER_FLAG_LEAVING = 0x10,   /* leaving / screen transition */
+    SHOPKEEPER_FLAG_TICK = 0x20       /* per-frame tick effect this frame */
+};
+
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjGroup_FindNearestObject();
 extern void dll_2E_func06();
 
 extern f32 lbl_803E59D8;
 extern void objRenderFn_8003b8f4(f32);
 
-#pragma scheduling on
-#pragma peephole on
 extern void Stack_Free();
 extern void* lbl_803AD068[8];
 extern void* lbl_803DDC58;
@@ -82,32 +100,6 @@ extern void playerAddMoney(void* player, int amount);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;
 
-undefined4 FUN_801e76a0(int obj)
-{
-    uint gbit;
-    undefined4 result;
-    int state;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    gbit = GameBit_Get(0xcef);
-    if (gbit == 0)
-    {
-        result = 0;
-    }
-    else
-    {
-        gbit = GameBit_Get(0xad3);
-        if (gbit == 0)
-        {
-            GameBit_Set(0xad3, 1);
-            state = *(int*)(state + 0x9b4);
-            (**(code**)(**(int**)&((GameObject*)state)->anim.dll + 0x24))(state, 1, 2);
-        }
-        result = 2;
-    }
-    return result;
-}
-
 #pragma scheduling off
 #pragma peephole off
 void fn_801E7DC8(int p1, int p2, int count)
@@ -130,7 +122,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
     for (i = 0; i < count; i++)
     {
-        o = Obj_AllocObjectSetup(36, 1151);
+        o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
         ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
@@ -146,7 +138,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
     for (i = 0; i < count; i++)
     {
-        o = Obj_AllocObjectSetup(36, 1151);
+        o = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
         ((ShopkeeperSpawnSetup*)o)->base.posX = ((GameObject*)p1)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)o)->base.posY = ((GameObject*)p1)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
@@ -179,7 +171,7 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             (obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }
-    if ((*(u8*)(state + 0x9d4) & 0x20) != 0)
+    if ((*(u8*)(state + 0x9d4) & SHOPKEEPER_FLAG_TICK) != 0)
     {
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, local_18, 0x50, NULL);
     }
@@ -222,7 +214,7 @@ void shopkeeper_update(int obj)
     player = Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)obj)->extra;
     dist = lbl_803E5A20;
-    ((ShopkeeperState*)state)->flags9D4 &= ~0x20;
+    ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
     if (((ShopkeeperState*)state)->textTimer > lbl_803E59DC)
     {
         gameTextShow(0x433);
@@ -232,7 +224,7 @@ void shopkeeper_update(int obj)
             ((ShopkeeperState*)state)->textTimer = *(f32*)&lbl_803E59DC;
         }
     }
-    if ((((ShopkeeperState*)state)->flags9D4 & 0x04) != 0)
+    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_FACING) != 0)
     {
         shopKeeperRotateFn_801e7c4c((s16*)obj, player, 1);
     }
@@ -282,8 +274,8 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     state2 = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
-    ((ShopkeeperState*)state)->flags9D4 &= ~0x20;
-    if (((ShopkeeperState*)state)->flags9D4 & 0x10)
+    ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
+    if (((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_LEAVING)
     {
         if ((*gScreenTransitionInterface)->isFinished() != 0)
         {
@@ -300,7 +292,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     seq->flags &= ~0x20;
     speed = lbl_803E59DC;
     ((ShopkeeperState*)state2)->animSpeed = speed;
-    ((ShopkeeperState*)state)->flags9D4 |= 4;
+    ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_FACING;
     if (advance != 0)
     {
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
@@ -350,7 +342,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
         {
         case 1:
             fn_801E7DC8(obj, state, ((ShopkeeperState*)state)->amount);
-            ((ShopkeeperState*)state)->flags9D4 |= 2;
+            ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_PURCHASED;
             break;
         case 2:
             (*gPlayerInterface)->setState((void*)obj, (void*)state2, 3);
@@ -359,7 +351,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             break;
         case 3:
             (*gPlayerInterface)->setState((void*)obj, (void*)state2, 2);
-            ((ShopkeeperState*)state)->flags9D4 |= 0x20;
+            ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_TICK;
             ((ShopkeeperState*)state)->opacity = 0xFF;
             break;
         case 4:
