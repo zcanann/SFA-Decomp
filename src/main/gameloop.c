@@ -367,46 +367,38 @@ void copyToCache(void* dst, void* src, u32 count);
 
 int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 limit)
 {
-    register u32 src;
-    register u32 copySize;
-    register u32* cursor;
-    register u32* endOut;
-    register u32 maxEnd;
     u32 alignOffset;
     u32 end;
     u8* dst;
 
-    src = srcAddr;
-    copySize = size;
-    cursor = cacheCursor;
-    endOut = outEnd;
-    maxEnd = limit;
     dst = getCache();
-    alignOffset = src & 0x1f;
-    copySize = (copySize + alignOffset + 0x1f) & ~0x1f;
-    end = *cursor + copySize;
-    if (end <= maxEnd)
+    alignOffset = srcAddr & 0x1f;
+    size = size + alignOffset;
+    size += 0x1f;
+    size &= ~0x1f;
+    end = *cacheCursor + size;
+    if (end <= limit)
     {
-        src -= alignOffset;
-        *endOut = end;
-        dst += *cursor;
-        *cursor = (u32)(dst + alignOffset);
-        copySize >>= 5;
-        while (copySize > 0x7f)
+        srcAddr -= alignOffset;
+        *outEnd = end;
+        dst += *cacheCursor;
+        *cacheCursor = (u32)(dst + alignOffset);
+        size >>= 5;
+        while (size > 0x7f)
         {
-            copyToCache(dst, (void*)src, 0);
+            copyToCache(dst, (void*)srcAddr, 0);
             dst += 0x1000;
-            src += 0x1000;
-            copySize -= 0x80;
+            srcAddr += 0x1000;
+            size -= 0x80;
         }
-        if (copySize != 0)
+        if (size != 0)
         {
-            copyToCache(dst, (void*)src, copySize);
+            copyToCache(dst, (void*)srcAddr, size);
         }
         return 1;
     }
-    *endOut = *cursor;
-    *cursor = src;
+    *outEnd = *cacheCursor;
+    *cacheCursor = srcAddr;
     return 0;
 }
 
