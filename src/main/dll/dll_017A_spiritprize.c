@@ -120,6 +120,9 @@ void SpiritPrize_init(int* obj, u8* init)
             ((GameObject*)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     }
+    else
+    {
+    }
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if (*(s16*)(init + 0x18) != ((GameObject*)obj)->unkF4 - 1)
