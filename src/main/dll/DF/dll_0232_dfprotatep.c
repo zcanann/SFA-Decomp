@@ -496,11 +496,15 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     SfxplayerStateFlags* flags = &state->flags;
-    s16 rotation[3];
-    f32 baseVec[4];
+    struct {
+        s16 rotation[3];
+        f32 baseVec[4];
+    } scratch;
     int* handles;
     s16 angleStep;
     s16 i;
+#define rotation scratch.rotation
+#define baseVec scratch.baseVec
 
     if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
     {
@@ -541,6 +545,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
+#undef rotation
+#undef baseVec
 }
 
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
