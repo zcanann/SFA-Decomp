@@ -116,7 +116,7 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
     {
         GameBit_Set(0x1c8, 1);
     }
-    if ((*(int*)(state + 0x29c) != 0) && (((GameObject*)*(int*)(state + 0x29c))->anim.classId == 1))
+    if ((*(int*)&((GroundBaddieState*)state)->baddie.trackedObj != 0) && (((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1))
     {
         FUN_8001766c();
     }
@@ -194,9 +194,9 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
         )
         {
             *(float*)(state + 0x308) =
-                *(float*)(state + 0x2fc) *
+                ((GroundBaddieState*)state)->baddie.pathStep *
                 (((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2a4)) - DOUBLE_803e3408
-                ) / *(float*)(state + 0x2a8)) / lbl_803E33E4) *
+                ) / ((GroundBaddieState*)state)->baddie.unk2A8) / lbl_803E33E4) *
                 *(float*)(&DAT_8031feb8 + (uint) * (byte*)(state + 0x33b) * 4);
             if (*(float*)(state + 0x308) < lbl_803E3438)
             {
@@ -260,7 +260,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     }
     speed = (double)(float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(param_10 + 0x2a4)) -
         DOUBLE_803e3408);
-    if (speed < (double)(lbl_803E3440 * *(float*)(param_10 + 0x2ac)))
+    if (speed < (double)(lbl_803E3440 * ((GroundBaddieState*)param_10)->baddie.speedScale))
     {
         *(char*)(param_10 + 0x33a) = entry[8] + '\x01';
     }
@@ -678,7 +678,7 @@ void fn_80151DB8(int obj, u8* state)
     pz0 = setup->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
     dx = player->anim.worldPosX - px0;
     dz = player->anim.worldPosZ - pz0;
-    if (sqrtf(dx * dx + dz * dz) < *(f32*)(state + 0x2ac))
+    if (sqrtf(dx * dx + dz * dz) < ((GroundBaddieState*)state)->baddie.speedScale)
     {
         cosA = mathSinf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
         sinA = mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
