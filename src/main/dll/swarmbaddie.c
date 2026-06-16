@@ -334,39 +334,32 @@ void gameTextFn_80125ba4(int idx)
 void pauseMenuCreateHeads(void)
 {
     int i;
-    int* slots;
-    int* defs;
     f32 f;
 
-    i = 0;
-    slots = lbl_803A93F8;
-    defs = lbl_8031BF90;
-    for (; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
         if (i != 3 && i != 2 && i != 1)
         {
-            *slots = 0;
+            lbl_803A93F8[i] = 0;
         }
         else
         {
-            if (*(void**)slots == NULL)
+            if (*(void**)&lbl_803A93F8[i] == NULL)
             {
-                *slots = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *defs), 4, -1, -1, 0);
+                lbl_803A93F8[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
                 f = lbl_803E1E3C;
-                *(f32*)(*slots + 0xc) = f;
-                *(f32*)(*slots + 0x10) = f;
-                *(f32*)(*slots + 0x14) = lbl_803E1E5C;
-                *(s16*)*slots = 0x7447;
-                *(f32*)(*slots + 8) = lbl_803E205C;
-                if (*(u32*)(*slots + 0x4c) > 0x90000000u)
+                *(f32*)(lbl_803A93F8[i] + 0xc) = f;
+                *(f32*)(lbl_803A93F8[i] + 0x10) = f;
+                *(f32*)(lbl_803A93F8[i] + 0x14) = lbl_803E1E5C;
+                *(s16*)lbl_803A93F8[i] = 0x7447;
+                *(f32*)(lbl_803A93F8[i] + 8) = lbl_803E205C;
+                if (*(u32*)(lbl_803A93F8[i] + 0x4c) > 0x90000000u)
                 {
-                    *(u32*)(*slots + 0x4c) = 0;
+                    *(u32*)(lbl_803A93F8[i] + 0x4c) = 0;
                 }
-                ObjAnim_SetCurrentMove(*slots, 1, lbl_803E1E3C, 0);
+                ObjAnim_SetCurrentMove(lbl_803A93F8[i], 1, lbl_803E1E3C, 0);
             }
         }
-        slots = slots + 1;
-        defs = defs + 1;
     }
 }
 
