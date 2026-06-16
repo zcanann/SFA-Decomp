@@ -1,113 +1,126 @@
+/*
+ * Path-camera ROM-curve graph navigation (DLL 0x5B, CameraModeStatic
+ * family). Operates on the ROM curve-node graph reached through
+ * gRomCurveInterface->getById: each node holds up to five neighbour
+ * node IDs (int[5] at +0x1C) and a direction bitmask (+0x1B) splitting
+ * them into "forward"/"backward" links, plus three path-tag bytes
+ * (+0x31..+0x33) used to keep a walk on the path selected by `tag`.
+ *
+ * fn_8010A104 advances the camera's near/far node pair (*p1/*p2) along
+ * the tagged path: it nudges *p1 to the matching neighbour, then slides
+ * it by world distance through the node window from
+ * pathcam_findTaggedNodeWindow (near/far thresholds lbl_803E1888 /
+ * lbl_803E188C), counts the tagged span with fn_8010A47C, and walks *p2
+ * the same number of steps so the pair stays a fixed span apart.
+ *
+ * fn_8010A47C walks a node along its forward tagged links until it hits
+ * an endpoint (node type 0x1A/0x1B at +0x19), returning the final node
+ * and the number of steps taken.
+ */
 #include "main/dll/CAM/camshipbattle5C.h"
-#include "main/audio/sfx.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camdebug_state.h"
-#include "main/dll/CAM/dll_0045_camTalk.h"
-#include "main/dll/CAM/camstatic_state.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-#include "main/pad.h"
+#include "main/dll/rom_curve_interface.h"
 
-extern f32 lbl_803E1888;
-extern f32 lbl_803E188C;
+extern f32 lbl_803E1888; /* near distance threshold */
+extern f32 lbl_803E188C; /* far distance threshold */
 extern f32 fn_8010AC48(int* window, f32 x, f32 y, f32 z);
+
+#define PATHCAM_NEAR_THRESHOLD lbl_803E1888
+#define PATHCAM_FAR_THRESHOLD lbl_803E188C
 
 void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 {
-    int curve;
+    int node;
     int linked;
-    int found;
-    int i;
-    int k;
+    int noForwardExit;
+    int slot;
+    int step;
     int window[4];
-    int count;
-    int dummy;
-    int done;
+    int span;
+    int farSpan;
+    int settled;
     f32 dist;
 
-    curve = (int)(*gRomCurveInterface)->getById(*p1);
-    found = 1;
-    for (i = 0; i < 5; i++)
+    node = (int)(*gRomCurveInterface)->getById(*p1);
+    noForwardExit = 1;
+    for (slot = 0; slot < 5; slot++)
     {
-        if (*(int*)(curve + i * 4 + 28) > -1 &&
-            ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
+        if (*(int*)(node + slot * 4 + 0x1C) > -1 &&
+            (*(s8*)(node + 0x1B) & (1 << slot)) == 0)
         {
-            linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+            linked = (int)(*gRomCurveInterface)->getById(*(int*)(node + slot * 4 + 0x1C));
             if ((u32)linked != 0 &&
-                (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
-                    *(u8*)(linked + 51) == tag))
+                (*(u8*)(linked + 0x31) == tag || *(u8*)(linked + 0x32) == tag ||
+                    *(u8*)(linked + 0x33) == tag))
             {
-                found = 0;
-                i = 5;
+                noForwardExit = 0;
+                slot = 5;
             }
         }
     }
-    if (found != 0)
+    if (noForwardExit != 0)
     {
-        for (i = 0; i < 5; i++)
+        for (slot = 0; slot < 5; slot++)
         {
-            if (*(int*)(curve + i * 4 + 28) > -1 &&
-                ((s8) * (s8*)(curve + 27) & (1 << i)) != 0)
+            if (*(int*)(node + slot * 4 + 0x1C) > -1 &&
+                (*(s8*)(node + 0x1B) & (1 << slot)) != 0)
             {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+                linked = (int)(*gRomCurveInterface)->getById(*(int*)(node + slot * 4 + 0x1C));
                 if ((u32)linked != 0 &&
                     (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
                         *(u8*)(linked + 51) == tag))
                 {
-                    *p1 = *(int*)(curve + i * 4 + 28);
-                    i = 5;
+                    *p1 = *(int*)(node + slot * 4 + 0x1C);
+                    slot = 5;
                 }
             }
         }
     }
-    done = 0;
+    settled = 0;
     do
     {
-        f32 thresh = lbl_803E1888;
-        done = 1;
-        curve = (int)(*gRomCurveInterface)->getById(*p1);
-        pathcam_findTaggedNodeWindow((u8*)curve, window, tag);
+        f32 nearThresh = PATHCAM_NEAR_THRESHOLD;
+        settled = 1;
+        node = (int)(*gRomCurveInterface)->getById(*p1);
+        pathcam_findTaggedNodeWindow((u8*)node, window, tag);
         dist = fn_8010AC48(window, x, y, z);
-        if (dist < thresh)
+        if (dist < nearThresh)
         {
             if (window[0] > -1)
             {
                 *p1 = window[0];
-                done = 0;
+                settled = 0;
             }
         }
-        else if (dist > lbl_803E188C)
+        else if (dist > PATHCAM_FAR_THRESHOLD)
         {
             if (window[2] > -1 && window[3] > -1)
             {
                 *p1 = window[2];
-                done = 0;
+                settled = 0;
             }
         }
     }
-    while (done == 0);
-    curve = (int)(*gRomCurveInterface)->getById(*p1);
-    fn_8010A47C(curve, &count, tag);
-    curve = (int)(*gRomCurveInterface)->getById(*p2);
-    *p2 = *(int*)(fn_8010A47C(curve, &dummy, tag) + 20);
-    for (k = 0; k < count; k++)
+    while (settled == 0);
+    node = (int)(*gRomCurveInterface)->getById(*p1);
+    fn_8010A47C(node, &span, tag);
+    node = (int)(*gRomCurveInterface)->getById(*p2);
+    *p2 = *(int*)(fn_8010A47C(node, &farSpan, tag) + 0x14);
+    for (step = 0; step < span; step++)
     {
-        curve = (int)(*gRomCurveInterface)->getById(*p2);
-        for (i = 0; i < 5; i++)
+        node = (int)(*gRomCurveInterface)->getById(*p2);
+        for (slot = 0; slot < 5; slot++)
         {
-            if (*(int*)(curve + i * 4 + 28) > -1 &&
-                ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
+            if (*(int*)(node + slot * 4 + 0x1C) > -1 &&
+                (*(s8*)(node + 0x1B) & (1 << slot)) == 0)
             {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 28));
+                linked = (int)(*gRomCurveInterface)->getById(*(int*)(node + slot * 4 + 0x1C));
                 if ((u32)linked != 0 &&
                     (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
                         *(u8*)(linked + 51) == tag))
                 {
-                    *p2 = *(int*)(curve + i * 4 + 28);
-                    i = 5;
+                    *p2 = *(int*)(node + slot * 4 + 0x1C);
+                    slot = 5;
                 }
             }
         }
@@ -116,7 +129,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 
 int fn_8010A47C(int curve, int* count, int tag)
 {
-    int i;
+    int slot;
     int done;
     int linked;
 
@@ -125,28 +138,28 @@ int fn_8010A47C(int curve, int* count, int tag)
     while (done == 0)
     {
         done = 1;
-        if ((*(char*)(curve + 0x19) != '\x1b') && (*(char*)(curve + 0x19) != '\x1a'))
+        if ((*(char*)(curve + 0x19) != 0x1b) && (*(char*)(curve + 0x19) != 0x1a))
         {
-            for (i = 0; i < 5; i = i + 1)
+            for (slot = 0; slot < 5; slot++)
             {
-                if ((*(int*)(curve + i * 4 + 0x1c) > -1) &&
-                    (((int)*(char*)(curve + 0x1b) & (1 << i)) != 0))
+                if ((*(int*)(curve + slot * 4 + 0x1c) > -1) &&
+                    ((*(s8*)(curve + 0x1b) & (1 << slot)) != 0))
                 {
-                    linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 0x1c));
+                    linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + slot * 4 + 0x1c));
                     if (((u32)linked != 0) &&
                         ((*(u8*)(linked + 0x31) == tag || (*(u8*)(linked + 0x32) == tag)) ||
                             (*(u8*)(linked + 0x33) == tag)))
                     {
                         curve = linked;
                         done = 0;
-                        i = 5;
+                        slot = 5;
                     }
                 }
             }
         }
         if (done == 0)
         {
-            *count = *count + 1;
+            (*count)++;
         }
     }
     return curve;
