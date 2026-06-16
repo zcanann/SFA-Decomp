@@ -30,16 +30,25 @@ STATIC_ASSERT(sizeof(ArwingGuTextureState) == 0x8);
 STATIC_ASSERT(offsetof(ArwingGuTextureState, textureFrame) == 0x04);
 STATIC_ASSERT(sizeof(ArwingGuState) == 0x8);
 
+/* object def numbers (== seqId) of the Arwing's attached models */
+enum
+{
+    ARWGU_DEF_ENGINE = 0x606, /* escort / engine, animated texture */
+    ARWGU_DEF_GUN_L = 0x610,
+    ARWGU_DEF_BOMB = 0x611,
+    ARWGU_DEF_GUN_R = 0x615
+};
+
 int arwarwinggu_getExtraSize(int obj)
 {
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x606:
+    case ARWGU_DEF_ENGINE:
         return 8;
-    case 0x610:
-    case 0x615:
+    case ARWGU_DEF_GUN_L:
+    case ARWGU_DEF_GUN_R:
         return 4;
-    case 0x611:
+    case ARWGU_DEF_BOMB:
         return 1;
     default:
         return 0;
@@ -64,7 +73,7 @@ void arwarwinggu_hitDetect(void)
 #pragma peephole off
 void arwarwinggu_init(int obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x606)
+    if (((GameObject*)obj)->anim.seqId == ARWGU_DEF_ENGINE)
     {
         return;
     }
@@ -113,7 +122,7 @@ void arwarwinggu_update(int obj)
 
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x606:
+    case ARWGU_DEF_ENGINE:
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
             int model = Obj_GetActiveModel(obj);
@@ -123,8 +132,8 @@ void arwarwinggu_update(int obj)
             textureAnimFn_80053f2c(anim, (int)state, (int)texture);
             break;
         }
-    case 0x610:
-    case 0x615:
+    case ARWGU_DEF_GUN_L:
+    case ARWGU_DEF_GUN_R:
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
             f32 minTimer;
@@ -139,29 +148,29 @@ void arwarwinggu_update(int obj)
             }
             break;
         }
-    case 0x611:
+    case ARWGU_DEF_BOMB:
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
-            f32 v;
+            f32 alpha;
             if (state->fadeIn != 0)
             {
-                v = lbl_803E705C * timeDelta + (f32)(u32)
+                alpha = lbl_803E705C * timeDelta + (f32)(u32)
                 objAnim->alpha;
             }
             else
             {
-                v = (f32)(u32)
+                alpha = (f32)(u32)
                 objAnim->alpha - lbl_803E705C * timeDelta;
             }
-            if (v < lbl_803E7060)
+            if (alpha < lbl_803E7060)
             {
-                v = lbl_803E7060;
+                alpha = lbl_803E7060;
             }
-            else if (v > lbl_803E705C)
+            else if (alpha > lbl_803E705C)
             {
-                v = lbl_803E705C;
+                alpha = lbl_803E705C;
             }
-            objAnim->alpha = v;
+            objAnim->alpha = alpha;
             break;
         }
     }
@@ -169,10 +178,10 @@ void arwarwinggu_update(int obj)
 
 #pragma scheduling on
 #pragma peephole on
-void fn_8022F270(int obj, int p2)
+void fn_8022F270(int obj, int textureFrame)
 {
     ArwingGuState* state = ((GameObject*)obj)->extra;
-    state->texture.textureFrame = p2;
+    state->texture.textureFrame = textureFrame;
 }
 
 #pragma scheduling off
