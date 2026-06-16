@@ -80,7 +80,7 @@ void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimsnowball1c2_init(int obj, u8* p)
 {
     char* inner;
-    *(s16*)obj = (s16)((u32)p[0x1c] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
     inner = ((GameObject*)obj)->extra;
     ((DimicewallState*)inner)->unk2 = *(s16*)(p + 0x18);
     *(s16*)inner = *(s16*)(p + 0x18);
