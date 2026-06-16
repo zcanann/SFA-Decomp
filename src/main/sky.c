@@ -597,8 +597,8 @@ void fn_800897D4(int slot, f32* x, f32* y, f32* z)
     *x = ((SkyState*)sky)->lights[0].directionX;
     sky = lbl_803DD12C + offset;
     *y = ((SkyState*)sky)->lights[0].directionY;
-    sky = lbl_803DD12C;
-    sky += offset;
+    sky = lbl_803DD12C + offset;
+    sky = (u8*)sky;
     *z = ((SkyState*)sky)->lights[0].directionZ;
 }
 
@@ -1037,6 +1037,8 @@ void dll_06_func09(s32* x, s32* y, s32* z)
     s32 oldY;
     s32 oldZ;
     f32 blend;
+    f32 fy;
+    f32 fz;
 
     blend = lbl_803DF108;
     state = (Dll06InterpState*)lbl_803DD184;
@@ -1060,10 +1062,11 @@ void dll_06_func09(s32* x, s32* y, s32* z)
         blend = state->blend;
     }
 
-    blend *= lbl_803DF144;
-    *x = (s32)((f32)(targetX - oldX) * blend + (f32)oldX);
-    *y = (s32)((f32)(targetY - oldY) * blend + (f32)oldY);
-    *z = (s32)((f32)(targetZ - oldZ) * blend + (f32)oldZ);
+    fy = (f32)(targetY - oldY);
+    fz = (f32)(targetZ - oldZ);
+    *x = (s32)((f32)(targetX - oldX) * (blend = lbl_803DF144 * blend) + (f32)oldX);
+    *y = (s32)(fy * blend + (f32)oldY);
+    *z = (s32)(fz * blend + (f32)oldZ);
 }
 
 void sky2_run(void)

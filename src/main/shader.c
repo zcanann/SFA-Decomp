@@ -676,10 +676,10 @@ extern s8 lbl_803DCDEC;
 
 void mapBlockFn_80059c2c(u8* outFlags)
 {
+    int i;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
-        int i;
         s8 limit = lbl_803DCDEC;
         for (i = 0; i < limit; i++)
         {
@@ -889,14 +889,12 @@ extern void DCStoreRange(void* p, int size);
 
 int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 {
-    int blockId;
-    char* entry;
-    s8* statusArr;
     int slotIdx;
-    s16* arr;
-    int i;
-    void* blk;
     int byteOff;
+    char* entry;
+    int blockId;
+    s8* statusArr;
+    int i;
 
     entry = (char*)lbl_803822A0[layer];
     statusArr = (s8*)gMapBlockLayerTables[layer];
@@ -922,37 +920,35 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     }
     statusArr[slotIdx] = -1;
 
-    arr = lbl_803DCE94;
     for (i = 0; i < lbl_803DCE98; i++)
     {
-        if (*arr == blockId)
+        if (lbl_803DCE94[i] == blockId)
         {
             lbl_803DCE8C[i]++;
             statusArr[slotIdx] = (s8)i;
             return 1;
         }
-        arr++;
     }
 
-    blk = MapBlock_loadFromFile(blockId);
-    if (blk != NULL)
+    statusArr = (s8*)MapBlock_loadFromFile(blockId);
+    if (statusArr != NULL)
     {
-        MapBlock_init(blk);
+        MapBlock_init(statusArr);
         i = 0;
-        byteOff = 0;
-        while (i < *(u8*)((char*)blk + 0xa0))
+        byteOff = i;
+        while (i < *(u8*)((char*)statusArr + 0xa0))
         {
-            int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
+            int v = *(int*)(*(int*)((char*)statusArr + 0x54) + byteOff);
             v = -(int)((u32)v | 0x8000);
-            *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
+            *(int*)(*(int*)((char*)statusArr + 0x54) + byteOff) = textureLoad(v, 0);
             byteOff += 4;
             i++;
         }
-        MapBlock_initHits(blk, blockId);
-        MapBlock_initShaders(blk);
-        trackLoadBlockEnd(blk, blockId, slotIdx, layer);
-        *(int*)blk = return0_80060B90(blk);
-        DCStoreRange(blk, *(int*)((char*)blk + 0x8));
+        MapBlock_initHits(statusArr, blockId);
+        MapBlock_initShaders(statusArr);
+        trackLoadBlockEnd(statusArr, blockId, slotIdx, layer);
+        *(int*)statusArr = return0_80060B90(statusArr);
+        DCStoreRange(statusArr, *(int*)((char*)statusArr + 0x8));
     }
     return 1;
 }
@@ -1123,9 +1119,10 @@ extern int mapGetRomListAndOffsets(int p1, int b);
 void mapLoadForObject(int p1, char* p2)
 {
     int saved = lbl_803DCEC8;
+    int slot;
     int romList = mapGetRomListAndOffsets(p1, 1);
-    int slot = 0x50;
     int i;
+    slot = 0x50;
 
     for (i = 0; i < 40; i++)
     {
@@ -1335,8 +1332,8 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     rect[2] = p4 - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
-    *(u8*)((char*)rect + 8) = *(s16*)(self + 4);
-    *(u8*)((char*)rect + 9) = *(s16*)(self + 6);
+    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
+    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
     for (y = 0; (s16)y < *(s16*)(self + 2); y++)
     {
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)

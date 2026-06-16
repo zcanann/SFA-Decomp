@@ -623,13 +623,15 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
                                               float tipRadius, float length, float* out)
 {
     float invLength;
+    float zero;
     float axisDir[3];
     float surfacePoint[3];
 
-    if (axial < gObjHitsScalarZero)
+    zero = gObjHitsScalarZero;
+    if (axial < zero)
     {
         out[0] = point[0] - base[0];
-        out[1] = gObjHitsScalarZero;
+        out[1] = zero;
         out[2] = point[2] - base[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + baseRadius;
@@ -644,7 +646,7 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
     if (axial > length)
     {
         out[0] = point[0] - tip[0];
-        out[1] = gObjHitsScalarZero;
+        out[1] = zero;
         out[2] = point[2] - tip[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + tipRadius;

@@ -110,6 +110,7 @@ extern f32 lbl_803DEBDC;
 extern f32 changeMode_803DEC00;
 extern f32 lbl_803DEC04;
 extern F32Pair changed_803DEC08;
+extern f32 changed_803DEC0C;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
@@ -1474,8 +1475,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     cursor = state[4] + 4;
     state[4] = cursor;
-    countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
+    v = (countShifted = cursor >> 3, ((u8*)state[0])[countShifted]);
     base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
@@ -1517,8 +1517,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     cursor = state[4] + 4;
     state[4] = cursor;
-    countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
+    v = (countShifted = cursor >> 3, ((u8*)state[0])[countShifted]);
     base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
@@ -1545,11 +1544,11 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
 {
     int state[5];
     f32 m[12];
+    int cursor;
     int countShifted;
     int newR;
     u32 v;
     int* base;
-    int cursor;
     int nibble;
     int i;
 
@@ -1565,10 +1564,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    state[4] += 4;
-    cursor = state[4];
-    countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
+    cursor = state[4] + 4;
+    state[4] = cursor;
+    v = (countShifted = cursor >> 3, ((u8*)state[0])[countShifted]);
     base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
@@ -1587,11 +1585,11 @@ extern void* lbl_803DCEA0;
 
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
-    int outer;
-    int* page;
-    int* p;
     int inner_idx;
+    int* page;
+    int outer;
     int total_offset;
+    int* p;
     u16 limit;
     int sz;
 
@@ -1896,6 +1894,7 @@ void sceneDraw(void)
     setShadowFlag_803db658(0);
 }
 
+#pragma scheduling off
 void sceneDrawTransparentPolys(void)
 {
     int* e;
@@ -1993,6 +1992,7 @@ void sceneDrawTransparentPolys(void)
         e = e + 4;
     }
 }
+#pragma scheduling reset
 
 extern void mapFn_80057d24(int x, int z, int* box0, int* box1, int* box2, int* box3, int layer,
                            int one, int v);
@@ -2236,7 +2236,7 @@ void getVisibleObjects(s8* opacity)
     i = 0;
     p = objects;
     cur = opacity;
-    for (; i < count; i++)
+    for (; i < count; p++, i++, cur++)
     {
         o = (u8*)*p;
         ((GameObject*)o)->objectFlags &= ~0x800;
@@ -2277,7 +2277,7 @@ void getVisibleObjects(s8* opacity)
                                                  ((GameObject*)o)->anim.localPosZ - playerMapOffsetZ, &a, &b,
                                                  &depth, (f32*)(o + 0xa4));
                     }
-                    depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
+                    depthInt = (int)(changed_803DEC0C * (lbl_803DEBDC + depth));
                 }
                 if ((((GameObject*)o)->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
                     ((GameObject*)o)->anim.modelState != NULL &&
@@ -2353,8 +2353,6 @@ void getVisibleObjects(s8* opacity)
                 }
             }
         }
-        p++;
-        cur++;
     }
     if (gVisibleObjectSortKeyCount > 1)
     {

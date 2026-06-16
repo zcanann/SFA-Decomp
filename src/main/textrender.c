@@ -759,7 +759,7 @@ void* gameTextGetStr(int textId)
         }
         return lbl_803DC974;
     }
-    t = gameTextGet();
+    t = gameTextGet(textId);
     return *(void**)*(u8**)((u8*)t + 8);
 }
 

@@ -70,7 +70,7 @@ extern f32 lbl_803DEFF8;
 extern f32 lbl_803DEFFC;
 extern u8 lbl_803DD088;
 extern u8 curSeqNo;
-extern void Obj_TransformWorldPointToLocal(f32* x, f32* y, f32* z, void* m, f32 wx, f32 wy, f32 wz);
+extern void Obj_TransformWorldPointToLocal(f32 wx, f32 wy, f32 wz, f32* x, f32* y, f32* z, void* m);
 
 extern u8 lbl_8039944C[];
 extern int lbl_803DD0C0;
@@ -922,7 +922,6 @@ void ObjSeq_updateCamera(void)
     s16 pitch;
     s16 yaw;
     s16 roll;
-    int code;
 
     obj = lbl_803DD0B8;
     if (obj != NULL)
@@ -974,10 +973,10 @@ void ObjSeq_updateCamera(void)
             *(f32*)(camObj + 0x18) = x;
             *(f32*)(camObj + 0x1c) = y;
             *(f32*)(camObj + 0x20) = z;
-            Obj_TransformWorldPointToLocal((f32*)(camObj + 0xc), (f32*)(camObj + 0x10),
-                                           (f32*)(camObj + 0x14), *(void**)(camObj + 0x30),
-                                           *(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
-                                           *(f32*)(camObj + 0x20));
+            Obj_TransformWorldPointToLocal(*(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
+                                           *(f32*)(camObj + 0x20), (f32*)(camObj + 0xc),
+                                           (f32*)(camObj + 0x10), (f32*)(camObj + 0x14),
+                                           *(void**)(camObj + 0x30));
             *(s16*)camObj = (s16)(0x8000 - pitch);
             *(s16*)(camObj + 2) = (s16) - yaw;
             *(s16*)(camObj + 4) = roll;
@@ -1014,12 +1013,11 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = lbl_803DD108;
-                    code = lbl_803DD100;
-                    if (code == 0)
+                    if (lbl_803DD100 == 0)
                     {
                         mode48.flag = 1;
                     }
-                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, code, 0xff);
+                    (*gCameraInterface)->setMode(0x48, 1, 3, 8, &mode48, lbl_803DD100, 0xff);
                     break;
                 case 0x4a:
                     (*gCameraInterface)->setMode(0x4a, 1, 0, 0, NULL, lbl_803DD100, 0xff);
@@ -4156,9 +4154,10 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
             for (i = 0; i < objectCount; i++)
             {
                 candidate = objects[i];
+                j = 0;
                 slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
                 entry = slotBase;
-                for (j = 0; j < 16; j++)
+                for (; j < 16; j++)
                 {
                     if (*(u8**)entry == candidate)
                     {
@@ -4216,14 +4215,14 @@ void* ObjSeq_FindTargetObject(u8* obj)
     void** objects;
     int targetId;
     int objectType;
-    f32 bestDistSq;
+    u8* candidate;
     void* bestObj;
     int i;
-    u8* candidate;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 distSq;
+    f32 bestDistSq;
 
     targetId = *(int*)(*(u8**)&((GameObject*)obj)->extra + 0x10c);
     if (targetId != 0)
@@ -4586,6 +4585,7 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
     int val;
     f32 thr;
 
+    prev = NULL;
     node = NULL;
     if (t < state->fromTime)
     {
