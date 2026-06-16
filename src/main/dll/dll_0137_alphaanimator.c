@@ -289,7 +289,7 @@ void alphaanimator_update(int* obj)
         if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                (s16)(s->alphaLevel - framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
             if (s->alphaLevel <= ((AlphaanimatorPlacement*)d)->unk1D)
             {
                 s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
@@ -303,7 +303,7 @@ void alphaanimator_update(int* obj)
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                (s16)(s->alphaLevel + framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
             if (s->alphaLevel >= ((AlphaanimatorPlacement*)d)->unk1D)
             {
                 s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
@@ -319,7 +319,7 @@ void alphaanimator_update(int* obj)
         if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                (s16)(s->alphaLevel - framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
             if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
             {
                 s->alphaLevel =
@@ -330,7 +330,7 @@ void alphaanimator_update(int* obj)
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                (s16)(s->alphaLevel + framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
             if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
             {
                 s->alphaLevel =
@@ -345,7 +345,7 @@ void alphaanimator_update(int* obj)
             if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                    (s16)(s->alphaLevel - framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
                 if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1D)
                 {
                     return;
@@ -360,7 +360,7 @@ void alphaanimator_update(int* obj)
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                    (s16)(s->alphaLevel + framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
                 if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
                 {
                     return;
@@ -378,7 +378,7 @@ void alphaanimator_update(int* obj)
             if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                    (s16)(s->alphaLevel + framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
                 if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1C)
                 {
                     return;
@@ -393,7 +393,7 @@ void alphaanimator_update(int* obj)
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
+                    (s16)(s->alphaLevel - framesThisStep * (s8)((AlphaanimatorPlacement*)d)->unk1F);
                 if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
                 {
                     return;
