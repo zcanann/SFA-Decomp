@@ -290,6 +290,9 @@ void expgfxRemoveAll(void)
     }
 }
 
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 5
+#pragma ppc_unroll_instructions_limit 120
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
                   int preferredPoolIndex, uint sourceId)
 {
@@ -326,16 +329,15 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     if (foundPool)
     {
         poolIndex = (s16)foundPoolIndex;
-        poolActiveMasks = runtime->poolActiveMasks;
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
-            if ((activeBit & poolActiveMasks[poolIndex]) == 0)
+            if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
             {
                 *slotIndexOut = (s16)slotIndex;
                 *poolIndexOut = (s16)poolIndex;
-                poolActiveMasks[poolIndex] |= activeBit;
-                poolActiveCounts[poolIndex]++;
+                runtime->poolActiveMasks[poolIndex] |= activeBit;
+                runtime->poolActiveCounts[poolIndex]++;
                 return 1;
             }
         }
@@ -346,16 +348,16 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     {
         for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT - 1; poolIndex++)
         {
-            if (poolActiveCounts[poolIndex] <= 0)
+            if (runtime->poolActiveCounts[poolIndex] <= 0)
             {
                 foundPoolIndex = (s16)poolIndex;
                 foundPool = 1;
-                poolActiveCounts[poolIndex] = 0;
+                runtime->poolActiveCounts[poolIndex] = 0;
                 break;
             }
         }
     }
-    else if (poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
+    else if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
     {
         foundPoolIndex = (s16)preferredPoolIndex;
         foundPool = 1;
@@ -367,23 +369,24 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     }
 
     poolIndex = (s16)foundPoolIndex;
-    poolActiveMasks = runtime->poolActiveMasks;
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
     {
         activeBit = 1 << slotIndex;
-        if ((activeBit & poolActiveMasks[poolIndex]) == 0)
+        if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
         {
             *slotIndexOut = (s16)slotIndex;
             *poolIndexOut = (s16)poolIndex;
-            poolActiveMasks[poolIndex] |= activeBit;
-            poolSlotTypeIds[poolIndex] = slotType;
-            poolActiveCounts[poolIndex]++;
+            runtime->poolActiveMasks[poolIndex] |= activeBit;
+            gExpgfxStaticPoolSlotTypeIds[poolIndex] = slotType;
+            runtime->poolActiveCounts[poolIndex]++;
             return 1;
         }
     }
 
     return EXPGFX_INVALID_POOL_INDEX;
 }
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 256
 
 void expgfx_initSlotQuad(void* slotPtr)
 {
