@@ -1082,8 +1082,8 @@ void creditsStart_(void)
     }
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
     gameTextFn_80016810(gCreditEntries[lbl_803DD998].a, 0, 0);
-    lbl_803DD994 = lbl_803DD994 + lbl_803DB411;
-    lbl_803DD996 = lbl_803DD996 + lbl_803DB411;
+    lbl_803DD994 += lbl_803DB411;
+    lbl_803DD996 += lbl_803DB411;
     if (lbl_803DD996 < gCreditEntries[lbl_803DD998].b)
     {
         return;
