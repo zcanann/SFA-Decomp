@@ -1712,34 +1712,31 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x1d:
-                    if (p[2] == 0)
-                    {
-                        GameBit_Set(0x966, 1);
-                        GameBit_Set(0x967, 1);
-                        GameBit_Set(0x968, 1);
-                    }
-                    else
+                    if (p[2] != 0)
                     {
                         GameBit_Set(0x966, 0);
                         GameBit_Set(0x967, 0);
                         GameBit_Set(0x968, 0);
                     }
+                    else
+                    {
+                        GameBit_Set(0x966, 1);
+                        GameBit_Set(0x967, 1);
+                        GameBit_Set(0x968, 1);
+                    }
                     break;
                 case 0x2c:
-                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(int)(u16)((p[2] << 8) | p[3]);
+                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s16)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = Obj_GetPlayerObject();
-                    if (t == 0)
+                    if ((void*)t != NULL)
                     {
-                        if (getArwing() != 0)
-                        {
-                            gameTextFn_80125ba4((u16)((p[2] << 8) | p[3]));
-                        }
+                        (*gGameUIInterface)->showNpcDialogue((p[2] << 8) | p[3], 0x14, 0x8c, 1);
                     }
-                    else
+                    else if ((void*)getArwing() != NULL)
                     {
-                        (*gGameUIInterface)->showNpcDialogue((u16)((p[2] << 8) | p[3]), 0x14, 0x8c, 1);
+                        gameTextFn_80125ba4((p[2] << 8) | p[3]);
                     }
                     break;
                 }
@@ -1749,17 +1746,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
         i++;
         p += 4;
     }
-    if ((s8)p3 < 1)
-    {
-        if ((s8)p3 < 0)
-        {
-            *state |= 2;
-        }
-    }
-    else
+    if ((s8)p3 > 0)
     {
         *state |= 1;
         GameBit_Set(((TriggerState*)state)->unk80, 1);
+    }
+    else if ((s8)p3 < 0)
+    {
+        *state |= 2;
     }
 }
 
