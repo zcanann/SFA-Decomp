@@ -15172,7 +15172,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int flag;
 
-    *(u32*)((char*)inner + 0x360) &= ~0x2LL;
+    *(u32*)((char*)((GameObject*)obj)->extra + 0x360) &= ~0x2LL;
     *(u32*)((char*)inner + 0x360) |= 0x2000LL;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
