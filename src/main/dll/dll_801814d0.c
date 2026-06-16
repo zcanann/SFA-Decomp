@@ -1,3 +1,17 @@
+/*
+ * dll_801814d0 - a multi-object DLL bundling six unrelated placeable
+ * object classes, each exported through its own ObjectDescriptor:
+ * MagicPlant, TrickyWarp, TrickyGuard, StayPoint, Duster and CurveFish
+ * (all using the 10-slot descriptor flag).
+ *
+ * The one resident function defined here is fn_801814D0, the Duster's
+ * hit-response handler: it reads the highest-priority hit on the object,
+ * fades the model in on a kill-volume hit (type 0x10), and otherwise
+ * spawns the dust light effect, applies area damage to nearby group-0x10
+ * objects within range/height, plays the configured sfx, kicks the
+ * hit-react timer and launch velocity, then clears its hit volumes and
+ * optionally disables itself.
+ */
 #include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
@@ -9,10 +23,10 @@
 #include "main/objfx.h"
 
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined8 ObjHits_DisableObject();
+extern void ObjHits_ClearHitVolumes();
+extern void ObjHits_DisableObject();
 extern int ObjHits_IsObjectEnabled();
-extern undefined4 ObjHits_RecordObjectHit();
+extern int ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -28,8 +42,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
-
-
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -48,21 +60,6 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 typedef struct DusterHitEffectPos
 {
     u8 pad00[0xc];
@@ -78,10 +75,10 @@ void fn_801814D0(int obj, int param_2, u8* state)
     int hitType;
     int* objects;
     int i;
-    int* ret;
-    f32 objY;
-    f32 groupObjY;
-    f32 f;
+    int* groupObjects;
+    f32 dusterY;
+    f32 candidateY;
+    f32 launchVel;
 
     hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitWork[3], &hitWork[2], &hitWork[1],
                                                  &effectPos.x, &effectPos.y, &effectPos.z);
@@ -95,7 +92,7 @@ void fn_801814D0(int obj, int param_2, u8* state)
         {
             effectPos.x += playerMapOffsetX;
             effectPos.z += playerMapOffsetZ;
-            if (state[0x20] != 0)
+            if (state[0x20] != 0) /* area-damage enable flag (past DusterState) */
             {
                 if (hitType != 5)
                 {
@@ -106,16 +103,16 @@ void fn_801814D0(int obj, int param_2, u8* state)
                     }
                     return;
                 }
-                ret = (int*)ObjGroup_GetObjects(0x10, &hitWork[0]);
+                groupObjects = (int*)ObjGroup_GetObjects(0x10, &hitWork[0]);
                 i = 0;
-                objects = ret;
+                objects = groupObjects;
                 for (; i < hitWork[0]; i++)
                 {
                     if (ObjHits_IsObjectEnabled(*objects) != 0)
                     {
-                        groupObjY = *(f32*)(*objects + 0x10);
-                        objY = ((GameObject*)obj)->anim.localPosY;
-                        if (groupObjY > objY && groupObjY < objY + lbl_803DBDA8)
+                        candidateY = ((GameObject*)*objects)->anim.localPosY;
+                        dusterY = ((GameObject*)obj)->anim.localPosY;
+                        if (candidateY > dusterY && candidateY < dusterY + lbl_803DBDA8)
                         {
                             if (Vec_xzDistance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < lbl_803DBDA4)
                             {
@@ -128,17 +125,17 @@ void fn_801814D0(int obj, int param_2, u8* state)
             }
             objLightFn_8009a1dc((void*)obj, lbl_803E3934, &effectPos, 1, 0);
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-            if (Sfx_IsPlayingFromObject(0, (u16) * (s16*)(state + 0x10)) == 0)
+            if (Sfx_IsPlayingFromObject(0, (u16)((DusterState*)state)->heldObjectId) == 0)
             {
-                Sfx_PlayFromObject(obj, (u16) * (s16*)(state + 0x10));
+                Sfx_PlayFromObject(obj, (u16)((DusterState*)state)->heldObjectId);
             }
-            *(s16*)(state + 0xa) = 0x32;
+            ((DusterState*)state)->hitReactTimer = 0x32;
             state[9] = 0;
             fn_801816F8(obj, param_2, state);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-            f = lbl_803E3938;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+            launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;
-            ((GameObject*)obj)->anim.velocityZ = f;
+            ((GameObject*)obj)->anim.velocityZ = launchVel;
             ObjHits_ClearHitVolumes(obj);
             if (lbl_803DBDA0 != 0)
             {
@@ -147,9 +144,6 @@ void fn_801814D0(int obj, int param_2, u8* state)
         }
     }
 }
-
-void trickyguard_update(int* obj);
-
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
