@@ -5233,7 +5233,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         {
             u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
             start = tbl[(s8)seg * 2];
-            end = *(u8*)(tbl + (s8)seg * 2 + 1);
+            end = tbl[(s8)seg * 2 + 1];
         }
         else
         {
@@ -5252,8 +5252,9 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     {
         if ((s8)seg != -1)
         {
-            start = ((u16*)lbl_8038D840)[(s8)seg * 2];
-            end = ((u16*)lbl_8038D840)[(s8)seg * 2 + 1];
+            u16* segtbl = (u16*)lbl_8038D840;
+            start = segtbl[(s8)seg * 2];
+            end = segtbl[(s8)seg * 2 + 1];
         }
         else
         {
