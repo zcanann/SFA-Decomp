@@ -241,7 +241,7 @@ void fn_explosion_release_v11_unused(uint param_1)
         {
             do
             {
-                hitShapeId = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + idx + 0x100) + 0x46);
+                hitShapeId = ((GameObject*)(*(int*)(*(int*)(param_1 + 0x58) + idx + 0x100)))->anim.seqId;
                 if ((hitShapeId == 399) || (hitShapeId == 0x1d6))
                 {
                     found = true;
@@ -481,7 +481,7 @@ void dll_1CE_update(int* obj)
         for (; i < n; i++)
         {
             int* o = *(int**)((char*)list + i * 4 + 0x100);
-            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
+            if (((GameObject*)o)->anim.seqId == 0x18f || ((GameObject*)o)->anim.seqId == 0x1d6)
             {
                 found = 1;
                 break;
