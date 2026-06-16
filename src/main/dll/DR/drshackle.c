@@ -186,7 +186,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
             fn_801EC870(obj, state);
             angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0xc),
                                   ((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x14));
-            *(s16*)(obj) = angle;
+            ((GameObject*)obj)->anim.rotX = angle;
             *(s16*)(state + DRSHACKLE_TARGET_YAW_OFFSET) = angle;
             *(s16*)(state + DRSHACKLE_YAW_OFFSET) = angle;
             *(f32*)(state + DRSHACKLE_SWING_ACCEL_OFFSET) = lbl_803E5B74;
@@ -230,7 +230,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
 
     angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0xc),
                           ((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x14));
-    *(s16*)(obj) = angle;
+    ((GameObject*)obj)->anim.rotX = angle;
     ((GameObject*)obj)->anim.localPosX = *(f32*)(state + 0xc);
     ((GameObject*)obj)->anim.localPosY = *(f32*)(state + 0x10);
     ((GameObject*)obj)->anim.localPosZ = *(f32*)(state + 0x14);
