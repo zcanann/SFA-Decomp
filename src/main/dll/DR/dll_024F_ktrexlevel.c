@@ -1,3 +1,17 @@
+/*
+ * ktrexlevel (DLL 0x24F) - level controller object for the SharpClaw
+ * T-rex (Galdon) arena in the DarkIce Mines / Krazoa region.
+ *
+ * On init it forces the level's sky/cloud/lighting setup, primes the
+ * path-selection game bits and arms its active-level bit; on the first
+ * update tick it kicks off the environment fx and weather, then each
+ * tick mirrors a status game bit into a shared global. The path game
+ * bits (0x54a/0x54e/0x552/0x556, selected via 0x55a/0x55b) gate which
+ * branch of the arena is open. The remaining bit literals are cross-TU
+ * game bits without established names.
+ *
+ * The 4-byte extra block holds a single f32 scratch value seeded at init.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -64,13 +78,13 @@ void ktrexlevel_updatePathGameBits(void)
 
 void ktrexlevel_init(int obj)
 {
-    char* p = ((GameObject*)obj)->extra;
+    char* extra = ((GameObject*)obj)->extra;
     setDrawCloudsAndLights(0);
     GameBit_Set(0x572, 0);
     GameBit_Set(0x56e, 1);
     GameBit_Set(0x566, 1);
     GameBit_Set(0x569, 1);
-    *(f32*)p = lbl_803E67A8;
+    *(f32*)extra = lbl_803E67A8;
     GameBit_Set(0x55a, 1);
     GameBit_Set(0x54a, 2);
     GameBit_Set(0x54e, 2);
