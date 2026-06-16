@@ -15364,7 +15364,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         if (lbl_803DE44C != NULL && (inner->unk3F4 >> 6 & 1) != 0)
         {
             inner->unk8B4 = 1;
-            inner->unk3F4 |= 8;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         switch (*(s16*)((char*)sub + 0x46))
         {
