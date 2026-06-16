@@ -1,5 +1,61 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session: 0 wins, ~13 attempts (hard #82/#108 residual band) =====
+This wave's near-misses were dominated by FP/GPR coloring perms + frame layout, no
+source lever. All reverted clean (no regressions committed). Banked:
+- textrender getControlCharLen INLINED into GameText_CountPrintableChars (99.98%) +
+  GameText_FindControlCodeArgs (99.99%): the dead loop counter `i` (`for i=45;i>=0;i--`,
+  p++ walk) decrements by -2 in target (unroll factor 2) but -1 in current. STANDALONE
+  getControlCharLen is 100% and uses -1. So it's an INLINING-CONTEXT optimizer artifact:
+  post-inline strength-reduction picks -2 for the dead IV only when inlined. peephole/
+  scheduling/opt_strength_reduction off all INERT. Index form (lbl[i]) walks wrong
+  direction. Bank — can't control inlined dead-IV step from source.
+- dll_002E_moveLib fn_80114408 (99.86%): REAL LATENT BUG found but UNWINNABLE on score.
+  Line 137 `*(f32*)(p3+0x24)=vb` (vb=lbl_803E1C90) but TARGET stores lbl_803E1CA0 there
+  (same value as posY/0x18 — it's the X-component of a 2nd vec3: [CA0,vb,vb,CA0,vb,vb]).
+  Fixing to CA0 + hoisting `f32 va=lbl_803E1CA0` for CSE gets the structure right (f0=CA0
+  at 0x18/0x24, f1=C90 elsewhere) BUT regs are SWAPPED vs target (target CA0=f1,C90=f0;
+  MWCC always puts first-loaded const in f0). decl swap va/vb + load-C90-first all INERT.
+  Net 99.63 < buggy-original 99.86 (the wrong-value version coincidentally byte-matches
+  more because the perm only spans 2 stores). #82 commutative coloring frontier. The
+  value fix IS semantically correct (siblings lines 782/815 use lbl_803E1CA0). Bank;
+  retry only if a #82 f0/f1-first-load lever is discovered.
+- dll_0104_smallbasket smallbasket_update (99.83%): `flag=0; alpha=flag` — target keeps
+  flag in saved r28 and stores r28; current const-folds to fresh `li r0,0; stb r0`. #110
+  const-equal-copy-fold. O1 wrapper REGRESSED hard (94.26). Bank.
+- grenade trickyFn_80142eb0 (98.82%): `*(int*)stateFlags & ~0x10` produces rlwinm (1-bit
+  andi clear); target wants `li -17; and` (materialized #74). Changing to `*(u32*)...
+  & ~0x10LL` (matching siblings 782/815) DOES produce the `and` BUT introduces a `li r0,0`
+  hoist for the adjacent `substate=0` store + r3/r4 perm → net 98.42 < 98.82. The rlwinm
+  happens to byte-match the target's `li;and` better than the correct `and`+perm. Bank.
+- camera Camera_UpdateViewMatrices (99.92%): `slot=base+off; slot+=4416` — target does
+  both adds into r30 (`add r30,r31,r0; addi r30,r30,4416`); current uses r3 temp for
+  base+off then `addi r30,r3,4416`. Single-stmt `base+off+4416` regrouped (K onto off).
+  off-inline INERT. #108/#119 throwaway-temp coloring. Bank.
+- baby_snowworm pauseMenuDoSave (99.95%): color[2] array + 4 outparams (texture/scale/x/y
+  &-passed to objShadowFn). Frame=64 both; target lays color@8(low)/outparams@16-31,
+  current color@24(high)/outparams@8-23. Decl reorder (color first/last, texture first)
+  ALL INERT — array placement is fixed by MWCC independent of decl order. #67 frame. Bank.
+- mm heapSpawnSlot (99.33%) / mmFreeDeferred (99.45%): pure r28/r29 (base vs count) and
+  r3/r4 swaps. #108 within-class single-def creation-order. O2 wrapper regressed
+  heapSpawnSlot to 94.43. un-naming `top` changed lwz-disp→lwzx (worse). Bank.
+- mm mmFreeTick (93.17%): multi-issue — target RE-READS gMmDeferredFreeCount fresh per
+  use (lha 0(0) ×2) for `g->deferred[count-1].ptr/.delay`; current CSEs the count (legit,
+  no decrement between reads) + uses lwzx vs target's add-base+lwz-disp. End-pointer form
+  INERT. Needs volatile-launder of the count + #112 disp grouping together. Bank (multi).
+- objfx objfx_spawnBoxBurst (99.30%): prologue param-save INTERLEAVE — target emits
+  fmr f29/f30/f31 (mulX/Y/Z) BEFORE `mr r23,r8`(origin) matching loop use-order (mul
+  before origin); current saves all int params then FP. peephole/scheduling off INERT.
+  #108 cross-class prologue interleave (use-order driven, no source lever). Bank.
+- smallbasket fn_80157558 (99.86%): turnRaw/mag r28/r29 swap. decl reorder INERT. Bank.
+LESSON: at 99.8%+, a "correctness fix" (moveLib CA0, grenade ~0x10LL) can score LOWER
+than the buggy original if it unlocks a coloring perm — objdiff is byte-fuzzy, a wrong
+const that shares a reg can out-score a right const that forces a swap. Don't commit a
+correctness fix that regresses fuzzy% (per source-of-truth rule); bank it as a known bug.
+LESSON: O1/O2 per-fn pragma wrappers REGRESS call-bearing dispatcher-style fns hard
+(smallbasket_update 99.83→94.26, heapSpawnSlot 99.33→94.43) — only use O1/O2 for small
+call-free loop fns (#110 caveat). Default-O4 is right for these.
+
 ## ===== Session (later): 3 wins, ~13 attempts =====
 WINS:
 - dll_000B fn_800A0524 (98.95->99.99%): else-clamp (s16==0 branch) wrote 3 separate
@@ -283,3 +339,41 @@ BANKED (no source lever, all reverted byte-clean):
 LESSON: #110 const-equal-copy (`li rY,K; mr rX,rY` where BOTH are literal K) is
 UNREPRODUCIBLE at O4 (copy-prop always folds to fresh li); O1 wrecks the rest.
 Recurring 1-instr cap on 99%+ fns. BANK on sight — don't burn attempts.
+
+## ===== Session (later2): 4 wins / 2 fns, ~8 attempts =====
+WINS (all in TOP-LEVEL src/main, NOT dll/):
+- newshadows initFn_8006d020 (79.88->82.61%, 3 commits):
+  (1) `int collide`->`u8 collide`: target holds collide in saved reg as u8
+      (li r4,1; clrlwi r0,r4,24; cmplwi) vs bare cmpwi. +0.88. #7/#58.
+  (2) `attempts < 10000`->`< 10000u`: cmplwi not cmpwi (TWO sites, do/while
+      + outer while). +1.7. #58/#64.
+  (3) hoist __PADFixBits to FUNCTION-SCOPE local padFix: target keeps it in
+      f26 across tex loop (fmuls f0,f26); current reloaded per use. +0.13.
+      #45/#121. NOTE: block-scope inside tex loop REGRESSED (80.19) - must
+      be function-scope.
+  RESIDUAL (banked): second tex loop (line ~1862-1877) is multi-issue FP -
+  inlined single-prec floor (target fmadds f29,f1,f25 vs current fmadd+frsp
+  via double floor), multiple hoisted consts f27/f28/f29/f30/f31, sthx/sth.
+  Tried `(f32)floor(cv)` cast -> REGRESSED 80.14. Banked FP-pressure.
+- textrender setLanguageFn_8001ad64 (79.99->82.84%, 1 commit): THREE manual
+  element-copy loops used `arr[i]` indexing -> base+index addr (add;lbzx/sthx
+  with mr r0; addi; lbzx r,base,r0). Target walks POINTERS with post-incr +
+  displacement-unroll. Rewrote as `*d = *s; d++; s++;` separate statements
+  (NOT *d++=*s++ which merges). +2.85. Ref-table pointer-walk-vs-index lever.
+  RESIDUAL: ~57 reg-perm (#82) + 2 `cmplwi r0,0` guard deletes. Banked.
+
+CANDIDATE BANKED (pure #82/#108, no source lever):
+- textMeasureFn_80016c9c (gametext, 75.7%): the 18 lbzx are IDENTICAL opcodes
+  target vs current; ONLY diff is whole-fn saved-reg rotation (r30<->r28,
+  r27<->r31, r5<->r4). Pure coloring. Verified NOT a copy-loop fix.
+- ObjAnim_AdvanceCurrentMove (objanim, 82.5%): whole-body f0-vs-f4 reg-perm +
+  fcmpo operand swaps. clampedStepScale homes f0(target)/f4(current). #82.
+- drawGlow (expgfx, 69.9%): massive saved-reg scramble (r14-r22, f26-f31) +
+  frame 256 vs 240. Heavy #108/#67. Banked.
+
+LESSON: TOP-LEVEL src/main/*.c (textrender, newshadows, gametext) still has
+STRUCTURAL veins the dll/ scope lacked: (a) signed-vs-unsigned counter compares
+(cmplwi via `< Ku`), (b) u8 flag held in saved reg (clrlwi mask), (c) manual
+copy loops with arr[i] indexing that should be pointer-walks. ndiff --classify
+"cmp-width" + real "delete" blocks (not reg-perm) = the reliable signal. The
+src .o objdump-disasm-by-symbol does NOT work here (use ndiff for both sides).
