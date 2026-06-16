@@ -618,17 +618,20 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     if (blendSamples != NULL)
     {
+        s16* axisAt = &axis[sampleIndex];
+        s16* blendAt = &blendSamples[sampleIndex];
         previousDistance =
-            (rootScale * moveWeight * (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex)) +
-            (blendScale * blendWeight * (f32)blendSamples[sampleIndex]);
+            (rootScale * moveWeight * (f32)axisAt[1]) +
+            (blendScale * blendWeight * (f32)blendAt[0]);
         nextDistance =
-            (rootScale * moveWeight * (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex + 1)) +
-            (blendScale * blendWeight * (f32)blendSamples[sampleIndex + 1]);
+            (rootScale * moveWeight * (f32)axisAt[2]) +
+            (blendScale * blendWeight * (f32)blendAt[1]);
     }
     else
     {
-        previousDistance = rootScale * (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex);
-        nextDistance = rootScale * (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex + 1);
+        s16* axisAt = &axis[sampleIndex];
+        previousDistance = rootScale * (f32)axisAt[1];
+        nextDistance = rootScale * (f32)axisAt[2];
     }
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
@@ -643,19 +646,19 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         previousDistance = nextDistance;
         if (blendSamples != NULL)
         {
+            s16* axisAt = &axis[sampleIndex];
+            s16* blendAt = &blendSamples[sampleIndex];
             nextDistance +=
                 (rootScale * moveWeight *
-                    ((f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex + 1) -
-                        (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex))) +
+                    ((f32)axisAt[2] - (f32)axisAt[1])) +
                 (blendScale * blendWeight *
-                    ((f32)blendSamples[sampleIndex + 1] - (f32)blendSamples[sampleIndex]));
+                    ((f32)blendAt[1] - (f32)blendAt[0]));
         }
         else
         {
+            s16* axisAt = &axis[sampleIndex];
             nextDistance +=
-                rootScale *
-                ((f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex + 1) -
-                    (f32)ObjAnim_ReadRootAxisSample(axis, sampleIndex));
+                rootScale * ((f32)axisAt[2] - (f32)axisAt[1]);
         }
         phase += phaseStep;
     }
