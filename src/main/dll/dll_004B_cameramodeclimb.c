@@ -1,28 +1,51 @@
+/*
+ * cameramodeclimb (DLL 0x4B) - camera mode used while the player is
+ * climbing. Owns a single heap-allocated CameraModeClimbState
+ * (lbl_803DD578).
+ *
+ * _init(mode) seeds that state: mode 2 reads a 6-byte arg block
+ * (duration, distance, min/max height, relative-position angle) and
+ * sets up a transition FROM the live values TO those targets; mode 1
+ * (and any other) zeroes the state and primes a 60-step default
+ * transition by sampling the active camera handler's defaults.
+ *
+ * _update(camObj) ticks the transition timer (lerping distance, min/max
+ * height and relative position toward their targets), drives the camera
+ * height toward the view target's clamped height band, smooths the
+ * follow distance, orbits the camera around the view target by the
+ * relative-position angle, traces the move against geometry, then yaws
+ * camObj toward the target and converts the world point into the
+ * camera's local frame.
+ */
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
 
-extern CameraModeClimbState* lbl_803DD578;
+extern void memset(void* dst, int val, int size);
 
-extern uint getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern u8 framesThisStep;
-extern f32 timeDelta;
+/* tuning constants in .sdata2 (home TU unknown); lbl_803E19A0 == 0.0f */
 extern f32 lbl_803E19A0;
 extern f32 lbl_803E19A4;
 extern f32 lbl_803E19A8;
 extern f32 lbl_803E19AC;
 extern f32 lbl_803E19B0;
 extern f32 lbl_803E19B4;
-extern void memset(void* dst, int val, int size);
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;
 extern f32 lbl_803E19C0;
 extern f32 lbl_803E19C4;
 extern f32 lbl_803E19C8;
+
+/* live climb-camera state, allocated on first init */
+extern CameraModeClimbState* lbl_803DD578;
+
+extern int getAngle(f32 dx, f32 dz);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern u8 framesThisStep;
+extern f32 timeDelta;
 
 void CameraModeClimb_copyToCurrent_nop(void)
 {
@@ -31,27 +54,27 @@ void CameraModeClimb_copyToCurrent_nop(void)
 void CameraModeClimb_free(void)
 {
     mm_free(lbl_803DD578);
-    lbl_803DD578 = 0;
+    lbl_803DD578 = NULL;
 }
 
-void CameraModeClimb_update(short* camObj)
+void CameraModeClimb_update(CameraObject* camObj)
 {
     f32 blend;
-    f32 fb;
+    f32 targetY;
     f32 hi;
     f32 lo;
     int yawDelta;
-    short* viewObj;
+    GameObject* viewObj;
     f32 trigValue;
-    f32 fd;
+    f32 relX;
     f32 clamped;
-    f32 fc;
+    f32 relZ;
     f32 dist;
     f32 traceFrom[3];
     f32 traceOut[3];
-    undefined auStack176[112];
+    u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
-    viewObj = *(short**)(camObj + 0x52);
+    viewObj = (GameObject*)camObj->anim.targetObj;
     if (lbl_803DD578->transitionTimer != 0)
     {
         lbl_803DD578->transitionTimer -= framesThisStep;
@@ -60,23 +83,21 @@ void CameraModeClimb_update(short* camObj)
             lbl_803DD578->transitionTimer = 0;
         }
         blend = (f32)(s32)(lbl_803DD578->transitionDuration - lbl_803DD578->transitionTimer) /
-            (f32)(s32)
-        lbl_803DD578->transitionDuration;
+                (f32)(s32)lbl_803DD578->transitionDuration;
         lbl_803DD578->relativePosition =
             blend * (f32)(s32)(lbl_803DD578->targetRelativePosition - lbl_803DD578->startRelativePosition) +
-            (f32)(u32)(u16)
-        lbl_803DD578->startRelativePosition;
-        lbl_803DD578->targetDistance = blend * (lbl_803DD578->endDistance - lbl_803DD578->startDistance) + lbl_803DD578
-            ->startDistance;
-        lbl_803DD578->minHeight = blend * (lbl_803DD578->endMinHeight - lbl_803DD578->startMinHeight) + lbl_803DD578->
-            startMinHeight;
-        lbl_803DD578->maxHeight = blend * (lbl_803DD578->endMaxHeight - lbl_803DD578->startMaxHeight) + lbl_803DD578->
-            startMaxHeight;
+            (f32)(u32)(u16)lbl_803DD578->startRelativePosition;
+        lbl_803DD578->targetDistance =
+            blend * (lbl_803DD578->endDistance - lbl_803DD578->startDistance) + lbl_803DD578->startDistance;
+        lbl_803DD578->minHeight =
+            blend * (lbl_803DD578->endMinHeight - lbl_803DD578->startMinHeight) + lbl_803DD578->startMinHeight;
+        lbl_803DD578->maxHeight =
+            blend * (lbl_803DD578->endMaxHeight - lbl_803DD578->startMaxHeight) + lbl_803DD578->startMaxHeight;
     }
-    fb = *(f32*)(viewObj + 0xe);
-    hi = fb + lbl_803DD578->maxHeight;
-    lo = fb + lbl_803DD578->minHeight;
-    blend = *(f32*)(camObj + 0xe);
+    targetY = viewObj->anim.worldPosY;
+    hi = targetY + lbl_803DD578->maxHeight;
+    lo = targetY + lbl_803DD578->minHeight;
+    blend = camObj->anim.worldPosY;
     if (blend < lo)
     {
         clamped = lo - blend;
@@ -90,72 +111,69 @@ void CameraModeClimb_update(short* camObj)
         clamped = lbl_803E19A0;
     }
     clamped = clamped * (lbl_803DD578->heightAdjustRate * timeDelta);
-    *(f32*)(camObj + 0xe) = *(f32*)(camObj + 0xe) + clamped;
+    camObj->anim.worldPosY = camObj->anim.worldPosY + clamped;
     dist = lbl_803DD578->targetDistance;
     dist = dist - lbl_803DD578->smoothedDistance;
     dist = dist * (lbl_803E19A4 * timeDelta);
     lbl_803DD578->smoothedDistance = lbl_803DD578->smoothedDistance + dist;
-    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
-    traceFrom[0] = lbl_803E19A8 * trigValue + *(f32*)(viewObj + 0xc);
-    traceFrom[1] = *(f32*)(viewObj + 0xe);
-    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
-    traceFrom[2] = lbl_803E19A8 * trigValue + *(f32*)(viewObj + 0x10);
-    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
-    *(f32*)(camObj + 0xc) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[0];
-    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
-    *(f32*)(camObj + 0x10) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[2];
-    camcontrol_traceMove(traceFrom, (f32*)(camObj + 0xc), traceOut, auStack176, 3, 1, 1, lbl_803E19B4);
-    *(f32*)(camObj + 0xc) = traceOut[0];
-    *(f32*)(camObj + 0xe) = traceOut[1];
-    *(f32*)(camObj + 0x10) = traceOut[2];
+    trigValue = mathSinf((lbl_803E19AC * (f32)(s32)viewObj->anim.rotX) / lbl_803E19B0);
+    traceFrom[0] = lbl_803E19A8 * trigValue + viewObj->anim.worldPosX;
+    traceFrom[1] = viewObj->anim.worldPosY;
+    trigValue = mathCosf((lbl_803E19AC * (f32)(s32)viewObj->anim.rotX) / lbl_803E19B0);
+    traceFrom[2] = lbl_803E19A8 * trigValue + viewObj->anim.worldPosZ;
+    trigValue = mathSinf((lbl_803E19AC * (f32)(s32)viewObj->anim.rotX) / lbl_803E19B0);
+    camObj->anim.worldPosX = lbl_803DD578->smoothedDistance * trigValue + traceFrom[0];
+    trigValue = mathCosf((lbl_803E19AC * (f32)(s32)viewObj->anim.rotX) / lbl_803E19B0);
+    camObj->anim.worldPosZ = lbl_803DD578->smoothedDistance * trigValue + traceFrom[2];
+    camcontrol_traceMove(traceFrom, &camObj->anim.worldPosX, traceOut, traceWork, 3, 1, 1, lbl_803E19B4);
+    camObj->anim.worldPosX = traceOut[0];
+    camObj->anim.worldPosY = traceOut[1];
+    camObj->anim.worldPosZ = traceOut[2];
     (*gCameraInterface)->getRelativePosition((f32)(u32)(u16)lbl_803DD578->relativePosition,
-                                             (int)camObj, &fd, &clamped,
-                                             &fc, &dist, 0);
+                                             (int)camObj, &relX, &clamped,
+                                             &relZ, &dist, 0);
     {
-        int t = 0x8000 - (u16)getAngle(fd, fc);
-        yawDelta = t - (u16) * camObj;
+        int t = 0x8000 - (u16)getAngle(relX, relZ);
+        yawDelta = t - (u16)camObj->anim.rotX;
     }
     if (0x8000 < yawDelta)
     {
-        yawDelta = yawDelta + -0xffff;
+        yawDelta = yawDelta - 0xffff;
     }
     if (yawDelta < -0x8000)
     {
         yawDelta = yawDelta + 0xffff;
     }
-    *camObj += yawDelta;
-    clamped = *(f32*)(camObj + 0xe) -
-        (*(f32*)(viewObj + 0xe) + (f32)(u32)(u16)
-    lbl_803DD578->relativePosition
-    )
-    ;
-    yawDelta = (u16)getAngle(clamped, dist) - (u16)camObj[1];
+    camObj->anim.rotX += yawDelta;
+    clamped = camObj->anim.worldPosY -
+              (viewObj->anim.worldPosY + (f32)(u32)(u16)lbl_803DD578->relativePosition);
+    yawDelta = (u16)getAngle(clamped, dist) - (u16)camObj->anim.rotY;
     if (0x8000 < yawDelta)
     {
-        yawDelta = yawDelta + -0xffff;
+        yawDelta = yawDelta - 0xffff;
     }
     if (yawDelta < -0x8000)
     {
         yawDelta = yawDelta + 0xffff;
     }
-    camObj[1] += (yawDelta * framesThisStep) / 6;
-    Obj_TransformWorldPointToLocal(*(f32*)(camObj + 0xc), *(f32*)(camObj + 0xe),
-                                   *(f32*)(camObj + 0x10), (f32*)(camObj + 6), (f32*)(camObj + 8),
-                                   (f32*)(camObj + 10),
-                                   *(int*)(camObj + 0x18));
+    camObj->anim.rotY += (yawDelta * framesThisStep) / 6;
+    Obj_TransformWorldPointToLocal(camObj->anim.worldPosX, camObj->anim.worldPosY,
+                                   camObj->anim.worldPosZ, &camObj->anim.localPosX,
+                                   &camObj->anim.localPosY, &camObj->anim.localPosZ,
+                                   *(int*)&camObj->anim.parent);
 }
 
-void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
+void CameraModeClimb_init(int arg1, int mode, s8* args)
 {
-    undefined4 local_28[1];
-    undefined4 local_24[1];
-    undefined4 local_20[1];
-    undefined4 outA[1];
-    f32 vE;
-    f32 vD;
-    f32 vC;
-    f32 vB;
-    f32 vA;
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    f32 defaultDistXZ;
+    f32 defaultDistB;
+    f32 defaultDistA;
+    f32 defaultMinHeight;
+    f32 defaultMaxHeight;
+    f32 defaultRelPos;
     int handler;
 
     if (lbl_803DD578 == NULL)
@@ -170,37 +188,31 @@ void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
         lbl_803DD578->startMaxHeight = lbl_803DD578->maxHeight;
         lbl_803DD578->startDistance = lbl_803DD578->targetDistance;
         lbl_803DD578->targetRelativePosition = (u16)(int)(lbl_803E19B8 * (f32)(s8)args[3]);
-        lbl_803DD578->endMinHeight = (f32)(s8)
-        args[5];
-        lbl_803DD578->endMaxHeight = (f32)(s8)
-        args[4];
-        lbl_803DD578->endDistance = (f32)(s8)
-        args[2];
-        lbl_803DD578->transitionTimer = (s16)(s8)
-        args[1];
-        lbl_803DD578->transitionDuration = (s16)(s8)
-        args[1];
+        lbl_803DD578->endMinHeight = (f32)(s8)args[5];
+        lbl_803DD578->endMaxHeight = (f32)(s8)args[4];
+        lbl_803DD578->endDistance = (f32)(s8)args[2];
+        lbl_803DD578->transitionTimer = (s16)(s8)args[1];
+        lbl_803DD578->transitionDuration = (s16)(s8)args[1];
         break;
     case 1:
     default:
         memset(lbl_803DD578, 0, sizeof(CameraModeClimbState));
         handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        ((code)(*(undefined4**)((undefined4*)handler)[1])[8])(&vE, &vD, &vC, &vB, &vA);
+        (*(code*)(**(int**)(handler + 4) + 0x20))(&defaultDistB, &defaultDistA, &defaultMinHeight,
+                                                  &defaultMaxHeight, &defaultRelPos);
         (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
-                                                 (int)arg1, (f32*)local_28,
-                                                 (f32*)local_24, (f32*)local_20,
-                                                 (f32*)outA, 0);
-        lbl_803DD578->startRelativePosition = (s16)vA;
-        lbl_803DD578->startMinHeight = vC;
-        lbl_803DD578->startMaxHeight = vB;
-        lbl_803DD578->startDistance = *(f32*)outA;
+                                                 arg1, &outX, &outY, &outZ, &defaultDistXZ, 0);
+        lbl_803DD578->startRelativePosition = (s16)defaultRelPos;
+        lbl_803DD578->startMinHeight = defaultMinHeight;
+        lbl_803DD578->startMaxHeight = defaultMaxHeight;
+        lbl_803DD578->startDistance = defaultDistXZ;
         lbl_803DD578->targetRelativePosition = 30;
         lbl_803DD578->endMinHeight = lbl_803E19BC;
         lbl_803DD578->endMaxHeight = lbl_803E19C0;
-        lbl_803DD578->endDistance = lbl_803E19C4 * (vD + vE);
+        lbl_803DD578->endDistance = lbl_803E19C4 * (defaultDistA + defaultDistB);
         lbl_803DD578->transitionTimer = 60;
         lbl_803DD578->transitionDuration = 60;
-        lbl_803DD578->smoothedDistance = *(f32*)outA;
+        lbl_803DD578->smoothedDistance = defaultDistXZ;
         lbl_803DD578->heightAdjustRate = lbl_803E19C8;
         break;
     }
