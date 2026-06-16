@@ -96,7 +96,7 @@ void vfpobjcreator_init(int* obj, u8* init)
 {
     VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)init;
     VfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(placement->yaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->yaw << 8);
     state->gameBit = placement->gameBit;
     state->spawnInterval = placement->spawnInterval;
     state->spawnTimer = state->spawnInterval;
@@ -211,7 +211,7 @@ void vfpobjcreator_update(int* obj)
             }
             m.ang[2] = 0;
             m.ang[1] = 0;
-            m.ang[0] = *(s16*)obj;
+            m.ang[0] = ((GameObject*)obj)->anim.rotX;
             vecRotateZXY(m.ang, (f32*)(n + 0x24));
             Sfx_PlayFromObject((int)n, 0x10c);
             (*gPartfxInterface)->spawnObject(n, 0x39a, NULL, 0x10002, -1, NULL);
