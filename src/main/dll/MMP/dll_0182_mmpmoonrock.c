@@ -53,8 +53,6 @@ void mmp_moonrock_initialise(void)
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 
-extern void objRenderFn_8003b8f4(f32);
-
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);

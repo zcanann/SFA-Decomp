@@ -71,10 +71,11 @@ void mmp_bridge_init(int* obj)
 
 void mmp_bridge_update(int* obj)
 {
+    MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
     ObjTextureRuntimeSlot* tex;
     int frame;
 
-    if (GameBit_Get(*(s16*)((char*)obj[0x4c / 4] + 0x1e)) != 0)
+    if (GameBit_Get(placement->enableBit) != 0)
     {
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
