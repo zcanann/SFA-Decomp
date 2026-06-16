@@ -1,9 +1,17 @@
-/* DLL 0x01A2 (nwtricky) — NW Tricky and mammoth objects [0x801CF78C-0x801CFB24). */
+/*
+ * nwtricky (DLL 0x1A2) - the SnowHorn Wastes controller for Tricky (the
+ * player's companion) during the SnowHorn herding objective (map
+ * 'nwastes', 0x0A).
+ *
+ * State 0: while the herd-start bit (0xd11) is clear, drive Tricky to
+ * bark at / herd the SnowHorn herd objects (seqId 0x13a) toward whichever
+ * of the player or Tricky is nearer, periodically issuing the bark
+ * command; once 0xd11 is set the herding stops. State 1: meter Tricky's
+ * energy via game bit 0x4e3 against the map-event Tricky-energy gauge.
+ */
 #include "main/gameplay_runtime.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
 extern f32 timeDelta;
 
@@ -35,12 +43,10 @@ void nw_tricky_free(int obj)
     GameBit_Set(0x4e4, 1);
 }
 
-/* segment pragma-stack balance (re-split): */
-
 typedef struct NwTrickyState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 timer;
 } NwTrickyState;
 
 typedef struct NwTrickyIds
@@ -51,15 +57,15 @@ typedef struct NwTrickyIds
 typedef struct NwObjPos
 {
     u8 pad[0x18];
-    f32 pos[3];
+    f32 worldPos[3];
 } NwObjPos;
 
 #pragma opt_loop_invariants off
 void nw_tricky_update(int* obj)
 {
-    extern int* getTrickyObject(void); /* #57 */
-    extern int Obj_GetPlayerObject(void); /* #57 */
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern int* getTrickyObject(void);
+    extern int Obj_GetPlayerObject(void);
+    extern undefined4 GameBit_Set(int eventId, int value);
     int count;
     NwTrickyIds ids;
     char* state;
@@ -106,7 +112,7 @@ void nw_tricky_update(int* obj)
                 if (!(*(u8 (**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
                     GameBit_Set(0x4e4, 0);
-                    ((NwTrickyState*)state)->unk4 = lbl_803E5260;
+                    ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
                 for (i = 0, ip = ids.ids; i < 3; ip++, i++)
@@ -120,11 +126,11 @@ void nw_tricky_update(int* obj)
                     }
                 }
 
-                ((NwTrickyState*)state)->unk4 += timeDelta;
-                t = ((NwTrickyState*)state)->unk4;
+                ((NwTrickyState*)state)->timer += timeDelta;
+                t = ((NwTrickyState*)state)->timer;
                 if (t >= lbl_803E5264)
                 {
-                    ((NwTrickyState*)state)->unk4 = t - lbl_803E5264;
+                    ((NwTrickyState*)state)->timer = t - lbl_803E5264;
                     fn_80138920(tricky, 0x152, 0x1000);
                 }
             }
@@ -134,8 +140,8 @@ void nw_tricky_update(int* obj)
             {
                 if (((GameObject*)*scan)->anim.seqId == 0x13a)
                 {
-                    dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->pos, ((NwObjPos*)player)->pos);
-                    if (vec3f_distanceSquared(((NwObjPos*)*scan)->pos, ((NwObjPos*)tricky)->pos) < dPlayer)
+                    dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)player)->worldPos);
+                    if (vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
                     {
                         fn_8014C66C(*scan, tricky);
                     }
@@ -150,7 +156,7 @@ void nw_tricky_update(int* obj)
     case 1:
         if (!(((GameObject*)tricky)->objectFlags & 0x1000))
         {
-            ((NwTrickyState*)state)->unk4 += timeDelta;
+            ((NwTrickyState*)state)->timer += timeDelta;
         }
         if (GameBit_Get(0x4e3) == 1)
         {
@@ -159,10 +165,10 @@ void nw_tricky_update(int* obj)
                 GameBit_Set(0x4e3, 0xff);
             }
         }
-        t = ((NwTrickyState*)state)->unk4;
+        t = ((NwTrickyState*)state)->timer;
         if (t >= lbl_803E5268)
         {
-            ((NwTrickyState*)state)->unk4 = t - lbl_803E5268;
+            ((NwTrickyState*)state)->timer = t - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
@@ -176,12 +182,8 @@ void nw_tricky_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-void nw_animice_render(void);
-
 void nw_tricky_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = (void*)nw_tricky_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
-
-void nw_animice_init(int* obj);
