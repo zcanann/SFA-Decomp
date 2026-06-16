@@ -1,3 +1,20 @@
+/*
+ * In-game C-menu (radial item ring) and Tricky HUD overlay rendering.
+ *
+ * cMenuSetItems / fn_801244B0 walk a placement-style item table (8
+ * shorts per entry) gated by game bits, populating the parallel cMenu
+ * arrays at lbl_803A87F0 (ids/words/state/flags/textures) and loading
+ * per-item textures. The "useTricky" path filters entries through the
+ * Tricky HUD item/action masks instead.
+ *
+ * The fn_80124A78 / fn_80124B38 / modelFn_80124794 / cMenuRenderFn_80124854
+ * callbacks are model render hooks that drive the GX colour/alpha
+ * pipeline for menu/HUD models. drawTrickyHudOverlay draws the Tricky
+ * action/item icons and the view-finder HUD. hudDrawCMenu renders the
+ * three rotating menu objects through a dedicated camera view, fading
+ * by selection. cMenuRotateFn_80124d80 advances the ring rotation and
+ * computes the highlight fade (lbl_803DD8D4).
+ */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 
@@ -8,8 +25,8 @@ extern undefined4 FUN_80052778();
 extern undefined4 FUN_800528d0();
 extern undefined4 FUN_80052904();
 extern uint FUN_80053078();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(int a);
+extern void gxSetZMode_(int a, int b, int c);
 extern undefined4 FUN_8025c754();
 extern undefined4 FUN_8025cce8();
 
@@ -329,17 +346,17 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
 
 #pragma scheduling on
 #pragma peephole on
-int fn_801244B0(short* table, char mode)
+int fn_801244B0(s16* table, char mode)
 {
     uint bitVal;
     int count;
-    short* entry;
+    s16* entry;
 
     count = 0;
     entry = table;
-    if (mode == '\0')
+    if (mode == 0)
     {
-        for (; -1 < *entry; entry = entry + 8)
+        for (; -1 < *entry; entry += 8)
         {
             bitVal = GameBit_Get((int)*entry);
             if (bitVal != 0)
@@ -348,13 +365,13 @@ int fn_801244B0(short* table, char mode)
                 {
                     if ((entry[2] < 0) || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))
                     {
-                        count = count + 1;
+                        count++;
                     }
                 }
                 else if (((entry[1] < 0) || (bitVal = GameBit_Get((int)entry[1]), bitVal == 0)) &&
                     ((entry[2] < 0 || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))))
                 {
-                    count = count + 1;
+                    count++;
                 }
             }
         }
@@ -365,7 +382,7 @@ int fn_801244B0(short* table, char mode)
         {
             if ((DAT_803de3b8 != 0xffffffff) && ((DAT_803de3b8 & (int)*table) != 0))
             {
-                count = count + 1;
+                count++;
             }
         }
     }
@@ -374,14 +391,14 @@ int fn_801244B0(short* table, char mode)
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_801244a4(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_801244a4(u64 param_1, f64 param_2, f64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
 }
 
 #pragma scheduling on
 #pragma peephole on
-undefined4 fn_80124A78(int shader, int* block, int idx)
+int fn_80124A78(int shader, int* block, int idx)
 {
     int rec;
     uint texHandle;
@@ -401,7 +418,7 @@ undefined4 fn_80124A78(int shader, int* block, int idx)
     return 1;
 }
 
-undefined4 fn_80124B38(int shader, int* block, int idx)
+int fn_80124B38(int shader, int* block, int idx)
 {
     int level;
     int rec;
@@ -411,7 +428,7 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
 
     colorWord = DAT_803e2a90;
     rec = FUN_8001792c(*block, idx);
-    rec = *(byte*)(rec + 0x29) - 1;
+    rec = *(u8*)(rec + 0x29) - 1;
     FUN_80052904();
     if ((-1 < rec) && (rec < 7))
     {
@@ -422,9 +439,9 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
             if (tabB[rec] == 0)
             {
                 level = (int)(FLOAT_803e2c90 *
-                    (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(shader + 0x37)) -
+                    (f32)((double)CONCAT44(0x43300000, (uint) * (u8*)(shader + 0x37)) -
                         DOUBLE_803e2b08));
-                colorWord = CONCAT31(colorWord >> 8, (undefined)level);
+                colorWord = CONCAT31(colorWord >> 8, (u8)level);
             }
             else
             {
@@ -449,9 +466,6 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
     return 1;
 }
 
-extern void gxSetZMode_(int a, int b, int c);
-extern void gxSetPeControl_ZCompLoc_(int a);
-
 #pragma scheduling off
 #pragma peephole off
 int modelFn_80124794(int obj, int param2, int param3)
@@ -470,8 +484,6 @@ int modelFn_80124794(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-
-extern void textureFree(void);
 
 void drawTrickyHudOverlay(int obj)
 {
