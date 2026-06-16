@@ -568,7 +568,8 @@ void ktrex_update(int obj)
     {
         return;
     }
-    runtime = gKTRexRuntime = ((GameObject*)obj)->extra;
+    runtime = ((GameObject*)obj)->extra;
+    gKTRexRuntime = runtime;
     if (((GameObject*)obj)->unkF8 == 1)
     {
         Music_Trigger(40, 1);
@@ -889,21 +890,25 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     return 0;
 }
 
-void ktrex_init(int obj, char* arg)
+void ktrex_init(int obj, char* arg, int flag)
 {
     int i;
-    int cp;
-    s16 yaw0;
+    ObjfsaRomCurveDef* cp;
+    int spawnFlags;
+    KTRexRuntime* rt;
+    int* base = (int*)lbl_8032A510;
     int* pA;
     int* pB;
     int* pC;
     int* pD;
-    char* curveBase;
-    KTRexRuntime* rt;
-    curveBase = (char*)lbl_8032A510;
     gKTRexRuntime = ((GameObject*)obj)->extra;
+    spawnFlags = 0x10;
+    if (flag != 0)
+    {
+        spawnFlags |= 1;
+    }
     (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
-        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0 ? 1 : 0), lbl_803E684C);
+        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, lbl_803E684C);
     ((GameObject*)obj)->animEventCallback = (void*)ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
     (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, rt, 0);
@@ -919,34 +924,37 @@ void ktrex_init(int obj, char* arg)
     }
     gKTRexState = ((KTRexRuntime*)gKTRexRuntime)->arena;
     ((KTRexArenaState*)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);
-    yaw0 = (s16)((s8)arg[0x2a] << 8);
-    *(s16*)obj = yaw0;
-    ((KTRexArenaState*)gKTRexState)->homeYaw = yaw0;
-    pA = (int*)(curveBase + 0x4c);
-    pB = (int*)(curveBase + 0x3c);
-    pC = (int*)(curveBase + 0x6c);
-    pD = (int*)(curveBase + 0x5c);
-    for (i = 0; i < 4; i++, pA++, pB++, pC++, pD++)
+    *(s16*)obj = (s16)((s8)arg[0x2a] << 8);
+    ((KTRexArenaState*)gKTRexState)->homeYaw = (s16)((s8)arg[0x2a] << 8);
+    pA = base + 0x4c / 4;
+    pB = base + 0x3c / 4;
+    pC = base + 0x6c / 4;
+    pD = base + 0x5c / 4;
+    for (i = 0; i < 4; i++)
     {
-        cp = (int)(*gRomCurveInterface)->getById(*pA);
-        if (cp != 0)
+        cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pA);
+        if (cp != NULL)
         {
-            ((KTRexArenaState*)gKTRexState)->laneAX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-            ((KTRexArenaState*)gKTRexState)->laneAY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-            ((KTRexArenaState*)gKTRexState)->laneAZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-            cp = (int)(*gRomCurveInterface)->getById(*pB);
-            ((KTRexArenaState*)gKTRexState)->laneBX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-            ((KTRexArenaState*)gKTRexState)->laneBY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-            ((KTRexArenaState*)gKTRexState)->laneBZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-            cp = (int)(*gRomCurveInterface)->getById(*pC);
-            ((KTRexArenaState*)gKTRexState)->laneCX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-            ((KTRexArenaState*)gKTRexState)->laneCY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-            ((KTRexArenaState*)gKTRexState)->laneCZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
-            cp = (int)(*gRomCurveInterface)->getById(*pD);
-            ((KTRexArenaState*)gKTRexState)->laneDX[i] = ((ObjfsaRomCurveDef*)cp)->x;
-            ((KTRexArenaState*)gKTRexState)->laneDY[i] = ((ObjfsaRomCurveDef*)cp)->y;
-            ((KTRexArenaState*)gKTRexState)->laneDZ[i] = ((ObjfsaRomCurveDef*)cp)->z;
+            ((KTRexArenaState*)gKTRexState)->laneAX[i] = cp->x;
+            ((KTRexArenaState*)gKTRexState)->laneAY[i] = cp->y;
+            ((KTRexArenaState*)gKTRexState)->laneAZ[i] = cp->z;
+            cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pB);
+            ((KTRexArenaState*)gKTRexState)->laneBX[i] = cp->x;
+            ((KTRexArenaState*)gKTRexState)->laneBY[i] = cp->y;
+            ((KTRexArenaState*)gKTRexState)->laneBZ[i] = cp->z;
+            cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pC);
+            ((KTRexArenaState*)gKTRexState)->laneCX[i] = cp->x;
+            ((KTRexArenaState*)gKTRexState)->laneCY[i] = cp->y;
+            ((KTRexArenaState*)gKTRexState)->laneCZ[i] = cp->z;
+            cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pD);
+            ((KTRexArenaState*)gKTRexState)->laneDX[i] = cp->x;
+            ((KTRexArenaState*)gKTRexState)->laneDY[i] = cp->y;
+            ((KTRexArenaState*)gKTRexState)->laneDZ[i] = cp->z;
         }
+        pA++;
+        pB++;
+        pC++;
+        pD++;
     }
     ((KTRexArenaState*)gKTRexState)->rowAX = (char*)gKTRexState + 0x10;
     ((KTRexArenaState*)gKTRexState)->rowAY = (char*)gKTRexState + 0x20;
@@ -955,7 +963,7 @@ void ktrex_init(int obj, char* arg)
     ((KTRexArenaState*)gKTRexState)->rowBY = (char*)gKTRexState + 0x50;
     ((KTRexArenaState*)gKTRexState)->rowBZ = (char*)gKTRexState + 0x60;
     ((KTRexArenaState*)gKTRexState)->unk102 = 4;
-    ((KTRexRuntime*)gKTRexRuntime)->unk354 = 3;
+    rt->unk354 = 3;
     lbl_803DDD48 = Resource_Acquire(0x5a, 1);
     ((GameObject*)obj)->unkF8 = 0;
     lbl_803DDD50 = (void*)mapBlockFn_800592e4();
