@@ -1,299 +1,48 @@
-/* DLL 0x016E (imanimspacecraft) - IM animated spacecraft object [0x801AE144-0x801AE508). */
-#include "main/dll/linklevcontrolstate_struct.h"
-#include "main/dll/lavaball1bfstate_struct.h"
-#include "main/dll/imspacethrusterstate_struct.h"
-#include "main/dll/lavaball1bestate_struct.h"
+/*
+ * imanimspacecraft (DLL 0x16E) - the animated SpaceCraft cinematic
+ * object on the Ice Mountain map.
+ *
+ * Its animation sequence (imanimspacecraft_SeqFn) toggles a set of
+ * "mask" bits that the parent queries through setScale to decide which
+ * sub-models are shown, runs a blink cycle on a warning light, and
+ * spawns engine-glow particles while the light is lit. init seeds the
+ * five spacecraft game bits and the shared particle-spawn position.
+ */
 #include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/dll16cstate_struct.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
-#include "main/objtexture.h"
-
-/*
- * Per-object extra state for the IM ice-mountain event controller
- * (imicemountain_getExtraSize == 0x14).
- */
-typedef struct IMIceMountainState
-{
-    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
-    u8 pad01[3];
-    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
-    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
-    u8 pad09;
-    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
-    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
-    u8 pad0D[3];
-    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
-} IMIceMountainState;
-
-STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
-
-/*
- * Per-object extra state for the magiclight proximity light
- * (magiclight_getExtraSize == 0x14 for non-0x172 types).
- */
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-
-/*
- * Per-object extra state for the dll_16C map-event boulder proxy
- * (dll_16C_getExtraSize == 0x24).
- */
-
-STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
-
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
-extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_80017ac8();
-
-/* Trivial 4b 0-arg blr leaves. */
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY
-
-void imicepillar_free(void);
-
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
-
-extern void objRenderFn_8003b8f4(f32);
-
-extern void warpToMap(int mapId, int flags);
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-
-/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
- * through jumptable_80323698 (states 1..7; state 0 idles). */
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-
-
-/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
- * from a small id table, then run the map-event sub-object state callbacks. */
-
-/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
- * extra block, optionally re-issuing a move on the sub-object first. */
-
-extern void Music_Trigger(int track, int flag);
-
-/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
- * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-
-extern u8 framesThisStep;
-
-/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
- * its move and fade opacity by distance to the player. */
-
-
-/* crrockfall_init: derive the per-rock scale from the placement params, size the
- * capsule hitbox from the sub-object bounds, set up render flags, and pick the
- * state-table variant by object type. */
-
-/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
- * height/distance, trigger the fall when the player is in range, integrate the
- * fall, then shatter (sfx + explosion) on impact. */
-
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/DIM/DIMcannon.h"
+#include "main/objanim_update.h"
+#include "main/objtexture.h"
 
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern int GameBit_Set(int eventId, int value);
+extern u8 framesThisStep;
 
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80057690();
-extern undefined8 FUN_80286830();
-extern undefined4 FUN_8028687c();
-extern f32 lbl_803E4784;
+/* shared particle-spawn position vector (written at +0xc/+0x10/+0x14) */
 extern char lbl_803AC948[];
-extern f32 lbl_803E4780;
-extern void Music_Trigger(int id, int p2);
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
+extern f32 lbl_803E4780; /* render scale */
+extern f32 lbl_803E4784; /* init position component */
+extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
 
-#pragma scheduling on
-#pragma peephole on
-void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                               undefined8 param_4,
-                                               undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                                               undefined8 param_8,
-                                               int param_9)
-{
-    if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
-    {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     *(int*)&((GameObject*)param_9)->childObjs[0]);
-    }
-    return;
-}
+/* state->flags */
+#define ANIMSPACECRAFT_FLAG_BLINK_ON 0x2
+#define ANIMSPACECRAFT_FLAG_TOGGLE_8 0x8
+#define ANIMSPACECRAFT_FLAG_TOGGLE_4 0x4
 
-void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                  undefined4 param_5, char param_6)
-{
-    extern undefined4 FUN_801adca0(); /* #57 */
-    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
-    u8 savedAlpha;
-    bool active;
-    undefined2* obj;
-    uint bit;
-    int subState;
-    undefined4 alpha;
-    undefined2* subObj;
-    undefined4* placement;
-    undefined8 packed;
+/* state->maskBits: bits 4..6 toggled together as one group */
+#define ANIMSPACECRAFT_MASK_GROUP 0x70
 
-    packed = FUN_80286830();
-    obj = (undefined2*)((ulonglong)packed >> 0x20);
-    if (obj[0x23] == 0x373)
-    {
-        FUN_8003b818((int)obj);
-    }
-    else
-    {
-        bit = GameBit_Get(0x6e);
-        if ((bit == 0) || (bit = GameBit_Get(0x382), bit != 0))
-        {
-            placement = *(undefined4**)(obj + 0x5c);
-            subObj = (undefined2*)*placement;
-            active = false;
-            if ((subObj != (undefined2*)0x0) &&
-                (subState = (**(code**)(**(int**)(subObj + 0x34) + 0x38))(subObj), subState == 2))
-            {
-                active = true;
-            }
-            if (active)
-            {
-                obj[3] = obj[3] | 8;
-                alpha = FUN_80057690((int)subObj);
-                param_6 = (char)alpha;
-                FUN_801adca0(obj, subObj, (int)packed, param_3, param_4, param_5, param_6,
-                             (uint) * (byte*)(placement + 8), 1);
-            }
-            else
-            {
-                obj[3] = obj[3] & ~0x8;
-            }
-            if ((param_6 != '\0') && (*(char*)(placement + 8) != '\0'))
-            {
-                savedAlpha = *(u8*)((int)obj + 0x37);
-                if (active)
-                {
-                    *(char*)((int)obj + 0x37) = *(char*)(placement + 8);
-                }
-                FUN_8003b818((int)obj);
-                ObjPath_GetPointWorldPosition(obj, 1, (float*)(placement + 5), placement + 6, (float*)(placement + 7), 0);
-                *(u8*)((int)obj + 0x37) = savedAlpha;
-            }
-        }
-    }
-    FUN_8028687c();
-    return;
-}
-
-void imicepillar_hitDetect(void);
-
-void imicepillar_update(void);
-
-void imicepillar_init(void);
-
-void imicepillar_release(void);
-
-void imicepillar_initialise(void);
-
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
-
-#pragma scheduling off
-#pragma peephole off
 void imanimspacecraft_modelMtxFn(void)
 {
 }
 
-void imanimspacecraft_hitDetect(void)
-{
-}
-
-void imanimspacecraft_release(void)
-{
-}
-
-void imanimspacecraft_initialise(void)
-{
-}
-
-
-int imanimspacecraft_getExtraSize(void) { return 0x4; }
-int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
-
-void imanimspacecraft_update(int* obj)
-{
-    if (((GameObject*)obj)->unkF4 != 0) return;
-    ((GameObject*)obj)->unkF4 = 1;
-}
-
-void imanimspacecraft_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-void imanimspacecraft_init(int* obj)
-{
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
-    f32 v;
-    ((GameObject*)obj)->animEventCallback = (void*)imanimspacecraft_SeqFn;
-    v = lbl_803E4784;
-    *(f32*)(lbl_803AC948 + 0xc) = v;
-    *(f32*)(lbl_803AC948 + 0x10) = v;
-    *(f32*)(lbl_803AC948 + 0x14) = v;
-    GameBit_Set(0xbeb, 1);
-    GameBit_Set(0xbec, 1);
-    GameBit_Set(0xbed, 1);
-    GameBit_Set(0xbee, 1);
-    GameBit_Set(0xbef, 1);
-}
+u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 
 int imanimspacecraft_setScale(int* obj, int bitIdx)
 {
-    ImAnimSpacecraftState* p = (ImAnimSpacecraftState*)((GameObject*)obj)->extra;
-    switch (p->maskBits & (1 << bitIdx))
+    ImAnimSpacecraftState* state = (ImAnimSpacecraftState*)((GameObject*)obj)->extra;
+    switch (state->maskBits & (1 << bitIdx))
     {
     default:
         return TRUE;
@@ -301,17 +50,6 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
         return FALSE;
     }
 }
-
-
-
-void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4780);
-}
-
-
-u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 
 int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -322,19 +60,19 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     state = ((GameObject*)obj)->extra;
     tex = objFindTexture(obj, 1, 0);
     tex->textureId = ((state->flags >> 1 & 1) ^ 1) << 8;
-    if (!(state->flags & 2))
+    if (!(state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON))
     {
         if ((state->blinkTimer -= framesThisStep) < 0)
         {
-            state->flags |= 2;
+            state->flags |= ANIMSPACECRAFT_FLAG_BLINK_ON;
             state->blinkTimer = 0x78;
         }
     }
     else
     {
-        state->flags &= ~2;
+        state->flags &= ~ANIMSPACECRAFT_FLAG_BLINK_ON;
     }
-    if (state->flags & 2)
+    if (state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON)
     {
         *(f32*)(lbl_803AC948 + 0xc) = lbl_803E4770;
         *(f32*)(lbl_803AC948 + 0x10) = lbl_803E4774;
@@ -365,15 +103,62 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
             break;
         case 5:
-            state->maskBits = (u8)(state->maskBits ^ 0x70);
+            state->maskBits = (u8)(state->maskBits ^ ANIMSPACECRAFT_MASK_GROUP);
             break;
         case 6:
-            state->flags = (u8)(state->flags ^ 8);
+            state->flags = (u8)(state->flags ^ ANIMSPACECRAFT_FLAG_TOGGLE_8);
             break;
         case 7:
-            state->flags = (u8)(state->flags ^ 4);
+            state->flags = (u8)(state->flags ^ ANIMSPACECRAFT_FLAG_TOGGLE_4);
             break;
         }
     }
     return 0;
+}
+
+int imanimspacecraft_getExtraSize(void) { return 0x4; }
+int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
+
+void imanimspacecraft_free(GameObject* obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4780);
+}
+
+void imanimspacecraft_hitDetect(void)
+{
+}
+
+void imanimspacecraft_update(GameObject* obj)
+{
+    if (obj->unkF4 != 0) return;
+    obj->unkF4 = 1;
+}
+
+void imanimspacecraft_init(GameObject* obj)
+{
+    f32 pos;
+    obj->animEventCallback = (void*)imanimspacecraft_SeqFn;
+    pos = lbl_803E4784;
+    *(f32*)(lbl_803AC948 + 0xc) = pos;
+    *(f32*)(lbl_803AC948 + 0x10) = pos;
+    *(f32*)(lbl_803AC948 + 0x14) = pos;
+    GameBit_Set(0xbeb, 1);
+    GameBit_Set(0xbec, 1);
+    GameBit_Set(0xbed, 1);
+    GameBit_Set(0xbee, 1);
+    GameBit_Set(0xbef, 1);
+}
+
+void imanimspacecraft_release(void)
+{
+}
+
+void imanimspacecraft_initialise(void)
+{
 }
