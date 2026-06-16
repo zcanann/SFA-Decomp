@@ -264,7 +264,7 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void vfpflamepoint_init(int* obj, s8* def)
 {
-    VfpFlamePointData* d = (VfpFlamePointData*)obj[0xb8 / 4];
+    VfpFlamePointData* d = (VfpFlamePointData*)((GameObject*)obj)->extra;
     d->counter = (s8) * (s16*)(def + 0x1a);
     d->noCheck = (u8) * (s16*)(def + 0x1c);
     d->showGameBit = *(s16*)(def + 0x1e);
