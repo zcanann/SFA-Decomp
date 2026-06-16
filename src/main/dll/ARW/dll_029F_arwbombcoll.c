@@ -216,18 +216,18 @@ void arwbombcoll_update(int obj)
     ArwBombFlags* flags;
     int arw;
     ARWBombCollState* state;
-    int a2;
-    f32 thr;
+    int arwingCheck;
+    f32 minLifetime;
 
     arw = getArwing();
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
     flags = &state->flags;
 
-    if (state->lifetime > (thr = lbl_803E707C))
+    if (state->lifetime > (minLifetime = lbl_803E707C))
     {
         state->lifetime -= timeDelta;
-        if (state->lifetime <= thr)
+        if (state->lifetime <= minLifetime)
         {
             Obj_FreeObject(obj);
             return;
@@ -244,8 +244,8 @@ void arwbombcoll_update(int obj)
 
     if (flags->b80 == 0)
     {
-        a2 = getArwing();
-        if ((((u32)a2 != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)a2)->anim.localPosZ < lbl_803E7080) : 0) != 0)
+        arwingCheck = getArwing();
+        if ((((u32)arwingCheck != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)arwingCheck)->anim.localPosZ < lbl_803E7080) : 0) != 0)
         {
             goto active;
         }
@@ -255,18 +255,18 @@ void arwbombcoll_update(int obj)
     return;
 active :
     {
-        int v;
+        int alpha;
 
-        v = (int)
+        alpha = (int)
         (lbl_803E7084 * timeDelta + (f32)(u32)
         objAnim->alpha
         )
         ;
-        if (v > 0xff)
+        if (alpha > 0xff)
         {
-            v = 0xff;
+            alpha = 0xff;
         }
-        objAnim->alpha = v;
+        objAnim->alpha = alpha;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
