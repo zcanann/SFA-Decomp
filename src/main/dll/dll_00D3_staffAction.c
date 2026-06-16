@@ -1166,6 +1166,7 @@ void fn_80166444(int obj, int state)
         f32 hitRadius;
         undefined pad[0x10];
         undefined hitType;
+        undefined pad2[0x1f];
     } hitScratch;
     f32 fVar1;
 
