@@ -339,6 +339,7 @@ int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker *route, f32 speed)
 }
 
 #pragma peephole off
+#pragma optimization_level 2
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 {
     u8* state;
@@ -404,6 +405,7 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 
     return delta;
 }
+#pragma optimization_level reset
 
 #pragma scheduling on
 #pragma peephole on
