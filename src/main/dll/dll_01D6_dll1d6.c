@@ -240,7 +240,7 @@ void dll_1D6_init(int* obj, u8* params)
     int* model;
     int i;
 
-    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)params + 0x18) << 8);
     extra = ((GameObject*)obj)->extra;
     model = DIM2snowball_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
@@ -371,7 +371,7 @@ void dll_1D6_update(int* obj)
     mtx[0] = -((GameObject*)obj)->anim.localPosX;
     mtx[1] = -((GameObject*)obj)->anim.localPosY;
     mtx[2] = -((GameObject*)obj)->anim.localPosZ;
-    ang[0] = -*(s16*)obj;
+    ang[0] = -((GameObject*)obj)->anim.rotX;
     ang[1] = 0;
     ang[2] = 0;
     mtxRotateByVec3s(&mtx[3], ang);
