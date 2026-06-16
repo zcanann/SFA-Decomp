@@ -5855,7 +5855,7 @@ int fn_8029EBCC(int obj, int state)
         inner->unk418 = lbl_803E7EA4;
         if (lbl_803DE44C != NULL)
         {
-            if ((inner->unk3F4 >> 6 & 1) != 0)
+            if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
                 inner->unk8B4 = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
