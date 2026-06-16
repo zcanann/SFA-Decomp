@@ -2998,7 +2998,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     ret = ang[2];
     if (lbl_803DCC00.flip)
     {
-        ang[2] = (s16)(ret - 0x8000);
+        ang[2] -= 0x8000;
         ang[3] = -ang[3];
         lbl_803DCC00.flip = 0;
     }
