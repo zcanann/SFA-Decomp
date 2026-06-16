@@ -78,25 +78,25 @@ void arwspeedstr_update(int obj)
     ARWSpeedStrState* state = ((GameObject*)obj)->extra;
     if (state->flags == 0)
     {
-        f32 local[3];
-        local[0] = (f32)(int)
+        f32 camOffset[3];
+        camOffset[0] = (f32)(int)
         randomGetRange((int)-state->spreadX, (int)state->spreadX);
-        local[1] =
+        camOffset[1] =
             (f32)(int)
         randomGetRange((int)-state->spreadY, (int)state->spreadY);
-        local[2] = state->viewZ;
-        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32*)((char*)obj + 12));
+        camOffset[2] = state->viewZ;
+        PSMTXMultVec(Camera_GetInverseViewMatrix(), &camOffset[0], (f32*)((char*)obj + 12));
         ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;
         ((GameObject*)obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;
         state->alpha = lbl_803E7104;
     }
     {
-        f32 t = state->lifeTimer;
+        f32 lifeTimer = state->lifeTimer;
         f32 zero = lbl_803E7104;
-        if (t > zero)
+        if (lifeTimer > zero)
         {
-            state->lifeTimer = t - timeDelta;
+            state->lifeTimer = lifeTimer - timeDelta;
             if (state->lifeTimer <= zero)
             {
                 state->lifeTimer = zero;
@@ -121,8 +121,8 @@ void fn_80231058(int obj, int src)
     ((GameObject*)obj)->anim.velocityZ = ((ARWSpeedStrVelocity*)src)->z;
 }
 
-void fn_80231028(int obj, int v)
+void fn_80231028(int obj, int speed)
 {
     ARWSpeedStrState* state = ((GameObject*)obj)->extra;
-    state->speed = (f32)v;
+    state->speed = (f32)speed;
 }
