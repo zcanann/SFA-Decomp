@@ -1,28 +1,30 @@
-/* DLL 0x0139 — hitanimator (hit-reaction animation driver). TU: 0x80193DBC–0x8019423C. */
+/*
+ * hitanimator (DLL 0x0139) - hit-reaction animation driver for map-block
+ * objects (HITANIMATOR_CLASS_ID 0x4B). Each instance watches a game bit
+ * (HitAnimatorPlacement.gameBit): when the bit's value flips, it toggles
+ * state->activeBit and queues the configured reactions via state->flags -
+ * a poly toggle (toggleMode), a sound cue (SETUP_FLAG_SOUND) and/or a
+ * map-block update (SETUP_FLAG_BLOCK_UPDATE). hitAnimatorFn_80193dbc walks
+ * the block's polys and layers to set/clear the visibility/draw bits that
+ * realise the reaction. FUN_80192488 is the sibling texture-scroll context
+ * pass that recolours the block's texture cells, gated on the two map ids
+ * TEXSCROLL_GAMEBIT_GATED_MAP_A/B.
+ *
+ * This TU also carries the layout asserts for the wave/alpha/ground/vis
+ * animator states it shares headers with.
+ */
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-
-extern uint GameBit_Get(int eventId);
-
-extern void* mapGetBlock(int idx);
-
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 
-/* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
- * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
- * globals). */
-
-STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
-
-STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
-
-STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
+extern u32 GameBit_Get(u32 bit);
+extern u8* mapGetBlock(int idx);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern char* fn_8006070C(void* block, int idx);
 
 extern int FUN_80017af0();
 extern int FUN_8005337c();
@@ -34,16 +36,24 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-#pragma scheduling on
-#pragma peephole on
-extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
-                                   HitAnimatorPlacement* desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* Shader_getLayer(char* s, int layer);
 
+STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
+STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
+STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
+STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
+
+/* on-state wraps FUN_80192488 + hitanimator_getExtraSize (off-pair restores it below) */
+#pragma scheduling on
+#pragma peephole on
+extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state,
+                                   HitAnimatorPlacement* desc);
+
+/* BANKED PARTIAL: raw Ghidra output (undefined types, FUN_ callees, offset derefs) - unprocessed */
 void FUN_80192488(void)
 {
     int texV;
@@ -76,11 +86,11 @@ void FUN_80192488(void)
         if ((polyIdx != 0) &&
             (placement = FUN_8005337c(-*(int*)(polyIdx + *(short*)(placement + 0x18) * 4)), placement != 0))
         {
-            for (polyIdx = 0; polyIdx < (int)(uint) * (byte*)(block + 0xa2); polyIdx = polyIdx + 1)
+            for (polyIdx = 0; polyIdx < (int)(uint) * (byte*)(block + 0xa2); polyIdx++)
             {
                 cell = FUN_800600e4(block, polyIdx);
                 vtx = cell;
-                for (vtxIdx = 0; vtxIdx < (int)(uint) * (byte*)(cell + 0x41); vtxIdx = vtxIdx + 1)
+                for (vtxIdx = 0; vtxIdx < (int)(uint) * (byte*)(cell + 0x41); vtxIdx++)
                 {
                     if (*(int*)(vtx + 0x24) == placement)
                     {
@@ -95,7 +105,7 @@ void FUN_80192488(void)
                         else
                         {
                             mapId = *(int*)(*(int*)(ctxHi + 0x4c) + 0x14);
-                            if ((mapId == 0x49b2f) || (mapId == 0x49b67))
+                            if ((mapId == TEXSCROLL_GAMEBIT_GATED_MAP_A) || (mapId == TEXSCROLL_GAMEBIT_GATED_MAP_B))
                             {
                                 gameBit = GameBit_Get(*(uint*)(ctxLo + 8));
                                 if (gameBit != 0)
@@ -117,18 +127,14 @@ void FUN_80192488(void)
         }
     }
     FUN_80286878();
-    return;
 }
 
-
-int hitanimator_getExtraSize(void) { return 0x4; }
-int visanimator_getExtraSize(void);
+int hitanimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
 
 #pragma scheduling off
 #pragma peephole off
 void hitanimator_update(HitAnimatorObject* obj)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     HitAnimatorPlacement* setup = (HitAnimatorPlacement*)obj->objAnim.placementData;
     HitAnimatorState* state = obj->state;
     void* block;
@@ -190,13 +196,12 @@ void hitanimator_update(HitAnimatorObject* obj)
 
 void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
     HitAnimatorState* state = obj->state;
     void* block;
-    u8 g;
-    s8 init_bit;
-    init_bit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
-    state->activeBit = init_bit;
+    u8 gameBitValue;
+    s8 initialBit;
+    initialBit = (s8)(desc->flags & HITANIMATOR_SETUP_FLAG_INITIAL_INVERT);
+    state->activeBit = initialBit;
     state->flags = 0;
     if (GameBit_Get(desc->gameBit) != 0)
     {
@@ -222,39 +227,38 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     {
         state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
     }
-    g = (u8)GameBit_Get(desc->gameBit);
-    state->gameBitValue = g;
-    state->previousGameBitValue = g;
+    gameBitValue = (u8)GameBit_Get(desc->gameBit);
+    state->gameBitValue = gameBitValue;
+    state->previousGameBitValue = gameBitValue;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
 
-void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc)
+void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
 {
-    extern char* fn_8006070C(void* block, int idx); /* #57 */
     int i;
-    char* m;
+    char* poly;
 
     if ((desc->flags & 0x10) == 0)
     {
         for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
         {
-            m = (char*)mapBlockFn_800606ec(block, i);
-            if (desc->blockEffectId == mapBlockFn_80060678(m))
+            poly = (char*)mapBlockFn_800606ec(block, i);
+            if (desc->blockEffectId == mapBlockFn_80060678(poly))
             {
-                if (vstate->activeBit != 0)
+                if (state->activeBit != 0)
                 {
-                    *(u32*)(m + 0x10) &= ~2LL;
+                    *(u32*)(poly + 0x10) &= ~2LL;
                     if ((desc->flags & 0x2) != 0)
                     {
-                        *(u32*)(m + 0x10) &= ~1LL;
+                        *(u32*)(poly + 0x10) &= ~1LL;
                     }
                 }
                 else
                 {
-                    *(int*)(m + 0x10) |= 2;
+                    *(int*)(poly + 0x10) |= 2;
                     if ((desc->flags & 0x2) != 0)
                     {
-                        *(int*)(m + 0x10) |= 1;
+                        *(int*)(poly + 0x10) |= 1;
                     }
                 }
             }
@@ -262,19 +266,19 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
     }
     if ((desc->flags & 0x2) != 0)
     {
-        for (i = 0; i < *((u8*)block + 0xa2); i++)
+        for (i = 0; i < ((MapBlockData*)block)->unkA2; i++)
         {
-            char* s = fn_8006070C(block, i);
-            u8* layer = Shader_getLayer(s, 0);
+            char* shader = fn_8006070C(block, i);
+            u8* layer = Shader_getLayer(shader, 0);
             if (desc->blockEffectId == layer[5])
             {
-                if (vstate->activeBit != 0)
+                if (state->activeBit != 0)
                 {
-                    *(u32*)(s + 0x3c) &= ~2LL;
+                    *(u32*)(shader + 0x3c) &= ~2LL;
                 }
                 else
                 {
-                    *(int*)(s + 0x3c) |= 2;
+                    *(int*)(shader + 0x3c) |= 2;
                 }
             }
         }
