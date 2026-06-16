@@ -1,7 +1,7 @@
 /*
  * drcagewith (DLL 0x26C) - a hanging cage with a winch rope. On first
  * hit it spawns its linked rope/winch object and, while unlocked,
- * integrates a damped angular velocity (unk24) from the object's
+ * integrates a damped angular velocity (angularVel) from the object's
  * horizontal motion, driving the rope segments' rotZ and the linked
  * object. The placement supplies setup flags (unk5) and the game bit
  * that marks the cage already opened (unk1E).
@@ -21,7 +21,7 @@ typedef struct DrcagewithPlacement
 typedef struct DrcagewithState
 {
     u8 pad0[0x4 - 0x0];
-    s32 unk4;
+    s32 linkedObject; /* 0x4: linked rope object, freed via Obj_FreeObject */
     f32 unk8;
     u8 padC[0x10 - 0xC];
     f32 unk10;
@@ -29,9 +29,13 @@ typedef struct DrcagewithState
     f32 unk18;
     f32 unk1C;
     f32 unk20;
-    f32 unk24;
+    f32 angularVel;   /* 0x24: damped angular velocity */
     u8 pad28[0x34 - 0x28];
 } DrcagewithState;
+
+STATIC_ASSERT(offsetof(DrcagewithState, linkedObject) == 0x4);
+STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
+STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
 
 
 int drcagewith_getExtraSize(void) { return 0x34; }
@@ -53,7 +57,7 @@ void drcagewith_update(void)
 void drcagewith_hitDetect(int obj)
 {
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
-    u8* p;
+    u8* state;
     BitFlags8* bf31;
     f32 maxDist;
     int i;
@@ -65,8 +69,8 @@ void drcagewith_hitDetect(int obj)
     f32 div;
 
     maxDist = lbl_803E69F4;
-    p = ((GameObject*)obj)->extra;
-    bf31 = (BitFlags8*)(p + 0x31);
+    state = ((GameObject*)obj)->extra;
+    bf31 = (BitFlags8*)(state + 0x31);
 
     if (bf31->b1 != 0)
     {
@@ -81,7 +85,7 @@ void drcagewith_hitDetect(int obj)
         }
         return;
     }
-    if (*(void**)p == NULL)
+    if (*(void**)state == NULL)
     {
         if (Obj_IsLoadingLocked())
         {
@@ -96,7 +100,7 @@ void drcagewith_hitDetect(int obj)
                                       *(int*)&((GameObject*)obj)->anim.parent);
             ((GameObject*)spawned)->anim.flags |= 0x4000;
             ((GameObject*)spawned)->unkF4 = 1;
-            *(int*)p = spawned;
+            *(int*)state = spawned;
             return;
         }
     }
@@ -111,40 +115,40 @@ void drcagewith_hitDetect(int obj)
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 0;
-                ((DrcagewithState*)p)->unk4 = 0;
+                ((DrcagewithState*)state)->linkedObject = 0;
             }
             return;
         }
         v = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
         v = v * lbl_803E69FC;
-        v = interpolate(v - ((DrcagewithState*)p)->unk24, lbl_803E6A00, timeDelta);
+        v = interpolate(v - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
         clamped = (v < lbl_803E6A04 * timeDelta)
                       ? lbl_803E6A04 * timeDelta
                       : ((v > lbl_803E6A08 * timeDelta) ? lbl_803E6A08 * timeDelta : v);
-        ((DrcagewithState*)p)->unk24 = ((DrcagewithState*)p)->unk24 + clamped;
+        ((DrcagewithState*)state)->angularVel = ((DrcagewithState*)state)->angularVel + clamped;
         for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {
             nearest = objModelGetVecFn_800395d8(obj, i);
             if (nearest != NULL)
             {
-                ((GameObject*)nearest)->anim.rotZ = ((DrcagewithState*)p)->unk24 / div;
+                ((GameObject*)nearest)->anim.rotZ = ((DrcagewithState*)state)->angularVel / div;
             }
         }
-        if (*(void**)p != NULL)
+        if (*(void**)state != NULL)
         {
-            *(s16*)(*(int*)p + 4) = (s16)((DrcagewithState*)p)->unk24;
+            *(s16*)(*(int*)state + 4) = (s16)((DrcagewithState*)state)->angularVel;
             nearest = (int*)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 1;
-                ((DrcagewithState*)p)->unk4 = (int)nearest;
-                ((GameObject*)nearest)->anim.rotZ = *(s16*)(*(int*)p + 4);
-                *(int*)(*(int*)p + 0xf4) = 1;
+                ((DrcagewithState*)state)->linkedObject = (int)nearest;
+                ((GameObject*)nearest)->anim.rotZ = *(s16*)(*(int*)state + 4);
+                *(int*)(*(int*)state + 0xf4) = 1;
             }
-            if (*(void**)&((DrcagewithState*)p)->unk4 != NULL &&
-                (((GameObject*)((DrcagewithState*)p)->unk4)->objectFlags & 0x40) != 0)
+            if (*(void**)&((DrcagewithState*)state)->linkedObject != NULL &&
+                (((GameObject*)((DrcagewithState*)state)->linkedObject)->objectFlags & 0x40) != 0)
             {
-                ((DrcagewithState*)p)->unk4 = 0;
+                ((DrcagewithState*)state)->linkedObject = 0;
             }
         }
     }
@@ -171,36 +175,36 @@ void drcagewith_hitDetect(int obj)
 
 int drcagewith_setScale(int obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
-    return p[0x30];
+    u8* state = ((GameObject*)obj)->extra;
+    return state[0x30];
 }
 
 void drcagewith_free(int obj, int arg)
 {
-    char* p = ((GameObject*)obj)->extra;
-    char* x = *(char**)p;
-    if (x != 0 && arg == 0 && *(void**)(x + 0x50) != 0)
+    char* state = ((GameObject*)obj)->extra;
+    char* linked = *(char**)state;
+    if (linked != 0 && arg == 0 && *(void**)(linked + 0x50) != 0)
     {
-        char* y = *(char**)&((DrcagewithState*)p)->unk4;
-        if (y != 0)
+        char* child = *(char**)&((DrcagewithState*)state)->linkedObject;
+        if (child != 0)
         {
-            *(int*)(y + 0xf4) = 0;
+            *(int*)(child + 0xf4) = 0;
         }
-        *(int*)(*(char**)p + 0xf4) = 0;
-        Obj_FreeObject(*(int*)p);
+        *(int*)(*(char**)state + 0xf4) = 0;
+        Obj_FreeObject(*(int*)state);
     }
     ObjGroup_RemoveObject(obj, 0x18);
 }
 
 int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    char* p = ((GameObject*)obj)->extra;
+    char* state = ((GameObject*)obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == 1)
         {
-            ((BitFlags8*)(p + 0x31))->b1 ^= 1;
+            ((BitFlags8*)(state + 0x31))->b1 ^= 1;
         }
     }
     return 0;
@@ -208,24 +212,24 @@ int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* 
 
 void drcagewith_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    char* p = ((GameObject*)obj)->extra;
-    int* b;
+    char* state = ((GameObject*)obj)->extra;
+    int* linkedObj;
     if (visible != 0)
     {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
-        if (*(int**)p != 0)
+        if (*(int**)state != 0)
         {
-            ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(*(int*)p + 0xc), (f32*)(*(int*)p + 0x10),
-                                          (f32*)(*(int*)p + 0x14), 0);
-            objRenderFn_8003b8f4(*(void**)p, p2, p3, p4, p5, (double)lbl_803E69F0);
-            b = *(int**)&((DrcagewithState*)p)->unk4;
-            if (b != 0)
+            ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(*(int*)state + 0xc), (f32*)(*(int*)state + 0x10),
+                                          (f32*)(*(int*)state + 0x14), 0);
+            objRenderFn_8003b8f4(*(void**)state, p2, p3, p4, p5, (double)lbl_803E69F0);
+            linkedObj = *(int**)&((DrcagewithState*)state)->linkedObject;
+            if (linkedObj != 0)
             {
-                *(s16*)((char*)b + 0x2) = *(s16*)(*(int*)p + 0x2);
-                *(s16*)((char*)b + 0x4) = *(s16*)(*(int*)p + 0x4);
-                ObjPath_GetPointWorldPosition(*(int*)p, 0, (f32*)((char*)b + 0xc), (f32*)((char*)b + 0x10),
-                                              (f32*)((char*)b + 0x14), 0);
-                objRenderFn_8003b8f4(b, p2, p3, p4, p5, (double)lbl_803E69F0);
+                *(s16*)((char*)linkedObj + 0x2) = *(s16*)(*(int*)state + 0x2);
+                *(s16*)((char*)linkedObj + 0x4) = *(s16*)(*(int*)state + 0x4);
+                ObjPath_GetPointWorldPosition(*(int*)state, 0, (f32*)((char*)linkedObj + 0xc), (f32*)((char*)linkedObj + 0x10),
+                                              (f32*)((char*)linkedObj + 0x14), 0);
+                objRenderFn_8003b8f4(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
             }
         }
     }
@@ -233,7 +237,7 @@ void drcagewith_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 
 void drcagewith_init(int obj, char* arg)
 {
-    char* p = ((GameObject*)obj)->extra;
+    char* state = ((GameObject*)obj)->extra;
     s16 type;
     f32 fz;
     ((GameObject*)obj)->animEventCallback = (void*)drcagewith_toggleRopeStateCallback;
@@ -252,21 +256,21 @@ void drcagewith_init(int obj, char* arg)
         {
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ((BitFlags8*)(p + 0x31))->b0 = 1;
+            ((BitFlags8*)(state + 0x31))->b0 = 1;
         }
         else
         {
             GameBit_Set(0x7aa, 5);
         }
         *(s16*)obj = (s16)((s8)arg[0x18] << 8);
-        ((DrcagewithState*)p)->unk8 = (f32) * (s16*)(arg + 0x1c);
-        ((DrcagewithState*)p)->unk10 = (f32) * (s16*)(arg + 0x1a) / lbl_803E6A18;
-        ((DrcagewithState*)p)->unk4 = 0;
+        ((DrcagewithState*)state)->unk8 = (f32) * (s16*)(arg + 0x1c);
+        ((DrcagewithState*)state)->unk10 = (f32) * (s16*)(arg + 0x1a) / lbl_803E6A18;
+        ((DrcagewithState*)state)->linkedObject = 0;
         fz = lbl_803E6A1C;
-        ((DrcagewithState*)p)->unk14 = fz;
-        ((DrcagewithState*)p)->unk18 = fz;
-        ((DrcagewithState*)p)->unk1C = fz;
-        ((DrcagewithState*)p)->unk20 = fz;
+        ((DrcagewithState*)state)->unk14 = fz;
+        ((DrcagewithState*)state)->unk18 = fz;
+        ((DrcagewithState*)state)->unk1C = fz;
+        ((DrcagewithState*)state)->unk20 = fz;
         ObjGroup_AddObject(obj, 0x18);
     }
 }
