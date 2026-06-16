@@ -175,6 +175,7 @@ void wcpushblock_initialise(void)
 #pragma opt_common_subs off
 void wcpushblock_update(int obj)
 {
+    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
