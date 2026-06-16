@@ -12568,8 +12568,9 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        if (animUpdate->eventIds[i] == 1)
+        switch (animUpdate->eventIds[i])
         {
+        case 1:
             *(u8*)((char*)inner + 0x404) = *(u8*)((char*)inner + 0x404) | 1;
             GameBit_Set(*(s16*)((char*)placement + 0x1c), 1);
             arr[3] = lbl_803E8180;
@@ -12580,6 +12581,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 fn_80098B18(scale * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, 0, 0, arr);
             }
+            break;
         }
     }
     if (*(s16*)((char*)placement + 0x1a) == 0x64c)
@@ -12590,7 +12592,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             timerRec = *(int*)((char*)inner + 0x40c);
             *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) - timeDelta;
-            if (lbl_803E8180 < *(f32*)((char*)timerRec + 0xc))
+            if (*(f32*)((char*)timerRec + 0xc) > lbl_803E8180)
             {
                 mode = 0;
             }
