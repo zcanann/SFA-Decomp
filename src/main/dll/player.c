@@ -13026,8 +13026,7 @@ void fn_802AF7F8(int obj, int state)
         {
             ((PlayerState*)state)->animState = -1;
             lbl_803DE42C = 0;
-            p = lbl_80332ED4;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
