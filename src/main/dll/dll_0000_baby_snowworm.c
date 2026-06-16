@@ -4261,13 +4261,12 @@ void fn_8012FA70(int idx, s8 flag)
 
     for (i = 0; i < count * 2; i++)
     {
-        u8 b = lbl_803A8C78[(s16)pos];
-        if (b != 0 && (prev != 0 || i >= count))
+        if (lbl_803A8C78[(s16)pos] != 0 && (prev != 0 || i >= count))
         {
             *(s16*)((char*)entry + 4) = pos;
             return;
         }
-        prev = b;
+        prev = lbl_803A8C78[(s16)pos];
         pos++;
         if (pos >= count)
         {
