@@ -1275,7 +1275,7 @@ void textureFree(u8* tex)
                 {
                     if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) iter = NULL;
                     if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) { iter = NULL; continue; }
-                    if (iter == NULL) break;
+                    if (iter == NULL) continue;
                     next = *(u8**)iter;
                     if (iter[72] != 0) findSomething(*(int*)(iter + 64));
                     if (iter[73] == 0) mm_free(iter);
