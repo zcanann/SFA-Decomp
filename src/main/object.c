@@ -1747,7 +1747,7 @@ void Obj_UpdateObject(u8* obj)
         case 0x4f3:
         case 0x882:
         case 0x887:
-            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)((char*)*object->dll + 8);
             cb2(obj);
             break;
         }
@@ -1821,7 +1821,7 @@ void Obj_UpdateObject(u8* obj)
             {
                 goto skip;
             }
-            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)((char*)*object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
