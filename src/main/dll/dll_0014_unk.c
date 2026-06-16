@@ -1919,7 +1919,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
             u8 j;
             z = point[2];
             x = point[0];
-            j = i = 0;
+            i = 0;
+            j = i;
             for (; i < 4; i++, j += 2)
             {
                 if (patch->planeOffsets[i] +
