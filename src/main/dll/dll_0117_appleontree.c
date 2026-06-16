@@ -349,8 +349,8 @@ int fn_8017DCD4(int p, int state, f32 y)
                 }
                 else
                 {
-                    f32 r1 = (-b - q) / t;
                     f32 r2 = (-b + q) / t;
+                    f32 r1 = (-b - q) / t;
                     r = (r1 > 0.0f) ? r1 : r2;
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
@@ -402,8 +402,8 @@ int fn_8017DCD4(int p, int state, f32 y)
                 }
                 else
                 {
-                    f32 r1 = (-b - q) / t;
                     f32 r2 = (-b + q) / t;
+                    f32 r1 = (-b - q) / t;
                     r = (r1 > 0.0f) ? r1 : r2;
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
