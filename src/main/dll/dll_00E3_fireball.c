@@ -2179,7 +2179,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difY = targY - (u16)angY;
         if (difY > 0x8000)
         {
-            difY -= 0xffff;
+            difY = (difY - 0x10000) + 1;
         }
         if (difY < -0x8000)
         {
@@ -2188,7 +2188,7 @@ void fn_8016F260(int* obj, int* state, int* other)
         difP = targP - (u16)angP;
         if (difP > 0x8000)
         {
-            difP -= 0xffff;
+            difP = (difP - 0x10000) + 1;
         }
         if (difP < -0x8000)
         {
@@ -2220,9 +2220,12 @@ void fn_8016F260(int* obj, int* state, int* other)
         ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
         f = lbl_803E3338 * (f32)angP / lbl_803E333C;
         c = mathSinf(f);
-        if (lbl_803E3330 != mathCosf(f))
         {
-            c = c / mathCosf(f);
+            f32 cosP = mathCosf(f);
+            if (lbl_803E3330 != cosP)
+            {
+                c = c / cosP;
+            }
         }
         ((GameObject*)obj)->anim.velocityY = c;
 
