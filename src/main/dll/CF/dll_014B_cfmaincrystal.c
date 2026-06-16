@@ -286,7 +286,7 @@ void fn_8019D9F0(int* obj)
             sl->fc = -(lbl_803E41F4 * fr - sl->f8);
             sl->f14 = sl->f10;
         }
-        *(s16*)obj += framesThisStep * (count * 0x7e);
+        ((GameObject*)obj)->anim.rotX += framesThisStep * (count * 0x7e);
     }
     if (count != 0)
     {
@@ -328,7 +328,7 @@ void fn_8019D9F0(int* obj)
         i++;
     }
     while (i < 3);
-    *(s16*)obj += framesThisStep * 0x2a;
+    ((GameObject*)obj)->anim.rotX += framesThisStep * 0x2a;
 }
 
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
@@ -374,7 +374,7 @@ void cfmaincrystal_update(int* obj)
             }
         }
         lbl_803DDB10 = obj;
-        *(s16*)obj = (s16)(*(s16*)obj + (s32)framesThisStep * 0xb6);
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)framesThisStep * 0xb6);
         break;
     }
 }
@@ -382,7 +382,7 @@ void cfmaincrystal_update(int* obj)
 void cfmaincrystal_init(int* obj, u8* def)
 {
     CfMainCrystalState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
     if (*(s8*)((char*)def + 0x19) == 0)
     {
         state->chime[0] = 0x28;
