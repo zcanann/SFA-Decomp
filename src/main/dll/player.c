@@ -18599,10 +18599,10 @@ void fn_80295918(int obj, int sel, f32 fval)
     {
     case 1:
         {
+            u8 v = (u8)iv;
             u8 n = *(u8*)((char*)state + 0x8b8);
             if (n < 4)
             {
-                u8 v = (u8)iv;
                 *(u8*)((char*)state + 0x8b8) += 1;
                 *((u8*)((char*)state + 0x8b9) + n) = v;
             }
