@@ -1789,15 +1789,13 @@ int mediumbasket_stateHandlerB07(int obj, int state)
 void fn_8015CE68(int obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
-    f32 transformedX;
-    f32 transformedY;
-    f32 transformedZ;
     u8 transformScratch[0x18];
-    f32 pathX;
-    f32 pathY;
     f32 pathZ;
+    f32 pathY;
+    f32 pathX;
     f32 pathMtx[16];
     f32 scale;
+    f32 effScale;
     f32 angle;
 
     memcpy(pathMtx, (void*)ObjPath_GetPointModelMtx(obj, 1), 0x40);
@@ -1812,9 +1810,14 @@ void fn_8015CE68(int obj, int state)
     {
         scale = lbl_803E2D2C;
     }
-    scale = (((GroundBaddieState*)state)->baddie.animSpeedA >= scale)
-                ? ((GroundBaddieState*)state)->baddie.animSpeedA
-                : scale;
+    if (((GroundBaddieState*)state)->baddie.animSpeedA < scale)
+    {
+        effScale = scale;
+    }
+    else
+    {
+        effScale = ((GroundBaddieState*)state)->baddie.animSpeedA;
+    }
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
         ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
@@ -1828,21 +1831,22 @@ void fn_8015CE68(int obj, int state)
     *(f32*)(control + 0x30) = lbl_803E2D90 + ((GameObject*)obj)->anim.localPosY;
     angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
     *(f32*)(control + 0x2c) =
-        *(f32*)(control + 0x2c) - scale * (lbl_803E2D94 * mathSinf(angle));
+        *(f32*)(control + 0x2c) - effScale * (lbl_803E2D94 * mathSinf(angle));
     angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
     *(f32*)(control + 0x34) =
-        *(f32*)(control + 0x34) - scale * (lbl_803E2D94 * mathCosf(angle));
+        *(f32*)(control + 0x34) - effScale * (lbl_803E2D94 * mathCosf(angle));
     pathX = lbl_803E2D14;
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
     ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
     if ((*(u8*)(control + 0x44) & 2) != 0)
     {
-        transformedX = lbl_803E2DA8;
-        transformedY = lbl_803E2DAC;
-        transformedZ = lbl_803E2DA4;
-        Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
-        memcpy((void*)(control + 0x38), &transformedX, 0xc);
+        *(f32*)&transformScratch[0] = lbl_803E2DA8;
+        *(f32*)&transformScratch[4] = lbl_803E2DAC;
+        *(f32*)&transformScratch[8] = lbl_803E2DA4;
+        Matrix_TransformPoint(pathMtx, (f32*)&transformScratch[0], (f32*)&transformScratch[4],
+                              (f32*)&transformScratch[8]);
+        memcpy((void*)(control + 0x38), &transformScratch[0], 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
         *(u8*)(control + 0x44) |= 1;
     }
