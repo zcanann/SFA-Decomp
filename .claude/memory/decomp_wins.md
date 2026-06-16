@@ -1,5 +1,34 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## Session: objInterpretSeq (dll_0126_trigger) 87.7->97.4% — BIG win (~10 commits)
+Large switch dispatcher. Was the banked TOP LEAD; cracked with stacked structural fixes:
+- fn_80295918 / skyFn_80088e54: declare INT param first (caller emits int args before
+  the f32-magic block) — target evals li r3,K BEFORE lfs/lfd magic (#87/#29).
+- Inner switches on unk2 → switch on `p[2]` (u8, NO extsb) not the s8 struct field (#15).
+  (Some sites DO extsb — verify per-site; case 1/0xb at low addr = no extsb.)
+- INVERT arm order (#21) was the single biggest lever: case 4 (Play-first/Stop-else),
+  case 0x1d (p[2]!=0 set-0 first), case 0x2d (player!=0 showNpcDialogue first),
+  tail (s8 p3>0 |=1 / else if <0 |=2). These flipped ~3% in one batch.
+- case 0x2c: (f32)(s16) SIGNED magic (xoris 0x8000 + lfd lbl_803E40D0) not (int)(u16) (#10).
+- case 0xc d-dispatch: restructure to SHARED TRAILING `match:` block reached by
+  goto/continue (==0x54 goto; >0x54{==0x230 goto/continue}; >=0x51||<0x4b continue;
+  fallthrough match). +3.2% alone (#13/#79).
+- case 0x1f: `d = (d - 0x10000) + 1` two-op wrap-clamp keeps addis;addi;extsh (#83/#20).
+- Pointer null checks `(void*)t != NULL` → cmplwi everywhere (ObjGroup_FindNearestObject,
+  getLoadedTexture, getTablesBinEntry, getTrickyObject results) (#3).
+- DROP (u16) on call args going to INT params (setObjGroupStatus/setMapAct/OSReport pass
+  raw `or`, no clrlwi) — KEEP (u16) where arg is a u16 LOCAL `id` (#37 inverse).
+- op/bit decl-order swap helped case 0x12/0x21 r22/r23 coloring partially.
+- BANKED residual (~97.4%, #108-class): case 0x12/0x21 op/bit r22<->r23 within-class
+  scramble (op should color r22, bit r23; decl swap only partial); case 0x15/0x16/0x26
+  `mr r22,r3` copy-BEFORE-compare vs target compare-first (peephole on/off NEUTRAL here);
+  case 0xc >0x54/0x230 block placement (inline vs out-of-line). @NNN-vs-jumptable/lbl
+  relocs are score-neutral (#70) — dense switch kept bctr under peephole-off (#1). The
+  jump-table + per-case bodies all match; residual is pure register permutation.
+LEVERS THAT WORKED BEST on big dispatchers: read target arm ORDER and INVERT (#21);
+shared trailing label for multi-goto dispatch; per-call pointer null check sweep (#3);
+int-param-first for mixed int/f32 calls (#87).
+
 ## Session (dll_0141-02FF scope): 1 win, ~10 attempts
 WIN: wclevelcont_func10 (dll_028D, WC subdir) 82.5->84.9%. FIX: #59 lift the
 leading FP subterm. Target evals `lbl_DD0+p` into a reg FIRST, THEN loads the
@@ -164,3 +193,34 @@ ADDITIONAL BANKED (hard, no source lever found this session):
 - gameTextBoxFn_80134d40 (dll_02C0_front, 82.8%): multi-issue FP — f30 hoist of
   lbl_803E2300 (#45/#121, target keeps in saved f30 across draw calls) + fmadds/fsubs
   reassoc + __cvt_fp2unsigned ordering. 102 regions. Banked (multi-issue).
+
+## ===== Session (later): 1 full + 1 partial win, ~13 attempts =====
+WINS:
+- mmsh_waterspike fn_801BEEA0 (98.87->100%): turnVel CSE'd; target RE-READS
+  *(f32*)(motion+4) fresh for rotZ update + fadds operand order rotZ_conv FIRST.
+  Drop named local entirely (re-read at store AND use). #130.
+- arwarwing_clampToFlightBounds (dll_0298 WC, 98.30->99.32%): inlined homeX/homeY
+  reads (drop cx/cy CSE) -> 11 regions to 6. Residual = within-class FP perm (#82).
+
+CRITICAL: NEVER `rm build/GSAE01/obj/*.o` (TARGET reference = dtk split output).
+Restore: `rm build/GSAE01/config.json && ninja build/GSAE01/config.json` (~8s).
+Only ever rm build/GSAE01/SRC/*.o (your build).
+
+BANKED (no source lever, all reverted byte-clean):
+- animsharpclaw_free (dll_0184, 99.24%): null-checked child ptr saved(r30)-vs-
+  volatile(r4) classing. read-order swap fixed load order only. #108/#65.
+- arwbombcoll_checkArwingCollision (dll_029F, 99.57%): else two-fsubs from shared
+  objZ, eval order (current=20(r5) first vs prev=136 first). decl/inline INERT. #82.
+- sc_totembond_update (dll_01BB, 99.79%): `li;mr` const-equal copy (availableCount=
+  orbIndex=0). copy-prop folds at O4; O1 regresses 38 regions. #110.
+- smallbasket_update (dll_0104, 99.83%): `flag=0;alpha=flag` target reuses r28 for
+  stb; current `li r0,0;stb r0` extra instr. Same #110 const-copy fold.
+- deathseq_update (dll_010E, 99.78%): f29<->f30 whole-body swap + fmuls operand. #82.
+- xyzanimator_update (dll_013C, 99.69%): `unk4*6+rowCount*0xc` accum-reg r3-vs-r4;
+  swap-terms regressed. int #108 + #70 relocs dominate.
+- DFP_Torch_init (dll_022B, 99.81%): frame -64 vs -48 (16B), conversion-scratch +
+  address-taken f32 spawnArg slot layout. #67 frame class. Not pursued (0.19%).
+
+LESSON: #110 const-equal-copy (`li rY,K; mr rX,rY` where BOTH are literal K) is
+UNREPRODUCIBLE at O4 (copy-prop always folds to fresh li); O1 wrecks the rest.
+Recurring 1-instr cap on 99%+ fns. BANK on sight — don't burn attempts.
