@@ -11754,23 +11754,20 @@ int fn_80298380(int obj, int state, f32 fv)
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F2C)
     {
-        if (((PlayerState*)state)->baddie.hasTarget == 1)
+        if (((PlayerState*)state)->baddie.hasTarget != 1)
         {
-            r = fn_80299E44(obj, state, fv);
-            if (r != 0)
-            {
-                return r;
-            }
-        }
-        else
-        {
-            if ((int)lbl_803DE44C != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
                 inner->unk8B4 = 0;
-                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return -1;
+        }
+        r = fn_80299E44(obj, state, fv);
+        if (r != 0)
+        {
+            return r;
         }
     }
     return 0;
