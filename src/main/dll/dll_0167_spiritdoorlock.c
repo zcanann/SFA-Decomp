@@ -141,11 +141,11 @@ void SpiritDoorLock_update(int obj)
             state->active = GameBit_Get(descriptor->activeGameBit);
             if (state->active != 0)
             {
-                ((GameObject*)obj)->anim.rootMotionScale =
-                    (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
-                    (f32)(int)
-                descriptor->scale *
-                    lbl_803E4448;
+                {
+                    f32 base = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
+                        (f32)(int)descriptor->scale;
+                    ((GameObject*)obj)->anim.rootMotionScale = base * lbl_803E4448;
+                }
                 if (state->light == 0u)
                 {
                     state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
