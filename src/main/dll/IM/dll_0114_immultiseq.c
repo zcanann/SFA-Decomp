@@ -17,8 +17,8 @@
 
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjGroup_RemoveObject();
+extern void ObjGroup_AddObject();
+extern void ObjGroup_RemoveObject();
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 lbl_803E37A8;
 
@@ -150,7 +150,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
 
     objAnim = (ObjAnimComponent*)obj;
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(params->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
     ((GameObject*)obj)->animEventCallback = (void*)immultiseq_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
     objAnim->bankIndex = (s8)params->modelBankIndex;

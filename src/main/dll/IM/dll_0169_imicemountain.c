@@ -38,9 +38,9 @@ typedef struct IMIceMountainState
 
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
-extern undefined4 getLActions();
+extern void getLActions();
 extern uint GameBit_Get(int eventId);
-extern undefined8 GameBit_Set(int eventId, int value);
+extern int GameBit_Set(int eventId, int value);
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E46E0;
@@ -173,8 +173,8 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->eventIds[i] == 2)
         {
-            GameBit_Set(888, 0);
-            GameBit_Set(953, 0);
+            GameBit_Set(0x378, 0);
+            GameBit_Set(0x3b9, 0);
         }
     }
     return 0;
@@ -204,12 +204,12 @@ void imicemountain_updateEventState(int* obj)
         {
             GameBit_Set(0xade, 1);
             extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
         }
         else if (GameBit_Get(0x70) != 0)
         {
             extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
         }
         break;
     case 2:

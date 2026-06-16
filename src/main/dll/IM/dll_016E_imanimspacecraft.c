@@ -18,6 +18,8 @@ extern void objRenderFn_8003b8f4(f32 scale);
 extern int GameBit_Set(int eventId, int value);
 extern u8 framesThisStep;
 
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+
 /* shared particle-spawn position vector (written at +0xc/+0x10/+0x14) */
 extern char lbl_803AC948[];
 
@@ -37,6 +39,8 @@ void imanimspacecraft_modelMtxFn(void)
 {
 }
 
+/* vtable slot 0x0B: reports whether the spacecraft's bound model has its
+   bit-2 flag set (read from byte +3 of the model pointer at obj+0xb8). */
 u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 
 int imanimspacecraft_setScale(int* obj, int bitIdx)

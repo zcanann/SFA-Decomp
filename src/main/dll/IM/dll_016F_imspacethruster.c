@@ -30,7 +30,7 @@ extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4;
 /* blend-channel target weights / fade endpoints */
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
+static inline int* getActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
@@ -73,7 +73,7 @@ void imspacethruster_update(GameObject* obj)
         case 0:
             if (mode == 1)
             {
-                ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
+                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
                 obj->anim.alpha = 0xff;
                 state->phase = 1;
             }
@@ -90,7 +90,7 @@ void imspacethruster_update(GameObject* obj)
         case 1:
             if (mode == 0)
             {
-                ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
+                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
                 state->blendTimer = 0xb4;
                 obj->anim.alpha = 0xa4;
                 state->phase = 2;
@@ -171,7 +171,7 @@ void imspacethruster_init(GameObject* obj, u8* placement)
         obj->anim.rootMotionScale = lbl_803E47B4;
         break;
     }
-    model = DIMcannon_GetActiveModel(obj);
+    model = getActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
     {
