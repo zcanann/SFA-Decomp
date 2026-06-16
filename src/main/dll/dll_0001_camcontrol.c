@@ -685,7 +685,7 @@ void Camera_update(void)
         camcontrol_applyQueuedAction();
         if (textActive == 0)
         {
-            if (camera->overrideTarget == 0)
+            if (camera->overrideTarget == 0u)
             {
                 target = camcontrol_findBestTarget(camera, focus);
                 camera->currentTarget = (int)target;
