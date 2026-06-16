@@ -1063,16 +1063,16 @@ int fn_802A3B04(int obj, int state)
         }
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                           *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5D4, ((PlayerState*)inner)->unk5D8,
+                                           ((PlayerState*)inner)->unk5DC, (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                           *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
+                                           ((PlayerState*)inner)->unk5F4, (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                           *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+            Obj_TransformWorldPointToLocal(((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
+                                           ((PlayerState*)inner)->unk600, (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->unk4C4);
             ((PlayerState*)inner)->unk5AC =
