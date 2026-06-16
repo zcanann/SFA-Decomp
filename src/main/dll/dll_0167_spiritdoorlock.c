@@ -81,7 +81,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     f32 mult;
     int isLess;
 
-    *(s16*)obj = (s16)(params->yaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(params->yaw << 8);
     state->orbitCount = params->orbitCount;
     state->active = 0;
 
@@ -208,7 +208,7 @@ void SpiritDoorLock_update(int obj)
             ((GameObject*)obj)->anim.rotZ = (s16)angle;
             Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
             PSVECAdd(&((GameObject*)obj)->anim.localPosX, local_5c, (f32*)((char*)list_ptr[i] + 0xc));
-            *(s16*)list_ptr[i] = *(s16*)obj;
+            *(s16*)list_ptr[i] = ((GameObject*)obj)->anim.rotX;
             *(s16*)((char*)list_ptr[i] + 4) = (s16)(angle + 0x8000);
             *(f32*)((char*)list_ptr[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
             angle += stride;
