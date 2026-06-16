@@ -1002,7 +1002,7 @@ void pushable_hitDetect(int* obj)
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     state->timer_0x110 = state->timer_0x110 - timeDelta;
-    if (state->timer_0x110 <= lbl_803E3528)
+    if (state->timer_0x110 <= *(f32*)&lbl_803E3528)
     {
         state->timer_0x110 = lbl_803E3528;
     }
