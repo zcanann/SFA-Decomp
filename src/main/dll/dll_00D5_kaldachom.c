@@ -496,7 +496,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     initMode = 6;
     if (skip_alloc != 0)
     {
-        initMode = initMode | 1;
+        initMode |= 1;
     }
     (*(code*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
     ((GameObject*)obj)->animEventCallback = NULL;
