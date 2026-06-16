@@ -1,3 +1,14 @@
+/*
+ * shqueenearthwalker (DLL 0x1AC) - the Queen EarthWalker in ThornTail
+ * Hollow, the giant matriarch dinosaur the player tends.
+ *
+ * update() is driven by the area's map-event act: it picks the queen's
+ * trigger-sequence event table for the current act, walks her toward the
+ * player and runs idle/attention sequences. The feed and open-portal
+ * sub-handlers cover the berry-feeding interaction (Y-button item 0x66d)
+ * and the spell-portal opening. stateIndex selects the locomotion move
+ * (lbl_80326E18/E24 tables); the flags byte tracks the per-frame mode.
+ */
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
@@ -242,7 +253,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         }
         break;
     case 1:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
         if (cMenuGetSelectedItem() == -1)
         {
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
@@ -256,7 +267,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
                 }
                 else
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+                    ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
                 }
                 break;
             }
@@ -315,7 +326,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     void* player;
 
     player = Obj_GetPlayerObject();
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+    ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
     if (GameBit_Get(0xc48) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &lbl_803DBFEC;
@@ -326,7 +337,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     }
     else if (GameBit_Get(0x5bd) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
         if (playerHasSpell(player, 3) != 0 &&
             getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < lbl_803E53FC)
         {
@@ -352,7 +363,7 @@ void openPortalFn_801d4364(void* obj, void* state)
 
 void sh_queenearthwalker_init(void* obj, QueenEarthWalkerMapData* mapData)
 {
-    *(s16*)obj = (s16)(mapData->yawByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
     ((GameObject*)obj)->animEventCallback = (void*)sh_queenearthwalker_processAnimEvents;
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }
