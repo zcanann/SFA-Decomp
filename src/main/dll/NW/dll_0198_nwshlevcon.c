@@ -1,13 +1,20 @@
+/*
+ * nwshlevcon (DLL 0x198) - the SnowHorn level controller for SnowHorn
+ * Wastes (map 'nwastes', 0x0A; "sh" = SnowHorn).
+ *
+ * Drives the area's intro: on init it unlocks the connecting level
+ * (map 0x28), starts ambient music track 6 and arms its setup game
+ * bits, then counts a one-frame delay (unkF4) before restoring the sky
+ * and environment fx. Its trigger sequence hands the player an item and
+ * opens the next batch of object groups / map act. On free it stops the
+ * music and clears its progress bit.
+ */
 #include "main/dll/dll_0198_nwshlevcon.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-extern undefined4 FUN_8003b818();
-
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int track, int param);
@@ -18,15 +25,6 @@ extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);
-
-void FUN_801cacd4(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
 
 #pragma scheduling off
 #pragma peephole off
@@ -54,7 +52,7 @@ void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void nwsh_levcon_free(int obj)
 {
     Music_Trigger(6, 0);
-    GameBit_Set(3837, 0);
+    GameBit_Set(0xefd, 0);
 }
 
 void nwsh_levcon_update(int* obj)
@@ -110,5 +108,3 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
