@@ -1,87 +1,37 @@
-#include "main/dll/baddie/dll_003B_menu.h"
+/*
+ * menu (DLL 0x3B) - a small horizontal item-selector menu built by the
+ * game text/HUD layer.
+ *
+ * Callers register items one at a time (Menu_func05 / Menu_func06): each
+ * appends to the running item count (lbl_803DD8F0) and accumulated width
+ * (lbl_803DD8F2), and the entry whose index matches the requested default
+ * becomes the selected result id (lbl_803DD8F5). Menu_func03 / Menu_func04
+ * reset the list before a build pass.
+ *
+ * Menu_func08 polls the menu each frame: it advances a wrap-around scroll
+ * timer (lbl_803DD8EC against the lbl_803E21D8 window), reads the analog
+ * stick to step the caller's selection index (wrapping at 0 / item count),
+ * and once armed (lbl_803DD8E8) returns the selected id on A/Start (subject
+ * to GameBit 0x44F) or the cancel id (lbl_803DD8F4) on B. It bails while the
+ * HUD is hidden.
+ */
+#include "types.h"
 
-extern uint GameBit_Get(int eventId);
-extern int FUN_801244a4();
-extern undefined4 FUN_8012dca8();
-extern undefined8 FUN_8012e050();
-extern undefined8 FUN_8012e2a4();
-extern undefined4 FUN_8012ed00();
+extern u32 GameBit_Get(int eventId);
 
-extern undefined4 DAT_8031c22c;
-extern undefined4 DAT_803a98d8;
-extern undefined4 DAT_803de3fe;
-extern undefined4 DAT_803de413;
-extern undefined4 DAT_803de445;
+extern s8 lbl_803DD8F0;   /* item count */
+extern s16 lbl_803DD8F2;  /* accumulated item width */
+extern s8 lbl_803DD8F4;   /* cancel result id */
+extern s8 lbl_803DD8F5;   /* selected result id */
+extern s8 lbl_803DD8E8;   /* armed flag (ignore input for one frame after build) */
+extern f32 lbl_803DD8EC;  /* scroll timer */
+extern f32 lbl_803E21D8;  /* scroll timer wrap period */
+extern f32 timeDelta;
 
-extern s8 lbl_803DD8F0;
-extern s16 lbl_803DD8F2;
-extern s8 lbl_803DD8F4;
-extern s8 lbl_803DD8F5;
-extern s8 lbl_803DD8E8;
 extern int getScreenResolution(void);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
 extern int getButtonsJustPressed(int pad);
-extern f32 lbl_803DD8EC;
-extern f32 lbl_803E21D8;
-extern f32 timeDelta;
-
-void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
-{
-    int iVar1;
-    int iVar2;
-    short sVar3;
-    uint uVar4;
-    char cVar5;
-
-    iVar2 = FUN_801244a4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    sVar3 = (&DAT_8031c22c)[param_9 * 8];
-    uVar4 = 0;
-    cVar5 = '\x01';
-    while (true)
-    {
-        if (iVar2 << 1 <= (int)(uVar4 & 0xff))
-        {
-            return;
-        }
-        iVar1 = (int)sVar3;
-        if (((&DAT_803a98d8)[iVar1] != '\0') && ((cVar5 != '\0' || (iVar2 <= (int)(uVar4 & 0xff)))))
-            break;
-        sVar3 = sVar3 + 1;
-        if (iVar2 <= sVar3)
-        {
-            sVar3 = 0;
-        }
-        uVar4 = uVar4 + 1;
-        cVar5 = (&DAT_803a98d8)[iVar1];
-    }
-    (&DAT_8031c22c)[param_9 * 8] = sVar3;
-    return;
-}
-
-undefined4
-FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8)
-{
-    undefined8 uVar1;
-
-    if (DAT_803de445 != '\0')
-    {
-        if (DAT_803de3fe != '\0')
-        {
-            FUN_8012dca8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-        }
-        uVar1 = FUN_8012e050();
-        if (DAT_803de413 != '\0')
-        {
-            uVar1 = FUN_8012e2a4(uVar1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-        }
-        FUN_8012ed00(uVar1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    }
-    return 0;
-}
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -92,25 +42,6 @@ void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
 void Menu_func09_nop(void)
 {
 }
-#pragma peephole off
-void Menu_func07(int v) { lbl_803DD8F4 = (s8)v; }
-#pragma peephole reset
-#pragma scheduling off
-#pragma peephole off
-void Menu_func03(int v)
-{
-    lbl_803DD8F2 = (s16)v;
-    lbl_803DD8F0 = 0;
-    lbl_803DD8F4 = -1;
-}
-#pragma peephole reset
-#pragma scheduling reset
-void Menu_release(void)
-{
-}
-
-void titleScreenFn_80130464(u8 v);
-
 #pragma scheduling off
 #pragma peephole off
 int Menu_func08(int* sel)
@@ -150,7 +81,7 @@ int Menu_func08(int* sel)
     if (lbl_803DD8E8 != 0)
     {
         input = getButtonsJustPressed(0);
-        if (((input & 0x1100) != 0) && (GameBit_Get(1103) == 0))
+        if (((input & 0x1100) != 0) && (GameBit_Get(0x44F) == 0))
         {
             return lbl_803DD8F5;
         }
@@ -164,18 +95,11 @@ int Menu_func08(int* sel)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma peephole off
+void Menu_func07(int v) { lbl_803DD8F4 = (s8)v; }
+#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
-void Menu_func05(int arg1, int unused2, int arg3, int arg4)
-{
-    if (arg4 == (s32)lbl_803DD8F0)
-    {
-        lbl_803DD8F5 = (s8)arg1;
-    }
-    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg3);
-    lbl_803DD8F0++;
-}
-
 void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5)
 {
     if (arg5 == (s32)lbl_803DD8F0)
@@ -183,6 +107,16 @@ void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5)
         lbl_803DD8F5 = (s8)arg1;
     }
     lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg4);
+    lbl_803DD8F0++;
+}
+
+void Menu_func05(int arg1, int unused2, int arg3, int arg4)
+{
+    if (arg4 == (s32)lbl_803DD8F0)
+    {
+        lbl_803DD8F5 = (s8)arg1;
+    }
+    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg3);
     lbl_803DD8F0++;
 }
 #pragma peephole reset
@@ -198,6 +132,19 @@ void Menu_func04(int unused, int v)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void Menu_func03(int v)
+{
+    lbl_803DD8F2 = (s16)v;
+    lbl_803DD8F0 = 0;
+    lbl_803DD8F4 = -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+void Menu_release(void)
+{
+}
 void Menu_initialise(void)
 {
     lbl_803DD8F0 = 0;
