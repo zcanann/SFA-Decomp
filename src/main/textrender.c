@@ -1350,7 +1350,7 @@ void gameTextInitFn_8001bd14(void)
 
     scratch = (int*)lbl_8033B240;
     i = 8;
-    while (i != 0)
+    do
     {
         scratch[0] = zero;
         scratch[1] = zero;
@@ -1389,7 +1389,7 @@ void gameTextInitFn_8001bd14(void)
         scratch[7] = zero;
         scratch += 8;
         i--;
-    }
+    } while (i != 0);
 }
 
 #pragma optimization_level reset

@@ -850,8 +850,8 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    PSMTXScale(scaleMtx, 1.0f, 1.0f, 1.0f);
-    scaleMtx[1][2] = -fA;
+    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    scaleMtx[1][3] = -fA;
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
     GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
@@ -3222,8 +3222,8 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
     extern f32 hudScale;
-    extern f32 lbl_803DEEDC;
-    extern f32 lbl_803DEEE4;
+    extern const f32 lbl_803DEEDC;
+    extern const f32 lbl_803DEEE4;
     extern u8 lbl_803DB679;
     extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -3302,7 +3302,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
         GXWGFifo.s16 = (s16)((x << 2) + w);
         GXWGFifo.s16 = (s16)(y << 2);
         GXWGFifo.s16 = -8;
-        GXWGFifo.f32 = lbl_803DEEE4;
+        GXWGFifo.f32 = *(const f32*)&lbl_803DEEE4;
         GXWGFifo.f32 = lbl_803DEEDC;
 
         GXWGFifo.u8 = 0x3C;
