@@ -18889,13 +18889,7 @@ void fn_802AEF34(int obj, int state)
                     obj, lbl_8033366C[*(u8*)((char*)state + 0x8a2)], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
-            if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0)
-            {
-                *(s16*)((char*)state + 0x806) = 3;
-                *(u8*)((char*)state + 0x8a2) = 0xff;
-                changed = 1;
-            }
-            else
+            if (!(((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0))
             {
                 int ok;
                 ByteFlags* bf = (ByteFlags*)((char*)state + 0x3f0);
@@ -18921,6 +18915,12 @@ void fn_802AEF34(int obj, int state)
                     *(u8*)((char*)state + 0x8a2) = 0xff;
                     changed = 1;
                 }
+            }
+            else
+            {
+                *(s16*)((char*)state + 0x806) = 3;
+                *(u8*)((char*)state + 0x8a2) = 0xff;
+                changed = 1;
             }
             break;
         case 3:
