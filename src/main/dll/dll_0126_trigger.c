@@ -1450,22 +1450,24 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         d = *(s16*)tbl;
                         if (d == 0x54)
                         {
-                        match:
-                            if (*(s16*)((char*)tbl + 0x38) == id)
-                            {
-                                objInterpretSeq(t2, p2, p3, p4);
-                            }
+                            goto match;
                         }
-                        else if (d < 0x54)
+                        if (d > 0x54)
                         {
-                            if (d < 0x51 && d >= 0x4b)
+                            if (d == 0x230)
                             {
                                 goto match;
                             }
+                            continue;
                         }
-                        else if (d == 0x230)
+                        if (d >= 0x51 || d < 0x4b)
                         {
-                            goto match;
+                            continue;
+                        }
+                    match:
+                        if (*(s16*)((char*)tbl + 0x38) == id)
+                        {
+                            objInterpretSeq(t2, p2, p3, p4);
                         }
                     }
                     break;
