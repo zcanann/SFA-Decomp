@@ -4155,8 +4155,9 @@ int GameUI_isAnyItemBeingUsed(void)
 {
     s32 activeId = lbl_803DD8C2;
     s32 inverted = activeId ^ -1;
+    s32 shifted = inverted >> 1;
 
-    return (u32)((inverted >> 1) - (inverted & activeId)) >> 31;
+    return (u32)(shifted - (inverted & activeId)) >> 31;
 }
 
 /* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array

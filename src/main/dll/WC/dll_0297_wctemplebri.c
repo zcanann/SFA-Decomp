@@ -143,8 +143,8 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY)) +
-            state->wavePhaseA;
+        int wave = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY));
+        int idx = wave + state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
                 (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
@@ -220,8 +220,8 @@ void wctemplebri_update(int obj)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int idx = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY)) +
-            state->wavePhaseA;
+        int wave = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY));
+        int idx = wave + state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
                 (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
