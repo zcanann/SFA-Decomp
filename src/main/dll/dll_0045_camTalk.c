@@ -284,7 +284,7 @@ void firstPersonExit(CameraObject* camera)
     fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
     if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
-        if (lbl_803E17C4 <= lbl_803DD548->yawCurve.start)
+        if (lbl_803DD548->yawCurve.start >= lbl_803E17C4)
         {
             if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
             {
@@ -304,7 +304,7 @@ void firstPersonExit(CameraObject* camera)
     fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
     if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
-        if (lbl_803E17C4 <= lbl_803DD548->pitchCurve.start)
+        if (lbl_803DD548->pitchCurve.start >= lbl_803E17C4)
         {
             if (lbl_803DD548->pitchCurve.end < lbl_803E17C4)
             {
