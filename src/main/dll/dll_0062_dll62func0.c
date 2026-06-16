@@ -874,11 +874,11 @@ void dll_62_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((void*)ctx != NULL)
+        if (*(void**)&buf.ctx != (void*)0)
         {
-            buf.pos[0] += *(f32*)(ctx + 0x18);
-            buf.pos[1] += *(f32*)(ctx + 0x1c);
-            buf.pos[2] += *(f32*)(ctx + 0x20);
+            buf.pos[0] += *(f32*)(buf.ctx + 0x18);
+            buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
+            buf.pos[2] += *(f32*)(buf.ctx + 0x20);
         }
         else
         {
