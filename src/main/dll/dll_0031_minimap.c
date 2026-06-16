@@ -1143,7 +1143,7 @@ void fn_8013396C(void)
                     lbl_803DD945 = 0;
                 }
                 lbl_803DD934 = ObjGroup_FindNearestObject(0x4f, player, &dist);
-                if (lbl_803DD934 != 0)
+                if ((void*)lbl_803DD934 != NULL)
                 {
                     if (dist < lbl_803E2260)
                     {
