@@ -1,3 +1,25 @@
+/*
+ * tesla / "Tricky curve" trigger object.
+ *
+ * A box-shaped trigger volume centred on the object that watches the
+ * player's offset from the object on each axis. When the player is inside
+ * the half-extents on all three axes (insideAxes == 3) the object reacts:
+ *  - fn_80206968 is the cooldown variant: throttled by state->cooldown
+ *    (decremented by timeDelta, reset to TRICKY_CURVE_COOLDOWN_TICKS after
+ *    a hit). A sliding player (player anim state ==
+ *    TRICKY_CURVE_PLAYER_ANIM_SLIDE) sets the hit game bit and spawns the
+ *    cooldown partfx; otherwise the player takes a recorded hit. Either
+ *    way a sfx plays.
+ *  - fn_80206C18 is the burst variant: spawns a directional burst partfx
+ *    (TrickyCurveBurstPartfxArgs carries the player-relative deltas and an
+ *    x-rotation flip when the player crosses the x midline) and, off the
+ *    slide path, messages the player and plays the burst sfx. The
+ *    gTrickyCurveBurstCounter gates the bit/sfx to once every
+ *    TRICKY_CURVE_BURST_LIMIT ticks while sliding.
+ *
+ * Both variants cache the entry side per axis (xSide/ySide/zSide) in the
+ * trigger state so the burst variant can detect a midline crossing.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
@@ -17,23 +39,23 @@
 typedef struct TrickyCurveObject
 {
     u8 unk0[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
+    f32 x;                              /* 0x0C: localPosX (GameObject anim) */
+    f32 y;                              /* 0x10: localPosY */
+    f32 z;                              /* 0x14: localPosZ */
     u8 unk18[0xa0];
-    struct TrickyCurveTriggerState* state;
+    struct TrickyCurveTriggerState* state; /* 0xB8: GameObject extra block */
 } TrickyCurveObject;
 
 typedef struct TrickyCurveTriggerState
 {
-    s16 xExtent;
-    s16 zExtent;
-    s16 yExtent;
-    s16 cooldown;
-    u8 unk8[8];
-    u8 xSide;
-    u8 ySide;
-    u8 zSide;
+    s16 xExtent;    /* 0x00: half-extent of the trigger box on each axis */
+    s16 zExtent;    /* 0x02 */
+    s16 yExtent;    /* 0x04 */
+    s16 cooldown;   /* 0x06: ticks until the cooldown variant can hit again */
+    u8 unk8[8];     /* 0x08: unknown */
+    u8 xSide;       /* 0x10: which side of the midline the player entered on */
+    u8 ySide;       /* 0x11 */
+    u8 zSide;       /* 0x12 */
 } TrickyCurveTriggerState;
 
 typedef struct TrickyCurveBurstPartfxArgs
@@ -47,11 +69,17 @@ typedef struct TrickyCurveBurstPartfxArgs
     f32 zDelta;
 } TrickyCurveBurstPartfxArgs;
 
+STATIC_ASSERT(offsetof(TrickyCurveTriggerState, cooldown) == 0x06);
+STATIC_ASSERT(offsetof(TrickyCurveTriggerState, xSide) == 0x10);
+STATIC_ASSERT(sizeof(TrickyCurveTriggerState) == 0x14);
+STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, scale) == 0x08);
+STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
+
 extern int objGetAnimState80A(int obj);
 
-extern u8 gTrickyCurveBurstCounter;
-extern f32 timeDelta;
-extern f32 lbl_803E6448;
+extern u8 gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
+extern f32 timeDelta;                   /* engine frame-step seconds */
+extern f32 lbl_803E6448;                /* burst partfx scale constant */
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
     (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
@@ -246,7 +274,7 @@ void fn_80206C18(TrickyCurveObject* obj)
             {
                 gTrickyCurveBurstCounter = 0;
                 GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
-                Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
+                Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
             }
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
         }
@@ -255,7 +283,7 @@ void fn_80206C18(TrickyCurveObject* obj)
             GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
             ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
             PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);
-            Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
+            Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
         }
     }
 
