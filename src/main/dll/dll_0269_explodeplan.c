@@ -44,7 +44,7 @@ void explodeplan_init(int obj, char* arg)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     }
-    *(s16*)obj = (s16)((s8)arg[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
 }
 
 void explodeplan_update(int obj)
