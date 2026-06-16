@@ -1781,7 +1781,8 @@ extern f32 lbl_803DCFA8, lbl_803DCFAC;
 void initFn_8006d020(void)
 {
     u8 saved;
-    int placed, attempts, tex, row, col, collide, j;
+    int placed, attempts, tex, row, col, j;
+    u8 collide;
     f32* e;
     int* th;
 
