@@ -12,11 +12,7 @@
 #include "main/objlib.h"
 
 #include "main/game_object.h"
-
-/* object groups: nwice instances join NW_ICE; nwanimice blocks live in
-   NW_ANIMICE and are paired against by NwIcePlacement.pairId. */
-#define NW_ICE_GROUP_ID 0x3c
-#define NW_ANIMICE_GROUP_ID 0x3d
+#include "main/dll/NW/nw_shared.h"
 
 /* followed block alpha below which the ice decouples / stops colliding */
 #define ICE_FADE_ALPHA 0xc0

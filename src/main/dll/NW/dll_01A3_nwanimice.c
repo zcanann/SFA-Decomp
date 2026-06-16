@@ -10,9 +10,7 @@
 #include "main/objlib.h"
 
 #include "main/game_object.h"
-
-/* object group joined at init so nwice instances can locate this block */
-#define NW_ANIMICE_GROUP_ID 0x3d
+#include "main/dll/NW/nw_shared.h"
 
 void nw_animice_render(void)
 {
