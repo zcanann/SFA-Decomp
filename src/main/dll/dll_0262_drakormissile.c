@@ -58,8 +58,8 @@ void drakormissile_release(void)
 
 void drakormissile_startActiveLaunch(int obj)
 {
-    void* light;
     u8* p = ((GameObject*)obj)->extra;
+    void* light;
 
     ObjHits_EnableObject(obj);
     *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_HOMING;
