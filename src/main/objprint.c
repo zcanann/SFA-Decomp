@@ -1302,7 +1302,7 @@ void objRenderFn_8003b8f4(int* obj)
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
     {
         objRenderModel(obj, table);
-        if (*(void**)((char*)obj + 0x74) != NULL)
+        if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018(obj);
         }
@@ -1941,7 +1941,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
             (*(void(*)(int))objRenderModel)(obj);
-            if (*(void**)((char*)obj + 0x74) != NULL)
+            if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((int*)obj);
             }
@@ -1959,7 +1959,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
                 (*(void(*)(int))objRenderModel)(obj);
-                if (*(void**)((char*)obj + 0x74) != NULL)
+                if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((int*)obj);
                 }
@@ -1971,7 +1971,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
     {
         int staff = *(int*)&((GameObject*)walk)->childObjs[0];
-        if (*(s16*)((char*)staff + 0x44) == 0x2d)
+        if (((GameObject*)staff)->anim.classId == 0x2d)
         {
             staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
         }
@@ -2542,7 +2542,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
             int n;
             angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)curve + 4),
                              ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)curve + 0xc));
-            curve[10] = (s16)(angle - (u16) * (s16*)obj);
+            curve[10] = (s16)(angle - (u16)((GameObject*)obj)->anim.rotX);
             if (curve[10] > 0x8000)
             {
                 curve[10] = (s16)(curve[10] - 0xffff);
@@ -2637,7 +2637,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             s16* ap;
             int i;
 
-            ang[0] = (s16)getAngle(dx, dy) - (u16) * (s16*)obj;
+            ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
             if (ang[0] > 0x8000)
             {
                 ang[0] = (s16)(ang[0] - 0xffff);
@@ -2697,9 +2697,9 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
     f32 va[3];
     f32 vb[3];
 
-    if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && *(s16*)(staff + 0x44) == 0x2d)
+    if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
-        char* base = *(char**)(staff + 0xb8);
+        char* base = (char*)((GameObject*)staff)->extra;
         int i = 0;
         int k = 1;
         int off = 0x18;
@@ -2755,16 +2755,16 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
             {
-                int* v = *(int**)(staff + 0x68);
+                int* v = (int*)((GameObject*)staff)->anim.dll;
                 void(*fn)(int, int, f32 *) = (void (*)(int, int, f32*))*(int*)(*v + 0x28);
                 fn(staff, obj, vb);
             }
             va[0] = va[0] - vb[0];
             va[1] = va[1] - vb[1];
             va[2] = va[2] - vb[2];
-            *(s16*)staff = (s16)getAngle(va[0], va[2]);
-            *(s16*)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
-            *(s16*)(staff + 4) = 0;
+            ((GameObject*)staff)->anim.rotX = (s16)getAngle(va[0], va[2]);
+            ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
+            ((GameObject*)staff)->anim.rotZ = 0;
         }
     }
 }
@@ -2976,7 +2976,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     dy = (pos[1] + yOff) - ((GameObject*)obj)->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
-    ang[2] = (s16)getAngle(dx, dz) - (u16) * (s16*)obj;
+    ang[2] = (s16)getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
     if (ang[2] > 0x8000)
     {
         ang[2] = (s16)(ang[2] - 0xffff);
