@@ -1,20 +1,14 @@
+/* cannon.c is the object-file slot name; the content is Tricky flame/guard AI. */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
-typedef struct TrickyFlameState
+typedef struct TrickyState
 {
     u8 pad0[0x58 - 0x0];
     u8 unk58;
     u8 pad59[0x60 - 0x59];
-} TrickyFlameState;
-
-typedef struct TrickyGuardState
-{
-    u8 pad0[0x58 - 0x0];
-    u8 unk58;
-    u8 pad59[0x60 - 0x59];
-} TrickyGuardState;
+} TrickyState;
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
@@ -36,7 +30,9 @@ typedef struct TrickyRuntime
     u8 growlLatState;
     u8 pad09;
     u8 guardState;
-    u8 pad0B[0x24 - 0x0B];
+    u8 pad0B[0x0D - 0x0B];
+    s8 unk0D;
+    u8 pad0E[0x24 - 0x0E];
     ObjAnimComponent* homeObj;
     f32* targetPosition;
     u8 pad2C[TRICKY_STATE_FLAGS_OFFSET - 0x2C];
@@ -56,6 +52,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, flags) == TRICKY_STATE_FLAGS_OFFSET);
 STATIC_ASSERT(offsetof(TrickyRuntime, helperSpawnCount) == 0x00);
 STATIC_ASSERT(offsetof(TrickyRuntime, growlLatState) == 0x08);
 STATIC_ASSERT(offsetof(TrickyRuntime, guardState) == 0x0A);
+STATIC_ASSERT(offsetof(TrickyRuntime, unk0D) == 0x0D);
 STATIC_ASSERT(offsetof(TrickyRuntime, homeObj) == 0x24);
 STATIC_ASSERT(offsetof(TrickyRuntime, targetPosition) == 0x28);
 STATIC_ASSERT(offsetof(TrickyRuntime, targetTurnTimer) == 0xD2);
@@ -83,7 +80,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
         TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
         TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
         TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
-        *(s8 *)((u8 *)(st) + 0xd) = -1; \
+        TRICKY_RUNTIME(st)->unk0D = -1; \
     }
 
 extern void* ObjGroup_GetObjects();
@@ -194,7 +191,7 @@ void trickyFlame(int p1, int p2)
         trickyMove(p1, target);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, (void*)0x0) == 0)
         {
-            *(u32*)(p2 + 0x54) = *(u32*)(p2 + 0x54) | 0x10;
+            ((TrickyRuntime*)p2)->flags |= TRICKY_STATE_RESET_FLAG_10;
             *(u8*)(p2 + 0xa) = 5;
         }
         break;
@@ -239,14 +236,14 @@ void trickyFlame(int p1, int p2)
         }
         if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
-            if ((*(u32*)(p2 + 0x54) & 0x800) == 0)
+            if ((((TrickyRuntime*)p2)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
             {
                 if ((u8)Obj_IsLoadingLocked() != 0)
                 {
-                    *(u32*)(p2 + 0x54) = *(u32*)(p2 + 0x54) | 0x800;
-                    for (i = 0, slot = (void**)p2; i < 7; i++)
+                    ((TrickyRuntime*)p2)->flags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
+                    for (i = 0, slot = (void**)p2; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                        setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = (s16)i;
@@ -269,14 +266,14 @@ void trickyFlame(int p1, int p2)
                 else if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E2504)
                 {
                     TRICKY_MARK_HELPERS_FINISHED(p2);
-                    for (i = 0, slot = (void**)p2; i < 7; i++)
+                    for (i = 0, slot = (void**)p2; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
                     state = ((GameObject*)p1)->extra;
-                    if ((((u32)((TrickyFlameState*)state)->unk58 >> 6) & 1) == 0)
+                    if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
                     {
                         s16 a0 = ((GameObject*)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29)
@@ -311,7 +308,7 @@ void trickyFlame(int p1, int p2)
             int r = trickyFn_8013b368((void*)p1, lbl_803E2488, (void*)p2);
             if (r == 0)
             {
-                *(u32*)(p2 + 0x54) = *(u32*)(p2 + 0x54) | 0x10;
+                ((TrickyRuntime*)p2)->flags |= TRICKY_STATE_RESET_FLAG_10;
                 *(u8*)(p2 + 0xa) = 2;
             }
             else if (r == 2)
@@ -340,14 +337,14 @@ void trickyFlame(int p1, int p2)
         trickyDebugPrint(strBase + 0x778);
         if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
-            if ((*(u32*)(p2 + 0x54) & 0x800) == 0)
+            if ((((TrickyRuntime*)p2)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
             {
                 if ((u8)Obj_IsLoadingLocked() != 0)
                 {
-                    *(u32*)(p2 + 0x54) = *(u32*)(p2 + 0x54) | 0x800;
-                    for (i = 0, slot = (void**)p2; i < 7; i++)
+                    ((TrickyRuntime*)p2)->flags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
+                    for (i = 0, slot = (void**)p2; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                        setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = (s16)i;
@@ -370,14 +367,14 @@ void trickyFlame(int p1, int p2)
                 else if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E2504)
                 {
                     TRICKY_MARK_HELPERS_FINISHED(p2);
-                    for (i = 0, slot = (void**)p2; i < 7; i++)
+                    for (i = 0, slot = (void**)p2; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
                     state = ((GameObject*)p1)->extra;
-                    if ((((u32)((TrickyFlameState*)state)->unk58 >> 6) & 1) == 0)
+                    if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
                     {
                         s16 a0 = ((GameObject*)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29)
@@ -452,6 +449,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     return 0;
 }
 
+/* scheduling-off covers trickyGuard and the trailing fns; trickyFlame above runs the TU default. */
 #pragma scheduling off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
@@ -598,7 +596,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             }
             Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
             state = ((GameObject*)p1)->extra;
-            if ((((u32)((TrickyGuardState*)state)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
@@ -637,7 +635,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             objAnimFn_8013a3f0(p1, 0x33, lbl_803E2444, 0x4000000);
             trickyState->guardTimer = lbl_803E23DC;
             state = ((GameObject*)p1)->extra;
-            if ((((u32)((TrickyGuardState*)state)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
@@ -663,7 +661,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         if (randomGetRange(0, 10) == 0)
         {
             state = ((GameObject*)p1)->extra;
-            if ((((u32)((TrickyGuardState*)state)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
