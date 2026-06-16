@@ -1,3 +1,17 @@
+/*
+ * vfpobjcreator (DLL 0x217, VFP_ObjCreator) - an invisible spawner
+ * object in the Volcano Force Point Temple.
+ *
+ * While loading is locked it periodically allocates and launches one of
+ * two kinds of object setup, selected by the placement's spawnMode:
+ *  - mode 1 (falling): spawns object 0x263 within a random radius around
+ *    the spawner, gated on an optional game bit, with randomised spin
+ *    and downward/outward velocity;
+ *  - mode 6 (projectile): spawns object 0x549 burst at the spawner's
+ *    position, aimed by the spawner's pitch, with launch sfx + particle
+ *    trails.
+ * The spawn cadence is driven by spawnTimer counting down spawnInterval.
+ */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -10,22 +24,22 @@
 
 typedef struct VfpObjCreatorState
 {
-    s16 gameBit;
-    s16 spawnInterval;
-    s16 spawnTimer;
-    s16 spawnParam;
-    s16 spawnRadius;
+    s16 gameBit;       /* 0x00: spawn gate bit (-1 = always spawn) */
+    s16 spawnInterval; /* 0x02: frames between spawns */
+    s16 spawnTimer;    /* 0x04: countdown to the next spawn */
+    s16 spawnParam;    /* 0x06 */
+    s16 spawnRadius;   /* 0x08: random XZ scatter radius (falling mode) */
 } VfpObjCreatorState;
 
 typedef struct VfpObjCreatorPlacement
 {
     ObjPlacement base;
-    s16 gameBit;
-    s16 spawnMode;
-    s16 spawnInterval;
-    s8 yaw;
-    s8 spawnParam;
-    u8 spawnRadius;
+    s16 gameBit;       /* 0x18 */
+    s16 spawnMode;     /* 0x1A */
+    s16 spawnInterval; /* 0x1C */
+    s8 yaw;            /* 0x1E */
+    s8 spawnParam;     /* 0x1F */
+    u8 spawnRadius;    /* 0x20 */
     u8 pad21[3];
 } VfpObjCreatorPlacement;
 
@@ -38,8 +52,9 @@ STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnParam) == 0x1F);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnRadius) == 0x20);
 STATIC_ASSERT(sizeof(VfpObjCreatorPlacement) == 0x24);
 
-/* Obj_AllocObjectSetup buffer filled in vf_objcreator spawn cases.
- * Head is the common ObjPlacement; tail (0x18..0x27) is file-local. */
+/* Obj_AllocObjectSetup buffer filled in for each spawn. Head is the
+ * common ObjPlacement; tail (0x18..0x27) is the per-spawn payload (spin
+ * angles, model/seq id, scale) consumed by the spawned object's init. */
 typedef struct VfpObjCreatorSetup
 {
     ObjPlacement base; /* 0x00..0x17 (posX@0x8, unk04@0x4) */
@@ -105,8 +120,6 @@ void vfpobjcreator_init(int* obj, u8* init)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-/* EN v1.0 0x801F9D78  size: 1068b  Periodically spawns falling-object setups
- * (mode 1) or projectile bursts (mode 6) while loading is locked. */
 void vfpobjcreator_update(int* obj)
 {
     VfpObjCreatorPlacement* placement =
@@ -129,94 +142,89 @@ void vfpobjcreator_update(int* obj)
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0)
         {
-            u8* o;
-            char* n;
+            u8* setupBuf;
+            char* spawned;
             state->spawnTimer = state->spawnInterval;
-            o = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
-            ((VfpObjCreatorSetup*)o)->base.unk04[2] = 0xff;
-            ((VfpObjCreatorSetup*)o)->base.unk04[3] = 0xff;
-            ((VfpObjCreatorSetup*)o)->base.unk04[0] = 2;
-            ((VfpObjCreatorSetup*)o)->base.unk04[1] = 1;
-            ((VfpObjCreatorSetup*)o)->base.posX =
+            setupBuf = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[2] = 0xff;
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[3] = 0xff;
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[0] = 2;
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[1] = 1;
+            ((VfpObjCreatorSetup*)setupBuf)->base.posX =
                 ((GameObject*)obj)->anim.localPosX +
-                (f32)(int)
-            randomGetRange(-state->spawnRadius, state->spawnRadius);
-            ((VfpObjCreatorSetup*)o)->base.posY = ((GameObject*)obj)->anim.localPosY;
-            ((VfpObjCreatorSetup*)o)->base.posZ =
+                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
+            ((VfpObjCreatorSetup*)setupBuf)->base.posY = ((GameObject*)obj)->anim.localPosY;
+            ((VfpObjCreatorSetup*)setupBuf)->base.posZ =
                 ((GameObject*)obj)->anim.localPosZ +
-                (f32)(int)
-            randomGetRange(-state->spawnRadius, state->spawnRadius);
-            ((VfpObjCreatorSetup*)o)->unk20 = 0x50;
-            ((VfpObjCreatorSetup*)o)->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
-            ((VfpObjCreatorSetup*)o)->unk22 = -1;
-            ((VfpObjCreatorSetup*)o)->unk18 = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)o)->unk1A = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)o)->unk1C = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)o)->unk24 = 0;
-            n = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                *(int*)&((GameObject*)obj)->anim.parent);
-            if (n == NULL)
+                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
+            ((VfpObjCreatorSetup*)setupBuf)->unk20 = 0x50;
+            ((VfpObjCreatorSetup*)setupBuf)->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
+            ((VfpObjCreatorSetup*)setupBuf)->unk22 = -1;
+            ((VfpObjCreatorSetup*)setupBuf)->unk18 = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            ((VfpObjCreatorSetup*)setupBuf)->unk1A = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            ((VfpObjCreatorSetup*)setupBuf)->unk1C = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            ((VfpObjCreatorSetup*)setupBuf)->unk24 = 0;
+            spawned = Obj_SetupObject(setupBuf, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                      *(int*)&((GameObject*)obj)->anim.parent);
+            if (spawned == NULL)
             {
                 break;
             }
-            ((GameObject*)n)->anim.velocityY =
-                lbl_803E606C * (f32)(int)
-            randomGetRange(0, 10) + lbl_803E6068;
-            ((GameObject*)n)->anim.velocityX = lbl_803E6070 * (f32)(int)
-            randomGetRange(-10, 10);
-            ((GameObject*)n)->anim.velocityZ = lbl_803E6070 * (f32)(int)
-            randomGetRange(-10, 10);
+            ((GameObject*)spawned)->anim.velocityY =
+                lbl_803E606C * (f32)(int)randomGetRange(0, 10) + lbl_803E6068;
+            ((GameObject*)spawned)->anim.velocityX = lbl_803E6070 * (f32)(int)randomGetRange(-10, 10);
+            ((GameObject*)spawned)->anim.velocityZ = lbl_803E6070 * (f32)(int)randomGetRange(-10, 10);
         }
         break;
     case VFP_OBJCREATOR_PROJECTILE_MODE:
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0)
         {
-            u8* o;
-            char* n;
+            u8* setupBuf;
+            char* spawned;
             struct
             {
                 s16 ang[3];
                 f32 v[4];
-            } m;
+            } launch;
             state->spawnTimer = state->spawnInterval;
-            o = Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
-            ((VfpObjCreatorSetup*)o)->base.posX = placement->base.posX;
-            ((VfpObjCreatorSetup*)o)->base.posY = placement->base.posY;
-            ((VfpObjCreatorSetup*)o)->base.posZ = placement->base.posZ;
-            ((VfpObjCreatorSetup*)o)->base.unk04[0] = placement->base.unk04[0];
-            ((VfpObjCreatorSetup*)o)->base.unk04[1] = placement->base.unk04[1];
-            ((VfpObjCreatorSetup*)o)->base.unk04[2] = placement->base.unk04[2];
-            ((VfpObjCreatorSetup*)o)->base.unk04[3] = placement->base.unk04[3];
-            ((VfpObjCreatorSetup*)o)->unk1E = -1;
-            ((VfpObjCreatorSetup*)o)->unk20 = -1;
-            n = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                *(int*)&((GameObject*)obj)->anim.parent);
-            if (n == NULL)
+            setupBuf = Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
+            ((VfpObjCreatorSetup*)setupBuf)->base.posX = placement->base.posX;
+            ((VfpObjCreatorSetup*)setupBuf)->base.posY = placement->base.posY;
+            ((VfpObjCreatorSetup*)setupBuf)->base.posZ = placement->base.posZ;
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[0] = placement->base.unk04[0];
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[1] = placement->base.unk04[1];
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[2] = placement->base.unk04[2];
+            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[3] = placement->base.unk04[3];
+            ((VfpObjCreatorSetup*)setupBuf)->unk1E = -1;
+            ((VfpObjCreatorSetup*)setupBuf)->unk20 = -1;
+            spawned = Obj_SetupObject(setupBuf, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                      *(int*)&((GameObject*)obj)->anim.parent);
+            if (spawned == NULL)
             {
                 break;
             }
-            ((GameObject*)n)->unkF8 = 0x1f4;
+            ((GameObject*)spawned)->unkF8 = 0x1f4;
             {
-                f32 b;
-                f32 a = *(f32*)&lbl_803E6074;
-                ((GameObject*)n)->anim.velocityY = a;
-                ((GameObject*)n)->anim.velocityX = a;
-                b = lbl_803E6078;
-                ((GameObject*)n)->anim.velocityZ = b;
-                m.v[1] = a;
-                m.v[2] = a;
-                m.v[3] = a;
-                m.v[0] = b;
+                f32 vz;
+                f32 vxy = *(f32*)&lbl_803E6074;
+                ((GameObject*)spawned)->anim.velocityY = vxy;
+                ((GameObject*)spawned)->anim.velocityX = vxy;
+                vz = lbl_803E6078;
+                ((GameObject*)spawned)->anim.velocityZ = vz;
+                launch.v[1] = vxy;
+                launch.v[2] = vxy;
+                launch.v[3] = vxy;
+                launch.v[0] = vz;
             }
-            m.ang[2] = 0;
-            m.ang[1] = 0;
-            m.ang[0] = ((GameObject*)obj)->anim.rotX;
-            vecRotateZXY(m.ang, (f32*)(n + 0x24));
-            Sfx_PlayFromObject((int)n, 0x10c);
-            (*gPartfxInterface)->spawnObject(n, 0x39a, NULL, 0x10002, -1, NULL);
-            (*gPartfxInterface)->spawnObject(n, 0x39b, NULL, 0x10002, -1, NULL);
-            (*gPartfxInterface)->spawnObject(n, 0x39c, NULL, 0x10002, -1, NULL);
+            launch.ang[2] = 0;
+            launch.ang[1] = 0;
+            launch.ang[0] = ((GameObject*)obj)->anim.rotX;
+            vecRotateZXY(launch.ang, (f32*)(spawned + 0x24));
+            Sfx_PlayFromObject((int)spawned, 0x10c);
+            (*gPartfxInterface)->spawnObject(spawned, 0x39a, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnObject(spawned, 0x39b, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnObject(spawned, 0x39c, NULL, 0x10002, -1, NULL);
         }
         break;
     }
