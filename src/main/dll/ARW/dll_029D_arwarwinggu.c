@@ -1,3 +1,15 @@
+/*
+ * arwarwinggu (DLL 0x29D) - the Arwing's attached "gear" models in the
+ * on-rails flight sections: the twin laser guns (def 0x610 / 0x615), the
+ * bomb model (def 0x611) and the engine/escort model (def 0x606). One DLL
+ * drives all of them, branching on the object's seqId. getExtraSize and
+ * update therefore return / interpret a different state shape per seqId:
+ *   0x606  engine - scrolls a texture animation (8-byte texture state)
+ *   0x610/0x615 guns - count down a "just fired" visible timer, then hide
+ *   0x611  bomb - fades alpha in or out toward a target (1-byte fadeIn flag)
+ * arwarwinggu_setActiveVisible shows/hides a gun and selects its model
+ * index; the arwarwing TU calls it when a shot is fired.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
