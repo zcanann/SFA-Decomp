@@ -205,7 +205,10 @@ void dll_4F_update(int* obj)
     pts[1] = lbl_803E1A8C;
     pts[2] = lbl_803E1A88;
     pts[3] = lbl_803E1A88;
-    fz = Curve_EvalHermite(pts, 0, lbl_803DD590->blendProgress);
+    {
+        f32 t0 = lbl_803DD590->blendProgress;
+        fz = Curve_EvalHermite(pts, 0, t0);
+    }
     target = (GameObject*)camera->anim.targetObj;
     {
         s16 a0 = (s16)(0x8000 - target->anim.rotX);

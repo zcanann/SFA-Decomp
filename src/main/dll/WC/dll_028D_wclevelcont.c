@@ -284,6 +284,7 @@ void wclevelcont_update(int obj)
     }
 }
 
+#pragma scheduling on
 int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;

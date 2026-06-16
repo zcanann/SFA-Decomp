@@ -4031,9 +4031,9 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
             {
                 if (queryMode == 1 && frameTable != 0)
                 {
-                    int e = (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+                    int e = (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4);
                     int v;
-                    e = base + e;
+                    e = base + e + 4;
                     v = *(int*)(e + 4);
                     *outB = *(int*)(e + 8);
                     *outA = v;
@@ -5120,13 +5120,14 @@ void fn_80051528(void* p1, void* mtx)
         int id = lbl_803DCD8C;
         if (p1 != 0)
         {
+            void* obj = (char*)p1 + 0x20;
             if (*(u8*)((char*)p1 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded((char*)p1 + 0x20, *(void**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj((char*)p1 + 0x20, id);
+                GXLoadTexObj(obj, id);
             }
         }
     }
@@ -6329,8 +6330,8 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD70 = lbl_803DCD70 + 1;
         lbl_803DCD6C = lbl_803DCD6C + 1;
         lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 = lbl_803DCD69 + 2;
-        lbl_803DCD6A = lbl_803DCD6A + 2;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
     }
 }
 
@@ -6414,8 +6415,8 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD70 = lbl_803DCD70 + 1;
         lbl_803DCD6C = lbl_803DCD6C + 1;
         lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 = lbl_803DCD69 + 2;
-        lbl_803DCD6A = lbl_803DCD6A + 2;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
     }
 }
 
@@ -6506,8 +6507,8 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD70 = lbl_803DCD70 + 1;
         lbl_803DCD6C = lbl_803DCD6C + 1;
         lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 = lbl_803DCD69 + 2;
-        lbl_803DCD6A = lbl_803DCD6A + 2;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
     }
 }
 
@@ -6760,7 +6761,7 @@ void fn_8004D230(void)
     GXSetTevSwapMode(lbl_803DCD90, 1, 1);
     if (lbl_803DCD90 == 0)
     {
-        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xf);
     }
     else
     {
@@ -7031,11 +7032,11 @@ void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
     char* e;
     if (*(void**)(base + 0x74) == NULL) return;
     if (*(void**)(base + 0x78) == NULL) return;
-    e = (char*)*(int*)(base + 0x74) + idx;
+    e = *(char**)(base + 0x74) + idx;
     *out1 = *(s16*)(e + 0x1c);
     *out2 = *(s16*)(e + 0x1e);
-    *out3 = *(int*)((char*)*(int*)(base + 0x74) +
-        *(int*)((char*)*(int*)(base + 0x78) + p5 * 4 + 0x18) + 4);
+    *out3 = *(int*)(*(char**)(base + 0x74) +
+        *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
 }
 
 void trickyVoxAllocFn_8004b5d4(int* out)

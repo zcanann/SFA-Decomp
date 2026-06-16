@@ -74,8 +74,8 @@ void nw_ice_update(int* obj)
     else
     {
         objects = (int**)ObjGroup_GetObjects(0x3d, &count);
-        setup = *(int**)&((GameObject*)obj)->anim.placementData;
         scan = objects;
+        setup = *(int**)&((GameObject*)obj)->anim.placementData;
         for (i = 0; i < count; scan++, i++)
         {
             candidate = *scan;

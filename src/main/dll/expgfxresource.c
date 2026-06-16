@@ -81,7 +81,7 @@ int expgfx_acquireResourceEntry(int resourceId)
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
         }
     }
-    if (Obj_IsLoadingLocked() == 0)
+    if ((u8)Obj_IsLoadingLocked() == 0)
     {
         return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
     }

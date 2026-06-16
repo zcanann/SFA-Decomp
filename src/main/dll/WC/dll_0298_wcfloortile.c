@@ -84,7 +84,7 @@ void wcfloortile_update(int obj)
     default:
         if (state->flags & 4)
         {
-            int i, off;
+            int off, i;
             if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
             {
                 f32 z = lbl_803E6E9C;

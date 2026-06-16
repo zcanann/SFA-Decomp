@@ -66,6 +66,7 @@ void wcbouncycra_hitDetect(void)
 {
 }
 
+#pragma opt_common_subs off
 void wcbouncycra_update(int obj)
 {
     WCBouncyCrateState* state = ((GameObject*)obj)->extra;
@@ -93,7 +94,9 @@ void wcbouncycra_update(int obj)
             }
             else
             {
-                dist = (lbl_803E6D38 - (v - lbl_803E6D28) / lbl_803E6D34) * lbl_803E6D2C;
+                dist = (v - lbl_803E6D28) / lbl_803E6D34;
+                dist = lbl_803E6D38 - dist;
+                dist = dist * lbl_803E6D2C;
             }
             ((GameObject*)obj)->anim.velocityY = dist;
             state->flags |= WBOUNCY_FLAG_ACTIVE;
@@ -121,6 +124,7 @@ void wcbouncycra_update(int obj)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void wcbouncycra_init(int obj, int setup)
 {

@@ -3915,7 +3915,6 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
             linkIndex++;
         }
 
-        nextCurve = curve;
         if (nextCurveId != (int)ROMCURVE_LINK_ID_NONE)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
@@ -3931,9 +3930,9 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
                 }
                 hitCount++;
             }
+            curve = nextCurve;
         }
         previousCurveId = nextCurveId;
-        curve = nextCurve;
     }
     while ((previousCurveId != (int)curveId) && (nextCurveId != (int)ROMCURVE_LINK_ID_NONE));
 
@@ -4662,15 +4661,21 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                         segment.endY = linkedCurve->y;
                         segment.endZ = linkedCurve->z;
                         distance = RomCurve_distanceToSegment(pointX, pointY, pointZ, &segment);
-                        absBestDistance = bestDistance;
                         if (bestDistance < gFloatZero)
                         {
                             absBestDistance = -bestDistance;
                         }
-                        absDistance = distance;
+                        else
+                        {
+                            absBestDistance = bestDistance;
+                        }
                         if (distance < gFloatZero)
                         {
                             absDistance = -distance;
+                        }
+                        else
+                        {
+                            absDistance = distance;
                         }
                         if (absDistance < absBestDistance)
                         {
@@ -5429,7 +5434,7 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     int curveIndex;
     int typeIndex;
 
-    bestDistance = lbl_803E0664;
+    bestDistance = *(f32*)&lbl_803E0664;
     bestCurve = NULL;
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
@@ -5477,7 +5482,6 @@ void curves_remove(RomCurveDef* curve)
     int sortedCurveCount;
     RomCurveDef** tableSlot;
     int removeIndex;
-    u32 remaining;
 
     removeIndex = 0;
     tableSlot = romCurves;
@@ -5494,11 +5498,10 @@ void curves_remove(RomCurveDef* curve)
         return;
     }
 
-    sortedCurveCount = nRomCurves - 1;
-    nRomCurves = sortedCurveCount;
+    nRomCurves = nRomCurves - 1;
+    sortedCurveCount = nRomCurves;
     tableSlot = romCurves + removeIndex;
-    remaining = sortedCurveCount - removeIndex;
-    for (; remaining != 0; remaining--)
+    for (; removeIndex < sortedCurveCount; removeIndex++)
     {
         tableSlot[0] = tableSlot[1];
         tableSlot = tableSlot + 1;

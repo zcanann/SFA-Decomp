@@ -1570,11 +1570,11 @@ extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
 extern void GXCopyTex(void* dest, u8 clear);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 
+#pragma optimization_level 2
 void drawReflectionTexture(void)
 {
-    void* texture = lbl_803DCF7C;
-    f32 scale = lbl_803DED28;
-    drawTexture(texture, scale, scale, 0xff, 0x40);
+    char* texture = lbl_803DCF7C;
+    drawTexture(texture, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, 4, 0);
     GXCopyTex((char*)lbl_803DCFE4 + 0x60, 1);
@@ -1583,6 +1583,7 @@ void drawReflectionTexture(void)
         GXPreLoadEntireTexture((char*)lbl_803DCFE4 + 0x20, *(void**)(lbl_803DCFE4 + 0x40));
     }
 }
+#pragma optimization_level reset
 
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);

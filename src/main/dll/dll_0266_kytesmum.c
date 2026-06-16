@@ -390,6 +390,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     return 0;
 }
 
+#pragma optimization_level 2
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
 {
     u8 flags = 0;
@@ -432,3 +433,4 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
         Sfx_PlayFromObject(obj, (u16)sfxData[3]);
     }
 }
+#pragma optimization_level reset

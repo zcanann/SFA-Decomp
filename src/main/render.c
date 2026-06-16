@@ -143,7 +143,7 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
         shamt = 0;
     }
     acc = hi << shamt;
-    idx = (*p & 0xf) << 3;
+    idx = (*(volatile u8*)p & 0xf) << 3;
     p = p + 1;
     initialBit = modelRenderInstrsState_getBit(state);
     gap = gap - bitWidth;

@@ -268,9 +268,9 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.previousWorldPosX = *(f32*)((int)obj + 0x18);
-    ((GameObject*)obj)->anim.previousWorldPosY = *(f32*)((int)obj + 0x1c);
-    ((GameObject*)obj)->anim.previousWorldPosZ = *(f32*)((int)obj + 0x20);
+    ((GameObject*)obj)->anim.previousWorldPosX = ((GameObject*)obj)->anim.worldPosX;
+    ((GameObject*)obj)->anim.previousWorldPosY = ((GameObject*)obj)->anim.worldPosY;
+    ((GameObject*)obj)->anim.previousWorldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 
     if (((GameObject*)obj)->animEventCallback != NULL)
     {
@@ -395,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)((u8*)(int)lbl_80396918 + slotOff + j * 8 + 4) = obj;
         }
     }
     else
@@ -419,7 +419,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
             }
             if ((((ObjSeqState*)seq)->flags & 2) != 0)
             {
-                *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+                *(s16*)obj += ((ObjSeqState*)seq)->heading;
             }
             ((GameObject*)obj)->pendingParentObj = NULL;
             ((GameObject*)obj)->objectFlags &= ~0x1000;
@@ -3037,7 +3037,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 ((GameObject*)obj)->anim.localPosY +
                 ((((GameObject*)obj)->anim.localPosY - scratch[0]) - *(f32*)(model + 0xc));
         }
-        *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+        *(s16*)obj += ((ObjSeqState*)seq)->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
@@ -3158,7 +3158,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
                 + 0xc));
     }
 
-    *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+    *(s16*)obj += ((ObjSeqState*)seq)->heading;
     if (*seqObj != obj && (s8)lbl_803DD0D8 == 0)
     {
         objCallSeqFn(*seqObj, obj, seq, ((u8*)(historyBase + 0x3c4c))[(s8)((ObjSeqState*)seq)->slot]);
@@ -3201,7 +3201,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
     int baseYaw;
     int baseRoll;
-    int basePitch;
+    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
@@ -4208,6 +4208,7 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
     return -1;
 }
 
+#pragma opt_loop_invariants off
 void* ObjSeq_FindTargetObject(u8* obj)
 {
     int objectCount;
@@ -4243,8 +4244,6 @@ void* ObjSeq_FindTargetObject(u8* obj)
 
     bestDistSq = lbl_803DEFF0;
     bestObj = NULL;
-    {
-    f32 zeroRef = lbl_803DEFB0;
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
@@ -4254,16 +4253,16 @@ void* ObjSeq_FindTargetObject(u8* obj)
             dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)candidate)->anim.localPosY;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)candidate)->anim.localPosZ;
             distSq = dx * dx + dy * dy + dz * dz;
-            if (bestDistSq < zeroRef || distSq < bestDistSq)
+            if (bestDistSq < lbl_803DEFB0 || distSq < bestDistSq)
             {
                 bestDistSq = distSq;
                 bestObj = candidate;
             }
         }
     }
-    }
     return bestObj;
 }
+#pragma opt_loop_invariants reset
 
 void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 {
@@ -4796,14 +4795,14 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     RomCurveNode* node;
     f32 outPos[3];
     f32 offset[3];
+    f32 z;
+    f32 y;
+    f32 x;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 angleSin;
     f32 angleCos;
-    f32 x;
-    f32 y;
-    f32 z;
 
     base = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (base == NULL)
@@ -4984,8 +4983,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         {
             deltaPrev = -deltaPrev;
         }
-        values[2] = (deltaNext + deltaPrev) * lbl_803DF000 *
-            (f32)((s8)prev->tangentAndMode >> 2);
+        values[2] = (deltaNext + deltaPrev) * (lbl_803DF000 *
+            (f32)((s8)prev->tangentAndMode >> 2));
     }
 
     span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
@@ -5008,8 +5007,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
             {
                 deltaPrev = -deltaPrev;
             }
-            values[3] = (deltaNext + deltaPrev) * lbl_803DF000 *
-                (f32)((s8)key->tangentAndMode >> 2);
+            values[3] = (deltaNext + deltaPrev) * (lbl_803DF000 *
+                (f32)((s8)key->tangentAndMode >> 2));
         }
     }
 

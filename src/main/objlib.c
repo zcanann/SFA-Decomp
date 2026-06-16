@@ -1035,15 +1035,15 @@ uint ObjGroup_ContainsObject(uint obj, int group)
     return (uint)(halfDiff - limitXorIndex) >> 0x1f;
 }
 
+#pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistance)
 {
+    uint* entry;
     uint nearest;
     uint index;
     uint limit;
-    uint* entry;
     float distanceSq;
     float bestDistanceSq;
-    u8* off;
 
     nearest = 0;
     bestDistanceSq = *maxDistance * *maxDistance;
@@ -1051,9 +1051,8 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     {
         return 0;
     }
-    off = &gObjGroupOffsets[group];
-    index = (uint)off[0];
-    limit = (uint)off[1];
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)(&gObjGroupOffsets[group])[1];
     entry = (uint*)gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
@@ -1075,6 +1074,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     }
     return nearest;
 }
+#pragma opt_loop_invariants reset
 
 #pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)

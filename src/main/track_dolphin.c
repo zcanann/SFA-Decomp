@@ -2200,7 +2200,7 @@ void fn_80069EB8(int param)
     u32 j;
 
     cache = getCache();
-    for (blk = 0; blk < 0x40; blk++)
+    for (blk = 0; (u32)blk < 0x40; blk++)
     {
         int hi, mid;
         u32 scaled;

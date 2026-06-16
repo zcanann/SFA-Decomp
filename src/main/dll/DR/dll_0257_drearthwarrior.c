@@ -499,8 +499,6 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
 int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    u8* pathState = (u8*)&inner->baddie + 4;
     int i;
     f32 fz;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -518,16 +516,16 @@ int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 0xe:
         case 0xf:
             inner->unk9FD |= 1;
-            hitState->shapeFlags &= ~0x20;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->shapeFlags &= ~0x20;
             break;
         case 0x10:
             inner->unk9FD &= ~1;
-            hitState->shapeFlags |= 0x20;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->shapeFlags |= 0x20;
             break;
         }
     }
-    inner->sub.unk360 |= 0x800000;
-    (*gPathControlInterface)->attachObject((void*)obj, pathState);
+    *(u32*)&inner->sub.unk360 |= 0x800000LL;
+    (*gPathControlInterface)->attachObject((void*)obj, (u8*)&inner->baddie + 4);
     fz = lbl_803E8304;
     inner->baddie.animSpeedC = fz;
     inner->baddie.animSpeedB = fz;

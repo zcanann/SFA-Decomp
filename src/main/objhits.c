@@ -1710,9 +1710,9 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     f32 localBx;
     f32 localBy;
     f32 localBz;
-    uint angle;
     int angleA;
     int angleB;
+    uint angle;
     f32 sinVal;
     f32 sinSq;
     f32 weightA;
@@ -1836,8 +1836,8 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     }
     else
     {
-        angle = getAngle(-x, -z);
-        angleA = animA->rotX - (int)(angle & 0xffff);
+        angle = getAngle(-x, -z) & 0xffff;
+        angleA = animA->rotX - (int)angle;
         if (angleA > 0x8000)
         {
             angleA -= 0xffff;
@@ -1846,7 +1846,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         {
             angleA += 0xffff;
         }
-        angleB = animB->rotX - (int)(((angle & 0xffff) + 0x8000) & 0xffff);
+        angleB = animB->rotX - (int)((angle + 0x8000) & 0xffff);
         if (angleB > 0x8000)
         {
             angleB -= 0xffff;

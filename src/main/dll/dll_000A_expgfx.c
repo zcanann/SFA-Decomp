@@ -249,15 +249,14 @@ void expgfxRemoveAll(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                expTabIndex = Expgfx_GetSlotTableIndex(slot);
-                expTabEntry = Expgfx_GetTableEntry(expTabIndex);
-                if (expTabEntry->resource != 0)
+                if (*(u32*)((u8*)runtime + (Expgfx_GetSlotTableIndex(slot) << 4) + 2440) != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)expTabEntry->resource);
+                    textureFree((void*)*(u32*)((u8*)runtime + (Expgfx_GetSlotTableIndex(slot) << 4) + 2440));
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
+                expTabEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
                 if (expTabEntry->refCount != 0)
                 {
                     expTabEntry->refCount--;
@@ -3077,6 +3076,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
 }
 #pragma dont_inline reset
 
+#pragma ppc_unroll_factor_limit 1
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3140,6 +3140,7 @@ void expgfx_onMapSetup(void)
     }
     gExpgfxTextureFreeInProgress = 0;
 }
+#pragma ppc_unroll_factor_limit 4
 
 void expgfx_release(void)
 {
@@ -3156,6 +3157,7 @@ void expgfx_release(void)
     return;
 }
 
+#pragma ppc_unroll_factor_limit 1
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
