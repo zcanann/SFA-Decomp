@@ -1276,7 +1276,7 @@ void cutsceneEnterExit(int entering, int affectSounds)
     }
 }
 
-#pragma peephole off
+#pragma peephole on
 void removeButtonObject(u32 h)
 {
     int* p;

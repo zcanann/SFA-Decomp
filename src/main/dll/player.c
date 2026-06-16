@@ -12624,6 +12624,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void objLoadPlayerFromSave(int obj)
 {
+    u8* tbl = (u8*)lbl_80332EC0;
     int inner = *(int*)&((GameObject*)obj)->extra;
     u8* pathState;
     int me;
@@ -12670,9 +12671,9 @@ void objLoadPlayerFromSave(int obj)
     pathState = (u8*)&((PlayerState*)inner)->baddie + 4;
     (*gPathControlInterface)->init(pathState, 1, 0x400a7, 1);
     (*gPathControlInterface)->setLocalPointCollision(pathState, 1,
-                                                     (u8*)lbl_80332EC0 + 0x130,
+                                                     tbl + 0x130,
                                                      &lbl_803DC6C0, 1);
-    (*gPathControlInterface)->setup(pathState, 2, (u8*)lbl_80332EC0 + 0x118,
+    (*gPathControlInterface)->setup(pathState, 2, tbl + 0x118,
                                     lbl_803DC6B8, &lbl_803DC6A4);
     pathState[0x258] = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
@@ -12685,18 +12686,18 @@ void objLoadPlayerFromSave(int obj)
     (*(void (*)(GameUIInterface*))(*(int*)((char*)*gGameUIInterface + 0x14)))(*gGameUIInterface);
     lbl_803DE444 = NULL;
     ((ByteFlags*)((char*)inner + 0x3f4))->b40 = 1;
-    ((PlayerState*)inner)->unk3F8 = (int)((char*)lbl_80332EC0 + 0x190);
-    ((PlayerState*)inner)->moveSlots = (int)((char*)lbl_80332EC0 + 0x854);
+    ((PlayerState*)inner)->unk3F8 = (int)(tbl + 0x190);
+    ((PlayerState*)inner)->moveSlots = (int)(tbl + 0x854);
     ((PlayerState*)inner)->moveSlotCount = 0x1c;
-    ((PlayerState*)inner)->unk450 = (int)((char*)lbl_80332EC0 + 0x450);
+    ((PlayerState*)inner)->unk450 = (int)(tbl + 0x450);
     ((PlayerState*)inner)->unk8D0 = 0x29;
-    ((PlayerState*)inner)->unk454 = (int)((char*)lbl_80332EC0 + 0x4f4);
+    ((PlayerState*)inner)->unk454 = (int)(tbl + 0x4f4);
     ((PlayerState*)inner)->unk8D1 = 0x29;
-    ((PlayerState*)inner)->unk458 = (int)((char*)lbl_80332EC0 + 0x598);
+    ((PlayerState*)inner)->unk458 = (int)(tbl + 0x598);
     ((PlayerState*)inner)->unk8D2 = 0x2e;
-    ((PlayerState*)inner)->unk45C = (int)((char*)lbl_80332EC0 + 0x650);
+    ((PlayerState*)inner)->unk45C = (int)(tbl + 0x650);
     ((PlayerState*)inner)->unk8D3 = 0x29;
-    ((PlayerState*)inner)->unk460 = (int)((char*)lbl_80332EC0 + 0x6f4);
+    ((PlayerState*)inner)->unk460 = (int)(tbl + 0x6f4);
     ((PlayerState*)inner)->unk8D4 = 0x2e;
     ((PlayerState*)inner)->unk7E0 = lbl_803E7ED8;
     for (i = 0, off = 0; i < ((PlayerState*)inner)->moveSlotCount; i++)
@@ -12705,7 +12706,7 @@ void objLoadPlayerFromSave(int obj)
         *(int*)(((PlayerState*)inner)->moveSlots + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
         da = ((PlayerState*)inner)->moveSlots + off;
         objGetWeaponDa((u8*)obj, ((GameObject*)obj)->anim.seqId, (ObjWeaponDaTable*)(da + 0x60),
-                       *(s16*)((char*)lbl_80332EC0 + 0x7fc +
+                       *(s16*)(tbl + 0x7fc +
                            *(s16*)((char*)da + 0x2) * 2),
                        0);
         off += 0xb0;
@@ -12713,7 +12714,7 @@ void objLoadPlayerFromSave(int obj)
     fn_802AABE4(obj);
     lbl_803DE4B2 = 0x2d;
     lbl_803DE448 = 0;
-    gb = (s16*)((char*)lbl_80332EC0 + 0x1b94);
+    gb = (s16*)(tbl + 0x1b94);
     for (i = 0; i < 0xb; i++)
     {
         if (GameBit_Get(*gb) != 0)

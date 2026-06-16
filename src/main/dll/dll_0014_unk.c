@@ -5205,7 +5205,7 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
     return bestLink[0];
 }
 
-#pragma optimization_level 2
+#pragma optimization_level 1
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
 {
     f32 startX;
@@ -5229,14 +5229,14 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     deltaX = (endX = segment->endX) - (startX = segment->startX);
     deltaY = (endY = segment->endY) - (startY = segment->startY);
     deltaZ = (endZ = segment->endZ) - (startZ = segment->startZ);
-    if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ))
+    if (((gFloatZero == deltaX) && (gFloatZero == deltaY)) && (gFloatZero == deltaZ))
     {
-        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
-            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+        projection = gFloatZero;
     }
     else
     {
-        projection = gFloatZero;
+        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
+            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
     }
     if (projection < gFloatZero)
     {
