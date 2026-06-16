@@ -6136,6 +6136,7 @@ void fn_8029BC08(int obj)
     lbl_803DC66C = 1;
 }
 
+#pragma peephole off
 void fn_8029F67C(int obj)
 {
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -6151,6 +6152,7 @@ void fn_8029F67C(int obj)
         v[2] = 0;
     }
 }
+#pragma peephole reset
 
 void fn_80296124(int obj, void* p2, void* p3)
 {
