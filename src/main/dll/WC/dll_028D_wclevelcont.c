@@ -1,23 +1,3 @@
-/*
- * wclevelcont (DLL 0x28D) - the master level controller for the Walled
- * City (WC) push-block puzzle. One instance owns the level's global
- * progress: it drives the day/night sky and music state, latches a set of
- * game bits through a SCGameBitLatch, and dispatches the tile puzzle by the
- * object's map-event act (act 1 -> wcpushblock_updateLevelControlState,
- * act 2 -> fn_802251B4). state->mode is seeded at init from completion
- * game bits.
- *
- * The puzzle runs on two 8x8 u8 grids (lbl_803AD2D8 / lbl_803AD298), copied
- * at init from the ROM templates lbl_8032B008 / lbl_8032B088. The
- * func0E/func0F/func15/func16 helpers scan an 8x8 ROM table for a value and
- * return its (row,col); render2/func14 read a working-grid cell with bounds
- * checks and modelMtxFn/func13 write one; func0B/func12 map a world XZ to a
- * cell and setScale/func11 map a cell back to world XZ (via
- * mapGetBlockOriginForPos); func10 ray-walks a row or column from a start
- * cell in a +/-1 step direction, returning a hit classification (1/2/4) and
- * the world position of the blocking cell. The func* names are the retail
- * symbol names, not semantic.
- */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -89,14 +69,12 @@ void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
-    f32 base;
 
     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
-    base = lbl_803E6DB4;
-    *outXp = base + (lbl_803E6DB8 + outX + (f32)(col * 48));
-    *outZp = base + (lbl_803E6DC0 + outZ + (f32)(row * 48));
+    *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
+    *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
 
 void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
@@ -167,14 +145,12 @@ void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
-    f32 base;
 
     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
-    base = lbl_803E6DB4;
-    *outXp = base + (lbl_803E6DD0 + outX + (f32)(col * 48));
-    *outZp = base + (lbl_803E6DD4 + outZ + (f32)(row * 48));
+    *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
+    *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
 
 int wclevelcont_getExtraSize(void) { return 0x1c; }
@@ -304,7 +280,6 @@ void wclevelcont_update(int obj)
     }
 }
 
-#pragma scheduling off
 int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;
@@ -316,28 +291,24 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         if (dx == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ);
             {
-                f32 base = lbl_803E6DB4;
                 f32 tx = lbl_803E6DD0 + px;
-                *outX = base + (tx + lbl_803E6DBC);
-                *outZ = base + (lbl_803E6DD4 + pz + (f32)(bi * 48));
+                tx = tx + lbl_803E6DBC;
+                *outX = lbl_803E6DB4 + tx;
             }
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
             a += 1;
             limit = 8;
         }
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
-            {
-                f32 base = lbl_803E6DB4;
-                f32 tx = lbl_803E6DD0 + px;
-                *outX = base + (tx + lbl_803E6DA8);
-                *outZ = base + (lbl_803E6DD4 + pz + (f32)(bi * 48));
-            }
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ);
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DA8);
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
             a -= 1;
             limit = -1;
         }
@@ -349,20 +320,21 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 {
                     f32 pz, px;
                     i += dx;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                     *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                     *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
                     return 2;
                 }
             }
         }
+        return 4;
     }
     else
     {
@@ -370,14 +342,13 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         if (dy == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ);
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
             {
-                f32 base = lbl_803E6DB4;
-                f32 tz;
-                *outX = base + (lbl_803E6DD0 + px + (f32)(ai * 48));
-                tz = lbl_803E6DD4 + pz;
-                *outZ = base + (tz + lbl_803E6DBC);
+                f32 tz = lbl_803E6DD4 + pz;
+                tz = tz + lbl_803E6DBC;
+                *outZ = lbl_803E6DB4 + tz;
             }
             b += 1;
             limit = 8;
@@ -385,14 +356,13 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+            mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                    ((GameObject*)obj)->anim.localPosZ);
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
             {
-                f32 base = lbl_803E6DB4;
-                f32 tz;
-                *outX = base + (lbl_803E6DD0 + px + (f32)(ai * 48));
-                tz = lbl_803E6DD4 + pz;
-                *outZ = base + (tz + lbl_803E6DA8);
+                f32 tz = lbl_803E6DD4 + pz;
+                tz = tz + lbl_803E6DA8;
+                *outZ = lbl_803E6DB4 + tz;
             }
             b -= 1;
             limit = -1;
@@ -405,25 +375,24 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 {
                     f32 pz, px;
                     i += dy;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ, &px, &pz);
+                    mapGetBlockOriginForPos(&px, &pz, ((GameObject*)obj)->anim.localPosX,
+                                            ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
                     *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
                     return 2;
                 }
             }
         }
+        return 4;
     }
-    return 4;
 }
 
-#pragma scheduling off
 void wclevelcont_init(int obj)
 {
     WcLevelControlState* state = ((GameObject*)obj)->extra;
@@ -461,7 +430,6 @@ void wclevelcont_init(int obj)
     state->dialogueFlags.b20 = GameBit_Get(0xc59);
     state->dialogueFlags.b18 = GameBit_Get(0xc5a);
 }
-#pragma scheduling reset
 
 void wclevelcont_release(void)
 {
