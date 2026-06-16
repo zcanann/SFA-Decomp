@@ -428,7 +428,6 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     f32 dist;
     f32 dx;
     f32 dz;
-    u16 angle;
     int diff;
 
     dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
@@ -441,14 +440,14 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     }
     if (dist > lbl_803E5A24)
     {
-        angle = (u16)getAngle(dx, dz);
+        diff = (u16)getAngle(dx, dz);
         if (mode != 0)
         {
-            *obj = (s16)angle;
+            *obj = (s16)diff;
         }
         else
         {
-            diff = angle - *(u16*)obj;
+            diff = diff - (u16)*obj;
             if (diff > 0x8000)
             {
                 diff -= 0xFFFF;
@@ -469,7 +468,7 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
             {
                 diff = 0;
             }
-            *obj = (s16)(int)((f32)(diff >> 3) * timeDelta + (f32) * obj);
+            *obj = (s16)((f32)(diff >> 3) * timeDelta + (f32) * (volatile s16*)obj);
         }
     }
     return dist;
