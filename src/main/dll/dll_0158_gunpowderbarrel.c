@@ -271,16 +271,16 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
             (**(code**)(*DAT_803dd740 + 0x30))(obj, extra);
             *(undefined*)(extra + 0x15) = 0;
         }
-        *(undefined*)(extra + 0x17) = 1;
+        ((GunpowderBarrelState*)extra)->fuseFrames = 1;
         *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0xdf;
         ObjGroup_RemoveObject(obj, 0x19);
         if (*(int*)&((GameObject*)obj)->anim.parent == 0)
         {
-            *(float*)(extra + 0x34) = lbl_803E4F5C;
+            ((GunpowderBarrelState*)extra)->radiusGrowthPerFrame = lbl_803E4F5C;
         }
         else
         {
-            *(float*)(extra + 0x34) = lbl_803E4F5C;
+            ((GunpowderBarrelState*)extra)->radiusGrowthPerFrame = lbl_803E4F5C;
         }
         result = FUN_80017a90();
         if (result != 0)
@@ -288,9 +288,9 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
             FUN_8013651c(result);
         }
         *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) & 0xfd;
-        if (*(int*)(extra + 0x10) != 0)
+        if (((GunpowderBarrelState*)extra)->linkedTimerObject != 0)
         {
-            FUN_8020a90c(*(int*)(extra + 0x10));
+            FUN_8020a90c(((GunpowderBarrelState*)extra)->linkedTimerObject);
         }
     }
     FUN_80286884();
@@ -320,7 +320,7 @@ void gunpowderbarrel_free(int obj, int param_2)
     }
     ObjGroup_RemoveObject(obj, 0x19);
     ObjGroup_RemoveObject(obj, 0x16);
-    if (*(unsigned char*)(extra + 0x17) != 0)
+    if (((GunpowderBarrelState*)extra)->fuseFrames != 0)
     {
         (*gExpgfxInterface)->freeSource2((u32)obj);
     }
@@ -342,11 +342,11 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
     int* child;
 
     sub = ((GameObject*)obj)->extra;
-    if (sub[0x17] != 0 || ((GpbHeld4A*)(sub + 0x4a))->held_)
+    if (((GunpowderBarrelState*)sub)->fuseFrames != 0 || ((GpbHeld4A*)(sub + 0x4a))->held_)
     {
         return;
     }
-    if (sub[0x15] != 0)
+    if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
     {
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
