@@ -163,8 +163,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
         }
-        ((BombPlantSporeState*)state)->spinAngle =
-            ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->unk2a8;
+        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->unk2a8;
         angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
         if (0x8000 < angleDelta)
         {
@@ -174,7 +173,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             angleDelta += 0xffff;
         }
-        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
+        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
         {
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
@@ -196,7 +195,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
         }
-        else if (lbl_803E53B0 < ((BombPlantSporeState*)state)->randomPhase)
+        else if (((BombPlantSporeState*)state)->randomPhase > lbl_803E53B0)
         {
             ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
         }
@@ -211,9 +210,9 @@ void bombplantspore_updateDrift(void* obj, void* state)
     {
         angleDelta += 0xffff;
     }
-    ((BombPlantSporeState*)state)->unk2a8 += (s16)((angleDelta * (s32)framesThisStep) >> 4);
+    ((BombPlantSporeState*)state)->unk2a8 += (angleDelta * (s32)framesThisStep) >> 4;
     ((BombPlantSporeState*)state)->unk278 =
-        lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278) *
+        (lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278)) *
         timeDelta +
         ((BombPlantSporeState*)state)->unk278;
 
