@@ -122,7 +122,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* gPlayerShadowInterface;
 extern void OSReport(const char* fmt, ...);
 extern int Obj_GetPlayerObject(void);
-extern void fn_80295918(f32 a, int obj, int b);
+extern void fn_80295918(int obj, int b, f32 a);
 extern void setDrawCloudsAndLights(int v);
 extern void gameFlagFn_8005ce6c(int v);
 extern void setDrawLights(int v);
@@ -1275,7 +1275,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 switch (p[1])
                 {
                 case 1:
-                    switch (((ObjInterpretSeqPlacement*)p)->unk2)
+                    switch (p[2])
                     {
                     case 0:
                         break;
@@ -1283,40 +1283,40 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(lbl_803E40D8, t, 1);
+                            fn_80295918(t, 1, lbl_803E40D8);
                         }
                         break;
                     case 9:
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(lbl_803E40D8, t, 10);
+                            fn_80295918(t, 10, lbl_803E40D8);
                         }
                         break;
                     case 10:
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(lbl_803E40D8, t, 0xb);
+                            fn_80295918(t, 0xb, lbl_803E40D8);
                         }
                         break;
                     case 0xb:
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(lbl_803E40FC, t, 1);
+                            fn_80295918(t, 1, lbl_803E40FC);
                         }
                         break;
                     }
                     break;
                 case 4:
-                    if ((s8)p3 < 0)
+                    if ((s8)p3 >= 0)
                     {
-                        Sfx_StopFromObject((void*)obj, (u16)((p[2] << 8) | p[3]));
+                        Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
                     }
                     else
                     {
-                        Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
+                        Sfx_StopFromObject((void*)obj, (u16)((p[2] << 8) | p[3]));
                     }
                     break;
                 case 6:
@@ -1414,12 +1414,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     getLActions(obj, p2, (u16)((p[2] << 8) | p[3]), p3, p4, 0);
                     break;
                 case 0xb:
-                    switch (((ObjInterpretSeqPlacement*)p)->unk2)
+                    switch (p[2])
                     {
                     case 0:
                     case 3:
                         t = ObjGroup_FindNearestObject(0xf, obj, 0);
-                        if (t != 0)
+                        if ((void*)t != NULL)
                         {
                             (*gObjectTriggerInterface)
                                 ->runSequence(p[3], (void*)t, -1);
@@ -1470,7 +1470,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     Obj_SetActiveModelIndex(Obj_GetPlayerObject(), p[2]);
                     break;
                 case 0x12:
-                    op = (p[2] << 8) | p[3];
+                    op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x3fff;
                     v = GameBit_Get(bit);
                     sel = op >> 14 & 3;
