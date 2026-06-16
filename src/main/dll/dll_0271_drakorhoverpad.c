@@ -534,7 +534,7 @@ void drakorhoverpad_updateMain(int obj)
     if (lbl_803E6A3C != ((DrakorhoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorhoverpadUpdateMainState*)p)->verticalVel);
-        if ((curve->reverse != 0) != (curve->atSegmentEnd != 0))
+        if (curve->reverse != 0 ? curve->atSegmentEnd == 0 : curve->atSegmentEnd != 0)
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),

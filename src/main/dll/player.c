@@ -4923,7 +4923,7 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     {
         *(f32*)((char*)out + 0x8) = *(f32*)((char*)src + 0xc);
         *(f32*)((char*)out + 0x4) = *(f32*)((char*)src + 0x3c);
-        *(s8*)((char*)out + 0x2) = *(s8*)((char*)src + 0x53);
+        *(s8*)((char*)out + 0x2) = (s8)((char*)src)[0x53];
         return 1;
     }
     return 0;
@@ -6154,7 +6154,7 @@ void fn_8029F67C(int obj)
 {
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
     s16* v;
-    modelState->flags &= ~0x1000LL;
+    modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
     ((GameObject*)obj)->anim.flags &= ~0x8;
     ((GameObject*)obj)->anim.activeMove = -1;
     v = objModelGetVecFn_800395d8(obj, 9);
