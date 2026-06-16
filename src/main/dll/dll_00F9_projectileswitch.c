@@ -113,6 +113,7 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
 
 void ProjectileSwitch_hitDetect(int obj)
 {
+    int state3;
     int state2;
     int state;
     int hitId;
@@ -140,7 +141,7 @@ void ProjectileSwitch_hitDetect(int obj)
     if (*(u8*)state != 0)
     {
         if ((((ProjectileSwitchPlacement*)state2)->unk1E & 3) != 1) return;
-        state = *(int*)&((GameObject*)obj)->extra;
+        state3 = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
             Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
@@ -154,12 +155,12 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             tex->textureId = 0;
         }
-        *(u8*)state = 0;
+        *(u8*)state3 = 0;
         GameBit_Set((int)*(short*)(state + 2), 0);
     }
     else
     {
-        state = *(int*)&((GameObject*)obj)->extra;
+        state3 = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
             Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
@@ -173,7 +174,7 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             tex->textureId = 0x100;
         }
-        *(u8*)state = 1;
+        *(u8*)state3 = 1;
         GameBit_Set((int)*(short*)(state + 2), 1);
         if ((((ProjectileSwitchPlacement*)state2)->unk1E & 3) == 2)
         {
