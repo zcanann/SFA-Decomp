@@ -1559,7 +1559,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
         attStateB = NULL;
     }
     result = 0;
-    if ((stateA->objectHitMask != 0) && (stateA->suppressOutgoingHits == 0))
+    if ((stateA->objectHitMask != 0) && ((s8)stateA->suppressOutgoingHits == 0))
     {
         if (((GameObject*)objA)->anim.classId == 1)
         {
@@ -1579,7 +1579,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
                 memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
             }
-            if (attA != 0)
+            if ((uint)attA != 0)
             {
                 hitboxBuf = ObjHits_GetActiveModel(attA);
                 bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
@@ -1639,7 +1639,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
                 memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
             }
-            if (attB != 0)
+            if ((uint)attB != 0)
             {
                 hitboxBuf = ObjHits_GetActiveModel(attB);
                 bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
