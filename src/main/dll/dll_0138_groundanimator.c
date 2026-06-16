@@ -393,6 +393,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     }
 }
 
+#pragma fp_contract off
 void groundanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -525,8 +526,9 @@ void groundanimator_update(int* obj)
         }
         if (g->dirtyFrames != 0)
         {
-            f32 lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->unk20;
+            f32 lim;
             g->dirtyFrames -= 1;
+            lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->unk20;
             if (g->lastDepth > lim)
             {
                 g->lastDepth = lim;
