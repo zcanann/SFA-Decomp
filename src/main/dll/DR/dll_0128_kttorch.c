@@ -28,6 +28,9 @@ typedef struct KtTorchPlacement
     u8 pad1C[0x20 - 0x1C];
 } KtTorchPlacement;
 
+STATIC_ASSERT(offsetof(KtTorchPlacement, animSpeed) == 0x1B);
+STATIC_ASSERT(sizeof(KtTorchPlacement) == 0x20);
+
 void kt_torch_init(int obj, int placement)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
