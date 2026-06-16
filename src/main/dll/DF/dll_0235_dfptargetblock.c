@@ -116,11 +116,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
 
     dx = obj->x - lbl_803DDCF8;
     dz = obj->z - lbl_803DDCFC;
-    if ((lbl_803E648C == dx) && (lbl_803E648C == dz))
-    {
-        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
-    }
-    else if (sqrtf(dx * dx + dz * dz) < threshold)
+    if (((lbl_803E648C == dx) && (lbl_803E648C == dz)) || (sqrtf(dx * dx + dz * dz) < threshold))
     {
         state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
     }
