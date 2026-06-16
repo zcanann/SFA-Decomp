@@ -1742,7 +1742,6 @@ void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB)
 
 
 
-#pragma opt_unroll_count 2
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2)
 {
     u8* slot;
