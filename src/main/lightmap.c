@@ -812,17 +812,17 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
         lightmap_flushQueuedRenderPackets();
         DAT_803ddab0 = 0;
     }
-    if (*(int*)(object + 0x30) == 0)
+    if (*(int*)&((GameObject*)object)->anim.parent == 0)
     {
-        viewX = *(float*)(object + 0x18) - lbl_803DDA58;
-        viewY = *(float*)(object + 0x1c);
-        viewZ = *(float*)(object + 0x20) - lbl_803DDA5C;
+        viewX = ((GameObject*)object)->anim.worldPosX - lbl_803DDA58;
+        viewY = ((GameObject*)object)->anim.worldPosY;
+        viewZ = ((GameObject*)object)->anim.worldPosZ - lbl_803DDA5C;
     }
     else
     {
-        viewX = *(float*)(object + 0x18);
-        viewY = *(float*)(object + 0x1c);
-        viewZ = *(float*)(object + 0x20);
+        viewX = ((GameObject*)object)->anim.worldPosX;
+        viewY = ((GameObject*)object)->anim.worldPosY;
+        viewZ = ((GameObject*)object)->anim.worldPosZ;
     }
     viewMtx = (float*)FUN_80006974();
     FUN_80247bf8(viewMtx, &viewX, &viewX);
