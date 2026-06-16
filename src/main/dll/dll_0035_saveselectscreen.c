@@ -675,7 +675,7 @@ int SaveSelectScreen_run(void)
         lbl_803DD6C0 = slot;
         if (lbl_803DD6B8 != NULL)
         {
-            ((void (**)(void))gTitleMenuItemInterface->vtable)[5]();
+            ((void (**)(void*))gTitleMenuItemInterface->vtable)[5](lbl_803DD6B8);
         }
         if (sel != -1 || lbl_803DB9FB == 0)
         {
