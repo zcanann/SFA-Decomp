@@ -262,8 +262,9 @@ void bombplantspore_update(void* obj)
         detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0)
         {
-            if ((int)poppedMessage == detonateMessage)
+            switch ((int)poppedMessage)
             {
+            case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*gExpgfxInterface)->freeSource((u32)obj);
@@ -277,6 +278,7 @@ void bombplantspore_update(void* obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
+                break;
             }
         }
         if ((state->stateFlags >> 6 & 1) != 0u)
