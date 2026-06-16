@@ -1066,7 +1066,6 @@ void cloudprisoncontrol_update(int obj)
     int idx;
     int dval;
     int* p;
-    u32 cnt;
 
     data = 0;
     if (lbl_803DBE08 != 0)
@@ -1121,10 +1120,9 @@ void cloudprisoncontrol_update(int obj)
             lbl_803DDB09--;
             n = lbl_803DDB09;
             p = lbl_803AC7D8 + n * 2;
-            cnt = n - i;
             if (n > i)
             {
-                for (; cnt != 0; cnt--)
+                for (; i < n; i++)
                 {
                     p[-2] = p[0];
                     *(s16*)((char*)p - 4) = *(s16*)((char*)p + 4);
