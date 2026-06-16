@@ -1009,10 +1009,6 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
     f32 dz;
     f32 dx2;
     f32 dz2;
-    f32 zz;
-    f32 xx;
-    f32 xx2;
-    f32 zz2;
     f32 cx;
     f32 cz;
     f32* p;
@@ -1058,15 +1054,11 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         cz = ((ObjfsaRomCurveDef*)curve)->z;
         p = *(f32**)&((TrickyState*)state)->unk28;
         dz = p[2] - cz;
-        zz = dz * dz;
         cx = ((ObjfsaRomCurveDef*)curve)->x;
         dx = p[0] - cx;
-        xx = dx * dx;
         dx2 = ((GameObject*)obj)->anim.worldPosX - cx;
-        xx2 = dx2 * dx2;
         dz2 = ((GameObject*)obj)->anim.worldPosZ - cz;
-        zz2 = dz2 * dz2;
-        score = zz + (xx + (xx2 + zz2));
+        score = dz * dz + (dx * dx + (dx2 * dx2 + dz2 * dz2));
         if (score < bestDistances[7])
         {
             for (j = 0; j < 4; j++)
@@ -1256,7 +1248,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     dx = end[0] - center[0];
     dz = end[2] - center[2];
     length = sqrtf((dx * dx) + (dz * dz));
-    if (length != lbl_803E23E8)
+    if (length != lbl_803E23DC)
     {
         dx /= length;
         dz /= length;

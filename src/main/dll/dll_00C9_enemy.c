@@ -1752,14 +1752,16 @@ void fn_8014BC98(int* node, int* sub)
         ((TrickyState*)sub)->unk2A2 = (u16)delta;
         ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
 
-        dist = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
-        *(s16*)&((TrickyState*)sub)->unk2A4 = (s32)
-        dist;
+        {
+            f32* dp = (f32*)d;
+            dist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+        }
+        *(s16*)&((TrickyState*)sub)->unk2A4 = dist;
 
         {
             int* t = *(int**)&((TrickyState*)sub)->actionTargetObj;
-            *(s16*)&((TrickyState*)sub)->unk2A6 = (s32)(
-                *(f32*)((char*)t + 0x1c) - ((GameObject*)node)->anim.worldPosY);
+            *(s16*)&((TrickyState*)sub)->unk2A6 =
+                *(f32*)((char*)t + 0x1c) - ((GameObject*)node)->anim.worldPosY;
         }
     }
 }

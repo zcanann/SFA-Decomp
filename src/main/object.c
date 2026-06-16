@@ -1576,7 +1576,7 @@ void objFreeObjDef(void* objp, int flag)
                 if (*(int*)&((GameObject*)o)->anim.parent == (int)obj)
                 {
                     *(int*)&((GameObject*)o)->anim.parent = 0;
-                    if (*(int*)&((GameObject*)o)->anim.placementData != 0)
+                    if (*(void**)&((GameObject*)o)->anim.placementData != NULL)
                     {
                         defs[count] = (int)o;
                         count++;
@@ -1649,7 +1649,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(shadowRenderResource);
         }
     }
-    if (*(int*)&((GameObject*)obj)->unkDC != 0)
+    if (*(void**)&((GameObject*)obj)->unkDC != NULL)
     {
         mm_free(((GameObject*)obj)->unkDC);
         *(int*)&((GameObject*)obj)->unkDC = 0;
@@ -1683,7 +1683,7 @@ void objFreeObjDef(void* objp, int flag)
         ObjGroup_RemoveObject((uint)obj, group - 1);
     }
     type = ((GameObject*)obj)->anim.defId;
-    if (*(s8*)(lbl_803DCBA4 + type) == 0)
+    if (*(u8*)(lbl_803DCBA4 + type) == 0)
     {
         debugPrintf(sObjFreeObjdefError);
     }
@@ -1697,7 +1697,7 @@ void objFreeObjDef(void* objp, int flag)
             {
                 mm_free(((GameObject*)o)->anim.parent);
             }
-            if (*(int*)(o + 0x34) != 0)
+            if (*(void**)(o + 0x34) != NULL)
             {
                 mm_free(*(void**)(o + 0x34));
             }
@@ -1753,14 +1753,14 @@ void Obj_UpdateObject(u8* obj)
         }
         return;
     }
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && *(void**)&((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
         colorFadeFlags & 2))
     {
         Obj_TickModelColorFadeRecursive(obj);
     }
-    if (*(int*)&((GameObject*)obj)->pendingParentObj != 0)
+    if (*(void**)&((GameObject*)obj)->pendingParentObj != NULL)
     {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
+        if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
         {
             t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
             if (t != 0)
@@ -1791,7 +1791,7 @@ void Obj_UpdateObject(u8* obj)
     ((GameObject*)obj)->externalVelX = object->velocityX;
     ((GameObject*)obj)->externalVelY = object->velocityY;
     ((GameObject*)obj)->externalVelZ = object->velocityZ;
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && *(void**)&((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
         colorFadeFlags & 1))
     {
         ((GameObject*)obj)->colorFadeFrames = (f32)((GameObject*)obj)->colorFadeFrames - timeDelta;
@@ -1834,7 +1834,7 @@ skip:
     hitState = (ObjHitsPriorityState*)object->hitReactState;
     if (hitState != NULL)
     {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
+        if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
         {
             t = (u8*)((GameObject*)((GameObject*)obj)->childObjs[0])->anim.hitReactState;
             if (t != 0)
@@ -1847,7 +1847,7 @@ skip:
         hitState->lastHitObject = 0;
         hitState->priorityHitCount = 0;
     }
-    if (*(int*)(obj + 0x58) != 0)
+    if (*(void**)(obj + 0x58) != NULL)
     {
         *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
     }
@@ -2357,14 +2357,12 @@ void Obj_FreeObject(u8* obj)
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
         i = 0;
-        p = (u8**)lbl_803DCB88;
         for (n = lbl_803DCB84; n > 0; n--)
         {
-            if (*p == obj)
+            if (((u8**)lbl_803DCB88)[i] == obj)
             {
                 break;
             }
-            p++;
             i++;
         }
         if (i < lbl_803DCB84)
@@ -2396,7 +2394,7 @@ void Obj_FreeObject(u8* obj)
     {
         i = 0;
         base = (u8**)lbl_803DCB90;
-        p = base;
+        p = (u8**)lbl_803DCB90;
         for (n = lbl_803DCB8C; n > 0; n--)
         {
             if (*p == obj)
@@ -2423,14 +2421,12 @@ void Obj_FreeObject(u8* obj)
         if (lbl_803DCB94 != 0)
         {
             i = 0;
-            p = (u8**)lbl_803DCB98;
             for (n = lbl_803DCB94; n > 0; n--)
             {
-                if (*p == obj)
+                if (((u8**)lbl_803DCB98)[i] == obj)
                 {
                     break;
                 }
-                p++;
                 i++;
             }
         }
