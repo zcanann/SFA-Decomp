@@ -42,9 +42,15 @@ typedef struct DrbarrelgrState
     f32 startPosY;     /* 0x8C */
     f32 startPosZ;     /* 0x90 */
     u8 pad94[0x128 - 0x94];
-    s16 unk128;        /* 0x128: working carry speed */
+    s16 carrySpeed;    /* 0x128: working carry speed */
     u8 pad12A[0x12C - 0x12A];
 } DrbarrelgrState;
+
+STATIC_ASSERT(offsetof(DrbarrelgrState, heldBarrel) == 0x8);
+STATIC_ASSERT(offsetof(DrbarrelgrState, grabX) == 0x14);
+STATIC_ASSERT(offsetof(DrbarrelgrState, startPosX) == 0x88);
+STATIC_ASSERT(offsetof(DrbarrelgrState, carrySpeed) == 0x128);
+STATIC_ASSERT(sizeof(DrbarrelgrState) == 0x12C);
 
 
 int drbarrelgr_getExtraSize(void) { return 0x12c; }
@@ -93,7 +99,7 @@ void drbarrelgr_init(int obj, int setup)
     ((DrbarrelgrState*)state)->mode = 5;
     ((DrbarrelgrState*)state)->heldBarrel = 0;
     ((DrBarrelGrFlags*)(state + 0x12a))->bit80 = 0;
-    ((DrbarrelgrState*)state)->unk128 = ((DrbarrelgrPlacement*)setup)->speed;
+    ((DrbarrelgrState*)state)->carrySpeed = ((DrbarrelgrPlacement*)setup)->speed;
     ((DrbarrelgrState*)state)->unk10 = lbl_803E6CA4;
     ((DrbarrelgrState*)state)->prevMode = -3;
     ((DrBarrelGrFlags*)(state + 0x12a))->bit40 = 0;
@@ -115,7 +121,7 @@ void drbarrelgr_update(int obj)
     DrBarrelGrFlags* flags = (DrBarrelGrFlags*)(state + 0x12a);
     int nearest;
     int match;
-    int gbId;
+    int gameBit;
     f32 vec[3];
     f32 tmp[3];
 
@@ -138,8 +144,8 @@ void drbarrelgr_update(int obj)
         }
     }
 
-    gbId = ((DrbarrelgrPlacement*)setup)->gameBit;
-    if (gbId != -1 && (u32)GameBit_Get(gbId) == 0)
+    gameBit = ((DrbarrelgrPlacement*)setup)->gameBit;
+    if (gameBit != -1 && (u32)GameBit_Get(gameBit) == 0)
     {
         flags->bit40 = 0;
         return;
@@ -210,7 +216,7 @@ void drbarrelgr_update(int obj)
         break;
     case 5:
         {
-            f32 spd = lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->unk128;
+            f32 spd = lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->carrySpeed;
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
                                                      spd * timeDelta,
                                                      lbl_803E6CBC, lbl_803E6CB4, 1);
@@ -231,14 +237,14 @@ void drbarrelgr_update(int obj)
             break;
         }
     case 2:
-        if (((DrbarrelgrState*)state)->unk128 == ((DrbarrelgrPlacement*)setup)->speed)
+        if (((DrbarrelgrState*)state)->carrySpeed == ((DrbarrelgrPlacement*)setup)->speed)
         {
-            ((DrbarrelgrState*)state)->unk128 =
-                (f32)((DrbarrelgrState*)state)->unk128 * lbl_803E6CA8;
+            ((DrbarrelgrState*)state)->carrySpeed =
+                (f32)((DrbarrelgrState*)state)->carrySpeed * lbl_803E6CA8;
         }
         else
         {
-            ((DrbarrelgrState*)state)->unk128 = ((DrbarrelgrPlacement*)setup)->speed;
+            ((DrbarrelgrState*)state)->carrySpeed = ((DrbarrelgrPlacement*)setup)->speed;
         }
         storeZeroToFloatParam((void*)(state + 12));
         newMode = 5;
