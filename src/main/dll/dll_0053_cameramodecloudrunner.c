@@ -1,10 +1,24 @@
-/* DLL 0x0053 (cameramodecloudrunner) — Camera mode CloudRunner handlers [0x801101E4-0x801106B4). */
+/*
+ * cameramodecloudrunner (DLL 0x0053) - the CloudRunner-flight camera mode
+ * handlers (text [0x801101E4-0x801106B4)).
+ *
+ * The mode keeps a single shared CameraModeCloudRunnerState (lbl_803DD5B8)
+ * holding the orbit focus point and radius; init allocates it, free
+ * releases it. update() orbits the camera around the target object: it
+ * reads the player's aim angles, eases the camera yaw/pitch toward the
+ * target's facing, then places the camera at radius*(cos/sin) about a base
+ * point derived either from a curve node (when the target's curve tag is
+ * 1049) or from the target's world position, and finally transforms the
+ * world position back into the target's local frame.
+ *
+ * Most of the mode's vtable slots are empty no-op stubs.
+ *
+ * WIP boundary split: this file currently also carries bodies whose addresses
+ * fall outside [0x801101E4-0x801106B4) (e.g. 0x8010de18, 0x801115e0,
+ * 0x80110C80, 0x80110EC0); they belong to neighbouring camera-mode TUs and are
+ * pending relocation before the header range claim is fully accurate.
+ */
 #include "main/mm.h"
-
-extern s16 getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern float mathCosf(float x);
-
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
@@ -30,8 +44,9 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
+extern s16 getAngle(f32 dx, f32 dz);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
@@ -44,8 +59,9 @@ extern f32 lbl_803E1B30;
 extern f32 lbl_803E1B34;
 extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
-extern s16 getAngle(f32 x, f32 z);
-extern f32 mathCosf(f32 x);
+
+/* curve-node tag selecting the matrix-based base point in update() */
+#define CLOUDRUNNER_CURVE_TAG 1049
 
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
@@ -182,54 +198,52 @@ void CameraModePerv_copyToCurrent(void);
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-void CameraModeCloudRunner_init(int* p1, int p2, f32* p3)
+void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
 {
-    int* p1_a4 = ((int**)p1)[0xA4 / 4];
+    int* targetObj = ((int**)camera)[0xA4 / 4];
     if (lbl_803DD5B8 == NULL)
     {
         lbl_803DD5B8 = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
     }
     {
-        f32 v;
-        if (p3 != NULL)
+        f32 r;
+        if (focus != NULL)
         {
-            lbl_803DD5B8->focusX = p3[0];
-            lbl_803DD5B8->focusY = p3[1];
-            lbl_803DD5B8->focusZ = p3[2];
-            v = p3[3];
+            lbl_803DD5B8->focusX = focus[0];
+            lbl_803DD5B8->focusY = focus[1];
+            lbl_803DD5B8->focusZ = focus[2];
+            r = focus[3];
         }
         else
         {
-            lbl_803DD5B8->focusX = ((GameObject*)p1_a4)->anim.worldPosX;
-            lbl_803DD5B8->focusY = ((GameObject*)p1_a4)->anim.worldPosY;
-            lbl_803DD5B8->focusZ = ((GameObject*)p1_a4)->anim.worldPosZ;
-            v = (f32)p2;
+            lbl_803DD5B8->focusX = ((GameObject*)targetObj)->anim.worldPosX;
+            lbl_803DD5B8->focusY = ((GameObject*)targetObj)->anim.worldPosY;
+            lbl_803DD5B8->focusZ = ((GameObject*)targetObj)->anim.worldPosZ;
+            r = (f32)radius;
         }
-        lbl_803DD5B8->radius = v;
+        lbl_803DD5B8->radius = r;
     }
     getAngle(
-        ((GameObject*)p1)->anim.worldPosX - lbl_803DD5B8->focusX,
-        ((GameObject*)p1)->anim.worldPosZ - lbl_803DD5B8->focusZ);
+        ((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
+        ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
     {
-        int* a4 = ((int**)p1)[0xA4 / 4];
-        f32* q = (f32*)lbl_803DD5B8;
+        int* target = ((int**)camera)[0xA4 / 4];
+        f32* state = (f32*)lbl_803DD5B8;
         getAngle(
-            ((GameObject*)a4)->anim.worldPosX - q[0],
-            ((GameObject*)a4)->anim.worldPosZ - q[2]);
+            ((GameObject*)target)->anim.worldPosX - state[0],
+            ((GameObject*)target)->anim.worldPosZ - state[2]);
     }
 }
 
 void fn_801101E8(void)
 {
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
+    mm_free(lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
 
 void CameraModeCloudRunner_free(void)
 {
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
+    mm_free(lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
 
@@ -240,7 +254,7 @@ void dll_54_func05(void);
 
 void CameraModeCloudRunner_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx);
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     u8* curve;
@@ -257,7 +271,7 @@ void CameraModeCloudRunner_update(u8* obj)
     curve = (u8*)fn_802972A8((int)target);
     if (curve != NULL)
     {
-        if (*(s16*)(curve + 70) == 1049)
+        if (*(s16*)(curve + 70) == CLOUDRUNNER_CURVE_TAG)
         {
             *(f32*)(mxin + 12) = *(f32*)(curve + 24);
             *(f32*)(mxin + 16) = *(f32*)(curve + 28);
@@ -327,37 +341,3 @@ void CameraModeCloudRunner_update(u8* obj)
 }
 
 void CameraModeForceBehind_update(u8* obj);
-
-/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
- * angle into the caller's record. */
-
-/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
- * caller's record and aims its angle at the nearest group-8 object (falling
- * back to the point's packed angle). */
-
-/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
- * current target and turns the yaw by the buffered turn rate. */
-
-/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
- * primes the animation channel tables. */
-
-/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
- * first use and refreshes the current path point position. */
-
-/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
- * distance from an object to its target, updating the wide-turn flag. */
-
-/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
- * the object for walkable space, returning a bitmask of clear directions. */
-
-/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
- * curve, snapping to ground and easing the yaw toward the path direction. */
-
-/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
- * arms the move, phase 5 walks the setup/playback sub-phases. */
-
-/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
- * object's facing plane and returns the lateral offset of the result. */
-
-/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
- * given speed, snapping when close, easing yaw and pacing the walk anim. */
