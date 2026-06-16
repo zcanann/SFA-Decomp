@@ -10415,14 +10415,17 @@ int fn_802A9A0C(int obj, int p2)
     {
         threshold = 0xa;
     }
-    if (GameBit_Get(0x107) &&
-        *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4) >= threshold &&
-        inner->curAnimId != 0x44 &&
-        *(void**)((char*)inner + 0x7f8) == NULL &&
-        !((ByteFlags*)((char*)inner + 0x3f0))->b20 &&
-        !((ByteFlags*)((char*)inner + 0x3f0))->b04 &&
-        !((ByteFlags*)((char*)inner + 0x3f0))->b08 &&
-        ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+    if (GameBit_Get(0x107) == 0 ||
+        *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4) < threshold ||
+        inner->curAnimId == 0x44 ||
+        *(void**)((char*)inner + 0x7f8) != NULL ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
+        ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
+    {
+        return 0;
+    }
     {
         s16 v;
         if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x25 || v == 0x24)
