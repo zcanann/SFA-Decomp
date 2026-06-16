@@ -1,26 +1,55 @@
-#include "main/dll/CAM/camshipbattle5C.h"
+/*
+ * dll_0044_cameramodeviewfinder - the first-person "viewfinder" camera
+ * mode (binoculars / spyglass aiming) for the dll_5B camera-mode set.
+ *
+ * Shares the heap-allocated ViewfinderState (the .sbss pointer
+ * lbl_803DD548) with the other dll_5B modes. _init blends the live
+ * camera into the viewfinder pose along Hermite curves (posX/Y/Z + yaw
+ * curves); _update runs a small state machine over ViewfinderState.mode:
+ *   0 enter blend, 1 yaw settle, 2 active look, 3 exit blend, 4 fade
+ *   back to gameplay, 5 idle (skip-blend entry).
+ * In the active state firstPersonDoControls turns the control stick into
+ * yaw/pitch deltas and the C-stick into a zoom (FOV) adjust, and toggles
+ * the on-screen viewfinder HUD / zoom SFX. Exit is forced when the look
+ * button (0x210) is pressed or ObjHits_GetPriorityHit reports a blocking
+ * hit. GameBit 0xC64 selects the zoom-HUD ("binocular") variant.
+ *
+ * All tunables live in the lbl_803E17C0..lbl_803E1834 .sdata2 float pool
+ * (interpolation rates, clamp limits, FOV span); lbl_803E17C4 is 0.0f.
+ */
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
-#include "main/dll/CAM/camdebug_state.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
-#include "main/dll/CAM/camstatic_state.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"
-#include "main/dll/CAM/dll_5B.h"
+#include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
+#include "main/objhits.h"
 #include "main/pad.h"
 #include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
 
-extern char padGetCY(int port);
+extern s8 padGetCY(int port);
+extern s8 padGetStickX(int port);
+extern s8 padGetStickY(int port);
 extern uint getAngle();
-extern int ObjHits_GetPriorityHit();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
+extern f32 interpolate(f32 v, f32 a, f32 b);
+extern f32 Camera_GetFovY(void);
+extern void viewFinderSetZoom(f32 fov);
+extern void Rcp_SetViewFinderHudEnabled(int on);
+extern void buttonDisable(int port, int mask);
+extern void firstPersonZoomOutOnExit(int a, int b);
+extern void fn_80137948(char* fmt, ...);
+extern char sCam5BYDebugFormat;
+extern void* memset(void* dst, int v, int n);
 
+/* viewfinder heap record, shared across the dll_5B camera modes */
 extern ViewfinderState* lbl_803DD548;
+
+/* .sdata2 tuning-constant pool (rates / clamp limits / FOV span) */
 extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
@@ -48,27 +77,13 @@ extern f32 lbl_803E1824;
 extern f32 lbl_803E1828;
 extern f32 lbl_803E182C;
 extern f32 lbl_803E1830;
-
-extern char padGetStickX(int port);
-extern char padGetStickY(int port);
-extern f32 interpolate(f32 v, f32 a, f32 b);
-extern f32 Camera_GetFovY(void);
-extern void viewFinderSetZoom(f32 fov);
-
-extern void Rcp_SetViewFinderHudEnabled(int on);
-extern void buttonDisable(int port, int mask);
-extern void firstPersonZoomOutOnExit(int a, int b);
-extern void fn_80137948(char* fmt, ...);
-extern char sCam5BYDebugFormat;
-extern u32 GameBit_Get(int bit);
-extern void* memset(void* dst, int v, int n);
 extern f32 lbl_803E1834;
 
-void firstPersonDoControls(short* obj)
+void firstPersonDoControls(s16* obj)
 {
     short pitchDelta;
-    char stickX;
-    char stickY;
+    s8 stickX;
+    s8 stickY;
     short* camObj;
     int spinI;
     f32 t;
@@ -229,7 +244,7 @@ int firstPersonEnter(u8* cam, s16* p2)
     return 0;
 }
 
-void CameraModeViewfinder_copyToCurrent(undefined2* camObj)
+void CameraModeViewfinder_copyToCurrent(s16* camObj)
 {
     u8* src = (u8*)camObj;
     u8* cur;
@@ -278,9 +293,8 @@ void CameraModeViewfinder_free(int camObj)
     }
     Sfx_StopFromObject(0, 0x3d8);
     mm_free(lbl_803DD548);
-    lbl_803DD548 = 0;
-    viewFinderSetZoom((double)lbl_803E17E0);
-    return;
+    lbl_803DD548 = NULL;
+    viewFinderSetZoom(lbl_803E17E0);
 }
 
 void CameraModeViewfinder_update(s16* obj)
@@ -321,7 +335,7 @@ void CameraModeViewfinder_update(s16* obj)
         {
             Rcp_SetViewFinderHudEnabled(1);
         }
-        firstPersonDoControls((short*)obj);
+        firstPersonDoControls(obj);
         if (getButtonsJustPressed(0) & 0x210)
         {
             buttonDisable(0, 0x200);
@@ -366,6 +380,7 @@ void CameraModeViewfinder_update(s16* obj)
                 fade = lbl_803E17C4;
             }
             fade = fade * lbl_803E1828;
+            /* #81 launder: keeps the clamp limit in a distinct FP reg from the line-377 read */
             if (fade > *(f32*)&lbl_803E17E8)
             {
                 fade = *(f32*)&lbl_803E17E8;
@@ -476,9 +491,9 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     camObj = *(s16**)(obj + 0x52);
     if (lbl_803DD548 == NULL)
     {
-        lbl_803DD548 = mmAlloc(0x134, 0xf, 0);
+        lbl_803DD548 = mmAlloc(sizeof(ViewfinderState), 0xf, 0);
     }
-    memset(lbl_803DD548, 0, 0x134);
+    memset(lbl_803DD548, 0, sizeof(ViewfinderState));
     *(f32*)lbl_803DD548 = *(f32*)args;
     lbl_803DD548->unk114 = (f32)(u32) * (u16*)((int)args + 8);
     lbl_803DD548->unk4 = *(f32*)(args + 1);
@@ -580,7 +595,6 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->flags.zoomSfxPlaying = 0;
     lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
 }
-
 
 void CameraModeViewfinder_release(void)
 {
