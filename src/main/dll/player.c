@@ -959,7 +959,7 @@ int fn_802A3B04(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         void* sub;
-        Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId != 0 ? 0x29 : 0x2cb));
+        Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2cb : 0x29));
         *(s16*)((char*)state + 0x278) = 0xa;
         ((PlayerState*)inner)->unk898 = 0;
         ((PlayerState*)inner)->unk800 = 0;
@@ -982,8 +982,11 @@ int fn_802A3B04(int obj, int state)
     }
     fz = lbl_803E7EA4;
     ((PlayerState*)inner)->unk778 = fz;
-    *(u32*)((char*)inner + 0x360) &= ~2LL;
-    *(u32*)((char*)inner + 0x360) |= 0x2000LL;
+    {
+        int e = *(int*)&((GameObject*)obj)->extra;
+        *(u32*)((char*)e + 0x360) &= ~2LL;
+        *(u32*)((char*)e + 0x360) |= 0x2000LL;
+    }
     *(int*)((char*)state + 4) |= 0x100000;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
     ((PlayerState*)state)->baddie.animSpeedB = fz;
@@ -992,8 +995,10 @@ int fn_802A3B04(int obj, int state)
     ((GameObject*)obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 4) |= 0x8000000;
     ((GameObject*)obj)->anim.velocityY = fz;
-    if (((GameObject*)obj)->anim.currentMove == 0x22 ||
-        ((GameObject*)obj)->anim.currentMove == 0xd)
+    switch (((GameObject*)obj)->anim.currentMove)
+    {
+    case 0xd:
+    case 0x22:
     {
         f32 c;
         f32 d = ((GameObject*)obj)->anim.currentMoveProgress / lbl_803E7F44;
@@ -1018,8 +1023,9 @@ int fn_802A3B04(int obj, int state)
             *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
             return 0xd;
         }
+        break;
     }
-    else
+    default:
     {
         int m;
         int d = (u16)getAngle(((PlayerState*)inner)->unk5C4, ((PlayerState*)inner)->unk5CC) -
@@ -1079,6 +1085,8 @@ int fn_802A3B04(int obj, int state)
                 ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
+        break;
+    }
     }
     ((PlayerState*)inner)->unk8C9 |= 4;
     fn_802AB5A4(obj, inner + 4, 5);
