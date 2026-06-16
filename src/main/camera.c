@@ -1024,6 +1024,7 @@ f32* Camera_GetProjectionMatrix(void)
     return gCameraProjectionMatrix;
 }
 
+#pragma opt_common_subs off
 void Camera_RebuildProjectionMatrix(void)
 {
     if (gCameraProjectionMode == 1)
@@ -1044,6 +1045,7 @@ void Camera_RebuildProjectionMatrix(void)
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 }
+#pragma opt_common_subs reset
 
 f32 Camera_GetFarPlane(void)
 {
