@@ -12744,6 +12744,7 @@ void objLoadPlayerFromSave(int obj)
     lbl_803DE428 = 0;
 }
 
+#pragma opt_strength_reduction off
 int fn_802AB1D0(int obj)
 {
     int objs;
@@ -12804,6 +12805,7 @@ int fn_802AB1D0(int obj)
     }
     return best;
 }
+#pragma opt_strength_reduction reset
 
 int fn_802AE480(int obj, int inner, int state)
 {
