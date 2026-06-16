@@ -37,7 +37,7 @@ typedef struct VfpObjCreatorPlacement
     s16 gameBit;       /* 0x18 */
     s16 spawnMode;     /* 0x1A */
     s16 spawnInterval; /* 0x1C */
-    s8 yaw;            /* 0x1E */
+    s8 rotXByte;       /* 0x1E: packed into anim.rotX (<<8) */
     s8 spawnParam;     /* 0x1F */
     u8 spawnRadius;    /* 0x20 */
     u8 pad21[3];
@@ -47,14 +47,14 @@ STATIC_ASSERT(sizeof(VfpObjCreatorState) == 0xa);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnMode) == 0x1A);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnInterval) == 0x1C);
-STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, yaw) == 0x1E);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, rotXByte) == 0x1E);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnParam) == 0x1F);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnRadius) == 0x20);
 STATIC_ASSERT(sizeof(VfpObjCreatorPlacement) == 0x24);
 
 /* Obj_AllocObjectSetup buffer filled in for each spawn. Head is the
- * common ObjPlacement; tail (0x18..0x27) is the per-spawn payload (spin
- * angles, model/seq id, scale) consumed by the spawned object's init. */
+ * common ObjPlacement; tail (0x18..0x27) is the per-spawn payload whose
+ * fields are interpreted by the spawned object's own init. */
 typedef struct VfpObjCreatorSetup
 {
     ObjPlacement base; /* 0x00..0x17 (posX@0x8, unk04@0x4) */
@@ -111,7 +111,7 @@ void vfpobjcreator_init(int* obj, u8* init)
 {
     VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)init;
     VfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(placement->yaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     state->gameBit = placement->gameBit;
     state->spawnInterval = placement->spawnInterval;
     state->spawnTimer = state->spawnInterval;
