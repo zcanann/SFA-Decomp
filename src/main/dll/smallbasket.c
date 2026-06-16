@@ -1561,8 +1561,6 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
     if (*(u8*)(state + 0x33f) != 0)
     {
         u8 step;
-        int i;
-        BasketSeq16* e;
         if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             step = 4;
@@ -1571,13 +1569,11 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         {
             step = 3;
         }
-        i = step * 0x10;
-        Baddie_SetMove((int*)obj, (int*)state, *(u8*)((char*)tbl + i + 8), *(f32*)((int)tbl + i), 0,
-                    *(int*)((char*)tbl + i + 4) & 0xff);
-        e = (BasketSeq16*)((char*)tbl + i);
-        *(u8*)(state + 0x33c) = e->flagC;
+        Baddie_SetMove((int*)obj, (int*)state, tbl[step].moveId, tbl[step].spd, 0,
+                    tbl[step].mask & 0xff);
+        *(u8*)(state + 0x33c) = tbl[step].flagC;
         ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
-        *(u8*)(state + 0x33f) = e->next9;
+        *(u8*)(state + 0x33f) = tbl[step].next9;
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
