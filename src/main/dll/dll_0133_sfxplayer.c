@@ -155,6 +155,7 @@ void sfxplayerObj_free(u8* obj)
         } \
     } while (0)
 
+#pragma scheduling off
 void sfxplayerObj_update(u8* obj)
 {
     u8* state;
@@ -256,6 +257,7 @@ void sfxplayerObj_update(u8* obj)
         break;
     }
 }
+#pragma scheduling reset
 
 
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
