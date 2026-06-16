@@ -289,7 +289,7 @@ void MagicPlant_update(int obj)
         {
             ObjAnim_SetCurrentMove(obj, 0, state->animProgress, 0);
         }
-        ObjAnim_SetMoveProgress(state->animProgress, (ObjAnimComponent*)obj);
+        ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
         break;
 
     case MAGICPLANT_MODE_ACTIVE:
@@ -313,7 +313,7 @@ void MagicPlant_update(int obj)
                 state->animProgress = fz;
                 state->animStepScale = fz;
                 ObjAnim_SetCurrentMove(obj, 0, fz, 0);
-                ObjAnim_SetMoveProgress(lbl_803E385C, (ObjAnimComponent*)obj);
+                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E385C);
             }
             plant->objAnim.alpha = (u8)alpha;
         }
