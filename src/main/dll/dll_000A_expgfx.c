@@ -149,7 +149,6 @@ static inline f64 Expgfx_U16AsDouble(u16 value)
 void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxTableEntry* expTab;
     ExpgfxSlot* slot;
     u32 activeBit;
     u32 inactiveBitMask;
@@ -164,28 +163,31 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
     slot = (ExpgfxSlot*)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
 
-    expTab = runtime->expTab;
     if (skipTextureFree == 0)
     {
-        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource != 0)
+        u8* resCol = (u8*)runtime + 2440;
+        if (*(u32*)(resCol + (Expgfx_GetSlotTableIndex(slot) << 4)) != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((void*)expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource);
+            textureFree((void*)*(u32*)(resCol + (Expgfx_GetSlotTableIndex(slot) << 4)));
             gExpgfxTextureFreeInProgress = 0;
         }
 
-        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount != 0)
         {
-            expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount--;
-            if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount == 0)
+            u32 tIdx = Expgfx_GetSlotTableIndex(slot);
+            if (runtime->expTab[tIdx].refCount != 0)
             {
-                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource = 0;
-                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].sourceId = 0;
+                runtime->expTab[tIdx].refCount--;
+                if (runtime->expTab[tIdx].refCount == 0)
+                {
+                    *(u32*)(resCol + (tIdx << 4)) = 0;
+                    runtime->expTab[tIdx].sourceId = 0;
+                }
             }
-        }
-        else
-        {
-            debugPrintf(sExpgfxMismatchInAddRemove);
+            else
+            {
+                debugPrintf(sExpgfxMismatchInAddRemove);
+            }
         }
     }
 
