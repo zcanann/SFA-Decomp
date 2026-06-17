@@ -1,60 +1,56 @@
-/* DLL 0x0111 — door-lock objects [8017AC2C-8017ADB4) */
-#include "main/game_object.h"
-#include "main/dll/doorlockstate_struct.h"
-
-extern undefined8 ObjGroup_RemoveObject();
-
-#include "main/game_object.h"
+/*
+ * DLL 0x0111 - door-lock objects [8017AC2C-8017ADB4).
+ *
+ * A lockable door/gate placed from a DoorLockPlacement (alphaanim.h). Its
+ * lock state mirrors a per-instance game bit (DoorLockPlacement::lockGameBit):
+ * when set, the door is hidden (alpha 0) or its hittable flag (unkF8) cleared,
+ * depending on the placement mode flags at def+0x1B / modeFlags.
+ *
+ * doorlock_update polls trigger conditions (ObjTrigger_IsSet[ById] against the
+ * placement's prerequisite bits) and, when satisfied, fires the unlock trigger
+ * sequence at def+0x20, sets the lock bit, and disables the A-button prompt.
+ * The locked path can yield/preempt a queued sequence (def+0x24) and forwards
+ * placement flag bits 0x20/0x40/0x80 as runSequence flags 2/4/8. Lock_DoorLock_SeqFn
+ * is the trigger callback: command 1 sets the lock bit (when flag bit 4 is set),
+ * command 2 yields the queued sequence. GameBit 0x930 gates a one-shot global
+ * unlock sequence.
+ */
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/doorlockstate_struct.h"
 #include "main/dll/alphaanim.h"
 
-typedef struct LockDoorLockPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-    u8 unk20;
-    u8 unk21;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} LockDoorLockPlacement;
-
+/* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
     s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
+    s16 unk1C; /* 0x1C: lockGameBit */
+    s16 unk1E; /* 0x1E: prerequisite game bit */
+    s16 unk20; /* 0x20: unlock sequence id (s8) */
+    s16 unk22; /* 0x22: prerequisite game bit */
+    s16 unk24; /* 0x24: queued sequence id */
+    s16 unk26; /* 0x26: mode flags */
 } DoorlockPlacement;
 
-extern undefined4 ObjGroup_AddObject();
+/* one-shot global "doors unlocked" game bit gating the bulk unlock sequence */
+#define GAMEBIT_DOORLOCK_UNLOCKED 0x930
 
+extern void ObjGroup_RemoveObject(uint obj, int group);
+extern void ObjGroup_AddObject(uint obj, int group);
 extern u32 GameBit_Get(int eventId);
-
-__declspec(section ".sdata") extern char lbl_803DBD90[];
-
-extern void objRenderFn_8003b8f4(f32);
+extern int GameBit_Set(int eventId, int value);
+extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E3798;
-extern void objRenderFn_80041018(int* obj);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 extern void buttonDisable(int index, int mask);
-extern uint GameBit_Get(int eventId);
 
 int doorlock_getExtraSize(void) { return 0x1; }
 
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-
-void mmp_bridge_init(int* obj);
 
 void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -69,18 +65,15 @@ void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    objRenderFn_80041018(obj);
+    objRenderFn_80041018((int)obj);
     return;
 
 render_basic:
-    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3798);
 }
-
-int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int GameBit_Set(int eventId, int value); /* #57 */
     int def;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -88,11 +81,11 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (((*(u8*)(def + 0x1b) & 4) != 0) && (animUpdate->triggerCommand == 1))
         {
-            GameBit_Set(((LockDoorLockPlacement*)def)->unk1C, 1);
+            GameBit_Set(((DoorlockPlacement*)def)->unk1C, 1);
         }
-        if ((animUpdate->triggerCommand == 2) && (((LockDoorLockPlacement*)def)->unk24 != 0))
+        if ((animUpdate->triggerCommand == 2) && (((DoorlockPlacement*)def)->unk24 != 0))
         {
-            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((LockDoorLockPlacement*)def)->unk24);
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((DoorlockPlacement*)def)->unk24);
         }
         animUpdate->triggerCommand = 0;
     }
@@ -102,20 +95,19 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void doorlock_update(int obj)
 {
-    extern int GameBit_Set(int eventId, int value); /* #57 */
     int state;
     int def;
-    int flags;
-    u8 b;
+    int seqFlags;
+    u8 placeFlags;
 
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(0x930) == 0))
+    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(GAMEBIT_DOORLOCK_UNLOCKED) == 0))
     {
         buttonDisable(0, 0x100);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-        GameBit_Set(0x930, 1);
+        GameBit_Set(GAMEBIT_DOORLOCK_UNLOCKED, 1);
     }
     else
     {
@@ -185,21 +177,21 @@ void doorlock_update(int obj)
                 if ((*(s8*)(def + 0x20) != -1) && (((DoorlockPlacement*)def)->unk24 != 0))
                 {
                     (*gObjectTriggerInterface)->preempt(obj, ((DoorlockPlacement*)def)->unk24);
-                    flags = 1;
-                    b = *(u8*)(def + 0x1b);
-                    if ((b & 0x20) != 0)
+                    seqFlags = 1;
+                    placeFlags = *(u8*)(def + 0x1b);
+                    if ((placeFlags & 0x20) != 0)
                     {
-                        flags |= 2;
+                        seqFlags |= 2;
                     }
-                    if ((b & 0x40) != 0)
+                    if ((placeFlags & 0x40) != 0)
                     {
-                        flags |= 4;
+                        seqFlags |= 4;
                     }
-                    if ((b & 0x80) != 0)
+                    if ((placeFlags & 0x80) != 0)
                     {
-                        flags |= 8;
+                        seqFlags |= 8;
                     }
-                    (*gObjectTriggerInterface)->runSequence((int)*(s8*)(def + 0x20), (void*)obj, flags);
+                    (*gObjectTriggerInterface)->runSequence((int)*(s8*)(def + 0x20), (void*)obj, seqFlags);
                 }
                 ((GameObject*)obj)->unkF4 = 1;
             }
@@ -208,7 +200,7 @@ void doorlock_update(int obj)
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
             (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
         {
-            objRenderFn_80041018((int*)obj);
+            objRenderFn_80041018(obj);
         }
     }
 }
@@ -219,9 +211,9 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
     DoorLockState* state;
 
     objAnim = (ObjAnimComponent*)obj;
-    *obj = (short)((byte)config->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotY = (short)((byte)config->rotYByte << 8);
-    ((GameObject*)obj)->anim.rotZ = (short)((byte)config->rotZByte << 8);
+    *obj = (short)((u8)config->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = (short)((u8)config->rotYByte << 8);
+    ((GameObject*)obj)->anim.rotZ = (short)((u8)config->rotZByte << 8);
     ((GameObject*)obj)->animEventCallback = (void*)Lock_DoorLock_SeqFn;
     *(u8*)&objAnim->bankIndex = config->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
@@ -229,8 +221,8 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
         objAnim->bankIndex = 0;
     }
     state = ((GameObject*)obj)->extra;
-    state->unlocked = (byte)GameBit_Get(config->lockGameBit);
-    ObjGroup_AddObject(obj, 0xf);
+    state->unlocked = (u8)GameBit_Get(config->lockGameBit);
+    ObjGroup_AddObject((uint)obj, 0xf);
     if ((config->flags & 1) != 0)
     {
         if (state->unlocked != 0)
@@ -249,13 +241,4 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
             ((GameObject*)obj)->unkF8 = 1;
         }
     }
-    return;
 }
-
-undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , ObjAnimUpdateState* animUpdate, undefined4 param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
-
-/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
- * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
- * its GameBit, compare against the def[0x30] mask bit for that slot, and
- * if the polarity flips (GameBit != mask bit) end the current sequence.
- * Always latches state[1] bit 0 before returning 0. */
