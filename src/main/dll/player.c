@@ -14275,7 +14275,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         else if ((void*)lbl_803DE428 != NULL)
         {
-            *(int*)((char*)lbl_803DE428 + 0x3c) &= ~0x100000;
+            *(u32*)((char*)lbl_803DE428 + 0x3c) &= ~0x100000LL;
             lbl_803DE428 = 0;
         }
         {
@@ -14298,14 +14298,14 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x10) = py;
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x20) = pz;
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x14) = pz;
-                if (*(s16**)&((GameObject*)obj)->anim.parent == NULL)
-                {
-                    *(s16*)*(int*)((char*)in2 + 0x7f8) = *(s16*)((char*)in2 + 0x478);
-                }
-                else
+                if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
                 {
                     *(s16*)*(int*)((char*)in2 + 0x7f8) =
                         **(s16**)&((GameObject*)obj)->anim.parent + ((GameObject*)obj)->anim.rotX;
+                }
+                else
+                {
+                    *(s16*)*(int*)((char*)in2 + 0x7f8) = *(s16*)((char*)in2 + 0x478);
                 }
                 (*(void (*)(int, int, int, int, int, int))*(int*)(
                     *(int*)(*(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x68)) + 0x10))(
