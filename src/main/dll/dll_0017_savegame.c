@@ -565,23 +565,21 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
             if (!createTransient)
             {
-                transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                 {
-                    if (idx == transient->mapId && shift == transient->shift)
+                    if (idx == s->transient[i].mapId && shift == s->transient[i].shift)
                     {
                         return;
                     }
                 }
 
-                transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                 {
-                    if (transient->mapId == -1)
+                    if (s->transient[i].mapId == -1)
                     {
-                        transient->mapId = (s8)idx;
-                        transient->shift = (u8)shift;
-                        transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
+                        s->transient[i].mapId = (s8)idx;
+                        s->transient[i].shift = (u8)shift;
+                        s->transient[i].timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
                         break;
                     }
                 }
