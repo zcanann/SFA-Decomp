@@ -15207,13 +15207,14 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
     {
-        if (inner->unk546 == 4)
+        switch (inner->unk546)
         {
+        case 4:
             Sfx_PlayFromObject(obj, SFXdrak_roar1);
-        }
-        else
-        {
+            break;
+        default:
             Sfx_PlayFromObject(obj, SFXdn_rexroarlng11);
+            break;
         }
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
