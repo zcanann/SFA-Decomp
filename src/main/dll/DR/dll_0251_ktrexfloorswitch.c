@@ -120,7 +120,8 @@ void ktrexfloorswitch_init(int obj, char* placement)
     {
         KtrexfloorswitchPlacement* pl =
             (KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
-        curve = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, pl->curveX, pl->baseHeight, pl->curveZ);
+        curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            pl->curveX, pl->baseHeight, pl->curveZ, &lbl_803DC2A0, 1, 0);
     }
     if (curve != -1)
     {
