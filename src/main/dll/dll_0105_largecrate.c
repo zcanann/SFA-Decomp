@@ -1,21 +1,40 @@
+/*
+ * largecrate (DLL 0x105) - the destructible time-bonus crate objects.
+ *
+ * The obj+0xB8 extra record is the shared "explodable" state (timer to
+ * detonation, hit/explode sfx ids, spin speed, damage accumulator); init
+ * decodes the placement into a CfForcefieldState view. The crate counts
+ * down to a save-time bonus on the parent map, takes hits until its
+ * damage threshold, then plays the explode sfx, scatters debris (the
+ * fn_801833E4 spawner picks a debris object set by placement byte 0x11)
+ * and re-arms. seqId selects the crate variant (A=0x3DE, B=0x49F,
+ * C=0x7BE), each with its own hit/explode sfx pair. fn_80183204 is the
+ * camera target-reticle distance helper read cross-DLL by camcontrol;
+ * fn_80183250 drives the conveyor-belt slide for parented crates.
+ *
+ * GAMEBIT_SFX_MUTE (0xa71) gates the rob-wave warning sfx.
+ */
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/dll/explodable_state.h"
+#include "main/dll/cfforcefield.h"
+#include "main/dll/cfforcefield_state.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 
-#define SMALLBASKET_LINKED_ID_BASE 0x40000
-#define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
-#define SMALLBASKET_ROB_WAVE_ID_65D0 0x65d0
-#define SMALLBASKET_ROB_WAVE_ID_65D2 0x65d2
-#define SMALLBASKET_ROB_WAVE_ID_65D5 0x65d5
-#define SMALLBASKET_ROB_WAVE_ID_65D6 0x65d6
-#define SMALLBASKET_ROB_WAVE_ID_65D7 0x65d7
+#define LARGECRATE_LINKED_ID_BASE 0x40000
+#define LARGECRATE_ROB_WAVE_DIRECT_ID 0x66
+#define LARGECRATE_ROB_WAVE_ID_65D0 0x65d0
+#define LARGECRATE_ROB_WAVE_ID_65D2 0x65d2
+#define LARGECRATE_ROB_WAVE_ID_65D5 0x65d5
+#define LARGECRATE_ROB_WAVE_ID_65D6 0x65d6
+#define LARGECRATE_ROB_WAVE_ID_65D7 0x65d7
 #define GAMEBIT_SFX_MUTE 0xa71
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -27,15 +46,16 @@ extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(f32 a, f32 b);
 extern int Obj_GetPlayerObject(void);
-extern void ObjHits_EnableObject(int obj);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern int ObjHits_GetPriorityHitWithPosition(int obj, void* info, int* a, int* b, f32* x, f32* y, f32* z);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int Sfx_IsPlayingFromObject(int obj, u32 sfxId);
 extern void Sfx_PlayFromObject(int obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
+extern uint GameBit_Get(int eventId);
+extern ModgfxInterface** gModgfxInterface;
+extern int* lbl_803DDAC8;
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -56,36 +76,57 @@ extern f32 lbl_803E39D8;
 extern f32 lbl_803E39DC;
 extern f32 lbl_803E39E0;
 extern f32 lbl_803E39E4;
+extern f32 lbl_803E39E8;
+
+typedef union LargeCrateVariantRemap
+{
+    s16 entries[6];
+    int words[3];
+} LargeCrateVariantRemap;
+
+extern LargeCrateVariantRemap lbl_802C2280;
+extern LargeCrateVariantRemap lbl_802C228C;
 
 typedef struct
 {
     f32 x;
     f32 y;
     f32 z;
-} Vec3L;
+} Vec3f;
 
 typedef struct
 {
-    s16 h0;
-    s16 h1;
-    s16 h2;
-    f32 fx;
-    f32 fy;
-    f32 fz;
-    f32 fw;
+    s16 rotZ;
+    s16 rotX;
+    s16 rotY;
+    f32 scaleX;
+    f32 scaleY;
+    f32 scaleZ;
+    f32 scaleW;
 } ExplodeArgs;
+
+f32 fn_80183204(int obj);
+void fn_80183250(int obj, int def);
+int fn_801833E4(int obj, int player, int state);
+int largecrate_getExtraSize(void);
+int largecrate_getObjectTypeId(void);
+void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
+void largecrate_hitDetect(int obj);
+void largecrate_update(int obj);
+void largecrate_free(int obj);
+int LargeCrate_SeqFn(int* obj);
+void largecrate_init(int obj, u8* initData);
+void largecrate_release(void);
+void largecrate_initialise(void);
 
 f32 fn_80183204(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    return lbl_803E39AC - (f32)(u32)
-    state[0x13] / (f32)(u32)
-    state[0x28];
+    return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
 }
 
 void fn_80183250(int obj, int def)
 {
-    extern int GameBit_Get(int id);
     int state31;
     int player;
     f32 oldVel;
@@ -110,12 +151,12 @@ void fn_80183250(int obj, int def)
             (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
         {
             v = *(u32*)(state31 + 0x14);
-            adj = v - SMALLBASKET_LINKED_ID_BASE;
-            if ((adj == SMALLBASKET_ROB_WAVE_ID_65D7) ||
-                ((adj - SMALLBASKET_ROB_WAVE_ID_65D5) <=
-                    (SMALLBASKET_ROB_WAVE_ID_65D6 - SMALLBASKET_ROB_WAVE_ID_65D5)) ||
-                (v == SMALLBASKET_ROB_WAVE_DIRECT_ID) || (adj == SMALLBASKET_ROB_WAVE_ID_65D0) ||
-                (adj == SMALLBASKET_ROB_WAVE_ID_65D2))
+            adj = v - LARGECRATE_LINKED_ID_BASE;
+            if ((adj == LARGECRATE_ROB_WAVE_ID_65D7) ||
+                ((adj - LARGECRATE_ROB_WAVE_ID_65D5) <=
+                    (LARGECRATE_ROB_WAVE_ID_65D6 - LARGECRATE_ROB_WAVE_ID_65D5)) ||
+                (v == LARGECRATE_ROB_WAVE_DIRECT_ID) || (adj == LARGECRATE_ROB_WAVE_ID_65D0) ||
+                (adj == LARGECRATE_ROB_WAVE_ID_65D2))
             {
                 if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
                     lbl_803E39BC)
@@ -182,28 +223,21 @@ int fn_801833E4(int obj, int player, int state)
         }
         ((GameObject*)newObj)->anim.velocityX =
             ((GameObject*)newObj)->anim.velocityX *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
-        )
-        ;
+            -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19)
-        )
-        ;
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19));
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
-        blk.fy = lbl_803E39B8;
-        blk.fz = lbl_803E39B8;
-        blk.fw = lbl_803E39B8;
-        blk.fx = lbl_803E39AC;
-        blk.h2 = 0;
-        blk.h1 = 0;
-        blk.h0 = (s16)randomGetRange(-10000, 10000);
+        blk.scaleY = lbl_803E39B8;
+        blk.scaleZ = lbl_803E39B8;
+        blk.scaleW = lbl_803E39B8;
+        blk.scaleX = lbl_803E39AC;
+        blk.rotY = 0;
+        blk.rotX = 0;
+        blk.rotZ = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
-        ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
-            0xffff);
+            ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000)
         {
             angle = angle - 0xffff;
@@ -237,28 +271,21 @@ int fn_801833E4(int obj, int player, int state)
         }
         ((GameObject*)newObj)->anim.velocityX =
             ((GameObject*)newObj)->anim.velocityX *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
-        )
-        ;
+            -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19)
-        )
-        ;
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19));
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
-        blk.fy = lbl_803E39B8;
-        blk.fz = lbl_803E39B8;
-        blk.fw = lbl_803E39B8;
-        blk.fx = lbl_803E39AC;
-        blk.h2 = 0;
-        blk.h1 = 0;
-        blk.h0 = (s16)randomGetRange(-10000, 10000);
+        blk.scaleY = lbl_803E39B8;
+        blk.scaleZ = lbl_803E39B8;
+        blk.scaleW = lbl_803E39B8;
+        blk.scaleX = lbl_803E39AC;
+        blk.rotY = 0;
+        blk.rotX = 0;
+        blk.rotZ = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
-        ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
-            0xffff);
+            ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000)
         {
             angle = angle - 0xffff;
@@ -292,28 +319,21 @@ int fn_801833E4(int obj, int player, int state)
         }
         ((GameObject*)newObj)->anim.velocityX =
             ((GameObject*)newObj)->anim.velocityX *
-            -(lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E39AC
-        )
-        ;
+            -(lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E39AC);
         ((GameObject*)newObj)->anim.velocityZ =
             ((GameObject*)newObj)->anim.velocityZ *
-            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)
-        randomGetRange(0, 0x19)
-        )
-        ;
+            (lbl_803E39AC - lbl_803E39D4 * (f32)(int)randomGetRange(0, 0x19));
         ((GameObject*)newObj)->anim.velocityY = lbl_803E39D8;
-        blk.fy = lbl_803E39B8;
-        blk.fz = lbl_803E39B8;
-        blk.fw = lbl_803E39B8;
-        blk.fx = lbl_803E39AC;
-        blk.h2 = 0;
-        blk.h1 = 0;
-        blk.h0 = (s16)randomGetRange(-10000, 10000);
+        blk.scaleY = lbl_803E39B8;
+        blk.scaleZ = lbl_803E39B8;
+        blk.scaleW = lbl_803E39B8;
+        blk.scaleX = lbl_803E39AC;
+        blk.rotY = 0;
+        blk.rotX = 0;
+        blk.rotZ = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
-        ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
-            0xffff);
+            ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) & 0xffff);
         if (angle > 0x8000)
         {
             angle = angle - 0xffff;
@@ -411,21 +431,19 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     }
 }
 
-void largecrate_hitDetect(void)
+void largecrate_hitDetect(int obj)
 {
 }
 
 void largecrate_update(int obj)
 {
-    extern int* lbl_803DDAC8;
-    extern void ObjHits_DisableObject(int obj);
     int player;
     int def;
     int state;
-    Vec3L pos;
-    Vec3L lightPos;
+    Vec3f pos;
+    Vec3f lightPos;
     u8 hitInfo[4];
-    int local40;
+    int hitType;
     int hitDamage;
     f32 animSpeed;
     int hit;
@@ -433,7 +451,7 @@ void largecrate_update(int obj)
     f32 thresh;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    local40 = -1;
+    hitType = -1;
     animSpeed = lbl_803E39AC;
     (*gSkyInterface)->getClockTime(&animSpeed);
     state = *(int*)&((GameObject*)obj)->extra;
@@ -516,7 +534,8 @@ void largecrate_update(int obj)
             {
                 ((GameObject*)obj)->anim.rotY = 0;
             }
-            hit = ObjHits_GetPriorityHitWithPosition(obj, hitInfo, &local40, &hitDamage, &pos.x, &pos.y, &pos.z);
+            hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)hitInfo, &hitType, (uint*)&hitDamage,
+                                                     &pos.x, &pos.y, &pos.z);
             if (hit == 0x10)
             {
                 Obj_StartModelFadeIn(obj, 300);
@@ -568,11 +587,8 @@ void largecrate_update(int obj)
     }
 }
 
-extern ModgfxInterface** gModgfxInterface;
-
 void largecrate_free(int obj)
 {
-    extern int* lbl_803DDAC8;
     (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(lbl_803DDAC8);
 }
@@ -586,28 +602,8 @@ int LargeCrate_SeqFn(int* obj)
     return 0;
 }
 
-#include "main/dll/cfforcefield.h"
-#include "main/game_object.h"
-#include "main/dll/cfforcefield_state.h"
-#include "main/resource.h"
-
-extern uint GameBit_Get(int eventId);
-
-extern f32 lbl_803E39E8;
-
-typedef union LargeCrateVariantRemap
-{
-    s16 entries[6];
-    int words[3];
-} LargeCrateVariantRemap;
-
-extern LargeCrateVariantRemap lbl_802C2280;
-extern LargeCrateVariantRemap lbl_802C228C;
-
 void largecrate_init(int obj, u8* initData)
 {
-    extern void* lbl_803DDAC8;
-    extern void ObjHits_DisableObject(u32 obj);
     int state;
     u32 r3rand;
     f32 fr;
