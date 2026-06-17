@@ -487,13 +487,13 @@ void fn_801C4664(void* objArg)
         lbl_803E4F1C);
     trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
         lbl_803E4F1C);
-    obj->roll = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
+    obj->roll = (s16)(lbl_803E4F20 * (trigB + trigA));
 
     trigA = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_C(runtime)) /
         lbl_803E4F1C);
     trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
         lbl_803E4F1C);
-    obj->pitch = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
+    obj->pitch = (s16)(lbl_803E4F20 * (trigB + trigA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4F24, timeDelta,
                                                                  (ObjAnimEventList*)&animEvents);
@@ -514,7 +514,7 @@ void fn_801C4664(void* objArg)
         angleDelta += 0xFFFF;
     }
 
-    obj->yaw = (s16)(obj->yaw + (s16)(int)(((f32)angleDelta * timeDelta) / lbl_803E4F28));
+    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / lbl_803E4F28));
     distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
     if (distance <= lbl_803E4F2C)
     {
