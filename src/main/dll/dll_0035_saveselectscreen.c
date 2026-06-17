@@ -171,18 +171,15 @@ void saveSelectOpenFile(int sel, int slot)
 
 void SaveSelectScreen_release(void)
 {
-    void** p;
     int i;
     void* zero;
 
-    i = 0;
     zero = NULL;
-    p = lbl_803A8658;
+    i = 0;
     do
     {
-        mm_free(*p);
-        *p = zero;
-        p++;
+        mm_free(lbl_803A8658[i]);
+        lbl_803A8658[i] = zero;
         i++;
     }
     while (i < 10);
