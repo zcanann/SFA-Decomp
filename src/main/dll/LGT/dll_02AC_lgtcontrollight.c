@@ -77,9 +77,9 @@ void controllight_init(int obj, int setup)
 #pragma optimization_level 1
 void controllight_update(int obj)
 {
-    extern void pointlight_setEffectState(int obj, u8 enabled);
+    extern void pointlight_setEffectState(int obj, int enabled);
     ControlLightState* state = ((GameObject*)obj)->extra;
-    u8 bit = (u8)GameBit_Get(state->gameBit);
+    int bit = (u8)GameBit_Get(state->gameBit);
 
     if (bit != state->lastBit)
     {
