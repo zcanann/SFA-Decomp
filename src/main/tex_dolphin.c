@@ -525,20 +525,8 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                                                                z2 + playerMapOffsetZ,
                                                                (undefined*)&lbl_803DCE28, 2, &count);
                 }
-                if ((obj == NULL) ||
-                    (((*(uint*)(obj + 0x3c) & 0x800) == 0 && ((*(uint*)(obj + 0x3c) & 0x1000) == 0))))
-                {
-                    p = &lbl_803DCE28;
-                    for (i = 0; i < count; i = i + 1)
-                    {
-                        modelLightStruct_getDiffuseColor((void*)*p, &c0, &c1, &c2, &c3);
-                        modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
-                        modelLightStruct_getRadius((void*)*p);
-                        fn_8004FA30(&c0, &dOut0);
-                        p = p + 1;
-                    }
-                }
-                else
+                if ((obj != NULL) &&
+                    (((*(uint*)(obj + 0x3c) & 0x800) != 0 || ((*(uint*)(obj + 0x3c) & 0x1000) != 0))))
                 {
                     fn_80088730(g);
                     g[3] = 0;
@@ -579,6 +567,18 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                         {
                             fn_8004F080();
                         }
+                    }
+                }
+                else
+                {
+                    p = &lbl_803DCE28;
+                    for (i = 0; i < count; i = i + 1)
+                    {
+                        modelLightStruct_getDiffuseColor((void*)*p, &c0, &c1, &c2, &c3);
+                        modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
+                        modelLightStruct_getRadius((void*)*p);
+                        fn_8004FA30(&c0, &dOut0);
+                        p = p + 1;
                     }
                 }
                 if ((obj != NULL) && ((*(uint*)(obj + 0x3c) & 0x2000) != 0))
