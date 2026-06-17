@@ -14834,11 +14834,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 {
                     tri = 0;
                 }
-                if (tri == 0 || ((*(s8*)(tri + 3) & 0x3f) != 5 && (*(s8*)(tri + 3) & 0x3f) != 2))
-                {
-                    wallHit = 1;
-                }
-                else
+                if (tri != 0 && ((*(s8*)(tri + 3) & 0x3f) == 5 || (*(s8*)(tri + 3) & 0x3f) == 2))
                 {
                     x1 = *(f32*)(verts + *(s16*)(tri + 4) * 0xc);
                     y1 = lbl_803E7EA4;
@@ -14864,6 +14860,10 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                             wallHit = 1;
                         }
                     }
+                }
+                else
+                {
+                    wallHit = 1;
                 }
             }
             pl += 4;
