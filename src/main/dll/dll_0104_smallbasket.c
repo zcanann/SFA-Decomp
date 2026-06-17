@@ -1,3 +1,28 @@
+/*
+ * smallbasket (DLL 0x104) - a pick-up-and-throw basket/pot object whose
+ * extra record is the shared CfperchState (obj+0xB8).
+ *
+ * smallbasket_init acquires resource 0x5b, joins object group 0x10, seeds a
+ * random idle timer, and picks the impact sfx from the spawn seqId
+ * (0x3cf -> 0x60, 0x662 -> 0x37d, otherwise 0x4a).
+ *
+ * smallbasket_update drives the lifecycle: a respawn countdown
+ * (CfperchState.unk12) that scatters basket contents and warps the object
+ * back to its placement, fade-in via anim.alpha, the carry/throw state
+ * machine on unk5/unk9 (A-button grab, charged vs. normal throw via the
+ * player query helpers fn_80295BF0/fn_8029669C/fn_802966B4), in-flight
+ * physics integration calling fn_801821FC each step for swept-sphere
+ * ground/wall collision, leash to the placement origin (unkC range), and
+ * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype unk1E.
+ *
+ * fn_801816F8 spawns the basket "contents" on break/throw: it dispatches on
+ * the contents mode (data+0x1e, or a health-weighted random roll when 7),
+ * allocating one of several object types (0x3d3/0x3d4/0x3d5 fruit, 0xb/0x3cd
+ * effect) and launching it with a randomized outward velocity.
+ *
+ * objThrowFn_80182504 is the external entry the player code calls to launch
+ * a held basket.
+ */
 #include "main/dll/dll_0104_smallbasket.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -9,6 +34,10 @@
 #include "main/dll/player_status.h"
 #include "main/objfx.h"
 
+typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
+
+/* mirrors CfperchState for the fields used here, but unk6/unk9 are s8 (not u8)
+   - the sign-checked reads in smallbasket_update treat them as signed. */
 typedef struct SmallbasketState
 {
     u8 pad0[0x5 - 0x0];
@@ -20,6 +49,9 @@ typedef struct SmallbasketState
     s32 unk14;
 } SmallbasketState;
 
+/* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
+   player query) and this object's tuning floats (lbl_803Exxxx) - no home
+   header in the import skeleton; declared locally. */
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
@@ -53,16 +85,17 @@ extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
                                void* outHits, int flags);
 extern f32 lbl_803E3970;
-extern void smallbasket_init();
-extern void smallbasket_update();
-extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                               undefined4 param_5, char param_6);
+void smallbasket_init(int obj, int def);
+void smallbasket_update(int obj);
+void smallbasket_render(int obj, int param_2, int param_3, int param_4,
+                        int param_5, char param_6);
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
 extern f32 lbl_803E3974;
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                                 undefined4 p5, double scale);
+/* render callback ABI; param types are pass-throughs of unknown meaning - int. */
+extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
+                                 int p5, double scale);
 extern void* Obj_GetPlayerObject(void);
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -83,7 +116,6 @@ extern void setAButtonIcon(int icon);
 extern int fn_80295BF0(int player);
 extern int fn_8029669C(int player);
 extern int fn_802966B4(int player);
-extern void vecRotateZXY(void* p, void* v);
 extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32 * a, f32 * b);
@@ -440,7 +472,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         )
         ;
         ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
-        (*(code*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
+        (*(ObjThrowInitFn*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
             spawned, ((GameObject*)spawned)->anim.velocityX, ((GameObject*)spawned)->anim.velocityY,
             ((GameObject*)spawned)->anim.velocityZ);
         spread.f14 = lbl_803E3938;
@@ -628,8 +660,8 @@ void objThrowFn_80182504(int obj)
     vecRotateZXY(&local.f8, (void*)&((GameObject*)obj)->anim.velocityX);
 }
 
-void smallbasket_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                        undefined4 param_5, char param_6)
+void smallbasket_render(int obj, int param_2, int param_3, int param_4,
+                        int param_5, char param_6)
 {
     int extra;
     int result;
@@ -758,6 +790,9 @@ typedef struct
 
 void smallbasket_update(int obj)
 {
+    /* int-param redecls override the u8* definitions for these call sites only
+       (caller passes int locals); can't live at file scope - conflicts with the
+       earlier definitions. #57 */
     extern void fn_801821FC(int obj);
     extern void fn_801816F8(int obj, int player, int state);
     int player;
