@@ -14576,15 +14576,15 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             ok = 0;
         }
         if (ok != 0 && *(void**)((char*)inner + 0x7f8) != NULL &&
-            *(s8*)((char*)inner + 0x800) == 0)
+            *(u8*)((char*)inner + 0x800) == 0)
         {
-            if ((*(int*)((char*)state + 0x310) & 0x4000) == 0)
+            if ((*(int*)((char*)state + 0x310) & 0x4000) != 0)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A49A8;
-                return 8;
+                return 7;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A49A8;
-            return 7;
+            return 8;
         }
         if (!((ByteFlags*)((char*)inner + 0x3f0))->b20 &&
             !((ByteFlags*)((char*)inner + 0x3f0))->b08 &&
