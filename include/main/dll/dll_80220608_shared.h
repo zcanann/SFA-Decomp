@@ -1135,8 +1135,8 @@ extern void fn_8003B608(int r, int g, int b);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
-extern f32 lbl_803E72F8;
-extern f32 lbl_803E7308;
+extern const f32 lbl_803E72F8;
+extern const f32 lbl_803E7308;
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern void vecRotateZXY(int obj, f32 *vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
@@ -1148,15 +1148,15 @@ extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVol
 extern int Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 x);
 extern f32 gTreeEffectColors[];
-extern f32 lbl_803E730C;
-extern f32 lbl_803E7310;
-extern f32 lbl_803E7314;
-extern f32 lbl_803E7318;
-extern f32 lbl_803E731C;
-extern f32 lbl_803E7320;
-extern f32 lbl_803E7324;
-extern f32 lbl_803E7328;
-extern f32 lbl_803E732C;
+extern const f32 lbl_803E730C;
+extern const f32 lbl_803E7310;
+extern const f32 lbl_803E7314;
+extern const f32 lbl_803E7318;
+extern const f32 lbl_803E731C;
+extern const f32 lbl_803E7320;
+extern const f32 lbl_803E7324;
+extern const f32 lbl_803E7328;
+extern const f32 lbl_803E732C;
 
 #pragma dont_inline on
 
