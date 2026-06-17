@@ -1521,7 +1521,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         default:
             if (opcode != 0xf)
             {
-                ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->curFrame + cmd[1];
+                ((ObjSeqState*)seq)->curFrame += cmd[1];
             }
             break;
         }
