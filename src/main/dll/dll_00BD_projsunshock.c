@@ -1,33 +1,19 @@
+/*
+ * projsunshock (DLL 0xBD) - a deprecated projectile object DLL.
+ *
+ * Only the standard DLL lifecycle entry points survive. The object is
+ * no longer functional: doUnsupported logs a "no longer supported"
+ * message and returns the failure sentinel, while release/initialise are
+ * empty stubs that keep the DLL loadable.
+ */
 #include "main/dll/dll_7A.h"
 
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_7A.c
- * - 0x8010096C-0x80100970
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_79.c
- * - next split: main/dll/dll_7B.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
 extern void OSReport(const char* fmt, ...);
-
-#define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projsunshock_doUnsupported(void)
 {
     OSReport(sProjsunshockDoNoLongerSupported);
-    return PROJECTILE_UNSUPPORTED_RETURN;
+    return -1;
 }
 
 void projsunshock_release(void)
