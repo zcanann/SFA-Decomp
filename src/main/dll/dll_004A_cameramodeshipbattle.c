@@ -27,6 +27,7 @@ extern f32 lbl_803E1980;
 
 extern int shipBattleFn_801eed24(int focus);
 
+#pragma opt_common_subs off
 void CameraModeShipBattle_update(short* cam)
 {
     f32 fa;
@@ -130,6 +131,7 @@ void CameraModeShipBattle_update(short* cam)
                                    &((CameraObject*)cam)->anim.localPosZ,
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
+#pragma opt_common_subs reset
 
 void CameraModeShipBattle_init(void)
 {
