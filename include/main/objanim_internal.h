@@ -9,12 +9,12 @@
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 
-extern f32 gObjAnimProgressOne;
-extern f32 gObjAnimProgressZero;
-extern f32 gObjAnimEventStepScale;
-extern f32 gObjAnimEventFrameScale;
-extern f32 gObjAnimSetMoveProgressMax;
-extern f32 gObjAnimMoveStepScaleMin;
+extern const f32 gObjAnimProgressOne;
+extern const f32 gObjAnimProgressZero;
+extern const f32 gObjAnimEventStepScale;
+extern const f32 gObjAnimEventFrameScale;
+extern const f32 gObjAnimSetMoveProgressMax;
+extern const f32 gObjAnimMoveStepScaleMin;
 
 typedef struct ObjAnimHitReactRow {
   u8 pad00[0x16];
