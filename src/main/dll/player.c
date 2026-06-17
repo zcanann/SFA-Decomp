@@ -17013,7 +17013,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                     ((GameObject*)obj)->anim.velocityY =
                         ((GameObject*)obj)->anim.velocityY - lbl_803E7F6C * fv;
                 }
-                if (((GameObject*)obj)->anim.velocityY < lbl_803E8014)
+                if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E8014)
                 {
                     ((GameObject*)obj)->anim.velocityY = lbl_803E8014;
                 }
