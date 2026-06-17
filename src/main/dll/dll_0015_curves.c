@@ -1765,6 +1765,7 @@ int pushable_savePos(int obj)
                 return 0;
             }
             ((GameObject*)obj)->anim.localPosX = savedX;
+            slot = (CurvesSaveGameObjectPosition*)((int)gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition));
             ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET);
             ((GameObject*)obj)->anim.localPosZ = *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET);
             return 1;
