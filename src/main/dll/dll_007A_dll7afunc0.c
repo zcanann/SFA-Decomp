@@ -1,3 +1,16 @@
+/*
+ * dll_007A (gameplay/save-progress DLL) - cheat-unlock flags, the save
+ * preview/settings block (color preview RGB defaulting to 0x7f), the
+ * map-event "act" history ring (DAT_803a3be0.., FUN_800ea9b8) and the
+ * per-map act-flag propagation pass (FUN_800e95e8), plus a model-fx
+ * command-list spawner (dll_7A_func03) that builds a GfxCmd array on the
+ * stack and hands it to gModgfxInterface->spawnEffect.
+ *
+ * Cheat ids index a bitset in gGameplayRegisteredDebugOptions
+ * (saveFileStruct_unlockCheat / isCheatUnlocked). The file-scope DAT_/
+ * FUN_ symbols are drift duplicates shared across the dll_005E..dll_007B
+ * gameplay DLL family (the canonical copy lives in dll_0060).
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
@@ -125,7 +138,6 @@ extern f32 lbl_803E0D10;
 extern f32 lbl_803E0D14;
 extern f32 lbl_803E0D18;
 extern f32 lbl_803E0D1C;
-extern f32 lbl_803E0D08, lbl_803E0D0C, lbl_803E0D10, lbl_803E0D14, lbl_803E0D18, lbl_803E0D1C;
 extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
@@ -137,7 +149,6 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
 void saveFileStruct_unlockCheat(uint cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
-    return;
 }
 
 uint isCheatUnlocked(uint cheatId)
@@ -145,12 +156,16 @@ uint isCheatUnlocked(uint cheatId)
     return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
 
+enum
+{
+    SAVEGAME_DEFAULT_VOLUME = 0x7f,
+};
+
 void saveFileStruct_resetVolumes(void)
 {
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
-    return;
+    gGameplayPreviewColorRed = SAVEGAME_DEFAULT_VOLUME;
+    gGameplayPreviewColorGreen = SAVEGAME_DEFAULT_VOLUME;
+    gGameplayPreviewColorBlue = SAVEGAME_DEFAULT_VOLUME;
 }
 
 u8* getSaveFileStruct(void)
@@ -171,7 +186,6 @@ void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3
     FUN_8000676c((uint)gGameplayPreviewColorGreen, 10, 0, 1, 0);
     FUN_8000676c((uint)gGameplayPreviewColorRed, 10, 1, 0, 0);
     FUN_8000676c((uint)gGameplayPreviewColorBlue, 10, 0, 0, 1);
-    return;
 }
 
 undefined* FUN_800e82d8(void)
@@ -215,7 +229,7 @@ void FUN_800e8630(int obj)
         if ((*(int*)(entry + 0x1c8) == 0) || (objId == *(int*)(entry + 0x1c8))) break;
         entry = entry + 0x70;
         slotBase = slotBase + 7;
-        groupsLeft = groupsLeft + -1;
+        groupsLeft--;
         slotIdx = slotBase;
         if (groupsLeft == 0) break;
     }
@@ -233,14 +247,12 @@ void FUN_800e8630(int obj)
         anim.localPosY;
     *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)obj)->
         anim.localPosZ;
-    return;
 }
 
 undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
 
 undefined FUN_800e8b98(void)
 {
@@ -308,8 +320,8 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
         {
             (*gMapEventInterface)->setMapAct(act, 1);
         }
-        actFlags = actFlags + 1;
-        act = act + 1;
+        actFlags++;
+        act++;
     }
     while (act < 0x78);
     FUN_800e95e8(7, 0, 1);
@@ -326,13 +338,13 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = savedY;
     (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
-    if (src == (char*)0x0)
+    if (src == NULL)
     {
-        DAT_803a3f24 = 0x46;
-        DAT_803a3f25 = 0x4f;
-        DAT_803a3f26 = 0x58;
+        DAT_803a3f24 = 'F';
+        DAT_803a3f25 = 'O';
+        DAT_803a3f26 = 'X';
         DAT_803a3f27 = 0;
-        src = (char*)0x0;
+        src = NULL;
     }
     else
     {
@@ -340,21 +352,20 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
         do
         {
             c = *src;
-            src = src + 1;
+            src++;
             *dst = c;
-            dst = dst + 1;
+            dst++;
         }
         while (c != '\0');
     }
     saveHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
     c = (char)result;
-    if ((c != -1) && (DAT_803dc4f0 = c, src != (char*)0x0))
+    if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
         FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
-    return;
 }
 
 void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
@@ -441,7 +452,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                     }
                     actPtr = actPtr + 6;
                     wordPtr = wordPtr + 6;
-                    i = i + -1;
+                    i--;
                 }
                 while (i != 0);
                 if (!isClearMode)
@@ -461,7 +472,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                             goto LAB_800e9628;
                         histScan = histScan + 0xf;
                         slotBase = slotBase + '\x05';
-                        i = i + -1;
+                        i--;
                     }
                     while (i != 0);
                     slotIdx = -1;
@@ -481,8 +492,8 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                                 break;
                             }
                             histPtr = histPtr + 3;
-                            i = i + 1;
-                            j = j + -1;
+                            i++;
+                            j--;
                         }
                         while (j != 0);
                     }
@@ -524,7 +535,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                         }
                         actPtr = actPtr + 6;
                         wordPtr = wordPtr + 6;
-                        i = i + -1;
+                        i--;
                     }
                     while (i != 0);
                 }
@@ -532,9 +543,10 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
         }
     }
     FUN_8028687c();
-    return;
 }
 
+/* in_r6..in_r10/in_f4..in_f8/extraout_r4 are register-pass-through scaffolding -
+   live arg regs forwarded untouched into FUN_800176dc, not original locals. */
 void FUN_800e9e9c(void)
 {
     uint slotIdx;
@@ -573,7 +585,6 @@ void FUN_800e9e9c(void)
     }
     FUN_800d783c(0x1e, 1);
     DAT_803de100 = 2;
-    return;
 }
 
 undefined4
@@ -609,7 +620,7 @@ void FUN_800ea9b8(void)
     uint flagWord;
     uint bit;
     uint flagId;
-    uint unaff_r27;
+    uint cachedFlagWord;
     uint cachedFlagId;
     uint scanId;
     short* mapFlags;
@@ -659,18 +670,15 @@ void FUN_800ea9b8(void)
                 mapId = (uint)(short)(((byte)history[5] >> 5) + 0x12f);
                 if (mapId != (int)(short)cachedFlagId)
                 {
-                    unaff_r27 = FUN_80017690(mapId);
+                    cachedFlagWord = FUN_80017690(mapId);
                     cachedFlagId = mapId;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)history[5] & 0x1f)) != 0);
+            while ((cachedFlagWord & 1 << ((byte)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
-    return;
 }
-
-void SaveGame_func08_nop(void);
 
 void dll_7A_func01_nop(void)
 {
@@ -679,28 +687,6 @@ void dll_7A_func01_nop(void)
 void dll_7A_func00_nop(void)
 {
 }
-
-void dll_7B_func01_nop(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
-
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
-
-enum
-{
-    SAVEGAME_EMPTY_TASK_HINT = -1,
-    SAVEGAME_DEFAULT_VOLUME = 0x7f,
-};
 
 int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
@@ -847,5 +833,3 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     return ret;
 }
-
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
