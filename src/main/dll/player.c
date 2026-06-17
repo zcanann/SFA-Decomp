@@ -15226,33 +15226,35 @@ int fn_802A2918(int obj, int state, f32 fv)
         s16* tbl;
         s16* t;
         int sel;
-        f32 v[3];
-        f32 sp1c;
+        f32 v[4];
+        f32 z;
+#define sp1c v[1]
         ObjHits_MarkObjectPositionDirty(obj);
         if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
             inner->unk8B4 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
-        ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
+        z = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.animSpeedA = z;
+        ((PlayerState*)state)->baddie.animSpeedB = z;
         *(s16*)((char*)state + 0x278) = 0xe;
         inner->unk898 = (int)fn_8029FFD0;
-        sp1c = lbl_803E7EA4;
+        sp1c = z;
         if (flag)
         {
             v[0] = -inner->unk50C;
-            v[1] = -inner->unk514;
-            v[2] = -inner->unk518;
+            v[2] = -inner->unk514;
+            v[3] = -inner->unk518;
         }
         else
         {
             v[0] = inner->unk50C;
-            v[1] = inner->unk514;
-            v[2] = inner->unk518;
+            v[2] = inner->unk514;
+            v[3] = inner->unk518;
         }
         {
-            int delta = (u16)getAngle(v[0], v[1]) - inner->targetYaw;
+            int delta = (u16)getAngle(v[0], v[2]) - inner->targetYaw;
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -15274,10 +15276,10 @@ int fn_802A2918(int obj, int state, f32 fv)
         inner->unk544 =
             fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)v,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
-        fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
+        fn_802A71E0(obj, t[0], tbl[sel + 1], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, flag ? 0x34 | 0x40 : 0x34);
-        fn_802A71E0(obj, t[2], t[3], (int*)((char*)inner + 0x538),
+        fn_802A71E0(obj, t[2], tbl[sel + 3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->unk4F4 =
@@ -15336,6 +15338,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
+#undef sp1c
 
 int fn_8029FA24(int obj, int state, f32 fv)
 {
