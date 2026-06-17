@@ -1198,25 +1198,26 @@ void ktrex_updateAttackEffects(int obj)
 
 void ktrex_updateContactEffects(int obj, void* runtime)
 {
-    int hitA;
-    uint hitC;
     int hitType;
+    uint hitC;
+    int hitA;
     int msg[4];
     int hit;
     f32* contactPoints;
     f32* pt;
+    f32 lo;
     *(KTRexMsg4*)msg = *(KTRexMsg4*)lbl_802C2550;
     if (lbl_803DDD4C != 0)
     {
         lbl_803DDD4C -= 1;
     }
-    if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 > lbl_803E67B8)
+    if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 > (lo = lbl_803E67B8))
     {
         ((KTRexRuntime*)gKTRexRuntime)->unk3E8 =
             timeDelta * ((KTRexRuntime*)gKTRexRuntime)->unk3EC + ((KTRexRuntime*)gKTRexRuntime)->unk3E8;
-        if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 < lbl_803E67B8)
+        if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 < lo)
         {
-            ((KTRexRuntime*)gKTRexRuntime)->unk3E8 = lbl_803E67B8;
+            ((KTRexRuntime*)gKTRexRuntime)->unk3E8 = lo;
         }
         else if (((KTRexRuntime*)gKTRexRuntime)->unk3E8 > lbl_803E6820)
         {
