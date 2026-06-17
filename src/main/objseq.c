@@ -3202,9 +3202,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
 void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
+    s16 basePitch;
     int baseYaw;
     int baseRoll;
-    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
@@ -3248,7 +3248,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
             if ((s8)((ObjSeqState*)seq)->movementState == 2)
             {
                 *(s16*)(seqObj + 0) =
-                    (s16)(basePitch + (s32)(
+                    (s16)((s32)basePitch + (s32)(
                         (f32)((ObjSeqState*)seq)->rotOffsetX * ((ObjSeqState*)seq)->posOffsetScale));
                 *(s16*)(seqObj + 2) =
                     (s16)(baseYaw + (s32)((f32)((ObjSeqState*)seq)->rotOffsetY * ((ObjSeqState*)seq)->posOffsetScale));
