@@ -196,6 +196,7 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     DFropenodeExtra* extra;
     s8 idx;
     f32 x0;
+    f32 dx;
     f32 dy;
     f32 dz;
     f32 fraction;
@@ -210,7 +211,8 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     dy = node[1].pos[1] - node->pos[1];
     dz = node[1].pos[2] - node->pos[2];
     x0 = extra->rope->nodes[idx].pos[0];
-    *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject*)obj)->anim.localPosX + x0);
+    dx = node[1].pos[0] - x0;
+    *xOut = dx * fraction + (((GameObject*)obj)->anim.localPosX + x0);
     *yOut = dy * fraction + (((GameObject*)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
