@@ -791,8 +791,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
         }
     }
     stateIndex = state->stateIndex;
-    currentMove = table->stateMoveIds[stateIndex];
-    if (obj->currentMove != currentMove)
+    if (obj->currentMove != (currentMove = table->stateMoveIds[stateIndex]))
     {
         stepScale = table->stateMoveStepScales[stateIndex];
         if (stepScale > lbl_803E520C)
