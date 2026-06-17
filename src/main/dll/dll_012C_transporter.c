@@ -1,3 +1,23 @@
+/*
+ * transporter (DLL 0x12C) - the warp-pad / teleporter object of the CF
+ * warp-pad family (WarpPadPlacement / WarpPadState, helpers in
+ * CFchuckobj). Each pad is tagged by its placement destinationId (a
+ * 32-bit area/event id); the big switches in Transporter_SeqFn and
+ * transporter_init drive per-destination level locking/loading, map
+ * warps, env-fx and sky restores, and gate a few pads behind GameBits.
+ *
+ * transporter_init seeds state->flags with the pad's warp-fx class from
+ * its destinationId (0x68 / 0x08 / 0x30 / 0x10), or sets the
+ * gamebit-disabled bit 0x20 when any of a destination's three guard
+ * bits is set. transporter_hitDetect raises/lowers the A-button prompt
+ * through the resetHitboxMode interact bits, and Transporter_SeqFn
+ * consumes the anim sequence-event opcodes (1 warp, 2 map
+ * progress, 3 unlock, 5/6 block flags, 7 pulse fx, 8 env restore).
+ *
+ * The interact bits live in anim.resetHitboxMode (the signed s8 view of
+ * the resetHitboxFlags byte, objanim_internal.h): 0x8 = DISABLED,
+ * 0x10 = PROMPT_SUPPRESSED.
+ */
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/audio/sfx.h"
@@ -5,6 +25,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
+/* gameplay_runtime / dll_80220608_shared / sky / player TUs */
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int dirIdx, int v);
 extern int mapGetDirIdx(int mapId);
@@ -18,9 +39,8 @@ extern void skyFn_80088c94(int a, int b);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E3E98;
-
 extern void objRenderFn_80041018(int obj);
-extern short lbl_803DCEB8;
+extern s16 lbl_803DCEB8;
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -33,11 +53,11 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 7:
+        case 7: /* pulse fx + sfx */
             state->flags = state->flags | 4;
             Sfx_PlayFromObject((u32)obj, 0x420);
             break;
-        case 2:
+        case 2: /* map progress: lock/load per destination */
             id = setup->destinationId;
             switch (id)
             {
@@ -120,7 +140,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             }
             break;
-        case 3:
+        case 3: /* unlock level */
             switch (setup->destinationId)
             {
             case 0x47064:
@@ -128,7 +148,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             }
             break;
-        case 5:
+        case 5: /* load blocks-set 1 */
             switch (setup->destinationId)
             {
             case 0x47064:
@@ -136,7 +156,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             }
             break;
-        case 6:
+        case 6: /* clear blocks-set 1 */
             switch (setup->destinationId)
             {
             case 0x47064:
@@ -144,7 +164,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 break;
             }
             break;
-        case 1:
+        case 1: /* warp out */
             switch (setup->destinationId)
             {
             case 0x47064:
@@ -153,7 +173,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             warpToMap(setup->warpId, 0);
             break;
-        case 8:
+        case 8: /* env-fx / sky restore on arrival */
             id = setup->destinationId;
             switch (id)
             {
@@ -298,13 +318,7 @@ void transporter_render(void)
 {
 }
 
-/*
- * Recovered: large switch on params[20] (32-bit id) that sets bits in
- * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
- * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
- * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
- * obj->_af |= 8 (redundant with the unconditional prologue store).
- */
+/* Tail `flags & 0x40` store is redundant with the unconditional prologue store. */
 void transporter_init(int obj, u8* params)
 {
     WarpPadPlacement* placement;
@@ -347,37 +361,37 @@ void transporter_init(int obj, u8* params)
         state->flags = (u8)(state->flags | 0x10);
         break;
     case 0x43F83:
-        if (GameBit_Get(2984) != 0 || GameBit_Get(790) != 0 || GameBit_Get(1297) != 0)
+        if (GameBit_Get(0xBA8) != 0 || GameBit_Get(0x316) != 0 || GameBit_Get(0x511) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
         break;
     case 0x2BA7:
-        if (GameBit_Get(3069) != 0 || GameBit_Get(666) != 0 || GameBit_Get(667) != 0)
+        if (GameBit_Get(0xBFD) != 0 || GameBit_Get(0x29A) != 0 || GameBit_Get(0x29B) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
         break;
     case 0x46A40:
-        if (GameBit_Get(255) != 0 || GameBit_Get(2208) != 0 || GameBit_Get(2210) != 0)
+        if (GameBit_Get(0xFF) != 0 || GameBit_Get(0x8A0) != 0 || GameBit_Get(0x8A2) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
         break;
     case 0x497F4:
-        if (GameBit_Get(3182) != 0 || GameBit_Get(3184) != 0 || GameBit_Get(3185) != 0)
+        if (GameBit_Get(0xC6E) != 0 || GameBit_Get(0xC70) != 0 || GameBit_Get(0xC71) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
         break;
     case 0x4800C:
-        if (GameBit_Get(3205) != 0 || GameBit_Get(3253) != 0 || GameBit_Get(3254) != 0)
+        if (GameBit_Get(0xC85) != 0 || GameBit_Get(0xCB5) != 0 || GameBit_Get(0xCB6) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
         break;
     case 0x4A533:
-        if (GameBit_Get(372) != 0 || GameBit_Get(3255) != 0 || GameBit_Get(3256) != 0)
+        if (GameBit_Get(0x174) != 0 || GameBit_Get(0xCB7) != 0 || GameBit_Get(0xCB8) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }
