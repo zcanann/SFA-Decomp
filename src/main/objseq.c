@@ -2696,7 +2696,7 @@ int ObjSeq_update(u8* obj, f32 t)
         slot = (s8)((ObjSeqState*)seq)->slot;
         if ((s8)base[slot + 0x3c4c] != 0 && (s8)base[slot + 0x39e8] != 0)
         {
-            ((ObjSeqState*)seq)->curFrame = ((ObjSeqState*)seq)->curFrame - (s8)base[slot + 0x39e8];
+            ((ObjSeqState*)seq)->curFrame -= (s8)base[slot + 0x39e8];
             if (((ObjSeqState*)seq)->curFrame < 0)
             {
                 ((ObjSeqState*)seq)->curFrame = 0;
