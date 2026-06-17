@@ -1,3 +1,18 @@
+/*
+ * dll9efunc0 (DLL 0x9E) - one of the per-effect pickup/modgfx spawners.
+ *
+ * dll_9E_func03 builds a fixed list of 14 modgfx draw commands (GfxCmd
+ * entries[], one mode/blend + xyz per command, texture sub-tables taken
+ * from the lbl_80318260 data blob) plus the surrounding spawn header
+ * (colour, position, scale, the seven s16 params at tab+0x1f8..+0x204),
+ * then hands the whole packet to (*gModgfxInterface)->spawnEffect.
+ *
+ * The spawn flag word starts at 0xC0100C0 and ORs in the caller's flags;
+ * bit 0 means "anchor to a world position": from sourceObj+0x18 when a
+ * source object was passed, otherwise from posSource+0xc.
+ *
+ * func00/func01 are the empty DLL entry-table slots for this object.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
 
@@ -12,6 +27,8 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
+/* lbl_80318260: shared texture + halfword table; lbl_803E1418..1440:
+ * gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318260[];
 extern f32 lbl_803E1418;
 extern f32 lbl_803E141C;
@@ -25,30 +42,28 @@ extern f32 lbl_803E1438;
 extern f32 lbl_803E143C;
 extern f32 lbl_803E1440;
 
-
 void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
+        GfxCmd* cmds; /* +0x00 */
+        int ctx; /* +0x04 */
+        u8 pad0[0x18]; /* +0x08 */
+        f32 col[3]; /* +0x20 */
+        f32 pos[3]; /* +0x2c */
+        f32 scale; /* +0x38 */
+        u32 v3c; /* +0x3c */
+        u32 v40; /* +0x40 */
+        s16 v44; /* +0x44 */
+        s16 hw[7]; /* +0x46 */
+        u32 flags; /* +0x54 */
+        u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
+        s8 count; /* +0x5d */
+        u8 pad1[2]; /* +0x5e */
+        GfxCmd entries[32]; /* +0x60 */
     } buf;
     u8* tab = (u8*)(int)lbl_80318260;
     GfxCmd* e = buf.entries;
-    GfxCmd* end;
     u32 fl;
 
     e[0].layer = 0;
@@ -67,7 +82,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[1].z = lbl_803E141C;
     e[2].layer = 0;
     e[2].flags = 0;
-    e[2].tex = (void*)0;
+    e[2].tex = NULL;
     e[2].mode = 0x400000;
     e[2].x = lbl_803E1418;
     e[2].y = lbl_803E1424;
@@ -95,14 +110,14 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[5].z = lbl_803E1418;
     e[6].layer = 1;
     e[6].flags = 0;
-    e[6].tex = (void*)0;
+    e[6].tex = NULL;
     e[6].mode = 0x400000;
     e[6].x = lbl_803E1418;
     e[6].y = lbl_803E1418;
     e[6].z = lbl_803E1418;
     e[7].layer = 2;
     e[7].flags = 0x7a;
-    e[7].tex = (void*)0;
+    e[7].tex = NULL;
     e[7].mode = 0x10000;
     e[7].x = lbl_803E1418;
     e[7].y = lbl_803E1418;
@@ -123,7 +138,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[9].z = lbl_803E1418;
     e[10].layer = 2;
     e[10].flags = 0;
-    e[10].tex = (void*)0;
+    e[10].tex = NULL;
     e[10].mode = 0x400000;
     e[10].x = lbl_803E1418;
     e[10].y = lbl_803E143C;
@@ -137,7 +152,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[11].z = lbl_803E1418;
     e[12].layer = 3;
     e[12].flags = 0;
-    e[12].tex = (void*)0;
+    e[12].tex = NULL;
     e[12].mode = 0x400000;
     e[12].x = lbl_803E1418;
     e[12].y = lbl_803E143C;
@@ -165,8 +180,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    end = (GfxCmd*)((u8*)e + 336);
-    buf.count = end - e;
+    buf.count = (GfxCmd*)((u8*)e + 336) - e;
     buf.hw[0] = *(s16*)&tab[0x1f8];
     buf.hw[1] = *(s16*)&tab[0x1fa];
     buf.hw[2] = *(s16*)&tab[0x1fc];
@@ -181,7 +195,7 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.flags = fl;
     if (fl & 1)
     {
-        if (sourceObj != 0)
+        if (sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E1418 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E1418 + *(f32*)(sourceObj + 0x1c);
@@ -205,5 +219,3 @@ void dll_9E_func01_nop(void)
 void dll_9E_func00_nop(void)
 {
 }
-
-void dll_9F_func01_nop(void);
