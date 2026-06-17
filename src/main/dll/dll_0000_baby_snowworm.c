@@ -4317,16 +4317,14 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        u8* tex = (u8*)g + j * 4;
-        u8* base2 = (u8*)g + j * 2;
-        u8* base1 = (u8*)g + j;
-        if (*(void**)(tex + 2504) != NULL)
+        u8* tex = (u8*)g + j * 4 + 2504;
+        if (*(void**)tex != NULL)
         {
-            textureFree(*(void**)(tex + 2504));
-            *(void**)(tex + 2504) = NULL;
+            textureFree(*(void**)tex);
+            *(void**)tex = NULL;
         }
-        *(s16*)(base2 + 2376) = -1;
-        *(base1 + 1096) = 1;
+        ((s16*)((u8*)g + j * 2))[1188] = -1;
+        ((u8*)g + j)[1096] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -4343,16 +4341,14 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        u8* tex = (u8*)g + j * 4;
-        u8* base2 = (u8*)g + j * 2;
-        u8* base1 = (u8*)g + j;
-        if (*(void**)(tex + 2504) != NULL)
+        u8* tex = (u8*)g + j * 4 + 2504;
+        if (*(void**)tex != NULL)
         {
-            textureFree(*(void**)(tex + 2504));
-            *(void**)(tex + 2504) = NULL;
+            textureFree(*(void**)tex);
+            *(void**)tex = NULL;
         }
-        *(s16*)(base2 + 2376) = -1;
-        *(base1 + 1096) = 1;
+        ((s16*)((u8*)g + j * 2))[1188] = -1;
+        ((u8*)g + j)[1096] = 1;
     }
 
     textureFree(lbl_803DD8C4);
