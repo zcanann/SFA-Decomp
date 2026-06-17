@@ -1217,13 +1217,14 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
     PlayerState* inner = ((GameObject*)player)->extra;
     f32 sumC;
     f32 sumS;
-    int any = 0;
+    int any;
     int* objs;
     int n;
     int i;
 
     sumC = sumS = lbl_803E7EA4;
     objs = (int*)ObjGroup_GetObjects(0x14, &n);
+    any = 0;
     for (i = 0; i < n; i++)
     {
         int o = objs[i];
