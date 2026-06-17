@@ -71,7 +71,7 @@ extern u8 lbl_8037E0C0[];
 extern byte lbl_803DB638;
 extern int lbl_803DB63C;
 extern int lbl_803DB640;
-extern byte lbl_803DB644;
+extern s8 lbl_803DB644;
 extern int lbl_80382008[5];
 extern FrustumPlane gViewFrustumPlanes[5];
 extern int lbl_803E8444;
