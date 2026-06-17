@@ -80,6 +80,8 @@ void DFP_Torch_init(int obj, int def)
 
 void fn_80202EF0(int obj, int p2);
 
+#pragma opt_common_subs off
+#pragma fp_contract off
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern char*Camera_GetCurrentViewSlot(void);
@@ -174,6 +176,8 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
+#pragma fp_contract reset
+#pragma opt_common_subs reset
 
 void DFP_Torch_update(int obj)
 {
