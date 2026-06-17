@@ -1,3 +1,19 @@
+/*
+ * pressureswitchfb (DLL 0x00FB) - a weight-activated pressure switch / floor
+ * pad. While any tracked object (player, tricky, or seqId 0x754/0x6d) stands
+ * far enough above the pad, the switch is held depressed: it slides on its
+ * local Y toward the pressed target (CfGuardianState.targetPosY) at
+ * velocityY * timeDelta, sets the placement's "pressed" game bit
+ * (placement->unk1A) and swaps to the pressed texture (id 0x100). When the
+ * weight leaves it springs back up and clears the game bit.
+ *
+ * Up to PRESSURESWITCHFB_TRACKED_OBJECT_COUNT contacts are cached in the runtime
+ * extra block; the animEventCallback (pressureswitchfb_updateStateMode) captures
+ * or resets those slots on demand. canRelease / playerOnly / startPressed /
+ * usePressedTexture behaviour comes from the seqId and placement flags. The pad
+ * registers/unregisters in object group PRESSURESWITCHFB_REMOVE_GROUP_ID and can
+ * drive a linked Tricky object via its vtable when not pressed.
+ */
 #include "main/game_object.h"
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
@@ -5,8 +21,6 @@
 #include "main/gamebits.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
-
-extern undefined8 ObjGroup_RemoveObject();
 
 #define PRESSURESWITCHFB_STATE_IDLE 0
 #define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
@@ -31,9 +45,11 @@ extern undefined8 ObjGroup_RemoveObject();
 #define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
 #define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
+#define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
+extern void ObjGroup_RemoveObject();
 extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjGroup_AddObject();
+extern void ObjGroup_AddObject();
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern int fn_80295C5C(void* player);
@@ -45,7 +61,8 @@ extern f32 lbl_803E3760;
 extern f32 lbl_803E3764;
 extern f32 lbl_803E3768;
 extern f32 lbl_803E3778;
-undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
+
+int pressureswitchfb_updateStateMode(int obj, int unused, int stateParam)
 {
     s16 objType;
     int config;
@@ -82,11 +99,11 @@ undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int sta
              i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
         {
             trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-            *(undefined4*)(trackedObjectSlot + 0x0) = 0;
-            *(undefined4*)(trackedObjectSlot + 0x4) = 0;
-            *(undefined4*)(trackedObjectSlot + 0x8) = 0;
-            *(undefined4*)(trackedObjectSlot + 0xc) = 0;
-            *(undefined4*)(trackedObjectSlot + 0x10) = 0;
+            *(int*)(trackedObjectSlot + 0x0) = 0;
+            *(int*)(trackedObjectSlot + 0x4) = 0;
+            *(int*)(trackedObjectSlot + 0x8) = 0;
+            *(int*)(trackedObjectSlot + 0xc) = 0;
+            *(int*)(trackedObjectSlot + 0x10) = 0;
         }
         ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
         ((GameObject*)obj)->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
@@ -116,6 +133,8 @@ void pressureswitchfb_free(int obj)
     ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }
 
+typedef void (*TrickyVtableFn)(int, int, int, int);
+
 typedef struct PressureswitchfbState
 {
     u8 pad0[0x68 - 0x0];
@@ -128,7 +147,8 @@ typedef struct PressureswitchfbPlacement
     u8 pad0[0x18 - 0x0];
     s16 unk18;
     s16 unk1A;
-    s16 unk1C;
+    u8 unk1C;
+    u8 unk1D;
     u8 unk1E;
     u8 pad1F[0x20 - 0x1F];
     s16 unk20;
@@ -137,7 +157,7 @@ typedef struct PressureswitchfbPlacement
     u8 pad26[0x28 - 0x26];
 } PressureswitchfbPlacement;
 
-typedef struct
+typedef struct FxArgs
 {
     u8 pad[4];
     u16 type;
@@ -148,7 +168,7 @@ typedef struct
     f32 z;
 } FxArgs;
 
-typedef struct
+typedef struct SwitchFlags
 {
     u8 active : 1;
     u8 playerOnly : 1;
@@ -420,15 +440,11 @@ void pressureswitchfb_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
             {
-                (*(code*)(*(int*)(((PressureswitchfbState*)tmp)->unk68) + 0x28))(tmp, obj, 1, 3);
+                (*(TrickyVtableFn*)(*(int*)(((PressureswitchfbState*)tmp)->unk68) + 0x28))(tmp, obj, 1, 3);
             }
         }
     }
 }
-
-void mmp_bridge_free(void);
-
-__declspec(section ".sdata") extern char lbl_803DBD90[];
 
 typedef struct PressureSwitchFbFlags
 {
@@ -462,7 +478,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
     }
     defaultOffset = lbl_803E3778;
     ((CfGuardianState*)sub)->velocityY = defaultOffset;
-    if (((GameObject*)obj)->anim.seqId == 0x77b)
+    if (((GameObject*)obj)->anim.seqId == PRESSURESWITCHFB_OBJ_WM_PRESSURE)
     {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;
@@ -470,21 +486,21 @@ void pressureswitchfb_init(u8* obj, u8* params)
         ((CfGuardianState*)sub)->velocityY = defaultOffset;
     }
     ((CfGuardianState*)sub)->targetPosY = *(f32*)(params + 0xc);
-    if (GameBit_Get(*(s16*)(params + 0x1a)) != 0)
+    if (GameBit_Get(((PressureswitchfbPlacement*)params)->unk1A) != 0)
     {
         s16 model;
         ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)sub)->targetPosY - (f32)(u32)
-        params[0x1c];
+        ((PressureswitchfbPlacement*)params)->unk1C;
         sub[0] = 0x1e;
         flags->canRelease = 0;
         model = ((GameObject*)obj)->anim.seqId;
-        if (model != 0x19f)
+        if (model != PRESSURESWITCHFB_OBJ_LINK_SNOWPR)
         {
-            if (model != 0x26c)
+            if (model != PRESSURESWITCHFB_OBJ_SH_PRESSURE)
             {
-                if (model != 0x274)
+                if (model != PRESSURESWITCHFB_OBJ_LINK_UNDERW)
                 {
-                    if (model != 0x545)
+                    if (model != PRESSURESWITCHFB_OBJ_CC_PRESSURE)
                     {
                         flags->autoPress = 1;
                     }
@@ -500,7 +516,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
             }
         }
     }
-    ObjGroup_AddObject(obj, 0x53);
+    ObjGroup_AddObject(obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
     ((CfGuardianState*)sub)->unk4 = 0;
     ((CfGuardianState*)sub)->unk8 = 0;
     ((CfGuardianState*)sub)->unkC = 0;
@@ -513,11 +529,3 @@ void pressureswitchfb_init(u8* obj, u8* params)
     ((CfGuardianState*)sub)->unk28 = 0;
     ((GameObject*)obj)->animEventCallback = (void*)pressureswitchfb_updateStateMode;
 }
-
-int Door_getExtraSize(void);
-
-/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
- * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
- * its GameBit, compare against the def[0x30] mask bit for that slot, and
- * if the polarity flips (GameBit != mask bit) end the current sequence.
- * Always latches state[1] bit 0 before returning 0. */
