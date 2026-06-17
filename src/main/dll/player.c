@@ -15106,7 +15106,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         *(f32*)((char*)c + 0x3c);
     *(u8*)((char*)d + 0x5e) = *(u8*)((char*)c + 0x50);
     *(u8*)((char*)d + 0x61) = 1;
-    if (hitDetectFn_800658a4(a, (char*)d + 0x48, 0x205, *(f32*)((char*)d + 0x44),
+    if (hitDetectFn_800658a4(a, (char*)(int)d + 0x48, 0x205, *(f32*)((char*)d + 0x44),
                              *(f32*)((char*)d + 0x4), *(f32*)((char*)d + 0x4c)) != 0)
     {
         return 0;
