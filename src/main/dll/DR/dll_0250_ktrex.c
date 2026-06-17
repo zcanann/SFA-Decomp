@@ -1326,8 +1326,9 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         idx = phase >> 1;
         if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x56])
         {
-            int push = 5;
+            int push;
             ((KTRexArenaState*)gKTRexState)->unk103 = 2;
+            push = 5;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1357,8 +1358,9 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             if (cond && (((KTRexArenaState*)gKTRexState)->timerFA & 0x40) == 0)
             {
-                int push = 0xb;
+                int push;
                 ((KTRexArenaState*)gKTRexState)->unkFD = 0;
+                push = 0xb;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1398,8 +1400,9 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             if (result != 0)
             {
-                int push = 5;
+                int push;
                 ((KTRexArenaState*)gKTRexState)->unk103 = 1;
+                push = 5;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
