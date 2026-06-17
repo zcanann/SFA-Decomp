@@ -1,24 +1,13 @@
+/*
+ * projenergise1 (DLL 0xB4) - retired "energise projectile" object DLL.
+ *
+ * The object itself is gone: its only real entry point logs a
+ * "no longer supported" message and returns -1, while the standard DLL
+ * lifecycle hooks (release/initialise) are empty stubs. Effectively a
+ * placeholder that keeps the DLL id valid after the projectile behavior
+ * was removed.
+ */
 #include "main/dll/modgfx67.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/modgfx67.c
- * - 0x801007E4-0x801007E8
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_66.c
- * - next split: main/dll/dll_68.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
 
 extern void OSReport(const char* fmt, ...);
 
