@@ -15143,23 +15143,17 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             f32 q = *(f32*)((char*)d + 0x4) -
             (*(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x10) - *(f32*)((char*)c + 0xc)) +
                 *(f32*)((char*)c + 0xc));
-            if (*(f32*)((char*)d + 0x0) < lbl_803E7ED8)
+            if (*(f32*)((char*)d + 0x0) >= lbl_803E7ED8 &&
+                *(f32*)((char*)d + 0x0) <= lbl_803E7FBC &&
+                q >= lbl_803E80C4)
             {
-                return 0;
+                if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
+                {
+                    *(int*)((char*)b + 0x4c4) = (int)hit;
+                }
+                return 6;
             }
-            if (*(f32*)((char*)d + 0x0) > lbl_803E7FBC)
-            {
-                return 0;
-            }
-            if (q < lbl_803E80C4)
-            {
-                return 0;
-            }
-            if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
-            {
-                *(int*)((char*)b + 0x4c4) = (int)hit;
-            }
-            return 6;
+            return 0;
         }
     }
     else
