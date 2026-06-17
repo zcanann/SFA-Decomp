@@ -1232,14 +1232,14 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwingState*)state)->aimOffsetZ = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
                 ((ArwingState*)state)->aimYaw = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)(cam + 0);
                 if (((ArwingState*)state)->aimYaw > 32768)
-                    ((ArwingState*)state)->aimYaw -= 65535;
+                    ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw - 65535;
                 if (((ArwingState*)state)->aimYaw < -32768)
-                    ((ArwingState*)state)->aimYaw += 65535;
+                    ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw + 65535;
                 ((ArwingState*)state)->aimPitch = ((GameObject*)obj)->anim.rotY - (u16) * (s16*)(cam + 2);
                 if (((ArwingState*)state)->aimPitch > 32768)
-                    ((ArwingState*)state)->aimPitch -= 65535;
+                    ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch - 65535;
                 if (((ArwingState*)state)->aimPitch < -32768)
-                    ((ArwingState*)state)->aimPitch += 65535;
+                    ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch + 65535;
                 ((ArwingState*)state)->aimRoll = *(s16*)(cam + 4) - ((GameObject*)obj)->anim.rotZ;
                 ((ArwingState*)state)->aimSnapshotValid = 1;
                 break;
