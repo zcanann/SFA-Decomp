@@ -66,14 +66,14 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern u16 lbl_803DBDF0[4];
-extern f32 lbl_803E3F98;
+extern const f32 lbl_803E3F98;
 extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FAC;
-extern f32 lbl_803E3FB0;
-extern f32 lbl_803E3FB4;
-extern f32 lbl_803E3FB8;
-extern f32 lbl_803E3FBC;
-extern f32 lbl_803E3FC0;
+extern const f32 lbl_803E3FAC;
+extern const f32 lbl_803E3FB0;
+extern const f32 lbl_803E3FB4;
+extern const f32 lbl_803E3FB8;
+extern const f32 lbl_803E3FBC;
+extern const f32 lbl_803E3FC0;
 extern f32 lbl_803E3FC4;
 
 #pragma scheduling on

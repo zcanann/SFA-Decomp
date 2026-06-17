@@ -32,14 +32,14 @@ extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 lbl_803E5390;
-extern f32 lbl_803E5394;
-extern f32 lbl_803E5398;
-extern f32 lbl_803E539C;
-extern f32 lbl_803E53A8;
-extern f32 lbl_803E53AC;
-extern f32 lbl_803E53B0;
-extern f32 lbl_803E53B4;
+extern const f32 lbl_803E5390;
+extern const f32 lbl_803E5394;
+extern const f32 lbl_803E5398;
+extern const f32 lbl_803E539C;
+extern const f32 lbl_803E53A8;
+extern const f32 lbl_803E53AC;
+extern const f32 lbl_803E53B0;
+extern const f32 lbl_803E53B4;
 
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
@@ -58,21 +58,21 @@ extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 
                                         int flags, f32 f8val, f32 mult);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
-extern f32 lbl_803E5388;
-extern f32 lbl_803E538C;
-extern f32 lbl_803E53B8;
-extern f32 lbl_803E53BC;
-extern f32 lbl_803E53C0;
-extern f32 lbl_803E53C4;
-extern f32 lbl_803E53C8;
+extern const f32 lbl_803E5388;
+extern const f32 lbl_803E538C;
+extern const f32 lbl_803E53B8;
+extern const f32 lbl_803E53BC;
+extern const f32 lbl_803E53C0;
+extern const f32 lbl_803E53C4;
+extern const f32 lbl_803E53C8;
 extern f64 lbl_803E53D0;
 extern f64 lbl_803E53D8;
 extern f32 lbl_803E53E0;
-extern f32 lbl_803E53E4;
-extern f32 lbl_803E53E8;
-extern f32 lbl_803E53EC;
+extern const f32 lbl_803E53E4;
+extern const f32 lbl_803E53E8;
+extern const f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
-extern f32 lbl_803E53F4;
+extern const f32 lbl_803E53F4;
 
 int bombplantspore_getExtraSize(void)
 {
