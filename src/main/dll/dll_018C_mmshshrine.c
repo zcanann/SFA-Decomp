@@ -1,20 +1,42 @@
+/*
+ * mmshshrine (DLL 0x18C) - the Krazoa shrine object in the MMSH map
+ * (the shrine whose sway/test sequence rewards a Krazoa spirit).
+ *
+ * The shrine drives a small phase machine (runtime->phase 0..5): idle
+ * SFX while waiting, then on activation runs object-trigger sequence 0,
+ * lights the shrine model (flags06 & MMSH_SHRINE_FLAG_LIT), and on
+ * completion runs the result sequences and grants the Krazoa game bit
+ * (0x12a). A load-trigger countdown enables the sky and env fx once the
+ * map has settled, and three SCGameBitLatch updates gate the open /
+ * music-lock / completion ambient state from world game bits. The
+ * sequence callback (MMSH_Shrine_SeqFn) interprets per-frame command
+ * opcodes that toggle the light and drive the model sway parameters.
+ */
 #include "main/dll/dll_018C_mmshshrine.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 
-typedef struct MmshShrineState
-{
-    u8 pad0[0x18 - 0x0];
-    s32 unk18;
-    u8 pad1C[0x20 - 0x1C];
-} MmshShrineState;
-
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
+extern void ModelLightStruct_free(void* p);
+extern int objCreateLight(int param_1, int param_2);
+extern int Obj_GetPlayerObject(void);
 extern void fn_8011F6D4(int p);
 extern int fn_801C49B8(int obj);
-extern int Obj_GetPlayerObject(void);
 extern void fn_80296518(int obj, int arg, int enable);
+extern void Music_Trigger(int id, int p2);
+extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
+extern void skyFn_80088c94(int skyId, int enable);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int mapGetDirIdx(int mapDir);
+extern void unlockLevel(int mapDir, int mode, int flags);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern int objGetAnimStateFlags(int obj, u32 mask);
+extern void audioStopByMask(int mask);
+extern void GameBit_Set(int eventId, int value);
+extern void fn_801C4664(int obj);
+extern int randomGetRange(int min, int max);
+extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 f);
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
@@ -48,6 +70,12 @@ extern f32 lbl_803E4F60;
 #define MMSH_SHRINE_GB_MUSIC_LOCK 0xcbb
 #define MMSH_SHRINE_SFX_IDLE 0x343
 #define MMSH_SHRINE_MUSIC_RUMBLE 0xd8
+#define MMSH_SHRINE_MUSIC_RUMBLE_STOP 0xd9
+#define MMSH_SHRINE_MUSIC_STOP_8 0x8
+#define MMSH_SHRINE_MUSIC_STOP_A 0xa
+#define MMSH_SHRINE_GB_EFA 0xefa
+#define MMSH_SHRINE_GB_12D 0x12d
+#define MMSH_SHRINE_GB_F07 0xf07
 
 typedef struct MMSHShrineRuntime
 {
@@ -85,21 +113,8 @@ typedef struct MMSHShrineObject
     s32 loadTriggerTimer;
 } MMSHShrineObject;
 
-extern void ModelLightStruct_free(void* p);
-extern void Music_Trigger(int id, int p2);
-extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
-extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern int mapGetDirIdx(int mapDir);
-extern void unlockLevel(int mapDir, int mode, int flags);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int objGetAnimStateFlags(int obj, u32 mask);
-extern void audioStopByMask(int mask);
-extern int objCreateLight(int param_1, int param_2);
-
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
     u8 command;
     int i;
     int playerObj;
@@ -204,34 +219,32 @@ void mmsh_shrine_hitDetect(void)
 
 void mmsh_shrine_free(int obj)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
     int state = *(int*)&((GameObject*)obj)->extra;
-    if ((((MmshShrineState*)state)->unk18 & 0x20) != 0)
+    if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
     {
         fn_8011F6D4(0);
-        ((MmshShrineState*)state)->unk18 = ((MmshShrineState*)state)->unk18 & 0xffffffdf;
+        ((MMSHShrineRuntime*)state)->latch.activeMask = ((MMSHShrineRuntime*)state)->latch.activeMask & ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
     }
     if (*(void**)state != NULL)
     {
         ModelLightStruct_free(*(void**)state);
         *(int*)state = 0;
     }
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(0x8, 0);
-    Music_Trigger(0xa, 0);
-    GameBit_Set(0xefa, 0);
-    GameBit_Set(0xcbb, 1);
-    GameBit_Set(0xe82, 0);
-    GameBit_Set(0xe83, 0);
-    GameBit_Set(0xe84, 0);
-    GameBit_Set(0xe85, 0);
+    Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE, 0);
+    Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE_STOP, 0);
+    Music_Trigger(MMSH_SHRINE_MUSIC_STOP_8, 0);
+    Music_Trigger(MMSH_SHRINE_MUSIC_STOP_A, 0);
+    GameBit_Set(MMSH_SHRINE_GB_EFA, 0);
+    GameBit_Set(MMSH_SHRINE_GB_MUSIC_LOCK, 1);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET0, 0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET1, 0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET2, 0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET3, 0);
 }
 
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
                         char visible)
 {
-    extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 f);
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
     MMSHShrineRuntime* runtime = shrine->runtime;
 
@@ -253,14 +266,8 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
     }
 }
 
-/*
- * Shrine state machine: load-completion effects, gamebit latches, object-trigger phases.
- */
 void mmsh_shrine_update(int objArg)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
-    extern void fn_801C4664(int obj);
-    extern int randomGetRange(int min, int max);
     MMSHShrineRuntime* runtime;
     MMSHShrineObject* obj;
     int playerObj;
@@ -358,14 +365,13 @@ void mmsh_shrine_update(int objArg)
     }
 }
 
-void mmsh_shrine_init(undefined2* obj, int def)
+void mmsh_shrine_init(int obj, int def)
 {
-    extern void GameBit_Set(int eventId, int value);
     int light;
     int* state;
 
     state = ((GameObject*)obj)->extra;
-    *obj = 0;
+    ((MMSHShrineObject*)obj)->yaw = 0;
     ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
     *(undefined2*)(state + 7) = 10;
     *(undefined*)(state + 9) = 0;
@@ -373,20 +379,17 @@ void mmsh_shrine_init(undefined2* obj, int def)
     {
         *(short*)(state + 7) = *(short*)(def + 0x1a) >> 8;
     }
-    GameBit_Set(299, 0);
-    GameBit_Set(0x12d, 0);
-    *(undefined4*)(obj + 0x7a) = 1;
+    GameBit_Set(MMSH_SHRINE_GB_RESET_A, 0);
+    GameBit_Set(MMSH_SHRINE_GB_12D, 0);
+    ((MMSHShrineObject*)obj)->loadTriggerTimer = 1;
     if (*(void**)state == NULL)
     {
         light = objCreateLight(0, 1);
         *state = light;
     }
-    GameBit_Set(0xf07, 1);
-    GameBit_Set(0xefa, 1);
-    return;
+    GameBit_Set(MMSH_SHRINE_GB_F07, 1);
+    GameBit_Set(MMSH_SHRINE_GB_EFA, 1);
 }
-
-void mmsh_scales_update(int objArg);
 
 void mmsh_shrine_release(void)
 {
@@ -395,5 +398,3 @@ void mmsh_shrine_release(void)
 void mmsh_shrine_initialise(void)
 {
 }
-
-void mmsh_scales_hitDetect(void);
