@@ -1,3 +1,12 @@
+/*
+ * DLL 0x7C (foodbag family, func03 slot): builds a fixed FbBuf command
+ * list describing a multi-layer modgfx effect and spawns it via
+ * gModgfxInterface->spawnEffect. The 6 variants (0-5) select the
+ * sprite scale of the second command and the spawn offset (buf.pos),
+ * effectively choosing one of 6 placements. When flags bit 0 is set the
+ * spawn position is offset by the source object's (ctx) or posSource's
+ * world position. func00/func01 are the DLL's empty entry-point slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -73,7 +82,7 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     p[0].layer = 0;
     p[0].flags = 0;
-    p[0].tex = (void*)0;
+    p[0].tex = NULL;
     p[0].mode = 0x400000;
     p[0].x = lbl_803E0D88;
     p[0].y = lbl_803E0D98;
@@ -108,14 +117,14 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
     p[4].z = lbl_803E0D88;
     p[5].layer = 1;
     p[5].flags = 0;
-    p[5].tex = (void*)0;
+    p[5].tex = NULL;
     p[5].mode = 0x400000;
     p[5].x = lbl_803E0D88;
     p[5].y = lbl_803E0DB4;
     p[5].z = lbl_803E0D88;
     p[6].layer = 2;
     p[6].flags = 0x1e;
-    p[6].tex = (void*)0;
+    p[6].tex = NULL;
     p[6].mode = 0x20000;
     p[6].x = lbl_803E0D9C;
     p[6].y = lbl_803E0D88;
@@ -129,7 +138,7 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
     p[7].z = lbl_803E0D88;
     p[8].layer = 2;
     p[8].flags = 0;
-    p[8].tex = (void*)0;
+    p[8].tex = NULL;
     p[8].mode = 0x400000;
     p[8].x = lbl_803E0D88;
     p[8].y = lbl_803E0DB8;
@@ -157,14 +166,14 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
     p[11].z = lbl_803E0D88;
     p[12].layer = 3;
     p[12].flags = 0x1e;
-    p[12].tex = (void*)0;
+    p[12].tex = NULL;
     p[12].mode = 0x20000;
     p[12].x = lbl_803E0D9C;
     p[12].y = lbl_803E0D88;
     p[12].z = lbl_803E0D88;
     p[13].layer = 3;
     p[13].flags = 0;
-    p[13].tex = (void*)0;
+    p[13].tex = NULL;
     p[13].mode = 0x400000;
     p[13].x = lbl_803E0D88;
     p[13].y = lbl_803E0DB4;
