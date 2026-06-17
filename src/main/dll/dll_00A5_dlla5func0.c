@@ -1,3 +1,15 @@
+/*
+ * dlla5func0 (DLL 0xA5) - a modgfx effect spawner (sibling of DLL 0xA6/0xA8).
+ *
+ * dll_A5_func03 builds a fixed 13-entry GfxCmd command buffer on the stack
+ * (mode/layer/flags plus three coordinate words per primitive, several
+ * textured from the asset table at lbl_80318D48), fills a per-effect header
+ * (colour, position, scale, and hardware-state words copied from the same
+ * table), then hands it to gModgfxInterface->spawnEffect. When flag bit 0 is
+ * set the effect position is taken from the source object's world position,
+ * or, when no source object is given, from the spawn-param packet
+ * (posSource + 0xc..0x14). func00/func01 are the DLL's unused entry stubs.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -24,7 +36,6 @@ extern f32 lbl_803E1524;
 extern u8 lbl_803DB970;
 extern u8 lbl_803DB978;
 
-
 void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
@@ -40,7 +51,7 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
         s16 v44;
         s16 hw[7];
         u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
+        u8 v58, v59, v5a, v5b, v5c; /* v5c never written here; required for layout */
         s8 count;
         u8 pad1[2];
         GfxCmd entries[32];
@@ -72,14 +83,14 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     e[2].z = lbl_803E1510;
     e[3].layer = 0;
     e[3].flags = 0;
-    e[3].tex = (void*)0;
+    e[3].tex = NULL;
     e[3].mode = 0x80;
     e[3].x = lbl_803E1508;
     e[3].y = lbl_803E1508;
     e[3].z = (f32) * sourceObj;
     e[4].layer = 0;
     e[4].flags = 0x7a;
-    e[4].tex = (void*)0;
+    e[4].tex = NULL;
     e[4].mode = 0x10000;
     e[4].x = lbl_803E1508;
     e[4].y = lbl_803E1508;
@@ -93,7 +104,7 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     e[5].z = lbl_803E1508;
     e[6].layer = 1;
     e[6].flags = 0;
-    e[6].tex = (void*)0;
+    e[6].tex = NULL;
     e[6].mode = 0x400000;
     e[6].x = lbl_803E1508;
     e[6].y = lbl_803E1508;
@@ -107,14 +118,14 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     e[7].z = lbl_803E151C;
     e[8].layer = 1;
     e[8].flags = 0x3a1;
-    e[8].tex = (void*)0;
+    e[8].tex = NULL;
     e[8].mode = 0x1800000;
     e[8].x = lbl_803E150C;
     e[8].y = lbl_803E1508;
     e[8].z = lbl_803E1520;
     e[9].layer = 2;
     e[9].flags = 0x7a;
-    e[9].tex = (void*)0;
+    e[9].tex = NULL;
     e[9].mode = 0x10000;
     e[9].x = lbl_803E1508;
     e[9].y = lbl_803E1508;
@@ -128,14 +139,14 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     e[10].z = lbl_803E1508;
     e[11].layer = 2;
     e[11].flags = 0;
-    e[11].tex = (void*)0;
+    e[11].tex = NULL;
     e[11].mode = 0x400000;
     e[11].x = lbl_803E1508;
     e[11].y = lbl_803E1508;
     e[11].z = lbl_803E1524;
     e[12].layer = 2;
     e[12].flags = 0x3a0;
-    e[12].tex = (void*)0;
+    e[12].tex = NULL;
     e[12].mode = 0x800000;
     e[12].x = lbl_803E150C;
     e[12].y = lbl_803E1508;
@@ -193,5 +204,3 @@ void dll_A5_func01_nop(void)
 void dll_A5_func00_nop(void)
 {
 }
-
-void dll_A6_func01_nop(void);
