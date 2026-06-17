@@ -1,3 +1,16 @@
+/*
+ * dll_0085 (foodbag effect dll 0x85) - func03 builds a ModgfxInterface
+ * effect command list (FbBuf) and spawns it. Two layouts are emitted:
+ * variant 4 (a self-contained burst, base flags 0x4004400) and the
+ * default variant (scaled off the source object's field 8 and a child
+ * object at field 0x50, base flags 0x4006410). The caller's `flags` are
+ * OR'd in; flag bit 0 adds the source/position-source world offsets to
+ * buf.pos before the spawn. Several command slots seed x with a random
+ * angle from randomGetRange. The two trailing _nop entry points are the
+ * dll's unused func00/func01 slots. Externs (gModgfxInterface, the
+ * lbl_803E0Fxx float-constant pool, the lbl_803DB8Fx texture handles and
+ * the lbl_80315FA8 effect-template table) live in the foodbag base TU.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -23,20 +36,22 @@ extern f32 lbl_803E0F98;
 extern f32 lbl_803E0F9C;
 extern f32 lbl_803E0FA0;
 
+#define FX_VARIANT_BURST 4
+
 void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315FA8;
-    s16* base16 = (s16*)base;
+    s16* tableHw = (s16*)base;
     FbCmd* p;
     FbCmd* e = buf.entries;
     f32 rv;
 
-    if (variant == 4)
+    if (variant == FX_VARIANT_BURST)
     {
         e[0].layer = 0;
         e[0].flags = 0;
-        e[0].tex = (void*)0;
+        e[0].tex = NULL;
         e[0].mode = 0x400000;
         e[0].x = lbl_803E0F70;
         e[0].y = lbl_803E0F74;
@@ -78,7 +93,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
         randomGetRange(0, 0xfffe);
         e[2].layer = 0;
         e[2].flags = 0;
-        e[2].tex = (void*)0;
+        e[2].tex = NULL;
         e[2].mode = 0x80;
         e[2].x = rv;
         e[2].y = lbl_803E0F94;
@@ -101,11 +116,11 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     p[1].x = lbl_803E0F98;
     p[1].y = lbl_803E0F74;
     p[1].z = lbl_803E0F74;
-    if (variant == 4)
+    if (variant == FX_VARIANT_BURST)
     {
         p[2].layer = 2;
         p[2].flags = 0;
-        p[2].tex = (void*)0;
+        p[2].tex = NULL;
         p[2].mode = 0x100;
         p[2].x = lbl_803E0F9C;
         p[2].y = lbl_803E0F74;
@@ -116,7 +131,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p[2].layer = 1;
         p[2].flags = 0;
-        p[2].tex = (void*)0;
+        p[2].tex = NULL;
         p[2].mode = 0x80;
         p[2].x = rv;
         p[2].y = lbl_803E0F94;
@@ -125,11 +140,11 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     rv = (f32)(int)
     randomGetRange(0, 0xfffe);
-    if (variant == 4)
+    if (variant == FX_VARIANT_BURST)
     {
         p->layer = 2;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x100;
         p->x = lbl_803E0F9C;
         p->y = lbl_803E0F74;
@@ -140,18 +155,18 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 2;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x80;
         p->x = rv;
         p->y = lbl_803E0F94;
         p->z = lbl_803E0F74;
         p++;
     }
-    if (variant == 4)
+    if (variant == FX_VARIANT_BURST)
     {
         p->layer = 3;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x100;
         p->x = lbl_803E0F9C;
         p->y = lbl_803E0F74;
@@ -162,7 +177,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 3;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x80;
         p->x = rv;
         p->y = lbl_803E0F94;
@@ -207,7 +222,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.hw[5] = *(s16*)(base + 0x3e);
     buf.hw[6] = *(s16*)(base + 0x40);
     buf.cmds = (FbCmd*)((u8*)&buf + 0x60);
-    if (variant == 4)
+    if (variant == FX_VARIANT_BURST)
     {
         buf.flags = 0x4004400;
     }
@@ -238,9 +253,8 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 4, (u8*)(int)lbl_80315FA8, 2, base + 0x28,
-                                     base16[variant * 2 + (int)randomGetRange(0, 1) + 0x22], 0);
+                                     tableHw[variant * 2 + (int)randomGetRange(0, 1) + 0x22], 0);
 }
-
 
 void dll_85_func01_nop(void)
 {
@@ -249,5 +263,6 @@ void dll_85_func01_nop(void)
 void dll_85_func00_nop(void)
 {
 }
+
 
 void dll_86_func01_nop(void);
