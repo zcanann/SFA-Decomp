@@ -64,28 +64,28 @@ extern f64 DOUBLE_803e00c8;
 extern f32 lbl_803DC450;
 extern f32 lbl_803DC454;
 extern f32 lbl_803DDF04;
-extern const f32 lbl_803E00B0;
-extern const f32 lbl_803E00B4;
-extern const f32 lbl_803E00B8;
-extern const f32 lbl_803E00BC;
+extern f32 lbl_803E00B0;
+extern f32 lbl_803E00B4;
+extern f32 lbl_803E00B8;
+extern f32 lbl_803E00BC;
 extern f32 lbl_803E0900;
-extern const f32 lbl_803E0904;
-extern const f32 lbl_803E0908;
-extern const f32 lbl_803E090C;
-extern const f32 lbl_803E0910;
-extern const f32 lbl_803E0914;
-extern const f32 lbl_803E0918;
-extern const f32 lbl_803E091C;
-extern const f32 lbl_803E0920;
-extern const f32 lbl_803E0924;
+extern f32 lbl_803E0904;
+extern f32 lbl_803E0908;
+extern f32 lbl_803E090C;
+extern f32 lbl_803E0910;
+extern f32 lbl_803E0914;
+extern f32 lbl_803E0918;
+extern f32 lbl_803E091C;
+extern f32 lbl_803E0920;
+extern f32 lbl_803E0924;
 extern f32 lbl_803E0928;
-extern const f32 lbl_803E092C;
-extern const f32 lbl_803E0930;
-extern const f32 lbl_803E0934;
-extern const f32 lbl_803E0938;
-extern const f32 lbl_803E093C;
-extern const f32 lbl_803E0940;
-extern const f32 lbl_803E0944;
+extern f32 lbl_803E092C;
+extern f32 lbl_803E0930;
+extern f32 lbl_803E0934;
+extern f32 lbl_803E0938;
+extern f32 lbl_803E093C;
+extern f32 lbl_803E0940;
+extern f32 lbl_803E0944;
 
 void modgfx_releaseExpgfxPools(void)
 {
@@ -1213,15 +1213,15 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
 extern u32 lbl_802C2160[];
-extern const f32 lbl_803DF46C; /* 0.0f */
-extern const f32 lbl_803DF488;
-extern const f32 lbl_803DF48C;
-extern const f32 lbl_803DF490;
-extern const f32 lbl_803DF494;
-extern const f32 lbl_803DF498;
-extern const f32 lbl_803DF49C;
-extern const f32 lbl_803DF4A0;
-extern const f32 lbl_803DF4A4;
+extern f32 lbl_803DF46C; /* 0.0f */
+extern f32 lbl_803DF488;
+extern f32 lbl_803DF48C;
+extern f32 lbl_803DF490;
+extern f32 lbl_803DF494;
+extern f32 lbl_803DF498;
+extern f32 lbl_803DF49C;
+extern f32 lbl_803DF4A0;
+extern f32 lbl_803DF4A4;
 extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
 extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
@@ -1359,10 +1359,10 @@ extern f32 sqrtf(f32 x);
 extern f32 lbl_8030FDE8[];
 extern s16 lbl_803DD29A;
 extern s16 lbl_803DD29C;
-extern const f32 lbl_803DF468;
-extern const f32 lbl_803DF470;
-extern const f32 lbl_803DF474;
-extern const f32 lbl_803DF478;
+extern f32 lbl_803DF468;
+extern f32 lbl_803DF470;
+extern f32 lbl_803DF474;
+extern f32 lbl_803DF478;
 
 void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
