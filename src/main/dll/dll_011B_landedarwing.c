@@ -1,5 +1,23 @@
+/*
+ * landedarwing (DLL 0x11B) - the grounded Arwing set-piece object.
+ *
+ * Its placement->mapId selects which Krazoa map sequence the object
+ * drives: each sequence event (Landed_Arwing_SeqFn) loads/unlocks the
+ * matching level, locks neighbours, toggles the block-load file flags,
+ * and warps the player on completion. Per-frame the object spawns and
+ * tends a child object (type 0x606), tracks an interaction trigger
+ * through a three-state machine (sequenceState), and drives path-driven
+ * particle effects (renderPathEffects, paths 5-8).
+ *
+ * The hit-reaction path (updateHitReaction / updateDamageTexture) reads a
+ * damage game bit, swaps the damaged texture (textureId 0x100/0x200), and
+ * on impact either spawns debris, damages a nearby sibling, or jitters
+ * its own rotation depending on the placement reaction type (def+0x1e).
+ * Hit state is packed into a one-byte flag word (LandedArwingHitFlagBits).
+ */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
@@ -9,7 +27,7 @@
 typedef struct LandedArwingPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
     u16 unk18;
     s16 unk1A;
     s16 unk1C;
@@ -21,328 +39,53 @@ typedef struct LandedArwingPlacement
 typedef struct LandedArwingUpdateHitReactionPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
     u16 unk18;
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
-    s16 unk24;
+    s16 reactionGameBit;
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateHitReactionPlacement;
 
 typedef struct LandedArwingUpdateDamageTexturePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
     u16 unk18;
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
-    s16 unk22;
-    s16 unk24;
+    s16 damagedGameBit;
+    s16 damageStateGameBit;
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance);
-extern undefined4 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
-extern int ObjTrigger_IsSet();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_800427c8();
-extern undefined4 FUN_80042800();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80043030();
-extern undefined4 FUN_80044404();
-extern undefined4 FUN_80053c98();
+extern void ObjLink_DetachChild(int parent, int child);
+extern void ObjLink_AttachChild(int parent, int child, ushort flags);
+extern int ObjTrigger_IsSet(int obj);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY,
+                                          float* outZ, int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
-extern f32 FLOAT_803e4830;
-extern f32 FLOAT_803e4840;
-extern f32 FLOAT_803e4844;
-extern f32 FLOAT_803e4848;
-
-undefined4
-#pragma scheduling on
-#pragma peephole on
-FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    undefined4 eventHandle;
-    char mapAct;
-    int mapId;
-    int scratch;
-    int state;
-    int def;
-    int eventIndex;
-    undefined8 extraout_f1;
-    undefined8 extraout_f1_00;
-    undefined8 extraout_f1_01;
-    undefined8 extraout_f1_02;
-    undefined8 extraout_f1_03;
-    undefined8 uVar8;
-
-    def = *(int*)&((GameObject*)param_9)->anim.placementData;
-    state = *(int*)&((GameObject*)param_9)->extra;
-    eventIndex = 0;
-    scratch = (int)animUpdate;
-    do
-    {
-        if ((int)(uint)animUpdate->eventCount <= eventIndex)
-        {
-            return 0;
-        }
-        switch (animUpdate->eventIds[eventIndex])
-        {
-        case 2:
-        case 0x65:
-            scratch = *(int*)(def + 0x14);
-            if (scratch == 0x49f5a)
-            {
-                FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x26);
-                scratch = 1;
-                FUN_80042b9c(0, 0, 1);
-                eventHandle = FUN_80044404(0x26);
-                FUN_80042bec(eventHandle, 0);
-                eventHandle = FUN_80044404(0xb);
-                FUN_80042bec(eventHandle, 1);
-            }
-            else if (scratch < 0x49f5a)
-            {
-                if (scratch == 0x451b9)
-                {
-                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
-                    param_1 = extraout_f1;
-                    if (mapAct == '\x02')
-                    {
-                        FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0xb);
-                        scratch = 1;
-                        FUN_80042b9c(0, 0, 1);
-                        eventHandle = FUN_80044404(0xb);
-                        FUN_80042bec(eventHandle, 0);
-                    }
-                    else
-                    {
-                        FUN_80041ff8(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                        scratch = 1;
-                        FUN_80042b9c(0, 0, 1);
-                        eventHandle = FUN_80044404(0x29);
-                        FUN_80042bec(eventHandle, 0);
-                    }
-                }
-                else
-                {
-                    if ((0x451b8 < scratch) || (scratch != 0x43775)) goto LAB_801893dc;
-                    FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                    scratch = 1;
-                    FUN_80042b9c(0, 0, 1);
-                    eventHandle = FUN_80044404(0x29);
-                    FUN_80042bec(eventHandle, 0);
-                }
-            }
-            else if (scratch == 0x4cd65)
-            {
-                FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x41);
-                scratch = 1;
-                FUN_80042b9c(0, 0, 1);
-                eventHandle = FUN_80044404(0x41);
-                FUN_80042bec(eventHandle, 0);
-                eventHandle = FUN_80044404(0xb);
-                FUN_80042bec(eventHandle, 1);
-            }
-            else
-            {
-            LAB_801893dc:
-                FUN_80041ff8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x29);
-                scratch = 1;
-                FUN_80042b9c(0, 0, 1);
-                eventHandle = FUN_80044404(0x29);
-                FUN_80042bec(eventHandle, 0);
-            }
-            break;
-        case 3:
-        case 100:
-            mapId = *(int*)(def + 0x14);
-            if (mapId == 0x49f5a)
-            {
-                scratch = 0;
-                param_12 = (int)*gMapEventInterface;
-                param_1 = (**(code**)(param_12 + 0x50))(0xb, 4);
-            }
-            else if (mapId < 0x49f5a)
-            {
-                if (mapId == 0x451b9)
-                {
-                    mapAct = (*gMapEventInterface)->getMapAct(0xd);
-                    param_1 = extraout_f1_00;
-                    if (mapAct == '\x02')
-                    {
-                        uVar8 = extraout_f1_00;
-                        FUN_80042b9c(0, 0, 1);
-                        FUN_80044404(0xd);
-                        FUN_80043030(uVar8, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-                        (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 0);
-                        (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 0);
-                        scratch = 0;
-                        param_12 = (int)*gMapEventInterface;
-                        param_1 = (**(code**)(param_12 + 0x50))(0xd, 0xe);
-                    }
-                }
-                else if ((mapId < 0x451b9) && (mapId == 0x43775))
-                {
-                    scratch = 1;
-                    FUN_80042b9c(0, 0, 1);
-                    FUN_80044404(7);
-                    param_1 = FUN_80043030(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-                }
-            }
-            else if (mapId == 0x4cd65)
-            {
-                scratch = 1;
-                FUN_80042b9c(0, 0, 1);
-                FUN_80044404(0xb);
-                param_1 = FUN_80043030(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-            }
-            break;
-        case 5:
-            mapId = *(int*)(def + 0x14);
-            if (mapId == 0x451b9)
-            {
-                mapAct = (*gMapEventInterface)->getMapAct(0xd);
-                param_1 = extraout_f1_01;
-                if (mapAct == '\x02')
-                {
-                    param_1 = FUN_80042800();
-                }
-            }
-            else if (mapId < 0x451b9)
-            {
-                if (mapId == 0x43775)
-                {
-                LAB_801895a4:
-                    param_1 = FUN_80042800();
-                }
-            }
-            else if (mapId == 0x49f5a) goto LAB_801895a4;
-            break;
-        case 6:
-            mapId = *(int*)(def + 0x14);
-            if (mapId == 0x451b9)
-            {
-                mapAct = (*gMapEventInterface)->getMapAct(0xd);
-                param_1 = extraout_f1_02;
-                if (mapAct == '\x02')
-                {
-                    param_1 = FUN_800427c8();
-                }
-            }
-            else if (mapId < 0x451b9)
-            {
-                if (mapId == 0x43775)
-                {
-                LAB_80189614:
-                    param_1 = FUN_800427c8();
-                }
-            }
-            else if (mapId == 0x49f5a) goto LAB_80189614;
-            break;
-        case 7:
-        case 0x66:
-            mapId = *(int*)(def + 0x14);
-            if (mapId == 0x49f5a)
-            {
-                param_1 = FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x32,
-                                       '\0', scratch, param_12, param_13, param_14, param_15, param_16);
-            }
-            else if (mapId < 0x49f5a)
-            {
-                if ((mapId == 0x451b9) &&
-                    (mapAct = (*gMapEventInterface)->getMapAct(0xd), param_1 = extraout_f1_03,
-                        mapAct == '\x02'))
-                {
-                    scratch = (int)*gMapEventInterface;
-                    uVar8 = (**(code**)(scratch + 0x44))(0xb, 5);
-                    param_1 = FUN_80053c98(uVar8, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x4e,
-                                           '\0', scratch, param_12, param_13, param_14, param_15, param_16);
-                }
-            }
-            else if (mapId == 0x4cd65)
-            {
-                FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7f, '\0', scratch
-                             , param_12, param_13, param_14, param_15, param_16);
-                scratch = (int)*gMapEventInterface;
-                param_1 = (**(code**)(scratch + 0x44))(0x41, 2);
-            }
-            break;
-        case 10:
-            *(u8*)(state + 0x1a) = 1;
-            break;
-        case 0xb:
-            *(u8*)(state + 0x1a) = 0;
-            break;
-        case 0xc:
-            *(float*)(state + 4) = FLOAT_803e4830;
-            break;
-        case 0xd:
-            *(float*)(state + 4) = FLOAT_803e4840;
-            break;
-        case 0xe:
-            *(float*)(state + 4) = FLOAT_803e4844;
-            break;
-        case 0xf:
-            *(float*)(state + 4) = FLOAT_803e4848;
-            break;
-        case 0x10:
-            *(float*)(state + 8) = FLOAT_803e4830;
-            break;
-        case 0x11:
-            *(float*)(state + 8) = FLOAT_803e4840;
-            break;
-        case 0x12:
-            *(float*)(state + 8) = FLOAT_803e4844;
-            break;
-        case 0x13:
-            *(float*)(state + 8) = FLOAT_803e4848;
-            break;
-        case 0x14:
-            *(float*)(state + 0xc) = FLOAT_803e4830;
-            break;
-        case 0x15:
-            *(float*)(state + 0xc) = FLOAT_803e4840;
-            break;
-        case 0x16:
-            *(float*)(state + 0xc) = FLOAT_803e4844;
-            break;
-        case 0x17:
-            *(float*)(state + 0xc) = FLOAT_803e4848;
-            break;
-        case 0x18:
-            mapId = *(int*)(state + 0x10);
-            if (mapId != 0)
-            {
-                *(ushort*)(mapId + 6) = *(ushort*)(mapId + 6) & 0xbfff;
-            }
-            break;
-        case 0x19:
-            mapId = *(int*)(state + 0x10);
-            if (mapId != 0)
-            {
-                *(ushort*)(mapId + 6) = *(ushort*)(mapId + 6) | 0x4000;
-            }
-        }
-        eventIndex = eventIndex + 1;
-    }
-    while (true);
-}
-
+extern void loadMapAndParent(int mapId);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int dirIdx, int locked);
+extern void mapUnload(int dirIdx, int flags);
+extern void setLoadedFileFlags_blocks1(void);
+extern void clearLoadedFileFlags_blocks1(void);
+extern void warpToMap(int mapId, int arg);
+extern void unlockLevel(int a, int b, int c);
+extern void fn_8022F270(int obj, int arg);
+extern void fn_8022F27C(int obj);
+extern int fn_802972A8(int obj);
+extern u8 fn_8012DDA4(void);
+extern void cutSceneFn_8011dd30(void);
+extern void landed_arwing_renderPathEffects(int obj);
 
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
@@ -354,6 +97,8 @@ extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void objRenderFn_8003b8f4(f32);
 
 extern void Obj_FreeObject(int obj);
+
+/* Applies to every function below to the end of the file (never reset). */
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_free(int obj)
@@ -368,7 +113,6 @@ void landed_arwing_free(int obj)
 }
 
 extern f32 lbl_803E3BA4;
-extern void landed_arwing_renderPathEffects(int obj);
 
 void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -397,7 +141,7 @@ typedef struct LandedArwingFxScratch
     f32 z;
 } LandedArwingFxScratch;
 
-typedef struct CFLandedArwingState
+typedef struct LandedArwingState
 {
     f32 sequenceHitCooldown;
     f32 path7Fx;
@@ -416,7 +160,7 @@ typedef struct CFLandedArwingState
     u8 unk1E;
     u8 spawnCount;
     f32 hitEffectCooldown;
-} CFLandedArwingState;
+} LandedArwingState;
 
 typedef struct LandedArwingHitFlagBits
 {
@@ -430,12 +174,20 @@ typedef struct LandedArwingHitFlagBits
 extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
+extern f32 lbl_803E3BA0;
+extern f32 lbl_803E3BA8;
+extern f32 lbl_803E3BAC;
+extern f32 lbl_803E3BB0;
+extern f32 lbl_803E3BB8;
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BC0;
+extern f32 lbl_803E3BC4;
 extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int arg4, int arg5, int arg6, void* pos);
 extern void objfx_spawnLightPulse(int obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
 
 void landed_arwing_renderPathEffects(int obj)
 {
-    CFLandedArwingState* state;
+    LandedArwingState* state;
     u8 i;
     LandedArwingFxScratch scratch;
 
@@ -483,18 +235,6 @@ void landed_arwing_renderPathEffects(int obj)
     }
 }
 
-extern void loadMapAndParent(int mapId);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int locked);
-extern void mapUnload(int dirIdx, int flags);
-extern void setLoadedFileFlags_blocks1(void);
-extern void clearLoadedFileFlags_blocks1(void);
-extern void warpToMap(int mapId, int arg);
-extern void unlockLevel(int a, int b, int c);
-extern f32 lbl_803E3BA8;
-extern f32 lbl_803E3BAC;
-extern f32 lbl_803E3BB0;
-
 #define MAP_EVENT_STATUS(mapId) (*gMapEventInterface)->getMapAct((mapId))
 #define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
 #define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (arg), (value))
@@ -503,7 +243,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     int def;
-    CFLandedArwingState* state;
+    LandedArwingState* state;
     int mapId;
     int child;
 
@@ -558,7 +298,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 3:
         case 0x64:
-            mapId = ((LandedArwingPlacement*)def)->unk14;
+            mapId = ((LandedArwingPlacement*)def)->mapId;
             switch (mapId)
             {
             case 0x43775:
@@ -585,7 +325,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 5:
-            mapId = ((LandedArwingPlacement*)def)->unk14;
+            mapId = ((LandedArwingPlacement*)def)->mapId;
             switch (mapId)
             {
             case 0x43775:
@@ -601,7 +341,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 6:
-            mapId = ((LandedArwingPlacement*)def)->unk14;
+            mapId = ((LandedArwingPlacement*)def)->mapId;
             switch (mapId)
             {
             case 0x43775:
@@ -618,7 +358,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 7:
         case 0x66:
-            mapId = ((LandedArwingPlacement*)def)->unk14;
+            mapId = ((LandedArwingPlacement*)def)->mapId;
             switch (mapId)
             {
             case 0x451b9:
@@ -683,14 +423,14 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             child = state->childObject;
             if ((void*)child != NULL)
             {
-                ((GameObject*)child)->anim.flags &= ~0x4000;
+                ((GameObject*)child)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }
             break;
         case 0x19:
             child = state->childObject;
             if ((void*)child != NULL)
             {
-                ((GameObject*)child)->anim.flags |= 0x4000;
+                ((GameObject*)child)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
             break;
         }
@@ -698,16 +438,9 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern void fn_8022F270(int obj, int arg);
-extern void fn_8022F27C(int obj);
-extern int fn_802972A8(int obj);
-extern u8 fn_8012DDA4(void);
-extern void cutSceneFn_8011dd30(void);
-extern f32 lbl_803E3BA0;
-
 void landed_arwing_update(int obj)
 {
-    CFLandedArwingState* state;
+    LandedArwingState* state;
     int player;
     int child;
 
@@ -723,7 +456,7 @@ void landed_arwing_update(int obj)
             {
                 ObjLink_AttachChild(obj, state->childObject, 0);
                 fn_8022F270(state->childObject, 0xaf);
-                ((GameObject*)state->childObject)->anim.flags |= 0x4000;
+                ((GameObject*)state->childObject)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }
@@ -798,14 +531,11 @@ void landed_arwing_update(int obj)
     }
 }
 
-
-void infopoint_update(int obj);
-
 void landed_arwing_init(int obj, int param)
 {
-    int* p = (int*)((GameObject*)obj)->extra;
+    LandedArwingState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
-    *(s8*)((char*)p + 0x16) = 1;
+    state->sequenceState = 1;
     if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0)
     {
         unlockLevel(0, 0, 1);
@@ -813,14 +543,10 @@ void landed_arwing_init(int obj, int param)
     ((GameObject*)obj)->animEventCallback = (void*)Landed_Arwing_SeqFn;
 }
 
-extern f32 lbl_803E3BB8;
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BC0;
-extern f32 lbl_803E3BC4;
-void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
+void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
 {
     int i;
-    CFLandedArwingState* otherState;
+    LandedArwingState* otherState;
     int def;
     int setup;
     int other;
@@ -840,9 +566,9 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
         ((GameObject*)obj)->anim.rotZ = 0;
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
         {
-            if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
+            if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit > 0)
             {
-                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->unk24, 1);
+                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit, 1);
             }
 
             switch (*(u8*)(def + 0x1e))
@@ -901,7 +627,7 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
                                                                   &events);
 }
 
-void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
+void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
 {
     int def;
     ObjTextureRuntimeSlot* texture;
@@ -910,9 +636,9 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     flags = (LandedArwingHitFlagBits*)&state->hitFlags;
-    if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk24 != -1)
+    if (((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit != -1)
     {
-        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement*)def)->unk24);
+        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit);
         flags->gameBit24Set = bit;
         bit = flags->gameBit24Set;
         if (bit != 0 && *(u8*)(def + 0x1c) == 5)
@@ -927,16 +653,16 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
 
     if (flags->damaged == 0)
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) != 0)
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && GameBit_Get(
+            ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) != 0)
         {
             flags->damaged = 1;
         }
     }
     else
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) == 0)
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && GameBit_Get(
+            ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) == 0)
         {
             flags->damaged = 0;
         }
@@ -963,7 +689,3 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
     }
 }
 
-void dll_109_init(int obj, u8* p);
-
-#pragma dont_inline on
-#pragma dont_inline reset
