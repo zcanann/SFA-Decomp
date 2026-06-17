@@ -1,8 +1,32 @@
+/*
+ * dll_009D (dll9dfunc0) - pickup/effect glow spawner.
+ *
+ * dll_9D_func03 builds a 13-entry gfx command list on the stack (a
+ * GfxBuf), seeds each layer's blend mode / texture-table offset / scale
+ * triple from the f32 constant pool (lbl_803E13F8..lbl_803E1414) and a
+ * shared texture/halfword table (lbl_80318038), then hands the buffer to
+ * gModgfxInterface->spawnEffect to render the effect. When the caller
+ * sets flag bit 0, the effect is positioned either from the source
+ * object (offset 0x18..0x20) or from posSource (offset 0xc..0x14).
+ *
+ * dll_9D_func00_nop / dll_9D_func01_nop are the DLL's empty entry-point
+ * thunks.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
 
+/* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
+   gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318038[];
 extern ModgfxInterface** gModgfxInterface;
+extern f32 lbl_803E13F8;
+extern f32 lbl_803E13FC;
+extern f32 lbl_803E1400;
+extern f32 lbl_803E1404;
+extern f32 lbl_803E1408;
+extern f32 lbl_803E140C;
+extern f32 lbl_803E1410;
+extern f32 lbl_803E1414;
 
 typedef struct
 {
@@ -32,22 +56,12 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-extern f32 lbl_803E13F8;
-extern f32 lbl_803E13FC;
-extern f32 lbl_803E1400;
-extern f32 lbl_803E1404;
-extern f32 lbl_803E1408;
-extern f32 lbl_803E140C;
-extern f32 lbl_803E1410;
-extern f32 lbl_803E1414;
-
-
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     GfxBuf buf;
     u8* tab = (u8*)(int)lbl_80318038;
     GfxCmd* e = buf.entries;
-    u32 fl;
+    u32 effectFlags;
 
     e[0].layer = 0;
     e[0].flags = 0x15;
@@ -79,7 +93,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[3].z = lbl_803E13FC;
     e[4].layer = 0;
     e[4].flags = 0;
-    e[4].tex = (void*)0;
+    e[4].tex = NULL;
     e[4].mode = 0x400000;
     e[4].x = lbl_803E13F8;
     e[4].y = lbl_803E1404;
@@ -100,7 +114,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[6].z = lbl_803E13F8;
     e[7].layer = 1;
     e[7].flags = 0;
-    e[7].tex = (void*)0;
+    e[7].tex = NULL;
     e[7].mode = 0x400000;
     e[7].x = lbl_803E13F8;
     e[7].y = lbl_803E140C;
@@ -114,7 +128,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[8].z = lbl_803E13F8;
     e[9].layer = 2;
     e[9].flags = 0;
-    e[9].tex = (void*)0;
+    e[9].tex = NULL;
     e[9].mode = 0x400000;
     e[9].x = lbl_803E13F8;
     e[9].y = lbl_803E1410;
@@ -128,7 +142,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     e[10].z = lbl_803E13F8;
     e[11].layer = 3;
     e[11].flags = 0;
-    e[11].tex = (void*)0;
+    e[11].tex = NULL;
     e[11].mode = 0x400000;
     e[11].x = lbl_803E13F8;
     e[11].y = lbl_803E140C;
@@ -156,7 +170,7 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    buf.count = (GfxCmd*)((u8*)e + 0x138) - e;
+    buf.count = (GfxCmd*)((u8*)e + 0x138) - e; /* 13 entries */
     buf.hw[0] = *(s16*)&tab[504];
     buf.hw[1] = *(s16*)&tab[506];
     buf.hw[2] = *(s16*)&tab[508];
@@ -167,10 +181,10 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     buf.cmds = e;
     buf.flags = 0xc0100c0;
     buf.flags |= flags;
-    fl = buf.flags;
-    if (fl & 1)
+    effectFlags = buf.flags;
+    if (effectFlags & 1)
     {
-        if (sourceObj != 0)
+        if (sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E13F8 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E13F8 + *(f32*)(sourceObj + 0x1c);
@@ -194,5 +208,3 @@ void dll_9D_func01_nop(void)
 void dll_9D_func00_nop(void)
 {
 }
-
-void dll_9E_func01_nop(void);
