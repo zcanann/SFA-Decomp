@@ -11139,7 +11139,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             }
             break;
         case 32:
-            if (((PlayerState*)cfg)->baddie.animSpeedA <= lbl_803E7E98)
+            if (((PlayerState*)cfg)->baddie.animSpeedA > lbl_803E7E98)
+            {
+                r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
+                ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
+            }
+            else
             {
                 ((PlayerState*)state)->unk7C8 =
                     -(lbl_803E7E90 * dt - ((PlayerState*)state)->unk7C8);
@@ -11153,11 +11158,6 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 {
                     lbl_803DE440 = lbl_803DE440 - dt;
                 }
-            }
-            else
-            {
-                r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
-                ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
             }
             iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
