@@ -305,7 +305,7 @@ int lfxemitter_setScale(void) { return -1; }
 
 void lfxemitter_initialise(void)
 {
-    *(s16*)(lbl_803AC7B0 + 14) = 10000;
+    *(s16*)(lbl_803AC7B0 + 0xe) = 10000;
 }
 
 int lfxemitter_func0B(LfxEmitterObject* obj)
