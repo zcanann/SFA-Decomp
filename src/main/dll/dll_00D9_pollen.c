@@ -1,45 +1,57 @@
+/*
+ * pollen (DLL 0x00D9)
+ *
+ * A drifting pollen mote. It falls under gravity (anim.velocityY ramped by
+ * lbl_803E3140 * timeDelta each frame); when its descent passes through zero
+ * (prev velocityY >= 0 and the new one <= 0) it bursts: fn_8016A660 spawns a
+ * fixed batch of pollen-fragment objects (POLLEN_FRAGMENT_OBJECT_ID), plays
+ * sfx 0xb7 and hides the mote. The mote also collides: a hit against the
+ * player or Tricky triggers a small camera offset + shake (sfx 0xb6) and
+ * arms a 60-frame despawn timer; pollen_hitDetect snaps the mote to the
+ * contact point and freezes it. Visible motes emit a particle (fx 0x4ba)
+ * each frame. The object frees itself once hidden and idle.
+ *
+ * This TU also hosts the ObjectDescriptors for the kaldachompspit, pinponspike
+ * and pollenfragment sibling DLLs that share the xyzanimator code.
+ */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-extern undefined4 FUN_800067e8();
+/* misc codegen externs needed by this TU (xyzanimator family) */
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern uint FUN_8007f6c8();
-extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8008112c();
+extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
+extern void Obj_FreeObject(int obj);
 
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-#pragma dont_inline on
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
-extern void objRenderFn_8003b8f4(f32);
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
+extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern f32 timeDelta;
-extern f32 lbl_803E3140;
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objRenderFn_8003b8f4(f32);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 
+/* kaldachompspit descriptor slots not declared in xyzanimator.h */
+extern void kaldachompspit_free(void);
+extern void kaldachompspit_update(void);
+extern int kaldachompspit_getObjectTypeId(void);
+extern int kaldachompspit_getExtraSize(void);
+
+#pragma dont_inline on
 void fn_8016A660(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern u8*Obj_AllocObjectSetup(int size, int type);
-    extern u8*Obj_SetupObject(u8* obj, int a, int b, int c, int d);
+    extern u8* Obj_AllocObjectSetup(int size, int type);
+    extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
     extern f32 lbl_803E3144;
-    extern f32 lbl_803E3148;
     int burstCounter;
     PollenExtra* extra;
     u8* fragment;
@@ -52,92 +64,44 @@ void fn_8016A660(int obj)
     burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
     do
     {
-            fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
-            ((GameObject*)fragment)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)fragment)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)fragment)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-            *(u8*)&((GameObject*)fragment)->anim.rotZ = 1;
-            *(u8*)(fragment + 5) = 1;
-            *(u8*)&((GameObject*)fragment)->anim.flags = 0xff;
-            *(u8*)(fragment + 7) = 0xff;
-            fragment = Obj_SetupObject(fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, 0);
-            if (fragment != 0)
-            {
-                ((GameObject*)fragment)->anim.rotY = 0;
-                ((GameObject*)fragment)->anim.rotX = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
-                ((GameObject*)fragment)->anim.velocityX =
-                    lbl_803E3144 *
-                    (f32)(s32)
-                randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                               POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                    ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)fragment)->anim.velocityY =
-                    lbl_803E3148 *
-                    (f32)(s32)
-                randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                               POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                    ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)fragment)->anim.velocityZ =
-                    lbl_803E3144 *
-                    (f32)(s32)
-                randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                               POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                    ((GameObject*)obj)->anim.velocityZ;
-                *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
-            }
+        fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
+        ((GameObject*)fragment)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
+        ((GameObject*)fragment)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)fragment)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
+        *(u8*)&((GameObject*)fragment)->anim.rotZ = 1;
+        *(u8*)(fragment + 5) = 1;
+        *(u8*)&((GameObject*)fragment)->anim.flags = 0xff;
+        *(u8*)(fragment + 7) = 0xff;
+        fragment = Obj_SetupObject(fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, 0);
+        if (fragment != 0)
+        {
+            ((GameObject*)fragment)->anim.rotY = 0;
+            ((GameObject*)fragment)->anim.rotX = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
+            ((GameObject*)fragment)->anim.velocityX =
+                lbl_803E3144 *
+                (f32)(s32)
+            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                ((GameObject*)obj)->anim.velocityX;
+            ((GameObject*)fragment)->anim.velocityY =
+                lbl_803E3148 *
+                (f32)(s32)
+            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                ((GameObject*)obj)->anim.velocityY;
+            ((GameObject*)fragment)->anim.velocityZ =
+                lbl_803E3144 *
+                (f32)(s32)
+            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                ((GameObject*)obj)->anim.velocityZ;
+            *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
         }
+    }
     while (burstCounter-- != 0);
     extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
 }
 #pragma dont_inline reset
-
-
-void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    ObjHitsPriorityState* hitState;
-    int hitObject;
-
-    iVar3 = *(int*)&((GameObject*)param_9)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
-    uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
-    if (uVar1 == 0)
-    {
-        iVar2 = ObjHits_GetPriorityHit(param_9, &hitObject, (int*)0x0, (uint*)0x0);
-        if ((iVar2 == 0xe) || (iVar2 == 0xf))
-        {
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            ObjHits_DisableObject((u32)param_9);
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-        if (hitState->contactFlags != 0)
-        {
-            ObjHits_DisableObject((u32)param_9);
-            *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-    }
-    return;
-}
-
-
-
-
 
 void pollen_release(void)
 {
@@ -147,14 +111,10 @@ void pollen_initialise(void)
 {
 }
 
-
-
-
 void pollen_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
 
 void pollen_hitDetect(int obj)
 {
@@ -173,8 +133,7 @@ void pollen_hitDetect(int obj)
     }
 }
 
-
-int pollen_getExtraSize(void) { return 0x14; }
+int pollen_getExtraSize(void) { return sizeof(PollenExtra); }
 int pollen_getObjectTypeId(void) { return 0x0; }
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -182,8 +141,6 @@ void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3138);
 }
-
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -304,7 +261,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -343,7 +299,6 @@ void pollen_init(int obj)
         }
     }
 }
-
 
 void pollen_update(int obj)
 {
@@ -396,5 +351,3 @@ void pollen_update(int obj)
         Obj_FreeObject(obj);
     }
 }
-
-
