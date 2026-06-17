@@ -579,6 +579,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
     int tgt;
     int cur;
     int d;
+    f32 zero;
 
     ((ArwingState*)state)->barrelRollAngle =
         (int)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
@@ -587,7 +588,8 @@ void arwarwing_updateBarrelRoll(int obj, int state)
         (s16)(
             timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
             (f32) * &((GameObject*)obj)->anim.rotZ);
-    if (((ArwingState*)state)->barrelRollDirection > lbl_803E6ECC)
+    zero = lbl_803E6ECC;
+    if (((ArwingState*)state)->barrelRollDirection > zero)
     {
         tgt = ((ArwingState*)state)->rotZTrimCur;
         {
@@ -598,7 +600,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
             {
                 ((ArwingState*)state)->mode = 0;
                 ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle - 0xffff;
-                ((ArwingState*)state)->rotZBlend = lbl_803E6ECC;
+                ((ArwingState*)state)->rotZBlend = zero;
                 ((ArwingState*)state)->maxSpeedX = ((ArwingState*)state)->maxSpeedX / ((ArwingState*)state)->
                     barrelRollMaxSpeedScale;
                 ((ArwingState*)state)->accelX = ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
@@ -629,7 +631,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
             {
                 ((ArwingState*)state)->mode = 0;
                 ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle + 0xffff;
-                ((ArwingState*)state)->rotZBlend = lbl_803E6ECC;
+                ((ArwingState*)state)->rotZBlend = zero;
                 ((ArwingState*)state)->maxSpeedX = ((ArwingState*)state)->maxSpeedX / ((ArwingState*)state)->
                     barrelRollMaxSpeedScale;
                 ((ArwingState*)state)->accelX = ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
