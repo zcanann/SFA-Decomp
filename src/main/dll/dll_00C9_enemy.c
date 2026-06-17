@@ -1691,7 +1691,10 @@ void fn_8014BC98(int* node, int* sub)
         ((TrickyState*)sub)->unk2A2 = (u16)delta;
         ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
 
-        dist = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+        {
+            f32* dd = (f32*)d;
+            dist = sqrtf(dd[2] * dd[2] + (dd[0] * dd[0] + dd[1] * dd[1]));
+        }
         *(s16*)&((TrickyState*)sub)->unk2A4 = (s32)
         dist;
 
