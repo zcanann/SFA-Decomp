@@ -13792,15 +13792,15 @@ int fn_8029C9C8(int obj, int state)
         }
     }
     {
-        f32 az = ((PlayerState*)state)->baddie.animSpeedB;
         f32 ax = ((PlayerState*)state)->baddie.animSpeedA;
-        if (az < lbl_803E7EA4)
-        {
-            az = -az;
-        }
+        f32 az = ((PlayerState*)state)->baddie.animSpeedB;
         if (ax < lbl_803E7EA4)
         {
             ax = -ax;
+        }
+        if (az < lbl_803E7EA4)
+        {
+            az = -az;
         }
         if (((int (*)(f32, int, f32*))ObjAnim_SampleRootCurvePhase)(((PlayerState*)state)->baddie.animSpeedC, obj,
                                                                     &curveOut) != 0)
