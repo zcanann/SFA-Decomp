@@ -1,143 +1,53 @@
+/*
+ * invhit (DLL 0xF1) - "invisible hit" volume objects of the pushable
+ * effect family. One placement type drives several distinct hit-volume
+ * behaviours selected by InvHitState.mode (def[0x1a], 0..7):
+ *   0  proximity damage: scan the player (and Tricky) and bump the
+ *      hit-priority counters once they fall inside unkF8 range.
+ *   1  attach to an owner object's hit list (ObjList_ContainsObject).
+ *   2  passive shape/radius hit volume.
+ *   3  publish the object's world position to lbl_803AC780 while the
+ *      player exists.
+ *   4  homing/tethered projectile: ease toward the owner's target,
+ *      clamp to a growing reach around an anchor, spawn fx, and snap to
+ *      ground via hitDetectFn_80065e50.
+ *   5  like 3 but gated on the player having a lock-on target.
+ *   6  fixed primary-radius hit volume.
+ *   7  self-free once the owner's hit list no longer references it.
+ * invhit_free releases the expgfx source for mode 4.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
-#include "main/dll/dll_00EF_pushable.h"
 #include "main/dll/player_target.h"
 
-typedef struct InvhitState
+typedef struct InvHitState
 {
-    u8 pad0[0x8 - 0x0];
-    u8 unk8;
-    u8 pad9[0xC - 0x9];
-} InvhitState;
+    f32 anchorX;
+    f32 anchorZ;
+    u8 mode;
+} InvHitState;
 
 typedef struct InvhitObjectDef
 {
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
+    u8 pad0[0x1C - 0x0];
+    void* anchorObj;
 } InvhitObjectDef;
 
-extern undefined4 FUN_80017748();
-extern int FUN_80017a90();
-extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_ClearHitVolumes();
 extern void Obj_FreeObject(int* obj);
-extern int ObjList_ContainsObject();
-extern undefined4 FUN_80053c98();
-extern int FUN_801365ac();
-extern undefined4 FUN_801365b8();
-extern f32 lbl_803E42B0;
-extern f32 lbl_803E42B4;
-extern f32 lbl_803E42B8;
-extern f32 lbl_803E42BC;
+extern int ObjList_ContainsObject(int obj);
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern s16* getTrickyObject(void);
-extern f32 sqrtf(f32 x);
+extern f32 sqrtf(f32 x); /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
-
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
-undefined4
-FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int iVar1;
-
-    if (((*(char*)(*(int*)(param_9 + 0x4c) + 0x1d) != '\x02') &&
-            (animUpdate->triggerCommand == 1)) &&
-        (iVar1 = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < iVar1))
-    {
-        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
-                     (int)animUpdate, param_12, param_13, param_14, param_15, param_16);
-        animUpdate->triggerCommand = 0;
-    }
-    return 0;
-}
-
-void FUN_801778d0(int param_1)
-{
-    *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
-    return;
-}
-
-undefined4
-FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
-             int param_10)
-{
-    float fVar1;
-    short* psVar2;
-    undefined4 uVar3;
-    int iVar4;
-    float* pfVar5;
-    ushort local_28;
-    short local_26;
-    short local_24;
-    float local_20;
-    float local_1c;
-    float local_18;
-    float local_14;
-
-    psVar2 = (short*)FUN_80017a90();
-    local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != (short*)0x0))
-    {
-        *(float*)(param_9 + 0x24) = lbl_803E42B0;
-        *(float*)(param_9 + 0x28) = local_1c;
-        *(float*)(param_9 + 0x2c) = lbl_803E42B4;
-        local_18 = local_1c;
-        local_14 = local_1c;
-        local_20 = lbl_803E42B8;
-        local_24 = psVar2[2];
-        local_26 = psVar2[1];
-        iVar4 = FUN_801365ac((int)psVar2);
-        local_28 = *psVar2 + (short)iVar4;
-        FUN_80017748(&local_28, (float*)(param_9 + 0x24));
-        if ((psVar2[0x58] & 0x800U) == 0)
-        {
-            pfVar5 = (float*)(psVar2 + 6);
-        }
-        else
-        {
-            pfVar5 = (float*)FUN_801365b8((int)psVar2);
-        }
-        fVar1 = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *pfVar5);
-        *(float*)(param_10 + 8) = -(fVar1 * *(float*)(param_9 + 0x28) - pfVar5[1]);
-        *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
-        if (*(char*)(param_10 + 0x11) == '\0')
-        {
-            ObjHits_ClearHitVolumes(param_9);
-        }
-        else
-        {
-            *(char*)(param_10 + 0x11) = *(char*)(param_10 + 0x11) + -1;
-        }
-        uVar3 = 1;
-    }
-    else
-    {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-        uVar3 = 0;
-    }
-    return uVar3;
-}
 
 void invhit_hitDetect(void)
 {
@@ -151,7 +61,6 @@ void invhit_initialise(void)
 {
 }
 
-
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
 
@@ -162,7 +71,7 @@ void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(
 void invhit_free(int obj)
 {
     char* inner = ((GameObject*)obj)->extra;
-    switch (((InvhitState*)inner)->unk8)
+    switch (((InvHitState*)inner)->mode)
     {
     case 4:
         (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -170,19 +79,7 @@ void invhit_free(int obj)
     }
 }
 
-void iceblast_init(int obj, s16* p);
-
 #pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-typedef struct InvHitState
-{
-    f32 anchorX;
-    f32 anchorZ;
-    u8 mode;
-} InvHitState;
-
 void invhit_init(int* obj, u8* def)
 {
     InvHitState* state = ((GameObject*)obj)->extra;
@@ -261,11 +158,11 @@ void invhit_init(int* obj, u8* def)
         *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
         ((GameObject*)obj)->unkF8 = 0x78;
         {
-            char* anchorObj = *(char**)&((InvhitObjectDef*)def)->unk1C;
+            char* anchorObj = *(char**)&((InvhitObjectDef*)def)->anchorObj;
             if (anchorObj != NULL)
             {
                 state->anchorX = ((GameObject*)anchorObj)->anim.localPosX;
-                state->anchorZ = *(f32*)(*(char**)&((InvhitObjectDef*)def)->unk1C + 0x14);
+                state->anchorZ = *(f32*)(*(char**)&((InvhitObjectDef*)def)->anchorObj + 0x14);
             }
         }
         break;
@@ -379,7 +276,7 @@ void invhit_update(int* obj)
                 f32 qt;
                 f32 d;
 
-                if (ObjList_ContainsObject(targetObj) == 0) break;
+                if (ObjList_ContainsObject((int)targetObj) == 0) break;
                 dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
                 dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
                 k = lbl_803E35EC;
