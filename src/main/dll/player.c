@@ -9473,7 +9473,7 @@ s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
         ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     v1 = *(f32*)((char*)buf1 + ((u8)n << 2));
-    if (v1 < lbl_803E7EA4)
+    if (v1 < 0.0f)
     {
         v1 = -v1;
     }
@@ -9488,28 +9488,28 @@ s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
         ObjModel_SampleJointTransform(model, 1, 2, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     v2 = *(f32*)((char*)buf1 + ((u8)n << 2));
-    if (v2 < lbl_803E7EA4)
+    if (v2 < 0.0f)
     {
         v2 = -v2;
     }
     t = *(f32*)((char*)p7 + 0xc) +
     (*(f32*)((char*)p6 + 0x0) * *(f32*)((char*)p7 + 0x0) +
         *(f32*)((char*)p6 + 0x8) * *(f32*)((char*)p7 + 0x8));
-    if (t < lbl_803E7EA4)
+    if (t < 0.0f)
     {
         t = -t;
     }
     t = (t - v1) / (v2 - v1);
     if (uf & 0x1)
     {
-        if (t < lbl_803E7EA4)
+        if (t < 0.0f)
         {
-            t = lbl_803E7EA4;
+            t = 0.0f;
         }
     }
     else
     {
-        if (t < lbl_803E7EA4)
+        if (t < 0.0f)
         {
             t = -t;
         }
