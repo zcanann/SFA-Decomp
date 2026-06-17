@@ -112,7 +112,7 @@ extern int textureLoad(int a, int b);
 extern int textureAlloc512(void);
 extern int textureFn_8006c5c4(void);
 extern f32 lbl_803DB654;
-extern f32 lbl_803DEC90;
+extern f32 lbl_803DEC90[2];
 extern int lbl_803DCFB8;
 extern u8 lbl_803DCF80;
 extern f32 lbl_803DF930;
@@ -2176,7 +2176,7 @@ int fn_800626C8(int* obj, int delta)
             *alphaStep = 0x4000;
         }
     }
-    f31 = lbl_803DEC90 * (f32) * alphaStep;
+    f31 = lbl_803DEC90[0] * (f32) * alphaStep;
     f31 = lbl_803DB654 * f31;
     {
         f32 tint = (f32)objShadowFn_80062378(obj, modelState->shadowTintA);
@@ -2282,7 +2282,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
 }
 #pragma dont_inline reset
 
-void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
+void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 {
     f32 vec[3];
     f32 dot;
@@ -2293,17 +2293,14 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
     vec[2] = c;
     PSVECNormalize(vec, vec);
     lbl_803DB65A = param;
-    lbl_803DCED8 = a * (f32)(s16)
-    param;
-    lbl_803DB650 = b * (f32)(s16)
-    param;
+    lbl_803DCED8 = a * (f32)param;
+    lbl_803DB650 = b * (f32)param;
     lbl_803DB654 = lbl_803DEC68;
-    if (lbl_803DB650 < (&lbl_803DEC90)[1])
+    if (lbl_803DB650 < lbl_803DEC90[1])
     {
-        lbl_803DB650 = (&lbl_803DEC90)[1];
+        lbl_803DB650 = lbl_803DEC90[1];
     }
-    lbl_803DCEDC = c * (f32)(s16)
-    param;
+    lbl_803DCEDC = c * (f32)param;
     dot = vec[0] * lbl_803879B0[0] + vec[1] * lbl_803879B0[1] + vec[2] * lbl_803879B0[2];
     mag = (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
         lbl_803879B0[2] * lbl_803879B0[2]) *
