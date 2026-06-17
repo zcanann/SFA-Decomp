@@ -4735,19 +4735,19 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         toScale = ROM_CURVE_NODE_SCALE(to);
 
         xPoints[0] = from->x;
+        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
         xPoints[1] = to->x;
         xPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->yaw));
-        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         yPoints[0] = from->y;
+        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
         yPoints[1] = to->y;
         yPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->pitch));
-        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
 
         zPoints[0] = from->z;
+        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
         zPoints[1] = to->z;
         zPoints[2] = fromScale * mathCosf(ROM_CURVE_NODE_ANGLE(from->yaw));
-        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
         if ((s8)ignoreY == 0)
