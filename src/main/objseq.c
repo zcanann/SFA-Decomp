@@ -4697,6 +4697,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
 {
     RomCurveNode* from;
     RomCurveNode* to;
+    f32 segmentT;
     f32 t;
     f32 fromScale;
     f32 toScale;
@@ -4706,7 +4707,6 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     f32 xTangent;
     f32 yTangent;
     f32 zTangent;
-    f32 segmentT;
     f32 length;
     f32 scale;
     f32 angle;
