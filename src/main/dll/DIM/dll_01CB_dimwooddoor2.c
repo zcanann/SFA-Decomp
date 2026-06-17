@@ -14,7 +14,6 @@
 #include "main/dll/dimwooddoor2placement_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 

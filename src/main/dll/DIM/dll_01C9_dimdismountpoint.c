@@ -4,7 +4,6 @@
  * plane test so the conveyor can determine which side of the dismount point
  * the player is on.
  */
-#include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"

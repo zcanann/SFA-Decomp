@@ -7,14 +7,8 @@
  * NOTE: GameBit_Get is used implicitly (no include); adding gamebits.h changes
  * codegen at the (u32) cast call sites — leave it implicit.
  */
-#include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll/DF/rope.h"
-#include "main/dll/mmsh_waterspike.h"
 
 #define DIMBOSSCRACKPAR_BASE_PARTICLE_ID  1222 /* crack-site particle, offset by particleIndex */
 #define DIMBOSSCRACKPAR_GLOW_PARTICLE_ID  1224 /* fixed glow burst particle */

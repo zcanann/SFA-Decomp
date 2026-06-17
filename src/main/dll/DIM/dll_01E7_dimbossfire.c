@@ -11,8 +11,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/dll/DF/DFcradle.h"
-#include "main/effect_interfaces.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 

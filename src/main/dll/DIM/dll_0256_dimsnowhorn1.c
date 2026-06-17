@@ -6,7 +6,6 @@
  * input and the air-meter while mounted, and DIMSnowHorn1_update coordinates
  * the full per-frame tick.
  */
-#include "types.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"

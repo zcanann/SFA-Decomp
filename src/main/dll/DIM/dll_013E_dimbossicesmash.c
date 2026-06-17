@@ -3,7 +3,6 @@
  * rotation, optionally follows a path-control surface bounce, fades over a
  * per-setup lifetime window, and emits two trail particles per frame while
  * fully opaque. */
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
@@ -12,7 +11,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);
 
-#include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
