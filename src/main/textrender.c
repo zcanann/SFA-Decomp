@@ -2820,6 +2820,7 @@ extern u16 lbl_802C9F00[];
 extern u16 lbl_802CA100[];
 
 #pragma opt_strength_reduction off
+#pragma optimization_level 1
 void gameTextInitFn_8001c794(void)
 {
     s16* p;
@@ -2835,6 +2836,7 @@ void gameTextInitFn_8001c794(void)
     int off;
     u16* dst;
     u16* src;
+    u8* rb;
 
     i = 1;
     p = &lbl_803DB3E8 + 1;
@@ -2858,49 +2860,57 @@ void gameTextInitFn_8001c794(void)
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
             off = y * 32;
-            dst[0] = *(u16*)((u8*)src + off + xb);
-            dst[1] = *(u16*)((u8*)src + off + x1);
-            dst[2] = *(u16*)((u8*)src + off + x2);
-            dst[3] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[0] = *(u16*)(rb + xb);
+            dst[1] = *(u16*)(rb + x1);
+            dst[2] = *(u16*)(rb + x2);
+            dst[3] = *(u16*)(rb + x3);
             off += 32;
-            dst[4] = *(u16*)((u8*)src + off + xb);
-            dst[5] = *(u16*)((u8*)src + off + x1);
-            dst[6] = *(u16*)((u8*)src + off + x2);
-            dst[7] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[4] = *(u16*)(rb + xb);
+            dst[5] = *(u16*)(rb + x1);
+            dst[6] = *(u16*)(rb + x2);
+            dst[7] = *(u16*)(rb + x3);
             off += 32;
-            dst[8] = *(u16*)((u8*)src + off + xb);
-            dst[9] = *(u16*)((u8*)src + off + x1);
-            dst[10] = *(u16*)((u8*)src + off + x2);
-            dst[11] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[8] = *(u16*)(rb + xb);
+            dst[9] = *(u16*)(rb + x1);
+            dst[10] = *(u16*)(rb + x2);
+            dst[11] = *(u16*)(rb + x3);
             off += 32;
-            dst[12] = *(u16*)((u8*)src + off + xb);
-            dst[13] = *(u16*)((u8*)src + off + x1);
-            dst[14] = *(u16*)((u8*)src + off + x2);
-            dst[15] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[12] = *(u16*)(rb + xb);
+            dst[13] = *(u16*)(rb + x1);
+            dst[14] = *(u16*)(rb + x2);
+            dst[15] = *(u16*)(rb + x3);
             xb += 8;
             x1 = (x + 5) * 2;
             x2 = (x + 6) * 2;
             x3 = (x + 7) * 2;
             off = y * 32;
-            dst[16] = *(u16*)((u8*)src + off + xb);
-            dst[17] = *(u16*)((u8*)src + off + x1);
-            dst[18] = *(u16*)((u8*)src + off + x2);
-            dst[19] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[16] = *(u16*)(rb + xb);
+            dst[17] = *(u16*)(rb + x1);
+            dst[18] = *(u16*)(rb + x2);
+            dst[19] = *(u16*)(rb + x3);
             off += 32;
-            dst[20] = *(u16*)((u8*)src + off + xb);
-            dst[21] = *(u16*)((u8*)src + off + x1);
-            dst[22] = *(u16*)((u8*)src + off + x2);
-            dst[23] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[20] = *(u16*)(rb + xb);
+            dst[21] = *(u16*)(rb + x1);
+            dst[22] = *(u16*)(rb + x2);
+            dst[23] = *(u16*)(rb + x3);
             off += 32;
-            dst[24] = *(u16*)((u8*)src + off + xb);
-            dst[25] = *(u16*)((u8*)src + off + x1);
-            dst[26] = *(u16*)((u8*)src + off + x2);
-            dst[27] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[24] = *(u16*)(rb + xb);
+            dst[25] = *(u16*)(rb + x1);
+            dst[26] = *(u16*)(rb + x2);
+            dst[27] = *(u16*)(rb + x3);
             off += 32;
-            dst[28] = *(u16*)((u8*)src + off + xb);
-            dst[29] = *(u16*)((u8*)src + off + x1);
-            dst[30] = *(u16*)((u8*)src + off + x2);
-            dst[31] = *(u16*)((u8*)src + off + x3);
+            rb = (u8*)src + off;
+            dst[28] = *(u16*)(rb + xb);
+            dst[29] = *(u16*)(rb + x1);
+            dst[30] = *(u16*)(rb + x2);
+            dst[31] = *(u16*)(rb + x3);
             dst += 32;
             x += 8;
             xb += 8;
@@ -2950,6 +2960,7 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)lbl_803DCA20 + 0x60, 800);
 }
+#pragma optimization_level reset
 
 extern f32 lbl_803DE730;
 extern f32 lbl_803DE734;
