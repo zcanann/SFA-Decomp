@@ -1,26 +1,11 @@
+/*
+ * projrobotfire (DLL 0x00B2) - the robot fire projectile object.
+ *
+ * The entire retail DLL is a stub: doUnsupported logs "no longer supported"
+ * via OSReport and returns -1; release/initialise are empty.
+ */
+#include "dolphin/os.h"
 #include "main/dll/dll_6D.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_6D.c
- * - 0x80100854-0x80100858
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_6C.c
- * - next split: main/dll/dll_6E.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
-extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
