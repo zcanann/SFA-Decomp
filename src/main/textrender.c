@@ -1685,8 +1685,8 @@ void gameTextRun(void)
     GameTextSlot* cmd;
     u8* textWindow;
     int color;
-    double zero;
     double fadeLimit;
+    double zero;
 
     gameTextBase = lbl_80339980;
 
