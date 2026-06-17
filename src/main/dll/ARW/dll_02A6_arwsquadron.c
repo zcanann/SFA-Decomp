@@ -724,12 +724,14 @@ void arwsquadron_update(int obj)
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 ObjHits_EnableObject(obj);
                 state->phase = ARW_SQUADRON_STATE_ACTIVE;
-                setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
-                if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                 {
-                    flags->f20 = 0;
-                    storeZeroToFloatParam(&state->volleyCooldownTimer);
-                    s16toFloat(&state->volleyCooldownTimer, setupL->volleyCooldown);
+                    ArwSquadronSetup* setupE = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
+                    if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
+                    {
+                        flags->f20 = 0;
+                        storeZeroToFloatParam(&state->volleyCooldownTimer);
+                        s16toFloat(&state->volleyCooldownTimer, setupE->volleyCooldown);
+                    }
                 }
             }
             return;
