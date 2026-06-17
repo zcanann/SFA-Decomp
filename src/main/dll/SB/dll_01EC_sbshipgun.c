@@ -23,6 +23,7 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/dll/DB/DBstealerworm.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -126,13 +127,9 @@ STATIC_ASSERT(offsetof(SBShipGunPlacement, targetX) == 0x18);
 STATIC_ASSERT(sizeof(SBShipGunPlacement) == 0x28);
 
 /* The parent Galleon's DLL exposes an interface vtable (anim.dll -> table);
-   the ship gun reads its phase and "wake"/death conditions through these
-   byte-offset slots. */
-typedef int (*SBGalleonVtblFn)(int galleon);
-#define SB_GALLEON_VTBL(galleon) ((int)*((GameObject*)(galleon))->anim.dll)
-#define SB_GALLEON_VTBL_GET_PHASE 0x24
-#define SB_GALLEON_VTBL_WAKE_CONDITION 0x28
-#define SB_GALLEON_VTBL_ON_GUN_DESTROYED 0x20
+   the ship gun reads its stage and "wake"/death conditions through the typed
+   SBGalleonVtbl (see DBstealerworm.h). The gun's "wake condition" is the
+   galleon's phase slot, and "on gun destroyed" is the onPartDestroyed slot. */
 
 /* state->phase machine (SBShipGunState +0xA) */
 enum
@@ -163,7 +160,7 @@ void SB_ShipGun_update(int obj)
     GameObject* player;
     int galleon;
     int* state;
-    int galleonPhase;
+    int galleonStage;
     int hit;
     uint randDelay;
     u16* spawned;
@@ -223,11 +220,11 @@ void SB_ShipGun_update(int obj)
         if (((void*)galleon != NULL) &&
             (((GameObject*)galleon)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
         {
-            galleonPhase = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_GET_PHASE))(galleon);
+            galleonStage = SB_GALLEON_VTBL(galleon)->getStage(galleon);
         }
         else
         {
-            galleonPhase = 0;
+            galleonStage = 0;
             *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
         }
         ((SBShipGunState*)state)->active = 1;
@@ -236,7 +233,7 @@ void SB_ShipGun_update(int obj)
         {
         case SB_SHIPGUN_PHASE_IDLE:
             if (((void*)galleon != NULL) &&
-                (galleon = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon), galleon == 0))
+                (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
             {
                 if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
@@ -254,7 +251,7 @@ void SB_ShipGun_update(int obj)
         case SB_SHIPGUN_PHASE_ACTIVE:
             {
                 ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
-                placement = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon);
+                placement = SB_GALLEON_VTBL(galleon)->getPhase(galleon);
                 if ((placement == 0) &&
                     (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
                 {
@@ -267,7 +264,7 @@ void SB_ShipGun_update(int obj)
                         *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
-                            (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_ON_GUN_DESTROYED))(galleon);
+                            SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
                         }
                     }
                     else if (*(char*)((int)state + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
@@ -277,7 +274,7 @@ void SB_ShipGun_update(int obj)
                         *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
-                            (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_ON_GUN_DESTROYED))(galleon);
+                            SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
                         }
                     }
                 }
@@ -356,7 +353,7 @@ void SB_ShipGun_update(int obj)
                     ((SBShipGunState*)state)->volleyCount += 1;
                     if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
                     {
-                        if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                        if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                             *(short*)(state + 2) = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
@@ -368,7 +365,7 @@ void SB_ShipGun_update(int obj)
                         }
                         ((SBShipGunState*)state)->volleyCount = 0;
                     }
-                    else if (galleonPhase >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                    else if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
                     {
                         *(u16*)(state + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
                     }
@@ -410,17 +407,17 @@ void SB_ShipGun_update(int obj)
         case SB_SHIPGUN_PHASE_SMOLDERING:
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
             if (((void*)galleon != NULL) &&
-                (galleon = (*(SBGalleonVtblFn*)(SB_GALLEON_VTBL(galleon) + SB_GALLEON_VTBL_WAKE_CONDITION))(galleon), galleon == 0))
+                (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
             {
                 if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
-                    if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= galleonPhase)
+                    if (SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE <= galleonStage)
                     {
                         *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
                         *(u16*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
                     }
                 }
-                else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= galleonPhase)
+                else if (SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE <= galleonStage)
                 {
                     *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
                     *(u16*)(state + 2) = 0;

@@ -29,11 +29,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-/* parent Galleon anim.dll vtable slots */
-#define GALLEON_VT_ON_HEAD_DESTROYED 0x20
-#define GALLEON_VT_GET_CAM_B 0x28
-#define GALLEON_VT_GET_PHASE 0x2c
-
 extern u32 randomGetRange(int min, int max);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -92,7 +87,7 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         objRenderFn_8003b8f4(lbl_803E5830);
         parent = *(int*)&o->anim.parent;
         if ((((void*)parent != NULL && (((GameObject*)parent)->anim.seqId == SB_GALLEON_SEQID_FIRING)) &&
-            (phase = (**(int (**)(int))(**(int**)&((GameObject*)parent)->anim.dll + GALLEON_VT_GET_PHASE))(parent),
+            (phase = SB_GALLEON_VTBL(parent)->getDamagePhase(parent),
                 phase != 0)) && (phase != 2))
         {
             state->swayA = state->swayA - timeDelta;
@@ -194,7 +189,7 @@ void SB_ShipHead_update(int obj)
                 break;
             }
         }
-        if (((**(int (**)(u8*))(**(int**)&((GameObject*)galleon)->anim.dll + GALLEON_VT_GET_CAM_B))(galleon) >= 2)
+        if ((SB_GALLEON_VTBL(galleon)->getPhase((int)galleon) >= 2)
             && (o->unkF8 <= 0) && (((uint)(galleonPhase - 3) <= 1 || (galleonPhase == 5)))
             && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             && (((GameObject*)hit)->anim.seqId != SB_FIREBALL_OBJID))
@@ -204,7 +199,7 @@ void SB_ShipHead_update(int obj)
             hs->health -= 1;
             if (hs->health <= 0)
             {
-                (**(void (**)(u8*))(**(int**)&((GameObject*)galleon)->anim.dll + GALLEON_VT_ON_HEAD_DESTROYED))(galleon);
+                SB_GALLEON_VTBL(galleon)->onPartDestroyed((int)galleon);
                 o->unkF8 = 300;
                 ObjHits_DisableObject((u32)obj);
             }

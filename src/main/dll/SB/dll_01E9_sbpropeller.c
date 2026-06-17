@@ -24,11 +24,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* a second SB object's seqId the propeller ignores when scanning hits */
 #define SB_OTHER_SEQ_ID 0x9a
 
-/* parent Galleon anim.dll vtable slots */
-#define GALLEON_VT_ON_PROPELLER_DESTROYED 0x20
-#define GALLEON_VT_GET_CAM_A 0x24
-#define GALLEON_VT_GET_CAM_B 0x28
-
 /* propeller sound effects (SB-specific ids, no shared name) */
 #define SB_PROPELLER_SFX_LOOP 0x2c6
 #define SB_PROPELLER_SFX_HIT 0x2c7
@@ -85,10 +80,8 @@ void SB_Propeller_update(int obj)
     objAnim = (ObjAnimComponent*)obj;
     o = (GameObject*)obj;
     state = o->extra;
-    camA = (**(int (**)(int))(**(int**)(*(int*)&objAnim->parent + 0x68) + GALLEON_VT_GET_CAM_A))(
-        *(int*)&objAnim->parent);
-    camB = (**(int (**)(int))(**(int**)(*(int*)&objAnim->parent + 0x68) + GALLEON_VT_GET_CAM_B))(
-        *(int*)&objAnim->parent);
+    camA = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getStage(*(int*)&objAnim->parent);
+    camB = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getPhase(*(int*)&objAnim->parent);
     if (((state->health != 0) && (camB < 6)) && (objAnim->seqId != SB_PROPELLER_SEQ_ID))
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SB_PROPELLER_SFX_LOOP);
@@ -158,8 +151,7 @@ void SB_Propeller_update(int obj)
             if (state->health <= 0)
             {
                 state->health = 0;
-                (**(void (**)(int))(**(int**)(*(int*)&objAnim->parent + 0x68) + GALLEON_VT_ON_PROPELLER_DESTROYED))(
-                    *(int*)&objAnim->parent);
+                SB_GALLEON_VTBL(*(int*)&objAnim->parent)->onPartDestroyed(*(int*)&objAnim->parent);
                 ObjHits_DisableObject(obj);
                 objAnim->flags = objAnim->flags | OBJANIM_FLAG_HIDDEN;
                 spawnExplosion(obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);

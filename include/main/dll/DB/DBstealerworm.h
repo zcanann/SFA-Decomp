@@ -11,6 +11,19 @@ extern ObjectDescriptor gSB_PropellerObjDescriptor;
 extern ObjectDescriptor gSB_ShipHeadObjDescriptor;
 extern ObjectDescriptor gSB_ShipMastObjDescriptor;
 
+/* The galleon DLL exposes an interface vtable to its part objects (the guns,
+   the propellers, the figurehead) via *(part->parent->anim.dll). The parts
+   query the galleon's stage/phase and report their destruction through it. */
+typedef int (*SBGalleonVtblFn)(int galleon);
+typedef struct SBGalleonVtbl {
+    SBGalleonVtblFn _slot00[8];      /* 0x00..0x1c: standard object-class slots */
+    SBGalleonVtblFn onPartDestroyed; /* 0x20: a part reports its destruction */
+    SBGalleonVtblFn getStage;        /* 0x24: SBGalleonState.stage */
+    SBGalleonVtblFn getPhase;        /* 0x28: SBGalleonState.phase (-1/-2 edge cases) */
+    SBGalleonVtblFn getDamagePhase;  /* 0x2c: SBGalleonState.damagePhase */
+} SBGalleonVtbl;
+#define SB_GALLEON_VTBL(galleon) ((SBGalleonVtbl*)*((GameObject*)(galleon))->anim.dll)
+
 void fn_801E1588(int param_1,int param_2);
 int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 undefined4 FUN_801e1ee4(void);
