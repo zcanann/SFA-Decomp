@@ -17406,7 +17406,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         break;
     case 0x7f:
         ((GameObject*)obj)->anim.velocityY = lbl_803E7EFC * fv + ((GameObject*)obj)->anim.velocityY;
-        if (((GameObject*)obj)->anim.velocityY > lbl_803E7F10)
+        if (((GameObject*)obj)->anim.velocityY > *(f32*)&lbl_803E7F10)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E7F10;
         }
