@@ -396,9 +396,9 @@ int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void);
 
-u8 SB_Galleon_getPhase(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase; }
+u8 SB_Galleon_getDamagePhase(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase; }
 
-s32 SB_Galleon_func0B(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
+s32 SB_Galleon_getStage(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
 
 /*
  * Galleon DLL vtable slot SB_GALLEON_VTBL_ON_GUN_DESTROYED: a destructible part
@@ -600,7 +600,7 @@ void SB_Galleon_free(GameObject* obj, int p2)
 }
 
 
-int SB_Galleon_modelMtxFn(int* obj)
+int SB_Galleon_getPhase(int* obj)
 {
     int phase;
     SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;

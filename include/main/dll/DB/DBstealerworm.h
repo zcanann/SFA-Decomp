@@ -16,9 +16,9 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
 undefined4 FUN_801e1ee4(void);
 undefined4 FUN_801e2184(void);
 int SB_Galleon_func0E(int *obj);
-u8 SB_Galleon_getPhase(int *obj);
-int SB_Galleon_modelMtxFn(int *obj);
-s32 SB_Galleon_func0B(int *obj);
+u8 SB_Galleon_getDamagePhase(int *obj);
+int SB_Galleon_getPhase(int *obj);
+s32 SB_Galleon_getStage(int *obj);
 int SB_Galleon_onPartDestroyed(GameObject* obj);
 int SB_Galleon_getExtraSize(void);
 int SB_Galleon_getObjectTypeId(void);
