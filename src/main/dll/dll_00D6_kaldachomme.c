@@ -1,16 +1,25 @@
-#include "main/effect_interfaces.h"
+/*
+ * kaldachomme (DLL 0x00D6) - the KaldaChompMe animated chomping-mouth
+ * object plus the data records for several sibling objects whose code
+ * lives in neighbouring DLLs (kaldachompspit, pinponspike, pollen,
+ * pollenfragment).
+ *
+ * KaldaChompMe drives a single animation move toward a target progress
+ * value (state @0x00..0x0C) at state->step per frame; setLinkedMouthMode
+ * looks up a paired mouth object by placement-mapId and (re)arms its
+ * open/close move (mode 1 = moveId 0, mode 2 = moveId 1). render draws
+ * via objRenderFn_8003b8f4 when the visible flag is set; init seeds the
+ * rotation from the placement bytes and starts move 0.
+ *
+ * This TU also owns the ObjectDescriptors and the PollenFragmentConfig
+ * table (the config pointer table) for the sibling pollen-fragment object.
+ */
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
+#include "main/obj_placement.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800175cc();
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8008112c();
+extern void objRenderFn_8003b8f4(f32);
 
-extern f64 DOUBLE_803e3d80;
-extern f32 lbl_803E3D78;
 extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
@@ -30,57 +39,57 @@ typedef struct KaldaChompMeState
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
     KaldaChompMeState* state;
-    int obj2;
+    int linkedObj;
 
     if (obj == NULL)
     {
         return;
     }
-    switch (*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14))
+    switch (((GameObject*)obj)->anim.placement->mapId)
     {
     case 0x43d14:
-        obj2 = ObjList_FindObjectById(0x4b3b5);
+        linkedObj = ObjList_FindObjectById(0x4b3b5);
         break;
     case 0x41be9:
-        obj2 = ObjList_FindObjectById(0x4b3f9);
+        linkedObj = ObjList_FindObjectById(0x4b3f9);
         break;
     case 0x41cc4:
-        obj2 = ObjList_FindObjectById(0x4b402);
+        linkedObj = ObjList_FindObjectById(0x4b402);
         break;
     case 0x41cc5:
-        obj2 = ObjList_FindObjectById(0x4b403);
+        linkedObj = ObjList_FindObjectById(0x4b403);
         break;
     case 0x41cc6:
-        obj2 = ObjList_FindObjectById(0x4b404);
+        linkedObj = ObjList_FindObjectById(0x4b404);
         break;
     case 0x41cc7:
-        obj2 = ObjList_FindObjectById(0x4b40b);
+        linkedObj = ObjList_FindObjectById(0x4b40b);
         break;
     case 0x41cc8:
-        obj2 = ObjList_FindObjectById(0x4b40c);
+        linkedObj = ObjList_FindObjectById(0x4b40c);
         break;
     case 0x41cc9:
-        obj2 = ObjList_FindObjectById(0x4b40f);
+        linkedObj = ObjList_FindObjectById(0x4b40f);
         break;
     case 0x41cd2:
-        obj2 = ObjList_FindObjectById(0x4b410);
+        linkedObj = ObjList_FindObjectById(0x4b410);
         break;
     case 0x41ccc:
-        obj2 = ObjList_FindObjectById(0x4b411);
+        linkedObj = ObjList_FindObjectById(0x4b411);
         break;
     case 0x41cd5:
-        obj2 = ObjList_FindObjectById(0x4b414);
+        linkedObj = ObjList_FindObjectById(0x4b414);
         break;
     case 0x41cd6:
-        obj2 = ObjList_FindObjectById(0x4b415);
+        linkedObj = ObjList_FindObjectById(0x4b415);
         break;
     case 0x41cd9:
-        obj2 = ObjList_FindObjectById(0x4b453);
+        linkedObj = ObjList_FindObjectById(0x4b453);
         break;
     default:
         return;
     }
-    state = *(KaldaChompMeState**)(obj2 + 0xb8);
+    state = *(KaldaChompMeState**)(linkedObj + 0xb8);
     if (state != NULL)
     {
         switch (mode)
@@ -103,7 +112,7 @@ void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 
 int kaldachompme_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(KaldaChompMeState);
 }
 
 int kaldachompme_getObjectTypeId(void)
@@ -115,12 +124,9 @@ void kaldachompme_free(void)
 {
 }
 
-void kaldachompme_render(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                         undefined4 param_5, s8 renderFlag)
+void kaldachompme_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag)
 {
-    extern void objRenderFn_8003b8f4(double scale); /* #57 */
-    s32 v = renderFlag;
-    if (v != 0)
+    if (renderFlag != 0)
     {
         objRenderFn_8003b8f4(lbl_803E30D0);
     }
@@ -132,9 +138,9 @@ void kaldachompme_hitDetect(void)
 
 void kaldachompme_update(int obj)
 {
-    float target;
-    float current;
-    float step;
+    f32 target;
+    f32 current;
+    f32 step;
     KaldaChompMeState* extra;
 
     extra = ((GameObject*)obj)->extra;
@@ -200,58 +206,9 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     kaldachompme_getExtraSize,
 };
 
-#pragma scheduling on
-#pragma peephole on
-void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(param_1);
-    }
-    return;
-}
-
-void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    uint uVar1;
-    int* piVar2;
-    int local_18[2];
-    undefined4 local_10;
-    uint uStack_c;
-
-    piVar2 = ((GameObject*)param_9)->extra;
-    ((GameObject*)param_9)->anim.alpha = 0;
-    *(undefined4*)(param_9 + 0xf4) = 0xdc;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
-    if (*piVar2 != 0)
-    {
-        FUN_800175cc((double)lbl_803E3D78, *piVar2, '\0');
-    }
-    if (((GameObject*)param_9)->anim.seqId == 0x869)
-    {
-        uVar1 = randomGetRange(0, 1);
-        uStack_c = randomGetRange(0x32, 0x3c);
-        FUN_8008112c((double)(float)((double)CONCAT44(0x43300000, uStack_c) - DOUBLE_803e3d80), param_2,
-                     param_3, param_4, param_5, param_6, param_7, param_8, param_9, 1, 1, 0, uVar1 & 0xff, 0, 1, 0);
-    }
-    else
-    {
-        for (local_18[0] = 0; local_18[0] < 0x19; local_18[0] = local_18[0] + 1)
-        {
-            (*gPartfxInterface)->spawnObject((void*)param_9, 0x715, NULL, 1, -1, local_18);
-        }
-        FUN_80006824(param_9, SFXsc_attack03);
-    }
-    return;
-}
-
 int kaldachompspit_getExtraSize(void);
 int kaldachompspit_getObjectTypeId(void);
-
 void kaldachompspit_free(int* obj);
-
 void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
