@@ -2598,17 +2598,18 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         return EXPGFX_INVALID_POOL_INDEX;
     }
     { /* load-bearing: this scope and the tex-coord re-init set the stack-slot layout MWCC matches */
-        if ((int)poolIndex < EXPGFX_POOL_COUNT)
+        int pi = poolIndex;
+        if (pi < EXPGFX_POOL_COUNT)
         {
-            runtime->poolSourceIds[(int)poolIndex] = (int)config->attachedSource;
+            runtime->poolSourceIds[pi] = (int)config->attachedSource;
         }
-        trackedFrameMask = &runtime->trackedSourceFrameMasks[(uint)poolIndex & 1];
-        if ((int)poolIndex < EXPGFX_POOL_COUNT &&
+        trackedFrameMask = &runtime->trackedSourceFrameMasks[(uint)pi & 1];
+        if (pi < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
             maskHighWord = trackedFrameMask->highWord;
             maskLowWord = trackedFrameMask->lowWord;
-            bit = 1 << ((int)poolIndex >> 1);
+            bit = 1 << (pi >> 1);
             trackedFrameMask->lowWord = maskLowWord | bit;
             trackedFrameMask->highWord = maskHighWord | (uint)((int)bit >> 0x1f);
         }
@@ -2616,11 +2617,11 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         {
             maskHighWord = trackedFrameMask->highWord;
             maskLowWord = trackedFrameMask->lowWord;
-            inverseBit = ~(uint)(1 << ((int)poolIndex >> 1));
+            inverseBit = ~(uint)(1 << (pi >> 1));
             trackedFrameMask->lowWord = maskLowWord & inverseBit;
             trackedFrameMask->highWord = maskHighWord & (uint)((int)inverseBit >> 0x1f);
         }
-        slot = (ExpgfxSlot*)(runtime->slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
         if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < gExpgfxSequenceCounter)
