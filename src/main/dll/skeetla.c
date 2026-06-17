@@ -12,17 +12,17 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 
-extern const f32 lbl_803E23DC;
-extern const f32 lbl_803E23E0;
-extern const f32 lbl_803E23EC;
-extern const f32 lbl_803E2410;
-extern const f32 lbl_803E2414;
-extern const f32 lbl_803E2424;
-extern const f32 lbl_803E2428;
-extern const f32 lbl_803E242C;
-extern const f32 lbl_803E2430;
-extern const f32 lbl_803E2434;
-extern const f32 lbl_803E2438;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E0;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2424;
+extern f32 lbl_803E2428;
+extern f32 lbl_803E242C;
+extern f32 lbl_803E2430;
+extern f32 lbl_803E2434;
+extern f32 lbl_803E2438;
 extern f32 timeDelta;
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -36,27 +36,27 @@ extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern int trickyDebugPrint(const char* fmt, ...);
 
 #pragma peephole off
-extern const f32 lbl_803E244C;
-extern const f32 lbl_803E2448;
-extern const f32 lbl_803E23F8;
-extern const f32 lbl_803E2450;
+extern f32 lbl_803E244C;
+extern f32 lbl_803E2448;
+extern f32 lbl_803E23F8;
+extern f32 lbl_803E2450;
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern void RomCurve_stepClamped(RomCurveWalker *state, f32 dt);
-extern const f32 lbl_803E23E8;
-extern const f32 lbl_803E2418;
-extern const f32 lbl_803E2420;
-extern const f32 lbl_803E243C;
-extern const f32 lbl_803E2440;
-extern const f32 lbl_803E2454;
-extern const f32 lbl_803E2458;
-extern const f32 lbl_803E2468;
-extern const f32 lbl_803E246C;
-extern const f32 lbl_803E2470;
-extern const f32 lbl_803E2474;
-extern const f32 lbl_803E247C;
-extern const f32 lbl_803E2478;
-extern const f32 lbl_803E2480;
-extern const f32 lbl_803E2484;
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E2420;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f32 lbl_803E2468;
+extern f32 lbl_803E246C;
+extern f32 lbl_803E2470;
+extern f32 lbl_803E2474;
+extern f32 lbl_803E247C;
+extern f32 lbl_803E2478;
+extern f32 lbl_803E2480;
+extern f32 lbl_803E2484;
 extern f32 oneOverTimeDelta;
 extern char lbl_803DBC4C;
 extern char lbl_8031D2E8[];
