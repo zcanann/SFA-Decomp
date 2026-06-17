@@ -1,16 +1,25 @@
+/*
+ * dll9afunc0 (DLL 0x9A) - one of the screen-fx descriptor builders
+ * (the dll_9X_func03 family). dll_9A_func03 fills a ScreenFxHdr plus a
+ * table of ScreenFxPart entries describing an animated multi-part
+ * screen effect, then hands it to the modgfx interface to spawn.
+ *
+ * The seven-element animation template (ScreenSeq) is read from the
+ * lbl_802C2180 blob and jittered with randomGetRange; the part table
+ * is built in two variants selected by `variant` (0 or 1), and the
+ * header is anchored to the target/parent object positions when its
+ * low flag bit is set. lbl_803E13xx are shared f32 effect constants.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
 extern u32 randomGetRange(int min, int max);
 
+/* gModgfxInterface lives in the modgfx DLL; not declared in effect_interfaces.h. */
 extern ModgfxInterface** gModgfxInterface;
 
-typedef struct
-{
-    s16 v[7];
-} ScreenSeq;
-
+/* screen-fx resource blobs and placement constants, declared per-TU */
 extern u8 lbl_802C2180[];
 extern u8 lbl_80317B98[];
 extern u8 lbl_803DB958;
@@ -27,8 +36,13 @@ extern f32 lbl_803E138C;
 extern f32 lbl_803E1390;
 extern f32 lbl_803E1394;
 
+typedef struct
+{
+    s16 v[7];
+} ScreenSeq;
+
 #pragma opt_propagation off
-void dll_9A_func03(int a, int b, int p, uint flags)
+void dll_9A_func03(int target, int variant, int parent, uint flags)
 {
     ScreenSeq seq;
     ScreenFxPart parts[32];
@@ -45,7 +59,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     seq.v[4] += randomGetRange(-0x14, 0x14);
     pp = parts;
     cur = pp;
-    if (b == 0)
+    if (variant == 0)
     {
         cur->state = 0;
         cur->id = 3;
@@ -56,7 +70,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
         cur->z = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
         cur++;
     }
-    else if (b == 1)
+    else if (variant == 1)
     {
         cur->state = 0;
         cur->id = 3;
@@ -73,7 +87,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     randomGetRange(-0x2ee0, 0x2ee0);
     cur[0].state = 0;
     cur[0].id = 0;
-    cur[0].tex = 0;
+    cur[0].tex = NULL;
     cur[0].flags = 0x80;
     cur[0].x = lbl_803E1370;
     cur[0].y = ry;
@@ -117,7 +131,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[5].z = lbl_803E1390;
     cur[6].state = 1;
     cur[6].id = 0;
-    cur[6].tex = 0;
+    cur[6].tex = NULL;
     cur[6].flags = 0x80;
     cur[6].x = (f32)(s32)
     randomGetRange(-32000, 32000);
@@ -127,7 +141,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     randomGetRange(-1, 1);
     cur[7].state = 2;
     cur[7].id = 0;
-    cur[7].tex = 0;
+    cur[7].tex = NULL;
     cur[7].flags = 0x80;
     cur[7].x = (f32)(s32)
     randomGetRange(-32000, 32000);
@@ -144,7 +158,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[8].z = lbl_803E1370;
     cur[9].state = 3;
     cur[9].id = 0;
-    cur[9].tex = 0;
+    cur[9].tex = NULL;
     cur[9].flags = 0x80;
     cur[9].x = (f32)(s32)
     randomGetRange(-32000, 32000);
@@ -161,7 +175,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[10].z = lbl_803E1370;
     cur[11].state = 4;
     cur[11].id = 0;
-    cur[11].tex = 0;
+    cur[11].tex = NULL;
     cur[11].flags = 0x80;
     cur[11].x = (f32)(s32)
     randomGetRange(-32000, 32000);
@@ -185,14 +199,14 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[13].z = lbl_803E1370;
 
     hdr.v0 = 0;
-    hdr.target = a;
-    hdr.b = (s16)b;
+    hdr.target = target;
+    hdr.b = (s16)variant;
     hdr.bx = lbl_803E1370;
-    if (b == 0)
+    if (variant == 0)
     {
         hdr.by = lbl_803E1370;
     }
-    else if (b == 1)
+    else if (variant == 1)
     {
         hdr.by = lbl_803E1394;
     }
@@ -219,11 +233,11 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     hdr.flags |= flags;
     if ((hdr.flags & 1) != 0)
     {
-        if ((void*)hdr.target != NULL && (void*)p != NULL)
+        if ((void*)hdr.target != NULL && (void*)parent != NULL)
         {
-            hdr.bx = hdr.bx + (*(f32*)(hdr.target + 0x18) + *(f32*)(p + 0xc));
-            hdr.by = hdr.by + (*(f32*)(hdr.target + 0x1c) + *(f32*)(p + 0x10));
-            hdr.bz = hdr.bz + (*(f32*)(hdr.target + 0x20) + *(f32*)(p + 0x14));
+            hdr.bx = hdr.bx + (*(f32*)(hdr.target + 0x18) + *(f32*)(parent + 0xc));
+            hdr.by = hdr.by + (*(f32*)(hdr.target + 0x1c) + *(f32*)(parent + 0x10));
+            hdr.bz = hdr.bz + (*(f32*)(hdr.target + 0x20) + *(f32*)(parent + 0x14));
         }
         else if ((void*)hdr.target != NULL)
         {
@@ -231,17 +245,16 @@ void dll_9A_func03(int a, int b, int p, uint flags)
             hdr.by = hdr.by + *(f32*)(hdr.target + 0x1c);
             hdr.bz = hdr.bz + *(f32*)(hdr.target + 0x20);
         }
-        else if ((void*)p != NULL)
+        else if ((void*)parent != NULL)
         {
-            hdr.bx = hdr.bx + *(f32*)(p + 0xc);
-            hdr.by = hdr.by + *(f32*)(p + 0x10);
-            hdr.bz = hdr.bz + *(f32*)(p + 0x14);
+            hdr.bx = hdr.bx + *(f32*)(parent + 0xc);
+            hdr.by = hdr.by + *(f32*)(parent + 0x10);
+            hdr.bz = hdr.bz + *(f32*)(parent + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, 0x31, 0);
 }
 #pragma opt_propagation reset
-
 
 void dll_9A_func01_nop(void)
 {
@@ -250,5 +263,3 @@ void dll_9A_func01_nop(void)
 void dll_9A_func00_nop(void)
 {
 }
-
-void dll_9B_func01_nop(void);
