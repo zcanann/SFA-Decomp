@@ -1,18 +1,28 @@
+/*
+ * pollenfragment (DLL 0x00DA) - the homing pollen-cloud projectile/fragment
+ * spawned by the pollen object. Each fragment picks one of five
+ * PollenFragmentConfig presets by its pollen type (0..5), spawns a burst of
+ * particle fx and a loop sfx on init, then per-frame steers toward the
+ * nearest object in its target group, applies velocity damping/gravity,
+ * optionally smooth-turns to face its velocity (or free-spins for the
+ * 0x482 fragment object), and bursts (explosion fx + sfx) on contact with a
+ * non-owner object. Timed variants fade their alpha out and self-free.
+ *
+ * This TU also owns the shared ObjectDescriptors and PollenFragmentConfig
+ * tables for the xyzanimator object family (kaldachompspit, pinponspike,
+ * pollen, pollenfragment).
+ */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
 
-extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern uint FUN_8007f6c8();
-extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8008112c();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void s16toFloat(void* timer, int duration);
+extern void storeZeroToFloatParam(void* timer);
 
 typedef struct
 {
@@ -42,10 +52,6 @@ typedef struct PollenFragmentExtra
     PollenFragmentDef* def; /* 0x1C */
 } PollenFragmentExtra;
 
-extern void storeZeroToFloatParam(void* timer);
-
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 
@@ -84,7 +90,6 @@ extern void PSVECAdd(void* a, void* b, void* out);
 
 void pollenfragment_init(int obj, int config)
 {
-    bool keepSpawning;
     s8 pollenType;
     uint randomValue;
     int spawnCount;
@@ -125,57 +130,7 @@ void pollenfragment_init(int obj, int config)
     ((XyzAnimatorState*)state)->rowCount = 0;
     s16toFloat(state + 9, 0xe10);
     storeZeroToFloatParam(state + 8);
-    return;
 }
-
-void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    ObjHitsPriorityState* hitState;
-    int hitObject;
-
-    iVar3 = *(int*)&((GameObject*)param_9)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
-    uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
-    if (uVar1 == 0)
-    {
-        iVar2 = ObjHits_GetPriorityHit(param_9, &hitObject, (int*)0x0, (uint*)0x0);
-        if ((iVar2 == 0xe) || (iVar2 == 0xf))
-        {
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            ObjHits_DisableObject((u32)param_9);
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-        if (hitState->contactFlags != 0)
-        {
-            ObjHits_DisableObject((u32)param_9);
-            *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-    }
-    return;
-}
-
-
-
-
-
-
 
 void pollenfragment_release(void)
 {
@@ -184,12 +139,6 @@ void pollenfragment_release(void)
 void pollenfragment_initialise(void)
 {
 }
-
-void mikabomb_hitDetect(void);
-
-
-
-
 
 void pollenfragment_free(int obj)
 {
@@ -202,12 +151,8 @@ void pollenfragment_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void mikabomb_free(int obj, int mode);
-
 int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
-int mikabomb_getExtraSize(void);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -352,15 +297,10 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
-
 typedef struct
 {
     f32 x, y, z;
 } XyzVec;
-
-
 
 void pollenfragment_hitDetect(int obj)
 {
@@ -514,7 +454,7 @@ void pollenfragment_update(int obj)
         Obj_SmoothTurnAnglesTowardVelocity(obj, (void*)(obj + 0x24), 10, lbl_803E3160, lbl_803E3158);
         ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + framesThisStep * 0x500;
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x482)
+    else if (((GameObject*)obj)->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)
     {
         ((GameObject*)obj)->anim.rotX =
             lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
