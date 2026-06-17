@@ -14,7 +14,7 @@
  *
  * This object is both the galleon and the driver of that closing cutscene's
  * camera/encounter state machine: SB_Galleon_animEventCallback consumes the
- * sequence events (spirit-vision phase, water spray, sky lighting, the
+ * sequence events (damage-phase toggle, water spray, sky lighting, the
  * on-screen gameText subtitle) while SB_Galleon_update steps the camera
  * state and hands per-phase work to the DBprotection.c handlers
  * (fn_801DFA28, DBprotection_updateShield) that run on the same object.
