@@ -1,23 +1,18 @@
+/*
+ * projlightning2 (DLL 0x00B0) - retired "lightning 2" projectile object.
+ *
+ * The object's behaviour was cut from the shipping game: its "do" entry
+ * point now only logs a "no longer supported" message and returns the
+ * unsupported sentinel (-1). release/initialise are empty stubs kept so the
+ * DLL still exports the standard projectile lifecycle entry points. This is
+ * one of a family of identical retired projectile DLLs sharing dll_66.h
+ * (projdummy, projmagicstream, projroombeam, projlightning1..7).
+ */
 #include "main/dll/dll_66.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 extern void OSReport(const char* fmt, ...);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 int projlightning2_doUnsupported(void)
 {
@@ -32,18 +27,3 @@ void projlightning2_release(void)
 void projlightning2_initialise(void)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
