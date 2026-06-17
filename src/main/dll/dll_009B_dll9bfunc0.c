@@ -1,9 +1,25 @@
+/*
+ * dll9bfunc0 (DLL 0x9B) - one of the screenfx scene builders (sibling of
+ * DLL 0x9A/0x9C). dll_9B_func03 fills a fixed 14-entry ScreenFxPart list
+ * plus a ScreenFxHdr describing a multi-state screen effect (texture/model
+ * ids, per-part placement offsets and a 7-entry anim table read out of the
+ * lbl_80317BD8 resource blob), then hands it to ModgfxInterface spawnEffect
+ * (effect 0x15, asset 0x156). When header flag bit 0 is set the base
+ * position is offset by either the target object's transform (target, +0x18)
+ * or the passed parameter packet (parent, +0x0C). func00/func01 are the DLL's
+ * nop lifecycle slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
-extern u8 lbl_80317BD8[];
+/* gModgfxInterface lives in the modgfx DLL; not declared in effect_interfaces.h. */
 extern ModgfxInterface** gModgfxInterface;
+
+/* texture/anim resource blob for this screenfx scene. */
+extern u8 lbl_80317BD8[];
+
+/* screenfx placement constants (.sdata2). */
 extern f32 lbl_803E13A0;
 extern f32 lbl_803E13A4;
 extern f32 lbl_803E13A8;
@@ -15,13 +31,13 @@ extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
 
-extern u8 lbl_80317E00[];
+#define SCREENFX_PART_COUNT 14
 
-void dll_9B_func03(int a, int b, int p, uint flags)
+void dll_9B_func03(int target, int variant, int parent, uint flags)
 {
     ScreenFxHdr hdr;
-    u8 buf[440];
-    ScreenFxPart parts[14];
+    u8 buf[440]; /* layout anchor declared before parts[] so MWCC places it above them; buf - pp == 14 * 0x18 */
+    ScreenFxPart parts[SCREENFX_PART_COUNT];
     ScreenFxPart* pp = parts;
     u8* base = (u8*)lbl_80317BD8;
 
@@ -125,8 +141,8 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     parts[13].z = lbl_803E13A0;
 
     hdr.v0 = 0;
-    hdr.target = a;
-    hdr.b = (s16)b;
+    hdr.target = target;
+    hdr.b = (s16)variant;
     hdr.bx = lbl_803E13A0;
     hdr.by = lbl_803E13A0;
     hdr.bz = lbl_803E13A0;
@@ -152,23 +168,21 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     hdr.flags |= flags;
     if ((hdr.flags & 1) != 0)
     {
-        if ((void*)a != NULL)
+        if ((void*)target != NULL)
         {
-            hdr.bx = lbl_803E13A0 + *(f32*)(a + 0x18);
-            hdr.by = lbl_803E13A0 + *(f32*)(a + 0x1c);
-            hdr.bz = lbl_803E13A0 + *(f32*)(a + 0x20);
+            hdr.bx = lbl_803E13A0 + *(f32*)(target + 0x18);
+            hdr.by = lbl_803E13A0 + *(f32*)(target + 0x1c);
+            hdr.bz = lbl_803E13A0 + *(f32*)(target + 0x20);
         }
         else
         {
-            hdr.bx = lbl_803E13A0 + *(f32*)(p + 0xc);
-            hdr.by = lbl_803E13A0 + *(f32*)(p + 0x10);
-            hdr.bz = lbl_803E13A0 + *(f32*)(p + 0x14);
+            hdr.bx = lbl_803E13A0 + *(f32*)(parent + 0xc);
+            hdr.by = lbl_803E13A0 + *(f32*)(parent + 0x10);
+            hdr.bz = lbl_803E13A0 + *(f32*)(parent + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
 }
-
-void dll_9C_func03(int a, int b, int p, uint flags);
 
 void dll_9B_func01_nop(void)
 {
@@ -177,5 +191,3 @@ void dll_9B_func01_nop(void)
 void dll_9B_func00_nop(void)
 {
 }
-
-void dll_9C_func01_nop(void);
