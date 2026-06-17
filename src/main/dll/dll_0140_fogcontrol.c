@@ -1,14 +1,35 @@
+/*
+ * fogcontrol (DLL 0x140) - a placed object that drives the engine's
+ * heavy-fog volume.
+ *
+ * The fog is gated by a placement game bit (enableGameBit, -1 = always
+ * on). While the gate transitions, fogcontrol_update ramps a 0..1 blend
+ * value toward the gated target (ramp speeds lbl_803E4068/lbl_803E406C
+ * scaled by timeDelta, selected by the FOG_FLAG_FAST_* bits) and feeds
+ * the resulting fog band/density to enableHeavyFog each frame; at blend
+ * <= floor (lbl_803E4070) the fog is turned off (disableHeavyFog).
+ * fogcontrol_init primes the blend from the gate state and fogcontrol_free
+ * tears the fog down if it was left active.
+ *
+ * The fog band is derived from the object's localPosY plus the placement
+ * height fields (0x1C/0x1E/0x20), with density at 0x22/0x24 and the
+ * enableHeavyFog mode taken from FOG_FLAG_MODE.
+ */
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
 
-#include "main/game_object.h"
+/* FogcontrolPlacement::flags (low byte, offset 0x1A) */
+#define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */
+#define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses lbl_803E4068 (else ...406C) */
+#define FOG_FLAG_FAST_OUT 0x04  /* ramp-out uses lbl_803E4068 (else ...406C) */
+#define FOG_FLAG_ENABLE 0x08    /* fog volume is placed/active */
 
 typedef struct FogcontrolPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 enableGameBit;
-    s16 unk1A;
+    s16 flags;
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
@@ -37,30 +58,13 @@ typedef struct FogcontrolPlacement
 extern f32 timeDelta;
 
 extern void disableHeavyFog(void);
-extern f32 lbl_803E4070;
-extern f32 lbl_803E4074;
-extern f32 lbl_803E4078;
-extern f32 lbl_803E407C;
+extern f32 lbl_803E4070; /* blend floor (fog off at/below this) */
+extern f32 lbl_803E4074; /* blend ceiling (fully on) */
+extern f32 lbl_803E4078; /* density divisor */
+extern f32 lbl_803E407C; /* enableHeavyFog 'e' arg constant */
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 lbl_803E4068;
-extern f32 lbl_803E406C;
-
-void fogcontrol_hitDetect(void)
-{
-}
-
-int fogcontrol_getExtraSize(void) { return 0x8; }
-int fogcontrol_getObjectTypeId(void) { return 0x0; }
-int lightning_getExtraSize(void);
-
-void fogcontrol_free(int* obj)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    if (((u32)state[4] >> 7) & 1u)
-    {
-        disableHeavyFog();
-    }
-}
+extern f32 lbl_803E4068; /* fast ramp speed (FOG_FLAG_FAST_* set) */
+extern f32 lbl_803E406C; /* slow ramp speed (FOG_FLAG_FAST_* clear) */
 
 typedef struct FogControlState
 {
@@ -70,7 +74,23 @@ typedef struct FogControlState
     u8 rest : 6;
 } FogControlState;
 
-void fogcontrol_init(u8* obj, u8* params)
+void fogcontrol_hitDetect(void)
+{
+}
+
+int fogcontrol_getExtraSize(void) { return sizeof(FogControlState); }
+int fogcontrol_getObjectTypeId(void) { return 0x0; }
+
+void fogcontrol_free(int obj)
+{
+    FogControlState* st = ((GameObject*)obj)->extra;
+    if (st->on)
+    {
+        disableHeavyFog();
+    }
+}
+
+void fogcontrol_init(int obj, FogcontrolPlacement* placement)
 {
     FogControlState* st;
     u8 cv;
@@ -81,42 +101,38 @@ void fogcontrol_init(u8* obj, u8* params)
     st->on = 0;
     st->full = 0;
     st->blend = lbl_803E4070;
-    if ((params[0x1a] & 0x08) != 0)
+    if ((*(u8*)&placement->flags & FOG_FLAG_ENABLE) != 0)
     {
-        if (*(s16*)(params + 0x18) == -1)
+        if (placement->enableGameBit == -1)
         {
             cv = 1;
         }
         else
         {
-            cv = (u8)GameBit_Get(*(s16*)(params + 0x18));
+            cv = (u8)GameBit_Get(placement->enableGameBit);
         }
         if (cv != 0)
         {
             st->full = 1;
             st->on = 1;
             st->blend = lbl_803E4074;
-            t = st->blend * ((f32) * (s16*)(params + 0x1c) - (f32) * (s16*)(params + 0x20)) +
-                (f32) * (s16*)(params + 0x20);
+            t = st->blend * ((f32)placement->unk1C - (f32)placement->unk20) +
+                (f32)placement->unk20;
             t = ((GameObject*)obj)->anim.localPosY + t;
             enableHeavyFog(t,
-                           ((f32) * (s16*)(params + 0x1e) + t) - (f32) * (s16*)(params + 0x1c),
-                           (f32) * (s16*)(params + 0x24),
-                           (f32) * (s16*)(params + 0x22) / lbl_803E4078,
-                           lbl_803E407C, params[0x1a] & 1);
+                           ((f32)placement->unk1E + t) - (f32)placement->unk1C,
+                           (f32)placement->unk24,
+                           (f32)placement->unk22 / lbl_803E4078,
+                           lbl_803E407C, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }
     }
 }
 
-void explodeanimator_init(int* obj, int* def);
-
-/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */
+/* fogcontrol_update: ramp the fog blend toward the gamebit-selected
+ * target and feed the heavy fog params. */
 void fogcontrol_update(int obj)
 {
-    u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
+    u8* setup = (u8*)((GameObject*)obj)->anim.placement;
     FogControlState* st = ((GameObject*)obj)->extra;
     u8 cv;
     u8 run;
@@ -142,7 +158,7 @@ void fogcontrol_update(int obj)
     {
         if (cv != 0)
         {
-            if ((*(u8*)(setup + 0x1a) & 2) != 0)
+            if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_IN) != 0)
             {
                 st->blend = lbl_803E4068 * timeDelta + st->blend;
             }
@@ -154,7 +170,7 @@ void fogcontrol_update(int obj)
         }
         else
         {
-            if ((*(u8*)(setup + 0x1a) & 4) != 0)
+            if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_OUT) != 0)
             {
                 st->blend = -(lbl_803E4068 * timeDelta - st->blend);
             }
@@ -186,7 +202,7 @@ void fogcontrol_update(int obj)
                            (f32)((FogcontrolPlacement*)setup)->unk24,
                            (f32)((FogcontrolPlacement*)setup)->unk22 / lbl_803E4078,
                            lbl_803E407C,
-                           *(u8*)(setup + 0x1a) & 1);
+                           *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
         }
     }
 }
