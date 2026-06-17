@@ -109,14 +109,8 @@ void softbody_update(int obj)
         }
     }
 
-    if (object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END &&
-        object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST)
-    {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
-    }
-    else
-    {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
-    }
+    ObjAnim_SetCurrentMove(obj, 0,
+        (object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END &&
+         object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST) ? lbl_803DDDA0 : lbl_803DDD9C, 0);
 }
 #pragma opt_common_subs reset
