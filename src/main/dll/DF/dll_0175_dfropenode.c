@@ -62,10 +62,10 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
 int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
                       float* phaseOut, u8* sideOut)
 {
-    DFropenodeExtra* extra;
     int result;
     int offset;
     int i;
+    DFropenodeExtra* extra;
     f32 localZ;
     f32 localY;
     f32 localX;
