@@ -2382,7 +2382,7 @@ void setLanguageFn_8001ad64(void* reqp)
     {
         *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
     }
-    txt = (u8*)(table + numStrings + 1);
+    txt = (u8*)(strs + numStrings);
     for (i = 0; i < numStrings; i++)
     {
         strs[i] = strs[i] + (int)txt;
