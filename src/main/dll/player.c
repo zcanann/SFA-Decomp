@@ -11142,7 +11142,14 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (((PlayerState*)cfg)->baddie.animSpeedA > lbl_803E7E98)
             {
                 r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
-                ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
+                if (r < clamp)
+                {
+                }
+                else
+                {
+                    r = clamp;
+                }
+                ((PlayerState*)state)->unk7C8 = r;
             }
             else
             {
