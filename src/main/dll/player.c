@@ -5657,8 +5657,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         off = 0;
         Player_GetObjHitsState(obj)->objectHitMask = 0;
         i = 0;
-        n = 3;
-        do
+        for (n = 0; n < 3; n++)
         {
             int stride = (u32)inner->moveSlotIndex * 0xb0;
             int ent = inner->moveSlots + stride + off;
@@ -5706,9 +5705,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             }
             off += 4;
             i++;
-            n--;
         }
-        while (n != 0);
     }
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone == 0)
