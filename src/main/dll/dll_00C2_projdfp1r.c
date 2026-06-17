@@ -1,26 +1,12 @@
+/*
+ * projdfp1r (DLL 0xC2) - retired "dfp1r" projectile object.
+ *
+ * The object is no longer supported: its single behavior entry point just
+ * prints the "projdfp1r ... No Longer supported" banner and returns -1, and
+ * the load/unload hooks are empty stubs.
+ */
+#include "dolphin/os.h"
 #include "main/dll/dll_89.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * second anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_89.c
- * - 0x80100A84-0x80100A88
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_88.c
- * - next split: main/dll/dll_8A.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
-extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
