@@ -135,15 +135,15 @@ extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DE750;
-extern f32 lbl_803DE754;
-extern f32 lbl_803DE758;
-extern f32 lbl_803DE760;
-extern f32 lbl_803DE75C;
-extern f32 lbl_803DE76C;
-extern f32 lbl_803DE790;
-extern f32 lbl_803DE79C;
-extern f32 lbl_803DE7A0;
+extern const f32 lbl_803DE750;
+extern const f32 lbl_803DE754;
+extern const f32 lbl_803DE758;
+extern const f32 lbl_803DE760;
+extern const f32 lbl_803DE75C;
+extern const f32 lbl_803DE76C;
+extern const f32 lbl_803DE790;
+extern const f32 lbl_803DE79C;
+extern const f32 lbl_803DE7A0;
 extern void textureFree(void* tex);
 
 void* objCreateLight(int arg, u8 addToList)
@@ -493,12 +493,12 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct* p, int n)
     p->objectLightMask = (u8)(1 << n);
 }
 
-extern f32 lbl_803DE764;
-extern f32 lbl_803DE778;
-extern f32 lbl_803DE78C;
+extern const f32 lbl_803DE764;
+extern const f32 lbl_803DE778;
+extern const f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
-extern f32 lbl_803DE794;
-extern f32 lbl_803DE798;
+extern const f32 lbl_803DE794;
+extern const f32 lbl_803DE798;
 extern void* textureLoadAsset(int assetId);
 extern int randomGetRange(int lo, int hi);
 
@@ -850,7 +850,7 @@ extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int l
 extern void GXSetNumChans(int numChannels);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern f32 lbl_803DE7A4;
+extern const f32 lbl_803DE7A4;
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 
@@ -1196,7 +1196,7 @@ void updateLights(void)
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32 * v);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern f32 lbl_803DE768;
+extern const f32 lbl_803DE768;
 extern f32 lbl_802C1A88[];
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)

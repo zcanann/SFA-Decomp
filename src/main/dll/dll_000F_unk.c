@@ -43,26 +43,26 @@ extern f32 lbl_803DD448;
 extern u32 playerOverride;
 extern f32 timeDelta;
 
-extern f32 lbl_803E0570;
-extern f32 lbl_803E0574;
-extern f32 lbl_803E0578;
-extern f32 lbl_803E057C;
-extern f32 lbl_803E0580;
-extern f32 lbl_803E0584;
-extern f32 lbl_803E0588;
-extern f32 lbl_803E058C;
-extern f32 lbl_803E0590;
-extern f32 lbl_803E0594;
-extern f32 lbl_803E05A0;
-extern f32 lbl_803E05A4;
-extern f32 lbl_803E05A8;
-extern f32 lbl_803E05AC;
-extern f32 lbl_803E05B0;
-extern f32 lbl_803E05B4;
-extern f32 lbl_803E05B8;
-extern f32 lbl_803E05BC;
-extern f32 lbl_803E05C0;
-extern f32 lbl_803E05C4;
+extern const f32 lbl_803E0570;
+extern const f32 lbl_803E0574;
+extern const f32 lbl_803E0578;
+extern const f32 lbl_803E057C;
+extern const f32 lbl_803E0580;
+extern const f32 lbl_803E0584;
+extern const f32 lbl_803E0588;
+extern const f32 lbl_803E058C;
+extern const f32 lbl_803E0590;
+extern const f32 lbl_803E0594;
+extern const f32 lbl_803E05A0;
+extern const f32 lbl_803E05A4;
+extern const f32 lbl_803E05A8;
+extern const f32 lbl_803E05AC;
+extern const f32 lbl_803E05B0;
+extern const f32 lbl_803E05B4;
+extern const f32 lbl_803E05B8;
+extern const f32 lbl_803E05BC;
+extern const f32 lbl_803E05C0;
+extern const f32 lbl_803E05C4;
 
 void dll_0F_func19_nop(void)
 {
