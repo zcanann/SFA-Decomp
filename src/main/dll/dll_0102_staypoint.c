@@ -1,66 +1,59 @@
-#include "main/dll/dusterstate_types.h"
+/*
+ * staypoint (DLL 0x0102) - a "stay here" marker that drives the player's
+ * Tricky (the fox companion) to hold position at this object.
+ *
+ * StayPoint_init marks the object with the 0x4000 object flag.
+ *
+ * StayPoint_update arms the disable bit each frame, then - while the
+ * placement's required game bit is satisfied (-1 = always) - tests whether
+ * this is the stay point Tricky is currently assigned to (fn_80138F84).
+ * If it is and Tricky is within range (squared distance < lbl_803E38A8) it
+ * sets the placement's active game bit and bails. Otherwise it clears the
+ * active bit, sets the hit-volume priority from whether a menu item is
+ * selected, clears the disable bit, re-runs the object render hook, and -
+ * if the player is within range - issues the stay command to Tricky
+ * through Tricky's vtable (slot at (tricky + 0x68) -> [0] -> 0x28).
+ *
+ * This TU is the shared DLL bundle for objects 0x00FE..0x0103: it also
+ * defines the ObjectDescriptors for magicplant, trickywarp, trickyguard,
+ * duster and curvefish, whose callbacks live in their own TUs (declared in
+ * cfprisonuncle.h).
+ */
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
+
+/* StayPoint_init: object flag set on spawn. */
+#define STAYPOINT_OBJECT_FLAG 0x4000
+
+#define STAYPOINT_HITBOX_IN_RANGE 0x4
+
+/* hit-volume priority when a cMenu item is / isn't selected. */
+#define STAYPOINT_PRIORITY_MENU 0x10
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* getTrickyObject(void);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int cMenuGetSelectedItem(void);
-extern int fn_80138F84(int tricky);
-extern void objRenderFn_80041018(int* obj);
+extern int fn_80138F84(int tricky); /* current stay-point object for Tricky */
+extern void objRenderFn_80041018(int obj);
 
-extern f32 lbl_803E38A8;
-
-
-
-STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
-STATIC_ASSERT(sizeof(DusterState) == 0x20);
-STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
-STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
-STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
-STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
-STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
-STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
-STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
-STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
-STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
-STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
-STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
-STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
-STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
-STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-
-
-void StayPoint_init(u16* obj)
-{
-    u32 v;
-    v = ((GameObject*)obj)->objectFlags;
-    v |= 0x4000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void trickyguard_update(int* obj);
+extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
 
 typedef struct StayPointSetup
 {
     u8 pad00[0x1e];
-    s16 activeGameBit;
-    s16 requiredGameBit;
+    s16 activeGameBit;   /* 0x1E: set while Tricky is staying here; -1 = none */
+    s16 requiredGameBit; /* 0x20: gate; -1 = always active */
 } StayPointSetup;
+
+void StayPoint_init(u16* obj)
+{
+    u32 flags;
+    flags = ((GameObject*)obj)->objectFlags;
+    flags |= STAYPOINT_OBJECT_FLAG;
+    ((GameObject*)obj)->objectFlags = (u16)flags;
+}
 
 void StayPoint_update(int obj)
 {
@@ -70,7 +63,8 @@ void StayPoint_update(int obj)
 
     setup = *(StayPointSetup**)&((GameObject*)obj)->anim.placementData;
     tricky = getTrickyObject();
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     if (tricky != NULL)
     {
         isCurrentStayPoint = (obj - fn_80138F84((int)tricky) == 0);
@@ -95,16 +89,16 @@ void StayPoint_update(int obj)
             }
             else
             {
-                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0x10;
+                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = STAYPOINT_PRIORITY_MENU;
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (
-                u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
+                u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
             if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
                 ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
             {
-                objRenderFn_80041018((int*)obj);
+                objRenderFn_80041018((int)obj);
             }
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAYPOINT_HITBOX_IN_RANGE) != 0)
             {
                 ((void (*)(void*, int, int, int))(*(int*)(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28)))(
                     tricky, obj, 1, 3);
