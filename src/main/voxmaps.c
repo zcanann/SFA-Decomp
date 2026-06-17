@@ -895,8 +895,8 @@ searched:
     }
     else
     {
-        n = &state->nodes[nodeCount];
         state->unk1C = nodeCount + 1;
+        n = &state->nodes[nodeCount];
         n->x = box[0];
         n->unk2 = box[1];
         n->y = box[2];
