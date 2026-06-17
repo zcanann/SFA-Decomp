@@ -447,23 +447,20 @@ void dfsh_shrine_update(int obj)
         state->mode = 3;
         break;
     case 3:
-        if (objGetAnimStateFlags(player, 1) == 0 && GameBit_Get(0xbfd) == 0)
+        if (objGetAnimStateFlags(player, 1) != 0 || GameBit_Get(0xbfd) != 0)
         {
-            if (DFSH_FLAGS(state)->success == 0)
-            {
-                state->mode = 4;
-                GameBit_Set(0xb70, 1);
-            }
-            else
-            {
-                state->mode = 4;
-                audioStopByMask(3);
-                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            }
+            state->mode = 4;
+        }
+        else if (DFSH_FLAGS(state)->success == 0)
+        {
+            state->mode = 4;
+            GameBit_Set(0xb70, 1);
         }
         else
         {
             state->mode = 4;
+            audioStopByMask(3);
+            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
         GameBit_Set(0x129, 1);
         GameBit_Set(0xb76, 0);
