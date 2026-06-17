@@ -138,7 +138,8 @@ void shop_buyItem(int obj, int price)
     }
 
     items = lbl_80327FD0;
-    boughtBit = *(s16*)(items + ((ShopState*)state)->selectedItem * 0xc + 8);
+    items = items + ((ShopState*)state)->selectedItem * 0xc;
+    boughtBit = *(s16*)(items + 8);
     if (boughtBit != -1)
     {
         GameBit_Set(boughtBit, 1);
