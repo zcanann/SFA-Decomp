@@ -14,8 +14,6 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/objhits.h"
-#include "main/obj_placement.h"
 
 typedef struct ArwbombcollHandleArwingHitPlacement
 {

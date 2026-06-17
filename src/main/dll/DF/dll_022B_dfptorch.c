@@ -4,11 +4,8 @@
  * sfx effects while lit, and latches its lit-state gamebit.
  */
 #include "main/dll/dfptorchstate_struct.h"
-#include "main/objlib.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/baddie_state.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);

@@ -7,9 +7,7 @@
  * anims. The large extra block (0x654 bytes) is the shared character state
  * driven by the dll_2E_func* helpers.
  */
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);

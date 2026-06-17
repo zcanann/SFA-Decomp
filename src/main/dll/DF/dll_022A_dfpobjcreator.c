@@ -4,11 +4,8 @@
  * placement template, gated by a gamebit and a spawn-period timer.
  */
 #include "main/dll/dfpobjcreatorstate_struct.h"
-#include "main/objlib.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/baddie_state.h"
 
 extern uint GameBit_Get(int eventId);
 

@@ -1,8 +1,5 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
-#include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 

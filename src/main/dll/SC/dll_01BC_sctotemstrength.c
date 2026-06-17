@@ -6,7 +6,6 @@
  * Winning sets GameBit 0x784, losing sets 0x786. (This file also carries the
  * FElevControl descriptor tail.)
  */
-#include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"

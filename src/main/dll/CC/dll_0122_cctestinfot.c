@@ -6,7 +6,6 @@
  * once its ObjTrigger fires - shows help text from the model's helpTextIds
  * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
  */
-#include "main/dll/CF/CFtoggleswitch.h"
 #include "main/game_object.h"
 
 extern void *Obj_GetPlayerObject(void);

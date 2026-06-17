@@ -9,7 +9,6 @@
 #include "main/main.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/baddie_state.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

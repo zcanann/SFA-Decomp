@@ -14,7 +14,6 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
-#include "main/objseq.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern uint GameBit_Get(int eventId);

@@ -13,7 +13,6 @@
 
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);

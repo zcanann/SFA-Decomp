@@ -7,7 +7,6 @@
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
 
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"

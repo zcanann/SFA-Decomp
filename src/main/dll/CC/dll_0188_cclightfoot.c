@@ -28,7 +28,6 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/player_target.h"
 

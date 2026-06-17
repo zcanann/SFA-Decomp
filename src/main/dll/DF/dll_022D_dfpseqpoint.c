@@ -8,9 +8,7 @@
 #include "main/gamebits.h"
 #include "main/main.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/anim.h"
-#include "main/dll/baddie_state.h"
 #include "main/objseq.h"
 
 extern void objRenderFn_8003b8f4(f32);

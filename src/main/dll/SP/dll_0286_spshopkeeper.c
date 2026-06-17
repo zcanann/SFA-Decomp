@@ -16,7 +16,6 @@
 #include "main/mapEvent.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_002E_moveLib.h"
-#include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/player_control_interface.h"
 #include "main/screen_transition.h"
