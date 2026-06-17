@@ -1,3 +1,24 @@
+/*
+ * warppoint (DLL 0x00F0) - placed map-transition / save-point markers.
+ *
+ * Each instance carries a placement-defined "mode" byte (def+0x1d) that
+ * selects how the marker behaves in WarpPoint_update:
+ *   mode 0: proximity warp / trigger-sequence near the player;
+ *   mode 1: trigger sequences while a hint flag is set and on a timer;
+ *   mode 2/4: gated warp when its game bit is set and the player is in
+ *             range (modes 2/4 use the world-space distance variant);
+ *   mode 3: one-shot trigger-sequence gated on its game bit.
+ * mode 2 also doubles as a no-op marker at init (clears the timer).
+ *
+ * Most behavior keys off the player object's position/parent, the global
+ * map-hint byte (lbl_803DCEB8), and per-marker game bits. Markers placed
+ * on the WARPPOINT_MAP_SAVE_* maps additionally record a save point the
+ * first time the matching hint byte is seen.
+ *
+ * The shared sequence/particle helpers for the pushable/transporter object
+ * family (pushable, invhit, iceblast, flameblast) live in the dll_00EF
+ * pushable TU in the same binary; they are not called from this object.
+ */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -5,40 +26,34 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
+/* placement mapIds that arm the one-shot save-point recording at init */
+#define WARPPOINT_MAP_SAVE_A 0x4B675
+#define WARPPOINT_MAP_SAVE_B 0x46882
+
+/* game bit shared with mode-0 markers to coordinate a single save point */
+#define GAMEBIT_WARPPOINT_SAVED 0xD53
+
 typedef struct WarpPointObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    void* unk1C;
-    s16 unk20;
+    u8 pad18[0x20 - 0x18];
+    s16 gameBit;
     u8 pad22[0x28 - 0x22];
 } WarpPointObjectDef;
 
+/* extra block; only the head 0x10 bytes are owned (WarpPoint_getExtraSize).
+   state[0] (0x00) an s16 countdown timer, state[1] (0x02) a game bit,
+   state[2] (0x04) a sequence id - all reached through the s16* alias. */
 typedef struct WarpPointState
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    u8 unkC;
-    u8 unkD;
+    f32 triggerRadius;  /* 0x08 */
+    u8 triggered;       /* 0x0C: sequence already fired this approach */
+    u8 savePointRecorded; /* 0x0D: one-shot save-point latch */
     u8 padE[0x10 - 0xE];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[0x18 - 0x12];
 } WarpPointState;
 
-extern undefined4 FUN_80017748();
-extern int FUN_80017a90();
-extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 FUN_80053c98();
-extern int FUN_801365ac();
-extern undefined4 FUN_801365b8();
-extern f32 lbl_803E42B0;
-extern f32 lbl_803E42B4;
-extern f32 lbl_803E42B8;
-extern f32 lbl_803E42BC;
-extern unsigned long GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void warpToMap(int mapId, int flag);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
@@ -51,101 +66,6 @@ extern u8 lbl_803DCDE0;
 extern f32 lbl_803E35D8;
 extern f32 lbl_803E35DC;
 
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
-undefined4
-FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int iVar1;
-
-    if (((*(char*)(*(int*)(param_9 + 0x4c) + 0x1d) != '\x02') &&
-            (animUpdate->triggerCommand == 1)) &&
-        (iVar1 = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < iVar1))
-    {
-        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
-                     (int)animUpdate, param_12, param_13, param_14, param_15, param_16);
-        animUpdate->triggerCommand = 0;
-    }
-    return 0;
-}
-
-void FUN_801778d0(int param_1)
-{
-    *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
-    return;
-}
-
-undefined4
-FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
-             int param_10)
-{
-    float fVar1;
-    short* psVar2;
-    undefined4 uVar3;
-    int iVar4;
-    float* pfVar5;
-    ushort local_28;
-    short local_26;
-    short local_24;
-    float local_20;
-    float local_1c;
-    float local_18;
-    float local_14;
-
-    psVar2 = (short*)FUN_80017a90();
-    local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != (short*)0x0))
-    {
-        *(float*)(param_9 + 0x24) = lbl_803E42B0;
-        *(float*)(param_9 + 0x28) = local_1c;
-        *(float*)(param_9 + 0x2c) = lbl_803E42B4;
-        local_18 = local_1c;
-        local_14 = local_1c;
-        local_20 = lbl_803E42B8;
-        local_24 = psVar2[2];
-        local_26 = psVar2[1];
-        iVar4 = FUN_801365ac((int)psVar2);
-        local_28 = *psVar2 + (short)iVar4;
-        FUN_80017748(&local_28, (float*)(param_9 + 0x24));
-        if ((psVar2[0x58] & 0x800U) == 0)
-        {
-            pfVar5 = (float*)(psVar2 + 6);
-        }
-        else
-        {
-            pfVar5 = (float*)FUN_801365b8((int)psVar2);
-        }
-        fVar1 = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *pfVar5);
-        *(float*)(param_10 + 8) = -(fVar1 * *(float*)(param_9 + 0x28) - pfVar5[1]);
-        *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
-        if (*(char*)(param_10 + 0x11) == '\0')
-        {
-            ObjHits_ClearHitVolumes(param_9);
-        }
-        else
-        {
-            *(char*)(param_10 + 0x11) = *(char*)(param_10 + 0x11) + -1;
-        }
-        uVar3 = 1;
-    }
-    else
-    {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-        uVar3 = 0;
-    }
-    return uVar3;
-}
-
-
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 
@@ -157,8 +77,7 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     if (visible == 0) return;
     if (*(s8*)((char*)p + 0x1d) == 1) return;
 }
-
-void invhit_free(int obj);
+#pragma reset
 
 int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -182,24 +101,24 @@ void WarpPoint_init(int* obj, u8* def)
 {
     s16* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)WarpPoint_SeqFn;
-    *(s16*)obj = (s16)((u32)def[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
-    ((WarpPointState*)state)->unk8 = (f32)((s32) * (s8*)((char*)def + 0x1e) << 2);
-    state[1] = ((WarpPointObjectDef*)def)->unk20;
+    ((WarpPointState*)state)->triggerRadius = (f32)((s32) * (s8*)((char*)def + 0x1e) << 2);
+    state[1] = ((WarpPointObjectDef*)def)->gameBit;
     state[2] = (s16)(s32) * (s8*)((char*)def + 0x1b);
     if (*(s8*)((char*)def + 0x1c) != 0)
     {
-        ((WarpPointState*)state)->unkC = 0;
+        ((WarpPointState*)state)->triggered = 0;
     }
     else
     {
-        ((WarpPointState*)state)->unkC = 1;
+        ((WarpPointState*)state)->triggered = 1;
     }
     if (*(s8*)((char*)def + 0x1d) == 2)
     {
         state[0] = 0;
     }
-    if (((ObjPlacement*)def)->mapId == 0x4B675 || ((ObjPlacement*)def)->mapId == 0x46882)
+    if (((ObjPlacement*)def)->mapId == WARPPOINT_MAP_SAVE_A || ((ObjPlacement*)def)->mapId == WARPPOINT_MAP_SAVE_B)
     {
         *(u8*)((char*)def + 0x1f) = 1;
     }
@@ -208,15 +127,6 @@ void WarpPoint_init(int* obj, u8* def)
         *(u8*)((char*)def + 0x1f) = 0;
     }
 }
-
-void iceblast_update(int* obj);
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-
-#pragma opt_common_subs reset
 
 void WarpPoint_update(int* obj)
 {
@@ -237,42 +147,42 @@ void WarpPoint_update(int* obj)
     {
         *state = 0;
     }
-    if (*(u8*)(def + 0x1f) != 0 && ((WarpPointState*)state)->unkD == 0 && lbl_803DCEB8 > -1 &&
+    if (*(u8*)(def + 0x1f) != 0 && ((WarpPointState*)state)->savePointRecorded == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8*)(def + 0x19))
     {
         (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX,
                                             0, getCurMapLayer());
-        ((WarpPointState*)state)->unkD = 1;
+        ((WarpPointState*)state)->savePointRecorded = 1;
     }
     switch (*(s8*)(def + 0x1d))
     {
     case 0:
-        if (lbl_803DCEB8 > -1 || GameBit_Get(0xd53) != 0)
+        if (lbl_803DCEB8 > -1 || GameBit_Get(GAMEBIT_WARPPOINT_SAVED) != 0)
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
             f32 dz = ((PushableState*)player)->timer_0x14 - ((GameObject*)obj)->anim.localPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (((WarpPointState*)state)->unkC == 0 && *(s8*)(def + 0x1c) != 0 &&
-                dist < ((WarpPointState*)state)->unk8 &&
+            if (((WarpPointState*)state)->triggered == 0 && *(s8*)(def + 0x1c) != 0 &&
+                dist < ((WarpPointState*)state)->triggerRadius &&
                 *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
             {
                 if (((GameObject*)obj)->anim.seqId == 0x27e)
                 {
-                    GameBit_Set(0xd53, 1);
+                    GameBit_Set(GAMEBIT_WARPPOINT_SAVED, 1);
                     (*gMapEventInterface)->savePoint(
                         (int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0, getCurMapLayer());
                 }
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-                GameBit_Set(0xd53, 0);
+                GameBit_Set(GAMEBIT_WARPPOINT_SAVED, 0);
                 lbl_803DCDE0 = 2;
-                ((WarpPointState*)state)->unkC = 1;
+                ((WarpPointState*)state)->triggered = 1;
             }
         }
         if (*(s8*)(def + 0x1a) > -1)
         {
             f32 d2 = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-            if (d2 < ((WarpPointState*)state)->unk8)
+            if (d2 < ((WarpPointState*)state)->triggerRadius)
             {
                 warpToMap(*(s8*)(def + 0x1a), 1);
             }
@@ -298,24 +208,24 @@ void WarpPoint_update(int* obj)
             break;
         }
     case 2:
-        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->unk8))
+        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->triggerRadius))
         {
             f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
             f32 dy = ((PushableState*)player)->probeLocal[0].y - ((GameObject*)obj)->anim.worldPosY;
             f32 dz = ((PushableState*)player)->probeLocal[0].z - ((GameObject*)obj)->anim.worldPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
-        if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->unkC == 0 &&
-            *(s8*)(def + 0x1c) != 0 && dist <= ((WarpPointState*)state)->unk8 &&
+        if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->triggered == 0 &&
+            *(s8*)(def + 0x1c) != 0 && dist <= ((WarpPointState*)state)->triggerRadius &&
             *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
         {
             (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-            ((WarpPointState*)state)->unkC = 1;
+            ((WarpPointState*)state)->triggered = 1;
         }
         else
         {
-            if (((WarpPointState*)state)->unkC == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
-                dist <= ((WarpPointState*)state)->unk8 && *(s8*)(def + 0x1a) > -1)
+            if (((WarpPointState*)state)->triggered == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
+                dist <= ((WarpPointState*)state)->triggerRadius && *(s8*)(def + 0x1a) > -1)
             {
                 GameBit_Set(state[1], 0);
                 warpToMap(*(s8*)(def + 0x1a), 0);
@@ -328,33 +238,33 @@ void WarpPoint_update(int* obj)
             f32 dy = ((PushableState*)player)->scale - ((GameObject*)obj)->anim.localPosY;
             f32 dz = ((PushableState*)player)->timer_0x14 - ((GameObject*)obj)->anim.localPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->unkC == 0 &&
-                *(s8*)(def + 0x1c) != 0 && dist < ((WarpPointState*)state)->unk8 &&
+            if (GameBit_Get(state[1]) != 0 && ((WarpPointState*)state)->triggered == 0 &&
+                *(s8*)(def + 0x1c) != 0 && dist < ((WarpPointState*)state)->triggerRadius &&
                 *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
             {
                 GameBit_Set(state[1], 0);
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-                ((WarpPointState*)state)->unkC = 1;
+                ((WarpPointState*)state)->triggered = 1;
             }
             break;
         }
     case 4:
-        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->unk8))
+        if (lbl_803E35DC != (dist = ((WarpPointState*)state)->triggerRadius))
         {
             f32 dx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
             f32 dy = ((PushableState*)player)->probeLocal[0].y - ((GameObject*)obj)->anim.worldPosY;
             f32 dz = ((PushableState*)player)->probeLocal[0].z - ((GameObject*)obj)->anim.worldPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
-        if (lbl_803DCEB8 > -1 && ((WarpPointState*)state)->unkC == 0 && *(s8*)(def + 0x1c) != 0 &&
-            dist < ((WarpPointState*)state)->unk8 &&
+        if (lbl_803DCEB8 > -1 && ((WarpPointState*)state)->triggered == 0 && *(s8*)(def + 0x1c) != 0 &&
+            dist < ((WarpPointState*)state)->triggerRadius &&
             *(u32*)&((GameObject*)player)->anim.parent == *(u32*)&((GameObject*)obj)->anim.parent)
         {
             (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
             lbl_803DCDE0 = 2;
-            ((WarpPointState*)state)->unkC = 1;
+            ((WarpPointState*)state)->triggered = 1;
         }
-        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= ((WarpPointState*)state)->unk8 &&
+        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= ((WarpPointState*)state)->triggerRadius &&
             *(s8*)(def + 0x1a) > -1)
         {
             GameBit_Set(state[1], 0);
