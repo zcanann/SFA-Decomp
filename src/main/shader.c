@@ -1811,6 +1811,7 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
 }
 
 #pragma optimization_level 4
+#pragma dont_inline on
 int mapCoordsToId(int x, int z, int layerIdx)
 {
     int x0, z0;
@@ -1855,6 +1856,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
     }
     return -1;
 }
+#pragma dont_inline reset
 #pragma optimization_level reset
 
 extern f32 sAabbCornerDirections[];
