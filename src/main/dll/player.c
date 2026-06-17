@@ -10641,17 +10641,17 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
             {
                 if (r & 4)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + 0x7ff8;
+                    ((GameObject*)obj)->anim.rotX += 0x7ff8;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
                 else if (r & 2)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX - 0x3ffc;
+                    ((GameObject*)obj)->anim.rotX -= 0x3ffc;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
                 else if (r & 8)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + 0x3ffc;
+                    ((GameObject*)obj)->anim.rotX += 0x3ffc;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
             }
