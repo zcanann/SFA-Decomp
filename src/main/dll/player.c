@@ -15080,7 +15080,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 f32 scale = lbl_803E7EE0 / len;
                 dx = dx * scale;
                 dz = dz * scale;
-                if (dx * *(f32*)((char*)d + 0x1c) + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
+                if (dz * *(f32*)((char*)d + 0x24) + dx * *(f32*)((char*)d + 0x1c) < lbl_803E7E98)
                 {
                     return 0;
                 }
