@@ -812,10 +812,10 @@ void arwsquadron_update(int obj)
             }
             if (flags->f80)
             {
-                setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
+                ArwSquadronSetup* setupV = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
                 ObjHits_SetHitVolumeSlot(obj, 0x13, state->hitVolumeMode, 0);
                 if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
-                    arwsquadron_updateVolley(obj, (int)state, (int)setupL);
+                    arwsquadron_updateVolley(obj, (int)state, (int)setupV);
             }
             break;
         }
