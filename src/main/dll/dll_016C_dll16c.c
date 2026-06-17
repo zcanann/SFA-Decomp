@@ -1,3 +1,19 @@
+/*
+ * dll_16C - map-event boulder proxy object (object type id 0x3, extra size 0x24).
+ *
+ * Drives a "boulder" GameObject that mirrors a separately-spawned map-event
+ * sub-object: on update it relinks to a member of object group 10 chosen by
+ * seqId (364 normally, 367 for seqId 368), advances its 0x100 move, and fades
+ * its render opacity by the player's distance to the linked object. Render is
+ * gated by GameBit 0x3A2 / seqId 883 and suppressed when GameBit 110 is set
+ * unless GameBit 898 is also set. The sequence callback (dll_16C_SeqFn) spawns
+ * /frees a child object from a small id table (Blob10 @ lbl_802C2308) keyed by
+ * subObjIndex, and forwards trigger commands (1/2/3) to the linked object's
+ * vtable.
+ *
+ * This TU shares the DIM/magiclight extra-state family; the IMIceMountain,
+ * MagicLight and CrRockfall layouts are size-asserted here as a build guard.
+ */
 #include "main/dll/blob10_struct.h"
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
@@ -45,223 +61,25 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern undefined4 getLActions();
 extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_8001771c();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_800305f8();
-
-extern undefined4 DAT_802c2a88;
-extern undefined4 DAT_802c2a8c;
-extern undefined4 DAT_802c2a90;
-extern f32 lbl_803E53D0;
-extern f32 lbl_803E53E0;
-extern f32 lbl_803E53F0;
-
 extern void objRenderFn_8003b8f4(f32);
 extern void Obj_FreeObject(int*);
-extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern f32 lbl_803E4758;
 extern float Vec_distance(float* a, float* b);
-extern void warpToMap(int mapId, int flags);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern f32 lbl_803E4748;
 extern u8 lbl_802C2308[];
-extern void Music_Trigger(int track, int flag);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern u8 framesThisStep;
+extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
+extern f32 lbl_803E4758;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
-
-void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
-{
-}
-
-undefined4
-FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
-{
-    int lookupBase;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    float* state;
-    double dist;
-    double value;
-
-    if (((GameObject*)param_9)->anim.seqId != 0x172)
-    {
-        state = ((GameObject*)param_9)->extra;
-        lookupBase = FUN_80017a98();
-        dist = (double)FUN_8001771c((float*)(lookupBase + 0x18), (float*)&((GameObject*)param_9)->anim.worldPosX);
-        value = (double)*state;
-        if ((value <= dist) || (*(char*)((int)state + 0xb) != '\0'))
-        {
-            if (((double)(float)((double)lbl_803E53D0 + value) < dist) &&
-                (*(char*)((int)state + 0xb) != '\0'))
-            {
-                *(u8*)((int)state + 0xb) = 0;
-                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
-                            (uint) * (ushort*)(state + 2), 0, 0, 0, in_r9, in_r10);
-            }
-        }
-        else
-        {
-            *(u8*)((int)state + 0xb) = 1;
-            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
-                        (uint) * (ushort*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
-        }
-    }
-    return 0;
-}
-
-void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
-                  undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
-{
-    u8 savedAlpha;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined4 local_20[5];
-
-    if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
-    {
-        savedAlpha = *(u8*)((int)param_2 + 0x37);
-        *(char*)((int)param_2 + 0x37) = (char)param_8;
-        (**(code**)(**(int**)(param_2 + 0x34) + 0x10))
-            (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
-        *(u8*)((int)param_2 + 0x37) = savedAlpha;
-    }
-    *(undefined4*)(param_1 + 0x46) = *(undefined4*)(param_1 + 0xc);
-    *(undefined4*)(param_1 + 0x48) = *(undefined4*)(param_1 + 0xe);
-    *(undefined4*)(param_1 + 0x4a) = *(undefined4*)(param_1 + 0x10);
-    *(undefined4*)(param_1 + 0x40) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0x42) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 10);
-    (**(code**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
-    *(undefined4*)(param_1 + 6) = local_20[0];
-    *(undefined4*)(param_1 + 8) = local_24;
-    *(undefined4*)(param_1 + 10) = local_28;
-    *param_1 = *param_2;
-    param_1[1] = param_2[1];
-    param_1[2] = param_2[2];
-    *(undefined4*)(param_1 + 0xc) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0xe) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x10) = *(undefined4*)(param_1 + 10);
-    *(undefined4*)(param_1 + 0x12) = *(undefined4*)(param_2 + 0x12);
-    *(undefined4*)(param_1 + 0x14) = *(undefined4*)(param_2 + 0x14);
-    *(undefined4*)(param_1 + 0x16) = *(undefined4*)(param_2 + 0x16);
-    return;
-}
-
-undefined4
-FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
-             , undefined4 param_16)
-{
-    uint active;
-    undefined2* setup;
-    undefined4 spawned;
-    int modelState;
-    int* extra;
-    int linkedObj;
-    undefined2 uStack_2a;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined2 local_20;
-
-    extra = ((GameObject*)param_9)->extra;
-    *(u8*)(extra + 8) = 0xff;
-    linkedObj = *extra;
-    if (param_11->triggerCommand == 3)
-    {
-        *(u8*)((int)extra + 0x21) = 0xff;
-        param_11->triggerCommand = 0;
-    }
-    local_28 = DAT_802c2a88;
-    local_24 = DAT_802c2a8c;
-    local_20 = DAT_802c2a90;
-    if (*(char*)((int)extra + 0x21) != *(char*)((int)extra + 0x22))
-    {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
-        {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)&((GameObject*)param_9)->childObjs[0] = 0;
-            ((GameObject*)param_9)->childCount = 0;
-        }
-        active = FUN_80017ae8();
-        if ((active & 0xff) == 0)
-        {
-            *(u8*)((int)extra + 0x22) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)((int)extra + 0x21))
-            {
-                setup = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
-                param_12 = 0xffffffff;
-                param_13 = *(uint**)&((GameObject*)param_9)->anim.parent;
-                spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
-                                     4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                *(undefined4*)&((GameObject*)param_9)->childObjs[0] = spawned;
-                ((GameObject*)param_9)->childCount = 1;
-            }
-            *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
-        }
-    }
-    param_11->hitVolumePair = param_11->activeHitVolumePair;
-    if ((linkedObj == 0) || (param_11->triggerCommand != 2))
-    {
-        if ((linkedObj != 0) && (param_11->triggerCommand == 1))
-        {
-            (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 0);
-            param_11->triggerCommand = 0;
-        }
-    }
-    else
-    {
-        extra[1] = (int)lbl_803E53F0;
-        extra[2] = extra[5];
-        extra[3] = extra[6];
-        extra[4] = extra[7];
-        (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
-        FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
-        modelState = (int)((GameObject*)param_9)->anim.modelState;
-        if (modelState != 0)
-        {
-            ((GameObject*)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-        param_11->hitVolumePair &= ~4;
-        param_11->triggerCommand = 0;
-    }
-    if ((linkedObj != 0) && (linkedObj = (**(code**)(**(int**)(linkedObj + 0x68) + 0x38))(linkedObj), linkedObj == 2))
-    {
-        param_11->hitVolumePair &= 0xfffc;
-    }
-    return 0;
-}
-
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY
 
 void dll_16C_release(void)
 {
@@ -279,7 +97,6 @@ void dll_16C_free(int* obj)
     int* p = (int*)obj[0xc8 / 4];
     if (p != NULL) Obj_FreeObject(p);
 }
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -362,12 +179,6 @@ void dll_16C_init(void* obj, void* arg2)
     *(u8*)&extra->subObjIndex = *(u8*)((char*)arg2 + 0x27);
     extra->opacity = 0xff;
 }
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-
-#undef MEVT_TRIGGER
-#undef MEVT_SET
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -583,7 +394,7 @@ void dll_16C_update(int* obj)
             extra->opacity = 0xff;
             if (((GameObject*)obj)->anim.modelState != NULL)
             {
-                ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
+                ((GameObject*)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         }
     }
