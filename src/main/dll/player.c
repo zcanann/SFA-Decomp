@@ -4872,15 +4872,12 @@ void fn_80296EB4(int obj, int newParent)
     ((GameObject*)obj)->anim.previousWorldPosX = s.wp2[0];
     ((GameObject*)obj)->anim.previousWorldPosY = s.wp2[1];
     ((GameObject*)obj)->anim.previousWorldPosZ = s.wp2[2];
-    {
-        ObjHitsPriorityState* hitState = Player_GetObjHitsState(obj);
-        hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
-        hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
-        hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-        hitState->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-        hitState->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-        hitState->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
-    }
+    Player_GetObjHitsState(obj)->localPosX = ((GameObject*)obj)->anim.localPosX;
+    Player_GetObjHitsState(obj)->localPosY = ((GameObject*)obj)->anim.localPosY;
+    Player_GetObjHitsState(obj)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+    Player_GetObjHitsState(obj)->worldPosX = ((GameObject*)obj)->anim.worldPosX;
+    Player_GetObjHitsState(obj)->worldPosY = ((GameObject*)obj)->anim.worldPosY;
+    Player_GetObjHitsState(obj)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
     *(int*)&((GameObject*)obj)->anim.parent = newParent;
 }
 
