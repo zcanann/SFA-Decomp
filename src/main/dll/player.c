@@ -13141,8 +13141,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
             entry += inner->unk8CE * 4;
             *p5 = *(f32*)(entry + 0x94);
         }
-        if (*(u8*)(inner->moveSlots +
-            inner->moveSlotIndex * 0xb0 + 0x88) & 2)
+        if (((u8*)(inner->moveSlots + 0x88))[inner->moveSlotIndex * 0xb0] & 2)
         {
             if (inner->unk8AB < inner->unk8AC)
             {
@@ -13150,8 +13149,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
                 *p7 = lbl_803E7EA4;
             }
         }
-        if ((*(u8*)(inner->moveSlots +
-                inner->moveSlotIndex * 0xb0 + 0x88) & 1) &&
+        if ((((u8*)(inner->moveSlots + 0x88))[inner->moveSlotIndex * 0xb0] & 1) &&
             inner->unk820 >= lbl_803E7EF0)
         {
             *flags |= 0x80;
