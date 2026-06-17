@@ -16692,14 +16692,14 @@ void fn_802B0920(int obj, int state)
             vec0[2] = -(((PlayerState*)state)->headPitch / 2);
         }
     }
-    if (((ByteFlags*)((char*)state + 0x3f0))->b20)
+    if (!((ByteFlags*)((char*)state + 0x3f0))->b20)
     {
-        ((GameObject*)obj)->anim.rotZ =
-            (f32)((GameObject*)obj)->anim.rotZ * powfBitEstimate(lbl_803E7FF4, timeDelta);
+        ((GameObject*)obj)->anim.rotZ = ((PlayerState*)state)->headPitch / 4;
     }
     else
     {
-        ((GameObject*)obj)->anim.rotZ = ((PlayerState*)state)->headPitch / 4;
+        ((GameObject*)obj)->anim.rotZ =
+            (f32)((GameObject*)obj)->anim.rotZ * powfBitEstimate(lbl_803E7FF4, timeDelta);
     }
     {
         int e;
