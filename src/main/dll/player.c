@@ -11045,7 +11045,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 posZ;
     f32 posY;
     f32 posX;
-    int** nearList;
+    f32** nearList;
     f32 pushX;
     f32 pushZ;
     f32 queryParams[4];
@@ -11159,11 +11159,11 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     lbl_803DE440 = lbl_803DE440 - dt;
                 }
             }
-            iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
+            iv = hitDetectFn_80065e50(obj, (int***)&nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
             velMag = -((PlayerState*)state)->unk7C8;
             if (1 < iv &&
-                (velMag = velMag + (**nearList - *nearList[iv - 1]), lbl_803E7FA0 < velMag))
+                (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
             {
                 int inner = *(int*)&((GameObject*)obj)->extra;
                 s8* p = *(s8**)((char*)inner + 0x35c);
@@ -11172,12 +11172,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 {
                     n = 0;
                 }
-                else if (p[1] < n)
+                else if (n > p[1])
                 {
                     n = p[1];
                 }
                 *p = (s8)n;
-                if (**(s8**)((char*)inner + 0x35c) < 1)
+                if (**(s8**)((char*)inner + 0x35c) <= 0)
                 {
                     playerDie(obj);
                 }
