@@ -673,8 +673,8 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         }
         else
         {
-            n = &state->nodes[idx];
             state->unk1C = idx + 1;
+            n = &state->nodes[idx];
             n->x = box[0];
             n->unk2 = box[1];
             n->y = box[2];
