@@ -226,28 +226,28 @@ extern f64 DOUBLE_803e00c8;
 extern f32 lbl_803DC450;
 extern f32 lbl_803DC454;
 extern f32 lbl_803DDF04;
-extern f32 lbl_803E00B0;
-extern f32 lbl_803E00B4;
-extern f32 lbl_803E00B8;
-extern f32 lbl_803E00BC;
+extern const f32 lbl_803E00B0;
+extern const f32 lbl_803E00B4;
+extern const f32 lbl_803E00B8;
+extern const f32 lbl_803E00BC;
 extern f32 lbl_803E0900;
-extern f32 lbl_803E0904;
-extern f32 lbl_803E0908;
-extern f32 lbl_803E090C;
-extern f32 lbl_803E0910;
-extern f32 lbl_803E0914;
-extern f32 lbl_803E0918;
-extern f32 lbl_803E091C;
-extern f32 lbl_803E0920;
-extern f32 lbl_803E0924;
+extern const f32 lbl_803E0904;
+extern const f32 lbl_803E0908;
+extern const f32 lbl_803E090C;
+extern const f32 lbl_803E0910;
+extern const f32 lbl_803E0914;
+extern const f32 lbl_803E0918;
+extern const f32 lbl_803E091C;
+extern const f32 lbl_803E0920;
+extern const f32 lbl_803E0924;
 extern f32 lbl_803E0928;
-extern f32 lbl_803E092C;
-extern f32 lbl_803E0930;
-extern f32 lbl_803E0934;
-extern f32 lbl_803E0938;
-extern f32 lbl_803E093C;
-extern f32 lbl_803E0940;
-extern f32 lbl_803E0944;
+extern const f32 lbl_803E092C;
+extern const f32 lbl_803E0930;
+extern const f32 lbl_803E0934;
+extern const f32 lbl_803E0938;
+extern const f32 lbl_803E093C;
+extern const f32 lbl_803E0940;
+extern const f32 lbl_803E0944;
 
 void modgfx_releaseExpgfxPools(void)
 {
@@ -1424,8 +1424,8 @@ void dll_0B_release(void)
     fn_800A1040(0, 1);
 }
 
-extern f32 lbl_803DF430;
-extern f32 lbl_803DF434;
+extern const f32 lbl_803DF430;
+extern const f32 lbl_803DF434;
 extern void mm_free(void* p);
 extern void textureFree(void* resource);
 extern void*gPartfxActiveEffects[];
@@ -1587,7 +1587,7 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 extern void* textureLoadAsset(int id);
 extern void* mmAlloc(int size, int align, int flag);
 
-extern f32 lbl_803DF438;
+extern const f32 lbl_803DF438;
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
@@ -1714,8 +1714,8 @@ void fn_800A081C(int p1, int p2, int mode)
 {
     extern void vecRotateZXY(void*, f32*);
     extern f32 lbl_803DD284;
-    extern f32 lbl_803DF430;
-    extern f32 lbl_803DF434;
+    extern const f32 lbl_803DF430;
+    extern const f32 lbl_803DF434;
 
     if (mode == 1)
     {
@@ -1908,7 +1908,7 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
     }
 }
 
-extern f32 lbl_803DF460;
+extern const f32 lbl_803DF460;
 extern s16 lbl_803DD280;
 
 int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
@@ -2223,10 +2223,10 @@ extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void fn_800542F4(void);
-extern f32 lbl_803DF450;
-extern f32 lbl_803DF454;
-extern f32 lbl_803DF458;
-extern f32 lbl_803DF45C;
+extern const f32 lbl_803DF450;
+extern const f32 lbl_803DF454;
+extern const f32 lbl_803DF458;
+extern const f32 lbl_803DF45C;
 
 typedef struct
 {
@@ -2557,8 +2557,8 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
-    extern f32 lbl_803DF430;
-    extern f32 lbl_803DF43C;
+    extern const f32 lbl_803DF430;
+    extern const f32 lbl_803DF43C;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + *(u8*)((char*)state + 0x130) * 4);
@@ -2616,8 +2616,8 @@ animate:
 
 void fn_800A0524(void* state, void* p, int mode)
 {
-    extern f32 lbl_803DF430;
-    extern f32 lbl_803DF43C;
+    extern const f32 lbl_803DF430;
+    extern const f32 lbl_803DF43C;
     u8* buf = ((u8**)((char*)state + 0x78))[*(u8*)((char*)state + 0x130)];
     int j;
 
@@ -2701,7 +2701,7 @@ void fn_800A0524(void* state, void* p, int mode)
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
-    extern f32 lbl_803DF434;
+    extern const f32 lbl_803DF434;
     int idx2 = idx * 2;
 #define base ((char*)state + idx2 * 0xc)
     int j;
@@ -2775,7 +2775,7 @@ extern int* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern void ObjList_GetObjects(int* idx, int* count);
 extern void Sfx_StopObjectChannel(void* obj, int ch);
-extern f32 lbl_803DF43C;
+extern const f32 lbl_803DF43C;
 
 typedef void (*ExpFn2)(void*, int);
 typedef void (*ExpFn3)(void*, void*, int);
