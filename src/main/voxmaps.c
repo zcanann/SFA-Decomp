@@ -1037,8 +1037,8 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 node->y = out[2];
                 node->unk8 = 0;
                 node->unkA = 0xff;
-                dx = state->tgtX - node->x;
-                dz = state->tgtY - node->y;
+                dx = node->x - state->tgtX;
+                dz = node->y - state->tgtY;
                 d2 = dx * dx + dz * dz;
                 node->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
             }
