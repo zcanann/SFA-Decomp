@@ -1,200 +1,36 @@
+/*
+ * explodable (DLL 0x15A) - a destructible scenery prop that shatters into
+ * up to 15 physics fragments (chunks) when its activate game bit is set.
+ *
+ * explodable_init seeds the fragment chunk array (DrExplodableChunk[15]) and
+ * looks up the prop's break recipe (object type / sfx / mode flags) from the
+ * gas-vent table lbl_80322DA0, keyed on the object's seqId. If the activate
+ * bit is already set at load time the prop starts pre-exploded (phase 2).
+ *
+ * explodable_update drives the phase machine:
+ *   phase 0: wait for the activate game bit, then build the fragments
+ *            (fn_801A2E80), play the break sfx and go invisible (phase 1).
+ *   phase 1: poll each spawned fragment object's vtable status (slot +0x20);
+ *            free finished fragments and raise the prop's done game bit.
+ *   phase 2: already broken, nothing to do.
+ *
+ * fn_801A30C0 computes a fragment's launch offset/velocity/spin from the
+ * placement def and random spread; fn_801A2BDC spawns the fragment object.
+ */
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/objhits.h"
 
 extern u32 randomGetRange(int min, int max);
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_8005af70();
-extern int FUN_8005b398();
-extern uint FUN_80060058();
-extern int FUN_800600c4();
-extern int FUN_800600e4();
-extern undefined4 FUN_8007f6e4();
 
-extern undefined4* DAT_803dd740;
-extern f64 DOUBLE_803e4f98;
-extern f64 DOUBLE_803e4ff8;
-extern f32 lbl_803E4F58;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
-extern f32 lbl_803E4FF4;
-
-#pragma scheduling on
-#pragma peephole on
-void fn_blasted_init_v11_unused(int param_1, int param_2)
-{
-    int extra;
-    ObjHitsPriorityState* hitState;
-
-    extra = *(int*)&((GameObject*)param_1)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
-    *(byte*)(extra + 7) = *(byte*)(extra + 7) | 2;
-    (**(code**)(*DAT_803dd740 + 4))(param_1, extra, 5);
-    ObjGroup_AddObject(param_1, 0x19);
-    ObjGroup_AddObject(param_1, 0x16);
-    ObjMsg_AllocQueue(param_1, 8);
-    ((GameObject*)param_1)->unkF8 = 0;
-    *(undefined2*)(extra + 0x44) = 0;
-    *(undefined2*)(extra + 0x46) = 0;
-    *(undefined*)(extra + 0x15) = 0;
-    *(undefined2*)(extra + 0x3c) = 0;
-    *(undefined*)(extra + 0x16) = 0;
-    *(undefined*)(extra + 0x17) = 0;
-    *(undefined*)(extra + 0x3e) = 0;
-    *(undefined4*)(extra + 0x40) = 0;
-    *(float*)(extra + 0x30) = lbl_803E4F58;
-    *(undefined*)(extra + 0x49) = 0;
-    FUN_8007f6e4((undefined4*)(extra + 0x18));
-    FUN_8007f6e4((undefined4*)(extra + 0x1c));
-    *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) | 1;
-    *(byte*)(extra + 0x48) =
-        (*(char*)(param_2 + 0x19) < '\x01') << 7 | *(byte*)(extra + 0x48) & 0x7f;
-    *(byte*)(extra + 0x48) = (*(short*)(param_2 + 0x1c) != 0) << 6 | *(byte*)(extra + 0x48) & 0xbf;
-    ObjHits_EnableObject(param_1);
-    *(float*)(extra + 0x2c) =
-        (float)((double)CONCAT44(0x43300000, (int)hitState->primaryRadius ^ 0x80000000) - DOUBLE_803e4f98);
-    *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0xdf;
-    *(float*)(extra + 0x38) = lbl_803E4F58;
-    *(undefined4*)(extra + 0x10) = 0;
-    (**(code**)(*DAT_803dd740 + 0x2c))(extra, 1);
-    if (hitState != NULL)
-    {
-        hitState->trackContactMask = 1;
-    }
-    if (((GameObject*)param_1)->anim.seqId == 0x754)
-    {
-        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0xfb | 4;
-    }
-    return;
-}
-
-undefined4 FUN_801a2cb8(int param_1, uint param_2)
-{
-    int block;
-    undefined4 result;
-    uint id;
-    int group;
-    int entry;
-    int j;
-    int i;
-
-    block = FUN_8005b398((double)((GameObject*)param_1)->anim.localPosX,
-                         (double)((GameObject*)param_1)->anim.localPosY);
-    block = FUN_8005af70(block);
-    if ((block == 0) || ((*(ushort*)(block + 4) & 8) == 0))
-    {
-        result = 0;
-    }
-    else
-    {
-        for (i = 0; i < (int)(uint) * (ushort*)(block + 0x9a); i = i + 1)
-        {
-            entry = FUN_800600c4(block, i);
-            id = FUN_80060058(entry);
-            if (param_2 == id)
-            {
-                *(uint*)(entry + 0x10) = *(uint*)(entry + 0x10) | 3;
-            }
-        }
-        for (i = 0; i < (int)(uint) * (byte*)(block + 0xa2); i = i + 1)
-        {
-            group = FUN_800600e4(block, i);
-            entry = group;
-            for (j = 0; j < (int)(uint) * (byte*)(group + 0x41); j = j + 1)
-            {
-                if (*(byte*)(entry + 0x29) == param_2)
-                {
-                    *(uint*)(group + 0x3c) = *(uint*)(group + 0x3c) | 2;
-                }
-                entry = entry + 8;
-            }
-        }
-        result = 1;
-    }
-    return result;
-}
-
-undefined4
-FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
-             undefined2 param_10, int param_11, undefined param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-    float scale;
-    uint enabled;
-    undefined4 result;
-    undefined2* setup;
-    double bias;
-
-    enabled = FUN_80017ae8();
-    if ((enabled & 0xff) == 0)
-    {
-        result = 0;
-    }
-    else
-    {
-        setup = FUN_80017aa4(0x44, param_10);
-        *setup = param_10;
-        *(undefined*)(setup + 2) = 2;
-        *(undefined*)(setup + 3) = 0xff;
-        *(undefined*)((int)setup + 5) = 1;
-        *(undefined*)((int)setup + 7) = 0xff;
-        *(undefined4*)(setup + 4) = *(undefined4*)&((GameObject*)param_9)->anim.localPosX;
-        *(undefined4*)(setup + 6) = *(undefined4*)&((GameObject*)param_9)->anim.localPosY;
-        *(undefined4*)(setup + 8) = *(undefined4*)&((GameObject*)param_9)->anim.localPosZ;
-        scale = lbl_803E4FE8;
-        setup[0x10] = (short)(int)(lbl_803E4FE8 * *(float*)(param_11 + 0x40));
-        setup[0x11] = (short)(int)(scale * *(float*)(param_11 + 0x44));
-        setup[0x12] = (short)(int)(scale * *(float*)(param_11 + 0x48));
-        setup[0xd] = *(undefined2*)(param_11 + 0x68);
-        setup[0xe] = *(undefined2*)(param_11 + 0x66);
-        setup[0xf] = *(undefined2*)(param_11 + 100);
-        bias = DOUBLE_803e4ff8;
-        setup[0x16] = (short)(int)(*(float*)(param_11 + 0x1c) *
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_11 + 0x6d))
-                - DOUBLE_803e4ff8));
-        setup[0x17] = (short)(int)(*(float*)(param_11 + 0x20) *
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_11 + 0x6d))
-                - bias));
-        setup[0x18] = (short)(int)(*(float*)(param_11 + 0x24) *
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_11 + 0x6d))
-                - bias));
-        scale = lbl_803E4FEC;
-        setup[0x19] = (short)(int)(lbl_803E4FEC * *(float*)(param_11 + 0x28));
-        setup[0x1b] = (short)(int)(scale * *(float*)(param_11 + 0x30));
-        setup[0x1a] = (short)(int)(scale * *(float*)(param_11 + 0x2c));
-        scale = lbl_803E4FF0;
-        setup[0x13] = (short)(int)(lbl_803E4FF0 * *(float*)(param_11 + 0x34));
-        setup[0x14] = (short)(int)(scale * *(float*)(param_11 + 0x38));
-        setup[0x15] = (short)(int)(scale * *(float*)(param_11 + 0x3c));
-        *(undefined*)(setup + 0xc) = param_12;
-        bias = (double)lbl_803E4FF4;
-        scale = ((GameObject*)param_9)->anim.rootMotionScale;
-        *(char*)((int)setup + 0x3d) =
-            (char)(int)(bias * (double)(float)((double)scale /
-                (double)*(float*)(*(int*)&((GameObject*)param_9)->anim.modelInstance + 4)));
-        setup[0x1c] = (short)*(undefined4*)(param_11 + 0x5c);
-        setup[0x1d] = (short)(int)*(float*)(param_11 + 0x58);
-        result = FUN_80017ae4((double)scale, bias, param_3, param_4, param_5, param_6, param_7, param_8, setup,
-                             5, ((GameObject*)param_9)->anim.mapEventSlot, 0xffffffff, (uint*)0x0, param_14, param_15,
-                             param_16);
-    }
-    return result;
-}
+/* object group this prop registers its fragments under */
+#define EXPLODABLE_OBJ_GROUP 0x21
+/* fragment object vtable slot returning its lifecycle status */
+#define FRAGMENT_VTABLE_STATUS 0x20
 
 void explodable_render(void)
 {
 }
-
-void cfforcefield_free(void);
-
-/* 8b "li r3, N; blr" returners. */
 
 typedef struct ExplodablePlacement
 {
@@ -211,8 +47,9 @@ typedef struct ExplodablePlacement
     s16 unk30;
     u8 pad32[0x38 - 0x32];
     u16 unk38;
-    u8 pad3A[0x3E - 0x3A];
-    s16 unk3E;
+    u8 pad3A[0x3E - 0x3B];
+    s8 scaleParam;
+    s16 doneGameBit;
     s16 activateGameBit;
     u8 pad42[0x48 - 0x42];
 } ExplodablePlacement;
@@ -223,7 +60,6 @@ STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void) { return 0x6e8; }
-int cfforcefield_getExtraSize(void);
 
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
@@ -236,7 +72,7 @@ void explodable_free(int obj, int flag)
     void* o;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 0x21);
+    ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
     if (flag == 0)
     {
         p = state - 4;
@@ -250,7 +86,7 @@ void explodable_free(int obj, int flag)
         }
     }
 }
-
+#pragma reset
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);
 
@@ -293,16 +129,16 @@ void explodable_update(int obj)
                 o = *(int*)(p + 0x690);
                 if ((void*)o != NULL)
                 {
-                    r = (*(code*)(*(int*)*(int*)(o + 0x68) + 0x20))(o);
+                    r = (*(code*)(*(int*)*(int*)(o + 0x68) + FRAGMENT_VTABLE_STATUS))(o);
                     switch (r)
                     {
                     case 2:
-                        GameBit_Set(((ExplodablePlacement*)def)->unk3E, 1);
+                        GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
                         Obj_FreeObject(*(int*)(p + 0x690));
                         *(int*)(p + 0x690) = 0;
                         break;
                     case 0:
-                        GameBit_Set(((ExplodablePlacement*)def)->unk3E, 1);
+                        GameBit_Set(((ExplodablePlacement*)def)->doneGameBit, 1);
                         if ((((DrExplodableState*)state)->flags6CC & (1 << i)) == 0)
                         {
                             ((DrExplodableState*)state)->flags6CC |= 1 << i;
@@ -336,16 +172,16 @@ void explodable_init(int obj, int setup)
     int state = *(int*)&((GameObject*)obj)->extra;
     int base;
     GasVentTableEntry* e;
-    u32 c1;
+    u32 count;
 
-    ObjGroup_AddObject(obj, 0x21);
+    ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
     state = *(int*)&((GameObject*)obj)->extra;
-    c1 = *(u8*)(setup + 0x18);
-    if (c1 == 0)
+    count = *(u8*)(setup + 0x18);
+    if (count == 0)
     {
-        c1 = 1;
+        count = 1;
     }
-    ((DrExplodableState*)state)->count6D4 = c1;
+    ((DrExplodableState*)state)->count6D4 = count;
     *(int*)&((DrExplodableState*)state)->flags6CC = 0;
     ((DrExplodableState*)state)->children[0] = 0;
     ((DrExplodableState*)state)->children[1] = 0;
@@ -365,7 +201,7 @@ void explodable_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
     ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
     ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
-    if ((u32)GameBit_Get(*(s16*)(setup + 0x3e)) != 0)
+    if ((u32)GameBit_Get(((ExplodablePlacement*)setup)->doneGameBit) != 0)
     {
         ((DrExplodableState*)state)->phase6E4 = 2;
     }
@@ -377,12 +213,12 @@ void explodable_init(int obj, int setup)
             break;
         }
     }
-    if (*(s8*)(setup + 0x3d) == 0)
+    if (((ExplodablePlacement*)setup)->scaleParam == 0)
     {
-        *(u8*)(setup + 0x3d) = 0x14;
+        ((ExplodablePlacement*)setup)->scaleParam = 0x14;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
-        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int) * (s8*)(setup + 0x3d) / lbl_803E435C;
+        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
     e = lbl_80322DA0;
     if ((e[((DrExplodableState*)state)->unk6E5].flags & 1) != 0)
     {
@@ -509,13 +345,13 @@ void fn_801A2E80(int obj, int def, int p3, int state)
             *(f32*)(i15 + 0x18) = *(f32*)(i15 + 0xc);
             fn_801A30C0(obj, i15, def);
             *(u8*)(i15 + 0x6b) = 0xff;
-            *(u8*)(i15 + 0x6a) = (u32)GameBit_Get(*(s16*)(def + 0x3e)) != 0 ? 2 : 0;
+            *(u8*)(i15 + 0x6a) = (u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
             *(int*)(i8 + 0x690) = fn_801A2BDC(obj, objType, i15, i13);
             i15 += 0x70;
             i14 += 4;
             i8 += 4;
         }
-        ((DrExplodableState*)state)->phase6E4 = ((u32)GameBit_Get(*(s16*)(def + 0x3e)) != 0) ? 1 : 0;
+        ((DrExplodableState*)state)->phase6E4 = ((u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0) ? 1 : 0;
     }
 }
 
