@@ -1,28 +1,22 @@
-/* DLL 0x166 - Exploded [801A39B4-801A39D0) */
+/*
+ * exploded (DLL 0x166) - a single destructible debris shard object.
+ *
+ * On init the shard takes its model tag, scale, position and angles from
+ * its placement map data; a randomized lifetime is rolled and physics are
+ * armed when any initial velocity or acceleration is present. While active
+ * (explodePhase 1) the per-frame update integrates linear velocity and spin
+ * with gravity, bounces off a cached floor height, and settles to rest
+ * (explodePhase 0); the lifetime countdown then fades alpha out and flags
+ * the object for removal (flags06 |= 0x4000, explodePhase 2).
+ */
 #include "main/dll/drexplodable_types.h"
-#include "main/obj_placement.h"
-
-extern u32 randomGetRange(int min, int max);
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-extern void Model_GetVertexPosition(int model, int i, f32* out);
-
-/* segment pragma-stack balance (re-split): */
-
 #include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
+extern int randomGetRange(int min, int max);
+extern void Model_GetVertexPosition(int* model, int i, f32* out);
 extern f32 timeDelta;
+extern void vecRotateYXZ(int, int);
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
@@ -39,56 +33,10 @@ extern f32 lbl_803E441C;
 extern f32 lbl_803E4420;
 extern f32 lbl_803E4424;
 
-void FUN_801a4520(int param_1)
-{
-    int iVar1;
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
-    if (((GameObject*)param_1)->unkF4 == 0)
-    {
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(iVar1 + 0x1c) != 0) && (**(byte**)&((GameObject*)param_1)->extra >> 5 != 0))
-        {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(iVar1 + 0x1c));
-        }
-        iVar1 = (int)*(char*)(iVar1 + 0x1e);
-        if (iVar1 != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(iVar1, (void*)param_1, -1);
-        }
-        ((GameObject*)param_1)->unkF4 = 1;
-    }
-    return;
-}
-
-void FUN_801a45cc(short* param_1, int param_2)
-{
-}
-
-
-undefined4
-FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    undefined4 handle;
-    int i;
-    undefined8 obj;
-
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            FUN_80017698(0xdcb, 1);
-            obj = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(obj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
-            FUN_80042b9c(0, 0, 1);
-            handle = FUN_80044404(0x2b);
-            FUN_80042bec(handle, 0);
-        }
-    }
-    return 0;
-}
-
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 void exploded_free(void)
 {
@@ -108,7 +56,7 @@ void exploded_initialise(void)
 
 int exploded_getExtraSize(void) { return 0x6c; }
 
-u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)((int**)obj)[0xb8 / 4])->explodePhase; }
+u8 exploded_setScale(int* obj) { return ((ExplodedObject*)obj)->state->explodePhase; }
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -116,9 +64,7 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43F4);
 }
 
-
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
-
 
 void exploded_update(int* obj)
 {
@@ -170,29 +116,12 @@ check:
     }
 }
 
-/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
- * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
- * (state[0] bits 5..7) through the door's open/close machine. Returns 1
- * while in the static states (0/1) and 0 while in transition (2/3). */
-
-/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
- * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
- * run that sequence with obj, -1.
- * Finally latch obj->_f4 = 1. */
-
-/* exploded_init: store the map object tag, scale the model using the map
- * byte, then enable physics if any initial velocity/acceleration is present. */
 void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
 {
     ExplodedObjectState* state;
     obj->objectTypeTag = data->objectTypeTag;
     state = obj->state;
-    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)
-    data->scaleByte
-    )
-    /
-    lbl_803E4428;
+    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
     exploded_initDebrisState(obj, data, extra, state);
     if (data->initialVelocityX != 0 ||
         data->initialVelocityY != 0 ||
@@ -209,23 +138,9 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
     }
 }
 
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
- * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
- * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-
-/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
- * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
- * obj->_b8->_0. */
-
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
                               int computeModelCenter, ExplodedObjectState* state)
 {
-    extern void Model_GetVertexPosition(int, int, f32*);
-    extern void vecRotateYXZ(int, int);
-    extern f32 lbl_803E43F0;
-    extern f32 lbl_803E43F4;
-
     obj->x = data->positionX;
     obj->y = data->positionY;
     obj->z = data->positionZ;
@@ -249,7 +164,7 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
         mesh = *(int**)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + (u32)data->objectTypeTag * 4));
         for (i = 0; i < *(u16*)((char*)mesh + 0xe4); i++)
         {
-            Model_GetVertexPosition((int)mesh, i, v);
+            Model_GetVertexPosition((int*)mesh, i, v);
             v[3] = v[0] + v[3];
             v[4] = v[1] + v[4];
             v[5] = v[2] + v[5];
@@ -280,8 +195,6 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
     state->physicsFlags = 0;
 }
 
-/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
- * ground clearance, and the randomized lifetime countdown. */
 void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data)
 {
     f32 floorY[2];
@@ -343,8 +256,6 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     }
 }
 
-/* Exploded debris physics step: integrate local velocity and spin, bounce from
- * the stored floor height, and return nonzero once the shard comes to rest. */
 int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
 {
     f32 stopped;
