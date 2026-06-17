@@ -145,7 +145,9 @@ int DR_CloudRunner_stateHandler07(int obj)
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
     if (inner->airTimeRemaining == 0)
     {
-        ((GameObject*)obj)->anim.alpha = ((GameObject*)obj)->anim.alpha - framesThisStep;
+        s32 a = ((GameObject*)obj)->anim.alpha;
+        a -= framesThisStep;
+        ((GameObject*)obj)->anim.alpha = a;
     }
     return 0;
 }
