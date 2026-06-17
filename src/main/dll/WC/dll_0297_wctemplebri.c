@@ -151,8 +151,9 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     }
     model = Obj_GetActiveModel(obj);
     modelBase = *(int*)model;
+    i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
-    for (i = 0; i < *(u16*)(modelBase + 0xe4); i++)
+    for (; i < *(u16*)(modelBase + 0xe4); i++)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
@@ -228,8 +229,9 @@ void wctemplebri_update(int obj)
     wctemplebri_updateModelWarp(obj, (int)state);
     model = Obj_GetActiveModel(obj);
     modelBase = *(int*)model;
+    i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
-    for (i = 0; i < *(u16*)(modelBase + 0xe4); i++)
+    for (; i < *(u16*)(modelBase + 0xe4); i++)
     {
         int curr = ObjModel_GetCurrentVertexCoords(model, i);
         int base = ObjModel_GetBaseVertexCoords(modelBase, i);
