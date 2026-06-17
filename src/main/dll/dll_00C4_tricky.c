@@ -2645,10 +2645,10 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     f32* hit;
     f32 hitY;
     f32 dy;
+    f32 nearestSpecialDelta;
+    f32 nearestFloorDelta;
     f32 absDy;
     f32 defaultY;
-    f32 nearestFloorDelta;
-    f32 nearestSpecialDelta;
     f32 zero;
 
     defaultY = lbl_803E25C4;
