@@ -81,8 +81,11 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex)
         callback->triggerValue = triggerValue;
         callback->controllerIndex = controllerIndex;
         prev = 0;
-        callback->listIndex =
-            SYNTH_CALLBACK_CONTROLLER_STATE(gSynthCurrentVoice, controllerIndex)->listIndex;
+        {
+            u8* ccsBase = (u8*)gSynthCurrentVoice + 0x1518;
+            callback->listIndex =
+                ((SynthCallbackControllerState*)(ccsBase + controllerIndex * 0x38))->listIndex;
+        }
 
         current = gSynthCurrentVoice->callbackLists[callback->listIndex];
         while (current != 0)
