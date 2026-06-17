@@ -14312,7 +14312,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     *(int*)((char*)in2 + 0x7f8), 0, 0, 0, 0, -1);
             }
         }
-        if (lbl_803E7EA4 < ((PlayerState*)inner)->unk79C ||
+        if (((PlayerState*)inner)->unk79C > lbl_803E7EA4 ||
             (((PlayerState*)inner)->unk8D8 & 2) != 0)
         {
             tbl[0] = lbl_803E7E68;
