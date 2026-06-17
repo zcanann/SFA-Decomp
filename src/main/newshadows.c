@@ -2293,7 +2293,7 @@ void shadowCreate(int* obj)
         {
             *(u8*)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
         }
-        lbl_803DCF78 = lbl_803DCF78 + 1;
+        lbl_803DCF78++;
     }
 }
 
