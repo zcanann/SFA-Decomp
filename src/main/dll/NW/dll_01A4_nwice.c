@@ -84,11 +84,14 @@ void nw_ice_update(int* obj)
     }
     else
     {
+        int** walker;
         objects = (int**)ObjGroup_GetObjects(NW_ANIMICE_GROUP_ID, &count);
+        i = 0;
+        walker = objects;
         setup = *(int**)&((GameObject*)obj)->anim.placementData;
-        for (i = 0; i < count; i++)
+        for (; i < count; i++)
         {
-            candidate = objects[i];
+            candidate = *walker;
             if ((obj != candidate) &&
                 (((NwIcePlacement*)setup)->pairId ==
                     *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
@@ -96,6 +99,7 @@ void nw_ice_update(int* obj)
                 state->linkedObj = objects[i];
                 break;
             }
+            walker++;
         }
     }
 }
