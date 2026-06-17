@@ -95,7 +95,11 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     ((DrshackleState*)p)->savedPosY = ((GameObject*)obj)->anim.localPosY;
     ((DrshackleState*)p)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
 
-    joint1 = *(s8*)((char*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24) + objAnim->bankIndex + 0x12);
+    {
+        s8* jp = (s8*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24);
+        jp += objAnim->bankIndex;
+        joint1 = jp[0x12];
+    }
     model = DrShackle_GetActiveModel((void*)a);
     modelData = *(int**)model;
 
