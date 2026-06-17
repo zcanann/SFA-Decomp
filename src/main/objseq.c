@@ -4543,18 +4543,18 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     nextScale = ROM_CURVE_NODE_SCALE(next);
 
     xPoints[0] = curve->x;
-    xPoints[1] = next->x;
     xPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    xPoints[1] = next->x;
     xPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     yPoints[0] = curve->y;
-    yPoints[1] = next->y;
     yPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->pitch));
+    yPoints[1] = next->y;
     yPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->pitch));
 
     zPoints[0] = curve->z;
-    zPoints[1] = next->z;
     zPoints[2] = curveScale * mathCosf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    zPoints[1] = next->z;
     zPoints[3] = nextScale * mathCosf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
