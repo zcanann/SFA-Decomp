@@ -1,7 +1,24 @@
 /*
  * GunPowderBarrel (DLL 0x158) - carryable gunpowder barrel (+ MetalBarrel).
+ *
+ * The barrel registers with the carry interface (gCarryableInterface) so the
+ * player can lift, carry, steal and throw it; gunpowderbarrel_update drives the
+ * pickup/steal/toss state machine and the throw is launched via
+ * gunpowderbarrel_launchAtTarget. When struck (or resting on a damage source)
+ * the fuse is lit: gunpowderbarrel_update grows the hit radius each frame and,
+ * after the fuse window (state->fuseFrames > 0x14), spawns the explosion and
+ * either hands the barrel back to its owning generator (obj group 0x3a, matched
+ * by placement link id) or removes it. seqId 0x754 selects the indestructible
+ * cannon-range variant. gunpowderbarrel_updatePhysics applies gravity, velocity
+ * clamps, the ground probe and landing/impact sfx.
+ *
  * TU = 0x801A0B14..0x801A27B8 (helper group at the head, then the barrel
- * descriptor fns).
+ * descriptor fns; physically emitted last so the helpers stay out-of-line bls).
+ *
+ * Mixed provenance: gunpowderbarrel_free and gunpowderbarrel_render are the
+ * v1.1-shaped helper group; everything below the "Drift-recovery: v1.0" marker
+ * is the v1.0 body. GunpowderBarrelState (extra) layout lives in
+ * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -11,60 +28,16 @@
 #include "main/dll/player_motion.h"
 #include "main/objlib.h"
 
-typedef struct GunpowderbarrelTriggerExplosionPlacement
+/* Barrel placement data block (obj group 0x3a link id at 0x1A). The three
+ * descriptor fns each read only unk1A; unk1C/unk1E are documented for the
+ * adjacent placement words different call sites also reference raw. */
+typedef struct GunpowderbarrelPlacement
 {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} GunpowderbarrelTriggerExplosionPlacement;
-
-typedef struct GunpowderbarrelTriggerExplosionState
-{
-    u8 pad0[0x10 - 0x0];
-    void* unk10;
-    u8 pad14[0x34 - 0x14];
-    f32 unk34;
-} GunpowderbarrelTriggerExplosionState;
-
-typedef struct GunpowderbarrelState
-{
-    u8 pad0[0x10 - 0x0];
-    s32 unk10;
-    u8 pad14[0x34 - 0x14];
-    f32 unk34;
-} GunpowderbarrelState;
-
-typedef struct GunpowderbarrelUpdatePhysicsState
-{
-    u8 pad0[0xC - 0x0];
-    void* unkC;
-    void* unk10;
-    u8 pad14[0x20 - 0x14];
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    u8 pad2C[0x34 - 0x2C];
-    f32 unk34;
-    f32 slideTimer;
-    u8 pad3C[0x44 - 0x3C];
-    s16 unk44;
-    s16 unk46;
-} GunpowderbarrelUpdatePhysicsState;
-
-extern undefined4 FUN_80006824();
-extern int FUN_80017a90();
-extern undefined4 FUN_8008112c();
-extern undefined4 FUN_800e8630();
-extern undefined4 FUN_8013651c();
-extern int FUN_8020a468();
-extern undefined4 FUN_8020a90c();
-extern uint FUN_80286838();
-extern undefined4 FUN_80286884();
-
-extern undefined4* DAT_803dd740;
-extern f32 lbl_803E4F58;
-extern f32 lbl_803E4F5C;
-extern f32 lbl_803E4FA0;
+    s16 unk1C;
+    s16 unk1E;
+} GunpowderbarrelPlacement;
 
 extern undefined4* gCarryableInterface;
 extern f32 lbl_803E42DC;
@@ -139,163 +112,26 @@ extern const f32 lbl_803E42E8;
 extern f32 lbl_803E42EC;
 extern f32 lbl_803E42F0;
 
-void FUN_801a1230(int param_1, char param_2)
+/* Bit flags at GunpowderBarrelState+0x4a (heldFlags). */
+typedef struct
 {
-    int extra;
-    ObjHitsPriorityState* hitState;
+    u8 playerHeld : 1; /* 0x80 */
+    u8 unk40 : 1;      /* 0x40 */
+    u8 held : 1;       /* 0x20 */
+    u8 onGround : 1;   /* 0x10 */
+    u8 wasOnGround : 1; /* 0x08 */
+    u8 landed : 1;     /* 0x04 */
+    u8 unk02 : 1;      /* 0x02 */
+    u8 unk01 : 1;      /* 0x01 */
+} GpbFlags4A;
 
-    extra = *(int*)&((GameObject*)param_1)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
-    if (param_2 == '\0')
-    {
-        hitState->lateralResponseWeight = ((GameObject*)param_1)->anim.modelInstance->lateralResponseWeight;
-        hitState->axialResponseWeight = ((GameObject*)param_1)->anim.modelInstance->axialResponseWeight;
-        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0x7f;
-        *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode &
-            0xf7;
-        ObjHits_ClearFlags(param_1, 0x400);
-        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) | 1;
-    }
-    else
-    {
-        hitState->lateralResponseWeight = 1;
-        hitState->axialResponseWeight = 1;
-        *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode |
-            8;
-        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0x7f | 0x80;
-        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) & 0xfd;
-        ObjHits_SetFlags(param_1, 0x480);
-        ObjHits_ClearSourceMask(param_1, 1);
-        ObjHits_EnableObject(param_1);
-        ObjHits_SyncObjectPositionIfDirty(param_1);
-    }
-    return;
-}
-
-void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+/* Bit flags at GunpowderBarrelState+0x48 (configFlags). */
+typedef struct
 {
-    uint obj;
-    ObjHitsPriorityState* hitState;
-    int result;
-    uint* objs;
-    int linkId;
-    uint* p;
-    int def;
-    int i;
-    int extra;
-    double in_f29;
-    double savedZ;
-    double in_f30;
-    double savedY;
-    double in_f31;
-    double savedX;
-    double in_ps29_1;
-    double in_ps30_1;
-    double in_ps31_1;
-    int local_58;
-    int hitObject;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
-
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    local_18 = (float)in_f30;
-    fStack_14 = (float)in_ps30_1;
-    local_28 = (float)in_f29;
-    fStack_24 = (float)in_ps29_1;
-    obj = FUN_80286838();
-    extra = *(int*)&((GameObject*)obj)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    result = ObjHits_GetPriorityHit(obj, &hitObject, (int*)0x0, (uint*)0x0);
-    if ((result != 0) || ((hitState->contactFlags != 0 && ((*(byte*)(extra + 0x49) & 2) != 0))))
-    {
-        *(char*)(extra + 0x16) = *(char*)(extra + 0x16) + '\x01';
-        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) | 1;
-    }
-    if (*(char*)(extra + 0x16) != '\0')
-    {
-        if ((*(byte*)(extra + 0x48) >> 6 & 1) != 0)
-        {
-            def = *(int*)&((GameObject*)obj)->anim.placementData;
-            result = 0;
-            if (*(short*)(def + 0x1a) == 0)
-            {
-                result = ObjGroup_FindNearestObject(0x3a, obj, (float*)0x0);
-            }
-            else
-            {
-                objs = ObjGroup_GetObjects(0x3a, &local_58);
-                p = objs;
-                for (i = 0; i < local_58; i = i + 1)
-                {
-                    linkId = FUN_8020a468(*p);
-                    if (*(short*)(def + 0x1a) == linkId)
-                    {
-                        result = objs[i];
-                        break;
-                    }
-                    p = p + 1;
-                }
-            }
-            if (result != 0)
-            {
-                savedX = (double)*(float*)(obj + 0xc);
-                savedY = (double)*(float*)(obj + 0x10);
-                savedZ = (double)*(float*)(obj + 0x14);
-                *(undefined4*)(obj + 0xc) = *(undefined4*)(result + 0xc);
-                *(undefined4*)(obj + 0x10) = *(undefined4*)(result + 0x10);
-                *(undefined4*)(obj + 0x14) = *(undefined4*)(result + 0x14);
-                FUN_800e8630(obj);
-                *(float*)(obj + 0xc) = (float)savedX;
-                *(float*)(obj + 0x10) = (float)savedY;
-                *(float*)(obj + 0x14) = (float)savedZ;
-            }
-        }
-        ObjHits_ClearFlags(obj, 0x80);
-        ObjHits_SetSourceMask(obj, 1);
-        ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
-        ObjHits_EnableObject(obj);
-        ObjHits_MarkObjectPositionDirty(obj);
-        ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
-        FUN_80006824(obj, SFXsk_bapt11_c);
-        *(float*)(obj + 0x10) = *(float*)(obj + 0x10) + lbl_803E4FA0;
-        FUN_8008112c((double)lbl_803E4F58, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 1, 1, 0, 0, 0, 1, 0);
-        if (*(char*)(extra + 0x15) != '\0')
-        {
-            (**(code**)(*DAT_803dd740 + 0x30))(obj, extra);
-            *(undefined*)(extra + 0x15) = 0;
-        }
-        ((GunpowderBarrelState*)extra)->fuseFrames = 1;
-        *(byte*)(extra + 0x4a) = *(byte*)(extra + 0x4a) & 0xdf;
-        ObjGroup_RemoveObject(obj, 0x19);
-        if (*(int*)&((GameObject*)obj)->anim.parent == 0)
-        {
-            ((GunpowderBarrelState*)extra)->radiusGrowthPerFrame = lbl_803E4F5C;
-        }
-        else
-        {
-            ((GunpowderBarrelState*)extra)->radiusGrowthPerFrame = lbl_803E4F5C;
-        }
-        result = FUN_80017a90();
-        if (result != 0)
-        {
-            FUN_8013651c(result);
-        }
-        *(byte*)(extra + 0x49) = *(byte*)(extra + 0x49) & 0xfd;
-        if (((GunpowderBarrelState*)extra)->linkedTimerObject != 0)
-        {
-            FUN_8020a90c(((GunpowderBarrelState*)extra)->linkedTimerObject);
-        }
-    }
-    FUN_80286884();
-    return;
-}
+    u8 unk80 : 1;      /* 0x80 */
+    u8 returnHome : 1; /* 0x40 */
+    u8 unkRest : 6;
+} GpbFlags48;
 
 int gunpowderbarrel_getExtraSize(void)
 {
@@ -309,13 +145,13 @@ void gunpowderbarrel_free(int obj, int param_2)
     void* child;
     extra = *(int*)&((GameObject*)obj)->extra;
     (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
-    child = (void*)((GunpowderbarrelState*)extra)->unk10;
+    child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && param_2 == 0)
     {
         if (Obj_IsObjectAlive((int)child) != 0)
         {
-            ObjLink_DetachChild(obj, ((GunpowderbarrelState*)extra)->unk10);
-            ((GunpowderbarrelState*)extra)->unk10 = 0;
+            ObjLink_DetachChild(obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
+            ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
         }
     }
     ObjGroup_RemoveObject(obj, 0x19);
@@ -326,14 +162,6 @@ void gunpowderbarrel_free(int obj, int param_2)
     }
 }
 
-typedef struct
-{
-    u8 playerHeld_ : 1;
-    u8 unk40_ : 1;
-    u8 held_ : 1;
-    u8 rest_ : 5;
-} GpbHeld4A;
-
 void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int param_5,
                             s8 visFlag)
 {
@@ -342,7 +170,7 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
     int* child;
 
     sub = ((GameObject*)obj)->extra;
-    if (((GunpowderBarrelState*)sub)->fuseFrames != 0 || ((GpbHeld4A*)(sub + 0x4a))->held_)
+    if (((GunpowderBarrelState*)sub)->fuseFrames != 0 || ((GpbFlags4A*)(sub + 0x4a))->held)
     {
         return;
     }
@@ -356,7 +184,7 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
     {
         objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E42DC);
     }
-    child = *(int**)&((GunpowderbarrelState*)sub)->unk10;
+    child = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)
     {
         (*(void (**)(int*, int, int, int, int, s8))(*(int*)(*(int*)&((GameObject*)child)->anim.dll) + 0x10))(
@@ -365,25 +193,6 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
 }
 
 /* Drift-recovery: v1.0 function set (the FUN_801a1xxx above are v1.1-shaped). */
-
-typedef struct
-{
-    u8 playerHeld : 1; /* 0x80 */
-    u8 unk40 : 1; /* 0x40 */
-    u8 held : 1; /* 0x20 */
-    u8 onGround : 1; /* 0x10 */
-    u8 wasOnGround : 1; /* 0x08 */
-    u8 landed : 1; /* 0x04 */
-    u8 unk02 : 1; /* 0x02 */
-    u8 unk01 : 1; /* 0x01 */
-} GpbFlags4A;
-
-typedef struct
-{
-    u8 unk80 : 1; /* 0x80 */
-    u8 returnHome : 1; /* 0x40 */
-    u8 unkRest : 6;
-} GpbFlags48;
 
 /* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
  * (or touched while resting on a damage source) blow the barrel up, optionally
@@ -412,13 +221,13 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             int** objs;
             int i;
             int** p;
-            if (((GunpowderbarrelTriggerExplosionPlacement*)def)->unk1A != 0)
+            if (((GunpowderbarrelPlacement*)def)->unk1A != 0)
             {
                 objs = (int**)ObjGroup_GetObjects(0x3a, &count);
                 for (i = 0; i < count; i++)
                 {
                     int id = barrelgener_getLinkId(objs[i]);
-                    if (((GunpowderbarrelTriggerExplosionPlacement*)def)->unk1A == id)
+                    if (((GunpowderbarrelPlacement*)def)->unk1A == id)
                     {
                         best = objs[i];
                         break;
@@ -462,11 +271,11 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         ObjGroup_RemoveObject((u32)obj, 0x19);
         if (((GameObject*)obj)->anim.parent != 0)
         {
-            ((GunpowderbarrelTriggerExplosionState*)sub)->unk34 = lbl_803E42C4;
+            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
         }
         else
         {
-            ((GunpowderbarrelTriggerExplosionState*)sub)->unk34 = lbl_803E42C4;
+            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
         }
         tricky = getTrickyObject();
         if (tricky != 0)
@@ -474,7 +283,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             trickyImpress(tricky);
         }
         sub[0x49] = (u8)(sub[0x49] & ~2);
-        timer = *(int**)&((GunpowderbarrelTriggerExplosionState*)sub)->unk10;
+        timer = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
         if (timer != 0)
         {
             timer_clearManualFlags(timer);
@@ -507,36 +316,36 @@ void gunpowderbarrel_updatePhysics(int* obj)
         }
         return;
     }
-    if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY > lbl_803E430C))
+    if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderBarrelState*)sub)->throwVelY > lbl_803E430C))
     {
         ObjHits_SetHitVolumeSlot((u32)obj, 0xe, 1, 0);
         ObjHits_EnableObject((u32)obj);
     }
     if (!((GpbFlags4A*)(sub + 0x4a))->playerHeld)
     {
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY -= lbl_803E4310 * timeDelta;
+        ((GunpowderBarrelState*)sub)->throwVelY -= lbl_803E4310 * timeDelta;
     }
     {
-        f32 v = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityX;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityX = (v < lbl_803E4314)
+        f32 v = ((GunpowderBarrelState*)sub)->throwVelX;
+        ((GunpowderBarrelState*)sub)->throwVelX = (v < lbl_803E4314)
                                                                    ? lbl_803E4314
                                                                    : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
-        f32 v = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY = (v < lbl_803E4314)
+        f32 v = ((GunpowderBarrelState*)sub)->throwVelY;
+        ((GunpowderBarrelState*)sub)->throwVelY = (v < lbl_803E4314)
                                                                    ? lbl_803E4314
                                                                    : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
-        f32 v = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityZ;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityZ = (v < lbl_803E4314)
+        f32 v = ((GunpowderBarrelState*)sub)->throwVelZ;
+        ((GunpowderBarrelState*)sub)->throwVelZ = (v < lbl_803E4314)
                                                                    ? lbl_803E4314
                                                                    : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
-    ((GameObject*)obj)->anim.velocityX = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityX;
-    ((GameObject*)obj)->anim.velocityY = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY;
-    ((GameObject*)obj)->anim.velocityZ = ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityZ;
+    ((GameObject*)obj)->anim.velocityX = ((GunpowderBarrelState*)sub)->throwVelX;
+    ((GameObject*)obj)->anim.velocityY = ((GunpowderBarrelState*)sub)->throwVelY;
+    ((GameObject*)obj)->anim.velocityZ = ((GunpowderBarrelState*)sub)->throwVelZ;
     dt = timeDelta;
     objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
             ((GameObject*)obj)->anim.velocityZ * dt);
@@ -591,9 +400,9 @@ void gunpowderbarrel_updatePhysics(int* obj)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityX = z;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY = z;
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->velocityZ = z;
+        ((GunpowderBarrelState*)sub)->throwVelX = z;
+        ((GunpowderBarrelState*)sub)->throwVelY = z;
+        ((GunpowderBarrelState*)sub)->throwVelZ = z;
         if (contact != 0)
         {
             u32 flags;
@@ -601,9 +410,9 @@ void gunpowderbarrel_updatePhysics(int* obj)
             flags = ((ObjAnimComponent*)contact)->modelInstance->flags;
             if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000))
             {
-                *(int**)&((GunpowderbarrelUpdatePhysicsState*)sub)->unkC = contact;
+                *(int**)&((GunpowderBarrelState*)sub)->queuedHitObject = contact;
             }
-            else if (((GunpowderbarrelUpdatePhysicsState*)sub)->slideTimer < lbl_803E431C)
+            else if (((GunpowderBarrelState*)sub)->unk38 < lbl_803E431C)
             {
                 sub[0x16] = 4;
             }
@@ -612,19 +421,19 @@ void gunpowderbarrel_updatePhysics(int* obj)
         {
             gunpowderbarrel_setPlayerHeldState(obj, 0);
         }
-        ((GunpowderbarrelUpdatePhysicsState*)sub)->slideTimer = lbl_803E42C0;
+        ((GunpowderBarrelState*)sub)->unk38 = lbl_803E42C0;
     }
     else
     {
-        if (((GunpowderbarrelUpdatePhysicsState*)sub)->velocityY < lbl_803E4320)
+        if (((GunpowderBarrelState*)sub)->throwVelY < lbl_803E4320)
         {
-            fn_801A0F58(obj, ((GunpowderbarrelUpdatePhysicsState*)sub)->unk44,
-                        ((GunpowderbarrelUpdatePhysicsState*)sub)->unk46);
+            fn_801A0F58(obj, ((GunpowderBarrelState*)sub)->unk44,
+                        ((GunpowderBarrelState*)sub)->unk46);
         }
         if (!((GpbFlags4A*)(sub + 0x4a))->held && !((GpbFlags4A*)(sub + 0x4a))->playerHeld)
         {
-            ((GunpowderbarrelUpdatePhysicsState*)sub)->slideTimer += ((GameObject*)obj)->anim.velocityY;
-            if (((GunpowderbarrelUpdatePhysicsState*)sub)->slideTimer < -lbl_803DBE88)
+            ((GunpowderBarrelState*)sub)->unk38 += ((GameObject*)obj)->anim.velocityY;
+            if (((GunpowderBarrelState*)sub)->unk38 < -lbl_803DBE88)
             {
                 sub[0x16] = 4;
             }
@@ -635,14 +444,6 @@ void gunpowderbarrel_updatePhysics(int* obj)
 
 /* Tail of the TU (0x801A1A60..0x801A27B8) - formerly the head of
  * cannontargetControl.c (now dll_0159_blasted.c). */
-
-typedef struct GunpowderbarrelPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} GunpowderbarrelPlacement;
 
 void gunpowderbarrel_hitDetect(int param_1)
 {
@@ -764,20 +565,7 @@ copy_end:
     barrel->anim.previousLocalPosX = barrel->anim.localPosX;
     barrel->anim.previousLocalPosY = barrel->anim.localPosY;
     barrel->anim.previousLocalPosZ = barrel->anim.localPosZ;
-    return;
 }
-
-typedef struct
-{
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 b4 : 1;
-    u8 b3 : 1;
-    u8 b2 : 1;
-    u8 b1 : 1;
-    u8 b0 : 1;
-} BarrelBits;
 
 /* EN v1.0 0x801A25E8  size: 464b  Gunpowder-barrel setup: registers with the
  * carryable interface and obj groups, zeroes the roll/contact state, seeds
@@ -809,13 +597,13 @@ void gunpowderbarrel_init(int obj, u8* def)
     {
         u8 v;
         v = ((s8)def[0x19] >= 1) ? 0 : 1;
-        ((BarrelBits*)&state->configFlags)->b7 = v;
+        ((GpbFlags48*)&state->configFlags)->unk80 = v;
         v = (*(s16*)(def + 0x1c) == 0) ? 0 : 1;
-        ((BarrelBits*)&state->configFlags)->b6 = v;
+        ((GpbFlags48*)&state->configFlags)->returnHome = v;
     }
     ObjHits_EnableObject(obj);
     state->hitRadius = (f32)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->primaryRadius;
-    ((BarrelBits*)&state->heldFlags)->b5 = 0;
+    ((GpbFlags4A*)&state->heldFlags)->held = 0;
     state->unk38 = lbl_803E42C0;
     state->linkedTimerObject = 0;
     (*(void (**)(GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x2c))(state, 1);
@@ -825,7 +613,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     }
     if (((GameObject*)obj)->anim.seqId == 0x754)
     {
-        ((BarrelBits*)&state->heldFlags)->b1 = 1;
+        ((GpbFlags4A*)&state->heldFlags)->unk02 = 1;
     }
 }
 
@@ -871,9 +659,9 @@ void gunpowderbarrel_update(int obj)
         memset((void*)&((GameObject*)obj)->anim.velocityX, 0, 0xc);
         return;
     }
-    if (((BarrelBits*)&state->heldFlags)->b5 == 0)
+    if (((GpbFlags4A*)&state->heldFlags)->held == 0)
     {
-        if (((BarrelBits*)&state->heldFlags)->b1 != 0 && playerIsDisguised(player) == 0)
+        if (((GpbFlags4A*)&state->heldFlags)->unk02 != 0 && playerIsDisguised(player) == 0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
         }
@@ -922,7 +710,7 @@ void gunpowderbarrel_update(int obj)
             }
         }
     }
-    if (((BarrelBits*)&state->heldFlags)->b5 != 0)
+    if (((GpbFlags4A*)&state->heldFlags)->held != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     }
@@ -946,7 +734,7 @@ void gunpowderbarrel_update(int obj)
         {
             int i;
             u32 gen;
-            if (((BarrelBits*)&state->heldFlags)->b7 != 0)
+            if (((GpbFlags4A*)&state->heldFlags)->playerHeld != 0)
             {
                 gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
             }
@@ -984,7 +772,7 @@ void gunpowderbarrel_update(int obj)
             memset((void*)&((GameObject*)obj)->anim.velocityX, 0, 0xc);
             state->motionFlags &= ~2;
             ObjHits_RefreshObjectState(obj);
-            if (((BarrelBits*)&state->configFlags)->b7 != 0)
+            if (((GpbFlags48*)&state->configFlags)->unk80 != 0)
             {
                 s16toFloat(&state->respawnTimer, 0x3c);
                 storeZeroToFloatParam(&state->releaseTimer);
@@ -1015,15 +803,15 @@ void gunpowderbarrel_update(int obj)
     }
     else
     {
-        if (((BarrelBits*)&state->configFlags)->b6 != 0 && ((BarrelBits*)&state->heldFlags)->b4 != 0 &&
+        if (((GpbFlags48*)&state->configFlags)->returnHome != 0 && ((GpbFlags4A*)&state->heldFlags)->onGround != 0 &&
             (state->motionFlags & 2) == 0)
         {
             saveGame_saveObjectPos((int*)obj);
         }
     }
-    if ((state->motionFlags & 2) != 0 || ((BarrelBits*)&state->heldFlags)->b5 != 0 ||
+    if ((state->motionFlags & 2) != 0 || ((GpbFlags4A*)&state->heldFlags)->held != 0 ||
         (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))(obj, state) == 0 ||
-        (((BarrelBits*)&state->heldFlags)->b1 != 0 && playerIsDisguised(player) == 0))
+        (((GpbFlags4A*)&state->heldFlags)->unk02 != 0 && playerIsDisguised(player) == 0))
     {
         ObjHits_EnableObject(obj);
         fn_801A1230(obj);
@@ -1077,20 +865,20 @@ void gunpowderbarrel_update(int obj)
             ObjGroup_RemoveObject(obj, 0x16);
         }
         state->heldByCarryInterface = 1;
-        ((BarrelBits*)&state->heldFlags)->b6 = 1;
+        ((GpbFlags4A*)&state->heldFlags)->unk40 = 1;
         state->launchYaw = ((GameObject*)player)->anim.rotX;
         fn_801A1230(obj);
     }
-    if (((BarrelBits*)&state->heldFlags)->b5 != 0)
+    if (((GpbFlags4A*)&state->heldFlags)->held != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        if (((BarrelBits*)&state->heldFlags)->b6 != 0 && ((BarrelBits*)&state->heldFlags)->b7 != 0)
+        if (((GpbFlags4A*)&state->heldFlags)->unk40 != 0 && ((GpbFlags4A*)&state->heldFlags)->playerHeld != 0)
         {
             state->throwVelX = ((GameObject*)obj)->anim.velocityX;
             state->throwVelY = ((GameObject*)obj)->anim.velocityY;
             state->throwVelZ = ((GameObject*)obj)->anim.velocityZ;
             state->throwVelY = lbl_803E42C0;
-            ((BarrelBits*)&state->heldFlags)->b6 = 0;
+            ((GpbFlags4A*)&state->heldFlags)->unk40 = 0;
         }
     }
     if (*(void* *)&state->linkedTimerObject != NULL)
@@ -1108,22 +896,14 @@ void gunpowderbarrel_update(int obj)
  * update/hitDetect callers above (they were extern bls before the
  * re-split, and the retail unit keeps the bls). */
 
-u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((int**)obj)[0xb8 / 4])->heldFlags >> 5) & 1; }
-
-typedef struct
-{
-    u8 playerHeld : 1;
-    u8 _pad0 : 1;
-    u8 held : 1;
-    u8 _pad1 : 5;
-} GpbHeldByte;
+u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((GameObject*)obj)->extra)->heldFlags >> 5) & 1; }
 
 /* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
  * barrel as held, mark obj active, and clear its physics-sleep bit. */
 void gunpowderbarrel_setHeldState(int* obj)
 {
     GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
-    ((GpbHeldByte*)&sub->heldFlags)->held = 1;
+    ((GpbFlags4A*)&sub->heldFlags)->held = 1;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
     sub->motionFlags = (u8)(sub->motionFlags & ~2);
 }
@@ -1141,7 +921,7 @@ void gunpowderbarrel_clearHeldState(int* obj)
     sub->motionFlags = (u8)(sub->motionFlags | 1);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
     sub->unk38 = z;
-    ((GpbHeldByte*)&sub->heldFlags)->held = 0;
+    ((GpbFlags4A*)&sub->heldFlags)->held = 0;
 }
 
 /* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
@@ -1159,7 +939,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         h[0x6a] = 1;
         h[0x6b] = 1;
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | 8);
-        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 1;
+        ((GpbFlags4A*)&sub->heldFlags)->playerHeld = 1;
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
         ObjHits_SetFlags(o, 0x480);
         ObjHits_ClearSourceMask(o, 1);
@@ -1170,7 +950,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
     {
         h[0x6a] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x63];
         h[0x6b] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x64];
-        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 0;
+        ((GpbFlags4A*)&sub->heldFlags)->playerHeld = 0;
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~8);
         ObjHits_ClearFlags(o, 0x400);
         sub->motionFlags = (u8)(sub->motionFlags | 1);
@@ -1194,20 +974,12 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
     int result = 0;
     if (state->heldByCarryInterface == 0 &&
         state->respawnTimer == lbl_803E42C0 &&
-        ((int(*)(GunpowderBarrelState*))(*(*(void****)&gCarryableInterface))[5])(state) == 0)
+        (*(int (**)(GunpowderBarrelState*))(*(int*)gCarryableInterface + 0x14))(state) == 0)
     {
         result = 1;
     }
     return result;
 }
-
-typedef struct GunpowderbarrelLaunchAtTargetPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-} GunpowderbarrelLaunchAtTargetPlacement;
 
 /* gunpowderbarrel_launchAtTarget: gunpowder-barrel "throw at target" launch. Seeds state's
  * launch velocity (state+0x20..28) from a per-axis pair scaled by the
@@ -1251,7 +1023,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     state->motionFlags = (u8)(state->motionFlags | 1);
     Sfx_PlayFromObject((u32)obj, SFXsk_baptr6_c);
     state->motionFlags = (u8)(state->motionFlags | 2);
-    if (((BarrelBits*)&state->configFlags)->b6 != 0)
+    if (((GpbFlags48*)&state->configFlags)->returnHome != 0)
     {
         u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
         target = 0;
@@ -1263,7 +1035,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
             uint* p = barrels;
             for (i = 0; i < count; i++)
             {
-                if (((GunpowderbarrelLaunchAtTargetPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
+                if (((GunpowderbarrelPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
                 {
                     target = barrels[i];
                     break;
