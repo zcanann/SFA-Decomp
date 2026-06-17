@@ -1,3 +1,13 @@
+/*
+ * dll7ffunc0 (DLL 0x7F) - one of the foodbag effect DLLs (siblings 0x7C..0x90).
+ * dll_7F_func03 builds a FbBuf command list of textured billboard quads from
+ * the resource blob at lbl_80315328 and the per-effect float table
+ * lbl_803E0E20..lbl_803E0E54, then hands it to the modgfx system via
+ * (*gModgfxInterface)->spawnEffect. The `variant` arg (0/1/2) selects which
+ * quads are emitted; `flags` is OR'd into the buffer's flags, and bit 0 makes
+ * the effect track the source object's (or posSource's) world position.
+ * dll_7F_func00_nop/func01_nop are the DLL's empty init/free export slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -29,7 +39,7 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags)
 
     e[0].layer = 0;
     e[0].flags = 0x8c;
-    e[0].tex = (void*)0;
+    e[0].tex = NULL;
     e[0].mode = 0x20000000;
     e[0].x = lbl_803E0E20;
     e[0].y = lbl_803E0E24;
@@ -158,7 +168,7 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags)
     p++;
     p->layer = 3;
     p->flags = 0;
-    p->tex = (void*)0;
+    p->tex = NULL;
     p->mode = 0x20000000;
     p->x = lbl_803E0E20;
     p->y = lbl_803E0E24;
@@ -224,4 +234,5 @@ void dll_7F_func00_nop(void)
 {
 }
 
+/* Trailing decl of the next DLL's nop; pins cross-TU link order. */
 void dll_80_func01_nop(void);
