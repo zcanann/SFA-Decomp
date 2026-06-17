@@ -1125,7 +1125,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
             objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
             trickyDebugPrint(lbl_8031D478);
         }
-        trickyState[0x15] = trickyState[0x15] & ~0x10LL;
+        trickyState[0x15] = trickyState[0x15] & ~0x10;
         *(u8*)((int)trickyState + 10) = 0;
     }
         break;
