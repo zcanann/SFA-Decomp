@@ -3219,6 +3219,7 @@ void doPendingMapLoads(void)
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
 
+#pragma dont_inline on
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
@@ -3249,7 +3250,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         slot = i2;
         if (slot == -1)
             slot = mapProcessRomList(id);
-        *(s8*)&((BlockEntry*)lbl_8038224C)[slot].field_6 = 1;
+        *(s8*)(p2 + 6 + slot * 8) = 1;
         entry = (char*)lbl_8038224C[slot].field_0;
         pairs = (s16*)lbl_80382238[2];
         cv3 = (s8)pairs[id * 2];
@@ -3290,7 +3291,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         found3:
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
-            *(s8*)&((BlockEntry*)lbl_8038224C)[i4].field_6 = 1;
+            *(s8*)(p2 + 6 + i4 * 8) = 1;
         }
         rects = (s16*)(lbl_80382238[1] + id * 10);
         x = x - rects[0];
@@ -3323,6 +3324,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         *(s8*)((char*)out + 8) = 0;
     }
 }
+#pragma dont_inline reset
 
 extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
