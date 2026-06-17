@@ -1,25 +1,38 @@
-#include "main/dll/MMP/MMP_asteroid.h"
+/*
+ * pinponspike (DLL 0x0D8) - a thrown spike projectile.
+ *
+ * On init the object disables its hits, goes fully opaque, plays the
+ * attack02 launch sfx and sets objectFlags 0x6000. Each update it
+ * ballistically integrates velocity * timeDelta through objMove,
+ * applies gravity (clamped to a terminal fall speed) and orients rotX/
+ * rotY to the velocity heading. While alive it re-enables a hit volume;
+ * on striking the player or Tricky (or any contact hit) it goes
+ * invisible, starts a 0x78-frame free countdown, bursts 0x19 impact fx
+ * (0x715) and plays the attack03 hit sfx, then frees itself once the
+ * countdown elapses or it falls below the kill plane.
+ *
+ * fn_80169EF4 computes the launch angle that lands a projectile of the
+ * given speed under gravity at a target offset (used cross-TU by duster).
+ *
+ * This TU also hosts the object descriptors for the sibling
+ * kaldachompspit / pollen / pollenfragment objects (their code lives in
+ * the neighbouring DLLs) plus the pollen-fragment spawn config table.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-extern undefined4 FUN_800067e8();
-extern uint FUN_8007f6c8();
-extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8008112c();
-
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
+/* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
+   the remaining callbacks (render/hitDetect/init/release/initialise) are in xyzanimator.h */
+extern void kaldachompspit_free(int* obj);
+extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
+
 extern f32 timeDelta;
 extern f32 lbl_803E3110;
 extern f32 lbl_803E3114;
@@ -33,50 +46,8 @@ extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int obj);
 extern void* getTrickyObject(void);
-
-void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    uint uVar1;
-    int iVar2;
-    int iVar3;
-    ObjHitsPriorityState* hitState;
-    int auStack_18[4];
-
-    iVar3 = *(int*)&((GameObject*)param_9)->extra;
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
-    uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
-    if (uVar1 == 0)
-    {
-        iVar2 = ObjHits_GetPriorityHit(param_9, auStack_18, (int*)0x0, (uint*)0x0);
-        if ((iVar2 == 0xe) || (iVar2 == 0xf))
-        {
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            ObjHits_DisableObject(param_9);
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-        if (hitState->contactFlags != 0)
-        {
-            ObjHits_DisableObject(param_9);
-            *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
-            if (*(short*)(((XyzAnimatorState*)iVar3)->unk1C + 4) != -1)
-            {
-                FUN_8008112c((double)lbl_803E3DF4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 0, 1, 0, 1, 0, 1, 0);
-                FUN_800067e8(param_9, *(ushort*)(((XyzAnimatorState*)iVar3)->unk1C + 4), 3);
-            }
-            FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
-        }
-    }
-    return;
-}
 
 void pinponspike_render(void)
 {
@@ -94,15 +65,10 @@ void pinponspike_initialise(void)
 {
 }
 
-
-
-
-
 void pinponspike_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
 
 void pinponspike_init(int obj)
 {
@@ -113,11 +79,8 @@ void pinponspike_init(int obj)
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
-
-
 int pinponspike_getExtraSize(void) { return 0x0; }
 int pinponspike_getObjectTypeId(void) { return 0x0; }
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -238,7 +201,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -273,7 +235,7 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
     dist = dist * lbl_803E3110;
     a = grav * (lbl_803E3114 * grav);
     {
-        f32 vel = -(grav * dy) - (speed = speed * speed);
+        f32 vel = -(grav * dy) - (speed = speed * speed); /* speed is now speed^2 */
         disc = vel * vel - (lbl_803E3118 * a) * (dy * dy + dist * dist);
         if (disc >= lbl_803E311C)
         {
@@ -286,7 +248,7 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
                 t = (lbl_803E3120 * (-vel - sqrtf(disc))) / a;
             }
             t = sqrtf(t);
-            a = dist / t;
+            a = dist / t; /* a is now the horizontal velocity */
             return getAngle(sqrtf(-(a * a - speed)), a);
         }
     }
@@ -335,7 +297,7 @@ void pinponspike_update(int obj)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, 0x279);
+            Sfx_PlayFromObject(obj, SFXsc_attack03);
         }
         else if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
@@ -347,7 +309,7 @@ void pinponspike_update(int obj)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, 0x279);
+            Sfx_PlayFromObject(obj, SFXsc_attack03);
         }
         else if (((GameObject*)obj)->anim.localPosY < lbl_803E312C)
         {
@@ -355,6 +317,3 @@ void pinponspike_update(int obj)
         }
     }
 }
-
-
-
