@@ -109,7 +109,7 @@ void nw_levcontrol_update(int objArg)
     bitVal4 = 0;
     bitVal = GameBit_Get(0x19f);
     bitVal3 = GameBit_Get(0x19d);
-    if ((bitVal3 != bitVal) && (flag = gameTimerIsRunning(), flag != 0))
+    if (((bitVal3 ^ bitVal) != 0) && (flag = gameTimerIsRunning(), flag != 0))
     {
         bitVal4 = 1;
     }
