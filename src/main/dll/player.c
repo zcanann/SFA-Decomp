@@ -15116,7 +15116,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     {
         *(f32*)((char*)d + 0x8) = *(f32*)((char*)a + 0x84);
         *(f32*)((char*)d + 0x0) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x8);
-        if ((*(u8*)((char*)b + 0x3f1) & 1) != 0)
+        if ((*(u8*)((char*)b + 0x3f1) & 1) != 0u)
         {
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
