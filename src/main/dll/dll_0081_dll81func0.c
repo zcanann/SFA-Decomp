@@ -1,3 +1,16 @@
+/*
+ * dll81func0 (DLL 0x81) - a foodbag-family modgfx effect builder.
+ *
+ * dll_81_func03 fills a stack FbBuf with a list of FbCmd draw entries
+ * (textures taken from the lbl_80315548 texture data array) and hands it to
+ * ModgfxInterface::spawnEffect. The `variant` arg selects which optional
+ * entries get appended and which spawnEffect effect id is used (0x3e9 for
+ * variant 0x1e, 0x23d for variants 2/3, 0x2e for variants 10..13 and 0xe,
+ * 0xd9 otherwise); the low bit of the merged flag word selects whether the
+ * effect position is read from the source object (+0x18..) or the posSource
+ * transform (+0xc..). The two trailing _nop entry points are the DLL's empty
+ * func00/func01 slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -90,14 +103,14 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     p[0].layer = 0;
     p[0].flags = 0x77;
-    p[0].tex = (void*)0;
+    p[0].tex = NULL;
     p[0].mode = 0x10000;
     p[0].x = lbl_803E0E80;
     p[0].y = lbl_803E0E80;
     p[0].z = lbl_803E0E80;
     p[1].layer = 0;
     p[1].flags = 0x79;
-    p[1].tex = (void*)0;
+    p[1].tex = NULL;
     p[1].mode = 0x10000;
     p[1].x = lbl_803E0E80;
     p[1].y = lbl_803E0E80;
@@ -172,7 +185,7 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 4;
         p->flags = 2;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x2000;
         p->x = lbl_803E0E80;
         p->y = lbl_803E0E80;
@@ -207,14 +220,14 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     p[0].layer = 5;
     p[0].flags = 0x78;
-    p[0].tex = (void*)0;
+    p[0].tex = NULL;
     p[0].mode = 0x10000;
     p[0].x = lbl_803E0E80;
     p[0].y = lbl_803E0E80;
     p[0].z = lbl_803E0E80;
     p[1].layer = 5;
     *(s16*)&p[1].flags = -1;
-    p[1].tex = (void*)0;
+    p[1].tex = NULL;
     p[1].mode = 0x10000;
     p[1].x = lbl_803E0E80;
     p[1].y = lbl_803E0E80;
@@ -278,7 +291,6 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     }
 }
 
-
 void dll_81_func01_nop(void)
 {
 }
@@ -286,5 +298,3 @@ void dll_81_func01_nop(void)
 void dll_81_func00_nop(void)
 {
 }
-
-void dll_82_func01_nop(void);
