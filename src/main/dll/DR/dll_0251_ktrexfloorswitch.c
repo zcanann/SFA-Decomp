@@ -194,10 +194,11 @@ void ktrexfloorswitch_update(int obj)
             int curveId;
             ((KtrexfloorswitchState*)state)->flags |= 0x2;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveId = (*gRomCurveInterface)->find(
-                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
+            curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10));
+                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
+                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
@@ -225,10 +226,11 @@ void ktrexfloorswitch_update(int obj)
             int curveId;
             ((KtrexfloorswitchState*)state)->flags |= 0x2;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
-            curveId = (*gRomCurveInterface)->find(
-                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
+            curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10));
+                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
+                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
