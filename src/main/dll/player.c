@@ -416,9 +416,10 @@ int fn_802974A0(int obj, int state, f32 fv)
     ((GameObject*)obj)->anim.velocityY = inner->unk784 * fv;
     if (*(f32*)((char*)state + 0x298) > lbl_803E7EFC)
     {
+        f32 rfv = (f32)inner->targetYawRate * fv;
         inner->targetYaw =
             (s16)((f32)(s16)inner->targetYaw +
-                  lbl_803E7F00 * ((f32)inner->targetYawRate * fv * lbl_803E7F04));
+                  lbl_803E7F00 * (rfv * lbl_803E7F04));
         inner->yaw = inner->targetYaw;
     }
     fn_802ABAE8(obj, state, (int)inner, lbl_803E7EA4);
