@@ -604,7 +604,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             }
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
-                obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
+                obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
                 (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
                 (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
                 (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);

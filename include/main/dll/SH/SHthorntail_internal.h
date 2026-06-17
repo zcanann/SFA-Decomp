@@ -101,7 +101,9 @@ typedef struct SHthorntailObject {
       f32 modelScale;
       Vec modelPos;
       Vec pos;
-      u8 pad24[0x46 - 0x24];
+      f32 velocityX;
+      f32 velocityY;
+      u8 pad2C[0x46 - 0x2C];
       s16 objType;
       u8 pad48[0x4C - 0x48];
       SHthorntailConfig *config;
