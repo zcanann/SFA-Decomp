@@ -2689,6 +2689,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
     }
 }
 
+#pragma opt_propagation off
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 {
     extern f32 playerMapOffsetX;
@@ -2768,6 +2769,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
         }
     }
 }
+#pragma opt_propagation reset
 
 void characterDoEyeAnims(int obj, int p2)
 {
