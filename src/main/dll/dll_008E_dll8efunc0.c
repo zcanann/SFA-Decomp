@@ -1,3 +1,18 @@
+/*
+ * dll8efunc0 (DLL 0x8E) - one of the foodbag modgfx effect spawners
+ * (dll_NN_func03 family, see foodbag.h). func03 builds a multi-command
+ * FbBuf and hands it to the modgfx interface to spawn a randomized
+ * particle burst (a flame/spark fan: textured layer-0/1/2 commands plus
+ * mode-0x80 emitter markers, the lone &lbl_803DB918 texture). variant 0
+ * vs 1 selects two different random spawn-box ranges for the lead
+ * command; flag bit 0 offsets the burst position from sourceObj
+ * (offsets 0x18/0x1c/0x20) and/or posSource (offsets 0xc/0x10/0x14).
+ * func00/func01 are unused stub slots; effect params come from the
+ * resource tables lbl_80316C60 (the halfword parameter block copied
+ * into buf.hw[]) and lbl_80316C40 (the vertex/color table passed to
+ * spawnEffect). lbl_803DB910 is the lone extra resource handed to
+ * spawnEffect alongside the &lbl_803DB918 texture.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -8,7 +23,7 @@ extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316C60[];
 extern u8 lbl_80316C40[];
 extern u8 lbl_803DB918;
-extern u8 lbl_803DB910;
+extern u8 lbl_803DB910[8];
 extern f32 lbl_803E1138;
 extern f32 lbl_803E113C;
 extern f32 lbl_803E1140;
@@ -63,7 +78,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     randomGetRange(-0xbb8, -0x2ee0);
     p[0].layer = 0;
     p[0].flags = 0;
-    p[0].tex = (void*)0;
+    p[0].tex = NULL;
     p[0].mode = 0x80;
     p[0].x = lbl_803E1138;
     p[0].y = ry;
@@ -102,7 +117,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     p[3].z = lbl_803E1138;
     p[4].layer = 2;
     p[4].flags = 0;
-    p[4].tex = (void*)0;
+    p[4].tex = NULL;
     p[4].mode = 0x80;
     p[4].x = lbl_803E1138;
     p[4].y = lbl_803E1138;
@@ -117,7 +132,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     p[5].z = lbl_803E115C;
     p[6].layer = 2;
     p[6].flags = 0;
-    p[6].tex = (void*)0;
+    p[6].tex = NULL;
     p[6].mode = 0x80;
     p[6].x = lbl_803E1138;
     p[6].y = lbl_803E1138;
@@ -149,6 +164,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         buf.pos[1] = lbl_803E116C;
     }
+    /* launder forces these four into a fresh shared f-reg (CSE'd, distinct from pos[0]/pos[1]) */
     buf.pos[2] = *(f32*)&lbl_803E1138;
     buf.col[0] = *(f32*)&lbl_803E1138;
     buf.col[1] = *(f32*)&lbl_803E1138;
@@ -195,7 +211,6 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80316C40, 1, &lbl_803DB910, 0x26a, 0);
 }
 #pragma opt_propagation reset
-
 
 void dll_8E_func01_nop(void)
 {
