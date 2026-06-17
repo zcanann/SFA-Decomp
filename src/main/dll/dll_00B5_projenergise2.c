@@ -1,33 +1,19 @@
+/*
+ * projenergise2 (DLL 0x00B5) - retired "energise" projectile object.
+ *
+ * No descriptor survives in this TU: only the entry point (logs that this
+ * projectile is no longer supported and returns the unsupported sentinel)
+ * plus empty release/initialise stubs.
+ */
 #include "main/dll/dll_6A.h"
+#include "dolphin/os.h"
 
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_6A.c
- * - 0x8010081C-0x80100820
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_69.c
- * - next split: main/dll/dll_6B.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
-extern void OSReport(const char* fmt, ...);
-
-#define PROJECTILE_UNSUPPORTED_RETURN -1
+#define PROJENERGISE2_UNSUPPORTED -1
 
 int projenergise2_doUnsupported(void)
 {
     OSReport(sProjenergise2DoNoLongerSupported);
-    return PROJECTILE_UNSUPPORTED_RETURN;
+    return PROJENERGISE2_UNSUPPORTED;
 }
 
 void projenergise2_release(void)
