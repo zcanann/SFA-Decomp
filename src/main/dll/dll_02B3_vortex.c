@@ -261,6 +261,7 @@ void vortex_update(int obj)
 {
     VortexState* state = ((GameObject*)obj)->extra;
     VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
+    u32 active;
 
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
@@ -279,7 +280,8 @@ void vortex_update(int obj)
         }
     }
 
-    if (state->flags.active != 0)
+    active = state->flags.active;
+    if (active != 0)
     {
         f32 lim = lbl_803E73E0;
         if (state->alpha < lim)
@@ -291,7 +293,7 @@ void vortex_update(int obj)
             }
         }
     }
-    if (state->flags.active == 0)
+    if (active == 0)
     {
         f32 lim = lbl_803E73D0;
         if (state->alpha > lim)
