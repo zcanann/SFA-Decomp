@@ -16754,9 +16754,10 @@ void fn_802ADE80(int obj, int inner, int state)
 {
     f32 waterZ;
     f32 waterX;
-    f32 tx;
-    f32 ty;
-    f32 tz;
+    f32 t[3];
+#define tx t[0]
+#define ty t[1]
+#define tz t[2]
     struct
     {
         u8 pad[6];
@@ -16848,11 +16849,11 @@ void fn_802ADE80(int obj, int inner, int state)
             s8 c;
             tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
             c = *(s8*)((char*)inner + 0x8cc);
-            if (c > 0xc)
+            if (c <= 8)
             {
                 tz = lbl_803E8124;
             }
-            else if (c > 8)
+            else if (c <= 0xc)
             {
                 tz = lbl_803E8124;
             }
@@ -16905,6 +16906,9 @@ void fn_802ADE80(int obj, int inner, int state)
         }
     }
 }
+#undef tx
+#undef ty
+#undef tz
 
 int fn_802A16CC(int obj, int state, f32 fv)
 {
