@@ -126,7 +126,6 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         for (i = 0; i < count; i++)
         {
             GameObject* partner = (GameObject*)objs[i];
-            /* setup[0x1b]: linkId */
             if (*(u8*)((int)partner->anim.placement + 0x1b) == state->targetLinkId)
                 break;
         }

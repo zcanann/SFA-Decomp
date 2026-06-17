@@ -834,7 +834,6 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
     {
         activeEffects[i] = (ModgfxActiveEffect*)0x0;
     }
-    /* redundant tail re-zero: reproduces the target's unrolled trailing stores */
     i = 2;
     {
         ModgfxActiveEffect** tailEffects;
@@ -1175,7 +1174,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-/* in-range ObjectDescriptor stubs: 0x800A432C / 0x800A4330 / 0x800A4334 */
 void playerShadow_func03_nop(void)
 {
 }

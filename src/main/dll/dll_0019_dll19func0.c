@@ -119,7 +119,6 @@ extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
 extern u8 framesThisStep;
 
-void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
 #pragma peephole off

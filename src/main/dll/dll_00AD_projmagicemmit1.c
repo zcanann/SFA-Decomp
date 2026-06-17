@@ -8,7 +8,6 @@
  */
 #include "main/dll/dll_66.h"
 
-/* declared here for codegen; not pulled in via dll_66.h */
 extern void OSReport(const char* fmt, ...);
 
 int projmagicemmit1_doUnsupported(void)

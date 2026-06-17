@@ -521,7 +521,6 @@ void Effect17_func05(void)
 
 void Effect18_func05(void);
 
-/* colorWord0..2 are u16 here; effectIdByte/modelIdByte written but ignored by the consumer */
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, s16* extraArgs)
 {
@@ -804,4 +803,3 @@ void Effect18_func03_nop(void);
 
 #pragma dont_inline reset
 #pragma dont_inline reset
-

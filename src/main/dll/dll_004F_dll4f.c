@@ -25,7 +25,6 @@ extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 timeDelta;
 
-/* mode-4F framing constants (lbl_803E1A88..lbl_803E1AB4) */
 extern f32 lbl_803E1A88;
 extern f32 lbl_803E1A8C;
 extern f32 lbl_803E1A90;

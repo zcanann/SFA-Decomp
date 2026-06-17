@@ -111,7 +111,6 @@ ObjectDescriptor gDllFCObjDescriptor = {
     dll_FC_getExtraSize_ret_8,
 };
 
-/* obj stays int (cast in-body) to match the original param register classing. */
 void dll_FC_update(int obj)
 {
     BabyCloudRunnerPlacement* placement;

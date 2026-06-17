@@ -86,7 +86,6 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags,
     int n;
     int cnt;
     spr = Gameplay_GetActiveModel(sourceObj);
-    /* lbl_803E0730 packs the default {lo, hi} count range as one 32-bit word. */
     *(u32*)&r = lbl_803E0730;
     if (countRange != NULL)
     {
@@ -123,7 +122,6 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags,
     buf.v59 = 4;
     buf.v5a = 0;
     buf.v5b = 0;
-    /* hw[] mirrors the seven s16 entries at lbl_80311E30+0x40. */
     buf.hw[0] = *(s16*)&base[0x40];
     buf.hw[1] = *(s16*)&base[0x42];
     buf.hw[2] = *(s16*)&base[0x44];
@@ -335,7 +333,6 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags,
     {
         cnt = randomGetRange(1, 3);
     }
-    /* m.seqId selects the gPartfxInterface particle sequence per effect. */
     switch (effectId)
     {
     case 0:

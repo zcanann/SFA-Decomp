@@ -116,7 +116,6 @@ void pointlight_render(int obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     ModelLight* light = state->light;
-    /* glowType (0x2f8) set and the light enabled (0x4c) */
     if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 &&
         *(u8*)((char*)light + 0x4c) != 0)
     {

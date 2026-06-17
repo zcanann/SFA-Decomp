@@ -30,7 +30,6 @@ extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
-/* per-frame scratch globals shared across the update sub-passes */
 extern u32 lbl_803DD438;
 extern u32 lbl_803DD43C;
 extern u8 lbl_803DD434;
@@ -44,7 +43,6 @@ extern f32 lbl_803DD448;
 extern u32 playerOverride;
 extern f32 timeDelta;
 
-/* tuning constants (.sdata2, shared with sibling player TUs) */
 extern f32 lbl_803E0570;
 extern f32 lbl_803E0574;
 extern f32 lbl_803E0578;
@@ -88,7 +86,6 @@ void player_clearXZvel(int* obj, int* state)
 
 #pragma scheduling off
 #pragma peephole off
-/* identical body to player_playSoundFn10 - two distinct symbols required by the binary (0x800D8D08 / 0x800D8CBC) */
 void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
     register int flags;

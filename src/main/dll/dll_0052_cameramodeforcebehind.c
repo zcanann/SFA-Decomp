@@ -17,7 +17,6 @@
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-/* called as (f32 from[3], GameObject *target, f32 to[3], void *out); out is f32* or s16* per site */
 extern void camcontrol_traceFromTarget();
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx);

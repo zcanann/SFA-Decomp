@@ -20,14 +20,10 @@ extern u8 framesThisStep;
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 
-/* per-kind keyframe-row indices into the tab file */
 extern s16 lbl_80323818[], lbl_80323824[];
 
-/* render scale */
 extern f32 lbl_803E4788;
-/* root-motion scales by kind group */
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4;
-/* blend-channel target weights / fade endpoints */
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
 static inline int* getActiveModel(void* obj)

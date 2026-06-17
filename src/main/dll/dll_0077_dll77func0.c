@@ -21,7 +21,6 @@ STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 
 extern ModgfxInterface** gModgfxInterface;
 
-/* Typed u8[] (not s16[]) so the seven s16 reads keep the array/sda21 form. */
 extern u8 lbl_80314980[];
 extern f32 lbl_803E0C58;
 extern f32 lbl_803E0C5C;

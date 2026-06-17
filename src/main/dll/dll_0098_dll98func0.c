@@ -48,10 +48,8 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern u32 randomGetRange(int min, int max);
 
-/* per-entry flag/texture/anim table (.data) */
 extern u8 lbl_803178B0[];
 
-/* effect float-constant table (.sdata2) */
 extern f32 lbl_803E1318;
 extern f32 lbl_803E131C;
 extern f32 lbl_803E1320;
@@ -193,7 +191,6 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.unk_5a = 0;
     buf.unk_5b = 0x10;
     buf.flags = 0x4080400; /* bit 0 enables position offset below */
-    /* 0xd8 / sizeof(GfxCmd) = 9 entries; ptr-diff form is matching-required */
     buf.count = (GfxCmd*)((u8*)entry + 0xd8) - entry;
     buf.hw[0] = *(s16*)(table + 0x214);
     buf.hw[1] = *(s16*)(table + 0x216);
@@ -202,7 +199,6 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.hw[4] = *(s16*)(table + 0x21c);
     buf.hw[5] = *(s16*)(table + 0x21e);
     buf.hw[6] = *(s16*)(table + 0x220);
-    /* == &buf.entries[0]; buf-relative cast is matching-required (not &buf.entries) */
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)

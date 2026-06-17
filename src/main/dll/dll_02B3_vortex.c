@@ -120,7 +120,6 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
-        /* texture guaranteed non-NULL at this seqId */
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
@@ -155,7 +154,6 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
-        /* texture guaranteed non-NULL at this seqId */
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
@@ -194,7 +192,6 @@ void vortex_hitDetect(void)
 {
 }
 
-/* initData carries a VortexSetup*; kept int (matches obj) for register coloring */
 void vortex_init(int obj, int initData)
 {
     f32* base = lbl_8032BE20;

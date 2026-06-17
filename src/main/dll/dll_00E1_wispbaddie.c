@@ -268,8 +268,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 
 /* segment pragma-stack balance (re-split): */
 
-#define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
-#define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
 
 void wispbaddie_update(int obj)
 {

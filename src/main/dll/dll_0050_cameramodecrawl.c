@@ -32,7 +32,6 @@ extern f32 mathCosf(f32 x);
 extern f32 timeDelta;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 
-/* per-mode state singletons, allocated/freed by this DLL */
 extern CameraModeCrawlState* lbl_803DD598;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 

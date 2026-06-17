@@ -43,13 +43,10 @@ typedef struct IMIceMountainState
 
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
-/* MagicLightState (magiclightstate_struct.h): magiclight_getExtraSize == 0x14. */
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
-/* Dll16CState (dll16cstate_struct.h): dll_16C_getExtraSize == 0x24. */
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
-/* CrRockfallState (crrockfall_types.h): crrockfall_getExtraSize == 0x14. */
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern undefined4 getLActions();
@@ -78,14 +75,12 @@ extern f32 lbl_803E4738;
 extern void warpToMap(int mapId, int flags);
 extern void Music_Trigger(int track, int flag);
 
-/* TODO raw Ghidra stub; target is imicemountain_updateEventState (0x801AC248). */
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
 {
 }
 
-/* TODO raw Ghidra; target is dll_16C_SeqFn (0x801AD930). */
 undefined4
 FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
@@ -123,7 +118,6 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return 0;
 }
 
-/* TODO raw Ghidra; target is dll_16C_render (0x801ADBAC). */
 void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
@@ -162,7 +156,6 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
     return;
 }
 
-/* TODO raw Ghidra; target is dll_16C_update (0x801ADDB0). */
 undefined4
 FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10

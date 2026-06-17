@@ -30,10 +30,8 @@ extern f32 timeDelta;
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-/* state singleton (own TU: camnpcspeak) */
 extern CameraModeNpcSpeakState* lbl_803DD584;
 
-/* mode-tuning float constants (.sdata2) */
 extern f32 lbl_803E19D0;
 extern f32 lbl_803E19D4;
 extern f32 lbl_803E19D8;

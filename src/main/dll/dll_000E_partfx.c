@@ -167,7 +167,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -287,7 +286,6 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    /* setupValue read uninitialized on purpose: load-bearing for the matched codegen */
     gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
     gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
@@ -1290,7 +1288,6 @@ void partfx_onMapSetup(void)
 {
 }
 
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -1599,8 +1596,6 @@ void partfx_release(void)
     gPartfxResourceModule19 = NULL;
     gPartfxCachedResourceCount = 0;
 }
-
-/* Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h). */
 
 extern f32 lbl_803DB7A0;
 extern f32 lbl_803DB7A4;
@@ -2929,7 +2924,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             lbl_8039C308.unk6 = 0;
             spawnParams = &lbl_8039C308;
         }
-        /* second NULL guard is load-bearing for matching (drops match% if removed) */
         if (spawnParams == NULL)
         {
             return -1;
@@ -2971,7 +2965,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             lbl_8039C308.unk6 = 0;
             spawnParams = &lbl_8039C308;
         }
-        /* second NULL guard is load-bearing for matching (drops match% if removed) */
         if (spawnParams == NULL)
         {
             return -1;

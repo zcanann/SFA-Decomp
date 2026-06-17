@@ -108,7 +108,6 @@ void drchimmey_update(DRChimmeyObject* obj)
             {
                 if ((obj->renderFlags & 4) != 0)
                 {
-                    /* Tricky interface method call (vtable slot 0x28 via tricky+0x68) */
                     (*(void (**)(int*, int, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x28))(
                         tricky, (int)obj, 1, 4);
                 }

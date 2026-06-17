@@ -16,7 +16,6 @@
 extern void objRenderFn_8003b8f4(f32);
 extern u8 framesThisStep;
 
-/* TU-local .sdata2 floats */
 extern f32 lbl_803E3D60; /* render scale */
 extern f32 lbl_803E3D64; /* minimum sway magnitude */
 extern f32 lbl_803E3D68; /* sway -> scale multiplier */

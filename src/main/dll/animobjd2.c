@@ -57,7 +57,6 @@ extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 timeDelta;
 
-/* tricky tuning constants (.sdata2) */
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2410;

@@ -47,12 +47,9 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-/* shared entry texture (.sdata) */
 extern u8 lbl_803DB950[8];
-/* per-entry flag/texture/anim table (.data) */
 extern u8 lbl_80317AF8[];
 
-/* effect float-constant table (.sdata2) */
 extern f32 lbl_803E1340;
 extern f32 lbl_803E1344;
 extern f32 lbl_803E1348;
@@ -174,7 +171,6 @@ void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.unk_59 = 6;
     buf.unk_5a = 0;
     buf.unk_5b = 0;
-    /* 0xd8 / sizeof(GfxCmd) = 9 entries; ptr-diff form is matching-required */
     buf.count = (GfxCmd*)((u8*)entry + 0xd8) - entry;
     buf.hw[0] = *(s16*)(table + 0x6c);
     buf.hw[1] = *(s16*)(table + 0x6e);
@@ -183,7 +179,6 @@ void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.hw[4] = *(s16*)(table + 0x74);
     buf.hw[5] = *(s16*)(table + 0x76);
     buf.hw[6] = *(s16*)(table + 0x78);
-    /* == &buf.entries[0]; buf-relative cast is matching-required (not &buf.entries) */
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x4000410; /* default effect flag set; bit0 enables position offset below */
     buf.flags |= flags;

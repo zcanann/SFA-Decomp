@@ -17,7 +17,6 @@
 #include "main/dll/CAM/camperv_state.h"
 #include "main/game_object.h"
 
-/* tuning constants; home TU not yet split out */
 extern f32 timeDelta;
 extern CameraModePervState* lbl_803DD5C8;
 extern f32 lbl_803E1B98;

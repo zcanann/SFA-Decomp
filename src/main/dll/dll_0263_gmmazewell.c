@@ -154,7 +154,6 @@ checkValue:
                     {
                     case 3:
                         state->pendingDialogue = MAZEWELL_DEFAULT_DIALOGUE;
-                        /* fallthrough */
                     case 0:
                     case 1:
                     case 2:

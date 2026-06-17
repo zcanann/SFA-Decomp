@@ -154,7 +154,6 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags)
     e[15].x = lbl_803E0F2C;
     e[15].y = lbl_803E0F60;
     e[15].z = lbl_803E0F2C;
-    /* e[16].mode intentionally unset (inherits 0 from stack); matches retail */
     e[16].layer = 4;
     e[16].flags = 0x24;
     e[16].tex = base + 0x260;

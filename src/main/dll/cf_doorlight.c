@@ -33,7 +33,6 @@ typedef struct KaldachomPlacement
 
 extern u32 randomGetRange(int min, int max);
 
-/* lbl_803E30xx live in this DLL's .sdata2 float pool. */
 extern f32 timeDelta;
 extern f32 lbl_803E3060; /* 0.0f */
 extern f32 lbl_803E3078;

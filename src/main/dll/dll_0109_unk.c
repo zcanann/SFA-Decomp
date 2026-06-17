@@ -28,7 +28,6 @@ typedef struct Dll109State
     u8 padB[0x10 - 0xB];
 } Dll109State;
 
-/* ObjHits / object-setup helpers (home TU: obj hit-volume + setup code) */
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_SetHitVolumeSlot();
@@ -40,7 +39,6 @@ extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-/* sequence-dispatch helpers consumed by Dll109_SeqFn */
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_800427c8();
 extern undefined4 FUN_80042800();
@@ -50,7 +48,6 @@ extern undefined4 FUN_80043030();
 extern undefined4 FUN_80044404();
 extern undefined4 FUN_80053c98();
 
-/* accumulator-slot presets written by sequence opcodes 0xC..0x17 */
 extern f32 FLOAT_803e4830;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
@@ -169,7 +166,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 scratch = 0;
                 param_12 = (int)*gMapEventInterface;
-                /* MapEventInterface+0x50: setObjGroupStatus */
                 param_1 = (**(code**)(param_12 + 0x50))(0xb, 4);
             }
             else if (mapId < 0x49f5a)
@@ -188,7 +184,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                         (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 0);
                         scratch = 0;
                         param_12 = (int)*gMapEventInterface;
-                        /* MapEventInterface+0x50: setObjGroupStatus */
                         param_1 = (**(code**)(param_12 + 0x50))(0xd, 0xe);
                     }
                 }
@@ -265,7 +260,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                         mapAct == 2))
                 {
                     scratch = (int)*gMapEventInterface;
-                    /* MapEventInterface+0x44: setMapAct */
                     f1Arg = (**(code**)(scratch + 0x44))(0xb, 5);
                     param_1 = FUN_80053c98(f1Arg, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x4e,
                                            '\0', scratch, param_12, param_13, param_14, param_15, param_16);
@@ -276,7 +270,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
                 FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7f, '\0', scratch
                              , param_12, param_13, param_14, param_15, param_16);
                 scratch = (int)*gMapEventInterface;
-                /* MapEventInterface+0x44: setMapAct */
                 param_1 = (**(code**)(scratch + 0x44))(0x41, 2);
             }
             break;
@@ -341,7 +334,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-
 void dll_109_hitDetect_nop(void)
 {
 }
@@ -382,7 +374,6 @@ void carryable_break_respawn_update(int obj)
         (*gCarryableInterface)->getAnimState(obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            /* CarryableInterface+0x30: break/anim-state slot */
             (*(void (*)(int, CarryableBreakRespawnState*))*(int*)((u8*)*gCarryableInterface + 0x30))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
@@ -433,7 +424,6 @@ void dll_109_init(int obj, u8* p)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x1a] << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     (*gCarryableInterface)->initAnim((void*)obj, *(int*)&((GameObject*)obj)->extra, 0x21);
-    /* CarryableInterface+0x2c slot */
     (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))(((GameObject*)obj)->extra, 1);
 }
 

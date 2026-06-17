@@ -54,14 +54,12 @@ STATIC_ASSERT(offsetof(AlphaanimatorPlacement, fadeMax) == 0x22);
 STATIC_ASSERT(offsetof(AlphaanimatorPlacement, sfxId) == 0x24);
 STATIC_ASSERT(sizeof(AlphaanimatorPlacement) == 0x28);
 
-/* sibling animator-class extra-state sizes, verified against each getExtraSize */
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern void GameBit_Set(int eventId, int value);
-/* unmatched per-block render-walk helpers (still FUN_ in this NonMatching unit) */
 extern int FUN_80017af0();
 extern int FUN_8005337c();
 extern int FUN_80056418();
@@ -96,7 +94,6 @@ void alphaanimator_free(int* obj)
     if (buf != NULL) mm_free(buf);
 }
 
-/* per-block vertex-alpha repaint walk (unmatched; still FUN_ named) */
 void FUN_80192488(void)
 {
     int texV;
@@ -264,7 +261,6 @@ void alphaanimator_update(int* obj)
         {
             state->buf = mmAlloc(state->vertCount << 2, 5, 0);
         }
-        /* both toggles are emitted (lhz/xori/sth x2) - load-bearing, kept verbatim */
         ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
         ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
     }

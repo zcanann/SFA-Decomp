@@ -225,7 +225,6 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags)
     }
 }
 
-
 void dll_7F_func01_nop(void)
 {
 }
@@ -234,5 +233,4 @@ void dll_7F_func00_nop(void)
 {
 }
 
-/* Trailing decl of the next DLL's nop; pins cross-TU link order. */
 void dll_80_func01_nop(void);

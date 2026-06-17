@@ -549,7 +549,6 @@ void FUN_800e9e9c(void)
 {
     uint slotIdx;
     int saveResult;
-    /* register pass-throughs for FUN_800176dc's full (undecoded) signature */
     undefined4 extraout_r4;
     undefined4 sizeArg;
     undefined4 in_r6;

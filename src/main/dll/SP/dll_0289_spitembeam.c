@@ -24,7 +24,6 @@ enum
 #define SPITEMBEAM_SCROLL_STEP 8
 #define SPITEMBEAM_SCROLL_WRAP 0x400
 
-/* radius handed to ObjGroup_FindNearestObject when latching onto a shop */
 extern f32 lbl_803E5AD8;
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 

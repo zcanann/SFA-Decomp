@@ -184,7 +184,6 @@ int dll_2E_func0F_ret_0(void) { return 0x0; }
 void fn_80113F94(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int* p, int v) { *(int*)((char*)p + 0x608) = v; }
 
-/* #1: global scheduling/peephole off for the remainder of the TU. */
 #pragma scheduling off
 #pragma peephole off
 void dll_2E_func08(int obj, int v1, int v2)

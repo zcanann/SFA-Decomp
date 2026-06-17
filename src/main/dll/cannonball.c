@@ -100,7 +100,6 @@ void trickyFn_80141290(int obj, int ball)
         }
         else if (((RomCurveWalker*)(ball + CANNONBALL_ROUTE))->atSegmentEnd == 0)
         {
-            /* distinct locals required: reusing the outer node/nodeSet/mask changes register coloring */
             int node2;
             int nodeSet2;
             u32 mask2;

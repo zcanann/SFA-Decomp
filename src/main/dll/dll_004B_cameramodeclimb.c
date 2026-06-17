@@ -25,7 +25,6 @@
 
 extern void memset(void* dst, int val, int size);
 
-/* tuning constants in .sdata2 (home TU unknown); lbl_803E19A0 == 0.0f */
 extern f32 lbl_803E19A0;
 extern f32 lbl_803E19A4;
 extern f32 lbl_803E19A8;
@@ -38,7 +37,6 @@ extern f32 lbl_803E19C0;
 extern f32 lbl_803E19C4;
 extern f32 lbl_803E19C8;
 
-/* live climb-camera state, allocated on first init */
 extern CameraModeClimbState* lbl_803DD578;
 
 extern int getAngle(f32 dx, f32 dz);

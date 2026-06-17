@@ -24,7 +24,6 @@ extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 
-/* leader object published for the imspacering swarm to track */
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47C0; /* render scale */
 extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */

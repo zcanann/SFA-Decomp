@@ -164,7 +164,6 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         buf.pos[1] = lbl_803E116C;
     }
-    /* launder forces these four into a fresh shared f-reg (CSE'd, distinct from pos[0]/pos[1]) */
     buf.pos[2] = *(f32*)&lbl_803E1138;
     buf.col[0] = *(f32*)&lbl_803E1138;
     buf.col[1] = *(f32*)&lbl_803E1138;

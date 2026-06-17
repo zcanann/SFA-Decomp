@@ -102,11 +102,9 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
-void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on
-extern void fn_80206C18(int* obj);
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
 extern void gameTimerInit(int timerId, int frames);
 extern int isGameTimerDisabled(void);

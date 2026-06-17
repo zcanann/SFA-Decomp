@@ -15,9 +15,7 @@ extern void objRenderFn_8003b8f4(f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern u8 framesThisStep;
 
-/* leader object the rings track, published by imspaceringgen */
 extern GameObject* lbl_803DDB48;
-/* render scale passed to the shared object render helper */
 extern f32 lbl_803E47B8;
 
 int imspacering_getExtraSize(void) { return 0x0; }

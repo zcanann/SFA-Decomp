@@ -47,13 +47,11 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-/* on-state wraps FUN_80192488 + hitanimator_getExtraSize (off-pair restores it below) */
 #pragma scheduling on
 #pragma peephole on
 extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* state,
                                    HitAnimatorPlacement* desc);
 
-/* BANKED PARTIAL: raw Ghidra output (undefined types, FUN_ callees, offset derefs) - unprocessed */
 void FUN_80192488(void)
 {
     int texV;

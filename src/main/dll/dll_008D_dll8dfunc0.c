@@ -23,10 +23,8 @@
 extern u32 randomGetRange(int min, int max);
 extern ModgfxInterface** gModgfxInterface;
 
-/* per-effect parameter block: texture base (+0x8c) and s16 size words (+0xb0..) */
 extern u8 lbl_80316B60[];
 
-/* shared geometry/colour float pool (.data) */
 extern f32 lbl_803E10E0;
 extern f32 lbl_803E10E4;
 extern f32 lbl_803E10E8;
@@ -366,7 +364,6 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     buf.ctx = sourceObj;
     buf.v44 = (s16)variant;
-    /* matching: target branches here despite identical arms */
     if (variant == 0)
     {
         buf.pos[0] = lbl_803E10EC;

@@ -260,7 +260,6 @@ int shop_isItemAvailable(int p, int idx)
     return result;
 }
 
-/* 1 when the item's bought GameBit (boughtBit) is set; else 0. */
 int shop_isItemBought(int p, int idx)
 {
     s16 slot;

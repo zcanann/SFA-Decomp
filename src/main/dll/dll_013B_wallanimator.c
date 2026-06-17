@@ -37,7 +37,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
 
-/* debris-spawn / scale-fit constants (sibling lbl_803E3F.. pool) */
 extern f32 lbl_803E4C98; /* default coord fallback */
 extern f32 lbl_803E3FFC; /* nearest-object search radius seed */
 extern f32 lbl_803E3FD0;
@@ -218,7 +217,6 @@ void wallanimator_free(int obj)
 
 void wallanimator_update(int obj)
 {
-    /* per-file extern reconciliation (recipe #57) - load-bearing here */
     extern void objRenderFn_80041018(int obj);
     extern int getTrickyObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -258,7 +256,6 @@ void wallanimator_update(int obj)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
             {
-                /* Tricky interface vtable slot 0x28 (tricky+0x68 -> iface) */
                 (*(void (**)(int, int, int, int))(**(int**)(tricky + 0x68) + 0x28))(tricky, obj, 1, 1);
             }
             objRenderFn_80041018(obj);

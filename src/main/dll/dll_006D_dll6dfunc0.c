@@ -151,7 +151,6 @@ extern f32 lbl_803E0A88;
 extern f32 lbl_803E0A8C;
 extern f32 lbl_803E0A90;
 
-/* Unused here, but its presence is byte-load-bearing for this TU's .o. */
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -815,4 +814,3 @@ void dll_6D_func03(int sourceObj, int variant, int posSource, uint flags)
 }
 
 void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags);
-

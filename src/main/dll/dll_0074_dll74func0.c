@@ -39,7 +39,6 @@ typedef struct
     u8 layer;
 } GfxCmd;
 
-/* Recovered / named cross-TU symbols. */
 extern ModgfxInterface** gModgfxInterface;
 extern undefined1 gGameplayPreviewSettings;
 extern undefined4 gGameplayPreviewColorRed;
@@ -151,7 +150,6 @@ extern undefined4 DAT_803de104;
 extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 
-/* Unused here, but its presence is byte-load-bearing for this TU's .o. */
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;

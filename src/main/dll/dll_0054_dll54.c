@@ -23,7 +23,6 @@
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
-/* home TUs unresolved (drifted FUN_/lbl_/DAT_ symbols) */
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -44,7 +43,6 @@ extern f32 lbl_803E265C;
 
 extern void* memset(void* dst, int val, u32 n);
 extern f32 timeDelta;
-/* lbl_803DD5C0/lbl_803DD5B8: .sbss globals, owning TU unconfirmed in splits — kept extern */
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
@@ -63,7 +61,6 @@ extern const f32 lbl_803E1B68;
 
 #pragma scheduling on
 #pragma peephole on
-/* NonMatching drift helper (v1.1 home TU unresolved) — not yet attempted, raw Ghidra body */
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -100,7 +97,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
     return;
 }
 
-/* NonMatching drift helper (v1.1 home TU unresolved) — not yet attempted, raw Ghidra body */
 void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9, int param_10)
@@ -161,7 +157,6 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-/* 0x801101E4 CameraModeCloudRunner_copyToCurrent — genuine 4-byte no-op (sibling DLL) */
 void fn_801101E4(void)
 {
 }
@@ -216,7 +211,6 @@ void dll_54_init(int* p1, int unused, int* p3)
     lbl_803DD5C0->startRoll = camera->anim.rotZ;
 }
 
-/* 0x801101E8 CameraModeCloudRunner_free (size 0x2C, not a no-op; sibling DLL) */
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57: block-scope extern reconciles per-file type disagreement */

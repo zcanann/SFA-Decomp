@@ -51,25 +51,18 @@ extern u32 GameBit_Get(int eventId);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
-extern u8 lbl_803DBBB0;
-extern u8 lbl_803DD928;
 extern void* minimapTexture;
 extern void* lbl_803DD940;
-extern s8 lbl_803DD944;
 
 #pragma scheduling on
 #pragma peephole on
-extern u8 warpstoneUIState;
-extern u8 showCredits;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
-extern f32 lbl_803DD968;
 extern f32 lbl_803E23E8;
-extern f32 lbl_803E2344;
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern f32 lbl_803E23B8;
@@ -87,21 +80,17 @@ extern int vsprintf(char* s, const char* format, va_list arg);
 extern int lbl_803DD9E4;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
-extern int Obj_AllocObjectSetup(int a, int b);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern int* Obj_GetActiveModel(void* obj);
 extern f32 lbl_803E2408;
-extern void* lbl_803DD984;
 extern f32 timeDelta;
 extern u32 lbl_803DDA00;
 extern u32 lbl_803DDA08;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
-extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u8 lbl_803AB118[];
 extern u16 lbl_803DDA40;
 extern u32 lbl_803DDA3C;
@@ -121,8 +110,6 @@ extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
-extern f32 lbl_803DD99C;
-extern u16 lbl_803DBC0A;
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
 extern void DCStoreRange(void* p, u32 nBytes);
@@ -143,7 +130,6 @@ extern f32 lbl_803E2398;
 extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
-extern int getButtonsHeld(int p);
 extern void GXSetTevColor(int id, int* color);
 extern void setTextColor(int p);
 extern u16 lbl_803DDA14;
@@ -155,7 +141,6 @@ extern u8 lbl_803DD9F2;
 extern u8 lbl_803DD9F3;
 extern u16 lbl_803DD9F6;
 extern int lbl_803DDA10;
-extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern u16* debugFrameBuffer;
 extern char lbl_803DBC18;
 extern char lbl_803DBC1C;
@@ -776,8 +761,6 @@ void fn_80138D7C(int obj, int p2)
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
 #define TUMBLEWEED_BLEND_WEIGHT_OFFSET 0x830
 #define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
-#define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
-#define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
 
 typedef struct TumbleweedBlendFlags {
     u8 pending : 1;

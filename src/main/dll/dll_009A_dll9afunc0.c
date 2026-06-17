@@ -16,10 +16,8 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/* gModgfxInterface lives in the modgfx DLL; not declared in effect_interfaces.h. */
 extern ModgfxInterface** gModgfxInterface;
 
-/* screen-fx resource blobs and placement constants, declared per-TU */
 extern u8 lbl_802C2180[];
 extern u8 lbl_80317B98[];
 extern u8 lbl_803DB958;

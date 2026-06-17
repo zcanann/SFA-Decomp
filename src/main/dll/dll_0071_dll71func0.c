@@ -21,7 +21,6 @@ typedef struct
     u8 layer;
 } GfxCmd;
 
-/* also declared in dll_80220608_shared.h / player_80295318_shared.h */
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80314060[];

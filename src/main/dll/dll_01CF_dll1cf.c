@@ -75,7 +75,6 @@ extern void FUN_800067c0(int* param, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4A30;
 
-/* GX write-gather pipe FIFO. */
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 typedef struct Dll1CFObjectDef
@@ -89,7 +88,6 @@ typedef struct Dll1CFObjectDef
     s16 gateGameBit;    /* 0x1E: game bit that enables the rotY setup */
 } Dll1CFObjectDef;
 
-/* load-bearing for this re-split TU's codegen - removing it shifts the .o. */
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -101,7 +99,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
  * and the surrounding TU state is the default - no reset pair is needed. */
 #pragma scheduling on
 #pragma peephole on
-/* obj is taken as int (not GameObject*) for param coloring (CLAUDE.md #126). */
 void FUN_801b7314(int obj, undefined4 unused, float* outX, float* outY)
 {
     uint bit;

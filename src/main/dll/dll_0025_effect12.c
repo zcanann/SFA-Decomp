@@ -45,7 +45,6 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-
 int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* auxParam)
 {
   EffectSrcParams local;
@@ -105,7 +104,6 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
     p.kind = 0x159;
     break;
   case 0x483:
-    /* default src params (repeated verbatim in cases 0x484/0x485/0x48c) */
     if (src == NULL)
     {
       lbl_8039C3E0.x = lbl_803DFFA8;
@@ -272,7 +270,6 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
     {
       return -1;
     }
-    /* auxParam[0] selects the mode: 0 = sparkle, 1 = smoke, else = directed burst */
     if (*(int*)auxParam == 0)
     {
       p.scale = lbl_803DFFEC * (f32)(int)randomGetRange(8, 0x11);
@@ -355,5 +352,4 @@ void Effect12_initialise(void)
 {
 }
 
-/* defined in dll_0027_effect14; declared here to anchor linker symbol order */
 void Effect14_func05_nop(void);

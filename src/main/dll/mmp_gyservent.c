@@ -45,7 +45,6 @@ typedef struct MmpGyserventState
     f32 reachBY;       /* 0x2C */
     f32 reachBZ;       /* 0x30 */
     f32 reach;         /* 0x34: eruption reach distance */
-    /* 0x38: 4x4 inverse-rotation matrix written by mtx44Transpose */
 } MmpGyserventState;
 
 STATIC_ASSERT(offsetof(MmpGyserventState, nearRadiusSq) == 0x04);
@@ -148,7 +147,6 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     distSqB = state->reachBZ - ((GameObject*)obj)->anim.worldPosZ;
     distSqB = t * t + distSqB * distSqB;
     t = state->nearRadiusSq;
-    /* goto preserves the target's flattened two-exit branch shape */
     if (distSqB < t)
     {
         dyB = (dyB < lbl_803E40D8) ? -dyB : dyB;

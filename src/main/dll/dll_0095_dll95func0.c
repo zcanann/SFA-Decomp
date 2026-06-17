@@ -30,8 +30,6 @@ typedef struct GfxCmd
 
 extern ModgfxInterface** gModgfxInterface;
 
-/* cross-DLL forward reference (DLL 0x96) */
-void dll_96_func01_nop(void);
 
 extern u8 lbl_80317528[];
 extern u8 lbl_803DB940[8];
@@ -167,7 +165,6 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
     buf.unk_46[6] = *(s16*)(base + 0x9c);
     buf.cmds = e;
     buf.spawnFlags = 0x4002400;
-    /* bit 0 of 0x4002400 is clear, so this position-offset block is never taken */
     if ((buf.spawnFlags & 1) != 0)
     {
         if ((uint)sourceObj != 0 && (uint)posSource != 0)

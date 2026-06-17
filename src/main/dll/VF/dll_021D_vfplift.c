@@ -134,7 +134,6 @@ void vfplift23_updateState(int obj)
         ((GameObject*)obj)->anim.localPosY = setup->base.posY + raisedOffset;
         state->applyHeight = 0;
     }
-    /* redundant comparison terms preserved to match compiler output */
     if (state->mode == VFPLIFT_STATE_RAISED || state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitEnabled(obj);
@@ -225,7 +224,6 @@ void vfplift1_updateState(int obj)
     {
         return;
     }
-    /* redundant comparison terms preserved to match compiler output */
     if (state->mode == VFPLIFT_STATE_RAISED || state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitEnabled(obj);
@@ -336,7 +334,6 @@ void vfplift_init(int* obj, VfpLiftPlacement* init)
     state->toggleGameBit = init->toggleGameBit;
     state->travelDistance = (f32)(s32)init->travelDistance;
     state->mapEventNo = init->mapEventNo;
-    /* clear unused state fields within pad10 */
     *(s16*)((char*)state + 0x12) = 0;
     *(s16*)((char*)state + 0x14) = 0;
     *(s16*)((char*)state + 0x16) = 0;

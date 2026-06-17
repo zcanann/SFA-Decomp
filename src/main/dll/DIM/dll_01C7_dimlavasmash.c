@@ -27,7 +27,6 @@ extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
-void dimcannon_hitDetect(void);
 
 #pragma scheduling off
 #pragma peephole off

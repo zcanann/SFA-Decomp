@@ -84,7 +84,6 @@ void ShipBattle_free(int* obj)
     int* state = ((GameObject*)obj)->extra;
     int light;
     (*gObjectTriggerInterface)->freeState((u8*)state);
-    /* slot 2 of the gTitleMenuControlInterface vtable - detaches obj from its group (id 0xffff) */
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     light = ((GameObject*)obj)->unkF8;
     if (light != 0)
@@ -144,7 +143,6 @@ light_setup:
     }
 
     lbl_803DDC50 = lbl_803E5958;
-    /* lbl_803DDC50 is an 8-byte object; zero the first byte of its second word */
     *(u8*)((char*)&lbl_803DDC50 + 4) = 0;
 }
 
@@ -188,7 +186,6 @@ void ShipBattle_update(int obj)
 
     groupId = *(s8*)&((ObjSeqState*)((GameObject*)obj)->extra)->slot;
     linkedObject = 0;
-    /* i is recycled: scratch out-param here, then reset to 0 as the loop counter below */
     objects = ObjList_GetObjects(&i, &objectCount);
     sameGroupCount = 0;
     i = 0;

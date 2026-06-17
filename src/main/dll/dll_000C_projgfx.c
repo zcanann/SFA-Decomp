@@ -1281,8 +1281,6 @@ int projgfx_getObjectTypeId(void) { return 0x0; }
 void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSupported); }
 #pragma scheduling reset
 
-/* OSReport-stub returns. */
-
 #pragma scheduling off
 int projgfx_rayhit_doUnsupported(void)
 {

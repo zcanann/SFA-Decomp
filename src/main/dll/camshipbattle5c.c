@@ -21,7 +21,6 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
 
-/* shared .sdata2 path-camera constants (home TU unestablished) */
 extern f32 lbl_803E1890; /* angle delta upper bound */
 extern f32 lbl_803E1894; /* angle delta lower bound */
 extern f32 lbl_803E1898; /* angle unwrap step */

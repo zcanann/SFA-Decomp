@@ -166,7 +166,6 @@ void texscroll2_update(TexScroll2Object* obj)
             }
         }
     }
-    /* record this frame's bit value for next frame's change-detect (above) */
     state->previousGameBitValue = GameBit_Get(state->gameBit);
     if (block == NULL)
     {
@@ -199,7 +198,6 @@ void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int l
     state->gameBit = placement->gameBit;
     state->previousGameBitValue = -1;
 }
-
 
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

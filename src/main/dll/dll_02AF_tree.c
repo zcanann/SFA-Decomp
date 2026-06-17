@@ -235,7 +235,6 @@ void tree_init(int obj, u8* setup)
     {
         state->flags |= TREE_FLAG_HIT_ENABLED;
     }
-    /* seqId (tree model/animation id) selects the gTreeEffectColors profile */
     switch (object->anim.seqId)
     {
     case 0x798:

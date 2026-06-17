@@ -65,7 +65,6 @@ extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern void textureFree(u32);
-/* three menu texture handles, freed in reverse load order in release */
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
 extern void cutsceneExit(void);
@@ -119,7 +118,6 @@ void WeirdUnusedMenu_frameEnd(void)
 {
 }
 
-/* scheduling/peephole off covers WeirdUnusedMenu_run and _release below */
 #pragma scheduling off
 #pragma peephole off
 int WeirdUnusedMenu_run(void)
@@ -196,7 +194,6 @@ void WeirdUnusedMenu_release(void)
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }
 
-/* peephole on: re-enabled for WeirdUnusedMenu_initialise (scheduling stays off) */
 #pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {

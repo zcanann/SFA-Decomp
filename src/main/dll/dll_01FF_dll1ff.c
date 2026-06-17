@@ -74,7 +74,6 @@ typedef struct Dll1FFSlots
 #define DLL1FF_BUTTON_ACTION 0x100  /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB 0x100008    /* ObjMsg kind sent on release */
 
-/* grab/release plumbing (obj hit volume + button + message routing) */
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006ba8();
@@ -329,7 +328,6 @@ void dll_1FF_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    /* resetHitboxMode is s8; the *(u8*)& reads/writes it unsigned for the bit ops. */
     if (state->grabPhase == 0)
     {
         grab = 0;

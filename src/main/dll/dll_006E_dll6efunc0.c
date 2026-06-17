@@ -152,7 +152,6 @@ extern f32 lbl_803E0AA4;
 extern f32 lbl_803E0AA8;
 extern f32 lbl_803E0AAC;
 
-/* byte-load-bearing for this TU's .o */
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -792,4 +791,3 @@ void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 5, (u8*)(int)lbl_80313C30, 4, &base[52], 0x5e, 0);
 }
-

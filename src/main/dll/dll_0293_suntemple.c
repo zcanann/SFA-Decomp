@@ -118,7 +118,6 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
-        /* event id 1 and any unrecognised id share this latch path */
         case 1:
         default:
             if (cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)

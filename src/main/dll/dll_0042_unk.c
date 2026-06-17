@@ -28,7 +28,6 @@
 #include "main/mm.h"
 #include "string.h"
 
-/* hit-detection / collision helpers (home TUs: hitdetect, objBbox) */
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* hitsOut, int pointCount,
@@ -48,17 +47,12 @@ extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motio
 extern int EmissionController_IsLingering(int obj);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 
-/* sibling camcontrol TUs */
-extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
-extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
-extern void camcontrol_updateModeSettings(int camera);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
-/* float pool constants (.sdata2) */
 extern f32 lbl_803DD52C;
 extern f32 lbl_803E1688;
 extern f32 lbl_803E168C;

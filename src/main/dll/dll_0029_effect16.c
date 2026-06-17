@@ -26,7 +26,6 @@ extern f32 mathSinf(f32 x);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-/* animation-phase accumulators / sin state, owned by this DLL */
 extern f32 lbl_803DB840;
 extern f32 lbl_803DB844;
 extern f32 lbl_803DB848;
@@ -36,7 +35,6 @@ extern s32 lbl_803DD3C4;
 extern f32 lbl_803DD3C8;
 extern f32 lbl_803DD3CC;
 
-/* tuning constants (.sdata2) */
 extern f32 lbl_803E00A8;
 extern f32 lbl_803E00AC;
 extern f32 lbl_803E00B0;
@@ -81,7 +79,6 @@ void Effect16_func05(void)
     lbl_803DD3C8 = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
 }
 
-/* colorWord0..2 are u16 here; the consumer side spells them u32 */
 int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, s16* extraArgs)
 {
@@ -96,7 +93,6 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     if ((spawnFlags & 0x200000) != 0)
     {
         if (spawnParams == 0) return -1;
-        /* PartFxSpawnParams lays out posX at the slot EffectSpawnConfig names sourcePosY (aliased, one-field offset) */
         cfg.sourcePosY = spawnParams->posX;
         cfg.sourcePosZ = spawnParams->posY;
         cfg.sourcePosW = spawnParams->posZ;

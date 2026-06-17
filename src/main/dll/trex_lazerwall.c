@@ -39,7 +39,6 @@ extern undefined4* gTitleMenuControlInterfaceCopy;
 extern f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0;
 extern u32 lbl_803E59D0;
-extern u32 lbl_803E59D4;
 
 typedef struct LazerwallHeadPair {
     u32 a;

@@ -42,7 +42,6 @@ extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 sca
 
 extern u8 framesThisStep;
 
-/* shared landed-arwing motion tuning constants */
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;

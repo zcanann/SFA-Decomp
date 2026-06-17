@@ -46,10 +46,8 @@ extern void fn_80137948(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
 
-/* viewfinder heap record, shared across the dll_5B camera modes */
 extern ViewfinderState* lbl_803DD548;
 
-/* .sdata2 tuning-constant pool (rates / clamp limits / FOV span) */
 extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
@@ -380,7 +378,6 @@ void CameraModeViewfinder_update(s16* obj)
                 fade = lbl_803E17C4;
             }
             fade = fade * lbl_803E1828;
-            /* #81 launder: keeps the clamp limit in a distinct FP reg from the line-377 read */
             if (fade > *(f32*)&lbl_803E17E8)
             {
                 fade = *(f32*)&lbl_803E17E8;
@@ -603,4 +600,3 @@ void CameraModeViewfinder_release(void)
 void CameraModeViewfinder_initialise(void)
 {
 }
-

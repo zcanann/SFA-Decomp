@@ -13,13 +13,10 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
-/* gModgfxInterface lives in the modgfx DLL; not declared in effect_interfaces.h. */
 extern ModgfxInterface** gModgfxInterface;
 
-/* texture/anim resource blob for this screenfx scene. */
 extern u8 lbl_80317BD8[];
 
-/* screenfx placement constants (.sdata2). */
 extern f32 lbl_803E13A0;
 extern f32 lbl_803E13A4;
 extern f32 lbl_803E13A8;

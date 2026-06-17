@@ -56,7 +56,6 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-/* shared wave tables (built once per first instance, freed with the last) */
 extern u8 lbl_803DDAE8;     /* live-instance refcount */
 extern void* lbl_803DDAEC;  /* per-cell RGB color field */
 extern void* lbl_803DDAF0;  /* per-grid phase table */
@@ -64,7 +63,6 @@ extern void* lbl_803DDAF4;  /* per-cell height field */
 extern u8 lbl_803DDAF8;     /* phases-advanced-this-frame latch */
 extern u8 framesThisStep;
 
-/* wave-geometry and color-ramp constants */
 extern f32 lbl_803E3F40; /* grid step scale */
 extern f32 lbl_803E3F44; /* 0.0f sentinel / color-split zero */
 extern f32 lbl_803E3F48; /* wave scale */
@@ -78,9 +76,6 @@ extern f32 lbl_803E3F64; /* B ramp slope */
 extern f32 lbl_803E3F70; /* model scale */
 
 void fn_801923F8(int* cfgArg);
-void alphaanimator_hitDetect(void);
-int alphaanimator_getExtraSize(void);
-void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 {

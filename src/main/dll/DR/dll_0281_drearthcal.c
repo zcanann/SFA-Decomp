@@ -71,7 +71,6 @@ void drearthcal_update(int obj)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= DREARTHCAL_HITBOX_OUTOFRANGE;
-        /* obj+0x58 = contact list ptr; 0x10f = entry count; entries base at +0x100 (index +0x40 as void*) */
         if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
         {
             i = 0;

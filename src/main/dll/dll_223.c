@@ -139,7 +139,6 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
     {
         spawnPos = (f32*)((char*)spawnArgs + 0xc);
         {
-            /* modelPos is a 4-float per-part record; index 0 is skipped (x/y/z live at 1/2/3) */
             f32* modelPos = (f32*)(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks +
                 ((s8)((u8*)obj)[0xad] << 2)) + 0x50) + modelPart * 0x10);
             spawnPos[0] = playerMapOffsetX + modelPos[1];

@@ -49,7 +49,6 @@ extern f32 lbl_803E1BF8;
 extern f32 lbl_803E1BFC;
 extern f32 lbl_803E1C00;
 
-void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
 #pragma peephole off

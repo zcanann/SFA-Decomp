@@ -219,11 +219,9 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags)
             buf.pos[2] = lbl_803E0EE4 + *(f32*)(posSource + 0x14);
         }
     }
-    /* base32[variant + 0xb7]: per-variant texture-asset id from the resource blob */
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)lbl_80315998, 0x10, base + 0x168, base32[variant + 0xb7],
                                      0);
 }
-
 
 void dll_83_func01_nop(void)
 {

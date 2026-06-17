@@ -21,7 +21,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-/* find `value` in ROM grid lbl_8032B0C8 -> (row, col) */
 void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -40,7 +39,6 @@ void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-/* find `value` in ROM grid lbl_8032B088 -> (row, col) */
 void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -59,7 +57,6 @@ void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-/* read working grid lbl_803AD298 cell, 0 when (i,j) out of range */
 int wclevelcont_func14(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -69,7 +66,6 @@ int wclevelcont_func14(s16 i, s16 j)
     return lbl_803AD298[i][j];
 }
 
-/* write working grid lbl_803AD298 cell, bounds-checked */
 void wclevelcont_func13(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -79,7 +75,6 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = (u8)value;
 }
 
-/* world XZ -> grid (row, col) for the lbl_803AD298 grid */
 void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
@@ -91,7 +86,6 @@ void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
 
-/* grid (col, row) -> world XZ for the lbl_803AD298 grid */
 void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
@@ -105,7 +99,6 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
     *outZp = base + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
 
-/* find `value` in ROM grid lbl_8032B048 -> (row, col) */
 void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -124,7 +117,6 @@ void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-/* find `value` in ROM grid lbl_8032B008 -> (row, col) */
 void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
 {
     int i, j;
@@ -143,7 +135,6 @@ void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
     }
 }
 
-/* read working grid lbl_803AD2D8 cell, 0 when (i,j) out of range */
 int wclevelcont_render2(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -153,7 +144,6 @@ int wclevelcont_render2(s16 i, s16 j)
     return lbl_803AD2D8[i][j];
 }
 
-/* write working grid lbl_803AD2D8 cell, bounds-checked */
 void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7)
@@ -163,7 +153,6 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = (u8)value;
 }
 
-/* world XZ -> grid (row, col) for the lbl_803AD2D8 grid */
 void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
@@ -175,7 +164,6 @@ void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
 
-/* grid (col, row) -> world XZ for the lbl_803AD2D8 grid */
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;

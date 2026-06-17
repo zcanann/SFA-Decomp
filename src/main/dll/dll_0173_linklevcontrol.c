@@ -42,7 +42,6 @@ extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern u8 lbl_803239F0[];
 
-/* Drift stubs resolved by v1.0 name; bodies recovered from target asm. */
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();

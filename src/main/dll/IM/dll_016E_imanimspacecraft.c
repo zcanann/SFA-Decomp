@@ -20,7 +20,6 @@ extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
-/* shared particle-spawn position vector (written at +0xc/+0x10/+0x14) */
 extern char lbl_803AC948[];
 
 extern f32 lbl_803E4780; /* render scale */

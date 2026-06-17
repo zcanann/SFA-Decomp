@@ -30,7 +30,6 @@ STATIC_ASSERT(offsetof(FlameblastState, freeRequested) == 0x10);
 STATIC_ASSERT(offsetof(FlameblastState, hitVolumeDelay) == 0x11);
 STATIC_ASSERT(sizeof(FlameblastState) == 0x14);
 
-/* shared transporter-family helpers (also live in the sibling TUs) */
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
@@ -47,7 +46,6 @@ extern int fn_80138F90(void);
 extern f32* trickyGetQueuedPathParticlePos(s16* tricky);
 extern f32 timeDelta;
 
-/* animation/flight tuning floats */
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
@@ -155,7 +153,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     }
     return uVar3;
 }
-
 
 int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
 

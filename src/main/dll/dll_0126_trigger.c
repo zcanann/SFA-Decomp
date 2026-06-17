@@ -1194,11 +1194,9 @@ void Trigger_init(u8* obj, u8* params)
     sub[0] = (u8)(sub[0] | 0x40);
 }
 
-void cloudprisoncontrol_free(void);
 
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
-int cloudprisoncontrol_getExtraSize(void);
 
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).

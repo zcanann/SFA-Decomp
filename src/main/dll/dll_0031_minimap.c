@@ -744,7 +744,6 @@ void Minimap_release(void)
 }
 #pragma peephole on
 
-/* Load the compass texture and reset the box y-coordinate. */
 #pragma scheduling off
 void Minimap_initialise(void)
 {

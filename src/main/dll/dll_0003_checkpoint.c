@@ -367,7 +367,6 @@ void Checkpoint_func0C(CheckpointRouteState* o)
     }
 }
 
-/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries. */
 void Checkpoint_func0D(u32 v)
 {
     extern u32 lbl_803DD41C; /* #57 */

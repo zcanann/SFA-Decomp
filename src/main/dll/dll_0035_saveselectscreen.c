@@ -108,7 +108,6 @@ extern char* loadFileByPath(char* path, int a, int b);
 extern void* memcpy(void* dst, void* src, int n);
 extern void fn_80296B70(int arg);
 extern void titleScreenFn_801368d4(void);
-/* single-pointer spelling (canonical is MapEventInterface**) is intentional for matching: one lwz to vtable, not two */
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 extern char sFrontendFoxName;

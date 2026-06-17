@@ -16,7 +16,6 @@
  */
 #include "main/asset_load.h"
 
-/* gameplay save/bit helpers - home TU gameplay/save */
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
 extern void mm_free(void* ptr);
@@ -31,7 +30,6 @@ extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];   /* taskId -> "TaskTextsNNN" directory index */
 extern s16 lbl_803119E0[];  /* taskId -> hint text slot */
 
-/* screens overlay buffer state */
 extern u32 lbl_803DD4A0;    /* heap buffer */
 extern u32 lbl_803DD4A4;    /* buffer size */
 extern u32 lbl_803DD4A8;    /* dirty flag */

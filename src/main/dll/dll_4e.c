@@ -51,13 +51,11 @@
 #define OPTIONS_SUBMENU_AUDIO 2
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
-/* title-menu interfaces (vtable head in the first word) */
 extern int* gTitleMenuControlInterface;
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
 extern int* lbl_803A87D0[8]; /* the 8 menu-row widgets */
 
-/* options-menu state globals */
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704; /* transition fade counter */
 extern s8 lbl_803DD705; /* transition pending flag */
@@ -128,7 +126,6 @@ void optionsMenu_applyAudioSetting(int action, int option)
             (lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME], lbl_803DD708[11]);
         (*(void(**)(int*, u8))(*gTitleMenuItemInterface + 0x28))
             (lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME], lbl_803DD708[12]);
-        /* original bug: music/sfx flag args are crossed vs the widget read */
         value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))
             (lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME]);
         audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 1, 0);

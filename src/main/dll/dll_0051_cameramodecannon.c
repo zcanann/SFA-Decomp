@@ -22,11 +22,9 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
-/* CAM state singletons (home TUs dll_0051 / dll_0053). */
 extern CameraModeCannonState* lbl_803DD5A0;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-/* tuning constants (.sdata2). */
 extern f32 lbl_803E1AE0; /* easing divisor */
 extern f32 lbl_803E1AE4; /* orbit radius */
 extern f32 lbl_803E1AE8; /* angle scale */
@@ -105,7 +103,6 @@ void CameraModeCannon_update(u8* obj)
     s16 yaw;
     s16 delta;
 
-    /* NULL target: pass the value anyway (matches target asm call-before-guard order) */
     vec = objModelGetVecFn_800395d8((int)lbl_803DD5A0->target, 0);
     if (lbl_803DD5A0->target == NULL)
     {

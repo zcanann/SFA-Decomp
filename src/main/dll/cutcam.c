@@ -36,7 +36,6 @@ extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints,
                                             float* radii, int pointCount);
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2();
-/* lock-on / mode-switch eligibility predicates (return nonzero to switch mode) */
 extern int fn_80295C0C(int);     /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(int);  /* gates mode 0x44 */
 extern int objFn_80296700(int);  /* gates mode 0x49 (with fn_80295C0C) */
@@ -46,16 +45,13 @@ extern f64 sqrtf(f64 x);
 extern int getAngle(f32 dx, f32 dy);
 extern u32 OSGetTick(void);
 
-/* collision/trace scratch globals (home TU dll_0042) */
 extern u8 lbl_803DD528;       /* last bbox-hit result */
 extern u8 framesThisStep;
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 
 extern f32 lbl_803E1688;      /* collision probe / trace radius */
-/* DEG2RAD scale: lbl_803E168C / lbl_803E1690 */
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
-/* tuning constants below */
 extern f32 lbl_803E1694;
 extern f32 lbl_803E16A0;
 extern f32 lbl_803E16A4;

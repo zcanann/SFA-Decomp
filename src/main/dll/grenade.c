@@ -1584,13 +1584,6 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
-typedef struct TrickyByte82E
-{
-    u8 b0 : 1;
-    u8 b1 : 1;
-    u8 b5 : 1;
-    u8 rest : 5;
-} TrickyByte82E;
 
 int trickyFoodFn_8014460c(int objArg, int* trickyState)
 {

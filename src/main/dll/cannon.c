@@ -449,7 +449,6 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     return 0;
 }
 
-/* scheduling-off covers trickyGuard and the trailing fns; trickyFlame above runs the TU default. */
 #pragma scheduling off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {

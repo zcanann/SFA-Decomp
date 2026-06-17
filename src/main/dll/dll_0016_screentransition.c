@@ -14,7 +14,6 @@ void Checkpoint_release(void);
 extern u8 lbl_803DD42D;
 u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
-
 extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
 
@@ -111,7 +110,6 @@ extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma opt_common_subs off
-/* p1/p2/p3 are only forwarded to screenRectFn_800d7568 (case 3); the signature is required for the calling convention. */
 void screenTransition_do2(int p1, int p2, int p3)
 {
     if (lbl_803DD42E != 0)

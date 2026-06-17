@@ -20,7 +20,6 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
-/* gModgfxInterface: home TU is the modgfx interface module. */
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80316FF8[];
