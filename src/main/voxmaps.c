@@ -833,7 +833,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         int kkk = 0;
         int boff = 0;
         nodeCount = state->unk1C;
-        for (; nodeCount != 0; nodeCount--)
+        for (; nodeCount > 0; nodeCount--)
         {
             RouteNode* nn = (RouteNode*)((char*)state->nodes + boff);
             if (nn->x == box[0] && nn->y == box[2])
