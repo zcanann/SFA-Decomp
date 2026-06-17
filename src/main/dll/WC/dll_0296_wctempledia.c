@@ -163,8 +163,7 @@ void wctempledia_update(int obj)
     }
     for (stage = 0; stage < WCTEMPLE_DIA_STAGE_COUNT; stage++)
     {
-        int bit = 1 << stage;
-        if ((state->stageMask & bit) == 0 &&
+        if ((state->stageMask & (1 << stage)) == 0 &&
             GameBit_Get(state->gamebits[stage]) != 0)
         {
             int found = 0;
@@ -187,7 +186,7 @@ void wctempledia_update(int obj)
                 state->targetSpeed = state->targetTable[0];
                 break;
             }
-            state->stageMask |= bit;
+            state->stageMask |= (1 << stage);
             if (stage == 0)
             {
                 state->targetSpeed = state->targetTable[1];
