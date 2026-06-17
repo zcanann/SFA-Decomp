@@ -1,9 +1,24 @@
+/*
+ * dll_008C (foodbag effect 0x8C) - builds a fixed 14-entry modgfx command
+ * list (FbBuf/FbCmd) and spawns it through gModgfxInterface->spawnEffect.
+ *
+ * dll_8C_func03 is the effect's func03 spawn entry (one of the dll_NN_func03
+ * family declared in foodbag.h). Each FbCmd row sets a layer, render flags,
+ * a texture pointer into the per-effect asset blob (lbl_80316950 + offset),
+ * a draw mode and an x/y/z triple. Rows 1, 2, 5, 7 and 9 read live values
+ * from posSource (the s16 vector/scale packet) when supplied, else fall back
+ * to the lbl_803E10xx default constants. buf.flags ORs in the caller flags;
+ * bit 0 means "use a world position" - taken from sourceObj+0x18 when there
+ * is a source object, otherwise from posSource+0xC.
+ *
+ * func00/func01 are the descriptor's empty init/free slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316950[];
+extern u8 lbl_80316950[]; /* per-effect texture/asset blob */
 extern f32 lbl_803E10B0;
 extern f32 lbl_803E10B4;
 extern f32 lbl_803E10B8;
@@ -90,7 +105,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     e[6].layer = 2;
     e[6].flags = 0x3a;
-    e[6].tex = (void*)0;
+    e[6].tex = NULL;
     e[6].mode = 0x1800000;
     e[6].x = lbl_803E10CC;
     e[6].y = lbl_803E10B0;
@@ -111,7 +126,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     e[8].layer = 3;
     e[8].flags = 0x3b8;
-    e[8].tex = (void*)0;
+    e[8].tex = NULL;
     e[8].mode = 0x1800000;
     e[8].x = lbl_803E10CC;
     e[8].y = lbl_803E10B0;
@@ -132,7 +147,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     e[10].layer = 4;
     e[10].flags = 0;
-    e[10].tex = (void*)0;
+    e[10].tex = NULL;
     e[10].mode = 0x1000;
     e[10].x = lbl_803E10D4;
     e[10].y = lbl_803E10B0;
@@ -202,7 +217,6 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, 0x5e0, 0);
 }
 
-
 void dll_8C_func01_nop(void)
 {
 }
@@ -210,5 +224,3 @@ void dll_8C_func01_nop(void)
 void dll_8C_func00_nop(void)
 {
 }
-
-void dll_8D_func01_nop(void);
