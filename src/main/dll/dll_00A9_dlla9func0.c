@@ -1,3 +1,15 @@
+/*
+ * dlla9func0 (DLL 0xA9) - a modgfx pickup/effect spawner.
+ *
+ * dll_A9_func03 builds a stack command buffer of GfxCmd primitives (two
+ * variant layouts selected by extraArgs) plus a per-effect header (colour,
+ * position, scale, hardware-state words copied from the asset table at
+ * lbl_80319028) and hands it to gModgfxInterface->spawnEffect. When flag bit
+ * 0 is set the effect is positioned at the source object's world position
+ * (sourceObj + 0x18..0x20) or, lacking a source object, at the spawn-param
+ * packet's position (posSource + 0xc..0x14). func00/func01 are the DLL's
+ * unused entry-point stubs.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
 
@@ -26,7 +38,6 @@ extern f32 lbl_803E15F4;
 extern f32 lbl_803E15F8;
 extern f32 lbl_803E15FC;
 
-
 void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
                    u8* extraArgs)
 {
@@ -49,18 +60,18 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
         GfxCmd entries[32];
     } buf;
     u8* tab = (u8*)(int)lbl_80319028;
-    f32 sx;
+    f32 scaleX;
     GfxCmd* e;
     GfxCmd* p;
-    u32 fl;
+    u32 effectFlags;
 
     if (extraArgs != 0)
     {
-        sx = lbl_803E15D0;
+        scaleX = lbl_803E15D0;
     }
     else
     {
-        sx = lbl_803E15D4;
+        scaleX = lbl_803E15D4;
     }
     e = buf.entries;
     e[0].layer = 0;
@@ -124,19 +135,19 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
     p[2].flags = 0xe;
     p[2].tex = &tab[0xf4];
     p[2].mode = 0x4000;
-    p[2].x = sx;
+    p[2].x = scaleX;
     p[2].y = lbl_803E15D8;
     p[2].z = lbl_803E15D8;
     p[3].layer = 2;
     p[3].flags = 0xe;
     p[3].tex = &tab[0xf4];
     p[3].mode = 0x4000;
-    p[3].x = sx;
+    p[3].x = scaleX;
     p[3].y = lbl_803E15D8;
     p[3].z = lbl_803E15D8;
     p[4].layer = 3;
     p[4].flags = 1;
-    p[4].tex = (void*)0;
+    p[4].tex = NULL;
     p[4].mode = 0x2000;
     p[4].x = lbl_803E15D8;
     p[4].y = lbl_803E15D8;
@@ -152,7 +163,7 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
     p[6].flags = 0xe;
     p[6].tex = &tab[0xf4];
     p[6].mode = 0x4000;
-    p[6].x = sx;
+    p[6].x = scaleX;
     p[6].y = lbl_803E15D8;
     p[6].z = lbl_803E15D8;
     p[7].layer = 4;
@@ -187,11 +198,11 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
     buf.hw[5] = *(s16*)&tab[0x11a];
     buf.hw[6] = *(s16*)&tab[0x11c];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    fl = 0xc010040;
-    buf.flags = fl;
-    fl |= flags;
-    buf.flags = fl;
-    if (fl & 1)
+    effectFlags = 0xc010040;
+    buf.flags = effectFlags;
+    effectFlags |= flags;
+    buf.flags = effectFlags;
+    if (effectFlags & 1)
     {
         if (sourceObj != 0)
         {
@@ -216,5 +227,3 @@ void dll_A9_func01_nop(void)
 void dll_A9_func00_nop(void)
 {
 }
-
-void dll_AA_func01_nop(void);
