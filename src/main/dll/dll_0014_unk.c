@@ -3673,7 +3673,7 @@ void walkPath_writeU16LE(u32 v, u8* dst)
     dst[1] = (u8)((s32)v >> 8);
 }
 
-#pragma scheduling on
+#pragma scheduling off
 void fn_800D9EE8(float* p)
 {
     u32* a = (u32*)((char*)p + 0x9c);
