@@ -21,6 +21,7 @@ import json
 import os
 import struct
 import sys
+import threading
 import traceback
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -46,6 +47,11 @@ class Debugger:
         self.syms = SymbolDB(self.gameid)
         # addr -> (bptype, kind) for breakpoints/watches we've set
         self.breakpoints: dict[int, tuple[int, int]] = {}
+        # Serializes all GDB-stub access between the stdio request thread and a
+        # background toggle_loop thread (one socket, no concurrent packets).
+        self.lock = threading.Lock()
+        self._loop_stop = threading.Event()
+        self._loop_thread: threading.Thread | None = None
 
     def ensure_connected(self):
         if not self.rsp.connected:
@@ -216,6 +222,57 @@ class Debugger:
         a = self.syms.resolve_target(target)
         return self.syms.resolve(a)
 
+    def toggle_loop(self, addr: str, value_a: str, value_b: str = "0",
+                    size: int = 1, period: float = 5.0, cycles: int = 0) -> dict:
+        """Alternate a memory location between two values every `period` seconds.
+
+        Runs in a background thread so the game free-runs between switches; each
+        switch is a brief halt -> write -> resume blip. Great for A/B-ing a
+        cosmetic value visually. cycles=0 runs until stop_loop. The write is
+        `size` bytes, big-endian. Only one loop at a time.
+        """
+        self.ensure_connected()
+        a = self.syms.resolve_target(addr)
+        sz = int(size)
+        va = (int(str(value_a), 0) & ((1 << (sz * 8)) - 1)).to_bytes(sz, "big")
+        vb = (int(str(value_b), 0) & ((1 << (sz * 8)) - 1)).to_bytes(sz, "big")
+        period = float(period)
+        cycles = int(cycles)
+        if self._loop_thread and self._loop_thread.is_alive():
+            return {"ok": False, "error": "a toggle_loop is already running; call stop_loop first"}
+        self._loop_stop.clear()
+
+        def run():
+            i = 0
+            while not self._loop_stop.is_set():
+                if cycles and i >= cycles:
+                    break
+                data = va if (i % 2 == 0) else vb
+                with self.lock:
+                    try:
+                        if self.rsp.running:
+                            self.rsp.halt()
+                        self.rsp.write_memory(a, data)
+                        self.rsp.resume()
+                    except Exception as e:  # noqa: BLE001
+                        log("toggle_loop stopped on error:", e)
+                        break
+                i += 1
+                self._loop_stop.wait(period)  # interruptible sleep
+
+        self._loop_thread = threading.Thread(target=run, name="toggle_loop", daemon=True)
+        self._loop_thread.start()
+        return {"ok": True, "addr": f"{a:#010x}", "size": sz, "period": period,
+                "value_a": va.hex(), "value_b": vb.hex(),
+                "cycles": cycles or "until stop_loop",
+                "note": "game free-runs between switches; call stop_loop to end."}
+
+    def stop_loop(self) -> dict:
+        running = bool(self._loop_thread and self._loop_thread.is_alive())
+        self._loop_stop.set()
+        return {"ok": True, "was_running": running,
+                "note": "loop stopped; the game is left running on the last-written value."}
+
 
 # ---- MCP tool schema definitions ----------------------------------------
 def tool_defs():
@@ -247,6 +304,13 @@ def tool_defs():
         ("step", "Single-step one instruction.", {}),
         ("halt", "Halt the running emulator (Ctrl-C break).", {}),
         ("lookup", "Resolve a symbol name <-> address without touching Dolphin.", {"target": addr}),
+        ("toggle_loop", "A/B a value visually: alternate `addr` between value_a and value_b every "
+                        "`period` seconds in the background (brief halt/write/resume blip per switch; "
+                        "game free-runs between). cycles=0 runs until stop_loop.",
+         {"addr": addr, "value_a": {"type": "string"}, "value_b": {"type": "string", "default": "0"},
+          "size": {"type": "integer", "default": 1}, "period": {"type": "number", "default": 5},
+          "cycles": {"type": "integer", "default": 0}}),
+        ("stop_loop", "Stop the running toggle_loop (leaves the game running on the last value).", {}),
     ]
 
 
@@ -255,6 +319,7 @@ REQUIRED = {
     "read_memory": ["addr"], "write_memory": ["addr", "hex_bytes"],
     "set_breakpoint": ["target"], "watch_memory": ["addr"],
     "clear_breakpoint": ["target"], "lookup": ["target"],
+    "toggle_loop": ["addr", "value_a"],
 }
 
 # tool name -> Debugger method name (continue is a keyword)
@@ -267,6 +332,7 @@ DISPATCH = {
     "clear_all_breakpoints": "clear_all_breakpoints", "continue": "continue_",
     "resume": "resume", "wait_stop": "wait_stop",
     "step": "step", "halt": "halt", "lookup": "lookup",
+    "toggle_loop": "toggle_loop", "stop_loop": "stop_loop",
 }
 
 
@@ -314,7 +380,8 @@ class Server:
             return self._tool_error(mid, f"unknown tool: {name}")
         try:
             fn = getattr(self.dbg, DISPATCH[name])
-            result = fn(**args)
+            with self.dbg.lock:
+                result = fn(**args)
             text = json.dumps(result, indent=2)
             return self._ok(mid, {"content": [{"type": "text", "text": text}]})
         except (RSPError, KeyError, ValueError, OSError) as e:
