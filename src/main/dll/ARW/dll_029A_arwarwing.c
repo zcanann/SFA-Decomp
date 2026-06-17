@@ -454,8 +454,8 @@ void arwarwing_updateWeaponFire(int obj, int state)
 void arwarwing_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    f32 camPos[2];
     s16 camRot[3];
+    f32 camPos[2];
     u8 mode;
     int p;
     f32 t;
