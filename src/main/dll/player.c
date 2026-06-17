@@ -14273,7 +14273,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 {
                     Shader_getLayer(op, 1);
                     lbl_803DE428 = op;
-                    *(int*)((char*)op + 0x3c) |= 0x100000;
+                    *(u32*)((char*)op + 0x3c) |= 0x100000LL;
                     break;
                 }
             }
