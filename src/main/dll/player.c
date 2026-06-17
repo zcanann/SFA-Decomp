@@ -14244,7 +14244,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((GameObject*)obj)->anim.localPosY = sy;
             ((GameObject*)obj)->anim.localPosZ = sz;
         }
-        if ((u8)flag != 0)
+        if (flag != 0)
         {
             fn_802AAF80(obj, inner, a, b, c);
         }
@@ -14332,7 +14332,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             {
                 if ((((PlayerState*)inner)->unk8D8 & 8) != 0)
                 {
-                    int n;
+                    u8 n;
                     vel[0] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityX;
                     vel[1] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityY;
                     vel[2] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityZ;
