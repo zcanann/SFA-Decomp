@@ -3255,8 +3255,11 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         *(s8*)(p2 + 6 + slot * 8) = 1;
         entry = (char*)lbl_8038224C[slot].field_0;
         pairs = (s16*)lbl_80382238[2];
-        cv3 = (s8)pairs[id * 2];
-        cv4 = (s8)pairs[id * 2 + 1];
+        {
+            int pi = id * 2;
+            cv3 = (s8)pairs[pi];
+            cv4 = (s8)pairs[pi + 1];
+        }
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
