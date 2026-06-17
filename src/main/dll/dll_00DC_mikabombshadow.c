@@ -161,6 +161,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern u8 framesThisStep;
 
+/* includes deferred to preserve the pre-include extern declarations for codegen */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
@@ -973,13 +974,13 @@ void FUN_80170048(void)
 
 void mikabombshadow_update(int* obj)
 {
-    int* r4;
+    int* owner;
     f32 fz = lbl_803E31D8;
     f32 t;
     f32 f;
 
-    r4 = ((GameObject*)obj)->ownerObj;
-    t = fz - (((GameObject*)r4)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
+    owner = ((GameObject*)obj)->ownerObj;
+    t = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
     if (f > fz) f = fz;
@@ -1607,25 +1608,8 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
 
-s32 staff_func16(int* obj);
-
-
-
-
-
-void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
-
-void flamethrowerspe_func0B(int* obj);
-
-
-
-void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
 
 
 
@@ -1641,10 +1625,6 @@ void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-
-void gcbaddieshield_update(int* obj);
-
-void staff_free(int* obj);
 
 void fireball_free(int* obj);
 
@@ -1664,7 +1644,7 @@ void mikabombshadow_init(int* obj)
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     ((GameObject*)obj)->anim.rotY = 0x4000;
-    *(s16*)obj = 0;
+    ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.modelState->flags |= 0x10000LL;
     *(f32*)state = out;
@@ -1681,8 +1661,6 @@ void animatedobj_free(int* obj, int seqFlag);
 
 void staff_init(int* obj);
 
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
@@ -1696,17 +1674,9 @@ void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-
-void dim2roofrub_update(int* obj);
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
-
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void shield_update(int* obj);
 
@@ -1714,13 +1684,12 @@ void dll_F7_update(int* obj);
 
 void staff_initialise(void);
 
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
+/* Unreferenced in this TU; present for the opt_common_subs pragma-state / sibling-DLL data layout, not for direct calls. */
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
 {
     GXWGFifo.f32 = x;
