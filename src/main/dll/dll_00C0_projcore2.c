@@ -1,24 +1,11 @@
+/*
+ * projcore2 (DLL 0xC0) - retired projectile-core DLL.
+ *
+ * The only live entry point reports that projectiles are no longer
+ * supported and returns the unsupported sentinel (-1); the DLL's
+ * release/initialise lifecycle hooks are empty stubs.
+ */
 #include "main/dll/dll_83.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_83.c
- * - 0x80100A14-0x80100A18
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_82.c
- * - next split: main/dll/dll_84.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
 
 extern void OSReport(const char* fmt, ...);
 
