@@ -478,8 +478,8 @@ void drlasercannon_update(int obj)
     f32 nearDist;
     int spawnFlag;
     f32 hitPos[3];
-    f32 inv[6];
     f32 outv[6];
+    f32 inv[6];
     ((GameObject*)obj)->anim.localPosY -= state->bobOffset;
     if (state->flags.b7 != 0)
     {
@@ -525,7 +525,7 @@ void drlasercannon_update(int obj)
     }
     else
     {
-        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, (u8)(5 - (u8)state->health), lbl_803E6904);
         if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
@@ -537,7 +537,7 @@ void drlasercannon_update(int obj)
         }
     }
     target = drlasercannon_getTrackedTarget(obj, &state->trickyCooldown);
-    if (target != 0 &&
+    if ((void*)target != NULL &&
         (state->optionalGameBit == -1 || GameBit_Get(state->optionalGameBit) == 0))
     {
         hit = 1;
@@ -560,7 +560,7 @@ void drlasercannon_update(int obj)
         }
         if (hit != 0)
         {
-            if (state->firepipeObject != 0)
+            if ((void*)state->firepipeObject != NULL)
             {
                 firepipe_clearLinkedUpdateFlag(state->firepipeObject);
             }
@@ -600,7 +600,7 @@ void drlasercannon_update(int obj)
                             ((DrLaserCannonBeamSetup*)o)->spawnZ = state->muzzleZ;
                             spawned = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                         }
-                        if (spawned != 0)
+                        if ((void*)spawned != NULL)
                         {
                             outv[3] = state->muzzleX;
                             outv[4] = state->muzzleY;
@@ -629,7 +629,7 @@ void drlasercannon_update(int obj)
         }
     }
     spawned = state->firepipeObject;
-    if (spawned != 0)
+    if ((void*)spawned != NULL)
     {
         if ((((GameObject*)spawned)->objectFlags & 0x40) != 0)
         {
