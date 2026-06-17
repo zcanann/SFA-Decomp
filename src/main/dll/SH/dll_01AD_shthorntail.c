@@ -408,7 +408,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            if ((obj->objectFlags & 0x800U) != 0)
+            if ((obj->objectFlags & 0x800) != 0)
             {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
@@ -421,13 +421,13 @@ void SHthorntail_update(SHthorntailObject* obj)
     }
     runtime->behaviorFlags = runtime->behaviorFlags & ~0x08;
     if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
+        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
     {
-        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
     }
     else
     {
-        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
     uval = (uint)runtime->hitReactState;
@@ -456,26 +456,26 @@ void SHthorntail_update(SHthorntailObject* obj)
             break;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) == 0)
+            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) != 0)
         {
-            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
-            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
+            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
         }
         else
         {
-            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
             byteVal = runtime->freezeFrameCounter + 1;
             runtime->freezeFrameCounter = byteVal;
-            if (byteVal <= 0xa)
+            if (byteVal > 0xa)
             {
-                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
+                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
             else
             {
-                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
+                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
             }
         }
         if ((int)obj->currentMove !=
@@ -490,13 +490,13 @@ void SHthorntail_update(SHthorntailObject* obj)
         val = ObjAnim_AdvanceCurrentMove(
             SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState], timeDelta,
             (int)obj, &animEvents);
-        if (val == 0)
+        if (val != 0)
         {
-            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         else
         {
-            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
             SHTHORNTAIL_STATE_FLAG_APPLY_ROOT_MOTION) != 0)
@@ -547,23 +547,23 @@ void SHthorntail_update(SHthorntailObject* obj)
         objAudioFn_8006ef38((int)obj, (int)&animEvents, 8, (int)runtime->renderPathPoints,
                             (int)runtime->moveScratch, lbl_803E5448, lbl_803E5448);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) == 0)
-        {
-            runtime->movementControlFlags = runtime->movementControlFlags | 1;
-        }
-        else
+            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0)
         {
             runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
         }
+        else
+        {
+            runtime->movementControlFlags = runtime->movementControlFlags | 1;
+        }
         dll_2E_func03(obj, runtime);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
+            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
         {
-            fn_8003B228((int)obj, (int)runtime->collisionShapeState);
+            characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
         }
         else
         {
-            characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
+            fn_8003B228((int)obj, (int)runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
@@ -603,11 +603,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
             }
-            if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState))
-            {
-                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
-            }
-            else
+            if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
                 obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
                 (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
@@ -615,6 +611,10 @@ void SHthorntail_update(SHthorntailObject* obj)
                 (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
                 obj->pitch = runtime->moveControlPitch;
                 obj->roll = runtime->moveControlRoll;
+            }
+            else
+            {
+                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
             }
         }
     }
