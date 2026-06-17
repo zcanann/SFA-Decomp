@@ -2270,8 +2270,8 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
     extern f32 lbl_803DEA04;
     extern f32 lbl_803DEA08;
     extern f32 lbl_803DEA0C;
-    extern f32 lbl_803DEA10;
-    extern f32 lbl_803DEA14;
+    extern const f32 lbl_803DEA10;
+    extern const f32 lbl_803DEA14;
     f32 buf[12];
     f32 x;
     f32 y;
@@ -2291,22 +2291,20 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
         }
         else
         {
-            y = lbl_803DEA04 - __kernel_cos(buf[1], buf[0]);
+            y = __kernel_cos(buf[1], buf[0]);
             z = lbl_803DEA04;
+            y = z - y;
         }
     }
     else
     {
-        y = __kernel_cos(buf[1], buf[0]) - lbl_803DEA04;
+        y = __kernel_cos(buf[1], buf[0]);
         z = lbl_803DEA04;
+        y = y - z;
     }
-    {
-        f32 d = lbl_803DEA14;
-        f32 s = lbl_803DEA10;
-        *outC = (s16)(s32)(s * z / d);
-        *outB = (s16)(s32)(s * x / d);
-        *outA = (s16)(s32)(s * y / d);
-    }
+    *outC = (s16)(s32)(lbl_803DEA10 * z / lbl_803DEA14);
+    *outB = (s16)(s32)(lbl_803DEA10 * x / lbl_803DEA14);
+    *outA = (s16)(s32)(lbl_803DEA10 * y / lbl_803DEA14);
     return 1;
 }
 
