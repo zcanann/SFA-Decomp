@@ -15054,11 +15054,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 return 0;
             }
-            if (((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 6 &&
-                ((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 0x10)
+            if (((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 6 ||
+                ((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 0x10)
             {
-                return 0;
-            }
             ax = *(f32*)((char*)tbl2 + *(s16*)((char*)face + 0x4) * 0xc);
             ay = lbl_803E7EA4;
             az = *(f32*)((char*)tbl2 + *(s16*)((char*)face + 0x4) * 0xc + 8);
@@ -15081,6 +15079,11 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 {
                     return 0;
                 }
+            }
+            }
+            else
+            {
+                return 0;
             }
         }
     }
