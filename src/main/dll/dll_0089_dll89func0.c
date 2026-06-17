@@ -1,3 +1,13 @@
+/*
+ * dll89func0 (DLL 0x89) - one entry of the foodbag/modgfx spawn-effect
+ * family (dll_7C..dll_90 in foodbag.h). dll_89_func03 fills a stack
+ * FbBuf command list with ten FbCmd layers (texture/mode/xyz from the
+ * lbl_803E10xx float pool and the lbl_80316460 resource block) and hands
+ * it to gModgfxInterface->spawnEffect (effect 0x1fd). When flag bit 0 is
+ * requested the effect is positioned from sourceObj's transform (+0x18)
+ * or, when none, from posSource (+0xc). The two _nop entries are empty
+ * vtable slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -17,25 +27,7 @@ extern f32 lbl_803E1048;
 
 void dll_89_func03(int sourceObj, int variant, int posSource, uint flags)
 {
-    typedef struct
-    {
-        FbCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        FbCmd entries[32];
-    } FbBuf89;
-    FbBuf89 buf;
+    FbBuf buf;
     u8* base = (u8*)(int)lbl_80316460;
     FbCmd* e = buf.entries;
 
@@ -55,7 +47,7 @@ void dll_89_func03(int sourceObj, int variant, int posSource, uint flags)
     e[1].z = lbl_803E1030;
     e[2].layer = 0;
     e[2].flags = 0;
-    e[2].tex = (void*)0;
+    e[2].tex = NULL;
     e[2].mode = 0x400000;
     e[2].x = lbl_803E1034;
     e[2].y = lbl_803E1038;
@@ -162,4 +154,3 @@ void dll_89_func00_nop(void)
 {
 }
 
-void dll_8A_func01_nop(void);
