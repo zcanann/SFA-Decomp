@@ -112,13 +112,13 @@ extern void textureFree(void* tex);
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
 enum SbGalleonSeqEvent
 {
-    SBGALLEON_SEQEV_SPIRIT_VISION_1 = 2,  /* toggle spirit phase 1 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1 = 2,  /* toggle damagePhase to 1 */
     SBGALLEON_SEQEV_SPRAY_ON = 3,
     SBGALLEON_SEQEV_SPRAY_OFF = 4,
-    SBGALLEON_SEQEV_SPIRIT_VISION_2 = 5,  /* toggle spirit phase 2 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_2 = 5,  /* toggle damagePhase to 2 */
     SBGALLEON_SEQEV_SFX_ON = 6,
     SBGALLEON_SEQEV_SFX_OFF = 7,
-    SBGALLEON_SEQEV_SPIRIT_VISION_8 = 8,  /* toggle spirit phase 8 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8 = 8,  /* toggle damagePhase to 8 */
     SBGALLEON_SEQEV_SKY_ON = 9,
     SBGALLEON_SEQEV_SKY_OFF = 10,
     SBGALLEON_SEQEV_SPLASH_SFX = 0xb,
@@ -167,14 +167,14 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
     {
         switch (animUpdate->eventIds[i])
         {
-        case SBGALLEON_SEQEV_SPIRIT_VISION_1:
-            if (state->spiritPhase == 1)
+        case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1:
+            if (state->damagePhase == 1)
             {
-                state->spiritPhase = 0;
+                state->damagePhase = 0;
             }
             else
             {
-                state->spiritPhase = 1;
+                state->damagePhase = 1;
             }
             break;
         case SBGALLEON_SEQEV_SPRAY_ON:
@@ -196,14 +196,14 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
         case SBGALLEON_SEQEV_SPRAY_OFF:
             state->sprayActive = 0;
             break;
-        case SBGALLEON_SEQEV_SPIRIT_VISION_2:
-            if (state->spiritPhase == 2)
+        case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_2:
+            if (state->damagePhase == 2)
             {
-                state->spiritPhase = 0;
+                state->damagePhase = 0;
             }
             else
             {
-                state->spiritPhase = 2;
+                state->damagePhase = 2;
             }
             break;
         case SBGALLEON_SEQEV_SFX_ON:
@@ -212,14 +212,14 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
         case SBGALLEON_SEQEV_SFX_OFF:
             Sfx_StopFromObject(obj, SBGALLEON_SFX_SPLASH);
             break;
-        case SBGALLEON_SEQEV_SPIRIT_VISION_8:
-            if (state->spiritPhase == 8)
+        case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
+            if (state->damagePhase == 8)
             {
-                state->spiritPhase = 1;
+                state->damagePhase = 1;
             }
             else
             {
-                state->spiritPhase = 8;
+                state->damagePhase = 8;
             }
             break;
         case SBGALLEON_SEQEV_SKY_ON:
@@ -396,7 +396,7 @@ int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void);
 
-u8 SB_Galleon_render2(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->spiritPhase; }
+u8 SB_Galleon_getPhase(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase; }
 
 s32 SB_Galleon_func0B(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
 
@@ -548,7 +548,7 @@ void SB_Galleon_init(GameObject* obj)
     state->sweepDir = 1;
     state->timer26 = 0xf0;
     state->phaseTimer = 0xf0;
-    state->spiritPhase = 0;
+    state->damagePhase = 0;
     state->headingLatch = 200;
     state->envfxActs[2] = 0x89;
     state->envfxActs[3] = 0x95;

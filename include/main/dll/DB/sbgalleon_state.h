@@ -49,7 +49,11 @@ typedef struct SBGalleonState {
     s16 mapLayer;    /* 0x72: latched from obj+0xac at init */
     f32 textAlpha;   /* 0x74: gameText 0x4b1 fade */
     u8 textRising;   /* 0x78 */
-    u8 spiritPhase;  /* 0x79 render/anim variant (read by SB_Galleon_render2); set from stage (7/8/9->3/4/5) and toggled by anim events (0/1/2/8). NOT fight progress -- stage/phase/phaseCounter track that. */
+    u8 damagePhase;  /* 0x79 damage/fire escalation, queried by parts via SB_Galleon_getPhase:
+                        head renders on fire (partfx 0x7aa) when nonzero (!=2) during the firing anim,
+                        guns fast-fire when >=3. Set from stage (7/8/9->3/4/5) and toggled by the
+                        victory-cinematic anim events (0/1/2/8). Stays 0 during the fight, so this
+                        escalation is effectively dormant in retail. NOT fight progress -- stage does that. */
     u8 flightPattern;/* 0x7a */
     u8 unk7B;        /* 0x7b */
     s8 phaseCounter;        /* 0x7c */

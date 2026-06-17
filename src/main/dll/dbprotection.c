@@ -1,5 +1,5 @@
 /*
- * dbprotection - protection-spirit phase handlers for the SB_Galleon boss.
+ * dbprotection - galleon damage-phase + boss handlers for the SB_Galleon boss.
  * Runs on the SB_Galleon object (extra == SBGalleonState) alongside the
  * SB_Galleon handlers in DBstealerworm.c.
  *
@@ -246,15 +246,15 @@ void fn_801DFA28(u8* obj)
     c = ((SBGalleonState*)state)->stage;
     if (c == 7)
     {
-        ((SBGalleonState*)state)->spiritPhase = 3;
+        ((SBGalleonState*)state)->damagePhase = 3;
     }
     else if (c == 8)
     {
-        ((SBGalleonState*)state)->spiritPhase = 4;
+        ((SBGalleonState*)state)->damagePhase = 4;
     }
     else if (c == 9)
     {
-        ((SBGalleonState*)state)->spiritPhase = 5;
+        ((SBGalleonState*)state)->damagePhase = 5;
     }
     if (((SBGalleonState*)state)->phase < 2)
     {
