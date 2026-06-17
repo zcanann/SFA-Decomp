@@ -1,10 +1,26 @@
+/*
+ * dll9cfunc0 (DLL 0x9C) - one of the screenfx scene builders (sibling of
+ * DLL 0x9A/0x9B). dll_9C_func03 fills a ScreenFxPart list (two fixed
+ * entries, then 0/1 variant entries selected by `b`) plus a ScreenFxHdr
+ * describing a multi-state screen effect (texture/model ids, per-part
+ * placement offsets and a 7-entry anim table read out of the lbl_80317E00
+ * resource blob at index b*7), then hands it to ModgfxInterface::spawnEffect
+ * (effect 0x15, asset 0x154). When header flag bit 0 is set the base
+ * position is offset by either the target object's transform (a, +0x18) or
+ * the passed parameter packet (p, +0x0C). func00/func01 are the DLL's nop
+ * lifecycle slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
+/* gModgfxInterface lives in the modgfx DLL; not declared in effect_interfaces.h. */
 extern ModgfxInterface** gModgfxInterface;
 
+/* texture/anim resource blob for this screenfx scene. */
 extern u8 lbl_80317E00[];
+
+/* screenfx placement constants (.sdata2). */
 extern f32 lbl_803E13C8;
 extern f32 lbl_803E13CC;
 extern f32 lbl_803E13D0;
@@ -147,13 +163,13 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     hdr.v3 = 0x1e;
     hdr.count = (s8)(((u8*)(cur + 3) - (u8*)pp) / 0x18);
     idx = b * 7;
-    hdr.anim[0] = *(s16*)((u8*)(base + idx * 2) + 0x1f8);
-    hdr.anim[1] = *(s16*)((u8*)(base + (idx + 1) * 2) + 0x1f8);
-    hdr.anim[2] = *(s16*)((u8*)(base + (idx + 2) * 2) + 0x1f8);
-    hdr.anim[3] = *(s16*)((u8*)(base + (idx + 3) * 2) + 0x1f8);
-    hdr.anim[4] = *(s16*)((u8*)(base + (idx + 4) * 2) + 0x1f8);
-    hdr.anim[5] = *(s16*)((u8*)(base + (idx + 5) * 2) + 0x1f8);
-    hdr.anim[6] = *(s16*)((u8*)(base + (idx + 6) * 2) + 0x1f8);
+    hdr.anim[0] = *(s16*)(base + 0x1f8 + idx * 2);
+    hdr.anim[1] = *(s16*)(base + 0x1f8 + (idx + 1) * 2);
+    hdr.anim[2] = *(s16*)(base + 0x1f8 + (idx + 2) * 2);
+    hdr.anim[3] = *(s16*)(base + 0x1f8 + (idx + 3) * 2);
+    hdr.anim[4] = *(s16*)(base + 0x1f8 + (idx + 4) * 2);
+    hdr.anim[5] = *(s16*)(base + 0x1f8 + (idx + 5) * 2);
+    hdr.anim[6] = *(s16*)(base + 0x1f8 + (idx + 6) * 2);
     hdr.parts = parts;
     hdr.flags = 0xc010480;
     hdr.flags |= flags;
@@ -174,8 +190,6 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x154, 0);
 }
-
-void dll_9A_func01_nop(void);
 
 void dll_9C_func01_nop(void)
 {
