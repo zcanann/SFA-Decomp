@@ -14091,9 +14091,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                 *(u8*)(setup + 0x6) = 0xff;
                 *(u8*)(setup + 0x5) = 1;
                 *(u8*)(setup + 0x7) = 0xff;
-                *(int*)&((ObjPlacement*)setup)->posX = *(int*)&((GameObject*)obj)->anim.localPosX;
+                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = lbl_803E7F58 + ((GameObject*)obj)->anim.localPosY;
-                *(int*)&((ObjPlacement*)setup)->posZ = *(int*)&((GameObject*)obj)->anim.localPosZ;
+                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 *(u8*)(setup + 0x19) = 1;
                 Obj_SetupObject((int)setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
             }
@@ -14101,47 +14101,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             return 0;
         }
         {
-            if (*(s8*)((char*)inner + 0x8b3) == 0)
-            {
-                if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
-                {
-                    int ok2;
-                    if (*(void**)((char*)inner + 0x7f8) != NULL ||
-                        !((ByteFlags*)((char*)inner + 0x3f4))->b40 ||
-                        ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
-                        ((ByteFlags*)((char*)inner + 0x3f0))->b10)
-                    {
-                        ok2 = 0;
-                    }
-                    else
-                    {
-                        ok2 = 1;
-                    }
-                    if (ok2 != 0)
-                    {
-                        if (*(s8*)((char*)inner + 0x8b4) == 2 ||
-                            (inner->unk4B8 != NULL &&
-                                inner->unk4B0 < lbl_803E8054 &&
-                                inner->unk4A8 < 0x4000 &&
-                                *(s16*)((char*)inner + 0x4b4) == 1))
-                        {
-                            if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
-                            {
-                                inner->unk8B4 = 4;
-                                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
-                            }
-                            *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
-                            return 0x32;
-                        }
-                        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
-                        {
-                            inner->unk8B4 = 2;
-                            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
-                        }
-                    }
-                }
-            }
-            else
+            if (*(s8*)((char*)inner + 0x8b3) != 0)
             {
                 int r2;
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x200) != 0 && lbl_803DE44C != NULL &&
@@ -14171,6 +14131,46 @@ int fn_802A418C(int obj, int state, f32 fv)
                     if (r2 != 0)
                     {
                         return r2;
+                    }
+                }
+            }
+            else
+            {
+                if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
+                {
+                    int ok2;
+                    if (*(void**)((char*)inner + 0x7f8) != NULL ||
+                        !((ByteFlags*)((char*)inner + 0x3f4))->b40 ||
+                        ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
+                        ((ByteFlags*)((char*)inner + 0x3f0))->b10)
+                    {
+                        ok2 = 0;
+                    }
+                    else
+                    {
+                        ok2 = 1;
+                    }
+                    if (ok2 != 0)
+                    {
+                        if (*(u8*)((char*)inner + 0x8b4) == 2 ||
+                            (inner->unk4B8 != NULL &&
+                                inner->unk4B0 < lbl_803E8054 &&
+                                inner->unk4A8 < 0x4000 &&
+                                *(u16*)((char*)inner + 0x4b4) == 1))
+                        {
+                            if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+                            {
+                                inner->unk8B4 = 4;
+                                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+                            }
+                            *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
+                            return 0x32;
+                        }
+                        if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+                        {
+                            inner->unk8B4 = 2;
+                            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
+                        }
                     }
                 }
             }
