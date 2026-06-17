@@ -356,12 +356,15 @@ void dfsh_shrine_update(int obj)
     switch (state->mode)
     {
     case 0:
-        state->idleChimeTimer -= timeDelta;
-        if (state->idleChimeTimer <= lbl_803E4E8C)
         {
-            Sfx_PlayFromObject(obj, 0x343);
-            state->idleChimeTimer = (f32)(s32)
-            randomGetRange(500, 1000);
+            f32 t = state->idleChimeTimer - timeDelta;
+            state->idleChimeTimer = t;
+            if (t <= lbl_803E4E8C)
+            {
+                Sfx_PlayFromObject(obj, 0x343);
+                state->idleChimeTimer = (f32)(s32)
+                randomGetRange(500, 1000);
+            }
         }
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
         {
