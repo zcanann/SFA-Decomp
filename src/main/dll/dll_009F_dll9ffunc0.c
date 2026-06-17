@@ -1,7 +1,30 @@
+/*
+ * dll9ffunc0 (DLL 0x9F) - builds a layered ModGfx effect command list and
+ * submits it via gModgfxInterface->spawnEffect (effect id 0x46c).
+ *
+ * dll_9F_func03 fills a stack command buffer with up to 17 GfxCmd entries
+ * (an optional leading entry keyed off *sourceObj, then a fixed 16-entry
+ * body) plus a header of colours, position, scale and seven halfwords read
+ * from the effect's data table (lbl_80318488). The base draw flags
+ * (0xC0104C0) are OR'd with the caller's flags; bit 0 means "position the
+ * effect", taken from the GameObject's world position when sourceObj is set,
+ * otherwise from posSource+0xC. The float constants (lbl_803E14xx) are the
+ * per-entry coordinates. dll_9F_func00/01_nop are empty DLL slots.
+ *
+ * Sibling DLL 0xA0 (dll_00A0_dlla0func0.c) is the same builder with a
+ * different table/effect id.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern ModgfxInterface** gModgfxInterface;
+
+/* base draw flags before OR'ing the caller's flags */
+#define DLL9F_EFFECT_BASE_FLAGS 0xc0104c0
+/* spawnEffect effect id for this DLL */
+#define DLL9F_EFFECT_ID 0x46c
+/* fl bit 0: derive effect position from sourceObj / posSource */
+#define DLL9F_FLAG_POSITIONED 0x1
 
 typedef struct
 {
@@ -28,7 +51,6 @@ extern f32 lbl_803E1474;
 extern f32 lbl_803E1478;
 extern f32 lbl_803E147C;
 
-
 void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
 {
     struct
@@ -38,16 +60,20 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
         u8 pad0[0x18];
         f32 col[3];
         f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
+        f32 scale; /* +0x38 */
+        u32 v3c; /* +0x3c: unknown */
+        u32 v40; /* +0x40: unknown */
+        s16 v44; /* +0x44: variant */
+        s16 hw[7]; /* +0x46 */
+        u32 flags; /* +0x54 */
+        u8 v58; /* +0x58: unknown */
+        u8 v59; /* +0x59: unknown */
+        u8 v5a; /* +0x5a: unknown */
+        u8 v5b; /* +0x5b: unknown */
+        u8 v5c; /* +0x5c: unwritten */
+        s8 count; /* +0x5d */
+        u8 pad1[2]; /* +0x5e */
+        GfxCmd entries[32]; /* +0x60 */
     } buf;
     u8* tab = lbl_80318488;
     GfxCmd* base = buf.entries;
@@ -110,7 +136,7 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
     e[5].z = lbl_803E1448;
     e[6].layer = 1;
     e[6].flags = 0;
-    e[6].tex = (void*)0;
+    e[6].tex = NULL;
     e[6].mode = 0x400000;
     e[6].x = lbl_803E1448;
     e[6].y = lbl_803E1448;
@@ -124,7 +150,7 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
     e[7].z = lbl_803E1448;
     e[8].layer = 2;
     e[8].flags = 0;
-    e[8].tex = (void*)0;
+    e[8].tex = NULL;
     e[8].mode = 0x400000;
     e[8].x = lbl_803E1448;
     e[8].y = lbl_803E1448;
@@ -145,7 +171,7 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
     e[10].z = lbl_803E1448;
     e[11].layer = 3;
     e[11].flags = 0;
-    e[11].tex = (void*)0;
+    e[11].tex = NULL;
     e[11].mode = 0x400000;
     e[11].x = lbl_803E1448;
     e[11].y = lbl_803E1448;
@@ -173,7 +199,7 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
     e[14].z = lbl_803E1448;
     e[15].layer = 4;
     e[15].flags = 0;
-    e[15].tex = (void*)0;
+    e[15].tex = NULL;
     e[15].mode = 0x400000;
     e[15].x = lbl_803E1448;
     e[15].y = lbl_803E1448;
@@ -203,13 +229,13 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
     buf.hw[5] = *(s16*)&tab[0x202];
     buf.hw[6] = *(s16*)&tab[0x204];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    fl = 0xc0104c0;
+    fl = DLL9F_EFFECT_BASE_FLAGS;
     buf.flags = fl;
     fl |= flags;
     buf.flags = fl;
-    if (fl & 1)
+    if (fl & DLL9F_FLAG_POSITIONED)
     {
-        if (sourceObj != 0)
+        if (sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E1448 + ((GameObject*)sourceObj)->anim.worldPosX;
             buf.pos[1] = lbl_803E1448 + ((GameObject*)sourceObj)->anim.worldPosY;
@@ -222,10 +248,8 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
             buf.pos[2] = lbl_803E1448 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x46c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], DLL9F_EFFECT_ID, 0);
 }
-
-void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags);
 
 void dll_9F_func01_nop(void)
 {
@@ -234,5 +258,3 @@ void dll_9F_func01_nop(void)
 void dll_9F_func00_nop(void)
 {
 }
-
-void dll_A0_func01_nop(void);
