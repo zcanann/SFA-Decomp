@@ -1181,7 +1181,7 @@ void renderObjects(s8* arg0)
             if (p != NULL && ((GameObject*)obj)->anim.modelState->shadowCastSlot != NULL)
             {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
+                ((u32*)qbase)[lbl_803DCE30 * 4 + 3] = 2;
                 lbl_803DCE30++;
             }
             else if (((GameObject*)obj)->anim.modelInstance->shadowType == 3 && (((GameObject*)obj)->anim.flags
@@ -1189,7 +1189,7 @@ void renderObjects(s8* arg0)
                 OBJ_MODEL_STATE_SHADOW_VISIBLE))
             {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
+                ((u32*)qbase)[lbl_803DCE30 * 4 + 3] = 3;
                 lbl_803DCE30++;
             }
         }
