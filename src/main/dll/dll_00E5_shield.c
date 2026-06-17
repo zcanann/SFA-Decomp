@@ -1,13 +1,38 @@
-/* DLL 0x00E5 — shield / kaldachompspit / pollenfragment group. TU: 0x8016B230–0x8016B2E0. */
+/*
+ * DLL 0x00E5 — the player's energy-shield object plus the bank of
+ * ObjectDescriptors this DLL registers (kaldachompspit, pinponspike,
+ * pollen, pollenfragment, mikabomb/mikabombshadow, staticcamera,
+ * gcbaddieshield, baddieinterestp, animatedobj, dim2roofrub,
+ * depthoffieldpoint, staff, fireball, flamethrowerspe, shield, curve,
+ * restartmarker, dll_F7, checkpoint4). Most descriptor callbacks live in
+ * sibling DLLs and are only referenced here by address.
+ *
+ * The shield itself (seqId 0x836 uses staff-mode 5, otherwise mode 7) is
+ * a four-segment ring driven by staffFn_80170380: each mode sets the
+ * per-segment fade/scale targets in ShieldState, drives a point light
+ * (modelLightStruct_*) and the 0x42C/0x42D loop sfx, and seeds the
+ * fcos16 wobble for the four segments. shield_update advances the fade
+ * toward its target, modulates alpha from a random flicker, and updates
+ * the segment cosine; shield_render re-renders the four segments with
+ * per-segment rotation and (off-HUD) spawns particle fx 2028 at the
+ * staff tips.
+ *
+ * staticCamera_* implements the static-camera placement object (copies
+ * negated rotation from its placement and joins object group 7).
+ * staffFn_80170380 (vtbl/cmd dispatch 0..7) is shared with the staff
+ * object and dispatched via jumptable_80320AA0.
+ *
+ * TU: 0x8016B230–0x8016B2E0.
+ */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/player_objects.h"
+#include "main/game_object.h"
+#include "main/dll/genprops.h"
+#include "main/dll_000A_expgfx.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
-
+extern void FUN_8003b818(int obj);
 
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -25,7 +50,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -171,11 +195,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/genprops.h"
-#include "main/dll_000A_expgfx.h"
-
 typedef struct ShieldState
 {
     u8 pad0[0x4 - 0x0];
@@ -215,103 +234,15 @@ typedef struct ShieldState
     s16 unk116;
 } ShieldState;
 
-extern undefined4 FUN_80006810();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
-extern int FUN_80294cf8();
-extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
 
-extern undefined4 DAT_80321678;
-extern int DAT_80321688;
-extern undefined4 DAT_80321698;
-extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
 extern f64 DOUBLE_803e3e88;
-extern f64 DOUBLE_803e4068;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
-extern f32 lbl_803E3F28;
-extern f32 lbl_803E3F2C;
-extern f32 lbl_803E3F30;
-extern f32 lbl_803E3F34;
-extern f32 lbl_803E3F38;
-extern f32 lbl_803E3F3C;
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 lbl_803E3F68;
-extern f32 lbl_803E3F6C;
-extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F74;
-extern f32 lbl_803E3F78;
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
-extern f32 lbl_803E3F88;
-extern f32 lbl_803E3F8C;
-extern f32 lbl_803E3FA4;
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FC4;
-extern f32 lbl_803E4040;
-extern f32 lbl_803E4044;
-extern f32 lbl_803E4048;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
-extern f32 lbl_803E4060;
-extern f32 lbl_803E4064;
-extern f32 lbl_803E40E8;
-extern f32 lbl_803E40EC;
 
 extern f32 lbl_803E3420;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void gcbaddieshield_update(int* obj);
@@ -330,7 +261,7 @@ extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
 extern void staff_modelMtxFn(int* obj, int p4, int p5);
-extern void staff_hitDetectGeometry();
+extern void staff_hitDetectGeometry(int* obj);
 extern s16 staff_getHitReactValue(int* obj);
 extern s32 staff_func16(int* obj);
 extern void fireball_free();
@@ -342,9 +273,8 @@ extern void flamethrowerspe_func0B(int* obj);
 extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_free();
 extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void shield_update();
+extern void shield_update(int* obj);
 extern void dll_F7_free();
 extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
@@ -353,11 +283,7 @@ extern int* Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
 extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 extern int getHudHiddenFrameCount(void);
-extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern void vecRotateZXY(int* obj, f32* p);
-extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setLightKind(int light, int v);
 extern f32 fcos16(u16 angle);
 extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
 extern f32 lbl_803E33A8;
@@ -380,827 +306,39 @@ extern f32 lbl_803E33C0;
 extern f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
 
-void staticCamera_free(int param_1)
+void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(param_1, 7);
-    return;
+    ObjGroup_RemoveObject(obj, 7);
 }
 
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
-    return;
 }
 
-void staticCamera_init(short* param_1, int param_2, int param_3)
+void staticCamera_init(short* state, int placement, int addToGroup)
 {
-    undefined* dst;
+    u8* dst;
 
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    dst = *(undefined**)(param_1 + 0x5c);
-    *dst = *(undefined*)(param_2 + 0x19);
-    *(float*)(dst + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+    *state = -*(short*)(placement + 0x1c);
+    state[1] = -*(short*)(placement + 0x1e);
+    state[2] = -*(short*)(placement + 0x20);
+    dst = *(u8**)(state + 0x5c);
+    *dst = *(u8*)(placement + 0x19);
+    *(float*)(dst + 4) = (f32)(u32) * (u8*)(placement + 0x1a);
     dst[1] = 0;
-    if (param_3 == 0)
+    if (addToGroup == 0)
     {
-        ObjGroup_AddObject((int)param_1, 7);
+        ObjGroup_AddObject((int)state, 7);
     }
-    return;
 }
-
-void FUN_8016d188(int param_1, int param_2)
-{
-    float factor;
-    int mode;
-    uint cfgFlag;
-    int stateExtra;
-    double colorD;
-    int ownerData;
-    float intensity;
-    int spawnType;
-    undefined2 fxArgs[3];
-    short fxArgsCount;
-    float fxArgsScale;
-    undefined2 fxId;
-    undefined2 local_32;
-    undefined2 local_30;
-    short fxCount;
-    float fxScale;
-    float fxParam28;
-    float fxParam24;
-    undefined4 local_20;
-    longlong tmpLL;
-
-    stateExtra = *(int*)&((GameObject*)param_1)->extra;
-    if ((param_1 != 0) && (param_2 != 0))
-    {
-        if (*(char*)(stateExtra + 0xba) != '\0')
-        {
-            mode = FUN_80294d10(param_2);
-            if (mode == 0)
-            {
-                intensity = lbl_803E3F24;
-                factor = lbl_803E3F28;
-            }
-            else
-            {
-                intensity = lbl_803E3F20;
-                factor = lbl_803E3F20;
-            }
-            if (*(byte*)(stateExtra + 0xbb) == 7)
-            {
-                colorD = (double)lbl_803E3F2C;
-                tmpLL = (longlong)(int)(lbl_803E3F30 * factor);
-                FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * intensity), param_1, 7,
-                             (uint) * (byte*)(stateExtra + 0xba), 1, (int)(lbl_803E3F30 * factor), 0, 0);
-            }
-            else
-            {
-                colorD = (double)lbl_803E3F20;
-                tmpLL = (longlong)(int)(lbl_803E3F30 * factor);
-                FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * intensity), param_1,
-                             (uint) * (byte*)(stateExtra + 0xbb), (uint) * (byte*)(stateExtra + 0xba), 1,
-                             (int)(lbl_803E3F30 * factor), 0, 0);
-            }
-        }
-        FUN_80294c60(param_2, &spawnType, &intensity);
-        fxId = 0;
-        local_32 = 0;
-        local_30 = 0;
-        fxScale = lbl_803E3F20;
-        if (spawnType == 0x87)
-        {
-            stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
-            tmpLL = (longlong)stateExtra;
-            fxCount = 0x15 - (short)stateExtra;
-            fxParam28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
-            fxId = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            fxCount = 9;
-            fxScale = lbl_803E3F48 * (intensity / lbl_803E3F40) + lbl_803E3F44;
-            fxParam24 = lbl_803E3F4C;
-            fxId = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-        }
-        else if (spawnType < 0x87)
-        {
-            if (spawnType == 0x7f)
-            {
-                fxScale = lbl_803E3F58;
-                fxCount = 10;
-                fxParam24 = lbl_803E3F54;
-                fxParam28 = lbl_803E3F50;
-                fxId = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-            }
-            else if (spawnType < 0x7f)
-            {
-                if ((spawnType == 0x43) && (lbl_803E3F4C < intensity))
-                {
-                    stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
-                    tmpLL = (longlong)stateExtra;
-                    fxCount = (short)stateExtra + 6;
-                    fxParam28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
-                    fxId = 0xc94;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &fxId, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &fxId, 2, -1, NULL);
-                    fxCount = 9;
-                    fxScale = lbl_803E3F48 * (intensity / lbl_803E3F40) + lbl_803E3F44;
-                    fxParam24 = lbl_803E3F4C;
-                    fxId = 0xc0e;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-                }
-            }
-            else if (spawnType == 0x85)
-            {
-                if (lbl_803E3F4C < intensity)
-                {
-                    cfgFlag = FUN_80017690(0xc55);
-                    if (cfgFlag == 0)
-                    {
-                        factor = intensity / lbl_803E3F40;
-                        stateExtra = (int)(lbl_803E3F38 * factor);
-                        fxCount = (short)stateExtra;
-                        fxId = 0xc94;
-                    }
-                    else
-                    {
-                        factor = intensity / lbl_803E3F50;
-                        stateExtra = (int)(lbl_803E3F38 * factor);
-                        fxCount = (short)stateExtra;
-                        fxId = 0xc75;
-                    }
-                    tmpLL = (longlong)stateExtra;
-                    fxParam28 = lbl_803E3F5C * (lbl_803E3F28 - factor);
-                    fxCount = 0x15 - fxCount;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-                    fxCount = 9;
-                    cfgFlag = FUN_80017690(0xc55);
-                    if (cfgFlag == 0)
-                    {
-                        fxId = 0xc0e;
-                        factor = lbl_803E3F40;
-                    }
-                    else
-                    {
-                        fxId = 0xc75;
-                        factor = lbl_803E3F50;
-                    }
-                    fxScale = lbl_803E3F48 * (intensity / factor) + lbl_803E3F44;
-                    fxParam24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-                }
-            }
-            else if (0x84 < spawnType)
-            {
-                cfgFlag = FUN_80017690(0xc55);
-                if (cfgFlag == 0)
-                {
-                    fxId = 0xc0e;
-                }
-                else
-                {
-                    fxId = 0xc75;
-                }
-                factor = *(float*)(param_2 + 0x98);
-                if (lbl_803E3F68 <= factor)
-                {
-                    if (factor < lbl_803E3F70)
-                    {
-                        fxParam28 = lbl_803E3F5C * (lbl_803E3F74 * (factor - lbl_803E3F68) - lbl_803E3F2C);
-                        fxCount = 9;
-                        fxScale = lbl_803E3F20;
-                        fxParam24 = lbl_803E3F4C;
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-                    }
-                }
-                else
-                {
-                    fxParam28 = lbl_803E3F6C;
-                    fxCount = 9;
-                    fxScale = lbl_803E3F20;
-                    fxParam24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-                }
-            }
-        }
-        else if (spawnType == 0x468)
-        {
-            if (lbl_803E3F4C < intensity)
-            {
-                stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
-                tmpLL = (longlong)stateExtra;
-                fxArgsCount = 0x15 - (short)stateExtra;
-                fxArgs[0] = 0xc95;
-                FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerData);
-                fxParam28 = *(float*)(ownerData + 0xc);
-                fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(undefined4*)(ownerData + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
-                                                 0x200001, -1, fxArgs);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
-                                                 0x200001, -1, fxArgs);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
-                                                 0x200001, -1, fxArgs);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
-                                                 0x200001, -1, fxArgs);
-                fxArgsCount = 9;
-                fxArgs[0] = 0xc95;
-                fxArgsScale = lbl_803E3F64 * (intensity / lbl_803E3F60) + lbl_803E3F44;
-                fxParam28 = *(float*)(ownerData + 0xc);
-                fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(undefined4*)(ownerData + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &fxId,
-                                                 0x200001, -1, fxArgs);
-            }
-        }
-        else if (spawnType < 0x468)
-        {
-            if (spawnType < 0x89)
-            {
-                fxCount = 0x23;
-                fxParam24 = lbl_803E3F4C;
-                fxParam28 = lbl_803E3F50;
-                fxId = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-                fxCount = 0x12;
-                fxParam24 = lbl_803E3F54;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-            }
-        }
-        else if ((spawnType == 0x46f) && (lbl_803E3F4C < intensity))
-        {
-            stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
-            tmpLL = (longlong)stateExtra;
-            fxCount = 0x15 - (short)stateExtra;
-            fxParam28 = lbl_803E3F5C * (lbl_803E3F28 - intensity / lbl_803E3F60);
-            fxId = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
-            fxCount = 9;
-            fxScale = lbl_803E3F48 * (intensity / lbl_803E3F60) + lbl_803E3F44;
-            fxParam24 = lbl_803E3F4C;
-            fxId = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &fxId, 2, -1, NULL);
-        }
-    }
-    return;
-}
-
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
-{
-    int stateExtra;
-
-    stateExtra = *(int*)&((GameObject*)param_1)->extra;
-    *(undefined*)(stateExtra + 0xbb) = param_2;
-    *(undefined*)(stateExtra + 0xba) = param_3;
-    return;
-}
-
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
-{
-    short clamped;
-    int hits;
-    int* group;
-    uint idx;
-    int particle;
-    int* state;
-    double colorD;
-    double clampedColor;
-    undefined8 local_18;
-
-    state = ((GameObject*)param_9)->extra;
-    hits = FUN_80017a54(param_9);
-    *(ushort*)(hits + 0x18) = *(ushort*)(hits + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)state[0x14], (double)lbl_803DC074);
-    hits = 3;
-    group = state;
-    do
-    {
-        if ((*(byte*)(group + 5) & 2) != 0)
-        {
-            idx = (uint) * (ushort*)(group + 3);
-            particle = *group + idx * 0x14;
-            for (; (int)idx < (int)(uint) * (ushort*)((int)group + 0xe); idx = idx + 2)
-            {
-                if (group == (int*)state[0x12])
-                {
-                    param_3 = (double)lbl_803E3F8C;
-                    colorD = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)state[0x26] -
-                            *(float*)(particle + 0xc)) * lbl_803E3FA8));
-                    clampedColor = (double)lbl_803E3F4C;
-                    if ((clampedColor <= colorD) && (clampedColor = colorD, param_3 < colorD))
-                    {
-                        clampedColor = param_3;
-                    }
-                    *(short*)(particle + 0x10) = (short)(int)(param_3 - clampedColor);
-                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
-                }
-                else
-                {
-                    param_3 = (double)lbl_803E3FC4;
-                    *(short*)(particle + 0x10) =
-                        (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(particle + 0x10)));
-                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
-                }
-                clamped = *(short*)(particle + 0x10);
-                if (clamped < 0)
-                {
-                    clamped = 0;
-                }
-                else if (0xff < clamped)
-                {
-                    clamped = 0xff;
-                }
-                *(short*)(particle + 0x10) = clamped;
-                clamped = *(short*)(particle + 0x24);
-                if (clamped < 0)
-                {
-                    clamped = 0;
-                }
-                else if (0xff < clamped)
-                {
-                    clamped = 0xff;
-                }
-                *(short*)(particle + 0x24) = clamped;
-                if ((*(short*)(particle + 0x10) < 1) && (*(short*)(particle + 0x24) < 1))
-                {
-                    *(short*)((int)group + 0x12) = *(short*)((int)group + 0x12) + -2;
-                    *(short*)(group + 3) = *(short*)(group + 3) + 2;
-                }
-                particle = particle + 0x28;
-            }
-            if ((group != (int*)state[0x12]) && (*(short*)((int)group + 0x12) == 0))
-            {
-                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
-            }
-        }
-        group = group + 6;
-        hits = hits + -1;
-    }
-    while (hits != 0);
-    FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
-    FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)state + 0xb9) = 0;
-    if (DAT_803ad338 != '\0')
-    {
-        DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
-        ObjHitbox_SetSphereRadius(DAT_803ad334, (short)(int)DAT_803ad324);
-        ObjHits_SetHitVolumeSlot(DAT_803ad334, 0x11, 5, 0);
-        DAT_803ad330 = DAT_803ad330 + lbl_803E3F7C;
-        clampedColor = (double)DAT_803ad330;
-        DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
-        DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
-        ((GameObject*)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
-        ((GameObject*)DAT_803ad334)->anim.rootMotionScale = ((GameObject*)DAT_803ad334)->anim.rootMotionScale +
-            lbl_803E3F88;
-        if ((double)DAT_803ad330 < (double)lbl_803E3F20)
-        {
-            DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, clampedColor, param_3, param_4, param_5, param_6, param_7, param_8,
-                         DAT_803ad334);
-            DAT_803ad334 = 0;
-        }
-    }
-    return;
-}
-
-void FUN_80170048(void)
-{
-    float defaultVal;
-    uint objHi;
-    int seqObj;
-    int* writer;
-    uint rand;
-    int glowObj;
-    int* state;
-    int* colorTbl;
-    float* scaleTbl;
-    double cosVal;
-    double scaleC;
-    double phase;
-    double biasC;
-    double offsetC;
-    undefined8 packed;
-    undefined8 local_78;
-    undefined8 local_70;
-
-    packed = FUN_80286838();
-    objHi = (uint)((ulonglong)packed >> 0x20);
-    scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(objHi + 0xb8);
-    seqObj = FUN_80017a98();
-    glowObj = 0;
-    if (seqObj != 0)
-    {
-        glowObj = FUN_80294cf8(seqObj);
-    }
-    defaultVal = lbl_803E4064;
-    switch ((uint)packed & 0xff)
-    {
-    case 0:
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        defaultVal = lbl_803E4048;
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4048;
-            state[1] = (int)defaultVal;
-            if (glowObj != 0)
-            {
-                FUN_8016d994(glowObj, 7, 0);
-            }
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        FUN_80006810(objHi, 0x42c);
-        FUN_80006810(objHi, 0x42d);
-        break;
-    case 1:
-        if (lbl_803E4044 == (float)state[2])
-        {
-            if (glowObj != 0)
-            {
-                FUN_8016d994(glowObj, 7, 8);
-            }
-            if (*state == 0)
-            {
-                writer = FUN_80017624(0, '\x01');
-                *state = (int)writer;
-            }
-            if (*state != 0)
-            {
-                FUN_800175b0(*state, 2);
-                FUN_800175ec((double)*(float*)(objHi + 0xc),
-                             (double)(*(float*)(objHi + 0x10) - lbl_803E4050),
-                             (double)*(float*)(objHi + 0x14), (int*)*state);
-                FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-                FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-                FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-                FUN_800175bc(*state, 1);
-                FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-                FUN_8001753c(*state, 0, 0);
-                FUN_800175d8(*state, 1);
-            }
-            defaultVal = lbl_803E4044;
-            if (lbl_803E4044 == (float)state[2])
-            {
-                state[4] = (int)lbl_803E4048;
-                state[1] = (int)defaultVal;
-            }
-            state[2] = (int)lbl_803E4048;
-            scaleC = (double)lbl_803E405C;
-            state[3] = (int)lbl_803E405C;
-            seqObj = 0;
-            colorTbl = &DAT_80321688;
-            phase = (double)lbl_803E4040;
-            biasC = (double)lbl_803E4060;
-            writer = state;
-            offsetC = DOUBLE_803e4068;
-            do
-            {
-                *(undefined2*)(writer + 0xd) = 0xc000;
-                cosVal = (double)fcos16Precise();
-                state[9] = (int)(*scaleTbl * (float)((double)(float)(scaleC + cosVal) * phase));
-                state[5] = *colorTbl;
-                rand = randomGetRange(0x78, 0x7f);
-                local_78 = (double)CONCAT44(0x43300000, seqObj * rand ^ 0x80000000);
-                *(short*)(writer + 0xf) = (short)(int)(biasC + (double)(float)(local_78 - offsetC));
-                writer = (int*)((int)writer + 2);
-                scaleTbl = scaleTbl + 1;
-                state = state + 1;
-                colorTbl = colorTbl + 1;
-                seqObj = seqObj + 1;
-            }
-            while (seqObj < 4);
-            FUN_80006824(objHi, 0x42c);
-            FUN_80006824(objHi, 0x42d);
-        }
-        break;
-    case 2:
-        if (glowObj != 0)
-        {
-            FUN_8016d994(glowObj, 7, 0);
-        }
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        FUN_80006810(objHi, 0x42c);
-        FUN_80006810(objHi, 0x42d);
-        break;
-    case 3:
-        if (glowObj != 0)
-        {
-            FUN_8016d994(glowObj, 7, 8);
-        }
-        if (*state == 0)
-        {
-            writer = FUN_80017624(0, '\x01');
-            *state = (int)writer;
-        }
-        if (*state != 0)
-        {
-            FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(objHi + 0xc),
-                         (double)(*(float*)(objHi + 0x10) - lbl_803E4050),
-                         (double)*(float*)(objHi + 0x14), (int*)*state);
-            FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-            FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-            FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-            FUN_800175bc(*state, 1);
-            FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-            FUN_8001753c(*state, 0, 0);
-            FUN_800175d8(*state, 1);
-        }
-        if (lbl_803E4044 == (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4064;
-        biasC = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        seqObj = 0;
-        colorTbl = &DAT_80321688;
-        offsetC = (double)lbl_803E4040;
-        writer = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0;
-            scaleC = (double)fcos16Precise();
-            writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + scaleC) * offsetC));
-            writer[5] = *colorTbl;
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            writer = writer + 1;
-            colorTbl = colorTbl + 1;
-            seqObj = seqObj + 1;
-        }
-        while (seqObj < 4);
-        FUN_80006824(objHi, 0x42d);
-        FUN_80006824(objHi, 0x42c);
-        break;
-    case 4:
-        state[2] = (int)lbl_803E4064;
-        biasC = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        state[4] = (int)defaultVal;
-        seqObj = 0;
-        scaleTbl = (float*)&DAT_80321698;
-        colorTbl = &DAT_803216a8;
-        phase = (double)lbl_803E4040;
-        scaleC = (double)lbl_803E4060;
-        writer = state;
-        offsetC = DOUBLE_803e4068;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0xc000;
-            cosVal = (double)fcos16Precise();
-            writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + cosVal) * phase));
-            writer[5] = *colorTbl;
-            rand = randomGetRange(0x78, 0x7f);
-            local_70 = (double)CONCAT44(0x43300000, seqObj * rand ^ 0x80000000);
-            *(short*)(state + 0xf) = (short)(int)(scaleC + (double)(float)(local_70 - offsetC));
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            writer = writer + 1;
-            colorTbl = colorTbl + 1;
-            seqObj = seqObj + 1;
-        }
-        while (seqObj < 4);
-        FUN_80006824(objHi, 0x42d);
-        FUN_80006824(objHi, 0x42c);
-        break;
-    case 5:
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        state[4] = (int)lbl_803E4064;
-        FUN_80006810(objHi, 0x42c);
-        FUN_80006810(objHi, 0x42d);
-        break;
-    case 6:
-        seqObj = 0;
-        scaleTbl = (float*)&DAT_80321698;
-        colorTbl = &DAT_803216a8;
-        biasC = (double)lbl_803E405C;
-        phase = (double)lbl_803E4040;
-        writer = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0x4000;
-            scaleC = (double)fcos16Precise();
-            writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + scaleC) * phase));
-            writer[5] = *colorTbl;
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            writer = writer + 1;
-            colorTbl = colorTbl + 1;
-            seqObj = seqObj + 1;
-        }
-        while (seqObj < 4);
-        break;
-    case 7:
-        if (glowObj != 0)
-        {
-            FUN_8016d994(glowObj, 7, 0);
-        }
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        defaultVal = lbl_803E4044;
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)defaultVal;
-        state[4] = (int)defaultVal;
-        state[1] = (int)defaultVal;
-        *(byte*)(state + 0x17) = *(byte*)(state + 0x17) | 1;
-        *(byte*)((int)state + 0x5d) = *(byte*)((int)state + 0x5d) | 1;
-        *(byte*)((int)state + 0x5e) = *(byte*)((int)state + 0x5e) | 1;
-        *(byte*)((int)state + 0x5f) = *(byte*)((int)state + 0x5f) | 1;
-    }
-    FUN_80286884();
-    return;
-}
-
-
 
 void mikabombshadow_update(int* obj);
 
-
-void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
-    short seqId;
-    char counter;
-    uint tmp;
-    int setupData;
-    int placementData;
-    int stateExtra;
-    undefined8 callResult;
-
-    stateExtra = *(int*)&((GameObject*)param_9)->extra;
-    placementData = *(int*)&((GameObject*)param_9)->anim.placementData;
-    setupData = (int)((GameObject*)param_9)->anim.modelInstance->extraSetupData;
-    FUN_80017a98();
-    FUN_80017a90();
-    FUN_80017a98();
-    FUN_80017a90();
-    callResult = ObjHits_DisableObject(param_9);
-    if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
-    {
-        *(float*)(stateExtra + 8) = lbl_803E40E8;
-        if (((GameObject*)param_9)->anim.modelState != NULL)
-        {
-            ((GameObject*)param_9)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-    }
-    if ((int)*(short*)(stateExtra + 0x10) != 0xffffffff)
-    {
-        FUN_80017698((int)*(short*)(stateExtra + 0x10), 1);
-        callResult = FUN_800e842c(param_9);
-    }
-    tmp = (uint) * (short*)(placementData + 0x1e);
-    if (tmp != 0xffffffff)
-    {
-        callResult = FUN_80017698(tmp, 1);
-    }
-    tmp = (uint) * (short*)(placementData + 0x2c);
-    if (0 < (int)tmp)
-    {
-        FUN_80017688(tmp);
-    }
-    seqId = *(short*)(setupData + 2);
-    if (seqId == 4)
-    {
-        seqId = ((GameObject*)param_9)->anim.seqId;
-        if (seqId == 0x3cd)
-        {
-            setupData = FUN_80017a98();
-            FUN_80294d60(callResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setupData, 2);
-            tmp = FUN_80017a98();
-            FUN_80006824(tmp, SFXen_treadlpc);
-            FUN_80081118((double)lbl_803E40EC, param_9, 1, 0x28);
-        }
-        else if ((seqId < 0x3cd) && (seqId == 0xb))
-        {
-            tmp = FUN_80017a98();
-            callResult = FUN_80006824(tmp, SFXen_treadlpc);
-            setupData = FUN_80017a98();
-            FUN_80294d60(callResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setupData, 4);
-            FUN_80081118((double)lbl_803E40EC, param_9, 3, 0x28);
-        }
-        else
-        {
-            tmp = FUN_80017a98();
-            FUN_80006824(tmp, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-    }
-    else if ((seqId < 4) && (seqId == 1))
-    {
-        seqId = ((GameObject*)param_9)->anim.seqId;
-        if (seqId == 0x319)
-        {
-            FUN_80006824(param_9, SFXwp_gprop2_c);
-            FUN_80017698(0x3e9, 1);
-            *(undefined2*)(stateExtra + 0x3c) = 0x4b0;
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-        else
-        {
-            if (seqId < 0x319)
-            {
-                if (seqId == 0x5a)
-                {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 2, 0x28);
-                    goto LAB_801725bc;
-                }
-                if ((seqId < 0x5a) && (seqId == 0x22))
-                {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-                    goto LAB_801725bc;
-                }
-            }
-            else if (seqId == 0x6a6)
-            {
-                tmp = FUN_80017690(0x86a);
-                counter = (char)tmp;
-                if (counter < '\a')
-                {
-                    counter = counter + '\x01';
-                }
-                FUN_80017698(0x86a, (int)counter);
-                FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
-                FUN_80006824(param_9, SFXen_treadlpc);
-                goto LAB_801725bc;
-            }
-            FUN_80006824(param_9, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-    }
-    else
-    {
-        FUN_80006824(param_9, SFXen_waterblock_stop);
-        FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-    }
-LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
-        modelInstance + 4);
-    ((GameObject*)param_9)->unkF4 = 1;
-    return;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1248,17 +386,6 @@ void shield_free(int obj)
     Sfx_StopFromObject(obj, 0x42D);
 }
 
-
-
-
-
-
-
-
-
-
-
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -1274,7 +401,6 @@ int shield_getObjectTypeId(void) { return 0x0; }
 void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1687,31 +813,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
-
-s32 staff_func16(int* obj);
-
-
-
-
-
-void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-
-void flamethrowerspe_func0B(int* obj);
-
 void staffSetGlow(int* obj, u8 a, u8 b);
-
-
-
-void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
-
-
-
-
 
 int* fn_801702D4(int* obj, f32 fv)
 {
@@ -1766,7 +870,6 @@ void dim2roofrub_init(int* obj, int* params);
 void animatedobj_init(int* obj, int* params);
 
 void flamethrowerspe_update(int* obj);
-
 
 void mikabomb_init(int* obj);
 
@@ -1871,8 +974,8 @@ void staff_initialise(void);
 typedef struct ShieldFxVec
 {
     u8 pad[8];
-    f32 a;
-    f32 v[3];
+    f32 alpha;
+    f32 pos[3];
 } ShieldFxVec;
 
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -1932,7 +1035,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            f32* pv = s.v;
+            f32* pv = s.pos;
             for (i = 0; i < 4; i++)
             {
                 if ((*(u8*)(state + i + 0x5c) & 1) == 0)
@@ -1965,7 +1068,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                             pv[0] += ((GameObject*)obj)->anim.localPosX;
                             pv[1] += ((GameObject*)obj)->anim.localPosY;
                             pv[2] += ((GameObject*)obj)->anim.localPosZ;
-                            s.a = cD;
+                            s.alpha = cD;
                             (*gPartfxInterface)->spawnObject(obj, 2028, &s, 0x200001, -1,
                                                              NULL);
                         }
@@ -1981,7 +1084,6 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
