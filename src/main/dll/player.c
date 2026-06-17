@@ -1332,7 +1332,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         f32 x;
         f32 y;
         f32 z;
-    } pfx;
+    } pfx2;
     struct
     {
         u8 pad[6];
@@ -1341,7 +1341,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         f32 x;
         f32 y;
         f32 z;
-    } pfx2;
+    } pfx;
 
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
@@ -1495,7 +1495,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
     }
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
-        if (((u16) * (s16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
+        if ((*(u16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
             inner->curAnimId != 0x52)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
