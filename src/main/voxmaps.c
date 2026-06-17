@@ -679,7 +679,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             n->unk2 = box[1];
             n->y = box[2];
             n->unk8 = count;
-            n->unkA = (u8)a3;
+            n->unkA = (u8)(u16)a3;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
             n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -901,7 +901,7 @@ searched:
         n->unk2 = box[1];
         n->y = box[2];
         n->unk8 = count;
-        n->unkA = (u8)a3;
+        n->unkA = (u8)(u16)a3;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
         n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
