@@ -1,3 +1,20 @@
+/*
+ * duster (DLL 0x118) - a drifting collectible "dust" object the player
+ * gathers and deposits, plus the shared ObjectDescriptor table for the
+ * sibling DLL objects compiled into this unit (magicplant, trickywarp,
+ * trickyguard, staypoint, curvefish).
+ *
+ * Each duster activates from its placement game bit; once active it settles
+ * to the nearest floor hit, drifts (driftDir / random heading), advances its
+ * canned move, and reacts to priority hits. When the player is close and
+ * facing it (fn_8029622C), it is either picked up (ObjMsg DUSTER_MSG_REQUEST_
+ * PICKUP, gated by game bit 0xcc0) or deposited directly if the current
+ * character's duster collection isn't full. Depositing (DUSTER_MSG_DEPOSIT)
+ * sets the object's completeGameBit, bumps the collected count, spawns the
+ * place fx and marks the duster complete. Game bits >= 0x6fe are treated as
+ * already-complete markers (completeGameBit == activeGameBit); below that the
+ * complete bit lives at activeGameBit + 0x64.
+ */
 #include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
@@ -6,15 +23,15 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
-extern undefined8 ObjHits_DisableObject();
+extern void ObjHits_DisableObject(u32 obj);
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void *obj, int capacity);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4,
                                 f32 x, f32 y, f32 z);
@@ -22,6 +39,7 @@ extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 extern f32 lbl_803E38B0;
+extern f32 lbl_803E38B4;
 extern f32 lbl_803E38B8;
 extern f32 lbl_803E38BC;
 extern f32 lbl_803E38C0;
@@ -33,7 +51,9 @@ extern f32 lbl_803E38D4;
 extern f32 lbl_803E38E0;
 extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
-
+extern void objRenderFn_8003b8f4(f32);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
+                              void* obj, int flags, int mask, int arg9, int arg10);
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -51,10 +71,13 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-extern void objRenderFn_8003b8f4(int obj, float arg);
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
-                              void* obj, int flags, int mask, int arg9, int arg10);
-extern f32 lbl_803E38B4;
+
+/* ObjMsg ids shared with the other collectible objects (magicdust/fuelcell) */
+#define DUSTER_MSG_REQUEST_PICKUP 0x7000a
+#define DUSTER_MSG_DEPOSIT 0x7000b
+
+/* game bit guarding a single carried duster at a time */
+#define GAMEBIT_DUSTER_CARRIED 0xcc0
 
 int duster_getExtraSize(void) { return 0x20; }
 
@@ -64,13 +87,6 @@ int duster_SeqFn(u8* obj)
     state->flags.floorCached = 0;
     return 0;
 }
-
-
-
-
-
-
-
 
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -82,16 +98,15 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E38B0);
 }
 
-void duster_hitDetect(int param_1)
+void duster_hitDetect(int obj)
 {
-    int obj = param_1;
     DusterState* state;
     u8 hit[0x54];
-    int r;
+    int hitResult;
     state = ((GameObject*)obj)->extra;
-    r = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12),
+    hitResult = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12),
                            lbl_803E38B4, 2, hit, (void*)obj, 8, -1, 255, 0);
-    if (r != 0)
+    if (hitResult != 0)
     {
         state->priorityHit = 1;
     }
@@ -185,7 +200,7 @@ void duster_update(int obj)
     {
         switch (msg)
         {
-        case 0x7000b:
+        case DUSTER_MSG_DEPOSIT:
             Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51a, NULL, 1, -1, NULL);
@@ -336,12 +351,12 @@ void duster_update(int obj)
         Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < lbl_803E38D4 &&
         fn_8029622C(player) != 0)
     {
-        if (GameBit_Get(0xcc0) == 0)
+        if (GameBit_Get(GAMEBIT_DUSTER_CARRIED) == 0)
         {
             state->heldObjectId = -1;
             ObjHits_DisableObject(obj);
-            ObjMsg_SendToObject(player, 0x7000a, obj, &state->heldObjectId);
-            GameBit_Set(0xcc0, 1);
+            ObjMsg_SendToObject(player, DUSTER_MSG_REQUEST_PICKUP, obj, &state->heldObjectId);
+            GameBit_Set(GAMEBIT_DUSTER_CARRIED, 1);
         }
         else
         {
@@ -370,13 +385,6 @@ void duster_update(int obj)
 
     ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
 }
-
-
-
-
-
-void trickyguard_update(int* obj);
-
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
