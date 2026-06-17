@@ -1,26 +1,49 @@
+/*
+ * tumbleweedbush (DLL 0x00D1) - a destructible bush/cluster object that
+ * spawns and manages a small array of detachable "piece" sub-objects.
+ *
+ * init seeds rotation from placement bytes, scales the capsule hitbox by
+ * the placement rootMotionScale, and - keyed on anim.seqId - selects a
+ * piece count (3) and a piece-offset template row in lbl_803201E8,
+ * rotating each offset into world space.
+ *
+ * update polls a priority hit; on a hit (other than seqId 0x4ba) it spawns
+ * a hit emitter, plays SFXsc_gethit04 and triggers each live piece's vtable
+ * +0x28 callback. When the player comes within triggerRadius it repeatedly
+ * calls fn_801631C8 to spawn sibling objects, and it prunes pieces whose
+ * vtable +0x20 query reports >1.
+ *
+ * fn_801631C8 picks a sibling seqId from the bush seqId (0x28d->0x39d sun-
+ * gated, 0x3fd->0x3fb, 0x4b9->0x4ba, 0x4be->0x4c1), finds a free piece
+ * slot, caps the live sibling count at 7, and allocates/positions a new
+ * sibling. fn_80163990 (called by tumbleweed) advances a detached piece's
+ * gravity/spin. findNearestActive/setScale are shared piece helpers used
+ * by sibling DLLs.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/sky_interface.h"
 
-typedef struct TumbleweedbushState
+typedef struct TumbleweedBushState
 {
-    u8 pad0[0x8 - 0x0];
-    u16 unk8;
-    u8 padA[0x54 - 0xA];
-} TumbleweedbushState;
+    f32 scale;
+    u8 pad04[4];
+    u16 triggerRadius;
+    u8 pad0A[2];
+    void* pieceObjects[4];
+    f32 pieceOffsets[3][3];
+    u8 pad40[0x4c - 0x40];
+    u8 variant;
+    u8 pad4D[3];
+    u8 pieceCount;
+    u8 pad51[3];
+} TumbleweedBushState;
 
 extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 FUN_8003b818();
-
-/* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
- * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 extern f32 timeDelta;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E2F48;
 extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;
@@ -50,17 +73,6 @@ extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
 
-void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(param_1);
-    }
-    return;
-}
-
-void cannonclaw_release(void);
-
 #pragma scheduling off
 #pragma peephole off
 void tumbleweedbush_free(void)
@@ -84,14 +96,14 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     u8* sub;
     f32 t;
     int idx;
-    u8* p4;
+    u8* pieceSlot;
     u8* pe;
-    u8* p12;
+    u8* pieceOffset;
     int i;
 
     sub = ((GameObject*)obj)->extra;
     *(f32*)sub = lbl_803E2F48;
-    ((TumbleweedbushState*)sub)->unk8 = (u16)(params[0x1b] * 2);
+    ((TumbleweedBushState*)sub)->triggerRadius = (u16)(params[0x1b] * 2);
     sub[0x4c] = params[0x23];
     ((GameObject*)obj)->anim.rotZ = (s16)((params[0x18] - 0x7f) << 7);
     ((GameObject*)obj)->anim.rotY = (s16)((params[0x19] - 0x7f) << 7);
@@ -118,41 +130,26 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     if (param3 == 0)
     {
         i = 0;
-        p4 = sub;
+        pieceSlot = sub;
         pe = lbl_803201E8 + idx * 0x30;
-        p12 = sub;
+        pieceOffset = sub;
         for (; i < (int)sub[0x50]; i++)
         {
-            *(int*)(p4 + 0xc) = 0;
-            memcpy(p12 + 0x1c, pe, 0xc);
-            *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * ((GameObject*)obj)->anim.rootMotionScale;
-            *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * ((GameObject*)obj)->anim.rootMotionScale;
-            *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * ((GameObject*)obj)->anim.rootMotionScale;
-            vecRotateZXY(obj, p12 + 0x1c);
-            p4 += 4;
+            *(int*)(pieceSlot + 0xc) = 0;
+            memcpy(pieceOffset + 0x1c, pe, 0xc);
+            *(f32*)(pieceOffset + 0x1c) = *(f32*)(pieceOffset + 0x1c) * ((GameObject*)obj)->anim.rootMotionScale;
+            *(f32*)(pieceOffset + 0x20) = *(f32*)(pieceOffset + 0x20) * ((GameObject*)obj)->anim.rootMotionScale;
+            *(f32*)(pieceOffset + 0x24) = *(f32*)(pieceOffset + 0x24) * ((GameObject*)obj)->anim.rootMotionScale;
+            vecRotateZXY(obj, pieceOffset + 0x1c);
+            pieceSlot += 4;
             pe += 0xc;
-            p12 += 0xc;
+            pieceOffset += 0xc;
         }
     }
 }
 
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
-
-typedef struct TumbleweedBushState
-{
-    f32 scale;
-    u8 pad04[4];
-    u16 triggerRadius;
-    u8 pad0A[2];
-    void* pieceObjects[4];
-    f32 pieceOffsets[3][3];
-    u8 pad40[0x4c - 0x40];
-    u8 variant;
-    u8 pad4D[3];
-    u8 pieceCount;
-    u8 pad51[3];
-} TumbleweedBushState;
 
 #pragma optimization_level 2
 void tumbleweedbush_update(int* obj)
@@ -193,8 +190,7 @@ void tumbleweedbush_update(int* obj)
     dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
     dy = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
     d = sqrtf(dx * dx + dy * dy);
-    if ((u16)(s32)d < state->triggerRadius
-    )
+    if ((u16)(s32)d < state->triggerRadius)
     {
         while ((s8)fn_801631C8(obj) != -1)
         {
@@ -225,12 +221,6 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E2F44);
 }
-
-void cannonclaw_init(s16* dst, void* src);
-
-/* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
- * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
- * the supplied position vector). Returns NULL if no match. */
 
 void* tumbleweedbush_findNearestActive(f32* p_pos)
 {
@@ -266,8 +256,6 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     return bestObj;
 }
 
-/* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
- * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 void tumbleweedbush_setScale(u8* obj, void* match)
 {
     TumbleweedBushState* state;
