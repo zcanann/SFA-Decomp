@@ -38,16 +38,16 @@ extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E4C98; /* default coord fallback */
-extern f32 lbl_803E3FFC; /* nearest-object search radius seed */
-extern f32 lbl_803E3FD0;
-extern f32 lbl_803E3FD4;
-extern f32 lbl_803E3FD8;
-extern f32 lbl_803E3FDC;
-extern f32 lbl_803E3FE0; /* deltaY lower bound */
-extern f32 lbl_803E3FE4; /* deltaY upper bound */
-extern f32 lbl_803E3FE8; /* max planar distance squared */
-extern f32 lbl_803E3FEC; /* scale divisor */
-extern f32 lbl_803E3FF8; /* render scale */
+extern const f32 lbl_803E3FFC; /* nearest-object search radius seed */
+extern const f32 lbl_803E3FD0;
+extern const f32 lbl_803E3FD4;
+extern const f32 lbl_803E3FD8;
+extern const f32 lbl_803E3FDC;
+extern const f32 lbl_803E3FE0; /* deltaY lower bound */
+extern const f32 lbl_803E3FE4; /* deltaY upper bound */
+extern const f32 lbl_803E3FE8; /* max planar distance squared */
+extern const f32 lbl_803E3FEC; /* scale divisor */
+extern const f32 lbl_803E3FF8; /* render scale */
 
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
