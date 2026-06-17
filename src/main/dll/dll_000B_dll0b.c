@@ -2553,6 +2553,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     return 0;
 }
 
+#pragma opt_loop_invariants off
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
@@ -2611,6 +2612,7 @@ animate:
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void fn_800A0524(void* state, void* p, int mode)
 {
