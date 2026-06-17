@@ -11,14 +11,9 @@ extern uint GameBit_Get(int eventId);
 
 /* render-with-fn(lbl) (no visibility check). */
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
-#include "main/dll/lightning.h"
-#include "main/dll/path_control_interface.h"
 #include "main/dll/pushable.h"
-#include "main/objanim_internal.h"
 #include "main/objtexture.h"
 #include "main/game_object.h"
 #include "main/resource.h"

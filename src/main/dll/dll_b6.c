@@ -1,6 +1,5 @@
 #include "main/dll/dll_B6.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern void *Obj_GetPlayerObject(void);

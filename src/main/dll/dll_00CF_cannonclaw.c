@@ -1,10 +1,7 @@
 #include "main/game_object.h"
-#include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();

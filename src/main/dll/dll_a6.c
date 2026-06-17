@@ -1,6 +1,5 @@
 #include "main/dll/dll_A6.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/object_transform.h"
 
 extern f32 lbl_803E1628;

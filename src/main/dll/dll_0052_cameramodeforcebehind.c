@@ -9,7 +9,6 @@
  * free-function just past the mode's range that frees the shared cloudrunner
  * state (lbl_803DD5B8).
  */
-#include "main/mm.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"

@@ -1,19 +1,14 @@
 /* DIM2 mixed-DLL TU: 0x801B9ECC–0x801BA224. Contains the hit-reaction dispatcher
  * (fn_801B9ECC) and shared helpers for DIM2 objects (icicle, geyser, rolling rock,
  * conveyor, crusher, snowball, path generator, truth-horn ice). */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/DIM/DIM2projrock.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
-#include "main/effect_interfaces.h"
-#include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 

@@ -13,7 +13,6 @@
  * func00/func01 are the table's no-op slots.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 typedef struct

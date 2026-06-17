@@ -16,7 +16,6 @@
  * drift duplicated from sibling DLL units (modgfx, projgfx); it is not part of
  * this TU's matched symbol set - only the five partfx_* functions are.
  */
-#include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"

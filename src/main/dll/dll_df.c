@@ -1,5 +1,4 @@
 #include "main/dll/baddie/dll_DF.h"
-#include "main/dll/curve_walker.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"

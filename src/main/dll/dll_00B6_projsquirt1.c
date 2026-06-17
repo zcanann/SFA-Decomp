@@ -7,8 +7,6 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/dll_70.h"
-#include "main/dll/dll_71.h"
-#include "main/dll/dll_AF.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

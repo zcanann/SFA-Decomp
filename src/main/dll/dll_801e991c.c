@@ -25,9 +25,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     spscarab_getExtraSize,
 };
 
-#include "main/objanim_internal.h"
-#include "main/game_object.h"
-#include "main/dll/DR/DRsimplehuman.h"
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 

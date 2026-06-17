@@ -10,7 +10,6 @@
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
-#include "main/pad.h"
 
 /* pad.h declares getButtonsJustPressed as u32; the u16 override in
    CameraModeDebug_update is load-bearing for the mask comparison. */

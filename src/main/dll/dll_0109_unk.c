@@ -18,7 +18,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
-#include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
 /* per-object extra block read by dll_109_render */

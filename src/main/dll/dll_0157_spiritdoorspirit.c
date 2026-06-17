@@ -6,18 +6,14 @@
  * prototypes appear here so MWCC can resolve forward references.
  */
 #include "main/dll/cfguardian_state.h"
-#include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"
-#include "main/dll/babycloudrunnerflags_struct.h"
 #include "main/dll/gcrobotlightbeastate_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
-#include "main/objseq.h"
 
 extern undefined8 FUN_80006824();
 extern uint FUN_80017690();

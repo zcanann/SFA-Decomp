@@ -1,22 +1,16 @@
 /* DLL — DIM log-fire objects [801AA558-801AA560) */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
-#include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
 /* 8b "li r3, N; blr" returners. */
 
-#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objfx.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMsnowball.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_8008112c();
 

@@ -10,10 +10,7 @@ extern f32 mathCosf(f32 x);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-#include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/DF/DFcradle.h"
-#include "main/effect_interfaces.h"
 
 extern void* memcpy(void* dst, const void* src, u32 size);
 

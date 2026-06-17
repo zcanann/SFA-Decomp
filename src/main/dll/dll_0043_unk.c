@@ -19,7 +19,6 @@
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/cutCam.h"
-#include "main/dll/CAM/pathcam.h"
 #include "main/pad.h"
 #include "main/object_transform.h"
 #include "main/audio/sfx_ids.h"

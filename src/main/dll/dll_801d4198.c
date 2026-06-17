@@ -1,17 +1,10 @@
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
-#include "main/objseq.h"
 
 extern void* Obj_GetPlayerObject(void);
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
-#include "main/dll/SH/SHrocketmushroom.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 extern void Sfx_StopObjectChannel(void* obj, int channel);

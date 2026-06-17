@@ -1,4 +1,3 @@
-#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
 extern void Obj_UpdateWorldTransform(void *obj);

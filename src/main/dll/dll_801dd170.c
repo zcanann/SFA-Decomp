@@ -1,15 +1,11 @@
 /* DLL — SC level-control tail objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
-#include "main/game_object.h"
 
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
-#include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objfx.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);

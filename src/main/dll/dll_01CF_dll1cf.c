@@ -27,7 +27,6 @@
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objseq.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);

@@ -24,7 +24,6 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern float mathCosf(float x);
 
-#include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/obj_placement.h"
