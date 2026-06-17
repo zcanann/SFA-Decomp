@@ -1799,7 +1799,7 @@ void gameTextRun(void)
     textWindow = gTextBoxes;
     for (i = 148; i != 0; i--)
     {
-        *(u16*)(textWindow + 0x1c) &= 0xfffe;
+        *(u16*)(textWindow + 0x1c) &= ~1;
         textWindow += 0x20;
     }
 
