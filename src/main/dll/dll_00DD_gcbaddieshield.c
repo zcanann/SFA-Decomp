@@ -1,11 +1,28 @@
+/*
+ * gcbaddieshield (DLL 0xDD) - the spinning shield effect object.
+ *
+ * The object's only owned behavior is a short-lived spinning, fading
+ * billboard: init seeds a lifetime counter (state[0]) from the placement
+ * data, update spins it on rotX/rotZ each frame scaled by timeDelta,
+ * fades alpha out over the final stretch, and frees itself once the
+ * counter runs out; render draws the model while obj->unkF4 == 0.
+ *
+ * The bulk of this translation unit is the shared baddie/effect object
+ * TABLE: the ObjectDescriptor records and their backing data tables for
+ * the sibling DLL objects (kaldachompspit, pinponspike, pollen[fragment],
+ * mikabomb[shadow], staticcamera, baddieinterestp, animatedobj,
+ * dim2roofrub, depthoffieldpoint, staff, fireball, flamethrowerspe,
+ * shield, curve, restartmarker, dll_F7, checkpoint4). Those descriptors
+ * reference functions defined in their own DLLs; only the forward
+ * declarations and the descriptor/data definitions live here.
+ */
 #include "main/dll/xyzanimator.h"
-#include "main/dll/genpropswgpipe_struct.h"
+#include "main/game_object.h"
+#include "main/dll/genprops.h"
 
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
+extern f32 timeDelta;
 
+void mikabomb_init(int* obj);
 
 void mikabomb_hitDetect(void);
 
@@ -14,8 +31,7 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
-
+extern void objRenderFn_8003b8f4(f32 alpha);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -158,141 +174,42 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 timeDelta;
-
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/genprops.h"
-#include "main/effect_interfaces.h"
-
-extern undefined4 FUN_80006810();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
-extern int FUN_80294cf8();
-extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
-
-extern undefined4 DAT_80321678;
-extern int DAT_80321688;
-extern undefined4 DAT_80321698;
-extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
-extern f64 DOUBLE_803e3e88;
-extern f64 DOUBLE_803e4068;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
-extern f32 lbl_803E3F28;
-extern f32 lbl_803E3F2C;
-extern f32 lbl_803E3F30;
-extern f32 lbl_803E3F34;
-extern f32 lbl_803E3F38;
-extern f32 lbl_803E3F3C;
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 lbl_803E3F68;
-extern f32 lbl_803E3F6C;
-extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F74;
-extern f32 lbl_803E3F78;
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
-extern f32 lbl_803E3F88;
-extern f32 lbl_803E3F8C;
-extern f32 lbl_803E3FA4;
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FC4;
-extern f32 lbl_803E4040;
-extern f32 lbl_803E4044;
-extern f32 lbl_803E4048;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
-extern f32 lbl_803E4060;
-extern f32 lbl_803E4064;
-extern f32 lbl_803E40E8;
-extern f32 lbl_803E40EC;
-
-extern f32 lbl_803E3420;
-extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free();
+extern void animatedobj_free(int* obj, int seqFlag);
 extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_update(int* obj);
-extern void animatedobj_init();
+extern void animatedobj_init(int* obj, int* params);
 extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 extern void dim2roofrub_update(int* obj);
-extern void dim2roofrub_init();
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
+extern void dim2roofrub_init(int* obj, int* params);
+extern void depthoffieldpoint_update(int* obj);
+extern void depthoffieldpoint_init(int* obj);
 extern void staff_free(int* obj);
-extern void staff_update();
-extern void staff_init();
-extern void staff_release();
-extern void staff_initialise();
+extern void staff_update(int* obj);
+extern void staff_init(int* obj);
+extern void staff_release(void);
+extern void staff_initialise(void);
 extern void staff_modelMtxFn(int* obj, int p4, int p5);
-extern void staff_hitDetectGeometry();
+extern void staff_hitDetectGeometry(int* obj);
 extern s16 staff_getHitReactValue(int* obj);
 extern s32 staff_func16(int* obj);
-extern void fireball_free();
+extern void fireball_free(int* obj);
 extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void fireball_hitDetect();
-extern void fireball_update();
-extern void fireball_init();
+extern void fireball_hitDetect(int* obj);
+extern void fireball_update(int* obj);
+extern void fireball_init(int* obj);
 extern void flamethrowerspe_func0B(int* obj);
 extern void flamethrowerspe_render(void);
-extern void flamethrowerspe_update();
-extern void flamethrowerspe_init();
-extern void shield_free();
+extern void flamethrowerspe_update(int* obj);
+extern void flamethrowerspe_init(int* obj, int* params);
+extern void shield_free(int obj);
 extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void shield_update();
-extern void dll_F7_free();
+extern void shield_update(int* obj);
+extern void dll_F7_free(int obj);
 extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void dll_F7_update();
-extern void dll_F7_init();
+extern void dll_F7_update(int* obj);
+extern void dll_F7_init(int* obj, int* params);
+extern void mikabombshadow_init(int* obj);
+extern void StaticCamera_init(int* obj, int* params, int flag);
 extern f32 lbl_803E31F8;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
@@ -301,815 +218,7 @@ extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
 
-void staticCamera_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, 7);
-    return;
-}
-
-void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
-
-void staticCamera_init(short* obj, int params, int skipAdd)
-{
-    undefined* extra;
-
-    *obj = -*(short*)(params + 0x1c);
-    obj[1] = -*(short*)(params + 0x1e);
-    obj[2] = -*(short*)(params + 0x20);
-    extra = *(undefined**)(obj + 0x5c);
-    *extra = *(undefined*)(params + 0x19);
-    *(float*)(extra + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(params + 0x1a)) - DOUBLE_803e3e88);
-    extra[1] = 0;
-    if (skipAdd == 0)
-    {
-        ObjGroup_AddObject((int)obj, 7);
-    }
-    return;
-}
-
-void FUN_8016d188(int param_1, int param_2)
-{
-    float fVar1;
-    int iVar2;
-    uint uVar3;
-    int iVar4;
-    double dVar5;
-    int local_58;
-    float local_54;
-    int local_50;
-    undefined2 local_4c[3];
-    short local_46;
-    float local_44;
-    undefined2 local_34;
-    undefined2 local_32;
-    undefined2 local_30;
-    short local_2e;
-    float local_2c;
-    float local_28;
-    float local_24;
-    undefined4 local_20;
-    longlong local_18;
-
-    iVar4 = *(int*)&((GameObject*)param_1)->extra;
-    if ((param_1 != 0) && (param_2 != 0))
-    {
-        if (*(char*)(iVar4 + 0xba) != '\0')
-        {
-            iVar2 = FUN_80294d10(param_2);
-            if (iVar2 == 0)
-            {
-                local_54 = lbl_803E3F24;
-                fVar1 = lbl_803E3F28;
-            }
-            else
-            {
-                local_54 = lbl_803E3F20;
-                fVar1 = lbl_803E3F20;
-            }
-            if (*(byte*)(iVar4 + 0xbb) == 7)
-            {
-                dVar5 = (double)lbl_803E3F2C;
-                local_18 = (longlong)(int)(lbl_803E3F30 * fVar1);
-                FUN_800810f8(dVar5, dVar5, dVar5, (double)(lbl_803E3F34 * local_54), param_1, 7,
-                             (uint) * (byte*)(iVar4 + 0xba), 1, (int)(lbl_803E3F30 * fVar1), 0, 0);
-            }
-            else
-            {
-                dVar5 = (double)lbl_803E3F20;
-                local_18 = (longlong)(int)(lbl_803E3F30 * fVar1);
-                FUN_800810f8(dVar5, dVar5, dVar5, (double)(lbl_803E3F34 * local_54), param_1,
-                             (uint) * (byte*)(iVar4 + 0xbb), (uint) * (byte*)(iVar4 + 0xba), 1,
-                             (int)(lbl_803E3F30 * fVar1), 0, 0);
-            }
-        }
-        FUN_80294c60(param_2, &local_50, &local_54);
-        local_34 = 0;
-        local_32 = 0;
-        local_30 = 0;
-        local_2c = lbl_803E3F20;
-        if (local_50 == 0x87)
-        {
-            iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F30));
-            local_18 = (longlong)iVar4;
-            local_2e = 0x15 - (short)iVar4;
-            local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
-            local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            local_2e = 9;
-            local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
-            local_24 = lbl_803E3F4C;
-            local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-        }
-        else if (local_50 < 0x87)
-        {
-            if (local_50 == 0x7f)
-            {
-                local_2c = lbl_803E3F58;
-                local_2e = 10;
-                local_24 = lbl_803E3F54;
-                local_28 = lbl_803E3F50;
-                local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-            }
-            else if (local_50 < 0x7f)
-            {
-                if ((local_50 == 0x43) && (lbl_803E3F4C < local_54))
-                {
-                    iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F30));
-                    local_18 = (longlong)iVar4;
-                    local_2e = (short)iVar4 + 6;
-                    local_28 = lbl_803E3F3C * (local_54 / lbl_803E3F40 - lbl_803E3F2C);
-                    local_34 = 0xc94;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
-                    local_2e = 9;
-                    local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F40) + lbl_803E3F44;
-                    local_24 = lbl_803E3F4C;
-                    local_34 = 0xc0e;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-                }
-            }
-            else if (local_50 == 0x85)
-            {
-                if (lbl_803E3F4C < local_54)
-                {
-                    uVar3 = FUN_80017690(0xc55);
-                    if (uVar3 == 0)
-                    {
-                        fVar1 = local_54 / lbl_803E3F40;
-                        iVar4 = (int)(lbl_803E3F38 * fVar1);
-                        local_2e = (short)iVar4;
-                        local_34 = 0xc94;
-                    }
-                    else
-                    {
-                        fVar1 = local_54 / lbl_803E3F50;
-                        iVar4 = (int)(lbl_803E3F38 * fVar1);
-                        local_2e = (short)iVar4;
-                        local_34 = 0xc75;
-                    }
-                    local_18 = (longlong)iVar4;
-                    local_28 = lbl_803E3F5C * (lbl_803E3F28 - fVar1);
-                    local_2e = 0x15 - local_2e;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    local_2e = 9;
-                    uVar3 = FUN_80017690(0xc55);
-                    if (uVar3 == 0)
-                    {
-                        local_34 = 0xc0e;
-                        fVar1 = lbl_803E3F40;
-                    }
-                    else
-                    {
-                        local_34 = 0xc75;
-                        fVar1 = lbl_803E3F50;
-                    }
-                    local_2c = lbl_803E3F48 * (local_54 / fVar1) + lbl_803E3F44;
-                    local_24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-                }
-            }
-            else if (0x84 < local_50)
-            {
-                uVar3 = FUN_80017690(0xc55);
-                if (uVar3 == 0)
-                {
-                    local_34 = 0xc0e;
-                }
-                else
-                {
-                    local_34 = 0xc75;
-                }
-                fVar1 = *(float*)(param_2 + 0x98);
-                if (lbl_803E3F68 <= fVar1)
-                {
-                    if (fVar1 < lbl_803E3F70)
-                    {
-                        local_28 = lbl_803E3F5C * (lbl_803E3F74 * (fVar1 - lbl_803E3F68) - lbl_803E3F2C);
-                        local_2e = 9;
-                        local_2c = lbl_803E3F20;
-                        local_24 = lbl_803E3F4C;
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-                    }
-                }
-                else
-                {
-                    local_28 = lbl_803E3F6C;
-                    local_2e = 9;
-                    local_2c = lbl_803E3F20;
-                    local_24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-                }
-            }
-        }
-        else if (local_50 == 0x468)
-        {
-            if (lbl_803E3F4C < local_54)
-            {
-                iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F60));
-                local_18 = (longlong)iVar4;
-                local_46 = 0x15 - (short)iVar4;
-                local_4c[0] = 0xc95;
-                FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &local_58);
-                local_28 = *(float*)(local_58 + 0xc);
-                local_24 = *(float*)(local_58 + 0x10);
-                local_20 = *(undefined4*)(local_58 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
-                                                 0x200001, -1, local_4c);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
-                                                 0x200001, -1, local_4c);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
-                                                 0x200001, -1, local_4c);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
-                                                 0x200001, -1, local_4c);
-                local_46 = 9;
-                local_4c[0] = 0xc95;
-                local_44 = lbl_803E3F64 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
-                local_28 = *(float*)(local_58 + 0xc);
-                local_24 = *(float*)(local_58 + 0x10);
-                local_20 = *(undefined4*)(local_58 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &local_34,
-                                                 0x200001, -1, local_4c);
-            }
-        }
-        else if (local_50 < 0x468)
-        {
-            if (local_50 < 0x89)
-            {
-                local_2e = 0x23;
-                local_24 = lbl_803E3F4C;
-                local_28 = lbl_803E3F50;
-                local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-                local_2e = 0x12;
-                local_24 = lbl_803E3F54;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-            }
-        }
-        else if ((local_50 == 0x46f) && (lbl_803E3F4C < local_54))
-        {
-            iVar4 = (int)(lbl_803E3F38 * (local_54 / lbl_803E3F60));
-            local_18 = (longlong)iVar4;
-            local_2e = 0x15 - (short)iVar4;
-            local_28 = lbl_803E3F5C * (lbl_803E3F28 - local_54 / lbl_803E3F60);
-            local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            local_2e = 9;
-            local_2c = lbl_803E3F48 * (local_54 / lbl_803E3F60) + lbl_803E3F44;
-            local_24 = lbl_803E3F4C;
-            local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
-        }
-    }
-    return;
-}
-
-void FUN_8016d994(int obj, undefined typeId, undefined colorId)
-{
-    int extra;
-
-    extra = *(int*)&((GameObject*)obj)->extra;
-    *(undefined*)(extra + 0xbb) = typeId;
-    *(undefined*)(extra + 0xba) = colorId;
-    return;
-}
-
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9)
-{
-    short channel;
-    int iVar2;
-    int* group;
-    uint idx;
-    int elem;
-    int* extra;
-    double dVar7;
-    double dVar8;
-    undefined8 local_18;
-
-    extra = ((GameObject*)param_9)->extra;
-    iVar2 = FUN_80017a54(param_9);
-    *(ushort*)(iVar2 + 0x18) = *(ushort*)(iVar2 + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)extra[0x14], (double)lbl_803DC074);
-    iVar2 = 3;
-    group = extra;
-    do
-    {
-        if ((*(byte*)(group + 5) & 2) != 0)
-        {
-            idx = (uint) * (ushort*)(group + 3);
-            elem = *group + idx * 0x14;
-            for (; (int)idx < (int)(uint) * (ushort*)((int)group + 0xe); idx = idx + 2)
-            {
-                if (group == (int*)extra[0x12])
-                {
-                    param_3 = (double)lbl_803E3F8C;
-                    dVar7 = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)extra[0x26] -
-                            *(float*)(elem + 0xc)) * lbl_803E3FA8));
-                    dVar8 = (double)lbl_803E3F4C;
-                    if ((dVar8 <= dVar7) && (dVar8 = dVar7, param_3 < dVar7))
-                    {
-                        dVar8 = param_3;
-                    }
-                    *(short*)(elem + 0x10) = (short)(int)(param_3 - dVar8);
-                    *(undefined2*)(elem + 0x24) = *(undefined2*)(elem + 0x10);
-                }
-                else
-                {
-                    param_3 = (double)lbl_803E3FC4;
-                    *(short*)(elem + 0x10) =
-                        (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(elem + 0x10)));
-                    *(undefined2*)(elem + 0x24) = *(undefined2*)(elem + 0x10);
-                }
-                channel = *(short*)(elem + 0x10);
-                if (channel < 0)
-                {
-                    channel = 0;
-                }
-                else if (0xff < channel)
-                {
-                    channel = 0xff;
-                }
-                *(short*)(elem + 0x10) = channel;
-                channel = *(short*)(elem + 0x24);
-                if (channel < 0)
-                {
-                    channel = 0;
-                }
-                else if (0xff < channel)
-                {
-                    channel = 0xff;
-                }
-                *(short*)(elem + 0x24) = channel;
-                if ((*(short*)(elem + 0x10) < 1) && (*(short*)(elem + 0x24) < 1))
-                {
-                    *(short*)((int)group + 0x12) = *(short*)((int)group + 0x12) + -2;
-                    *(short*)(group + 3) = *(short*)(group + 3) + 2;
-                }
-                elem = elem + 0x28;
-            }
-            if ((group != (int*)extra[0x12]) && (*(short*)((int)group + 0x12) == 0))
-            {
-                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
-            }
-        }
-        group = group + 6;
-        iVar2 = iVar2 + -1;
-    }
-    while (iVar2 != 0);
-    FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
-    FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)extra + 0xb9) = 0;
-    if (DAT_803ad338 != '\0')
-    {
-        DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
-        ObjHitbox_SetSphereRadius(DAT_803ad334, (short)(int)DAT_803ad324);
-        ObjHits_SetHitVolumeSlot(DAT_803ad334, 0x11, 5, 0);
-        DAT_803ad330 = DAT_803ad330 + lbl_803E3F7C;
-        dVar8 = (double)DAT_803ad330;
-        DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
-        DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
-        ((GameObject*)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
-        ((GameObject*)DAT_803ad334)->anim.rootMotionScale = ((GameObject*)DAT_803ad334)->anim.rootMotionScale +
-            lbl_803E3F88;
-        if ((double)DAT_803ad330 < (double)lbl_803E3F20)
-        {
-            DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, dVar8, param_3, param_4, param_5, param_6, param_7, param_8,
-                         DAT_803ad334);
-            DAT_803ad334 = 0;
-        }
-    }
-    return;
-}
-
-void FUN_80170048(void)
-{
-    float fVar1;
-    uint objPtr;
-    int iVar3;
-    int* piVar4;
-    uint uVar5;
-    int subObj;
-    int* state;
-    int* piVar8;
-    float* pfVar9;
-    double dVar10;
-    double dVar11;
-    double dVar12;
-    double dVar13;
-    double dVar14;
-    undefined8 uVar15;
-    undefined8 local_78;
-    undefined8 local_70;
-
-    uVar15 = FUN_80286838();
-    objPtr = (uint)((ulonglong)uVar15 >> 0x20);
-    pfVar9 = (float*)&DAT_80321678;
-    state = *(int**)(objPtr + 0xb8);
-    iVar3 = FUN_80017a98();
-    subObj = 0;
-    if (iVar3 != 0)
-    {
-        subObj = FUN_80294cf8(iVar3);
-    }
-    fVar1 = lbl_803E4064;
-    switch ((uint)uVar15 & 0xff)
-    {
-    case 0:
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        fVar1 = lbl_803E4048;
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4048;
-            state[1] = (int)fVar1;
-            if (subObj != 0)
-            {
-                FUN_8016d994(subObj, 7, 0);
-            }
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        FUN_80006810(objPtr, 0x42c);
-        FUN_80006810(objPtr, 0x42d);
-        break;
-    case 1:
-        if (lbl_803E4044 == (float)state[2])
-        {
-            if (subObj != 0)
-            {
-                FUN_8016d994(subObj, 7, 8);
-            }
-            if (*state == 0)
-            {
-                piVar4 = FUN_80017624(0, '\x01');
-                *state = (int)piVar4;
-            }
-            if (*state != 0)
-            {
-                FUN_800175b0(*state, 2);
-                FUN_800175ec((double)((GameObject*)objPtr)->anim.localPosX,
-                             (double)(((GameObject*)objPtr)->anim.localPosY - lbl_803E4050),
-                             (double)((GameObject*)objPtr)->anim.localPosZ, (int*)*state);
-                FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-                FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-                FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-                FUN_800175bc(*state, 1);
-                FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-                FUN_8001753c(*state, 0, 0);
-                FUN_800175d8(*state, 1);
-            }
-            fVar1 = lbl_803E4044;
-            if (lbl_803E4044 == (float)state[2])
-            {
-                state[4] = (int)lbl_803E4048;
-                state[1] = (int)fVar1;
-            }
-            state[2] = (int)lbl_803E4048;
-            dVar12 = (double)lbl_803E405C;
-            state[3] = (int)lbl_803E405C;
-            iVar3 = 0;
-            piVar8 = &DAT_80321688;
-            dVar11 = (double)lbl_803E4040;
-            dVar14 = (double)lbl_803E4060;
-            piVar4 = state;
-            dVar13 = DOUBLE_803e4068;
-            do
-            {
-                *(undefined2*)(piVar4 + 0xd) = 0xc000;
-                dVar10 = (double)fcos16Precise();
-                state[9] = (int)(*pfVar9 * (float)((double)(float)(dVar12 + dVar10) * dVar11));
-                state[5] = *piVar8;
-                uVar5 = randomGetRange(0x78, 0x7f);
-                local_78 = (double)CONCAT44(0x43300000, iVar3 * uVar5 ^ 0x80000000);
-                *(short*)(piVar4 + 0xf) = (short)(int)(dVar14 + (double)(float)(local_78 - dVar13));
-                piVar4 = (int*)((int)piVar4 + 2);
-                pfVar9 = pfVar9 + 1;
-                state = state + 1;
-                piVar8 = piVar8 + 1;
-                iVar3 = iVar3 + 1;
-            }
-            while (iVar3 < 4);
-            FUN_80006824(objPtr, 0x42c);
-            FUN_80006824(objPtr, 0x42d);
-        }
-        break;
-    case 2:
-        if (subObj != 0)
-        {
-            FUN_8016d994(subObj, 7, 0);
-        }
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        FUN_80006810(objPtr, 0x42c);
-        FUN_80006810(objPtr, 0x42d);
-        break;
-    case 3:
-        if (subObj != 0)
-        {
-            FUN_8016d994(subObj, 7, 8);
-        }
-        if (*state == 0)
-        {
-            piVar4 = FUN_80017624(0, '\x01');
-            *state = (int)piVar4;
-        }
-        if (*state != 0)
-        {
-            FUN_800175b0(*state, 2);
-            FUN_800175ec((double)((GameObject*)objPtr)->anim.localPosX,
-                         (double)(((GameObject*)objPtr)->anim.localPosY - lbl_803E4050),
-                         (double)((GameObject*)objPtr)->anim.localPosZ, (int*)*state);
-            FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-            FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-            FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-            FUN_800175bc(*state, 1);
-            FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-            FUN_8001753c(*state, 0, 0);
-            FUN_800175d8(*state, 1);
-        }
-        if (lbl_803E4044 == (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4064;
-        dVar14 = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        iVar3 = 0;
-        piVar8 = &DAT_80321688;
-        dVar13 = (double)lbl_803E4040;
-        piVar4 = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0;
-            dVar11 = (double)fcos16Precise();
-            piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar14 + dVar11) * dVar13));
-            piVar4[5] = *piVar8;
-            state = (int*)((int)state + 2);
-            pfVar9 = pfVar9 + 1;
-            piVar4 = piVar4 + 1;
-            piVar8 = piVar8 + 1;
-            iVar3 = iVar3 + 1;
-        }
-        while (iVar3 < 4);
-        FUN_80006824(objPtr, 0x42d);
-        FUN_80006824(objPtr, 0x42c);
-        break;
-    case 4:
-        state[2] = (int)lbl_803E4064;
-        dVar14 = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        state[4] = (int)fVar1;
-        iVar3 = 0;
-        pfVar9 = (float*)&DAT_80321698;
-        piVar8 = &DAT_803216a8;
-        dVar11 = (double)lbl_803E4040;
-        dVar12 = (double)lbl_803E4060;
-        piVar4 = state;
-        dVar13 = DOUBLE_803e4068;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0xc000;
-            dVar10 = (double)fcos16Precise();
-            piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar14 + dVar10) * dVar11));
-            piVar4[5] = *piVar8;
-            uVar5 = randomGetRange(0x78, 0x7f);
-            local_70 = (double)CONCAT44(0x43300000, iVar3 * uVar5 ^ 0x80000000);
-            *(short*)(state + 0xf) = (short)(int)(dVar12 + (double)(float)(local_70 - dVar13));
-            state = (int*)((int)state + 2);
-            pfVar9 = pfVar9 + 1;
-            piVar4 = piVar4 + 1;
-            piVar8 = piVar8 + 1;
-            iVar3 = iVar3 + 1;
-        }
-        while (iVar3 < 4);
-        FUN_80006824(objPtr, 0x42d);
-        FUN_80006824(objPtr, 0x42c);
-        break;
-    case 5:
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        state[4] = (int)lbl_803E4064;
-        FUN_80006810(objPtr, 0x42c);
-        FUN_80006810(objPtr, 0x42d);
-        break;
-    case 6:
-        iVar3 = 0;
-        pfVar9 = (float*)&DAT_80321698;
-        piVar8 = &DAT_803216a8;
-        dVar13 = (double)lbl_803E405C;
-        dVar14 = (double)lbl_803E4040;
-        piVar4 = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0x4000;
-            dVar11 = (double)fcos16Precise();
-            piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar13 + dVar11) * dVar14));
-            piVar4[5] = *piVar8;
-            state = (int*)((int)state + 2);
-            pfVar9 = pfVar9 + 1;
-            piVar4 = piVar4 + 1;
-            piVar8 = piVar8 + 1;
-            iVar3 = iVar3 + 1;
-        }
-        while (iVar3 < 4);
-        break;
-    case 7:
-        if (subObj != 0)
-        {
-            FUN_8016d994(subObj, 7, 0);
-        }
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        fVar1 = lbl_803E4044;
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)fVar1;
-        state[4] = (int)fVar1;
-        state[1] = (int)fVar1;
-        *(byte*)(state + 0x17) = *(byte*)(state + 0x17) | 1;
-        *(byte*)((int)state + 0x5d) = *(byte*)((int)state + 0x5d) | 1;
-        *(byte*)((int)state + 0x5e) = *(byte*)((int)state + 0x5e) | 1;
-        *(byte*)((int)state + 0x5f) = *(byte*)((int)state + 0x5f) | 1;
-    }
-    FUN_80286884();
-    return;
-}
-
-
-
 void mikabombshadow_update(int* obj);
-
-
-void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
-    short sVar1;
-    char cVar2;
-    uint uVar3;
-    int iVar4;
-    int placement;
-    int extra;
-    undefined8 uVar7;
-
-    extra = *(int*)&((GameObject*)param_9)->extra;
-    placement = *(int*)&((GameObject*)param_9)->anim.placementData;
-    iVar4 = (int)((GameObject*)param_9)->anim.modelInstance->extraSetupData;
-    FUN_80017a98();
-    FUN_80017a90();
-    FUN_80017a98();
-    FUN_80017a90();
-    uVar7 = ObjHits_DisableObject(param_9);
-    if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
-    {
-        *(float*)(extra + 8) = lbl_803E40E8;
-        if (((GameObject*)param_9)->anim.modelState != NULL)
-        {
-            ((GameObject*)param_9)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-    }
-    if ((int)*(short*)(extra + 0x10) != 0xffffffff)
-    {
-        FUN_80017698((int)*(short*)(extra + 0x10), 1);
-        uVar7 = FUN_800e842c(param_9);
-    }
-    uVar3 = (uint) * (short*)(placement + 0x1e);
-    if (uVar3 != 0xffffffff)
-    {
-        uVar7 = FUN_80017698(uVar3, 1);
-    }
-    uVar3 = (uint) * (short*)(placement + 0x2c);
-    if (0 < (int)uVar3)
-    {
-        FUN_80017688(uVar3);
-    }
-    sVar1 = *(short*)(iVar4 + 2);
-    if (sVar1 == 4)
-    {
-        sVar1 = ((GameObject*)param_9)->anim.seqId;
-        if (sVar1 == 0x3cd)
-        {
-            iVar4 = FUN_80017a98();
-            FUN_80294d60(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 2);
-            uVar3 = FUN_80017a98();
-            FUN_80006824(uVar3, SFXen_treadlpc);
-            FUN_80081118((double)lbl_803E40EC, param_9, 1, 0x28);
-        }
-        else if ((sVar1 < 0x3cd) && (sVar1 == 0xb))
-        {
-            uVar3 = FUN_80017a98();
-            uVar7 = FUN_80006824(uVar3, SFXen_treadlpc);
-            iVar4 = FUN_80017a98();
-            FUN_80294d60(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar4, 4);
-            FUN_80081118((double)lbl_803E40EC, param_9, 3, 0x28);
-        }
-        else
-        {
-            uVar3 = FUN_80017a98();
-            FUN_80006824(uVar3, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-    }
-    else if ((sVar1 < 4) && (sVar1 == 1))
-    {
-        sVar1 = ((GameObject*)param_9)->anim.seqId;
-        if (sVar1 == 0x319)
-        {
-            FUN_80006824(param_9, SFXwp_gprop2_c);
-            FUN_80017698(0x3e9, 1);
-            *(undefined2*)(extra + 0x3c) = 0x4b0;
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-        else
-        {
-            if (sVar1 < 0x319)
-            {
-                if (sVar1 == 0x5a)
-                {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 2, 0x28);
-                    goto LAB_801725bc;
-                }
-                if ((sVar1 < 0x5a) && (sVar1 == 0x22))
-                {
-                    FUN_80006824(param_9, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-                    goto LAB_801725bc;
-                }
-            }
-            else if (sVar1 == 0x6a6)
-            {
-                uVar3 = FUN_80017690(0x86a);
-                cVar2 = (char)uVar3;
-                if (cVar2 < '\a')
-                {
-                    cVar2 = cVar2 + '\x01';
-                }
-                FUN_80017698(0x86a, (int)cVar2);
-                FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
-                FUN_80006824(param_9, SFXen_treadlpc);
-                goto LAB_801725bc;
-            }
-            FUN_80006824(param_9, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-        }
-    }
-    else
-    {
-        FUN_80006824(param_9, SFXen_waterblock_stop);
-        FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
-    }
-LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
-        modelInstance + 4);
-    ((GameObject*)param_9)->unkF4 = 1;
-    return;
-}
-
-
-
-
-
-
-
-
-
-
 
 void gcbaddieshield_free(void)
 {
@@ -1127,13 +236,7 @@ void gcbaddieshield_initialise(void)
 {
 }
 
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1163,19 +266,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
-
-
-
-
-
-
-
-
-
-
-
-
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
 int gcbaddieshield_getObjectTypeId(void) { return 0x0; }
 int animatedobj_getExtraSize(void);
@@ -1190,10 +280,7 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-void dll_F7_free(int obj);
-
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1594,13 +681,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
-
-s32 staff_func16(int* obj);
-
-
-
-
 void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -1617,26 +697,11 @@ void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void flamethrowerspe_render(void);
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
-
-void flamethrowerspe_func0B(int* obj);
-
-
-
-void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
-
-
 void gcbaddieshield_init(int* obj, void* initData)
 {
-    int v = *(s16*)((char*)initData + 0x1a);
-    *(f32*)((int**)obj)[0xb8 / 4] = (f32)v;
+    int lifetime = *(s16*)((char*)initData + 0x1a);
+    *(f32*)((GameObject*)obj)->extra = (f32)lifetime;
 }
-
-
 
 void gcbaddieshield_update(int* obj)
 {
@@ -1659,89 +724,4 @@ void gcbaddieshield_update(int* obj)
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
 }
-
-void staff_free(int* obj);
-
-void fireball_free(int* obj);
-
-void depthoffieldpoint_init(int* obj);
-
-void depthoffieldpoint_update(int* obj);
-
-void staff_release(void);
-
-void mikabombshadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
-
-void flamethrowerspe_init(int* obj, int* params);
-
-void animatedobj_free(int* obj, int seqFlag);
-
-void staff_init(int* obj);
-
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dll_F7_init(int* obj, int* params);
-
-void fireball_hitDetect(int* obj);
-
-void dim2roofrub_init(int* obj, int* params);
-
-void animatedobj_init(int* obj, int* params);
-
-void flamethrowerspe_update(int* obj);
-
-
-void mikabomb_init(int* obj);
-
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-
-void dim2roofrub_update(int* obj);
-
-void fireball_init(int* obj);
-
-void fireball_update(int* obj);
-
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
-
-void staff_initialise(void);
-
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void staff_hitDetectGeometry(int* obj);
-#pragma opt_common_subs reset
-
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
-
-static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
-{
-    GXWGFifo.f32 = x;
-    GXWGFifo.f32 = y;
-    GXWGFifo.f32 = z;
-}
-
-static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
-{
-    GXWGFifo.u8 = r;
-    GXWGFifo.u8 = g;
-    GXWGFifo.u8 = b;
-    GXWGFifo.u8 = a;
-}
-
-static inline void swipeTexCoord2f32(const f32 s, const f32 t)
-{
-    GXWGFifo.f32 = s;
-    GXWGFifo.f32 = t;
-}
-
-#pragma opt_common_subs off
-
-void staff_update(int* obj);
 
