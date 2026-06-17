@@ -1,11 +1,32 @@
+/*
+ * dll 0x8D func03 - foodbag-effect builder for one DLL object's modgfx
+ * effect (foodbag.h DLL slot 0x8D, the dll_NN_func03 spawn-effect family).
+ *
+ * dll_8D_func03 fills an FbBuf command list on the stack, three layered
+ * passes of FbCmd records selected by `variant` (0/1/2), then hands it to
+ * the modgfx interface's spawnEffect. Each variant emits a distinct effect
+ * id (0x156 / 0xc0d / 0x23b). posSource (when non-null) supplies the world
+ * position triple at offset 0xc/0x10/0x14; otherwise default constants are
+ * used. flags is OR'd into the effect flag word and, when bit 0 is set, the
+ * source object's position (ctx+0x18..0x20, or posSource) is added in.
+ *
+ * The geometry/colour constants live in the shared lbl_803E10E0.. pool and
+ * the per-effect parameter block at lbl_80316B60 (texture base +0x8c, the
+ * s16 size words at +0xb0..+0xbc).
+ *
+ * dll_8D_func00_nop / dll_8D_func01_nop are empty export-table slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
 extern u32 randomGetRange(int min, int max);
-
 extern ModgfxInterface** gModgfxInterface;
+
+/* per-effect parameter block: texture base (+0x8c) and s16 size words (+0xb0..) */
 extern u8 lbl_80316B60[];
+
+/* shared geometry/colour float pool (.data) */
 extern f32 lbl_803E10E0;
 extern f32 lbl_803E10E4;
 extern f32 lbl_803E10E8;
@@ -32,7 +53,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     FbCmd* p;
     u8* base = lbl_80316B60;
     int ret = 0;
-    f32 q;
+    f32 jitter;
 
     p = buf.entries;
 
@@ -40,7 +61,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 0;
         p->flags = 0x8c;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E10E4;
@@ -79,7 +100,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         *(s16*)(base + 0xb4) = 0x50;
         p->layer = 0;
         p->flags = 2;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x1800000;
         p->x = lbl_803E10FC;
         p->y = lbl_803E10EC;
@@ -87,7 +108,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p++;
         p->layer = 0;
         p->flags = 0x69;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x1800000;
         p->x = lbl_803E10FC;
         p->y = lbl_803E10EC;
@@ -97,14 +118,13 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p->flags = 8;
         p->tex = base + 0x8c;
         p->mode = 2;
-        q = lbl_803E1100 * (f32)(int)
-        randomGetRange(0, 0xc);
-        p->y = p->x = lbl_803E1104 + q;
-        p->z = lbl_803E1108 + q;
+        jitter = lbl_803E1100 * (f32)(int)randomGetRange(0, 0xc);
+        p->y = p->x = lbl_803E1104 + jitter;
+        p->z = lbl_803E1108 + jitter;
         p++;
         p->layer = 0;
         p->flags = 0x8c;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E110C;
@@ -135,7 +155,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         *(s16*)(base + 0xb4) = 0x50;
         p->layer = 0;
         p->flags = 0x1fc;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x1800000;
         p->x = lbl_803E10FC;
         p->y = lbl_803E10EC;
@@ -145,14 +165,13 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p->flags = 8;
         p->tex = base + 0x8c;
         p->mode = 2;
-        q = lbl_803E1100 * (f32)(int)
-        randomGetRange(0, 0xc);
-        p->y = p->x = lbl_803E1114 + q;
-        p->z = lbl_803E1118 + q;
+        jitter = lbl_803E1100 * (f32)(int)randomGetRange(0, 0xc);
+        p->y = p->x = lbl_803E1114 + jitter;
+        p->z = lbl_803E1118 + jitter;
         p++;
         p->layer = 0;
         p->flags = 0x8c;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E110C;
@@ -188,7 +207,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p[0].z = lbl_803E10EC;
         p[1].layer = 1;
         p[1].flags = 0x68;
-        p[1].tex = (void*)0;
+        p[1].tex = NULL;
         p[1].mode = 0x800000;
         p[1].x = lbl_803E10FC;
         p[1].y = lbl_803E10EC;
@@ -213,7 +232,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p[0].z = lbl_803E10EC;
         p[1].layer = 1;
         p[1].flags = 0x8f;
-        p[1].tex = (void*)0;
+        p[1].tex = NULL;
         p[1].mode = 0x1800000;
         p[1].x = lbl_803E1120;
         p[1].y = lbl_803E10EC;
@@ -231,7 +250,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p[0].z = lbl_803E10EC;
         p[1].layer = 1;
         p[1].flags = 0x1fd;
-        p[1].tex = (void*)0;
+        p[1].tex = NULL;
         p[1].mode = 0x1800000;
         p[1].x = lbl_803E1120;
         p[1].y = lbl_803E10EC;
@@ -316,7 +335,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 3;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E10E4;
@@ -327,7 +346,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 3;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E110C;
@@ -338,7 +357,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         p->layer = 3;
         p->flags = 0;
-        p->tex = (void*)0;
+        p->tex = NULL;
         p->mode = 0x20000000;
         p->x = lbl_803E10E0;
         p->y = lbl_803E110C;
@@ -347,6 +366,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     buf.ctx = sourceObj;
     buf.v44 = (s16)variant;
+    /* matching: target branches here despite identical arms */
     if (variant == 0)
     {
         buf.pos[0] = lbl_803E10EC;
@@ -414,7 +434,6 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     return ret;
 }
 
-
 void dll_8D_func01_nop(void)
 {
 }
@@ -422,5 +441,3 @@ void dll_8D_func01_nop(void)
 void dll_8D_func00_nop(void)
 {
 }
-
-void dll_8E_func01_nop(void);
