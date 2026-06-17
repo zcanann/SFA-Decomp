@@ -1,3 +1,13 @@
+/*
+ * DLL 0x91 - func0 object. Holds the "func00"/"func01" no-op slots plus
+ * dll_91_func03, which assembles a fixed 19-entry modgfx command list (one
+ * GfxCmd per sub-effect: per-layer texture, draw mode, and a position scale
+ * triple) into a stack GfxBuf, optionally biases the spawn position by the
+ * source object's world position (flags bit 0), then hands the buffer to
+ * (*gModgfxInterface)->spawnEffect. The texture pointers index a shared
+ * resource blob (lbl_80316FF8); the position/scale constants live in a
+ * shared float pool (lbl_803E11D8..lbl_803E1208).
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 
@@ -10,6 +20,7 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
+/* gModgfxInterface: home TU is the modgfx interface module. */
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80316FF8[];
@@ -36,12 +47,6 @@ void dll_91_func00_nop(void)
 {
 }
 
-void dll_92_func01_nop(void);
-
-/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
- * the same large-struct + vtable-call pattern as foodbag's func03s; matching
- * bodies needs proper struct recovery as follow-up. */
-
 typedef struct
 {
     GfxCmd* cmds; /* +0x00 */
@@ -53,9 +58,10 @@ typedef struct
     u32 v3c; /* +0x3c */
     u32 v40; /* +0x40 */
     s16 v44; /* +0x44 */
-    s16 hw[7]; /* +0x46 */
+    s16 params[7]; /* +0x46: 7 consecutive s16s read from base+0x194..0x1a0 */
     u32 flags; /* +0x54 */
-    u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
+    u8 v58, v59, v5a, v5b; /* +0x58..+0x5b */
+    u8 pad2; /* +0x5c: never written by dll_91_func03 */
     s8 count; /* +0x5d */
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
@@ -118,7 +124,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     e[6].z = lbl_803E11F0;
     e[7].layer = 2;
     e[7].flags = 0;
-    e[7].tex = (void*)0;
+    e[7].tex = NULL;
     e[7].mode = 0x20;
     e[7].x = lbl_803E11D8;
     e[7].y = lbl_803E11D8;
@@ -181,7 +187,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     e[15].z = lbl_803E1200;
     e[16].layer = 5;
     e[16].flags = 2;
-    e[16].tex = (void*)0;
+    e[16].tex = NULL;
     e[16].mode = 0x1000;
     e[16].x = lbl_803E11F0;
     e[16].y = lbl_803E11D8;
@@ -217,13 +223,13 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.v5b = 0xc;
     buf.flags = 0x1000082;
     buf.count = (GfxCmd*)((u8*)e + 0x1c8) - e;
-    buf.hw[0] = *(s16*)(base + 0x194);
-    buf.hw[1] = *(s16*)(base + 0x196);
-    buf.hw[2] = *(s16*)(base + 0x198);
-    buf.hw[3] = *(s16*)(base + 0x19a);
-    buf.hw[4] = *(s16*)(base + 0x19c);
-    buf.hw[5] = *(s16*)(base + 0x19e);
-    buf.hw[6] = *(s16*)(base + 0x1a0);
+    buf.params[0] = *(s16*)(base + 0x194);
+    buf.params[1] = *(s16*)(base + 0x196);
+    buf.params[2] = *(s16*)(base + 0x198);
+    buf.params[3] = *(s16*)(base + 0x19a);
+    buf.params[4] = *(s16*)(base + 0x19c);
+    buf.params[5] = *(s16*)(base + 0x19e);
+    buf.params[6] = *(s16*)(base + 0x1a0);
     buf.cmds = e;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
@@ -243,5 +249,3 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316FF8, 0x10, base + 0xb4, 0x45, 0);
 }
-
-void dll_92_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
