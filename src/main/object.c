@@ -461,22 +461,21 @@ void fn_8002B758(void* v)
 
     p = lbl_803408A8;
     count = lbl_803DCB74;
-    for (i = 0; i < count; i++, p++)
+    for (i = 0; i < count; i++)
     {
-        if ((void*)*p == v)
+        if ((void*)p[i] == v)
         {
             break;
         }
     }
-    if (i == count)
+    if (i != count)
     {
-        return;
+        for (p = &lbl_803408A8[i]; i < count - 1; i++, p++)
+        {
+            *p = p[1];
+        }
+        lbl_803DCB74--;
     }
-    for (p = &lbl_803408A8[i]; i < count - 1; i++, p++)
-    {
-        *p = p[1];
-    }
-    lbl_803DCB74--;
 }
 #pragma opt_strength_reduction reset
 
