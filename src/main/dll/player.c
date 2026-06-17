@@ -18726,19 +18726,20 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
     }
 
     *(f32*)((char*)dst + 0x38) = -*(f32*)((char*)src + 0x24);
-    *(f32*)((char*)dst + 0x3c) = lbl_803E7EA4;
+    y = lbl_803E7EA4;
+    *(f32*)((char*)dst + 0x3c) = y;
     *(f32*)((char*)dst + 0x40) = *(f32*)((char*)src + 0x1c);
     *(f32*)((char*)dst + 0x44) =
-        -(*(f32*)((char*)dst + 0x4c) * *(f32*)((char*)dst + 0x3c) +
-            *(f32*)((char*)dst + 0x48) * *(f32*)((char*)dst + 0x38) +
+        -(*(f32*)((char*)dst + 0x48) * *(f32*)((char*)dst + 0x38) +
+            *(f32*)((char*)dst + 0x4c) * *(f32*)((char*)dst + 0x3c) +
             *(f32*)((char*)dst + 0x50) * *(f32*)((char*)dst + 0x40));
 
     *(f32*)((char*)dst + 0x54) = *(f32*)((char*)p4 + 0x768);
-    *(f32*)((char*)dst + 0x58) = lbl_803E7EA4;
+    *(f32*)((char*)dst + 0x58) = y;
     *(f32*)((char*)dst + 0x5c) = *(f32*)((char*)p4 + 0x770);
     *(f32*)((char*)dst + 0x18) =
-        *(f32*)((char*)dst + 0x58) * *(f32*)((char*)dst + 0x3c) +
         *(f32*)((char*)dst + 0x54) * *(f32*)((char*)dst + 0x38) +
+        *(f32*)((char*)dst + 0x58) * *(f32*)((char*)dst + 0x3c) +
         *(f32*)((char*)dst + 0x5c) * *(f32*)((char*)dst + 0x40) +
         *(f32*)((char*)dst + 0x44);
 
