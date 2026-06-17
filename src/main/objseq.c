@@ -2656,8 +2656,9 @@ int ObjSeq_update(u8* obj, f32 t)
         ((ObjSeqState*)seq)->curFrame = ((f32*)(base + 0x3894))[slot];
     }
 
+    i = 3;
     p = seq + 6;
-    for (i = 3; i != 0; i--)
+    for (; i != 0; i--)
     {
         p -= 2;
         if (*(s16*)(p + 0x30) > 0)
