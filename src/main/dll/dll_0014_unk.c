@@ -2641,7 +2641,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     {
         currentCurve = Objfsa_FindRomCurveById(startCurveId);
         *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, -1);
         if (nextId == -1)
         {
             return 1;
@@ -2659,11 +2659,11 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, -1);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2B(*(s32*)&state->nodeA0, -1, -1);
     }
     if (nextId == -1)
     {
@@ -2724,7 +2724,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     {
         currentCurve = Objfsa_FindRomCurveById(curveId);
         *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, -1);
         if (nextId == -1)
         {
             return 1;
@@ -2742,11 +2742,11 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, -1);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+        nextId = RomCurve_getControlPointId_2B(*(s32*)&state->nodeA0, -1, -1);
     }
     if (nextId == -1)
     {
