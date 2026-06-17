@@ -1,3 +1,17 @@
+/*
+ * magicplant (DLL 0x00FE) - the swaying magic-plant object plus the
+ * ObjectDescriptors for the sibling objects whose code lives in this
+ * DLL (TrickyWarp, TrickyGuard, StayPoint, Duster, CurveFish).
+ *
+ * A magic plant runs off a map-event timer: while waiting for its event
+ * (MAGICPLANT_MODE_WAIT_FOR_EVENT) it drives its open/close anim from the
+ * event's remaining time, then becomes interactive (MAGICPLANT_MODE_ACTIVE)
+ * where it idles, randomly retriggers its sway, plays its ambient loop sfx
+ * based on player distance, and spawns a child object once loading is locked.
+ * Hits push it into MAGICPLANT_MODE_HIT_REACT (delegated to fn_8017F334 in
+ * the sibling DLL) with a particle burst and red colour-fade; the
+ * fade-out/fade-in modes ramp model alpha around the event boundary.
+ */
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
@@ -26,7 +40,11 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
+extern void objRenderFn_8003b8f4(int obj, float arg);
+/* MAGICPLANT_MODE_HIT_REACT handler; lives in the sibling DLL 0x00FD */
+extern void fn_8017F334(int obj, MagicPlantSetup* setup, MagicPlantState* state);
 
+extern void* gCameraInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3858;
@@ -52,16 +70,14 @@ typedef struct MagicPlantChildSetup
     f32 y;
     f32 z;
     u8 pad14[6];
-    u8 field1A;
+    u8 field1A; /* init 0x14 */
     u8 pad1B;
-    s16 field1C;
+    s16 field1C; /* init -1 */
     u8 pad1E[6];
-    s16 field24;
+    s16 field24; /* init -1 */
     u8 pad26[6];
-    s16 field2C;
+    s16 field2C; /* init -1 */
 } MagicPlantChildSetup;
-
-extern void fn_8017F334(int obj, MagicPlantSetup* setup, MagicPlantState* state);
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -79,8 +95,6 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-extern void* gCameraInterface;
-extern void objRenderFn_8003b8f4(int obj, float arg);
 
 void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
@@ -91,7 +105,6 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
     u8 lightPos[0x0c];
     int hitKind;
     int i;
-    s16 timer;
     int player;
     GameObject* playerObj;
     f32 distance;
@@ -186,7 +199,7 @@ void fn_8017F7B8(int obj, int objectId)
     state = ((GameObject*)obj)->extra;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x30, objectId);
+        setup = Obj_AllocObjectSetup(sizeof(MagicPlantChildSetup), objectId);
         setup->field1A = 0x14;
         setup->field2C = -1;
         setup->field1C = -1;
@@ -211,7 +224,6 @@ void fn_8017F7B8(int obj, int objectId)
             state->childObject = 0;
         }
     }
-    return;
 }
 #pragma dont_inline reset
 
@@ -228,7 +240,7 @@ void MagicPlant_update(int obj)
     int hitKind;
     s32 alpha;
     f32 progress;
-    f32 fz;
+    f32 resetProgress;
     int divisor;
 
     plant = (MagicPlantObject*)obj;
@@ -309,10 +321,10 @@ void MagicPlant_update(int obj)
             {
                 alpha = 0;
                 state->mode = MAGICPLANT_MODE_FADE_IN;
-                fz = lbl_803E385C;
-                state->animProgress = fz;
-                state->animStepScale = fz;
-                ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+                resetProgress = lbl_803E385C;
+                state->animProgress = resetProgress;
+                state->animStepScale = resetProgress;
+                ObjAnim_SetCurrentMove(obj, 0, resetProgress, 0);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E385C);
             }
             plant->objAnim.alpha = (u8)alpha;
@@ -337,7 +349,7 @@ void MagicPlant_update(int obj)
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
 }
 
-int MagicPlant_getExtraSize(void) { return 0x10; }
+int MagicPlant_getExtraSize(void) { return MAGICPLANT_EXTRA_STATE_BYTES; }
 
 int MagicPlant_SeqFn(u8* obj)
 {
@@ -352,8 +364,7 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj)
     return (setup->modelIndex << MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT) | MAGICPLANT_OBJECT_TYPE_BASE;
 }
 
-
-void MagicPlant_free(int obj, int param_2)
+void MagicPlant_free(int obj, int freeChildren)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
@@ -365,7 +376,7 @@ void MagicPlant_free(int obj, int param_2)
     if (plant->childLinkActive != 0)
     {
         ObjLink_DetachChild(obj, state->childObject);
-        if (param_2 == 0)
+        if (freeChildren == 0)
         {
             Obj_FreeObject(state->childObject);
         }
@@ -376,41 +387,32 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
-    void* s0;
-    s32 v;
+    void* child;
 
     plant = (MagicPlantObject*)obj;
     state = plant->state;
-    v = visible;
-    if (v != 0)
+    if (visible != 0)
     {
         objRenderFn_8003b8f4(obj, lbl_803E3858);
-        s0 = (void*)state->childObject;
-        if (s0 != NULL)
+        child = (void*)state->childObject;
+        if (child != NULL)
         {
-            if (*(void**)((char*)s0 + 0xc4) != NULL)
+            if (*(void**)((char*)child + 0xc4) != NULL)
             {
-                ObjPath_GetPointWorldPosition(obj, 0, (float*)((char*)s0 + 0xc), (float*)((char*)s0 + 0x10),
-                                              (float*)((char*)s0 + 0x14), 0);
+                ObjPath_GetPointWorldPosition(obj, 0, (float*)((char*)child + 0xc), (float*)((char*)child + 0x10),
+                                              (float*)((char*)child + 0x14), 0);
             }
         }
     }
 }
-
-
-
-
-
-
-
 
 void MagicPlant_init(int obj, MagicPlantSetup* setup)
 {
     MagicPlantObject* plant;
     ObjAnimComponent* objAnim;
     MagicPlantState* state;
-    s32 r;
-    f32 t;
+    s32 noSaveTime;
+    f32 progress;
     int divisor;
 
     plant = (MagicPlantObject*)obj;
@@ -418,22 +420,22 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     state = plant->state;
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
-    r = (*gMapEventInterface)->shouldNotSaveTime(setup->eventId);
-    if (r == 0)
+    noSaveTime = (*gMapEventInterface)->shouldNotSaveTime(setup->eventId);
+    if (noSaveTime == 0)
     {
-        t = (*gMapEventInterface)->getTime(setup->eventId);
+        progress = (*gMapEventInterface)->getTime(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
-        t /= (f32)divisor;
-        if (t > lbl_803E3858)
+        progress /= (f32)divisor;
+        if (progress > lbl_803E3858)
         {
-            t = lbl_803E3858;
+            progress = lbl_803E3858;
         }
-        else if (t < lbl_803E385C)
+        else if (progress < lbl_803E385C)
         {
-            t = lbl_803E385C;
+            progress = lbl_803E385C;
         }
-        state->animProgress = *(f32*)&lbl_803E3858 - t;
+        state->animProgress = *(f32*)&lbl_803E3858 - progress;
     }
     else
     {
@@ -455,12 +457,6 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     }
     plant->seqCallback = (void*)MagicPlant_SeqFn;
 }
-
-
-
-
-void trickyguard_update(int* obj);
-
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
