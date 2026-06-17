@@ -769,7 +769,7 @@ void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c)
     GXSetVtxDesc(0xd, 1);
 }
 
-extern s16 lbl_803DBA8A;
+extern volatile s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
 
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)

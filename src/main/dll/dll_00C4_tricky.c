@@ -2468,6 +2468,7 @@ u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to)
     return visible;
 }
 
+#pragma opt_strength_reduction off
 void baddieFn_8014a304(f32 radius, int obj, int state)
 {
     u8 traceHit[4];
@@ -2558,6 +2559,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
         }
     }
 }
+#pragma opt_strength_reduction reset
 
 void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
 
