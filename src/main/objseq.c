@@ -2653,7 +2653,7 @@ int ObjSeq_update(u8* obj, f32 t)
     }
     else
     {
-        ((ObjSeqState*)seq)->curFrame = (int)((f32*)(base + 0x3894))[slot];
+        ((ObjSeqState*)seq)->curFrame = ((f32*)(base + 0x3894))[slot];
     }
 
     p = seq + 6;
@@ -2662,7 +2662,7 @@ int ObjSeq_update(u8* obj, f32 t)
         p -= 2;
         if (*(s16*)(p + 0x30) > 0)
         {
-            *(s16*)(p + 0x30) = *(s16*)(p + 0x30) - framesThisStep;
+            *(s16*)(p + 0x30) -= framesThisStep;
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
