@@ -1,3 +1,23 @@
+/*
+ * DLL 0xCE - a GroundBaddie-derived enemy plus two companion objects
+ * (the ChukChuk ice-spitter and its IceBall projectile).
+ *
+ * The enemy runs as a baddie-control state machine: dll_CE_init wires it
+ * into gBaddieControlInterface (mode 7/6, obj type id 0x49) and dll_CE_update
+ * ticks the control interface each frame, dispatching melee/move/hit events.
+ * dll_CE_initialise installs the two per-object handler tables
+ * (lbl_803AC5B0 = the move/attack handlers, lbl_803AC598 = the
+ * begin/check handlers) used by the control interface; each fn_8015E*
+ * entry implements one move state. Handlers coordinate sibling instances
+ * of the same DLL by walking the object list and calling their
+ * vtable[0x24] with message 129 (0x81); the shared anim sequence id is
+ * 774 (0x306). dll_CE_func0B is the inbound message handler (0x80 -> take
+ * damage / enter substate 4; 0x81 -> clear the "no-target" config bit).
+ *
+ * gChukChukObjDescriptor / gIceBallObjDescriptor expose the two companion
+ * objects (defined in sibling TUs); their callbacks are forward-declared
+ * here only so the descriptor tables can take their addresses.
+ */
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
@@ -8,50 +28,14 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-extern undefined8 FUN_80003494();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_80006a54();
-extern undefined4 FUN_80017698();
-extern uint FUN_80017730();
-extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern int FUN_80017b00();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined8 ObjMsg_SendToObjects();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 FUN_8003b818();
-extern double FUN_80293900();
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd738;
-extern f64 DOUBLE_803e3a58;
-extern f32 lbl_803E3A60;
-extern f32 lbl_803E3A64;
-extern f32 lbl_803E3A68;
-extern f32 lbl_803E3A6C;
-extern f32 lbl_803E3A70;
-extern f32 lbl_803E3A74;
-extern f32 lbl_803E3A78;
-extern f32 lbl_803E3A7C;
-extern f32 lbl_803E3B00;
-extern f32 lbl_803E3B04;
-extern f32 lbl_803E3B08;
-extern f32 lbl_803E3B0C;
-extern f32 lbl_803E3B10;
-extern f32 lbl_803E3B24;
-extern f32 lbl_803E3B28;
-extern f32 lbl_803E3B2C;
-extern f32 lbl_803E3B50;
-extern f32 lbl_803E3B80;
-extern f32 lbl_803E3B88;
-extern f32 lbl_803E3B8C;
-extern f32 lbl_803E3B90;
-extern f32 lbl_803E3B94;
+/* collision / object-list / messaging helpers (home TUs in the engine core) */
+extern int randomGetRange(int min, int max);
+extern void ObjHits_RegisterActiveHitVolumeObject();
+extern void ObjHits_SetHitVolumeSlot();
+extern void ObjHits_DisableObject();
+extern void ObjHits_EnableObject();
+extern void ObjGroup_RemoveObject();
+extern void ObjMsg_SendToObjects();
 
 int fn_8015E3A0(int obj, int p2)
 {
@@ -103,51 +87,6 @@ int fn_8015E3A0(int obj, int p2)
         *(u32*)(p2 + 0x314) = *(u32*)(p2 + 0x314) & ~0x1;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
         Sfx_PlayFromObject(obj, SFXfoxcom_heel);
-    }
-    return 0;
-}
-
-undefined4
-#pragma scheduling on
-#pragma peephole on
-FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj
-             , int state)
-{
-    float zero;
-    float* vel;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined8 msgResult;
-
-    zero = lbl_803E3A60;
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB == '\0')
-    {
-        if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
-        {
-            msgResult = ObjMsg_SendToObjects(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0, 3,
-                                         obj, 0xe0000, obj, in_r8, in_r9, in_r10);
-            if (*(int*)&((GameObject*)obj)->anim.placementData == 0)
-            {
-                FUN_80017ac8(msgResult, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
-                return 0;
-            }
-            return 4;
-        }
-    }
-    else
-    {
-        vel = *(float**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-        *vel = lbl_803E3A60;
-        vel[1] = zero;
-        (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 6);
-        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
-        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
-        ObjHits_DisableObject(obj);
-        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
-            8;
     }
     return 0;
 }
@@ -214,116 +153,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
     *(s8*)&state->baddie.unk34D = 3;
     state->baddie.moveSpeed = lbl_803E2DD4;
     state->baddie.animSpeedA = lbl_803E2DC8;
-    return 0;
-}
-
-undefined4
-#pragma scheduling on
-#pragma peephole on
-FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    float zero;
-    int player;
-    int sub;
-    double zeroD;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    *(undefined*)(state + 0x34d) = 3;
-    *(float*)(state + 0x2a0) = lbl_803E3A64;
-    zero = lbl_803E3A60;
-    zeroD = (double)lbl_803E3A60;
-    *(float*)(state + 0x280) = lbl_803E3A60;
-    *(float*)(state + 0x284) = zero;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        FUN_800305f8(zeroD, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj, 1, 0, param_12,
-                     param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    if ((*(byte*)(state + 0x356) & 1) == 0)
-    {
-        player = FUN_80017a98();
-        if (((GameObject*)player)->anim.seqId == 0)
-        {
-            FUN_80006824(obj, SFXfox_treadwater322);
-        }
-        else
-        {
-            FUN_80006824(obj, SFXfoot_metal_run_2);
-        }
-        FUN_80006824(obj, SFXdoor_unlocked);
-        FUN_80006824(obj, SFXfoxcom_find);
-        *(byte*)(state + 0x356) = *(byte*)(state + 0x356) | 1;
-    }
-    if (((*(byte*)(state + 0x356) & 2) == 0) && (lbl_803E3A68 < ((GameObject*)obj)->anim.currentMoveProgress))
-    {
-        FUN_80006824(obj, SFXdoor_creak);
-        *(byte*)(state + 0x356) = *(byte*)(state + 0x356) | 2;
-        (**(code**)(*DAT_803dd738 + 0x4c))(obj, (int)*(short*)(sub + 0x3f0), 0xffffffff, 0);
-    }
-    return 0;
-}
-
-undefined4
-FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int objs;
-    uint other;
-    int player;
-    int i;
-    int count;
-
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        objs = FUN_80017b00(&i, &count);
-        for (; i < count; i = i + 1)
-        {
-            other = *(uint*)(objs + i * 4);
-            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
-            {
-                (**(code**)(**(int**)&((GameObject*)other)->anim.dll + 0x24))(other, 0x81, 0);
-            }
-        }
-        objs = FUN_80017a98();
-        player = *(int*)&((GameObject*)objs)->childObjs[0];
-        objs = FUN_80017a98();
-        player = (**(code**)(**(int**)&((GameObject*)player)->anim.dll + 0x44))(player);
-        if (player == 0)
-        {
-            if (((GameObject*)objs)->anim.seqId == 0)
-            {
-                FUN_80006824(obj, SFXfox_treadwater322);
-            }
-            else
-            {
-                FUN_80006824(obj, SFXfoot_metal_run_2);
-            }
-        }
-        else if (((GameObject*)objs)->anim.seqId == 0)
-        {
-            FUN_80006824(obj, SFXmv_ropecreak22);
-        }
-        else
-        {
-            FUN_80006824(obj, SFXfoot_metal_run_2);
-        }
-        FUN_80006824(obj, SFXfoxcom_stay);
-    }
-    *(undefined*)(state + 0x34d) = 3;
-    *(float*)(state + 0x2a0) = lbl_803E3A6C;
-    *(float*)(state + 0x280) = lbl_803E3A60;
     return 0;
 }
 
@@ -460,8 +289,6 @@ void fn_8015DAE8(void)
     gMediumBasketStateHandlersB[7] = (void*)mediumbasket_stateHandlerB07;
 }
 #pragma dont_inline reset
-
-void dll_CA_init(int obj, u8* p, int flags);
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
@@ -739,158 +566,6 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
     }
 }
 
-undefined4
-#pragma scheduling on
-#pragma peephole on
-FUN_8015e678(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int objs;
-    uint other;
-    int otherVtbl;
-    int sub;
-    int i;
-    int count;
-    ObjHitsPriorityState* hitState;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(obj);
-    }
-    otherVtbl = -1;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        objs = FUN_80017b00(&i, &count);
-        for (; i < count; i = i + 1)
-        {
-            other = *(uint*)(objs + i * 4);
-            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
-            {
-                otherVtbl = **(int**)&((GameObject*)other)->anim.dll;
-                (**(code**)(otherVtbl + 0x24))(other, 0x81, 0);
-            }
-        }
-    }
-    *(float*)(state + 0x2a0) = lbl_803E3A70;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 10, 0, otherVtbl, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    *(undefined*)(state + 0x34d) = 1;
-    if ((*(uint*)(state + 0x314) & 1) != 0)
-    {
-        sub = *(int*)(sub + 0x40c);
-        *(uint*)(state + 0x314) = *(uint*)(state + 0x314) & ~1;
-        *(byte*)(sub + 8) = *(byte*)(sub + 8) | 1;
-        FUN_80006824(obj, SFXfoxcom_heel);
-    }
-    return 0;
-}
-
-undefined4
-FUN_8015e88c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    undefined4 noVtbl;
-    ObjHitsPriorityState* hitState;
-
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(obj);
-    }
-    noVtbl = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    *(float*)(state + 0x2a0) = lbl_803E3A70;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 5, 0, noVtbl, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    *(undefined*)(state + 0x34d) = 1;
-    return 0;
-}
-
-undefined4
-FUN_8015e9f4(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int objs;
-    int other;
-    uint roll;
-    int otherVtbl;
-    int sub;
-    int i;
-    int count[5];
-    ObjHitsPriorityState* hitState;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(obj);
-    }
-    otherVtbl = -1;
-    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->objectPairPriority = 10;
-    hitState->objectPairHitVolume = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        objs = FUN_80017b00(&i, count);
-        for (; i < count[0]; i = i + 1)
-        {
-            other = *(int*)(objs + i * 4);
-            if ((other != obj) && (((GameObject*)other)->anim.seqId == 0x306))
-            {
-                otherVtbl = **(int**)&((GameObject*)other)->anim.dll;
-                (**(code**)(otherVtbl + 0x24))(other, 0x81, 0);
-            }
-        }
-        roll = randomGetRange(0, 1);
-        if (roll == 0)
-        {
-            if (*(char*)(state + 0x27a) != '\0')
-            {
-                FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             obj, 7, 0, otherVtbl, param_13, param_14, param_15, param_16);
-                *(undefined*)(state + 0x346) = 0;
-            }
-        }
-        else if (*(char*)(state + 0x27a) != '\0')
-        {
-            FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         obj, 6, 0, otherVtbl, param_13, param_14, param_15, param_16);
-            *(undefined*)(state + 0x346) = 0;
-        }
-        *(undefined*)(state + 0x34d) = 1;
-        *(float*)(state + 0x2a0) =
-            lbl_803E3A74 +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(sub + 0x406)) - DOUBLE_803e3a58) /
-            lbl_803E3A78;
-    }
-    *(float*)(state + 0x280) = lbl_803E3A60;
-    return 0;
-}
-
 #pragma scheduling off
 #pragma peephole off
 void fn_8015EB6C(int obj, int p2, int p3)
@@ -947,53 +622,6 @@ void fn_8015EB6C(int obj, int p2, int p3)
         }
         *(f32*)(sub + 0) += timeDelta;
     }
-}
-
-undefined4
-#pragma scheduling on
-#pragma peephole on
-FUN_8015ec98(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int light;
-    int sub;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0xe, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    if (lbl_803E3A7C < ((GameObject*)obj)->anim.currentMoveProgress)
-    {
-        light = *(int*)(sub + 0x40c);
-        *(byte*)(light + 8) = *(byte*)(light + 8) | 2;
-    }
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        ObjHits_DisableObject(obj);
-        *(float*)(state + 0x2a0) = lbl_803E3A70;
-        *(float*)(state + 0x280) = lbl_803E3A60;
-    }
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
-    {
-        FUN_80017698((int)*(short*)(sub + 0x3f4), 0);
-        FUN_800305f8((double)lbl_803E3A60, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
-        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
-        *(undefined2*)(sub + 0x402) = 0;
-        if ((*(byte*)(light + 9) & 2) == 0)
-        {
-            *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.
-                resetHitboxMode | 8;
-        }
-    }
-    return 0;
 }
 
 #pragma scheduling off
@@ -1226,326 +854,10 @@ void dll_CE_update(int obj, int p2, int p3)
     }
 }
 
-#pragma dont_inline on
-void fn_8015FBEC(int obj);
-#pragma dont_inline reset
-
-static inline u8 scarab_isObjectInList(void* o)
-{
-    extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
-    int i;
-    int count;
-    int* objs = ObjList_GetObjects(&i, &count);
-    while (i < count)
-    {
-        if (o == (void*)objs[i++])
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void fn_8015FCCC(int obj);
-
-extern int Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int* obj);
-extern f32 timeDelta;
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma scheduling on
 #pragma peephole on
-void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(param_1);
-    }
-    return;
-}
 
-undefined4
-FUN_80160798(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state)
-{
-    float zero;
-    int sub;
-    undefined8 result;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(int*)(state + 0x2d0) == 0)
-    {
-        (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 0);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    else
-    {
-        (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 1);
-        zero = lbl_803E3B00;
-        ((GroundBaddieState*)state)->baddie.moveInputX = lbl_803E3B00;
-        ((GroundBaddieState*)state)->baddie.moveInputZ = zero;
-        FUN_80003494(sub + 0x35c, obj + 0xc, 0xc);
-        result = FUN_80003494(sub + 0x368, *(int*)(state + 0x2d0) + 0xc, 0xc);
-        FUN_80006a54(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-        if ((*(float*)(state + 0x2c0) < lbl_803E3B04) && (*(char*)(sub + 0x405) == '\x02'))
-        {
-            return 5;
-        }
-        if (*(char*)(sub + 0x381) == '\0')
-        {
-            (**(code**)(*DAT_803dd70c + 0x1c))
-            ((double)*(float*)(sub + 0x374), (double)*(float*)(sub + 0x37c),
-             (double)lbl_803E3B00, (double)lbl_803E3B00, (double)lbl_803E3B08, obj,
-             state);
-        }
-        else
-        {
-            (**(code**)(*DAT_803dd70c + 0x1c))
-            ((double)*(float*)(sub + 0x374), (double)*(float*)(sub + 0x37c),
-             (double)lbl_803E3B0C, (double)lbl_803E3B10, (double)lbl_803E3B08, obj,
-             state);
-        }
-    }
-    return 0;
-}
-
-undefined4
-FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj
-             , int state, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-    int player;
-    undefined4 result;
-    ObjHitsPriorityState* hitState;
-
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB == '\0')
-    {
-        player = FUN_80017a98();
-        ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, player, 0xe0000,
-                            obj, 0, param_13, param_14, param_15, param_16);
-        if (*(int*)&((GameObject*)obj)->anim.placementData == 0)
-        {
-            FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
-            result = 0;
-        }
-        else
-        {
-            result = 4;
-        }
-    }
-    else
-    {
-        (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 3);
-        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
-        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
-            8;
-        result = 0;
-    }
-    return result;
-}
-
-undefined4
-FUN_80160cd0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    undefined4 child;
-
-    child = *(undefined4*)&((GameObject*)obj)->extra;
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3B00, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    ((GroundBaddieState*)state)->baddie.physicsActive = 1;
-    *(undefined2*)&((GameObject*)obj)->anim.rotZ = *(undefined2*)&((GroundBaddieState*)state)->baddie.spawnRotZ;
-    *(undefined2*)&((GameObject*)obj)->anim.rotY = *(undefined2*)&((GroundBaddieState*)state)->baddie.spawnRotY;
-    (**(code**)(*DAT_803dd738 + 0x10))
-        ((double)lbl_803E3B24, (double)lbl_803E3B28, obj, state, child);
-    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B2C * ((GroundBaddieState*)state)->baddie.animSpeedA;
-    return 0;
-}
-
-void FUN_80161130(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int obj)
-{
-    undefined4 sub;
-    undefined8 result;
-
-    sub = *(undefined4*)&((GameObject*)obj)->extra;
-    result = ObjGroup_RemoveObject(obj, 3);
-    if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
-    {
-        FUN_80017ac8(result, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     *(int*)&((GameObject*)obj)->childObjs[0]);
-        *(undefined4*)&((GameObject*)obj)->childObjs[0] = 0;
-    }
-    (**(code**)(*DAT_803dd738 + 0x40))(obj, sub, 1);
-    return;
-}
-
-undefined4
-FUN_801615d4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj,
-             int state)
-{
-    undefined4 result;
-
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedB != '\0')
-    {
-        (**(code**)(*DAT_803dd70c + 0x14))(obj, state, 8);
-        *(undefined4*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
-        ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState*)state)->baddie.hasTarget = 0;
-        param_1 = ObjHits_DisableObject(obj);
-        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode |
-            8;
-    }
-    if (((GameObject*)obj)->anim.alpha == 0)
-    {
-        if (*(int*)&((GameObject*)obj)->anim.placementData == 0)
-        {
-            FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
-            result = 0;
-        }
-        else
-        {
-            result = 6;
-        }
-    }
-    else
-    {
-        result = 0;
-    }
-    return result;
-}
-
-undefined4
-FUN_80161c08(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int sub;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 8, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B80;
-    if ((*(uint*)(state + 0x314) & 0x200) != 0)
-    {
-        FUN_80006824(obj, SFXdoor_creak);
-        *(uint*)(state + 0x314) = *(uint*)(state + 0x314) & 0xfffffdff;
-        (**(code**)(*DAT_803dd738 + 0x4c))(obj, (int)*(short*)(sub + 0x3f0), 0xffffffff, 1);
-    }
-    return 0;
-}
-
-undefined4
-FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    uint roll;
-    int angle;
-    undefined4 result;
-    int sub;
-    double mag;
-    ObjHitsPriorityState* hitState;
-    float aX;
-    float aY;
-    float aZ;
-    float bX;
-    float bY;
-    float bZ[2];
-    uint dir;
-
-    sub = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 9;
-    hitState->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    roll = randomGetRange(0, 100);
-    if ((int)roll < 0x32)
-    {
-        if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
-        {
-            FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         obj, 1, 0, param_12, param_13, param_14, param_15, param_16);
-            ((GroundBaddieState*)state)->baddie.moveDone = 0;
-        }
-    }
-    else if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
-    {
-        FUN_800305f8((double)lbl_803E3B50, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 4, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E3B88;
-    (**(code**)(*DAT_803dd70c + 0x20))(param_1, obj, state, 1);
-    dir = *(char*)(sub + 0x45) * -2 + 1U ^ 0x80000000;
-    bZ[1] = 176.0;
-    (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x28))
-        ((double)(*(float*)(state + 0x280) *
-             (f32)(s32)dir),
-        *(int*)(sub + 0x38), sub + 0x48
-    )
-    ;
-    if (lbl_803E3B8C <= *(float*)(sub + 0x48))
-    {
-        if (lbl_803E3B90 < *(float*)(sub + 0x48))
-        {
-            *(float*)(sub + 0x48) = lbl_803E3B90;
-        }
-    }
-    else
-    {
-        *(float*)(sub + 0x48) = lbl_803E3B8C;
-    }
-    (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x24))
-    ((double)(*(float*)(sub + 0x48) - lbl_803E3B94), *(int*)(sub + 0x38), &aX,
-     &aY, &aZ);
-    (**(code**)(**(int**)(*(int*)(sub + 0x38) + 0x68) + 0x24))
-    ((double)(lbl_803E3B94 + *(float*)(sub + 0x48)), *(int*)(sub + 0x38), &bX,
-     &bY, bZ);
-    aX = aX - bX;
-    aY = aY - bY;
-    aZ = aZ - bZ[0];
-    mag = FUN_80293900((double)(aX * aX + aZ * aZ));
-    aX = (float)mag;
-    angle = FUN_80017730();
-    ((GameObject*)obj)->anim.rotY = (short)angle * ((short)((int)*(char*)(sub + 0x45) << 1) + -1);
-    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone == '\0')
-    {
-        result = 0;
-    }
-    else
-    {
-        result = 5;
-    }
-    return result;
-}
-
-void dll_CA_release_nop(void);
+extern void Obj_FreeObject(int* obj);
 
 void dll_CE_hitDetect_nop(void)
 {
@@ -1562,11 +874,6 @@ void chukchuk_hitDetect(void);
 void chukchuk_release(void);
 
 void chukchuk_initialise(void);
-
-/*
- * Per-object extra state for the ChukChuk ice-spitter
- * (chukchuk_getExtraSize == 0x18).
- */
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
@@ -1586,9 +893,6 @@ int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
 
 s16 dll_CE_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
-s16 dll_CB_setScale(int* obj);
-
-extern void objRenderFn_8003b8f4(f32);
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -1612,9 +916,9 @@ int fn_8015E00C(int p1, u8* obj)
 
 extern void GameBit_Set(int eventId, int value);
 
-extern undefined4* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 
-extern undefined4* gPlayerInterface;
+extern int* gPlayerInterface;
 
 extern f32 lbl_803E2DC8;
 
@@ -1696,7 +1000,6 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-
 extern void* lbl_803AC5B0[];
 extern void* lbl_803AC598[];
 
@@ -1716,7 +1019,6 @@ void dll_CE_initialise(void)
     lbl_803AC598[4] = (void*)fn_8015DE50;
     lbl_803AC598[5] = (void*)fn_8015DC04;
 }
-
 
 void dll_CE_free(int* obj)
 {
@@ -1770,16 +1072,3 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
-
-extern f32 sqrtf(f32);
-
-/* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
- * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
- * already engaged) reads the angle from the obj to the target; when within
- * a +/-90? wedge the planar distance term is the constant lbl_803E2EB0,
- * otherwise it's sqrtf(dx*dx + dz*dz) - lbl_803E2EB4. The signed magnitude
- * drives three threshold checks against lbl_803E2EBC/EC0/EC4 that issue
- * vtable[5] calls with mode 6 (close), 1 (medium-out), or 1 (close-in)
- * depending on the current mode at (*(u8 *)&state->baddie.controlMode) and the latch byte at
- * state->baddie.moveDone. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
- * lbl_803E2ECC) for (*(u8 *)&state->baddie.moveSpeed). Returns 0. */
