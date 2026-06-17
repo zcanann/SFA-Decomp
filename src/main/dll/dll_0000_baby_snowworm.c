@@ -327,11 +327,11 @@ extern void Camera_DisableViewYOffset(void);
 extern f32 Camera_GetFovY(void);
 extern void GXSetViewport(f32, f32, f32, f32, f32, f32);
 
-extern f32 lbl_803E1E3C; /*  0.0f */
-extern f32 lbl_803E1E68; /*  1.0f */
-extern f32 lbl_803E1F34; /*  320.0f */
-extern f32 lbl_803E2024; /*  240.0f */
-extern f32 lbl_803E2044; /*  43.0f  (FOV value) */
+extern const f32 lbl_803E1E3C; /*  0.0f */
+extern const f32 lbl_803E1E68; /*  1.0f */
+extern const f32 lbl_803E1F34; /*  320.0f */
+extern const f32 lbl_803E2024; /*  240.0f */
+extern const f32 lbl_803E2044; /*  43.0f  (FOV value) */
 
 extern s8 lbl_803DBA64;
 extern void shadowRenderFn_8006b558(void*);
@@ -1015,9 +1015,9 @@ extern f32 lbl_803DD7BC;
 extern f32 lbl_803DD7C0;
 extern u8 lbl_803DD7C4;
 extern int lbl_803DD7D8;
-extern f32 lbl_803E216C;
-extern f32 lbl_803E2170;
-extern f32 lbl_803E1E94;
+extern const f32 lbl_803E216C;
+extern const f32 lbl_803E2170;
+extern const f32 lbl_803E1E94;
 
 typedef struct
 {
@@ -1111,7 +1111,7 @@ extern f32 lbl_803DD760;
 extern f32 lbl_803DD764;
 extern f64 lbl_803E2160;
 extern f64 lbl_803E1F60;
-extern f32 lbl_803E2168;
+extern const f32 lbl_803E2168;
 extern int lbl_803DD81C;
 extern u8 lbl_803DD781;
 extern GridEntry lbl_8031BD30[];
@@ -1176,8 +1176,8 @@ void pauseMenuFn_8012b77c(void)
 
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
-extern f32 lbl_803E213C;
-extern f32 lbl_803E2140;
+extern const f32 lbl_803E213C;
+extern const f32 lbl_803E2140;
 extern f64 lbl_803E2148;
 extern f64 lbl_803E2150;
 extern f64 lbl_803E2158;
@@ -1245,20 +1245,20 @@ extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, 
 extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
 extern int getNextTaskHintText(void);
 extern u8 lbl_803DBA9C[6];
-extern f32 lbl_803E1FA8;
-extern f32 lbl_803E1FD0;
-extern f32 lbl_803E20D4;
-extern f32 lbl_803E20D8;
-extern f32 lbl_803E20DC;
-extern f32 lbl_803E20E0;
-extern f32 lbl_803E20E4;
-extern f32 lbl_803E20E8;
-extern f32 lbl_803E20EC;
-extern f32 lbl_803E20F0;
-extern f32 lbl_803E20F4;
-extern f32 lbl_803E20F8;
-extern f32 lbl_803E20FC;
-extern f32 lbl_803E2100;
+extern const f32 lbl_803E1FA8;
+extern const f32 lbl_803E1FD0;
+extern const f32 lbl_803E20D4;
+extern const f32 lbl_803E20D8;
+extern const f32 lbl_803E20DC;
+extern const f32 lbl_803E20E0;
+extern const f32 lbl_803E20E4;
+extern const f32 lbl_803E20E8;
+extern const f32 lbl_803E20EC;
+extern const f32 lbl_803E20F0;
+extern const f32 lbl_803E20F4;
+extern const f32 lbl_803E20F8;
+extern const f32 lbl_803E20FC;
+extern const f32 lbl_803E2100;
 
 typedef struct
 {
@@ -1476,12 +1476,12 @@ extern s16 lbl_803DD7E6;
 extern s16 lbl_803DBAB4;
 extern f32 lbl_803DBAB8;
 extern f32 lbl_803DBABC;
-extern f32 lbl_803E1E40;
-extern f32 lbl_803E2090;
-extern f32 lbl_803E20BC;
-extern f32 lbl_803E2130;
-extern f32 lbl_803E2134;
-extern f32 lbl_803E2138;
+extern const f32 lbl_803E1E40;
+extern const f32 lbl_803E2090;
+extern const f32 lbl_803E20BC;
+extern const f32 lbl_803E2130;
+extern const f32 lbl_803E2134;
+extern const f32 lbl_803E2138;
 
 /* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
@@ -1639,8 +1639,8 @@ void highScoreScreenDraw(int p1, int p2, int p3)
 
 extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;
-extern f32 lbl_803E2068;
-extern f32 lbl_803E2174;
+extern const f32 lbl_803E2068;
+extern const f32 lbl_803E2174;
 extern u8 lbl_803DD7D6;
 extern int lbl_803DD8E0;
 extern s16 lbl_803A8B48[];
@@ -2282,12 +2282,12 @@ extern f32 lbl_803DBA8C;
 extern f32 lbl_803DBAC0;
 extern f32 lbl_803DD748;
 extern f64 lbl_803E2088;
-extern f32 lbl_803E20A0;
-extern f32 lbl_803E2104;
-extern f32 lbl_803E1EC8;
+extern const f32 lbl_803E20A0;
+extern const f32 lbl_803E2104;
+extern const f32 lbl_803E1EC8;
 extern f64 lbl_803E2108;
-extern f32 lbl_803E2110;
-extern f32 lbl_803E2114;
+extern const f32 lbl_803E2110;
+extern const f32 lbl_803E2114;
 
 void fn_80128A7C(u8 i, int p2, int p3);
 
@@ -2419,31 +2419,31 @@ extern f32 fsin16Approx(u16 angle);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
 extern u8 gTextBoxes[];
 extern u16 lbl_803DD77C;
-extern f32 lbl_803E1E9C;
-extern f32 lbl_803E1ECC;
-extern f32 lbl_803E1EDC;
-extern f32 lbl_803E1F48;
-extern f32 lbl_803E1F9C;
-extern f32 lbl_803E1FB8;
-extern f32 lbl_803E1FF0;
-extern f32 lbl_803E2010;
-extern f32 lbl_803E204C;
-extern f32 lbl_803E2050;
-extern f32 lbl_803E2058;
-extern f32 lbl_803E2198;
-extern f32 lbl_803E219C;
-extern f32 lbl_803E21A0;
-extern f32 lbl_803E21A4;
-extern f32 lbl_803E21A8;
-extern f32 lbl_803E21AC;
-extern f32 lbl_803E21B0;
-extern f32 lbl_803E21B4;
-extern f32 lbl_803E21B8;
-extern f32 lbl_803E21BC;
-extern f32 lbl_803E21C0;
-extern f32 lbl_803E21C4;
-extern f32 lbl_803E21C8;
-extern f32 lbl_803E21CC;
+extern const f32 lbl_803E1E9C;
+extern const f32 lbl_803E1ECC;
+extern const f32 lbl_803E1EDC;
+extern const f32 lbl_803E1F48;
+extern const f32 lbl_803E1F9C;
+extern const f32 lbl_803E1FB8;
+extern const f32 lbl_803E1FF0;
+extern const f32 lbl_803E2010;
+extern const f32 lbl_803E204C;
+extern const f32 lbl_803E2050;
+extern const f32 lbl_803E2058;
+extern const f32 lbl_803E2198;
+extern const f32 lbl_803E219C;
+extern const f32 lbl_803E21A0;
+extern const f32 lbl_803E21A4;
+extern const f32 lbl_803E21A8;
+extern const f32 lbl_803E21AC;
+extern const f32 lbl_803E21B0;
+extern const f32 lbl_803E21B4;
+extern const f32 lbl_803E21B8;
+extern const f32 lbl_803E21BC;
+extern const f32 lbl_803E21C0;
+extern const f32 lbl_803E21C4;
+extern const f32 lbl_803E21C8;
+extern const f32 lbl_803E21CC;
 
 /* EN v1.0 0x8012C9FC  size: 3456b  Map screen HUD: rising panel with quest
  * hint voice line and dust shimmer while opening, then the full two-panel
@@ -2727,7 +2727,7 @@ extern int lbl_803DD8D8;
 extern int lbl_803DD8DC;
 extern f32 lbl_803DD820;
 extern u8 lbl_803DBAA2;
-extern f32 lbl_803E1E60;
+extern const f32 lbl_803E1E60;
 extern f32 lbl_803E1F9C_;
 
 typedef struct
@@ -3560,7 +3560,7 @@ extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int*
 extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
 extern void* lbl_803DD868[2];
 extern u32 lbl_803E1E00; /* default HUD colour */
-extern f32 lbl_803E20B8; /* 0.25f */
+extern const f32 lbl_803E20B8; /* 0.25f */
 
 /* EN v1.0 0x801299D4  size: 672b  Pause-menu save-screen render pass.
  * Saves the live FOV, swaps to view 1 at the origin facing 0x8000,
@@ -3645,7 +3645,7 @@ void pauseMenuDoSave(void)
 
 extern f64 lbl_803E2080;
 extern f64 lbl_803E2118;
-extern f32 lbl_803E2120;
+extern const f32 lbl_803E2120;
 extern f64 lbl_803E2128;
 
 /* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
@@ -3762,16 +3762,16 @@ void fn_80128A7C(u8 i, int p2, int p3)
 extern f32 lbl_8031BFA8[30];
 extern s16 lbl_803DD782;
 extern s16 lbl_803DD78A;
-extern f32 lbl_803E1E58;
-extern f32 lbl_803E1E64;
-extern f32 lbl_803E1FC0;
-extern f32 lbl_803E2178;
-extern f32 lbl_803E217C;
+extern const f32 lbl_803E1E58;
+extern const f32 lbl_803E1E64;
+extern const f32 lbl_803E1FC0;
+extern const f32 lbl_803E2178;
+extern const f32 lbl_803E217C;
 extern f64 lbl_803E2180;
-extern f32 lbl_803E2188;
-extern f32 lbl_803E218C;
-extern f32 lbl_803E2190;
-extern f32 lbl_803E2194;
+extern const f32 lbl_803E2188;
+extern const f32 lbl_803E218C;
+extern const f32 lbl_803E2190;
+extern const f32 lbl_803E2194;
 extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x8012C000  size: 1368b  Pause-menu character carousel driver:
@@ -4371,7 +4371,7 @@ extern void fearTestMeterDraw(void);
 
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
-extern f32 lbl_803E1E70;
+extern const f32 lbl_803E1E70;
 
 /* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
 void GameUI_hudDraw(int a, int b, int c)
@@ -4504,7 +4504,7 @@ extern int lbl_803DD898;
 extern s16 lbl_803DD89E;
 extern u8 lbl_803DD8B7;
 extern s16 lbl_803DD8D2;
-extern f32 lbl_803E21D0;
+extern const f32 lbl_803E21D0;
 
 /* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
 void GameUI_update(void)
