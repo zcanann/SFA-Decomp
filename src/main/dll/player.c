@@ -10631,7 +10631,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
         u8 r;
         if (*(u8*)((char*)sub + 0x2c) != 0)
         {
-            *(u8*)((char*)sub + 0x2c) = *(u8*)((char*)sub + 0x2c) - 1;
+            *(u8*)((char*)sub + 0x2c) -= 1;
         }
         else
         {
