@@ -18914,28 +18914,28 @@ void fn_802AEF34(int obj, int state)
             if (!(((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0))
             {
                 int ok;
+                s16 t;
                 ByteFlags* bf = (ByteFlags*)((char*)state + 0x3f0);
                 if (bf->b10 || bf->b04 || bf->b08 || bf->b20 ||
-                    ((PlayerState*)state)->baddie.controlMode == 0x36)
+                    (t = ((PlayerState*)state)->baddie.controlMode) == 0x36)
                 {
                     ok = 0;
                 }
                 else
                 {
-                    s16 t = ((PlayerState*)state)->baddie.controlMode;
-                    ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
-                        ((PlayerState*)state)->baddie.targetObj != NULL;
+                    ok = ((u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
+                        ((PlayerState*)state)->baddie.targetObj != NULL) ? 1 : 0;
                 }
-                if (ok)
-                {
-                    Object_ObjAnimAdvanceMove(lbl_8033369C[*(u8*)((char*)state + 0x8a2)],
-                                              timeDelta, obj, NULL);
-                }
-                else
+                if (!ok)
                 {
                     *(s16*)((char*)state + 0x806) = 3;
                     *(u8*)((char*)state + 0x8a2) = 0xff;
                     changed = 1;
+                }
+                else
+                {
+                    Object_ObjAnimAdvanceMove(lbl_8033369C[*(u8*)((char*)state + 0x8a2)],
+                                              timeDelta, obj, NULL);
                 }
             }
             else
