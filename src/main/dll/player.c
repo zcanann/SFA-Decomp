@@ -14999,7 +14999,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane planes[2];
     f32 threshold;
-    f32 ax, ay, az, bx, by, bz;
+    f32 bx, ax, bz, az, by, ay;
     void* hit;
     int tbl1, tbl2;
     int i;
@@ -15071,7 +15071,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 f32 dz = bz - az;
                 f32 dx = ax - bx;
-                f32 len = sqrtf(dx * dx + dz * dz);
+                f32 len = sqrtf(dz * dz + dx * dx);
                 f32 scale = lbl_803E7EE0 / len;
                 dx = dx * scale;
                 dz = dz * scale;
