@@ -1,3 +1,15 @@
+/*
+ * dll7dfunc0 (DLL 0x7D) - one entry in the foodbag effect-DLL family
+ * (DLLs 0x7C..0x90). dll_7D_func03 builds a 10-entry FbBuf model-graphics
+ * command list from sub-textures of the global texture blob lbl_80315030,
+ * scales the second sprite by an optional caller scale (arg6), positions
+ * the effect from either the source object (flags bit 0 set, sourceObj
+ * non-null) or a separate position source, then spawns it through
+ * gModgfxInterface->spawnEffect. lbl_803DD4B0 is a 0..4 rotating slot
+ * counter advanced per spawn. The trailing func01/func00 nops are this
+ * DLL's empty lifecycle stubs; the next DLL's nop is forward-declared per
+ * the family convention.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -23,7 +35,7 @@ int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefin
     u8* base = (u8*)(int)lbl_80315030;
     f32 s = lbl_803E0DD8;
     FbCmd* e;
-    if (arg6 != (f32*)0)
+    if (arg6 != NULL)
     {
         s = *arg6;
     }
@@ -146,7 +158,6 @@ int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefin
     }
     return ret;
 }
-
 
 void dll_7D_func01_nop(void)
 {
