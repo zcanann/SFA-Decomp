@@ -157,7 +157,10 @@ s32 dataInsertLayer(u16 cid, void* layerdata, u16 size)
 
     sndBegin();
 
-    for (i = 0; i < dataLayerNum && t->layer[i].id < cid; ++i);
+    {
+        LAYER_TAB* c = &t->layer[0];
+        for (i = 0; i < dataLayerNum && c->id < cid; ++c, ++i);
+    }
 
     if (i < dataLayerNum)
     {
