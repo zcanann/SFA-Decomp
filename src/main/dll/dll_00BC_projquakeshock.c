@@ -1,26 +1,12 @@
+/*
+ * projquakeshock (DLL 0xBC) - retired "quake shock" projectile object.
+ *
+ * The DLL's lifecycle hooks (release/initialise) are empty and its single
+ * entry point logs a "no longer supported" message and returns a failure
+ * code, so this projectile type has been disabled in retail.
+ */
+#include "dolphin/os.h"
 #include "main/dll/dll_77.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_77.c
- * - 0x80100934-0x80100938
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_76.c
- * - next split: main/dll/dll_78.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
-extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
