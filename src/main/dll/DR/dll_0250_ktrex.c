@@ -1318,8 +1318,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     }
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
     laneBit = flags & 1;
-    phase = ((KTRexArenaState*)gKTRexState)->unk101;
-    if (((KTRexArenaState*)gKTRexState)->unkFC == 0 && phase >= 2 && (flags & 0x20) == 0 &&
+    if (((KTRexArenaState*)gKTRexState)->unkFC == 0 &&
+        (phase = ((KTRexArenaState*)gKTRexState)->unk101) >= 2 && (flags & 0x20) == 0 &&
         ((laneBit == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
             (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
     {
