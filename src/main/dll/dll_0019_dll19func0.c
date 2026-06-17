@@ -991,7 +991,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
             memset((void*)*(int*)(p3 + 988), 0, 264);
         }
         if ((*gRomCurveInterface)->initCurve((void*)*(int*)(p3 + 988), (void*)p1,
-                                             (f32)(s32) * (u16*)(p3 + 1022) - lbl_803E1C38,
+                                             (f32)(u32) * (u16*)(p3 + 1022),
                                              &curveLocal, -1) == 0)
         {
             *(s16*)(p3 + 1024) = *(u16*)(p3 + 1024) | 8;
