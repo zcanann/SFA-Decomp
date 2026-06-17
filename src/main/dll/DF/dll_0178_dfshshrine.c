@@ -447,7 +447,7 @@ void dfsh_shrine_update(int obj)
         state->mode = 3;
         break;
     case 3:
-        if (objGetAnimStateFlags(player, 1) != 0 || GameBit_Get(0xbfd) != 0)
+        if (objGetAnimStateFlags(player, 1) != 0 || GameBit_Get(0xbfd) != 0u)
         {
             state->mode = 4;
         }
