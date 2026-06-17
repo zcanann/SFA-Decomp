@@ -16074,7 +16074,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
     {
         *(u16*)((char*)data + 0x1a) = *(u16*)((char*)data + 0x1c);
         *(u16*)((char*)data + 0x1c) = *(u16*)((char*)data + 0x18);
-        *(s16*)((char*)data + 0x18) += (int)(lbl_803E81AC * timeDelta);
+        *(u16*)((char*)data + 0x18) += (int)(lbl_803E81AC * timeDelta);
     }
     if (*(u16*)((char*)data + 0x24) < 4)
     {
