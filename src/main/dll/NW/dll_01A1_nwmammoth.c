@@ -780,7 +780,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     else
     {
         obj->hitboxFlags = (u8)(obj->hitboxFlags & ~NW_MAMMOTH_PATH_CONTROL_FLAG);
-        if (((stateFlags & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
+        if (((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
             (cMenuGetSelectedItem() != -1))
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
