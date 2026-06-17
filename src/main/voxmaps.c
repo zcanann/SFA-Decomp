@@ -700,7 +700,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         dx = box[0] - vs->originX;
         dz = box[2] - vs->originZ;
     }
-    map = vs->activeMap;
+    map = lbl_803387E8.activeMap;
     if (map == NULL)
     {
         return;
