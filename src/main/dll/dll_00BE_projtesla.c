@@ -1,33 +1,18 @@
+/*
+ * projtesla (DLL 0xBE) - defunct "tesla" projectile (behaviour cut).
+ *
+ * Its only non-trivial entry point reports the "no longer supported" string
+ * via OSReport and returns 0. The release and initialise descriptor hooks are
+ * empty stubs.
+ */
 #include "main/dll/dll_7D.h"
 
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_7D.c
- * - 0x801009A4-0x801009A8
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_7C.c
- * - next split: main/dll/dll_7E.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
 extern void OSReport(const char* fmt, ...);
-
-#define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
 
 int projtesla_doUnsupported(void)
 {
     OSReport(sProjteslaDoNoLongerSupported);
-    return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
+    return 0;
 }
 
 void projtesla_release(void)
