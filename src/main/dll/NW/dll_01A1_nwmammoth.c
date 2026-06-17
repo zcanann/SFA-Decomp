@@ -744,8 +744,9 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
             hitReactEntries = &table->normalHitReactEntry;
         }
         state->hitReactState =
-            ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState,
-                               &state->hitReactStepScale);
+            ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
+                (int)obj, hitReactEntries, 1, state->hitReactState,
+                &state->hitReactStepScale);
         if (state->hitReactState != 0)
         {
             fn_8003A168((int)obj, state->eyeAnimState);
