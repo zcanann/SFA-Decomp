@@ -1,11 +1,10 @@
 /* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
-#include "main/dll/genpropswgpipe_struct.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
+extern void FUN_8003b818(int param_1);
 
 
 void mikabomb_hitDetect(void);
@@ -159,8 +158,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-/* ==== v1.0 recovered functions (drift additions) ==== */
-
+/* includes for the drift-recovered functions below; kept mid-file because the
+   top-section descriptors above resolve without them */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
@@ -186,8 +185,8 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_80081118();
 extern undefined8 FUN_800e842c();
@@ -298,7 +297,6 @@ extern void dll_F7_init();
 void staticCamera_free(int param_1)
 {
     ObjGroup_RemoveObject(param_1, 7);
-    return;
 }
 
 void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
@@ -307,26 +305,24 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
     {
         FUN_8003b818(param_1);
     }
-    return;
 }
 
 void staticCamera_init(short* param_1, int param_2, int param_3)
 {
-    undefined* colorState;
+    u8* colorState;
 
     *param_1 = -*(short*)(param_2 + 0x1c);
     param_1[1] = -*(short*)(param_2 + 0x1e);
     param_1[2] = -*(short*)(param_2 + 0x20);
-    colorState = *(undefined**)(param_1 + 0x5c);
-    *colorState = *(undefined*)(param_2 + 0x19);
+    colorState = *(u8**)(param_1 + 0x5c);
+    *colorState = *(u8*)(param_2 + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (uint) * (u8*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
     colorState[1] = 0;
     if (param_3 == 0)
     {
         ObjGroup_AddObject((int)param_1, 7);
     }
-    return;
 }
 
 void FUN_8016d188(int param_1, int param_2)
@@ -1181,9 +1177,9 @@ void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
-void restartmarker_init(int* obj, int* state)
+void restartmarker_init(int* obj, int* placement)
 {
-    *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
+    *(s16*)obj = (s16)(*(u8*)((char*)placement + 0x18) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 
@@ -1586,6 +1582,7 @@ s32 staff_func16(int* obj);
 
 
 void flamethrowerspe_render(void);
+/* checkpoint4_render carrier (0x801719F8): renders at the global scale lbl_803E3420 */
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
 
@@ -1659,32 +1656,6 @@ void staff_initialise(void);
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void staff_hitDetectGeometry(int* obj);
-#pragma opt_common_subs reset
-
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
-
-static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
-{
-    GXWGFifo.f32 = x;
-    GXWGFifo.f32 = y;
-    GXWGFifo.f32 = z;
-}
-
-static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
-{
-    GXWGFifo.u8 = r;
-    GXWGFifo.u8 = g;
-    GXWGFifo.u8 = b;
-    GXWGFifo.u8 = a;
-}
-
-static inline void swipeTexCoord2f32(const f32 s, const f32 t)
-{
-    GXWGFifo.f32 = s;
-    GXWGFifo.f32 = t;
-}
-
-#pragma opt_common_subs off
 
 void staff_update(int* obj);
 
