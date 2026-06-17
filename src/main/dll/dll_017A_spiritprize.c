@@ -1,14 +1,44 @@
-#include "main/dll/DF/DFlantern.h"
-
-extern void objRenderFn_8003b8f4(f32);
-extern void ModelLightStruct_free(void* light);
-
-extern f32 timeDelta;
-
-#include "main/dll/DF/DFlantern.h"
+/*
+ * spiritprize (DLL 0x17A) - the collectible Krazoa-spirit prize object.
+ *
+ * Spawns and animates a coloured point light around the prize, runs its
+ * trigger/animation sequence each update tick, and periodically plays an
+ * ambient sfx near the player. On init it loads the placement's anim data
+ * (skipping placements tagged with the SPIRITPRIZE_PLACEMENT_DISABLED
+ * sentinel) and creates the light - detached or object-bound depending on
+ * the spawn seqId. On update, once its sequence ends (seqIndex == -2) it
+ * scans the object list to hand its sequence off to a matching live object
+ * and frees itself.
+ */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
+
+extern void ModelLightStruct_free(void* light);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u32 randomGetRange(int min, int max);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void Obj_FreeObject(int obj);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void* objCreateLight(int* obj, int v);
+extern void modelLightStruct_setLightKind(void* light, int v);
+extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
+extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
+
+extern f32 timeDelta;
+extern u8 lbl_803DB411;
+extern f32 lbl_803E4E98;
+extern f32 lbl_803E4E9C;
+extern f32 lbl_803E4EB0;
+extern f32 lbl_803E4EB4;
+
+/* placements carrying this id in their unk14 are inert and never spawn */
+#define SPIRITPRIZE_PLACEMENT_DISABLED 0x4ca62
+
+/* anim.classId of a spirit-prize object */
+#define SPIRITPRIZE_CLASS_ID 0x10
 
 typedef struct SpiritPrizePlacement
 {
@@ -17,50 +47,6 @@ typedef struct SpiritPrizePlacement
     s16 unk18;
     u8 pad1A[0x20 - 0x1A];
 } SpiritPrizePlacement;
-
-extern u32 randomGetRange(int min, int max);
-extern void objRenderFn_8003b8f4(f32 scale);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 lbl_803DB411;
-extern f32 lbl_803E4E9C;
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void Obj_FreeObject(int obj);
-extern int coordsToMapCell(f32 x, f32 z);
-
-typedef struct DfshShrinePlacement
-{
-    ObjPlacement base;
-    s8 initialYaw;
-    u8 pad19;
-    s16 startDelay;
-    u8 pad1C[0x24 - 0x1C];
-} DfshShrinePlacement;
-
-STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
-STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
-
-extern void* objCreateLight(int* obj, int v);
-
-extern void modelLightStruct_setLightKind(void* light, int v);
-extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern f32 lbl_803E4E98;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EB4;
-
-void SpiritPrize_hitDetect(void)
-{
-}
-
-void SpiritPrize_release(void)
-{
-}
-
-void SpiritPrize_initialise(void)
-{
-}
 
 typedef struct SpiritPrizeState
 {
@@ -83,6 +69,18 @@ typedef struct SpiritPrizeState
     f32 sfxTimer;
 } SpiritPrizeState;
 
+void SpiritPrize_hitDetect(void)
+{
+}
+
+void SpiritPrize_release(void)
+{
+}
+
+void SpiritPrize_initialise(void)
+{
+}
+
 void SpiritPrize_free(int obj)
 {
     SpiritPrizeState* state;
@@ -104,13 +102,10 @@ void SpiritPrize_init(int* obj, u8* init)
     SpiritPrizeState* state;
 
     state = ((GameObject*)obj)->extra;
-    if (*(u32*)(init + 0x14) == 0x4ca62) return;
+    if (*(u32*)(init + 0x14) == SPIRITPRIZE_PLACEMENT_DISABLED) return;
     state->mapParam1A = *(s16*)(init + 0x1a);
     state->targetObjectId = -1;
-    state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)
-    init[0x24]
-    )
-    ;
+    state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
     state->triggerHandle = -1;
     if (((GameObject*)obj)->unkF4 == 0)
     {
@@ -150,21 +145,18 @@ void SpiritPrize_init(int* obj, u8* init)
         }
     }
     ((GameObject*)obj)->anim.alpha = 0;
-    *(u8*)((char*)obj + 0x37) = 0;
-    state->sfxTimer = (f32)(s32)
-    randomGetRange(0xb4, 0xf0);
+    ((GameObject*)obj)->anim.pad37[0] = 0;
+    state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }
 
-void dfsh_objcreator_free(void);
-
-int SpiritPrize_getExtraSize(void) { return 0x14c; }
+int SpiritPrize_getExtraSize(void) { return sizeof(SpiritPrizeState); }
 int SpiritPrize_getObjectTypeId(void) { return 0x8; }
-int dfsh_objcreator_getExtraSize(void);
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SpiritPrizeState* state;
     s32 v;
+
     state = ((GameObject*)obj)->extra;
     v = visible;
     if (v != 0)
@@ -202,7 +194,7 @@ void SpiritPrize_update(int obj)
     {
         return;
     }
-    if (((SpiritPrizePlacement*)params)->unk14 == 0x4ca62)
+    if (((SpiritPrizePlacement*)params)->unk14 == SPIRITPRIZE_PLACEMENT_DISABLED)
     {
         return;
     }
@@ -227,7 +219,7 @@ void SpiritPrize_update(int obj)
         int prizeId;
         int duplicateCount;
 
-        prizeId = *(s8*)&((SpiritPrizeState*)state)->prizeId;
+        prizeId = *(s8*)&state->prizeId;
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         duplicateCount = 0;
@@ -235,20 +227,20 @@ void SpiritPrize_update(int obj)
         while (objectIndex < objectCount)
         {
             childObj = objects[objectIndex];
-            if (*(s16*)(childObj + 0xb4) == prizeId)
+            if (((GameObject*)childObj)->seqIndex == prizeId)
             {
                 matchingObj = childObj;
             }
-            if (*(s16*)(childObj + 0xb4) == -2 && ((GameObject*)childObj)->anim.classId == 0x10 &&
+            if (((GameObject*)childObj)->seqIndex == -2 && ((GameObject*)childObj)->anim.classId == SPIRITPRIZE_CLASS_ID &&
                 prizeId == (s8)((SpiritPrizeState*)*(int*)&((GameObject*)childObj)->extra)->prizeId)
             {
                 duplicateCount++;
             }
             objectIndex++;
         }
-        if (duplicateCount <= 1 && (void*)matchingObj != NULL && *(s16*)(matchingObj + 0xb4) != -1)
+        if (duplicateCount <= 1 && (void*)matchingObj != NULL && ((GameObject*)matchingObj)->seqIndex != -1)
         {
-            *(s16*)(matchingObj + 0xb4) = -1;
+            ((GameObject*)matchingObj)->seqIndex = -1;
             (*gObjectTriggerInterface)->endSequence(prizeId);
         }
         ((GameObject*)obj)->seqIndex = -1;
