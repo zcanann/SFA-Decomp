@@ -37,15 +37,16 @@ void fn_80204320(int obj)
     if (lbl_803DC182 != 0)
     {
         s16 i;
-        s16* arr = (s16*)((char*)lbl_80329848 + 12);
-        arr[0] = 0;
-        arr[1] = 0;
-        arr[2] = 0;
-        arr = lbl_80329848;
+        s16* arr = lbl_80329848;
+        s16* walk;
+        arr[6] = 0;
+        arr[7] = 0;
+        arr[8] = 0;
+        walk = arr;
         for (i = 0; i < 6; i++)
         {
-            *arr = (s16)randomGetRange(1, 4);
-            arr++;
+            *walk = (s16)randomGetRange(1, 4);
+            walk++;
         }
         GameBit_Set(1508, 0);
         sub->timer = 0;
