@@ -1,24 +1,20 @@
-/* DLL 0x00C8 (depthoffieldpoint) — Depth-of-field point object [0x8016CD48-0x8016CEE8). */
+/*
+ * DLL 0x00C8 (depthoffieldpoint) — depth-of-field point object
+ * [0x8016CD48-0x8016CEE8).
+ *
+ * A placed point that drives the screen blur (depth-of-field) filter.
+ * Its animation-event callback (depthoffieldpoint_SeqFn) toggles the
+ * filter: while enabled it feeds the point's world position plus two
+ * mode bytes to turnOnBlurFilter every tick; sequence events select the
+ * mode (off / default / two variants) and the update handler tears the
+ * filter back down. State lives in a 3-byte extra (DofState).
+ *
+ * Everything else in this translation unit (the foreign ObjectDescriptor
+ * tables and their forward declarations) is Ghidra drift dumped from the
+ * surrounding contiguous DLL address block; only the depthoffieldpoint_*
+ * functions and gDepthOfFieldPointObjDescriptor belong to this object.
+ */
 #include "main/dll/xyzanimator.h"
-#include "main/dll/genpropswgpipe_struct.h"
-
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
-
-
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-
-void mikabomb_hitDetect(void);
-
-void mikabomb_free(int obj, int mode);
-
-int mikabomb_getExtraSize(void);
-int mikabomb_getObjectTypeId(void);
-
-extern void objRenderFn_8003b8f4(f32);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -164,104 +160,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/dll_000A_expgfx.h"
 
-extern undefined4 FUN_80006810();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
-extern int FUN_80294cf8();
-extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
-
-extern undefined4 DAT_80321678;
-extern int DAT_80321688;
-extern undefined4 DAT_80321698;
-extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
-extern f64 DOUBLE_803e3e88;
-extern f64 DOUBLE_803e4068;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
-extern f32 lbl_803E3F28;
-extern f32 lbl_803E3F2C;
-extern f32 lbl_803E3F30;
-extern f32 lbl_803E3F34;
-extern f32 lbl_803E3F38;
-extern f32 lbl_803E3F3C;
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 lbl_803E3F68;
-extern f32 lbl_803E3F6C;
-extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F74;
-extern f32 lbl_803E3F78;
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
-extern f32 lbl_803E3F88;
-extern f32 lbl_803E3F8C;
-extern f32 lbl_803E3FA4;
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FC4;
-extern f32 lbl_803E4040;
-extern f32 lbl_803E4044;
-extern f32 lbl_803E4048;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
-extern f32 lbl_803E4060;
-extern f32 lbl_803E4064;
-extern f32 lbl_803E40E8;
-extern f32 lbl_803E40EC;
-
-extern f32 lbl_803E3420;
-extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
 extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_update(int* obj);
@@ -269,8 +169,8 @@ extern void animatedobj_init();
 extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 extern void dim2roofrub_update(int* obj);
 extern void dim2roofrub_init();
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
+void depthoffieldpoint_init(int* obj);
+void depthoffieldpoint_update(int* obj);
 extern void staff_free(int* obj);
 extern void staff_update();
 extern void staff_init();
@@ -298,829 +198,8 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern void Rcp_DisableBlurFilter(void);
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
-extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-
-void staticCamera_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, 7);
-    return;
-}
-
-void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(obj);
-    }
-    return;
-}
-
-void staticCamera_init(short* param_1, int param_2, int param_3)
-{
-    undefined* dest;
-
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    dest = *(undefined**)(param_1 + 0x5c);
-    *dest = *(undefined*)(param_2 + 0x19);
-    *(float*)(dest + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
-    dest[1] = 0;
-    if (param_3 == 0)
-    {
-        ObjGroup_AddObject((int)param_1, 7);
-    }
-    return;
-}
-
-void FUN_8016d188(int obj, int fx)
-{
-    float scale;
-    int dispatchResult;
-    uint variantFlag;
-    int extra;
-    double colorD;
-    int vecData;
-    float value;
-    int fxCode;
-    undefined2 fxParams[3];
-    short lifetime2;
-    float fxFloat44;
-    undefined2 fxColor;
-    undefined2 fxField32;
-    undefined2 fxField30;
-    short lifetime;
-    float fxFloat2c;
-    float fxFloat28;
-    float fxFloat24;
-    undefined4 fxField20;
-    longlong lTmp;
-
-    extra = *(int*)&((GameObject*)obj)->extra;
-    if ((obj != 0) && (fx != 0))
-    {
-        if (*(char*)(extra + 0xba) != '\0')
-        {
-            dispatchResult = FUN_80294d10(fx);
-            if (dispatchResult == 0)
-            {
-                value = lbl_803E3F24;
-                scale = lbl_803E3F28;
-            }
-            else
-            {
-                value = lbl_803E3F20;
-                scale = lbl_803E3F20;
-            }
-            if (*(byte*)(extra + 0xbb) == 7)
-            {
-                colorD = (double)lbl_803E3F2C;
-                lTmp = (longlong)(int)(lbl_803E3F30 * scale);
-                FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * value), obj, 7,
-                             (uint) * (byte*)(extra + 0xba), 1, (int)(lbl_803E3F30 * scale), 0, 0);
-            }
-            else
-            {
-                colorD = (double)lbl_803E3F20;
-                lTmp = (longlong)(int)(lbl_803E3F30 * scale);
-                FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * value), obj,
-                             (uint) * (byte*)(extra + 0xbb), (uint) * (byte*)(extra + 0xba), 1,
-                             (int)(lbl_803E3F30 * scale), 0, 0);
-            }
-        }
-        FUN_80294c60(fx, &fxCode, &value);
-        fxColor = 0;
-        fxField32 = 0;
-        fxField30 = 0;
-        fxFloat2c = lbl_803E3F20;
-        if (fxCode == 0x87)
-        {
-            extra = (int)(lbl_803E3F38 * (value / lbl_803E3F30));
-            lTmp = (longlong)extra;
-            lifetime = 0x15 - (short)extra;
-            fxFloat28 = lbl_803E3F3C * (value / lbl_803E3F40 - lbl_803E3F2C);
-            fxColor = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            lifetime = 9;
-            fxFloat2c = lbl_803E3F48 * (value / lbl_803E3F40) + lbl_803E3F44;
-            fxFloat24 = lbl_803E3F4C;
-            fxColor = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-        }
-        else if (fxCode < 0x87)
-        {
-            if (fxCode == 0x7f)
-            {
-                fxFloat2c = lbl_803E3F58;
-                lifetime = 10;
-                fxFloat24 = lbl_803E3F54;
-                fxFloat28 = lbl_803E3F50;
-                fxColor = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-            }
-            else if (fxCode < 0x7f)
-            {
-                if ((fxCode == 0x43) && (lbl_803E3F4C < value))
-                {
-                    extra = (int)(lbl_803E3F38 * (value / lbl_803E3F30));
-                    lTmp = (longlong)extra;
-                    lifetime = (short)extra + 6;
-                    fxFloat28 = lbl_803E3F3C * (value / lbl_803E3F40 - lbl_803E3F2C);
-                    fxColor = 0xc94;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b4, &fxColor, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b4, &fxColor, 2, -1, NULL);
-                    lifetime = 9;
-                    fxFloat2c = lbl_803E3F48 * (value / lbl_803E3F40) + lbl_803E3F44;
-                    fxFloat24 = lbl_803E3F4C;
-                    fxColor = 0xc0e;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-                }
-            }
-            else if (fxCode == 0x85)
-            {
-                if (lbl_803E3F4C < value)
-                {
-                    variantFlag = FUN_80017690(0xc55);
-                    if (variantFlag == 0)
-                    {
-                        scale = value / lbl_803E3F40;
-                        extra = (int)(lbl_803E3F38 * scale);
-                        lifetime = (short)extra;
-                        fxColor = 0xc94;
-                    }
-                    else
-                    {
-                        scale = value / lbl_803E3F50;
-                        extra = (int)(lbl_803E3F38 * scale);
-                        lifetime = (short)extra;
-                        fxColor = 0xc75;
-                    }
-                    lTmp = (longlong)extra;
-                    fxFloat28 = lbl_803E3F5C * (lbl_803E3F28 - scale);
-                    lifetime = 0x15 - lifetime;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-                    lifetime = 9;
-                    variantFlag = FUN_80017690(0xc55);
-                    if (variantFlag == 0)
-                    {
-                        fxColor = 0xc0e;
-                        scale = lbl_803E3F40;
-                    }
-                    else
-                    {
-                        fxColor = 0xc75;
-                        scale = lbl_803E3F50;
-                    }
-                    fxFloat2c = lbl_803E3F48 * (value / scale) + lbl_803E3F44;
-                    fxFloat24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-                }
-            }
-            else if (0x84 < fxCode)
-            {
-                variantFlag = FUN_80017690(0xc55);
-                if (variantFlag == 0)
-                {
-                    fxColor = 0xc0e;
-                }
-                else
-                {
-                    fxColor = 0xc75;
-                }
-                scale = *(float*)(fx + 0x98);
-                if (lbl_803E3F68 <= scale)
-                {
-                    if (scale < lbl_803E3F70)
-                    {
-                        fxFloat28 = lbl_803E3F5C * (lbl_803E3F74 * (scale - lbl_803E3F68) - lbl_803E3F2C);
-                        lifetime = 9;
-                        fxFloat2c = lbl_803E3F20;
-                        fxFloat24 = lbl_803E3F4C;
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-                    }
-                }
-                else
-                {
-                    fxFloat28 = lbl_803E3F6C;
-                    lifetime = 9;
-                    fxFloat2c = lbl_803E3F20;
-                    fxFloat24 = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-                }
-            }
-        }
-        else if (fxCode == 0x468)
-        {
-            if (lbl_803E3F4C < value)
-            {
-                extra = (int)(lbl_803E3F38 * (value / lbl_803E3F60));
-                lTmp = (longlong)extra;
-                lifetime2 = 0x15 - (short)extra;
-                fxParams[0] = 0xc95;
-                FUN_80294c48(*(int*)&((GameObject*)obj)->ownerObj, &vecData);
-                fxFloat28 = *(float*)(vecData + 0xc);
-                fxFloat24 = *(float*)(vecData + 0x10);
-                fxField20 = *(undefined4*)(vecData + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxColor,
-                                                 0x200001, -1, fxParams);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxColor,
-                                                 0x200001, -1, fxParams);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxColor,
-                                                 0x200001, -1, fxParams);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxColor,
-                                                 0x200001, -1, fxParams);
-                lifetime2 = 9;
-                fxParams[0] = 0xc95;
-                fxFloat44 = lbl_803E3F64 * (value / lbl_803E3F60) + lbl_803E3F44;
-                fxFloat28 = *(float*)(vecData + 0xc);
-                fxFloat24 = *(float*)(vecData + 0x10);
-                fxField20 = *(undefined4*)(vecData + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7ba, &fxColor,
-                                                 0x200001, -1, fxParams);
-            }
-        }
-        else if (fxCode < 0x468)
-        {
-            if (fxCode < 0x89)
-            {
-                lifetime = 0x23;
-                fxFloat24 = lbl_803E3F4C;
-                fxFloat28 = lbl_803E3F50;
-                fxColor = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-                lifetime = 0x12;
-                fxFloat24 = lbl_803E3F54;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-            }
-        }
-        else if ((fxCode == 0x46f) && (lbl_803E3F4C < value))
-        {
-            extra = (int)(lbl_803E3F38 * (value / lbl_803E3F60));
-            lTmp = (longlong)extra;
-            lifetime = 0x15 - (short)extra;
-            fxFloat28 = lbl_803E3F5C * (lbl_803E3F28 - value / lbl_803E3F60);
-            fxColor = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b2, &fxColor, 2, -1, NULL);
-            lifetime = 9;
-            fxFloat2c = lbl_803E3F48 * (value / lbl_803E3F60) + lbl_803E3F44;
-            fxFloat24 = lbl_803E3F4C;
-            fxColor = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7b3, &fxColor, 2, -1, NULL);
-        }
-    }
-    return;
-}
-
-void FUN_8016d994(int obj, undefined groupId, undefined flag)
-{
-    int extra;
-
-    extra = *(int*)&((GameObject*)obj)->extra;
-    *(undefined*)(extra + 0xbb) = groupId;
-    *(undefined*)(extra + 0xba) = flag;
-    return;
-}
-
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int obj)
-{
-    short color;
-    int groupIdx;
-    int* group;
-    uint partIdx;
-    int entry;
-    int* state;
-    double alphaD;
-    double clampD;
-    undefined8 local_18;
-
-    state = ((GameObject*)obj)->extra;
-    groupIdx = FUN_80017a54(obj);
-    *(ushort*)(groupIdx + 0x18) = *(ushort*)(groupIdx + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)state[0x14], (double)lbl_803DC074);
-    groupIdx = 3;
-    group = state;
-    do
-    {
-        if ((*(byte*)(group + 5) & 2) != 0)
-        {
-            partIdx = (uint) * (ushort*)(group + 3);
-            entry = *group + partIdx * 0x14;
-            for (; (int)partIdx < (int)(uint) * (ushort*)((int)group + 0xe); partIdx = partIdx + 2)
-            {
-                if (group == (int*)state[0x12])
-                {
-                    param_3 = (double)lbl_803E3F8C;
-                    alphaD = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)state[0x26] -
-                            *(float*)(entry + 0xc)) * lbl_803E3FA8));
-                    clampD = (double)lbl_803E3F4C;
-                    if ((clampD <= alphaD) && (clampD = alphaD, param_3 < alphaD))
-                    {
-                        clampD = param_3;
-                    }
-                    *(short*)(entry + 0x10) = (short)(int)(param_3 - clampD);
-                    *(undefined2*)(entry + 0x24) = *(undefined2*)(entry + 0x10);
-                }
-                else
-                {
-                    param_3 = (double)lbl_803E3FC4;
-                    *(short*)(entry + 0x10) =
-                        (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(entry + 0x10)));
-                    *(undefined2*)(entry + 0x24) = *(undefined2*)(entry + 0x10);
-                }
-                color = *(short*)(entry + 0x10);
-                if (color < 0)
-                {
-                    color = 0;
-                }
-                else if (0xff < color)
-                {
-                    color = 0xff;
-                }
-                *(short*)(entry + 0x10) = color;
-                color = *(short*)(entry + 0x24);
-                if (color < 0)
-                {
-                    color = 0;
-                }
-                else if (0xff < color)
-                {
-                    color = 0xff;
-                }
-                *(short*)(entry + 0x24) = color;
-                if ((*(short*)(entry + 0x10) < 1) && (*(short*)(entry + 0x24) < 1))
-                {
-                    *(short*)((int)group + 0x12) = *(short*)((int)group + 0x12) + -2;
-                    *(short*)(group + 3) = *(short*)(group + 3) + 2;
-                }
-                entry = entry + 0x28;
-            }
-            if ((group != (int*)state[0x12]) && (*(short*)((int)group + 0x12) == 0))
-            {
-                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
-            }
-        }
-        group = group + 6;
-        groupIdx = groupIdx + -1;
-    }
-    while (groupIdx != 0);
-    FUN_8016d188(obj, *(int*)&((GameObject*)obj)->ownerObj);
-    FUN_80294d6c(*(int*)&((GameObject*)obj)->ownerObj);
-    *(undefined*)((int)state + 0xb9) = 0;
-    if (DAT_803ad338 != '\0')
-    {
-        DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
-        ObjHitbox_SetSphereRadius(DAT_803ad334, (short)(int)DAT_803ad324);
-        ObjHits_SetHitVolumeSlot(DAT_803ad334, 0x11, 5, 0);
-        DAT_803ad330 = DAT_803ad330 + lbl_803E3F7C;
-        clampD = (double)DAT_803ad330;
-        DAT_803ad328 = DAT_803ad328 * lbl_803E3F80;
-        DAT_803ad32c = DAT_803ad32c * lbl_803E3F84;
-        ((GameObject*)DAT_803ad334)->anim.alpha = (char)(int)DAT_803ad330;
-        ((GameObject*)DAT_803ad334)->anim.rootMotionScale = ((GameObject*)DAT_803ad334)->anim.rootMotionScale +
-            lbl_803E3F88;
-        if ((double)DAT_803ad330 < (double)lbl_803E3F20)
-        {
-            DAT_803ad338 = '\0';
-            FUN_80017ac8((double)DAT_803ad330, clampD, param_3, param_4, param_5, param_6, param_7, param_8,
-                         DAT_803ad334);
-            DAT_803ad334 = 0;
-        }
-    }
-    return;
-}
-
-void FUN_80170048(void)
-{
-    float scale;
-    uint obj;
-    int iTmp;
-    int* walk;
-    uint rand;
-    int handle;
-    int* state;
-    int* colorTbl;
-    float* scaleTbl;
-    double dA;
-    double dB;
-    double dC;
-    double dD;
-    double dE;
-    undefined8 packed;
-    undefined8 randBits;
-    undefined8 randBits2;
-
-    packed = FUN_80286838();
-    obj = (uint)((ulonglong)packed >> 0x20);
-    scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(obj + 0xb8);
-    iTmp = FUN_80017a98();
-    handle = 0;
-    if (iTmp != 0)
-    {
-        handle = FUN_80294cf8(iTmp);
-    }
-    scale = lbl_803E4064;
-    switch ((uint)packed & 0xff)
-    {
-    case 0:
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        scale = lbl_803E4048;
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4048;
-            state[1] = (int)scale;
-            if (handle != 0)
-            {
-                FUN_8016d994(handle, 7, 0);
-            }
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        FUN_80006810(obj, 0x42c);
-        FUN_80006810(obj, 0x42d);
-        break;
-    case 1:
-        if (lbl_803E4044 == (float)state[2])
-        {
-            if (handle != 0)
-            {
-                FUN_8016d994(handle, 7, 8);
-            }
-            if (*state == 0)
-            {
-                walk = FUN_80017624(0, '\x01');
-                *state = (int)walk;
-            }
-            if (*state != 0)
-            {
-                FUN_800175b0(*state, 2);
-                FUN_800175ec((double)*(float*)(obj + 0xc),
-                             (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                             (double)*(float*)(obj + 0x14), (int*)*state);
-                FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-                FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-                FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-                FUN_800175bc(*state, 1);
-                FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-                FUN_8001753c(*state, 0, 0);
-                FUN_800175d8(*state, 1);
-            }
-            scale = lbl_803E4044;
-            if (lbl_803E4044 == (float)state[2])
-            {
-                state[4] = (int)lbl_803E4048;
-                state[1] = (int)scale;
-            }
-            state[2] = (int)lbl_803E4048;
-            dC = (double)lbl_803E405C;
-            state[3] = (int)lbl_803E405C;
-            iTmp = 0;
-            colorTbl = &DAT_80321688;
-            dB = (double)lbl_803E4040;
-            dE = (double)lbl_803E4060;
-            walk = state;
-            dD = DOUBLE_803e4068;
-            do
-            {
-                *(undefined2*)(walk + 0xd) = 0xc000;
-                dA = (double)fcos16Precise();
-                state[9] = (int)(*scaleTbl * (float)((double)(float)(dC + dA) * dB));
-                state[5] = *colorTbl;
-                rand = randomGetRange(0x78, 0x7f);
-                randBits = (double)CONCAT44(0x43300000, iTmp * rand ^ 0x80000000);
-                *(short*)(walk + 0xf) = (short)(int)(dE + (double)(float)(randBits - dD));
-                walk = (int*)((int)walk + 2);
-                scaleTbl = scaleTbl + 1;
-                state = state + 1;
-                colorTbl = colorTbl + 1;
-                iTmp = iTmp + 1;
-            }
-            while (iTmp < 4);
-            FUN_80006824(obj, 0x42c);
-            FUN_80006824(obj, 0x42d);
-        }
-        break;
-    case 2:
-        if (handle != 0)
-        {
-            FUN_8016d994(handle, 7, 0);
-        }
-        if (lbl_803E4044 != (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        FUN_80006810(obj, 0x42c);
-        FUN_80006810(obj, 0x42d);
-        break;
-    case 3:
-        if (handle != 0)
-        {
-            FUN_8016d994(handle, 7, 8);
-        }
-        if (*state == 0)
-        {
-            walk = FUN_80017624(0, '\x01');
-            *state = (int)walk;
-        }
-        if (*state != 0)
-        {
-            FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(obj + 0xc),
-                         (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                         (double)*(float*)(obj + 0x14), (int*)*state);
-            FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
-            FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
-            FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
-            FUN_800175bc(*state, 1);
-            FUN_800175cc((double)lbl_803E4044, *state, '\x01');
-            FUN_8001753c(*state, 0, 0);
-            FUN_800175d8(*state, 1);
-        }
-        if (lbl_803E4044 == (float)state[2])
-        {
-            state[4] = (int)lbl_803E4064;
-        }
-        state[2] = (int)lbl_803E4064;
-        dE = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        iTmp = 0;
-        colorTbl = &DAT_80321688;
-        dD = (double)lbl_803E4040;
-        walk = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0;
-            dB = (double)fcos16Precise();
-            walk[9] = (int)(*scaleTbl * (float)((double)(float)(dE + dB) * dD));
-            walk[5] = *colorTbl;
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            walk = walk + 1;
-            colorTbl = colorTbl + 1;
-            iTmp = iTmp + 1;
-        }
-        while (iTmp < 4);
-        FUN_80006824(obj, 0x42d);
-        FUN_80006824(obj, 0x42c);
-        break;
-    case 4:
-        state[2] = (int)lbl_803E4064;
-        dE = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        state[4] = (int)scale;
-        iTmp = 0;
-        scaleTbl = (float*)&DAT_80321698;
-        colorTbl = &DAT_803216a8;
-        dB = (double)lbl_803E4040;
-        dC = (double)lbl_803E4060;
-        walk = state;
-        dD = DOUBLE_803e4068;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0xc000;
-            dA = (double)fcos16Precise();
-            walk[9] = (int)(*scaleTbl * (float)((double)(float)(dE + dA) * dB));
-            walk[5] = *colorTbl;
-            rand = randomGetRange(0x78, 0x7f);
-            randBits2 = (double)CONCAT44(0x43300000, iTmp * rand ^ 0x80000000);
-            *(short*)(state + 0xf) = (short)(int)(dC + (double)(float)(randBits2 - dD));
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            walk = walk + 1;
-            colorTbl = colorTbl + 1;
-            iTmp = iTmp + 1;
-        }
-        while (iTmp < 4);
-        FUN_80006824(obj, 0x42d);
-        FUN_80006824(obj, 0x42c);
-        break;
-    case 5:
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        state[4] = (int)lbl_803E4064;
-        FUN_80006810(obj, 0x42c);
-        FUN_80006810(obj, 0x42d);
-        break;
-    case 6:
-        iTmp = 0;
-        scaleTbl = (float*)&DAT_80321698;
-        colorTbl = &DAT_803216a8;
-        dD = (double)lbl_803E405C;
-        dE = (double)lbl_803E4040;
-        walk = state;
-        do
-        {
-            *(undefined2*)(state + 0xd) = 0x4000;
-            dB = (double)fcos16Precise();
-            walk[9] = (int)(*scaleTbl * (float)((double)(float)(dD + dB) * dE));
-            walk[5] = *colorTbl;
-            state = (int*)((int)state + 2);
-            scaleTbl = scaleTbl + 1;
-            walk = walk + 1;
-            colorTbl = colorTbl + 1;
-            iTmp = iTmp + 1;
-        }
-        while (iTmp < 4);
-        break;
-    case 7:
-        if (handle != 0)
-        {
-            FUN_8016d994(handle, 7, 0);
-        }
-        if (*state != 0)
-        {
-            FUN_800175cc((double)lbl_803E4040, *state, '\0');
-        }
-        scale = lbl_803E4044;
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)scale;
-        state[4] = (int)scale;
-        state[1] = (int)scale;
-        *(byte*)(state + 0x17) = *(byte*)(state + 0x17) | 1;
-        *(byte*)((int)state + 0x5d) = *(byte*)((int)state + 0x5d) | 1;
-        *(byte*)((int)state + 0x5e) = *(byte*)((int)state + 0x5e) | 1;
-        *(byte*)((int)state + 0x5f) = *(byte*)((int)state + 0x5f) | 1;
-    }
-    FUN_80286884();
-    return;
-}
-
-
-
-void mikabombshadow_update(int* obj);
-
-
-void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint obj)
-{
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
-    short seqVal;
-    char counter;
-    uint sndHandle;
-    int iTmp;
-    int placement;
-    int extra;
-    undefined8 hitState;
-
-    extra = *(int*)&((GameObject*)obj)->extra;
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    iTmp = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
-    FUN_80017a98();
-    FUN_80017a90();
-    FUN_80017a98();
-    FUN_80017a90();
-    hitState = ObjHits_DisableObject(obj);
-    if ((*(ushort*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
-    {
-        *(float*)(extra + 8) = lbl_803E40E8;
-        if (((GameObject*)obj)->anim.modelState != NULL)
-        {
-            ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-    }
-    if ((int)*(short*)(extra + 0x10) != 0xffffffff)
-    {
-        FUN_80017698((int)*(short*)(extra + 0x10), 1);
-        hitState = FUN_800e842c(obj);
-    }
-    sndHandle = (uint) * (short*)(placement + 0x1e);
-    if (sndHandle != 0xffffffff)
-    {
-        hitState = FUN_80017698(sndHandle, 1);
-    }
-    sndHandle = (uint) * (short*)(placement + 0x2c);
-    if (0 < (int)sndHandle)
-    {
-        FUN_80017688(sndHandle);
-    }
-    seqVal = *(short*)(iTmp + 2);
-    if (seqVal == 4)
-    {
-        seqVal = ((GameObject*)obj)->anim.seqId;
-        if (seqVal == 0x3cd)
-        {
-            iTmp = FUN_80017a98();
-            FUN_80294d60(hitState, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iTmp, 2);
-            sndHandle = FUN_80017a98();
-            FUN_80006824(sndHandle, SFXen_treadlpc);
-            FUN_80081118((double)lbl_803E40EC, obj, 1, 0x28);
-        }
-        else if ((seqVal < 0x3cd) && (seqVal == 0xb))
-        {
-            sndHandle = FUN_80017a98();
-            hitState = FUN_80006824(sndHandle, SFXen_treadlpc);
-            iTmp = FUN_80017a98();
-            FUN_80294d60(hitState, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iTmp, 4);
-            FUN_80081118((double)lbl_803E40EC, obj, 3, 0x28);
-        }
-        else
-        {
-            sndHandle = FUN_80017a98();
-            FUN_80006824(sndHandle, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
-        }
-    }
-    else if ((seqVal < 4) && (seqVal == 1))
-    {
-        seqVal = ((GameObject*)obj)->anim.seqId;
-        if (seqVal == 0x319)
-        {
-            FUN_80006824(obj, SFXwp_gprop2_c);
-            FUN_80017698(0x3e9, 1);
-            *(undefined2*)(extra + 0x3c) = 0x4b0;
-            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
-        }
-        else
-        {
-            if (seqVal < 0x319)
-            {
-                if (seqVal == 0x5a)
-                {
-                    FUN_80006824(obj, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, obj, 2, 0x28);
-                    goto LAB_801725bc;
-                }
-                if ((seqVal < 0x5a) && (seqVal == 0x22))
-                {
-                    FUN_80006824(obj, SFXen_treadlpc);
-                    FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
-                    goto LAB_801725bc;
-                }
-            }
-            else if (seqVal == 0x6a6)
-            {
-                sndHandle = FUN_80017690(0x86a);
-                counter = (char)sndHandle;
-                if (counter < '\a')
-                {
-                    counter = counter + '\x01';
-                }
-                FUN_80017698(0x86a, (int)counter);
-                FUN_80081118((double)lbl_803E40EC, obj, 6, 0x28);
-                FUN_80006824(obj, SFXen_treadlpc);
-                goto LAB_801725bc;
-            }
-            FUN_80006824(obj, SFXen_waterblock_stop);
-            FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
-        }
-    }
-    else
-    {
-        FUN_80006824(obj, SFXen_waterblock_stop);
-        FUN_80081118((double)lbl_803E40EC, obj, 0xff, 0x28);
-    }
-LAB_801725bc:
-    *(undefined4*)&((GameObject*)obj)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.
-        modelInstance + 4);
-    ((GameObject*)obj)->unkF4 = 1;
-    return;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1150,19 +229,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
-
-
-
-
-
-
-
-
-
-
-
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void) { return 0x3; }
@@ -1175,10 +241,7 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-void dll_F7_free(int obj);
-
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1579,50 +642,29 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
-
-s32 staff_func16(int* obj);
-
-
-
-
-
-void flamethrowerspe_render(void);
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
-
-void flamethrowerspe_func0B(int* obj);
-
-
-
-void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
-
-
-
-
-
-void gcbaddieshield_update(int* obj);
-
-void staff_free(int* obj);
-
-void fireball_free(int* obj);
-
 typedef struct DofState
 {
-    u8 enabled : 1;
-    u8  : 7;
-    u8 field1;
-    u8 field2;
+    u8 enabled : 1; /* 0x00 & 0x01: blur filter currently active */
+    u8 unusedPad : 7;
+    u8 mode0;       /* 0x01: turnOnBlurFilter mode arg 1 */
+    u8 mode1;       /* 0x02: turnOnBlurFilter mode arg 2 */
 } DofState;
+
+/* sequence event opcodes consumed by depthoffieldpoint_SeqFn */
+enum
+{
+    DOF_SEQEV_DISABLE = 0,
+    DOF_SEQEV_ENABLE = 1,
+    DOF_SEQEV_ENABLE_MODE0 = 2,
+    DOF_SEQEV_ENABLE_MODE1 = 3
+};
 
 void depthoffieldpoint_init(int* obj)
 {
     DofState* s = ((GameObject*)obj)->extra;
     s->enabled = 0;
     ((GameObject*)obj)->animEventCallback = (void*)depthoffieldpoint_SeqFn;
-    s->field1 = 0;
+    s->mode0 = 0;
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }
 
@@ -1636,22 +678,6 @@ void depthoffieldpoint_update(int* obj)
     }
 }
 
-void staff_release(void);
-
-void mikabombshadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
-
-void flamethrowerspe_init(int* obj, int* params);
-
-void animatedobj_free(int* obj, int seqFlag);
-
-void staff_init(int* obj);
-
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dll_F7_init(int* obj, int* params);
-
 int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     DofState* s = ((GameObject*)obj)->extra;
@@ -1659,93 +685,31 @@ int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate
     if (s->enabled)
     {
         turnOnBlurFilter(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                         ((GameObject*)obj)->anim.worldPosZ, s->field1, s->field2);
+                         ((GameObject*)obj)->anim.worldPosZ, s->mode0, s->mode1);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 1:
+        case DOF_SEQEV_ENABLE:
             s->enabled = 1;
-            s->field1 = 0;
+            s->mode0 = 0;
             break;
-        case 0:
+        case DOF_SEQEV_DISABLE:
             s->enabled = 0;
             Rcp_DisableBlurFilter();
             break;
-        case 2:
+        case DOF_SEQEV_ENABLE_MODE0:
             s->enabled = 1;
-            s->field1 = 1;
-            s->field2 = 0;
+            s->mode0 = 1;
+            s->mode1 = 0;
             break;
-        case 3:
+        case DOF_SEQEV_ENABLE_MODE1:
             s->enabled = 1;
-            s->field2 = 1;
-            s->field1 = 0;
+            s->mode1 = 1;
+            s->mode0 = 0;
             break;
         }
     }
     return 0;
 }
-
-void fireball_hitDetect(int* obj);
-
-void dim2roofrub_init(int* obj, int* params);
-
-void animatedobj_init(int* obj, int* params);
-
-void flamethrowerspe_update(int* obj);
-
-
-void mikabomb_init(int* obj);
-
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-
-void dim2roofrub_update(int* obj);
-
-void fireball_init(int* obj);
-
-void fireball_update(int* obj);
-
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
-
-void staff_initialise(void);
-
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void staff_hitDetectGeometry(int* obj);
-#pragma opt_common_subs reset
-
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
-
-static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
-{
-    GXWGFifo.f32 = x;
-    GXWGFifo.f32 = y;
-    GXWGFifo.f32 = z;
-}
-
-static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
-{
-    GXWGFifo.u8 = r;
-    GXWGFifo.u8 = g;
-    GXWGFifo.u8 = b;
-    GXWGFifo.u8 = a;
-}
-
-static inline void swipeTexCoord2f32(const f32 s, const f32 t)
-{
-    GXWGFifo.f32 = s;
-    GXWGFifo.f32 = t;
-}
-
-#pragma opt_common_subs off
-
-void staff_update(int* obj);
-
