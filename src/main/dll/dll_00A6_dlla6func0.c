@@ -1,3 +1,16 @@
+/*
+ * dlla6func0 (DLL 0xA6) - a modgfx effect spawner (sibling of DLL 0xA8).
+ *
+ * dll_A6_func03 builds a stack command buffer of GfxCmd primitives on the
+ * stack, with a small variant-0/variant-1 prefix command, then a fixed set
+ * of mode/layer commands (several randomised per spawn via randomGetRange),
+ * plus a per-effect header (colour, position, scale, hardware-state words
+ * copied from the asset table at lbl_80318E10) and hands it to
+ * gModgfxInterface->spawnEffect. When flag bit 0 is set the effect is
+ * positioned from the source object's world position and/or the spawn-param
+ * packet's position (posSource + 0xc..0x14). func00/func01 are the DLL's
+ * unused entry-point stubs.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -31,7 +44,6 @@ extern f32 lbl_803E1558;
 extern f32 lbl_803E155C;
 extern f32 lbl_803E1560;
 extern f32 lbl_803E1564;
-
 
 #pragma opt_propagation off
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
@@ -82,13 +94,11 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
         p->z = (f32)(int)(randomGetRange(0, 0x1e) + 0xe1);
         p++;
     }
-    zr = (f32)(int)
-    randomGetRange(0, 0xfffe);
-    yr = (f32)(int)
-    randomGetRange(-3000, -12000);
+    zr = (f32)(int)randomGetRange(0, 0xfffe);
+    yr = (f32)(int)randomGetRange(-3000, -12000);
     p[0].layer = 0;
     p[0].flags = 0;
-    p[0].tex = (void*)0;
+    p[0].tex = NULL;
     p[0].mode = 0x80;
     p[0].x = lbl_803E1530;
     p[0].y = yr;
@@ -105,34 +115,29 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     p[2].tex = &lbl_803DB988;
     p[2].mode = 2;
     p[2].x = lbl_803E1534;
-    p[2].y = lbl_803E153C * (f32)(int)
-    randomGetRange(0, 0x19) + lbl_803E1538;
-    p[2].z = lbl_803E153C * (f32)(int)
-    randomGetRange(0, 10) + lbl_803E1540;
+    p[2].y = lbl_803E153C * (f32)(int)randomGetRange(0, 0x19) + lbl_803E1538;
+    p[2].z = lbl_803E153C * (f32)(int)randomGetRange(0, 10) + lbl_803E1540;
     p[3].layer = 1;
     p[3].flags = 3;
     p[3].tex = &lbl_803DB988;
     p[3].mode = 4;
     if (randomGetRange(0, 10) == 0)
     {
-        p[3].x = lbl_803E1544 + (f32)(int)
-        randomGetRange(0, 0x1e);
+        p[3].x = lbl_803E1544 + (f32)(int)randomGetRange(0, 0x1e);
     }
     else
     {
-        p[3].x = lbl_803E1548 + (f32)(int)
-        randomGetRange(0, 10);
+        p[3].x = lbl_803E1548 + (f32)(int)randomGetRange(0, 10);
     }
     p[3].y = lbl_803E1530;
     p[3].z = lbl_803E1530;
     p[4].layer = 1;
     p[4].flags = 0;
-    p[4].tex = (void*)0;
+    p[4].tex = NULL;
     p[4].mode = 0x80;
     p[4].x = lbl_803E1530;
     p[4].y = lbl_803E1530;
-    p[4].z = (f32)(int)
-    randomGetRange(0, 0xfffe);
+    p[4].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[5].layer = 1;
     p[5].flags = 3;
     p[5].tex = &lbl_803DB988;
@@ -142,12 +147,11 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
     p[5].z = lbl_803E1554;
     p[6].layer = 2;
     p[6].flags = 0;
-    p[6].tex = (void*)0;
+    p[6].tex = NULL;
     p[6].mode = 0x80;
     p[6].x = lbl_803E1530;
     p[6].y = lbl_803E1530;
-    p[6].z = (f32)(int)
-    randomGetRange(0, 0xfffe);
+    p[6].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[7].layer = 2;
     p[7].flags = 3;
     p[7].tex = &lbl_803DB988;
@@ -216,8 +220,6 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
 }
 #pragma opt_propagation reset
 
-void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5, u8* extraArgs);
-
 void dll_A6_func01_nop(void)
 {
 }
@@ -225,5 +227,3 @@ void dll_A6_func01_nop(void)
 void dll_A6_func00_nop(void)
 {
 }
-
-void dll_A7_func01_nop(void);
