@@ -1,24 +1,13 @@
+/*
+ * projship1 (DLL 0xB7) - retired "ship projectile 1" object.
+ *
+ * The object's behaviour was removed during development: its only live
+ * entry point, projship1_doUnsupported, just logs a "no longer supported"
+ * message and returns -1. release/initialise are empty lifecycle hooks
+ * kept so the object descriptor / DLL loader still resolves.
+ */
+
 #include "main/dll/dll_72.h"
-
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_72.c
- * - 0x801008C4-0x801008C8
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_AF.c
- * - next split: main/dll/dll_73.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
 
 extern void OSReport(const char* fmt, ...);
 
