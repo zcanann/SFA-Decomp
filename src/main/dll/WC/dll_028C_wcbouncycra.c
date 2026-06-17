@@ -111,7 +111,8 @@ void wcbouncycra_update(int obj)
             }
             else
             {
-                launchVelY = (nearDist - lbl_803E6D28) / lbl_803E6D34;
+                launchVelY = nearDist - lbl_803E6D28;
+                launchVelY = launchVelY / lbl_803E6D34;
                 launchVelY = lbl_803E6D38 - launchVelY;
                 launchVelY = launchVelY * lbl_803E6D2C;
             }
