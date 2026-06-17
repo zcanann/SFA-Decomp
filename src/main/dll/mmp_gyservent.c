@@ -86,7 +86,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     obj[1] = (s16)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTY) << 8);
     *(f32*)(obj + 4) =
         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        ((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC;
+        (((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC);
 
     rot[0] = obj[0];
     rot[1] = obj[1];
