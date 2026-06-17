@@ -97,15 +97,16 @@ void softbody_update(int obj)
     if ((void*)obj == lbl_803DDD98)
     {
         f32 td = timeDelta;
-        lbl_803DDDA0 = lbl_803E728C * td + lbl_803DDDA0;
-        while (lbl_803DDDA0 > lbl_803E7288)
+        f32 a;
+        lbl_803DDDA0 = a = lbl_803E728C * td + lbl_803DDDA0;
+        while (a > lbl_803E7288)
         {
-            lbl_803DDDA0 -= lbl_803E7288;
+            lbl_803DDDA0 = a -= lbl_803E7288;
         }
-        lbl_803DDD9C = lbl_803E7290 * td + lbl_803DDD9C;  /* CSE timeDelta */
-        while (lbl_803DDD9C > lbl_803E7288)
+        lbl_803DDD9C = a = lbl_803E7290 * td + lbl_803DDD9C;  /* CSE timeDelta */
+        while (a > lbl_803E7288)
         {
-            lbl_803DDD9C -= lbl_803E7288;
+            lbl_803DDD9C = a -= lbl_803E7288;
         }
     }
 
