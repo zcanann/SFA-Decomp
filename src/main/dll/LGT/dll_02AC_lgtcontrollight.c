@@ -81,7 +81,7 @@ void controllight_update(int obj)
     ControlLightState* state = ((GameObject*)obj)->extra;
     int bit = (u8)GameBit_Get(state->gameBit);
 
-    if (bit != state->lastBit)
+    if ((u32)bit != state->lastBit)
     {
         switch (state->invertMode)
         {
@@ -119,7 +119,7 @@ void controllight_update(int obj)
                     if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
                                      (int)&lightObj->anim.worldPosX) < radius)
                     {
-                        pointlight_setEffectState((int)lightObj, invBit);
+                        pointlight_setEffectState((int)lightObj, (u8)invBit);
                     }
                     p++;
                 }
