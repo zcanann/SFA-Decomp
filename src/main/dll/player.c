@@ -14253,30 +14253,30 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x768),
                                       (f32*)((char*)inner + 0x76c),
                                       (f32*)((char*)inner + 0x770), 0);
-        if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) == 0)
+        if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) != 0)
         {
-            if ((void*)lbl_803DE428 != NULL)
+            if ((void*)lbl_803DE428 == NULL)
             {
-                *(int*)((char*)lbl_803DE428 + 0x3c) &= ~0x100000;
-                lbl_803DE428 = 0;
-            }
-        }
-        else if ((void*)lbl_803DE428 == NULL)
-        {
-            int* mdl = (int*)Obj_GetActiveModel(obj);
-            int m = *mdl;
-            int i;
-            for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
-            {
-                int op = ObjModel_GetRenderOp(m, i);
-                if (*(u8*)((char*)op + 0x41) == 2)
+                int* mdl = (int*)Obj_GetActiveModel(obj);
+                int m = *mdl;
+                int i;
+                for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
                 {
-                    Shader_getLayer(op, 1);
-                    lbl_803DE428 = op;
-                    *(u32*)((char*)op + 0x3c) |= 0x100000LL;
-                    break;
+                    int op = ObjModel_GetRenderOp(m, i);
+                    if (*(u8*)((char*)op + 0x41) == 2)
+                    {
+                        Shader_getLayer(op, 1);
+                        lbl_803DE428 = op;
+                        *(u32*)((char*)op + 0x3c) |= 0x100000LL;
+                        break;
+                    }
                 }
             }
+        }
+        else if ((void*)lbl_803DE428 != NULL)
+        {
+            *(int*)((char*)lbl_803DE428 + 0x3c) &= ~0x100000;
+            lbl_803DE428 = 0;
         }
         {
             int in2 = *(int*)&((GameObject*)obj)->extra;
