@@ -2420,6 +2420,7 @@ void shadowRenderFn_8006b558(int* obj)
 }
 
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 
 void fn_8006CB50(void)
 {
@@ -2428,26 +2429,26 @@ void fn_8006CB50(void)
     for (y = 0; y < 0x100; y++)
     {
         int ypart = (y >> 2) * 0x20 + (y & 3) * 2;
-        f32 fy = (f32)y - (&Udchuff_803DEDA0)[3];
+        f32 fy = (f32)y - Udchuff_803DEDAC;
         for (x = 0; x < 0x100; x++)
         {
             char* addr = (char*)lbl_803DCFBC + ypart + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = (f32)x - (&Udchuff_803DEDA0)[3];
+            f32 fx = (f32)x - Udchuff_803DEDAC;
             f32 dist = sqrtf(fy * fy + fx * fx);
             f32 ny = fy / dist;
             f32 nx = fx / dist;
             f32 s;
-            if (dist <= (&Udchuff_803DEDA0)[6])
+            if (dist <= Udchuff_803DEDB8)
             {
-                s = lbl_803DED34 * ((&Udchuff_803DEDA0)[4] - GXOverflowSuspendInProgress_803DED48 * dist) * (&Udchuff_803DEDA0)[5];
+                s = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist) * Udchuff_803DEDB4;
             }
             else
             {
                 s = lbl_803DED28;
             }
             {
-                f32 py = Vdchuff_803DEDC0 * (ny * s) + (&Udchuff_803DEDA0)[7];
-                f32 px = Vdchuff_803DEDC0 * (nx * s) + (&Udchuff_803DEDA0)[7];
+                f32 py = Vdchuff_803DEDC0 * (ny * s) + Udchuff_803DEDBC;
+                f32 px = Vdchuff_803DEDC0 * (nx * s) + Udchuff_803DEDBC;
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
         }
