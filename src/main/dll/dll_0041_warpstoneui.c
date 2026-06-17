@@ -72,9 +72,9 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
         }
         idp += 4;
     }
+    yoff = (count - n) * 0x2a / 2 + 0x52;
     k = 0;
     idp = ids;
-    yoff = (count - n) * 0x2a / 2 + 0x52;
     for (n = 0; n < count; n++)
     {
         if ((u32)GameBit_Get(*(s16*)idp) != 0)
