@@ -1,13 +1,25 @@
+/*
+ * dll96func0 (DLL 0x96) - particle/gfx effect spawner DLL.
+ *
+ * Exports two empty entry stubs (func01/func00) plus func03, which builds a
+ * 7-entry GfxCmd command buffer on the stack and submits it through
+ * gModgfxInterface->spawnEffect. func03 aborts (returns -1) when game bit
+ * 0x63c is set, and chooses entry[1]'s scale from a fixed constant vs a random
+ * 5..10 multiple based on game bit 0x4e9. When the result flags carry bit 0,
+ * the effect is positioned from sourceObj (or posSource when sourceObj is
+ * null). Effect constants/textures come from lbl_803175E8 and the lbl_803E12xx
+ * float pool.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 
-typedef struct
+typedef struct GfxCmd
 {
-    u32 mode; /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    u32 mode;     /* 0x00: blend/draw mode */
+    f32 x, y, z;  /* 0x04: size/scale per axis */
+    void* tex;    /* 0x10: texture descriptor */
+    u16 flags;    /* 0x14: per-entry render flags */
+    u8 layer;     /* 0x16: draw layer */
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -32,30 +44,39 @@ void dll_96_func00_nop(void)
 {
 }
 
-void dll_97_func01_nop(void);
-
-/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
- * the same large-struct + vtable-call pattern as foodbag's func03s; matching
- * bodies needs proper struct recovery as follow-up. */
-
-typedef struct
+typedef struct GfxBuf
 {
-    GfxCmd* cmds; /* +0x00 */
-    int ctx; /* +0x04 */
-    u8 pad0[0x18]; /* +0x08 */
-    f32 col[3]; /* +0x20 */
-    f32 pos[3]; /* +0x2c */
-    f32 scale; /* +0x38 */
-    u32 v3c; /* +0x3c */
-    u32 v40; /* +0x40 */
-    s16 v44; /* +0x44 */
-    s16 hw[7]; /* +0x46 */
-    u32 flags; /* +0x54 */
-    u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
-    s8 count; /* +0x5d */
-    u8 pad1[2]; /* +0x5e */
-    GfxCmd entries[32]; /* +0x60 */
+    GfxCmd* cmds;       /* 0x00: points at entries[] */
+    int ctx;            /* 0x04: source object / context */
+    int unk_08;         /* 0x08: never read */
+    int unk_0c;         /* 0x0c: never read */
+    int unk_10;         /* 0x10: never read */
+    int unk_14;         /* 0x14: never read */
+    int unk_18;         /* 0x18: never read */
+    int unk_1c;         /* 0x1c: never read */
+    f32 col[3];         /* 0x20: tint color */
+    f32 pos[3];         /* 0x2c: world position */
+    f32 scale;          /* 0x38: overall scale */
+    u32 unk_3c;         /* 0x3c: always 7 (entry count) */
+    u32 unk_40;         /* 0x40: always 2 */
+    s16 variant;        /* 0x44: caller-supplied variant */
+    s16 hw[7];          /* 0x46: per-entry half-words from texture data */
+    u32 flags;          /* 0x54: render flags (0xc0104c0 | caller flags) */
+    u8 unk_58;          /* 0x58: always 0 */
+    u8 unk_59;          /* 0x59: always 0xe */
+    u8 unk_5a;          /* 0x5a: always 0 */
+    u8 unk_5b;          /* 0x5b: always 0 */
+    u8 unk_5c;          /* 0x5c: never written here */
+    s8 count;           /* 0x5d: number of entries */
+    u8 pad5e[2];        /* 0x5e */
+    GfxCmd entries[32]; /* 0x60: command list */
 } GfxBuf;
+
+STATIC_ASSERT(offsetof(GfxBuf, col[0]) == 0x20);
+STATIC_ASSERT(offsetof(GfxBuf, pos[0]) == 0x2c);
+STATIC_ASSERT(offsetof(GfxBuf, scale) == 0x38);
+STATIC_ASSERT(offsetof(GfxBuf, entries[0]) == 0x60);
+STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
 int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
 {
@@ -85,8 +106,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     else
     {
-        e[1].x = lbl_803E12C8 * (f32)(int)
-        randomGetRange(5, 10);
+        e[1].x = lbl_803E12C8 * (f32)(int)randomGetRange(5, 10);
     }
     e[1].y = lbl_803E12CC;
     e[1].z = e[1].x;
@@ -125,9 +145,9 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     e[6].x = lbl_803E12C0;
     e[6].y = lbl_803E12D0;
     e[6].z = lbl_803E12C0;
-    buf.v58 = 0;
+    buf.unk_58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.variant = (s16)variant;
     buf.pos[0] = lbl_803E12C0;
     buf.pos[1] = lbl_803E12C0;
     buf.pos[2] = lbl_803E12C0;
@@ -135,11 +155,11 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.col[1] = lbl_803E12C0;
     buf.col[2] = lbl_803E12C0;
     buf.scale = lbl_803E12D0;
-    buf.v40 = 2;
-    buf.v3c = 7;
-    buf.v59 = 0xe;
-    buf.v5a = 0;
-    buf.v5b = 0;
+    buf.unk_40 = 2;
+    buf.unk_3c = 7;
+    buf.unk_59 = 0xe;
+    buf.unk_5a = 0;
+    buf.unk_5b = 0;
     buf.count = (GfxCmd*)((u8*)e + 0xa8) - e;
     buf.hw[0] = *(s16*)(base + 0x1f8);
     buf.hw[1] = *(s16*)(base + 0x1fa);
@@ -168,5 +188,3 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, 0x89, 0);
 }
-
-void dll_97_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
