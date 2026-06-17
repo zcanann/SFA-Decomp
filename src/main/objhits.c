@@ -371,6 +371,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     float* rPtr;
     float* norm;
     float* pb;
+    float tdiff;
     struct
     {
         float out[9];
@@ -451,7 +452,8 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     Vec3_Normalize(&move.x);
     if (moveLen > axial)
     {
-        t = lbl_803DE928 + (gObjHitsScalarOne - t) * lbl_803DE930;
+        tdiff = gObjHitsScalarOne - t;
+        t = lbl_803DE928 + tdiff * lbl_803DE930;
         move.x = move.x * (t * (moveLen - axial));
         move.y = move.y * (t * (moveLen - axial));
         move.z = move.z * (t * (moveLen - axial));
