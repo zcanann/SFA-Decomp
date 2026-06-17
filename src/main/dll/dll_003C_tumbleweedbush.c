@@ -119,6 +119,7 @@ u16 fn_80130124(void)
 }
 #pragma scheduling reset
 #pragma scheduling off
+#pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -129,8 +130,8 @@ void linkInitTextures(LinkMenuItemDB* item)
     {
         item->slots[i] = -1;
     }
-    item->slots[0] = 0;
     i = 1;
+    item->slots[0] = 0;
     budget -= linkTextures[6] + linkTextures[14];
     while (budget != 0)
     {
@@ -155,6 +156,7 @@ void linkInitTextures(LinkMenuItemDB* item)
         OSReport(lbl_8031C234);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
