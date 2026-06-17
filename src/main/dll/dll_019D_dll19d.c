@@ -3,7 +3,6 @@
 
 extern void objRenderFn_8003b8f4(f32);
 
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"

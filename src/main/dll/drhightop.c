@@ -3,7 +3,6 @@
 #include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
-#include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"

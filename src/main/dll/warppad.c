@@ -1,4 +1,3 @@
-#include "main/dll/CF/CFchuckobj.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/CF/warp_pad.h"

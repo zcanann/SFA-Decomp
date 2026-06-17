@@ -2,7 +2,6 @@
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
 extern undefined4 objInterpretSeq();

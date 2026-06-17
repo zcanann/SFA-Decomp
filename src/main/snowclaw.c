@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 

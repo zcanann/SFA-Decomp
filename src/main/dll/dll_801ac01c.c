@@ -7,10 +7,8 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 /* 8b "li r3, N; blr" returners. */
 
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 extern undefined4 FUN_8008112c();
 

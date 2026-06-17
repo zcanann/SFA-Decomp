@@ -12,8 +12,6 @@
  */
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/objanim_update.h"
-#include "main/dll/sfxplayer.h"
 #include "main/dll/crate.h"
 
 #define SFXPLAYER_EVENT_ACTIVATE 1

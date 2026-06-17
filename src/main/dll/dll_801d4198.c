@@ -2,9 +2,7 @@
 
 extern void* Obj_GetPlayerObject(void);
 
-#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 extern void Sfx_StopObjectChannel(void* obj, int channel);

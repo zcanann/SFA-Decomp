@@ -1,7 +1,6 @@
 #include "global.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/dll/synthfade_struct.h"
-#include "main/audio/inp_midi.h"
 
 typedef struct SynthDelayedNode
 {

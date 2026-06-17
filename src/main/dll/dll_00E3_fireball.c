@@ -174,7 +174,6 @@ extern int getAngle(f32 a, f32 b);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 
 typedef struct FireballPlacement
