@@ -14244,7 +14244,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((GameObject*)obj)->anim.localPosY = sy;
             ((GameObject*)obj)->anim.localPosZ = sz;
         }
-        if (flag != 0)
+        if ((u8)flag != 0)
         {
             fn_802AAF80(obj, inner, a, b, c);
         }
@@ -14269,7 +14269,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
             {
                 int op = ObjModel_GetRenderOp(m, i);
-                if (*(s8*)((char*)op + 0x41) == 2)
+                if (*(u8*)((char*)op + 0x41) == 2)
                 {
                     Shader_getLayer(op, 1);
                     lbl_803DE428 = op;
