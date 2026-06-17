@@ -4317,14 +4317,16 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        u8* tex = (u8*)g + j * 4 + 2504;
-        if (*(void**)tex != NULL)
+        void** tex = (void**)((u8*)g + j * 4);
+        s16* idx = (s16*)((u8*)g + j * 2);
+        u8* flag = (u8*)g + j;
+        if (tex[626] != NULL)
         {
-            textureFree(*(void**)tex);
-            *(void**)tex = NULL;
+            textureFree(tex[626]);
+            tex[626] = NULL;
         }
-        ((s16*)((u8*)g + j * 2))[1188] = -1;
-        ((u8*)g + j)[1096] = 1;
+        idx[1188] = -1;
+        flag[1096] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
