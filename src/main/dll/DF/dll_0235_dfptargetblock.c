@@ -116,7 +116,14 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
 
     dx = obj->x - lbl_803DDCF8;
     dz = obj->z - lbl_803DDCFC;
-    if (((lbl_803E648C == dx) && (lbl_803E648C == dz)) || (sqrtf(dx * dx + dz * dz) < *threshold))
+    if (!((lbl_803E648C == dx) && (lbl_803E648C == dz)))
+    {
+        if (sqrtf(dx * dx + dz * dz) < *threshold)
+        {
+            state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+        }
+    }
+    else
     {
         state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
     }
@@ -130,7 +137,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     DfpTargetBlockPartfxArgs effect;
     int priority;
     int hitType;
-    int mode;
+    s16 mode;
     f32 velX;
     f32 velZ;
     f32 dx;
