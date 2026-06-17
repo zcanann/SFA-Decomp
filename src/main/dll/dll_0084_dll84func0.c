@@ -1,3 +1,14 @@
+/*
+ * dll84func0 (DLL 0x84) - a foodbag-family modgfx effect builder.
+ *
+ * dll_84_func03 fills a stack FbBuf with a fixed 20-entry list of FbCmd
+ * draw commands (textures taken from the `lbl_80315CA8` texture data
+ * array) and hands it to ModgfxInterface::spawnEffect. The low bit of the
+ * merged flag word selects whether the effect position is read from the
+ * source object (+0x18..) or the posSource transform (+0xc..); the
+ * `variant` arg is only forwarded as buf.v44. The two trailing _nop entry
+ * points are the DLL's empty func00/func01 slots.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
@@ -68,7 +79,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags)
     e[4].z = lbl_803E0F2C;
     e[5].layer = 0;
     e[5].flags = 0x0;
-    e[5].tex = (void*)0;
+    e[5].tex = NULL;
     e[5].mode = 0x400000;
     e[5].x = lbl_803E0F30;
     e[5].y = lbl_803E0F34;
@@ -117,7 +128,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags)
     e[11].z = lbl_803E0F2C;
     e[12].layer = 2;
     e[12].flags = 0x0;
-    e[12].tex = (void*)0;
+    e[12].tex = NULL;
     e[12].mode = 0x400000;
     e[12].x = lbl_803E0F54;
     e[12].y = lbl_803E0F58;
@@ -139,14 +150,15 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags)
     e[15].layer = 3;
     e[15].flags = 0x24;
     e[15].tex = base + 0x260;
-    e[15].y = lbl_803E0F2C;
+    e[15].y = lbl_803E0F2C; /* dead store, load-bearing: matches retail emission order */
     e[15].x = lbl_803E0F2C;
     e[15].y = lbl_803E0F60;
     e[15].z = lbl_803E0F2C;
+    /* e[16].mode intentionally unset (inherits 0 from stack); matches retail */
     e[16].layer = 4;
     e[16].flags = 0x24;
     e[16].tex = base + 0x260;
-    e[16].y = lbl_803E0F2C;
+    e[16].y = lbl_803E0F2C; /* dead store, load-bearing: matches retail emission order */
     e[16].x = lbl_803E0F2C;
     e[16].y = lbl_803E0F60;
     e[16].z = lbl_803E0F2C;
@@ -215,7 +227,6 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)lbl_80315CA8, 0x10, base + 0x168, 0x3f, 0);
 }
 
-
 void dll_84_func01_nop(void)
 {
 }
@@ -223,5 +234,3 @@ void dll_84_func01_nop(void)
 void dll_84_func00_nop(void)
 {
 }
-
-void dll_85_func01_nop(void);
