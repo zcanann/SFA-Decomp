@@ -1,9 +1,20 @@
+/*
+ * dll86func0 (DLL 0x86) - one of the foodbag/modgfx particle-effect DLLs
+ * (the dll_NN_func03 family in foodbag.h). dll_86_func03 builds an FbBuf
+ * command list of five FbCmd layers, seeds positions with randomGetRange
+ * jitter, copies the seven shared hw words from lbl_80316020, and submits
+ * the effect via gModgfxInterface->spawnEffect.
+ *
+ * flags bit 0 anchors the effect to a source object: when set, the spawn
+ * position is offset by the source object's world position (ctx+0x18 when
+ * a context object is given, else posSource+0xc). func00/func01 are the
+ * DLL's empty entry/exit stubs.
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
 extern u32 randomGetRange(int min, int max);
-
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316020[];
 extern f32 lbl_803E0FB0;
@@ -27,7 +38,7 @@ void dll_86_func03(int sourceObj, int variant, int posSource, uint flags)
     f32 fy = lbl_803E0FB4;
     int fl = 0x64;
     f32 rx;
-    f32 rz;
+    f32 ry;
     if (variant == 0)
     {
         fx = lbl_803E0FB8;
@@ -55,39 +66,37 @@ void dll_86_func03(int sourceObj, int variant, int posSource, uint flags)
     e = buf.entries;
     e[0].layer = 0;
     *(s16*)&e[0].flags = (s16)fl;
-    e[0].tex = (void*)0;
+    e[0].tex = NULL;
     e[0].mode = 0x20000000;
     e[0].x = lbl_803E0FD0;
     e[0].y = fx;
     e[0].z = fy;
     e[1].layer = 1;
     e[1].flags = 0;
-    e[1].tex = (void*)0;
+    e[1].tex = NULL;
     e[1].mode = 0x400000;
-    e[1].x = (f32)(int)
-    randomGetRange(-0x64, 0x64);
+    e[1].x = (f32)(int)randomGetRange(-0x64, 0x64);
     e[1].y = lbl_803E0FD4;
-    e[1].z = (f32)(int)
-    randomGetRange(-0x4b0, -0x320);
+    e[1].z = (f32)(int)randomGetRange(-0x4b0, -0x320);
     rx = e[1].x;
-    rz = *(f32*)((int)e + 0x20);
+    ry = *(f32*)((int)e + 0x20);
     e[2].layer = 1;
     e[2].flags = 0;
-    e[2].tex = (void*)0;
+    e[2].tex = NULL;
     e[2].mode = 0x40000000;
     e[2].x = rx;
     e[2].y = lbl_803E0FD4;
-    e[2].z = rz;
+    e[2].z = ry;
     e[3].layer = 1;
     e[3].flags = 0x65;
-    e[3].tex = (void*)0;
+    e[3].tex = NULL;
     e[3].mode = 0x800000;
     e[3].x = lbl_803E0FD8;
     e[3].y = lbl_803E0FD8;
     e[3].z = lbl_803E0FD4;
     e[4].layer = 2;
     e[4].flags = 0;
-    e[4].tex = (void*)0;
+    e[4].tex = NULL;
     e[4].mode = 0x20000000;
     e[4].x = lbl_803E0FD0;
     e[4].y = fx;
@@ -95,8 +104,7 @@ void dll_86_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = (s16)variant;
-    rx = (f32)(int)
-    randomGetRange(-0x64, 0x64);
+    rx = (f32)(int)randomGetRange(-0x64, 0x64);
     buf.pos[0] = rx;
     buf.pos[1] = lbl_803E0FD4;
     buf.pos[2] = lbl_803E0FD4;
@@ -139,7 +147,6 @@ void dll_86_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
-
 void dll_86_func01_nop(void)
 {
 }
@@ -147,5 +154,3 @@ void dll_86_func01_nop(void)
 void dll_86_func00_nop(void)
 {
 }
-
-void dll_87_func01_nop(void);
