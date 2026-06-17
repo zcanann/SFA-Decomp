@@ -457,7 +457,7 @@ void fn_8002B758(void* v)
 {
     int i;
     int* p;
-    int count;
+    s8 count;
 
     i = 0;
     p = lbl_803408A8;
