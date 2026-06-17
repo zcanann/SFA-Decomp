@@ -175,7 +175,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     u8* tbl;
 
     pos = bitReader[4];
-    word = *(u8*)(*bitReader + (pos >> 3));
+    word = ((u8*)*bitReader)[pos >> 3];
     bptr = *bitReader + (pos >> 3);
     word = word | (u32)(*(u8*)(bptr + 1) << 8);
     word = word | (u32)(*(u8*)(bptr + 2) << 16);
