@@ -1137,7 +1137,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             *(s16*)((char*)setup + 0x1a) = 1;
         }
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
-        if (setup == 0)
+        if ((void*)setup == NULL)
         {
             return;
         }
@@ -1184,7 +1184,10 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             f32 m;
             *(s16*)((char*)setup + 0x0) = *(s16*)((char*)slot + 0x0);
             fov = lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4) / lbl_803E7F98;
-            cot = lbl_803E7F5C * (mathSinf(fov) / mathCosf(fov));
+            {
+                f32 sn = mathSinf(fov);
+                cot = lbl_803E7F5C * (sn / mathCosf(fov));
+            }
             fx = cot * -((inner->unk788 - (f32)(int)((res & 0xffff) >> 1)) /
                 (f32)(int)((res & 0xffff) >> 1) * Camera_GetAspectRatio());
             cot = cot * ((inner->unk78C - (f32)half) / (f32)half);
