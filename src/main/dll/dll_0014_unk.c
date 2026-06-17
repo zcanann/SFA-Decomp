@@ -5227,8 +5227,8 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     }
     else
     {
-        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
-            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+        projection = (deltaX * (x - startX) + deltaY * (y - startY) + deltaZ * (z - startZ)) /
+            (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
     }
     if (projection < gFloatZero)
     {
