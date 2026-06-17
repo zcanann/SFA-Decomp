@@ -1239,13 +1239,15 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
     cornerWords = (u32*)corners;
     sourceWords = (u32*)lbl_802C1A88;
-    i = 12;
-    do
     {
-        *cornerWords++ = *sourceWords++;
-        *cornerWords++ = *sourceWords++;
+        int copyCount = 12;
+        do
+        {
+            *cornerWords++ = *sourceWords++;
+            *cornerWords++ = *sourceWords++;
+        }
+        while (--copyCount != 0);
     }
-    while (--i != 0);
 
     worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
     worldPos[1] = ((GameObject*)obj)->anim.localPosY;
