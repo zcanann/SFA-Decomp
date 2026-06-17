@@ -586,7 +586,7 @@ void fn_802BE6E8(int obj, int t, int p3)
 
 int fn_802BC830(int obj, int p2, int p3)
 {
-    ((EarthWarriorSub*)p2)->unk360 |= 0x1000000;
+    *(u32*)&((EarthWarriorSub*)p2)->unk360 |= 0x1000000LL;
     ((BaddieState*)p3)->moveSpeed = lbl_803E82EC;
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
