@@ -3027,7 +3027,7 @@ int ObjSeq_update(u8* obj, f32 t)
         ((ObjSeqState*)seq)->unk80 = 0;
         if (action != NULL && (((ObjSeqState*)seq)->flags & 4) != 0)
         {
-            *(s16*)(*(u8**)(action + 0x2c) + 0x58) =
+            *(u16*)(*(u8**)(action + 0x2c) + 0x58) =
                 (u16)(int)(SendMailData * ((ObjSeqState*)seq)->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
