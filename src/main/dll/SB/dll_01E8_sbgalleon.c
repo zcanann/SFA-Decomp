@@ -400,7 +400,13 @@ u8 SB_Galleon_render2(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->e
 
 s32 SB_Galleon_func0B(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
 
-int SB_Galleon_setScale(GameObject* obj)
+/*
+ * Galleon DLL vtable slot SB_GALLEON_VTBL_ON_GUN_DESTROYED: a destructible part
+ * (gun / propeller blade / ship head, via their *_update) reports its destruction
+ * here. Advances the fight -- bumps `stage`, or `phaseCounter` while phase == 1.
+ * (Was mis-named SB_Galleon_setScale; it performs no scaling.)
+ */
+int SB_Galleon_onPartDestroyed(GameObject* obj)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     int phase = state->phase;

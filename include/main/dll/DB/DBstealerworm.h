@@ -19,7 +19,7 @@ int SB_Galleon_func0E(int *obj);
 u8 SB_Galleon_render2(int *obj);
 int SB_Galleon_modelMtxFn(int *obj);
 s32 SB_Galleon_func0B(int *obj);
-int SB_Galleon_setScale(GameObject* obj);
+int SB_Galleon_onPartDestroyed(GameObject* obj);
 int SB_Galleon_getExtraSize(void);
 int SB_Galleon_getObjectTypeId(void);
 void SB_Galleon_free(GameObject* obj, int p2);
