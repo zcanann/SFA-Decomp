@@ -1,3 +1,15 @@
+/*
+ * kaldachom (DLL 0x00D5, object type 0x49) - the "Kaldachom" / mouth-flytrap
+ * ground baddie. Driven through gBaddieControlInterface (movement/combat
+ * dispatch) and gPlayerInterface; combat (kaldachom_updateCombat) handles
+ * the player's hit response, knockback, hit-point decrement and death
+ * transition (substate 1 = stun, 2 = dead). Mouth-point projectiles are
+ * spawned from anim events (kaldachom_handleAnimEvents) at the upper/lower
+ * mouth path points, and a dust object is spawned while loading is locked.
+ * The render path scrolls a texture by a sine-driven phase and refreshes the
+ * mouth path points. State-machine handler tables A/B are populated at
+ * initialise time and stepped by gPlayerInterface slot 8 each update.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -5,23 +17,12 @@
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 #include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
 
-typedef struct KaldachomPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-} KaldachomPlacement;
-
-typedef struct KaldachomState
-{
-    u8 pad0[0x3E8 - 0x0];
-    f32 unk3E8;
-    u8 pad3EC[0x3F0 - 0x3EC];
-} KaldachomState;
-
+/* cross-TU helpers (game-object / baddie / fx runtime) */
 extern undefined4 Sfx_PlayFromObject();
 extern u32 randomGetRange(int min, int max);
 extern int Obj_AllocObjectSetup();
@@ -40,6 +41,8 @@ extern f32 sqrtf(f32);
 extern f32 mathSinf(f32 x);
 extern undefined4 fn_802961FC();
 
+/* this DLL's data/sdata2 pool: lbl_803E30xx are float constants, the
+   lbl_803DDAxx are mutable scratch globals (fx spawn position / radius). */
 extern undefined4 lbl_802C2210[];
 extern f32 lbl_803DDA94;
 extern f32 lbl_803DDA98;
@@ -65,10 +68,9 @@ extern f32 lbl_803E30C0;
 extern f32 lbl_803E30C4;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
-
-#pragma dont_inline on
 extern u8 lbl_803AC668[0x18];
 
+#pragma dont_inline on
 void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
 {
     u8 loadLocked;
@@ -84,7 +86,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     do
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x717, 0, 4, 0xffffffff, &lbl_803DDA94);
-        work = work + -1;
+        work--;
     }
     while (work != 0);
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
@@ -101,7 +103,6 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
         control->spawnedDustObj = (void*)work;
         *(float*)((u8*)control->spawnedDustObj + 8) = lbl_803DDA94;
     }
-    return;
 }
 
 void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
@@ -211,10 +212,10 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 
 typedef struct KaldaCombatParams
 {
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
+    u32 unk00;
+    u32 unk04;
+    u32 unk08;
+    u32 unk0C;
 } KaldaCombatParams;
 
 typedef struct KaldaCombatStack
@@ -351,7 +352,6 @@ void kaldachom_free(int obj)
     state = *(undefined4*)&((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     (*(code*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
-    return;
 }
 
 void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -365,25 +365,24 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-        if (((KaldachomState*)state)->unk3E8 != lbl_803E3060)
+        if (((GroundBaddieState*)state)->unk3E8 != lbl_803E3060)
         {
-            fn_8003B5E0(200, 0, 0, (int)((KaldachomState*)state)->unk3E8);
+            fn_8003B5E0(200, 0, 0, (int)((GroundBaddieState*)state)->unk3E8);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
             (obj, p2, p3, p4, p5, lbl_803E3078);
         if ((*(ushort*)(state + 0x400) & 0x60) != 0)
         {
-            objParticleFn_80099d84(obj, lbl_803E3078, 3, ((KaldachomState*)state)->unk3E8, 0);
+            objParticleFn_80099d84(obj, lbl_803E3078, 3, ((GroundBaddieState*)state)->unk3E8, 0);
         }
         control = ((CampfireState*)state)->control;
         ObjPath_GetPointWorldPosition(obj, 2, &control->upperMouthPosX, &control->upperMouthPosY,
                                       &control->upperMouthPosZ, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &control->lowerMouthPosX, &control->lowerMouthPosY,
                                       &control->lowerMouthPosZ, 0);
-            break;
+        break;
         }
     }
-    return;
 }
 
 void kaldachom_hitDetect(void)
@@ -393,10 +392,8 @@ void kaldachom_hitDetect(void)
 void kaldachom_update(int obj)
 {
     int cond;
-    uint ua;
     undefined4 player;
     ObjTextureRuntimeSlot* texture;
-    undefined4 ub;
     int ref;
     int state;
     KaldaChomControl* control;
@@ -407,7 +404,7 @@ void kaldachom_update(int obj)
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if ((((CampfireState*)state)->unk270 != 3) &&
-            (cond = (*gMapEventInterface)->shouldNotSaveTime(((KaldachomPlacement*)ref)->unk14), cond != 0))
+            (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
             (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
             *(undefined2*)(state + 0x402) = 0;
@@ -482,7 +479,6 @@ void kaldachom_update(int obj)
             }
         }
     }
-    return;
 }
 
 void kaldachom_init(int obj, int data, int skip_alloc)
@@ -525,7 +521,6 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     {
         lbl_803DDA90 = Resource_Acquire(0x5a, 1);
     }
-    return;
 }
 
 void kaldachom_release(void)
