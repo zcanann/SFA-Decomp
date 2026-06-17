@@ -786,8 +786,7 @@ void sfxplayer_update(int obj)
                 GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 0);
             }
             TrickyCurve_updateEffectHandleRing(obj);
-            handles = (uint*)gSfxplayerEffectHandles;
-            for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+            for (i = 0, handles = (uint*)gSfxplayerEffectHandles; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
                 if (handles[0] != 0)
                 {
