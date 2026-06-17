@@ -1,3 +1,19 @@
+/*
+ * dlla0func0 (DLL 0x00A0) - spawns a layered model-graphics (modgfx)
+ * effect for a source object.
+ *
+ * dll_A0_func03 builds a fixed command list of GfxCmd descriptors plus a
+ * spawn-context header on the stack and hands it to
+ * (*gModgfxInterface)->spawnEffect. Each GfxCmd selects a texture sub-asset
+ * (offset into lbl_803186B0) and a per-layer blend/draw mode with a
+ * position/scale triple pulled from the lbl_803E14xx float table; the
+ * `variant` argument swaps one descriptor's Y component. The base spawn
+ * flags are SPAWN_FLAGS_BASE; when its low bit (SPAWN_FLAG_USE_POSITION)
+ * survives the caller's `flags`, the effect origin is offset by the source
+ * object's world position (or by posSource when sourceObj is NULL).
+ *
+ * func00/func01 are exported no-ops (other DLL entry slots).
+ */
 #include "main/effect_interfaces.h"
 #include "main/dll/pickup.h"
 
@@ -5,15 +21,19 @@ extern ModgfxInterface** gModgfxInterface;
 
 typedef struct
 {
-    u32 mode; /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    u32 mode;    /* 0x00: blend/draw mode */
+    f32 x, y, z; /* 0x04 0x08 0x0c: per-axis scale/offset */
+    void* tex;   /* 0x10: texture sub-asset pointer */
+    u16 flags;   /* 0x14 */
+    u8 layer;    /* 0x16: draw layer */
 } GfxCmd;
 
-extern u8 lbl_803186B0[];
-extern f32 lbl_803E1488;
+/* base spawn flags; low bit positions the effect at the source object */
+#define SPAWN_FLAGS_BASE 0xc010480
+#define SPAWN_FLAG_USE_POSITION 1
+
+extern u8 lbl_803186B0[]; /* texture/asset table */
+extern f32 lbl_803E1488;  /* float constant table (0.0f, offsets, etc.) */
 extern f32 lbl_803E148C;
 extern f32 lbl_803E1490;
 extern f32 lbl_803E1494;
@@ -24,7 +44,6 @@ extern f32 lbl_803E14A4;
 extern f32 lbl_803E14A8;
 extern f32 lbl_803E14AC;
 extern f32 lbl_803E14B0;
-
 
 void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
 {
@@ -161,13 +180,13 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
     buf.hw[5] = *(s16*)&tab[0x202];
     buf.hw[6] = *(s16*)&tab[0x204];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    fl = 0xc010480;
+    fl = SPAWN_FLAGS_BASE;
     buf.flags = fl;
     fl |= flags;
     buf.flags = fl;
-    if (fl & 1)
+    if (fl & SPAWN_FLAG_USE_POSITION)
     {
-        if (sourceObj != 0)
+        if (sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E1488 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E1488 + *(f32*)(sourceObj + 0x1c);
@@ -183,7 +202,6 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x1d9, 0);
 }
 
-
 void dll_A0_func01_nop(void)
 {
 }
@@ -191,5 +209,3 @@ void dll_A0_func01_nop(void)
 void dll_A0_func00_nop(void)
 {
 }
-
-void dll_A1_func01_nop(void);
