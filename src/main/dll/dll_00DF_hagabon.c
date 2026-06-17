@@ -391,7 +391,7 @@ void hagabon_update(int obj)
         {
             return;
         }
-        if (((u8 (*)(int))(*gMapEventInterface)->shouldNotSaveTime)(((HagabonPlacement*)data)->mapEventId) == 0)
+        if (((int (*)(int))(*gMapEventInterface)->shouldNotSaveTime)(((HagabonPlacement*)data)->mapEventId) == 0)
         {
             return;
         }
