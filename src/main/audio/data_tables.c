@@ -220,7 +220,8 @@ s32 dataRemoveLayer(u16 sid)
     if (i != num && --t->layer[i].refCount == 0)
     {
         {
-            LAYER_TAB* p = &t->layer[i + 1];
+            LAYER_TAB* layer = t->layer;
+            LAYER_TAB* p = &layer[i + 1];
             for (j = i + 1; j < num; j++)
             {
                 p[-1] = p[0];
@@ -310,7 +311,8 @@ s32 dataRemoveCurve(u16 sid)
     if (i != num && --t->curve[i].refCount == 0)
     {
         {
-            DATA_TAB* p = &t->curve[i + 1];
+            DATA_TAB* curve = t->curve;
+            DATA_TAB* p = &curve[i + 1];
             for (j = i + 1; j < num; j++)
             {
                 p[-1] = p[0];
