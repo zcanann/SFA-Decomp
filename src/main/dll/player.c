@@ -5940,7 +5940,7 @@ int fn_8029EBCC(int obj, int state)
         (f32)inner->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
     inner->headYaw =
         (int)((f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta));
-    inner->bodyLeanHalf = (int)(lbl_803E7FB0 * inner->unk7B8);
+    inner->bodyLeanHalf = (lbl_803E7FB0 * inner->unk7B8);
     inner->bodyLeanAngle = (s16)(inner->bodyLeanHalf >> 1);
     *(u32*)&inner->flags360 &= ~0x400LL;
     v7bc = inner->unk7BC;
