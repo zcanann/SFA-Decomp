@@ -15690,7 +15690,10 @@ void fn_802AA014(int obj)
             hw = res >> 17;
             *(s16*)((char*)o + 0) = *(s16*)((char*)slot + 0);
             fov = (lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4)) / lbl_803E7F98;
-            cot = lbl_803E7F5C * (mathSinf(fov) / mathCosf(fov));
+            {
+                f32 s = mathSinf(fov);
+                cot = lbl_803E7F5C * (s / mathCosf(fov));
+            }
             aspect = Camera_GetAspectRatio();
             h2 = (u16)res >> 1;
             ycomp = cot * -(((inner->unk788 - (f32)h2) / (f32)h2) * aspect);
@@ -15700,15 +15703,19 @@ void fn_802AA014(int obj)
             v[1] = xcomp / len;
             v[2] = lbl_803E7F5C / len;
             Matrix_TransformVector(fn_8000E814(), v, v);
-            *(f32*)((char*)o + 0x24) = v[0] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x28) = v[1] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x2c) = v[2] * lbl_803E80D8;
-            *(f32*)((char*)o + 0xc) = *(f32*)((char*)o + 0x18) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
-            *(f32*)((char*)o + 0x10) = *(f32*)((char*)o + 0x1c) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
-            *(f32*)((char*)o + 0x14) = *(f32*)((char*)o + 0x20) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
+            {
+                f32 sc = lbl_803E80D8;
+                f32 k = lbl_803E7ED4;
+                *(f32*)((char*)o + 0x24) = v[0] * sc;
+                *(f32*)((char*)o + 0x28) = v[1] * sc;
+                *(f32*)((char*)o + 0x2c) = v[2] * sc;
+                *(f32*)((char*)o + 0xc) = *(f32*)((char*)o + 0x18) =
+                    k * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
+                *(f32*)((char*)o + 0x10) = *(f32*)((char*)o + 0x1c) =
+                    k * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
+                *(f32*)((char*)o + 0x14) = *(f32*)((char*)o + 0x20) =
+                    k * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
+            }
             *(s16*)((char*)o + 2) = *(s16*)((char*)slot + 2) / 2;
             *(s16*)((char*)o + 0) = -*(s16*)((char*)slot + 0);
             *(int*)((char*)o + 0xf4) = 0x64;
