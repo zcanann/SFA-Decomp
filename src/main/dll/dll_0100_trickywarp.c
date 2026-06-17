@@ -1,4 +1,20 @@
-#include "main/dll/dusterstate_types.h"
+/*
+ * trickywarp (DLL 0x0100) - the "warp to Tricky" reachability gate.
+ *
+ * A trickywarp placement watches the player and Tricky relative to the
+ * walk/patch-group graph. Once GameBit 0x4E5 (Tricky available) is set
+ * and Tricky exists, it caches its own patch group and the ids of the
+ * type-'$' rom curves that link to it. Each update it tests whether the
+ * player is reachable from that patch group - directly, across a visible
+ * curve node whose required/forbidden game bits are satisfied, or via
+ * getPatchGroup - and toggles membership of object group 0x4B (the warp
+ * candidate set) accordingly. It deactivates itself while on screen
+ * (ViewFrustum_IsSphereVisible) so the warp can't trigger in view.
+ *
+ * This TU is also the home of the ObjectDescriptors for the sibling DLLs
+ * built from the same source family (magicplant, trickyguard, staypoint,
+ * duster, curvefish); their callbacks live in their own units.
+ */
 #include "main/frustum.h"
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
@@ -7,43 +23,51 @@
 extern u32 GameBit_Get(int eventId);
 extern void* getTrickyObject(void);
 extern void* Obj_GetPlayerObject(void);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int param_2);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
+extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 extern int getPatchGroup(f32* pos, int patchGroup);
 
 extern f32 lbl_803E38A0;
 
+#define GAMEBIT_TRICKY_AVAILABLE 0x4e5
+#define TRICKYWARP_OBJ_GROUP 0x4b
+#define ROMCURVE_TYPE_TRICKYWARP '$'
 
-STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
-STATIC_ASSERT(sizeof(DusterState) == 0x20);
-STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
-STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
-STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
-STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
-STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
-STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
-STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
-STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
-STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
-STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
-STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
-STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
-STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
-STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-
-int trickywarp_getExtraSize(void) { return 0x64; }
-
-
-
-
+int fn_8017FFD0(int obj, TrickyWarpState* state);
 
 void trickywarp_free(int obj)
 {
     TrickyWarpState* state = ((GameObject*)obj)->extra;
     if (state->active != 0)
     {
-        ObjGroup_RemoveObject(obj, 0x4b);
+        ObjGroup_RemoveObject(obj, TRICKYWARP_OBJ_GROUP);
+    }
+}
+
+int trickywarp_getExtraSize(void) { return sizeof(TrickyWarpState); }
+
+void trickywarp_update(int obj)
+{
+    TrickyWarpState* state;
+    int reachable;
+    state = ((GameObject*)obj)->extra;
+    reachable = fn_8017FFD0(obj, state);
+    if (reachable != 0)
+    {
+        if (state->active == 0)
+        {
+            state->active = 1;
+            ObjGroup_AddObject(obj, TRICKYWARP_OBJ_GROUP);
+        }
+    }
+    else
+    {
+        if (state->active != 0)
+        {
+            state->active = 0;
+            ObjGroup_RemoveObject(obj, TRICKYWARP_OBJ_GROUP);
+        }
     }
 }
 
@@ -75,11 +99,11 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     int linkIndex;
     TrickyWarpCurveEntry* entry;
     TrickyWarpCurveNode* node;
-    int n;
+    int nodeCount;
     int playerObj;
     int playerPatchGroup;
 
-    if (GameBit_Get(0x4e5) == 0)
+    if (GameBit_Get(GAMEBIT_TRICKY_AVAILABLE) == 0)
     {
         return 0;
     }
@@ -93,18 +117,18 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
         if (state->patchGroup != 0)
         {
             curveEntries = (TrickyWarpCurveEntry**)(*gRomCurveInterface)->getCurves(&curveCount);
-            n = 0;
+            nodeCount = 0;
             for (i = 0; i < curveCount; i++)
             {
                 entry = curveEntries[i];
-                if (entry->type == '$' && entry->entryPatchGroup == 0)
+                if (entry->type == ROMCURVE_TYPE_TRICKYWARP && entry->entryPatchGroup == 0)
                 {
                     for (linkIndex = 0; linkIndex < 4; linkIndex++)
                     {
                         if (entry->linkPatchGroups[linkIndex] == state->patchGroup)
                         {
-                            state->curveNodeIds[n] = entry->nodeId;
-                            n++;
+                            state->curveNodeIds[nodeCount] = entry->nodeId;
+                            nodeCount++;
                             break;
                         }
                     }
@@ -165,50 +189,14 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     return getPatchGroup((f32*)(playerObj + 0xc), state->patchGroup);
 }
 
-void trickywarp_init(s16* obj, u8* param_2)
+void trickywarp_init(s16* obj, u8* placement)
 {
-    u32 v;
-    v = ((GameObject*)obj)->objectFlags;
-    v |= 0x4000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-    *obj = (s16)((u32)param_2[0x1a] << 8);
+    u32 flags;
+    flags = ((GameObject*)obj)->objectFlags;
+    flags |= 0x4000;
+    ((GameObject*)obj)->objectFlags = (u16)flags;
+    *obj = (s16)((u32)placement[0x1a] << 8);
 }
-
-
-
-
-
-
-
-void trickywarp_update(int param_1)
-{
-    int obj = param_1;
-    TrickyWarpState* state;
-    int r;
-    state = ((GameObject*)obj)->extra;
-    r = fn_8017FFD0(obj, state);
-    if (r != 0)
-    {
-        if (state->active == 0)
-        {
-            state->active = 1;
-            ObjGroup_AddObject(obj, 0x4b);
-        }
-    }
-    else
-    {
-        if (state->active != 0)
-        {
-            state->active = 0;
-            ObjGroup_RemoveObject(obj, 0x4b);
-        }
-    }
-}
-
-
-
-void trickyguard_update(int* obj);
-
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
