@@ -1,3 +1,20 @@
+/*
+ * swarmbaddie (DLL 0x00E0) - the swarming flying baddie (a "wisp"-class
+ * pest) plus the hagabon variant's object descriptor.
+ *
+ * A swarmbaddie follows a ROM curve path (allocated per-instance via the
+ * rom-curve interface) while bobbing on yaw/roll sine waves. When the
+ * player comes within chaseRadius it switches to CHASE mode and steers its
+ * velocity toward the player instead of the path; it falls back to the path
+ * when the player gets too far (the PATH_NEEDS_LINK/CHASE flag pair in
+ * state->flags). Per-tick it scans for priority hits, drives a looping sfx
+ * whose channel volume tracks an attack envelope + sine wobble, and emits
+ * particle fx (0x336). The shared pressure-switch resource (DAT_803de6d0)
+ * is acquired/freed through the pi_dolphin helpers.
+ *
+ * This TU exports both gSwarmBaddieObjDescriptor and gHagabonObjDescriptor;
+ * the hagabon_* and wispbaddie_* callbacks live in the sibling DLLs.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
@@ -6,17 +23,30 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
+/* pi_dolphin: shared-resource acquire/free */
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
+extern undefined4 DAT_803de6d0;
+
+/* ObjHits / ObjGroup helpers (game core) */
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
-extern undefined4 DAT_803de6d0;
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 extern void mm_free(void* p);
+extern void* mmAlloc(int size, int heap, int flags);
+extern void* memset(void* dst, int val, u32 n);
+extern GameObject* Obj_GetPlayerObject(void);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 timeDelta;
+
+/* per-instance tuning constants (.sdata2 of this TU) */
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;
@@ -37,17 +67,11 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
+
+/* .sdata / .sbss globals */
 extern int lbl_803DBC78;
-extern void* mmAlloc(int size, int heap, int flags);
-extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DDA60;
-extern f32 timeDelta;
-extern GameObject* Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
+
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -59,7 +83,6 @@ void pressureSwitch_freeSharedResource(void)
         FUN_80006b0c(DAT_803de6d0);
         DAT_803de6d0 = 0;
     }
-    return;
 }
 
 void pressureSwitch_ensureSharedResource(void)
@@ -68,7 +91,6 @@ void pressureSwitch_ensureSharedResource(void)
     {
         DAT_803de6d0 = FUN_80006b14(0x5a);
     }
-    return;
 }
 
 void hagabon_release(void);
@@ -87,10 +109,10 @@ void swarmbaddie_initialise(void)
 {
 }
 
-void wispbaddie_hitDetect(void);
-
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
+#define SWARMBADDIE_FLAG_CHASE_LOCKOUT 0x04 /* strayed too far; block re-chase until back near path */
+#define SWARMBADDIE_FLAG_CHASE_MASK 0x06
 
 void hagabon_hitDetect(int obj);
 
@@ -104,8 +126,6 @@ void swarmbaddie_free(int obj)
         *state = NULL;
     }
 }
-
-void wispbaddie_free(int obj);
 
 void hagabon_free(int obj);
 
@@ -125,7 +145,7 @@ void swarmbaddie_init(int obj, int data, int skip_alloc)
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius,
                                              &lbl_803DBC78, -1) == 0)
         {
-            *(u8*)&state->flags |= 0x1;
+            *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
@@ -138,19 +158,16 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 int hagabon_getExtraSize(void);
 int hagabon_getObjectTypeId(void);
-int swarmbaddie_getExtraSize(void) { return 0x24; }
+int swarmbaddie_getExtraSize(void) { return sizeof(SwarmBaddieState); }
 int swarmbaddie_getObjectTypeId(void) { return 0x9; }
-int wispbaddie_getExtraSize(void);
 
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {
     int curve;
     int done;
     f32 step;
-    f32 wave;
 
     curve = state->curve;
     done = Curve_AdvanceAlongPath(curve, state->curveStep);
@@ -230,17 +247,14 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
             mathSinf((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
 }
 
-void fn_8014F620(int obj, int* state);
-
 void swarmbaddie_update(int obj)
 {
-    int hitObj;
     SwarmBaddieState* state;
     struct
     {
         f32 x, y, z;
     } d;
-    f32* dp = &d.x;
+    f32* dp = &d.x; /* unread, but coloring-critical: removing it changes the .o */
     f32 volume;
     int oldTarget;
     int hitD;
@@ -286,19 +300,19 @@ void swarmbaddie_update(int obj)
         d.z = *(f32*)(oldTarget + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    if (((state->flags & 2) != 0) && (state->pathDistance > lbl_803E26C4))
+    if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > lbl_803E26C4))
     {
-        state->flags = state->flags & ~2;
-        state->flags = state->flags | 4;
+        state->flags = state->flags & ~SWARMBADDIE_FLAG_CHASE_PLAYER;
+        state->flags = state->flags | SWARMBADDIE_FLAG_CHASE_LOCKOUT;
     }
-    if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E26C8))
+    if (((state->flags & SWARMBADDIE_FLAG_CHASE_LOCKOUT) != 0) && (state->pathDistance < lbl_803E26C8))
     {
-        state->flags = state->flags & ~4;
+        state->flags = state->flags & ~SWARMBADDIE_FLAG_CHASE_LOCKOUT;
     }
-    if (((state->flags & 6) == 0) && (state->player != NULL) &&
+    if (((state->flags & SWARMBADDIE_FLAG_CHASE_MASK) == 0) && (state->player != NULL) &&
         (state->playerDistance < state->chaseRadius))
     {
-        state->flags = state->flags | 2;
+        state->flags = state->flags | SWARMBADDIE_FLAG_CHASE_PLAYER;
     }
     fn_8014EE8C(obj, state);
 }
