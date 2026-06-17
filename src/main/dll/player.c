@@ -417,8 +417,8 @@ int fn_802974A0(int obj, int state, f32 fv)
     if (*(f32*)((char*)state + 0x298) > lbl_803E7EFC)
     {
         inner->targetYaw =
-            (s16)(int)((f32)(s16)inner->targetYaw +
-                       lbl_803E7F00 * ((f32)inner->targetYawRate * fv * lbl_803E7F04));
+            (s16)((f32)(s16)inner->targetYaw +
+                  lbl_803E7F00 * ((f32)inner->targetYawRate * fv * lbl_803E7F04));
         inner->yaw = inner->targetYaw;
     }
     fn_802ABAE8(obj, state, (int)inner, lbl_803E7EA4);
