@@ -1639,7 +1639,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                 {
                     ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                    ((ObjSeqState*)seq)->cmdCursor++;
                 }
                 else
                 {
@@ -1652,9 +1652,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     if (opcode != 0xf)
                     {
-                        ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
+                        ((ObjSeqState*)seq)->unk68 += cmd[1];
                     }
-                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                    ((ObjSeqState*)seq)->cmdCursor++;
                     if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0)
                     {
                         return;
@@ -2905,7 +2905,7 @@ int ObjSeq_update(u8* obj, f32 t)
                     if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                     {
                         ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                        ((ObjSeqState*)seq)->cmdCursor++;
                     }
                     else
                     {
@@ -2918,9 +2918,9 @@ int ObjSeq_update(u8* obj, f32 t)
                     {
                         if (opcode != 0xf)
                         {
-                            ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
+                            ((ObjSeqState*)seq)->unk68 += cmd[1];
                         }
-                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                        ((ObjSeqState*)seq)->cmdCursor++;
                         if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, 0, 0) != 0)
                         {
                             targetFrame = ((ObjSeqState*)seq)->curFrame;
