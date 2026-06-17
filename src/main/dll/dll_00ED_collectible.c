@@ -1,4 +1,22 @@
-/* DLL 0x00ED — collectible / genprops group. TU: 0x80171D14–0x801723DC. */
+/*
+ * DLL 0x00ED — collectible / genprops object group. TU: 0x80171D14–0x801723DC.
+ *
+ * Hosts the pick-up "collectible" object (the magicdust/scarab family) plus
+ * the ObjectDescriptor tables for a batch of sibling genprops objects whose
+ * bodies live in other TUs (mikabomb, mikabombshadow, StaticCamera,
+ * gcbaddieshield, baddieinterestp, animatedobj, dim2roofrub, depthoffieldpoint,
+ * staff, fireball, flamethrowerspe, shield, curve, restartmarker, dll_F7,
+ * checkpoint4).
+ *
+ * collectible behaviour (init/update/render/SeqFn): each instance is gated by
+ * placement game bits (visibilityGameBit / hideGameBit). On player proximity
+ * (Vec_xzDistance vs a per-object radius) it is picked up by anim.seqId: health
+ * items add health, dust items bump counters, others message the player object
+ * (ObjMsg 0x7000a / 0x7000b) and play a pickup sfx + particle fx. Picked-up
+ * objects fade their shadow (OBJ_MODEL_STATE_SHADOW_FADE_OUT), set their hide
+ * game bit, and unsave their saved position. Per-seqId spin/bob motion and a
+ * bounce/path-follow physics step (gPathControlInterface) run while idle.
+ */
 #include "main/game_object.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
@@ -10,113 +28,145 @@
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
 
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern void ObjGroup_RemoveObject();
+extern void ObjGroup_AddObject();
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-
-extern f32 lbl_803DC074;
-extern f32 lbl_803E40EC;
 
 extern void* getTrickyObject(void);
 extern u32 GameBit_Get(int eventId);
 
-void mikabombshadow_update(int* obj);
+extern void saveGame_saveObjectPos(int obj);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void objMove(int* obj, f32 x, f32 y, f32 z);
+extern void GameBit_Set(int eventId, int value);
+extern f32 mathSinf(f32 v);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern void playerAddHealth(void* player, int amount);
+extern void gameBitIncrement(int eventId);
+extern void saveGame_unsaveObjectPos(int* obj);
+extern f32 lbl_803E3450;
+extern f32 lbl_803E3454;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3460;
+extern f32 lbl_803E3464;
+extern f32 lbl_803E3468;
+extern f32 lbl_803E346C;
+extern u32 randomGetRange(int min, int max);
+extern u32 ObjMsg_SendToObject();
+extern int ObjTrigger_IsSet();
+extern f32 lbl_803E3458;
+extern f32 lbl_803E3484;
+extern f32 lbl_803E3488;
+extern f32 lbl_803E348C;
+extern void fn_8003B608(s16 a, s16 b, s16 c);
+extern u8* fn_802972A8(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern int fn_8029622C(u8 * player);
+extern f32 lbl_803E3490;
+extern f32 lbl_803E3478;
+extern f32 lbl_803E347C;
+extern f32 lbl_803E3480;
+extern void fn_801723DC(int obj);
+extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
+extern void ObjMsg_AllocQueue();
+extern u8 lbl_80320C58[];
+extern u32 lbl_803E3440;
+extern u8 lbl_803E3444;
+extern f32 lbl_803E3494;
+extern f32 lbl_803E3498;
+extern f32 lbl_803E349C;
+extern f32 lbl_803E34A0;
 
-void staff_func0F(void);
-
-void staff_func0B(void);
-
-void staff_setScale(void);
-
-void staff_render(void);
-
-void staff_hitDetect(void);
-
-void fireball_release(void);
-
-void fireball_initialise(void);
-
-void flamethrowerspe_modelMtxFn(void);
-
-void flamethrowerspe_free(void);
-
-void flamethrowerspe_hitDetect(void);
-
-void flamethrowerspe_release(void);
-
-void flamethrowerspe_initialise(void);
-
-void shield_hitDetect(void);
-
-void shield_release(void);
-
-void shield_initialise(void);
-
-void shield_free(int obj);
-
-int animatedobj_getExtraSize(void);
-int dim2roofrub_getExtraSize(void);
-int depthoffieldpoint_getExtraSize(void);
-int staff_getExtraSize(void);
-int staff_getObjectTypeId(void);
-int fireball_getExtraSize(void);
-int fireball_getObjectTypeId(void);
-int flamethrowerspe_getExtraSize(void);
-int flamethrowerspe_getObjectTypeId(void);
-int shield_getExtraSize(void);
-int shield_getObjectTypeId(void);
-
-void dll_F7_free(int obj);
-
-void dim2roofrub_free(int* obj);
-
+/* Sibling-TU object bodies referenced by the descriptor tables below. */
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free();
-extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update(int* obj);
+
 extern void animatedobj_init();
-extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-extern void dim2roofrub_update(int* obj);
+extern void animatedobj_update(int* obj);
+extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void animatedobj_free();
+extern int animatedobj_getExtraSize(void);
+
 extern void dim2roofrub_init();
-extern void depthoffieldpoint_update();
+extern void dim2roofrub_update(int* obj);
+extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
+extern void dim2roofrub_free(int* obj);
+extern int dim2roofrub_getExtraSize(void);
+
 extern void depthoffieldpoint_init();
-extern void staff_free(int* obj);
-extern void staff_update();
-extern void staff_init();
-extern void staff_release();
+extern void depthoffieldpoint_update();
+extern int depthoffieldpoint_getExtraSize(void);
+
 extern void staff_initialise();
+extern void staff_release();
+extern void staff_init();
+extern void staff_update();
+extern void staff_hitDetect(void);
+extern void staff_render(void);
+extern void staff_free(int* obj);
+extern int staff_getObjectTypeId(void);
+extern int staff_getExtraSize(void);
+extern void staff_setScale(void);
+extern void staff_func0B(void);
 extern void staff_modelMtxFn(int* obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
-void staff_func10(int* obj, s32 v);
-void staff_setHitReactValue(int* obj, s32 v);
-void staff_addHitReactValue(int* obj, s32 delta);
+extern void staff_func0E(void);
+extern void staff_func0F(void);
+extern void staff_func10(int* obj, s32 v);
+extern void staff_setHitReactValue(int* obj, s32 v);
+extern void staff_addHitReactValue(int* obj, s32 delta);
 extern s16 staff_getHitReactValue(int* obj);
-void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
+extern void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
+extern void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int* obj);
-extern void fireball_free();
-extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void fireball_hitDetect();
-extern void fireball_update();
+extern void staffFn_80170380(int* obj, int cmd);
+
+extern void fireball_initialise(void);
+extern void fireball_release(void);
 extern void fireball_init();
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
-extern void flamethrowerspe_func0B(int* obj);
-extern void flamethrowerspe_render(void);
-extern void flamethrowerspe_update();
+extern void fireball_update();
+extern void fireball_hitDetect();
+extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void fireball_free();
+extern int fireball_getObjectTypeId(void);
+extern int fireball_getExtraSize(void);
+
+extern void flamethrowerspe_initialise(void);
+extern void flamethrowerspe_release(void);
 extern void flamethrowerspe_init();
-extern void shield_free();
-extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void flamethrowerspe_update();
+extern void flamethrowerspe_hitDetect(void);
+extern void flamethrowerspe_render(void);
+extern void flamethrowerspe_free(void);
+extern int flamethrowerspe_getObjectTypeId(void);
+extern int flamethrowerspe_getExtraSize(void);
+extern void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
+extern void flamethrowerspe_func0B(int* obj);
+extern void flamethrowerspe_modelMtxFn(void);
+
+extern void shield_initialise(void);
+extern void shield_release(void);
+extern void shield_init(int* obj, void* initData);
 extern void shield_update();
+extern void shield_hitDetect(void);
+extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void shield_free(int obj);
+extern int shield_getObjectTypeId(void);
+extern int shield_getExtraSize(void);
 
-void restartmarker_init(int* obj, int* state);
+extern void mikabombshadow_update(int* obj);
+extern void restartmarker_init(int* obj, int* state);
 
-extern void dll_F7_free();
-extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void dll_F7_update();
 extern void dll_F7_init();
-void staffFn_80170380(int* obj, int cmd);
+extern void dll_F7_update();
+extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void dll_F7_free(int obj);
 
-void shield_init(int* obj, void* initData);
+/* ObjMsg slots: collectible notifies the player it is in range, player
+   replies to trigger the pickup. */
+#define COLLECTIBLE_MSG_IN_RANGE 0x7000a
+#define COLLECTIBLE_MSG_PICKUP 0x7000b
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -504,77 +554,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-s16 staff_getHitReactValue(int* obj);
-extern void saveGame_saveObjectPos(int obj);
-extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void GameBit_Set(int eventId, int value);
-extern f32 mathSinf(f32 v);
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern void playerAddHealth(void* player, int amount);
-extern void gameBitIncrement(int eventId);
-extern void saveGame_unsaveObjectPos(int* obj);
-extern f32 lbl_803E3450;
-extern f32 lbl_803E3454;
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
-extern f32 lbl_803E3464;
-extern f32 lbl_803E3468;
-extern f32 lbl_803E346C;
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a88();
-extern undefined4 ObjMsg_SendToObject();
-extern int ObjTrigger_IsSet();
-extern double FUN_80293900();
-extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e4108;
-extern f32 lbl_803E40F4;
-extern f32 lbl_803E40F8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
-extern f32 lbl_803E4104;
-extern uint GameBit_Get(int);
-extern f32 mathSinf(f32 x);
-extern f32 lbl_803E3458;
-extern f32 lbl_803E3484;
-extern f32 lbl_803E3488;
-extern f32 lbl_803E348C;
-extern void fn_8003B608(s16 a, s16 b, s16 c);
-extern u8* fn_802972A8(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern int fn_8029622C(u8 * player);
-extern void GameBit_Set(int bit, int value);
-extern f32 lbl_803E3490;
-extern f32 lbl_803E3478;
-extern f32 lbl_803E347C;
-extern f32 lbl_803E3480;
-extern void fn_801723DC(int obj);
-extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
-extern uint GameBit_Get(int eventId);
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
-extern u8 lbl_80320C58[];
-extern u32 lbl_803E3440;
-extern u8 lbl_803E3444;
-extern f32 lbl_803E3494;
-extern f32 lbl_803E3498;
-extern f32 lbl_803E349C;
-extern f32 lbl_803E34A0;
-
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((GameObject*)obj)->extra + 0x1e); }
 
-s32 staff_func16(int* obj);
-
-void flamethrowerspe_render(void);
-
 int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
-
-void objSetAnimField48to0(int* obj);
-
-void flamethrowerspe_func0B(int* obj);
 
 void collectible_func0E(int* obj, u32 v)
 {
@@ -635,77 +617,9 @@ int collectible_modelMtxFn(int* obj)
     return *(int*)((char*)inner + 0x18);
 }
 
-void staff_modelMtxFn(int* obj, int p4, int p5);
-
-void gcbaddieshield_update(int* obj);
-
-void staff_free(int* obj);
-
-void fireball_free(int* obj);
-
-void depthoffieldpoint_init(int* obj);
-
-void depthoffieldpoint_update(int* obj);
-
-void staff_release(void);
-
-void mikabombshadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
-
-void flamethrowerspe_init(int* obj, int* params);
-
-void animatedobj_free(int* obj, int seqFlag);
-
-void staff_init(int* obj);
-
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dll_F7_init(int* obj, int* params);
-
-void fireball_hitDetect(int* obj);
-
-void dim2roofrub_init(int* obj, int* params);
-
-void animatedobj_init(int* obj, int* params);
-
-void flamethrowerspe_update(int* obj);
-
-void mikabomb_init(int* obj);
-
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-
-void dim2roofrub_update(int* obj);
-
-void fireball_init(int* obj);
-
-void fireball_update(int* obj);
-
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void shield_update(int* obj);
-
-void dll_F7_update(int* obj);
-
-void staff_initialise(void);
-
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void staff_hitDetectGeometry(int* obj);
-
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
-static inline void swipePos3f32(const f32 x, const f32 y, const f32 z);
-
-static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a);
-
-static inline void swipeTexCoord2f32(const f32 s, const f32 t);
-
 #pragma opt_common_subs off
-
-void staff_update(int* obj);
 
 void fn_80171E5C(int* obj)
 {
@@ -870,95 +784,7 @@ void fn_80172144(int* obj)
     }
 }
 
-void staff_setupSwipe(int p1, int p2, int p3, int p4);
-
 #pragma opt_common_subs reset
-
-#pragma scheduling on
-#pragma peephole on
-void FUN_801723dc(int param_1)
-{
-    float fVar1;
-    float fVar2;
-    uint uVar3;
-    int iVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    double dVar9;
-
-    GfxEmitState* state = ((GameObject*)param_1)->extra;
-    iVar4 = (int)state;
-    if (((GameObject*)param_1)->anim.seqId == 0x6a6)
-    {
-        FUN_80017a88((double)lbl_803E40F4,
-                     (double)(((GameObject*)param_1)->anim.velocityY *
-                         (float)((double)CONCAT44(0x43300000, (uint)DAT_803dc070) - DOUBLE_803e4108))
-                     , (double)lbl_803E40F4, param_1);
-    }
-    else
-    {
-        uVar3 = (uint)DAT_803dc070;
-        FUN_80017a88((double)(((GameObject*)param_1)->anim.velocityX *
-                         (float)((double)CONCAT44(0x43300000, uVar3) - DOUBLE_803e4108)),
-                     (double)(((GameObject*)param_1)->anim.velocityY *
-                         (float)((double)CONCAT44(0x43300000, uVar3) - DOUBLE_803e4108)),
-                     (double)(((GameObject*)param_1)->anim.velocityZ *
-                         (float)((double)CONCAT44(0x43300000, uVar3) - DOUBLE_803e4108)), param_1);
-    }
-    (*gPathControlInterface)->update((void*)param_1, state->pathState, lbl_803DC074);
-    (*gPathControlInterface)->apply((void*)param_1, state->pathState);
-    (*gPathControlInterface)->advance((void*)param_1, state->pathState, lbl_803DC074);
-    if (*(char*)&((GfxEmitState*)iVar4)->unk2B1 == '\0')
-    {
-        ((GameObject*)param_1)->anim.velocityY = ((GameObject*)param_1)->anim.velocityY * lbl_803E4100;
-        ((GameObject*)param_1)->anim.velocityY = -(lbl_803E4104 * lbl_803DC074 - ((GameObject*)param_1)->anim.
-            velocityY);
-    }
-    else
-    {
-        dVar8 = -(double)((GameObject*)param_1)->anim.velocityX;
-        dVar7 = -(double)((GameObject*)param_1)->anim.velocityY;
-        dVar9 = -(double)((GameObject*)param_1)->anim.velocityZ;
-        dVar6 = FUN_80293900((double)(float)(dVar9 * dVar9 +
-            (double)(float)(dVar8 * dVar8 +
-                (double)(float)(dVar7 * dVar7))));
-        if ((double)lbl_803E40F4 != dVar6)
-        {
-            dVar5 = (double)(float)((double)lbl_803E40EC / dVar6);
-            dVar8 = (double)(float)(dVar8 * dVar5);
-            dVar7 = (double)(float)(dVar7 * dVar5);
-            dVar9 = (double)(float)(dVar9 * dVar5);
-        }
-        fVar1 = *(float*)(iVar4 + 0xbc);
-        fVar2 = *(float*)(iVar4 + 0xc0);
-        dVar5 = (double)(lbl_803E40F8 *
-            (float)(dVar9 * (double)fVar2 +
-                (double)(float)(dVar8 * (double)*(float*)(iVar4 + 0xb8) +
-                    (double)(float)(dVar7 * (double)fVar1))));
-        ((GameObject*)param_1)->anim.velocityX = (float)((double)*(float*)(iVar4 + 0xb8) * dVar5);
-        ((GameObject*)param_1)->anim.velocityY = (float)((double)fVar1 * dVar5);
-        ((GameObject*)param_1)->anim.velocityZ = (float)((double)fVar2 * dVar5);
-        ((GameObject*)param_1)->anim.velocityX = (float)((double)((GameObject*)param_1)->anim.velocityX - dVar8);
-        ((GameObject*)param_1)->anim.velocityY = (float)((double)((GameObject*)param_1)->anim.velocityY - dVar7);
-        ((GameObject*)param_1)->anim.velocityZ = (float)((double)((GameObject*)param_1)->anim.velocityZ - dVar9);
-        ((GameObject*)param_1)->anim.velocityY = (float)((double)((GameObject*)param_1)->anim.velocityY * dVar6);
-        ((GameObject*)param_1)->anim.velocityY = ((GameObject*)param_1)->anim.velocityY * lbl_803E40FC;
-        ((GameObject*)param_1)->anim.velocityX = (float)((double)((GameObject*)param_1)->anim.velocityX * dVar6);
-        ((GameObject*)param_1)->anim.velocityZ = (float)((double)((GameObject*)param_1)->anim.velocityZ * dVar6);
-        *(char*)&((GfxEmitState*)iVar4)->unk1D = *(char*)&((GfxEmitState*)iVar4)->unk1D + -1;
-        if (*(char*)&((GfxEmitState*)iVar4)->unk1D == '\0')
-        {
-            ((GfxEmitState*)iVar4)->unk1D = 0;
-            fVar1 = lbl_803E40F4;
-            ((GameObject*)param_1)->anim.velocityX = lbl_803E40F4;
-            ((GameObject*)param_1)->anim.velocityY = fVar1;
-            ((GameObject*)param_1)->anim.velocityZ = fVar1;
-        }
-    }
-    return;
-}
 
 #pragma scheduling off
 void collectible_free(int obj)
@@ -1088,7 +914,7 @@ void fn_80172824(int obj, u8* state)
         case 0xb:
             if (GameBit_Get(0x90e) == 0)
             {
-                ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 GameBit_Set(0x90e, 1);
             }
             else
@@ -1106,7 +932,7 @@ void fn_80172824(int obj, u8* state)
         case 0x3cd:
             if (GameBit_Get(0x90f) == 0)
             {
-                ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 GameBit_Set(0x90f, 1);
             }
             else
@@ -1118,7 +944,7 @@ void fn_80172824(int obj, u8* state)
         case 0x6a6:
             if (GameBit_Get(0x9a8) == 0)
             {
-                ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 GameBit_Set(0x9a8, 1);
             }
             else
@@ -1132,7 +958,7 @@ void fn_80172824(int obj, u8* state)
             {
                 GameBit_Set(0xa7b, 1);
                 ((GfxEmitState*)state)->unk48 = attach[0xf];
-                ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 state[0x37] |= 1;
                 if (((GameObject*)obj)->anim.modelState != NULL)
                 {
@@ -1216,7 +1042,7 @@ void collectible_update(int obj)
     {
         switch (msg)
         {
-        case 0x7000b:
+        case COLLECTIBLE_MSG_PICKUP:
             fn_80171E5C(obj);
             break;
         }
@@ -1265,7 +1091,7 @@ void collectible_update(int obj)
             if (state[0x3e] == 0)
             {
                 ((GfxEmitState*)state)->unk48 = -1;
-                ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000a, obj, state + 0x48);
+                ObjMsg_SendToObject(Obj_GetPlayerObject(), COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
             }
         }
         else
@@ -1347,9 +1173,7 @@ void fn_801723DC(int obj)
     }
 }
 
-/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
- * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
- * verified). File rename parked as a repo-owner proposal. */
+/* texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-verified). */
 
 void collectible_init(int obj, int setup)
 {
