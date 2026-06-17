@@ -5018,7 +5018,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             (yitem == 1 && (item == 0x2d || item == 0x5ce)))
         {
             buttonDisable(0, 0x900);
-            *(s16*)((char*)inner + 0x6e2) = inner->buttonsJustPressed & ~0x900;
+            *(u16*)((char*)inner + 0x6e2) = inner->buttonsJustPressed & ~0x900;
             lbl_803DE4B2 = item;
             if (item != inner->animState)
             {
