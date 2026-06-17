@@ -1,21 +1,38 @@
+/*
+ * areafxemit (DLL 0x130) - a proximity particle-effect emitter object.
+ *
+ * Each tick areafxemit_update measures the distance from the emitter to
+ * the player; once inside state->triggerRadius (a sentinel radius means
+ * "always") it runs areafxemit_emitEffect. emitType selects how the fx
+ * is spawned: 0 = world-positioned local fx (spawn flag 0x200001),
+ * 1/2 = an acquired object resource (effectId + 0x58 / 0xAB) driven
+ * through its vtable, 3 = local-space fx (flag 2), >=6 = pre-rotated
+ * fx with type 6 world-positioned. emitCount controls the per-emit
+ * particle count (>0) or, when <=0, a re-emit cooldown counted down in
+ * frames; emitCount 0 self-suppresses after one emit. For emitType >= 4
+ * crossing the trigger radius also fires a one-shot approach burst
+ * (areafxemit_emitBurst, AREAFXEMIT_APPROACH_BURST_COUNT particles).
+ *
+ * Gating: state->enableBit (-1 = always) arms the emitter, state->stopBit
+ * permanently suppresses it once set. Sequence event id 1 (areafxemit_SeqFn)
+ * also triggers an emit.
+ */
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_80017748();
 extern void vecRotateZXY(s16 * in, f32 * out);
 extern u32 randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 value);
 
 extern u8 framesThisStep;
-extern f64 DOUBLE_803e4af8;
-extern f32 FLOAT_803e4b00;
+
+enum {
+    AREAFXEMIT_SEQEV_EMIT = 1
+};
+
 extern f32 lbl_803E3E68;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
@@ -71,238 +88,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 }
 #pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
-void FUN_8018f650(void)
-{
-    byte spawnType;
-    int emitter;
-    int config;
-    int* effectVtbl;
-    short i;
-    double in_f31;
-    double roundBias;
-    double in_ps31_1;
-    ushort posBlock;
-    undefined2 posBlock1;
-    short posBlock2;
-    u8 spawnParams[8];
-    float local_58;
-    float offX;
-    float offY;
-    float offZ;
-    undefined4 local_48;
-    uint randX;
-    undefined4 local_40;
-    uint randY;
-    undefined4 local_38;
-    uint randZ;
-    float local_8;
-    float fStack_4;
-
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    emitter = FUN_8028683c();
-    config = *(int*)(emitter + 0xb8);
-    local_58 = FLOAT_803e4b00;
-    spawnType = *(byte*)(config + 8);
-    if (spawnType == 0)
-    {
-        if (*(short*)(config + 0xc) < 1)
-        {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-            offX = (f32)(s32)
-            randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-            offY = (f32)(s32)
-            randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-            offZ = (f32)(s32)
-            randX;
-            posBlock = *(ushort*)(config + 0x1a);
-            posBlock1 = *(undefined2*)(config + 0x1c);
-            posBlock2 = *(short*)(config + 0x1e);
-            if (*(int*)(emitter + 0x30) != 0)
-            {
-                posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
-            }
-            FUN_80017748(&posBlock, &offX);
-            offX = offX + *(float*)(emitter + 0xc);
-            offY = offY + *(float*)(emitter + 0x10);
-            offZ = offZ + *(float*)(emitter + 0x14);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                             spawnParams, 0x200001, -1, NULL);
-        }
-        else
-        {
-            roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
-            {
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-                offX = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-                offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-                offZ = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                posBlock = *(ushort*)(config + 0x1a);
-                posBlock1 = *(undefined2*)(config + 0x1c);
-                posBlock2 = *(short*)(config + 0x1e);
-                if (*(int*)(emitter + 0x30) != 0)
-                {
-                    posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
-                }
-                FUN_80017748(&posBlock, &offX);
-                offX = offX + *(float*)(emitter + 0xc);
-                offY = offY + *(float*)(emitter + 0x10);
-                offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                 spawnParams, 0x200001, -1, NULL);
-            }
-        }
-    }
-    else if (spawnType == 1)
-    {
-        effectVtbl = (int*)FUN_80006b14(*(ushort*)(config + 10) + 0x58 & 0xffff);
-        if (*(short*)(config + 0xc) < 1)
-        {
-            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
-        }
-        else
-        {
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
-            {
-                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
-            }
-        }
-        FUN_80006b0c((undefined*)effectVtbl);
-    }
-    else if (spawnType == 2)
-    {
-        effectVtbl = (int*)FUN_80006b14(*(ushort*)(config + 10) + 0xab & 0xffff);
-        if (*(short*)(config + 0xc) < 1)
-        {
-            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(ushort*)(config + 10) & 0xff, 0);
-        }
-        else
-        {
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
-            {
-                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(ushort*)(config + 10) & 0xff, 0);
-            }
-        }
-        FUN_80006b0c((undefined*)effectVtbl);
-    }
-    else if (spawnType == 3)
-    {
-        if (*(short*)(config + 0xc) < 1)
-        {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-            offX = (f32)(s32)
-            randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-            offY = (f32)(s32)
-            randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-            offZ = (f32)(s32)
-            randX;
-            posBlock = *(ushort*)(config + 0x1a);
-            posBlock1 = *(undefined2*)(config + 0x1c);
-            posBlock2 = *(short*)(config + 0x1e);
-            if (*(int*)(emitter + 0x30) != 0)
-            {
-                posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
-            }
-            FUN_80017748(&posBlock, &offX);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                             spawnParams, 2, -1, NULL);
-        }
-        else
-        {
-            roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
-            {
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-                offX = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-                offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-                offZ = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                posBlock = *(ushort*)(config + 0x1a);
-                posBlock1 = *(undefined2*)(config + 0x1c);
-                posBlock2 = *(short*)(config + 0x1e);
-                if (*(int*)(emitter + 0x30) != 0)
-                {
-                    posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
-                }
-                FUN_80017748(&posBlock, &offX);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                 spawnParams, 2, -1, NULL);
-            }
-        }
-    }
-    else if (5 < spawnType)
-    {
-        if (*(short*)(config + 0xc) < 1)
-        {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-            offX = (f32)(s32)
-            randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-            offY = (f32)(s32)
-            randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-            offZ = (f32)(s32)
-            randX;
-            FUN_80017748((ushort*)(config + 0x1a), &offX);
-            if (*(char*)(config + 8) == '\x06')
-            {
-                offX = offX + *(float*)(emitter + 0xc);
-                offY = offY + *(float*)(emitter + 0x10);
-                offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                 spawnParams, 0x200001, -1, NULL);
-            }
-            else
-            {
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                 spawnParams, 2, -1, NULL);
-            }
-        }
-        else
-        {
-            roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
-            {
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
-                offX = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
-                offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
-                offZ = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                FUN_80017748((ushort*)(config + 0x1a), &offX);
-                if (*(char*)(config + 8) == '\x06')
-                {
-                    offX = offX + *(float*)(emitter + 0xc);
-                    offY = offY + *(float*)(emitter + 0x10);
-                    offZ = offZ + *(float*)(emitter + 0x14);
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                     spawnParams, 0x200001, -1, NULL);
-                }
-                else
-                {
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
-                                                     spawnParams, 2, -1, NULL);
-                }
-            }
-        }
-    }
-    FUN_80286888();
-    return;
-}
-
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
 typedef struct CFEmitterFxArgs
 {
     u32 unk0;
@@ -314,11 +99,11 @@ typedef struct CFEmitterFxArgs
 #define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
     do {                                                      \
         u16 range;                                            \
-        range = (state)->extentX;                      \
+        range = (state)->extentX;                             \
         (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentY;                      \
+        range = (state)->extentY;                             \
         (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentZ;                      \
+        range = (state)->extentZ;                             \
         (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
     } while (0)
 
@@ -326,15 +111,15 @@ typedef struct CFEmitterFxArgs
     (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (flags), (modelId), \
         (void *)(arg6))
 
-#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
+#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)      \
     do {                                                          \
-        rot[0] = (state)->emitAngles[0];                         \
-        rot[1] = (state)->emitAngles[1];                         \
-        rot[2] = (state)->emitAngles[2];                         \
+        (rot)[0] = (state)->emitAngles[0];                       \
+        (rot)[1] = (state)->emitAngles[1];                       \
+        (rot)[2] = (state)->emitAngles[2];                       \
         if ((obj)->objAnim.parent != NULL) {                      \
-            rot[2] += ((ObjAnimComponent *)(obj)->objAnim.parent)->rotZ; \
+            (rot)[2] += ((ObjAnimComponent *)(obj)->objAnim.parent)->rotZ; \
         }                                                         \
-        vecRotateZXY(rot, (args)->pos);                        \
+        vecRotateZXY((rot), (args)->pos);                         \
     } while (0)
 
 #define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
@@ -359,14 +144,14 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
     args.scale = lbl_803E3E68;
     type = state->emitType;
 
-    if (type == 0)
+    if (type == AREAFXEMIT_SPAWN_LOCAL_WORLD)
     {
         if (state->emitCount > 0)
         {
             for (i = 0; i < state->emitCount; i++)
             {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
+                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
                 CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
             }
@@ -374,12 +159,12 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
         else
         {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
+            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
             CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
             CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
         }
     }
-    else if (type == 1)
+    else if (type == AREAFXEMIT_SPAWN_OBJECT_RESOURCE)
     {
         resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
         if (state->emitCount > 0)
@@ -395,7 +180,7 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
         }
         Resource_Release(resource);
     }
-    else if (type == 2)
+    else if (type == AREAFXEMIT_SPAWN_OBJECT_RESOURCE_ALT)
     {
         resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
         if (state->emitCount > 0)
@@ -413,21 +198,21 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
         }
         Resource_Release(resource);
     }
-    else if (type == 3)
+    else if (type == AREAFXEMIT_SPAWN_LOCAL_OBJECT)
     {
         if (state->emitCount > 0)
         {
             for (i = 0; i < state->emitCount; i++)
             {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
+                CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
             }
         }
         else
         {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
+            CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
             CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
         }
     }
@@ -474,7 +259,7 @@ int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* anim
     {
         switch ((s32)animUpdate->eventIds[i])
         {
-        case 1:
+        case AREAFXEMIT_SEQEV_EMIT:
             areafxemit_emitEffect(obj);
             break;
         }
@@ -584,9 +369,7 @@ void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
     }
 }
 
-
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
 
 void areafxemit_free(AreaFxEmitObject* obj)
 {
@@ -606,6 +389,5 @@ void areafxemit_initialise(void)
 {
 }
 
-
-int areafxemit_getExtraSize(void) { return 0x20; }
+int areafxemit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
 int areafxemit_getObjectTypeId(void) { return 0x0; }
