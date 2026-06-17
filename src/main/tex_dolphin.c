@@ -463,10 +463,7 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
     u8 c2;
     u8 c1;
     u8 c0;
-    u8 g3;
-    u8 g2;
-    u8 g1;
-    u8 g0;
+    u8 g[4];
     u8* base;
     int ptr;
     int* p;
@@ -543,20 +540,20 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                 }
                 else
                 {
-                    fn_80088730(&g0);
-                    g3 = 0;
-                    g2 = 0;
-                    g1 = 0;
-                    g0 = 0;
+                    fn_80088730(g);
+                    g[3] = 0;
+                    g[2] = 0;
+                    g[1] = 0;
+                    g[0] = 0;
                     if (count == 0)
                     {
                         if ((obj != NULL) && ((*(uint*)(obj + 0x3c) & 0x800) != 0))
                         {
-                            fn_8004EF9C(&g0);
+                            fn_8004EF9C(g);
                         }
                         else
                         {
-                            fn_8004EECC(&g0);
+                            fn_8004EECC(g);
                         }
                     }
                     else
@@ -564,7 +561,7 @@ void mapBlockRender_callList(uint hi, uint lo, int block, u8* obj, int* stream, 
                         modelLightStruct_getDiffuseColor((void*)lbl_803DCE28, &c0, &c1, &c2, &c3);
                         modelLightStruct_getPosition((void*)lbl_803DCE28, &dOut0, &dOut1, dBig);
                         modelLightStruct_getRadius((void*)lbl_803DCE28);
-                        fn_8004F6D8(&c0, &dOut0, &g0);
+                        fn_8004F6D8(&c0, &dOut0, g);
                         p = &lbl_803DCE28 + 1;
                         for (i = 1; i < count; i = i + 1)
                         {
