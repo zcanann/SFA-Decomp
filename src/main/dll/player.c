@@ -5923,7 +5923,7 @@ int fn_8029EBCC(int obj, int state)
             }
         }
         inner->targetYaw =
-            (int)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw);
+            lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw;
         inner->yaw = inner->targetYaw;
     }
     if (inner->unk7BC > lbl_803E7EA4)
@@ -5939,7 +5939,7 @@ int fn_8029EBCC(int obj, int state)
     inner->headPitch =
         (f32)inner->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
     inner->headYaw =
-        (int)((f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta));
+        (f32)inner->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
     inner->bodyLeanHalf = (lbl_803E7FB0 * inner->unk7B8);
     inner->bodyLeanAngle = (s16)(inner->bodyLeanHalf >> 1);
     *(u32*)&inner->flags360 &= ~0x400LL;
