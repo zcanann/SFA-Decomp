@@ -1,33 +1,24 @@
+/*
+ * projwallpower (DLL 0x00BB) - retired projectile "wall power" object.
+ *
+ * The object's behavior has been removed: the only live entry point,
+ * projwallpower_doUnsupported, just reports that the feature is no longer
+ * supported and returns 0 (false). release/initialise are empty lifecycle
+ * stubs. sProjwallpowerDoNoLongerSupported is the message string (a data-only
+ * extern resolved from the assembly data stub, declared in dll_64.h).
+ *
+ * Note: unlike the rest of the retired-projectile family (projlightning1,
+ * projquakeshock, etc.) which return the -1 unsupported sentinel, wallpower
+ * returns 0 (confirmed from target asm: li r3, 0).
+ */
 #include "main/dll/dll_64.h"
 
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_64.c
- * - 0x801008FC-0x80100900
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_74.c
- * - next split: main/dll/dll_75.c
- */
-
-/*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
- */
-
 extern void OSReport(const char* fmt, ...);
-
-#define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
 
 int projwallpower_doUnsupported(void)
 {
     OSReport(sProjwallpowerDoNoLongerSupported);
-    return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
+    return 0;
 }
 
 void projwallpower_release(void)
