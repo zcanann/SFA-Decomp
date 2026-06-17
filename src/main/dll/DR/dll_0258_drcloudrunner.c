@@ -1148,13 +1148,13 @@ void DR_CloudRunner_update(int obj)
 
 void fn_802BF4D8(int obj)
 {
-    f32 tr[2];
-    f32 gB[2];
-    f32 gC[2];
-    f32 pos[3];
-    f32 diff[3];
-    f32* pdiff = diff;
     f32 dir[3];
+    f32 diff[3];
+    f32 pos[3];
+    f32 gC[2];
+    f32 gB[2];
+    f32 tr[2];
+    f32* pdiff = diff;
     struct
     {
         s16 angles[4];
