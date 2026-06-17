@@ -1375,16 +1375,13 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
         if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
         {
-            int result;
+            u8 result;
             if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
             {
                 if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
                 {
                     result = 1;
-                }
-                else
-                {
-                    result = 0;
+                    goto haveResult;
                 }
             }
             else
@@ -1392,12 +1389,11 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 if (((KTRexArenaState*)gKTRexState)->unkF4 - ((KTRexArenaState*)gKTRexState)->unk8 > lbl_803E67B4)
                 {
                     result = 1;
-                }
-                else
-                {
-                    result = 0;
+                    goto haveResult;
                 }
             }
+            result = 0;
+        haveResult:
             if (result != 0)
             {
                 int push;
