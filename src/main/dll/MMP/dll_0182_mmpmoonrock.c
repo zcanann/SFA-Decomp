@@ -164,7 +164,7 @@ extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hi
                               int p10);
 extern f32 lbl_803E454C;
 extern f32 lbl_803E4550;
-extern f32 lbl_803E4558;
+extern const f32 lbl_803E4558;
 
 #pragma dont_inline on
 void fn_801A79E0(int obj)
@@ -218,7 +218,7 @@ void mmp_moonrock_free(int obj)
     (*gCarryableInterface)->free(obj);
 }
 
-extern f32 lbl_803E457C;
+extern const f32 lbl_803E457C;
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*gCarryableInterface)->isVisible(obj, (s32)visible) != 0)
