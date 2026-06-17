@@ -1509,12 +1509,12 @@ int fn_8029A76C(int obj, int state, f32 fv)
     return 0;
 }
 
-extern const f32 lbl_803E8064;
-extern const f32 lbl_803E8074;
-extern const f32 lbl_803E8030;
-extern const f32 lbl_803E8078;
-extern const f32 lbl_803E807C;
-extern const f32 lbl_803E8080;
+extern f32 lbl_803E8064;
+extern f32 lbl_803E8074;
+extern f32 lbl_803E8030;
+extern f32 lbl_803E8078;
+extern f32 lbl_803E807C;
+extern f32 lbl_803E8080;
 extern int fn_802AD2F4(int obj, int inner, int state);
 
 int fn_802A5384(int obj, int state)
@@ -2176,7 +2176,7 @@ int fn_802A5384(int obj, int state)
 }
 
 extern s16 lbl_803DC6A2;
-extern const f32 lbl_803E8020;
+extern f32 lbl_803E8020;
 
 int fn_802A1CA8(int obj, int state)
 {
@@ -2704,9 +2704,9 @@ typedef struct
     u8 pad5;
 } WallHit;
 
-extern const f32 lbl_803E7FF8;
-extern const f32 lbl_803E8000;
-extern const f32 lbl_803E8004;
+extern f32 lbl_803E7FF8;
+extern f32 lbl_803E8000;
+extern f32 lbl_803E8004;
 
 int fn_802A0680(int obj, int state)
 {
@@ -4093,11 +4093,11 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     return result;
 }
 
-extern const f32 lbl_803E8090;
-extern const f32 lbl_803E8094;
-extern const f32 lbl_803E8098;
-extern const f32 lbl_803E809C;
-extern const f32 lbl_803E80A0;
+extern f32 lbl_803E8090;
+extern f32 lbl_803E8094;
+extern f32 lbl_803E8098;
+extern f32 lbl_803E809C;
+extern f32 lbl_803E80A0;
 extern char sNotOnGroundFailureMessage[];
 extern void fn_80137948(const char* fmt, ...);
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
@@ -5373,7 +5373,7 @@ int fn_8029AF9C(int obj, int state)
     return 0;
 }
 
-extern const f32 lbl_803E7FB8;
+extern f32 lbl_803E7FB8;
 
 int fn_8029BDB4(int obj, int state, f32 fv)
 {
@@ -6273,9 +6273,9 @@ typedef struct
 
 extern int lbl_803DE484;
 extern int lbl_803E7E78;
-extern const f32 lbl_803E7FDC;
-extern const f32 lbl_803E7FE0;
-extern const f32 lbl_803E7FE4;
+extern f32 lbl_803E7FDC;
+extern f32 lbl_803E7FE0;
+extern f32 lbl_803E7FE4;
 
 int fn_8029DB70(int obj, int state, f32 fv)
 {
@@ -6557,8 +6557,8 @@ int fn_8029DB70(int obj, int state, f32 fv)
     return 0;
 }
 
-extern const f32 lbl_803E8034;
-extern const f32 lbl_803E803C;
+extern f32 lbl_803E8034;
+extern f32 lbl_803E803C;
 
 int fn_802A2EE0(int obj, int state, f32 fv)
 {
@@ -6845,10 +6845,10 @@ int fn_802A2EE0(int obj, int state, f32 fv)
 
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern const f32 lbl_803E8104;
-extern const f32 lbl_803E8108;
-extern const f32 lbl_803E810C;
-extern const f32 lbl_803E8110;
+extern f32 lbl_803E8104;
+extern f32 lbl_803E8108;
+extern f32 lbl_803E810C;
+extern f32 lbl_803E8110;
 
 int fn_802AD2F4(int obj, int inner, int state)
 {
@@ -7139,7 +7139,7 @@ extern void fn_802AFB0C(int obj, int inner, int state);
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];
 extern int lbl_802C2C50[];
-extern const f32 lbl_803E8164;
+extern f32 lbl_803E8164;
 
 typedef struct
 {
@@ -7731,8 +7731,8 @@ void fn_802B0EA4(int obj, int inner, int state)
 }
 
 extern s16 lbl_803DC6CC[4];
-extern const f32 lbl_803E8084;
-extern const f32 lbl_803E8088;
+extern f32 lbl_803E8084;
+extern f32 lbl_803E8088;
 
 int fn_802A6694(int obj, int state, f32 fv)
 {
@@ -8103,7 +8103,7 @@ typedef struct
 
 extern int getSbGalleon(void);
 extern int DBprotection_getCameraState(void);
-extern const f32 lbl_803E8160;
+extern f32 lbl_803E8160;
 
 void playerDoHitDetection(int obj)
 {
@@ -8395,7 +8395,7 @@ extern void fn_8009A8C8(int obj, f32 fv);
 extern int lbl_803DE470;
 extern int lbl_803DE474;
 extern int lbl_802C2C68[];
-extern const f32 lbl_803E8134;
+extern f32 lbl_803E8134;
 
 void fn_802AFB0C(int obj, int inner, int state)
 {
@@ -13876,7 +13876,7 @@ int fn_8029C9C8(int obj, int state)
 
 extern int gameBitDecrement(int);
 extern u8 objGetByteParam1C(int obj);
-extern const f32 lbl_803E8054;
+extern f32 lbl_803E8054;
 
 int fn_802A418C(int obj, int state, f32 fv)
 {
@@ -14401,8 +14401,8 @@ typedef struct
 } IntPair2;
 
 extern int lbl_803E7E70;
-extern const f32 lbl_803E80FC;
-extern const f32 lbl_803E8100;
+extern f32 lbl_803E80FC;
+extern f32 lbl_803E8100;
 
 int fn_802AC7DC(int obj, int state, int inner, f32 fv)
 {
@@ -14729,7 +14729,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     }
 }
 
-extern const f32 lbl_803E80C0;
+extern f32 lbl_803E80C0;
 extern f32 lbl_803DC6B8[2];
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
