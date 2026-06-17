@@ -420,6 +420,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     }
 }
 
+#pragma opt_common_subs off
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
@@ -652,6 +653,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void nw_mammoth_free(void* obj)
 {
