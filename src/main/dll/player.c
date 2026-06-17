@@ -14185,12 +14185,12 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     f32 sx;
     f32 sy;
     f32 sz;
-    f32 px;
-    f32 py;
-    f32 pz;
-    f32 qx;
-    f32 qy;
     f32 qz;
+    f32 qy;
+    f32 qx;
+    f32 pz;
+    f32 py;
+    f32 px;
     int tbl[2];
     struct
     {
