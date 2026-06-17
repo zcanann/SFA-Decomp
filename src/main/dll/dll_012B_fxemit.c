@@ -1,17 +1,45 @@
+/*
+ * fxemit (DLL 0x12B, class 0x6B) - the CF "FxEmit" particle-emitter
+ * object. Each instance reads an FxEmitPlacement and drifts/spins by a
+ * per-axis step (FXEMIT_ROTATION_STEP_AUTO = framesThisStep auto-spin,
+ * otherwise step*framesThisStep*100), optionally moving along its
+ * velocity, and emits a particle effect when the player comes within
+ * triggerRadius (or always, at the sentinel radius).
+ *
+ * Emission (fxemit_emitEffect) dispatches on the placement spawnMode:
+ *   OBJECT/OBJECT_ALT/WORLD pick partfx spawn flags from effectMode,
+ *   then either spawn a partfx object (effectMode 0), or acquire a
+ *   resource (effectId+0x58 / effectId+0xAB) and call its slot-1 fn.
+ *   The WORLD/mode-0 path (flag 1) instead spawns with explicit
+ *   yaw/pitch/roll/scale/position args. emitCount>0 spawns that many;
+ *   <=0 spawns the alt effect once and seeds a re-emit cooldown.
+ *
+ * Gated by enableBit/stopBit game bits; sfxPeriod drives a periodic
+ * Sfx_PlayFromObject. SeqFn responds to anim events 1 (emit now) and 2
+ * (toggle continuous emit). init lives here too; the placement is
+ * defined by FXEMIT_DEF_ID 0x5A7.
+ */
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
+/* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
+   (the per-file spelling is load-bearing for codegen). */
 extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
-
-extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
-extern f32 lbl_803E3E48;
-extern char sCFTreasSharpyDebugFormat[];
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern ObjAnimComponent* Obj_GetPlayerObject(void);
 extern void fn_80137948(char* fmt, ...);
+extern ModgfxInterface** gModgfxInterface;
+extern char sCFTreasSharpyDebugFormat[];
+extern f32 lbl_803E3E48;
+extern f32 lbl_803E3E4C;
+extern f32 lbl_803E3E50;
 
-typedef struct CFTreasSharpyFxSpawnArgs
+typedef struct FxEmitWorldSpawnArgs
 {
     s16 yaw;
     s16 pitch;
@@ -20,7 +48,7 @@ typedef struct CFTreasSharpyFxSpawnArgs
     f32 x;
     f32 y;
     f32 z;
-} CFTreasSharpyFxSpawnArgs;
+} FxEmitWorldSpawnArgs;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
@@ -103,7 +131,7 @@ void fxemit_emitEffect(FxEmitObject* obj)
 
     if ((spawnFlags & 1) != 0)
     {
-        CFTreasSharpyFxSpawnArgs args;
+        FxEmitWorldSpawnArgs args;
 
         args.x = obj->objAnim.localPosX;
         args.y = obj->objAnim.localPosY;
@@ -201,6 +229,7 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             fxemit_emitEffect(obj);
         }
+        /* re-read (not `event`) is load-bearing: keeps the matching reg/load */
         if (animUpdate->eventIds[i] == 2)
         {
             state->seqToggle = (u8)(1 - state->seqToggle);
@@ -247,7 +276,7 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int fxemit_getExtraSize(void)
 {
-    return 0x20;
+    return sizeof(FxEmitState);
 }
 
 int fxemit_getObjectTypeId(void)
@@ -267,14 +296,8 @@ void fxemit_hitDetect(void)
 
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-extern f32 timeDelta;
-extern f32 sqrtf(f32);
-extern int Sfx_PlayFromObject(int obj, int sfx);
-extern f32 lbl_803E3E4C;
-
 void fxemit_update(FxEmitObject* obj)
 {
-    extern ObjAnimComponent* Obj_GetPlayerObject(void);
     FxEmitState* state;
     FxEmitPlacement* def;
     ObjAnimComponent* player;
@@ -360,6 +383,7 @@ void fxemit_update(FxEmitObject* obj)
 
         if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
         {
+            /* single-case switch is load-bearing for the matching asm */
             switch (state->suppressed)
             {
             case 0:
@@ -400,15 +424,6 @@ void fxemit_update(FxEmitObject* obj)
     }
 }
 
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/resource.h"
-
-extern uint GameBit_Get(int eventId);
-extern f32 sqrtf(f32 value);
-
-extern f32 lbl_803E3E50;
-
 void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 {
     FxEmitState* state;
@@ -448,7 +463,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->startDelay = (s16)randomGetRange(0, 10);
     state->altEffectId = 0;
 }
-
 
 void fxemit_release(void)
 {
