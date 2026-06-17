@@ -6,14 +6,14 @@
  * carries her on to Krazoa Palace. The player mounts the bird, holds A to
  * fire a forward burst (WCPushBlock_SpawnFromPath), steers with the analog
  * stick (padGetStickX/Y feed the yaw/pitch integrators in the steer update,
- * fn_801EE668), and the laser targets nearby objects
+ * SB_CloudRunner_UpdateSteer), and the laser targets nearby objects
  * (SB_CloudRunner_HandlePriorityHit). The ride leans/banks via
  * WCPushBlock_UpdateRideTilt / WCPushBlock_UpdateCloudAction.
  *
  * The Cloudrunner was retooled from the WC ("warlock") push-block ride,
  * so the shared steering/burst helpers retain their WCPushBlock_* names.
  *
- * fn_801EE668 (the analog-steer update) integrates the stick input into
+ * SB_CloudRunner_UpdateSteer (the analog-steer update) integrates the stick input into
  * the bird's body rotation and advances the flap animation; the two-op
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps
  * (must stay spelled that way - they keep the conversion pool in bump
@@ -303,7 +303,7 @@ typedef struct
     s8 sfxFlag;
 } WCAnimEvents;
 
-void fn_801EE668(s16 *obj, u8 *state)
+void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
 {
     WCAnimEvents events;
     int doSpawn;
@@ -607,7 +607,7 @@ void SB_CloudRunner_update(GameObject *obj)
     switch (*(s8 *)&((SBCloudRunnerState *)state)->rideSubState)
     {
     case RIDE_SUBSTATE_STEER:
-        ((void (*)(int, int))fn_801EE668)((int)obj, state);
+        ((void (*)(int, int))SB_CloudRunner_UpdateSteer)((int)obj, state);
         ((void (*)(int, int))SB_CloudRunner_HandlePriorityHit)((int)obj, state);
         break;
     case RIDE_SUBSTATE_TILT:
