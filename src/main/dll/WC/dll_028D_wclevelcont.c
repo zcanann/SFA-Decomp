@@ -363,7 +363,6 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 }
             }
         }
-        return 4;
     }
     else
     {
@@ -420,8 +419,8 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int 
                 }
             }
         }
-        return 4;
     }
+    return 4;
 }
 
 #pragma scheduling off
