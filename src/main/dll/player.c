@@ -11050,8 +11050,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 posY;
     f32 posZ;
 
-    fv2 = lbl_803E7EE0;
     found = 0;
+    fv2 = lbl_803E7EE0;
     ((PlayerState*)state)->unk82C = lbl_803E7EE0;
     ((PlayerState*)state)->unk834 = fv2;
     ((PlayerState*)state)->unk830 = lbl_803E8144;
