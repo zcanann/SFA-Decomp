@@ -16650,10 +16650,11 @@ void fn_802B0920(int obj, int state)
     {
         if (((ByteFlags*)((char*)state + 0x3f0))->b20)
         {
-            vec9[2] = lbl_803E7E98 *
+            f32 sc = lbl_803E7E98;
+            vec9[2] = sc *
             ((f32)((PlayerState*)state)->headPitch * f30v +
                 (f32)((PlayerState*)state)->bodyLeanHalf * f31v);
-            vec9[1] = lbl_803E7E98 *
+            vec9[1] = sc *
             ((f32)((PlayerState*)state)->bodyLeanHalf * f30v +
                 (f32)((PlayerState*)state)->headPitch * f31v);
         }
@@ -16670,8 +16671,9 @@ void fn_802B0920(int obj, int state)
         {
             int h4 = ((PlayerState*)state)->bodyLeanAngle / 2;
             int h0 = -(((PlayerState*)state)->headPitch / 2);
-            vec0[1] = lbl_803E7E98 * ((f32)h4 * f30v + (f32)h0 * f31v);
-            vec0[2] = lbl_803E7E98 * ((f32)h0 * f30v + (f32)h4 * f31v);
+            f32 sc = lbl_803E7E98;
+            vec0[1] = sc * ((f32)h4 * f30v + (f32)h0 * f31v);
+            vec0[2] = sc * ((f32)h0 * f30v + (f32)h4 * f31v);
         }
         else
         {
