@@ -1,7 +1,23 @@
-/* DLL 0x15D - SlidingDoor [801A39B4-801A39D0) */
+/*
+ * slidingdoor (DLL 0x15D) - a proximity-triggered sliding door object.
+ *
+ * The 3-bit door state (top bits of state byte 0) is a 4-state machine:
+ *   0 closed, 1 open, 2 opening, 3 closing.
+ * slidingdoor_SeqFn (installed as the anim/think callback) opens the door
+ * when its openGameBit (gated by gateGameBit) is set AND the player or
+ * Tricky is within lbl_803E43B8 xz-distance, and closes it again when
+ * neither is near. The opening/closing transitions complete on the matching
+ * trigger command (1=close-done, 2=open-done). SeqFn returns 1 in the steady
+ * states and 0 mid-transition.
+ *
+ * slidingdoor_update fires once (latched via obj->unkF4): it preempts the
+ * placement's preemptEvent if the door is already moving and runs the
+ * placement's startup sequence (data[0x1e], -1 = none).
+ */
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
+/* pragma-stack / pool balance inherited from the DLL re-split: */
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -11,27 +27,27 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 #include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/objseq.h"
 
 typedef struct SlidingdoorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
+    s16 openGameBit;    /* 0x18: door opens while this bit is set (gated by gateGameBit) */
+    s16 openedGameBit;  /* 0x1A: set to 1 once the door opens */
+    s16 preemptEvent;   /* 0x1C: event preempted by slidingdoor_update if already moving */
+    s8 unk1E;           /* 0x1E: startup sequence id */
+    u8 pad1F[0x20 - 0x1F];
+    s16 unk20;          /* 0x20 */
+    s16 gateGameBit;    /* 0x22: -1 = none; otherwise must also be set to open */
     u8 pad24[0x28 - 0x24];
 } SlidingdoorPlacement;
 
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+typedef struct SlidingdoorState
+{
+    u8 mode : 3;
+    u8 rest : 5;
+} SlidingdoorState;
 
 extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
@@ -40,57 +56,6 @@ extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
-
-void FUN_801a4520(int param_1)
-{
-    int iVar1;
-
-    if (((GameObject*)param_1)->unkF4 == 0)
-    {
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(iVar1 + 0x1c) != 0) && (**(byte**)&((GameObject*)param_1)->extra >> 5 != 0))
-        {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(iVar1 + 0x1c));
-        }
-        iVar1 = (int)*(char*)(iVar1 + 0x1e);
-        if (iVar1 != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(iVar1, (void*)param_1, -1);
-        }
-        ((GameObject*)param_1)->unkF4 = 1;
-    }
-    return;
-}
-
-void FUN_801a45cc(short* param_1, int param_2)
-{
-}
-
-
-undefined4
-FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
-{
-    undefined4 handle;
-    int i;
-    undefined8 obj;
-
-    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            FUN_80017698(0xdcb, 1);
-            obj = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(obj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x2b);
-            FUN_80042b9c(0, 0, 1);
-            handle = FUN_80044404(0x2b);
-            FUN_80042bec(handle, 0);
-        }
-    }
-    return 0;
-}
-
 
 void slidingdoor_free(void)
 {
@@ -108,28 +73,16 @@ void slidingdoor_initialise(void)
 {
 }
 
-
 int slidingdoor_getExtraSize(void) { return 0x1; }
 int slidingdoor_getObjectTypeId(void) { return 0x0; }
 
 void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E43BC);
+    if (visible != 0) objRenderFn_8003b8f4(lbl_803E43BC);
 }
 
-
-/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
- * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
- * (state[0] bits 5..7) through the door's open/close machine. Returns 1
- * while in the static states (0/1) and 0 while in transition (2/3). */
 int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    typedef struct DoorFlags
-    {
-        u8 mode : 3;
-        u8 rest : 5;
-    } DoorFlags;
     register int playerNear;
     register int trickyNear;
     register u8* state;
@@ -167,30 +120,30 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (mode == 0)
     {
-        if (GameBit_Get(((SlidingdoorPlacement*)params)->unk18) != 0 &&
-            (((SlidingdoorPlacement*)params)->unk22 == -1 ||
-                GameBit_Get(((SlidingdoorPlacement*)params)->unk22) != 0))
+        if (GameBit_Get(((SlidingdoorPlacement*)params)->openGameBit) != 0 &&
+            (((SlidingdoorPlacement*)params)->gateGameBit == -1 ||
+                GameBit_Get(((SlidingdoorPlacement*)params)->gateGameBit) != 0))
         {
-            GameBit_Set(((SlidingdoorPlacement*)params)->unk1A, 1);
+            GameBit_Set(((SlidingdoorPlacement*)params)->openedGameBit, 1);
             if (playerNear != 0 || trickyNear != 0)
             {
-                ((DoorFlags*)state)->mode = 2;
+                ((SlidingdoorState*)state)->mode = 2;
             }
         }
     }
     else if (mode == 1)
     {
-        if ((GameBit_Get(((SlidingdoorPlacement*)params)->unk18) != 0 ||
-                (((SlidingdoorPlacement*)params)->unk22 != -1 &&
-                    GameBit_Get(((SlidingdoorPlacement*)params)->unk22) != 0)) &&
+        if ((GameBit_Get(((SlidingdoorPlacement*)params)->openGameBit) != 0 ||
+                (((SlidingdoorPlacement*)params)->gateGameBit != -1 &&
+                    GameBit_Get(((SlidingdoorPlacement*)params)->gateGameBit) != 0)) &&
             playerNear == 0 && trickyNear == 0)
         {
-            ((DoorFlags*)state)->mode = 3;
+            ((SlidingdoorState*)state)->mode = 3;
         }
     }
 
     {
-        register DoorFlags* fl = (DoorFlags*)state;
+        register SlidingdoorState* fl = (SlidingdoorState*)state;
         if (fl->mode == 2)
         {
             if (animUpdate->triggerCommand == 2)
@@ -209,20 +162,16 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     result = 0;
     {
-        u32 m3 = ((u32)state[0] >> 5) & 7;
-        if (m3 != 2)
+        /* re-read: the state byte may have been mutated above */
+        u32 modeAfter = ((u32)state[0] >> 5) & 7;
+        if (modeAfter != 2)
         {
-            if (m3 != 3) result = 1;
+            if (modeAfter != 3) result = 1;
         }
     }
     return result;
 }
 
-/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
- * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
- * run that sequence with obj, -1.
- * Finally latch obj->_f4 = 1. */
 void slidingdoor_update(u8* obj)
 {
     u8* sub;
@@ -230,16 +179,16 @@ void slidingdoor_update(u8* obj)
     if (((GameObject*)obj)->unkF4 != 0) return;
     sub = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((SlidingdoorPlacement*)data)->unk1C != 0)
+    if (((SlidingdoorPlacement*)data)->preemptEvent != 0)
     {
         u32 mode = (u32)((sub[0] >> 5) & 7);
         if (mode != 0)
         {
-            (*gObjectTriggerInterface)->preempt((int)obj, ((SlidingdoorPlacement*)data)->unk1C);
+            (*gObjectTriggerInterface)->preempt((int)obj, ((SlidingdoorPlacement*)data)->preemptEvent);
         }
     }
     {
-        s8 id = (s8)data[0x1e];
+        s8 id = ((SlidingdoorPlacement*)data)->unk1E;
         if (id != -1)
         {
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);
@@ -248,41 +197,18 @@ void slidingdoor_update(u8* obj)
     *(u32*)&((GameObject*)obj)->unkF4 = 1;
 }
 
-/* exploded_init: store the map object tag, scale the model using the map
- * byte, then enable physics if any initial velocity/acceleration is present. */
-
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
- * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
- * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-
-/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
- * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
- * obj->_b8->_0. */
 void slidingdoor_init(u8* obj, u8* data)
 {
-    typedef struct SlidingDoorSubFlags
-    {
-        u8 doorState : 3;
-        u8 rest : 5;
-    } SlidingDoorSubFlags;
     u8* sub;
     f32 v;
     u32 doorState = 0;
     *(u32*)&((GameObject*)obj)->unkF4 = doorState;
     ((GameObject*)obj)->anim.rotX = (s16)(data[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)slidingdoor_SeqFn;
-    v = (f32)(u32)
-    data[0x21] * lbl_803E43C0;
+    v = (f32)(u32)data[0x21] * lbl_803E43C0;
     ((GameObject*)obj)->anim.rootMotionScale = v;
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     sub = ((GameObject*)obj)->extra;
-    ((SlidingDoorSubFlags*)sub)->doorState = doorState;
+    ((SlidingdoorState*)sub)->mode = doorState;
 }
-
-/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
- * ground clearance, and the randomized lifetime countdown. */
-
-/* Exploded debris physics step: integrate local velocity and spin, bounce from
- * the stored floor height, and return nonzero once the shard comes to rest. */
