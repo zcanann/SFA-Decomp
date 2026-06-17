@@ -255,18 +255,12 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 
     events->rootCurveValid = 0;
     eventTable = objAnim->eventTable;
-    if (eventTable == NULL)
+    if (eventTable != NULL)
     {
-        return wrapped;
-    }
-
-    events->triggerCount = 0;
-    eventCount = eventTable->byteCount >> 1;
-    if (eventCount == 0)
-    {
-        return wrapped;
-    }
-
+        events->triggerCount = 0;
+        eventCount = eventTable->byteCount >> 1;
+        if (eventCount != 0)
+        {
     previousFrame = (int)(gObjAnimEventFrameScale * previousProgress);
     currentFrame = (int)(gObjAnimEventFrameScale * objAnim->activeMoveProgress);
     scanMode = OBJANIM_EVENT_SCAN_FORWARD;
@@ -318,6 +312,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
             {
                 events->triggeredIds[events->triggerCount++] = (s8)eventId;
             }
+        }
+    }
         }
     }
 
