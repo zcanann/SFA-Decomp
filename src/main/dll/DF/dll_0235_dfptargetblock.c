@@ -16,9 +16,9 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj, float param_2);
 
-extern f32 lbl_803E6488;
-extern f32 lbl_803E648C;
-extern f32 lbl_803E6490;
+extern const f32 lbl_803E6488;
+extern const f32 lbl_803E648C;
+extern const f32 lbl_803E6490;
 
 #define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
 #define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
@@ -32,18 +32,18 @@ extern f32 sqrtf(f32 value);
 extern f32 timeDelta;
 extern f32 lbl_803DDCF8;
 extern f32 lbl_803DDCFC;
-extern f32 lbl_803E6494;
-extern f32 lbl_803E6498;
-extern f32 lbl_803E649C;
-extern f32 lbl_803E64A0;
-extern f32 lbl_803E64A4;
+extern const f32 lbl_803E6494;
+extern const f32 lbl_803E6498;
+extern const f32 lbl_803E649C;
+extern const f32 lbl_803E64A0;
+extern const f32 lbl_803E64A4;
 extern f32 lbl_803E64A8;
 extern const f32 lbl_803E64AC;
-extern f32 lbl_803E64B0;
-extern f32 lbl_803E64B4;
-extern f32 lbl_803E64B8;
-extern f32 lbl_803E64BC;
-extern f32 lbl_803E64C0;
+extern const f32 lbl_803E64B0;
+extern const f32 lbl_803E64B4;
+extern const f32 lbl_803E64B8;
+extern const f32 lbl_803E64BC;
+extern const f32 lbl_803E64C0;
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
@@ -51,11 +51,11 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
 extern s32 lbl_80329B78[];
-extern f32 lbl_803E64C4;
-extern f32 lbl_803E64C8;
-extern f32 lbl_803E64CC;
-extern f32 lbl_803E64D0;
-extern f32 lbl_803E64D4;
+extern const f32 lbl_803E64C4;
+extern const f32 lbl_803E64C8;
+extern const f32 lbl_803E64CC;
+extern const f32 lbl_803E64D0;
+extern const f32 lbl_803E64D4;
 
 int dfptargetblock_getExtraSize(void)
 {

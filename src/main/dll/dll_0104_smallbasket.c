@@ -63,19 +63,19 @@ extern int getAngle(f32 dx, f32 dz);
 extern void vecRotateZXY(void* in, void* out);
 
 extern f32 lbl_803AC790[];
-extern f32 lbl_803E3930;
+extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
-extern f32 lbl_803E393C;
-extern f32 lbl_803E3940;
-extern f32 lbl_803E3944;
-extern f32 lbl_803E3948;
-extern f32 lbl_803E394C;
-extern f32 lbl_803E3950;
+extern const f32 lbl_803E393C;
+extern const f32 lbl_803E3940;
+extern const f32 lbl_803E3944;
+extern const f32 lbl_803E3948;
+extern const f32 lbl_803E394C;
+extern const f32 lbl_803E3950;
 extern f32 lbl_803E3954;
-extern f32 lbl_803E3958;
-extern f32 lbl_803E395C;
-extern f32 lbl_803E3960;
-extern f32 lbl_803E3964;
+extern const f32 lbl_803E3958;
+extern const f32 lbl_803E395C;
+extern const f32 lbl_803E3960;
+extern const f32 lbl_803E3964;
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
                               int p7, int p8, int p9, int p10);
@@ -84,7 +84,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f3
 extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
                                void* outHits, int flags);
-extern f32 lbl_803E3970;
+extern const f32 lbl_803E3970;
 void smallbasket_init(int obj, int def);
 void smallbasket_update(int obj);
 void smallbasket_render(int obj, int param_2, int param_3, int param_4,
@@ -92,7 +92,7 @@ void smallbasket_render(int obj, int param_2, int param_3, int param_4,
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
-extern f32 lbl_803E3974;
+extern const f32 lbl_803E3974;
 /* render callback ABI; param types are pass-throughs of unknown meaning - int. */
 extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
                                  int p5, double scale);
@@ -122,14 +122,14 @@ extern f32 getXZDistance(f32 * a, f32 * b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E3934;
-extern f32 lbl_803E3978;
-extern f32 lbl_803E397C;
-extern f32 lbl_803E3980;
-extern f32 lbl_803E3984;
-extern f32 lbl_803E3988;
-extern f32 lbl_803E398C;
-extern f32 lbl_803E3990;
-extern f32 lbl_803E3994;
+extern const f32 lbl_803E3978;
+extern const f32 lbl_803E397C;
+extern const f32 lbl_803E3980;
+extern const f32 lbl_803E3984;
+extern const f32 lbl_803E3988;
+extern const f32 lbl_803E398C;
+extern const f32 lbl_803E3990;
+extern const f32 lbl_803E3994;
 extern f32 lbl_803E3998;
 
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
