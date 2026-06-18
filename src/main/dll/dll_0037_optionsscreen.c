@@ -28,9 +28,9 @@ extern undefined4 DAT_803de3a8;
 
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
-extern s8 lbl_803DBA28;
-extern u16 lbl_8031ACB8[];
-extern int lbl_803A87D0[8];
+extern s8 lbl_803DBA28;        /* active panel id (-1 = none) */
+extern u16 lbl_8031ACB8[];     /* per-panel text-box table, 8 u16 per panel */
+extern int lbl_803A87D0[8];    /* the 8 menu-item objects of the active panel */
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
@@ -43,23 +43,21 @@ extern void titleScreenPositionElements(f32 x, f32 y);
 extern void gameTextSetDrawFunc(void* fn);
 extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern u32 gameTextGet(int textId);
+extern void* gameTextGet(int textId);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextShow(int textId);
 extern void titleScreenShowCopyright(int arg);
-extern s8 lbl_803DD706;
-#pragma scheduling off
-#pragma peephole off
 extern void gameTextLoadDir(int);
-extern s8 lbl_803DD70C;
-extern u32 lbl_803DD708;
-extern s8 lbl_803DD705;
+extern s8 lbl_803DD706;        /* render-stale countdown */
+extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */
+extern u32 lbl_803DD708;       /* save-file struct base */
+extern s8 lbl_803DD705;        /* exit-in-progress flag */
 extern u8 lbl_803DD6F9;
-extern u8 lbl_803DD6F8;
+extern u8 lbl_803DD6F8;        /* initial panel selector */
 extern void fn_8011CA74(void);
 extern void fn_8011C7B4(void);
-extern s8 lbl_803DD704;
-extern int lbl_803DD700;
+extern s8 lbl_803DD704;        /* exit fade countdown */
+extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
 extern void loadUiDll(int id);
 extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawCloudsAndLights(int v);
@@ -69,6 +67,8 @@ extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
+#pragma scheduling off
+#pragma peephole off
 void OptionsScreen_render(int arg)
 {
     int alpha;
@@ -299,37 +299,6 @@ int OptionsScreen_run(void)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-}
-
-undefined4
-FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-    byte bVar1;
-    undefined8 uVar2;
-
-    FUN_80017a98();
-    bVar1 = DAT_803dc070;
-    if (3 < DAT_803dc070)
-    {
-        bVar1 = 3;
-    }
-    if (('\0' < DAT_803de3a8) && (DAT_803de3a8 = DAT_803de3a8 - bVar1, DAT_803de3a8 < '\x01'))
-    {
-        uVar2 = FUN_80006b84(1);
-        FUN_80053c98(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x60, '\x01', param_11,
-                     param_12, param_13, param_14, param_15, param_16);
-    }
-    return 0;
-}
-
 void OptionsScreen_frameEnd(void)
 {
 }
@@ -337,5 +306,3 @@ void OptionsScreen_frameEnd(void)
 void OptionsScreen_release(void)
 {
 }
-
-void WeirdUnusedMenu_render(void);
