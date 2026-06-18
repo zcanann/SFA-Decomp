@@ -1,20 +1,45 @@
+/*
+ * explodeplan (DLL 0x269, object type 0x0) - a static placed prop that is
+ * removed from the world by a game bit. The placement stores a removal
+ * game bit at +0x1E and a packed rotX byte at +0x18.
+ *
+ * explodeplan_init applies the rotation and, if the removal bit is already
+ * set, hides the model and disables its hit volumes. explodeplan_update
+ * re-tests the bit every frame and toggles the hidden flag / hit-detection
+ * state so the prop appears or disappears the moment the bit changes.
+ * Render is a plain model draw at a fixed scale (lbl_803E69D0).
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
-typedef struct CagecontrolPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-} CagecontrolPlacement;
+#define EXPLODEPLAN_OBJECT_TYPE_ID 0x0
 
+/* opaque per-instance extra state; no field is read or written by this DLL */
+typedef struct ExplodePlanState
+{
+    u8 pad0[0x4];
+} ExplodePlanState;
+
+/* explodeplan placement record (tail past the common ObjPlacement head) */
+typedef struct ExplodePlanPlacement
+{
+    u8 pad0[0x18];
+    s8 rotXByte;     /* 0x18: rotX in 1/256 turns */
+    u8 pad19[0x1E - 0x19];
+    s16 removeGameBit; /* 0x1E: game bit that removes this prop */
+} ExplodePlanPlacement;
+
+STATIC_ASSERT(offsetof(ExplodePlanPlacement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(ExplodePlanPlacement, removeGameBit) == 0x1E);
+STATIC_ASSERT(sizeof(ExplodePlanPlacement) == 0x20);
 
 void explodeplan_free(void)
 {
 }
 
-int explodeplan_getExtraSize(void) { return 0x4; }
+int explodeplan_getExtraSize(void) { return sizeof(ExplodePlanState); }
 
-int explodeplan_getObjectTypeId(void) { return 0x0; }
+int explodeplan_getObjectTypeId(void) { return EXPLODEPLAN_OBJECT_TYPE_ID; }
 
 void explodeplan_hitDetect(void)
 {
@@ -38,19 +63,20 @@ void explodeplan_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 
 void explodeplan_init(int obj, char* arg)
 {
+    ExplodePlanPlacement* def = (ExplodePlanPlacement*)arg;
     ObjHits_EnableObject(obj);
-    if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
+    if (GameBit_Get(def->removeGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(def->rotXByte << 8);
 }
 
 void explodeplan_update(int obj)
 {
-    int p = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((CagecontrolPlacement*)p)->unk1E) != 0)
+    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&((GameObject*)obj)->anim.placementData;
+    if (GameBit_Get(placement->removeGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
