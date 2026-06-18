@@ -362,8 +362,9 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
     int i;
     SaveScoreFile* file;
 
+    rank = 0;
     file = (SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE);
-    for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
+    for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
     {
         if (score > file->entries[rank].score)
         {
@@ -377,12 +378,12 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
                 file->entries[i].initials[3] = file->entries[i - 1].initials[3];
             }
 
-            file->entries[rank].score = score;
-            file->entries[rank].flag = flag;
-            file->entries[rank].initials[0] = initials[0];
-            file->entries[rank].initials[1] = initials[1];
-            file->entries[rank].initials[2] = initials[2];
-            file->entries[rank].initials[3] = initials[3];
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].score = score;
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].flag = flag;
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].initials[0] = initials[0];
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].initials[1] = initials[1];
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].initials[2] = initials[2];
+            ((SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE))->entries[rank].initials[3] = initials[3];
             return rank;
         }
     }
