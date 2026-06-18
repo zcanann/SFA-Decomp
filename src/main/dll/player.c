@@ -14500,7 +14500,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
             else
             {
-                *(u8*)((char*)inner + 0x40d) = *(u8*)((char*)inner + 0x40d) + 1;
+                *(u8*)((char*)inner + 0x40d) += 1;
             }
             *(u8*)((char*)inner + 0x40d) =
                 (*(u8*)((char*)inner + 0x40d) > 10) ? 10 : *(u8*)((char*)inner + 0x40d);
