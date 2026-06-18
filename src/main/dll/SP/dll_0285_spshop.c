@@ -110,8 +110,8 @@ int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
 int fn_801E66DC(void);
 
-s32 shop_getStateField1(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x1); }
-s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0); }
+s32 shop_getStateField1(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x1); }
+s32 shop_setScale(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x0); }
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
