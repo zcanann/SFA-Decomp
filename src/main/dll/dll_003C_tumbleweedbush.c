@@ -213,6 +213,7 @@ void Link_copy(u8* srcArg)
 }
 #pragma scheduling reset
 #pragma scheduling off
+#pragma peephole off
 void Link_func0B(u8* srcArg)
 {
     extern u8 lbl_803DD911; /* #57 */
@@ -228,6 +229,7 @@ void Link_func0B(u8* srcArg)
         lbl_803A9458[i].field38 = 2;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
 
