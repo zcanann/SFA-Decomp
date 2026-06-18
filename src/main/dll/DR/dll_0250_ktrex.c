@@ -561,6 +561,7 @@ void ktrex_update(int obj)
     int phase;
     int i;
     f32 dz, dx;
+    f32 result;
     s16* bitA;
     s16* bitB;
 
@@ -607,16 +608,17 @@ void ktrex_update(int obj)
         ->rowAZ)[phase];
     if (__fabs(dz) > __fabs(dx))
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        result =
             (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
             dz;
     }
     else
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        result =
             (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
             dx;
     }
+    ((KTRexArenaState*)gKTRexState)->unkF4 = result;
     tmp = lbl_803E67B0;
     ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
