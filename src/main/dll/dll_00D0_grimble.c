@@ -116,13 +116,13 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
         ((GrimbleControl*)sub)->reversed = 1 - *(u8*)&((GrimbleControl*)sub)->reversed;
         ((GameObject*)obj)->anim.rotX = ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed << 15);
         spd = (f32)(int)
-        randomGetRange(0x32, 0x64) / lbl_803E2F04;
+        randomGetRange(0x32, 0x64) / 100.0f;
         vel = (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) * spd;
         if (zone < 4 || zone > 0xb)
         {
             if (dist > 0x1f4)
             {
-                vel *= lbl_803E2EBC + (f32)dist / lbl_803E2F04;
+                vel *= lbl_803E2EBC + (f32)dist / 100.0f;
             }
             else
             {
