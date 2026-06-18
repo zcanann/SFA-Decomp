@@ -37,7 +37,8 @@ void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 x
     for (i = 0; i < 4; i++)
     {
         state[0x12 + i] = (65535.0f / period + (f32)(i * randomGetRange(120, 127)));
-        state[0xe + i] = ((f32)state[0x12 + i] * timeDelta + (f32)state[0xe + i]);
+        phase = (f32)state[0x12 + i];
+        state[0xe + i] = (phase * timeDelta + (f32)state[0xe + i]);
         phase = fcos16(state[0xe + i]);
         *(f32*)((char*)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((1.0f + phase) * 0.5f);
 
