@@ -11658,7 +11658,7 @@ void fn_80295CF4(int obj, int a)
     {
         if ((void*)lbl_803DE44C != NULL)
         {
-            if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
+            if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
                 inner->unk8B4 = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
