@@ -12541,7 +12541,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        if (animUpdate->eventIds[i] == 1)
+        if ((int)animUpdate->eventIds[i] == 1)
         {
             *(u8*)((char*)inner + 0x404) = *(u8*)((char*)inner + 0x404) | 1;
             GameBit_Set(*(s16*)((char*)placement + 0x1c), 1);
