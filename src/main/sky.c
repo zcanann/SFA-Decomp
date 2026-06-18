@@ -2715,7 +2715,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             else
             {
-                lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * sunT);
+                *(s16*)&lbl_803DD128 = (lbl_803DF0A4 * sunT);
             }
         }
         else
@@ -2728,7 +2728,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (sunT - lbl_803DF0A8)));
+                    *(s16*)&lbl_803DD128 = (lbl_803DF0A4 * (lbl_803DF0A0 - (sunT - lbl_803DF0A8)));
                 }
             }
             else
@@ -2800,7 +2800,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             else
             {
-                lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * moonTC);
+                *(s16*)&lbl_803DD12A = (lbl_803DF0A4 * moonTC);
             }
         }
         else
@@ -2813,7 +2813,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (moonTC - lbl_803DF0A8)));
+                    *(s16*)&lbl_803DD12A = (lbl_803DF0A4 * (lbl_803DF0A0 - (moonTC - lbl_803DF0A8)));
                 }
             }
             else
