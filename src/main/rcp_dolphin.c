@@ -2393,7 +2393,7 @@ int objShouldUnload(u8* obj)
         tp = gMapBlockLayerTables;
         for (k = 0; k < 5; k++)
         {
-            if (*(s8*)(bx + *tp) >= 0)
+            if (*(s8*)((u8*)bx + (int)*tp) >= 0)
             {
                 found = 1;
             }
