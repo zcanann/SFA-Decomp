@@ -246,7 +246,7 @@ extern f32 timeDelta;
 extern f32 lbl_803DF324;
 extern f32 lbl_803DF328;
 extern f32 lbl_803DF32C;
-extern f32 lbl_803DF330;
+extern const f32 lbl_803DF330;
 extern f32 lbl_803DF334;
 extern void GXSetArray(int attr, void *base, int stride);
 extern void GXBegin(int type, int fmt, int count);
