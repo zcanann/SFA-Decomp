@@ -83,7 +83,7 @@ void dll_28B_update(int obj)
     xform.rz = ((GameObject*)obj)->anim.rotZ;
     xform.scale = lbl_803E6D18;
     setMatrixFromObjectPos(mtx, &xform);
-    Matrix_TransformPoint(mtx, lbl_803E6CF8, lbl_803E6CF8, lbl_803E6CF8, &ox, &oy, &oz);
+    Matrix_TransformPoint(mtx, 0.0f, 0.0f, 0.0f, &ox, &oy, &oz);
     doNothing_80062A50(obj, ox, oy, oz);
 }
 
