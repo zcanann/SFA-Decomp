@@ -1,3 +1,22 @@
+/*
+ * tumbleweedbush (DLL 0x00D1)
+ *
+ * Tricky "growl/dig" action handler.
+ *
+ * trickyGrowl drives a four-step substate machine for the Tricky sidekick:
+ *   0  growl windup  - barks (sfx 0x299), kicks off anim move 0x33
+ *   1  face target   - turns toward the followed object (extra+0x28), with a
+ *                      random chance to bark again, until anim flag + timer hit
+ *   2  dig start     - if loading isn't locked, spawns seven child objects
+ *                      (Obj_AllocObjectSetup/Obj_SetupObject into unk700..),
+ *                      plays/loops the dig sfx (0x3db/0x3dc) and runs anim 0x34
+ *   3  dig end       - on move progress >= threshold, resets child anim speed,
+ *                      stops the dig loop, barks (sfx 0x29d) and clears the
+ *                      action's state flags, returning to substate 0
+ *
+ * Barks are gated on bit 6 of TrickyGrowlState.unk58, the current anim move
+ * being outside [0x29,0x30), and no sfx already playing on channel 0x10.
+ */
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
@@ -5,9 +24,9 @@
 typedef struct TrickyGrowlState
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
+    f32 unk8;            /* 0x08: target Z (paired with deref base for X) */
     u8 padC[0x58 - 0xC];
-    u8 unk58;
+    u8 unk58;            /* 0x58: bit 6 suppresses barks */
     u8 pad59[0x60 - 0x59];
 } TrickyGrowlState;
 
@@ -23,13 +42,23 @@ extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern void trickyTurnTowardYaw(void* obj, s16 angle);
 extern void objSetAnimSpeedTo1(void* obj);
 
-extern char lbl_8031D2E8[];
+extern char lbl_8031D2E8[];  /* tricky debug-string blob */
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
+
+#define CHILD_OBJECT_COUNT 7
+
+enum
+{
+    TRICKYGROWL_WINDUP = 0,
+    TRICKYGROWL_FACE_TARGET = 1,
+    TRICKYGROWL_DIG_START = 2,
+    TRICKYGROWL_DIG_END = 3
+};
 
 void trickyGrowl(void* obj, void* trickyState)
 {
@@ -41,15 +70,15 @@ void trickyGrowl(void* obj, void* trickyState)
 
     switch (((TrickyState*)trickyState)->substate)
     {
-    case 0:
+    case TRICKYGROWL_WINDUP:
         trickyDebugPrint(strBase + 0x558);
         if (trickyFn_8013b368(obj, lbl_803E24C8, trickyState) == 0)
         {
             state = ((GameObject*)obj)->extra;
             if ((((uint)((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
             {
-                s16 a0 = ((GameObject*)obj)->anim.currentMove;
-                if (a0 >= 0x30 || a0 < 0x29)
+                s16 move = ((GameObject*)obj)->anim.currentMove;
+                if (move >= 0x30 || move < 0x29)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
@@ -57,20 +86,20 @@ void trickyGrowl(void* obj, void* trickyState)
                     }
                 }
             }
-            ((TrickyState*)trickyState)->substate = 1;
+            ((TrickyState*)trickyState)->substate = TRICKYGROWL_FACE_TARGET;
             objAnimFn_8013a3f0(obj, 0x33, lbl_803E2444, 0x4000000);
             *(int*)((char*)trickyState + 0x728) = 0;
         }
         break;
-    case 1:
+    case TRICKYGROWL_FACE_TARGET:
         trickyDebugPrint(strBase + 0x568);
-        if (*(u8*)*(int*)trickyState != 0 && *(int*)((char*)trickyState + 0x728) != 0)
+        if (*(u8*)((TrickyState*)trickyState)->progressPtr != 0 && *(int*)((char*)trickyState + 0x728) != 0)
         {
-            ((TrickyState*)trickyState)->substate = 2;
+            ((TrickyState*)trickyState)->substate = TRICKYGROWL_DIG_START;
         }
         else
         {
-            void* target = *(void**)((char*)((GameObject*)obj)->extra + 0x28);
+            void* target = ((TrickyState*)((GameObject*)obj)->extra)->unk28;
             trickyTurnTowardYaw(obj, (s16)getAngle(
                                     -(*(f32*)target - ((GameObject*)obj)->anim.worldPosX),
                                     -(((TrickyGrowlState*)target)->unk8 - ((GameObject*)obj)->anim.worldPosZ)));
@@ -79,8 +108,8 @@ void trickyGrowl(void* obj, void* trickyState)
                 state = ((GameObject*)obj)->extra;
                 if (((((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
                 {
-                    s16 a0 = ((GameObject*)obj)->anim.currentMove;
-                    if (a0 >= 0x30 || a0 < 0x29)
+                    s16 move = ((GameObject*)obj)->anim.currentMove;
+                    if (move >= 0x30 || move < 0x29)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                         {
@@ -91,14 +120,14 @@ void trickyGrowl(void* obj, void* trickyState)
             }
         }
         break;
-    case 2:
+    case TRICKYGROWL_DIG_START:
         trickyDebugPrint(strBase + 0x57c);
         if (trickyFn_8013b368(obj, lbl_803E24CC, trickyState) == 0)
         {
             if ((u8)Obj_IsLoadingLocked() != 0)
             {
                 ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x800;
-                for (i = 0, slot = (void**)trickyState; i < 7; slot++, i++)
+                for (i = 0, slot = (void**)trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8*)((char*)setup + 0x4) = 2;
@@ -111,20 +140,20 @@ void trickyGrowl(void* obj, void* trickyState)
                 Sfx_PlayFromObject((u32)obj, 0x3db);
                 Sfx_AddLoopedObjectSound((u32)obj, 0x3dc);
             }
-            (*(u8*)*(int*)trickyState)--;
+            (*(u8*)((TrickyState*)trickyState)->progressPtr)--;
             objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
             ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x10;
-            ((TrickyState*)trickyState)->substate = 3;
+            ((TrickyState*)trickyState)->substate = TRICKYGROWL_DIG_END;
             *(int*)((char*)trickyState + 0x728) = 0;
         }
         break;
-    case 3:
+    case TRICKYGROWL_DIG_END:
         trickyDebugPrint(strBase + 0x590);
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24D0)
         {
             ((TrickyState*)trickyState)->stateFlags &= ~0x800LL;
             ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x1000;
-            for (i = 0, slot = (void**)trickyState; i < 7; slot++, i++)
+            for (i = 0, slot = (void**)trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
             {
                 objSetAnimSpeedTo1(slot[0x700 / 4]);
             }
@@ -132,8 +161,8 @@ void trickyGrowl(void* obj, void* trickyState)
             state = ((GameObject*)obj)->extra;
             if (((((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
             {
-                s16 a0 = ((GameObject*)obj)->anim.currentMove;
-                if (a0 >= 0x30 || a0 < 0x29)
+                s16 move = ((GameObject*)obj)->anim.currentMove;
+                if (move >= 0x30 || move < 0x29)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
@@ -142,7 +171,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 }
             }
             ((TrickyState*)trickyState)->unk08 = 1;
-            ((TrickyState*)trickyState)->substate = 0;
+            ((TrickyState*)trickyState)->substate = TRICKYGROWL_WINDUP;
             {
                 f32 resetValue = lbl_803E23DC;
                 ((TrickyState*)trickyState)->unk71C = resetValue;
@@ -156,7 +185,7 @@ void trickyGrowl(void* obj, void* trickyState)
         }
         else
         {
-            void* target = *(void**)((char*)((GameObject*)obj)->extra + 0x28);
+            void* target = ((TrickyState*)((GameObject*)obj)->extra)->unk28;
             trickyTurnTowardYaw(obj, (s16)getAngle(
                                     -(*(f32*)target - ((GameObject*)obj)->anim.worldPosX),
                                     -(((TrickyGrowlState*)target)->unk8 - ((GameObject*)obj)->anim.worldPosZ)));
