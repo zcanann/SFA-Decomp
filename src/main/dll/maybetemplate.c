@@ -1,3 +1,18 @@
+/*
+ * In-game HUD / pause-status DLL. Draws and animates the on-screen
+ * status overlay over a single shared HUD block at lbl_803A87F0
+ * (modeled here as PauseMenuHud):
+ *   - hudDrawMagicBar   : segmented magic-meter bar (current + drain ghost).
+ *   - hudDrawCounter    : right-edge numeric counters (score/progress).
+ *   - pauseMenuDrawStatus: per-frame status latch + fade-in/out of each HUD
+ *       element (health, magic, money, keys, scarabs, spirits), driven off
+ *       game bits and the pause/screen-fade/camera state; sets the new-item
+ *       "got" game bits (0xB98..0xD97) and plays pickup sfx.
+ *   - hudDrawButtons    : C-menu item ring + A/B/Y button-prompt icons.
+ *   - cMenuUpdateAnims  : C-menu open/close slide and fade animation.
+ *   - minimapFn_8012310c: minimap reveal/fade animation.
+ *   - trickyBitFn_801241cc: counts active Tricky-HUD item entries by game bit.
+ */
 #include "main/audio/sfx.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/camera_interface.h"
@@ -12,24 +27,21 @@ extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
 
-// v1.0 symbols for minimapFn_8012310c
-extern sbyte lbl_803DD7A0;
+extern s8 lbl_803DD7A0;
 extern short lbl_803DD7A2;
-extern byte framesThisStep;
+extern u8 framesThisStep;
 extern short lbl_803DD8D2;
 extern short lbl_803DBA68;
 extern short lbl_803DBA6E;
 
-// v1.0 symbols for cMenuUpdateAnims
-extern byte lbl_803DBA65;
+extern u8 lbl_803DBA65;
 extern short lbl_803DD796;
 extern short lbl_803DD78E;
-extern byte cMenuOpen;
+extern u8 cMenuOpen;
 extern short cMenuFadeCounter;
 extern short lbl_803DD8D6;
 extern short lbl_803DBA66;
 
-// v1.0 symbols for trickyBitFn_801241cc
 extern int gTrickyHudItemMask;
 extern short lbl_8031B4E0[];
 
@@ -180,7 +192,7 @@ STATIC_ASSERT(offsetof(PauseMenuHud, spiritBitState) == 0xB58);
 STATIC_ASSERT(offsetof(PauseMenuHud, magicLatch) == 0xB7C);
 STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
 
-void hudDrawMagicBar(int p1, int p2, uint p3)
+void hudDrawMagicBar(int alpha, int unk2, uint flags)
 {
     int total;
     int current;
@@ -200,7 +212,7 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
     seg1 = (current > 7) ? 7 : current;
     if (seg1 != 0)
     {
-        seg1 = seg1 + 1;
+        seg1++;
     }
     rem1 = 8 - seg1;
     seg2 = current - 7;
@@ -234,89 +246,89 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
         seg4 = 7;
     }
     rem4 = 0x10 - seg4;
-    if (p3 & 0xff)
+    if (flags & 0xff)
     {
-        pauseMenuDrawElement(hudTextures[0x27], (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, p2, p1, 0x100, 0);
+        pauseMenuDrawElement(hudTextures[0x27], (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, unk2, alpha, 0x100, 0);
     }
     else
     {
-        drawTexture(hudTextures[0x27], (f32)lbl_803DBAD8, (f32)lbl_803DBADC, p1, 0x100);
+        drawTexture(hudTextures[0x27], (f32)lbl_803DBAD8, (f32)lbl_803DBADC, alpha, 0x100);
     }
     if (seg1 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x28], (f32)(lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, p2, p1, 0x100, seg1, 0x12,
+            drawFn_8011eb3c(hudTextures[0x28], (f32)(lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, unk2, alpha, 0x100, seg1, 0x12,
                             0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x28], (f32)(lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, p1, 0x100, seg1, 0x12,
+            drawScaledTexture(hudTextures[0x28], (f32)(lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, alpha, 0x100, seg1, 0x12,
                               0);
         }
     }
     if (rem1 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, p2, p1, rem1, 0x12,
+            drawFn_8011e8d8(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, unk2, alpha, rem1, 0x12,
                             seg1, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, p1, 0x100, rem1,
+            drawPartialTexture(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, alpha, 0x100, rem1,
                                0x12, seg1, 0);
         }
     }
     if (seg2 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2A], (f32)(lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1, 0x100, seg2, 0x12,
+            drawFn_8011eb3c(hudTextures[0x2A], (f32)(lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha, 0x100, seg2, 0x12,
                             0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2A], (f32)(lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1, 0x100, seg2, 0x12,
+            drawScaledTexture(hudTextures[0x2A], (f32)(lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha, 0x100, seg2, 0x12,
                               0);
         }
     }
     if (seg3 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1, 0x100,
+            drawFn_8011eb3c(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha, 0x100,
                             seg3, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1, 0x100, seg3,
+            drawScaledTexture(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha, 0x100, seg3,
                               0x12, 0);
         }
     }
     if (seg4 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1, 0x100, seg4,
+            drawFn_8011eb3c(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha, 0x100, seg4,
                             0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1, 0x100, seg4,
+            drawScaledTexture(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha, 0x100, seg4,
                               0x12, 0);
         }
     }
     if (rem4 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1, rem4,
+            drawFn_8011e8d8(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha, rem4,
                             0x12, seg4, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1, 0x100,
+            drawPartialTexture(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha, 0x100,
                                rem4, 0x12, seg4, 0);
         }
     }
@@ -327,11 +339,11 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
     }
     if (current != 0)
     {
-        current = current + 1;
+        current++;
     }
     if (current == total)
     {
-        current = current + 1;
+        current++;
     }
     w8 = current;
     if (current > 8)
@@ -361,40 +373,40 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
     seg4 = seg4 - current;
     if (seg1 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x31], (f32)(w8 + lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, p2, p1, seg1, 0x12,
+            drawFn_8011e8d8(hudTextures[0x31], (f32)(w8 + lbl_803DBAD0 + 0x1c), (f32)lbl_803DBAD4, unk2, alpha, seg1, 0x12,
                             w8, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x31], (f32)(w8 + lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, p1, 0x100, seg1,
+            drawPartialTexture(hudTextures[0x31], (f32)(w8 + lbl_803DBAD8 + 0x1c), (f32)lbl_803DBADC, alpha, 0x100, seg1,
                                0x12, w8, 0);
         }
     }
     if (seg2 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1, 0x100,
+            drawFn_8011eb3c(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha, 0x100,
                             seg2, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1, 0x100, seg2,
+            drawScaledTexture(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha, 0x100, seg2,
                               0x12, 0);
         }
     }
     if (seg4 != 0)
     {
-        if (p3 & 0xff)
+        if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, p2, p1,
+            drawFn_8011eb3c(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD0 + 0x24), (f32)lbl_803DBAD4, unk2, alpha,
                             0x100, seg4, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, p1,
+            drawScaledTexture(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD8 + 0x24), (f32)lbl_803DBADC, alpha,
                               0x100, seg4, 0x12, 0);
         }
     }
@@ -402,8 +414,7 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
 
 typedef struct CounterText
 {
-    u32 a;
-    u32 b;
+    u32 raw[2];
 } CounterText;
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
@@ -469,7 +480,7 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
     }
 }
 
-#define PMDS_MAP_EVENT_GET_STATUS() \
+#define PMDS_TRICKY_ENERGY_PTR() \
   (*gMapEventInterface)->getTrickyEnergy()
 #define PMDS_SCREEN_GET_FADE() \
   (*gScreenTransitionInterface)->getProgress()
@@ -500,7 +511,7 @@ void pauseMenuDrawStatus(void)
     base = (u8*)lbl_803A87F0;
     player = (u8*)Obj_GetPlayerObject();
     getTrickyObject();
-    trickyStatus = PMDS_MAP_EVENT_GET_STATUS();
+    trickyStatus = PMDS_TRICKY_ENERGY_PTR();
     statuses[0] = Player_GetCurrentHealth((int)player);
     statuses[7] = Player_GetMaxHealth((int)player);
     statuses[1] = GameBit_Get(0xC1);
@@ -795,7 +806,7 @@ void minimapFn_8012310c(void)
     return;
 }
 
-void hudDrawButtons(int param1, int param2, int param3)
+void hudDrawButtons(int unk1, int unk2, int unk3)
 {
     char slots[68];
     u32 label;
@@ -901,14 +912,14 @@ void hudDrawButtons(int param1, int param2, int param3)
                     lbl_803DD848[(i + 3) - sel] = ((u8*)(base + 0x448))[k];
                 }
             }
-            k = k + 1;
+            k++;
             if (k >= lbl_803DD8B0)
             {
                 k = k - lbl_803DD8B0;
             }
         }
         GXSetScissor(0, 0, 0x280, 0x1E0);
-        hudDrawCMenu(param1, param2, param3);
+        hudDrawCMenu(unk1, unk2, unk3);
         i = 0;
         yOff = i;
         do
@@ -941,7 +952,7 @@ void hudDrawButtons(int param1, int param2, int param3)
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
                 gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + yOff + lbl_803DD796);
             }
-            iconPtr = iconPtr + 1;
+            iconPtr++;
             yOff += 0x32;
             i++;
         }
@@ -961,6 +972,7 @@ void hudDrawButtons(int param1, int param2, int param3)
                 {
                     if (lbl_803DD8B6 < 0)
                     {
+                        /* icon stays 0 when lbl_803DD8B6 < 0 */
                     }
                     else
                     {
@@ -1008,7 +1020,7 @@ void hudDrawButtons(int param1, int param2, int param3)
             }
             if (lbl_803DD7B1 != 0)
             {
-                lbl_803DD7B1 = lbl_803DD7B1 - 1;
+                lbl_803DD7B1--;
             }
             if (lbl_803DD7B1 & 8)
             {
@@ -1076,7 +1088,7 @@ void hudDrawButtons(int param1, int param2, int param3)
             }
             if (lbl_803DD7B2 != 0)
             {
-                lbl_803DD7B2 = lbl_803DD7B2 - 1;
+                lbl_803DD7B2--;
             }
             if (lbl_803DD7B2 & 8)
             {
@@ -1184,10 +1196,10 @@ void hudDrawButtons(int param1, int param2, int param3)
 
 void cMenuUpdateAnims(void)
 {
-    sbyte s;
-    byte b;
+    s8 s;
+    u8 b;
 
-    s = (sbyte)lbl_803DBA65;
+    s = (s8)lbl_803DBA65;
     if (s >= 0)
     {
         lbl_803DD796 = lbl_803DD796 - framesThisStep * s;
@@ -1209,7 +1221,7 @@ void cMenuUpdateAnims(void)
         }
     }
     b = cMenuOpen;
-    if ((sbyte)b != 0)
+    if ((s8)b != 0)
     {
         cMenuFadeCounter = cMenuFadeCounter + framesThisStep * 8;
         if (cMenuFadeCounter > 0xff)
@@ -1228,7 +1240,7 @@ void cMenuUpdateAnims(void)
             }
         }
     }
-    if ((sbyte)b != 0 && cMenuFadeCounter > 0x40)
+    if ((s8)b != 0 && cMenuFadeCounter > 0x40)
     {
         lbl_803DD8D6 = lbl_803DD8D6 + framesThisStep * 16;
         if (lbl_803DD8D6 > lbl_803DBA66)
