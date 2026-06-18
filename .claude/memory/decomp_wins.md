@@ -1,5 +1,44 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17b, dll_0141-02FF scope): 2 wins, ~6 attempts =====
+WINS (both = drawTexture per-file extern WRONG arg order):
+- dll_003D_titlemenuitem TitleMenuItem_render (83.61->100.00%): per-file
+  `extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale)` had
+  alpha BEFORE the f32 coords. CANONICAL sig across codebase (newshadows/textrender/
+  dll_02C0/dll_0031) = `(void*, f32 x, f32 y, int alpha, int scale)`. ABI-identical
+  (FP->f1/f2 by FP-index, int->r3/r4/r5 by int-index, INDEPENDENT of list position)
+  but eval/EMISSION order follows list position: target evals floats first, alpha LAST
+  (li r4 right before bl). Fixed extern + reordered 3 calls. PLUS (u8) mask on case-2
+  alpha*0x96 (target masks before mul) + `frameDelay--; if(<0)` -> `if(--field<0)`
+  (keeps decremented val live, drops reload). 100% (residual=#70 @NNN reloc). 29548b9bd1.
+- dll_003C_tumbleweedbush Link_render (85.43->94.86%): SAME wrong-order extern. Fixed
+  sig + reordered 3 calls. Residual 5% = r27/r28/r30 saved-reg perm (#108). eecec9df1a.
+LEVER (RELIABLE): grep `extern void drawTexture` per-file — any with alpha before
+  `f32 x` is WRONG -> fix to canonical + reorder calls. Only 2 files had it (both won).
+  Arg-EMISSION order = callee param POSITION (#29/#87): floats-before-int in the sig ->
+  floats eval first. Check other varargs draw/text fns with mixed int+f32 args.
+BANKED (no source lever, reverted byte-clean):
+- dll_0045_camTalk firstPersonExit (91.86%): yaw/pitch clamp fcmpo-operand swap (target
+  fsubs f1,f2,f3 keeps start@f2/end@f3 live; current lands fVar1 in f3) + outer-guard ||
+  term order. `17C4<=start`->`start>=17C4` only flipped cror lt->gt (inert). #81/#82. SJIS
+  file (compiles w/ warning, EXIT=0).
+- trex_lazerwall TREX_Lazerwall_popQueuedState (87.05%): target CSEs state->stack (0x9B0)
+  into saved r28 (mr r3,r28 x6); current re-reads lwz r3. Lifting to `int stack` REGRESSED
+  (86.84). #6/#45 inert / #108.
+- dll_004A_cameramodeshipbattle CameraModeShipBattle_update (87%): fdivs-repeated vs
+  reciprocal-CSE + fmuls/fnmsubs operand perm. FP #82.
+- dll_0013_waterfx fn_80095164 (86.4%): whole-body f20-f31 reg shift-by-one (#82) + one
+  `li r30,0; mr r29,r27` index setup. Bank.
+- dll_80136a40 debugPrintfxy (87%): p1/p2 both=(u8*)buf-1; target materializes addi r1,115
+  TWICE (two saved regs), current = one addi + two mr (#94 CSE-temp copy / #80) + add-sum
+  CSE. Multi-issue. Bank.
+LESSON: ndiff region count is a POOR fuzzy% proxy on reg-perm fns — Link_render went 46->47
+  regions but 85->95% (drawTexture region cleaned, perm regions reshuffled). VERIFY with
+  report.json fuzzy_match_percent. Report build aborts if ANY unit fails compile (other
+  agents' WIP) — retry locked_ninja (transient). config.json is consumed by split step;
+  objdump directly: powerpc-eabi-objdump -drz -M gekko --disassemble=SYM
+  build/GSAE01/{obj=target,src=yours}/main/dll/UNIT.o.
+
 ## ===== Session (Jun17, top-level src/main): 3 wins, ~6 attempts =====
 WINS (all TOP-LEVEL src/main, big fns, saved-reg/CSE/temp veins):
 - newclouds_update (85.9->96.0%, 3 commits): the WIN VEIN was target re-derives
