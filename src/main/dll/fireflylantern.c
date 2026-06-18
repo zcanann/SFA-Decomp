@@ -1,3 +1,20 @@
+/*
+ * fireflylantern - named for the firefly-lantern DLL object whose source
+ * this TU was split from; it owns the generic rom-curve path-walk and
+ * target-steering helpers that object first defined, which the fox-fighting
+ * baddie family then reuses (the "fox fightbreath" SFX and BaddieState
+ * path/curve fields identify the latter). These four routines live in this
+ * object but are linked into sibling baddie DLLs:
+ *   - fn_80154870  per-frame update: walks the rom curve path, faces the
+ *     player, drives the move/look helpers and plays attack-breath SFX.
+ *   - fn_80154C24  state init: seeds BaddieState path/speed fields and a
+ *     random path phase/step.
+ *   - fn_80154D0C  computes the signed angle + planar distance from the
+ *     object to its tracked target relative to the path plane.
+ *   - fn_80154FB4  steers/moves the object toward its target along the
+ *     path plane, clamped by a per-frame turn rate and max step.
+ * (callers: dll_00C9_enemy, duster.)
+ */
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx.h"
@@ -5,7 +22,6 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
-
 
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
 extern uint randomGetRange(int min, int max);
@@ -25,7 +41,7 @@ extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
 extern f32 fn_80293DA4(f32);
 
-extern undefined4 lbl_803DBCD0;
+extern u32 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;
@@ -81,7 +97,7 @@ void fn_80154870(int obj, int* state)
         *(f32*)(state + 0xc9) = lbl_803E2990;
     }
     ((GameObject*)obj)->anim.rotY =
-        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)((u8*)state + 0x33a)) -
+        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8*)((u8*)state + 0x33a)) -
             (f32)((GameObject*)obj)->anim.rotY);
     if (flag == 0)
     {
@@ -97,7 +113,7 @@ void fn_80154870(int obj, int* state)
     }
     if (state[0xb7] & 0x40000000U)
     {
-        fval = *(f32*)&lbl_803E2990;
+        fval = *(f32*)&lbl_803E2990; /* launder to break CSE with the line-95/102 reads */
         if (fval == *(f32*)(state + 0xca))
         {
             if (flag == 0)
@@ -144,7 +160,7 @@ void fn_80154870(int obj, int* state)
     }
     *(u8*)((u8*)state + 0x33a) += 1;
     ((GameObject*)obj)->anim.rotY =
-    (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)((u8*)state + 0x33a)) +
+    (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8*)((u8*)state + 0x33a)) +
         (f32)((GameObject*)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
@@ -167,16 +183,15 @@ void fn_80154C24(int obj, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fval;
     fval = lbl_803E2990;
-    *(float*)(state + 0x324) = lbl_803E2990;
+    *(float*)(state + 0x324) = fval;
     *(float*)(state + 0x328) = fval;
     *(float*)(state + 0x32c) = ((GameObject*)obj)->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     *(u8*)(state + 0x33a) = randVal;
-    *(undefined*)(state + 0x33b) = 0;
+    *(u8*)(state + 0x33b) = 0;
     *(float*)(state + 0x330) = lbl_803E29F4;
     randVal = randomGetRange(0x32, 0x4b);
-    fval = (f32)(s32)
-    randVal;
+    fval = (f32)(s32)randVal;
     fval = lbl_803E29F8 * fval;
     ((BaddieState*)state)->pathStep = fval;
 }
@@ -193,8 +208,8 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     f32 axisA[3];
     f32 axisB[3];
     f32 objY;
-    f32 dx;
-    f32 targetY;
+    f32 dxDiff;
+    f32 dy;
     f32 d;
     int targetObj;
     int delta;
@@ -215,11 +230,11 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0])
     {
-        dx = (((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0x360)) / crossA[0];
+        dxDiff = (((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0x360)) / crossA[0];
     }
     else
     {
-        dx = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
+        dxDiff = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = *(f32*)(targetObj + 0xc);
@@ -231,7 +246,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32*)(state + 0x344));
     vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
-    vecB[1] = *(f32*)(state + 0x348) * d + (targetY = targetPos[1]);
+    vecB[1] = *(f32*)(state + 0x348) * d + (dy = targetPos[1]);
     vecB[2] = *(f32*)(state + 0x34c) * d + targetPos[2];
     axisB[0] = lbl_803E2A00;
     axisB[1] = lbl_803E2A04;
@@ -246,9 +261,9 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     {
         d = (targetPos[2] - *(f32*)(state + 0x364)) / crossB[2];
     }
-    dx = dx - d;
-    targetY = objY - targetY;
-    angle = getAngle(-targetY, dx) & 0xffff;
+    dxDiff = dxDiff - d;
+    dy = objY - dy;
+    angle = getAngle(-dy, dxDiff) & 0xffff;
     delta = angle - (((GameObject*)obj)->anim.rotY & 0xffff);
     if (delta > 0x8000)
     {
@@ -263,7 +278,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
         delta = -delta;
     }
     *outAngle = delta & 0xffff;
-    *outDistance = sqrtf(dx * dx + targetY * targetY);
+    *outDistance = sqrtf(dxDiff * dxDiff + dy * dy);
 }
 
 uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
@@ -287,7 +302,7 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     f32 d;
     f32 turnStep;
     s16 rot;
-    int curve;
+    int targetObj;
     int delta;
     int angleStep;
     uint angle;
@@ -313,10 +328,10 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     {
         dxA = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
-    curve = *(int*)&((BaddieState*)state)->trackedObj;
-    targetPos[0] = *(f32*)(curve + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(f32*)(curve + 0x10);
-    targetPos[2] = *(f32*)(curve + 0x14);
+    targetObj = *(int*)&((BaddieState*)state)->trackedObj;
+    targetPos[0] = *(f32*)(targetObj + 0xc);
+    targetPos[1] = lbl_803E2A08 + *(f32*)(targetObj + 0x10);
+    targetPos[2] = *(f32*)(targetObj + 0x14);
     vecB[0] = *(f32*)(state + 0x360);
     vecB[1] = *(f32*)(state + 0x358);
     vecB[2] = *(f32*)(state + 0x364);
@@ -383,4 +398,3 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     }
     return angleStep & 0xffff;
 }
-
