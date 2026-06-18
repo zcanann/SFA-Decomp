@@ -1,3 +1,26 @@
+/*
+ * fall_ladders - shared baddie move/behaviour handlers (0x801540A0..0x80154870).
+ *
+ * These five functions are not an object descriptor of their own; they are
+ * called by other baddie DLLs (dll_00C9_enemy, dll_00C4_tricky, fireflylantern)
+ * as per-state update/setup callbacks for a curve-following water creature.
+ *
+ *   fn_801540A0  per-frame move update: picks the active move (Baddie_SetMove)
+ *                from the tracked target, runs an approach/retreat timer, and
+ *                plays a gasp sfx on the attack transition.
+ *   fn_801542AC  one-shot move setup: seeds speed/path-step and the BaddieState
+ *                scratch floats at 0x300..0x33c.
+ *   fn_80154328  spawns a water ripple under the object and a splash sfx when
+ *                it is moving fast enough; gated by a randomised cooldown.
+ *   fn_801544E8  hit-reaction handler: sets reaction flags + door sfx above a
+ *                progress threshold.
+ *   fn_80154584  curve-path follow update: advances the RomCurveWalker, steers
+ *                toward the next point, bobs rotY via a sine table, then calls
+ *                fn_80154328.
+ *
+ * The state pointer is the surrounding BaddieState; most accesses are raw
+ * offsets into its per-baddie scratch region (0x29c..0x340).
+ */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx.h"
@@ -9,31 +32,10 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 
-extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8014d3d0();
-extern undefined4 FUN_8014d4c8();
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
+extern f32 sqrtf(f32 x);
 
-extern f32 lbl_803DC074;
-extern f32 lbl_803E358C;
-extern f32 lbl_803E35A4;
-extern f32 lbl_803E35A8;
-extern f32 lbl_803E35BC;
-extern f32 lbl_803E35C0;
-extern f32 lbl_803E35C4;
-extern f32 lbl_803E35C8;
-extern f32 lbl_803E35D8;
-extern f32 lbl_803E35DC;
-extern f32 lbl_803E35E0;
-extern f32 lbl_803E35E4;
-extern f32 lbl_803E35F0;
-extern f32 lbl_803E3600;
-extern f32 lbl_803E3604;
-extern f32 lbl_803E3608;
-extern f32 lbl_803E360C;
-
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
@@ -73,31 +75,6 @@ extern f32 lbl_803E2980;
 extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
-
-void FUN_801540a0(undefined4 obj, int state)
-{
-    float fa;
-    float fb;
-
-    ((BaddieState*)state)->speedScale = lbl_803E35BC;
-    ((BaddieState*)state)->unk2E4 = 1;
-    ((BaddieState*)state)->unk308 = lbl_803E358C;
-    ((BaddieState*)state)->unk300 = lbl_803E35C0;
-    ((BaddieState*)state)->unk304 = lbl_803E35C4;
-    *(undefined*)(state + 800) = 0;
-    fb = lbl_803E35A8;
-    *(f32*)&((BaddieState*)state)->eventFlags = lbl_803E35A8;
-    *(undefined*)(state + 0x321) = 7;
-    fa = lbl_803E35A4;
-    ((BaddieState*)state)->unk318 = lbl_803E35A4;
-    *(undefined*)(state + 0x322) = 0;
-    ((BaddieState*)state)->unk31C = fb;
-    *(undefined*)(state + 0x33a) = 0;
-    *(undefined*)(state + 0x33b) = 0;
-    *(float*)(state + 0x324) = lbl_803E35C8;
-    ((BaddieState*)state)->pathStep = fa;
-    return;
-}
 
 #pragma scheduling off
 #pragma peephole off
@@ -189,10 +166,8 @@ void fn_80154584(int obj, int p)
             *(f32*)(p + 0x324) = lbl_803E2990;
         }
     }
-    {
-        ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) - (
-            f32)((GameObject*)obj)->anim.rotY);
-    }
+    ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) - (
+        f32)((GameObject*)obj)->anim.rotY);
     fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     if ((*(u32*)(p + 0x2dc) & 0x40000000) != 0)
     {
@@ -219,18 +194,13 @@ void fn_80154584(int obj, int p)
         }
     }
     *(u8*)(p + 0x33a) += 1;
-    {
-        ((GameObject*)obj)->anim.rotY = lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) + (
-            f32)((GameObject*)obj)->anim.rotY;
-    }
+    ((GameObject*)obj)->anim.rotY = lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) + (
+        f32)((GameObject*)obj)->anim.rotY;
     fn_80154328(obj, p);
 }
 
 void fn_80154328(int obj, int p)
 {
-    extern u32 randomGetRange(int min, int max);
-    extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
-    extern f32 sqrtf(f32 x);
     f32 mtx[17];
     struct
     {
@@ -244,8 +214,7 @@ void fn_80154328(int obj, int p)
     *(f32*)(p + 0x330) -= timeDelta;
     if (*(f32*)(p + 0x330) <= lbl_803E2990)
     {
-        *(f32*)(p + 0x330) = (f32)(s32)
-        randomGetRange(30, 60);
+        *(f32*)(p + 0x330) = (f32)(s32)randomGetRange(30, 60);
         stk.pos[0] = ((GameObject*)obj)->anim.localPosX;
         stk.pos[1] = lbl_803E2990;
         stk.pos[2] = ((GameObject*)obj)->anim.localPosZ;
@@ -254,10 +223,8 @@ void fn_80154328(int obj, int p)
         stk.in[2] = 0;
         *(f32*)(stk.in + 4) = lbl_803E2994;
         setMatrixFromObjectPos(mtx, stk.in);
-        tx = lbl_803E2998 + (f32)(s32)
-        randomGetRange(-20, 20) / lbl_803E299C;
-        tz = lbl_803E29A0 + (f32)(s32)
-        randomGetRange(-20, 20) / lbl_803E299C;
+        tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
+        tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
             tx, *(f32*)(p + 0x32c), tz, 0, lbl_803E2990, 3);
@@ -270,85 +237,14 @@ void fn_80154328(int obj, int p)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
-void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  short* obj, int state)
-{
-    bool done;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-
-    *(float*)(state + 0x32c) = lbl_803E35E4;
-    done = false;
-    ObjHits_SetHitVolumeSlot((int)obj, 0x18, 1, -1);
-    if (*(int*)(state + 0x340) != 0)
-    {
-        done = true;
-        *(float*)(state + 0x324) = lbl_803E3600;
-        *(float*)(state + 0x32c) = lbl_803E35E4;
-        if (obj[0x50] != 0)
-        {
-            FUN_8014d4c8((double)lbl_803E35F0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         (int)obj, state, 2, 0, 3, in_r8, in_r9, in_r10);
-        }
-    }
-    if (obj[0x50] == 3)
-    {
-        *(float*)(state + 0x328) = *(float*)(state + 0x328) - lbl_803DC074;
-        if (*(float*)(state + 0x328) <= lbl_803E35E4)
-        {
-            done = true;
-            *(float*)(state + 0x32c) = lbl_803E35D8;
-            *(float*)(state + 0x324) = lbl_803E35DC;
-            FUN_8014d4c8((double)lbl_803E35E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         (int)obj, state, 4, 0, 3, in_r8, in_r9, in_r10);
-        }
-    }
-    else
-    {
-        param_2 = (double)*(float*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14);
-        FUN_8014d3d0(obj, state, 0x3c, 0);
-    }
-    if (done)
-    {
-        *(uint*)(state + 0x2e4) = *(uint*)(state + 0x2e4) | 0x10000;
-    }
-    else if (*(char*)(state + 0x33a) == '\0')
-    {
-        *(undefined*)(state + 0x33a) = 1;
-        FUN_8014d4c8((double)lbl_803E3604, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     (int)obj, state, 1, 0, 3, in_r8, in_r9, in_r10);
-    }
-    else if (((*(uint*)(state + 0x2dc) & 0x40000000) != 0) &&
-        (FUN_8014d4c8((double)lbl_803E3608, param_2, param_3, param_4, param_5, param_6, param_7,
-                      param_8, (int)obj, state, 3, 0, 3, in_r8, in_r9, in_r10),
-            lbl_803E35E4 == *(float*)(state + 0x328)))
-    {
-        *(float*)(state + 0x328) = lbl_803E360C;
-        FUN_8014d3d0(obj, state, 1, 0);
-        FUN_80006824((uint)obj, SFXfox_healthgasp2);
-    }
-    obj[1] = ((BaddieState*)state)->spawnRotY;
-    obj[2] = ((BaddieState*)state)->spawnRotZ;
-    if (*(char*)(state + 0x33b) != '\0')
-    {
-        *(char*)(state + 0x33b) = *(char*)(state + 0x33b) + -1;
-    }
-    return;
-}
-
-#pragma scheduling off
-void fn_801544E8(int* obj, u8* state, int p3, int p4)
+void fn_801544E8(int obj, u8* state, int p3, int p4)
 {
     if (p4 == 17 || p4 == 16) return;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
         *(int*)&((BaddieState*)state)->reactionFlags |= 8;
-        Sfx_PlayFromObject((u32)obj, SFXdoor_unlocked);
-        Sfx_PlayFromObject((u32)obj, SFXdoor_creak);
+        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+        Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(s16*)&((BaddieState*)state)->hitCounter = 0;
         ((BaddieState*)state)->unk2E4 |= 32;
     }
