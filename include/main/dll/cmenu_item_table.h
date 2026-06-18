@@ -87,4 +87,22 @@ typedef struct CMenuSection
  *  0x4c3  Use Gate Key              0xc6f    0xd20                  SnowHorn Wastes
  */
 
+/*
+ * Tricky abilities (gCMenuTrickyAbilities, the useTricky == 1 section).
+ *
+ * Unlike collectables, the tricky table is NOT gated by GameBits: ownedGameBit
+ * is instead a single ABILITY BIT tested against gTrickyHudActionMask (shown)
+ * and gTrickyHudItemMask (usable). Both masks are recomputed every frame by
+ * drawTrickyHudOverlay() from the Tricky object's vtable (+0x20 = action mask,
+ * +0x24 = usable mask); with no Tricky companion both are forced to 0.
+ *
+ *  bit    text   ability        icon     notes
+ *  ----   ----   -------        ----     -----
+ *  0x01   0x3f7  Call Tricky    0xc81    whistle; Tricky comes to you
+ *  0x20   0x3f8  Throw Ball     0xc84    ball bought from the shop
+ *  0x02   0x3f9  Find Secret    0xc82    Tricky digs up buried items
+ *  0x10   0x3fa  Use Flame      0xc83    fire breath (burns MoonSeeds, etc.)
+ *  0x08   0x3fc  Tricky Stay!   0xc85    hold position (pressure plates)
+ */
+
 #endif /* MAIN_DLL_CMENU_ITEM_TABLE_H_ */
