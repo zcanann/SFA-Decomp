@@ -1,29 +1,52 @@
+/*
+ * dll_b6 - camera-control lock-on target selection helpers.
+ *
+ * Companion code to the CAM camcontrol DLL (dll_0001_camcontrol): the two
+ * functions here are called from there.
+ *
+ * camcontrol_findBestTarget scans the live object list for the best lock-on
+ * target relative to the camera focus: it rejects hidden/invisible/flagged
+ * objects, keeps only hit volumes whose class is enabled in
+ * gCamcontrolTargetClassMask, filters by a vertical band and a squared planar
+ * range derived from the volume's bounds, then inserts survivors into a
+ * priority/distance-sorted list (highest priority first, nearest first within a
+ * priority). The chosen target's line of sight is optionally validated against
+ * the voxel map (voxmaps_traceLine).
+ *
+ * camcontrol_updateMoveAverage maintains a 5-frame rolling average of the focus
+ * object's speed, used to damp camera follow.
+ */
 #include "main/dll/dll_B6.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
+/* player query (player_80295318) */
 extern void *Obj_GetPlayerObject(void);
+/* signatures below are spellings-for-match; canonical decls take int obj (player_80295318_shared.h) */
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(void *player);
+/* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
+   (canonical engine_shared.h uses s16/VoxPos pointers and u8 - do not narrow these here) */
 extern void voxmaps_worldToGrid(f32 *world, int *grid);
 extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
 extern f32 PSVECMag(void *vec);
 extern float sqrtf(float x);
 
-extern f32 lbl_803E1644;
-extern f32 lbl_803E1648;
-extern f32 lbl_803E1658;
+/* lock-on tuning constants (this DLL's .sdata2) */
+extern f32 lbl_803E1644; /* vertical band lower bound */
+extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
+extern f32 lbl_803E1658; /* 1/5 move-average weight */
 
 CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState, ObjAnimComponent *focus)
 {
     int objIndex;
     int objCount;
-    u8 out2[4];
-    f32 v1[3];
-    f32 v2[3];
-    int g1[3];
-    int g2[3];
-    int out1[3];
+    u8 occOut[4];
+    f32 worldFrom[3];
+    f32 worldTo[3];
+    int gridFrom[3];
+    int gridTo[3];
+    int traceOut[3];
     GameObject *targets[8];
     f32 dist[8];
     GameObject **ptr;
@@ -39,10 +62,10 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     GameObject *best;
     int i;
     int k;
-    int ok;
+    int accept;
     f32 dx, dz, dy, distsq, range;
-    f32 *pd;
-    GameObject **pa;
+    f32 *pDist;
+    GameObject **pTarget;
 
     (void)cameraState;
     bestPri = -1;
@@ -64,10 +87,11 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
            || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
            || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
            || (obj->objectFlags & 0x40)
-           || (gCamcontrolTargetClassMask & ((ok = 1) << (data[obj->unkE4].flags & 0xf))) == 0) {
-            ok = 0;
+           /* embedded accept=1 inside the mask shift is matching-critical; the failure body clears it back to 0 */
+           || (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->unkE4].flags & CAMCONTROL_TARGET_KIND_MASK))) == 0) {
+            accept = 0;
         }
-        if (ok == 0) {
+        if (accept == 0) {
             continue;
         }
         if ((int)obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
@@ -93,7 +117,8 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
             continue;
         }
         canTarget = 1;
-        if ((entry->flags & 0xf) == 2 && fn_80295C24(player) != 0) {
+        if ((entry->flags & CAMCONTROL_TARGET_KIND_MASK) == CAMCONTROL_TARGET_KIND_A_BUTTON_HINT &&
+            fn_80295C24(player) != 0) {
             canTarget = 0;
         }
         if (canTarget == 0) {
@@ -101,18 +126,18 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         }
         bestPri = obj->anim.modelInstance->hitVolumes[obj->unkE4].priority;
         i = 0;
-        pa = targets;
+        pTarget = targets;
         while (i < count
-            && (int)(*pa)->anim.modelInstance->hitVolumes[(*pa)->unkE4].priority > bestPri) {
-            pa++;
+            && (int)(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority > bestPri) {
+            pTarget++;
             i++;
         }
-        pd = dist + i;
-        pa = targets + i;
-        while (i < count && *pd < distsq
-            && bestPri == (int)(*pa)->anim.modelInstance->hitVolumes[(*pa)->unkE4].priority) {
-            pd++;
-            pa++;
+        pDist = dist + i;
+        pTarget = targets + i;
+        while (i < count && *pDist < distsq
+            && bestPri == (int)(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority) {
+            pDist++;
+            pTarget++;
             i++;
         }
         for (k = count; k > i; k--) {
@@ -130,15 +155,15 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         best = targets[0];
         row = &best->anim.modelInstance->hitVolumes[best->unkE4];
         if (row->flags & 0x20) {
-            v1[0] = focus->worldPosX;
-            v1[1] = lbl_803E1648 + focus->worldPosY;
-            v1[2] = focus->worldPosZ;
-            v2[0] = best->anim.hitVolumeTransforms[best->unkE4].jointX;
-            v2[1] = best->anim.hitVolumeTransforms[best->unkE4].jointY;
-            v2[2] = best->anim.hitVolumeTransforms[best->unkE4].jointZ;
-            voxmaps_worldToGrid(v1, g1);
-            voxmaps_worldToGrid(v2, g2);
-            if (voxmaps_traceLine(g1, g2, out1, out2, 0) == 0 && out2[0] != 1) {
+            worldFrom[0] = focus->worldPosX;
+            worldFrom[1] = lbl_803E1648 + focus->worldPosY;
+            worldFrom[2] = focus->worldPosZ;
+            worldTo[0] = best->anim.hitVolumeTransforms[best->unkE4].jointX;
+            worldTo[1] = best->anim.hitVolumeTransforms[best->unkE4].jointY;
+            worldTo[2] = best->anim.hitVolumeTransforms[best->unkE4].jointZ;
+            voxmaps_worldToGrid(worldFrom, gridFrom);
+            voxmaps_worldToGrid(worldTo, gridTo);
+            if (voxmaps_traceLine(gridFrom, gridTo, traceOut, occOut, 0) == 0 && occOut[0] != 1) {
                 return NULL;
             }
         }
@@ -147,7 +172,8 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     return NULL;
 }
 
-void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus) {
+void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus)
+{
     f32 mag;
     f32 minMove;
     cameraState->focusMoveHistory[0] = cameraState->focusMoveHistory[1];
