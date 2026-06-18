@@ -10630,7 +10630,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
         u8 r;
         if (*(u8*)((char*)sub + 0x2c) != 0)
         {
-            *(u8*)((char*)sub + 0x2c) = *(u8*)((char*)sub + 0x2c) - 1;
+            *(u8*)((char*)sub + 0x2c) -= 1;
         }
         else
         {
@@ -10640,17 +10640,17 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
             {
                 if (r & 4)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + 0x7ff8;
+                    ((GameObject*)obj)->anim.rotX += 0x7ff8;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
                 else if (r & 2)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX - 0x3ffc;
+                    ((GameObject*)obj)->anim.rotX -= 0x3ffc;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
                 else if (r & 8)
                 {
-                    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + 0x3ffc;
+                    ((GameObject*)obj)->anim.rotX += 0x3ffc;
                     *(u8*)((char*)sub + 0x2c) = 3;
                 }
             }
@@ -10659,7 +10659,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
     }
     if (*(u8*)((char*)sub + 0x2c) == 0)
     {
-        ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX +
+        ((GameObject*)obj)->anim.rotX +=
             (int)((f32)(s32)((u16) * (u16*)((char*)sub + 0x20) - 0x7fff) *
                 timeDelta * lbl_803E8194);
     }
