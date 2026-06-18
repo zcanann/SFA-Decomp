@@ -1826,7 +1826,6 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
     u8 fl;
-    f32 vec[3];
     struct
     {
         s16 f8;
@@ -1840,6 +1839,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     } args;
     f32 posA[3] = {0.0f, 0.0f, 0.0f};
     f32 posB[3] = {0.0f, 0.0f, 0.0f};
+    f32 vec[3];
 
     env = saveGameGetEnvState();
     if (params == NULL)
