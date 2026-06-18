@@ -1,5 +1,71 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17g, src/main/dll/player.c): 5 wins, ~11 attempts =====
+WINS (all clean structural levers, committed local; push rejected remote-ahead):
+- fn_8029A4A8 (95.1->98.2%, 8d969ff237) & playerDie (98.15->98.88%, b7c85a051c):
+  the lbl_80332ED4[0..6] death-cleanup loop. Spell `lbl_80332ED4[i]` indexed,
+  NOT a walker `p=lbl_80332ED4; *p; p++`. Drops the separate walker pointer reg.
+  RESIDUAL (banked both): #108 walker/counter saved-reg swap (target inits the
+  counter via `mr rCounter,rZero` reusing the NULL-store zero, AND colors the
+  walker LOWER than the counter; current inverts). Index form gains ~3pt; the
+  final reg-swap resisted decl-order + chained-init `i=lbl=0` (REGRESSED both).
+- fn_802957B4 (97.35->97.98%, 4b3cf64c46): modelState->flags &= 0xFFFFEFFFLL
+  forced a high-word `li r3,0` that got REUSED for the adjacent inner->unk7F0=0
+  store; target uses fresh `li r0,0`. Spell `&= ~0x1000` (32-bit, NO LL/U) ->
+  rlwinm + separate zero store. CAVEAT: ~0x1000 gives rlwinm but target wants
+  `li -4097;and` (materialized inverse) — 1-instr residual; both ~0x1000LL and
+  0xFFFFEFFFU REINTRODUCE the high-word reuse (REGRESS to 95.0). The plain
+  32-bit ~K is the only non-regressing form. (#74 high-word-reuse vein, same as
+  enemy_update from Jun17d.)
+- fn_80295CF4 (97.9->99.0%, 2869d57faa): `if (lbl==NULL || b40==a) return;`
+  early-return guard folded the SECOND `||` term to `bne CONT;b RET` instead of
+  target's shared `beq RET`. Split into TWO separate `if(...)return;` guards ->
+  beq for each. RESIDUAL: 1 extra beq in the else-branch nested null check
+  (target emits a redundant `cmplwi r3,0;beq b34;beq acc` double-beq #109d).
+  LEVER: a 2-term `||` early-return where the 2nd term mis-folds to bne;b ->
+  split into separate ifs (the inverse of #17 merging — here SPLITTING wins).
+- fn_802AA4B0 (97.97->98.24%, bbf40dbf7e): TWO levers. (1) `(void*)setup==NULL`
+  -> cmplwi (#3). (2) `mathSinf(fov)/mathCosf(fov)` tan: target calls sinf
+  BEFORE cosf; current evaluated cosf first (mathSinf/mathCosf RELOC swap +
+  fmuls operand swap). Split `f32 sn=mathSinf(fov); cot=lbl*(sn/mathCosf(fov));`
+  -> sinf-first, kills the reloc swap AND the multiply-operand swap. RESIDUAL:
+  #82 dx/dy/dz f30/f31 + pt/lbl_803DE44C base GPR perm in the targetObj branch.
+BANKED this session (no source lever, reverted byte-clean):
+- fn_802AA8D0 (97.59%): #82 base f3/f1 + divisor/bias f30/f31 swap +
+  @370-vs-lbl_803E7EC0 conversion-magic reloc. decl-order swap INERT, (int)
+  cast on randomGetRange INERT. The bias-magic named-vs-pool is tied to the
+  f30/f31 class. Bank.
+- fn_802AA2B0 (97.7%): target does `li r30,1; bl Camera_GetCurrentViewSlot
+  (DISCARDS return); cmpwi r30,1` — slot is a constant 1 held in saved r30, the
+  Camera return is thrown away. `int slot=1;` + separate call REGRESSED (96.0,
+  MWCC const-folds the `if(slot==1)` away). Can't reproduce the un-folded
+  tautology cleanly. Bank (slot-as-constant-1 + r30/r31 perm).
+- fn_8029A76C (95.45%): frame -128(target) vs -112, all stack offsets shifted
+  +24 (target r1+8/20, current r1+32/52) — TWO disjoint-branch structs pfx/pfx2
+  that target keeps BOTH (bigger frame); merging to one REGRESSED (-112 too
+  small). Plus `0x200001` spawn flag: target hoists `lis r28,32`(0x200000) to
+  SAVED r28 across whole fn, `addi r6,r28,1` per call; `int spawnFlags=0x200000;
+  ...spawnFlags+1` only hoists in the LOOP branch (LICM), the 2 non-loop calls
+  re-materialize volatile r6. Multi-issue #67/#6. Bank.
+- fn_802AF7F8 (99.31%): chained deref `r35c=*(int*)(extra+0x35c)`: target keeps
+  base in r3 (overwrites), current copies to r4. Inlining the expr (#107) INERT
+  (CSE keeps the copy). + death-loop coloring. Bank.
+- fn_802ABFBC/fn_8029D4C0 (99.18/99.41%): the `d=(u16)getAngle(...)-(u16)field`
+  idiom: target masks getAngle result INTO r4 (`clrlwi r4,r3,16;subf r4,r0,r4`),
+  current masks in-place r3. Statement-split `d=(u16)getAngle(); d-=(u16)field;`
+  INERT. Recurs across multiple player fns. Banked #82/#66. ALSO fn_802ABFBC has
+  frame -176 vs -144 (#67 conversion-temp scratch for many `(f32)d`).
+LESSON (CONFIRMED): the lbl_80332ED4 death-cleanup loop appears in MANY player
+  fns (fn_8029A4A8/playerDie/fn_8029A76C/fn_8029ABD8/fn_80299E44/fn_802AF7F8 +
+  caps). Indexed `lbl_80332ED4[i]` beats walker `p++` by ~3pt WHEN the walker is
+  the only divergence; inert where it's already `p[i]` indexed (same codegen) or
+  where the fn has bigger frame/coloring issues. Residual is always the #108
+  walker/counter saved-reg swap (target reuses the zero-store reg for counter).
+LESSON: a 2-term `||` early-return mis-folding the 2nd term to `bne;b` -> SPLIT
+  into two separate `if()return;` (beq each). The `~KLL`-on-u32 high-word-reuse
+  vein (#74) recurs in player.c too (fn_802957B4). Sin/cos tan eval order:
+  split sinf into a temp before the divide to force sinf-first call order.
+
 ## ===== Session (Jun17f, FLAT dll): 2 wins, ~14 attempts =====
 WINS:
 - SaveGame_gplayAddTime (dll_0017, 87.9->99.4%, 433b6fb0fd): the final
