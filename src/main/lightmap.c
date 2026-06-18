@@ -126,9 +126,6 @@ extern f32 fn_802943F4(f32 v);
 void updateVisibleGeometry(void)
 {
     u8* cam;
-    f32* py;
-    f32* pz;
-    f32* pd;
     int n;
     f32 scale;
     f32 xx, yy, zz;
@@ -141,9 +138,6 @@ void updateVisibleGeometry(void)
     f32 m[17];
 
     cam = (u8*)Camera_GetCurrentViewSlot();
-    py = &gViewFrustumPlanes[1];
-    pz = &gViewFrustumPlanes[2];
-    pd = &gViewFrustumPlanes[3];
     n = 0;
     if ((renderFlags & 8) != 0 || (renderFlags & 0x10000) != 0)
     {
@@ -166,9 +160,9 @@ void updateVisibleGeometry(void)
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
     gViewFrustumPlanes[n * 5] = ox;
-    py[n * 5] = oy;
-    pz[n * 5] = oz;
-    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n * 5 + 1] = oy;
+    gViewFrustumPlanes[n * 5 + 2] = oz;
+    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
     fov = (int)(lbl_803DEC04 * scale) & 0xffff;
     tt = fn_80293AC4(fov);
@@ -180,28 +174,28 @@ void updateVisibleGeometry(void)
     negff = -ff;
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, negff, &ox, &oy, &oz);
     gViewFrustumPlanes[n * 5] = ox;
-    py[n * 5] = oy;
-    pz[n * 5] = oz;
-    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n * 5 + 1] = oy;
+    gViewFrustumPlanes[n * 5 + 2] = oz;
+    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
     negss = -ss;
     Matrix_TransformPoint(m, negss, lbl_803DEBCC, negff, &ox, &oy, &oz);
     gViewFrustumPlanes[n * 5] = ox;
-    py[n * 5] = oy;
-    pz[n * 5] = oz;
-    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n * 5 + 1] = oy;
+    gViewFrustumPlanes[n * 5 + 2] = oz;
+    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, negss, negff, &ox, &oy, &oz);
     gViewFrustumPlanes[n * 5] = ox;
-    py[n * 5] = oy;
-    pz[n * 5] = oz;
-    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n * 5 + 1] = oy;
+    gViewFrustumPlanes[n * 5 + 2] = oz;
+    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, ss, negff, &ox, &oy, &oz);
     gViewFrustumPlanes[n * 5] = ox;
-    py[n * 5] = oy;
-    pz[n * 5] = oz;
-    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n * 5 + 1] = oy;
+    gViewFrustumPlanes[n * 5 + 2] = oz;
+    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
