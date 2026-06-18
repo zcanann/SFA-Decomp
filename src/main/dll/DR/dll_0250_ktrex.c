@@ -1287,7 +1287,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     u8 phase;
     int idx;
     u16 flags;
-    int dir;
+    int flag1;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
@@ -1307,18 +1307,17 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         return 4;
     }
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
-    dir = flags & 1;
+    flag1 = flags & 1;
     if (((KTRexArenaState*)gKTRexState)->unkFC == 0 &&
         (phase = ((KTRexArenaState*)gKTRexState)->unk101) >= 2 && (flags & 0x20) == 0 &&
-        ((dir == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
-            (dir != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
+        ((flag1 == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
+            (flag1 != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
     {
         idx = phase >> 1;
-        if ((int)randomGetRange(0, 0x64) <= ((u8*)p + idx)[0x56])
+        if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x56])
         {
-            int push;
+            int push = 5;
             ((KTRexArenaState*)gKTRexState)->unk103 = 2;
-            push = 5;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1326,7 +1325,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             ((KTRexArenaState*)gKTRexState)->unkFD = 1;
             return 5;
         }
-        if ((int)randomGetRange(0, 0x64) <= ((u8*)p + idx)[0x52])
+        if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x52])
         {
             u8 cond;
             u8 fe = ((KTRexArenaState*)gKTRexState)->unkFE;
@@ -1348,9 +1347,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             if (cond && (((KTRexArenaState*)gKTRexState)->timerFA & 0x40) == 0)
             {
-                int push;
+                int push = 0xb;
                 ((KTRexArenaState*)gKTRexState)->unkFD = 0;
-                push = 0xb;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
@@ -1365,7 +1363,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
         if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
         {
-            u8 result;
+            int result;
             if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
             {
                 if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
@@ -1374,7 +1372,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
-                    goto resultZero;
+                    result = 0;
                 }
             }
             else
@@ -1385,15 +1383,13 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
-                resultZero:
                     result = 0;
                 }
             }
             if (result != 0)
             {
-                int push;
+                int push = 5;
                 ((KTRexArenaState*)gKTRexState)->unk103 = 1;
-                push = 5;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
