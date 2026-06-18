@@ -68,6 +68,15 @@ typedef struct
     u32 extra; /* 0xc */
 } SeqRow16;
 
+typedef struct
+{
+    f32 speed; /* 0x0 */
+    u32 flags; /* 0x4 */
+    u8 anim;   /* 0x8 */
+    u8 pad9;   /* 0x9 */
+    u16 padA;  /* 0xa */
+} IdleRow;
+
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {
@@ -282,27 +291,31 @@ void fn_80150EDC(void* p1, void* p2)
 
     if ((((BaddieState*)p2)->controlFlags & 0x40000000) != 0)
     {
-        u16 cur338 = *(u16*)((u8*)p2 + 0x338);
-        if (cur338 != 0)
+        SeqRow16* seqRow16 = (SeqRow16*)seqRows;
+        if (*(u16*)((u8*)p2 + 0x338) != 0)
         {
-            *(u8*)((u8*)p2 + 0x2f2) = (u8)((SeqRow16*)seqRows)[cur338].extra;
-            Baddie_SetMove(p1, p2, ((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].anim,
+            SeqRow16* row;
+            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
+            *(u8*)((u8*)p2 + 0x2f2) = (u8)row->extra;
+            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
+            Baddie_SetMove(p1, p2, row->anim,
                         *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
-                        (u8)((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].flags);
+                        (u8)row->flags);
+            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
             ObjAnim_SetMoveProgress(
-                *(f32*)(table + (((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].anim << 2)),
+                *(f32*)(table + (row->anim << 2)),
                 (ObjAnimComponent*)p1);
-            *(u16*)((u8*)p2 + 0x338) =
-                ((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].next;
+            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
+            *(u16*)((u8*)p2 + 0x338) = row->next;
         }
         else
         {
-            u16 idx2a0 = *(u16*)((u8*)p2 + 0x2a0);
+            IdleRow* idleRows = (IdleRow*)idleSrc;
             u8 v8;
             *(u8*)((u8*)p2 + 0x2f2) = 0;
             *(u8*)((u8*)p2 + 0x2f3) = 0;
             *(u8*)((u8*)p2 + 0x2f4) = 0;
-            v8 = *(u8*)((u8*)idleSrc + idx2a0 * 0xc + 0x8);
+            v8 = idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim;
             if (v8 == 0)
             {
                 *(u8*)((u8*)p2 + 0x323) = 3;
@@ -311,9 +324,9 @@ void fn_80150EDC(void* p1, void* p2)
             else
             {
                 Baddie_SetMove(p1, p2, v8,
-                            *(f32*)((u8*)idleSrc + idx2a0 * 0xc), 0, 0xb);
+                            idleRows[*(u16*)((u8*)p2 + 0x2a0)].speed, 0, 0xb);
                 ObjAnim_SetMoveProgress(
-                    *(f32*)(table + (*(u8*)((u8*)idleSrc + (*(u16*)((u8*)p2 + 0x2a0)) * 0xc + 0x8) << 2)),
+                    *(f32*)(table + (idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim << 2)),
                     (ObjAnimComponent*)p1);
             }
         }
