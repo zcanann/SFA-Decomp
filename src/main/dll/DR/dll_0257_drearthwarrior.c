@@ -1108,10 +1108,10 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
 
 void DR_EarthWarrior_hitDetect(int obj)
 {
-    void* hitObj;
-    f32 hx;
-    f32 hy;
     f32 hz;
+    f32 hy;
+    f32 hx;
+    void* hitObj;
     struct
     {
         s16 angles[4];
