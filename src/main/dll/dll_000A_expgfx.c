@@ -3075,6 +3075,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
 }
 #pragma dont_inline reset
 
+#pragma ppc_unroll_speculative off
+#pragma ppc_unroll_factor_limit 1
+#pragma ppc_unroll_instructions_limit 120
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3138,6 +3141,9 @@ void expgfx_onMapSetup(void)
     }
     gExpgfxTextureFreeInProgress = 0;
 }
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 5
+#pragma ppc_unroll_instructions_limit 120
 
 void expgfx_release(void)
 {
