@@ -184,7 +184,7 @@ void modelLightStruct_freeSlot(void** lightSlot)
     light = *lightSlot;
     if (light != NULL)
     {
-        for (i = 0, count = gModelLightCount; i < count; i++)
+        for (i = 0; i < (count = gModelLightCount); i++)
         {
             if (gModelLightList[i] == light)
             {
