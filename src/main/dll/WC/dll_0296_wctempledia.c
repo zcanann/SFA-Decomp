@@ -71,8 +71,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)
         {
-            bit = mask & (1 << (part - 1));
-            for (slot = 0; slot < *(u8*)(block + 0xa2); slot++)
+            for (slot = 0, bit = mask & (1 << (part - 1)); slot < *(u8*)(block + 0xa2); slot++)
             {
                 int entry = fn_8006070C(block, slot);
                 if (*(u8*)(entry + 0x29) == part)
