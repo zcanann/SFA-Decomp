@@ -1,3 +1,23 @@
+/*
+ * tricky (GameUI DLL) - the in-game HUD / heads-up display and pause-menu
+ * resource layer.
+ *
+ * gameUiLoadResources spawns the persistent HUD objects (button icons,
+ * magic/health/spirit/scarab/key/tricky counters, the air/breath meter and
+ * the viewfinder reticle models) and gameUiResetMenuState tears them down.
+ * The bulk of the file is GX immediate-mode drawing: pauseMenuDrawElement /
+ * pauseMenuTextDrawFn / drawFn_* push textured quads into the write-gather
+ * pipe (GXWGFifo at 0xCC008000); pauseMenuMapFn_8011de20 programs the TEV
+ * pipeline shared by those draws.
+ *
+ * Functional HUD pieces: the breath/air meter (GameUI_initAirMeter,
+ * GameUI_airMeterRun, hudDrawAirMeter - two layouts selected by m[0x10]),
+ * the fear-test meter (fearTestMeterDraw), the main status HUD with magic
+ * bar and item counters (hudDrawFn_80121440, gated by various game bits),
+ * and the photo-mode viewfinder overlay with its angle ticks and distance
+ * readout (drawViewFinderHud). A/B button prompt icons, the death menu and
+ * input-override state round it out.
+ */
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -24,28 +44,15 @@ typedef struct TrickyAirMeter
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
 
-extern undefined4 FUN_80017488();
-extern undefined4 FUN_80017498();
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern int playerHasKrazoaSpirit();
-extern undefined4 hudDrawMagicBar();
-extern undefined8 FUN_8012c894();
-extern undefined4 GXSetBlendMode();
+extern void hudDrawMagicBar(int alpha, int p2, int p3);
+extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 
-extern undefined4 DAT_803dc084;
-extern undefined4 DAT_803de3ee;
-extern undefined4 DAT_803de400;
-extern undefined4 DAT_803de412;
-extern undefined4 DAT_803de42a;
-extern undefined4 DAT_803de42c;
-extern undefined4 DAT_803de458;
-extern undefined4 DAT_803de55c;
-extern f32 lbl_803DE3E4;
-extern f32 gViewFinderFadeLevel; /* ramped/clamped fade for the viewfinder HUD; the drift
- * import wrongly referenced 803DE4C4 here - target asm shows 803DD7F0 */
-extern f32 lbl_803E2AE0;
+/* ramped/clamped fade for the viewfinder HUD */
+extern f32 gViewFinderFadeLevel;
 
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
@@ -161,79 +168,6 @@ void gameUiLoadResources(void)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
-{
-    int iVar1;
-    double extraout_f1;
-    undefined8 uVar2;
-
-    iVar1 = (int)(*gMapEventInterface)->getCurCharacterState();
-    uVar2 = FUN_8012c894(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    if (*(char*)(iVar1 + 9) == '\0')
-    {
-        if (DAT_803dc084 == '\0')
-        {
-            DAT_803de400 = 10;
-        }
-        else
-        {
-            DAT_803de400 = 9;
-        }
-    }
-    else
-    {
-        DAT_803de400 = 8;
-    }
-    DAT_803de55c = FUN_80017498();
-    FUN_80017488(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0xb);
-    lbl_803DE3E4 = lbl_803E2AE0;
-    DAT_803de458 = 1;
-    return;
-}
-
-void FUN_8011e460(double param_1, double param_2, int param_3, int param_4, undefined param_5,
-                  uint param_6, byte param_7)
-{
-}
-
-void FUN_8011e7ac(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
-{
-}
-
-void FUN_8011e800(undefined param_1)
-{
-    DAT_803de412 = param_1;
-    return;
-}
-
-void FUN_8011e844(undefined param_1)
-{
-    if (DAT_803de42c != '\0')
-    {
-        return;
-    }
-    DAT_803de42c = param_1;
-    return;
-}
-
-void FUN_8011e868(undefined2 param_1)
-{
-    if (DAT_803de42a != 0)
-    {
-        return;
-    }
-    DAT_803de42a = param_1;
-    return;
-}
-
-void FUN_8011eb10(ushort param_1)
-{
-    DAT_803de3ee = param_1 & 0xff;
-    return;
-}
-
 extern u8 pauseMenuState;
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
@@ -249,13 +183,12 @@ extern s16 lbl_803DD76E;
 
 void fn_8011F6D4(u32 x)
 {
-    lbl_803DD76E = (s16)(u8)
-    x;
+    lbl_803DD76E = (s16)(u8)x;
 }
 
 extern s16 aButtonIcon;
-#pragma scheduling off
-#pragma peephole off
+#pragma scheduling reset
+#pragma peephole reset
 void forceAButtonIcon(int x)
 {
     aButtonIcon = (s16)x;
@@ -387,11 +320,11 @@ typedef struct
     char pad[0x44];
     u8 bit7 : 1;
     u8 bits_0to6 : 7;
-} _Obj8011F70C;
+} AirMeterFlags;
 #pragma scheduling off
 void GameUI_airMeterSetShutdown(void)
 {
-    _Obj8011F70C* p = (_Obj8011F70C*)airMeter;
+    AirMeterFlags* p = (AirMeterFlags*)airMeter;
     if (p == 0) return;
     p->bit7 = 1;
 }
@@ -432,7 +365,7 @@ void GameUI_initAirMeter(int a, int b)
     if (airMeter == NULL)
     {
     }
-    else if ((((_Obj8011F70C*)airMeter)->bit7) != 0)
+    else if ((((AirMeterFlags*)airMeter)->bit7) != 0)
     {
         GameUI_airMeterShutdown();
     }
@@ -865,10 +798,8 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     dy = ((u32)(p8 << 2) * (u16)p6) >> 8;
     f1 = lbl_803E1E80 * f1;
     f2 = lbl_803E1E80 * f2;
-    tu = (f32)(u32)
-    p7 / (f32)(u32) * (u16*)((char*)this + 0xa);
-    tv = (f32)(u32)
-    p8 / (f32)(u32) * (u16*)((char*)this + 0xc);
+    tu = (f32)(u32)p7 / (f32)(u32)*(u16*)((char*)this + 0xa);
+    tv = (f32)(u32)p8 / (f32)(u32)*(u16*)((char*)this + 0xc);
     if (flags & 1)
     {
         ua = tu;
@@ -1072,7 +1003,7 @@ void hudDrawAirMeter(void)
     int sc0, sc1, sc2, sc3;
     int* player = Obj_GetPlayerObject();
     int* m = (int*)airMeter;
-    _Obj8011F70C* p = (_Obj8011F70C*)airMeter;
+    AirMeterFlags* p = (AirMeterFlags*)airMeter;
     s16 alpha;
     s16 clamped;
     if (m == NULL) return;
@@ -1307,11 +1238,7 @@ extern const f32 lbl_803E1F98;
 extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
 extern f32 timeDelta;
 
-/* File-local overlay for the pause/status HUD block at lbl_803A87F0 (used as a
- * raw char* base here). Only pure-constant scalar fields are named; indexed and
- * matrix-pointer accesses are left as raw casts to preserve register coloring
- * (byte-neutral). Offsets agree with PauseMenuHud in maybetemplate.c where they
- * overlap (0xB00/0xB08/0xB0C/0xB24/0xB28/0xB2C anim timers). */
+/* overlay for lbl_803A87F0; offsets verified against maybetemplate.c */
 typedef struct TrickyHud
 {
     u8 _pad0[0x314];
@@ -1537,8 +1464,7 @@ extern const double lbl_803E1F38, lbl_803E1F40;
 extern const f32 lbl_803E1F94;
 extern char lbl_803DBB40;
 extern const f32 lbl_803E1F70, lbl_803E1F90;
-extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88,
-                    lbl_803E1EF8;
+extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88;
 extern int lbl_803DBAE8;
 extern char lbl_803DBB18, lbl_803DBB1C, lbl_803DBB20, lbl_803DBB24, lbl_803DBB28, lbl_803DBB2C, lbl_803DBB30,
             lbl_803DBB34, lbl_803DBB38;
