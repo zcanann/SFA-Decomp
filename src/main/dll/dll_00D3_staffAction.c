@@ -1,25 +1,3 @@
-/*
- * staffAction (DLL 0x00D3) - a baddie that hops/crawls along surfaces and
- * chases the player, driven by the shared baddie-control interface
- * (gBaddieControlInterface) and the LandedArwing movement/collision state
- * (LandedArwingState behind GroundBaddieState->control, at +0x40c).
- *
- * Movement is a bounce-walker: landedarwing_moveSurfaceCrawler runs a
- * per-axis bounce machine over surfaceMode 0-5 (X/Y/Z wall planes), while
- * surfaceMode 6 is the swept-surface mode that does collision against a
- * bound mesh object (fn_80165B3C / fn_80166444 / fn_80166840). flags92
- * is a packed bit/nibble field (StaffBits) holding the per-frame movement
- * flags and a retry counter (hi nibble).
- *
- * dll_D3_update drives target acquisition, contact damage, and per-frame
- * advance through gBaddieControlInterface and gPlayerInterface vtable
- * slots; the object id is 0x49 and its extra block is 0x4a4 bytes. The
- * state handler table gLandedArwingStateHandlers is populated in
- * dll_D3_initialise (slot 0 = fn_801659B8).
- *
- * The TU also defines a second object descriptor, gSkeetlaWallObjDescriptor
- * (skeetlawall), an 11-slot object whose callbacks live in a sibling unit.
- */
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
@@ -27,27 +5,39 @@
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
 
+extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017784();
+extern undefined4 FUN_80017788();
+extern int FUN_80017a98();
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int atan2_8002178c(f32 dx, f32 dz);
-extern void ObjGroup_RemoveObject(uint obj, int group);
+extern undefined4 FUN_800305f8();
+extern undefined8 ObjGroup_RemoveObject();
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
 extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
                                 void* hits, int hitCount);
 extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
+extern int FUN_80063a68();
+extern undefined4 FUN_80063a74();
 extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
+extern void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
+                                          float* radii, int pointCount);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
+extern double FUN_80293900();
+extern undefined4 FUN_80293bc4();
+extern undefined4 FUN_80293f80();
 
-extern int* gBaddieControlInterface;
-
+extern undefined4 DAT_803dc070;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern f32 lbl_803DC074;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
@@ -56,6 +46,250 @@ extern f32 lbl_803E3024;
 extern f32 lbl_803E3028;
 extern f32 lbl_803E302C;
 extern f32 lbl_803E3030;
+extern f32 lbl_803E3C70;
+extern f32 lbl_803E3C74;
+extern f32 lbl_803E3C8C;
+extern f32 lbl_803E3C9C;
+extern f32 lbl_803E3CA0;
+extern f32 lbl_803E3CA4;
+extern f32 lbl_803E3CA8;
+extern f32 lbl_803E3CB8;
+extern f32 lbl_803E3CBC;
+extern f32 lbl_803E3CC0;
+extern f32 lbl_803E3CC4;
+extern f32 lbl_803E3CC8;
+
+undefined4
+#pragma scheduling on
+#pragma peephole on
+FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* obj, uint* params,
+             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
+             undefined4 param_15, undefined4 param_16)
+{
+    int target;
+    uint mode;
+    int state;
+    double trig;
+    double targetX;
+    double targetZ;
+    double targetY;
+    double speed;
+
+    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    target = FUN_80017a98();
+    *(undefined*)((int)params + 0x34d) = 1;
+    if (*(char*)((int)params + 0x27a) != '\0')
+    {
+        *(float*)(state + 0x60) = lbl_803E3C9C;
+        ObjHits_EnableObject((u32)obj);
+        trig = (double)FUN_80293bc4();
+        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *(float*)(obj + 0x14) = lbl_803E3C74;
+        trig = (double)FUN_80293f80();
+        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *params = *params | 0x2004000;
+        FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
+        *(float*)(state + 0x44) = lbl_803E3CA0;
+    }
+    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    (*gPathControlInterface)->advance(obj, params + 1, lbl_803DC074);
+    if (*(char*)(state + 0x90) == '\x06')
+    {
+        if ((*(byte*)(state + 0x92) & 1) == 0)
+        {
+            mode = 0;
+        }
+        else
+        {
+            mode = 2;
+            if ((ushort)DAT_803dc070 < *(ushort*)(state + 0x8e))
+            {
+                *(ushort*)(state + 0x8e) = *(ushort*)(state + 0x8e) - (ushort)DAT_803dc070;
+            }
+            else
+            {
+                *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfe;
+            }
+        }
+    }
+    else if ((((target == 0) || (*(float*)(target + 0x18) < *(float*)(state + 0x48))) ||
+            (*(float*)(state + 0x4c) < *(float*)(target + 0x18))) ||
+        (((*(float*)(target + 0x1c) < *(float*)(state + 0x5c) ||
+                (*(float*)(state + 0x58) < *(float*)(target + 0x1c))) ||
+            ((*(float*)(target + 0x20) < *(float*)(state + 0x54) ||
+                (*(float*)(state + 0x50) < *(float*)(target + 0x20)))))))
+    {
+        mode = 1;
+    }
+    else
+    {
+        mode = 0;
+    }
+    if (mode == 1)
+    {
+        if ((ushort)DAT_803dc070 < *(ushort*)(state + 0x8c))
+        {
+            *(ushort*)(state + 0x8c) = *(ushort*)(state + 0x8c) - (ushort)DAT_803dc070;
+        }
+        else
+        {
+            mode = randomGetRange((int)*(float*)(state + 0x48), (int)*(float*)(state + 0x4c));
+            *(float*)(state + 100) =
+                (f32)(s32)(mode);
+            mode = randomGetRange((int)*(float*)(state + 0x5c), (int)*(float*)(state + 0x58));
+            *(float*)(state + 0x68) =
+                (f32)(s32)(mode);
+            mode = randomGetRange((int)*(float*)(state + 0x54), (int)*(float*)(state + 0x50));
+            *(float*)(state + 0x6c) =
+                (f32)(s32)(mode);
+            mode = randomGetRange(300, 600);
+            *(short*)(state + 0x8c) = (short)mode;
+        }
+        targetX = (double)*(float*)(state + 100);
+        targetZ = (double)*(float*)(state + 0x68);
+        targetY = (double)*(float*)(state + 0x6c);
+        speed = (double)lbl_803E3CA8;
+    }
+    else if (mode == 0)
+    {
+        targetX = (double)*(float*)(target + 0xc);
+        targetZ = (double)(*(float*)(target + 0x10) - lbl_803E3C70);
+        targetY = (double)*(float*)(target + 0x14);
+        speed = (double)lbl_803E3CA4;
+        mode = GameBit_Get(0x698);
+        if (mode != 0)
+        {
+            speed = -(double)lbl_803E3CA4;
+        }
+    }
+    else if (mode < 3)
+    {
+        targetX = (double)*(float*)(state + 0x70);
+        targetZ = (double)*(float*)(state + 0x74);
+        targetY = (double)*(float*)(state + 0x78);
+        speed = (double)lbl_803E3CA4;
+    }
+    FUN_80166e9c(targetX, targetZ, targetY, speed, (int)obj);
+    if (*(char*)(state + 0x90) == '\x06')
+    {
+        if ((*(byte*)(state + 0x92) >> 2 & 1) == 0)
+        {
+            FUN_8016693c((int)obj, state);
+        }
+        else
+        {
+            FUN_801660c0((int)obj, state);
+        }
+    }
+    else
+    {
+        FUN_801661ec(obj, state);
+    }
+    return 0;
+}
+
+undefined4
+FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* obj, uint* params,
+             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
+             undefined4 param_15, undefined4 param_16)
+{
+    int state;
+    double trig;
+
+    state = *(int*)(*(int*)(obj + 0x5c) + 0x40c);
+    *(undefined*)((int)params + 0x34d) = 1;
+    if (*(char*)((int)params + 0x27a) != '\0')
+    {
+        *(float*)(state + 0x60) = lbl_803E3C9C;
+        ObjHits_EnableObject((u32)obj);
+        trig = (double)FUN_80293bc4();
+        *(float*)(obj + 0x12) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *(float*)(obj + 0x14) = lbl_803E3C74;
+        trig = (double)FUN_80293f80();
+        *(float*)(obj + 0x16) = (float)(-(double)*(float*)(state + 0x60) * trig);
+        *params = *params | 0x2004000;
+        FUN_800305f8((double)lbl_803E3C74, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                     obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
+        *(float*)(state + 0x44) = lbl_803E3C74;
+    }
+    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    (*gPathControlInterface)->advance(obj, params + 1, lbl_803DC074);
+    if (*(char*)((int)params + 0x27a) != '\0')
+    {
+        if (*(char*)(state + 0x90) == '\x06')
+        {
+            if ((*(byte*)(state + 0x92) >> 2 & 1) == 0)
+            {
+                FUN_8016693c((int)obj, state);
+            }
+            else
+            {
+                FUN_801660c0((int)obj, state);
+            }
+        }
+        else
+        {
+            FUN_801661ec(obj, state);
+        }
+    }
+    return 0;
+}
+
+void FUN_801660c0(int obj, int state)
+{
+    float damping;
+    int hitFound;
+    float local_b8;
+    float local_b4;
+    float local_b0;
+    float local_ac;
+    float local_a8;
+    float local_a4;
+    float local_a0;
+    uint auStack_9c[6];
+    float afStack_84[16];
+    float local_44;
+    undefined local_30;
+
+    local_b8 = lbl_803E3CB8;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E3C8C;
+    damping = lbl_803E3CBC;
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E3CBC;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * damping;
+    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
+    local_a8 = ((GameObject*)obj)->anim.localPosX;
+    local_a4 = ((GameObject*)obj)->anim.localPosY;
+    local_a0 = ((GameObject*)obj)->anim.localPosZ;
+    local_b4 = local_a8 + ((GameObject*)obj)->anim.velocityX;
+    local_b0 = local_a4 + ((GameObject*)obj)->anim.velocityY;
+    local_ac = local_a0 + ((GameObject*)obj)->anim.velocityZ;
+    local_44 = lbl_803E3C74;
+    local_30 = 3;
+    trackDolphin_buildSweptBounds(auStack_9c, &local_a8, &local_b4, &local_b8, 1);
+    FUN_80063a74(obj, auStack_9c, 0, '\x01');
+    hitFound = FUN_80063a68();
+    if (hitFound == 0)
+    {
+        ((GameObject*)obj)->anim.localPosX = local_b4;
+        ((GameObject*)obj)->anim.localPosY = local_b0;
+        ((GameObject*)obj)->anim.localPosZ = local_ac;
+    }
+    else
+    {
+        *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfb;
+        FUN_80166c6c(obj, state, afStack_84, &local_b4);
+    }
+    return;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -324,38 +558,38 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
     switch (state->surfaceMode)
     {
     case 0:
-        *obj = 0; /* rotX */
+        *obj = 0;
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityZ, ((GameObject*)obj)->anim.velocityY);
         ((GameObject*)obj)->anim.rotY = (short)(headingAngle + 0x4000);
         ((GameObject*)obj)->anim.rotZ = -0x4000;
         break;
     case 1:
-        *obj = 0; /* rotX */
+        *obj = 0;
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityZ, ((GameObject*)obj)->anim.velocityY);
         ((GameObject*)obj)->anim.rotY = (short)(headingAngle + 0x4000);
         ((GameObject*)obj)->anim.rotZ = 0x4000;
         break;
     case 2:
-        *obj = 0x4000; /* rotX */
+        *obj = 0x4000;
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY);
         ((GameObject*)obj)->anim.rotY = (short)(headingAngle + 0x4000);
         ((GameObject*)obj)->anim.rotZ = -0x4000;
         break;
     case 3:
-        *obj = 0x4000; /* rotX */
+        *obj = 0x4000;
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY);
         ((GameObject*)obj)->anim.rotY = (short)(headingAngle + 0x4000);
         ((GameObject*)obj)->anim.rotZ = 0x4000;
         break;
     case 5:
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
-        *obj = (short)(headingAngle + 0x8000); /* rotX */
+        *obj = (short)(headingAngle + 0x8000);
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
     case 4:
         headingAngle = atan2_8002178c(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
-        *obj = (short)(headingAngle + 0x8000); /* rotX */
+        *obj = (short)(headingAngle + 0x8000);
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = -0x8000;
         break;
@@ -365,6 +599,201 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
 
 #pragma scheduling on
 #pragma peephole on
+void FUN_801661ec(short* param_1, int param_2)
+{
+    landedarwing_moveSurfaceCrawler(param_1, (LandedArwingState*)param_2);
+}
+
+void FUN_8016693c(int obj, int state)
+{
+    float stepScale;
+    int hitFound;
+    int stepCount;
+    double distanceRemaining;
+    double segmentLen;
+    double traveled;
+    double one;
+    float local_e8;
+    float local_e4;
+    float local_e0;
+    float local_dc;
+    float local_d8;
+    float local_d4;
+    float local_d0;
+    uint auStack_cc[6];
+    float local_b4;
+    float local_b0;
+    float local_ac;
+    float local_a8;
+    float local_74;
+    undefined local_60;
+
+    distanceRemaining = FUN_80293900((double)(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
+        ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+        ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
+    traveled = (double)lbl_803E3C74;
+    stepCount = 0;
+    local_74 = lbl_803E3C74;
+    local_60 = 3;
+    local_d8 = ((GameObject*)obj)->anim.localPosX;
+    local_d4 = ((GameObject*)obj)->anim.localPosY;
+    local_d0 = ((GameObject*)obj)->anim.localPosZ;
+    local_e4 = local_d8 + ((GameObject*)obj)->anim.velocityX;
+    local_e0 = local_d4 + ((GameObject*)obj)->anim.velocityY;
+    local_dc = local_d0 + ((GameObject*)obj)->anim.velocityZ;
+    local_e8 = lbl_803E3CB8;
+    trackDolphin_buildSweptBounds(auStack_cc, &local_d8, &local_e4, &local_e8, 1);
+    FUN_80063a74(obj, auStack_cc, 0, '\x01');
+    one = (double)lbl_803E3C8C;
+    while ((traveled < distanceRemaining && (stepCount = stepCount + 1, stepCount < 10)))
+    {
+        local_d8 = ((GameObject*)obj)->anim.localPosX;
+        local_d4 = ((GameObject*)obj)->anim.localPosY;
+        local_d0 = ((GameObject*)obj)->anim.localPosZ;
+        stepScale = (float)(one - (double)(float)(traveled / distanceRemaining));
+        local_e4 = ((GameObject*)obj)->anim.velocityX * stepScale + local_d8;
+        local_e0 = ((GameObject*)obj)->anim.velocityY * stepScale + local_d4;
+        local_dc = ((GameObject*)obj)->anim.velocityZ * stepScale + local_d0;
+        hitFound = FUN_80063a68();
+        if (hitFound == 0)
+        {
+            ((GameObject*)obj)->anim.localPosX = local_e4;
+            ((GameObject*)obj)->anim.localPosY = local_e0;
+            ((GameObject*)obj)->anim.localPosZ = local_dc;
+            traveled = distanceRemaining;
+        }
+        else
+        {
+            segmentLen = FUN_80293900((double)((local_dc - local_d0) * (local_dc - local_d0) +
+                (local_e4 - local_d8) * (local_e4 - local_d8) +
+                (local_e0 - local_d4) * (local_e0 - local_d4)));
+            traveled = (double)(float)(traveled + segmentLen);
+            FUN_80166c6c(obj, state, &local_b4, &local_e4);
+        }
+    }
+    local_d8 = ((GameObject*)obj)->anim.localPosX;
+    local_d4 = ((GameObject*)obj)->anim.localPosY;
+    local_d0 = ((GameObject*)obj)->anim.localPosZ;
+    local_e4 = -(lbl_803E3CC0 * *(float*)(state + 0x7c) - local_d8);
+    local_e0 = -(lbl_803E3CC0 * *(float*)(state + 0x80) - local_d4);
+    local_dc = -(lbl_803E3CC0 * *(float*)(state + 0x84) - local_d0);
+    local_74 = lbl_803E3C74;
+    local_60 = 3;
+    stepCount = FUN_80063a68();
+    if (stepCount == 0)
+    {
+        local_d8 = local_e4;
+        local_d4 = local_e0;
+        local_d0 = local_dc;
+        local_e4 = -((GameObject*)obj)->anim.velocityX;
+        local_e0 = -((GameObject*)obj)->anim.velocityY;
+        local_dc = -((GameObject*)obj)->anim.velocityZ;
+        FUN_80017784(&local_e4);
+        local_e4 = lbl_803E3CC4 * local_e4 + local_d8;
+        local_e0 = lbl_803E3CC4 * local_e0 + local_d4;
+        local_dc = lbl_803E3CC4 * local_dc + local_d0;
+        local_74 = lbl_803E3C74;
+        local_60 = 3;
+        stepCount = FUN_80063a68();
+        stepScale = lbl_803E3CC8;
+        if (stepCount == 0)
+        {
+            ((GameObject*)obj)->anim.velocityX = lbl_803E3CC8 * *(float*)(state + 0x7c);
+            ((GameObject*)obj)->anim.velocityY = stepScale * *(float*)(state + 0x80);
+            ((GameObject*)obj)->anim.velocityZ = stepScale * *(float*)(state + 0x84);
+            *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xfb | 4;
+        }
+        else
+        {
+            FUN_80166c6c(obj, state, &local_b4, &local_e4);
+        }
+    }
+    else if ((((local_b4 == *(float*)(state + 0x7c)) && (local_b0 == *(float*)(state + 0x80)))
+        && (local_ac == *(float*)(state + 0x84))) && (local_a8 == *(float*)(state + 0x88)))
+    {
+        ((GameObject*)obj)->anim.localPosX = local_e4;
+        ((GameObject*)obj)->anim.localPosY = local_e0;
+        ((GameObject*)obj)->anim.localPosZ = local_dc;
+    }
+    else
+    {
+        FUN_80166c6c(obj, state, &local_b4, &local_e4);
+    }
+    *(byte*)(state + 0x92) = *(byte*)(state + 0x92) & 0xf7 | 8;
+    return;
+}
+
+void FUN_80166c6c(int obj, int state, float* plane, float* offset)
+{
+    float scale;
+    double k;
+    double surfX;
+    double velX;
+    double posX;
+    double posY;
+    double posZ;
+    double surfZ;
+    double surfY;
+    double velZ;
+    double velY;
+    float local_98;
+    float local_94;
+    float local_90;
+    float local_8c;
+    float local_88;
+    float local_84;
+    float local_80;
+
+    k = (double)lbl_803E3CB8;
+    posX = (double)((GameObject*)obj)->anim.localPosX;
+    surfX = (double)(float)(k * (double)*(float*)(state + 0x7c) + posX);
+    posY = (double)((GameObject*)obj)->anim.localPosY;
+    surfY = (double)(float)(k * (double)*(float*)(state + 0x80) + posY);
+    posZ = (double)((GameObject*)obj)->anim.localPosZ;
+    surfZ = (double)(float)(k * (double)*(float*)(state + 0x84) + posZ);
+    velX = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityX + posX);
+    velY = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityY + posY);
+    k = (double)(float)(k * (double)((GameObject*)obj)->anim.velocityZ + posZ);
+    velZ = (double)(float)(posY * (double)(float)(surfZ - k) +
+        (double)(float)(surfY * (double)(float)(k - posZ) +
+            (double)(float)(velY * (double)(float)(posZ - surfZ))));
+    posZ = (double)(float)(posZ * (double)(float)(surfX - velX) +
+        (double)(float)(surfZ * (double)(float)(velX - posX) +
+            (double)(float)(k * (double)(float)(posX - surfX))));
+    velX = (double)(float)(posX * (double)(float)(surfY - velY) +
+        (double)(float)(surfX * (double)(float)(velY - posY) +
+            (double)(float)(velX * (double)(float)(posY - surfY))));
+    k = FUN_80293900((double)(float)(velX * velX +
+        (double)(float)(velZ * velZ +
+            (double)(float)(posZ * posZ))));
+    if ((double)lbl_803E3C74 < k)
+    {
+        k = (double)(float)((double)lbl_803E3C8C / k);
+        velZ = (double)(float)(velZ * k);
+        posZ = (double)(float)(posZ * k);
+        velX = (double)(float)(velX * k);
+    }
+    local_98 = (float)velZ;
+    local_94 = (float)posZ;
+    local_90 = (float)velX;
+    local_8c = -(float)(surfZ * velX +
+        (double)(float)(surfX * velZ + (double)(float)(surfY * posZ)));
+    FUN_80017788(&local_98, plane, &local_88);
+    FUN_80017784(&local_88);
+    scale = lbl_803E3C9C;
+    ((GameObject*)obj)->anim.velocityX = lbl_803E3C9C * local_88;
+    ((GameObject*)obj)->anim.velocityY = scale * local_84;
+    ((GameObject*)obj)->anim.velocityZ = scale * local_80;
+    *(float*)(state + 0x7c) = *plane;
+    *(float*)(state + 0x80) = plane[1];
+    *(float*)(state + 0x84) = plane[2];
+    *(float*)(state + 0x88) = plane[3];
+    ((GameObject*)obj)->anim.localPosX = *offset + *(float*)(state + 0x7c);
+    ((GameObject*)obj)->anim.localPosY = offset[1] + *(float*)(state + 0x80);
+    ((GameObject*)obj)->anim.localPosZ = offset[2] + *(float*)(state + 0x84);
+    return;
+}
+
 void dll_D3_hitDetect_nop(void)
 {
 }
@@ -372,6 +801,7 @@ void dll_D3_hitDetect_nop(void)
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
 int dll_D3_getObjectTypeId(void) { return 0x49; }
 
+extern int* gBaddieControlInterface;
 #pragma scheduling off
 #pragma peephole off
 void dll_D3_free(int obj)
@@ -398,6 +828,7 @@ typedef struct StaffBits
     u8 b0 : 1;
 } StaffBits;
 #pragma dont_inline on
+#pragma peephole on
 void fn_80166E38(f32* out, f32* forward, f32* up)
 {
     f32 rt[3];
@@ -471,15 +902,15 @@ undefined4 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
-    state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    state = *(LandedArwingState**)(*(int*)(obj + 0x5c) + 0x40c);
     *(undefined*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((u32)obj);
-        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16) * obj);
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16) * obj);
+        *(f32*)(obj + 0x12) = -(state->speed) * fsin16Precise((u16) * obj);
+        *(f32*)(obj + 0x14) = lbl_803E2FDC;
+        *(f32*)(obj + 0x16) = -(state->speed) * fcos16Precise((u16) * obj);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
@@ -491,15 +922,15 @@ undefined4 fn_801659B8(s16* obj, u32* params)
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
-        if (*(u8*)&state->surfaceMode == 6)
+        if (*(s8*)&state->surfaceMode == 6)
         {
-            if (((state->flags92 >> 2) & 1) != 0)
+            if (((state->flags92 >> 2) & 1) == 0)
             {
-                fn_80165B3C((int)obj, (int)state);
+                fn_80166444((int)obj, (int)state);
             }
             else
             {
-                fn_80166444((int)obj, (int)state);
+                fn_80165B3C((int)obj, (int)state);
             }
         }
         else
@@ -549,8 +980,12 @@ void fn_80165B3C(int obj, int state)
     if (hitFound != 0)
     {
         {
+            struct StaffFlag92
+            {
+                u8 b80 : 1, b40 : 1, b20 : 1, b10 : 1, b08 : 1, b04 : 1, b02 : 1, b01 : 1;
+            };
             int zero = 0;
-            ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = zero;
+            ((struct StaffFlag92*)&((LandedArwingState*)state)->flags92)->b04 = zero;
         }
         fn_80166840(obj, state, hitScratch.hit, end);
     }
@@ -597,7 +1032,7 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
     planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
     planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
     len = sqrtf(planeX * planeX + (planeY * planeY + planeZ * planeZ));
-    if (len > lbl_803E2FDC)
+    if (lbl_803E2FDC < len)
     {
         len = lbl_803E2FF4 / len;
         planeX *= len;
@@ -732,7 +1167,6 @@ void fn_80166444(int obj, int state)
         f32 hitRadius;
         undefined pad[0x10];
         undefined hitType;
-        undefined pad2[0x1f];
     } hitScratch;
     f32 fVar1;
 
@@ -783,9 +1217,9 @@ void fn_80166444(int obj, int state)
     start[0] = ((GameObject*)obj)->anim.localPosX;
     start[1] = ((GameObject*)obj)->anim.localPosY;
     start[2] = ((GameObject*)obj)->anim.localPosZ;
-    end[0] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
-    end[1] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
-    end[2] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
+    end[0] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
+    end[1] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
+    end[2] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
     hitScratch.hitRadius = lbl_803E2FDC;
     hitScratch.hitType = 3;
     hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);
@@ -836,11 +1270,12 @@ void fn_80166444(int obj, int state)
     ((StaffBits*)&((LandedArwingState*)state)->flags92)->b3 = 1;
 }
 
+/* segment pragma-stack balance (re-split): */
+
 #include "main/dll/treasurechest_state.h"
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
-#include "main/objanim.h"
 
 typedef struct DllD3Placement
 {
@@ -857,6 +1292,7 @@ extern void* Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
+extern f32 sqrtf(f32);
 extern void* memset(void* dst, int val, u32 size);
 extern int* gPlayerInterface;
 
@@ -866,6 +1302,7 @@ extern int lbl_803AC638[];
 extern void* gLandedArwingStateHandlers[];
 extern void* gLandedArwingDefaultStateHandler;
 
+extern double lbl_803E3040;
 extern f32 lbl_803E3034;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
@@ -878,7 +1315,6 @@ extern void LandedArwing_ReturnZero(void);
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 extern void fn_80167550(int* obj);
 
-#pragma fp_contract off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -888,26 +1324,27 @@ void dll_D3_update(int* obj)
     int hitCount;
     int rc;
     int hits;
-    struct { f32 searchRadius; f32 x, y, z; } sd;
-    int aiStack_80[22];
+    f32 searchRadius;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    int aiStack_80[24];
     char hitType;
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
     player = (int*)Obj_GetPlayerObject();
-    sd.searchRadius = lbl_803E3034;
+    searchRadius = lbl_803E3034;
 
     if (extra->boundsObj == NULL)
     {
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            hits = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &sd.searchRadius);
-            *(int*)&extra->boundsObj = hits;
-            if ((void*)hits != NULL)
+            if ((extra->boundsObj = (void*)ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius)) != NULL)
             {
-                (*(void (**)(int, int, int))(*(int**)(*(int*)(*(int*)&extra->boundsObj + 0x68)) + 0x20 / 4))(
+                (*(void (**)(int, int, int))(*(int**)*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
                     *(int*)&extra->boundsObj,
                     (int)&extra->boundsMinX,
                     (int)&extra->bounceFlags);
@@ -924,7 +1361,7 @@ void dll_D3_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->unk10;
-        (*gObjectTriggerInterface)->runSequence(*(s8*)((char*)trans + 0x2e), obj, -1);
+        (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement*)trans)->unk2E, obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
@@ -944,9 +1381,9 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetState != 1)
     {
-        rc = ((int (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
-            obj, state,
-            (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
+        rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
+            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040),
+            obj, state, 0x18000);
         if (rc != 0u)
         {
             ((void (*)(int*, int*, int, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x28 /
@@ -962,11 +1399,11 @@ void dll_D3_update(int* obj)
         }
     }
 
-    if ((void*)((TreasureChestState*)state)->targetObj != NULL &&
+    if (((TreasureChestState*)state)->targetObj != 0 &&
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
-            (f32)(u32)((TreasureChestState*)state)->aggroRange)
+            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040))
         {
             ((TreasureChestState*)state)->targetState = 1;
         }
@@ -974,14 +1411,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        sd.x = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        dx = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
             ((GameObject*)obj)->anim.worldPosX;
-        sd.y = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        dy = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
             ((GameObject*)obj)->anim.worldPosY;
-        sd.z = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(sd.x * sd.x + sd.y * sd.y + sd.z * sd.z);
+            sqrtf(dx * dx + dy * dy + dz * dz);
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -1035,7 +1472,6 @@ void dll_D3_update(int* obj)
         }
     }
 }
-#pragma fp_contract reset
 
 void dll_D3_init(int obj, int def, int flag)
 {
@@ -1149,3 +1585,5 @@ void fn_80167550(int* obj)
     int* state = ((GameObject*)obj)->extra;
     ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])(obj, state, 2);
 }
+
+void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
