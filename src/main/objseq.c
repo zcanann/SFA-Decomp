@@ -2422,7 +2422,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             else
             {
                 val = (s16)(*(s16*)(cmd + 2) & 0xfff);
-                lbl_803DD113 = lbl_803DD113 + 1;
+                lbl_803DD113++;
                 *(s16*)(entry + 0x3ca8) = val;
             }
         }
