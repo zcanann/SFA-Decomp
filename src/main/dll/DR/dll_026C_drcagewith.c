@@ -262,7 +262,7 @@ void drcagewith_init(int obj, char* arg)
         {
             GameBit_Set(0x7aa, 5);
         }
-        *(s16*)obj = (s16)((s8)arg[0x18] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
         ((DrcagewithState*)state)->unk8 = (f32) * (s16*)(arg + 0x1c);
         ((DrcagewithState*)state)->unk10 = (f32) * (s16*)(arg + 0x1a) / lbl_803E6A18;
         ((DrcagewithState*)state)->linkedObject = 0;
