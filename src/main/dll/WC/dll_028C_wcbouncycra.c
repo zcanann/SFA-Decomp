@@ -1,20 +1,3 @@
-/*
- * wcbouncycra (DLL 0x28C) - a bouncing crate in the Walled City (WC).
- * While idle (flags & WBOUNCY_FLAG_ACTIVE clear) it counts a cooldown down
- * and, once expired, looks for the nearest object in trigger group
- * WBOUNCY_TRIGGER_GROUP; the proximity distance is mapped to a launch
- * velocityY (closer = stronger, with near/far clamps) and the crate goes
- * active. While active it integrates gravity on velocityY/localPosY and,
- * on each ground contact (localPosY <= homeY), reflects velocity with a
- * restitution factor and increments bounceCount; after WBOUNCY_MAX_BOUNCES
- * it snaps back to homeY, zeroes velocity and re-arms the cooldown. Per-
- * instance state (WCBouncyCrateState, 0xc bytes) holds homeY (seeded from
- * the placement posY), the cooldown, the flags byte and the bounce count.
- *
- * This TU also carries the shared WC grid-block helper
- * wcblock_isPlayerAwayFromStoredCell() and the WCBlockGridInterface vtable
- * used by wcpushblock (0x290) / wctile (0x291).
- */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -83,40 +66,38 @@ void wcbouncycra_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void wcbouncycra_update(int obj)
 {
     WCBouncyCrateState* state = ((GameObject*)obj)->extra;
 
     if ((state->flags & WBOUNCY_FLAG_ACTIVE) == 0)
     {
-        int nextCooldown = (int)((f32)state->cooldown - timeDelta);
-        state->cooldown = nextCooldown;
-        if ((s16)nextCooldown <= 0)
+        int n = (int)((f32)state->cooldown - timeDelta);
+        state->cooldown = n;
+        if ((s16)n <= 0)
         {
-            f32 nearDist = lbl_803E6D20;
-            f32 launchVelY;
+            f32 v = lbl_803E6D20;
+            f32 dist;
 
-            if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, obj, &nearDist) == NULL)
+            if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, obj, &v) == NULL)
             {
-                launchVelY = lbl_803E6D24;
+                dist = lbl_803E6D24;
             }
-            else if (nearDist < lbl_803E6D28)
+            else if (v < lbl_803E6D28)
             {
-                launchVelY = lbl_803E6D2C;
+                dist = lbl_803E6D2C;
             }
-            else if (nearDist > lbl_803E6D30)
+            else if (v > lbl_803E6D30)
             {
-                launchVelY = lbl_803E6D24;
+                dist = lbl_803E6D24;
             }
             else
             {
-                launchVelY = nearDist - lbl_803E6D28;
-                launchVelY = launchVelY / lbl_803E6D34;
-                launchVelY = lbl_803E6D38 - launchVelY;
-                launchVelY = launchVelY * lbl_803E6D2C;
+                dist = (v - lbl_803E6D28) / lbl_803E6D34;
+                dist = lbl_803E6D38 - dist;
+                dist = dist * lbl_803E6D2C;
             }
-            ((GameObject*)obj)->anim.velocityY = launchVelY;
+            ((GameObject*)obj)->anim.velocityY = dist;
             state->flags |= WBOUNCY_FLAG_ACTIVE;
             state->bounceCount = 0;
         }
@@ -142,7 +123,6 @@ void wcbouncycra_update(int obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void wcbouncycra_init(int obj, int setup)
 {
@@ -160,8 +140,7 @@ void wcbouncycra_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma opt_common_subs off
+#pragma scheduling on
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent* objAnim;
@@ -171,6 +150,7 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     f32 pos;
     f32 min;
     f32 max;
+    WCBlockGridInterface* iface;
 
     objAnim = (ObjAnimComponent*)obj;
     if (objAnim->bankIndex == WCBLOCK_VARIANT_A)
@@ -217,6 +197,5 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 
     return 0;
 }
-#pragma opt_common_subs reset
 
 #undef WCBLOCK_GRID_IFACE
