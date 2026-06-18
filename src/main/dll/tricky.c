@@ -263,25 +263,25 @@ void cutSceneFn_8011dd30(void)
     lbl_803DD7D8 = 1;
 }
 
-extern int lbl_803DD8A0;
+extern int gCMenuScriptedButtons;
 extern s16 lbl_803DD89E;
-extern s16 lbl_803DD89C;
-extern u8 lbl_803DD8AC;
+extern s16 gCMenuScriptedStickY;
+extern u8 gCMenuScriptedInput;
 
 void GameUI_setInputOverride(int x, s16 a, s16 b)
 {
     if (x == -1)
     {
-        lbl_803DD8A0 = 0;
+        gCMenuScriptedButtons = 0;
         lbl_803DD89E = 0;
-        lbl_803DD89C = 0;
-        lbl_803DD8AC = 0;
+        gCMenuScriptedStickY = 0;
+        gCMenuScriptedInput = 0;
         return;
     }
-    lbl_803DD8A0 = x;
+    gCMenuScriptedButtons = x;
     lbl_803DD89E = a;
-    lbl_803DD89C = b;
-    lbl_803DD8AC = 1;
+    gCMenuScriptedStickY = b;
+    gCMenuScriptedInput = 1;
 }
 
 extern u8 arwingHudVisible;

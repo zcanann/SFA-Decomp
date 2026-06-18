@@ -39,8 +39,8 @@ extern short gCMenuScrollTimer;
 extern short lbl_803DD78E;
 extern u8 cMenuOpen;
 extern short cMenuFadeCounter;
-extern short lbl_803DD8D6;
-extern short lbl_803DBA66;
+extern short gCMenuOpenAnim;
+extern short gCMenuOpenAnimMax;
 
 extern int gTrickyHudItemMask;
 extern short gCMenuStaffAbilities[];
@@ -1231,7 +1231,7 @@ void cMenuUpdateAnims(void)
     }
     else
     {
-        if (lbl_803DD8D6 == 0)
+        if (gCMenuOpenAnim == 0)
         {
             cMenuFadeCounter = cMenuFadeCounter - framesThisStep * 8;
             if (cMenuFadeCounter < 0)
@@ -1242,18 +1242,18 @@ void cMenuUpdateAnims(void)
     }
     if ((s8)b != 0 && cMenuFadeCounter > 0x40)
     {
-        lbl_803DD8D6 = lbl_803DD8D6 + framesThisStep * 16;
-        if (lbl_803DD8D6 > lbl_803DBA66)
+        gCMenuOpenAnim = gCMenuOpenAnim + framesThisStep * 16;
+        if (gCMenuOpenAnim > gCMenuOpenAnimMax)
         {
-            lbl_803DD8D6 = lbl_803DBA66;
+            gCMenuOpenAnim = gCMenuOpenAnimMax;
         }
     }
     else
     {
-        lbl_803DD8D6 = lbl_803DD8D6 - framesThisStep * 16;
-        if (lbl_803DD8D6 < 0)
+        gCMenuOpenAnim = gCMenuOpenAnim - framesThisStep * 16;
+        if (gCMenuOpenAnim < 0)
         {
-            lbl_803DD8D6 = 0;
+            gCMenuOpenAnim = 0;
         }
     }
     if (cMenuFadeCounter != 0)
