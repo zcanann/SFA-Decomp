@@ -1,30 +1,22 @@
-/*
- * optionsscreen (DLL 0x37) - the front-end Options screen, run as a
- * title-menu sub-state through gTitleMenuLinkInterface / gTitleMenuItemInterface.
- *
- * lbl_803DBA28 selects the active panel: 0 = top-level options list,
- * 1 = audio, 2 = gameplay (widescreen / rumble), 3 = misc (subtitles +
- * cheat toggles). _run() reads the highlighted item, dispatches to the
- * matching optionsMenu_* handler, and mirrors the chosen settings into
- * the save-file struct (lbl_803DD708) byte fields: [2]=subtitles,
- * [6]=widescreen, [8]=rumble, [9..12]=audio. _render() fades the panel
- * text in/out against the screen-transition progress; _initialise()
- * loads the text directory and the active panel's item list. Selecting
- * Exit (panel 3, item 0) starts the transition out and reloads UI DLL 4.
- */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
 
-extern u8* getSaveFileStruct(void);
-extern void saveFileStruct_setCheatActive(uint cheatId, u8 enabled);
-extern void languageMenuInit(void);
+extern undefined8 FUN_80006b84();
+extern undefined4 FUN_80017a98();
+extern undefined4 FUN_80053c98();
+extern undefined4 saveFileStruct_setCheatActive(uint optionIndex, u8 active);
+extern u8* getSaveFileStruct();
+extern undefined4 languageMenuInit();
+
+extern undefined4 DAT_803dc070;
+extern undefined4 DAT_803de3a8;
 
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
-extern s8 lbl_803DBA28;        /* active panel id (-1 = none) */
-extern u16 lbl_8031ACB8[];     /* per-panel text-box table, 8 u16 per panel */
-extern int lbl_803A87D0[8];    /* the 8 menu-item objects of the active panel */
+extern s8 lbl_803DBA28;
+extern u16 lbl_8031ACB8[];
+extern int lbl_803A87D0[8];
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
@@ -37,21 +29,23 @@ extern void titleScreenPositionElements(f32 x, f32 y);
 extern void gameTextSetDrawFunc(void* fn);
 extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void* gameTextGet(int textId);
+extern u32 gameTextGet(int textId);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextShow(int textId);
 extern void titleScreenShowCopyright(int arg);
+extern s8 lbl_803DD706;
+#pragma scheduling off
+#pragma peephole off
 extern void gameTextLoadDir(int);
-extern s8 lbl_803DD706;        /* render-stale countdown */
-extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */
-extern u32 lbl_803DD708;       /* save-file struct base */
-extern s8 lbl_803DD705;        /* exit-in-progress flag */
+extern s8 lbl_803DD70C;
+extern u32 lbl_803DD708;
+extern s8 lbl_803DD705;
 extern u8 lbl_803DD6F9;
-extern u8 lbl_803DD6F8;        /* initial panel selector */
+extern u8 lbl_803DD6F8;
 extern void fn_8011CA74(void);
 extern void fn_8011C7B4(void);
-extern s8 lbl_803DD704;        /* exit fade countdown */
-extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
+extern s8 lbl_803DD704;
+extern int lbl_803DD700;
 extern void loadUiDll(int id);
 extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawCloudsAndLights(int v);
@@ -61,8 +55,6 @@ extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-#pragma scheduling off
-#pragma peephole off
 void OptionsScreen_render(int arg)
 {
     int alpha;
@@ -262,7 +254,7 @@ int OptionsScreen_run(void)
                 break;
             default:
                 saveFileStruct_setCheatActive(3,
-                                              (u8)!(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(
+                                              !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(
                                                   lbl_803A87D0[item]));
                 break;
             }
@@ -293,6 +285,37 @@ int OptionsScreen_run(void)
 
 #pragma scheduling on
 #pragma peephole on
+void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
+                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+{
+}
+
+undefined4
+FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
+             undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+{
+    byte bVar1;
+    undefined8 uVar2;
+
+    FUN_80017a98();
+    bVar1 = DAT_803dc070;
+    if (3 < DAT_803dc070)
+    {
+        bVar1 = 3;
+    }
+    if (('\0' < DAT_803de3a8) && (DAT_803de3a8 = DAT_803de3a8 - bVar1, DAT_803de3a8 < '\x01'))
+    {
+        uVar2 = FUN_80006b84(1);
+        FUN_80053c98(uVar2, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x60, '\x01', param_11,
+                     param_12, param_13, param_14, param_15, param_16);
+    }
+    return 0;
+}
+
 void OptionsScreen_frameEnd(void)
 {
 }
@@ -300,3 +323,5 @@ void OptionsScreen_frameEnd(void)
 void OptionsScreen_release(void)
 {
 }
+
+void WeirdUnusedMenu_render(void);
