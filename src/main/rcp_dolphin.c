@@ -2608,7 +2608,7 @@ void texRestructRefs(int mode)
     u32 size;
     int d;
 
-    strs = lbl_8030D058;
+    strs = (char*)(int)lbl_8030D058;
     done = 0;
     pass = 0;
     texFlagFn_80023cbc(2);
