@@ -1,6 +1,7 @@
 #include "main/game_object.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
+#include "main/objanim_internal.h"
 
 extern void mm_free(void* ptr);
 
@@ -135,15 +136,15 @@ extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern const f32 lbl_803DE750;
-extern const f32 lbl_803DE754;
-extern const f32 lbl_803DE758;
-extern const f32 lbl_803DE760;
-extern const f32 lbl_803DE75C;
-extern const f32 lbl_803DE76C;
-extern const f32 lbl_803DE790;
-extern const f32 lbl_803DE79C;
-extern const f32 lbl_803DE7A0;
+extern f32 lbl_803DE750;
+extern f32 lbl_803DE754;
+extern f32 lbl_803DE758;
+extern f32 lbl_803DE760;
+extern f32 lbl_803DE75C;
+extern f32 lbl_803DE76C;
+extern f32 lbl_803DE790;
+extern f32 lbl_803DE79C;
+extern f32 lbl_803DE7A0;
 extern void textureFree(void* tex);
 
 void* objCreateLight(int arg, u8 addToList)
@@ -183,7 +184,7 @@ void modelLightStruct_freeSlot(void** lightSlot)
     light = *lightSlot;
     if (light != NULL)
     {
-        for (i = 0; i < (count = gModelLightCount); i++)
+        for (i = 0, count = gModelLightCount; i < count; i++)
         {
             if (gModelLightList[i] == light)
             {
@@ -493,12 +494,12 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct* p, int n)
     p->objectLightMask = (u8)(1 << n);
 }
 
-extern const f32 lbl_803DE764;
-extern const f32 lbl_803DE778;
-extern const f32 lbl_803DE78C;
+extern f32 lbl_803DE764;
+extern f32 lbl_803DE778;
+extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
-extern const f32 lbl_803DE794;
-extern const f32 lbl_803DE798;
+extern f32 lbl_803DE794;
+extern f32 lbl_803DE798;
 extern void* textureLoadAsset(int assetId);
 extern int randomGetRange(int lo, int hi);
 
@@ -850,7 +851,7 @@ extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int l
 extern void GXSetNumChans(int numChannels);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern const f32 lbl_803DE7A4;
+extern f32 lbl_803DE7A4;
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 
@@ -996,7 +997,6 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
     gModelLightNextGXLightId <<= 1;
 }
 
-#pragma optimization_level 1
 void modelLightChannels_applyGXControls(void)
 {
     int activeMask;
@@ -1095,7 +1095,6 @@ void modelLightChannels_applyGXControls(void)
         GXSetNumChans(0);
     }
 }
-#pragma optimization_level reset
 
 void updateLights(void)
 {
@@ -1196,7 +1195,7 @@ void updateLights(void)
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32 * v);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern const f32 lbl_803DE768;
+extern f32 lbl_803DE768;
 extern f32 lbl_802C1A88[];
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)
@@ -1221,33 +1220,26 @@ void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b)
     GXGetLightAttnK(obj + 0x68, (f32*)(obj + 0x124), (f32*)(obj + 0x128), (f32*)(obj + 0x12c));
 }
 
+typedef struct ModelLightCornerBlock
+{
+    f32 v[24];
+} ModelLightCornerBlock;
+
 u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
 {
     f32 localPos[3];
     f32 projected[3];
     f32 worldPos[3];
-    f32 corners[24];
+    ModelLightCornerBlock cornerBlock;
     f32 extent;
     f32 scaledExtent;
     u32 clipMask;
     u32 combinedClipMask;
-    u32* cornerWords;
-    u32* sourceWords;
     f32 zero;
     int i;
 
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
-    cornerWords = (u32*)corners;
-    sourceWords = (u32*)lbl_802C1A88;
-    {
-        int copyCount = 12;
-        do
-        {
-            *cornerWords++ = *sourceWords++;
-            *cornerWords++ = *sourceWords++;
-        }
-        while (--copyCount != 0);
-    }
+    cornerBlock = *(ModelLightCornerBlock*)lbl_802C1A88;
 
     worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
     worldPos[1] = ((GameObject*)obj)->anim.localPosY;
@@ -1278,9 +1270,9 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     combinedClipMask = 0x3f;
     for (i = 0; i < 8; i++)
     {
-        worldPos[0] = localPos[0] + scaledExtent * corners[i * 3 + 0];
-        worldPos[1] = localPos[1] + scaledExtent * corners[i * 3 + 1];
-        worldPos[2] = localPos[2] + scaledExtent * corners[i * 3 + 2];
+        worldPos[0] = localPos[0] + scaledExtent * cornerBlock.v[i * 3 + 0];
+        worldPos[1] = localPos[1] + scaledExtent * cornerBlock.v[i * 3 + 1];
+        worldPos[2] = localPos[2] + scaledExtent * cornerBlock.v[i * 3 + 2];
         PSMTXMultVec((f32*)(light + 0x1f0), worldPos, projected);
         if (projected[2] != zero)
         {
@@ -1601,49 +1593,49 @@ int randomGetRange(int lo, int hi);
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
-void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
+void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f32 b)
 {
-    obj->projectionFovY = fovY;
-    obj->projectionAspect = aspect;
+    obj->projectionFovY = a;
+    obj->projectionAspect = b;
     obj->projectionType = 1;
     C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
-                          0.5f, 0.5f, 0.5f, 0.5f);
+                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
     C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect,
-                          0.5f, 0.5f, 0.5f, 0.5f);
+                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
 }
 
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
 
-void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT)
+void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f)
 {
-    f32 scaledT;
-    f32 scaledS;
+    f32 fScale;
+    f32 eScale;
 
-    obj->projectionTop = top;
-    obj->projectionBottom = bottom;
-    obj->projectionLeft = left;
-    obj->projectionRight = right;
+    obj->projectionTop = a;
+    obj->projectionBottom = b;
+    obj->projectionLeft = c;
+    obj->projectionRight = d;
     obj->projectionType = 0;
-    scaledT = scaleT * lbl_803DE790;
-    scaledS = scaleS * lbl_803DE790;
+    fScale = f * lbl_803DE790;
+    eScale = e * lbl_803DE790;
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, scaledT, scaledS, scaledT,
-                    scaledS);
+                    obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
+                    eScale);
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, 0.5f, 0.5f,
-                    0.5f, 0.5f);
+                    obj->projectionLeft, obj->projectionRight, lbl_803DE790, lbl_803DE790,
+                    lbl_803DE790, lbl_803DE790);
 }
 
-void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
 {
     u8* lightObj;
     f32 zero;
-    f32 atten;
     f32 one;
+    f32 atten;
 
-    obj->specularAttenuationScale = scale;
-    obj->specularBrightness = brightness;
+    obj->specularAttenuationScale = a;
+    obj->specularBrightness = b;
     atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
     zero = lbl_803DE75C;
