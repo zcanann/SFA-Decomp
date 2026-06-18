@@ -487,6 +487,7 @@ int cmbsrc_update(int obj)
 
 void cmbsrc_init(int obj, u8* setup)
 {
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcMapData* mapData = (CmbSrcMapData*)setup;
     CmbSrcState* state = cmbsrc->state;
