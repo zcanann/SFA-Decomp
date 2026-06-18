@@ -2492,6 +2492,7 @@ void gxTextureFn_80052efc(void)
     u8* e;
     u8* tex;
     int* lp;
+    u8* base;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2503,7 +2504,7 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopyDst(0x20, 0x20, 6, 0);
     modelTextureFn_80089970(2);
     i = 0;
-    e = lbl_8037E000;
+    e = base = lbl_8037E000;
     for (; i < 6; i++)
     {
         tex = *(u8**)e;
@@ -2545,12 +2546,11 @@ void gxTextureFn_80052efc(void)
         e -= 0x1c;
     }
     i = 0;
-    e = lbl_8037E000;
     for (; i < 6; i++)
     {
-        if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && lbl_803DCDA4 == e[0x1a])
+        if (*(u16*)(*(u8**)base + 0xe) != 0 && base[0x1b] == 0 && lbl_803DCDA4 == base[0x1a])
         {
-            model = *(int*)(e + 4);
+            model = *(int*)(base + 4);
             modelTextureFn_80089970(2 - (i - 3));
             modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
             modelLightChannels_reset(1);
@@ -2565,14 +2565,14 @@ void gxTextureFn_80052efc(void)
             lightGetColor(0, &c2.r, &c2.g, &c2.b);
             GXSetChanAmbColor(0, c2);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(*(u8**)e + 0x60, (i == sel) ? 1 : 0);
-            tex = *(u8**)e;
+            GXCopyTex(*(u8**)base + 0x60, (i == sel) ? 1 : 0);
+            tex = *(u8**)base;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
             }
         }
-        e += 0x1c;
+        base += 0x1c;
     }
     GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, lbl_803DEB84,
                   lbl_803DEB88, LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
