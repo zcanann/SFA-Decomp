@@ -135,7 +135,7 @@ void updateVisibleGeometry(void)
     u16 fov;
     f32 ox, oy, oz;
     PosRot st;
-    f32 m[17];
+    f32 m[18];
 
     cam = (u8*)Camera_GetCurrentViewSlot();
     n = 0;
@@ -1539,7 +1539,7 @@ extern f32 lbl_80396820[12];
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
 {
     int state[5];
-    f32 m[12];
+    f32 m[18];
     int cursor;
     int countShifted;
     int newR;
@@ -1900,7 +1900,7 @@ void sceneDrawTransparentPolys(void)
     GXColor8 c4copy, c4;
     GXColor8 c5copy, c5;
     GXColor8 c6copy, c6;
-    f32 m[16];
+    f32 m[18];
 
     lightmap_sortTransparentDrawQueue();
     i = 0;
