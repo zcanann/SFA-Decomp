@@ -1,24 +1,50 @@
+/*
+ * androssligh (DLL 0x2BF) - the lightning beam between Andross's hands in
+ * the final boss fight. It locks onto a light-anchor object (0x47dd9),
+ * mirroring that object's position each frame, and in its active state
+ * (ANDROSSLIGH_ACTIVE) builds a screen-space lightning bolt that arcs
+ * across the gap between the two hands. The bolt is rebuilt via
+ * lightningCreate the first frame and aged each frame until its phase
+ * counter reaches the end, then freed. State is driven externally through
+ * androssligh_setState (called by androssbrain on defeat).
+ *
+ * This DLL has no initialise/release entry points (none exist in the retail
+ * symbol table); it is a sub-object whose lifetime is driven externally.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-typedef struct AndrosslighSetStateState
+enum
 {
-    u8 pad0[0xC - 0x0];
-    s8 unkC;
-    u8 padD[0x10 - 0xD];
-} AndrosslighSetStateState;
+    ANDROSSLIGH_ANCHOR_OBJ_ID = 0x47dd9
+};
 
+enum
+{
+    ANDROSSLIGH_IDLE = 0,
+    ANDROSSLIGH_ACTIVE = 1,
+    ANDROSSLIGH_DONE = 2
+};
 
 typedef struct AndrosslighState
 {
-    u8 pad0[0xC - 0x0];
-    s8 unkC;
-    u8 unkD;
-    u8 padE[0x10 - 0xE];
+    void* anchor;  /* 0x00: light-anchor object (id 0x47dd9), position source */
+    void* bolt;    /* 0x04: lightningCreate handle, NULL when not built */
+    f32 boltAge;   /* 0x08: phase accumulator advancing the bolt */
+    s8 state;      /* 0x0C: ANDROSSLIGH_* */
+    u8 prevState;  /* 0x0D: previous frame's state */
+    u8 padE[0x10 - 0x0E];
 } AndrosslighState;
 
+STATIC_ASSERT(sizeof(AndrosslighState) == 0x10);
+STATIC_ASSERT(offsetof(AndrosslighState, bolt) == 0x4);
+STATIC_ASSERT(offsetof(AndrosslighState, boltAge) == 0x8);
+STATIC_ASSERT(offsetof(AndrosslighState, state) == 0xC);
+STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
 
-int androssligh_getExtraSize(void) { return 0x10; }
+void androssligh_updateBeam(int obj, int beam);
+
+int androssligh_getExtraSize(void) { return sizeof(AndrosslighState); }
 
 int androssligh_getObjectTypeId(void) { return 0; }
 
@@ -28,31 +54,31 @@ void androssligh_free(void)
 
 void androssligh_render(int obj)
 {
-    void* p = *(void**)(*(int*)&((GameObject*)obj)->extra + 4);
+    void* bolt = ((AndrosslighState*)((GameObject*)obj)->extra)->bolt;
 
-    if (p != NULL)
+    if (bolt != NULL)
     {
-        lightningRender(p);
+        lightningRender(bolt);
     }
 }
 
 void androssligh_setState(int obj, int newState, u8 force)
 {
-    int state;
+    AndrosslighState* state;
 
     if ((void*)obj == NULL)
     {
         return;
     }
-    state = *(int*)&((GameObject*)obj)->extra;
-    if (((AndrosslighSetStateState*)state)->unkC == 2)
+    state = ((GameObject*)obj)->extra;
+    if (state->state == ANDROSSLIGH_DONE)
     {
         if (force == 0)
         {
             return;
         }
     }
-    ((AndrosslighSetStateState*)state)->unkC = (s8)newState;
+    state->state = (s8)newState;
 }
 
 void androssligh_hitDetect(void)
@@ -65,27 +91,27 @@ void androssligh_init(void)
 
 void androssligh_update(int obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    AndrosslighState* state = ((GameObject*)obj)->extra;
 
-    if (*(void**)state == NULL)
+    if (state->anchor == NULL)
     {
-        *(int*)state = ObjList_FindObjectById(0x47dd9);
+        state->anchor = (void*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
     }
-    if (*(void**)state != NULL)
+    if (state->anchor != NULL)
     {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(*(int*)state + 0xc);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(*(int*)state + 0x10);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(*(int*)state + 0x14);
+        ((GameObject*)obj)->anim.localPosX = *(f32*)((int)state->anchor + 0xc);
+        ((GameObject*)obj)->anim.localPosY = *(f32*)((int)state->anchor + 0x10);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)((int)state->anchor + 0x14);
     }
-    ((AndrosslighState*)state)->unkD = *(u8*)&((AndrosslighState*)state)->unkC;
-    switch (((AndrosslighState*)state)->unkC)
+    state->prevState = (u8)state->state;
+    switch (state->state)
     {
-    case 0:
+    case ANDROSSLIGH_IDLE:
         break;
-    case 1:
-        androssligh_updateBeam(obj, state);
+    case ANDROSSLIGH_ACTIVE:
+        androssligh_updateBeam(obj, (int)state);
         break;
-    case 2:
+    case ANDROSSLIGH_DONE:
         break;
     }
 }
