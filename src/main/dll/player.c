@@ -4994,7 +4994,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     else if (inner->unk80E != -1 || (inner->buttonsJustPressed & 0x800) != 0)
     {
         int yitem;
-        int b28;
+        u16 b28;
         s16 item;
         if (inner->buttonsJustPressed & 0x800)
         {
