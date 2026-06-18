@@ -271,7 +271,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj)
         center = ((GameObject*)obj)->anim.localPosZ;
         lo = (center - lbl_803E683C) - *(f32*)((char*)lbl_803DDD50 + 0x28);
         hi = (lbl_803E683C + center) - *(f32*)((char*)lbl_803DDD50 + 0x28);
-        if (!(lo > lbl_803E6840) && hi >= lbl_803E6840)
+        if (!(lo > lbl_803E6840) && !(hi < lbl_803E6840))
         {
             return 1;
         }
@@ -281,7 +281,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj)
         center = ((GameObject*)obj)->anim.localPosX;
         lo = (center - lbl_803E683C) - *(f32*)((char*)lbl_803DDD50 + 0x24);
         hi = (lbl_803E683C + center) - *(f32*)((char*)lbl_803DDD50 + 0x24);
-        if (!(lo > lbl_803E6844) && hi >= lbl_803E6844)
+        if (!(lo > lbl_803E6844) && !(hi < lbl_803E6844))
         {
             return 1;
         }
