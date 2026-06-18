@@ -1,4 +1,30 @@
-/* DLL 0x023F (dbegg) - DB egg and Dragon Fire Palace objects [0x801FE118-0x801FF884). */
+/*
+ * DLL 0x023F (dbegg) - the "dbegg" floating egg object [0x801FE118-0x801FF884).
+ *
+ * A buoyant egg driven by a mode state machine (DbEggState.mode, byte at
+ * +0x118; flags119 at +0x119). dbegg_update dispatches per mode:
+ *   1  settled/idle            2  drifting on water (flocking + buoyancy)
+ *   4  inert                   5  falling, seeking water/ground surface
+ *   6  player-pickup prompt    7  sinking after release
+ *   8  respawn wait            9  curve-follow path
+ *   0xa curve init             0xb held (velocity from message +0x10c..)
+ *   0xc gated respawn          0xd homing-to-target reposition
+ * Surface probing (water tri type 0xe vs ground) is fn_801FE560; sibling-egg
+ * flocking repulsion is fn_801FE774. Buoyancy/clamp/turn constants live in
+ * the lbl_803E61xx/.. pool. dbegg_setupFromDef seeds mode from the placement
+ * config's primary/ready condition game bits; behaviorMode selects variant
+ * flags119 bits (held, curve, model-1, group-32).
+ *
+ * Game bits: 0x3c4 (egg grabbed, global gate), 0x86d, 0x426/0x428 (sink
+ * progress + count), 0x42a (respawn), 0x44d, and the placement's
+ * triggerGameBit. Messages are pumped by dbegg_processMessages (ObjMsg type
+ * 17; subtypes 16-20).
+ *
+ * FUN_80200558 is a dbstealerworm sequence handler that genuinely lands in
+ * this object's pool (load-bearing for the match); the remaining FUN_ drift
+ * duplicates of the 0x80200740-0x80204320 sibling handlers were dead and
+ * removed.
+ */
 #include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -55,38 +81,40 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern undefined4 FUN_80006824();
-extern uint FUN_80006ab8();
-extern undefined8 FUN_80006ac4();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
 extern undefined8 FUN_800305f8();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_8003b818();
-extern double FUN_80293900();
-extern undefined4 DAT_8032a290;
-extern f64 DOUBLE_803e6f78;
-extern f64 DOUBLE_803e7000;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E6F40;
-extern f32 lbl_803E6F50;
-extern f32 lbl_803E6F60;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
-extern f32 lbl_803E6F88;
-extern f32 lbl_803E6F8C;
-extern f32 lbl_803E6F90;
-extern f32 lbl_803E6F94;
-extern f32 lbl_803E6FD8;
-extern f32 lbl_803E6FDC;
-extern f32 lbl_803E6FE0;
-extern f32 lbl_803E6FE4;
-extern f32 lbl_803E7008;
-extern f32 lbl_803E700C;
-extern f32 lbl_803E7010;
-extern void Obj_RemoveFromUpdateList(int* obj);
+extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 timeDelta;
+
+typedef struct DbeggPlacement
+{
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 targetPosX;
+    f32 targetPosY;
+    f32 targetPosZ;
+    u32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 triggerGameBit;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x2B - 0x26];
+    u8 unk2B;
+    s16 unk2C;
+    s8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} DbeggPlacement;
 
 void dbegg_processMessages(int obj)
 {
@@ -168,8 +196,6 @@ int dbegg_getObjectTypeId(void) { return 0x8; }
 
 void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 
-void dll_224_update(void* param_1);
-
 #pragma scheduling on
 #pragma peephole on
 int dbegg_setScale(int obj)
@@ -183,7 +209,7 @@ int dbegg_setScale(int obj)
 void dbegg_setupFromDef(int obj, u8* state)
 {
     AnimBehaviorConfig* config;
-    f32 local_unused;
+    f32 surfaceProbeOut;
 
     config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
     state[0x119] = 0;
@@ -197,7 +223,7 @@ void dbegg_setupFromDef(int obj, u8* state)
     state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1)
     {
-        if (fn_801FE560(obj, &local_unused, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
+        if (fn_801FE560(obj, &surfaceProbeOut, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
         {
             state[0x118] = 2;
         }
@@ -243,7 +269,7 @@ void dbegg_setupFromDef(int obj, u8* state)
 #pragma peephole on
 int dbegg_func0B(int obj, f32* v)
 {
-    char* inner = ((GameObject*)obj)->extra;
+    u8* inner = ((GameObject*)obj)->extra;
     if (((DbEggState*)inner)->mode == 0xb)
     {
         *(f32*)(inner + 0x10c) = v[0];
@@ -267,8 +293,6 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         }
     }
 }
-
-void dll_224_init(void* obj, void* other);
 
 #pragma peephole on
 void dbegg_hitDetect(int obj)
@@ -493,40 +517,6 @@ void fn_801FE774(int cam, f32* vel)
     }
 }
 
-/*
- * DbStealerwormControl - the per-family control record hung off
- * GroundBaddieState.control (state+0x40C) for dbstealerworm
- * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
- * the control record itself is memset(0x50) in dbstealerworm_init).
- */
-
-/* chuka extra block (extraSize 0xC). */
-
-typedef struct DbeggPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 targetPosX;
-    f32 targetPosY;
-    f32 targetPosZ;
-    u32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 triggerGameBit;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    s16 unk2C;
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DbeggPlacement;
-
 undefined4
 #pragma peephole off
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -563,383 +553,6 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-undefined4
-FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    float speedDiv;
-    uint busy;
-    int target;
-    short* msgQueue;
-    int control;
-    double dist;
-    undefined4 msgWord48;
-    undefined4 msgWord44;
-    undefined4 msgWord40;
-    undefined4 msgWord3c;
-    undefined4 msgWord38;
-    undefined4 msgWord34;
-    undefined4 msgWord30;
-    undefined4 msgWord2c;
-    undefined4 msgWord28;
-    float dx;
-    float dy;
-    float dz;
-
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) & 0xfb;
-    speedDiv = lbl_803E6F88;
-    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
-    *(float*)(state + 0x284) = *(float*)(state + 0x284) / speedDiv;
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    *(undefined*)(state + 0x34d) = 0x1f;
-    if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)obj)->anim.localPosY < *(float*)(*(int*)(state + 0x2d0) + 0x10) - lbl_803E6F90))
-    {
-        target = *(int*)(state + 0x2d0);
-        dx = *(float*)(target + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        dy = *(float*)(target + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
-        dz = *(float*)(target + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-        dist = FUN_80293900((double)(dz * dz + dx * dx + dy * dy));
-        if (dist < (double)lbl_803E6F50)
-        {
-            msgWord40 = *(undefined4*)(state + 0x2d0);
-            msgQueue = *(short**)(control + 0x24);
-            msgWord48 = 0xe;
-            msgWord44 = 1;
-            busy = FUN_80006ab8(msgQueue);
-            if (busy == 0)
-            {
-                FUN_80006ac4(msgQueue, (uint) & msgWord48);
-            }
-            *(undefined*)(control + 0x34) = 1;
-        }
-    }
-    else
-    {
-        msgQueue = *(short**)(control + 0x24);
-        msgWord30 = 9;
-        msgWord2c = 0;
-        msgWord28 = 0x24;
-        busy = FUN_80006ab8(msgQueue);
-        if (busy == 0)
-        {
-            FUN_80006ac4(msgQueue, (uint) & msgWord30);
-        }
-        *(undefined*)(control + 0x34) = 1;
-        msgWord34 = *(undefined4*)(state + 0x2d0);
-        msgQueue = *(short**)(control + 0x24);
-        msgWord3c = 7;
-        msgWord38 = 1;
-        busy = FUN_80006ab8(msgQueue);
-        if (busy == 0)
-        {
-            FUN_80006ac4(msgQueue, (uint) & msgWord3c);
-        }
-        *(undefined*)(control + 0x34) = 1;
-    }
-    return 0;
-}
-
-undefined4
-FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    int playerInjured;
-    uint sfxIdx;
-    short* msgQueue;
-    int control;
-    undefined4 msgWord28;
-    undefined4 msgWord24;
-    undefined4 msgWord20;
-
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
-    }
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        *(undefined4*)(state + 0x2d0) = 0;
-        if (*(int*)(control + 0x18) != 0)
-        {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                *(int*)(control + 0x18), 0x11, obj, 0x10, param_13, param_14, param_15, param_16);
-            *(int*)(control + 0x18) = 0;
-        }
-        playerInjured = FUN_80017a98();
-        playerInjured = (**(code**)(**(int**)(*(int*)(playerInjured + 200) + 0x68) + 0x44))();
-        if (playerInjured == 0)
-        {
-            sfxIdx = randomGetRange(0, 2);
-            FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + sfxIdx * 4));
-        }
-        else
-        {
-            sfxIdx = randomGetRange(3, 4);
-            FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + sfxIdx * 4));
-        }
-        msgWord20 = ((DbStealerwormControl*)control)->unk30;
-        msgWord24 = ((DbStealerwormControl*)control)->unk2C;
-        msgQueue = *(short**)(control + 0x24);
-        msgWord28 = ((DbStealerwormControl*)control)->unk28;
-        sfxIdx = FUN_80006ab8(msgQueue);
-        if (sfxIdx == 0)
-        {
-            FUN_80006ac4(msgQueue, (uint) & msgWord28);
-        }
-        ((DbStealerwormControl*)control)->unk3C = 0;
-    }
-    *(undefined*)(state + 0x34d) = 0x10;
-    *(float*)(state + 0x2a0) = lbl_803E6FD8;
-    *(float*)(state + 0x280) = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
-    {
-        *(undefined*)(control + 0x34) = 1;
-    }
-    return 0;
-}
-
-undefined4
-FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 noMove;
-    int control;
-
-    control = *(int*)&((GameObject*)param_9)->extra;
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(param_9);
-    }
-    noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 10, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
-    }
-    *(undefined*)(param_10 + 0x34d) = 1;
-    control = *(int*)(control + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    if ((*(uint*)(param_10 + 0x314) & 1) != 0)
-    {
-        *(uint*)(param_10 + 0x314) = *(uint*)(param_10 + 0x314) & ~1;
-        *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 1;
-    }
-    if (*(char*)(param_10 + 0x346) != '\0')
-    {
-        *(undefined*)(control + 0x34) = 1;
-    }
-    return 0;
-}
-
-int dbstealerworm_stateHandlerA09(int obj, int p);
-
-undefined4
-FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 noMove;
-
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(param_9);
-    }
-    noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 5, 0, noMove, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
-    }
-    *(undefined*)(param_10 + 0x34d) = 1;
-    return 0;
-}
-
-undefined4
-FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
-{
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    uint pick;
-    undefined4 noMove;
-    int extra;
-    int control;
-
-    extra = *(int*)&((GameObject*)param_9)->extra;
-    control = *(int*)(extra + 0x40c);
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        ObjHits_EnableObject(param_9);
-    }
-    noMove = 0xffffffff;
-    ObjHits_SetHitVolumeSlot(param_9, 10, 1, -1);
-    if (*(char*)(param_10 + 0x27a) != '\0')
-    {
-        pick = randomGetRange(0, 1);
-        if (pick == 0)
-        {
-            if (*(char*)(param_10 + 0x27a) != '\0')
-            {
-                FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             param_9, 7, 0, noMove, param_13, param_14, param_15, param_16);
-                *(undefined*)(param_10 + 0x346) = 0;
-            }
-        }
-        else if (*(char*)(param_10 + 0x27a) != '\0')
-        {
-            FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         param_9, 6, 0, noMove, param_13, param_14, param_15, param_16);
-            *(undefined*)(param_10 + 0x346) = 0;
-        }
-        *(undefined*)(param_10 + 0x34d) = 1;
-        *(float*)(param_10 + 0x2a0) =
-            lbl_803E6FDC +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e6f78) /
-            lbl_803E6FE0;
-    }
-    *(float*)(param_10 + 0x280) = lbl_803E6F40;
-    if (*(char*)(param_10 + 0x346) != '\0')
-    {
-        *(undefined*)(control + 0x34) = 1;
-    }
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    return 0;
-}
-
-undefined4
-FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
-             int param_6)
-{
-    int yawDelta;
-    undefined4 result;
-    int anim;
-    double absRate;
-    double turnRate;
-    float yawOut[5];
-
-    anim = *(int*)(param_5 + 0x5c);
-    yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
-    if ((double)lbl_803E6F40 == param_4)
-    {
-        result = 0;
-    }
-    else
-    {
-        turnRate = (double)(float)((double)(float)((double)yawOut[0] - param_1) / param_4);
-        absRate = turnRate;
-        if (turnRate < (double)lbl_803E6F40)
-        {
-            absRate = -turnRate;
-        }
-        if ((double)lbl_803E7008 <= absRate)
-        {
-            if (turnRate < (double)lbl_803E6F40)
-            {
-                param_2 = -param_2;
-            }
-            *(float*)(anim + 0x280) =
-                lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
-                    (double)(lbl_803E6F60 -
-                        (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(anim + 0x280)) +
-                *(float*)(anim + 0x280);
-            *(float*)(anim + 0x284) = lbl_803E6F40;
-            result = 0;
-        }
-        else
-        {
-            result = 1;
-        }
-    }
-    return result;
-}
-
-int dbstealerworm_stateHandlerA06(int obj, int p2);
-
-undefined4
-FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* param_5,
-             int param_6)
-{
-    int yawDelta;
-    int anim;
-    double heightDiff;
-    float yawOut[7];
-
-    anim = *(int*)(param_5 + 0x5c);
-    if ((param_5 != (ushort*)0x0) && (param_6 != 0))
-    {
-        yawDelta = Obj_GetYawDeltaToObject(param_5, param_6, yawOut);
-        if ((double)lbl_803E6F40 != param_4)
-        {
-            if ((double)yawOut[0] < param_1)
-            {
-                heightDiff = (double)(*(float*)(param_5 + 8) - *(float*)(param_6 + 0x10));
-                if (heightDiff < (double)lbl_803E6F40)
-                {
-                    heightDiff = -heightDiff;
-                }
-                if (heightDiff < (double)lbl_803E7010)
-                {
-                    return 1;
-                }
-            }
-            *(float*)(anim + 0x280) =
-                lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
-                    (double)(lbl_803E6F60 -
-                        (float)((double)CONCAT44(0x43300000, (int)(short)yawDelta ^ 0x80000000) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(anim + 0x280)) +
-                *(float*)(anim + 0x280);
-            *(float*)(anim + 0x284) = lbl_803E6F40;
-        }
-    }
-    return 0;
-}
-
-int dbstealerworm_stateHandlerA05(int obj, int p);
-
-void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    if (visible != 0)
-    {
-        FUN_8003b818(param_1);
-    }
-    return;
-}
-
-void fn_80204320(int obj);
-
 void dbegg_release(void)
 {
 }
@@ -947,7 +560,6 @@ void dbegg_release(void)
 void dbegg_initialise(void)
 {
 }
-
 
 void dbegg_init(int obj)
 {
@@ -963,7 +575,8 @@ void dbegg_init(int obj)
     }
 }
 
-
+/* Inherits #pragma peephole off from FUN_80200558 (line ~521) by design:
+   restoring peephole on here de-matches dbegg_update (97.5->94.8). */
 void dbegg_update(int obj)
 {
     extern void dbegg_setupFromDef(int obj, int* state); /* #57 */
@@ -975,21 +588,15 @@ void dbegg_update(int obj)
     extern void objMove(int, f32, f32, f32);
     extern void Sfx_PlayFromObject(int, int);
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
-    extern uint GameBit_Get(int);
-    extern void GameBit_Set(int, int);
     extern int randomGetRange(int, int);
     extern f32 Vec_xzDistance(int, int);
-    extern void ObjGroup_RemoveObject(int, int);
-    extern void ObjGroup_AddObject(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern uint getButtonsJustPressed(int);
-    extern f32 sqrtf(f32);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char*, ...);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(int);
-    extern f32 timeDelta;
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;
@@ -1397,13 +1004,3 @@ void dbegg_update(int obj)
         }
     }
 }
-
-/* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
-
-/* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
-
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
- * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
- */
-
-/* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
