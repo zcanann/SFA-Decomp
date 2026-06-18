@@ -331,7 +331,7 @@ void camslide_update(CameraObject* camera, GameObject* target)
             step *= lbl_803E16E4;
             if (step > lbl_803E16B4)
             {
-                step = lbl_803E16B4;
+                step = *(f32*)&lbl_803E16B4;
             }
             gCamcontrolModeSettings->lowerHeightOffset =
                 gCamcontrolModeSettings->lowerHeightOffset + step;
@@ -344,7 +344,7 @@ void camslide_update(CameraObject* camera, GameObject* target)
             step *= lbl_803E16E4;
             if (step > lbl_803E16B4)
             {
-                step = lbl_803E16B4;
+                step = *(f32*)&lbl_803E16B4;
             }
             gCamcontrolModeSettings->upperHeightOffset =
                 gCamcontrolModeSettings->upperHeightOffset + step;
@@ -693,7 +693,7 @@ void camstatic_update(CameraObject* camera)
     float fa;
     int val;
     uint angleDelta;
-    short yaw;
+    u16 yaw;
     float dx;
     float dy;
     float dz;
@@ -861,7 +861,7 @@ void camstatic_update(CameraObject* camera)
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
-    angleDelta = getAngle(camera->anim.worldPosY -
+    angleDelta = (u16)getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
     angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
