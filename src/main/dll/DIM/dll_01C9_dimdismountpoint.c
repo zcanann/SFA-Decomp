@@ -86,7 +86,7 @@ void dimdismountpoint_init(u8* obj, u8* params)
     f32* sub;
 
     ObjGroup_AddObject((u32)obj, DIMDISMOUNT_GROUP);
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     sub = ((GameObject*)obj)->extra;
     sub[0] = mathSinf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNX */
     sub[1] = lbl_803E4908;                                                     /* planeNY */
