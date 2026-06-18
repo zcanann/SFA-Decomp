@@ -1274,7 +1274,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         worldPos[1] = localPos[1] + scaledExtent * cornerBlock.v[i * 3 + 1];
         worldPos[2] = localPos[2] + scaledExtent * cornerBlock.v[i * 3 + 2];
         PSMTXMultVec((f32*)(light + 0x1f0), worldPos, projected);
-        if (projected[2] != zero)
+        if (zero != projected[2])
         {
             projected[0] /= projected[2];
             projected[1] /= projected[2];
