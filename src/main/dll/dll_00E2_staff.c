@@ -773,9 +773,9 @@ typedef struct StaffState
     s8 fieldB9;
 } StaffState;
 
-s16 staff_getHitReactValue(int* obj) { return ((StaffState*)((int**)obj)[0xb8 / 4])->hitReactValue; }
+s16 staff_getHitReactValue(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue; }
 
-s32 staff_func16(int* obj) { return ((StaffState*)((int**)obj)[0xb8 / 4])->fieldB9; }
+s32 staff_func16(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->fieldB9; }
 
 extern f32 lbl_803E3420;
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
@@ -783,7 +783,7 @@ void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 void objSetAnimField48to0(int* obj)
 {
     s32 v = 0x0;
-    *(s32*)((char*)((int**)obj)[0xb8 / 4] + 0x48) = v;
+    *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x48) = v;
 }
 
 void flamethrowerspe_func0B(int* obj);
@@ -794,7 +794,7 @@ void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*
 #pragma dont_inline on
 void staffSetGlow(int* obj, u8 a, u8 b)
 {
-    u8* state = (u8*)((int**)obj)[0xb8 / 4];
+    u8* state = (u8*)(int*)((GameObject*)obj)->extra;
     state[0xbb] = a;
     state[0xba] = b;
 }
@@ -802,12 +802,12 @@ void staffSetGlow(int* obj, u8 a, u8 b)
 
 void staff_func10(int* obj, s32 v)
 {
-    ((StaffState*)((int**)obj)[0xb8 / 4])->fieldB2 = (s16)v;
+    ((StaffState*)(int*)((GameObject*)obj)->extra)->fieldB2 = (s16)v;
 }
 
 void staff_setHitReactValue(int* obj, s32 v)
 {
-    s16* p = &((StaffState*)((int**)obj)[0xb8 / 4])->hitReactValue;
+    s16* p = &((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
     if (v > 0xff) v = 0xff;
     *p = (s16)v;
 }
@@ -831,7 +831,7 @@ void staff_modelMtxFn(int* obj, int p4, int p5)
 
 void staff_addHitReactValue(int* obj, s32 delta)
 {
-    s16* p = &((StaffState*)((int**)obj)[0xb8 / 4])->hitReactValue;
+    s16* p = &((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
     s32 v;
     *p = (s16)(*p + delta);
     v = *p;
@@ -861,7 +861,7 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2)
 {
     u8* slot;
     int n;
-    u8* state = (u8*)((int**)obj)[0xb8 / 4];
+    u8* state = (u8*)(int*)((GameObject*)obj)->extra;
     slot = state;
     for (n = 0; n < 3; n++)
     {
