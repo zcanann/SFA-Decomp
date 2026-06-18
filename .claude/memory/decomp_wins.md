@@ -1,4 +1,254 @@
+
+## ===== Session (Jun17n, top-level main object.c cmp-width + re-read vein): 3 commits / ~6 attempts =====
+TOOLING: full report.json works. CAUTION: I `rm`'d build/GSAE01/obj/main/newshadows.o
+  (the TARGET tree -- FORBIDDEN). Restored ALL obj/*.o via `build/tools/dtk dol split
+  config/GSAE01/config.yml build/GSAE01` (the `split` ninja rule; outputs obj tree from
+  the DOL+config.yml/splits.txt/symbols.txt). NEVER rm obj/*.o again -- but if you do,
+  this one command fully regenerates them (0.5s). /tmp/odp/objdiff.json gets CLOBBERED by
+  sibling agents mid-session -- ALWAYS re-write the 1-unit filter immediately before each
+  objdiff-cli report run (inline python, filter c['units'] by target_path).
+WINS (committed local; push rejected remote-ahead):
+- Obj_UpdateObject (object.c, 93.61->100.0%, 9be1e7401c, BIGGEST +6.4 full match):
+  THE LEAD LEVER = SAVED-REG-CSE-vs-RE-DERIVE. Target RE-READS object->hitReactState
+  (off 84) and childObjs[0]->[0x54] (off 200->84) FRESH from memory before EACH zero
+  store (lwz 84;stw 80;lwz 84;stb 113), mine cached in a named local (hitState/t/
+  childHitState) -> stw 80(r4);stb 113(r4). FIX: delete the locals, inline the deref
+  expression at every use: `((ObjHitsPriorityState*)object->hitReactState)->lastHitObject
+  =0;` x2 and `((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0]+0x54))->...=0` x2,
+  in ALL THREE blocks (pendingParent path + skip: path). Each block ~+1pt. PLUS #3
+  pointer null-checks: pendingParentObj/childObjs[0]/ownerObj(off196,off76)/obj+0x58 all
+  `*(int*)..!=0`->`*(void**)..!=NULL` for cmplwi. PLUS dll vtable: `**object->dll + 8`
+  (3 lwz) was ONE deref too many -> `*(int*)((char*)*object->dll + 8)` (2 lwz; dll is
+  int**, target does lwz dll;lwz *dll;lwz 8). PLUS f32->s16 store: `(s16)(int)(fexpr)`
+  AND `(int)(fexpr)` BOTH emit extsh before sth; `(s16)(fexpr)` ALONE (no int) emits
+  fctiwz;sth direct NO extsh (matches target) -- the (int) node forces the narrowing
+  extsh, the bare (s16) lets the fctiwz result store straight.
+- objFreeObjDef (object.c, 89.65->91.86%, c27e634c9a + c34e45e9c1, +2.21): pure cmp-width
+  vein. (1) #3 *(void**)..!=NULL on unkDC(220)/anim.parent(76)/placementData(76&80)/
+  o+0x34(52) -> cmplwi. (2) the per-defId refcount byte `*(s8*)(lbl_803DCBA4+type)` on
+  `==0` tests -> `*(u8*)` drops extsb (lbz;cmplwi). (3) banks[i] null-check is SIGNED in
+  target (cmpwi) -- typed ptr gave cmplwi; spell `*(int*)&banks[i]!=0`. (4) seqIndex>=0
+  -> `>-1` for cmpwi -1;ble (#69). (5) anim.flags read `*(s16*)` not `*(u16*)` (lha vs
+  lhz before the &0x2000). Residual: r30/r31 #108 quad-rotation (49 reg-perm), banked.
+METHOD WIN: `categorize_near_misses`-style symptom histogram per candidate:
+  `python3 tools/ndiff.py UNIT SYM --classify | grep -oE '\[[a-z-]+\]' | sort|uniq -c`.
+  A fn dominated by [cmp-width] with few [reg-perm] = a guaranteed multi-fix vein (both
+  object.c fns). Obj_UpdateObject was 6 cmp-width + 1 reg-perm -> went to 100%.
+LESSON: the RE-DERIVE-from-memory crack (inline `obj->field` deref at each use, delete
+  the cached local) is the strongest top-level-main lever this band -- target value-tracks
+  stack addrs but NOT global/heap re-reads across stores; when target shows `lwz X;...;lwz X`
+  (same load repeated before each store) and mine shows one load into a saved reg + reuse,
+  un-name the local. Worked 3x in ONE fn. Also the f32->s16 `(s16)` vs `(s16)(int)` extsh
+  distinction is new + clean. BANKED (inert, reverted): shadowRenderFn_8006b558 (newshadows
+  78.15) -- named-extern CSE of 8.0f/1.3f/320 (lbl_803DED10/0C/14) was score-neutral; real
+  cap = frame -176 vs -144 (target saves f27-f31, mine f29-f31) + addi-arg-block emitted
+  early not pre-call; scheduling-off INERT on the addi placement. gameTextGet (textrender
+  83.48) -- K-grouping reassoc of `base+0x40+idx*0xc` INERT (MWCC keeps addi-K-on-product;
+  target re-reads lbl_803DC97C per use, mine CSEs into r6 -- CSE-vs-reread cap, no clean
+  force-reread without volatile).
+
+## ===== Session (Jun17m, flat dll 85-99% structural band): 2 wins / ~9 attempts =====
+TOOLING: full report.json + objdiff-cli + /tmp/onepct.sh ALL WORKING this session
+  (the prior broken-report issue is gone). `timeout` is NOT on macOS PATH -- run
+  build commands without it. `bash tools/locked_ninja.sh <unit.o>` then onepct.sh.
+  git commits succeed despite ".git/objects unlink Operation not permitted" gc.log
+  spam (environmental, NOT a commit failure -- verify with git log -1). Push always
+  rejected (remote ahead).
+WINS (committed local):
+- tumbleweed_updateRollingMotion (dll_00D2, 88.24->93.20%, 2a57eee049, +4.96):
+  DIVISION-FIRST eval order. The bounce-velocity expr
+  `-(lbl_803E2F84 * velocityY * ((f32)*(ushort*)(state+0x268) / (f32)(int)uval))`
+  -- target schedules the fdivs (the ratio) BEFORE the two fmuls, but the inline
+  left-associated product `(2F84*velY)*ratio` made MWCC emit the velY multiply
+  first. FIX: hoist the ratio into a preceding statement reusing the dead `dy`
+  local: `dy = (f32)*(ushort*)(state+0x268)/(f32)(int)uval; velY = -(2F84*velY*dy);`
+  Applied to BOTH identical if/else arms. Residual: fdivs numerator/denominator
+  reg swap (f2,f0 vs f0,f2 -- target converts the uval denominator first) +
+  @NNN-vs-lbl_803E2F70/F90 conversion-bias relocs (#70 score-neutral) + the early
+  0x30 r3-vs-r30 pre-call deref (#68, peephole-ON fn so couldn't flip). SJIS file
+  -- edited byte-wise via python.
+- linkInitTextures (dll_003C_tumbleweedbush, 89.74->97.89%, 75bd9ad151, +8.15
+  BIGGEST): #68 PEEPHOLE OFF for saved-copy pre-call derefs. Target keeps `item`
+  in r28 (saved copy) and routes the unrolled slots[] init stores (25x stb 31-55)
+  + the (s8)randomGetRange casts THROUGH the copy; peephole-on forwarded the param
+  r3 directly AND folded the extsb byte extensions (mine was 3 instrs short). Wrap
+  fn in `#pragma peephole off`...`#pragma peephole reset`. The fn already had
+  `#pragma scheduling off` (no reset) before it -- peephole is INDEPENDENT (#1).
+  Verified other fns in the TU unchanged (reset pops correctly). SJIS file, byte-wise.
+LESSON: #68 peephole-off for the param-vs-saved-copy pre-call deref is the
+  repeatable winner this band -- BUT only when target genuinely routes derefs
+  through the copy AND the deltas are the copy/extsb, not coloring. A/B test:
+  cracked linkInitTextures +8.15, but INERT on sidekickball trickyBallFn_801793b8
+  (86.26, pure r28/r29/r31 coloring web, #54 two-copies-of-obj) and hagabon
+  fn_8014E1DC (88.72, the `*flags &= 0xfe` clrrwi+clrlwi fuses to ONE rlwinm but
+  peephole-off did NOT unfuse it -- different pass; plus #45 lbl_803E2640-in-f31
+  CSE across mathSinf + frame -144). The DIVISION-FIRST hoist (reuse a dead f32
+  local, ratio into its own statement before a `A*B*(div)` product) is the other
+  clean structural crack -- look for target fdivs-before-fmuls.
+BANKED (coloring/perm caps, reverted/not-attempted clean):
+- CameraModeShipBattle_update (dll_004A, 87.05): all FP divide-result reg coloring
+  (fdivs f2 vs f1; timeDelta load position) #82; both m!=2&&m!=5 arms genuinely
+  duplicated in target (faithful).
+- fn_80095164 (dll_0013 waterfx, 86.45): #45/#121 FP-const-hoist into f20-f31 saved
+  regs + loop-counter `li r30,0;mr r29,r27` init order; high FP pressure, decl-order
+  of c2E0..c304 would need to be REVERSED to f31-first (2FC first) -- fiddly perm.
+- playerShadow_renderObject (dll_000D, 88.60): f7/f8 swap on verts[] FP stores #82.
+- SaveGame_gplaySetObjGroupStatus (dll_0017, 85.22): ndiff misaligns (phantom
+  self-copy lwz/stw blocks); real diffs = bne;b fold + r29 coloring.
+- dll_5E_func03 (dll_005E, 88.24): GVN small-const class (li r3,2/4/16384/256
+  perm, T=C=359).
+- fn_8015CE68 (dll_00CA mediumbasket, 90.33): frame -160 + conversion-temp stack
+  slot layout #67.
+- initLoadingScreenTextures (dll_0032, 87.26): r26/r27/r30/r31 coloring + sched
+  (T=C=85).
+- linkInitTextures TU residual: Link_setup (90.66) heavy r20-r31 coloring + extsb
+  keeping (s8 link-field compares), NOT a peephole fn (already peephole-off).
+
 # Decomp Matching Wins (dll_0000-0140 scope)
+
+## ===== Session (Jun17l, flat dll structural band 90-95%): 4 wins / ~12 attempts =====
+TOOLING: the FULL report.json is BROKEN this session (another agent renamed
+  dll_00E0_swarmbaddie -> swarmbaddie mid-flight; objdiff-cli report aborts on
+  the missing .o). WORKAROUND: per-unit report via a temp project dir. Helper
+  /tmp/onepct.sh <unit_substr> <symbol>: writes a 1-unit objdiff.json (filter
+  the repo objdiff.json units by target_path substr) into /tmp/odp/, symlinks
+  build/, runs `build/tools/objdiff-cli report generate -p /tmp/odp -o ...`,
+  greps fuzzy_match_percent. Fast (0.004s) + immune to the broken full report.
+WINS (committed local; push rejected remote-ahead as always):
+- Tricky_findNearbyFloorHeights (dll_00C4, 91.96->97.94%, 8582b68695): THREE
+  stacked levers. (1) fcmpo operand order: `if (unk1B8 > lbl_803E25A0)` not
+  `(lbl < unk1B8)` -> ble (loads field first) #25/#91 [+1.3]. (2) loop-counter
+  init HOIST: `i = 0;` out of the for-header to BEFORE the surfaceFlags clear ->
+  li r3,0 emits early in r3 matching target's counter reg+slot [+3.5, biggest].
+  (3) #51 chained assign `nearestSpecialDelta = nearestFloorDelta = lbl` ->
+  single lfs+one fmr (drops the routed-through-f0 double copy) [+1.2].
+- saveGame_saveObjectPos (dll_0017, 90.22->92.17%, 2a73402c76): same
+  loop-counter init hoist -- `i = 0;` before `slot = gSaveGameData` so the
+  scan-loop's li r7,0 emits right after the status guard. Residual: status-guard
+  bnelr-vs-beq;blr fold + objectId/entry store-base eval order (peephole/perm).
+- groundanimator_free (dll_0138, 91.15->92.51%, e23175cf4a): TWO #3 pointer
+  null-checks. heightBuf/falloffBuf are typed `int` but hold buffer pointers;
+  target compares cmplwi (pointer), mine cmpwi (signed int). Spell as
+  `*(void**)&w->field != NULL`. Each flip ~ +0.68. Residual: high-pressure
+  reg-perm + extra saved GPR (_savegpr_19 vs _20) frame class (#108/#67).
+- Tricky_updateBlendChannelWeight (dll_80136a40, 92.74->98.11%, 65130f26c3,
+  BIGGEST +5.4): the two single-bit blend flags at state[0x82e] (PENDING 0x80
+  clear, ACTIVE 0x40 set) were `&= ~0x80` / `|= 0x40` -> rlwinm-clear + ori-set
+  + clrlwi. Target uses li;rlwimi (bitfield INSERT). MODELED as a bitfield-
+  overlay struct (#12/#39): `typedef struct { u8 pending:1; u8 active:1; u8
+  rest:6; }` (MSB-first packing -> pending=0x80), then `flags->pending = 0;
+  flags->active = 1;`. CLEAN crack. Residual: FP clamp fcmpo coloring (#81/#82).
+LESSON: TWO highly-repeatable structural cracks this band: (A) the loop-counter
+  init HOIST (`i=0;` out of for-header, placed to match target's li-emission slot
+  -- works when target emits the counter init BEFORE the loop-setup/conversion;
+  cracked findNearbyFloorHeights +3.5 AND saveObjectPos +1.9). (B) #12/#39
+  bitfield-overlay struct for single-bit flag CLEAR+SET pairs that target does
+  via rlwimi (cracked updateBlendChannelWeight +5.4 -- look for rlwimi in target
+  + `&= ~bit` / `|= bit` in source = mismatch). (C) #3 cmplwi on int-typed
+  pointer fields (`*(void**)&field`). BANKED caps (reverted clean): param-pool
+  perms (barrelgener Obj_UpdateRomCurveFollowVelocity route/flag swap, opt_level2
+  WORSE); jump-table-vs-binary-search where the BODY needs peephole-off but the
+  switch needs peephole-on (hightop_handleMotionEvent -- contradiction, can't win
+  both); fcmpo-flip on CameraModeDebug clamps = #82 const-in-f0-vs-f1 web, all
+  flips regressed; PlayControl modulo `(x%m)==(m-1)` reassoc + CSE'd-vs-reread
+  global; dll_AA_func03 = ptr/float-args-before-int-args emission order (resists,
+  matches old memory note); curves_remove peephole-on REGRESSED (global noschedule
+  is load-bearing); sandworm extsh is ordering-bound not form-bound.
+
+## ===== Session (Jun17k, camera/switch DLL): 0 NET commits (2 wins SNIPED by siblings), ~10 attempts =====
+KEY LESSON: the shared tree is SATURATED with agents on the SAME camera/switch fns.
+  TWO of my completed wins were committed by SIBLINGS with byte-identical fixes
+  BEFORE I could commit, while I was still A/B-ing:
+  - CameraModeNpcSpeak_update (dll_004D, 93.95->99.82%): sibling f0f1dcc078, SAME
+    %. My (independent) fix = #55 MIXED HOIST: target holds `lbl_803DD584` state
+    ptr in r31 for anchorX/Y/Z + the mode==6 block, but RE-READS it fresh (`lwz
+    r3,0(0)` reloc) for the cameraX/Y/Z stores, the orbitVel clamp inner-blocks,
+    the fn_8010DB7C call args, lookAtHeightOffset/XZScale/YScale, AND the two
+    mode==3/!=3 checks. FIX: spell `lbl_803DD584->field` DIRECTLY at the re-read
+    sites (keep the hoisted `speakState` only for anchor + mode==6 top). +5.9pt;
+    incidentally fixed the camera/target r29/r30 perm. Residual: 1 f29/f30 ey/ez
+    expr-temp swap (#82 decl-order INERT) + @238 reloc (#70). STRONG #55 recipe:
+    a state-ptr hoist that target only PARTIALLY uses -> re-spell the global at
+    each site target reloads.
+  - InvisibleHitSwitch_update (dll_00FA, 93.17->94.57%): sibling 80758b03c8, SAME
+    %. Lever = `extern const f32 lbl_803E3730;` (#127 store-aliasing CSE exemption)
+    to hold the clamp limit in f2 across the first if-block. Residual: f2/f3 swap +
+    CSE-overshoot at the `unk8 != lbl` compare (#127 caveat; #81 launder there got
+    LINTER-REVERTED repeatedly -- the auto-formatter strips `*(f32*)&lbl` casts).
+  IMPLICATION: COMMIT THE INSTANT a fuzzy% rises, BEFORE chasing the residual --
+  do NOT keep A/B-ing a solved fn or a sibling banks it first. The report-race
+  retry-loop (build missing sibling .o, retry report) costs ~30-60s each cycle and
+  the window closes.
+BANKED (real caps, reverted byte-clean, NOT sniped):
+- CameraModeForceBehind_update (dll_0052, 94.89%): sqrt arg `(a-sx)^2 + (b-sz)^2`
+  target FUSES one square via fmadds (`fsubs f1; fmadds f1,f1,f1,f0`) keeping the
+  other as plain fmuls; current emits BOTH fmuls + fadds (no fusion). d2-hoist
+  (`f32 d2=(pos[2]-sz)*(pos[2]-sz); sqrtf((pos[0]-sx)*(pos[0]-sx)+d2)`) did NOT
+  fuse (-0.04). fp_contract is ON (other fmadds present) but `a*a+b*b` w/ both
+  sides products won't contract -- appears uncontrollable from source. Plus frame
+  -224 vs -192 (#67 conversion-temp count) + extra/yaw/pitch address-taken layout.
+- dfptargetblock_hitDetect (dll_0235, 91.46%): 32 divergence regions. velX/velZ
+  clamp: target holds 648C in f0 (volatile, re-loaded each cmp) keeping velX/velZ
+  in f1/f2; current CSEs 648C into f1 pushing velX/velZ to f2/f3. `*(f32*)&648C`
+  launder on the two compares REGRESSED to 90.7 (re-load didn't free f1, made it
+  worse). Plus `velX<=velZ` -> cror;bne (current) vs ble (target) #25/#91. Plus
+  multiple dead-code clamp blocks (`velX>=lbl && velX<lbl`) = import artifacts.
+- screenRectFn_800d7568 (dll_0016, 90.48%): (1) `(span>>1)&0xffff` -> rlwinm
+  (current, even under peephole-off) vs target's srwi;clrlwi (needs `span` typed
+  u16 so >>1 needs no mask -- statement-split INERT, re-fuses to rlwinm). (2)
+  HudColor `col`(outer) vs `col2`(block-scope in if) stack-slot ORDER: target
+  packs col at r1,8 (lowest), current at r1,52 -- #67 decl-order layout, same
+  frame -176. Coloring/layout cap.
+TOOLING: a LINTER/auto-formatter in this tree REVERTS `*(f32*)&lbl` launder edits
+  (and possibly other "ugly" casts) silently between edit and build -- if a launder
+  "does nothing," grep the file to confirm it survived. Report.json builds FAIL
+  transiently when a sibling deletes a .o mid-generation ("Failed to open
+  .../dll_XXX.o"); retry-loop: parse the missing .o path, `locked_ninja` it, retry.
+
+## ===== Session (Jun17j, level/camera DLL deep-dive): 1 BIG win, ~6 attempts =====
+WIN: dll_bb camcontrol_applyState (92.30->98.93%, +6.6%, 6f7c1e4198). A LOW-%
+  camera controller cracked by stacked CORRECTNESS + codegen-shape fixes (the
+  deep-dive vein, NOT coloring). Levers, in order of impact:
+  - FIELD-OFFSET BUG (#46): `camera->localX/Y/Z` derefs were the WRONG fields;
+    target reads worldX/Y/Z (0x18/0x1C/0x20) not localX (0x0C). dll_0001 sibling
+    writes worldX via Obj_TransformLocalPointToWorld -> applyState consumes world.
+    Fixed PSVECSubtract arg + else-branch stores + loadMapForCameraPos. (Objdiff
+    near-neutral ALONE because the displacement bytes loosely match, but unblocked
+    the rest.)
+  - pCamera MACRO re-read: target reloads `pCamera` global for ONE field
+    (blendCurveMode) mid-fn while using the `camera` param elsewhere. The sibling
+    camcontrol_applyQueuedAction uses CAMCONTROL_CAMERA (=(T*)pCamera) for ALL
+    accesses. Spelling `CAMCONTROL_CAMERA->blendCurveMode` (read ONCE, both ==2/==1
+    tests reuse r0) + using `camera->blendProgress` directly (drop the `clamped=`
+    reassign) matched the whole dispatch. +0.83.
+  - (u16) cast on view->yaw/pitch/roll in `blendStart - view->yaw` (clrlwi). +part
+  - TWO-OP WRAP-CLAMP (#83): `d += 1` when `0x8000 < d` -> `d = (d - 0x10000) + 1`;
+    `d += -1` when `d < -0x8000` -> `d = (d + 0x10000) - 1`. Matches addis;addi
+    pair. Applied to all 3 yaw/pitch/roll blocks. +2.77 (the biggest single lever).
+  - DROP (short) on `blendStart - (short)itmp` (itmp = (int)((float)d*factor)) ->
+    no extsh on the fctiwz result. +0.94.
+  - letterbox: `(short)step * (short)(int)timeDelta` -> `step * (int)timeDelta`
+    (step is s8, drops spurious extsh on timeDelta). +0.66.
+  - sDllBBTimeDebugFormat (.sdata) as SCALAR extern + `&sym` -> @sda21 `li r3,0;`
+    not lis;addi far form (#47). +0.47.
+  - fcmpo OPERAND-ORDER flips: `Min < blendProgress` -> `blendProgress > Min`;
+    `targetOffset < lbl` -> `lbl > targetOffset` (loads the field FIRST per target).
+  - HOIST `clamped = gCamcontrolNormalizedMin` INTO the if-body (was before the
+    fovY store) so Min loads at the compare not early. +0.50.
+  RESIDUAL (banked ~99%): the clamp ternary reloads gCamcontrolNormalizedMin per
+  use (target CSEs into f3) = #127/#82 FP-const CSE; 3x @172-vs-lbl_803E1650 (#70
+  neutral); 1 sth r3/r4 naming. push rejected remote-ahead (cherry-pick flush).
+LESSON (STRONGLY CONFIRMED, matches VEIN MAP): the productive vein is LOW-% (90-95%)
+  level/camera CONTROLLERS via deep-dive — field-offset bugs (#46, re-derive from
+  target asm not the header even when a STATIC_ASSERT "confirms" it; the assert just
+  proves the struct is self-consistent, NOT that THIS fn uses the right field),
+  pCamera/macro accessor mismatch, two-op wrap-clamp (#83), drop-spurious-cast extsh,
+  @sda21 string form (#47), fcmpo operand order. Stacked ~10 fixes for +6.6%. The
+  HIGH-% (98%+) candidates (Checkpoint_func10, Objfsa_GetPatchGroupIdAtPoint,
+  texframeanimator_update, bossdrakor_handleActionEvent) were ALL coloring/block-layout
+  caps (banked clean): #108 reg-perm, addi-via-r0+mr base materialize, beq-vs-bne;b
+  body-out-of-line layout, signed-double-vs-unsigned-single switch bounds (not
+  pragma-controllable). Skip 98%+ fast; mine the 90-95% structural band.
 
 ## ===== Session (Jun17i, flat dll emission-order/pragma): 4 wins, ~16 attempts =====
 CRITICAL TOOLING LESSON: the proto/report race produces PHANTOM regressions.
