@@ -1374,7 +1374,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
-                    result = 0;
+                    goto resultZero;
                 }
             }
             else
@@ -1385,6 +1385,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
+                resultZero:
                     result = 0;
                 }
             }
