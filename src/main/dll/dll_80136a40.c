@@ -839,6 +839,7 @@ void objAnimFreeChildren(int a, int b, void** c)
     }
 }
 
+#pragma opt_strength_reduction off
 void fn_80137A00(int p1, int p2, u8* grid, int p4)
 {
     int i;
@@ -888,6 +889,7 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
         }
     }
 }
+#pragma opt_strength_reduction reset
 
 #pragma peephole on
 void debugPrintfxy(int x, int y, char* fmt, ...)
