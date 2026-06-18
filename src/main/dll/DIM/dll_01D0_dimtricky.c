@@ -76,7 +76,7 @@ int dimtruthhornice_getExtraSize(void);
 void dim_tricky_init(int* obj)
 {
     u8 v = 0x0;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x0) = v;
+    *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
 }
 
 void dim_tricky_render(void) { extern void objRenderFn_8003b8f4(f32); objRenderFn_8003b8f4(lbl_803E4A38); }
