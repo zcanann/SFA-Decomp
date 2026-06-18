@@ -128,7 +128,15 @@ void vfplift23_updateState(int obj)
 
     state = vfplift_getState(obj);
     setup = *(VfpLiftPlacement**)&((GameObject*)obj)->anim.placementData;
-    raisedOffset = vfplift23_getRaisedOffset(((GameObject*)obj)->anim.seqId);
+    raisedOffset = lbl_803E60E0;
+    if (((GameObject*)obj)->anim.seqId == VFPLIFT3_OBJTYPE)
+    {
+        raisedOffset = lbl_803E60E4;
+    }
+    else if (((GameObject*)obj)->anim.seqId == VFPLIFT2_OBJTYPE)
+    {
+        raisedOffset = lbl_803E60E8;
+    }
     if (state->applyHeight != 0)
     {
         ((GameObject*)obj)->anim.localPosY = setup->base.posY + raisedOffset;
