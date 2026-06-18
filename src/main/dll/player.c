@@ -5487,7 +5487,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     {
         lbl_803DE459 = 0;
         changed = 1;
-        inner->flags360 &= ~0x40;
+        *(u32*)&inner->flags360 &= ~0x40LL;
         Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         {
             f32 z = lbl_803E7EA4;
@@ -5748,7 +5748,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         if (((PlayerState*)state)->baddie.targetObj == NULL)
         {
             inner->unk3F1 = (inner->unk3F1 & 0x7f) | 0x80;
-            inner->flags360 |= 0x800000;
+            *(u32*)&inner->flags360 |= 0x800000LL;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
