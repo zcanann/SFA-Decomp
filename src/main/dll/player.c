@@ -14283,7 +14283,15 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
         }
-        if (((PlayerState*)inner)->unk838 <= lbl_803E7EA4)
+        if (lbl_803E7EA4 < ((PlayerState*)inner)->unk838)
+        {
+            if ((((PlayerState*)inner)->unk8D8 & 4) != 0)
+            {
+                ((PlayerState*)inner)->flags360 |= 0x20000;
+                ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x4;
+            }
+        }
+        else
         {
             if (lbl_8033322C[((PlayerState*)inner)->surfaceType] == 6 ||
                 lbl_8033322C[((PlayerState*)inner)->surfaceType] == 3)
@@ -14335,11 +14343,6 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x4;
                 }
             }
-        }
-        else if ((((PlayerState*)inner)->unk8D8 & 4) != 0)
-        {
-            ((PlayerState*)inner)->flags360 |= 0x20000;
-            ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x4;
         }
     }
 }
