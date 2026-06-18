@@ -1,3 +1,22 @@
+/*
+ * seqobj11d - a family of ground/walking baddie variants sharing one
+ * sequence-driven animation update. The variant is selected by anim.seqId
+ * in fn_80151954 (init) into a 0..5 type index (state+0x33b) that selects
+ * per-type tables (PTR_DAT_8031fd*, lbl_8031F16C entries) of movement
+ * sequence entries (SeqEntry: anim id + reaction mask + colour bytes).
+ *
+ * The per-frame update walks those tables to pick the next animation,
+ * stepping the seq-entry index (state+0x33a) until it finds an entry whose
+ * reaction mask matches the baddie's control flags, then drives the model
+ * (fn_8014D08C / ObjAnim_SetMoveProgress) and the hit-volume priority
+ * (ObjHitsPriorityState). fn_801511E8 picks the next move when far from the
+ * target; fn_801513AC steers toward a tracked object using getAngle.
+ * fn_80151C68 is a pay-to-trigger interaction (spends 25 money, sets a
+ * placement game bit, runs object trigger sequences). fn_80151DB8 pushes
+ * the player out of a cylinder around the object. fn_80152004 plays a dirt
+ * step sfx and sets a reaction flag. FUN_80151844 (still referenced by the
+ * wisp baddie DLL) is a shared variant of the sequence stepper.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -10,58 +29,60 @@
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_8001766c();
+typedef struct
+{
+    f32 speed;
+    u32 mask;
+    u8 anim;
+    u8 pad9;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 pad13[3];
+} SeqEntry;
+
+/* Routines live in sibling baddie/seq TUs (fn_8014*, getAngle, math*,
+   player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
+   tables and FP constants. */
 extern int FUN_80017730();
 extern undefined4 FUN_800305c4();
-extern undefined4 FUN_800305f8();
 extern int FUN_8014c78c();
-extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
-extern char FUN_8014ffa8();
-extern undefined4 FUN_801504f8();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
-
-extern undefined4 DAT_8031e980;
-extern undefined4 DAT_8031feb8;
-extern undefined4 DAT_803ad088;
-extern undefined4 DAT_803ad08c;
-extern undefined4 DAT_803dc8f0;
-extern f64 DOUBLE_803e3408;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E33D8;
-extern f32 lbl_803E33E4;
-extern f32 lbl_803E3438;
-extern f32 lbl_803E3440;
-extern void* PTR_DAT_8031fdbc;
-extern void* PTR_DAT_8031fdc8;
-extern void* PTR_DAT_8031fdd4;
-extern void* PTR_DAT_8031fdd8;
-
-#pragma scheduling on
-#pragma peephole on
 extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
-extern char lbl_8031F16C[];
-extern char lbl_8031DD30[];
-extern f32 lbl_803E27A4;
-extern f32 lbl_803E27A8;
 extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
-extern int getAngle(f32 dx, f32 dz);
-extern u8 lbl_803AC428[];
-extern u8 lbl_803DBC88[8];
-extern f32 lbl_803E27AC;
 extern void fn_8001FEA8(void);
 extern u8* Obj_GetPlayerObject(void);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern f32 lbl_803E2740;
-extern f32 timeDelta;
+extern int getAngle(f32 dx, f32 dz);
 extern void baddieAfterUpdateBonesCb();
+extern int playerGetMoney(u8 * player);
+extern void playerAddMoney(u8* player, int amount);
+extern void hudFn_8011f38c(int a);
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 sqrtf(f32 x);
+
+extern undefined4 DAT_8031e980;
+extern undefined4 DAT_803ad088;
+extern undefined4 DAT_803ad08c;
+extern undefined4 DAT_803dc8f0;
+extern void* PTR_DAT_8031fdc8;
+extern char lbl_8031F16C[];
+extern char lbl_8031DD30[];
+extern u8 lbl_803AC428[];
+extern u8 lbl_803DBC88[8];
+extern u16 lbl_803DBCA0[4];
+extern f32 timeDelta;
 extern f32 lbl_803DBC98;
+extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
+extern f32 lbl_803E3440;
+extern f32 lbl_803E27A4;
+extern f32 lbl_803E27A8;
+extern f32 lbl_803E27AC;
 extern f32 lbl_803E27B0;
 extern f32 lbl_803E27B4;
 extern f32 lbl_803E27B8;
@@ -71,146 +92,14 @@ extern f32 lbl_803E27C4;
 extern f32 lbl_803E27C8;
 extern f32 lbl_803E27CC;
 extern f32 lbl_803E27D0;
-extern int playerGetMoney(u8 * player);
-extern void playerAddMoney(u8* player, int amount);
-extern void hudFn_8011f38c(int a);
-extern u16 lbl_803DBCA0[4];
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E27D8;
 extern f32 lbl_803E27DC;
 extern f32 lbl_803E27E0;
 extern f32 lbl_803E27E4;
 extern f32 lbl_803E27E8;
 
-void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
-{
-    float animDefault;
-    int entryOff;
-    short* obj;
-    char handled;
-    int state;
-    uint typeIdx;
-    undefined4 in_r6;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined* tbl28;
-    undefined* tbl24;
-    undefined* tbl20;
-    double animDefaultD;
-    double animTimer;
-    undefined8 ctx;
-
-    ctx = FUN_8028683c();
-    obj = (short*)((ulonglong)ctx >> 0x20);
-    state = (int)ctx;
-    typeIdx = (uint) * (byte*)(state + 0x33b);
-    tbl20 = (&PTR_DAT_8031fdbc)[typeIdx * 10];
-    tbl24 = (&PTR_DAT_8031fdd4)[typeIdx * 10];
-    tbl28 = (&PTR_DAT_8031fdd8)[typeIdx * 10];
-    if ((typeIdx == 5) && ((*(uint*)(state + 0x2dc) & 0x800000) != 0))
-    {
-        GameBit_Set(0x1c8, 1);
-    }
-    if ((*(int*)&((GroundBaddieState*)state)->baddie.trackedObj != 0) && (((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1))
-    {
-        FUN_8001766c();
-    }
-    FUN_801504f8((uint)obj, state);
-    animDefault = lbl_803E33D8;
-    animTimer = (double)*(float*)(state + 0x328);
-    animDefaultD = (double)lbl_803E33D8;
-    if ((animTimer != animDefaultD) && (*(short*)(state + 0x338) != 0))
-    {
-        *(float*)(state + 0x328) = (float)(animTimer - (double)lbl_803DC074);
-        if ((double)*(float*)(state + 0x328) <= animDefaultD)
-        {
-            *(float*)(state + 0x328) = animDefault;
-            *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) | 0x40000000;
-            *(ushort*)(state + 0x338) =
-                (ushort)(byte)
-            tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 + 10];
-        }
-    }
-    handled = FUN_8014ffa8(animDefaultD, animTimer, param_3, param_4, param_5, param_6, param_7, param_8, obj, state, 0,
-                         in_r6, in_r7, in_r8, in_r9, in_r10);
-    if (handled == '\0')
-    {
-        if (((*(uint*)(state + 0x2dc) & 0x20000000) != 0) &&
-            ((*(uint*)(state + 0x2e0) & 0x20000000) == 0))
-        {
-            FUN_80006824((uint)obj, SFXdn_boar5_c);
-            *(uint*)(state + 0x2dc) = *(uint*)(state + 0x2dc) | 0x40000000;
-        }
-        if ((*(uint*)(state + 0x2dc) & 0x40000000) != 0)
-        {
-            if (*(ushort*)(state + 0x338) == 0)
-            {
-                *(u8*)(state + 0x2f2) = 0;
-                *(u8*)(state + 0x2f3) = 0;
-                *(u8*)(state + 0x2f4) = 0;
-                entryOff = (uint) * (ushort*)(state + 0x2a0) * 0xc;
-                if ((byte)tbl24[entryOff + 8] == 0)
-                {
-                    *(u8*)(state + 0x323) = 3;
-                    FUN_800305f8((double)lbl_803E33D8, animTimer, param_3, param_4, param_5, param_6, param_7, param_8
-                                 , obj, (uint)(byte)tbl20[0x2c], 0, in_r6, in_r7, in_r8, in_r9, in_r10);
-                }
-                else
-                {
-                    FUN_8014d4c8((double)*(float*)(tbl24 + entryOff), animTimer, param_3, param_4, param_5, param_6,
-                                 param_7, param_8, (int)obj, state, (uint)(byte)tbl24[entryOff + 8], 0, 0xb, in_r8,
-                                 in_r9, in_r10);
-                    FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                     (uint)(byte)tbl24[(uint) * (ushort*)(state + 0x2a0) * 0xc +
-                                     8] * 4), (int)obj
-                    )
-                    ;
-                }
-            }
-            else
-            {
-                *(char*)(state + 0x2f2) =
-                    (char)*(undefined4*)(tbl28 + (uint) * (ushort*)(state + 0x338) * 0x10 + 0xc);
-                entryOff = (uint) * (ushort*)(state + 0x338) * 0x10;
-                FUN_8014d4c8((double)*(float*)(tbl28 + entryOff), animTimer, param_3, param_4, param_5, param_6,
-                             param_7, param_8, (int)obj, state, (uint)(byte)tbl28[entryOff + 8], 0,
-                             *(uint*)(tbl28 + entryOff + 4) & 0xff, in_r8, in_r9, in_r10);
-                FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                 (uint)(byte)tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 +
-                                 8] * 4), (int)obj
-                )
-                ;
-                *(ushort*)(state + 0x338) =
-                    (ushort)(byte)
-                tbl28[(uint) * (ushort*)(state + 0x338) * 0x10 + 9];
-            }
-        }
-        if (((GameObject*)obj)->anim.currentMove == (ushort)(byte)tbl20[0x2c]
-        )
-        {
-            *(float*)(state + 0x308) =
-                ((GroundBaddieState*)state)->baddie.pathStep *
-                (((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(state + 0x2a4)) - DOUBLE_803e3408
-                ) / ((GroundBaddieState*)state)->baddie.unk2A8) / lbl_803E33E4) *
-                *(float*)(&DAT_8031feb8 + (uint) * (byte*)(state + 0x33b) * 4);
-            if (*(float*)(state + 0x308) < lbl_803E3438)
-            {
-                *(float*)(state + 0x308) = lbl_803E3438;
-            }
-        }
-        if ((*(byte*)(state + 0x323) & 8) == 0)
-        {
-            FUN_8014d3d0(obj, state, 0xf, 0);
-        }
-    }
-    FUN_80286888();
-    return;
-}
+#pragma scheduling on
+#pragma peephole on
 
 void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -222,7 +111,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
-    undefined* entry;
+    u8* entry;
     double speed;
 
     entry = (&PTR_DAT_8031fdc8)[(uint) * (byte*)(param_10 + 0x33b) * 10];
@@ -258,8 +147,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
             }
         }
     }
-    speed = (double)(float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(param_10 + 0x2a4)) -
-        DOUBLE_803e3408);
+    speed = (double)(f32)(u32) * (u16*)(param_10 + 0x2a4);
     if (speed < (double)(lbl_803E3440 * ((GroundBaddieState*)param_10)->baddie.speedScale))
     {
         *(char*)(param_10 + 0x33a) = entry[8] + '\x01';
@@ -292,28 +180,10 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     {
         *(u8*)(param_10 + 0x33a) = 1;
     }
-    return;
 }
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80152004(int obj, int* state)
-{
-    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
-    ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
-}
-
-typedef struct
-{
-    f32 speed;
-    u32 mask;
-    u8 anim;
-    u8 pad9;
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 pad13[3];
-} SeqEntry;
 
 #pragma dont_inline on
 void fn_801511E8(int obj, u8* state)
@@ -696,4 +566,10 @@ void fn_80151DB8(int obj, u8* state)
                                            (u32)player->anim.parent);
         }
     }
+}
+
+void fn_80152004(int obj, int* state)
+{
+    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
+    ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
 }
