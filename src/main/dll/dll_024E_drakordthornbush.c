@@ -72,7 +72,7 @@ void drakord_thornbush_free(int obj)
     int inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == 0x709)
     {
-        ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
+        ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
     }
     if (*(void**)&((DrakordThornbushState*)inner)->light != NULL)
     {
@@ -91,7 +91,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         {
             v = lbl_803E658C;
         }
-        ((void (*)(int, int, int, f32, int))fn_80221978)(p1, inner + 0x14, 3, v, inner + 0x64);
+        ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, v, inner + 0x64);
     }
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
 }
@@ -222,7 +222,7 @@ void drakord_thornbush_hitDetect(int obj)
                 Sfx_PlayFromObject(obj, 0x2f9);
                 spawnExplosion((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1, 1, 0, 1,
                                0);
-                ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
+                ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
                 break;
             }
             if (((DrakordThornbushPlacement*)setup)->unk1A != 0)

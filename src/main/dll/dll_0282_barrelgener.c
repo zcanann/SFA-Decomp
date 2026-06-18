@@ -301,7 +301,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
+int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light, f32 intensity)
 {
     int i;
     int spawned;
@@ -426,7 +426,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 }
 
 #pragma opt_loop_invariants off
-int fn_80221C18(int obj, f32 dt, int p3, int p4)
+int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
 {
     f32 pos[3];
     f32 step[3];

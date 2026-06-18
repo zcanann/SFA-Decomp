@@ -272,7 +272,7 @@ extern void voxmaps_gridToWorld(void *world, void *grid);
 extern int voxmaps_traceWorldLine(void *p1, void *p2);
 extern f32 lbl_803E6960;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern int fn_80221C18(int player, f32 v, f32 *objPos, f32 *out);
+extern int Obj_PredictInterceptPoint(int player, f32 v, f32 *objPos, f32 *out);
 extern void PSVECNormalize(f32 *out, f32 *in);
 extern void PSVECScale(f32 *out, f32 *in, f32 scale);
 extern void PSVECAdd(f32 *out, f32 *a, f32 *b);
