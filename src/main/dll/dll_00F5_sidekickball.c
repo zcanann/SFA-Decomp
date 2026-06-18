@@ -180,14 +180,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     if (params->triggerHit != 2) goto end;
     if (((GameObject*)obj)->unkF8 != 0) goto end;
 
-    if (fn_8029669C(player) == 0)
-    {
-        params->triggerHit = 0;
-        params->pad2CA[0] = 0;
-        params->fadeTimer = lbl_803E36A4;
-        params->ballMode = SIDEKICK_BALL_FADING;
-        goto end;
-    }
+    if (fn_8029669C(player) == 0) goto fading;
 
     params->triggerHit = 0;
     params->triggerArmed = 1;
@@ -216,10 +209,30 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     }
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
-    fn_801796BC(obj,
-                ((GameObject*)obj)->anim.velocityX,
-                ((GameObject*)obj)->anim.velocityY,
-                ((GameObject*)obj)->anim.velocityZ);
+    {
+        f32 a = ((GameObject*)obj)->anim.velocityX;
+        f32 b = ((GameObject*)obj)->anim.velocityY;
+        f32 c = ((GameObject*)obj)->anim.velocityZ;
+        SidekickBallState* st = ((GameObject*)obj)->extra;
+        st->ballMode = SIDEKICK_BALL_THROWN;
+        st->fadeTimer = lbl_803E369C;
+        *(f32*)((char*)obj + 36) = a;
+        ((GameObject*)obj)->anim.velocityY = b;
+        ((GameObject*)obj)->anim.velocityZ = c;
+        ObjHits_EnableObject(obj);
+        ObjHits_SyncObjectPositionIfDirty(obj);
+        st->unk25B = 1;
+        st->launchX = ((GameObject*)obj)->anim.localPosX;
+        st->launchY = ((GameObject*)obj)->anim.localPosY;
+        st->launchZ = ((GameObject*)obj)->anim.localPosZ;
+    }
+    goto end;
+
+fading:
+    params->triggerHit = 0;
+    params->pad2CA[0] = 0;
+    params->fadeTimer = lbl_803E36A4;
+    params->ballMode = SIDEKICK_BALL_FADING;
 
 end:
     if (params->pad2CA[0] != 0)
@@ -351,6 +364,7 @@ u8 trickyBallMove(u8* obj)
     f32 reflectedY;
     f32 reflectedZ;
     f32 dot;
+    f32 restitution;
     int hasCollisionNormal;
     int movedFromCache;
     int hasFloorDepth;
@@ -358,7 +372,8 @@ u8 trickyBallMove(u8* obj)
     state = ((GameObject*)obj)->extra;
     hasCollisionNormal = 0;
     movedFromCache = 0;
-    speed = lbl_803E36B0;
+    restitution = lbl_803E36B0;
+    speed = restitution;
 
     ObjHits_EnableObject((u32)obj);
 
@@ -369,10 +384,13 @@ u8 trickyBallMove(u8* obj)
     dz = state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ;
     dz = (dz >= lbl_803E369C) ? dz : -dz;
 
-    if ((dx + dy + dz) >= lbl_803E36B4)
+    if ((dx + dy + dz) < lbl_803E36B4)
+    {
+    }
+    else
     {
         PSVECSubtract((f32*)(obj + 0x0c), state->prevPos, collisionNormal);
-        speed = lbl_803E36B0;
+        speed = restitution;
         hasCollisionNormal = 1;
         movedFromCache = 1;
     }
@@ -403,9 +421,10 @@ u8 trickyBallMove(u8* obj)
 
     if (hasFloorDepth != 0)
     {
-        ((GameObject*)obj)->anim.velocityX *= lbl_803E36B8;
-        ((GameObject*)obj)->anim.velocityY *= lbl_803E36B8;
-        ((GameObject*)obj)->anim.velocityZ *= lbl_803E36B8;
+        f32 damping = lbl_803E36B8;
+        ((GameObject*)obj)->anim.velocityX *= damping;
+        ((GameObject*)obj)->anim.velocityY *= damping;
+        ((GameObject*)obj)->anim.velocityZ *= damping;
         ((GameObject*)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, ((GameObject*)obj)->anim.velocityY, state->floorDepth);
         if ((((GameObject*)obj)->anim.velocityY < lbl_803E36C0) &&
@@ -458,15 +477,18 @@ u8 trickyBallMove(u8* obj)
         fn_80137948(sSidekickBallDotFormat, dot);
         if (dot > lbl_803E369C)
         {
-            ((GameObject*)obj)->anim.velocityX = (collisionNormal[0] * dot) - reflectedX;
-            ((GameObject*)obj)->anim.velocityY = (collisionNormal[1] * dot) - reflectedY;
-            ((GameObject*)obj)->anim.velocityZ = (collisionNormal[2] * dot) - reflectedZ;
+            ((GameObject*)obj)->anim.velocityX = collisionNormal[0] * dot;
+            ((GameObject*)obj)->anim.velocityY = collisionNormal[1] * dot;
+            ((GameObject*)obj)->anim.velocityZ = collisionNormal[2] * dot;
+            ((GameObject*)obj)->anim.velocityX -= reflectedX;
+            ((GameObject*)obj)->anim.velocityY -= reflectedY;
+            ((GameObject*)obj)->anim.velocityZ -= reflectedZ;
             if ((state->floorY == lbl_803E369C) && (speed < lbl_803E36D4) &&
                 (state->hasCollisionNormal != 0))
             {
                 return 2;
             }
-            PSVECScale((f32*)(obj + 0x24), (f32*)(obj + 0x24), speed * lbl_803E36B0);
+            PSVECScale((f32*)(obj + 0x24), (f32*)(obj + 0x24), speed * restitution);
         }
     }
 
