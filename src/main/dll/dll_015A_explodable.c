@@ -282,7 +282,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
         i8 = state;
         for (; i13 < ((DrExplodableState*)state)->count6D4; i13++)
         {
-            *(u8*)(state + i13 + 0x6d5) = 1;
+            *(u8*)(state + i13 + offsetof(DrExplodableState, spawnedFlags)) = 1;
             *(u8*)(i15 + 0x6d) = entMode;
             if (skipCentroid == 0)
             {
@@ -344,16 +344,16 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
     c->posX = c->offX * ((GameObject*)obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posX;
     c->posY = c->offY * ((GameObject*)obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posY;
     c->posZ = c->offZ * ((GameObject*)obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posZ;
-    c->rotX = *(s16*)(def + 0x1a);
-    c->rotY = *(s16*)(def + 0x1c);
-    c->rotZ = *(s16*)(def + 0x1e);
-    dx = c->offX - (f32) * (s16*)(def + 0x20);
-    dy = c->offY - (f32) * (s16*)(def + 0x22);
-    dz = c->offZ - (f32) * (s16*)(def + 0x24);
+    c->rotX = ((ExplodablePlacement*)def)->rotX;
+    c->rotY = ((ExplodablePlacement*)def)->rotY;
+    c->rotZ = ((ExplodablePlacement*)def)->rotZ;
+    dx = c->offX - (f32)((ExplodablePlacement*)def)->originX;
+    dy = c->offY - (f32)((ExplodablePlacement*)def)->originY;
+    dz = c->offZ - (f32)((ExplodablePlacement*)def)->originZ;
     mag = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (mag != lbl_803E4368)
     {
-        scale = (f32) * (s16*)(def + 0x2c) / (lbl_803E4370 * mag);
+        scale = (f32)((ExplodablePlacement*)def)->launchForce / (lbl_803E4370 * mag);
         if (dx != lbl_803E4368 || dy != lbl_803E4368 || dz != lbl_803E4368)
         {
             normalize(&dx, &dy, &dz);
@@ -368,7 +368,7 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
         randomGetRange(0, max) / lbl_803E437C;
         c->spinZ = (f32)(int)
         randomGetRange(0, max) / lbl_803E437C;
-        scale = (f32) * (s16*)(def + 0x30) / lbl_803E4358;
+        scale = (f32)((ExplodablePlacement*)def)->unk30 / lbl_803E4358;
         if (((GameObject*)obj)->anim.velocityX > lbl_803E4368)
         {
             c->launchFlags |= 1;
@@ -400,16 +400,16 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
         c->unk38 = dy * scale - lbl_803E4380;
         c->unk3C = dz * scale;
         {
-            int height = *(s16*)(def + 0x2e);
+            int height = ((ExplodablePlacement*)def)->fragmentHeight;
             if (height != 0)
             {
                 c->height = (f32)height;
             }
         }
-        *(u32*)&c->unk5C = *(u16*)(def + 0x38);
-        if (*(u16*)(def + 0x38) != 0)
+        *(u32*)&c->unk5C = ((ExplodablePlacement*)def)->launchDelayBase;
+        if (((ExplodablePlacement*)def)->launchDelayBase != 0)
         {
-            c->launchDelay = (int)(*(u16*)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
+            c->launchDelay = (int)(((ExplodablePlacement*)def)->launchDelayBase * (randomGetRange(0, 100) + 100)) / 200;
         }
         else
         {
