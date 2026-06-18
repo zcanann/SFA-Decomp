@@ -2648,13 +2648,13 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
                                     ((GameObject*)obj)->anim.localPosZ, obj, hitList, 0, 0);
     *nearestFloorY = ((GameObject*)obj)->anim.localPosY;
     *nearestSpecialY = ((GameObject*)obj)->anim.localPosY;
-    nearestFloorDelta = lbl_803E25C8;
-    nearestSpecialDelta = nearestFloorDelta;
+    nearestSpecialDelta = nearestFloorDelta = lbl_803E25C8;
+    i = 0;
     ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
     zero = lbl_803E2574;
     ((TrickyState*)state)->unk1B8 = zero;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
-    for (i = 0; i < hitCount; i++)
+    for (; i < hitCount; i++)
     {
         hit = *(f32**)(hitList[0] + ((u32)i << 2));
         hitY = hit[0];
