@@ -4031,7 +4031,6 @@ void fn_8012FA70(int idx, s8 flag)
     s16* posPtr;
     u8 prev = 1;
     int count;
-    s16* posPtr;
     s16 pos;
     u8 i;
 
