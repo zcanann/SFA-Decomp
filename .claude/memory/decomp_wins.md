@@ -1,5 +1,94 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17, top-level src/main): 3 wins, ~6 attempts =====
+WINS (all TOP-LEVEL src/main, big fns, saved-reg/CSE/temp veins):
+- newclouds_update (85.9->96.0%, 3 commits): the WIN VEIN was target re-derives
+  the cloud pointer (lbl_8039A828[id]) + index id FRESH per use; MWCC CSE'd it
+  into 8 saved regs (_savegpr_24). (1) Redefine NC_CLOUD macro to re-read
+  *(u16*)(params+0x26) for the index + drop the cached 'p' local entirely (use
+  NC_CLOUD at every deref incl null checks) -> 8->5 saved regs (#80/#107/#130).
+  (2) Re-read id from params at the bounds check / env[idx] / snowKill-arg too
+  (drop the cached 'id' local) -> 5->4 saved regs, frame 128->112. (3) Reorder
+  posB/posA decls BEFORE vec/args so posB@20/posA@32 match target offsets (#67/#5).
+  RESIDUAL ~4%: @881/@882 pool vs lbl_802C1FA8/FB4 named (#70 neutral, but ties the
+  posA/posB zero-init EMISSION order — split-decl to fix order LOST the blob copy,
+  regressed to 85). #112 env+idx*12+0x14 lwzx (paren-group + named-ptr both re-fold).
+- Camera_InitState (89.8->94.2%): `slot = base + i*96 + 4416` FUSED the i*96
+  multiply into the slot pointer reg (mulli r5; add r5,r31,r5); target uses a
+  throwaway r0 (mulli r0,r0,96; add r5,r31,r0; addi r5,4416). FIX: split into TWO
+  statements `slot=(T*)(base+i*96); slot=(T*)((u8*)slot+4416);` -> multiply lands
+  in its own temp. #112/#119. (NOTE: sibling Camera_UpdateViewMatrices was BANKED
+  with the same pattern as off-inline-INERT — but the 2-STATEMENT split is the
+  crack, not inlining the off var. RETRY that bank with the 2-stmt split.)
+  RESIDUAL 6 regions: lfs lbl_803DE62C FP-const scheduling in C_MTXLightPerspective
+  args + addi/li lbl_803DC88A reorder. scheduling-off INERT (eval/isel order).
+- ObjSeq_update (86.40->86.51%, marginal): #20/#53 compound-assign `*(s16*)(p+0x30)
+  -= (s16)framesThisStep` drops a spurious extsh in the 3-iter cooldown loop.
+  Rest is an 18-saved-reg (_savegpr_23) whole-body perm + frame 176 vs 160 (#108/#67).
+
+BANKED (perm/scheduling-dominated, no further source lever this pass):
+- voxmapsFn_80010ff4 (85.0%): 18 saved regs both, frame 112 vs target 128 (one
+  extra scratch slot #67c), whole-body within-class perm. +1 real extsh on
+  state->unk1C=idx+1 store. Heavily #108.
+- voxmaps_updateRoutePath (89.8%, 16 regions): #66 operand load order (tgtX-node->x
+  loads node->x first), heap sift-up loop reorder, #21 r==0/>0/<0 branch-chain
+  layout (target beq;bge;cmpwi -1 vs our bne/ble chain). Multi-issue.
+- Camera_UpdateProjection (89.9%): INVERSE of newclouds — target CSEs activeViewIndex
+  into r31 (clrlwi;mulli 52), we re-read gCameraCurrentViewIndex global per use. +
+  lfs scheduling (inert). Subtle CSE, near-complete, didn't risk.
+- shader doPendingMapLoads (84.5%): frame -2592 (big buf), reg-perm + 1 cmp-width.
+- objseq RomCurveInterp_EvaluateOffsetPosition (40 regions), shader
+  mapLoadUnloadObjects (106), object objFreeObjDef (63): perm-heavy, not pursued.
+LESSON (CONFIRMED + STRONGEST this pass): the saved-reg-CSE-vs-re-derive axis is the
+top-level src/main vein. When target holds FEWER saved regs than us, find the value
+MWCC is CSE-ing into a saved reg (a pointer/index derived from a global or param) and
+force re-derivation: re-read the source expr (global deref / *(u16*)(param+K)) at EACH
+use and DROP the cached local entirely. This collapsed newclouds 8->4 saved regs +
+frame. Diagnostic: _savegpr_NN with a LOWER N than target = too many saved regs = a
+CSE'd derived value; grep the body for the repeated lwzx/add holding base+index.
+LESSON: 2-statement split (`p=base+off; p=(T*)((u8*)p+K)`) cracks the throwaway-multiply
+temp coloring where inlining the offset var is inert (Camera_InitState; retry banked
+Camera_UpdateViewMatrices). The multiply must NOT be the same SSA var as the final ptr.
+TOOLING: report generate ABORTS (writes nothing) if ANY base .o is missing (other
+agents' broken WIP like dll/player.o). Workaround: temp-swap objdiff.json to a 1-unit
+config (python filter units list), generate, restore objdiff.json. report.json on disk
+may be DAYS stale -> never trust it; always regenerate scoped.
+
+## ===== Session (Jun17): 1 win, ~6 attempts =====
+WIN: dll_00D3_staffAction dll_D3_update (86.93->88.10%). flags92 bit-1 (value 2)
+  set used `(x & 0xfd) | 2` -> andi.;ori;clrlwi. Target: `li 1; rlwimi r0,r3,1,30,30`
+  (single-bit insert). FIX (#12): split StaffBits `lo:2` into `b1:1; b0:1` and model
+  BOTH the guard read (`->b1 == 0`) AND the set (`->b1 = 1`) as bitfield ops. lo field
+  was unused so split was safe. Committed bc28b80692 (push rejected, remote ahead).
+BANKED (no source lever):
+- dll_00D3 same fn residual: `(f32)((double)(u32)aggroRange - lbl_803E3040)` where
+  lbl is extern double. Target does ONE fsubs (magic - lbl_combined) because its
+  lbl_803E3040 .sdata2 value = 2^52+K (bias fused). Current does fsub(magic-@139_2^52)
+  + fsub(-lbl) + frsp (two-step). Dropping the `(double)` cast INERT (`(u32)-double`
+  still promotes+splits). Can't fuse an EXTERNAL double into the conversion bias from
+  source. Plus dominant r27-vs-r26 obj perm (#108). Bank.
+- dll_00FF_magicdust magicdust_update (79.4%): obj param colors r28(tgt)/r30(cur) +
+  TWO spurious obj copies (r29,r31) + `register int msgId=0x7000b` FOLDED inline
+  (cmpw r31 tgt vs addis;cmplwi cur). playerObj/player split reorder INERT. #108/#126
+  pointer-param copy-pool + const-fold. Bank.
+- dll_0017_savegame saveScoreFn_800e88b4 (82.7%): target uses STACK FRAME + saves r31
+  for inner-loop IV `i`; current uses no frame (i in volatile r11). Also initials[1..3]
+  stores RE-DERIVE saveData global base (`lis;addi saveData; add; add rank*8`) vs
+  current reusing the `file` ptr. Frame-class #67 + #80. Bank.
+- dll_005E_dll5efunc0 dll_5E_func03 (88.2%): pure li-const scheduling. Vtable
+  addSequenceSpawn(2, lfs, lfs,...) — target emits `li r3,2` BEFORE the lfs FP-const
+  loads; current schedules first lfs before li. `#pragma scheduling off` INERT (it's
+  eval/isel order not scheduler). 13 calls each 1 mispositioned li. Bank.
+- dll_004A_cameramodeshipbattle CameraModeShipBattle_update (87.0%): target RE-DERIVES
+  `lbl_803DD570` base (lwz r3) AND reloads `timeDelta` (lfs f1) FRESH per division
+  statement; current CSEs both across statements (#130/#71 inverse). Global-base CSE
+  that target doesn't do — needs volatile launder (too risky). Also div-result reg
+  f2(tgt)/f1(cur) + fmuls/fnmsubs operand perm (#82). Bank.
+LESSON: cmp-width/li-const ndiff buckets aren't always winnable — the dll/* low band
+is heavily #108 (pointer-param copy-pool perms) + global-read CSE (target re-derives,
+MWCC CSEs). The reliable vein THIS wave was #12 bitfield: a `(x&~K)|K` flag set ->
+andi.;ori vs target's li;rlwimi single-bit insert. Grep for `& 0x..) | ` flag sets.
+
 ## ===== Session: 0 wins, ~13 attempts (hard #82/#108 residual band) =====
 This wave's near-misses were dominated by FP/GPR coloring perms + frame layout, no
 source lever. All reverted clean (no regressions committed). Banked:
