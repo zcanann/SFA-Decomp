@@ -11761,8 +11761,7 @@ int fn_80298380(int obj, int state, f32 fv)
     }
 
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x30)))(obj, state, fv, 1);
-    inner->yaw = *(s16*)((char*)obj);
-    inner->targetYaw = *(s16*)((char*)obj);
+    inner->targetYaw = inner->yaw = *(s16*)((char*)obj);
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 2);
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
