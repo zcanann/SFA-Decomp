@@ -1,18 +1,4 @@
-/*
- * dll_01AD_shthorntail (DLL 0x1AD) - the level-controlled ThornTail
- * dinosaur (the large herd creature in ThornTail Hollow), the half of
- * the SHthorntail behaviour that owns the GameObject hooks.
- *
- * SHthorntail_update is the per-frame driver: it runs the hit-reaction
- * pass, dispatches to the active control mode (level 0/1 = scripted by
- * the map-event act, root 2/3 = the shared root-control handlers in
- * shthorntail.c) and then advances the current animation move, applies
- * root motion, fires trigger sfx and runs path control. The two
- * level-control modes pick the locomotion impact-sfx table and run the
- * tail-swing / idle state machine. SHthorntail_init wires up path control
- * and the level-control anim-event callback; render samples the path
- * points for the trailing dust/effect points.
- */
+/* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/audio/sfx.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
@@ -71,9 +57,9 @@ extern f32 lbl_803E545C;
 void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern int Obj_GetPlayerObject();
-    extern u32 randomGetRange(int min, int max);
-    extern f32 getXZDistance(int posA, int posB);
+    extern int Obj_GetPlayerObject(); /* #57 */
+    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern f32 getXZDistance(int posA, int posB); /* #57 */
     int playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
@@ -188,7 +174,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runt
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern u32 randomGetRange(int min, int max);
+    extern u32 randomGetRange(int min, int max); /* #57 */
     int linkedEventPending;
     uint gameBit;
     int randomIdleWait;
@@ -274,7 +260,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
-    extern u32 randomGetRange(int min, int max);
+    extern u32 randomGetRange(int min, int max); /* #57 */
     SHthorntailRuntime* runtime;
     int randomIdleWait;
     int impactHandled;
@@ -379,12 +365,12 @@ typedef struct SHthorntailTailSwingEffectScratch
 
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern int randomGetRange(int min, int max);
-    extern f32 getXZDistance(f32 * posA, f32 * posB);
+    extern int randomGetRange(int min, int max); /* #57 */
+    extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     byte byteVal;
-    u8 hitResult;
+    char hitResult;
     undefined mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
@@ -404,11 +390,11 @@ void SHthorntail_update(SHthorntailObject* obj)
     runtime = obj->runtime;
     config = obj->config;
     ref = (int)config;
-    if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING)
+    if (runtime->behaviorState == '\f')
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            if ((obj->objectFlags & 0x800) != 0)
+            if ((obj->objectFlags & 0x800U) != 0)
             {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
@@ -419,21 +405,20 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         runtime->effectTimer = runtime->effectTimer - timeDelta;
     }
-    runtime->behaviorFlags = runtime->behaviorFlags & ~0x08;
+    runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
     if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
+        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
     {
-        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     else
     {
-        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
     uval = (uint)runtime->hitReactState;
     scratch = (float*)runtime->hitReactScratch;
-    hitResult = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-        (int)obj, hitReactEntries, 0x19, uval, scratch);
+    hitResult = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
     runtime->hitReactState = hitResult;
     if (hitResult == '\0')
     {
@@ -456,25 +441,26 @@ void SHthorntail_update(SHthorntailObject* obj)
             break;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) != 0)
-        {
-            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
-        }
-        else
+            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) == 0)
         {
             obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
             obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
         }
+        else
+        {
+            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+        }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
-            runtime->freezeFrameCounter++;
-            if (runtime->freezeFrameCounter > 0xa)
+            byteVal = runtime->freezeFrameCounter + 1;
+            runtime->freezeFrameCounter = byteVal;
+            if (byteVal < 0xb)
             {
-                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
+                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
             }
             else
             {
-                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
+                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
         }
         if ((int)obj->currentMove !=
@@ -489,13 +475,13 @@ void SHthorntail_update(SHthorntailObject* obj)
         val = ObjAnim_AdvanceCurrentMove(
             SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState], timeDelta,
             (int)obj, &animEvents);
-        if (val != 0)
+        if (val == 0)
         {
-            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         else
         {
-            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
             SHTHORNTAIL_STATE_FLAG_APPLY_ROOT_MOTION) != 0)
@@ -522,7 +508,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
             obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
-            obj->facingAngle += animEvents.rootPitch;
+            obj->facingAngle = obj->facingAngle + animEvents.rootPitch;
         }
         eventId = animEvents.triggeredIds;
         for (val = 0; val < animEvents.triggerCount; val = val + 1)
@@ -546,23 +532,23 @@ void SHthorntail_update(SHthorntailObject* obj)
         objAudioFn_8006ef38((int)obj, (int)&animEvents, 8, (int)runtime->renderPathPoints,
                             (int)runtime->moveScratch, lbl_803E5448, lbl_803E5448);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0)
-        {
-            runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
-        }
-        else
+            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) == 0)
         {
             runtime->movementControlFlags = runtime->movementControlFlags | 1;
         }
+        else
+        {
+            runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
+        }
         dll_2E_func03(obj, runtime);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
+            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
         {
-            characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
+            fn_8003B228((int)obj, (int)runtime->collisionShapeState);
         }
         else
         {
-            fn_8003B228((int)obj, (int)runtime->collisionShapeState);
+            characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
@@ -602,18 +588,18 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
             }
-            if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
+            if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState))
             {
-                obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
+                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
+            }
+            else
+            {
+                obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
                 (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
                 (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
                 (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
                 obj->pitch = runtime->moveControlPitch;
                 obj->roll = runtime->moveControlRoll;
-            }
-            else
-            {
-                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
             }
         }
     }
@@ -622,7 +608,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int min, int max); /* #57 */
     SHthorntailRuntime* runtime;
     uint randomTime;
     int moveScratch;
