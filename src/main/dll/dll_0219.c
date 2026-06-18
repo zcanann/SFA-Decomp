@@ -1,7 +1,19 @@
+/*
+ * DLL 0x219 - a game-bit gated sliding object.
+ *
+ * Only the object with id DLL_219_MOVING_OBJECT_ID is animated; the
+ * remaining ids are inert (update returns immediately). When its game
+ * bit is set the object slides its world X down to
+ * (placement posX - lbl_803E60A8) at speed lbl_803E60AC; when the bit
+ * is clear it slides back up to placement posX at speed lbl_803E60B0,
+ * clamping at each end. init seeds the object's rotX and the state's
+ * game bit from the placement record; free releases its expgfx source.
+ */
 #include "main/dll/VF/vf_shared.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
+/* slide distance / per-frame speeds (home TU owns these floats) */
 extern const f32 lbl_803E60A8;
 extern f32 lbl_803E60AC;
 extern f32 lbl_803E60B0;
@@ -15,16 +27,24 @@ typedef struct Dll219State
     s16 gameBit;
 } Dll219State;
 
+typedef struct Dll219Setup
+{
+    ObjPlacement placement;
+    s8 rotX;        /* 0x18 */
+    u8 pad19[0x1e - 0x19];
+    s16 gameBit;    /* 0x1e */
+} Dll219Setup;
+
 typedef struct Dll219Object
 {
     u8 pad00[0xc];
-    f32 x;
+    f32 x;              /* 0x0c: current world X */
     u8 pad10[0x46 - 0x10];
-    s16 objectId;
+    s16 objectId;       /* 0x46 */
     u8 pad48[0x4c - 0x48];
-    u8* setup;
+    ObjPlacement* setup; /* 0x4c */
     u8 pad50[0xb8 - 0x50];
-    Dll219State* state;
+    Dll219State* state; /* 0xb8 */
 } Dll219Object;
 
 int dll_219_getExtraSize_ret_4(void) { return 0x4; }
@@ -54,7 +74,7 @@ void dll_219_free(int obj)
 
 void dll_219_update(Dll219Object* obj)
 {
-    u8* setup = obj->setup;
+    ObjPlacement* setup = obj->setup;
     Dll219State* state = obj->state;
     s16 objectId = obj->objectId;
 
@@ -74,35 +94,35 @@ void dll_219_update(Dll219Object* obj)
         return;
     }
 
-    if ((u32)GameBit_Get(state->gameBit) != 0)
+    if (GameBit_Get(state->gameBit) != 0)
     {
-        if (obj->x > ((ObjPlacement*)setup)->posX - lbl_803E60A8)
+        if (obj->x > setup->posX - lbl_803E60A8)
         {
             obj->x -= lbl_803E60AC;
-            if (obj->x < ((ObjPlacement*)setup)->posX - lbl_803E60A8)
+            if (obj->x < setup->posX - lbl_803E60A8)
             {
-                obj->x = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
+                obj->x = setup->posX - lbl_803E60A8;
             }
             return;
         }
     }
-    if ((u32)GameBit_Get(state->gameBit) == 0)
+    if (GameBit_Get(state->gameBit) == 0)
     {
-        if (obj->x < ((ObjPlacement*)setup)->posX)
+        if (obj->x < setup->posX)
         {
             obj->x += lbl_803E60B0;
-            if (obj->x > ((ObjPlacement*)setup)->posX)
+            if (obj->x > setup->posX)
             {
-                obj->x = ((ObjPlacement*)setup)->posX;
+                obj->x = setup->posX;
             }
         }
     }
 }
 
-void dll_219_init(int* obj, u8* init)
+void dll_219_init(int* obj, Dll219Setup* placement)
 {
-    int* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
-    *(s16*)inner = *(s16*)((char*)init + 0x1e);
+    Dll219State* state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotX << 8);
+    state->gameBit = placement->gameBit;
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
