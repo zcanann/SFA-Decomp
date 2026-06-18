@@ -61,7 +61,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define OBJ_GROUP_CONVEYORS        22
 #define MUSIC_TRACK_CONVEYOR       0xdf
 
-extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4A58;
 extern f32 mathCosf(f32 x);
 extern f32 lbl_803E4A5C;
