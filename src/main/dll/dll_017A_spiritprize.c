@@ -11,7 +11,6 @@
  * and frees itself.
  */
 #include "main/game_object.h"
-#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 extern void ModelLightStruct_free(void* light);

@@ -10,7 +10,6 @@
  * (object 0x18/0x1c/0x20) or, if absent, by the PartFxSpawnParams packet
  * at posSource.
  */
-#include "main/asset_load.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"

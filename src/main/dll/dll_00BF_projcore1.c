@@ -6,8 +6,6 @@
  * release/initialise lifecycle hooks are empty stubs.
  */
 #include "main/dll/dll_80.h"
-#include "main/dll/dll_81.h"
-#include "main/dll/dll_82.h"
 
 extern void OSReport(const char* fmt, ...);
 

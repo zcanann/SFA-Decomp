@@ -16,7 +16,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
-#include "main/objanim_internal.h"
 
 /* sub->flags bits (see chukchukstate_struct.h) */
 #define CHUKCHUK_FLAG_PRIMED 0x1

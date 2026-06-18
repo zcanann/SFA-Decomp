@@ -23,19 +23,15 @@
  * it owns no game objects of its own.
  */
 #include "main/dll/objfsa_romcurve.h"
-#include "main/dll/savedata_struct.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 
 extern void OSReport(const char* fmt, ...);
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
-#include "main/dll/curve_walker.h"
 
-#include "main/dll/rom_curve_segment_projection.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 

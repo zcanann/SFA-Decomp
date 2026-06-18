@@ -15,7 +15,6 @@
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
-#include "main/dll/CF/dll_165.h"
 
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BDC;

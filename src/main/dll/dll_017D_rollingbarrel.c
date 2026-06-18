@@ -1,9 +1,7 @@
 #include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
 extern int Obj_GetPlayerObject(void);
