@@ -384,11 +384,11 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
             obj->velocityZ = obj->velocityZ * k;
             speed = obj->velocityX;
             speed = (speed >= t) ? speed : -speed;
-            if (speed < lbl_803E441C)
+            if (speed < 0.15f)
             {
                 speed = obj->velocityZ;
                 speed = (speed >= lbl_803E43F0) ? speed : -speed;
-                if (speed < lbl_803E441C)
+                if (speed < 0.15f)
                 {
                     stopped = lbl_803E43F4;
                 }
