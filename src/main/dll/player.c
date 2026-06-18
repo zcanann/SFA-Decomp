@@ -2106,7 +2106,7 @@ int fn_802A5384(int obj, int state)
                 *(s16*)(*(int*)((char*)inner + 0x3f8) +
                     (*(s8*)((char*)inner + 0x8cc) + dir) * 2))
             {
-                if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 ||
+                if (((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
                     ((u32) * (u8*)((char*)inner + 0x3f2) >> 4 & 1) != 0)
                 {
                     ObjAnim_SetCurrentMove(obj,
