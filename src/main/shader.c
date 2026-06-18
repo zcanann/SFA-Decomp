@@ -704,6 +704,7 @@ extern f32 lbl_803DEBCC;
 extern f32 retraceCount;
 extern f32 flushFlag;
 extern f32 retraceQueue;
+extern f32 PreCB;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
@@ -1952,8 +1953,8 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     else
     {
-        y0 = (&lbl_803DEBCC)[8];
-        y1 = (&lbl_803DEBCC)[9];
+        y0 = (&retraceQueue)[1];
+        y1 = PreCB;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++)
