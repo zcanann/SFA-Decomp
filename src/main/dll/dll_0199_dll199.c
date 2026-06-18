@@ -420,7 +420,7 @@ void dll_199_init(int obj, int def)
     short id;
 
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = 0;
+    ((GameObject*)obj)->anim.rotX = 0;
     *state = 10;
     if (((Dll199ObjectDef*)def)->unk1A > 0)
     {
