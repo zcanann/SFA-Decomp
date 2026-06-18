@@ -1,193 +1,45 @@
-#include "main/audio/sfx_ids.h"
-#include "main/dll/laserbeamstate_struct.h"
+/*
+ * dll200 (DLL 0x200) - an arwing-attachment / flying NPC whose behaviour
+ * is selected by the current map-event mode for its placement slot
+ * (gMapEventInterface->getMapAct). Per mode it plays idle/move anims,
+ * lets the player interact (A-button) to spend magic and grant game
+ * bits, runs trigger sequences (dll_200_SeqFn / fn_801F2974), and in
+ * mode 2 (fn_801F2290) steers a wandering attachment toward scripted
+ * targets (lbl_80328974) via getAngle/sqrtf. Object body is Dll200State
+ * (0x28); render scales through objRenderFn_8003b8f4 and gates on
+ * GameBit 0x2bd when the placement's map-act is 4.
+ */
 #include "main/dll/dll200state_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
-#include "main/objhits.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 
 typedef struct IntVec3
 {
-    int a;
-    int b;
-    int c;
+    int unk0;
+    int unk4;
+    int unk8;
 } IntVec3;
-
-STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
-
-/* pressureswitch_getExtraSize == 0x8. */
-
-/* wmlasertarget_getExtraSize == 0x4. */
-
-/* WM_colrise_getExtraSize == 0x4. */
-
-/* wmtorch_getExtraSize == 0x10. */
-
-/* lightsource_getExtraSize == 0x1c. */
-typedef struct LightSourceState
-{
-    void* light;
-    f32 fxTimer;
-    u8 pad08[4];
-    f32 sparkTimer;
-    int gameBit; /* 0x10: -1 none */
-    u8 mode; /* 0x14: 1 = hit-toggleable */
-    u8 fxType;
-    u8 fxArg;
-    u8 lit; /* 0x17 */
-    u8 litPrev;
-    u8 sparks; /* 0x19 */
-    u8 loopFlags; /* 0x1a: LightSourceFlagByte */
-    u8 pad1B;
-} LightSourceState;
-
-STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined8 FUN_80006ba8();
-extern uint FUN_80006c00();
-extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
-extern uint FUN_80017a98();
-extern undefined4 ObjMsg_SendToObject();
-extern int FUN_800632f4();
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6A1C;
-extern f32 lbl_803E6A20;
-extern f32 lbl_803E6A24;
-extern f32 lbl_803E6A80;
-
-extern f32 timeDelta;
-extern void objRenderFn_8003b8f4(f32);
 extern int GameBit_Get(int id);
+extern void GameBit_Set(int slot, int val);
 extern int Obj_GetPlayerObject(void);
-extern f32 lbl_803E5DC0;
-extern f32 lbl_803E5D98;
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
-extern void GameBit_Set(int slot, int val);
 extern ObjHitReactEntry lbl_80328898[];
-
-void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    char hitCount;
-    float floorY;
-    float floorMargin;
-    float fallVel;
-    int iVar5;
-    u8 wasReset;
-    float* collider;
-    uint inputBits;
-    int colByteOff;
-    float landedObj;
-    int colIdx;
-    undefined2* state;
-    int colList[3];
-
-    state = ((GameObject*)param_9)->extra;
-    iVar5 = FUN_80017a98();
-    if (*(char*)((int)state + 5) == '\0')
-    {
-        wasReset = 0;
-        if (((*(byte*)&((GameObject*)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject*)param_9)->unkF8 == 0))
-        {
-            *state = 0;
-            state[1] = 0x28;
-            FUN_80006ba8(0, 0x100);
-            wasReset = 1;
-        }
-        *(u8*)((int)state + 5) = wasReset;
-        if (*(char*)((int)state + 5) != '\0')
-        {
-            *(u8*)(state + 3) = 1;
-        }
-        if (((GameObject*)param_9)->unkF8 == 0)
-        {
-            ObjHits_EnableObject(param_9);
-            *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.
-                resetHitboxMode & 0xf7;
-            ((GameObject*)param_9)->anim.velocityY = -(lbl_803E6A1C * lbl_803DC074 - ((GameObject*)param_9)->anim.
-                velocityY);
-            ((GameObject*)param_9)->anim.localPosY =
-                ((GameObject*)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosY;
-            iVar5 = FUN_800632f4((double)((GameObject*)param_9)->anim.localPosX,
-                                 (double)((GameObject*)param_9)->anim.localPosY,
-                                 (double)((GameObject*)param_9)->anim.localPosZ, param_9, colList, 0, 1);
-            fallVel = lbl_803E6A24;
-            floorMargin = lbl_803E6A20;
-            landedObj = 0.0;
-            colIdx = 0;
-            colByteOff = 0;
-            if (0 < iVar5)
-            {
-                do
-                {
-                    collider = *(float**)(colList[0] + colByteOff);
-                    if (*(char*)(collider + 5) != '\x0e')
-                    {
-                        floorY = *collider;
-                        if ((((GameObject*)param_9)->anim.localPosY < floorY) &&
-                            ((floorY - floorMargin < ((GameObject*)param_9)->anim.localPosY || (colIdx == 0))))
-                        {
-                            landedObj = collider[4];
-                            ((GameObject*)param_9)->anim.localPosY = floorY;
-                            ((GameObject*)param_9)->anim.velocityY = fallVel;
-                        }
-                    }
-                    colByteOff = colByteOff + 4;
-                    colIdx = colIdx + 1;
-                    iVar5 = iVar5 + -1;
-                }
-                while (iVar5 != 0);
-            }
-            if (landedObj != 0.0)
-            {
-                iVar5 = *(int*)((int)landedObj + 0x58);
-                hitCount = *(char*)(iVar5 + 0x10f);
-                *(char*)(iVar5 + 0x10f) = hitCount + '\x01';
-                *(uint*)(iVar5 + hitCount * 4 + 0x100) = param_9;
-            }
-        }
-    }
-    else
-    {
-        ObjHits_DisableObject(param_9);
-        *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
-            8;
-        inputBits = FUN_80006c00(0);
-        if ((inputBits & 0x100) != 0)
-        {
-            *(u8*)(state + 3) = 0;
-            FUN_80006ba8(0, 0x100);
-        }
-        if (((GameObject*)param_9)->unkF8 == 1)
-        {
-            *(u8*)((int)state + 5) = 2;
-        }
-        if ((*(char*)((int)state + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
-        {
-            *(u8*)((int)state + 5) = 0;
-            *(u8*)(state + 3) = 0;
-        }
-        if (*(char*)(state + 3) != '\0')
-        {
-            ObjMsg_SendToObject(iVar5, 0x100008, param_9, CONCAT22(state[1], *state));
-        }
-    }
-    return;
-}
+extern f32 lbl_803E5DC0;
+extern f32 lbl_803E5D98;
 
 #pragma dont_inline on
 void fn_801F20D4(int obj)
 {
+    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
     extern void*Obj_GetPlayerObject(void);
     extern int lbl_802C247C[];
     extern void buttonDisable(int a, int b);
@@ -246,6 +98,7 @@ void fn_801F20D4(int obj)
 #pragma dont_inline on
 void fn_801F27E4(int obj)
 {
+    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
     extern void*Obj_GetPlayerObject(void);
     extern int fn_80296A14(void);
     extern void buttonDisable(int a, int b);
@@ -300,28 +153,6 @@ void fn_801F27E4(int obj)
 }
 #pragma dont_inline reset
 
-void FUN_801f2b94(short* param_1)
-{
-    int player;
-    double dist;
-
-    if (*(char*)(*(int*)(param_1 + 0x5c) + 0xc) == '\x02')
-    {
-        *param_1 = *param_1 + 0x32;
-    }
-    player = FUN_80017a98();
-    dist = (double)FUN_8001771c((float*)(player + 0x18), (float*)(param_1 + 0xc));
-    if ((double)lbl_803E6A80 <= dist)
-    {
-        FUN_8000680c((int)param_1, 0x40);
-    }
-    else
-    {
-        FUN_80006824((uint)param_1,SFXmn_eggylaugh216);
-    }
-    return;
-}
-
 void dll_200_free_nop(void)
 {
 }
@@ -338,26 +169,17 @@ void dll_200_initialise_nop(void)
 {
 }
 
-void WM_colrise_free(void);
-
-int dll_200_getExtraSize_ret_40(void) { return 0x28; }
+int dll_200_getExtraSize_ret_40(void) { return sizeof(Dll200State); }
 int dll_200_getObjectTypeId(void) { return 0x1; }
-int WM_colrise_getExtraSize(void);
 
-/* dll_1FF_render: when obj->_f8 implies
- * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
- * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-
-/* dll_200_render: when visible != 0 and
- * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
- * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-
+/* returns immediately if not visible; when the placement's map-act is 4,
+ * gate render on GameBit 0x2bd, otherwise render directly via
+ * objRenderFn_8003b8f4. */
 void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
-    s32 v = visible;
     int areaId;
-    if (v == 0) return;
+    if (visible == 0) return;
     areaId = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     if ((u8)areaId == 4)
     {
@@ -368,10 +190,7 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
 }
 
-/* dll_200_init: write a function pointer
- * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
- * fixed bytes, the three float position-quaternion from arg+8/c/10,
- * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
+int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 void dll_200_init(int* obj, int* arg)
 {
@@ -434,6 +253,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     }
     return 0;
 }
+#pragma opt_strength_reduction reset
 
 #pragma opt_strength_reduction off
 int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
@@ -473,6 +293,7 @@ int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     }
     return 0;
 }
+#pragma opt_strength_reduction reset
 
 void fn_801F2290(int obj);
 
@@ -518,23 +339,12 @@ void dll_200_update(int obj)
             fn_801F20D4(obj);
             break;
         case 0:
-            return;
         case 3:
-            return;
         case 5:
             return;
         }
     }
 }
-
-typedef struct LightSourceFlagByte
-{
-    u8 looped : 1;
-} LightSourceFlagByte;
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 
 typedef struct ArwAttachTarget
 {
@@ -547,6 +357,8 @@ typedef struct ArwAttachTarget
 
 void fn_801F2290(int obj)
 {
+    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
+    /* fn_80137948(sArwingAttachmentDiffFormat, diff) is a retail debug-print remnant */
     extern void*Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int id);
     extern void GameBit_Set(int slot, int val);
