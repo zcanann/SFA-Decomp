@@ -458,9 +458,10 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
         zero = 0;
-        for (i = 0; i < 8; i += 4)
         {
-            char* p = (char*)state + (i << 2) + i;
+            char* p = (char*)state;
+            for (i = 0; i < 8; i += 4)
+            {
             child = *(void**)(p + 56);
             if (child != NULL)
             {
@@ -490,6 +491,8 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
                 *(int*)(p + 72) = zero;
+            }
+            p += 20;
             }
         }
     }
