@@ -555,9 +555,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
         a2 = a2 + 0xffff;
     }
     lbl_803DD548->yawCurve.start = (f32)a2;
-    lbl_803DD548->yawCurve.end = lbl_803E17C4;
-    lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->yawCurve.endTangent = lbl_803E17C4;
+    lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.startTangent =
+        lbl_803DD548->yawCurve.endTangent = lbl_803E17C4;
     dx = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
     if (dx > lbl_803E17C8 || dx < lbl_803E17CC)
     {
@@ -571,9 +570,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
         }
     }
     lbl_803DD548->pitchCurve.start = (f32)obj[1];
-    lbl_803DD548->pitchCurve.end = lbl_803E17C4;
-    lbl_803DD548->pitchCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->pitchCurve.endTangent = lbl_803E17C4;
+    lbl_803DD548->pitchCurve.end = lbl_803DD548->pitchCurve.startTangent =
+        lbl_803DD548->pitchCurve.endTangent = lbl_803E17C4;
     *(u8*)(obj + 0x9f) = 1;
     if (GameBit_Get(0xc64) != 0)
     {
