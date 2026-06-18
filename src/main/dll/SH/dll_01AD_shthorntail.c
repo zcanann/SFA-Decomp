@@ -368,6 +368,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 {
     extern int randomGetRange(int min, int max); /* #57 */
     extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
+    extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     byte byteVal;
