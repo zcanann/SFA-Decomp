@@ -20,7 +20,10 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
         count |= (header[e3 + 1] & 0xf) << 8;
         cur = bitmap + e * 32;
     }
-    end = bitmap + (e * 32 | (f * 2 + (d >> 3)));
+    {
+        int f2 = f * 2;
+        end = bitmap + (e * 32 | (f2 + (d >> 3)));
+    }
     while (cur < end)
     {
         byte = *cur;
