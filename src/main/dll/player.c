@@ -12702,7 +12702,7 @@ void objLoadPlayerFromSave(int obj)
     lbl_803DE4B2 = 0x2d;
     lbl_803DE448 = 0;
     gb = (s16*)(base + 0x1b94);
-    for (i = 0; i < 0xb; i++)
+    for (i = 0; (u32)i < 0xb; i++)
     {
         if (GameBit_Get(*gb) != 0)
         {
