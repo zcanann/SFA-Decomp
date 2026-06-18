@@ -946,7 +946,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
 int Baddie_EnemygetExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
 
-void fn_8014C66C(int* obj, int x) { *(int*)((char*)((int**)obj)[0xb8 / 4] + 0x29c) = x; }
+void fn_8014C66C(int* obj, int x) { *(int*)((char*)(int*)((GameObject*)obj)->extra + 0x29c) = x; }
 
 #pragma scheduling off
 #pragma peephole off
