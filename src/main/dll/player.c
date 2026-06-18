@@ -5661,7 +5661,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             if (((GameObject*)obj)->anim.currentMoveProgress >= *(f32*)(ent + 0x30) &&
                 ((GameObject*)obj)->anim.currentMoveProgress <= *(f32*)(ent + 0x3c))
             {
-                if (Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
+                if ((s8)Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
                 {
                     int bits;
                     switch (*(s8*)((char*)(inner->moveSlots + 0x5d) + stride + i))
