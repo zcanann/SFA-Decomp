@@ -46,7 +46,7 @@ void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void gpsh_scene_init(int* obj, int* def)
 {
-    *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
