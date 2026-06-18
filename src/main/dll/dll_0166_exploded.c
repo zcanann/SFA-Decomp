@@ -108,7 +108,7 @@ void exploded_initialise(void)
 
 int exploded_getExtraSize(void) { return 0x6c; }
 
-u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)((int**)obj)[0xb8 / 4])->explodePhase; }
+u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)(int*)((GameObject*)obj)->extra)->explodePhase; }
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
