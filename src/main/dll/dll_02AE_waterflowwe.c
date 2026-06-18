@@ -1,3 +1,22 @@
+/*
+ * waterflowwe (DLL 0x2AE) - water-flow weed: a foliage object that
+ * sways to a water current.
+ *
+ * Each tick calcCurrentVector sums the influence of two source groups:
+ * the foliage-current group (0x14) - only members whose currentFlags
+ * have the ENABLED bit set contribute - and the object-current source
+ * group (0x50). A source affects the weed only when it is within a
+ * vertical band and inside its planar radius; its strength falls off
+ * linearly with distance and is projected through sin/cos of the
+ * source angle. The averaged current is low-pass filtered, clamped to
+ * a maximum magnitude, scaled by timeDelta, and used to point the
+ * weed (rotX) downstream.
+ *
+ * One weed instance (lbl_803DDDA8, claimed by the first non-disabled
+ * phaseDriver) advances two shared wrapping phase accumulators
+ * (lbl_803DDDB0 / lbl_803DDDAC) that select the weed's idle vs. flowing
+ * animation move via ObjAnim_SetCurrentMove.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
@@ -51,15 +70,16 @@ STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
-extern f32 lbl_803E72B4;
-extern f32 lbl_803E72B8;
-extern f32 lbl_803E72BC;
-extern f32 lbl_803E72C0;
-extern f32 lbl_803E72C4;
-extern f32 lbl_803E72C8;
-extern f32 lbl_803E72CC;
-extern f32 lbl_803E72D0;
-extern f32 lbl_803E72D4;
+/* current-tuning float constants local to this TU's .sdata2 */
+extern const f32 lbl_803E72B4;
+extern const f32 lbl_803E72B8;
+extern const f32 lbl_803E72BC;
+extern const f32 lbl_803E72C0;
+extern const f32 lbl_803E72C4;
+extern const f32 lbl_803E72C8;
+extern const f32 lbl_803E72CC;
+extern const f32 lbl_803E72D0;
+extern const f32 lbl_803E72D4;
 
 void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
 {
@@ -108,31 +128,27 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     }
 
     objects = (GameObject**)ObjGroup_GetObjects(WATERFLOWWE_OBJECT_CURRENT_GROUP, &count);
+    for (i = 0; i < count; i++)
     {
-        for (i = 0; i < count; i++)
-        {
-            GameObject* other;
-            f32 objectStrength;
-            s16 currentAngle;
+        GameObject* other = objects[i];
+        f32 objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / 10.0f;
+        s16 currentAngle;
 
-            other = objects[i];
-            objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / 10.0f;
-            hasCurrent = 1;
-            dy = other->anim.localPosY - object->anim.localPosY;
-            if ((dy <= 200.0f) && (dy >= lbl_803E72B8))
+        hasCurrent = 1;
+        dy = other->anim.localPosY - object->anim.localPosY;
+        if ((dy <= 200.0f) && (dy >= lbl_803E72B8))
+        {
+            dx = other->anim.localPosX - object->anim.localPosX;
+            dz = other->anim.localPosZ - object->anim.localPosZ;
+            currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET);
+            distance = sqrtf(dx * dx + dz * dz);
+            radius = (f32)(s32)(((ObjectCurrentSourceSetup*)other->anim.placementData)->radiusCells << 3);
+            if (distance < radius)
             {
-                dx = other->anim.localPosX - object->anim.localPosX;
-                dz = other->anim.localPosZ - object->anim.localPosZ;
-                currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET);
-                distance = sqrtf(dx * dx + dz * dz);
-                radius = (f32)(s32)(((ObjectCurrentSourceSetup*)other->anim.placementData)->radiusCells << 3);
-                if (distance < radius)
-                {
-                    strength = ((radius - distance) / radius) * objectStrength;
-                    angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
-                    currentX += strength * mathSinf(angle);
-                    currentZ += strength * mathCosf(angle);
-                }
+                strength = ((radius - distance) / radius) * objectStrength;
+                angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
+                currentX += strength * mathSinf(angle);
+                currentZ += strength * mathCosf(angle);
             }
         }
     }
@@ -169,7 +185,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     }
 }
 
-int waterflowwe_getExtraSize(void) { return 8; }
+int waterflowwe_getExtraSize(void) { return sizeof(WaterFlowWeState); }
 
 int waterflowwe_getObjectTypeId(void) { return 0; }
 
@@ -183,15 +199,14 @@ void waterflowwe_init(int obj, u8* setup)
     object->anim.rotX = (s16)(setupData->rotX << 8);
     if (setupData->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)
-        setupData->scale / lbl_803E72F4;
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E72F4;
         if (object->anim.rootMotionScale == lbl_803E72B0)
         {
             object->anim.rootMotionScale = lbl_803E72E8;
         }
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
-    object->objectFlags = object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT;
+    object->objectFlags = (u16)(object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT);
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
 
