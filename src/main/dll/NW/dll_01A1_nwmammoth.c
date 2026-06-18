@@ -831,15 +831,14 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
         fn_801CE2BC((int)obj, state, mapData);
         break;
     }
-    stateFlags = table->stateFlags[state->stateIndex];
-    if ((stateFlags & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0)
+    if ((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0)
     {
         obj->hitboxFlags = (u8)(obj->hitboxFlags | NW_MAMMOTH_PATH_CONTROL_FLAG);
     }
     else
     {
         obj->hitboxFlags = (u8)(obj->hitboxFlags & ~NW_MAMMOTH_PATH_CONTROL_FLAG);
-        if (((stateFlags & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
+        if (((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
             (cMenuGetSelectedItem() != -1))
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
