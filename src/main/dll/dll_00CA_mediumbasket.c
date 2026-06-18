@@ -1132,7 +1132,7 @@ void fn_8015D3C0(int obj, int sub, int state)
 }
 #pragma fp_contract reset
 
-s16 dll_CA_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
+s16 dll_CA_setScale(int* obj) { return *(s16*)((char*)(int*)((GameObject*)obj)->extra + 0x274); }
 
 int dll_CA_getExtraSize_ret_1112(void) { return 0x458; }
 int dll_CA_getObjectTypeId(void) { return 0x49; }
