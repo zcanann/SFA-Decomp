@@ -208,7 +208,7 @@ void mmp_asteroid_re_update(int obj)
             *(s16*)&state->rollPhase = lbl_803E4510 * timeDelta + (f32)state->rollPhase;
             *(s16*)&state->pitchPhase = lbl_803E4514 * timeDelta + (f32)state->pitchPhase;
             ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                                                    lbl_803E4518);
+                                                    *(f32*)&lbl_803E4518);
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + mathSinf(
                 (lbl_803E451C * (f32)state->bobPhase) / lbl_803E4520);
             if (((GameObject*)obj)->anim.localPosY < state->baseY)
