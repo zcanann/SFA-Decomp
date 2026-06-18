@@ -1,5 +1,44 @@
+/*
+ * NOTE: filename is swarmbaddie.c but this TU contains HUD/overlay code,
+ * not swarm-baddie logic (likely a mis-named split boundary). The
+ * description below reflects the ACTUAL contents.
+ *
+ * HUD / overlay drawing for the in-cockpit pause-menu head display and
+ * the Arwing flight HUD.
+ *
+ *  - drawFn_80125424: animates the active head-display panel (the NPC
+ *    "comms" box). Scrolls the panel open/closed (lbl_803DD858 width
+ *    clamp 0x122..0x152), renders the selected character model into a
+ *    side viewport, then composites the static-wave border texture and
+ *    corner/edge frame tiles (hudTextures[10..13,84]).
+ *  - fn_80125D04: frees the six cached head-display model objects.
+ *  - gameTextFn_80125ba4: opens the head display for entry idx (clamped
+ *    0..0x14), kicking off the matching audio stream (lbl_8031AF34
+ *    table, 0xC-byte records: int streamId, u16 textId@+4, u16 box@+8,
+ *    u8 npcDialogue@+7) and either an NPC dialogue bubble or a text box.
+ *  - pauseMenuCreateHeads: lazily sets up the head model objects for
+ *    slots 1..3 (the displayable characters); clears the rest.
+ *  - drawArwingHud: draws the Arwing shield bar, bomb pips and ring
+ *    counters; fades via arwingHudAlpha tied to arwingHudVisible.
+ *
+ * Most state lives in cross-TU lbl_803DD/lbl_803E globals; this TU only
+ * drives the rendering.
+ */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+
+/* head-display panel scroll-width animation bounds */
+#define HEADPANEL_WIDTH_MAX 0x152
+#define HEADPANEL_WIDTH_MIN 0x122
+#define HEADPANEL_WIDTH_OPEN 0x159
+
+/* lbl_8031AF34 head-display table: 0xC-byte records */
+#define HEADREC_STRIDE 0xc
+#define HEADREC_STREAM_ID 0    /* int  */
+#define HEADREC_TEXT_ID 4      /* u16  */
+#define HEADREC_PANEL_TYPE 6   /* u8   */
+#define HEADREC_NPC_DIALOGUE 7 /* u8   */
+#define HEADREC_BOX 8          /* u16  */
 
 extern u32 randomGetRange(int min, int max);
 
@@ -101,29 +140,29 @@ void drawFn_80125424(void)
     int type;
     int ypos;
     int i;
-    int a1;
-    int rx;
-    int ry;
-    s16 sw;
-    s16 sh;
-    int x2;
-    int x5;
+    int alphaI;
+    int randX;
+    int randY;
+    s16 panelW;
+    s16 panelH;
+    int xRight;
+    int xLeft;
     f32 wave;
-    f32 zz;
-    f32 k;
-    f32 base1;
-    f32 base2;
+    f32 camPos;
+    f32 waveAmp;
+    f32 waveBase1;
+    f32 waveBase2;
 
     if (lbl_803DD85A != 0)
     {
         if ((s8)lbl_803DD7A8 == 0)
         {
             lbl_803DD858 = lbl_803DD858 + framesThisStep * 5;
-            if (lbl_803DD858 > 0x152)
+            if (lbl_803DD858 > HEADPANEL_WIDTH_MAX)
             {
-                lbl_803DD858 = 0x152;
+                lbl_803DD858 = HEADPANEL_WIDTH_MAX;
                 lbl_803DD85A = 0;
-                if (*(int*)(lbl_8031AF34 + lbl_803DD85B * 0xc) != -1)
+                if (*(int*)(lbl_8031AF34 + lbl_803DD85B * HEADREC_STRIDE) != -1)
                 {
                     AudioStream_StopCurrent();
                     doNothing_8000CF54(0);
@@ -135,23 +174,23 @@ void drawFn_80125424(void)
         else
         {
             lbl_803DD858 = lbl_803DD858 - framesThisStep * 5;
-            if (lbl_803DD858 < 0x122)
+            if (lbl_803DD858 < HEADPANEL_WIDTH_MIN)
             {
-                lbl_803DD858 = 0x122;
+                lbl_803DD858 = HEADPANEL_WIDTH_MIN;
             }
             lbl_803DD856 = lbl_803DD856 + framesThisStep * 10;
             lbl_803DD854 = lbl_803DD854 + framesThisStep * 0x17;
         }
-        a1 = lbl_803DD854;
-        if (a1 < 0)
+        alphaI = lbl_803DD854;
+        if (alphaI < 0)
         {
-            a1 = 0;
+            alphaI = 0;
         }
-        else if (a1 > 0xff)
+        else if (alphaI > 0xff)
         {
-            a1 = 0xff;
+            alphaI = 0xff;
         }
-        alpha = a1;
+        alpha = alphaI;
         lbl_803DD854 = alpha;
         height = lbl_803DD856;
         if (height > 0x6e)
@@ -160,7 +199,7 @@ void drawFn_80125424(void)
         }
         lbl_803DD856 = height;
         width = lbl_803DD858;
-        type = *(u8*)(lbl_8031AF34 + lbl_803DD85B * 0xc + 6);
+        type = *(u8*)(lbl_8031AF34 + lbl_803DD85B * HEADREC_STRIDE + HEADREC_PANEL_TYPE);
         switch (type)
         {
         default:
@@ -181,8 +220,8 @@ void drawFn_80125424(void)
         Camera_SetCurrentViewIndex(1);
         lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
         Camera_DisableViewYOffset();
-        zz = lbl_803E1E3C;
-        Camera_SetCurrentViewPosition(zz, zz, zz);
+        camPos = lbl_803E1E3C;
+        Camera_SetCurrentViewPosition(camPos, camPos, camPos);
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
@@ -211,51 +250,51 @@ void drawFn_80125424(void)
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
-        k = lbl_803E204C;
-        base1 = lbl_803E2050;
-        base2 = lbl_803E2010;
+        waveAmp = lbl_803E204C;
+        waveBase1 = lbl_803E2050;
+        waveBase2 = lbl_803E2010;
         for (i = 0; i < (int)height; i += 4)
         {
-            wave = k * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
-            wave = k * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
-            a1 = (int)((f32)alpha * (base1 + wave));
-            if (a1 < 0)
+            wave = waveAmp * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
+            wave = waveAmp * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
+            alphaI = (int)((f32)alpha * (waveBase1 + wave));
+            if (alphaI < 0)
             {
-                a1 = 0;
+                alphaI = 0;
             }
-            rx = (int)randomGetRange(0, 0x1e) << 1;
-            ry = (int)randomGetRange(0, 0x1e) << 1;
-            if (a1 > 0xff)
+            randX = (int)randomGetRange(0, 0x1e) << 1;
+            randY = (int)randomGetRange(0, 0x1e) << 1;
+            if (alphaI > 0xff)
             {
-                a1 = 0xff;
+                alphaI = 0xff;
             }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i), a1 & 0xff, 0x100, 0x78, 2, ry, rx);
-            a1 = (int)((f32)alpha * (base2 + wave));
-            if (a1 < 0)
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i), alphaI & 0xff, 0x100, 0x78, 2, randY, randX);
+            alphaI = (int)((f32)alpha * (waveBase2 + wave));
+            if (alphaI < 0)
             {
-                a1 = 0;
+                alphaI = 0;
             }
-            rx = (int)randomGetRange(0, 0x1e) << 1;
-            ry = (int)randomGetRange(0, 0x1e) << 1;
-            if (a1 > 0xff)
+            randX = (int)randomGetRange(0, 0x1e) << 1;
+            randY = (int)randomGetRange(0, 0x1e) << 1;
+            if (alphaI > 0xff)
             {
-                a1 = 0xff;
+                alphaI = 0xff;
             }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), a1 & 0xff, 0x100, 0x78, 2, ry,
-                               rx);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), alphaI & 0xff, 0x100, 0x78, 2, randY,
+                               randX);
         }
-        sw = (s16)width;
-        x5 = sw - 5;
-        drawTexture(hudTextures[10], lbl_803E2054, (f32)x5, alpha & 0xff, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)x5, alpha & 0xff, 0x100, 0x78, 5, 0);
-        sh = (s16)height;
-        drawScaledTexture(hudTextures[11], lbl_803E2054, (f32)sw, alpha & 0xff, 0x100, 5, sh, 0);
-        x2 = sw + sh;
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)x2, alpha & 0xff, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, (f32)sw, alpha & 0xff, 0x100, 5, sh, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)x2, alpha & 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)x5, alpha & 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, (f32)x2, alpha & 0xff, 0x100, 5, 5, 2);
+        panelW = (s16)width;
+        xLeft = panelW - 5;
+        drawTexture(hudTextures[10], lbl_803E2054, (f32)xLeft, alpha & 0xff, 0x100);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)xLeft, alpha & 0xff, 0x100, 0x78, 5, 0);
+        panelH = (s16)height;
+        drawScaledTexture(hudTextures[11], lbl_803E2054, (f32)panelW, alpha & 0xff, 0x100, 5, panelH, 0);
+        xRight = panelW + panelH;
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)xRight, alpha & 0xff, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, (f32)panelW, alpha & 0xff, 0x100, 5, panelH, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)xRight, alpha & 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)xLeft, alpha & 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, (f32)xRight, alpha & 0xff, 0x100, 5, 5, 2);
     }
 }
 
@@ -277,11 +316,12 @@ void fn_80125D04(void)
     }
 }
 
+/* opt_common_subs off: target re-loads the lbl_8031AF34 record fields per use (no CSE merge) */
 #pragma opt_common_subs off
 void gameTextFn_80125ba4(int idx)
 {
-    int a;
-    int b;
+    int textId;
+    int boxId;
 
     if (lbl_803DD85A == 0)
     {
@@ -292,39 +332,39 @@ void gameTextFn_80125ba4(int idx)
         lbl_803DD85A = 1;
         lbl_803DD85B = idx;
         {
-        int off = idx * 0xc;
+        int off = idx * HEADREC_STRIDE;
         u8* base = lbl_8031AF34;
         if (*(int*)(base + off) != -1 && AudioStream_IsPreparing() == 0)
         {
             AudioStream_Play(*(int*)(base + off), AudioStream_StartPrepared);
         }
+        /* inner scope is load-bearing: keeping e declared here (not hoisted) sets decl order */
         {
             u8* e = &lbl_8031AF34[off];
-            if (e[7] != 0)
+            if (e[HEADREC_NPC_DIALOGUE] != 0)
             {
-                (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + 4), 0, 0, 0);
+                (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + HEADREC_TEXT_ID), 0, 0, 0);
             }
             else
             {
-                b = *(u16*)(e + 8);
-                a = *(u16*)(e + 4);
-                if (a != -1 && curGameText == 0xffff)
+                boxId = *(u16*)(e + HEADREC_BOX);
+                textId = *(u16*)(e + HEADREC_TEXT_ID);
+                if (textId != -1 && curGameText == 0xffff)
                 {
                     gameTextGetBox(0x7c);
                     lbl_803DD7A8 = 1;
                     lbl_803DD8D0 = 0;
-                    curGameText = a;
+                    curGameText = textId;
                     lbl_803DD8C8 = 0;
-                    lbl_803DD8CA = (s16)b;
-                    lbl_803DD8CC = (f32)(s16)
-                    b;
+                    lbl_803DD8CA = (s16)boxId;
+                    lbl_803DD8CC = (f32)(s16)boxId;
                     gameTextFreePhrase(lbl_803A9440);
                     lbl_803DD7A9 = 0;
                 }
             }
         }
         }
-        lbl_803DD858 = 0x159;
+        lbl_803DD858 = HEADPANEL_WIDTH_OPEN;
         lbl_803DD856 = 0;
         lbl_803DD854 = 0;
     }
@@ -372,14 +412,14 @@ void drawArwingHud(void)
     int bombs;
     int rings;
     int req;
-    int t30;
-    int t23;
-    int t22;
+    int fullPips;
+    int partialFrame;
+    int maxPips;
     u32 i;
-    u32 v;
-    int t;
-    u8 b;
-    int pos;
+    u32 pip;
+    int texIdx;
+    u8 bombSlot;
+    int bombX;
 
     arwing = getArwing();
     *(int*)buf = lbl_803E1E08;
@@ -388,11 +428,7 @@ void drawArwingHud(void)
     {
         if (arwingHudVisible != 0)
         {
-            arwingHudAlpha = (int)
-            (lbl_803E1FA0 * (f32)(u32)
-            framesThisStep + (f32)arwingHudAlpha
-            )
-            ;
+            arwingHudAlpha = (int)(lbl_803E1FA0 * (f32)(u32)framesThisStep + (f32)arwingHudAlpha);
             if (arwingHudAlpha > 0xff)
             {
                 arwingHudAlpha = 0xff;
@@ -400,10 +436,7 @@ void drawArwingHud(void)
         }
         else
         {
-            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)
-            framesThisStep - (f32)arwingHudAlpha
-            )
-            ;
+            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)framesThisStep - (f32)arwingHudAlpha);
             if (arwingHudAlpha < 0)
             {
                 arwingHudAlpha = 0;
@@ -418,33 +451,33 @@ void drawArwingHud(void)
         {
             rings = req;
         }
-        t30 = shield >> 2;
-        t23 = (shield & 3) + 0x12;
-        t22 = maxShield >> 2;
-        for (i = 0; (int)(v = i & 0xff) < t22; i++)
+        fullPips = shield >> 2;
+        partialFrame = (shield & 3) + 0x12;
+        maxPips = maxShield >> 2;
+        for (i = 0; (int)(pip = i & 0xff) < maxPips; i++)
         {
-            if ((int)v < t30)
+            if ((int)pip < fullPips)
             {
-                t = 0x16;
+                texIdx = 0x16;
             }
-            else if (t30 < (int)v)
+            else if (fullPips < (int)pip)
             {
-                t = 0x12;
+                texIdx = 0x12;
             }
             else
             {
-                t = (u8)t23;
+                texIdx = (u8)partialFrame;
             }
-            drawTexture(hudTextures[(u8)t], (f32)(int)(v * 0x21 + 0x1e), lbl_803E1FAC,
+            drawTexture(hudTextures[(u8)texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
         }
-        for (b = 0; b < 3; b++)
+        for (bombSlot = 0; bombSlot < 3; bombSlot++)
         {
-            pos = b * 0x1c;
-            drawTexture(hudTextures[56], (f32)(pos + 0x1e), lbl_803E2060, arwingHudAlpha & 0xff, 0x100);
-            if ((int)b < bombs)
+            bombX = bombSlot * 0x1c;
+            drawTexture(hudTextures[56], (f32)(bombX + 0x1e), lbl_803E2060, arwingHudAlpha & 0xff, 0x100);
+            if ((int)bombSlot < bombs)
             {
-                drawTexture(hudTextures[57], (f32)(pos + 0x23), lbl_803E2064, arwingHudAlpha & 0xff, 0x100);
+                drawTexture(hudTextures[57], (f32)(bombX + 0x23), lbl_803E2064, arwingHudAlpha & 0xff, 0x100);
             }
         }
         if (((GameObject*)arwing)->anim.mapEventSlot != 0x26)
@@ -455,12 +488,12 @@ void drawArwingHud(void)
                 drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), lbl_803E1F9C,
                             arwingHudAlpha & 0xff, 0x100);
             }
-            for (; (int)(v = i & 0xff) < req; i++)
+            for (; (int)(pip = i & 0xff) < req; i++)
             {
-                drawTexture(hudTextures[59], (f32)(int)(0x244 - v * 0x14), lbl_803E1F9C,
+                drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), lbl_803E1F9C,
                             arwingHudAlpha & 0xff, 0x100);
             }
-            drawTexture(hudTextures[58], (f32)(int)(0x23c - v * 0x14), lbl_803E1FAC,
+            drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
             sprintf(buf, &lbl_803DBB60, arwarwing_getScore(arwing));
         }
