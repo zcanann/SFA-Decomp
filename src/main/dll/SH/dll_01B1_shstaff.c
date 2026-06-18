@@ -200,10 +200,9 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 i = 5;
                 for (; i < 5; i++)
                 {
-                    o = state->slots[i];
-                    if ((uint)o != 0)
+                    if ((u32)state->slots[i] != 0)
                     {
-                        ((GameObject*)o)->anim.flags |= 0x4000;
+                        ((GameObject*)state->slots[i])->anim.flags |= 0x4000;
                         state->slots[i] = 0;
                     }
                 }
