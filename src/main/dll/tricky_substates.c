@@ -720,8 +720,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             if (Obj_IsLoadingLocked() != 0)
             {
                 ((TrickyState*)state)->stateFlags |= 0x800;
-                p = state;
-                for (i = 0; i < 7; i++)
+                for (i = 0, p = state; i < 7; i++)
                 {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
