@@ -12517,6 +12517,7 @@ void fn_802AC32C(int p1, int p2, int p3)
             powfBitEstimate(lbl_803E7F1C, timeDelta));
 }
 
+#pragma opt_loop_invariants off
 int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -12583,6 +12584,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;
     return 0;
 }
+#pragma opt_loop_invariants reset
 
 void objLoadPlayerFromSave(int obj)
 {
