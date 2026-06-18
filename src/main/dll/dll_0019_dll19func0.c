@@ -469,33 +469,36 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(void**)(p2 + 720) != (void*)player || (s8)p2[852] == 0)
+        if (*(void**)(p2 + 720) == (void*)player && (s8)p2[852] != 0)
         {
-            result = 1;
-        }
-        else if (*(f32*)(p2 + 704) > f && p4 != 0)
-        {
-            result = 1;
-        }
-        else if (fn_80295A04(player, 1) == 0)
-        {
-            result = 1;
-        }
-        else if (Player_GetCurrentHealth(player) <= 0)
-        {
-            result = 1;
-        }
-        else
-        {
-            f32 pos[3];
-            f32 out[22];
-            pos[0] = ((GameObject*)player)->anim.localPosX;
-            pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
-            pos[2] = ((GameObject*)player)->anim.localPosZ;
-            if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
+            if (*(f32*)(p2 + 704) > f && p4 != 0)
             {
                 result = 1;
             }
+            else if (fn_80295A04(player, 1) == 0)
+            {
+                result = 1;
+            }
+            else if (Player_GetCurrentHealth(player) <= 0)
+            {
+                result = 1;
+            }
+            else
+            {
+                f32 pos[3];
+                f32 out[22];
+                pos[0] = ((GameObject*)player)->anim.localPosX;
+                pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
+                pos[2] = ((GameObject*)player)->anim.localPosZ;
+                if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0)
+                {
+                    result = 1;
+                }
+            }
+        }
+        else
+        {
+            result = 1;
         }
     }
     return result;
@@ -597,6 +600,7 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
     return 0;
 }
 
+#pragma opt_loop_invariants off
 int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 {
     extern f32 lbl_803E1C68; /* #57 */
@@ -686,7 +690,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                     traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((int)(p1 + 12), gridIn, lbl_803E1C48, 0, bboxOut,
+                        if (objBboxFn_800640cc((int)p1 + 12, gridIn, lbl_803E1C48, 0, bboxOut,
                                                (int)p1, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
@@ -707,6 +711,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     }
     return obj;
 }
+#pragma opt_loop_invariants reset
 
 int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p8)
 {
@@ -747,7 +752,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                 *(s16*)(p1 + 6) = *(s16*)(p1 + 6) | 0x4000;
                 (*gMapEventInterface)->addTime(
                     *(int*)(other + 20),
-                    (f32)(s32)(*(s16*)(other + 44) * 60) - lbl_803E1C30);
+                    (f32)(s32)(*(s16*)(other + 44) * 60));
             }
         }
         else
@@ -804,7 +809,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     {
         if (v24 != 0)
         {
-            if (*(int*)(p2 + 720) == 0)
+            if (*(void**)(p2 + 720) == NULL)
             {
                 if (fn_80295A04(player, 1) != 0)
                 {
@@ -835,12 +840,12 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     GameObject* source = (GameObject*)p1;
     u8* state = *(u8**)&((GameObject*)p1)->anim.placementData;
     ObjPlacement* setup;
-    f32 scale;
     u16 ids1[4];
     u16 ids2[4];
     int idx;
     f32 savedX, savedY, savedZ;
     f32 nearDist;
+    f32 scale;
 
     scale = lbl_803E1C2C;
     *(u32*)&ids1[0] = lbl_803E1C18;
@@ -875,7 +880,7 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
         setup = Obj_AllocObjectSetup(48, ids2[idx]);
         scale = lbl_803E1C54;
     }
-    if ((u8)((Dll19Placement*)state)->unk22 != 0)
+    if ((int)(u8)((Dll19Placement*)state)->unk22 != 0)
     {
         switch (p2)
         {
@@ -899,11 +904,14 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
             savedX = source->anim.worldPosX;
             savedY = source->anim.worldPosY;
             savedZ = source->anim.worldPosZ;
-            if (state != NULL)
             {
-                source->anim.worldPosX = ((ObjPlacement*)state)->posX;
-                source->anim.worldPosY = ((ObjPlacement*)state)->posY;
-                source->anim.worldPosZ = ((ObjPlacement*)state)->posZ;
+                ObjPlacement* pl = *(ObjPlacement**)&source->anim.placementData;
+                if (pl != NULL)
+                {
+                    source->anim.worldPosX = pl->posX;
+                    source->anim.worldPosY = pl->posY;
+                    source->anim.worldPosZ = pl->posZ;
+                }
             }
             nearDist = lbl_803E1C58;
             lbl_803DD5E4 = (GameObject*)ObjGroup_FindNearestObject(4, p1, &nearDist);
@@ -950,15 +958,15 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     *(u8*)((u8*)setup + 6) = state[6];
     *(u8*)((u8*)setup + 5) = state[5];
     *(u8*)((u8*)setup + 7) = state[7];
-    lbl_803DD5E4 = Obj_SetupObject(setup, 5, (s8)p1[172], -1, *(int*)&source->anim.parent);
+    lbl_803DD5E4 = Obj_SetupObject(setup, 5, *(s8*)(p1 + 172), -1, *(int*)&source->anim.parent);
     return (int)lbl_803DD5E4;
 }
 
 void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, int p7)
 {
-    u8 flags = (u8)p7;
-    int b1 = flags & 1;
-    u8* path = p3 + 4;
+    u8 flags;
+    int b1;
+    u8* path;
     int curveLocal;
     u8 byteLocal;
 
@@ -967,6 +975,8 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     *(int*)(p3 + 1036) = (int)(p3 + 1040);
     *(s16*)(p3 + 1026) = 0;
 
+    flags = (u8)p7;
+    b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
         ObjGroup_AddObject(p1, 3);
@@ -992,6 +1002,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         GameBit_Set(*(s16*)(p3 + 1012), 0);
     }
+    path = p3 + 4;
     if ((flags & 2) != 0)
     {
         (*gPathControlInterface)->init(path, 0, p6 | 0x200000, 1);
@@ -1000,10 +1011,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)lbl_803DB9E0, 4);
+    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)&lbl_803DB9E0, 4);
     if ((flags & 4) != 0)
     {
-        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)lbl_803DD5E0, &byteLocal);
+        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)&lbl_803DD5E0, &byteLocal);
     }
     (*gPathControlInterface)->attachObject((void*)p1, path);
     p3[1028] = p2[43];
@@ -1011,7 +1022,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     p3[1030] = p2[47];
     p3[1031] = p2[39];
     p3[1032] = p2[40];
-    *(s16*)(p1 + 176) = *(u16*)(p1 + 176) | ((s8)p3[1032] & 7);
+    *(u16*)(p1 + 176) = *(u16*)(p1 + 176) | ((s8)p3[1032] & 7);
     if ((flags & 8) != 0)
     {
         *(s16*)(p3 + 1018) = *(s16*)(p2 + 32);
@@ -1023,7 +1034,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
         *(s16*)(p3 + 1020) = 0;
     }
     *(s16*)(p3 + 1024) = 0;
-    *(s16*)(p3 + 1022) = (u16)(p2[41] << 3);
+    *(u16*)(p3 + 1022) = (u16)(p2[41] << 3);
     p3[1029] = 0;
     *(f32*)(p3 + 996) = fparam;
     *(s16*)(p1 + 0) = (s16)((s8)p2[42] << 8);
@@ -1075,19 +1086,19 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     }
     if ((flags & 0x10) != 0)
     {
-        if (*(int*)(p3 + 988) == 0 && (flags & 0x20) == 0)
+        if (*(void**)(p3 + 988) == NULL && (flags & 0x20) == 0)
         {
             *(int*)(p3 + 988) = (int)mmAlloc(264, 26, 0);
         }
-        if (*(int*)(p3 + 988) != 0)
+        if (*(void**)(p3 + 988) != NULL)
         {
             memset((void*)*(int*)(p3 + 988), 0, 264);
         }
         if ((*gRomCurveInterface)->initCurve((void*)*(int*)(p3 + 988), (void*)p1,
-                                             (f32)(s32) * (u16*)(p3 + 1022) - lbl_803E1C38,
+                                             (f32)(u32) * (u16*)(p3 + 1022),
                                              &curveLocal, -1) == 0)
         {
-            *(s16*)(p3 + 1024) = *(u16*)(p3 + 1024) | 8;
+            *(u16*)(p3 + 1024) = *(u16*)(p3 + 1024) | 8;
         }
     }
     else
