@@ -358,18 +358,17 @@ void fn_80153640(int obj, int state)
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
-            f32 mul = lbl_803E28F4;
             p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            ((GameObject*)newObj)->anim.velocityX = mul * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
+            ((GameObject*)newObj)->anim.velocityX = 0.02f * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
                 fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
             {
                 p29c = *(int*)&((BaddieState*)state)->trackedObj;
-                ((GameObject*)newObj)->anim.velocityY = mul *
+                ((GameObject*)newObj)->anim.velocityY = 0.02f *
                     ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)rnd) -
                      ((GameObject*)fx)->anim.localPosX);
                 p29c = *(int*)&((BaddieState*)state)->trackedObj;
-                ((GameObject*)newObj)->anim.velocityZ = mul * (((GameObject*)p29c)->anim.localPosZ -
+                ((GameObject*)newObj)->anim.velocityZ = 0.02f * (((GameObject*)p29c)->anim.localPosZ -
                     ((GameObject*)fx)->anim.localPosY);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
