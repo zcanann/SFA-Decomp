@@ -706,6 +706,7 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
 }
 #pragma dont_inline reset
 
+#pragma opt_common_subs off
 void Camera_UpdateProjection(void* viewportArg)
 {
     u8 viewIndex = gCameraCurrentViewIndex;
@@ -798,6 +799,7 @@ void Camera_UpdateProjection(void* viewportArg)
         gCameraCurrentViewIndex = viewIndex;
     }
 }
+#pragma opt_common_subs reset
 
 void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth)
 {
