@@ -13765,7 +13765,7 @@ int fn_8029C9C8(int obj, int state)
             }
             else
             {
-                *(u8*)((char*)inner + 0x8cc) = phase - 4;
+                *(u8*)((char*)inner + 0x8cc) -= 4;
             }
         }
         else
