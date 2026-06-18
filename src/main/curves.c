@@ -142,7 +142,8 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         }
         if (curve->dir != 0)
         {
-            curve->segmentDistance = lengths[seg + 1] + curve->segmentDistance;
+            f32 segLen = lengths[seg + 1];
+            curve->segmentDistance = segLen + curve->segmentDistance;
         }
         else if (curve->t >= lbl_803DE674)
         {
