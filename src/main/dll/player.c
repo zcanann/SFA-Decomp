@@ -11026,7 +11026,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 r;
     f32 pushZ;
     f32 pushX;
-    int** nearList;
+    f32** nearList;
     f32 queryParams[4];
     f32 posX;
     f32 posY;
@@ -11141,7 +11141,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
                 ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
             }
-            iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
+            iv = hitDetectFn_80065e50(obj, (int***)&nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
             velMag = -((PlayerState*)state)->unk7C8;
             if (1 < iv &&
@@ -11159,7 +11159,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     n = p[1];
                 }
                 *p = (s8)n;
-                if (**(s8**)((char*)inner + 0x35c) < 1)
+                if (**(s8**)((char*)inner + 0x35c) <= 0)
                 {
                     playerDie(obj);
                 }
