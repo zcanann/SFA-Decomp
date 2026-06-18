@@ -135,8 +135,7 @@ void alphaanimator_update(int* obj)
         {
             return;
         }
-        s->fadeA = lbl_803E3F7C;
-        s->fadeB = lbl_803E3F7C;
+        s->fadeA = s->fadeB = lbl_803E3F7C;
         s->fadeMax = (f32)(u32)((AlphaanimatorPlacement*)d)->fadeMax;
         if (((AlphaanimatorPlacement*)d)->unk18 == -1)
         {
@@ -146,7 +145,7 @@ void alphaanimator_update(int* obj)
         {
             s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         }
-        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
+        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
         if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
         {
             s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
