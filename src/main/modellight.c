@@ -1599,9 +1599,11 @@ void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f
     obj->projectionAspect = b;
     obj->projectionType = 1;
     C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
-                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
+                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790,
+                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790);
     C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect,
-                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
+                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790,
+                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790);
 }
 
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
