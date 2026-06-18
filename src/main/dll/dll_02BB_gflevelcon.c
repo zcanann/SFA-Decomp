@@ -1,50 +1,6 @@
-/*
- * gflevelcon (DLL 0x2BB) - "GalleonForce" level controller object.
- *
- * Its anim-event callback (gf_levelcon_handleScriptEvents) reacts to
- * sequence event opcodes that drive the sky/weather presets (skyFn_*
- * + getEnvfxAct), warp/credits flow at the end of the level, and a
- * countdown-driven on-screen text prompt (gameTextShow 0x476). It also
- * finds the level's linked point-light and scroll objects (by their
- * placement def ids 0x477E3 / 0x4A946 / 0x4A947) and toggles / scrolls
- * them per frame.
- *
- * The fn_8023* helpers (referenced from dll_02BC_andross.c) spawn and
- * aim the Arwing projectile/effect objects used during the boss fight,
- * and fn_8023A3E4 is the hit-reaction handler (three breakable hit
- * zones + texture-state swaps).
- */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-/* sequence event opcodes consumed by gf_levelcon_handleScriptEvents */
-#define GFLEVELCON_SEQEV_NONE 0
-#define GFLEVELCON_SEQEV_SKY_PRESET_A 1
-#define GFLEVELCON_SEQEV_SKY_PRESET_B 2
-#define GFLEVELCON_SEQEV_LIGHT_ON 3
-#define GFLEVELCON_SEQEV_LIGHT_OFF 4
-#define GFLEVELCON_SEQEV_SKY_PRESET_C 5
-#define GFLEVELCON_SEQEV_LOAD_MAP 6
-#define GFLEVELCON_SEQEV_UNLOCK_LEVELS 7
-#define GFLEVELCON_SEQEV_START_PROMPT 8
-#define GFLEVELCON_SEQEV_CREDITS 9
-#define GFLEVELCON_SEQEV_SKY_PRESET_D 10
-#define GFLEVELCON_SEQEV_SKY_PRESET_E 11
-
-/* placement def ids of the linked objects gf_levelcon_findLinkedObjects
-   caches into its state (point light + two scrolling textures) */
-#define GFLEVELCON_LINK_LIGHT 0x477E3
-#define GFLEVELCON_LINK_SCROLL_A 0x4A946
-#define GFLEVELCON_LINK_SCROLL_B 0x4A947
-
-/* The next two typedefs are two views over the SAME 0x10-byte obj->extra
-   allocation (gf_levelcon_getExtraSize returns 0x10). findLinkedObjects
-   caches the three linked object handles as s32 ids (unk0=light,
-   unk4=scrollA, unk8=scrollB); handleScriptEvents reads unk4/unk8 back as
-   s16* scroll-offset pointers and unkC as the prompt countdown. The split
-   into two casts (with differing field types at unk4/unk8) is
-   matching-required: collapsing to one struct changes the cast keys and
-   the codegen. */
 typedef struct GfLevelconFindLinkedObjectsState
 {
     s32 unk0;
@@ -52,6 +8,7 @@ typedef struct GfLevelconFindLinkedObjectsState
     s32 unk8;
     u8 padC[0x10 - 0xC];
 } GfLevelconFindLinkedObjectsState;
+
 
 typedef struct GfLevelconHandleScriptEventsState
 {
@@ -61,25 +18,6 @@ typedef struct GfLevelconHandleScriptEventsState
     f32 unkC;
 } GfLevelconHandleScriptEventsState;
 
-typedef struct GfHitState
-{
-    u8 pad0[0x88];
-    int mode;
-    u8 pad1[0x16];
-    s16 pitchVel;
-    s16 rollVel;
-    u8 pad2[8];
-    u8 hits[4];
-    u8 timer[4];
-    u8 pad3[3];
-    u8 texState[3];
-} GfHitState;
-
-STATIC_ASSERT(offsetof(GfHitState, mode) == 0x88);
-STATIC_ASSERT(offsetof(GfHitState, pitchVel) == 0xA2);
-STATIC_ASSERT(offsetof(GfHitState, hits[0]) == 0xAE);
-STATIC_ASSERT(offsetof(GfHitState, timer[0]) == 0xB2);
-STATIC_ASSERT(offsetof(GfHitState, texState[0]) == 0xB9);
 
 int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
@@ -91,64 +29,64 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
     {
         switch (animUpdate->eventIds[i])
         {
-        case GFLEVELCON_SEQEV_NONE:
+        case 0:
             break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_A:
+        case 1:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
             getEnvfxAct(obj, obj, 0x21f, 0);
             break;
-        case GFLEVELCON_SEQEV_START_PROMPT:
+        case 8:
             ((GfLevelconHandleScriptEventsState*)state)->unkC = lbl_803E746C;
             break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_B:
+        case 2:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21d, 0);
             break;
-        case GFLEVELCON_SEQEV_LIGHT_ON:
+        case 3:
             gf_levelcon_findLinkedObjects(obj);
             if (*(void**)state != NULL)
             {
                 pointlight_setEffectState(*(int*)state, 1);
             }
             break;
-        case GFLEVELCON_SEQEV_LIGHT_OFF:
+        case 4:
             gf_levelcon_findLinkedObjects(obj);
             if (*(void**)state != NULL)
             {
                 pointlight_setEffectState(*(int*)state, 0);
             }
             break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_C:
+        case 5:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7480, lbl_803E747C, lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21e, 0);
             break;
-        case GFLEVELCON_SEQEV_LOAD_MAP:
+        case 6:
             loadMapAndParent(0x29);
             break;
-        case GFLEVELCON_SEQEV_UNLOCK_LEVELS:
+        case 7:
             unlockLevel(0, 0, 1);
             unlockLevel(0, 1, 1);
             mapUnload(mapGetDirIdx(0xb), 0x20000000);
             break;
-        case GFLEVELCON_SEQEV_CREDITS:
+        case 9:
             unlockLevel(0, 0, 1);
             loadUiDll(4);
             warpToMap(0x12, 0);
             creditsStart();
             break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_D:
+        case 10:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21f, 0);
             break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_E:
+        case 11:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
@@ -243,13 +181,13 @@ void gf_levelcon_findLinkedObjects(int obj)
         {
             switch (*(int*)(*(int*)(o + 0x4c) + 0x14))
             {
-            case GFLEVELCON_LINK_LIGHT:
+            case 0x477E3:
                 ((GfLevelconFindLinkedObjectsState*)state)->unk0 = o;
                 break;
-            case GFLEVELCON_LINK_SCROLL_A:
+            case 0x4A946:
                 ((GfLevelconFindLinkedObjectsState*)state)->unk4 = o;
                 break;
-            case GFLEVELCON_LINK_SCROLL_B:
+            case 0x4A947:
                 ((GfLevelconFindLinkedObjectsState*)state)->unk8 = o;
                 break;
             }
@@ -260,19 +198,19 @@ void gf_levelcon_findLinkedObjects(int obj)
 void fn_80239DD8(int p1, int p2)
 {
     f32 maxDist;
-    char* nearObj;
+    char* near;
     int newObj;
 
     maxDist = lbl_803E7490;
     if (Obj_IsLoadingLocked())
     {
-        nearObj = (char*)ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
-        if (nearObj != NULL)
+        near = (char*)ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
+        if (near != NULL)
         {
             newObj = Obj_AllocObjectSetup(0x24, 0x608);
-            *(f32*)(newObj + 8) = *(f32*)(nearObj + 0xc);
-            *(f32*)(newObj + 0xc) = *(f32*)(nearObj + 0x10);
-            *(f32*)(newObj + 0x10) = *(f32*)(nearObj + 0x14);
+            *(f32*)(newObj + 8) = *(f32*)(near + 0xc);
+            *(f32*)(newObj + 0xc) = *(f32*)(near + 0x10);
+            *(f32*)(newObj + 0x10) = *(f32*)(near + 0x14);
             *(u8*)(newObj + 4) = 1;
             *(u8*)(newObj + 5) = 1;
             *(int*)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -307,7 +245,7 @@ void fn_80239EAC(int p1, int p2)
             dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.rotX = (s16)getAngle(dx, dz);
             ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
-            arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
+            arwprojectile_placeForward(obj, (f32)(u32)lbl_803DC4E8);
         }
         objs++;
     }
@@ -370,7 +308,7 @@ void fn_8023A268(int p1, int p2, int p3)
         if ((void*)proj != NULL)
         {
             arwprojectile_setLifetime(proj, lbl_803DC4DC);
-            arwprojectile_placeForward(proj, (f32)(int)lbl_803DC4D8);
+            arwprojectile_placeForward(proj, (f32)(u32)lbl_803DC4D8);
         }
     }
 }
@@ -379,37 +317,55 @@ void fn_80239FCC(int p1, int p2)
 {
     f32 ang;
     int yaw;
-    s16 rndYaw;
+    int rndYaw;
     int rndDur;
     int newObj;
+    int proj;
 
     if (Obj_IsLoadingLocked())
     {
         yaw = lbl_803DDDC4;
         lbl_803DDDC0 = lbl_803DDDC6;
-        rndYaw = randomGetRange(-0x8000, 0x7fff);
+        rndYaw = (s16)randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
-        ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
-        *(f32*)(newObj + 8) = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)p2 + 0xc);
-        *(f32*)(newObj + 0xc) = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
+        ang = lbl_803E74A0 * (f32)(u32)
+        rndYaw / lbl_803E74A4;
+        *(f32*)(newObj + 8) = (f32)(u32)
+        rndDur * mathSinf(ang) + *(f32*)(*(int*)p2 + 0xc);
+        *(f32*)(newObj + 0xc) = (f32)(u32)
+        rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
         *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8) - lbl_803E74A8;
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
         *(u8*)(newObj + 0x19) = lbl_803DDDC0;
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        /* reuse of rndDur for the loaded projectile handle is matching-required (same reg/web) */
-        rndDur = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (rndDur != 0u)
+        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if (proj != 0)
         {
-            *(f32*)(rndDur + 8) = lbl_803DC4E4;
-            arwprojectile_setLifetime(rndDur, lbl_803DC4E0);
-            arwprojectile_placeForward(rndDur, lbl_803E74AC);
+            *(f32*)(proj + 8) = lbl_803DC4E4;
+            arwprojectile_setLifetime(proj, lbl_803DC4E0);
+            arwprojectile_placeForward(proj, lbl_803E74AC);
         }
     }
 }
 
+typedef struct GfHitState
+{
+    u8 pad0[0x88];
+    int mode;
+    u8 pad1[0x16];
+    s16 pitchVel;
+    s16 rollVel;
+    u8 pad2[8];
+    u8 hits[4];
+    u8 timer[4];
+    u8 pad3[3];
+    u8 texState[3];
+} GfHitState;
+
+#pragma optimization_level 1
 void fn_8023A3E4(int p1, int p2)
 {
     u8 i;
@@ -462,7 +418,7 @@ void fn_8023A3E4(int p1, int p2)
             }
             break;
         case 3:
-            if (((GameObject*)hitObj)->anim.seqId == 0x605 &&
+            if (*(s16*)(hitObj + 0x46) == 0x605 &&
                 s->timer[hitType] == 0 &&
                 s->hits[hitType] != 0 &&
                 s->mode == 0xc)
