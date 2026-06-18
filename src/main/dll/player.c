@@ -1139,12 +1139,15 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
         if (((PlayerState*)p2)->baddie.targetObj != NULL)
         {
             int sp = *(int*)&((PlayerState*)p2)->baddie.targetObj;
-            ObjHitVolumeRuntimeTransform* pt =
-                &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->unkE4];
-            f32 dx = pt->jointX - ((GameObject*)lbl_803DE44C)->anim.localPosX;
-            f32 dy = pt->jointY - ((GameObject*)lbl_803DE44C)->anim.localPosY;
-            f32 dz = pt->jointZ - ((GameObject*)lbl_803DE44C)->anim.localPosZ;
+            ObjHitVolumeRuntimeTransform* pt;
+            f32 dx;
+            f32 dy;
+            f32 dz;
             spawned = sp;
+            pt = &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->unkE4];
+            dx = pt->jointX - ((GameObject*)lbl_803DE44C)->anim.localPosX;
+            dy = pt->jointY - ((GameObject*)lbl_803DE44C)->anim.localPosY;
+            dz = pt->jointZ - ((GameObject*)lbl_803DE44C)->anim.localPosZ;
             v.mat[1] = lbl_803E7EA4;
             v.mat[2] = lbl_803E7EA4;
             v.mat[3] = lbl_803E7EA4;
