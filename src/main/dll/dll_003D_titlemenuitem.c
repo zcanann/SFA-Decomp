@@ -28,7 +28,7 @@ extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Music_PlayTrackByIndex(int index);
-extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
+extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void* gameTextGetPhrase(int textId, int variant);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
@@ -96,16 +96,16 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     switch (item->kind)
     {
     case 0:
-        drawTexture(lbl_803A9DB8[1], (u8)(((u8)alpha * 0xb4) >> 8),
-                    (f32)item->x, (f32)item->y, 0x100);
+        drawTexture(lbl_803A9DB8[1], (f32)item->x, (f32)item->y,
+                    (u8)(((u8)alpha * 0xb4) >> 8), 0x100);
 
         texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
             ((f32)(item->value - item->minValue) /
                 (f32)(item->maxValue - item->minValue)) +
             (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
-        drawTexture(texture, (u8)(((u8)alpha * 0xff) >> 8),
-                    markerX, (f32)(item->y - 4), 0x100);
+        drawTexture(texture, markerX, (f32)(item->y - 4),
+                    (u8)(((u8)alpha * 0xff) >> 8), 0x100);
         break;
     case 1:
         if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0)
@@ -136,8 +136,8 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         {
             drawAlpha = (u8)alpha;
         }
-        drawTexture(lbl_803A9DB8[textureIndex], (u8)drawAlpha,
-                    (f32)item->x, (f32)item->y, 0x100);
+        drawTexture(lbl_803A9DB8[textureIndex], (f32)item->x, (f32)item->y,
+                    (u8)drawAlpha, 0x100);
         break;
     case 2:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
@@ -151,8 +151,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         break;
     }
 
-    item->frameDelay--;
-    if (item->frameDelay < 0)
+    if (--item->frameDelay < 0)
     {
         item->frameDelay = 0;
     }
