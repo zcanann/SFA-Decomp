@@ -1611,8 +1611,8 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
         startCurveId = nextId;
     }
 
-    currentCurve = Objfsa_FindRomCurveById(startCurveId);
-    *(s32*)&state->nodeA0 = currentCurve;
+    *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
+    currentCurve = *(s32*)&state->nodeA0;
     if (state->nodeA0 == NULL)
     {
         state->nodeA0 = NULL;
