@@ -548,7 +548,7 @@ void dbstealerworm_free(int* obj)
 int dbstealerworm_getExtraSize(void) { return 0x460; }
 int dbstealerworm_getObjectTypeId(void) { return 0x49; }
 
-s16 DBstealerworm_setScale(int* obj) { return ((BaddieState*)((int**)obj)[0xb8 / 4])->controlMode; }
+s16 DBstealerworm_setScale(int* obj) { return ((BaddieState*)(int*)((GameObject*)obj)->extra)->controlMode; }
 
 void dbstealerworm_hitDetect(int obj)
 {
