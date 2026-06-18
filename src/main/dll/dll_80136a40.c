@@ -1380,14 +1380,14 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
+                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
