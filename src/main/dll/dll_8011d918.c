@@ -5,7 +5,7 @@
  * to a per-entry UI sound and plays it limited from the menu object. It is
  * called from cMenuRun's tricky branch, where gCMenuActivatedId is the Tricky
  * command index (0-5) and the sounds (0x3f7-0x3fc) are Fox's voice clips for
- * each command. Used by the C-menu code in dll 0x00 (baby_snowworm).
+ * each command. Used by the C-menu code in dll 0x00 (gameui).
  */
 #include "ghidra_import.h"
 

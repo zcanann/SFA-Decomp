@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_BADDIE_BABY_SNOWWORM_H_
-#define MAIN_DLL_BADDIE_BABY_SNOWWORM_H_
+#ifndef MAIN_DLL_DLL_0000_GAMEUI_H_
+#define MAIN_DLL_DLL_0000_GAMEUI_H_
 
 #include "ghidra_import.h"
 
@@ -37,4 +37,4 @@ void FUN_8012e114();
 void fn_8012E250(void);
 void FUN_8012e2a4();
 
-#endif /* MAIN_DLL_BADDIE_BABY_SNOWWORM_H_ */
+#endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

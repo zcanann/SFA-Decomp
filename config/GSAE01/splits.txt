@@ -773,7 +773,7 @@ main/dll/swarmbaddie.c:
 main/dll/wispbaddie.c:
 	.text       start:0x801262CC end:0x80128120
 
-main/dll/dll_0000_baby_snowworm.c:
+main/dll/dll_0000_gameui.c:
 	.text       start:0x80128120 end:0x8012FECC
 
 main/dll/dll_003B_menu.c:

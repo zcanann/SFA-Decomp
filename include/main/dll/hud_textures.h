@@ -6,7 +6,7 @@
 /*
  * HudTextures - the 0x198 pause-menu HUD work record at hudTextures
  * (.bss 0x803A89B0). Field widths mirror the deref widths observed in
- * wispBaddie.c / baby_snowworm.c; unobserved ranges padded.
+ * wispBaddie.c / dll_0000_gameui.c; unobserved ranges padded.
  */
 typedef struct HudTextures {
     u8 pad0[0x5C - 0x0];

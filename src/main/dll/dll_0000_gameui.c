@@ -1,8 +1,9 @@
 /*
- * dll_0000_baby_snowworm (owner TU: main/dll/baddie/baby_snowworm.c).
- *
- * This DLL contains the in-game UI / overlay layer (the "GameUI" family);
- * the "baby_snowworm" filename is a historical artifact of the auto-import.
+ * dll_0000_gameui - the in-game UI / overlay layer (the "GameUI" object,
+ * DLL id 0). Identity verified live via gResourceDescriptors[0], whose
+ * init/update slots are GameUI_initialise / GameUI_run / GameUI_update.
+ * DLL 0 has no retail OBJECTS.bin name - it is engine infrastructure, not
+ * an object handler.
  * It drives:
  *   - the pause menu: open/close tween animator, grid-cursor stepper,
  *     submenu runner, title-card overlay, item save/use state, and the
@@ -155,7 +156,7 @@ void fn_8012E250(void)
 
 /* ===== EN v1.0 retargeted leaves ==========================================
  * The fn_xxx helpers below are hand-ported against the live v1.0 asm at
- * build/GSAE01/asm/main/dll/baddie/baby_snowworm.s and pair by name in
+ * build/GSAE01/asm/main/dll/dll_0000_gameui.s and pair by name in
  * objdiff regardless of their physical offset within the .o.
  */
 
@@ -331,7 +332,7 @@ extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 extern void gameTextResetCursor(s32);
 
-typedef struct BabySnowwormBitTableEntry
+typedef struct TaskHintEntry
 {
     u16 hint0; /* 0x00 */
     u16 hint2; /* 0x02 */
@@ -345,8 +346,8 @@ typedef struct BabySnowwormBitTableEntry
     u8 thresh; /* 0x18 */
     u8 _19; /* 0x19 */
     u16 bit1a; /* 0x1a */
-} BabySnowwormBitTableEntry; /* sizeof = 0x1c */
-extern BabySnowwormBitTableEntry lbl_8031B074[5];
+} TaskHintEntry; /* sizeof = 0x1c */
+extern TaskHintEntry gTaskHintTable[5];
 
 extern u8 pauseMenuState;
 extern u8 pauseMenuFrameCounter;
@@ -457,7 +458,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
 /* EN v1.0 0x8012DDD8  size: 316b  State setter with bit-flag dispatch.
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
  *   flags & 0x08 : commit `idx` to lbl_803DD77A and consult the bit
- *                  table at lbl_8031B074 (stride 0x1c, halfword field
+ *                  table at gTaskHintTable (stride 0x1c, halfword field
  *                  at +0x16) -- if the GameBit reads 0, override idx
  *                  to 5 before the rest of the work runs.
  *   flags & 0x04 : full reset path -- clear lbl_803DD774 and return.
@@ -474,7 +475,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
     if (flags & 0x08)
     {
         lbl_803DD77A = idx;
-        if (GameBit_Get(lbl_8031B074[idx].bit_id) == 0)
+        if (GameBit_Get(gTaskHintTable[idx].bit_id) == 0)
         {
             idx = 5;
         }
@@ -1350,7 +1351,7 @@ void drawWorldMapHud(void)
             p = base;
             for (i = 0; i < 5; i++)
             {
-                if (GameBit_Get(lbl_8031B074[*p].bit_id))
+                if (GameBit_Get(gTaskHintTable[*p].bit_id))
                 {
                     fi = (s8)lbl_803DBA94[i];
                     goto haveIdx;
@@ -1381,11 +1382,11 @@ void drawWorldMapHud(void)
                 n++;
             }
 
-            if (n >= *(u8*)((u8*)lbl_8031B074 + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
-            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
-            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
-            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
-            else if (n >= *(u8*)((u8*)lbl_8031B074 + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
+            if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
+            else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
+            else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
+            else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
+            else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
             else li_ = -1;
         }
 
@@ -1402,7 +1403,7 @@ void drawWorldMapHud(void)
             }
             else if (fi == cur && li_ != cur)
             {
-                hint = lbl_8031B074[cur].hint8;
+                hint = gTaskHintTable[cur].hint8;
             }
             else if (cur == 2)
             {
@@ -1412,18 +1413,18 @@ void drawWorldMapHud(void)
                 }
                 else if (fi == li_)
                 {
-                    if (GameBit_Get(lbl_8031B074[li_].bit1a))
+                    if (GameBit_Get(gTaskHintTable[li_].bit1a))
                     {
                         hint = 0x51e6;
                     }
                     else
                     {
-                        hint = lbl_8031B074[li_].hint10;
+                        hint = gTaskHintTable[li_].hint10;
                     }
                 }
                 else
                 {
-                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                    hint = gTaskHintTable[lbl_803DD77A].hintC;
                 }
             }
             else if (cur == 0)
@@ -1434,12 +1435,12 @@ void drawWorldMapHud(void)
                 }
                 else
                 {
-                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                    hint = gTaskHintTable[lbl_803DD77A].hintC;
                 }
             }
             else
             {
-                hint = lbl_8031B074[lbl_803DD77A].hintC;
+                hint = gTaskHintTable[lbl_803DD77A].hintC;
             }
         }
         if (hint != 0)
@@ -2494,7 +2495,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 p = base;
                 for (i = 0; i < 5; i++)
                 {
-                    if (GameBit_Get(lbl_8031B074[*p].bit_id))
+                    if (GameBit_Get(gTaskHintTable[*p].bit_id))
                     {
                         fi = (s8)lbl_803DBA94[i];
                         goto haveIdx2;
@@ -2524,11 +2525,11 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     n++;
                 }
-                if (n >= *(u8*)((u8*)lbl_8031B074 + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
-                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
-                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
-                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
-                else if (n >= *(u8*)((u8*)lbl_8031B074 + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
+                if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[0];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[1];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[2];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[3];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) li_ = (s8)lbl_803DBA94[4];
                 else li_ = -1;
             }
             lv = 0;
@@ -2544,7 +2545,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 }
                 else if (fi == cur && li_ != cur)
                 {
-                    hint = lbl_8031B074[cur].hint0;
+                    hint = gTaskHintTable[cur].hint0;
                 }
                 else if (cur == 2)
                 {
@@ -2554,18 +2555,18 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                     }
                     else if (fi == li_)
                     {
-                        if (GameBit_Get(lbl_8031B074[li_].bit1a))
+                        if (GameBit_Get(gTaskHintTable[li_].bit1a))
                         {
                             hint = 0x578;
                         }
                         else
                         {
-                            hint = lbl_8031B074[li_].hint4;
+                            hint = gTaskHintTable[li_].hint4;
                         }
                     }
                     else
                     {
-                        hint = lbl_8031B074[lbl_803DD77A].hint2;
+                        hint = gTaskHintTable[lbl_803DD77A].hint2;
                     }
                 }
                 else if (cur == 0)
@@ -2576,12 +2577,12 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                     }
                     else
                     {
-                        hint = lbl_8031B074[lbl_803DD77A].hint2;
+                        hint = gTaskHintTable[lbl_803DD77A].hint2;
                     }
                 }
                 else
                 {
-                    hint = lbl_8031B074[lbl_803DD77A].hint2;
+                    hint = gTaskHintTable[lbl_803DD77A].hint2;
                 }
                 gameTextShow(hint);
             }
