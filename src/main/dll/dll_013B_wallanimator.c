@@ -36,18 +36,23 @@ extern void ObjGroup_AddObject(int obj, int group);
 extern void objRenderFn_8003b8f4(f32);
 extern void vecRotateZXY(void* in, void* out);
 extern u32 randomGetRange(int min, int max);
+extern void objRenderFn_80041018(int obj);
+extern int getTrickyObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-extern f32 lbl_803E4C98; /* default coord fallback */
 extern const f32 lbl_803E3FFC; /* nearest-object search radius seed */
-extern const f32 lbl_803E3FD0;
-extern const f32 lbl_803E3FD4;
-extern const f32 lbl_803E3FD8;
-extern const f32 lbl_803E3FDC;
+extern const f32 lbl_803E3FD0; /* debris jitter-X scale */
+extern const f32 lbl_803E3FD4; /* debris base spread; also out-of-range scale fallback */
+extern const f32 lbl_803E3FD8; /* debris drop-Z offset */
+extern const f32 lbl_803E3FDC; /* debris rise-Y offset */
 extern const f32 lbl_803E3FE0; /* deltaY lower bound */
 extern const f32 lbl_803E3FE4; /* deltaY upper bound */
 extern const f32 lbl_803E3FE8; /* max planar distance squared */
 extern const f32 lbl_803E3FEC; /* scale divisor */
 extern const f32 lbl_803E3FF8; /* render scale */
+
+#define TRICKY_IFACE_OFFSET 0x68    /* tricky object -> interface vtable pointer */
+#define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
 
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
@@ -55,16 +60,16 @@ typedef struct WallanimatorPlacement
     u8 pad0[0x18 - 0x0];
     s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
+    s16 unk1C; /* debris spawn rotation / particle-desc index */
     u8 pad1E[0x24 - 0x1E];
-    s16 unk24;
+    s16 unk24; /* initial rotX seed */
     u8 pad26[0x28 - 0x26];
 } WallanimatorPlacement;
 
 /* per-object extra state: 0x00 s32 timer; 0x04 bit 0x80 (activeFlag) = completed */
 typedef struct WallanimatorState
 {
-    u8 pad0[0x4 - 0x0];
+    s32 timer;
     u8 activeFlag : 1;
     u8 unk4Rest : 7;
     u8 pad5[0x8 - 0x5];
@@ -74,8 +79,8 @@ STATIC_ASSERT(sizeof(WallanimatorState) == 8);
 
 u8 wallanimator_func0B(int* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
-    return *state >= WALLANIMATOR_DONE_TIMER;
+    WallanimatorState* state = ((GameObject*)obj)->extra;
+    return state->timer >= WALLANIMATOR_DONE_TIMER;
 }
 
 u8 wallanimator_modelMtxFn(int* obj)
@@ -95,16 +100,16 @@ f32 wallanimator_setScale(int obj, int target)
     f32 deltaY;
     f32 deltaZ;
     f32 offset[3];
-    int desc;
+    int placementDesc;
     int count;
-    int* state;
+    WallanimatorState* state;
     f32 scale;
     f32 riseY;
     f32 dropZ;
     f32 baseSpread;
     f32 jitterX;
 
-    desc = *(int*)&((GameObject*)obj)->anim.placementData;
+    placementDesc = *(int*)&((GameObject*)obj)->anim.placementData;
     count = 6;
     do
     {
@@ -121,7 +126,7 @@ f32 wallanimator_setScale(int obj, int target)
         vecRotateZXY(spawn.rot, offset);
         offset[2] -= dropZ;
         vecRotateZXY((void*)obj, offset);
-        spawn.rot[2] = ((WallanimatorPlacement*)desc)->unk1C;
+        spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->unk1C;
         spawn.rot[0] = ((GameObject*)obj)->anim.rotX;
         spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
         spawn.pos[1] = riseY + (((GameObject*)obj)->anim.worldPosY + offset[1]);
@@ -148,54 +153,11 @@ f32 wallanimator_setScale(int obj, int target)
         }
         else
         {
-            *state += 0x3c;
-            scale = (f32) * state / lbl_803E3FEC;
+            state->timer += 0x3c;
+            scale = (f32)state->timer / lbl_803E3FEC;
         }
     }
     return scale;
-}
-
-/* coordinate getter (objFn_801948c0): coord selects a world/local axis
- * read out of the object's accumulator floats at extra+0x40/0x44/0x48. */
-double FUN_80194a70(int obj, u8 coord)
-{
-    int state;
-
-    if ((obj == 0) || (state = *(int*)&((GameObject*)obj)->extra, state == 0))
-    {
-        return (double)lbl_803E4C98;
-    }
-    if (coord == 4)
-    {
-        return (double)*(float*)(state + 0x44);
-    }
-    if (coord < 4)
-    {
-        if (coord == 2)
-        {
-            return (double)*(float*)(state + 0x40);
-        }
-        if (1 < coord)
-        {
-            return (double)(((GameObject*)obj)->anim.localPosY + *(float*)(state + 0x44));
-        }
-        if (coord != 0)
-        {
-            return (double)(((GameObject*)obj)->anim.localPosX + *(float*)(state + 0x40));
-        }
-    }
-    else
-    {
-        if (coord == 6)
-        {
-            return (double)*(float*)(state + 0x48);
-        }
-        if (coord < 6)
-        {
-            return (double)(((GameObject*)obj)->anim.localPosZ + *(float*)(state + 0x48));
-        }
-    }
-    return (double)lbl_803E4C98;
 }
 
 int wallanimator_getExtraSize(void)
@@ -217,27 +179,24 @@ void wallanimator_free(int obj)
 
 void wallanimator_update(int obj)
 {
-    extern void objRenderFn_80041018(int obj);
-    extern int getTrickyObject(void);
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
     int nearby;
-    int* state;
+    WallanimatorState* state;
     int desc;
     int tricky;
     float nearestDistance[4];
 
     state = ((GameObject*)obj)->extra;
     desc = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
 
-    if (((*(u8*)(state + 1) >> 7) & 1) != 0u)
+    if (state->activeFlag != 0)
     {
         return;
     }
 
-    if (*state >= WALLANIMATOR_DONE_TIMER)
+    if (state->timer >= WALLANIMATOR_DONE_TIMER)
     {
-        ((WallanimatorState*)state)->activeFlag = 1;
+        state->activeFlag = 1;
         GameBit_Set((int)((WallanimatorPlacement*)desc)->gameBit, 1);
         Sfx_PlayFromObject(obj, WALLANIMATOR_COMPLETE_SFX);
         return;
@@ -251,25 +210,25 @@ void wallanimator_update(int obj)
         if ((void*)nearby == NULL)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(void (**)(int, int, int, int))(**(int**)(tricky + 0x68) + 0x28))(tricky, obj, 1, 1);
+                (*(void (**)(int, int, int, int))(**(int**)(tricky + TRICKY_IFACE_OFFSET) + TRICKY_IFACE_NOTIFY_SLOT))(tricky, obj, 1, 1);
             }
             objRenderFn_80041018(obj);
         }
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 }
 
 void wallanimator_init(s16* obj, s16* placement)
 {
-    int* state;
+    WallanimatorState* state;
 
     state = ((GameObject*)obj)->extra;
     *obj = (s16)((WallanimatorPlacement*)placement)->unk24;
@@ -277,7 +236,7 @@ void wallanimator_init(s16* obj, s16* placement)
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
     {
-        ((WallanimatorState*)state)->activeFlag = 1;
-        *state = WALLANIMATOR_DONE_TIMER;
+        state->activeFlag = 1;
+        state->timer = WALLANIMATOR_DONE_TIMER;
     }
 }
