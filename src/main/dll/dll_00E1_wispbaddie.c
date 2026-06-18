@@ -34,7 +34,7 @@ extern f32 lbl_803E26D8;
 extern f32 lbl_803E26DC;
 extern f32 lbl_803E26E0;
 extern f32 lbl_803E26E4;
-extern f32 lbl_803E26E8;
+extern const f32 lbl_803E26E8;
 extern f32 lbl_803E26EC;
 extern f32 lbl_803E26F0;
 extern f32 lbl_803E26F4;
