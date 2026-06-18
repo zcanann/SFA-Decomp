@@ -87,6 +87,7 @@ void kytesmum_release(void)
 
 void kytesmum_update(int obj)
 {
+    extern int randomGetRange(int min, int max);
     KytesMumObject* kytesMum = (KytesMumObject*)obj;
     KytesMumRuntime* runtime = kytesMum->runtime;
     KytesMumSetup* setup = kytesMum->setup;
