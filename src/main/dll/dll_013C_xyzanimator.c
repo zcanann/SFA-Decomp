@@ -340,7 +340,8 @@ void xyzanimator_update(int obj)
             ((XyzAnimatorState*)state)->gameBitValue = 1;
         }
         t = ((XyzAnimatorState*)state)->unk4 * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
-        alloc = mmAlloc(t + ((XyzAnimatorState*)state)->unk8 * 0xc, 5, 0);
+        t = t + ((XyzAnimatorState*)state)->unk8 * 0xc;
+        alloc = mmAlloc(t, 5, 0);
         ((XyzAnimatorState*)state)->dataBuffer = alloc;
         stride = ((XyzAnimatorState*)state)->rowCount * 2;
         alloc = alloc + ((XyzAnimatorState*)state)->unk4 * 6;
