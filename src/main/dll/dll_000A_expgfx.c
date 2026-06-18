@@ -2533,6 +2533,7 @@ void expgfx_free2(u32 sourceId)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void expgfx_free(u32 sourceId)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -2569,8 +2570,7 @@ void expgfx_free(u32 sourceId)
             {
                 if (slot != NULL)
                 {
-                    tableIndex = Expgfx_GetSlotTableIndex(slot);
-                    tableEntry = Expgfx_GetTableEntry(tableIndex);
+                    tableEntry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
                     if (tableEntry->sourceId == sourceId)
                     {
                         expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
@@ -2594,6 +2594,7 @@ void expgfx_free(u32 sourceId)
         poolIndex++;
     }
 }
+#pragma dont_inline reset
 
 void expgfx_resetAllPools(void)
 {
