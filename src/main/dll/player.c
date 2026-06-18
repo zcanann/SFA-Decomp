@@ -13210,7 +13210,6 @@ void playerDie(int obj)
     int setup;
     int variant;
     int i;
-    void** p;
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
     setPendingMapLoad(1);
@@ -13237,14 +13236,13 @@ void playerDie(int obj)
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 0;
     ((ByteFlags*)((char*)inner + 0x3f3))->b02 = 1;
     lbl_803DE42C = 0;
-    for (i = 0, p = lbl_80332ED4; i < 7; i++)
+    for (i = 0; i < 7; i++)
     {
-        if (*p != NULL)
+        if (lbl_80332ED4[i] != NULL)
         {
-            Obj_FreeObject((int)*p);
-            *p = NULL;
+            Obj_FreeObject((int)lbl_80332ED4[i]);
+            lbl_80332ED4[i] = NULL;
         }
-        p++;
     }
     if (lbl_803DE454 != NULL)
     {
