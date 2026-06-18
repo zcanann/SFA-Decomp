@@ -284,7 +284,7 @@ void camcontrol_updateTargetFeedback(void)
                      : ((alphaScale > gCamcontrolReticleAlphaScale) ? gCamcontrolReticleAlphaScale : alphaScale);
     reticle->alpha = (int)alphaScale;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
-    reticle->rotX = (short)(int)(gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
+    *(s16*)&reticle->rotX = (gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
     return;
 }
 

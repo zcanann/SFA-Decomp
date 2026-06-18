@@ -124,17 +124,17 @@ uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
     flags = flagsIn;
     if ((flags & 1) == 0)
     {
-        camera->anim.rotX = (s16)(int)
+        *(s16*)&camera->anim.rotX =
         Curve_EvalLinear(q, &lbl_803DD560->rotXStart, (f32*)0x0);
     }
     if ((flags & 2) == 0)
     {
-        camera->anim.rotY = (s16)(int)
+        *(s16*)&camera->anim.rotY =
         Curve_EvalLinear(q, &lbl_803DD560->rotYStart, (f32*)0x0);
     }
     if ((flags & 4) == 0)
     {
-        camera->anim.rotZ = (s16)(int)
+        *(s16*)&camera->anim.rotZ =
         Curve_EvalLinear(q, &lbl_803DD560->rotZStart, (f32*)0x0);
     }
     return q >= lbl_803E188C;
