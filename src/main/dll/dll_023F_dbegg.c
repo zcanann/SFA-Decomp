@@ -626,7 +626,7 @@ void dbegg_update(int obj)
     extern const f32 lbl_803E6264;
     extern const f32 lbl_803E6268;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+#define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     int player;
     int blob;
     int p2;
@@ -1003,4 +1003,5 @@ void dbegg_update(int obj)
             }
         }
     }
+#undef hitState
 }
