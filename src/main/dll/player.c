@@ -1035,7 +1035,7 @@ int fn_802A3B04(int obj, int state)
             d += 0xffff;
         }
         m = ((PlayerState*)inner)->unk607 == 1 ? 0xb : 0xa;
-        ((PlayerState*)inner)->targetYaw = ((PlayerState*)inner)->targetYaw + d;
+        ((PlayerState*)inner)->targetYaw += d;
         ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                        ((GameObject*)obj)->anim.worldPosZ, (f32*)((char*)obj + 0xc),
