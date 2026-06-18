@@ -395,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)((u8*)(int)lbl_80396918 + slotOff + j * 8 + 4) = obj;
         }
     }
     else
