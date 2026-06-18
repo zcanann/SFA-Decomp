@@ -13258,7 +13258,7 @@ void fn_802AABE4(int obj)
     f32 out2[2];
     f32 out1[5];
 
-    model = (int)Player_GetActiveModel(obj);
+    model = (int)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
 
     ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->unk3F8, lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
