@@ -1007,7 +1007,6 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     extern int ObjAnim_GetCurrentEventCountdown();
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     EarthWarriorSub* q = &inner->sub;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int s;
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
@@ -1029,7 +1028,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         buttonDisable(0, 0x100);
         ((ByteFlags*)&inner->sub.flags994)->b01 = 1;
-        hitState->suppressOutgoingHits = 0;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         ((BaddieState*)p2)->moveDone = 0;
         return 3;
