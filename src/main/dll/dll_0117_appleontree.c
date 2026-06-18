@@ -182,7 +182,7 @@ void appleontree_setScale(void)
 
 int appleontree_getExtraSize(void) { return 0x64; }
 
-u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)((int**)obj)[0xb8 / 4])->unk3A; }
+u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->unk3A; }
 
 void appleontree_free(int* obj)
 {
