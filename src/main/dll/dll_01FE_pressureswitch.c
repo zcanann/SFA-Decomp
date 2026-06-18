@@ -24,11 +24,11 @@
 typedef struct PressureswitchPlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 unkC;
+    f32 restPosY;    /* 0x0C: rest (up) Y position; pad sinks below this */
     u8 pad10[0x1A - 0x10];
     s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 triggerGameBit; /* 0x1C: game bit raised while the pad is pressed */
+    s16 retriggerDelay; /* 0x1E: seconds before the pad can re-trigger (*60) */
     u8 pad20[0x4C - 0x20];
     u8 unk4C;
     u8 pad4D[0x2F8 - 0x4D];
@@ -38,9 +38,23 @@ typedef struct PressureswitchPlacement
     u8 pad2FB[0x300 - 0x2FB];
 } PressureswitchPlacement;
 
-#define PSWITCH_HITLIST_OFFSET 0x58
-#define PSWITCH_HITLIST_OBJECTS_OFFSET 0x100
-#define PSWITCH_HITLIST_COUNT_OFFSET 0x10f
+/*
+ * The contact list reached via GameObject+0x58 (ObjAnimComponent's pad58):
+ * the objects currently resting on / hitting this object. Only the fields
+ * this DLL reads are mapped; the engine struct is larger.
+ */
+typedef struct PswContactList
+{
+    u8 pad00[0x100];
+    GameObject* objects[3]; /* 0x100: contacts; `count` of them are valid */
+    u8 pad10C[0x10F - 0x10C];
+    s8 count;               /* 0x10F */
+} PswContactList;
+
+/* Re-derefs the +0x58 list pointer per use (matches the original codegen). */
+#define PSW_CONTACT_LIST(obj) ((PswContactList*)*(char**)((obj) + 0x58))
+
+/* seqIds of objects this pad reacts to (compared against ent->anim.seqId). */
 #define PSWITCH_TRIGGER_SEQ_ID 0x6d
 #define PSWITCH_CHIME_SEQ_ID 0x146
 
@@ -53,22 +67,16 @@ typedef struct PressureSwitchState
     s8 chimeLatch;
     s16 retriggerTimer;
     s16 mapGameBit; /* 0xf45/0xf46 per-map bit, -1 none */
-    u8 flags; /* PressureSwitchFlags / PswFlags overlay */
+    u8 flags; /* PressureSwitchFlags overlay */
     u8 pad7;
 } PressureSwitchState;
 
 typedef struct PressureSwitchFlags
 {
-    u8 active : 1;
-    u8 mapBitLatched : 1;
+    u8 active : 1;        /* bit0: a trigger-type object (seqId 0x6d) is on the pad */
+    u8 mapBitLatched : 1; /* bit1: map game bit latched on (not auto-cleared on release) */
     u8 otherFlags : 6;
 } PressureSwitchFlags;
-
-typedef struct PswFlags
-{
-    u8 active : 1;
-    u8 latched : 1;
-} PswFlags;
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -103,7 +111,7 @@ void pressureswitch_init(int* obj, u8* init)
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)PressureSwitch_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
-    sub->retriggerTimer = (s16)(*(s16*)(init + 0x1e) * 0x3c);
+    sub->retriggerTimer = (s16)(((PressureswitchPlacement*)init)->retriggerDelay * 0x3c);
     sub->chimeLatch = 0;
     mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
     if (mapId == 0x1f1a)
@@ -125,9 +133,9 @@ void pressureswitch_init(int* obj, u8* init)
             ((PressureSwitchFlags*)&sub->flags)->mapBitLatched = 1;
         }
     }
-    if (GameBit_Get(*(s16*)(init + 0x1c)) != 0)
+    if (GameBit_Get(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(init + 0xc) - lbl_803E5D78;
+        ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - lbl_803E5D78;
         sub->holdTimer = 0x1e;
     }
 }
@@ -192,20 +200,19 @@ void pressureswitch_update(int obj)
         sub->holdTimer = 0;
         sub->chimeLatch = 0;
     }
-    ((PswFlags*)&sub->flags)->active = 0;
-    if (*(char**)(obj + PSWITCH_HITLIST_OFFSET) != NULL &&
-        *(s8*)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + PSWITCH_HITLIST_COUNT_OFFSET) > 0)
+    ((PressureSwitchFlags*)&sub->flags)->active = 0;
+    if (PSW_CONTACT_LIST(obj) != NULL &&
+        PSW_CONTACT_LIST(obj)->count > 0)
     {
-        sub->retriggerTimer = (s16)(t->unk1E * 60);
+        sub->retriggerTimer = (s16)(t->retriggerDelay * 60);
         i = 0;
         thr = lbl_803E5D60;
-        for (; i < *(s8*)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + PSWITCH_HITLIST_COUNT_OFFSET); i++)
+        for (; i < PSW_CONTACT_LIST(obj)->count; i++)
         {
-            GameObject* ent =
-                *(GameObject**)(*(char**)(obj + PSWITCH_HITLIST_OFFSET) + i * 4 + PSWITCH_HITLIST_OBJECTS_OFFSET);
+            GameObject* ent = PSW_CONTACT_LIST(obj)->objects[i];
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
-                ((PswFlags*)&sub->flags)->active = 1;
+                ((PressureSwitchFlags*)&sub->flags)->active = 1;
             }
             if (ent->anim.localPosY - self->anim.localPosY > thr)
             {
@@ -236,7 +243,7 @@ void pressureswitch_update(int obj)
     {
         if (sub->holdTimer != 0)
         {
-            f = t->unkC - self->anim.localPosY;
+            f = t->restPosY - self->anim.localPosY;
             if (f > lbl_803E5D68 && f < lbl_803E5D6C && GameBit_Get(sub->mapGameBit) == 0)
             {
                 GameBit_Set(0x905, 1);
@@ -254,7 +261,7 @@ void pressureswitch_update(int obj)
     played = 0;
     if (sub->holdTimer != 0)
     {
-        lim = t->unkC - lbl_803E5D6C;
+        lim = t->restPosY - lbl_803E5D6C;
         cur = self->anim.localPosY;
         if (cur < lim)
         {
@@ -263,8 +270,8 @@ void pressureswitch_update(int obj)
             {
                 self->anim.localPosY = lim;
             }
-            GameBit_Set(t->unk1C, 1);
-            if (((PswFlags*)&sub->flags)->active)
+            GameBit_Set(t->triggerGameBit, 1);
+            if (((PressureSwitchFlags*)&sub->flags)->active)
             {
                 GameBit_Set(sub->mapGameBit, 1);
             }
@@ -275,14 +282,14 @@ void pressureswitch_update(int obj)
             if (self->anim.localPosY < lim)
             {
                 self->anim.localPosY = lim;
-                GameBit_Set(t->unk1C, 1);
+                GameBit_Set(t->triggerGameBit, 1);
                 v = sub->mapGameBit;
                 if (v != -1)
                 {
                     GameBit_Set(v, 1);
-                    if (((PswFlags*)&sub->flags)->active)
+                    if (((PressureSwitchFlags*)&sub->flags)->active)
                     {
-                        ((PswFlags*)&sub->flags)->latched = 1;
+                        ((PressureSwitchFlags*)&sub->flags)->mapBitLatched = 1;
                     }
                 }
             }
@@ -297,19 +304,19 @@ void pressureswitch_update(int obj)
         if (sub->retriggerTimer == 0)
         {
             self->anim.localPosY = lbl_803E5D74 * timeDelta + self->anim.localPosY;
-            if (self->anim.localPosY > t->unkC)
+            if (self->anim.localPosY > t->restPosY)
             {
-                self->anim.localPosY = t->unkC;
+                self->anim.localPosY = t->restPosY;
             }
             else
             {
                 played = 1;
             }
-            GameBit_Set(t->unk1C, 0);
+            GameBit_Set(t->triggerGameBit, 0);
             v = sub->mapGameBit;
             if (v != -1)
             {
-                if (!((PswFlags*)&sub->flags)->latched)
+                if (!((PressureSwitchFlags*)&sub->flags)->mapBitLatched)
                 {
                     GameBit_Set(v, 0);
                 }
