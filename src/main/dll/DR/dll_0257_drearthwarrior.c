@@ -858,7 +858,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             {
                 v = -v;
             }
-            ((EarthWarriorSub*)q)->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
+            *(s16*)&((EarthWarriorSub*)q)->unk478 = (lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
         }
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
@@ -873,7 +873,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             {
                 v = -v;
             }
-            ((EarthWarriorSub*)q)->currentYaw = (s16)(int)(
+            *(s16*)&((EarthWarriorSub*)q)->currentYaw = (
                 lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->currentYaw);
         }
         else if (((EarthWarriorState*)p2)->baddie.animSpeedC <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0x4) &&
