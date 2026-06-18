@@ -3704,8 +3704,7 @@ void fn_8012C000(void)
         int neg;
         cur = (u16)lbl_803DD782;
         neg = -lbl_803DBA64;
-        step = 0x10000 / (u8)step;
-        delta = neg * step - cur;
+        delta = neg * (step = 0x10000 / (u8)step) - cur;
     }
     if (delta > 0x8000)
     {
