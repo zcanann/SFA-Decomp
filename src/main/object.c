@@ -748,12 +748,11 @@ void objFn_8002b67c(u8* obj)
 
 int objApplyVelocity(u8* obj)
 {
-    f32 sc = lbl_803DE8B8;
-    ((GameObject*)obj)->anim.localPosX += timeDelta * (sc * (((GameObject*)obj)->externalVelX + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)
         obj)->anim.velocityX));
-    ((GameObject*)obj)->anim.localPosY += timeDelta * (sc * (((GameObject*)obj)->externalVelY + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)
         obj)->anim.velocityY));
-    ((GameObject*)obj)->anim.localPosZ += timeDelta * (sc * (((GameObject*)obj)->externalVelZ + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)
         obj)->anim.velocityZ));
     return 1;
 }
@@ -880,25 +879,21 @@ void ObjModel_Release(u8 * model);
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
     s16 mode = ((GameObject*)obj)->anim.seqId;
-    switch (mode)
+    if (mode == 0x1f || mode == 0)
     {
-    case 0x1f:
-    case 0:
         objLoadPlayerFromSave(obj);
-        break;
-    default:
+    }
+    else
+    {
+        int* p = (int*)((GameObject*)obj)->anim.dll;
+        if (p != NULL)
         {
-            int* p = (int*)((GameObject*)obj)->anim.dll;
-            if (p != NULL)
+            int fn = ((int*)*p)[1];
+            if (fn != -1 && (void*)fn != NULL)
             {
-                int fn = ((int*)*p)[1];
-                if (fn != -1 && (void*)fn != NULL)
-                {
-                    ((void (*)(u8*))fn)(obj);
-                }
+                ((void (*)(u8*))fn)(obj);
             }
         }
-        break;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -1558,7 +1553,7 @@ void objFreeObjDef(void* objp, int flag)
     default:
         if (((GameObject*)obj)->anim.dll != NULL)
         {
-            fp = (void (*)(u8*, int))((int*)*(int*)*(int*)&((GameObject*)obj)->anim.dll)[5];
+            fp = (void (*)(u8*, int))*(int*)(*(int*)&((GameObject*)obj)->anim.dll + 0x14);
             if (fp != NULL)
             {
                 fp(obj, flag);
@@ -1710,7 +1705,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(o);
         }
     }
-    if (((GameObject*)obj)->seqIndex > -1)
+    if (((GameObject*)obj)->seqIndex >= 0)
     {
         if (flag == 0)
         {
@@ -1718,7 +1713,7 @@ void objFreeObjDef(void* objp, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(s16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
@@ -1753,33 +1748,36 @@ void Obj_UpdateObject(u8* obj)
         case 0x4f3:
         case 0x882:
         case 0x887:
-            cb2 = (void (*)(u8*))*(int*)((char*)*object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
             cb2(obj);
             break;
         }
         return;
     }
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(void**)&((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
         colorFadeFlags & 2))
     {
         Obj_TickModelColorFadeRecursive(obj);
     }
-    if (*(void**)&((GameObject*)obj)->pendingParentObj != NULL)
+    if (*(int*)&((GameObject*)obj)->pendingParentObj != 0)
     {
-        if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            if (*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54) != 0)
+            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
+                childHitState = (ObjHitsPriorityState*)t;
+                childHitState->lastHitObject = 0;
+                childHitState->priorityHitCount = 0;
             }
         }
-        if (object->hitReactState == NULL)
+        hitState = (ObjHitsPriorityState*)object->hitReactState;
+        if (hitState == NULL)
         {
             return;
         }
-        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
-        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
+        hitState->lastHitObject = 0;
+        hitState->priorityHitCount = 0;
         return;
     }
     if ((object->flags & 8) == 0)
@@ -1794,10 +1792,10 @@ void Obj_UpdateObject(u8* obj)
     ((GameObject*)obj)->externalVelX = object->velocityX;
     ((GameObject*)obj)->externalVelY = object->velocityY;
     ((GameObject*)obj)->externalVelZ = object->velocityZ;
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(void**)&((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
         colorFadeFlags & 1))
     {
-        ((GameObject*)obj)->colorFadeFrames = (s16)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
+        ((GameObject*)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
         if (((GameObject*)obj)->colorFadeFrames <= 0)
         {
             ((GameObject*)obj)->colorFadeFrames = 0;
@@ -1824,7 +1822,7 @@ void Obj_UpdateObject(u8* obj)
             {
                 goto skip;
             }
-            cb2 = (void (*)(u8*))*(int*)((char*)*object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
@@ -1834,20 +1832,23 @@ void Obj_UpdateObject(u8* obj)
         Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
     }
 skip:
-    if (object->hitReactState != NULL)
+    hitState = (ObjHitsPriorityState*)object->hitReactState;
+    if (hitState != NULL)
     {
-        if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            if (*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54) != 0)
+            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
+                childHitState = (ObjHitsPriorityState*)t;
+                childHitState->lastHitObject = 0;
+                childHitState->priorityHitCount = 0;
             }
         }
-        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
-        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
+        hitState->lastHitObject = 0;
+        hitState->priorityHitCount = 0;
     }
-    if (*(void**)(obj + 0x58) != NULL)
+    if (*(int*)(obj + 0x58) != 0)
     {
         *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
     }
