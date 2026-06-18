@@ -1,16 +1,6 @@
-/*
- * BarrelGenerator (DLL 0x282) - the "pad" that owns and refills GunPowderBarrels
- * (DLL 0x158). Lives in obj group 0x3a; a barrel matches its generator by
- * placement link id (barrelgener_getLinkId). When a barrel detonates it hands
- * itself back via barrelgener_queueObjectRelease, and barrelgener_update plays a
- * release animation then teleports the queued barrel back onto the pad.
- *
- * The module also bundles its own copies of several shared DR-area helpers
- * (voxmaps_*, Obj_Steer/RomCurve/SmoothTurn, the lightning + intercept utils) -
- * see docs/live_debugging_workflow.md on why SFA DLLs duplicate utilities.
- */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/barrelgener_state.h"
+#include "main/dll/curve_walker.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -38,8 +28,6 @@ int barrelgener_getLinkId(int obj)
     return setup->linkId;
 }
 
-/* Queue a barrel for re-release: remember it and arm the release timer to fire
- * in (releaseFrame - bias) frames; barrelgener_update does the actual respawn. */
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
@@ -91,8 +79,6 @@ void barrelgener_update(int obj)
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
-    /* One-time proximity trigger: the first time the player gets close, fire
-     * sequence 1 and latch GameBit 0xadb so it never runs again. */
     if ((u32)GameBit_Get(0xadb) == 0)
     {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24)
@@ -101,8 +87,6 @@ void barrelgener_update(int obj)
             GameBit_Set(0xadb, 1);
         }
     }
-    /* Release pending: while the timer runs, start the release anim+SFX as it
-     * nears zero, and on expiry teleport the queued barrel back onto the pad. */
     if (fn_80080150((int)&state->releaseTimer) != 0)
     {
         if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0)
@@ -116,8 +100,6 @@ void barrelgener_update(int obj)
         {
             if (Obj_IsObjectAlive((int)state->queuedObject) != 0)
             {
-                /* Snap the barrel to the generator's position, zero its velocity,
-                 * re-add it to the active group (25) and clear the queue. */
                 GameObject* releasedBarrel = state->queuedObject;
                 f32 c2c;
                 releasedBarrel->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
@@ -194,7 +176,7 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     if (PSVECMag(cross) > lbl_803E6C38)
     {
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
-        if ((f32)__fabs((f32)(ang > c)) != lbl_803E6C38)
+        if ((f32)(ang > c) != lbl_803E6C38)
         {
             PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
             PSMTXMultVecSR(mtx, n1, n2);
@@ -215,38 +197,36 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
 int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
 {
     int result;
-
+    RomCurveWalker* route;
     f32 d[3];
     f32 dist, ang, scale;
 
     result = 0;
     scale = c;
-
-    d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    route = (RomCurveWalker*)routePtr;
+    d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
+    d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b)
     {
-        if (Curve_AdvanceAlongPath(((RomCurveWalker*)routePtr), a) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
         {
-            if ((*gRomCurveInterface)->goNextPoint(((RomCurveWalker*)routePtr)) != 0)
+            if ((*gRomCurveInterface)->goNextPoint(route) != 0)
                 result = -1;
             else
-                result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
+                result = (s8) * (u8*)((int)route->node9C + 0x18);
         }
         scale = lbl_803E6C78 * a;
     }
-    d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    d[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
-    if ((u8)flag == 0)
+    d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
+    d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
+    d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
+    if (flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
-        s16 angInt;
-        d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        angInt = (s16)getAngle(d[0], d[2]);
-        ang = lbl_803E6C60 * (f32)(-angInt) / lbl_803E6C64;
+        d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
+        d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
+        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -260,40 +240,38 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
 
 int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b, f32 c, int flag, int* pickIdx)
 {
-
+    int result;
+    RomCurveWalker* route;
     f32 d[3];
     f32 dist, ang, scale;
-    int result;
 
     result = 0;
     scale = c;
-
-    d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    route = (RomCurveWalker*)routePtr;
+    d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
+    d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b)
     {
-        if (Curve_AdvanceAlongPath(((RomCurveWalker*)routePtr), a) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(route, a) != 0 || route->atSegmentEnd != 0)
         {
-            if ((*gRomCurveInterface)->goNextPointIndexed(((RomCurveWalker*)routePtr), *pickIdx) != 0)
+            if ((*gRomCurveInterface)->goNextPointIndexed(route, *pickIdx) != 0)
                 result = -1;
             else
-                result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
+                result = (s8) * (u8*)((int)route->node9C + 0x18);
             *pickIdx = 0;
         }
         scale = lbl_803E6C78 * a;
     }
-    d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    d[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
-    if ((u8)flag == 0)
+    d[0] = route->posX - ((GameObject*)obj)->anim.localPosX;
+    d[1] = route->posY - ((GameObject*)obj)->anim.localPosY;
+    d[2] = route->posZ - ((GameObject*)obj)->anim.localPosZ;
+    if (flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
-        s16 angInt;
-        d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
-        angInt = (s16)getAngle(d[0], d[2]);
-        ang = lbl_803E6C60 * (f32)(-angInt) / lbl_803E6C64;
+        d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
+        d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
+        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
         ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -320,11 +298,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-/* Maintain a cluster of `count` lightning bolts plus a point light around `obj`,
- * spread/brightness scaled by `intensity`: age+render live bolts (free expired),
- * spawn into empty slots, create the light. intensity == sentinel frees it all.
- * Shared helper; also used by drakordthornbush. */
-int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light, f32 intensity)
+int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
 {
     int i;
     int spawned;
@@ -413,8 +387,19 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         delta = lbl_803E6C88 + delta;
     }
     delta *= rate;
-    clamped = (delta < lbl_803E6C90) ? lbl_803E6C90 : ((delta > lbl_803E6C94) ? lbl_803E6C94 : delta);
-    *(s16*)(a + 0) += (int)clamped;
+    if (delta < lbl_803E6C90)
+    {
+        clamped = lbl_803E6C90;
+    }
+    else if (delta > lbl_803E6C94)
+    {
+        clamped = lbl_803E6C94;
+    }
+    else
+    {
+        clamped = delta;
+    }
+    *(s16*)(a + 0) = *(s16*)(a + 0) + (int)clamped;
 
     if (d != lbl_803E6C38)
     {
@@ -444,16 +429,12 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             delta = lbl_803E6C88 + delta;
         }
-        *(s16*)(a + 2) += (int)(delta * rate);
+        *(s16*)(a + 2) = *(s16*)(a + 2) + (int)(delta * rate);
     }
 }
 
 #pragma opt_loop_invariants off
-/* Lead-target prediction: project `obj`'s motion forward (5 convergent steps,
- * each proportional to its distance from `p3`), write the predicted intercept
- * position to `p4`, then voxmaps_traceLine from `p3` to it. Returns nonzero if
- * the line of sight is blocked. Shared helper; used by Drakor projectiles. */
-int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
+int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
     f32 pos[3];
     f32 step[3];
