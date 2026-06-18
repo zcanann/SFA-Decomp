@@ -1,13 +1,31 @@
+/*
+ * objfx - object particle / light effect spawners (part of the
+ * fx_800944A0 DLL, sharing its tables and float pool).
+ *
+ * Each routine builds a PartfxParams / PartfxFlags block and hands it to
+ * the global particle interface (gPartfxInterface->spawnObject) or the
+ * bone-attached effect interface (gBoneParticleEffectInterface), keyed by
+ * a small caller-supplied selector that indexes the effect-id tables at
+ * lbl_802C1FD8 / lbl_802C20EC / etc. Coverage: crystal sparkle
+ * (WM_newcrystalFn_800969b0), generic hit/impact bursts, directional /
+ * arced / box scatter bursts, the A-button glow, projectile trails, item
+ * pickup sparkles, and dynamic lights (objParticleFn / objLightFn driving
+ * modelLightStruct_*). fn_8009A8C8 / spawnExplosion / DIMexplosionFn add a
+ * distance-attenuated camera shake + rumble and spawn the shared explosion
+ * object (type 0x24, id 0x253). The numerous 0x3xx/0x7xx literals are
+ * particle-effect resource ids; the float lbl_803DFxxx symbols are tuning
+ * constants in the DLL's shared .sdata2 pool.
+ */
 #include "main/dll/fx_800944A0_shared.h"
 
+/* objfx-only externs (home TU = fx_800944A0 shared pool / math lib) */
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
-extern f32 fcos16(u16 angle);
-
 extern u8 lbl_8030FA30[];
-extern f32 lbl_803DF39C;
 extern f32 lbl_803DF388;
 extern f32 lbl_803DF38C;
+extern f32 lbl_803DF39C;
+extern f32 fcos16(u16 angle);
 
 void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
@@ -55,22 +73,22 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
     ParticlePairTbl partbl = *(ParticlePairTbl*)lbl_802C212C;
     u16 rvec[3];
     int i;
-    int n;
-    f32 f26;
-    u8 fc = framesThisStep;
+    int total;
+    f32 r;
+    u8 frames = framesThisStep;
 
-    if (fc > 3)
+    if (frames > 3)
     {
-        fc = 3;
+        frames = 3;
     }
-    n = fc * count;
-    for (i = 0; i < n; i++)
+    total = frames * count;
+    for (i = 0; i < total; i++)
     {
-        f26 = (f32)randomGetRange(0, 1000) / 1000.0f;
+        r = (f32)randomGetRange(0, 1000) / 1000.0f;
         rvec[0] = (u16)randomGetRange(0, 0xffff);
         rvec[1] = (u16)randomGetRange(0, 0xffff);
         rvec[2] = (u16)randomGetRange(0, 0xffff);
-        params.vec[0] = mult * (1.0f - f26 * (f26 * f26));
+        params.vec[0] = mult * (1.0f - r * (r * r));
         params.vec[1] = 0.0f;
         params.vec[2] = 0.0f;
         vecRotateZXY(rvec, params.vec);
@@ -161,11 +179,7 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fv
     {
         return;
     }
-    if ((mask & (u16)(int)gExpgfxFrameTimerA
-    )
-    ==
-    0
-    )
+    if ((mask & (u16)(int)gExpgfxFrameTimerA) == 0)
     {
         return;
     }
@@ -912,9 +926,9 @@ void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval)
     }
 }
 
-void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* light)
+void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light)
 {
-    f32 p8 = fextra;
+    f32 fxParam = extraScale;
     PartfxParams params;
     ColorTbl colors = *(ColorTbl*)lbl_802C1FD8;
     f32 zoff = lbl_803DF394;
@@ -931,38 +945,38 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* li
         params.vec[0] = scale * (f32)randomGetRange(-10, 10);
         params.vec[1] = scale * (f32)randomGetRange(-10, 10);
         params.vec[2] = scale * (f32)randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &p8);
+        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &fxParam);
         break;
     case 2:
         params.vec[0] = scale * (f32)randomGetRange(-10, 10);
         params.vec[1] = scale * (f32)randomGetRange(-10, 10);
         params.vec[2] = scale * (f32)randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &p8);
+        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &fxParam);
         break;
     case 3:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &p8, 0x19, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &fxParam, 0x19, NULL);
         break;
     case 4:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &p8, 0x19, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &fxParam, 0x19, NULL);
         break;
     case 5:
         params.f6 = 0xc0a;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &p8, 0x32, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &fxParam, 0x32, &params);
         break;
     case 6:
         params.f6 = 0xc0d;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &p8, 0x50, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &fxParam, 0x50, &params);
         break;
     case 7:
         params.f6 = 0x605;
         params.pad[2] = 1;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &p8, 0x19, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &fxParam, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
     case 8:
         params.f6 = 0x605;
         params.pad[2] = 0;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &p8, 0x19, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &fxParam, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
     }
@@ -989,6 +1003,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* li
 
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
+    /* scale is unused in the body but kept for ABI: the caller sets up f1 */
     u8 args[16];
     int i;
 
