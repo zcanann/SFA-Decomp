@@ -16,7 +16,12 @@ typedef struct EnemyState {
     u8 unk8[0x29C - 0x8];
     u8 *trackedObj;
     u8 unk2A0[0x2A8 - 0x2A0];
-    f32 unk2A8;
+    f32 aggroRange; /* 0x2A8 engagement/aggro range (= setup[0x29]<<3): the enemy
+                       only attacks once the target is within this, even though it
+                       can SEE out to enemySightRange. live-confirmed. NOTE: the
+                       shared BaddieState+0x2A8 is a generic per-type radius/distance
+                       param (magicplant/seqobj: circular-motion radius; baskets:
+                       per-state config) - hence the per-type struct view here. */
     f32 unk2AC;
     s16 unk2B0;
     u16 unk2B2;
@@ -53,6 +58,6 @@ typedef struct EnemyState {
     u8 unk370[0x374 - 0x370];
 } EnemyState;
 
-STATIC_ASSERT(offsetof(EnemyState, unk2A8) == 0x2A8);
+STATIC_ASSERT(offsetof(EnemyState, aggroRange) == 0x2A8);
 
 #endif /* MAIN_DLL_ENEMY_STATE_H_ */

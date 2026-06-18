@@ -2365,7 +2365,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((GameObject*)obj)->anim.alpha = 255;
     }
     ((EnemyState*)state)->unk2FC = (f32)setup[0x2f] / lbl_803E257C;
-    ((EnemyState*)state)->unk2A8 = (f32)(u32)(setup[0x29] << 3);
+    ((EnemyState*)state)->aggroRange = (f32)(u32)(setup[0x29] << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
     *(s16*)obj = *(s8*)(setup + 0x2a) << 8;
@@ -2538,9 +2538,9 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->freezeRecoverTimer = lbl_803E2574;
-    if (((EnemyState*)state)->unk2A8 > *(f32*)&enemySightRange)
+    if (((EnemyState*)state)->aggroRange > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->unk2A8 = enemySightRange;
+        ((EnemyState*)state)->aggroRange = enemySightRange;
     }
     if (((EnemyState*)state)->unk2AC > *(f32*)&enemySightRange)
     {
