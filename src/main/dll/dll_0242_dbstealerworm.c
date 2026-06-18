@@ -2561,8 +2561,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     sub->flags15 &= ~4;
     if (*(u16*)(*(int*)&((BaddieState*)p2)->targetObj + 0xb0) & 0x1000)
     {
-        ((BaddieState*)p2)->animSpeedA = lbl_803E62A8;
-        ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
+        ((BaddieState*)p2)->animSpeedA = ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
         ((BaddieState*)p2)->moveSpeed = lbl_803E62C0;
         return 0;
     }
@@ -2605,8 +2604,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     }
     if (d < lbl_803E62D8 && randomGetRange(0, n) == 0)
     {
-        ((BaddieState*)p2)->animSpeedA = lbl_803E62A8;
-        ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
+        ((BaddieState*)p2)->animSpeedA = ((BaddieState*)p2)->animSpeedB = lbl_803E62A8;
         target = *(int*)&((BaddieState*)p2)->targetObj;
         tmpA = sub->unk30;
         tmpB = sub->unk2C;
