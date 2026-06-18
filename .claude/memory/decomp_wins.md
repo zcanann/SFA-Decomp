@@ -1,5 +1,139 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17f, FLAT dll): 2 wins, ~14 attempts =====
+WINS:
+- SaveGame_gplayAddTime (dll_0017, 87.9->99.4%, 433b6fb0fd): the final
+  entry-address compute `base = gSaveGameData; p = base + i*8` emitted
+  slwi(i*8) BEFORE the lis;addi(base). Target wants base materialized FIRST.
+  FIX: split into `base=gSaveGameData; p=base; p += i*8;` (3 statements) ->
+  forces lis;addi to emit before slwi. The single-expr `p=(u8*)gSaveGameData
+  + i*8` was INERT (still slwi-first); the base-assign+`+=` split is the
+  lever (#112 K-grouping cousin / base-first emission). RESIDUAL (banked):
+  1 region operand-name in `add` (target add r4,r0(base),r4(i*8) vs current
+  add r4,r4(base),r0(i*8)) -- which operand holds base. Pure naming.
+  NOTE: same split trick was INERT on saveGame_saveObjectPos (loop keeps
+  base live in r5; re-deriv has diff pressure) -- banked there.
+- fn_8015CE68 (dll_00CA_mediumbasket, 89.6->90.3%, 30e56f9f1f): TWO fixes.
+  (1) clamp `if (animSpeedA >= scale) scale = animSpeedA;` over-produced
+  `cror eq,gt,eq` (the #25/#91 cror). Rewrite as `if (scale < animSpeedA)
+  scale = animSpeedA;` (plain blt, no cror). The empty-then `if(scale>=x){}
+  else{...}` form still gave cror -- the `<` direct form is the lever.
+  (2) `if (controlMode==4){arg 0}else{arg 2}` -> target emits the else-arm
+  (li r4,2) FIRST. Inverted to `if (controlMode!=4){arg 2}else{arg 0}` (#21).
+  RESIDUAL (banked): frame -176 vs target -160 (16B) -- current emits an
+  EXTRA `psq_st f31` paired-single save alongside stfd f31. Frame #67 +
+  f0-vs-f31 scale home. Not cracked.
+
+BANKED this session (no source lever found):
+- saveGame_saveObjectPos (dll_0017, 90.2%): store block target loads
+  objectId (lwz 76;lwz 20) BEFORE entry addr; current computes entry first.
+  base-split flipped entry to base-first but objectId eval-order stayed
+  entry-first. Eval-order of store RHS-vs-LHS not crackable. + prologue
+  `beq;blr;li r7,0` (non-folded status guard) vs current `bnelr`.
+- dll_200_SeqFn (dll_0200, 89.7%): TARGET uses a 7-entry JUMP TABLE
+  (jumptable_80328A30, switch mode 0-6); current does if/else BINARY SEARCH.
+  Source IS already switch(mode) w/ all 7 cases (1,4,6 bodies; 0,2,3,5
+  empty). MWCC COLLAPSES empty cases->default => sparse => binary search.
+  peephole off INERT; opt_strength_reduction off (pre-existing) INERT.
+  Can't force jump table w/ empty cases (no side effects to keep them
+  distinct). Prologue byte-identical thru clrlwi; ONLY the dispatch differs.
+  JUMP-TABLE-vs-BINSEARCH heuristic cap. LESSON: empty switch cases that
+  share default fall-through DON'T count toward jump-table density.
+- trickyBallFn_801793b8 (dll_00F5, 86.3%): #108 whole-body saved-reg perm
+  (obj/params/player/playerState r28-r31 scramble). Un-naming playerState
+  (inline player->extra deref) REGRESSED 84.7 (target DOES hold it in saved
+  reg). Banked.
+- tree_init (dll_02AF, 98.7%): target CSEs lbl_803E72F8 const into f2 across
+  TWO non-adjacent stfs (offset 64 then 60, integer stores between); current
+  reloads f0 for the 2nd. Lift-to-local (#6) REGRESSED 98.1 (forces f31 save
+  across later calls); reordering the 2 stores adjacent REGRESSED 97.6.
+  Adjacent-store float-const CSE is an allocator decision no spelling hit.
+- RomCurve_func1E/func16 (dll_0014, 88/86.5%): binary-search (inlined
+  Objfsa_FindRomCurveById) coloring + _savegpr_26-vs-27 + romCurves
+  re-derive. #108-heavy. Banked.
+- fn_801343CC (dll_0041, 88%): #108 r23/r25/r26/r28 dual-loop scramble +
+  extra mr copies between loops. Banked.
+- groundanimator_free (dll_0138, 91%): GCC-style _savegpr prologue, whole-
+  body #108 + frame -96 vs -80. Banked.
+- tumbleweed_updateRollingMotion (dll_00D2, 87.4%): SJIS file. FP-conversion
+  magic (__cvt lis 17200/xoris 32768, @NNN bias relocs #70) + 53-region
+  coloring. Banked.
+- pressureswitchfb_updateStateMode (dll_00FB, 99%): pure r4/r5,r7/r8 coloring.
+
+TOOLING NOTE: ndiff.py reports "Unit not found" for SOME units
+(dll_0047/00FB/0110) while function_objdump.py resolves them fine (.o exists
+both trees). Workaround: function_objdump.py + awk-split target/current +
+sed-strip addr/bytes + diff (normalized manual diff). Snippet used:
+  grep -E "^[[:space:]]+[0-9a-f]+:" | sed -E 's/^[^\t]*\t[^\t]*\t//'
+SHARED-TREE NOTE: .git had concurrent writers; my 2 commits got buried under
+another agent's merge in `git log -3` linear view but ARE ancestors of HEAD
+(merge-base --is-ancestor = YES). push rejected (remote ahead, no-pull rule)
+-- commits safe on main for next agent's cycle. .git/objects unlink
+"Operation not permitted" warnings are environmental (gc.log), commits OK.
+
+## ===== Session (Jun17e, TOP-LEVEL src/main + dolphin): 3 wins, ~9 attempts =====
+WINS (all top-level src/main, structural CSE/lbzx/pragma veins):
+- textrender gameTextInitFn_8001c794 (62.7->65.9%, e6fa5b99a7): the two
+  unrolled tile-copy loops (16x16/20x20). Target walks ONE off register
+  re-added to src per row (add r8,r4; lhzx col) + bump-at-top; MWCC
+  strength-reduced to 4 saved row pointers + folded col-0 xb=0 to lhz disp.
+  #1 lever: `#pragma scheduling off`+`peephole off` round the fn (reset
+  after) recovered the lhzx index form +3.2%. RESIDUAL (banked): the
+  4-pointer row-base CSE across the two j-loop halves + col-0 xb=0
+  displacement fold. Single-use rp=(u8*)src+off recompute was INERT
+  (re-folds). opt_strength_reduction already off (pre-existing); toggling
+  it on was slightly worse.
+- lightmap updateVisibleGeometry (81.8->83.1%, 258d518650): #1/#80. Named
+  pointer locals py/pz/pd=&gViewFrustumPlanes[1..3] made MWCC hoist the
+  gViewFrustumPlanes BASE into saved r31 (frame+16, cam ptr rotated to r31).
+  Writing stores as gViewFrustumPlanes[n*5+k] directly re-derives base per
+  store, drops the saved-reg base. RESIDUAL (banked): target keeps 4
+  per-element base pointers (gVFP+0/+4/+8/+12 in r3/r31/r30/r29) indexed by
+  n*5 (li N; mulli ,20; stfsx) with n LIVE; current folds n to const disps.
+  Restoring px/py/pz/pd 4-base form REGRESSED (76.4 - MWCC folds n anyway,
+  bases become overhead). The n-nonfold is the open frontier (#28/#111).
+- tex_dolphin drawLightmapIndirectPasses (86.8->88.3%, eecaaf5fa7): #112/#30.
+  Bit-reader byte0 `*(u8*)(*bitReader+(pos>>3))` shared the +(pos>>3) sum
+  with bptr CSE -> lbz 0(bptr). Spelling byte0 as ((u8*)*bitReader)[pos>>3]
+  keeps base+index separate -> lbzx r,base,index (matches target). RESIDUAL
+  (banked): (u8)i CSE'd into extra saved r25 (target re-masks clrlwi per
+  use, saves r24 instead) + frame+16.
+BANKED (no source lever this pass, all reverted byte-clean):
+- newshadows fn_8006CB50 (73.7%): tile-gen loop. Target hoists 5 loop-inv
+  consts (Udchuff[3],lbl_803DED28,Udchuff[6],Vdchuff[0],Udchuff[7]) into
+  VOLATILE FP regs f11/f10/f8/f4/f3 before the loop (no FP calls in body -
+  sqrt inlined). Hoisting to fn-scope locals put them in SAVED f30/f31 +
+  grew frame (live range crosses textureAlloc call) -> 48% REGRESS. Moving
+  loads AFTER textureAlloc got volatile regs but still 2 saved + base-ptr
+  r7 hoist (from [4]/[5] array reads) -> 59% < 73.7 baseline. Bank: needs
+  individual @sda21 scalar reads + no base-ptr hoist, didn't crack.
+- lightmap renderSceneGeometry (82.6%): 4 box-fill loops unroll-by-8. Target
+  count form (box1+1-box0)>>3 no entry guard; current adds cmplwi;beq. Source
+  `while(n!=0)` -> do-while REGRESSED hard (62%, broke unroll). Plus stack-slot
+  decl order (box0..3/cv/cv2/map at wrong offsets, frame -208 vs -240) + extra
+  r30 buf slot. Multi-issue #67/unroll-internals. Bank.
+- objprint staffMtxFn_8003b620 (86.2%): joint loop reads t+(off+K). Target
+  keeps off in r23 index (addi r0,r23,K; lfsx); current strength-reduces
+  t+off into induction ptr (add base; lfs K). opt_strength_reduction off INERT.
+  #112 single-use re-folds. Bank.
+- render modelRenderFn_80006744 (87.3%): 1-instr mr (slw;mr vs slw) on acc +
+  *p CSE for hi/idx; rest heavy r5/r6/r8/r10 bit-test reg-perm. #108. Bank.
+- shader mapBlockFn_80059354 (87.9%): 3x scan-loop goto-found. Target b-over-b
+  (bne;b) vs current beq + extra saved r24 + redundant slot copy (mr r28,r0;
+  mr r3,r0 vs reuse r25). Multi-issue #108/#109d. Bank.
+LESSON (CONFIRMED): the #112 lbzx-vs-lbz crack works when the byte/half load
+  shares its base+index sum with a NEARBY pointer CSE -> spell ONE as an
+  array index `((T*)base)[idx]` to keep base+index in separate regs. Worked
+  tex_dolphin (single-use index here is FINE - the CSE sharing is what folds,
+  not single-use). Contrast objprint where it was inert (strength-reduced loop).
+LESSON: peephole+scheduling off recovers index/bump-at-top loop forms on
+  manually-unrolled byte/half copy loops (textrender +3.2%). Try FIRST on
+  unrolled-copy fns showing lhzx-vs-lhz or 4-pointer-CSE.
+LESSON: hoisting loop-invariant consts to fn-scope locals only helps if target
+  keeps them VOLATILE (no FP calls in loop); if the decl's live range crosses
+  a setup CALL it forces SAVED regs + frame growth (newshadows regress). Place
+  the loads AFTER the call if matching a post-call volatile hoist.
+
 ## ===== Session (Jun17d, baddie DLL scope): 3 wins, ~11 attempts =====
 WINS (all clean structural levers, committed locally; push rejected remote-ahead):
 - dll_00C9_enemy enemy_update (99.3->100%, 9494947eb4): controlFlags is u32 but
@@ -613,3 +747,69 @@ STRUCTURAL veins the dll/ scope lacked: (a) signed-vs-unsigned counter compares
 copy loops with arr[i] indexing that should be pointer-walks. ndiff --classify
 "cmp-width" + real "delete" blocks (not reg-perm) = the reliable signal. The
 src .o objdump-disasm-by-symbol does NOT work here (use ndiff for both sides).
+
+## ===== Session (Jun17f, FLAT dll_0141-02FF): 2 wins, ~7 attempts =====
+WINS (both committed locally; pushes rejected by remote-ahead, banked):
+- bombplantspore_update (dll_01AA, 89.9->90.2%): #3 `!= 0u` (u-suffix) on the
+  `(state->stateFlags >> 6 & 1) != 0` bit tests (2 sites) -> cmplwi not cmpwi.
+  stateFlags is u8 at off 0x2B0. RESIDUAL (banked, all #108/#128 caps): (1)
+  detonateMessage=0x7000B folded by current (addis;cmplwi) vs target keeps it
+  live in saved r30 + cmpw -- #19 non-foldable lever has no clean C form here
+  (no adjacent call to source it from); (2) ObjMsg_Pop stack offsets 8 bytes
+  lower in current (16/12 target vs 12/8) + target saves extra r28 for loop
+  counter `i` while detonateMessage holds r30 -- pure pressure/coloring; (3)
+  several objfx_spawnDirectionalBurst calls: target evals `li r8,0;li r9,0`
+  trailing args BEFORE the lfs f1/f2 const loads, current after -- arg-eval
+  order; (4) FP clamp chain register perm (#82). Frame/coloring caps.
+- gunpowderbarrel_hitDetect (dll_0158, 94.7->95.3%): #3 `!= 0u` on the
+  `((state->heldFlags >> 7) & 1) != 0` tests (2 sites) -> cmplwi. heldFlags u8.
+  RESIDUAL (banked, DSE cap): target reserves+stores the sp1c[3] throwVel-delta
+  stack vector (stfs 28/32/36) that current DEAD-STORE-ELIMINATES, shifting the
+  whole frame down 12 bytes (collision_buf at r1+28 vs target r1+40; lbz 109 vs
+  121). sp1c is NEVER passed to a callee, so #8 struct-wrap was INERT (struct
+  doesn't escape -> still DSE'd); `(void)sp1c` already present is INERT;
+  scheduling off INERT (it's DSE not scheduling). The original source must have
+  passed sp1c to a vector helper (the inline fadds suggest it got inlined). Open
+  -- needs a genuine escape that doesn't change semantics. Also FP fmuls/fadds
+  operand-order perm (#59) banked.
+
+ATTEMPTED, BANKED AS CAPS (no win):
+- lightning_update (dll_0141, 93.1%): the `style ? 1 : 0` flag bool (LightningFlags
+  bit at state+0x25, bit 0x20) is LICM-HOISTED into saved r27 ABOVE the obj-scan
+  loop in current; target RECOMPUTES it fresh after the loop (lbz 37; rlwinm 27;
+  cmplwi; li 1/0 + clrlwi r7) so the loop COUNTER gets r27 (target) vs r31
+  (current). T=C=228 instrs, pure hoist-decision + coloring. TRIED:
+  opt_loop_invariants off (INERT), opt_common_subs off (WORSE, 37 regions).
+  The @152-vs-lbl_803E4098 reloc is #70-neutral. #108/LICM cap.
+- crrockfall_update (dll_016A, 92.4%): r26-vs-r27 whole-fn coloring perm + the
+  shadowAlpha conversion-magic. Target uses NAMED lbl_803E46F8 unsigned-u8->dbl
+  magic (lis 17200; no xoris) for `(f32)(u32)*(u8*)(obj+0x37)`; current uses
+  @100/@210 anonymous (NEUTRAL #70). The streams are near-identical -- mostly
+  coloring + 1-2 fmuls operand-order. Low-yield #108 cap.
+- DR_EarthWarrior_update (dll_0257, 93.3%): pure #108 -- r26<->r29, r28<->r26,
+  f30<->f31 perm + one block reorder. T=C=280. Coloring cap.
+- dbstealerworm_stateHandlerA0D (dll_0242, 94%): #128-ish. Current parks
+  `&stk.msgN` (sp+K) into saved r29 + `mr r4,r29`; target materializes `addi
+  r4,r1,K` inline at the Stack_Push call. obj param (r28 current) gets SPILLED
+  (stw/lwz r28,64(r1)) due to the extra saved-reg pressure; target reuses r29
+  (obj's reg, obj dead after the pos block) for `q=sub->msgStack`. T=151 C=154
+  (3 extra). `q`/`msgStack` used 37+/47 across the WHOLE file -> can't safely
+  inline-drop q globally. Open #128/#108 pressure cap.
+- cloudprisoncontrol_update (dll_0145, 93.9%): dense r4/r5/r6/r7 coloring perm +
+  2 value-liveness diffs (target keeps r7 live; current reloads lwz 16(r1)).
+  T=234 C=239. Coloring cap.
+- FEseqobject_SeqFn (dll_0143, 94.6%): FRAME-CLASS cap (#67). Current frame 112
+  vs target 96 (+16): (a) the `effect` FEseqobjectEffectParams[20B] stack temp
+  sits 8 bytes higher (off 32 vs 24; addi r5,r1,32 vs +24); (b) a SPURIOUS
+  `psq_st f31,104(r1)` paired-single save current emits that target doesn't
+  (target plain stfd f30/f31 only). `register int self = obj;` is LOAD-BEARING
+  (removing it -> 38 regions, target uses self in r28). The psq_st + effect
+  8-byte misplacement is the open frontier (maybe effect needs 8-align like the
+  #67 union trick, untried).
+
+LESSON (this band): FLAT dll_0141-02FF 92-95% is DOMINATED by #108/#82 coloring
+perms (DR_EarthWarrior, crrockfall, cloudprisoncontrol all T==C instr-identical-
+except-regs) and #67 frame-class (FEseqobject psq_st). The reliable vein remains
+#3 `!= 0u` on u8 bitfield `>>N & 1` tests -> cmplwi (both wins this session were
+this exact lever; grep `>> [0-9] & 1) != 0` for more). DSE of never-escaping
+stack vectors (gunpowderbarrel sp1c) resists all source levers tried.
