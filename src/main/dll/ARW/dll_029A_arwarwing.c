@@ -159,7 +159,7 @@ void arwarwing_hitDetect(int obj)
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
         {
-            f32 posY = pos[1];
+            f32 posY = *(volatile f32*)&pos[1];
             fn_8008020C((s16)(0x8000 - ((GameObject*)obj)->anim.rotX + state->aimYaw),
                         (s16)(((GameObject*)obj)->anim.rotY + state->aimPitch),
                         (s16)(((GameObject*)obj)->anim.rotZ + state->aimRoll),
