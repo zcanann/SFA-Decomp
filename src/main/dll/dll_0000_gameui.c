@@ -4046,7 +4046,7 @@ void GameUI_hudDraw(int a, int b, int c)
                 f3 = lbl_803E1E70;
                 x = sx - f3 * (f32)(u32) * (u16*)((char*)tex + 0xa);
                 y = sy - f3 * (f32)(u32) * (u16*)((char*)tex + 0xc);
-                ((void (*)(void*, int, int, f32, f32))drawTexture)(tex, 0x96, 0x100, x, y);
+                drawTexture(tex, x, y, 0x96, 0x100);
             }
             hudDrawFn_80121440(a, b, c);
         }
