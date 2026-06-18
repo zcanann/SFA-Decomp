@@ -16654,10 +16654,11 @@ void fn_802B0920(int obj, int state)
     {
         if (((ByteFlags*)((char*)state + 0x3f0))->b20)
         {
-            vec9[2] = lbl_803E7E98 *
+            f32 k = lbl_803E7E98;
+            vec9[2] = k *
             ((f32)((PlayerState*)state)->headPitch * f30v +
                 (f32)((PlayerState*)state)->bodyLeanHalf * f31v);
-            vec9[1] = lbl_803E7E98 *
+            vec9[1] = k *
             ((f32)((PlayerState*)state)->bodyLeanHalf * f30v +
                 (f32)((PlayerState*)state)->headPitch * f31v);
         }
