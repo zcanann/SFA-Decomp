@@ -277,10 +277,10 @@ void cmbsrc_updateVisuals(int obj, int state)
     }
     else
     {
+        f32 fullRadius = lbl_803E7374 * setup->radius;
         sourceState->radius += interpolate(
             (f32)sourceState->hitCharge / lbl_803E7378 *
-            (lbl_803E7374 * setup->radius -
-                setup->radius * lbl_803E737C) +
+            (fullRadius - setup->radius * lbl_803E737C) +
             setup->radius * lbl_803E737C - sourceState->radius,
             lbl_803E7380, timeDelta);
     }
@@ -443,7 +443,7 @@ int cmbsrc_update(int obj)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj,
-                                               lbl_8032BD00[setup->colorIndex]);
+                                               lbl_8032BD00[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
             if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
                 *(u8*)((int)state->light + 0x4c) != 0)
