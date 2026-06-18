@@ -12570,14 +12570,14 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             timerRec = *(int*)((char*)inner + 0x40c);
             *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) - timeDelta;
-            if (lbl_803E8180 < *(f32*)((char*)timerRec + 0xc))
-            {
-                mode = 0;
-            }
-            else
+            if (*(f32*)((char*)timerRec + 0xc) <= lbl_803E8180)
             {
                 mode = 3;
                 *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) + lbl_803E81C0;
+            }
+            else
+            {
+                mode = 0;
             }
             snd0 = lbl_803E8180;
             snd1 = lbl_803E81C4;
