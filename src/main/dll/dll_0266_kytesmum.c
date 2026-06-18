@@ -145,11 +145,11 @@ void kytesmum_update(int obj)
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, runtime->animSpeed, timeDelta,
                                                                     (ObjAnimEventList*)runtime->animEvents) != 0)
     {
-        if (randomGetRange(0, 7) != 0)
+        if ((int)randomGetRange(0, 7) != 0)
         {
             moveIdx = 0;
         }
-        else if (randomGetRange(0, 1) != 0)
+        else if ((int)randomGetRange(0, 1) != 0)
         {
             moveIdx = 1;
         }
@@ -171,7 +171,7 @@ void kytesmum_update(int obj)
     characterDoEyeAnims(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
-    if (nearest != 0)
+    if ((void*)nearest != NULL)
     {
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(
             nearest, obj, 1, 2);
