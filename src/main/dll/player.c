@@ -8997,13 +8997,13 @@ void fn_802B249C(int obj, int inner, int state)
             }
         case 0x7000a:
             {
-                int t;
+                void* t;
                 s16 bit;
                 ((PlayerState*)inner)->unk8DC = param;
-                t = *(int*)(p + 0x64);
-                if (t != 0)
+                t = *(void**)(p + 0x64);
+                if (t != NULL)
                 {
-                    *(u32*)(t + 0x30) &= 0xfffffffb;
+                    *(u32*)((char*)t + 0x30) &= 0xfffffffb;
                 }
                 bit = **(s16**)((char*)inner + 0x8dc);
                 if (bit > 0)
@@ -9048,10 +9048,10 @@ void fn_802B249C(int obj, int inner, int state)
                 }
                 ((PlayerState*)inner)->unk684 = p;
                 ((PlayerState*)inner)->unk688 = *(s16*)(((PlayerState*)inner)->unk8DC + 2);
-                t = *(int*)(((PlayerState*)inner)->unk684 + 0x64);
-                if (t != 0)
+                t = *(void**)(((PlayerState*)inner)->unk684 + 0x64);
+                if (t != NULL)
                 {
-                    *(int*)(t + 0x30) = 0x1000;
+                    *(int*)((char*)t + 0x30) = 0x1000;
                 }
                 if (lbl_803DE44C != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
