@@ -1,8 +1,29 @@
+/*
+ * dll_3e - THP attract-mode movie playback (FRONT/attract_movie).
+ *
+ * Drives the streamed THP attract movie via the VI post-retrace callback:
+ * PlayControl() runs each retrace, pops a decoded texture set from the
+ * decode pipeline, paces it against the audio track (single-field /
+ * even-field / odd-field cadence from playFlags), recycles the previously
+ * displayed set back to its message queue, and detects end-of-movie /
+ * loop completion.
+ *
+ * THPPlayerPlay/THPPlayerStop arm and tear down the player (state machine
+ * in AttractMoviePlayer.state / internalState, with worker threads for
+ * video decode, audio decode and DVD read).
+ *
+ * prepareAttractMode() seeks to a movie within the attract package
+ * (offset table indexed by movieIndex), spins up the decode/read threads,
+ * primes the message queues (InitAllMessageQueue) and installs the
+ * retrace callback. Operates on the AttractMovieControl block at
+ * lbl_803A57C0 and the AttractMoviePlayer at lbl_803A5D60.
+ */
 #include "global.h"
 #include "dolphin/os.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
-#include "main/dll/FRONT/dll_3E.h"
+
+void InitAllMessageQueue(void);
 
 extern int ProperTimingForGettingNextFrame(void);
 extern OSMessage PopDecodedTextureSet(s32 flags);
@@ -10,7 +31,6 @@ extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 extern BOOL CreateVideoDecodeThread(int priority, void* param);
 extern BOOL CreateAudioDecodeThread(int priority, void* param);
 extern BOOL CreateReadThread(int priority);
-extern void InitAllMessageQueue(void);
 extern void VideoDecodeThreadStart(void);
 extern void AudioDecodeThreadStart(void);
 extern void ReadThreadStart(void);
@@ -71,6 +91,13 @@ STATIC_ASSERT(offsetof(AttractMovieControl, field670) == 0x670);
 STATIC_ASSERT(offsetof(AttractMovieControl, field684) == 0x684);
 STATIC_ASSERT(offsetof(AttractMovieControl, field690) == 0x690);
 
+/* playFlags bits (shared by AttractMoviePlayer and AttractMovieControl) */
+enum {
+    THP_PLAY_LOOP = 1,
+    THP_PLAY_EVEN_FIELD = 2,
+    THP_PLAY_ODD_FIELD = 4
+};
+
 void PlayControl(void)
 {
     AttractMovieTextureSet* decodedTexture;
@@ -107,11 +134,11 @@ void PlayControl(void)
 
     if ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4))
     {
-        if ((lbl_803A5D60.playFlags & 2) != 0)
+        if ((lbl_803A5D60.playFlags & THP_PLAY_EVEN_FIELD) != 0)
         {
             allowPop = (VIGetNextField() == 0) ? 1 : 0;
         }
-        else if ((lbl_803A5D60.playFlags & 4) != 0)
+        else if ((lbl_803A5D60.playFlags & THP_PLAY_ODD_FIELD) != 0)
         {
             allowPop = (VIGetNextField() == 1) ? 1 : 0;
         }
@@ -169,7 +196,7 @@ void PlayControl(void)
         }
     }
 
-    if ((decodedTexture != NULL) && ((u32)decodedTexture != 0xffffffff))
+    if ((decodedTexture != NULL) && (decodedTexture != (AttractMovieTextureSet*)-1))
     {
         lbl_803A5D60.curAudioTrack = decodedTexture->frameNumber;
         if (lbl_803A5D60.curAudioNumber != 0)
@@ -179,7 +206,7 @@ void PlayControl(void)
         lbl_803A5D60.curAudioNumber = (s32)decodedTexture;
     }
 
-    if ((lbl_803A5D60.playFlags & 1) == 0)
+    if ((lbl_803A5D60.playFlags & THP_PLAY_LOOP) == 0)
     {
         if (lbl_803A5D60.audioExists != 0)
         {
@@ -261,6 +288,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     char* base;
     AttractMovieControl* ctrl;
     void* readyMsg;
+    s32 startOffset;
 
     base = lbl_803A57C0;
     ctrl = (AttractMovieControl*)base;
@@ -310,12 +338,12 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         {
             return FALSE;
         }
-        playFlags = ((s32)ctrl->loopFrame + ctrl->frameOffset) -
+        startOffset = ((s32)ctrl->loopFrame + ctrl->frameOffset) -
             ctrl->dataOffset;
-        CreateVideoDecodeThread(0xf, (void*)playFlags);
+        CreateVideoDecodeThread(0xf, (void*)startOffset);
         if (ctrl->audioExists != 0)
         {
-            CreateAudioDecodeThread(0xc, (void*)playFlags);
+            CreateAudioDecodeThread(0xc, (void*)startOffset);
         }
     }
     else
@@ -362,31 +390,31 @@ void PrepareReady(void* msg)
 
 void InitAllMessageQueue(void)
 {
-    char* player;
+    char* buf;
     s32 i;
-    char* walk;
+    char* q;
     s32 j;
 
-    player = (char*)&lbl_803A5D60;
+    buf = (char*)&lbl_803A5D60;
     if (lbl_803A5D60.isOnMemory == 0)
     {
         i = 0;
         do
         {
-            PushFreeReadBuffer((OSMessage)(player + 0xf4));
-            player += sizeof(AttractMovieReadBuffer);
+            PushFreeReadBuffer((OSMessage)(buf + 0xf4));
+            buf += sizeof(AttractMovieReadBuffer);
             i++;
         }
         while (i < 10);
     }
 
     i = 0;
-    walk = (char*)&lbl_803A5D60;
-    player = walk;
+    q = (char*)&lbl_803A5D60;
+    buf = q;
     do
     {
-        PushFreeTextureSet((OSMessage)(player + 0x144));
-        player += sizeof(AttractMovieTextureSet);
+        PushFreeTextureSet((OSMessage)(buf + 0x144));
+        buf += sizeof(AttractMovieTextureSet);
         i++;
     }
     while (i < 3);
@@ -396,8 +424,8 @@ void InitAllMessageQueue(void)
         j = 0;
         do
         {
-            PushFreeAudioBuffer(walk + 0x174);
-            walk += sizeof(AttractMovieAudioBuffer);
+            PushFreeAudioBuffer(q + 0x174);
+            q += sizeof(AttractMovieAudioBuffer);
             j++;
         }
         while (j < 3);
