@@ -1502,7 +1502,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
     char* romBase;
-    char *p, *obj, *end;
+    char *p, *obj, *end, *objStart;
     int objIndex, i;
     int visible, v, flag;
     int byteIdx, bit;
@@ -1513,8 +1513,8 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
     objIndex = 0;
     romBase = *(char**)((char*)p1 + 0x20);
     p = romBase;
-    obj = romBase + seg[index];
-    while (p < obj)
+    objStart = romBase + seg[index];
+    while (p < objStart)
     {
         objIndex++;
         p += *(u8*)(p + 2) * 4;
@@ -1524,6 +1524,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
         if (seg[i] != -1)
             break;
     }
+    obj = objStart;
     end = romBase + seg[i];
 
     while (obj < end)
@@ -1584,11 +1585,13 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
             {
                 if (objIndex >= 0)
                 {
+                    void* bm2 = gLoadedRomListPages[mapId];
                     byteIdx = objIndex >> 3;
                     bit = 1 << (objIndex & 7);
-                    vis = *(s8**)((char*)gLoadedRomListPages[mapId] + 0x10);
-                    vis[byteIdx] = vis[byteIdx] & ~bit;
-                    vis[byteIdx] = vis[byteIdx] | bit;
+                    ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] =
+                        ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] & ~bit;
+                    ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] =
+                        ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] | bit;
                 }
                 Obj_SetupObject((int*)obj, 1, mapId, objIndex, p4);
             }
