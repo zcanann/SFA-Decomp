@@ -10358,7 +10358,7 @@ void fn_802AB5A4(int obj, int p2, int flags)
     }
     if (f & 2)
     {
-        curves_preparePointCollisionFrame(obj, (CurvesCollisionState*)((char*)p2 + 4));
+        curves_preparePointCollisionFrame(obj, (CurvesCollisionState*)((char*)(int)p2 + 4));
         *(f32*)(q + 0x20) = ((GameObject*)obj)->anim.worldPosX;
         *(f32*)(q + 0x24) = lbl_803E80EC + ((GameObject*)obj)->anim.worldPosY;
         *(f32*)(q + 0x28) = ((GameObject*)obj)->anim.worldPosZ;
