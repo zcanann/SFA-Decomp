@@ -199,7 +199,7 @@ int SnowBike_render2(void) { return 0x0; }
 int SnowBike_getExtraSize(void) { return 0x59c; }
 int SnowBike_getObjectTypeId(void) { return 0x3; }
 
-u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x420); }
+u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x420); }
 
 void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
 {
@@ -476,8 +476,8 @@ void SnowBike_free(int obj)
     }
 }
 
-s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x422); }
-s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
+s32 SnowBike_func14(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x422); }
+s32 SnowBike_getType(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x421); }
 
 void SnowBike_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
