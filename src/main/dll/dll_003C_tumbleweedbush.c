@@ -679,6 +679,7 @@ void Link_release(void)
 }
 #pragma peephole reset
 
+#pragma peephole off
 void Link_initialise(void)
 {
     int i;
@@ -695,6 +696,7 @@ void Link_initialise(void)
     linkIsRotated = 0;
     linkFlag_803dd8f8 = 1;
 }
+#pragma peephole reset
 
 #pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
