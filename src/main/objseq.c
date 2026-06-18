@@ -1639,7 +1639,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                 {
                     ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                    ((ObjSeqState*)seq)->cmdCursor += 1;
                 }
                 else
                 {
@@ -1652,9 +1652,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     if (opcode != 0xf)
                     {
-                        ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
+                        ((ObjSeqState*)seq)->unk68 += cmd[1];
                     }
-                    ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                    ((ObjSeqState*)seq)->cmdCursor += 1;
                     if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0)
                     {
                         return;
@@ -2798,9 +2798,9 @@ int ObjSeq_update(u8* obj, f32 t)
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + *(f32*)(seq + 4);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + *(f32*)(seq + 8);
         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((ObjSeqState*)seq)->unk0C;
-        *(u16*)&((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + ((ObjSeqState*)seq)->rotStepZ;
-        *(u16*)&((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((ObjSeqState*)seq)->rotStepY;
-        *(u16*)&((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + ((ObjSeqState*)seq)->rotStepX;
+        ((GameObject*)obj)->anim.rotZ += ((ObjSeqState*)seq)->rotStepZ;
+        ((GameObject*)obj)->anim.rotY += ((ObjSeqState*)seq)->rotStepY;
+        ((GameObject*)obj)->anim.rotX += ((ObjSeqState*)seq)->rotStepX;
 
         action = ObjSeq_GetActiveModel(activeObj);
         lbl_803DD0C0 = 0;
@@ -2905,7 +2905,7 @@ int ObjSeq_update(u8* obj, f32 t)
                     if (((ObjSeqState*)seq)->curFrame >= *(s16*)(cmd + 2))
                     {
                         ((ObjSeqState*)seq)->unk68 = *(s16*)(cmd + 2);
-                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                        ((ObjSeqState*)seq)->cmdCursor += 1;
                     }
                     else
                     {
@@ -2918,9 +2918,9 @@ int ObjSeq_update(u8* obj, f32 t)
                     {
                         if (opcode != 0xf)
                         {
-                            ((ObjSeqState*)seq)->unk68 = ((ObjSeqState*)seq)->unk68 + cmd[1];
+                            ((ObjSeqState*)seq)->unk68 += cmd[1];
                         }
-                        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + 1;
+                        ((ObjSeqState*)seq)->cmdCursor += 1;
                         if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, 0, 0) != 0)
                         {
                             targetFrame = ((ObjSeqState*)seq)->curFrame;
