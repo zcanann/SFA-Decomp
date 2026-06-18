@@ -467,12 +467,10 @@ void drakorhoverpad_updateMain(int obj)
     curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
-        phase = lbl_803E6A54 *
-            (f32)(int)
-        getAngle(sqrtf(curve->tangentX * curve->tangentX +
+        c = getAngle(sqrtf(curve->tangentX * curve->tangentX +
                      curve->tangentZ * curve->tangentZ),
-                 curve->tangentY) /
-            lbl_803E6A58;
+                 curve->tangentY);
+        phase = lbl_803E6A54 * (f32)(int)(s16)c / lbl_803E6A58;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0)
@@ -523,7 +521,7 @@ void drakorhoverpad_updateMain(int obj)
     if (lbl_803E6A3C != ((DrakorhoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorhoverpadUpdateMainState*)p)->verticalVel);
-        if ((curve->reverse != 0) != (curve->atSegmentEnd != 0))
+        if ((curve->reverse != 0) ^ (curve->atSegmentEnd != 0))
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),
