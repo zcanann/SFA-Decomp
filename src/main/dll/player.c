@@ -9368,7 +9368,7 @@ int fn_802A1114(int obj, int state)
         ((PlayerState*)state)->baddie.animSpeedA = zero;
         ((PlayerState*)state)->baddie.animSpeedB = zero;
         inner->targetYaw =
-            (s16)getAngle(*(f32*)((char*)inner + 0x56c), inner->unk574);
+            (s16)getAngle(*(f32*)((int)inner + 0x56c), inner->unk574);
         inner->yaw = inner->targetYaw;
         ((GameObject*)obj)->anim.localPosX = inner->unk58C;
         ((GameObject*)obj)->anim.localPosZ = inner->unk594;
