@@ -1,21 +1,26 @@
+/*
+ * dll_B4 - lock-on / A-button reticle setup.
+ *
+ * Lazily creates the shared camcontrol reticle object (gCamcontrolTargetReticle)
+ * on first use: spawns the object, registers the lock-on and A-button icon
+ * render callbacks against its two model banks, and builds a directional light
+ * (lbl_803DD4C4) aimed by the camcontrol normalized vector for lighting the icon.
+ */
 #include "main/dll/dll_B4.h"
+#include "main/dll/dll_B3.h"
+#include "main/dll/dll_B2.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
+#include "main/model_light.h"
 
 extern u8* Obj_AllocObjectSetup(int size, int type);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern u8* Obj_GetActiveModel(u8 * obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* cb);
-extern void lockIconTexCb(void);
-extern void aButtonIconTexCb(void);
 extern void lightSetColor(int a, int b, int c, int d);
-extern u8* objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(u8* p, int a);
-extern void modelLightStruct_setObjectLightMaskIndex(u8* p, int a);
-extern void objSetEventName(u8* p, int a);
-extern void modelLightStruct_setDirection(u8* p, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
+extern ModelLightStruct* objCreateLight(int a, int b);
+extern void objSetEventName(ModelLightStruct* p, int a);
 
-extern u8* lbl_803DD4C4;
+extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 
 void lockIconInit(void)
