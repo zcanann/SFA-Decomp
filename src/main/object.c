@@ -53,7 +53,7 @@ extern void mtx44Transpose(f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void OSReport(char* fmt, ...);
 extern void* memcpy(void* dst, const void* src, int n);
-extern f32 lbl_803DE8B8;
+extern const f32 lbl_803DE8B8;
 extern void objFreeObjDef(void* def, int flags);
 extern int lbl_803DCB94;
 extern void** lbl_803DCB98;
