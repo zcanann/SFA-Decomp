@@ -643,7 +643,7 @@ extern int gCurTextBuffer;
 extern int lbl_803DC97C;
 extern f32 timeDelta;
 extern f32 lbl_803DE71C;
-extern char lbl_803DB3D4[];
+extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern void* gameTextGet();
@@ -864,7 +864,7 @@ void* gameTextGet(int textId)
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
     lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-    sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId,
+    sprintf((char*)gCurTextBuffer, &lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)lbl_803DC974 = (u16)textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
@@ -1777,7 +1777,7 @@ void gameTextRun(void)
             {
                 *timer = (f32)zero;
                 *alpha = (f32)zero;
-                sprintf(**(char***)(entry + 8), lbl_803DB3D4);
+                sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
             }
         }
     }
@@ -1794,7 +1794,7 @@ void gameTextRun(void)
     textWindow = gTextBoxes;
     for (i = 148; i != 0; i--)
     {
-        *(u16*)(textWindow + 0x1c) &= 0xfffe;
+        *(u16*)(textWindow + 0x1c) &= ~1;
         textWindow += 0x20;
     }
 
