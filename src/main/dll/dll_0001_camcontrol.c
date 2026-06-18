@@ -39,7 +39,7 @@ extern int dll_19_func1B(); /* nonzero = obj is baddie-control managed (use its 
 extern int isTalkingToNpc();
 extern int gameTextFn_80134be8(void);
 extern f32 fn_8014C5D0(int obj); /* target reticle distance for the enemy objType group */
-extern f32 fn_80183204(int obj); /* target reticle distance for the largecrate objType group */
+extern f32 largecrate_getReticleDistance(int obj); /* target reticle distance for the largecrate objType group */
 extern f32 sqrtf(f32 x);
 
 extern u8 gCamcontrolStateStorage[];
@@ -242,7 +242,7 @@ void camcontrol_updateTargetFeedback(void)
             break;
         case 0x3de:
         case 0x49f:
-            targetDistance = fn_80183204((int)target);
+            targetDistance = largecrate_getReticleDistance((int)target);
             break;
         case 0x31:
             targetDistance = gCamcontrolNormalizedMax;

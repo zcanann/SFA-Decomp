@@ -764,16 +764,16 @@ main/dll/tricky.c:
 main/dll/maybetemplate.c:
 	.text       start:0x80121C4C end:0x801242DC
 
-main/dll/balloonbaddie.c:
+main/dll/cmenu.c:
 	.text       start:0x801242DC end:0x80125424
 
-main/dll/swarmbaddie.c:
+main/dll/headdisplay.c:
 	.text       start:0x80125424 end:0x801262CC
 
-main/dll/wispbaddie.c:
+main/dll/pausemenu.c:
 	.text       start:0x801262CC end:0x80128120
 
-main/dll/dll_0000_baby_snowworm.c:
+main/dll/dll_0000_gameui.c:
 	.text       start:0x80128120 end:0x8012FECC
 
 main/dll/dll_003B_menu.c:

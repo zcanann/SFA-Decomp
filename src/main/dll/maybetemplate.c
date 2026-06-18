@@ -153,7 +153,7 @@ extern f32 lbl_803E2018;
  * as a raw u8* base here). Only the pure-constant scalar fields are named; the
  * indexed/per-slot arrays in this region are left as raw casts to preserve
  * register coloring (byte-neutral). The lower offsets (<0x244) are modeled
- * file-locally elsewhere (CMenuHud in dll_0000_baby_snowworm.c). */
+ * file-locally elsewhere (CMenuHud in dll_0000_gameui.c). */
 typedef struct PauseMenuHud
 {
     u8 _pad0[0x244];

@@ -62,7 +62,7 @@ extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(void* a, void* b);
 extern void playerAddMoney(int player, u8 b);
-extern int objHitboxFn_801843c0(int obj);
+extern int scarab_sweptCollide(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void* p5, int obj, int p7, int p8, int p9, int p10);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
@@ -188,7 +188,7 @@ void scarab_update(int obj)
                 ((GameObject*)obj)->anim.velocityY = lbl_803E3A0C * timeDelta + ((GameObject*)obj)->anim.velocityY;
             }
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + ((ScarabState*)state)->yawSpeed * framesThisStep;
-            if (objHitboxFn_801843c0(obj) != 0)
+            if (scarab_sweptCollide(obj) != 0)
             {
                 flag = 1;
             }
@@ -746,7 +746,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int objHitboxFn_801843c0(int obj)
+int scarab_sweptCollide(int obj)
 {
     extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount);
     extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
