@@ -2178,8 +2178,7 @@ void loadTextureFiles(void)
     int n;
 
     gLoadedTextures = (LoadedTextureEntry*)mmAlloc(0x2bc0, 6, 0);
-    n = 0;
-    gLoadedTextureCount = n;
+    gLoadedTextureCount = n = 0;
     p = getCurrentDataFile(0x24);
     lbl_8037E0B4[0] = p;
     if (lbl_8037E0B4 != NULL)
@@ -2215,24 +2214,19 @@ void loadTextureFiles(void)
     loadAssetFileById(&lbl_803DCDC0, 0x22);
     q = lbl_8037E0B4;
     out = lbl_8037E0A8;
-    n = 0;
-    p = *q;
-    while (*p != -1)
+    for (n = 0; n < 2; n++)
     {
-        p++;
-        n++;
+        int m = 0;
+        p = *q;
+        while (*p != -1)
+        {
+            p++;
+            m++;
+        }
+        *out = m - 1;
+        q++;
+        out++;
     }
-    *out = n - 1;
-    q++;
-    out++;
-    n = 0;
-    p = *q;
-    while (*p != -1)
-    {
-        p++;
-        n++;
-    }
-    *out = n - 1;
     lbl_803DCDB8 = (void*)mmAlloc(0x120, 6, 0);
     textureLoad(0, 0);
 }
