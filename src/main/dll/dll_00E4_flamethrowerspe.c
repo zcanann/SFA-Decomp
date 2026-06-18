@@ -1645,7 +1645,7 @@ void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 void flamethrowerspe_func0B(int* obj)
 {
     s32 v = 0x1;
-    *(s32*)((char*)((int**)obj)[0xb8 / 4] + 0x10) = v;
+    *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x10) = v;
 }
 
 
