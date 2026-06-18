@@ -164,7 +164,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     f32 dx;
     f32 dz;
     s16 ang;
-    uint count;
+    int count;
     int i;
     f32* pf;
     RomCurvePoint** list;
