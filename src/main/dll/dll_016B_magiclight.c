@@ -45,8 +45,10 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
+/* Dll16CState is a co-tenant in this TU (same retail object) */
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
+/* CrRockfallState is a co-tenant in this TU (same retail object) */
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern undefined4 getLActions();
@@ -258,10 +260,7 @@ void magiclight_initialise(void)
 {
 }
 
-/* Seed obj header + per-tick callback. For the non-render variants roll a
- * random lifetime and, for seqId 0x16b, map the placement subtype to an
- * enter/leave L-action pair and a trigger-radius preset.
- * obj kept int* (not GameObject*): the param-pool classing matches the target. */
+/* obj kept int* (not GameObject*): the param-pool classing matches the target. */
 #pragma scheduling off
 #pragma peephole off
 void magiclight_init(int* obj, u8* params)
@@ -313,6 +312,8 @@ void magiclight_init(int* obj, u8* params)
 
 int magiclight_getObjectTypeId(void) { return 0x0; }
 
+/* peephole stays off (from magiclight_init) for every function below: the
+   target was built that way and restoring it regresses the rest of the TU. */
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -380,3 +381,5 @@ int magiclight_SeqFn(int* obj)
     }
     return 0;
 }
+#pragma scheduling on
+#pragma peephole on
