@@ -392,9 +392,7 @@ void DFSH_LaserBeam_update(uint objAddr)
         DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
     }
 
-    runtime->swayPhase = lbl_803E4EC0;
-    runtime->swayAccel = lbl_803E4EC0;
-    *(f32*)((u8*)runtime + 0x14) = lbl_803E4EC0;
+    runtime->swayPhase = runtime->swayAccel = *(f32*)((u8*)runtime + 0x14) = lbl_803E4EC0;
     runtime->swayVelocity = runtime->swayPhase;
     runtime->swayTarget = runtime->swayAccel;
     DFSH_LASER_RANGE_VALUE(runtime) =
