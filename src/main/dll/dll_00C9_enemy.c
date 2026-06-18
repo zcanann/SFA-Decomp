@@ -2279,7 +2279,7 @@ void enemy_update(int obj)
             ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->unk10;
             ((GameObject*)obj)->anim.rotZ = 0;
             ((GameObject*)obj)->anim.rotY = 0;
-            *(s16*)obj = ((EnemyPlacement*)s2)->unk2A << 8;
+            ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->unk2A << 8;
             fz = lbl_803E2574;
             ((GameObject*)obj)->anim.velocityX = fz;
             ((GameObject*)obj)->anim.velocityY = fz;
@@ -2369,7 +2369,7 @@ void enemy_init(int obj, u8* setup, int flag)
     ((EnemyState*)state)->aggroRange = (f32)(u32)(setup[0x29] << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
-    *(s16*)obj = *(s8*)(setup + 0x2a) << 8;
+    ((GameObject*)obj)->anim.rotX = *(s8*)(setup + 0x2a) << 8;
     ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
     ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
     ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
