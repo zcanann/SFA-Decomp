@@ -832,6 +832,8 @@ void linkDrawFn_801302c0(void)
     extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* sel;
     LinkMenuItemDB* p;
+    LinkMenuItemDB* base;
+    int four = 4;
     void* tex;
     int selLeft;
     int selRight;
@@ -840,8 +842,9 @@ void linkDrawFn_801302c0(void)
     int w;
     int i;
 
-    sel = &lbl_803A9458[(s8)linkSelected];
-    sel->field38 = 4;
+    base = lbl_803A9458;
+    sel = &base[(s8)linkSelected];
+    sel->field38 = four;
     if (((sel->field16 & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
         tex = *(void**)(linkTextures + (s8)sel->slots[0] * 8);
@@ -868,7 +871,7 @@ void linkDrawFn_801302c0(void)
         selLeft = sel->field06 - 2;
     }
     selRight = selLeft + w;
-    p = lbl_803A9458;
+    p = base;
     for (i = 0; i < (s8)lbl_803DD911; i++)
     {
         if (i != (s8)linkSelected)
@@ -901,7 +904,7 @@ void linkDrawFn_801302c0(void)
             itemRight = itemLeft + w;
             if (itemLeft < selRight && itemRight > selLeft)
             {
-                p->field38 = 4;
+                p->field38 = four;
             }
         }
         p++;
