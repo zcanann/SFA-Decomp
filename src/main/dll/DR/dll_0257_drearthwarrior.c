@@ -1004,6 +1004,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
 
 int DR_EarthWarrior_stateHandler01(int obj, int p2)
 {
+    extern int ObjAnim_GetCurrentEventCountdown();
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     EarthWarriorSub* q = &inner->sub;
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
