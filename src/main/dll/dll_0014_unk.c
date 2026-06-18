@@ -2309,10 +2309,9 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     {
         low = 0;
         high = nRomCurves - 1;
-        nextCurve = 0;
-        while (low <= high)
+        while (high >= low)
         {
-            mid = (low + high) >> 1;
+            mid = (high + low) >> 1;
             nextCurve = (s32)romCurves[mid];
             if ((u32)neighborId > *(u32*)(nextCurve + 0x14))
             {
@@ -2320,17 +2319,15 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
             }
             else if ((u32)neighborId >= *(u32*)(nextCurve + 0x14))
             {
-                break;
+                goto found;
             }
             else
             {
                 high = mid - 1;
             }
         }
-        if (low > high)
-        {
-            nextCurve = 0;
-        }
+        nextCurve = 0;
+    found:;
     }
 
     *(s32*)&state->nodeA4 = nextCurve;
