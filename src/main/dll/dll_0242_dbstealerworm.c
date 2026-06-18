@@ -115,7 +115,7 @@ extern u32 randomGetRange(int min, int max);
 extern uint ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObjectForObject();
 extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 
 extern void Stack_Free(int* stack);
@@ -427,7 +427,7 @@ int dbstealerworm_stateHandlerA03(int obj, int p)
 
 int dbstealerworm_stateHandlerA01(int obj, int p)
 {
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject(); /* #57 */
     extern int lbl_80329640[];
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62F4;
@@ -489,9 +489,9 @@ void dbstealerworm_release(void)
 
 void dbstealerworm_init(int* obj, u8* def, int param3)
 {
-    extern undefined4 ObjMsg_AllocQueue(); /* #57 */
-    extern undefined4 ObjGroup_AddObject(); /* #57 */
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjMsg_AllocQueue(); /* #57 */
+    extern u32 ObjGroup_AddObject(); /* #57 */
+    extern u32 ObjHits_EnableObject(); /* #57 */
     u8* sub;
     int* p40c;
     u8 mode;
@@ -531,7 +531,7 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
 
 void dbstealerworm_free(int* obj)
 {
-    extern undefined8 ObjGroup_RemoveObject(); /* #57 */
+    extern u64 ObjGroup_RemoveObject(); /* #57 */
     u8* sub = ((GameObject*)obj)->extra;
     int* p40c = *(int**)&((GroundBaddieState*)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
@@ -720,8 +720,8 @@ void fn_80203000(int obj, int param2)
 
 int dbstealerworm_stateHandlerA04(int obj, int param2)
 {
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
+    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     BaddieState* bs = (BaddieState*)param2;
     u32 v;

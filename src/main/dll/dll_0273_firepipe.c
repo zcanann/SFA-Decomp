@@ -415,7 +415,7 @@ int firepipe_getExtraSize(void)
     return sizeof(FirePipeExtra);
 }
 
-undefined4 firepipe_stateCallback(FirePipeObject* obj)
+u32 firepipe_stateCallback(FirePipeObject* obj)
 {
     firepipe_updateState(obj);
     return 0;

@@ -53,7 +53,7 @@ void explodeplan_release(void)
 {
 }
 
-void explodeplan_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
