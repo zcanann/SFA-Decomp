@@ -10,8 +10,8 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 
-extern const char sInWaterMessage[];
-extern const char lbl_8031D478[];
+extern char sInWaterMessage[];
+extern char lbl_8031D478[];
 
 extern int trickyFoodFn_8013db3c(u8 * arg1, u8 * arg2);
 extern u8** ObjGroup_GetObjects(int kind, int* count);
@@ -26,7 +26,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     f32 rejectDist;
     f32 minDist;
     f32 dist;
-    f32 zero;
+    f32 z;
     u8** objs;
     int count;
     int i;
@@ -39,13 +39,13 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     {
         state[0x8] = 1;
         state[0xA] = 0;
-        zero = lbl_803E23DC;
-        ((TrickyState*)state)->unk71C = zero;
-        ((TrickyState*)state)->unk720 = zero;
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x10;
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x10000;
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x20000;
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x40000;
+        z = lbl_803E23DC;
+        ((TrickyState*)state)->unk71C = z;
+        ((TrickyState*)state)->unk720 = z;
+        ((TrickyState*)state)->stateFlags &= ~0x10LL;
+        ((TrickyState*)state)->stateFlags &= ~0x10000LL;
+        ((TrickyState*)state)->stateFlags &= ~0x20000LL;
+        ((TrickyState*)state)->stateFlags &= ~0x40000LL;
         ((TrickyState*)state)->unkD = -1;
         return;
     }
@@ -71,9 +71,9 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     if (nearest != NULL)
     {
         ((TrickyState*)state)->followObj = nearest;
-        if (*(u32*)(state + 0x28) != (u32)(nearest + 0x18))
+        if (((TrickyState*)state)->unk28 != nearest + 0x18)
         {
-            *(u32*)(state + 0x28) = (u32)(nearest + 0x18);
+            ((TrickyState*)state)->unk28 = nearest + 0x18;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0xFFFFFBFF;
             ((TrickyState*)state)->unkD2 = 0;
         }
