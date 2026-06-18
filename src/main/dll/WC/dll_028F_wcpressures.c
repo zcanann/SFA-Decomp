@@ -301,7 +301,7 @@ void wcpressures_init(u8* obj, u8* setup)
     int i;
 
     objType = (s16)(setupData->objectTypeHi << 8);
-    *(s16*)obj = objType;
+    ((GameObject*)obj)->anim.rotX = objType;
     objFlags = ((GameObject*)obj)->objectFlags | 0x6000;
     ((GameObject*)obj)->objectFlags = objFlags;
     modelIndex = (s8)setupData->modelIndex;
