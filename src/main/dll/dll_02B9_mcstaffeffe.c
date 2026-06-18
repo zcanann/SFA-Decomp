@@ -1,3 +1,13 @@
+/*
+ * mcstaffeffe (DLL 0x2B9) - staff visual-effect object.
+ *
+ * From its placement effectProfile, init selects a particle type and a
+ * staff glow level (profiles 0-3, default = profile 0); each render tick
+ * spawns the staff particle fx (fn_80098B18) scaled by the object's
+ * root-motion scale. update is a no-op. The anim-event callback
+ * mcstaffeffe_SeqFn (defined alongside mcupgradema in DLL 0x2B8) drives
+ * the player's staff glow from sequence events.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
@@ -6,7 +16,7 @@ void mcstaffeffe_render(int obj)
 {
     McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
 
-    fn_80098B18(obj, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, 0);
+    fn_80098B18(obj, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, NULL);
 }
 
 void mcstaffeffe_update(void)
