@@ -14066,9 +14066,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                 *(u8*)(setup + 0x6) = 0xff;
                 *(u8*)(setup + 0x5) = 1;
                 *(u8*)(setup + 0x7) = 0xff;
-                *(int*)&((ObjPlacement*)setup)->posX = *(int*)&((GameObject*)obj)->anim.localPosX;
+                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = lbl_803E7F58 + ((GameObject*)obj)->anim.localPosY;
-                *(int*)&((ObjPlacement*)setup)->posZ = *(int*)&((GameObject*)obj)->anim.localPosZ;
+                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 *(u8*)(setup + 0x19) = 1;
                 Obj_SetupObject((int)setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
             }
