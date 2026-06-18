@@ -12482,7 +12482,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle1 = 0x16c;
     }
     *(s16*)((char*)p3 + 0x4d4) =
-        (int)((f32)angle1 * timeDelta + (f32) * (s16*)((char*)p3 + 0x4d4));
+        (f32)angle1 * timeDelta + (f32) * (s16*)((char*)p3 + 0x4d4);
     *(s16*)((char*)p3 + 0x4d2) = (s16)(*(s16*)((char*)p3 + 0x4d4) / 2);
 
     angle2 = *(s16*)((char*)p3 + 0x478) - (u16) * (s16*)((char*)p3 + 0x492);
@@ -12524,11 +12524,11 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle2 += 0xFFFF;
     }
     *(s16*)((char*)p3 + 0x4d0) =
-        (int)((f32) * (s16*)((char*)p3 + 0x4d0) +
-            interpolate((f32)angle2, lbl_803E7EB4, timeDelta));
+        (f32) * (s16*)((char*)p3 + 0x4d0) +
+            interpolate((f32)angle2, lbl_803E7EB4, timeDelta);
     *(s16*)((char*)p3 + 0x4d6) =
-        (int)((f32) * (s16*)((char*)p3 + 0x4d6) *
-            powfBitEstimate(lbl_803E7F1C, timeDelta));
+        (f32) * (s16*)((char*)p3 + 0x4d6) *
+            powfBitEstimate(lbl_803E7F1C, timeDelta);
 }
 
 int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
