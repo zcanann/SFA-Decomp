@@ -124,12 +124,14 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     if ((void*)p2 != NULL)
     {
         s16 tmp[3];
+        f32 va;
         f32 vb;
-        ((BaddieState*)p3)->posY = lbl_803E1CA0;
+        va = *(f32*)&lbl_803E1CA0;
+        ((BaddieState*)p3)->posY = va;
         vb = lbl_803E1C90;
         ((BaddieState*)p3)->posZ = vb;
         *(f32*)(p3 + 0x20) = vb;
-        *(f32*)(p3 + 0x24) = vb;
+        *(f32*)(p3 + 0x24) = va;
         *(f32*)(p3 + 0x28) = vb;
         *(f32*)(p3 + 0x2c) = vb;
         vecRotateYXZ(p1, p3 + 0x18);
