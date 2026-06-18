@@ -428,7 +428,7 @@ void ktrexfloorswitch_update(int obj)
             scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
             if (scroll > 0x200)
             {
-                scroll = 0x400 - scroll;
+                scroll = 0x200 - (scroll - 0x200);
                 ((KtrexfloorswitchState*)state)->scrollSpeed = -((KtrexfloorswitchState*)state)->scrollSpeed;
             }
             else if (scroll < 0x100)
@@ -443,7 +443,7 @@ void ktrexfloorswitch_update(int obj)
             scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
             if (scroll > 0x200)
             {
-                scroll = 0x400 - scroll;
+                scroll = 0x200 - (scroll - 0x200);
                 ((KtrexfloorswitchState*)state)->scrollSpeed = -((KtrexfloorswitchState*)state)->scrollSpeed;
             }
             else if (scroll < 0x100)
@@ -465,7 +465,7 @@ void ktrexfloorswitch_update(int obj)
             scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
             if (scroll > 0x200)
             {
-                scroll = 0x400 - scroll;
+                scroll = 0x200 - (scroll - 0x200);
                 ((KtrexfloorswitchState*)state)->scrollSpeed = -((KtrexfloorswitchState*)state)->scrollSpeed;
             }
             else if (scroll < 0x100)
