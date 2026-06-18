@@ -96,7 +96,7 @@ void gmmazewell_update(int obj)
         player = (u8*)Obj_GetPlayerObject();
         if (player != 0)
         {
-            (*gMapEventInterface)->savePoint((int)(player + 0xc), *(s16*)player, 0,
+            (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0,
                                              getCurMapLayer());
             state->savepointSet = 1;
         }
