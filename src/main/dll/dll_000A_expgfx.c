@@ -180,11 +180,12 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
     if (skipTextureFree == 0)
     {
         ExpgfxTableEntry* expTab = runtime->expTab;
+        u8* resBase = (u8*)&expTab[0].resource;
 
-        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource != 0)
+        if (*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((void*)expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource);
+            textureFree((void*)*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16));
             gExpgfxTextureFreeInProgress = 0;
         }
 
