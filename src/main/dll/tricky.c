@@ -56,7 +56,7 @@ extern f32 gViewFinderFadeLevel;
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
-extern char* lbl_803DD860[];
+extern char* lbl_803DD860[2];
 extern char* lbl_803DD868[];
 extern int lbl_8031BF90[];
 extern const f32 lbl_803E1E3C;
@@ -865,6 +865,7 @@ extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
 {
     char* base = lbl_803A87F0;
+    char** objs;
     f32 mA[12];
     f32 mB[12];
     lbl_803DD818 = f1;
@@ -898,26 +899,27 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
-    ((GameObject*)lbl_803DD860[0])->anim.localPosX = lbl_803DD818;
-    ((GameObject*)lbl_803DD860[0])->anim.localPosY = lbl_803DD814;
-    ((GameObject*)lbl_803DD860[0])->anim.localPosZ = lbl_803DD810;
-    ((GameObject*)lbl_803DD860[0])->anim.worldPosX = lbl_803DD818;
-    ((GameObject*)lbl_803DD860[0])->anim.worldPosY = lbl_803DD814;
-    ((GameObject*)lbl_803DD860[0])->anim.worldPosZ = lbl_803DD810;
-    *(f32*)(lbl_803DD860[0] + 0x8) = f4;
-    ((GameObject*)lbl_803DD860[0])->anim.rotZ = (s16)a;
-    ((GameObject*)lbl_803DD860[0])->anim.rotY = (s16)b;
-    ((GameObject*)lbl_803DD860[0])->anim.rotX = (s16)c;
-    ((GameObject*)lbl_803DD860[1])->anim.localPosX = lbl_803DD818;
-    ((GameObject*)lbl_803DD860[1])->anim.localPosY = lbl_803DD814;
-    ((GameObject*)lbl_803DD860[1])->anim.localPosZ = lbl_803DD810;
-    ((GameObject*)lbl_803DD860[1])->anim.worldPosX = lbl_803DD818;
-    ((GameObject*)lbl_803DD860[1])->anim.worldPosY = lbl_803DD814;
-    ((GameObject*)lbl_803DD860[1])->anim.worldPosZ = lbl_803DD810;
-    *(f32*)(lbl_803DD860[1] + 0x8) = f4;
-    ((GameObject*)lbl_803DD860[1])->anim.rotZ = (s16)a;
-    ((GameObject*)lbl_803DD860[1])->anim.rotY = (s16)b;
-    ((GameObject*)lbl_803DD860[1])->anim.rotX = (s16)c;
+    objs = lbl_803DD860;
+    ((GameObject*)objs[0])->anim.localPosX = lbl_803DD818;
+    ((GameObject*)objs[0])->anim.localPosY = lbl_803DD814;
+    ((GameObject*)objs[0])->anim.localPosZ = lbl_803DD810;
+    ((GameObject*)objs[0])->anim.worldPosX = lbl_803DD818;
+    ((GameObject*)objs[0])->anim.worldPosY = lbl_803DD814;
+    ((GameObject*)objs[0])->anim.worldPosZ = lbl_803DD810;
+    *(f32*)(objs[0] + 0x8) = f4;
+    ((GameObject*)objs[0])->anim.rotZ = (s16)a;
+    ((GameObject*)objs[0])->anim.rotY = (s16)b;
+    ((GameObject*)objs[0])->anim.rotX = (s16)c;
+    ((GameObject*)objs[1])->anim.localPosX = lbl_803DD818;
+    ((GameObject*)objs[1])->anim.localPosY = lbl_803DD814;
+    ((GameObject*)objs[1])->anim.localPosZ = lbl_803DD810;
+    ((GameObject*)objs[1])->anim.worldPosX = lbl_803DD818;
+    ((GameObject*)objs[1])->anim.worldPosY = lbl_803DD814;
+    ((GameObject*)objs[1])->anim.worldPosZ = lbl_803DD810;
+    *(f32*)(objs[1] + 0x8) = f4;
+    ((GameObject*)objs[1])->anim.rotZ = (s16)a;
+    ((GameObject*)objs[1])->anim.rotY = (s16)b;
+    ((GameObject*)objs[1])->anim.rotX = (s16)c;
 }
 #pragma opt_propagation reset
 
