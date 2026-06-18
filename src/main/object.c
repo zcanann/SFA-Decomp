@@ -880,21 +880,25 @@ void ObjModel_Release(u8 * model);
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
     s16 mode = ((GameObject*)obj)->anim.seqId;
-    if (mode == 0x1f || mode == 0)
+    switch (mode)
     {
+    case 0x1f:
+    case 0:
         objLoadPlayerFromSave(obj);
-    }
-    else
-    {
-        int* p = (int*)((GameObject*)obj)->anim.dll;
-        if (p != NULL)
+        break;
+    default:
         {
-            int fn = ((int*)*p)[1];
-            if (fn != -1 && (void*)fn != NULL)
+            int* p = (int*)((GameObject*)obj)->anim.dll;
+            if (p != NULL)
             {
-                ((void (*)(u8*))fn)(obj);
+                int fn = ((int*)*p)[1];
+                if (fn != -1 && (void*)fn != NULL)
+                {
+                    ((void (*)(u8*))fn)(obj);
+                }
             }
         }
+        break;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
