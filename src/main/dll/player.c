@@ -18507,9 +18507,10 @@ void fn_802AAD44(int obj)
     fn_80078740();
     GXSetColorUpdate(0);
 
-    v = lbl_803E7FA4 * (lbl_803E80C4 - height);
+    i = 0;
     src = lbl_802C2BF0;
-    for (i = 0; i < 8; i++)
+    v = lbl_803E7FA4 * (lbl_803E80C4 - height);
+    for (; i < 8; i++)
     {
         if (i < 4)
         {
