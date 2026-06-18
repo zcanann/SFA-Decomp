@@ -14039,9 +14039,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                     *(u8*)(setup + 0x6) = 0xff;
                     *(u8*)(setup + 0x5) = 1;
                     *(u8*)(setup + 0x7) = 0xff;
-                    *(int*)&((ObjPlacement*)setup)->posX = *(int*)&((GameObject*)player)->anim.localPosX;
-                    *(int*)&((ObjPlacement*)setup)->posY = *(int*)&((GameObject*)player)->anim.localPosY;
-                    *(int*)&((ObjPlacement*)setup)->posZ = *(int*)&((GameObject*)player)->anim.localPosZ;
+                    ((ObjPlacement*)setup)->posX = ((GameObject*)player)->anim.localPosX;
+                    ((ObjPlacement*)setup)->posY = ((GameObject*)player)->anim.localPosY;
+                    ((ObjPlacement*)setup)->posZ = ((GameObject*)player)->anim.localPosZ;
                     att = (void*)Obj_SetupObject((int)setup, 4, ((GameObject*)player)->anim.mapEventSlot,
                                                  -1, *(int*)&((GameObject*)player)->anim.parent);
                     lbl_803DE444 = att;
@@ -14066,9 +14066,9 @@ int fn_802A418C(int obj, int state, f32 fv)
                 *(u8*)(setup + 0x6) = 0xff;
                 *(u8*)(setup + 0x5) = 1;
                 *(u8*)(setup + 0x7) = 0xff;
-                *(int*)&((ObjPlacement*)setup)->posX = *(int*)&((GameObject*)obj)->anim.localPosX;
+                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = lbl_803E7F58 + ((GameObject*)obj)->anim.localPosY;
-                *(int*)&((ObjPlacement*)setup)->posZ = *(int*)&((GameObject*)obj)->anim.localPosZ;
+                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 *(u8*)(setup + 0x19) = 1;
                 Obj_SetupObject((int)setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
             }
@@ -14098,7 +14098,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                             (inner->unk4B8 != NULL &&
                                 inner->unk4B0 < lbl_803E8054 &&
                                 inner->unk4A8 < 0x4000 &&
-                                *(s16*)((char*)inner + 0x4b4) == 1))
+                                *(u16*)((char*)inner + 0x4b4) == 1))
                         {
                             if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                             {
