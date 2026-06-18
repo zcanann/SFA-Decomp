@@ -264,11 +264,11 @@ void camslide_update(CameraObject* camera, GameObject* target)
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
         (int)camera, &velX, &step, &velZ, &speed, 0, gCamcontrolModeSettings->targetHeight);
     speed = velZ * velZ + (velX * velX + step * step);
-    if (speed > lbl_803E16AC)
+    if (speed > *(f32*)&lbl_803E16AC)
     {
         speed = sqrtf(speed);
     }
-    if (speed < lbl_803E1694)
+    if (speed < *(f32*)&lbl_803E1694)
     {
         speed = lbl_803E1694;
     }
