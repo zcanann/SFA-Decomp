@@ -1675,7 +1675,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
     if (delta_f < lbl_803E25F4) delta_f = lbl_803E25F0 + delta_f;
     delta_f *= dt;
     newVal = (s16)(*(s16*)(int)node + (s32)delta_f);
-    *(s16*)node = newVal;
+    ((GameObject*)node)->anim.rotX = newVal;
 
     if (fa != lbl_803E2574)
     {
@@ -1739,11 +1739,11 @@ void fn_8014BC98(int* node, int* sub)
         ua = (u16)getAngle(-d[0], -d[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
         {
-            raw = (s16)(*(s16*)node + **(s16**)&((GameObject*)node)->anim.parent);
+            raw = (s16)(((GameObject*)node)->anim.rotX + **(s16**)&((GameObject*)node)->anim.parent);
         }
         else
         {
-            raw = *(s16*)node;
+            raw = ((GameObject*)node)->anim.rotX;
         }
         delta = ua - (u16)(s16)
         raw;
@@ -1781,7 +1781,7 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     p3;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
     newVal = (s16)(*(s16*)(int)node + (s32)((f32)(s16)delta * dt));
-    *(s16*)node = newVal;
+    ((GameObject*)node)->anim.rotX = newVal;
 }
 
 typedef struct EnemyPlacement
