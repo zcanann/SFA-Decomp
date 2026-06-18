@@ -276,6 +276,7 @@ void voxmaps_initialise(void)
 }
 
 #pragma opt_propagation off
+#pragma opt_strength_reduction off
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &lbl_803387A0;
@@ -346,8 +347,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
-            vm->slotOrigin[bestSlot].gridX = (s16)vm->blockOriginGridX;
-            vm->slotOrigin[bestSlot].gridZ = (s16)vm->blockOriginGridZ;
+            *(s16*)&vm->slotOrigin[bestSlot].gridX = (s16)vm->blockOriginGridX;
+            *(s16*)&vm->slotOrigin[bestSlot].gridZ = (s16)vm->blockOriginGridZ;
             vm->f58 = 0;
         }
     }
@@ -357,6 +358,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     }
     return &vm->blockOriginWorldX;
 }
+#pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 
 int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst)
@@ -672,12 +674,12 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         else
         {
             n = &state->nodes[idx];
-            state->unk1C = idx + 1;
+            state->unk1C++;
             n->x = box[0];
             n->unk2 = box[1];
             n->y = box[2];
             n->unk8 = count;
-            n->unkA = (u8)a3;
+            n->unkA = (u8)(u16)a3;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
             n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -787,24 +789,24 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             {
                 if (next == 1)
                 {
-                    if (sumCur < sumNext)
+                    if (sumCur >= sumNext)
                     {
-                        sumCur = sumNext;
+                        chosen--;
                     }
                     else
                     {
-                        chosen--;
+                        sumCur = sumNext;
                     }
                 }
                 else
                 {
-                    if (sumCur <= sumNext)
+                    if (sumCur > sumNext)
                     {
-                        sumCur = sumNext;
+                        chosen--;
                     }
                     else
                     {
-                        chosen--;
+                        sumCur = sumNext;
                     }
                 }
                 if (sumCur > 1)
@@ -893,13 +895,13 @@ searched:
     }
     else
     {
-        n = &state->nodes[nodeCount];
-        state->unk1C = nodeCount + 1;
+        n = &state->nodes[state->unk1C];
+        state->unk1C++;
         n->x = box[0];
         n->unk2 = box[1];
         n->y = box[2];
         n->unk8 = count;
-        n->unkA = (u8)a3;
+        n->unkA = (u8)(u16)a3;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
         n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -988,12 +990,13 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
 {
     RouteNode* node;
     int navState;
-    int ret = 0;
+    int ret;
     int flag = 0;
     int i;
     s16 out[3];
 
     navState = nav->navState;
+    ret = 0;
     if (navState == 0)
     {
         int pathDirect;
@@ -1035,8 +1038,8 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 node->y = out[2];
                 node->unk8 = 0;
                 node->unkA = 0xff;
-                dx = state->tgtX - node->x;
-                dz = state->tgtY - node->y;
+                dx = node->x - state->tgtX;
+                dz = node->y - state->tgtY;
                 d2 = dx * dx + dz * dz;
                 node->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
             }
@@ -1048,20 +1051,17 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 u16 val;
                 int parent;
 
-                state->queueCount++;
-                queue[state->queueCount].value = (u16)(state->unk1C - 1);
+                queue[++state->queueCount].value = (u16)(state->unk1C - 1);
                 queue[state->queueCount].priority = (u16)(0xffff - cost);
                 pos = state->queueCount;
                 key = queue[pos].priority;
                 val = queue[pos].value;
                 queue[0].priority = 0xffff;
-                parent = pos >> 1;
-                while (queue[parent].priority <= key)
+                while (parent = pos >> 1, queue[parent].priority <= key)
                 {
                     queue[pos].value = queue[parent].value;
                     queue[pos].priority = queue[parent].priority;
                     pos = parent;
-                    parent = pos >> 1;
                 }
                 queue[pos].priority = key;
                 queue[pos].value = val;
@@ -1088,8 +1088,9 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
         int r;
         ret = 1;
         r = voxmaps_processRouteQueue(state, nav->budget);
-        if (r == 0)
+        switch (r)
         {
+        case 0:
             if (navState++ < nav->maxIters)
             {
             }
@@ -1111,38 +1112,31 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 }
             }
             ret = 1;
-        }
-        else if (r > 0)
-        {
-            if (r < 2)
+            break;
+        case 1:
+            navState = 0;
+            if (fn_80011EB0(state, 1) != 0)
             {
-                navState = 0;
-                if (fn_80011EB0(state, 1) != 0)
-                {
-                    nav->tgtPos[0] = state->unk08[0];
-                    nav->tgtPos[1] = state->unk08[1];
-                    nav->tgtPos[2] = state->unk08[2];
-                }
-                else
-                {
-                    nav->tgtPos[0] = nav->curPos[0];
-                    nav->tgtPos[1] = nav->curPos[1];
-                    nav->tgtPos[2] = nav->curPos[2];
-                    flag = 1;
-                }
-                ret = 1;
+                nav->tgtPos[0] = state->unk08[0];
+                nav->tgtPos[1] = state->unk08[1];
+                nav->tgtPos[2] = state->unk08[2];
             }
-        }
-        else
-        {
-            if (r >= -1)
+            else
             {
-                navState = 0;
-                nav->tgtPos[0] = nav->destPos[0];
-                nav->tgtPos[1] = nav->destPos[1];
-                nav->tgtPos[2] = nav->destPos[2];
+                nav->tgtPos[0] = nav->curPos[0];
+                nav->tgtPos[1] = nav->curPos[1];
+                nav->tgtPos[2] = nav->curPos[2];
                 flag = 1;
             }
+            ret = 1;
+            break;
+        case -1:
+            navState = 0;
+            nav->tgtPos[0] = nav->destPos[0];
+            nav->tgtPos[1] = nav->destPos[1];
+            nav->tgtPos[2] = nav->destPos[2];
+            flag = 1;
+            break;
         }
     }
 
