@@ -87,7 +87,7 @@ void dll_219_update(Dll219Object* obj)
     }
     else
     {
-        if (objectId == DLL_219_UNUSED_OBJECT_ID)
+        if (objectId != DLL_219_UNUSED_OBJECT_ID)
         {
             return;
         }
