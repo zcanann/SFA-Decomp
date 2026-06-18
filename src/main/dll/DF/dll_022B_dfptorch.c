@@ -50,7 +50,7 @@ void DFP_Torch_init(int obj, int def)
     void* res;
     f32 spawnArg;
     int motionRate;
-    *(s16*)obj = (s16)((*(s8*)(def + 0x18) & 0x3f) << 10);
+    ((GameObject*)obj)->anim.rotX = (s16)((*(s8*)(def + 0x18) & 0x3f) << 10);
     motionRate = *(s16*)(def + 0x1a);
     if (motionRate > 0)
     {
