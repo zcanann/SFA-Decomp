@@ -236,7 +236,7 @@ void hightop_func0F(int obj, f32* ox, f32* oy, f32* oz)
     pos.x = ((GameObject*)player)->anim.localPosX;
     pos.y = ((GameObject*)player)->anim.localPosY;
     pos.z = ((GameObject*)player)->anim.localPosZ;
-    pos.rx = *(s16*)player;
+    pos.rx = ((GameObject*)player)->anim.rotX;
     pos.ry = ((GameObject*)player)->anim.rotY;
     pos.rz = ((GameObject*)player)->anim.rotZ;
     pos.scale = lbl_803E6AB8;
