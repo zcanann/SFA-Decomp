@@ -1,3 +1,21 @@
+/*
+ * hightop (DLL 0x272) - the "HighTop" rideable/escortable dinosaur baddie
+ * (object type 0x43).
+ *
+ * Runs as a BaddieState-driven object with an 11-entry state-handler
+ * table (gHighTopStateHandlers, installed in hightop_initialise) plus a
+ * default handler. States cover idle/wander (04), locomotion (02),
+ * follow/turn (01), the air-meter ride sequence (07/08), reset/death (09),
+ * and a scripted progress state (10). It owns a path-control walker
+ * (gPathControlInterface) for ground motion, a look-controller from
+ * dll_2E, eye animation, movement SFX, and the on-screen air meter
+ * (gGameUIInterface). Hits drain the air meter; emptying it shuts the
+ * meter down, spawns a follow-up object and sets GameBit 0xB48.
+ *
+ * Interaction is gated through trigger sequences (gObjectTriggerInterface)
+ * and a set of GameBits (e.g. 0x631/0x632/0x634, the 0x9C7.. progress
+ * quartet, and the 0x3F0.. counters).
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -54,14 +72,11 @@ typedef struct HightopPlacement
     u8 padC4C[0xC50 - 0xC4C];
 } HightopPlacement;
 
-
-
-
 typedef struct HighTopRuntime
 {
     BaddieState baddie;
     u8 pad35C[0x3ec - 0x35c];
-    u8 lookController[0x9fd - 0x3ec]; /* dll_2E look-controller block at 0x3EC (start evidenced; true extent unknown) */
+    u8 lookController[0x9fd - 0x3ec]; /* dll_2E look-controller block */
     u8 unk9FD;
     u8 pad9FE[0xb18 - 0x9fe];
     f32 pathPointWorldPositions[12];
@@ -122,6 +137,8 @@ STATIC_ASSERT(offsetof(HighTopObject, yaw) == offsetof(ObjAnimComponent, rotX));
 STATIC_ASSERT(offsetof(HighTopObject, x) == offsetof(ObjAnimComponent, localPosX));
 STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
+#define HIGHTOP_OBJECT_TYPE_ID 0x43
+
 int hightop_defaultStateHandler(void) { return 0x0; }
 
 void hightop_func15(void)
@@ -136,9 +153,9 @@ int hightop_func0E(void) { return 0x1; }
 
 int hightop_func0B(void) { return 0x1; }
 
-int hightop_getExtraSize(void) { return 0xc4c; }
+int hightop_getExtraSize(void) { return sizeof(HighTopRuntime); }
 
-int hightop_getObjectTypeId(void) { return 0x43; }
+int hightop_getObjectTypeId(void) { return HIGHTOP_OBJECT_TYPE_ID; }
 
 void hightop_release(void)
 {
@@ -240,6 +257,7 @@ int hightop_stateHandler03(int obj, u8* p2)
     if ((s8)p2[0x27a] != 0)
     {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
+        /* both arms intentionally identical in the retail build */
         if (*(u32*)&p->unkC3C == 4)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
@@ -374,7 +392,7 @@ void hightop_renderGroundMarker(int obj, f32 scale)
     fn_8003B950(lbl_803AD208);
 }
 
-void hightop_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
 {
     HighTopRuntime* runtime = ((HighTopObject*)obj)->runtime;
     if (visible != 0)
@@ -396,9 +414,9 @@ void hightop_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
             for (i = 0; i < count; i++)
             {
                 int idx = (*(int (**)(int*))((char*)**(int***)((char*)*list + 0x68) + 0x24))(*list);
-                (*(void (**)(int*, void*, int, undefined4, undefined4, undefined4, undefined4))((char*)**(int***)((char
-                    *)*list + 0x68) + 0x20))(
-                    *list, obj, lbl_8032AB48[idx], p2, p3, p4, p5);
+                void (*dispatch)(int*, void*, int, int, int, int, int) =
+                    *(void (**)(int*, void*, int, int, int, int, int))((char*)**(int***)((char*)*list + 0x68) + 0x20);
+                dispatch(*list, obj, lbl_8032AB48[idx], p2, p3, p4, p5);
                 list++;
             }
         }
@@ -519,8 +537,7 @@ int hightop_stateHandler08(int obj, u8* p2)
             }
         }
     }
-    state->unkC30 -= (f32)(u32)
-    framesThisStep;
+    state->unkC30 -= (f32)(u32)framesThisStep;
     return 0;
 }
 
@@ -800,8 +817,7 @@ int hightop_stateHandler04(int obj, int p)
     if ((s8)((BaddieState*)p)->moveJustStartedA != 0)
     {
         state->flagsC49.b1 = 1;
-        state->unkC30 = (f32)(int)
-        randomGetRange(0x1f4, 0x3e8);
+        state->unkC30 = (f32)(int)randomGetRange(0x1f4, 0x3e8);
         state->unkC4B = 0;
         if (((GameObject*)obj)->anim.currentMove != 2)
         {
@@ -838,8 +854,7 @@ int hightop_stateHandler04(int obj, int p)
         return 0;
     }
     objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
-    state->unkC30 -= (f32)(u32)
-    framesThisStep;
+    state->unkC30 -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {
         RandomTimer_UpdateRangeTrigger((char*)state + 0xc34, lbl_803E6AD8, lbl_803E6ADC);
@@ -916,7 +931,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     int idx;
     int changed;
     f32 v;
-    f32 f31;
+    f32 lateralSpeed;
     f32 ang;
     f32 moveSpeed;
     s16* vec;
@@ -963,20 +978,20 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     {
         v = lbl_803E6AB8;
     }
-    f31 = lbl_803E6ADC * v;
-    if (f31 < 0.0f)
+    lateralSpeed = lbl_803E6ADC * v;
+    if (lateralSpeed < 0.0f)
     {
-        f31 = 0.0f;
+        lateralSpeed = 0.0f;
     }
     *(f32*)((char*)p + 0x294) =
-        t * ((f31 - *(f32*)((char*)p + 0x294)) / *(f32*)((char*)p + 0x2b8)) + *(f32*)((char*)p + 0x294);
+        t * ((lateralSpeed - *(f32*)((char*)p + 0x294)) / *(f32*)((char*)p + 0x2b8)) + *(f32*)((char*)p + 0x294);
     if (((GameObject*)obj)->anim.rotY > 0)
     {
-        ang = f31 - lbl_803E6B14 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
+        ang = lateralSpeed - lbl_803E6B14 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
     }
     else
     {
-        ang = f31 - lbl_803E6B20 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
+        ang = lateralSpeed - lbl_803E6B20 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
     }
     *(f32*)((char*)p + 0x280) =
         t * ((ang - *(f32*)((char*)p + 0x280)) / *(f32*)((char*)p + 0x2b8)) + *(f32*)((char*)p + 0x280);
@@ -1034,7 +1049,7 @@ int hightop_stateHandler09(int obj, int p)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    int r25;
+    int prevCount;
     int i;
     if ((s8)((HightopPlacement*)p)->unk27A != 0 || state->flagsC49.b6 != 0)
     {
@@ -1060,13 +1075,13 @@ int hightop_stateHandler09(int obj, int p)
             ((HightopPlacement*)p)->unk2A0 = lbl_803E6AAC;
         }
         ((HightopPlacement*)p)->unk2A0 = lbl_803E6AAC;
-        r25 = GameBit_Get(0x3f0) - 1;
+        prevCount = GameBit_Get(0x3f0) - 1;
         state->unkC3C = 9;
         for (i = 0; i < 4; i++)
         {
-            GameBit_Set((&lbl_803DC330)[i], i > r25);
+            GameBit_Set((&lbl_803DC330)[i], i > prevCount);
         }
-        if (r25 == 3)
+        if (prevCount == 3)
         {
             GameBit_Set(0x3f4, 1);
             return 0xb;
@@ -1182,9 +1197,9 @@ int hightop_stateHandler10(int obj, int p)
         rt->unkC4B = 3;
         *(int*)((char*)p + 0) |= 0x1000000;
     }
-    if (GameBit_Get(451) != 0)
+    if (GameBit_Get(0x1c3) != 0)
     {
-        if ((int)GameBit_Get(238) == 2)
+        if ((int)GameBit_Get(0xee) == 2)
         {
             rt->unkC4B = 7;
         }
