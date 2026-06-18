@@ -127,7 +127,7 @@ extern void ObjGroup_AddObject(int obj, int group);
 extern int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern char sDrCreatorTimeFormat[];
 extern void fn_80137948(char *fmt, ...);
-extern f32 lbl_803E69A8;
+extern const f32 lbl_803E69A8;
 extern void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int b);
 extern f32 lbl_803E68B8;
 extern void vecRotateZXY(int obj, f32 *v);
