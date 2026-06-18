@@ -1,3 +1,27 @@
+/*
+ * picmenu - THP movie-load and decode back-end: movieLoad, audio DMA init,
+ * reader/decoder threads.
+ *
+ * Drives the front-end attract/demo movies, which are THP files streamed
+ * from disc. movieLoad() opens the file (singleton player at lbl_803A5D60),
+ * validates the THP magic/version, and parses the per-frame component table
+ * (video and optional audio). AttractMovieAudio_Init/Shutdown manage the AI
+ * DMA audio path and its double-buffered DMA ring.
+ *
+ * Two worker threads carry the pipeline:
+ *   - the reader (THPRead_Reader, CreateReadThread) DVD-reads each frame's
+ *     bytes into free buffers and hands them to the decoder via message
+ *     queues, wrapping back to the movie data offset when a looping movie
+ *     hits its last frame;
+ *   - the video decoder (AttractMovieVideo_Decoder / ...ForOnMemory,
+ *     CreateVideoDecodeThread) THPVideoDecode()s each frame into a Y/U/V
+ *     texture set and posts it for display.
+ * The on-memory decoder variant walks an in-RAM movie image directly
+ * instead of consuming reader messages.
+ *
+ * The PushReadedBuffer2 / Pop* / PushFree* helpers are the message-queue
+ * plumbing between the reader, decoder, and display sides.
+ */
 #include "dolphin/ai.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
@@ -30,20 +54,28 @@ extern s32 lbl_803DD66C;
 extern u32 lbl_803DD670;
 extern u32 lbl_803DD674;
 extern u32 lbl_803DD678;
-extern s32 lbl_803DD688;
+extern s32 lbl_803DD688; /* sbss slot is 8 bytes; upper word unreferenced */
 extern s32 lbl_803DD690;
 extern s32 lbl_803DD694;
-extern u32 gAttractMovieIdleFrameCount;
+extern u32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
 void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);
 void AttractMovieVideo_Decoder(void);
 
-BOOL movieLoad(const char* fileName, void* param2)
+#define THP_VERSION_1_0 0x10000
+
+/* per-frame component kinds in THPHeader::mCompInfoDataOffsets table */
+enum {
+    THP_COMPONENT_VIDEO = 0,
+    THP_COMPONENT_AUDIO = 1
+};
+
+BOOL movieLoad(const char* fileName, void* onMemory)
 {
     AttractMovieAudioInfo* audioInfo; /* r28 */
     AttractMovieVideoInfo* videoInfo; /* r29 */
-    char* pb; /* r30 */
+    char* pb; /* r30 home for the isOpen read/write only; other accesses use the raw global */
     THPFrameCompInfo* compInfo; /* r25 */
     u32 readOff; /* r24 */
     s32 result;
@@ -87,7 +119,7 @@ BOOL movieLoad(const char* fileName, void* param2)
         return 0;
     }
 
-    if (((AttractMoviePlayer*)&lbl_803A5D60)->header.mVersion != 0x10000)
+    if (((AttractMoviePlayer*)&lbl_803A5D60)->header.mVersion != THP_VERSION_1_0)
     {
         DVDClose((DVDFileInfo*)&lbl_803A5D60);
         return 0;
@@ -113,7 +145,7 @@ BOOL movieLoad(const char* fileName, void* param2)
     {
         switch (((AttractMoviePlayer*)&lbl_803A5D60)->compInfo.mFrameComp[i])
         {
-        case 0:
+        case THP_COMPONENT_VIDEO:
             result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x20, readOff);
             if (result < 0)
             {
@@ -123,7 +155,7 @@ BOOL movieLoad(const char* fileName, void* param2)
             memcpy(videoInfo, lbl_803A5D20, sizeof(*videoInfo));
             readOff += sizeof(*videoInfo);
             break;
-        case 1:
+        case THP_COMPONENT_AUDIO:
             result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x20, readOff);
             if (result < 0)
             {
@@ -142,7 +174,7 @@ BOOL movieLoad(const char* fileName, void* param2)
     ((AttractMoviePlayer*)&lbl_803A5D60)->internalState = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->state = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->playFlags = 0;
-    ((AttractMoviePlayer*)&lbl_803A5D60)->isOnMemory = (s32)param2;
+    ((AttractMoviePlayer*)&lbl_803A5D60)->isOnMemory = (s32)onMemory;
     ((AttractMoviePlayer*)pb)->isOpen = 1;
     ((AttractMoviePlayer*)&lbl_803A5D60)->curVolume = lbl_803E1D54;
     ((AttractMoviePlayer*)&lbl_803A5D60)->targetVolume = lbl_803E1D54;
@@ -379,7 +411,7 @@ void AttractMovieVideo_Decode(void* param)
         {
             switch (componentKind[0x70])
             {
-            case 0:
+            case THP_COMPONENT_VIDEO:
             {
                 s32 dec = THPVideoDecode(dvdData,
                                          ((AttractMovieTextureSet*)readMsg)->yTexture,
@@ -584,3 +616,4 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
     lbl_803DD694 = 1;
     return 1;
 }
+#pragma peephole reset
