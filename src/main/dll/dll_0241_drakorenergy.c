@@ -131,7 +131,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)((int**)obj)[0xb8 / 4])->mode == 0; }
+int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == 0; }
 
 void drakorenergy_update(int obj)
 {
