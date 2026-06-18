@@ -59,8 +59,8 @@ void OptionsScreen_render(int arg)
 {
     int alpha;
     int fade;
-    int i;
     int* item;
+    int i;
     u16* panel = &lbl_8031ACB8[(s8)lbl_803DBA28 * 8];
 
     if (shouldShowCredits() != 0)
@@ -98,7 +98,7 @@ void OptionsScreen_render(int arg)
     }
 
     item = lbl_803A87D0;
-    for (i = 0; i < 8; i++, item++)
+    for (i = 0; i < 8; item++, i++)
     {
         if (*(void**)item != NULL)
         {
