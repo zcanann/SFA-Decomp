@@ -369,6 +369,7 @@ typedef struct GfHitState
 void fn_8023A3E4(int p1, int p2)
 {
     u8 i;
+    u8 j;
     uint hitVol;
     int hitType;
     int hitObj;
@@ -376,28 +377,31 @@ void fn_8023A3E4(int p1, int p2)
     GfHitState* s = (GfHitState*)p2;
     int obj = p1;
     u8 adjusted;
-    u8 texIdx;
+    int texIdx;
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
-    got = ObjHits_GetPriorityHit(obj, &hitObj, &hitType, &hitVol);
-    for (i = 0; i < 4; i++)
+    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
+    for (j = 0; j < 4; j++)
     {
-        int v = s->timer[i] - framesThisStep;
+        int v = ((u8*)s)[178 + j] - framesThisStep;
         if (v < 0)
             v = 0;
-        s->timer[i] = v;
+        ((u8*)s)[178 + j] = v;
     }
     if (got != 0)
     {
-        switch (hitType)
+        int ht = hitType;
+        switch (ht)
         {
         case 0:
         case 1:
         case 2:
-            if (s->hits[hitType] != 0 && s->timer[hitType] == 0)
+        {
+            u8 *h = (u8*)s + ht;
+            if (h[174] != 0 && h[178] == 0)
             {
-                s->hits[hitType] -= 1;
+                h[174] -= 1;
                 s->timer[hitType] = 6;
                 if (s->hits[hitType] != 0)
                     Sfx_PlayFromObject(obj, 0x484);
@@ -417,10 +421,11 @@ void fn_8023A3E4(int p1, int p2)
                 }
             }
             break;
+        }
         case 3:
             if (*(s16*)(hitObj + 0x46) == 0x605 &&
-                s->timer[hitType] == 0 &&
-                s->hits[hitType] != 0 &&
+                s->timer[ht] == 0 &&
+                s->hits[ht] != 0 &&
                 s->mode == 0xc)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
@@ -432,25 +437,26 @@ void fn_8023A3E4(int p1, int p2)
     }
     for (i = 0; i < 3; i++)
     {
-        if (s->hits[i] != 0)
+        u8 *row = (u8*)s + i;
+        if (row[174] != 0)
         {
-            if (s->timer[i] != 0)
-                s->texState[i] = 1;
+            if (row[178] != 0)
+                row[185] = 1;
             else
-                s->texState[i] = 0;
+                row[185] = 0;
         }
         else
         {
-            s->texState[i] = 2;
+            row[185] = 2;
         }
-        state = s->texState[i];
+        state = row[185];
         adjusted = state;
         texIdx = (&lbl_803DC4C8)[i];
-        if (texIdx < 2 && state == 1)
+        if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
         tex = objFindTexture((void *)obj, texIdx * 2, 0);
         tex->textureId = adjusted << 8;
-        if (texIdx == 2 && state == 1)
+        if ((u32)texIdx == 2 && state == 1)
             state = 0;
         tex = objFindTexture((void *)obj, texIdx * 2 + 1, 0);
         tex->textureId = state << 8;
