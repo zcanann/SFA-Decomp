@@ -11118,24 +11118,24 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             }
             break;
         case 32:
-            if (lbl_803E7E98 < ((PlayerState*)cfg)->baddie.animSpeedA)
+            if (((PlayerState*)cfg)->baddie.animSpeedA > lbl_803E7E98)
             {
                 r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
-                ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
+                ((PlayerState*)state)->unk7C8 = (r >= clamp) ? clamp : r;
             }
             else
             {
                 ((PlayerState*)state)->unk7C8 =
                     -(lbl_803E7E90 * dt - ((PlayerState*)state)->unk7C8);
-                if (lbl_803DE440 <= clamp)
+                if (lbl_803DE440 > clamp)
+                {
+                    lbl_803DE440 = lbl_803DE440 - dt;
+                }
+                else
                 {
                     Sfx_PlayFromObject(obj, SFXmammoth_snowstep);
                     lbl_803DE440 = (f32)(int)
                     randomGetRange(0x27, 0x3c);
-                }
-                else
-                {
-                    lbl_803DE440 = lbl_803DE440 - dt;
                 }
             }
             iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
