@@ -1,72 +1,24 @@
-/*
- * dll_003C - the "Link" on-screen menu / icon-bar widget (despite the
- * TumbleweedBush DLL name, this object's symbol set is the EN v1.0 Link
- * menu code that was retargeted into this TU).
- *
- * A Link menu is an array of up to 40 LinkMenuItem entries (mirror copy in
- * lbl_803A9458). Each item carries a textId/boxId, position, a texture, and
- * up/down/left/right navigation links. Link_setup() installs the items and
- * the base/selected text colors; Link_update() reads analog + button input,
- * walks the navigation links, drives the highlight pulse (linkCount_803dd90e
- * oscillating 0..0xFF via lbl_803DD910) and returns 1 (accept) / 0 (cancel) /
- * -1 (idle). Link_render() draws each item's text/box/texture with the pulsed
- * highlight color and per-slot icon strip. The slot icons are picked by
- * linkInitTextures() from a random budget over the six entries in linkTextures
- * (LinkTextureSlot[6]).
- *
- * Item flag bits (LINK_FLAG_*) select draw style; navigation honors
- * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
- */
 #pragma scheduling on
 #pragma peephole on
+#include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
-extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
-extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
-extern s16 linkItemOpacity;
-extern s16 linkCount_803dd90e;      /* selected-item highlight pulse counter */
-extern s8 linkSelected;
-extern u8 linkTextures[0x30];       /* LinkTextureSlot[6] */
-extern s16 lbl_803DD8FA;            /* selected-color B */
-extern s16 lbl_803DD8FC;            /* selected-color G */
-extern s16 lbl_803DD8FE;            /* selected-color R */
-extern s16 lbl_803DD900;            /* base-color B */
-extern s16 lbl_803DD902;            /* base-color G */
-extern s16 lbl_803DD904;            /* base-color R */
-extern s8 lbl_803DD910;             /* highlight pulse direction */
-extern s8 lbl_803DD913;             /* input enabled after first update */
-extern const char* lbl_803DD908;    /* default message text */
-extern void* saveFileSelect_saveSlots;
-extern u8 framesThisStep;
-
 extern u32 randomGetRange(int min, int max);
+
 extern void textureFree(void* p);
+
+#pragma scheduling off
+#pragma scheduling reset
+
+/* ===== EN v1.0 retargeted leaves ========================================= */
+
+extern u8 linkFlag_803dd8f8;
+extern u8 linkIsRotated;
+extern s16 linkItemOpacity;
+extern s16 linkCount_803dd90e;
+extern s8 linkSelected;
+extern u8 linkTextures[0x30];
 extern void* textureLoadAsset(int id);
-extern void OSReport(const char* fmt, ...);
-extern char lbl_8031C234[]; /* "too many slots" overflow error format string */
-extern char lbl_8031C1A8[]; /* base of the nav-link out-of-range error format strings */
-extern int getCurLanguage(void);
-extern u8 lbl_802C8680[];
-extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
-extern void gameTextFn_80016810(int textId, int arg1, int arg2);
-extern void* gameTextGetBox(int boxId);
-extern void gameTextShow(int textId);
-extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void MWTRACE(int boxId);
-extern uint GameBit_Get(int eventId);
-extern int getHudHiddenFrameCount(void);
-extern void padGetAnalogInput(int pad, s8* x, s8* y);
-extern void padClearAnalogInputY(int pad);
-extern void padClearAnalogInputX(int pad);
-extern u32 getButtonsJustPressed(int pad);
-extern void buttonDisable(int pad, int mask);
-extern void linkDrawFn_801302c0(void);
-extern void linkDrawFn_80130484(void);
-extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
-extern void fn_8001BE2C(int mode); /* mode 3: (re)load the three subtitle textures */
-extern void* memcpy(void* dst, const void* src, int size);
-extern void padFn_80014b18(int value);
 
 typedef struct LinkMenuItemDB
 {
@@ -95,6 +47,47 @@ typedef struct LinkMenuItemDB
     u8 pad39[3];
 } LinkMenuItemDB;
 
+#pragma scheduling off
+#pragma scheduling reset
+
+extern void OSReport(const char* fmt, ...);
+extern char lbl_8031C234[];
+extern int getCurLanguage(void);
+extern u8 lbl_802C8680[];
+extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
+extern void gameTextFn_80016810(int textId, int arg1, int arg2);
+extern void* gameTextGetBox(int boxId);
+extern void gameTextSetColor(int red, int green, int blue, int alpha);
+extern void gameTextShow(int textId);
+extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
+extern void MWTRACE(int boxId);
+extern void* saveFileSelect_saveSlots;
+extern s16 lbl_803DD8FA;
+extern s16 lbl_803DD8FC;
+extern s16 lbl_803DD8FE;
+extern s16 lbl_803DD900;
+extern s16 lbl_803DD902;
+extern s16 lbl_803DD904;
+extern uint GameBit_Get(int eventId);
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8* x, s8* y);
+extern void padClearAnalogInputY(int pad);
+extern void padClearAnalogInputX(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern void buttonDisable(int pad, int mask);
+extern void linkDrawFn_801302c0(void);
+extern void linkDrawFn_80130484(void);
+extern u8 framesThisStep;
+extern s8 lbl_803DD910;
+extern s8 lbl_803DD913;
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void fn_8001BDD4(int);
+extern void fn_8001BE2C(int mode);
+extern void* memcpy(void* dst, const void* src, int size);
+extern void padFn_80014b18(int value);
+extern const char* lbl_803DD908;
+extern char lbl_8031C1A8[];
+
 void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
@@ -111,6 +104,18 @@ void Link_setSelected(int v) { linkSelected = (s8)v; }
 #pragma peephole reset
 s32 Link_getSelected(void) { return linkSelected; }
 
+/* Stubs added to align function set with v1.0 asm. Source had many Ghidra
+ * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
+ * asm symbol set is fully present so future hunters can fill bodies. */
+#pragma scheduling off
+#pragma scheduling reset
+#pragma scheduling off
+#pragma scheduling reset
+#pragma scheduling off
+
+#pragma scheduling reset
+#pragma scheduling off
+#pragma scheduling reset
 #pragma scheduling off
 u16 fn_80130124(void)
 {
@@ -119,7 +124,6 @@ u16 fn_80130124(void)
 }
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -130,8 +134,8 @@ void linkInitTextures(LinkMenuItemDB* item)
     {
         item->slots[i] = -1;
     }
-    i = 1;
     item->slots[0] = 0;
+    i = 1;
     budget -= linkTextures[6] + linkTextures[14];
     while (budget != 0)
     {
@@ -156,7 +160,12 @@ void linkInitTextures(LinkMenuItemDB* item)
         OSReport(lbl_8031C234);
     }
 }
-#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+void linkDrawFn_801302c0(void);
+#pragma scheduling reset
+#pragma scheduling off
+void linkDrawFn_80130484(void);
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
@@ -209,33 +218,31 @@ void Link_copy(u8* srcArg)
 }
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    extern s8 lbl_803DD911; /* #57 */
+    extern u8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* src;
     int i;
 
     src = (LinkMenuItemDB*)srcArg;
-    for (i = 0; i < lbl_803DD911; i++)
+    for (i = 0; i < (s8)lbl_803DD911; i++)
     {
         lbl_803A9458[i].field00 = src[i].field00;
         lbl_803A9458[i].itemId = src[i].itemId;
         lbl_803A9458[i].field38 = 2;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
 
-typedef struct LinkTextureSlot
+typedef struct LinkTexture
 {
     void* texture;
-    s16 assetId;
+    u8 pad4[2];
     u8 width;
     u8 pad7;
-} LinkTextureSlot;
+} LinkTexture;
 
 typedef struct LinkMenuItemDA
 {
@@ -317,8 +324,8 @@ void Link_render(void)
                     while (drawItem->slots[slotIndex] != -1 && slotIndex < 25)
                     {
                         textureIndex = drawItem->slots[slotIndex];
-                        drawTexture(((LinkTextureSlot*)linkTextures)[textureIndex].texture, 0xff, (f32)x, (f32)y, 0x100);
-                        x += ((LinkTextureSlot*)linkTextures)[drawItem->slots[slotIndex]].width;
+                        drawTexture(((LinkTexture*)linkTextures)[textureIndex].texture, (f32)x, (f32)y, 0xff, 0x100);
+                        x += ((LinkTexture*)linkTextures)[drawItem->slots[slotIndex]].width;
                         slotIndex++;
                     }
                 }
@@ -399,7 +406,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (u8)alpha, (f32)(drawItem->x + 11), (f32)drawItem->y, 0x100);
+                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), (f32)drawItem->y, (u8)alpha, 0x100);
                     }
                     else
                     {
@@ -411,7 +418,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (u8)alpha, (f32)drawItem->x, (f32)drawItem->y, 0x100);
+                        drawTexture(drawItem->texture, (f32)drawItem->x, (f32)drawItem->y, (u8)alpha, 0x100);
                     }
                 }
 
@@ -430,6 +437,14 @@ void Link_render(void)
     MWTRACE(0xff);
 }
 #pragma peephole reset
+
+typedef struct LinkTextureSlot
+{
+    void* texture;
+    s16 assetId;
+    u8 width;
+    u8 pad7;
+} LinkTextureSlot;
 
 typedef struct LinkMenuItem
 {
@@ -463,9 +478,6 @@ typedef struct LinkMenuItem
 
 #define LINK_FLAG_DISABLE_NAV_TO 0x1000
 #define LINK_FLAG_NO_ACCEPT      0x0020
-#define LINK_FLAG_INHERIT_X      0x0008
-#define LINK_FLAG_NO_SLOTS       0x0010
-#define LINK_FLAG_CENTRE         0x0400
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
 #pragma peephole off
@@ -613,6 +625,7 @@ undefined4 Link_update(void)
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 /* EN v1.0 0x80131570  size: 12b  Read changed bit from item->flags. */
+int TitleMenuItem_isChanged(TitleMenuItem* item);
 
 /* EN v1.0 0x8013157C  size: 20b  Set item->value and item->frameDelay = 2.
  * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
@@ -654,17 +667,18 @@ undefined4 Link_update(void)
 #pragma peephole off
 void Link_release(void)
 {
+    u8* p;
     int i;
 
-    for (i = 0; i < 6; i++)
+    for (i = 0, p = linkTextures; i < 6; i++)
     {
-        textureFree(((LinkTextureSlot*)linkTextures)[i].texture);
+        textureFree(*(void**)p);
+        p += 8;
     }
     fn_8001BDD4(3);
 }
 #pragma peephole reset
 
-#pragma peephole off
 void Link_initialise(void)
 {
     int i;
@@ -681,14 +695,13 @@ void Link_initialise(void)
     linkIsRotated = 0;
     linkFlag_803dd8f8 = 1;
 }
-#pragma peephole reset
 
 #pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
                 int unused1, int unused2, int baseRed, int baseGreen, int baseBlue,
                 int selectedRed, int selectedGreen, int selectedBlue)
 {
-    extern void linkInitTextures(LinkMenuItemDB* item); /* #57 */
+    extern void linkInitTextures(LinkMenuItem* item); /* #57 */
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
     extern s8 lbl_803DD911; /* #57 */
     const char* defaultText;
@@ -745,26 +758,26 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 item->texture = NULL;
             }
 
-            if ((item->flags & LINK_FLAG_NO_SLOTS) != 0)
+            if ((item->flags & 0x10) != 0)
             {
                 item->field14 = 0;
                 item->field08 = 0;
             }
 
-            if ((item->flags & LINK_FLAG_DRAW_SLOTS) != 0)
+            if ((item->flags & 0x04) != 0)
             {
-                linkInitTextures((LinkMenuItemDB*)item);
+                linkInitTextures(item);
             }
 
             linkedIndex = item->leftLink;
-            if ((linkedIndex != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0))
+            if ((linkedIndex != -1) && ((item->flags & 0x08) != 0))
             {
                 LinkMenuItem* linked = &lbl_803A9458[linkedIndex];
                 item->x = linked->x + linked->field14;
                 item->field04 = linked->field04 + linked->field14;
             }
 
-            if ((item->flags & LINK_FLAG_CENTRE) != 0)
+            if ((item->flags & 0x0400) != 0)
             {
                 item->x -= (s16)(item->field14 >> 1);
                 item->field04 = item->x;
@@ -790,6 +803,8 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 }
 #pragma peephole reset
 
+void TitleMenuItem_release(void);
+
 void Link_free(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
@@ -814,12 +829,12 @@ void linkDrawFn_801302c0(void)
     LinkMenuItemDB* sel;
     LinkMenuItemDB* p;
     void* tex;
-    int i;
     int selLeft;
     int selRight;
     int itemLeft;
     int itemRight;
     int w;
+    int i;
 
     sel = &lbl_803A9458[(s8)linkSelected];
     sel->field38 = 4;
@@ -849,9 +864,8 @@ void linkDrawFn_801302c0(void)
         selLeft = sel->field06 - 2;
     }
     selRight = selLeft + w;
-    i = 0;
     p = lbl_803A9458;
-    for (; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < (s8)lbl_803DD911; i++)
     {
         if (i != (s8)linkSelected)
         {
@@ -894,6 +908,7 @@ void linkDrawFn_80130484(void)
 {
     extern s8 lbl_803DD911; /* #57 */
     extern LinkMenuItemDB lbl_803A9458[40];
+    LinkMenuItemDB* p;
     void* tex;
     int i;
     int minX;
@@ -905,20 +920,21 @@ void linkDrawFn_80130484(void)
     minX = 480;
     maxX = 0;
     i = 0;
+    p = lbl_803A9458;
     for (; i < (s8)lbl_803DD911; i++)
     {
-        if (((lbl_803A9458[i].field16 & 4) != 0) && ((s8)lbl_803A9458[i].slots[0] != -1))
+        if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
         {
-            tex = *(void**)(linkTextures + (s8)lbl_803A9458[i].slots[0] * 8);
+            tex = *(void**)(linkTextures + (s8)p->slots[0] * 8);
         }
         else
         {
-            tex = lbl_803A9458[i].texture;
+            tex = p->texture;
         }
         if (tex != NULL)
         {
             w = *(u16*)((char*)tex + 12);
-            x = lbl_803A9458[i].field0C;
+            x = p->field0C;
         }
         else
         {
@@ -930,7 +946,7 @@ void linkDrawFn_80130484(void)
             {
                 w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
             }
-            x = lbl_803A9458[i].field06 - 2;
+            x = p->field06 - 2;
         }
         right = x + w;
         if (x < minX)
@@ -941,6 +957,7 @@ void linkDrawFn_80130484(void)
         {
             maxX = right;
         }
+        p++;
     }
 }
 #pragma peephole reset
