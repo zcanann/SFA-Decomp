@@ -932,7 +932,7 @@ void dll_D3_update(int* obj)
     rc = ((int (*)(int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
     if (rc == 0) return;
 
-    if ((extra->flags92 >> 1 & 1) == 0u)
+    if (((StaffBits*)&extra->flags92)->b1 == 0u)
     {
         if (ObjContact_AddCallback(obj, (int)player, fn_80167550) != 0)
         {
