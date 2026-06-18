@@ -1,3 +1,20 @@
+/*
+ * front (DLL 0x2C0) - the title/attract-mode front-end object and its
+ * UI. gTitleScreenObjDescriptor drives the title-screen actor: init
+ * seeds anim moves per seqId (0x77d..0x781 = the four Tricky title
+ * poses, 0x78a/0x781 the attract camera/movie), update runs the actor
+ * anim state machine plus the per-actor footstep/voice sfx grid at
+ * lbl_803A9F50 and the random blink blend, release/initialise manage the
+ * 19-slot texture table at lbl_803A9F98.
+ *
+ * Standalone leaf entry points cover the credits roll (creditsStart /
+ * creditsStart_, walking gCreditEntries with fade-in/out), the
+ * copyright/title text layout (gameTextBoxFn_80134d40,
+ * titleScreenShowCopyright, titleScreenPositionElements), and the GX
+ * quad emitters for the title and name-entry text (titleScreenTextDrawFunc
+ * / nameEntryTextDrawFunc, writing through GXWGFifo). showCredits gates
+ * the credits sequence; getCurUiDll selects the active front-end UI DLL.
+ */
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
@@ -17,25 +34,13 @@ typedef struct TitlescreenState
     f32 unk1C;
     f32 unk20;
     u8 pad24[0x30 - 0x24];
-    u8 unk30;
-    s8 unk31;
+    u8 unk30; /* anim state-machine phase (0-5); raw-indexed as state[0x30] in titlescreen_update */
+    s8 unk31; /* per-actor pose index (seqId - 0x77d), or -2 for non-Tricky */
     u8 pad32[0x34 - 0x32];
     f32 unk34;
 } TitlescreenState;
 
 extern int ObjGroup_FindNearestObject();
-extern undefined8 FUN_80053754();
-extern undefined4 FUN_80246dcc();
-
-extern undefined4 DAT_803dc818;
-extern undefined4 DAT_803de5a8;
-extern undefined4 DAT_803de5c4;
-extern undefined4 DAT_803de62b;
-extern undefined4 DAT_803de6b4;
-extern undefined4 DAT_803de6b8;
-extern undefined4 DAT_803de6bc;
-extern undefined4 DAT_803de6c0;
-extern f32 FLOAT_803e3098;
 
 extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int boxId);
@@ -44,78 +49,6 @@ extern void gameTextShow(int id);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern f32 mathCosf(f32);
-
-extern void* lbl_803DD92C;
-extern void* minimapTexture;
-
-void FUN_80132034(void)
-{
-    bool bVar1;
-
-    bVar1 = false;
-    if ((DAT_803de5c4 == '\x02') && (DAT_803dc818 != '\0'))
-    {
-        bVar1 = true;
-    }
-    if (!bVar1)
-    {
-        return;
-    }
-    DAT_803de5a8 = 5;
-    return;
-}
-
-void FUN_801334d4(void)
-{
-    FUN_80053754();
-    FUN_80053754();
-    return;
-}
-
-void FUN_80134bc4(void)
-{
-    DAT_803de62b = 0;
-    return;
-}
-
-void FUN_80135810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  char* param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-}
-
-void FUN_80135814(void)
-{
-    return;
-}
-
-void FUN_80135c48(undefined2 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)
-{
-    DAT_803de6b4 = param_4;
-    DAT_803de6b8 = param_3;
-    DAT_803de6bc = param_2;
-    DAT_803de6c0 = param_1;
-    FUN_80246dcc(-0x7fc54288);
-    return;
-}
-
-void FUN_80135c84(int param_1, uint param_2)
-{
-    *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) =
-        (byte)((param_2 & 0xff) << 6) & 0x40 | *(byte*)(*(int*)&((GameObject*)param_1)->extra + 0x58) & 0xbf;
-    return;
-}
-
-void FUN_8013651c(int param_1)
-{
-    int iVar1;
-
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    *(uint*)(iVar1 + 0x54) = *(uint*)(iVar1 + 0x54) | 0x80000000;
-    *(float*)(iVar1 + 0x808) = FLOAT_803e3098;
-    return;
-}
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -138,12 +71,6 @@ void fn_80135814(u32 a, u32 b)
 
 /* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
 void titleScreenFn_801368d4(void) { lbl_803DD9AB = 0; }
-
-/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
-f32 fn_80138F78(u8* obj);
-/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 (u32). */
-/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
-/* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 int titlescreen_getExtraSize(void) { return 56; }
@@ -192,7 +119,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 extern void* lbl_803DD9D4;
 extern void* lbl_803A9F98[0x13];
 extern u8 lbl_803DD992;
-extern void* gameTextGet(s32);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
  * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
@@ -337,8 +263,6 @@ void titlescreen_init(u8* obj, u8* p)
     }
 }
 
-extern f32 lbl_803E23E8;
-
 extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
@@ -352,6 +276,8 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
+/* The trailing sprintf into buf is dead in retail (the formatted string is
+ * never displayed); target asm ends right after the sprintf call. */
 void fn_80133F70(void* obj)
 {
     char buf[12];
@@ -384,15 +310,8 @@ void fn_80133F70(void* obj)
     sprintf(buf, lbl_803DBBF0, b);
 }
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(void* obj);
-
-/* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
- * the buffers at minimapTexture and lbl_803DD940 (the first only if
- * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
- * tearing down each non-null entry via Obj_FreeObject. Both buffer
- * pointers are zeroed at the end. */
 
 /* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
  * matrix at lbl_803A9FE4 and derive the three normalized cursor
@@ -405,14 +324,6 @@ void titleScreenPositionElements(f32 a, f32 b)
     lbl_803DD9B4 = (a - lbl_803E234C) / lbl_803E2350;
     lbl_803DD9B0 = lbl_803E2318 - lbl_803DD9C8;
 }
-
-extern void* lbl_803DD960;
-extern f32 lbl_803E2408;
-
-/* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
- * via textureFree. */
-
-/* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
@@ -433,22 +344,12 @@ void titleScreenFn_801368c4(u8 arg)
     lbl_803DD990 = arg;
 }
 
-/* EN v1.0 0x80138EF8  size: 28b  Set bit 0x80000000 of obj->_b8->_54
- * and store lbl_803E2408 into obj->_b8->_808. */
-void trickyImpress(u8* obj);
-
 extern u16 lbl_803DD994;
 extern u16 lbl_803DD996;
 extern u16 lbl_803DD998;
 extern s16 lbl_803DD9A8;
 extern int getCurUiDll(void);
 
-/* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
- * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
-
-/* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
- * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
- * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 timeDelta;
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
@@ -477,15 +378,6 @@ int gameTextFn_80134be8(void)
     return 0;
 }
 
-/* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
- * minimapTexture is non-null, release via textureFree and zero both
- * minimapTexture and lbl_803DD92C. */
-void fn_80133934(void);
-
-/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
- * the rlwimi only uses bit 0 of r4. No C form found to force it. */
-
 /* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
  * trigger Music_Trigger(0x3a, 0) and clear showCredits. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
@@ -499,18 +391,15 @@ void titlescreen_free(u8* obj)
     }
 }
 
-/* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
- * the thread at &lbl_803AB118. */
-extern u8 lbl_803AB118[];
-
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-
 extern f32 lbl_803DD99C;
 extern u8 lbl_803DD9A0;
 extern f32 lbl_803E231C;
 extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
+extern void* gameTextGet(s32);
 
+/* EN v1.0 0x80134C28  size: 280b  titleScreenShowCopyright: drive the
+ * copyright/title text fade and push text box 0x3d9. */
 #pragma scheduling off
 #pragma peephole off
 void titleScreenShowCopyright(u8 arg)
@@ -647,7 +536,6 @@ extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern f32 lbl_803DBC0C;
 extern u8 lbl_803A9F50[0x48];
-extern void Sfx_StopFromObject(int obj, int id);
 void fn_80134870(int obj, u8* arr);
 
 /* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title
@@ -669,7 +557,6 @@ void titlescreen_update(u8* obj)
     extern void skyFn_800895e0(int id, int red, int green, int blue, int m1, int m2);
     extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
     extern void fn_80131F0C(void);
-    extern f32 timeDelta;
 
     u8* state = ((GameObject*)obj)->extra;
     s16 t;
@@ -1093,10 +980,6 @@ void creditsStart_(void)
     }
 }
 
-extern void CMenu_SetFadeCounter(int v);
-
-extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
-
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern s16 fn_80130124(void);
 extern u8 lbl_803DD9C0;
@@ -1250,4 +1133,5 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     }
 }
 
-extern u16* debugFrameBuffer;
+#pragma scheduling on
+#pragma peephole on
