@@ -7,7 +7,7 @@
  * per-item textures. The "useTricky" path filters entries through the
  * Tricky HUD item/action masks instead.
  *
- * The fn_80124A78 / fn_80124B38 / modelFn_80124794 / cMenuRenderFn_80124854
+ * The cMenuItemModelRenderFn / cMenuStaffModelRenderFn / cMenuRingModelRenderFn / cMenuRingIconRenderFn
  * callbacks are model render hooks that drive the GX colour/alpha
  * pipeline for menu/HUD models. drawTrickyHudOverlay draws the Tricky
  * action/item icons and the view-finder HUD. hudDrawCMenu renders the
@@ -392,14 +392,14 @@ int cMenuCountVisibleItems(s16* table, char mode)
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_801244a4(u64 param_1, f64 param_2, f64 param_3, u64 param_4,
+void cMenuNullRenderFn(u64 param_1, f64 param_2, f64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
 }
 
 #pragma scheduling on
 #pragma peephole on
-int fn_80124A78(int shader, int* block, int idx)
+int cMenuItemModelRenderFn(int shader, int* block, int idx)
 {
     int rec;
     uint texHandle;
@@ -419,7 +419,7 @@ int fn_80124A78(int shader, int* block, int idx)
     return 1;
 }
 
-int fn_80124B38(int shader, int* block, int idx)
+int cMenuStaffModelRenderFn(int shader, int* block, int idx)
 {
     int level;
     int rec;
@@ -469,7 +469,7 @@ int fn_80124B38(int shader, int* block, int idx)
 
 #pragma scheduling off
 #pragma peephole off
-int modelFn_80124794(int obj, int param2, int param3)
+int cMenuRingModelRenderFn(int obj, int param2, int param3)
 {
     int renderOp;
     u8 cfg[4];
@@ -542,7 +542,7 @@ void drawTrickyHudOverlay(int obj)
 }
 
 #pragma peephole on
-int cMenuRenderFn_80124854(int obj, int param2, int param3)
+int cMenuRingIconRenderFn(int obj, int param2, int param3)
 {
     int idx;
     void* tex;

@@ -67,8 +67,8 @@ extern char* Obj_AllocObjectSetup(int size, int id);
 extern char* Obj_SetupObject(char* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(char* obj);
 extern void ObjModel_SetRenderCallback(void* model, void* cb);
-extern u8 modelFn_80124794[];
-extern u8 cMenuRenderFn_80124854[];
+extern u8 cMenuRingModelRenderFn[];
+extern u8 cMenuRingIconRenderFn[];
 extern int fn_8011E0D8();
 
 void gameUiLoadResources(void)
@@ -103,13 +103,13 @@ void gameUiLoadResources(void)
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
             ((GameObject*)(*arrA))->anim.rotX = (s16)val;
             *(s8*)(*arrA + 0xad) = (s8)i;
-            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), modelFn_80124794);
+            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), cMenuRingModelRenderFn);
             *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65f), 4, -1, -1, 0);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
             ((GameObject*)(*arrB))->anim.rotX = (s16)val;
-            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrB), cMenuRenderFn_80124854);
+            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrB), cMenuRingIconRenderFn);
             val += 0x5555;
             arrA++;
             arrB++;
