@@ -212,10 +212,10 @@ void arwbombcoll_update(int obj)
 {
     ObjAnimComponent* objAnim;
     ArwBombFlags* flags;
-    int arw;
     ARWBombCollState* state;
     int arwingCheck;
     f32 minLifetime;
+    int arw;
 
     arw = getArwing();
     objAnim = &((GameObject*)obj)->anim;
