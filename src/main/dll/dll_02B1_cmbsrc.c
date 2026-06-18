@@ -49,15 +49,14 @@ void cmbsrc_setExternalActive(int obj, u8 active)
 
 void cmbsrc_free(int obj)
 {
-    CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
-    CmbSrcState* state = cmbsrc->state;
+    CmbSrcState* state = ((CmbSrcObject*)obj)->state;
 
-    (*gExpgfxInterface)->freeSource((int)cmbsrc);
+    (*gExpgfxInterface)->freeSource(obj);
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
     }
-    Sfx_StopObjectChannel((int)cmbsrc, CMBSRC_LOOP_SOUND_CHANNEL);
+    Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
 }
 
 void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -190,7 +189,6 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -438,7 +436,7 @@ int cmbsrc_update(int obj)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj,
-                                               lbl_8032BD00[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
+                                               lbl_8032BD00[setup->colorIndex]);
             }
             if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
                 *(u8*)((int)state->light + 0x4c) != 0)
@@ -530,9 +528,9 @@ void cmbsrc_init(int obj, u8* setup)
     }
     if (mapData->flags & CMBSRC_MAP_CREATE_LIGHT)
     {
-        u8* colorTbl;
-        u8* colorTbl1;
-        u8* colorTbl2;
+        u8* c0;
+        u8* c1;
+        u8* c2;
         f32 sunTime;
 
         if (state->light == NULL)
@@ -550,15 +548,13 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
             }
-            colorTbl = &lbl_8032BD50[lightVariant * 0x30];
-            colorTbl1 = colorTbl + 1;
-            colorTbl2 = colorTbl + 2;
-            modelLightStruct_setDiffuseColor(state->light, colorTbl[mapData->colorIndex * 3],
-                                             colorTbl1[mapData->colorIndex * 3],
-                                             colorTbl2[mapData->colorIndex * 3], 0xff);
-            modelLightStruct_setSpecularColor(state->light, colorTbl[mapData->colorIndex * 3],
-                                              colorTbl1[mapData->colorIndex * 3],
-                                              colorTbl2[mapData->colorIndex * 3], 0xff);
+            c0 = &lbl_8032BD50[(u8)lightVariant * 0x30];
+            c1 = c0 + 1;
+            c2 = c0 + 2;
+            modelLightStruct_setDiffuseColor(state->light, c0[mapData->colorIndex * 3],
+                                             c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0xff);
+            modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3],
+                                              c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0xff);
             {
                 int n = (int)((mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0)
                     * cmbsrc->objAnim.rootMotionScale);
@@ -578,20 +574,10 @@ void cmbsrc_init(int obj, u8* setup)
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
             modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)colorTbl[mapData->colorIndex * 3]),
-                (int)
-            (lbl_803E7368 * (f32)(u32)
-            colorTbl1[mapData->colorIndex * 3]
-            )
-            ,
-            (int)
-            (lbl_803E7368 * (f32)(u32)
-            colorTbl2[mapData->colorIndex * 3]
-            )
-            ,
-            0xff
-            )
-            ;
+                                                   (int)(lbl_803E7368 * (f32)(u32)c0[mapData->colorIndex * 3]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)c1[mapData->colorIndex * 3]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)c2[mapData->colorIndex * 3]),
+                                                   0xff);
             if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT)
             {
                 modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
@@ -600,15 +586,15 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 if (mapData->flags & CMBSRC_MAP_GLOW_LARGE)
                 {
-                    modelLightStruct_setupGlow(state->light, 0, colorTbl[mapData->colorIndex * 3],
-                                               colorTbl1[mapData->colorIndex * 3],
-                                               colorTbl2[mapData->colorIndex * 3], 0x87, lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(state->light, 0, c0[mapData->colorIndex * 3],
+                                               c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0x87,
+                                               lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
-                    modelLightStruct_setupGlow(state->light, 0, colorTbl[mapData->colorIndex * 3],
-                                               colorTbl1[mapData->colorIndex * 3],
-                                               colorTbl2[mapData->colorIndex * 3], 0x87, lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(state->light, 0, c0[mapData->colorIndex * 3],
+                                               c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0x87,
+                                               lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
             {
