@@ -1,6 +1,8 @@
 /*
- * cannonball - Tricky's rolling cannonball, a baddie that follows a
- * rom-curve route. trickyFn_80141290 is the per-frame update.
+ * tricky_rollroute - Tricky (DLL 0x00C4) rom-curve route-walker sub-TU (was the
+ * placeholder slot name cannonball.c; this is Tricky cluster code sharing
+ * gTrickyObjDescriptor-adjacent data, not a cannonball). trickyFn_80141290 is the
+ * per-frame update that rolls the object along its rom-curve route.
  *
  * Before init (init-done byte 0x0a == 0): the ball homes onto its curve
  * (CANNONBALL_CURVE). Once the owner and the ball share a walk group it

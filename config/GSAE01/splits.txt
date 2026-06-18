@@ -827,13 +827,13 @@ main/dll/animobjd2.c:
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
 
-main/dll/cannon.c:
+main/dll/tricky_flameguard.c:
 	.text       start:0x8013FFB8 end:0x80141290
 
-main/dll/cannonball.c:
+main/dll/tricky_rollroute.c:
 	.text       start:0x80141290 end:0x80141880
 
-main/dll/grenade.c:
+main/dll/tricky_substates.c:
 	.text       start:0x80141880 end:0x80144E40
 
 main/dll/dll_00C4_tricky.c:
