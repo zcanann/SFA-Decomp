@@ -283,7 +283,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     if (diff < -0x8000) diff += 0xffff;
     iv = (int)((f32)(int)((f32)diff * arwing->rotZGain) - arwing->rotZRate);
     iv = (iv < -0x64) ? -0x64 : ((iv > 0x64) ? 0x64 : iv);
-    arwing->rotZRate = (f32)iv * timeDelta + arwing->rotZRate;
+    arwing->rotZRate = (f32)iv * timeDelta + *(f32*)((u8*)arwing + 0x378);
     arwing->rotZCur =
         (int)(arwing->rotZRate * timeDelta + (f32)arwing->rotZCur);
 
