@@ -2944,10 +2944,11 @@ int Tricky_func10(int* obj, int targetObj)
     }
     if (((u32)state[0x54 / 4] & 0x10) == 0)
     {
+        int next;
         state[0x24 / 4] = targetObj;
-        if ((void*)state[0x28 / 4] != (void*)(targetObj + 0x18))
+        if ((void*)state[0x28 / 4] != (void*)(next = targetObj + 0x18))
         {
-            state[0x28 / 4] = targetObj + 0x18;
+            state[0x28 / 4] = next;
             *(u32*)&state[0x54 / 4] = *(u32*)&state[0x54 / 4] & ~0x400LL;
             *(s16*)((u8*)state + 0xd2) = 0;
         }
