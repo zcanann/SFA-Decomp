@@ -105,4 +105,21 @@ typedef struct CMenuSection
  *  0x08   0x3fc  Tricky Stay!   0xc85    hold position (pressure plates)
  */
 
+/*
+ * Staff abilities (gCMenuStaffAbilities, the mi == 1 section). GameBit-gated
+ * like collectables (useTricky == 0): ownedGameBit unlocks the ability,
+ * usedGameBit hides it. Ground Quake (0x107) is gated by 0xc55, which is also
+ * the ownedGameBit of Super Quake - unlocking the upgrade swaps the entry.
+ *
+ *  text   ability             icon   ownedGameBit  notes
+ *  ----   -------             ----   ------------  -----
+ *  0x3fd  Fire Blaster        0xc7a  0x2d
+ *  0x3fe  Freeze Blast        0xc7b  0x5ce         freezes / puts out fires
+ *  0x3ff  SharpClaw Disguise  0xc7c  0x40          enemies stop targeting you
+ *  0x400  Ground Quake        0xc08  0x107         hidden once 0xc55 (Super Quake) is set
+ *  0x56b  Super Quake         0xc1a  0xc55         upgrade; replaces Ground Quake
+ *  0x401  Open Portal         0xc7d  0x5bd         opens the large square doors
+ *  0x402  Staff Booster       0xc07  0x957         uses boost pads to reach high ledges
+ */
+
 #endif /* MAIN_DLL_CMENU_ITEM_TABLE_H_ */
