@@ -134,14 +134,12 @@ void dfplevelcontrol_initialise(void)
 
 void dfplevelcontrol_setScale(int unused, u8* out)
 {
-    s16* p;
     int i;
-    for (i = 0, p = lbl_80329848; (s16)i < 9; i += 3)
+    for (i = 0; (s16)i < 9; i += 3)
     {
-        out[(s16)i] = p[0];
-        out[(s16)(i + 1)] = p[1];
-        out[(s16)(i + 2)] = p[2];
-        p += 3;
+        out[(s16)i] = lbl_80329848[i];
+        out[(s16)(i + 1)] = lbl_80329848[i + 1];
+        out[(s16)(i + 2)] = lbl_80329848[i + 2];
     }
 }
 
