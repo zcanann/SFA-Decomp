@@ -1466,6 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
+#pragma peephole on
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
@@ -1489,6 +1490,7 @@ void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
     gModgfxSpawnContext.byte5A = 0;
     gModgfxSpawnContext.byte5B = 0;
 }
+#pragma peephole reset
 
 void dll_0B_func0A(s16* p)
 {
@@ -1564,7 +1566,7 @@ void fn_800A1040(s16 p1, int p2)
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         if (arr[i] == NULL) continue;
-        if ((s16)p1 != arr[i]->sequenceId && p2 == 0) continue;
+        if (p1 != arr[i]->sequenceId && p2 == 0) continue;
         if (arr[i]->auxAllocation != NULL)
         {
             mm_free(arr[i]->auxAllocation);
@@ -1815,9 +1817,9 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
             ((ModgfxState*)obj)->rotStepX = 0;
         }
     }
-    ((ModgfxState*)obj)->rotOffsetZ = ((ModgfxState*)obj)->rotOffsetZ + ((ModgfxState*)obj)->rotStepZ;
-    ((ModgfxState*)obj)->rotOffsetY = ((ModgfxState*)obj)->rotOffsetY + ((ModgfxState*)obj)->rotStepY;
-    ((ModgfxState*)obj)->rotOffsetX = ((ModgfxState*)obj)->rotOffsetX + ((ModgfxState*)obj)->rotStepX;
+    ((ModgfxState*)obj)->rotOffsetZ += ((ModgfxState*)obj)->rotStepZ;
+    ((ModgfxState*)obj)->rotOffsetY += ((ModgfxState*)obj)->rotStepY;
+    ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
 }
 
 /* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
@@ -2066,11 +2068,9 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 
     total = 0;
     found = 0;
-    scan = (void**)gPartfxActiveEffects;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
-        if (*scan == NULL) found = 1;
-        scan++;
+        if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
     }
     if (found)
     {
@@ -2797,9 +2797,12 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xc8) = lbl_803DF430;
-            *(f32*)((char*)state + 0xcc) = lbl_803DF430;
-            *(f32*)((char*)state + 0xd0) = lbl_803DF430;
+            {
+                f32 z = lbl_803DF430;
+                *(f32*)((char*)state + 0xc8) = z;
+                *(f32*)((char*)state + 0xcc) = z;
+                *(f32*)((char*)state + 0xd0) = z;
+            }
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
@@ -2841,7 +2844,8 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
     extern f32 lbl_803DF434;
-    char* base = (char*)state + idx * 2 * 0xc;
+    int idx2 = idx * 2;
+#define base ((char*)state + idx2 * 0xc)
     int j;
 
     if (mode == 1)
@@ -2905,6 +2909,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             }
         }
     }
+#undef base
 }
 
 extern int Obj_IsLoadingLocked(void);
