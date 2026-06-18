@@ -194,15 +194,15 @@ void worldobj_init(int obj, int arg)
         +lbl_803E66CC
         )
         ;
-        *(int*)(obj + 0) = objCreateLight(obj, 1);
-        if (*(int*)(obj + 0) != 0)
+        state->light = objCreateLight(obj, 1);
+        if (*(void**)&state->light != NULL)
         {
-            modelLightStruct_setLightKind(*(int*)(obj + 0), 2);
-            modelLightStruct_setPosition(*(int*)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
-            modelLightStruct_setDiffuseColor(*(int*)(obj + 0), 0xff, 0xff, 0xff, 0);
-            modelLightStruct_setDistanceAttenuation(*(int*)(obj + 0), lbl_803E66AC, lbl_803E66D0);
-            modelLightStruct_setupGlow(*(int*)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
-            modelLightStruct_setGlowProjectionRadius(*(int*)(obj + 0), lbl_803E66A0);
+            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E665C, lbl_803E665C);
+            modelLightStruct_setDiffuseColor(state->light, 0xff, 0xff, 0xff, 0);
+            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66AC, lbl_803E66D0);
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
+            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E66A0);
         }
         break;
     case 0x5f5:
