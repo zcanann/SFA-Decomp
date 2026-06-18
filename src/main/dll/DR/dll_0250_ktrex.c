@@ -1191,9 +1191,9 @@ void ktrex_updateAttackEffects(int obj)
 
 void ktrex_updateContactEffects(int obj, void* runtime)
 {
-    int hitA;
-    uint hitC;
     int hitType;
+    uint hitC;
+    int hitA;
     int msg[4];
     int hit;
     f32* contactPoints;
