@@ -1,16 +1,3 @@
-/*
- * wctempledia (DLL 0x296) - a rotating temple dial puzzle in the Walled
- * City (WC). The dial spins about Z, easing currentSpeed toward
- * targetSpeed, and drives a looped roar sfx whose volume/pitch track the
- * spin ratio. It is a 3-stage ordered lock: each stage's game bit must
- * light in order, and setting a later stage while an earlier one is unset
- * clears all three bits, plays the reset sfx and drops back to the base
- * speed. Clearing the stages in order steps targetSpeed up through the
- * table. Solving all three sets the placement solvedBit, latches
- * FLAG_SOLVED and freezes the dial. Two model variants select distinct
- * game-bit/target-table pairs at init; syncPartVisibility toggles per-stage
- * texture overrides to reveal solved segments.
- */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -73,8 +60,9 @@ STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED
 
 void wctempledia_syncPartVisibility(int obj, u8 mask)
 {
-    int part;
     int block;
+    int part;
+    int bit;
     int slot;
 
     block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
@@ -83,13 +71,13 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)
         {
-            slot = 0;
-            for (; slot < *(u8*)(block + 0xa2); slot++)
+            bit = mask & (1 << (part - 1));
+            for (slot = 0; slot < *(u8*)(block + 0xa2); slot++)
             {
                 int entry = fn_8006070C(block, slot);
                 if (*(u8*)(entry + 0x29) == part)
                 {
-                    if ((mask & (1 << (part - 1))) != 0)
+                    if (bit != 0)
                     {
                         mapTextureOverrideSetValue(part, *(int*)(entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
                     }
@@ -108,8 +96,9 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 
     {
-        f32 cs;
-        f32 scaled = lbl_803E6E48 * -(cs = state->currentSpeed);
+        f32 scaled = lbl_803E6E48;
+        f32 cs = state->currentSpeed;
+        scaled = scaled * -cs;
         state->currentSpeed = scaled * timeDelta + cs;
     }
     ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
@@ -141,35 +130,38 @@ void wctempledia_hitDetect(void)
 
 void wctempledia_update(int obj)
 {
-    WCTempleDiaSetup* setup = (WCTempleDiaSetup*)((GameObject*)obj)->anim.placementData;
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
-    int stage;
-    int priorStage;
-    int resetStage;
+    WCTempleDiaSetup* setup = (WCTempleDiaSetup*)((GameObject*)obj)->anim.placementData;
+    int i;
+    int j;
+    int k;
+    f32 td;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
         wctempledia_syncPartVisibility(obj, state->stageMask);
         return;
     }
-    state->currentSpeed += timeDelta * (lbl_803E6E48 * (state->targetSpeed - state->currentSpeed));
-    ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
+    td = timeDelta;
+    state->currentSpeed = td * (lbl_803E6E48 * (state->targetSpeed - state->currentSpeed)) +
+        state->currentSpeed;
+    ((GameObject*)obj)->anim.rotZ = (s16)(td * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
         f32 ratio = state->currentSpeed / state->targetTable[2];
-        u8 vol = (u8)(int)(lbl_803E6E60 * ratio + lbl_803E6E5C);
-        Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, vol,
+        Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
-    for (stage = 0; stage < WCTEMPLE_DIA_STAGE_COUNT; stage++)
+    for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {
-        if ((state->stageMask & (1 << stage)) == 0 &&
-            GameBit_Get(state->gamebits[stage]) != 0)
+        int bit = 1 << i;
+        if ((state->stageMask & bit) == 0 &&
+            GameBit_Get(state->gamebits[i]) != 0)
         {
             int found = 0;
-            for (priorStage = 0; priorStage < stage; priorStage++)
+            for (j = 0; j < i; j++)
             {
-                if ((state->stageMask & (1 << priorStage)) == 0)
+                if ((state->stageMask & (1 << j)) == 0)
                 {
                     found = 1;
                     break;
@@ -177,22 +169,22 @@ void wctempledia_update(int obj)
             }
             if (found)
             {
-                for (resetStage = 0; resetStage < WCTEMPLE_DIA_STAGE_COUNT; resetStage++)
+                for (k = 0; k < WCTEMPLE_DIA_STAGE_COUNT; k++)
                 {
-                    GameBit_Set(state->gamebits[resetStage], 0);
+                    GameBit_Set(state->gamebits[k], 0);
                 }
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_RESET_SFX);
                 state->stageMask = 0;
                 state->targetSpeed = state->targetTable[0];
                 break;
             }
-            state->stageMask |= (1 << stage);
-            if (stage == 0)
+            state->stageMask |= bit;
+            if (i == 0)
             {
                 state->targetSpeed = state->targetTable[1];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);
             }
-            else if (stage == 1)
+            else if (i == 1)
             {
                 state->targetSpeed = state->targetTable[2];
                 Sfx_PlayFromObject(0, WCTEMPLE_DIA_STAGE_SFX);
@@ -215,7 +207,7 @@ void wctempledia_init(int obj, int setup)
     WCTempleDiaSetup* setupData = (WCTempleDiaSetup*)setup;
     int i;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->type << 8);
+    *(s16*)obj = (s16)(setupData->type << 8);
     *(u8*)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
