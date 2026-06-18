@@ -11637,7 +11637,11 @@ void fn_80295CF4(int obj, int a)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
 
-    if ((void*)lbl_803DE44C == NULL || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
+    if ((void*)lbl_803DE44C == NULL)
+    {
+        return;
+    }
+    if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == a)
     {
         return;
     }
