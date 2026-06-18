@@ -1,3 +1,14 @@
+/*
+ * BarrelGenerator (DLL 0x282) - the "pad" that owns and refills GunPowderBarrels
+ * (DLL 0x158). Lives in obj group 0x3a; a barrel matches its generator by
+ * placement link id (barrelgener_getLinkId). When a barrel detonates it hands
+ * itself back via barrelgener_queueObjectRelease, and barrelgener_update plays a
+ * release animation then teleports the queued barrel back onto the pad.
+ *
+ * The module also bundles its own copies of several shared DR-area helpers
+ * (voxmaps_*, Obj_Steer/RomCurve/SmoothTurn, the lightning + intercept utils) -
+ * see docs/live_debugging_workflow.md on why SFA DLLs duplicate utilities.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
@@ -27,6 +38,8 @@ int barrelgener_getLinkId(int obj)
     return setup->linkId;
 }
 
+/* Queue a barrel for re-release: remember it and arm the release timer to fire
+ * in (releaseFrame - bias) frames; barrelgener_update does the actual respawn. */
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
@@ -78,6 +91,8 @@ void barrelgener_update(int obj)
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
+    /* One-time proximity trigger: the first time the player gets close, fire
+     * sequence 1 and latch GameBit 0xadb so it never runs again. */
     if ((u32)GameBit_Get(0xadb) == 0)
     {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24)
@@ -86,6 +101,8 @@ void barrelgener_update(int obj)
             GameBit_Set(0xadb, 1);
         }
     }
+    /* Release pending: while the timer runs, start the release anim+SFX as it
+     * nears zero, and on expiry teleport the queued barrel back onto the pad. */
     if (fn_80080150((int)&state->releaseTimer) != 0)
     {
         if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0)
@@ -99,6 +116,8 @@ void barrelgener_update(int obj)
         {
             if (Obj_IsObjectAlive((int)state->queuedObject) != 0)
             {
+                /* Snap the barrel to the generator's position, zero its velocity,
+                 * re-add it to the active group (25) and clear the queue. */
                 GameObject* releasedBarrel = state->queuedObject;
                 f32 c2c;
                 releasedBarrel->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
@@ -301,6 +320,10 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
+/* Maintain a cluster of `count` lightning bolts plus a point light around `obj`,
+ * spread/brightness scaled by `intensity`: age+render live bolts (free expired),
+ * spawn into empty slots, create the light. intensity == sentinel frees it all.
+ * Shared helper; also used by drakordthornbush. */
 int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light, f32 intensity)
 {
     int i;
@@ -426,6 +449,10 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 }
 
 #pragma opt_loop_invariants off
+/* Lead-target prediction: project `obj`'s motion forward (5 convergent steps,
+ * each proportional to its distance from `p3`), write the predicted intercept
+ * position to `p4`, then voxmaps_traceLine from `p3` to it. Returns nonzero if
+ * the line of sight is blocked. Shared helper; used by Drakor projectiles. */
 int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
 {
     f32 pos[3];

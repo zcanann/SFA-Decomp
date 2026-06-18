@@ -34,7 +34,7 @@ typedef struct GunpowderBarrelState {
     s16 homingHeadingB; /* 0x46 */
     u8 configFlags; /* +0x48; bit 0x40 (returnHome): save position at the linked barrel */
     u8 motionFlags; /* +0x49; bit 0x01: sleeping, bit 0x02: in flight */
-    u8 heldFlags;   /* +0x4A; GpbFlags4A bitfield: held / playerHeld / etc. */
+    u8 heldFlags;   /* +0x4A; GpbHeldFlags bitfield: held / playerHeld / etc. */
     u8 pad4B[5];
     s16 launchYaw;  /* 0x50 */
     u8 pad52[2];
