@@ -17,6 +17,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/dll/cmenu_item_table.h"
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_8001792c();
@@ -40,7 +41,7 @@ extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2c90;
 
 extern u8 lbl_803A87F0[];
-extern s16 lbl_8031B4E0[];
+extern CMenuItemDef gCMenuStaffAbilities[];
 extern s16 lbl_803DD894;
 extern s8 lbl_803DD896;
 extern u16 yButtonState;
@@ -186,7 +187,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
             active = GameBit_Get(*src);
             if (active != 0)
             {
-                if (items == lbl_8031B4E0)
+                if (items == (s16*)gCMenuStaffAbilities)
                 {
                     if (src[1] < 0 || GameBit_Get(src[1]) == 0)
                     {

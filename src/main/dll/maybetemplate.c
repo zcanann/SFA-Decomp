@@ -43,7 +43,7 @@ extern short lbl_803DD8D6;
 extern short lbl_803DBA66;
 
 extern int gTrickyHudItemMask;
-extern short lbl_8031B4E0[];
+extern short gCMenuStaffAbilities[];
 
 extern void pauseMenuDrawElement(int tex, f32 x, f32 y, int a, int b, int c, int d);
 extern void drawPartialTexture(int tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
@@ -1276,7 +1276,7 @@ int trickyBitFn_801241cc(short* arr, sbyte flag)
         {
             if (GameBit_Get((int)entry[0]) != 0)
             {
-                if (arr == lbl_8031B4E0)
+                if (arr == gCMenuStaffAbilities)
                 {
                     if (entry[2] < 0 || GameBit_Get((int)entry[2]) == 0)
                     {

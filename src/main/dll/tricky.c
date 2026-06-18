@@ -504,11 +504,11 @@ void GameUI_airMeterInitType0(int a, int b, int c)
     m[0x10] = 0;
 }
 
-extern int lbl_8031B5D8[];
+extern int gCMenuSections[];
 
 void GameUI_func14(s16 a, int b, int c)
 {
-    int* entry = lbl_8031B5D8;
+    int* entry = gCMenuSections;
     lbl_803A9398[0] = 0;
     while ((void*)*entry != NULL)
     {

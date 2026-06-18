@@ -229,16 +229,16 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 }
 
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
- * lbl_8031B5D8 clearing the s16 at +0x4 until the u32 key at +0x0 is
+ * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
  * zero, then reset lbl_803DD8C2 to -1 and lbl_803DD8B8 to 0. */
-extern u8 lbl_8031B5D8[];
+extern u8 gCMenuSections[];
 extern s16 lbl_803DD8C2;
 
 void GameUI_unselectAllItems(void)
 {
     extern u8 lbl_803DD8B8; /* #57 */
     register int* p;
-    p = (int*)lbl_8031B5D8;
+    p = (int*)gCMenuSections;
     while (*(void**)p != NULL)
     {
         *(s16*)((u8*)p + 4) = 0;
@@ -1941,7 +1941,7 @@ void cMenuRun(void)
 
     {
         s8 mi = (s8)lbl_803DD8B6;
-        char* set = (char*)lbl_8031B5D8 + mi * 16;
+        char* set = (char*)gCMenuSections + mi * 16;
         int handle = *(int*)set;
         cursor = (s16*)(set + 4);
         flags = *(int*)(set + 8);
@@ -4003,7 +4003,7 @@ extern int lbl_803A9038[];
 void fn_8012F9B4(int idx, s16 target, s8 flag)
 {
     extern undefined4 cMenuSetItems(); /* #57 */
-    void* entry = &lbl_8031B5D8[idx * 16];
+    void* entry = &gCMenuSections[idx * 16];
     int count = cMenuSetItems(*(int*)entry, flag);
     s16 pos = *(s16*)((char*)entry + 4);
     u8 i;
@@ -4034,7 +4034,7 @@ void fn_8012FA70(int idx, s8 flag)
     s16 pos;
     u8 i;
 
-    entry = &lbl_8031B5D8[idx * 16];
+    entry = &gCMenuSections[idx * 16];
     count = cMenuSetItems(*(int*)entry, flag);
     posPtr = (s16*)((char*)entry + 4);
     pos = *posPtr;
@@ -4439,15 +4439,15 @@ void GameUI_update(void)
                         switch ((s8)lbl_803DD8B6)
                         {
                         case 0:
-                            if (trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0], 0) != 0 ||
-                                trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0x10], 0) == 0)
+                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0 ||
+                                trickyBitFn_801241cc(*(int*)&gCMenuSections[0x10], 0) == 0)
                             {
                                 lbl_803DD8A4 |= 0x80000;
                                 break;
                             }
                         case 1:
-                            if (trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0x10], 0) == 0 &&
-                                trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0], 0) != 0)
+                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0x10], 0) == 0 &&
+                                trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0)
                             {
                                 lbl_803DD8A4 |= 0x80000;
                             }
