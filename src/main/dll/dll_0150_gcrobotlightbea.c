@@ -644,7 +644,7 @@ int gcrobotlightbea_getExtraSize(void) { return 0xc; }
 int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
 int cfperch_getExtraSize(void);
 
-u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8 / 4])->hitFlags >> 7) & 1; }
+u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1; }
 
 void gcrobotlightbea_init(int* obj)
 {
