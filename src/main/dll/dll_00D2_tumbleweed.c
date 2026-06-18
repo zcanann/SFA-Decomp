@@ -253,7 +253,7 @@ void tumbleweed_free(int* obj)
     while (counter < limit)
     {
         int* o = (int*)items[counter];
-        if (target_id == ((GameObject*)o)->anim.seqId)
+        if (target_id == *(s16*)((int)o + 0x46))
         {
             (*(code*)(**(int**)((int)o + 0x68) + 0x20))(o, obj);
         }
@@ -268,6 +268,7 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     extern void objRenderFn_8003b8f4(f32); /* #57 */
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
+/* segment pragma-stack balance (re-split): */
 
 void tumbleweed_update(int obj)
 {
@@ -616,9 +617,11 @@ void tumbleweed_updateEffects(int obj)
     {
         u32 r;
         ObjHits_SetHitVolumeSlot((u32)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
-        r = state->hitPulseCounter + 1;
+        r = state->hitPulseCounter;
+        r = r + 1;
         state->hitPulseCounter = r;
-        if ((int)(u8)state->hitPulseCounter % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
+        r = state->hitPulseCounter;
+        if ((int)r % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
         {
             fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 1, 0, 0, 0);
         }
