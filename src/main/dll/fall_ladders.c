@@ -218,7 +218,7 @@ void fn_80154328(int obj, int p)
         stk.pos[0] = ((GameObject*)obj)->anim.localPosX;
         stk.pos[1] = lbl_803E2990;
         stk.pos[2] = ((GameObject*)obj)->anim.localPosZ;
-        stk.in[0] = *(s16*)obj;
+        stk.in[0] = ((GameObject*)obj)->anim.rotX;
         stk.in[1] = 0;
         stk.in[2] = 0;
         *(f32*)(stk.in + 4) = lbl_803E2994;
