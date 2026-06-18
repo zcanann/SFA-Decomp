@@ -1453,7 +1453,11 @@ u32 fn_80143DD4(int obj, int* trickyState)
             *(f32*)((int)trickyState + 0x738) = lbl_803E2440;
             return 1;
         }
-        if (*(f32*)((int)trickyState + 0x71c) <= lbl_803E23DC)
+        if (*(f32*)((int)trickyState + 0x71c) > lbl_803E23DC)
+        {
+            tricky_startRandomIdleMove(obj, (int)trickyState);
+        }
+        else
         {
             if (trickyState[0x1ec] != 0)
             {
@@ -1479,10 +1483,6 @@ u32 fn_80143DD4(int obj, int* trickyState)
                     objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
                 }
             }
-        }
-        else
-        {
-            tricky_startRandomIdleMove(obj, (int)trickyState);
         }
         return 1;
     }
