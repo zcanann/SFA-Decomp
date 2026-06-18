@@ -922,9 +922,9 @@ undefined4 fn_801659B8(s16* obj, u32* params)
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
-        if (*(s8*)&state->surfaceMode == 6)
+        if (state->surfaceMode == 6)
         {
-            if (((state->flags92 >> 2) & 1) == 0)
+            if (((state->flags92 >> 2) & 1) == 0u)
             {
                 fn_80166444((int)obj, (int)state);
             }
