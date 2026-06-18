@@ -160,7 +160,7 @@ extern f32 gFloatHalf;
 extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
-extern f32 lbl_803E0664;
+extern const f32 lbl_803E0664;
 extern SaveData saveData;
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
