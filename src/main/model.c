@@ -881,11 +881,14 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     ch = ((ObjModel*)model)->blendChannels + channel;
     if (a == -1 && b == -1)
     {
-        if (ch[0].unk0C == -1 && ch[0].unk0D == -1)
+        if (ch[0].unk0C != -1 || ch[0].unk0D != -1)
+        {
+            flags |= 6;
+        }
+        else
         {
             return;
         }
-        flags |= 6;
     }
     if (ch[0].unk0C == a && ch[0].unk0D == b)
     {
