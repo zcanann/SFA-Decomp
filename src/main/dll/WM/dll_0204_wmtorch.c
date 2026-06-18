@@ -81,7 +81,7 @@ void wmtorch_update(int obj)
     int state = *(int*)&((GameObject*)obj)->extra;
     if (((WmTorchState*)state)->torchType == 2)
     {
-        *(s16*)obj += 0x32;
+        ((GameObject*)obj)->anim.rotX += 0x32;
     }
     if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
         lbl_803E5DE8)
