@@ -1,6 +1,5 @@
 /* tricky_flameguard - Tricky (DLL 0x00C4) flame/guard AI sub-TU. Spawns Tricky's
-   flameblast (def 0x4F0) for the fire-breath/guard behaviour. (Was the placeholder
-   slot name cannon.c; this is Tricky code, not a cannon.) */
+   flameblast (def 0x4F0) for the fire-breath/guard behaviour. */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"

@@ -9,9 +9,7 @@
  *
  * Field meanings were recovered by live debugging (Dolphin MCP): reading the
  * struct on a live crate, breaking the crate to fire the spawn path, and
- * confirming the drop -> collectible -> player-health pickup chain. Replaces
- * the earlier mislabel where the same 0x2C bytes were viewed as both
- * "ExplodableState" and "CfForcefieldState".
+ * confirming the drop -> collectible -> player-health pickup chain.
  *
  * unkC / unk12 are written by init but never read inside this TU, so their
  * meaning is left unverified.

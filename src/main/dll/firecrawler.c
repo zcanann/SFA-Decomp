@@ -1,7 +1,7 @@
 /*
  * firecrawler - state-handler TU for a group of class-0x1C ground/air enemies
- * in the enemy mega-DLL (0x0C9). NOT a "smallbasket" (that earlier name was a
- * mislabel; the real SmallBasket is DLL 0x104). The enemies handled here were
+ * in the enemy mega-DLL (0x0C9). (The SmallBasket container is the unrelated
+ * DLL 0x104.) The enemies handled here were
  * identified from the retail OBJECTS.bin (object name at def+0x91) cross-
  * referenced with the dispatch in dll_00C9_enemy.c:
  *

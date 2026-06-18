@@ -1,6 +1,6 @@
 /*
  * shthorntail_ai - SHThorntail (Thorntail Hollow) AI helpers, split from the
- * thorntail DLL 0x1AD (was mislabeled dll_1E7; the real 0x1E7 is CraterFlame).
+ * thorntail DLL 0x1AD.
  *
  * Three routines split out of the main thorntail DLL (0x1AD):
  *  - SHthorntail_HasNearbyPendingEventObject: scans ObjGroup 3 for the

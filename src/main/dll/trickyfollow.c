@@ -1,6 +1,6 @@
 /*
- * trickyfollow - Tricky sidekick follow/path-walk movement (was mislabeled
- * dll_DF; this is Tricky code, not the Hagabon DLL 0xDF). trickyFn_8013b368 is
+ * trickyfollow - Tricky sidekick follow/path-walk movement (Tricky DLL 0x0C4;
+ * the Hagabon DLL 0xDF is unrelated). trickyFn_8013b368 is
  * the per-frame movement step that resolves the target's walk/patch group and
  * drives motion through a substate machine and RomCurveWalker route;
  * trickyUpdateApproachSpeed ramps the follow speed toward a target point. The

@@ -3,9 +3,7 @@
 
 #include "ghidra_import.h"
 
-/* largecrate (DLL 0x105) tuning constants and entry points.
- * (Merged from the former, mislabeled "cfforcefield.h" - those macros are
- * largecrate's, not the unrelated cfforcefield object's.) */
+/* largecrate (DLL 0x105) tuning constants and entry points. */
 
 #define LARGECRATE_TIMER_SCALE_FRAMES 0x3C
 #define LARGECRATE_TIMER_SENTINEL_DISABLED 0
