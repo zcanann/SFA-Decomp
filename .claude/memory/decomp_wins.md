@@ -1,5 +1,63 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17i, flat dll emission-order/pragma): 4 wins, ~16 attempts =====
+CRITICAL TOOLING LESSON: the proto/report race produces PHANTOM regressions.
+  Several times a fix that looked like a regress (83% / 76%) was actually a WIN
+  once rebuilt cleanly with mtime ordering. ALWAYS: rm .o; ninja .o; `touch` the
+  .o; rm report.json; ninja report.json; then `stat -f "%m %N"` BOTH and confirm
+  report mtime > .o mtime before trusting fuzzy%. Link_initialise read 83% stale
+  but was actually 100%. Don't `git checkout` a fix on a single bad read.
+WINS (all committed local; push rejected remote-ahead):
+- andross_updateModelAlpha (dll_02BC, 94.6->100%, e828e2b7cb): target emits the
+  for-loop counter init (li r31,0) right after the model load, BEFORE the
+  alpha=lbl*v conversion. Split `i=0` OUT of the for-header to its own statement
+  placed before the alpha line: `i=0; alpha=lbl*v; for(;i<n;i++)`. LEVER:
+  loop-counter-init HOIST to control li-vs-conversion emission order.
+- Link_initialise (dll_003C_tumbleweedbush, 93.2->100%, committed): texture-load
+  loop strength-reduced to induction ptr whose `addi r31,8` bump SANK below the
+  cmpwi (peephole bump-after-compare). Target has bump-at-top (ptr bump, counter
+  bump, compare). `#pragma peephole off` around the fn restores bump-at-top ->
+  100%. (Confirms playbook "loop bump-after-compare IS the peephole pass.")
+  CAVEAT: the walker-pointer rewrite (`slot++`) REGRESSED (extra mr + still
+  bump-after); peephole-off on the INDEX form is the clean lever.
+- kytesmum_animEventCallback (dll_0266, 91.4->93.5%, committed): per-fn `#pragma
+  optimization_level 2` was HURTING -- it forced the eventIds[i] access to the
+  add-base/lbz-disp form (vs target's #112 addi-129/lbzx grouping) AND
+  mis-materialized the `!!` return. DROP the opt_level 2 wrapper (+ its orphaned
+  reset). LEVER: A/B-DROP any per-fn opt_level pragma -- it may be a stale
+  pessimization from a prior agent. Residual: obj r27/r31 param-pool swap; the
+  `!!` still -> neg;or;srwi not double-cntlzw (unexplained, #23 didn't fire).
+- pushable_savePos (dll_0015_curves, 90.7->93.0%, 7cf2dfdac5): first slot ptr used
+  BYTE arith `(T*)(gSaveGameData + i*sizeof(T))` -> slwi emitted BEFORE the
+  gSaveGameData lis;addi base. TYPED ptr arith `(T*)gSaveGameData + i`
+  materializes base FIRST (lis;addi;slwi;add), folding the +0x168 record offset
+  into the lfs disps (364/368/372). Same base-first vein as SaveGame_gplayAddTime.
+  CAVEAT: only change the FIRST slot; the SECOND slot (line 1744) NEEDS the byte
+  form `(int)gSaveGameData + i*sizeof` (typed there REGRESSED to 83.7 -- it must
+  match a different just-computed shape). 1 extra slwi residual (target reuses
+  i*16 in r5 across both blocks; current recomputes -- CSE didn't fire).
+BANKED (no source lever, reverted byte-clean):
+- dll_5E_func03 (dll_005E, 88.2%) & fn_80198A00 (dll_80198a00, 93.3%): INT-arg
+  vs FP-arg EMISSION ORDER. Target emits the const int arg (li r3,K) / state-deref
+  derived FP args BEFORE the leading int args; current interleaves them
+  differently. scheduling off + peephole off + f32-temp-hoist all INERT. This is
+  an arg-eval-order cap, NOT scheduling. Bank.
+- hightop_handleMotionEvent (dll_0272, 91.7%): target uses a JUMP TABLE (bctr) for
+  the cases-5..9 switch; current does binary-search because the fn is wrapped in
+  `#pragma peephole off` (suppresses jump tables, playbook #1). `#pragma peephole
+  on` re-enable INSIDE the off-region did NOT restore the table. Plus cmplwi vs
+  cmpwi (event is u8 but switched signed). Bank (peephole-off jump-table cap).
+- wallanimator_init (dll_013B, 92.4%) / trickyBallFn_801793b8 (dll_00F5, 86.3%) /
+  RomCurve_func1E/func16 (dll_0014): param-pool/saved-reg coloring perms (obj
+  param deferred to r31 vs target r28/r29). The assignment-RHS-first eval (p2
+  before obj) puts the wrong param low; decl-reorder + register-removal +
+  opt_level 2 all INERT. depthoffieldpoint_SeqFn (dll_00C8): case1-before-case0
+  block order is MWCC binary-search codegen, NOT source case order (#13 inert).
+LESSON: emission-ORDER wins (loop-counter hoist, ptr bump position, base-first
+  ptr arith) are the productive vein for flat-dll fns at 90-95%. The losers are
+  param-pool coloring perms and int-vs-FP arg emission order (both source-inert).
+  Drop-stale-opt_level-pragma is a cheap A/B that can win.
+
 ## ===== Session (Jun17h, flat dll widthbranch): 4 %-wins + 1 correctness, ~10 attempts =====
 WINS (committed local; push rejected remote-ahead, single attempt):
 - waterfx_func05 (94.08->95.98%, e0bd88ef11): GXWGFifo.f32 drop-render block
