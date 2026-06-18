@@ -1,17 +1,3 @@
-/*
- * drakormissile (DLL 0x262) - the homing energy projectile fired by the
- * Drakor boss (dll_024D_bossdrakor calls drakormissile_startActiveLaunch
- * to arm a pooled missile). The extra block (0x38 bytes) holds a model
- * light handle, a state machine (IDLE/FADEOUT/EXPLODING/STRAIGHT/HOMING),
- * a countdown timer and five spiralling trail-render yaw/pitch phases.
- *
- * STRAIGHT missiles fly a precomputed line (voxel trace clamps the timer
- * at the first wall hit); HOMING missiles re-aim each frame toward a
- * predicted player intercept point. Either explodes on contact, timer
- * expiry or proximity, then fades out and frees itself. The trail is
- * drawn as DRAKORMISSILE_RENDER_TRAIL_COUNT spun copies plus the body,
- * with an attached point light and glow.
- */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -193,13 +179,13 @@ void drakormissile_update(int obj)
     f32 dir[3];
     int hitObj;
     int hit;
-    int* lastHit;
+    int* near;
     ObjHitsPriorityState* hitState;
     int result;
     int player;
     f32 mag;
-    int expired;
-    int nearHit;
+    int f5;
+    int f3;
     int rem;
 
     moving = 0;
@@ -235,7 +221,7 @@ void drakormissile_update(int obj)
             mag = PSVECMag((f32*)((int)player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
-        Obj_PredictInterceptPoint(player, mag, &((GameObject*)obj)->anim.localPosX, toTarget);
+        fn_80221C18(player, mag, &((GameObject*)obj)->anim.localPosX, toTarget);
         PSVECSubtract(toTarget, (f32*)((int)obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
@@ -271,22 +257,22 @@ void drakormissile_update(int obj)
     if (moving)
     {
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        lastHit = (int*)hitState->lastHitObject;
+        near = (int*)hitState->lastHitObject;
         hitObj = 0;
         hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
-        expired = 0;
+        f5 = 0;
         rem = *(int*)(p + DRAKORMISSILE_FIELD_TIMER) - framesThisStep;
         *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = rem;
         if (rem < 0 || hit != 0)
         {
-            expired = 1;
+            f5 = 1;
         }
-        nearHit = 0;
-        if (lastHit != NULL && *(s16*)((char*)lastHit + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        f3 = 0;
+        if (near != NULL && *(s16*)((char*)near + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
         {
-            nearHit = 1;
+            f3 = 1;
         }
-        result = expired | nearHit;
+        result = f5 | f3;
         result |= hitState->contactFlags;
         if (*(u8*)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING)
         {
@@ -359,50 +345,50 @@ void drakormissile_modelMtxFn(int obj)
 
 void drakormissile_free(int obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
-    void* light = *(void**)(p + DRAKORMISSILE_FIELD_LIGHT);
-    if (light != NULL)
+    char* p = ((GameObject*)obj)->extra;
+    void* m = *(void**)(p + DRAKORMISSILE_FIELD_LIGHT);
+    if (m != 0)
     {
-        ModelLightStruct_free(light);
-        *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
+        ModelLightStruct_free(m);
+        *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = 0;
     }
     ObjGroup_RemoveObject(obj, DRAKORMISSILE_GROUP_ID);
 }
 
-void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
+void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    u8* trail;
-    u8* p = ((GameObject*)obj)->extra;
+    char* p = ((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     if (visible != 0 && *(u8*)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT)
     {
-        s16 savedRotZ = ((GameObject*)obj)->anim.rotZ;
-        s16 savedRotY = ((GameObject*)obj)->anim.rotY;
-        f32 savedScale = ((GameObject*)obj)->anim.rootMotionScale;
+        s16 sv4 = ((GameObject*)obj)->anim.rotZ;
+        s16 sv2 = ((GameObject*)obj)->anim.rotY;
+        f32 sv8 = ((GameObject*)obj)->anim.rootMotionScale;
         int i;
         int* model;
+        char* m;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
         i = 0;
-        trail = p;
+        m = p;
         for (; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
         {
-            *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_YAW) +=
-                *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
-            *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_PITCH) +=
-                *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
-            ((GameObject*)obj)->anim.rotZ = *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_YAW);
-            ((GameObject*)obj)->anim.rotY = *(u16*)(trail + DRAKORMISSILE_FIELD_TRAIL_PITCH);
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) +=
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) +=
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
+            ((GameObject*)obj)->anim.rotZ = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW);
+            ((GameObject*)obj)->anim.rotY = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH);
             *(u16*)((char*)model + 0x18) &= ~8;
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-            trail += 2;
+            m += 2;
         }
-        ((GameObject*)obj)->anim.rotZ = savedRotZ;
-        ((GameObject*)obj)->anim.rotY = savedRotY;
-        ((GameObject*)obj)->anim.rootMotionScale = savedScale;
+        ((GameObject*)obj)->anim.rotZ = sv4;
+        ((GameObject*)obj)->anim.rotY = sv2;
+        ((GameObject*)obj)->anim.rootMotionScale = sv8;
         objAnim->bankIndex = 0;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState() != 0)
+        if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != 0 && modelLightStruct_getActiveState() != 0)
         {
             queueGlowRender(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
         }
@@ -411,7 +397,7 @@ void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
 
 void drakormissile_init(int obj, char* arg)
 {
-    u8* p = ((GameObject*)obj)->extra;
+    char* p = ((GameObject*)obj)->extra;
     int i;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0x13;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
@@ -419,9 +405,12 @@ void drakormissile_init(int obj, char* arg)
     ((GameObject*)obj)->anim.localPosX = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_X);
     ((GameObject*)obj)->anim.localPosY = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Y);
     ((GameObject*)obj)->anim.localPosZ = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Z);
-    ((GameObject*)obj)->anim.velocityX = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_X];
-    ((GameObject*)obj)->anim.velocityY = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_Y];
-    ((GameObject*)obj)->anim.velocityZ = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_Z];
+    ((GameObject*)obj)->anim.velocityX = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_X];
+    ((GameObject*)obj)->anim.velocityY = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_Y];
+    ((GameObject*)obj)->anim.velocityZ = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_Z];
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 1;
