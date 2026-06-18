@@ -1,3 +1,21 @@
+/*
+ * smallbasket - a baddie DLL implementing three closely related
+ * tentacle/whirlpool creatures, selected by anim.seqId 0x6a2/0x6a3/0x6a4
+ * (initialised in smallbasket_initModelVariantState) plus a scaled variant
+ * keyed off placement data. Behaviour is driven from a per-variant table at
+ * lbl_8031FAE8 holding move/sequence sub-tables (BasketSeq12 / BasketSeq16 /
+ * BasketDescriptor) consumed by the update handlers (fn_80157558,
+ * fn_80157004, fn_80159284, fn_80158494, fn_80158C2C, fn_80159FCC,
+ * fn_80159958).
+ *
+ * The creature follows ROM curve paths (RomCurveWalker / gRomCurveInterface),
+ * tracks the player, reacts to hits (fn_80157EBC, smallbasket_handle*), spawns
+ * a linked "firepipe" child object (smallbasket_spawnLinkedFirepipe /
+ * fn_80157B58), drives particle fx (gPartfxInterface), a dynamic light
+ * (objCreateLight / modelLightStruct_*), camera shake/rumble, and a looping
+ * engine SFX (0x3e8). controlFlags bits 0x80000000 (just-triggered) and
+ * 0x40000000 (active) gate the per-frame move dispatch.
+ */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -9,25 +27,16 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
-#include "main/dll/smallbasket.h"
 #include "main/objhits.h"
 
-extern undefined4 FUN_800067e8();
-extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
 extern undefined8 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
-extern undefined8 FUN_8014d4c8();
-extern undefined4 FUN_801577c8();
 
-extern undefined4 DAT_8031ff68;
-extern undefined4 DAT_8031ff70;
 extern f32 lbl_803E3954;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
 extern f32 lbl_803E2CC8;
@@ -38,6 +47,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int p1, int p2);
 extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 extern void firepipe_setLinkedUpdateFlag(int* obj);
+extern void firepipe_clearLinkedUpdateFlag(int);
 extern f32 lbl_803E2B18;
 extern f32 lbl_803E2B38;
 extern f32 lbl_803E2B40;
@@ -59,6 +69,7 @@ extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
 extern u8 lbl_8031FB70[];
 extern u8 lbl_8031FC2C[];
+extern char lbl_8031FAE8[];
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
 extern u8 lbl_8031FD48[];
@@ -174,123 +185,6 @@ extern f32 lbl_803E2C68;
 extern char lbl_803DBCF8;
 extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
-void FUN_80157004(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9, int param_10)
-{
-    int iVar1;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-
-    if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
-    {
-        if (*(byte*)(param_10 + 0x33a) == 0)
-        {
-            *(undefined*)(param_10 + 0x33a) = 1;
-        }
-        else if (1 < *(byte*)(param_10 + 0x33a))
-        {
-            *(undefined*)(param_10 + 0x33a) = 0;
-        }
-        iVar1 = (uint) * (byte*)(param_10 + 0x33a) * 0xc;
-        FUN_8014d4c8((double)*(float*)(&DAT_8031ff68 + iVar1), param_2, param_3, param_4, param_5, param_6,
-                     param_7, param_8, param_9, param_10, (uint)(byte)(&DAT_8031ff70)[iVar1], 0, 0, in_r8, in_r9
-                     , in_r10);
-    }
-    FUN_801577c8(param_9, param_10);
-    return;
-}
-
-#pragma scheduling off
-#pragma peephole off
-void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double param_4, double param_5,
-                  undefined8 param_6, undefined8 param_7, undefined8 param_8)
-{
-}
-
-void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double param_4, double param_5
-                  , double param_6, double param_7, undefined8 param_8, ushort* param_9,
-                  undefined4* param_10)
-{
-}
-
-#pragma scheduling on
-#pragma peephole on
-void FUN_8015a6c0(uint param_1, int param_2)
-{
-    bool bVar1;
-
-    bVar1 = false;
-    switch (*(undefined2*)(param_1 + 0xa0))
-    {
-    case 2:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_800067e8(param_1, 0x49b, 2);
-        }
-        bVar1 = true;
-        break;
-    case 3:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_80006824(param_1, 0x498);
-        }
-        break;
-    case 4:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            if (lbl_803E3954 <= *(float*)(param_1 + 0x98))
-            {
-                FUN_80006824(param_1, SFXfox_fightbreath4);
-            }
-            else
-            {
-                FUN_80006824(param_1, 0x499);
-            }
-        }
-        break;
-    case 5:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_80006824(param_1, 0x49d);
-        }
-        break;
-    case 6:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_80006824(param_1, 0x49d);
-        }
-        break;
-    case 7:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_800067e8(param_1, 0x49c, 2);
-        }
-        bVar1 = true;
-        break;
-    case 9:
-        if (*(short*)(param_2 + 0x2f8) != 0)
-        {
-            FUN_80006824(param_1, 0x49a);
-        }
-    }
-    if (bVar1)
-    {
-        if (*(short*)(param_2 + 0x338) == 0)
-        {
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x809, NULL, 2, -1, NULL);
-        }
-        else
-        {
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x802, NULL, 2, -1, NULL);
-        }
-    }
-    return;
-}
-
-#pragma scheduling off
-#pragma peephole off
 void smallbasket_nop(void)
 {
 }
@@ -378,11 +272,7 @@ void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, 
 
 void smallbasket_applyReactionState(int* obj, int* st)
 {
-    u8* t1;
-    {
-        u32 idx = *(u16*)((char*)st + 0x338);
-        t1 = *(u8**)((char*)lbl_8031FD48 + idx * 8);
-    }
+    u8* t1 = *(u8**)((char*)lbl_8031FD48 + *(u16*)((char*)st + 0x338) * 8);
     *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
     if ((((BaddieState*)st)->controlFlags & 0x40000000) != 0)
     {
@@ -548,12 +438,11 @@ void smallbasket_initScaledVariantState(int* obj, int* st)
     ObjHits_EnableObject((int)obj);
 }
 
-void smallbasket_rotateVectorYaw(int p1, int p2, f32* vec, f32 f1, int p5, u32 int_deg)
+void smallbasket_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg)
 {
     f32 mtx[12];
     f32 a;
-    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)
-    int_deg;
+    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
     a = fn_802943F4(a);
     a = lbl_803E2C1C * a;
     PSMTXRotRad(mtx, 0x79, a);
@@ -605,17 +494,11 @@ void smallbasket_initVariantState(int* obj, int* st)
 void fn_80157CDC(int obj, int p2)
 {
     extern void CameraShake_ApplyRadial(int, f32, f32, f32, f32, f32);
-    extern void*Obj_GetPlayerObject(void);
     extern f32 Vec_distance(int, int);
     extern void doRumble(f32);
     extern void smallbasket_spawnLinkedFirepipe(int, int);
     extern void fn_80157B58(int, int);
     extern void firepipe_setLinkedUpdateFlag(int);
-    extern void firepipe_clearLinkedUpdateFlag(int);
-    extern char lbl_8031FAE8[];
-    extern f32 lbl_803DDA70;
-    extern f32 timeDelta;
-    extern f32 lbl_803E2B80;
     extern f32 lbl_803E2BA0;
     extern f32 lbl_803E2BA4;
     typedef struct
@@ -747,10 +630,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
     {
         ((BaddieState*)state)->controlFlags |= 1;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E2C08 + ((f32)(s32)(s8)
-    params[0x28] / lbl_803E2C0C
-    )
-    ;
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E2C08 + ((f32)(s32)(s8)params[0x28] / lbl_803E2C0C);
 }
 
 /* Nearby-object scan. Asks fn_8014C11C for up to 40 objects
@@ -930,8 +810,7 @@ void fn_80157558(s16* obj, u8* state)
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
     if (*(f32*)(state + 0x324) <= lbl_803E2B18)
     {
-        *(f32*)(state + 0x324) = (f32)(int)
-        randomGetRange(0x3c, 0x78);
+        *(f32*)(state + 0x324) = (f32)(int)randomGetRange(0x3c, 0x78);
     }
 
     if (lbl_803E2B18 != *(f32*)(state + 0x328))
@@ -1029,29 +908,27 @@ void fn_80157558(s16* obj, u8* state)
 
 typedef struct
 {
-    f32 spd; // 0x0
-    u32 mask; // 0x4
-    u8 moveId; // 0x8
-    u8 next; // 0x9
-    u8 mode; // 0xa
+    f32 spd;     /* 0x0 */
+    u32 mask;    /* 0x4 */
+    u8 moveId;   /* 0x8 */
+    u8 next;     /* 0x9 */
+    u8 mode;     /* 0xa */
     u8 pad;
 } BasketSeq12;
 
 typedef struct
 {
-    f32 spd; // 0x0
-    u32 mask; // 0x4
-    u8 moveId; // 0x8
-    u8 next9; // 0x9
-    u8 nextA; // 0xa
+    f32 spd;     /* 0x0 */
+    u32 mask;    /* 0x4 */
+    u8 moveId;   /* 0x8 */
+    u8 next9;    /* 0x9 */
+    u8 nextA;    /* 0xa */
     u8 pad;
-    int flagC; // 0xc
+    int flagC;   /* 0xc */
 } BasketSeq16;
 
 void fn_80159284(int* obj, u8* state)
 {
-    extern void firepipe_clearLinkedUpdateFlag(int);
-    extern char lbl_8031FAE8[];
     typedef struct
     {
         u8 pad[0xc];
@@ -1187,11 +1064,11 @@ void fn_80159284(int* obj, u8* state)
 typedef struct
 {
     u8 pad[6];
-    u16 sfxId; // 0x6
-    f32 vol; // 0x8
-    f32 x; // 0xc
-    f32 y; // 0x10
-    f32 z; // 0x14
+    u16 sfxId;   /* 0x6 */
+    f32 vol;     /* 0x8 */
+    f32 x;       /* 0xc */
+    f32 y;       /* 0x10 */
+    f32 z;       /* 0x14 */
 } BasketSfxParams;
 
 void fn_80159FCC(s16* obj, u8* state)
@@ -1340,8 +1217,7 @@ void fn_80157004(s16* obj, u8* state)
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
     if (*(f32*)(state + 0x324) <= lbl_803E2B18)
     {
-        *(f32*)(state + 0x324) = (f32)(int)
-        randomGetRange(0x3c, 0x78);
+        *(f32*)(state + 0x324) = (f32)(int)randomGetRange(0x3c, 0x78);
     }
 
     if (lbl_803E2B18 != *(f32*)(state + 0x328))
@@ -1489,8 +1365,6 @@ void fn_80157004(s16* obj, u8* state)
 
 void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
 {
-    extern char lbl_8031FAE8[];
-    extern void firepipe_clearLinkedUpdateFlag(int);
     typedef struct
     {
         u8 pad[0x14];
@@ -1721,8 +1595,6 @@ typedef struct
 
 void fn_80158494(s16* obj, u8* state)
 {
-    extern char lbl_8031FAE8[];
-    extern void firepipe_clearLinkedUpdateFlag(int);
     BasketDescriptor* d = (BasketDescriptor*)lbl_8031FAE8;
     u8* t8 = d[*(u8*)(state + 0x33b)].tbl8;
     u8* t0 = d[*(u8*)(state + 0x33b)].tbl0;
@@ -1941,8 +1813,6 @@ void fn_80158494(s16* obj, u8* state)
 
 void fn_80158C2C(s16* obj, u8* state)
 {
-    extern char lbl_8031FAE8[];
-    extern void firepipe_clearLinkedUpdateFlag(int);
     BasketDescriptor* d = (BasketDescriptor*)lbl_8031FAE8;
     u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
