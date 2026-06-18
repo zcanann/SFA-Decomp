@@ -754,11 +754,7 @@ void drawSkyStars(void)
         }
         else
         {
-            if (t > lbl_803DF288)
-            {
-                return;
-            }
-            if (lbl_803DF28C == t)
+            if (t > lbl_803DF288 || lbl_803DF28C == t)
             {
                 return;
             }
