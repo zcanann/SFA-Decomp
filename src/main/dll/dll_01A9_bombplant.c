@@ -134,7 +134,7 @@ void fn_801D29E4(int* obj, int* p2)
         bd.v[2] = lbl_803E536C;
         bd.w = lbl_803E5370;
         setMatrixFromObjectPos(mtx, &bd);
-        Matrix_TransformPoint(mtx, lbl_803E536C, lbl_803E5370, lbl_803E536C, &tx, &ty, &tz);
+        Matrix_TransformPoint(mtx, 0.0f, lbl_803E5370, 0.0f, &tx, &ty, &tz);
         sx = lbl_803E5374 * tx;
         bd.v[0] = sx;
         bd.v[1] = lbl_803E5374 * ty;
