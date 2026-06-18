@@ -10251,12 +10251,9 @@ int objAnimFn_80296328(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int v;
-    if ((((GameObject*)obj)->objectFlags & 0x1000) != 0 &&
-        ((ByteFlags*)((char*)inner + 0x3f2))->b80 == 0)
-    {
-        return 0;
-    }
-    if (((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
+    if (((((GameObject*)obj)->objectFlags & 0x1000) != 0 &&
+         ((ByteFlags*)((char*)inner + 0x3f2))->b80 == 0) ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
         ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
         ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
         *(void**)((char*)inner + 0x7f8) != NULL ||
