@@ -2017,7 +2017,7 @@ void dll_0B_func08(void* param)
     }
 }
 
-extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
@@ -2052,7 +2052,7 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 extern f32 lbl_803DF460;
 extern s16 lbl_803DD280;
 
-int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
+s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
     u8* st = (u8*)base;
     int slot;
