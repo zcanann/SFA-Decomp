@@ -48,7 +48,11 @@ void DFP_Torch_init(int obj, int def)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
     void* res;
-    f32 spawnArg;
+    struct
+    {
+        u8 pad[16];
+        f32 val;
+    } spawnArg;
     int motionRate;
     ((GameObject*)obj)->anim.rotX = (s16)((*(s8*)(def + 0x18) & 0x3f) << 10);
     motionRate = *(s16*)(def + 0x1a);
@@ -62,7 +66,7 @@ void DFP_Torch_init(int obj, int def)
     }
     state->mode = *(u8*)(def + 0x19);
     state->gameBit = *(s16*)(def + 0x1e);
-    spawnArg = lbl_803E63E0;
+    spawnArg.val = lbl_803E63E0;
     switch (state->mode)
     {
     case 0:
