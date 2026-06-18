@@ -452,13 +452,13 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             byteVal = runtime->freezeFrameCounter + 1;
             runtime->freezeFrameCounter = byteVal;
-            if (byteVal <= 0xa)
+            if (byteVal > 0xa)
             {
-                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
+                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
             else
             {
-                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
+                obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
             }
         }
         if ((int)obj->currentMove !=
