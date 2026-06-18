@@ -4156,9 +4156,10 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
             for (i = 0; i < objectCount; i++)
             {
                 candidate = objects[i];
+                j = 0;
                 slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
                 entry = slotBase;
-                for (j = 0; j < 16; j++)
+                for (; j < 16; j++)
                 {
                     if (*(u8**)entry == candidate)
                     {
