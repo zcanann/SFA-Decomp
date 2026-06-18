@@ -748,13 +748,11 @@ void objFn_8002b67c(u8* obj)
 
 int objApplyVelocity(u8* obj)
 {
-    f32 scale = lbl_803DE8B8;
-
-    ((GameObject*)obj)->anim.localPosX += timeDelta * (scale * (((GameObject*)obj)->externalVelX + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)
         obj)->anim.velocityX));
-    ((GameObject*)obj)->anim.localPosY += timeDelta * (scale * (((GameObject*)obj)->externalVelY + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)
         obj)->anim.velocityY));
-    ((GameObject*)obj)->anim.localPosZ += timeDelta * (scale * (((GameObject*)obj)->externalVelZ + ((GameObject*)
+    ((GameObject*)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)
         obj)->anim.velocityZ));
     return 1;
 }
