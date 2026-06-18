@@ -2596,7 +2596,6 @@ extern char lbl_8030D058[];
 void texRestructRefs(int mode)
 {
     char* strs;
-    LoadedTextureEntry* entry;
     u8* tex;
     u8* na;
     int done;
@@ -2618,12 +2617,13 @@ void texRestructRefs(int mode)
     off = 0;
     for (; i < gLoadedTextureCount; i++, off += 16)
     {
-        entry = (LoadedTextureEntry*)((u8*)gLoadedTextures + off);
-        tex = entry->texture;
-        if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1 &&
+        tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
+        if (tex != NULL && ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->flag != 0 &&
+            ((Texture*)tex)->cached == 0 &&
+            (int)((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->size != -1 &&
             mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL)
         {
-            size = entry->size;
+            size = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->size;
             na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
             if (na == NULL)
             {
@@ -2637,9 +2637,9 @@ void texRestructRefs(int mode)
                 DCStoreRange(na, size);
                 textureFn_80053d58(na);
                 d = mmSetFreeDelay(0);
-                mm_free(entry->texture);
+                mm_free(((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture);
                 mmSetFreeDelay(d);
-                entry->texture = na;
+                ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture = na;
             }
         }
     }
@@ -2654,15 +2654,16 @@ void texRestructRefs(int mode)
         off = 0;
         for (; i < gLoadedTextureCount; i++, off += 16)
         {
-            entry = (LoadedTextureEntry*)((u8*)gLoadedTextures + off);
-            tex = entry->texture;
-            if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1)
+            tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
+            if (tex != NULL && ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->flag != 0 &&
+                ((Texture*)tex)->cached == 0 &&
+                (int)((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->size != -1)
             {
                 if (mmGetRegionForPtr(tex) == 0)
                 {
                     if (*(void**)tex == NULL)
                     {
-                        size = entry->size;
+                        size = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->size;
                         na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
                         if (na == NULL)
                         {
@@ -2690,9 +2691,9 @@ void texRestructRefs(int mode)
                             DCStoreRange(na, size);
                             textureFn_80053d58(na);
                             d = mmSetFreeDelay(0);
-                            mm_free(entry->texture);
+                            mm_free(((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture);
                             mmSetFreeDelay(d);
-                            entry->texture = na;
+                            ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture = na;
                         }
                     }
                 }
@@ -2702,7 +2703,7 @@ void texRestructRefs(int mode)
                     {
                         if (*(void**)tex == NULL && getHeapItemSize(tex) >= 0x3000)
                         {
-                            size = entry->size;
+                            size = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->size;
                             na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
                             if (na == NULL)
                             {
@@ -2723,9 +2724,9 @@ void texRestructRefs(int mode)
                                 DCStoreRange(na, size);
                                 textureFn_80053d58(na);
                                 d = mmSetFreeDelay(0);
-                                mm_free(entry->texture);
+                                mm_free(((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture);
                                 mmSetFreeDelay(d);
-                                entry->texture = na;
+                                ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture = na;
                             }
                         }
                     }
