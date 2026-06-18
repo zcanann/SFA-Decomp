@@ -1259,8 +1259,8 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
         for (i = 0; i < count; i++)
         {
             u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-            int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
-            if ((int)entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target)
+            u8* adj = entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
+            if ((int)adj[1] != 0xff && (s32)entries[entryIdx] == target)
             {
                 result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
