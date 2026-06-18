@@ -230,13 +230,13 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
  * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
- * zero, then reset lbl_803DD8C2 to -1 and lbl_803DD8B8 to 0. */
+ * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
 extern u8 gCMenuSections[];
-extern s16 lbl_803DD8C2;
+extern s16 gCMenuActivatedId;
 
 void GameUI_unselectAllItems(void)
 {
-    extern u8 lbl_803DD8B8; /* #57 */
+    extern u8 gCMenuCloseSfx; /* #57 */
     register int* p;
     p = (int*)gCMenuSections;
     while (*(void**)p != NULL)
@@ -244,8 +244,8 @@ void GameUI_unselectAllItems(void)
         *(s16*)((u8*)p + 4) = 0;
         p = (int*)((u8*)p + 0x10);
     }
-    lbl_803DD8C2 = -1;
-    lbl_803DD8B8 = 0;
+    gCMenuActivatedId = -1;
+    gCMenuCloseSfx = 0;
 }
 
 /* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
@@ -1816,8 +1816,8 @@ extern s8 gCMenuCurSection;
 extern s16 cMenuSelectedItem;
 extern s16 gCMenuSelIndex;
 extern int gCMenuItemCount;
-extern s16 lbl_803DD8BC;
-extern s16 lbl_803DD8BE;
+extern s16 gCMenuSelUsedBit;
+extern s16 gCMenuSelActiveBit;
 extern s16 lbl_803DD8D6;
 extern s16 lbl_803DBA66;
 extern s16 aButtonIcon;
@@ -1825,7 +1825,7 @@ extern u8 bButtonIcon;
 extern s16 lbl_803DD89C;
 extern s16 gCMenuPrevStickY;
 extern s16 gCMenuScrollTimer;
-extern u8 lbl_803DD7B8;
+extern u8 gCMenuScrollLock;
 extern s16 lbl_803DD79A;
 extern s8 lbl_803DBA65;
 extern s16 gCMenuScrollVel;
@@ -1875,7 +1875,7 @@ void cMenuRun(void)
     extern int Sfx_PlayFromObject(s32, s32); /* #57 */
     extern void buttonDisable(s32, u32); /* #57 */
     extern u32 getButtonsJustPressed(s32); /* #57 */
-    extern u8 lbl_803DD8B8; /* #57 */
+    extern u8 gCMenuCloseSfx; /* #57 */
     extern int cMenuSetItems(int handle, int flag); /* #57 */
     extern u32 GameBit_Get(u32); /* #57 */
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
@@ -1925,7 +1925,7 @@ void cMenuRun(void)
         }
     }
 
-    switch ((s8)lbl_803DD8B8)
+    switch ((s8)gCMenuCloseSfx)
     {
     case 0:
         break;
@@ -1936,8 +1936,8 @@ void cMenuRun(void)
         Sfx_PlayFromObject(0, 0xfb);
         break;
     }
-    lbl_803DD8C2 = -1;
-    lbl_803DD8B8 = 0;
+    gCMenuActivatedId = -1;
+    gCMenuCloseSfx = 0;
 
     {
         s8 mi = (s8)gCMenuCurSection;
@@ -2003,8 +2003,8 @@ void cMenuRun(void)
             s16 cur = gCMenuSelIndex;
             s16 cy;
             cMenuSelectedItem = (s16)hud->ids848[cur];
-            lbl_803DD8BC = (s16)hud->ids648[cur];
-            lbl_803DD8BE = (s16)hud->ids748[cur];
+            gCMenuSelUsedBit = (s16)hud->ids648[cur];
+            gCMenuSelActiveBit = (s16)hud->ids748[cur];
             {
                 s16 icon = hud->icons[cur];
                 if (aButtonIcon == 0)
@@ -2028,7 +2028,7 @@ void cMenuRun(void)
             {
                 s16 m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
-                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0)
+                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
                     if ((s8)lbl_803DBA65 == 0)
                     {
@@ -2042,7 +2042,7 @@ void cMenuRun(void)
             {
                 s16 m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
-                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0)
+                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
                     if ((s8)lbl_803DBA65 == 0)
                     {
@@ -2085,7 +2085,7 @@ void cMenuRun(void)
                                 gCMenuScrollTimer = 0x32;
                             }
                             lbl_803DBA65 = 3;
-                            lbl_803DD7B8 = 0;
+                            gCMenuScrollLock = 0;
                             gCMenuSelIndex = (s16)(gCMenuSelIndex + 1);
                             if (gCMenuSelIndex >= count)
                             {
@@ -2109,7 +2109,7 @@ void cMenuRun(void)
                                 gCMenuScrollTimer = -0x32;
                             }
                             lbl_803DBA65 = -3;
-                            lbl_803DD7B8 = 0;
+                            gCMenuScrollLock = 0;
                             gCMenuSelIndex = (s16)(gCMenuSelIndex - 1);
                             if (gCMenuSelIndex < 0)
                             {
@@ -2145,8 +2145,8 @@ void cMenuRun(void)
                                     Sfx_PlayFromObject(0, 0x408);
                                     yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
                                     yButtonItem = (u16)cMenuSelectedItem;
-                                    lbl_803DD888 = lbl_803DD8BE;
-                                    lbl_803DD886 = lbl_803DD8BC;
+                                    lbl_803DD888 = gCMenuSelActiveBit;
+                                    lbl_803DD886 = gCMenuSelUsedBit;
                                     lbl_803DD878 = lbl_803DBA84;
                                     if (isTricky == 0)
                                     {
@@ -2174,16 +2174,16 @@ void cMenuRun(void)
                                     if ((b2 & 0x100) || matched != 0)
                                     {
                                         ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
-                                        lbl_803DD8C2 = cMenuSelectedItem;
-                                        lbl_803DD8B8 = (s8)hud->closeMode[gCMenuSelIndex];
+                                        gCMenuActivatedId = cMenuSelectedItem;
+                                        gCMenuCloseSfx = (s8)hud->closeMode[gCMenuSelIndex];
                                         cMenuOpen = 0;
                                     }
                                     Sfx_PlayFromObject(0, 0xf7);
                                 }
                                 else
                                 {
-                                    lbl_803DD8C2 = -1;
-                                    lbl_803DD8B8 = 0;
+                                    gCMenuActivatedId = -1;
+                                    gCMenuCloseSfx = 0;
                                     Sfx_PlayFromObject(0, 0xfd);
                                 }
                             }
@@ -2194,15 +2194,15 @@ void cMenuRun(void)
                                     if ((b2 & 0x100) || matched != 0)
                                     {
                                         cMenuOpen = 0;
-                                        lbl_803DD8C2 = cMenuSelectedItem;
+                                        gCMenuActivatedId = cMenuSelectedItem;
                                         cMenuPlaySelectedItemSfx(player);
-                                        lbl_803DD8B8 = 0;
+                                        gCMenuCloseSfx = 0;
                                     }
                                 }
                                 else
                                 {
-                                    lbl_803DD8C2 = -1;
-                                    lbl_803DD8B8 = 0;
+                                    gCMenuActivatedId = -1;
+                                    gCMenuCloseSfx = 0;
                                     Sfx_PlayFromObject(0, 0xfd);
                                 }
                             }
@@ -2219,14 +2219,14 @@ void cMenuRun(void)
                 if (ys == 3 && lbl_803DD87C == 0)
                 {
                     ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
-                    lbl_803DD8C2 = (s16)yButtonItem;
+                    gCMenuActivatedId = (s16)yButtonItem;
                     buttonDisable(0, 0x900);
                 }
                 else if (ys == 2)
                 {
                     if (gTrickyHudItemMask & (1 << yButtonItem))
                     {
-                        lbl_803DD8C2 = (s16)yButtonItem;
+                        gCMenuActivatedId = (s16)yButtonItem;
                         cMenuPlaySelectedItemSfx(player);
                         buttonDisable(0, 0x900);
                     }
@@ -3911,24 +3911,24 @@ s16 cMenuGetSelectedItem(void)
 }
 
 /* EN v1.0 0x8012EBD0  size: 36b  Match-and-consume helper. If the s32
- * argument equals the active id at lbl_803DD8C2, clear the busy flag
- * lbl_803DD8B8 and return 1; else return 0. */
+ * argument equals the active id at gCMenuActivatedId, clear the busy flag
+ * gCMenuCloseSfx and return 1; else return 0. */
 int GameUI_isItemBeingUsed(s32 id)
 {
-    extern s8 lbl_803DD8B8; /* #57 */
-    if (id == lbl_803DD8C2)
+    extern s8 gCMenuCloseSfx; /* #57 */
+    if (id == gCMenuActivatedId)
     {
-        lbl_803DD8B8 = 0;
+        gCMenuCloseSfx = 0;
         return 1;
     }
     return 0;
 }
 
 /* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
- * when the current id at lbl_803DD8C2 is non-negative, 0 otherwise. */
+ * when the current id at gCMenuActivatedId is non-negative, 0 otherwise. */
 int GameUI_isAnyItemBeingUsed(void)
 {
-    s32 activeId = lbl_803DD8C2;
+    s32 activeId = gCMenuActivatedId;
     s32 inverted = activeId ^ -1;
     s32 shifted = inverted >> 1;
     shifted -= inverted & activeId;
@@ -3937,17 +3937,17 @@ int GameUI_isAnyItemBeingUsed(void)
 }
 
 /* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
- * for the active id at lbl_803DD8C2. On hit, clears the busy flag at
- * lbl_803DD8B8 and returns the matched value; on miss returns -1. */
+ * for the active id at gCMenuActivatedId. On hit, clears the busy flag at
+ * gCMenuCloseSfx and returns the matched value; on miss returns -1. */
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
-    extern s8 lbl_803DD8B8; /* #57 */
+    extern s8 gCMenuCloseSfx; /* #57 */
     int i;
     for (i = 0; i < count; i++)
     {
-        if (lbl_803DD8C2 == arr[i])
+        if (gCMenuActivatedId == arr[i])
         {
-            lbl_803DD8B8 = 0;
+            gCMenuCloseSfx = 0;
             return arr[i];
         }
     }
@@ -4707,7 +4707,7 @@ void GameUI_initialise(void)
     extern s16 yButtonState; /* #57 */
     extern void* hudTextures[]; /* #57 */
     extern void* textureLoadAsset(int id); /* #57 */
-    extern s8 lbl_803DD8B8; /* #57 */
+    extern s8 gCMenuCloseSfx; /* #57 */
     int res;
     int height;
     int width;
@@ -4716,8 +4716,8 @@ void GameUI_initialise(void)
 
     gCMenuPreselectOwnedBit = -1;
     gCMenuForcedSelIndex = -1;
-    lbl_803DD8C2 = -1;
-    lbl_803DD8B8 = 0;
+    gCMenuActivatedId = -1;
+    gCMenuCloseSfx = 0;
     gTrickyHudCachedIconIndex = -1;
     res = getScreenResolution();
     *(volatile int*)&lbl_803DD744 = res;

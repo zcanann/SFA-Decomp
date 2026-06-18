@@ -1,21 +1,23 @@
 /*
- * Menu item-select SFX dispatcher.
+ * C-menu item-select SFX dispatcher.
  *
- * cMenuPlaySelectedItemSfx maps the current menu-cursor row index
- * (lbl_803DD8C2) to a per-row UI sound and plays it limited from the
- * menu object. Used by the pause/menu code in dll 0x00 (baby_snowworm).
+ * cMenuPlaySelectedItemSfx maps the just-activated entry id (gCMenuActivatedId)
+ * to a per-entry UI sound and plays it limited from the menu object. It is
+ * called from cMenuRun's tricky branch, where gCMenuActivatedId is the Tricky
+ * command index (0-5) and the sounds (0x3f7-0x3fc) are Fox's voice clips for
+ * each command. Used by the C-menu code in dll 0x00 (baby_snowworm).
  */
 #include "ghidra_import.h"
 
 #pragma scheduling off
 
-extern s16 lbl_803DD8C2;
+extern s16 gCMenuActivatedId;
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
 
 void cMenuPlaySelectedItemSfx(int obj)
 {
     int sfx = 0;
-    switch (lbl_803DD8C2)
+    switch (gCMenuActivatedId)
     {
     case 0: sfx = 0x3FB;
         break;
