@@ -63,7 +63,7 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 void alphaanimator_free(int* obj)
 {
-    AlphaAnimatorState* o = (AlphaAnimatorState*)((int**)obj)[0xb8 / 4];
+    AlphaAnimatorState* o = (AlphaAnimatorState*)(int*)((GameObject*)obj)->extra;
     void* p = o->buf;
     if (p != NULL) mm_free(p);
 }
@@ -87,7 +87,7 @@ int alphaanimator_getObjectTypeId(void) { return 0x0; }
 void alphaanimator_init(int* obj)
 {
     s8 v = -1;
-    *(s8*)&((AlphaAnimatorState*)((int**)obj)[0xb8 / 4])->prevGate = v;
+    *(s8*)&((AlphaAnimatorState*)(int*)((GameObject*)obj)->extra)->prevGate = v;
 }
 
 #pragma scheduling on
