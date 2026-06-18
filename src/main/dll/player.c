@@ -9872,9 +9872,9 @@ int fn_80299E44(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x400) != 0)
     {
-        switch (*(u8*)((char*)state + 0x34b))
+        u8 sel = *(u8*)((char*)state + 0x34b);
+        if (sel == 1)
         {
-        case 1:
             inner->moveSlotIndex = 8;
             ObjAnim_SetCurrentMove(
                 obj,
@@ -9882,7 +9882,9 @@ int fn_80299E44(int obj, int state, f32 fv)
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
-        case 3:
+        }
+        if (sel == 3)
+        {
             inner->moveSlotIndex = 9;
             ObjAnim_SetCurrentMove(
                 obj,
@@ -9890,7 +9892,9 @@ int fn_80299E44(int obj, int state, f32 fv)
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
-        case 4:
+        }
+        if (sel == 4)
+        {
             inner->moveSlotIndex = 7;
             ObjAnim_SetCurrentMove(
                 obj,
@@ -9898,7 +9902,9 @@ int fn_80299E44(int obj, int state, f32 fv)
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
-        case 2:
+        }
+        if (sel == 2)
+        {
             inner->moveSlotIndex = 6;
             ObjAnim_SetCurrentMove(
                 obj,
@@ -9906,15 +9912,14 @@ int fn_80299E44(int obj, int state, f32 fv)
                 lbl_803E7EA4, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
-        default:
-            inner->moveSlotIndex = 5;
-            ObjAnim_SetCurrentMove(
-                obj,
-                lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
-                lbl_803E7EA4, 0);
-            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
-            return 0x27;
         }
+        inner->moveSlotIndex = 5;
+        ObjAnim_SetCurrentMove(
+            obj,
+            lbl_803336BC[*(s16*)((inner->moveSlots + 2) + (u32)inner->moveSlotIndex * 0xb0)],
+            lbl_803E7EA4, 0);
+        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
+        return 0x27;
     }
     if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
     {
