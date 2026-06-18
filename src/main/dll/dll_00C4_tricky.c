@@ -68,8 +68,6 @@ typedef struct TrickyStatusFlags58
 } TrickyStatusFlags58;
 
 extern bool FUN_800067f0();
-extern char FUN_80006a64();
-extern undefined4 FUN_80006a68();
 extern uint FUN_80017690();
 extern int randomGetRange(int min, int max);
 extern void Sfx_RemoveLoopedObjectSound(int param_1, int param_2);
@@ -104,7 +102,6 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern int objModelGetVecFn_800395d8(int obj, int param_2);
 extern void freeAndNull(void* param_1);
 extern void trickyVoxAllocFn_8004b5d4(void* param_1);
-extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
 extern void objAudioFn_8006edcc(int obj, u16 param_4, int param_5, float* points, void* aux, f32 param_1, f32 param_2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
@@ -125,10 +122,6 @@ extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern void objSetAnimSpeedTo1(int param_1);
 extern f32 objFn_801948c0(int obj, int param_2);
-extern undefined4 FUN_80247eb8();
-extern double SeekTwiceBeforeRead();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
 extern void trickyReportError(const char* fmt, ...);
@@ -196,9 +189,6 @@ extern f32 lbl_803E3138;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3188;
 extern f32 lbl_803E31C4;
-extern f32 lbl_803E3234;
-extern f32 lbl_803E3244;
-
 void FUN_80144e40(int param_1, int param_2)
 {
     float heightVal;
@@ -2846,78 +2836,6 @@ void Tricky_hitDetect(int obj)
             ((TrickyStatusFlags58*)&((TrickyState*)state)->statusFlags)->heightTracking = 0;
         }
     }
-    return;
-}
-
-void FUN_80146fa0(void)
-{
-    return;
-}
-
-void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, float* param_11, float* param_12)
-{
-    short objId;
-    bool applyOffset;
-    int* target;
-    char blocked;
-    int player;
-    double dist;
-    undefined8 packed;
-    char local_a0[4];
-    short asStack_9c[4];
-    short asStack_94[4];
-    float afStack_8c[3];
-    float local_80;
-    float local_7c;
-    float local_78;
-    int aiStack_74[29];
-
-    packed = FUN_8028683c();
-    target = (int*)((ulonglong)packed >> 0x20);
-    player = (int)packed;
-    local_a0[0] = '\0';
-    blocked = '\0';
-    if (*(int*)(player + 0x29c) != 0)
-    {
-        local_80 = *param_11;
-        local_7c = param_11[1];
-        local_78 = param_11[2];
-        applyOffset = true;
-        objId = *(short*)((int)target + 0x46);
-        if (((((objId != 0x613) && (objId != 0x642)) && (objId != 0x3fe)) &&
-            ((objId != 0x7c6 && (objId != 0x7c8)))) && ((objId != 0x251 && (objId != 0x851))))
-        {
-            local_7c = local_7c + lbl_803E3234;
-            applyOffset = false;
-        }
-        FUN_80006a68(&local_80, asStack_9c);
-        local_80 = *param_12;
-        local_7c = lbl_803E3234 + param_12[1];
-        local_78 = param_12[2];
-        FUN_80006a68(&local_80, asStack_94);
-        FUN_80247eb8(param_11, &local_80, afStack_8c);
-        dist = SeekTwiceBeforeRead(afStack_8c);
-        if (dist < (double)lbl_803E3244)
-        {
-            if (target[0xc] == 0)
-            {
-                blocked = FUN_80006a64(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                     asStack_94, asStack_9c, (undefined4*)0x0, local_a0, 0);
-            }
-            if ((!applyOffset) && (local_a0[0] == '\x01'))
-            {
-                blocked = '\x01';
-            }
-        }
-    }
-    if ((blocked != '\0') && ((*(uint*)(player + 0x2e4) & 8) != 0))
-    {
-        FUN_800620e8(param_11, &local_80, (float*)0x0, aiStack_74, target, (uint) * (byte*)(player + 0x261),
-                     0xffffffff, 0, 0);
-    }
-    FUN_80286888();
     return;
 }
 
