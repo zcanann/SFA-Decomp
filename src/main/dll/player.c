@@ -12397,7 +12397,6 @@ void fn_802AC32C(int p1, int p2, int p3)
         f32 ratio;
         f32 clamped;
         f32 f5;
-        f32 fdelta;
         f32 result;
         int delta;
 
@@ -12422,18 +12421,17 @@ void fn_802AC32C(int p1, int p2, int p3)
             (*(f32*)((char*)p3 + 0x404) - lbl_803E7E9C);
         clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
         f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
-        fdelta = (f32)delta;
-        if (fdelta < lbl_803E80F8 * -f5)
+        if ((f32)delta < lbl_803E80F8 * -f5)
         {
             result = lbl_803E80F8 * -f5;
         }
-        else if (fdelta > lbl_803E80F8 * f5)
+        else if ((f32)delta > lbl_803E80F8 * f5)
         {
             result = lbl_803E80F8 * f5;
         }
         else
         {
-            result = fdelta;
+            result = (f32)delta;
         }
         angle1 = (int)result;
     }
