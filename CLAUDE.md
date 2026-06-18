@@ -505,9 +505,11 @@ compare + md5. A local @NNN conversion-bias .sdata2 with no retail TU pool = fli
   match). **Retail ISO forensics** (`orig/GSAE01/*.iso`): OBJECTS.bin/.tab + gResourceDescriptors
   (0x802C6300) map DLL ids → names/units; `dll_boundary_audit.py` / `dll_boundary_resplit.py` for TU
   boundaries.
-- **Byte-exact cleanup verification:** baseline = `objdump -d -j .text` of every `.o` under
-  `build/GSAE01/src` (NOT `build/GSAE01/obj` = the target tree); edit; rebuild; diff; commit on zero
-  diffs. After a `git pull`, OTHER hunters' commits flag their .o — confirm any flagged .o is yours.
+- **Cleanup verification (match-% only):** the ONLY gate is `report.json` `fuzzy_match_percent` —
+  capture a per-function baseline, edit, force-rebuild the unit's `.o` + `ninja report.json`, and
+  confirm no function dropped below baseline. Byte-identity is NOT required: renames, struct
+  consolidation, duplicate-function removal, and other source restructuring are all fine as long as
+  the match % holds (a fn at 100% stays 100%). Don't byte-compare `.text` or chase md5 stability.
 
 ## Reference commits
 peephole-off mass fix `b7eda753` · drift add-new-fn `aedc9605`/`77438a6f` · u8-vs-char `6863ffe7` ·

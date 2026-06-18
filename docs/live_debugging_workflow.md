@@ -172,14 +172,11 @@ scared us off.
 `report.json` labels functions by their **target** symbol names, so your renames
 won't change the labels there — matching is by **address**. That's expected.
 
-**Pure symbol renames are byte-neutral** — the file md5 changes (the name string
-lives in the symbol table) but `.text` is identical. To prove a rename didn't touch
-codegen without a match rebuild, compare the raw `.text` section bytes (name-
-independent):
-
-```bash
-build/binutils/powerpc-eabi-objdump -s -j .text <file>.o | grep -E '^ [0-9a-f]+ ' | md5sum
-```
+**Match % is the only gate — byte-identity is never required.** Renames, struct
+consolidation, removing duplicate/dead functions, and other source restructuring
+are all fair game; just rebuild the unit + `report.json` and confirm no function
+dropped below baseline. Don't byte-compare `.text` or chase md5 stability — a
+function that was 100% and is still 100% is done, however much the source moved.
 
 ---
 
