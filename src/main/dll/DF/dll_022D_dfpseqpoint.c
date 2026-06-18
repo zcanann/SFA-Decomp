@@ -60,7 +60,7 @@ void dfpseqpoint_init(int* obj, u8* init)
     DfpSeqPointState* sub;
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)dfpseqpoint_SeqFn;
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32) * (s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
     sub->triggerMode = init[0x19];
