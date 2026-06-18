@@ -1056,8 +1056,8 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
             int count;
             uint* barrels = ObjGroup_GetObjects(0x3a, &count);
             int i;
-            uint* p = barrels;
-            for (i = 0; i < count; i++)
+            uint* p;
+            for (i = 0, p = barrels; i < count; i++)
             {
                 if (((GunpowderbarrelPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
                 {
@@ -1124,7 +1124,14 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         return;
     }
     dz = ((GameObject*)near)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-    rate = (dy2 != scale) ? ((GameObject*)obj)->anim.velocityY / dy2 : scale;
+    if (dy2 != scale)
+    {
+        rate = ((GameObject*)obj)->anim.velocityY / dy2;
+    }
+    else
+    {
+        rate = scale;
+    }
     if (rate >= lbl_803E42DC)
     {
         Sfx_PlayFromObject((u32)obj, 0xd2);
