@@ -34,7 +34,7 @@ extern f32 lbl_803E26D8;
 extern f32 lbl_803E26DC;
 extern f32 lbl_803E26E0;
 extern f32 lbl_803E26E4;
-extern f32 lbl_803E26E8;
+extern const f32 lbl_803E26E8;
 extern f32 lbl_803E26EC;
 extern f32 lbl_803E26F0;
 extern f32 lbl_803E26F4;
@@ -759,9 +759,10 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
             ((BaddieState*)state)->controlFlags =
-                (((BaddieState*)state)->controlFlags & ~SEQOBJ_ANIM_BLEND_ACTIVE_FLAG) |
-                SEQOBJ_ANIM_EVENT_HOLD_FLAG;
-            *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & 0x7f;
+                ((BaddieState*)state)->controlFlags & ~0x40LL;
+            ((BaddieState*)state)->controlFlags =
+                ((BaddieState*)state)->controlFlags | 0x40000000LL;
+            *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
             *(u8*)(state + 0x33c) = 0;
             return 0;
         }
