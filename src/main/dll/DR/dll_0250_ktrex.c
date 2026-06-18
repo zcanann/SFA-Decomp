@@ -554,13 +554,14 @@ void ktrex_update(int obj)
     void* runtime;
     void* player;
     f32 d[3];
+    f32* dp;
     u32 tmp;
     u8 maskA;
     u8 maskB;
     u8 flags;
     int phase;
     int i;
-    f32 dz, dx;
+    f32 dz, dx, frac;
     s16* bitA;
     s16* bitB;
 
@@ -582,10 +583,11 @@ void ktrex_update(int obj)
     if (((KTRexRuntime*)runtime)->unk2D0 != NULL)
     {
         player = ((KTRexRuntime*)runtime)->unk2D0;
-        d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+        dp = d;
+        dp[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
     maskA = 0;
@@ -607,16 +609,17 @@ void ktrex_update(int obj)
         ->rowAZ)[phase];
     if (__fabs(dz) > __fabs(dx))
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        frac =
             (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
             dz;
     }
     else
     {
-        ((KTRexArenaState*)gKTRexState)->unkF4 =
+        frac =
             (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
             dx;
     }
+    ((KTRexArenaState*)gKTRexState)->unkF4 = frac;
     tmp = lbl_803E67B0;
     ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
