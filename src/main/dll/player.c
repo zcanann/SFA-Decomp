@@ -12421,18 +12421,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         }
         ratio = lbl_803E7EE0 - (((PlayerState*)p2)->baddie.animSpeedC - lbl_803E7E9C) /
             (*(f32*)((char*)p3 + 0x404) - lbl_803E7E9C);
-        if (ratio < lbl_803E7EA4)
-        {
-            clamped = lbl_803E7EA4;
-        }
-        else if (ratio > lbl_803E7EE0)
-        {
-            clamped = lbl_803E7EE0;
-        }
-        else
-        {
-            clamped = ratio;
-        }
+        clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
         f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
         fdelta = (f32)delta;
         if (fdelta < lbl_803E80F8 * -f5)
