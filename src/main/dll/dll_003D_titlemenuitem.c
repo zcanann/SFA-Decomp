@@ -48,7 +48,7 @@ extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Music_PlayTrackByIndex(int index);
-extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
+extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void* gameTextGetPhrase(int textId, int variant);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
@@ -111,16 +111,16 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     switch (item->kind)
     {
     case TITLE_MENU_KIND_SLIDER:
-        drawTexture(lbl_803A9DB8[1], (u8)(((u8)alpha * 0xb4) >> 8),
-                    (f32)item->x, (f32)item->y, 0x100);
+        drawTexture(lbl_803A9DB8[1], (f32)item->x, (f32)item->y,
+                    (u8)(((u8)alpha * 0xb4) >> 8), 0x100);
 
         texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
             ((f32)(item->value - item->minValue) /
                 (f32)(item->maxValue - item->minValue)) +
             (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
-        drawTexture(texture, (u8)(((u8)alpha * 0xff) >> 8),
-                    markerX, (f32)(item->y - 4), 0x100);
+        drawTexture(texture, markerX, (f32)(item->y - 4),
+                    (u8)(((u8)alpha * 0xff) >> 8), 0x100);
         break;
     case TITLE_MENU_KIND_TOGGLE:
         if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0)
@@ -151,13 +151,13 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         {
             drawAlpha = (u8)alpha;
         }
-        drawTexture(lbl_803A9DB8[textureIndex], (u8)drawAlpha,
-                    (f32)item->x, (f32)item->y, 0x100);
+        drawTexture(lbl_803A9DB8[textureIndex], (f32)item->x, (f32)item->y,
+                    (u8)drawAlpha, 0x100);
         break;
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
                                    (item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0 ? 0 : item->value);
-        gameTextSetColor(0, 0, 0, (u8)((alpha * 0x96) >> 8));
+        gameTextSetColor(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
@@ -180,7 +180,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
     s8 stickX;
     s16 move;
     s16 gatedMove;
-    s16 sliderDelta;
+    int sliderDelta;
     s16 previewVolume;
 
     if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
@@ -235,17 +235,17 @@ void TitleMenuItem_update(TitleMenuItem* item)
         stickX = padGetStickX(0);
         sliderDelta = (s16)((s8)stickX / 16) * 0xa0;
 
-        if ((sliderDelta == 0) ||
-            ((lbl_803DD91C < (f32)item->minValue) && (sliderDelta < 0)) ||
-            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0)))
-        {
-            lbl_803DD918 = 0;
-        }
-        else
+        if (((s16)sliderDelta != 0) &&
+            (!(lbl_803DD91C < (f32)item->minValue) || ((s16)sliderDelta >= 0)) &&
+            (!(lbl_803DD91C > (f32)item->maxValue) || ((s16)sliderDelta <= 0)))
         {
             lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
                 (f32)lbl_803DD918);
             Sfx_KeepAliveLoopedObjectSound(0, 0x3b9);
+        }
+        else
+        {
+            lbl_803DD918 = 0;
         }
 
         lbl_803DD91C += (f32)lbl_803DD918 / lbl_803E21F4;
@@ -254,11 +254,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
         {
             previewVolume = item->value;
-            if (previewVolume > 0x7f)
-            {
-                previewVolume = 0x7f;
-            }
-            if (previewVolume < 0)
+            if ((previewVolume > 0x7f ? 0x7f : previewVolume) < 0)
             {
                 previewVolume = 0;
             }
@@ -281,24 +277,24 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
     if (item->value > item->maxValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->maxValue;
+            item->value = 0;
         }
         else
         {
-            item->value = 0;
+            item->value = item->maxValue;
         }
     }
     else if (item->value < item->minValue)
     {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) != 0)
         {
-            item->value = item->minValue;
+            item->value = item->maxValue;
         }
         else
         {
-            item->value = item->maxValue;
+            item->value = item->minValue;
         }
     }
 
