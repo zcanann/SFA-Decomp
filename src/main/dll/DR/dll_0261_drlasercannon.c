@@ -1,21 +1,3 @@
-/*
- * drlasercannon (DLL 0x261) - a wall-mounted laser turret.
- *
- * On init it spawns a warning marker object, optionally links to a
- * nearby firepipe (group 0x4a), and reads its placement setup
- * (initial yaw, reload cadence, target range, beam speed, plus the two
- * game bits that mark it destroyed / silence its warning).
- *
- * Each update it picks a target (Tricky when commanded, otherwise the
- * nearest non-hidden player/companion via drlasercannon_getTrackedTarget),
- * aims toward it (drlasercannon_aimAtTarget yaw/pitch-slews the model,
- * pitch inverted for the flipped placement type 0x417), and once aimed
- * and reloaded fires a beam object (type 0x429) from the muzzle toward
- * the predicted hit point. The cannon bobs vertically (mathSinf on
- * bobPhase) and rides a ROM curve path. hitDetect docks health from
- * incoming hits, plays sfx/explosion fx, and on death sets the
- * destroyed game bit and hides the object.
- */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
@@ -192,8 +174,9 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     f32 d[3];
     f32* dp;
     f32 horiz;
-    int yaw;
-    int pitch;
+    s16 yaw;
+    s16 pitch;
+    int clamp;
     int negClamp;
     s16 negClampS;
     int delta;
@@ -216,30 +199,32 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     dp[1] = target->anim.localPosY - eyePos[1];
     dp[2] = target->anim.localPosZ - eyePos[2];
     horiz = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
-    yaw = (s16)(int)getAngle(dp[0], dp[2]);
-    pitch = (s16)(int)getAngle(dp[1], horiz);
+    yaw = (s16)(int)
+    getAngle(dp[0], dp[2]);
+    pitch = (s16)(int)
+    getAngle(dp[1], horiz);
     if (self->anim.seqId == DR_LASERCANNON_PITCH_FLIP_TYPE)
     {
         pitch = (s16) - pitch;
     }
     if (maxRate < 0x168)
     {
-        maxRate = (s16)(lbl_803E68E0 * (f32)maxRate);
-        negClamp = -maxRate;
+        clamp = (s16)(lbl_803E68E0 * (f32)maxRate);
+        negClamp = -clamp;
         negClampS = (s16)negClamp;
         out->yaw = (s16)yaw;
-        if (out->yaw > maxRate)
+        if (out->yaw > clamp)
         {
-            out->yaw = maxRate;
+            out->yaw = clamp;
         }
         if (out->yaw < negClamp)
         {
             out->yaw = negClampS;
         }
         out->pitch = (s16)pitch;
-        if (out->pitch > maxRate)
+        if (out->pitch > clamp)
         {
-            out->pitch = maxRate;
+            out->pitch = clamp;
         }
         if (out->pitch < negClamp)
         {
@@ -362,7 +347,7 @@ void drlasercannon_init(int obj, char* arg)
     ObjGroup_AddObject(obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;
     state->flags.b3 = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)(setup->initialYaw << 8);
+    *(s16*)obj = (s16)(setup->initialYaw << 8);
     state->trickyCooldown = DR_LASERCANNON_TRICKY_COOLDOWN;
     state->animStepScale = lbl_803E6920;
     if (GameBit_Get(setup->destroyedGameBit) != 0)
@@ -427,7 +412,7 @@ void drlasercannon_hitDetect(int obj)
                                              &hitPosY, &hitPosZ);
     if (state->flags.b6 != 0)
     {
-        if (hit != 0 && ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType &&
+        if (hit != 0 && *(s16 *)(hitObject + 0x46) != state->hitExcludeType &&
             (void *)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
@@ -435,7 +420,7 @@ void drlasercannon_hitDetect(int obj)
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
              (void *)state->lastHitObject != (void *)hitObject &&
-             ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType)
+             *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
     {
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
@@ -478,8 +463,8 @@ void drlasercannon_update(int obj)
     f32 nearDist;
     int spawnFlag;
     f32 hitPos[3];
-    f32 outv[6];
     f32 inv[6];
+    f32 outv[6];
     ((GameObject*)obj)->anim.localPosY -= state->bobOffset;
     if (state->flags.b7 != 0)
     {
@@ -525,7 +510,7 @@ void drlasercannon_update(int obj)
     }
     else
     {
-        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, (u8)(5 - (u8)state->health), lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
         if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
@@ -554,7 +539,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v;
-            ((GameObject*)obj)->anim.rotX += lbl_803DC2AC;
+            *(s16*)obj += lbl_803DC2AC;
             v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
             v[0] = (s16)(v[0] >> 1);
         }
@@ -567,17 +552,21 @@ void drlasercannon_update(int obj)
         }
         else if (dist < (f32)setup->targetRange)
         {
-            if (target == player)
+            if ((void*)target == (void*)player)
             {
                 fn_802966CC(player);
             }
             switch (state->hasFirepipe)
             {
+            case 1:
+                state->hitExcludeType = DR_LASERCANNON_FIREPIPE_OBJECT_TYPE;
+                firepipe_setLinkedUpdateFlag(state->firepipeObject);
+                break;
             case 0:
                 state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
                 if (timerCountDown(&state->reloadTimer) != 0)
                 {
-                    if (Obj_PredictInterceptPoint(target,
+                    if (fn_80221C18(target,
                                     (f32)setup->beamSpeed / lbl_803E6908, &state->muzzleX, hitPos) != 0)
                     {
                         spawned = *(int*)&((GameObject*)obj)->extra;
@@ -621,10 +610,6 @@ void drlasercannon_update(int obj)
                     s16toFloat(&state->reloadTimer, (s16)(setup->reloadFrames << 2));
                 }
                 break;
-            case 1:
-                state->hitExcludeType = DR_LASERCANNON_FIREPIPE_OBJECT_TYPE;
-                firepipe_setLinkedUpdateFlag(state->firepipeObject);
-                break;
             }
         }
     }
@@ -638,7 +623,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
-            ((GameObject*)spawned)->anim.rotX = (s16)((f32)((GameObject*)obj)->anim.rotX + lbl_803DDD68);
+            *(s16*)spawned = (s16)((f32) * (s16*)obj + lbl_803DDD68);
             ((GameObject*)spawned)->anim.rotY = v[0];
         }
     }
