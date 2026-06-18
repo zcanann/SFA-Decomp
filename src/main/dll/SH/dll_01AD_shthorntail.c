@@ -407,13 +407,13 @@ void SHthorntail_update(SHthorntailObject* obj)
     }
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
     if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
+        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
     {
-        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
     }
     else
     {
-        hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
+        hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
     uval = (uint)runtime->hitReactState;
