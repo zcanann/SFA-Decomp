@@ -15026,10 +15026,6 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             }
             else
             {
-                face = NULL;
-            }
-            if (face == NULL)
-            {
                 return 0;
             }
             if (((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 6 &&
