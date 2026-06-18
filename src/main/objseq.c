@@ -457,7 +457,7 @@ void ObjSeq_run(void)
     f32* dists;
     f32* frames;
     u8* marks;
-    s8 frames8;
+    int frames8;
     u8* matched[0x28];
     s16 keepBuf[0x5a];
     int objectCount;
