@@ -82,13 +82,13 @@ int expgfx_acquireResourceEntry(int resourceId)
                     textureFree((u8*)resourceHandle);
                 }
                 gExpgfxTextureFreeInProgress = 0;
-                entry->resource = NULL;
+                EXPGFX_RUNTIME_DATA->resourceTable[i].resource = NULL;
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             if (resourceHandle != NULL)
             {
-                entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
-                entry->resourceId = resourceId;
+                EXPGFX_RUNTIME_DATA->resourceTable[i].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+                EXPGFX_RUNTIME_DATA->resourceTable[i].resourceId = resourceId;
                 return (s16)i;
             }
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
@@ -109,20 +109,19 @@ int expgfx_acquireResourceEntry(int resourceId)
             minIndex = i;
         }
     }
-    entry = &EXPGFX_RUNTIME_DATA->resourceTable[minIndex];
     gExpgfxTextureFreeInProgress = 1;
-    resourceHandle = (ExpgfxResourceHandle*)entry->resource;
+    resourceHandle = (ExpgfxResourceHandle*)EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resource;
     if (resourceHandle != NULL)
     {
         textureFree((u8*)resourceHandle);
     }
     gExpgfxTextureFreeInProgress = 0;
-    entry->resource = NULL;
-    entry->resource = textureLoadAsset(resourceId);
-    if (entry->resource != NULL)
+    EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resource = NULL;
+    EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resource = textureLoadAsset(resourceId);
+    if (EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resource != NULL)
     {
-        entry->evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
-        entry->resourceId = resourceId;
+        EXPGFX_RUNTIME_DATA->resourceTable[minIndex].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+        EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resourceId = resourceId;
         return (s16)minIndex;
     }
     return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
