@@ -1,30 +1,10 @@
-/*
- * dll_BB - per-frame camera commit + queued-action blending.
- *
- * camcontrol_applyState pushes the camcontrol working state onto the live
- * view slot each frame: it sets view orientation, optionally smooth-follows
- * the world position (smoothingFlags bit 7) toward the target, drives the
- * queued-action blend (eased by blendCurveMode: 2 = cubic, 1 = quadratic,
- * else linear) across position/orientation/FOV, then steps the letterbox
- * viewport offset toward its target.
- *
- * camcontrol_applyQueuedAction arms a pending queued action: it builds the
- * blend step from the requested frame count, snapshots the current view as
- * the blend start (or copies it straight through when no blend), records the
- * active action, and hands off to camcontrol_activateHandler.
- *
- * The Camera_func* setters poke the camera target/frame flag bytes and the
- * letterbox target; CAMCONTROL_CAMERA is the global working state.
- *
- * EN v1.0: camcontrol_applyState 0x80101980, camcontrol_applyQueuedAction 0x80101EBC.
- */
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
-extern void Obj_UpdateWorldTransform(s16 *obj);
+extern void Obj_UpdateWorldTransform(void *obj);
 extern void Camera_SetCurrentViewIndex(s32 index);
 extern void Camera_UpdateViewMatrices(void);
-extern s16 Camera_GetViewportYOffset(void);
+extern s32 Camera_GetViewportYOffset(void);
 extern void Camera_SetFovY(f32 fovY);
 extern f32 interpolate(f32 cur,f32 target,f32 t);
 extern void loadMapForCameraPos(f32 x,f32 y,f32 z);
@@ -34,25 +14,39 @@ extern void PSVECNormalize(f32 *src,f32 *dst);
 extern f32 PSVECMag(f32 *v);
 extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
-extern void Camera_SetViewportYOffset(s16 yOffset);
+extern void Camera_SetViewportYOffset(s32 yOffset);
 extern void mm_free(void *ptr);
 
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat;
+extern f64 lbl_803E1650;
 extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyState
+ * EN v1.0 Address: 0x80101980
+ * EN v1.0 Size: 1332b
+ * EN v1.1 Address: 0x80101C1C
+ * EN v1.1 Size: 1340b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void camcontrol_applyState(CamcontrolCameraState *camera)
 {
-  f32 prog;
-  f32 clamped;
+  float prog;
+  float clamped;
   CameraViewSlot *view;
   int itmp;
-  f32 mag;
-  f32 blendFactor;
-  f32 delta[3];
+  float mag;
+  float blendFactor;
+  float delta[3];
 
   Camera_SetCurrentViewIndex(0);
   view = Camera_GetCurrentViewSlot();
@@ -111,7 +105,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaYaw < -0x8000) {
         camera->blendDeltaYaw = (camera->blendDeltaYaw + 0x10000) - 1;
       }
-      itmp = (int)((f32)camera->blendDeltaYaw * blendFactor);
+      itmp = (int)((float)camera->blendDeltaYaw * blendFactor);
       view->yaw = camera->blendStartYaw - itmp;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_PITCH) != 0) {
@@ -122,7 +116,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaPitch < -0x8000) {
         camera->blendDeltaPitch = (camera->blendDeltaPitch + 0x10000) - 1;
       }
-      itmp = (int)((f32)camera->blendDeltaPitch * blendFactor);
+      itmp = (int)((float)camera->blendDeltaPitch * blendFactor);
       view->pitch = camera->blendStartPitch - itmp;
     }
     if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_ROLL) != 0) {
@@ -133,12 +127,12 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
       if (camera->blendDeltaRoll < -0x8000) {
         camera->blendDeltaRoll = (camera->blendDeltaRoll + 0x10000) - 1;
       }
-      itmp = (int)((f32)camera->blendDeltaRoll * blendFactor);
+      itmp = (int)((float)camera->blendDeltaRoll * blendFactor);
       view->roll = camera->blendStartRoll - itmp;
     }
   }
   Camera_SetFovY(lbl_803DD4D0);
-  Obj_UpdateWorldTransform((s16 *)view);
+  Obj_UpdateWorldTransform(view);
   loadMapForCameraPos(camera->worldX,camera->worldY,camera->worldZ);
   itmp = Camera_GetViewportYOffset();
   lbl_803DD4C0 = (short)itmp;
@@ -159,17 +153,25 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   }
   camera->letterboxTargetOffset = 0;
   Camera_UpdateViewMatrices();
+  return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyQueuedAction
+ * EN v1.0 Address: 0x80101EBC
+ * EN v1.0 Size: 400b
+ */
 #pragma opt_common_subs off
 void camcontrol_applyQueuedAction(void)
 {
   CameraViewSlot *view;
-  f32 blendStep;
+  float blendStep;
 
   if (gCamcontrolQueuedActionPending != '\0') {
     if (gCamcontrolQueuedActionBlendFrames > 1) {
-      blendStep = gCamcontrolNormalizedMax / (f32)gCamcontrolQueuedActionBlendFrames;
+      blendStep = gCamcontrolNormalizedMax / (float)gCamcontrolQueuedActionBlendFrames;
       if ((blendStep <= gCamcontrolNormalizedMin) || (blendStep > gCamcontrolNormalizedMax)) {
         blendStep = gCamcontrolNormalizedMax;
       }
@@ -202,11 +204,12 @@ void camcontrol_applyQueuedAction(void)
     gCamcontrolSavedActionStartFlags = gCamcontrolActiveActionStartFlags;
     camcontrol_activateHandler((u16)gCamcontrolQueuedActionId,gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionPending = '\0';
-    if (gCamcontrolQueuedActionData != NULL) {
+    if (gCamcontrolQueuedActionData != (void *)0x0) {
       mm_free(gCamcontrolQueuedActionData);
-      gCamcontrolQueuedActionData = NULL;
+      gCamcontrolQueuedActionData = (void *)0x0;
     }
   }
+  return;
 }
 #pragma opt_common_subs reset
 
@@ -239,4 +242,5 @@ void Camera_setLetterbox(int yOffset,int applyNow)
       Camera_SetViewportYOffset((s16)yOffset);
     }
   }
+  return;
 }
