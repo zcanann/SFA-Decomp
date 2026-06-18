@@ -372,10 +372,14 @@ void waterfx_func05(int p1, int p2)
             WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
             if (d->idx != -1)
             {
+                f32 vx, vy, vz;
                 GXBegin(0xb8, 2, 1);
-                GXWGFifo.f32 = d->x - playerMapOffsetX;
-                GXWGFifo.f32 = d->y;
-                GXWGFifo.f32 = d->z - playerMapOffsetZ;
+                vz = d->z - playerMapOffsetZ;
+                vy = d->y;
+                vx = d->x - playerMapOffsetX;
+                GXWGFifo.f32 = vx;
+                GXWGFifo.f32 = vy;
+                GXWGFifo.f32 = vz;
             }
         }
         if ((int)lbl_803DD22C != 0)
