@@ -316,7 +316,7 @@ void fn_801C8B68(int obj)
     register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
     register int state = *(int*)&((GameObject*)self)->extra;
     GameObject* player = Obj_GetPlayerObject();
-    int local_var;
+    ObjAnimEventList local_var;
     f32 dist;
     f32 angA, angB;
     int delta;
