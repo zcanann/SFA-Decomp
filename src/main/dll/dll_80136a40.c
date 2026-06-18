@@ -889,7 +889,7 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void debugPrintfxy(int x, int y, char* fmt, ...)
 {
     int xx;
@@ -927,7 +927,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
             default:
                 if (*p1 >= 0x61 && *p1 <= 0x7a)
                 {
-                    *p1 = *p1 - 0x20;
+                    *p1 -= 0x20;
                 }
                 if (*p1 >= 0x21 && *p1 <= 0x5a)
                 {
@@ -944,6 +944,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     }
 }
 
+#pragma peephole on
 int fn_80136A40(int p1, int c)
 {
     u8* tbl;
