@@ -15677,7 +15677,8 @@ void fn_802AA014(int obj)
             hw = res >> 17;
             *(s16*)((char*)o + 0) = *(s16*)((char*)slot + 0);
             fov = (lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4)) / lbl_803E7F98;
-            cot = lbl_803E7F5C * (mathSinf(fov) / mathCosf(fov));
+            cot = mathSinf(fov);
+            cot = lbl_803E7F5C * (cot / mathCosf(fov));
             aspect = Camera_GetAspectRatio();
             h2 = (u16)res >> 1;
             ycomp = cot * -(((inner->unk788 - (f32)h2) / (f32)h2) * aspect);
