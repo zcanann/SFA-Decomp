@@ -11765,7 +11765,7 @@ int fn_80298380(int obj, int state, f32 fv)
             if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
                 inner->unk8B4 = 0;
-                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return -1;
