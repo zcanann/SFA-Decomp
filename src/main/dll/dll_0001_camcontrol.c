@@ -279,14 +279,9 @@ void camcontrol_updateTargetFeedback(void)
         CAMCONTROL_CAMERA->targetDistance = targetDistance;
     }
     alphaScale = gCamcontrolReticleAlphaScale * reticle->currentMoveProgress;
-    if (alphaScale < gCamcontrolNormalizedMin)
-    {
-        alphaScale = gCamcontrolNormalizedMin;
-    }
-    else if (gCamcontrolReticleAlphaScale < alphaScale)
-    {
-        alphaScale = gCamcontrolReticleAlphaScale;
-    }
+    alphaScale = (alphaScale < gCamcontrolNormalizedMin)
+                     ? gCamcontrolNormalizedMin
+                     : ((alphaScale > gCamcontrolReticleAlphaScale) ? gCamcontrolReticleAlphaScale : alphaScale);
     reticle->alpha = (int)alphaScale;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
     reticle->rotX = (short)(int)(gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
