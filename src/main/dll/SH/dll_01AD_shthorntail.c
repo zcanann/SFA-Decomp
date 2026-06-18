@@ -376,7 +376,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     ObjHitReactEntry* hitReactEntries;
     int val;
     uint uval;
-    float* scratch;
     int ref;
     s8* eventId;
     u8* stateTables;
@@ -416,9 +415,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    uval = (uint)runtime->hitReactState;
-    scratch = (float*)runtime->hitReactScratch;
-    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
+    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, (uint)runtime->hitReactState, (float*)runtime->hitReactScratch);
     if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
