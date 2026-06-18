@@ -229,10 +229,10 @@ void alphaanimator_update(int* obj)
         {
             s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         }
-        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
+        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
         if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
         {
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
+            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
             s->fadeA = lbl_803E3F78 + s->fadeMax;
             s->gateVal = 1;
         }
