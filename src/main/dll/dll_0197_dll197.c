@@ -1,27 +1,60 @@
+/*
+ * dll197 - the three-stage "cup" / spin-symbol contact puzzle object.
+ *
+ * objType 0 is the contact cup (Cup197State): it toggles active on a
+ * priority hit, plays proximity sfx (channel 0x40), spawns 0x1a3 spark
+ * particles and an 0x69 resource effect on activation, and drives a
+ * three-stage progression latch (lbl_803DDBD0 0..3) keyed on its stage
+ * (0..2) and gameBit. Stage 2 completion sets game bit 0x472.
+ * objType 1 is the spin-symbol variant (Dll197State, getExtraSize 0x10),
+ * set up by dll_197_init from placement bytes.
+ *
+ * render does a camera line-of-sight check (voxmaps_traceLine) before
+ * emitting the 0x1f7 sparkle particle on a randomized cooldown.
+ *
+ * NOTE: the dll_197 ObjectDescriptor (.data:0x803264E0, size 0x38) is not yet
+ * claimed in splits.txt and is unimplemented here; data-section work pending.
+ */
 #include "main/dll/dll197state_struct.h"
-#include "main/dll/dbshsymbol_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 
+/* home TUs unknown; cross-TU game/audio/effect/voxmap services */
 extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern int Obj_GetPlayerObject(void);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
+extern void* Camera_GetCurrentViewSlot(void);
+extern f32 sqrtf(f32 x);
+extern void voxmaps_worldToGrid(void* world, void* grid);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
+extern int ObjHits_GetPriorityHit(int obj, int p2, int p3, int p4);
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
+extern int lbl_802C23C8[];
+extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
+extern f32 lbl_803E5120;
+extern f32 lbl_803E5124;
+extern f32 lbl_803E5128;
+extern f32 lbl_803E512C;
+extern f32 lbl_803E5130;
+extern f32 lbl_803E5134;
+extern f32 lbl_803E5138;
+extern f32 lbl_803E513C;
+extern f32 lbl_803E5140;
+extern f32 lbl_803E5144;
+
 typedef struct ResourceParamBlob
 {
     int w[4];
 } ResourceParamBlob;
-extern int lbl_802C23C8[];
-extern s8 lbl_803DDBD0;
-extern f32 lbl_803E5138;
-extern f32 lbl_803E513C;
 
 typedef struct Cup197State
 {
@@ -37,28 +70,7 @@ typedef struct Cup197State
     u8 stage;
 } Cup197State;
 
-/*
- * Per-object extra state for the DBSH spin-symbol minigame
- * (dbsh_symbol_getExtraSize == 0x24).
- */
-
-STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
-STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
-STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
-
-extern f32 lbl_803E5120;
-extern f32 lbl_803E5124;
-extern f32 lbl_803E5128;
-extern f32 lbl_803E512C;
-extern f32 lbl_803E5130;
-extern f32 lbl_803E5134;
-extern void* Camera_GetCurrentViewSlot(void);
-extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-extern int ObjHits_GetPriorityHit();
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
+#define CUP_STAGE_COMPLETE_BIT 0x472
 
 void dll_197_hitDetect(void)
 {
@@ -66,8 +78,6 @@ void dll_197_hitDetect(void)
 
 void dll_197_update(int obj)
 {
-    extern int Obj_GetPlayerObject(void);
-    extern undefined4 GameBit_Set(int eventId, int value);
     Cup197State* state = ((GameObject*)obj)->extra;
     int resourceParams[4];
     u8 callbackData[0x14];
@@ -76,7 +86,6 @@ void dll_197_update(int obj)
     void* resource;
     int effect;
     int stageEffectBase;
-    int* resourceDefaults;
 
     *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)lbl_802C23C8;
 
@@ -127,7 +136,7 @@ void dll_197_update(int obj)
             state->activeTimer = 300;
             if (state->stage == 2)
             {
-                GameBit_Set(0x472, 1);
+                GameBit_Set(CUP_STAGE_COMPLETE_BIT, 1);
             }
         }
     }
@@ -183,7 +192,7 @@ void dll_197_update(int obj)
         }
         if (lbl_803DDBD0 == 2 && state->stage == 2 && GameBit_Get(state->gameBit) != 0)
         {
-            GameBit_Set(0x472, 1);
+            GameBit_Set(CUP_STAGE_COMPLETE_BIT, 1);
             lbl_803DDBD0 = 3;
         }
         state->sparkArmed = 1;
@@ -208,7 +217,7 @@ void dll_197_update(int obj)
         }
         if (lbl_803DDBD0 == 3 && state->stage == 2 && GameBit_Get(0x474) == 0)
         {
-            GameBit_Set(0x472, 0);
+            GameBit_Set(CUP_STAGE_COMPLETE_BIT, 0);
             lbl_803DDBD0 = 0;
         }
     }
@@ -353,8 +362,6 @@ void dll_197_init(int obj, int data)
     ((Dll197State*)st)->unk4 = 0;
 }
 
-void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-
 void dll_197_release(void)
 {
 }
@@ -362,5 +369,3 @@ void dll_197_release(void)
 void dll_197_initialise(void)
 {
 }
-
-void nwsh_levcon_hitDetect(void);
