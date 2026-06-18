@@ -626,7 +626,7 @@ void translateToDinoLanguage(u8* str)
             }
             if (base != 0)
             {
-                *p = sGameTextGlyphOrder[ch - base] + (base - 0x61);
+                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
             }
         }
         byteOff += charLen;
@@ -643,7 +643,7 @@ extern int gCurTextBuffer;
 extern int lbl_803DC97C;
 extern f32 timeDelta;
 extern f32 lbl_803DE71C;
-extern char lbl_803DB3D4;
+extern char lbl_803DB3D4[];
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern void* gameTextGet();
@@ -667,20 +667,20 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -698,8 +698,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
-        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xefc, textId,
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
         return lbl_803DC974;
     }
@@ -715,8 +715,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
-        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return lbl_803DC974;
     }
 
@@ -759,11 +759,10 @@ void* gameTextGetStr(int textId)
         }
         return lbl_803DC974;
     }
-    t = gameTextGet(textId);
+    t = gameTextGet();
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
-#pragma peephole off
 void* gameTextGet(int textId)
 {
     u8* gameTextBase;
@@ -789,25 +788,25 @@ void* gameTextGet(int textId)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
+        entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
 
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -844,9 +843,8 @@ void* gameTextGet(int textId)
             fadeLimit = lbl_803DE71C;
             if (zero < fadeLimit)
             {
-                f32 alpha = zero + timeDelta;
-                *cachedAlpha = alpha;
-                if (alpha >= fadeLimit)
+                *cachedAlpha = zero + timeDelta;
+                if (*cachedAlpha >= fadeLimit)
                 {
                     sprintf((char*)*(int*)*(int**)((u8*)cachedEntry + 8), strings + 0xefc, textId,
                             sMapDirectoryNameTable[(int)curGameTextDir]);
@@ -861,18 +859,17 @@ void* gameTextGet(int textId)
     {
         lbl_803DC97C = 0;
     }
-    entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
+    entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
     lbl_803DC974 = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
-    lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
-    sprintf((char*)*(volatile int*)&gCurTextBuffer, &lbl_803DB3D4, textId,
+    lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
+    sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)lbl_803DC974 = (u16)textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
     return lbl_803DC974;
 }
-#pragma peephole reset
 
 undefined4
 #pragma scheduling on
@@ -1224,7 +1221,8 @@ void gameTextLoadTaskText(int taskId)
         if (lbl_803DCA00 == 0)
         {
             taskList = lbl_802C9EE8;
-            for (count = 0xb; count != 0; count--)
+            count = 0xb;
+            do
             {
                 if (taskId == *taskList)
                 {
@@ -1232,7 +1230,7 @@ void gameTextLoadTaskText(int taskId)
                     goto checkAllowed;
                 }
                 taskList++;
-            }
+            } while (--count != 0);
             allowed = 0;
         checkAllowed:
             if (allowed == 0)
@@ -1309,16 +1307,14 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
-#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
     {
         s16 sx = x;
         u8* box = gTextBoxes;
-        int off = idx * 0x20;
-        *(s16*)(box + off + 0x18) = sx;
-        *(s16*)(box + off + 0x1a) = y;
+        *(s16*)(box + idx * 0x20 + 0x18) = sx;
+        *(s16*)(box + idx * 0x20 + 0x1a) = y;
     }
     else
     {
@@ -1333,12 +1329,10 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     }
 }
 
-#pragma optimization_level reset
 extern void* lbl_8033BE54[];
 extern void* lbl_8033B240[];
 extern int lbl_803DCA14;
 
-#pragma optimization_level 1
 void gameTextInitFn_8001bd14(void)
 {
     int i;
@@ -1351,7 +1345,8 @@ void gameTextInitFn_8001bd14(void)
     lbl_803DB3E0 = -1;
 
     scratch = (int*)lbl_8033B240;
-    for (i = 8; i != 0; i--)
+    i = 8;
+    do
     {
         scratch[0] = zero;
         scratch[1] = zero;
@@ -1389,10 +1384,11 @@ void gameTextInitFn_8001bd14(void)
         scratch[6] = zero;
         scratch[7] = zero;
         scratch += 8;
+        i--;
     }
+    while (i != 0);
 }
 
-#pragma optimization_level reset
 #pragma dont_inline on
 void subtitleFn_8001b700(void)
 {
@@ -1685,8 +1681,8 @@ void gameTextRun(void)
     GameTextSlot* cmd;
     u8* textWindow;
     int color;
-    double fadeLimit;
     double zero;
+    double fadeLimit;
 
     gameTextBase = lbl_80339980;
 
@@ -1782,7 +1778,7 @@ void gameTextRun(void)
             {
                 *timer = (f32)zero;
                 *alpha = (f32)zero;
-                sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                sprintf(**(char***)(entry + 8), lbl_803DB3D4);
             }
         }
     }
@@ -1799,7 +1795,7 @@ void gameTextRun(void)
     textWindow = gTextBoxes;
     for (i = 148; i != 0; i--)
     {
-        *(u16*)(textWindow + 0x1c) &= ~1;
+        *(u16*)(textWindow + 0x1c) &= 0xfffe;
         textWindow += 0x20;
     }
 
@@ -2031,8 +2027,10 @@ void gameTextLoadForCurMap(int sourceId)
         return;
     }
 
-    lbl_803DC9D8 = dirId = (int)curGameTextDir;
-    lbl_803DC9E0 = languageId = curLanguage;
+    dirId = (int)curGameTextDir;
+    languageId = curLanguage;
+    lbl_803DC9D8 = dirId;
+    lbl_803DC9E0 = languageId;
     if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT ||
         languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT)
     {
@@ -2068,10 +2066,11 @@ void gameTextLoadForCurMap(int sourceId)
     }
     while (i-- != 0);
 
-    request = (GameTextLoadRequest*)(gameTextBase + sourceId * sizeof(GameTextLoadRequest));
-    *(int*)((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
-    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
-    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = (u8)curLanguage;
+    request = (GameTextLoadRequest*)(gameTextBase + GAMETEXT_LOAD_REQUESTS_OFFSET +
+        sourceId * sizeof(GameTextLoadRequest));
+    request->state = 1;
+    request->dirId = (u8)curGameTextDir;
+    request->languageId = (u8)curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)
@@ -2094,8 +2093,8 @@ void gameTextLoadForCurMap(int sourceId)
 
     if (freeSlot != NULL)
     {
-        dirId = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8);
-        languageId = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9);
+        dirId = request->dirId;
+        languageId = request->languageId;
         freeSlot->state = 1;
         freeSlot->dirId = (u8)dirId;
         freeSlot->languageId = (u8)languageId;
@@ -2108,8 +2107,8 @@ void gameTextLoadForCurMap(int sourceId)
             loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
                                 &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
-        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = GAMETEXT_INVALID_DIR;
-        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = GAMETEXT_INVALID_LANGUAGE;
+        request->dirId = GAMETEXT_INVALID_DIR;
+        request->languageId = GAMETEXT_INVALID_LANGUAGE;
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
@@ -2162,8 +2161,8 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int c3y0;
     int c3x1;
     int c3x0;
-    s16 savedY;
     s16 savedX;
+    s16 savedY;
     u16 f;
     u8* cur;
     int hw;
@@ -2227,7 +2226,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
         }
-        else if ((u32)boxId != 0)
+        else if (boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
@@ -2255,7 +2254,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
         }
-        else if ((u32)boxId != 0)
+        else if (boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
@@ -2382,7 +2381,7 @@ void setLanguageFn_8001ad64(void* reqp)
     {
         *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
     }
-    txt = (u8*)(strs + numStrings);
+    txt = (u8*)(table + numStrings + 1);
     for (i = 0; i < numStrings; i++)
     {
         strs[i] = strs[i] + (int)txt;
@@ -2830,7 +2829,8 @@ extern u16 lbl_802C9F00[];
 extern u16 lbl_802CA100[];
 
 #pragma opt_strength_reduction off
-#pragma optimization_level 1
+#pragma scheduling off
+#pragma peephole off
 void gameTextInitFn_8001c794(void)
 {
     s16* p;
@@ -2846,7 +2846,6 @@ void gameTextInitFn_8001c794(void)
     int off;
     u16* dst;
     u16* src;
-    u8* rb;
 
     i = 1;
     p = &lbl_803DB3E8 + 1;
@@ -2870,57 +2869,49 @@ void gameTextInitFn_8001c794(void)
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
             off = y * 32;
-            rb = (u8*)src + off;
-            dst[0] = *(u16*)(rb + xb);
-            dst[1] = *(u16*)(rb + x1);
-            dst[2] = *(u16*)(rb + x2);
-            dst[3] = *(u16*)(rb + x3);
+            dst[0] = *(u16*)((u8*)src + off + xb);
+            dst[1] = *(u16*)((u8*)src + off + x1);
+            dst[2] = *(u16*)((u8*)src + off + x2);
+            dst[3] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[4] = *(u16*)(rb + xb);
-            dst[5] = *(u16*)(rb + x1);
-            dst[6] = *(u16*)(rb + x2);
-            dst[7] = *(u16*)(rb + x3);
+            dst[4] = *(u16*)((u8*)src + off + xb);
+            dst[5] = *(u16*)((u8*)src + off + x1);
+            dst[6] = *(u16*)((u8*)src + off + x2);
+            dst[7] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[8] = *(u16*)(rb + xb);
-            dst[9] = *(u16*)(rb + x1);
-            dst[10] = *(u16*)(rb + x2);
-            dst[11] = *(u16*)(rb + x3);
+            dst[8] = *(u16*)((u8*)src + off + xb);
+            dst[9] = *(u16*)((u8*)src + off + x1);
+            dst[10] = *(u16*)((u8*)src + off + x2);
+            dst[11] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[12] = *(u16*)(rb + xb);
-            dst[13] = *(u16*)(rb + x1);
-            dst[14] = *(u16*)(rb + x2);
-            dst[15] = *(u16*)(rb + x3);
+            dst[12] = *(u16*)((u8*)src + off + xb);
+            dst[13] = *(u16*)((u8*)src + off + x1);
+            dst[14] = *(u16*)((u8*)src + off + x2);
+            dst[15] = *(u16*)((u8*)src + off + x3);
             xb += 8;
             x1 = (x + 5) * 2;
             x2 = (x + 6) * 2;
             x3 = (x + 7) * 2;
             off = y * 32;
-            rb = (u8*)src + off;
-            dst[16] = *(u16*)(rb + xb);
-            dst[17] = *(u16*)(rb + x1);
-            dst[18] = *(u16*)(rb + x2);
-            dst[19] = *(u16*)(rb + x3);
+            dst[16] = *(u16*)((u8*)src + off + xb);
+            dst[17] = *(u16*)((u8*)src + off + x1);
+            dst[18] = *(u16*)((u8*)src + off + x2);
+            dst[19] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[20] = *(u16*)(rb + xb);
-            dst[21] = *(u16*)(rb + x1);
-            dst[22] = *(u16*)(rb + x2);
-            dst[23] = *(u16*)(rb + x3);
+            dst[20] = *(u16*)((u8*)src + off + xb);
+            dst[21] = *(u16*)((u8*)src + off + x1);
+            dst[22] = *(u16*)((u8*)src + off + x2);
+            dst[23] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[24] = *(u16*)(rb + xb);
-            dst[25] = *(u16*)(rb + x1);
-            dst[26] = *(u16*)(rb + x2);
-            dst[27] = *(u16*)(rb + x3);
+            dst[24] = *(u16*)((u8*)src + off + xb);
+            dst[25] = *(u16*)((u8*)src + off + x1);
+            dst[26] = *(u16*)((u8*)src + off + x2);
+            dst[27] = *(u16*)((u8*)src + off + x3);
             off += 32;
-            rb = (u8*)src + off;
-            dst[28] = *(u16*)(rb + xb);
-            dst[29] = *(u16*)(rb + x1);
-            dst[30] = *(u16*)(rb + x2);
-            dst[31] = *(u16*)(rb + x3);
+            dst[28] = *(u16*)((u8*)src + off + xb);
+            dst[29] = *(u16*)((u8*)src + off + x1);
+            dst[30] = *(u16*)((u8*)src + off + x2);
+            dst[31] = *(u16*)((u8*)src + off + x3);
             dst += 32;
             x += 8;
             xb += 8;
@@ -2943,29 +2934,25 @@ void gameTextInitFn_8001c794(void)
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
             off = y * 40;
-            rb = (u8*)src + off;
-            dst[0] = *(u16*)(rb + xb);
-            dst[1] = *(u16*)(rb + x1);
-            dst[2] = *(u16*)(rb + x2);
-            dst[3] = *(u16*)(rb + x3);
+            dst[0] = *(u16*)((u8*)src + off + xb);
+            dst[1] = *(u16*)((u8*)src + off + x1);
+            dst[2] = *(u16*)((u8*)src + off + x2);
+            dst[3] = *(u16*)((u8*)src + off + x3);
             off += 40;
-            rb = (u8*)src + off;
-            dst[4] = *(u16*)(rb + xb);
-            dst[5] = *(u16*)(rb + x1);
-            dst[6] = *(u16*)(rb + x2);
-            dst[7] = *(u16*)(rb + x3);
+            dst[4] = *(u16*)((u8*)src + off + xb);
+            dst[5] = *(u16*)((u8*)src + off + x1);
+            dst[6] = *(u16*)((u8*)src + off + x2);
+            dst[7] = *(u16*)((u8*)src + off + x3);
             off += 40;
-            rb = (u8*)src + off;
-            dst[8] = *(u16*)(rb + xb);
-            dst[9] = *(u16*)(rb + x1);
-            dst[10] = *(u16*)(rb + x2);
-            dst[11] = *(u16*)(rb + x3);
+            dst[8] = *(u16*)((u8*)src + off + xb);
+            dst[9] = *(u16*)((u8*)src + off + x1);
+            dst[10] = *(u16*)((u8*)src + off + x2);
+            dst[11] = *(u16*)((u8*)src + off + x3);
             off += 40;
-            rb = (u8*)src + off;
-            dst[12] = *(u16*)(rb + xb);
-            dst[13] = *(u16*)(rb + x1);
-            dst[14] = *(u16*)(rb + x2);
-            dst[15] = *(u16*)(rb + x3);
+            dst[12] = *(u16*)((u8*)src + off + xb);
+            dst[13] = *(u16*)((u8*)src + off + x1);
+            dst[14] = *(u16*)((u8*)src + off + x2);
+            dst[15] = *(u16*)((u8*)src + off + x3);
             dst += 16;
             x += 4;
             xb += 8;
@@ -2974,7 +2961,8 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)lbl_803DCA20 + 0x60, 800);
 }
-#pragma optimization_level reset
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 lbl_803DE730;
 extern f32 lbl_803DE734;
