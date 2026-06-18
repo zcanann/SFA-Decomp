@@ -1083,7 +1083,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         {
             v = -v;
         }
-        q->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->unk478);
+        *(s16*)&q->unk478 = (lbl_803E8348 * v + (f32)(s32)q->unk478);
     }
     {
         f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
@@ -1093,7 +1093,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         {
             v = -v;
         }
-        q->currentYaw = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->currentYaw);
+        *(s16*)&q->currentYaw = (lbl_803E8348 * v + (f32)(s32)q->currentYaw);
     }
     fn_802BCA10(obj, (int)q, p2);
     return 0;
