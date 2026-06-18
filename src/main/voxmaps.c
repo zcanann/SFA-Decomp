@@ -309,7 +309,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         found = -1;
         for (i = 0; i < 6; i++)
         {
-            if (blockId == vm->blockId[i])
+            int* row = (int*)((u8*)vm + (i << 2));
+            if (blockId == row[12])
             {
                 found = i;
                 i = 6;
