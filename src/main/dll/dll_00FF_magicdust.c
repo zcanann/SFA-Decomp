@@ -80,7 +80,6 @@ void magicdust_update(int obj)
     short sVar2;
     byte flagsByte;
     int player;
-    GameObject* playerObj;
     int ref;
     uint val;
     int state;
@@ -91,7 +90,6 @@ void magicdust_update(int obj)
     f32 dist;
 
     player = (int)Obj_GetPlayerObject();
-    playerObj = (GameObject*)player;
     state = *(int*)&((GameObject*)obj)->extra;
     while (ref = ObjMsg_Pop(obj, (uint*)msg, (uint*)0x0, (uint*)0x0), ref != 0)
     {
@@ -117,7 +115,7 @@ void magicdust_update(int obj)
     if ((((MagicDustState*)state)->flags27A & 0x10) == 0)
     {
         if (((((MagicDustState*)state)->flags27A & 0x40) == 0) &&
-            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &playerObj->anim.worldPosX) < lbl_803E34B8))
+            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E34B8))
         {
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x10;
             fxArg = '\0';
@@ -133,7 +131,7 @@ void magicdust_update(int obj)
     }
     else
     {
-        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &playerObj->anim.worldPosX) >= lbl_803E34B8)
+        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) >= lbl_803E34B8)
         {
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xef;
             (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -267,14 +265,14 @@ void magicdust_update(int obj)
     }
     if (((((MagicDustState*)state)->flags27A & 0x20) == 0) && ((((MagicDustState*)state)->flags27A & 0x40) == 0))
     {
-        fval = ((GameObject*)obj)->anim.localPosY - playerObj->anim.localPosY;
+        fval = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
         if (fval < lbl_803E34C4)
         {
             fval = -fval;
         }
         if (fval < lbl_803E34DC)
         {
-            dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, &playerObj->anim.worldPosX);
+            dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
             fval = lbl_803E34E0 + ((MagicDustState*)state)->unk268;
             if ((dist < fval * fval) && (fn_8029622C(player) != 0))
             {
