@@ -30,8 +30,8 @@ extern int randomGetRange(int min, int max);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803DF1A0;
-extern const f32 lbl_803DF1D8;
-extern const f32 lbl_803DF1DC;
+extern f32 lbl_803DF1D8;
+extern f32 lbl_803DF1DC;
 extern u8 lbl_803DD19B;
 extern u8* lbl_803DD19C;
 extern u8 lbl_803DD1C0;
@@ -132,7 +132,7 @@ extern void* lbl_8039A828[];
 extern void* lbl_803DD1C8;
 extern void* lbl_803DD1C4;
 extern void* lbl_803DD1A0;
-extern const f32 lbl_803DF1A4;
+extern f32 lbl_803DF1A4;
 extern f32 lbl_803DB760;
 extern f32 lbl_803DB764;
 extern f32 lbl_803DB768;
@@ -247,7 +247,7 @@ typedef struct FogColor
 
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern int snowPrintSnowCloud(int arg, int x);
-extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
+extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a0, u8 a1);
 extern f32 lbl_8039A8F0[];
 extern int lbl_803DF198;
 
@@ -260,7 +260,8 @@ void dll_07_func07(int arg)
 
     GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
              *(FogColor*)&lbl_803DF198);
-    for (i = 0, total = 0; i < 8; i++)
+    total = 0;
+    for (i = 0; i < 8; i++)
     {
         snow = (u8*)lbl_8039A828[i];
         if (snow != NULL && snow[0x144F] == 0)
@@ -270,8 +271,8 @@ void dll_07_func07(int arg)
     }
     if (lbl_803DD198 != 0)
     {
-        drawFn_80079e64(lbl_803DD190, lbl_803DD198, lbl_8039A8F0, lbl_803DB764,
-                        lbl_803DD199, lbl_803DD19A, lbl_803DB768);
+        drawFn_80079e64(lbl_803DD190, lbl_803DB764, lbl_803DB768, lbl_803DD198,
+                        lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
     }
 }
 
@@ -283,15 +284,14 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 {
     void* p;
     int i;
-    int j;
 
     if (flag == 0)
     {
         if (cloudId == -1)
         {
-            for (j = 0; j < 8; j++)
+            for (i = 0; i < 8; i++)
             {
-                snowFreeSnowCloud(j);
+                snowFreeSnowCloud(i);
             }
         }
         else
@@ -309,7 +309,11 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL || i == 8)
+    if (p == NULL)
+    {
+        return;
+    }
+    if (i == 8)
     {
         return;
     }
@@ -327,7 +331,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
 extern void* textureIdxToPtr(int idx);
-extern const f32 lbl_803DF2B0;
+extern f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 
 #pragma dont_inline off
@@ -380,8 +384,8 @@ void snowFreeSnowCloud(int cloudId)
     env = saveGameGetEnvState();
     if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
     {
-        ((s16*)(env + 0xe))[cloudId] = -1;
-        ((s8*)(env + 0x41))[cloudId] = -1;
+        *(s16*)(env + cloudId * 2 + 0xe) = -1;
+        ((s8*)env)[cloudId + 0x41] = -1;
     }
     for (i = 0; i < 8; i++)
     {
@@ -392,7 +396,11 @@ void snowFreeSnowCloud(int cloudId)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL || i == 8)
+    if (p == NULL)
+    {
+        return;
+    }
+    if (i == 8)
     {
         return;
     }
@@ -522,7 +530,7 @@ extern f32 PSVECMag(f32 * v);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DF19C;
-extern const f32 lbl_803DF1D4;
+extern f32 lbl_803DF1D4;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
@@ -589,10 +597,10 @@ void lightningRender(void* state)
 extern s16 lbl_803DD1A8;
 extern f32 lbl_803DD1AC;
 extern f32 lbl_803DD1B0;
-extern const f32 lbl_803DF1E0;
-extern const f32 lbl_803DF1E4;
-extern const f32 lbl_803DF1E8;
-extern const f32 lbl_803DF1EC;
+extern f32 lbl_803DF1E0;
+extern f32 lbl_803DF1E4;
+extern f32 lbl_803DF1E8;
+extern f32 lbl_803DF1EC;
 extern const f32 lbl_803DF1F0;
 extern const f32 lbl_803DF1F4;
 extern const f32 lbl_803DF1F8;
@@ -711,10 +719,10 @@ extern u16 lbl_8039A900[];
 extern void* lbl_8039A9B8[];
 extern char* lbl_803DD1D0;
 extern char* lbl_803DD1D4;
-extern const f32 lbl_803DF280;
-extern const f32 lbl_803DF284;
-extern const f32 lbl_803DF288;
-extern const f32 lbl_803DF28C;
+extern f32 lbl_803DF280;
+extern f32 lbl_803DF284;
+extern f32 lbl_803DF288;
+extern f32 lbl_803DF28C;
 
 void drawSkyStars(void)
 {
@@ -845,12 +853,12 @@ extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 rad);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * src, f32 * dst);
 extern void GXSetLineWidth(int width, int fmt);
 extern void GXBegin(int prim, int fmt, u16 count);
-extern const f32 lbl_803DF1B8;
-extern const f32 lbl_803DF1BC;
-extern const f32 lbl_803DF1C0;
-extern const f32 lbl_803DF1C4;
-extern const f32 lbl_803DF1C8;
-extern const f32 lbl_803DF1CC;
+extern f32 lbl_803DF1B8;
+extern f32 lbl_803DF1BC;
+extern f32 lbl_803DF1C0;
+extern f32 lbl_803DF1C4;
+extern f32 lbl_803DF1C8;
+extern f32 lbl_803DF1CC;
 
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 {
@@ -1039,7 +1047,7 @@ void snowCloudUpdateFlakes(u8* snow)
 }
 
 extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
-extern const f32 lbl_803DF1D0;
+extern f32 lbl_803DF1D0;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth,
                        int flags)
@@ -1195,12 +1203,12 @@ extern u32 GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 extern u8 lbl_803DD1D8;
-extern const f32 lbl_803DF290;
-extern const f32 lbl_803DF294;
-extern const f32 lbl_803DF298;
-extern const f32 lbl_803DF29C;
-extern const f32 lbl_803DF2A0;
-extern const f32 lbl_803DF2A4;
+extern f32 lbl_803DF290;
+extern f32 lbl_803DF294;
+extern f32 lbl_803DF298;
+extern f32 lbl_803DF29C;
+extern f32 lbl_803DF2A0;
+extern f32 lbl_803DF2A4;
 
 void titleScreenDrawFn_80093db4(void)
 {
@@ -1365,9 +1373,9 @@ void titleScreenDrawFn_80093db4(void)
 }
 
 extern char lbl_8030F670[];
-extern const f32 lbl_803DF228;
-extern const f32 lbl_803DF22C;
-extern const f32 lbl_803DF230;
+extern f32 lbl_803DF228;
+extern f32 lbl_803DF22C;
+extern f32 lbl_803DF230;
 
 void snowReposSnowCloud(int cloudId)
 {
@@ -1413,7 +1421,11 @@ void snowReposSnowCloud(int cloudId)
         }
     }
     p = lbl_8039A828[i];
-    if (p == NULL || i == 8)
+    if (p == NULL)
+    {
+        return;
+    }
+    if (i == 8)
     {
         return;
     }
@@ -1534,13 +1546,13 @@ void snowReposSnowCloud(int cloudId)
 
 extern char lbl_8030F500[];
 extern int lbl_803DB76C;
-extern const f32 lbl_803DF1FC;
-extern const f32 lbl_803DF214;
-extern const f32 lbl_803DF234;
-extern const f32 lbl_803DF238;
-extern const f32 lbl_803DF23C;
-extern const f32 lbl_803DF240;
-extern const f32 lbl_803DF244;
+extern f32 lbl_803DF1FC;
+extern f32 lbl_803DF214;
+extern f32 lbl_803DF234;
+extern f32 lbl_803DF238;
+extern f32 lbl_803DF23C;
+extern f32 lbl_803DF240;
+extern f32 lbl_803DF244;
 
 #define NC_CLOUD ((u8 *)lbl_8039A828[id])
 #define NC_PARTS ((u8 *)*(void **)(NC_CLOUD + 4))
@@ -1548,8 +1560,8 @@ extern const f32 lbl_803DF244;
 void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 {
     char* strs;
-    int id;
     int ok;
+    int id;
     int i;
     u8 fl;
     WindSource* w;
@@ -1806,7 +1818,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 }
 
 extern int lbl_8030F5A0[];
-extern const f32 lbl_803DF27C;
+extern f32 lbl_803DF27C;
 
 #undef NC_CLOUD
 #define NC_CLOUD ((u8 *)lbl_8039A828[*(u16 *)(params + 0x26)])
@@ -1814,9 +1826,8 @@ extern const f32 lbl_803DF27C;
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
+    int id;
     u8 fl;
-    f32 posB[3] = {0.0f, 0.0f, 0.0f};
-    f32 posA[3] = {0.0f, 0.0f, 0.0f};
     f32 vec[3];
     struct
     {
@@ -1829,6 +1840,8 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         f32 f18;
         f32 f1c;
     } args;
+    f32 posA[3] = {0.0f, 0.0f, 0.0f};
+    f32 posB[3] = {0.0f, 0.0f, 0.0f};
 
     env = saveGameGetEnvState();
     if (params == NULL)
@@ -1847,7 +1860,8 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         posB[1] = *(f32*)(objB + 0x1c);
         posB[2] = *(f32*)(objB + 0x20);
     }
-    if ((u32)*(u16*)(params + 0x26) > 8)
+    id = *(u16*)(params + 0x26);
+    if ((u32)id > 8)
     {
         return;
     }
@@ -1953,7 +1967,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && NC_CLOUD[0x144e] != 0)
     {
-        env[*(u16*)(params + 0x26) + 0x41] = (s8)NC_CLOUD[0x144d];
+        env[id + 0x41] = (s8)NC_CLOUD[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
@@ -1992,7 +2006,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     else if (fl & 0x20)
     {
-        newclouds_snowKillSnowCloud(*(u16*)(params + 0x26), 0);
+        newclouds_snowKillSnowCloud(id, 0);
     }
     else if (fl & 4)
     {
@@ -2024,23 +2038,23 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
 
 extern void PSMTXIdentity(f32 * m);
 extern void PSMTXMultVec(f32 * matrix, f32 * in, f32 * out);
-extern const f32 lbl_803DF200;
-extern const f32 lbl_803DF208;
-extern const f32 lbl_803DF20C;
-extern const f32 lbl_803DF210;
-extern const f32 lbl_803DF248;
-extern const f32 lbl_803DF24C;
-extern const f32 lbl_803DF250;
-extern const f32 lbl_803DF254;
-extern const f32 lbl_803DF258;
-extern const f32 lbl_803DF25C;
-extern const f32 lbl_803DF260;
-extern const f32 lbl_803DF264;
-extern const f32 lbl_803DF268;
-extern const f32 lbl_803DF26C;
-extern const f32 lbl_803DF270;
-extern const f32 lbl_803DF274;
-extern const f32 lbl_803DF278;
+extern f32 lbl_803DF200;
+extern f32 lbl_803DF208;
+extern f32 lbl_803DF20C;
+extern f32 lbl_803DF210;
+extern f32 lbl_803DF248;
+extern f32 lbl_803DF24C;
+extern f32 lbl_803DF250;
+extern f32 lbl_803DF254;
+extern f32 lbl_803DF258;
+extern f32 lbl_803DF25C;
+extern f32 lbl_803DF260;
+extern f32 lbl_803DF264;
+extern f32 lbl_803DF268;
+extern f32 lbl_803DF26C;
+extern f32 lbl_803DF270;
+extern f32 lbl_803DF274;
+extern f32 lbl_803DF278;
 
 #define D7_CLOUD ((u8 *)lbl_8039A818[i + 4])
 
@@ -2366,7 +2380,7 @@ extern void mtx44Transpose(f32 * in, f32 * out);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void gxBlendFn_80078b4c(void);
 extern int lbl_803DD1A4;
-extern const f32 lbl_803DF204;
+extern f32 lbl_803DF204;
 
 int snowPrintSnowCloud(int arg, int cloudId)
 {
