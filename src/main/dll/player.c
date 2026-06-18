@@ -4959,10 +4959,10 @@ int fn_8029ABD8(int obj, int state, f32 fv)
         pfx.scale = lbl_803E7F9C;
         pfx.mode = 0;
         (*gPartfxInterface)->spawnObject(
-            (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
+            (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200000 + 1, -1, NULL);
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject(
-            (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, NULL);
+            (void*)lbl_803DE44C, 0x7f5, &pfx, 0x200000 + 1, -1, NULL);
         if ((inner->buttonsHeld & lbl_803DE4B4) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
@@ -4973,12 +4973,11 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             lbl_803DE42C = 0;
             for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (p[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)p[i]);
+                    p[i] = NULL;
                 }
-                p++;
             }
             if (lbl_803DE454 != NULL)
             {
