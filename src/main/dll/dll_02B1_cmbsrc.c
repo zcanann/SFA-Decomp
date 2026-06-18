@@ -189,6 +189,7 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
