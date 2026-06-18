@@ -1,15 +1,29 @@
+/*
+ * dll_0238_linkalevco - "LinkA level control" sequence object (FireObject).
+ *
+ * A scripted level-progression controller placed in the LinkA map. It runs
+ * trigger sequence 0 every update and reacts to that sequence's anim events
+ * (fire_updateState), branching on the current map-event mode (getMapAct of
+ * its mapEventMapId):
+ *   - OPEN_PATH:  defrag memory, enable object groups, unlock Lightfoot and
+ *                 load/lock the destination map for the active mode.
+ *   - WARP:       warp to the mode's destination map (mode 2 picks one of
+ *                 three routes from game bits) and load the UI DLL.
+ *   - UNLOAD_NEIGHBOR_MAP: unload the adjacent map for the active mode.
+ * init unlocks the starting level, flags the object as a sequence object,
+ * sets three progression game bits, kicks an env-fx act and streams a
+ * collectable. A looping object sound is kept alive while sequences run.
+ */
 #include "main/dll/dll_0238_linkalevco.h"
 #include "main/gameplay_runtime.h"
 #include "main/objseq.h"
 
+/* render scale; home TU unknown */
 extern f32 lbl_803E64D8;
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
 
-#define LINKA_LEVCONTROL_MODE_0 0
-#define LINKA_LEVCONTROL_MODE_1 1
-#define LINKA_LEVCONTROL_MODE_2 2
-#define LINKA_LEVCONTROL_MODE_3 3
+/* getMapAct mode is a small progression index 0..3 with no semantic label. */
 
 #define LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH 1
 #define LINKA_LEVCONTROL_ANIM_EVENT_WARP 2
@@ -35,6 +49,9 @@ extern f32 lbl_803E64D8;
 #define LINKA_LEVCONTROL_INIT_GAMEBIT_2 0x90F
 #define LINKA_LEVCONTROL_INIT_COLLECTABLE_ID 0x2EE
 
+/* per-instance extra block reserved by the object system; unused by this TU */
+#define LINKA_LEVCONTROL_EXTRA_SIZE 4
+
 int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int stateIndex;
@@ -43,8 +60,8 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
     int mapDir;
 
     mode = (u8)(*gMapEventInterface)->getMapAct((int)obj->mapEventMapId);
-    Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
-    for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++)
+    Sfx_KeepAliveLoopedObjectSound(0, LINKA_LEVCONTROL_LOOP_SFX_ID);
+    for (stateIndex = 0; stateIndex < animUpdate->eventCount; stateIndex++)
     {
         eventId = animUpdate->eventIds[stateIndex];
         if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH)
@@ -52,8 +69,8 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
             defragMemory(0);
             switch (mode)
             {
-            case LINKA_LEVCONTROL_MODE_0:
-            case LINKA_LEVCONTROL_MODE_1:
+            case 0:
+            case 1:
                 (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 0, 0);
                 (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 2, 0);
                 (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 3, 0);
@@ -65,12 +82,12 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
                 lockLevel(mapDir, 0);
                 break;
-            case LINKA_LEVCONTROL_MODE_2:
+            case 2:
                 loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
                 lockLevel(mapDir, 0);
                 break;
-            case LINKA_LEVCONTROL_MODE_3:
+            case 3:
                 loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
                 lockLevel(mapDir, 0);
@@ -81,11 +98,11 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
         {
             switch (mode)
             {
-            case LINKA_LEVCONTROL_MODE_0:
-            case LINKA_LEVCONTROL_MODE_1:
+            case 0:
+            case 1:
                 warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE, 0);
                 break;
-            case LINKA_LEVCONTROL_MODE_2:
+            case 2:
                 GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
                 if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
                 {
@@ -109,7 +126,7 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
                 break;
-            case LINKA_LEVCONTROL_MODE_3:
+            case 3:
                 warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE3, 0);
                 break;
             }
@@ -119,13 +136,13 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
         {
             switch (mode)
             {
-            case LINKA_LEVCONTROL_MODE_0:
-            case LINKA_LEVCONTROL_MODE_1:
-            case LINKA_LEVCONTROL_MODE_2:
+            case 0:
+            case 1:
+            case 2:
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
                 mapUnload(mapDir, 0x20000000);
                 break;
-            case LINKA_LEVCONTROL_MODE_3:
+            case 3:
                 mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
                 mapUnload(mapDir, 0x20000000);
                 break;
@@ -137,7 +154,7 @@ int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate
 
 int fireObj_getExtraSize(void)
 {
-    return 4;
+    return LINKA_LEVCONTROL_EXTRA_SIZE;
 }
 
 int fireObj_getObjectTypeId(void)
@@ -153,7 +170,6 @@ void fireObj_render(void)
 {
     extern void objRenderFn_8003b8f4(double scale);
     objRenderFn_8003b8f4((double)lbl_803E64D8);
-    return;
 }
 
 void fireObj_hitDetect(void)
@@ -163,22 +179,20 @@ void fireObj_hitDetect(void)
 void fireObj_update(FireObject* obj)
 {
     (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
-    return;
 }
 
 void fireObj_init(FireObject* obj)
 {
-    u32 v;
+    u32 flags;
     obj->animEventCallback = fire_updateState;
     unlockLevel(0, 0, 1);
-    v = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
-    obj->flags = (u16)v;
+    flags = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
+    obj->flags = (u16)flags;
     envFxActFn_800887f8(0);
     GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
     GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
     GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
-    streamFn_8000a380(3, 2,LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
-    return;
+    streamFn_8000a380(3, 2, LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
 }
 
 void fireObj_release(void)
