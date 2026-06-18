@@ -18488,7 +18488,7 @@ void fn_802AAD44(int obj)
         f32 scale;
         f32 px, py, pz;
     } xf;
-    f32 mtx[12];
+    f32 mtx[16];
 
     height = *(f32*)((char*)state + 0x7d0);
     setTextColor((undefined4*)0, 0xff, 0xff, 0xff, 0x80);
