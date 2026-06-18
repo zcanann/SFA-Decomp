@@ -125,7 +125,6 @@ void fn_8014E1DC(int obj, HagabonState* state)
     char animEvents[32];
     f32 waveA;
     f32 waveB;
-    f32 accel;
     f32 damp;
     f32 maxSpeed;
     f32 minSpeed;
@@ -168,27 +167,26 @@ void fn_8014E1DC(int obj, HagabonState* state)
     ;
     ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
-    accel = lbl_803E2624;
     if ((*flags & 2) != 0)
     {
         player = state->player;
-        ((GameObject*)obj)->anim.velocityX += accel * (player->anim.localPosX - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (player->anim.localPosX - ((GameObject*)obj)->anim.
             localPosX);
-        ((GameObject*)obj)->anim.velocityY += accel *
+        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 *
         ((lbl_803E2628 + player->anim.localPosY) -
             ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += accel * (player->anim.localPosZ - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (player->anim.localPosZ - ((GameObject*)obj)->anim.
             localPosZ);
     }
     else if ((*flags & 4) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX += accel * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
-        ((GameObject*)obj)->anim.velocityY += accel * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += accel * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
+        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
+        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX += accel * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
+        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
         waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
             lbl_803E2620
         )
@@ -197,11 +195,11 @@ void fn_8014E1DC(int obj, HagabonState* state)
             lbl_803E2620
         )
         ;
-        ((GameObject*)obj)->anim.velocityY += accel *
+        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 *
         (((lbl_803E262C * (waveA + waveB)) +
                 *(f32*)(curve + 0x6c)) -
             ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += accel * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
 
     damp = lbl_803E2630;
