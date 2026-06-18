@@ -1593,6 +1593,7 @@ int randomGetRange(int lo, int hi);
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
+#pragma opt_common_subs off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f32 b)
 {
     obj->projectionFovY = a;
@@ -1605,6 +1606,7 @@ void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f
                           *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790,
                           *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790);
 }
+#pragma opt_common_subs reset
 
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
