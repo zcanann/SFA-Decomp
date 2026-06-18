@@ -1,9 +1,27 @@
+/*
+ * cnthitobjec (DLL 0x2B6) - a destructible "counted-hit" object.
+ *
+ * The object starts inert and is armed when its startGameBit is set: it
+ * gains startHealth and (in the hidden-collider mode) a sphere hitbox.
+ * Each frame hitDetect polls the priority hit; a hit is only counted if
+ * its source matches one of the object's allowed hit-source profiles
+ * (CNTHIT_PROFILE_* tables lbl_8032BEF8/lbl_803DC42C). Counted damage is
+ * subtracted from remainingHealth; in CNTHIT_MODE_VISIBLE_OBJECT the
+ * object flashes and plays a hit sfx. On depletion it sets its
+ * doneGameBit, spawns an explosion (size depends on mode/explosionSize,
+ * suppressed for the CNTHIT_MODEL_NO_EXPLOSION_* models) and is disabled.
+ * doneGameBit also re-disables the object on init/update so it stays
+ * destroyed across reloads. The anim-event callback spawns the
+ * per-event explosion list.
+ *
+ * mcupgrade_SeqFn lives here but belongs to the sibling mcupgrade DLL
+ * (0x2B7), which installs it as its anim-event callback.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
 #include "main/audio/sfx_ids.h"
 
-int cnthitobjec_getExtraSize(void) { return 0xc; }
+int cnthitobjec_getExtraSize(void) { return sizeof(CntHitObjectState); }
 
 int cnthitobjec_getObjectTypeId(void) { return 0; }
 
@@ -71,7 +89,7 @@ void cnthitobjec_hitDetect(int obj)
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
         Obj_SetModelColorFadeRecursive(obj, 30, 200, 0, 0, 1);
-        Sfx_PlayFromObject(obj, 1174);
+        Sfx_PlayFromObject(obj, 1174); /* hit */
     }
     if (state->remainingHealth <= 0)
     {
@@ -97,7 +115,7 @@ void cnthitobjec_hitDetect(int obj)
             }
             if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
             {
-                Sfx_PlayFromObject(obj, 1175);
+                Sfx_PlayFromObject(obj, 1175); /* destroy */
             }
         }
     }
