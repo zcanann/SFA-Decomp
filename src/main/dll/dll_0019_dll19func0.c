@@ -1250,7 +1250,7 @@ void dll_19_func03_nop(void)
 
 int dll_19_func09_ret_0(void) { return 0x0; }
 
-f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((int**)obj)[0xb8 / 4] + 0x3e4); }
+f32 dll_19_func0B(int* obj) { return *(f32*)((char*)(int*)((GameObject*)obj)->extra + 0x3e4); }
 
 u16 dll_19_func0A(int obj)
 {
