@@ -1,32 +1,36 @@
+/*
+ * dll_DF - Tricky sidekick follow/path-walk movement. trickyFn_8013b368 is
+ * the per-frame movement step that resolves the target's walk/patch group and
+ * drives motion through a substate machine and RomCurveWalker route;
+ * trickyUpdateApproachSpeed ramps the follow speed toward a target point. The
+ * lbl_803E2xxx externs are this DLL's .sdata2 float constants.
+ */
 #include "main/dll/baddie/dll_DF.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 
+/* frame timing (engine globals) */
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 
-extern f32 lbl_803E23DC; /*  0.0f  */
-extern f32 lbl_803E23F4; /* -0.01f */
-extern f32 lbl_803E241C; /* -0.15f */
-extern f32 lbl_803E2420; /*  0.05f */
-extern f32 lbl_803E243C; /*  0.02f */
-extern f32 lbl_803E2488; /*  5.0f  */
-extern f32 lbl_803E248C; /*  3.0f  */
-
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void vecRotateZXY(void* params, void* outVec);
-extern f32 sqrtf(f32 x);
-
+/* this DLL's .sdata2 float constants */
+extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E23EC;
+extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
+extern f32 lbl_803E241C;
+extern f32 lbl_803E2420;
+extern f32 lbl_803E243C;
 extern f32 lbl_803E2440;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E2468;
 extern f32 lbl_803E246C;
 extern f32 lbl_803E2484;
+extern f32 lbl_803E2488;
+extern f32 lbl_803E248C;
 extern f32 lbl_803E2490;
 extern f32 lbl_803E2494;
 extern f32 lbl_803E2498;
@@ -43,6 +47,9 @@ extern f32 lbl_803E24C0;
 
 extern char lbl_8031D2E8[];
 
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern void vecRotateZXY(void* params, void* outVec);
+extern f32 sqrtf(f32 x);
 extern int isInWalkGroupOrPatch(f32 * pos);
 extern void ObjHits_SyncObjectPosition(u8 * obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
@@ -54,7 +61,6 @@ extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
 extern u16 Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
-extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
@@ -74,8 +80,12 @@ extern int fn_8004B218(void* search, int timeout);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, int a, int b);
 
+/* defined below */
+extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
+
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
+    /* all locals declared at top scope for MWCC register coloring */
     u8 moved;
     int wg;
     char* strs = (char*)lbl_8031D2E8;
@@ -109,14 +119,14 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u8 routeFlags[8];
     struct
     {
-        s16 yaw;
-        s16 b;
-        s16 c;
+        s16 angle; /* -anim.rotX */
+        s16 _pad0;
+        s16 _pad1;
     } rot;
     f32 delta[3];
     struct
     {
-        u8 pad;
+        u8 pad; /* offset 0: mask is at +1, patch[] at +2 */
         u8 mask;
         u16 patch[5];
     } wgi;
@@ -713,9 +723,9 @@ state_selected:
             delta[0] = tpos[0] - ((GameObject*)obj)->anim.worldPosX;
             delta[1] = tpos[1] - ((GameObject*)obj)->anim.worldPosY;
             delta[2] = tpos[2] - ((GameObject*)obj)->anim.worldPosZ;
-            rot.yaw = -((GameObject*)obj)->anim.rotX;
-            rot.b = 0;
-            rot.c = 0;
+            rot.angle = -((GameObject*)obj)->anim.rotX;
+            rot._pad0 = 0;
+            rot._pad1 = 0;
             vecRotateZXY(&rot, delta);
             if ((lbl_803E23DC < delta[2]) && (lbl_803E23DC != ((TrickyState*)state)->speed))
             {
@@ -1308,9 +1318,9 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
 {
     struct
     {
-        s16 a;
-        s16 angle;
-        s16 c;
+        s16 angle; /* -anim.rotX */
+        s16 _pad0;
+        s16 _pad1;
     } params;
     f32 delta[3];
     f32 sum;
@@ -1351,12 +1361,12 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
     }
     if (flag != 0)
     {
-        delta[0] = *(f32*)(targetPos + 0) - ((GameObject*)obj)->anim.worldPosX;
-        delta[1] = *(f32*)(targetPos + 1) - ((GameObject*)obj)->anim.worldPosY;
-        delta[2] = *(f32*)(targetPos + 2) - ((GameObject*)obj)->anim.worldPosZ;
-        params.a = -((GameObject*)obj)->anim.rotX;
-        params.angle = 0;
-        params.c = 0;
+        delta[0] = targetPos[0] - ((GameObject*)obj)->anim.worldPosX;
+        delta[1] = targetPos[1] - ((GameObject*)obj)->anim.worldPosY;
+        delta[2] = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
+        params.angle = -((GameObject*)obj)->anim.rotX;
+        params._pad0 = 0;
+        params._pad1 = 0;
         vecRotateZXY(&params, delta);
         if (delta[2] > lbl_803E23DC)
         {
