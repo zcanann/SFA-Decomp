@@ -2366,8 +2366,8 @@ void getVisibleObjects(s8* opacity)
 
 void sortVisibleObjectKeysDescending(u32* arr, int n)
 {
-    int gap = 1;
     int i, j;
+    int gap = 1;
     u32 tmp;
     while (gap <= n / 9)
         gap = gap * 3 + 1;
