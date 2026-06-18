@@ -11359,7 +11359,7 @@ int fn_802957B4(int obj)
         (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~8;
-        ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
+        ((GameObject*)obj)->anim.modelState->flags &= ~0x1000;
         inner->unk7F0 = 0;
         ((GameObject*)obj)->anim.activeMove = -1;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
@@ -11646,19 +11646,19 @@ void fn_80295CF4(int obj, int a)
         if ((void*)lbl_803DE44C != NULL)
         {
             *(s16*)((char*)lbl_803DE44C + 6) |= 0x4000;
-            if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
-            {
-                inner->unk8B4 = 1;
-                ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
-            }
-            GameBit_Set(0x96b, 1);
-            GameBit_Set(0x961, 1);
-            GameBit_Set(0x969, 1);
-            GameBit_Set(0x964, 1);
-            GameBit_Set(0x965, 1);
-            GameBit_Set(0x986, 1);
-            GameBit_Set(0x960, 1);
         }
+        if ((void*)lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+        {
+            inner->unk8B4 = 1;
+            ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
+        }
+        GameBit_Set(0x96b, 1);
+        GameBit_Set(0x961, 1);
+        GameBit_Set(0x969, 1);
+        GameBit_Set(0x964, 1);
+        GameBit_Set(0x965, 1);
+        GameBit_Set(0x986, 1);
+        GameBit_Set(0x960, 1);
     }
     else
     {
@@ -12579,7 +12579,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             timerRec = *(int*)((char*)inner + 0x40c);
             *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) - timeDelta;
-            if (*(f32*)((char*)timerRec + 0xc) > lbl_803E8180)
+            if (lbl_803E8180 < *(f32*)((char*)timerRec + 0xc))
             {
                 mode = 0;
             }
@@ -13154,9 +13154,9 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 void fn_802B066C(int obj, int state)
 {
     f32 v;
-    f32 pz;
-    f32 py;
     f32 px;
+    f32 py;
+    f32 pz;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
     {
@@ -13165,12 +13165,19 @@ void fn_802B066C(int obj, int state)
     if (((ByteFlags*)((char*)state + 0x3f0))->b08 == 0)
     {
         v = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-            (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
+            ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY);
         ((PlayerState*)state)->unk7A4 = v;
         v = ((PlayerState*)state)->unk7A4;
-        ((PlayerState*)state)->unk7A4 =
-            (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
+        if (v < lbl_803E7EE0)
+        {
+            v = lbl_803E7EE0;
+        }
+        else if (v > lbl_803E8138)
+        {
+            v = lbl_803E8138;
+        }
+        ((PlayerState*)state)->unk7A4 = v;
     }
     ((PlayerState*)state)->unk79C =
         ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;
@@ -14804,7 +14811,11 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 {
                     tri = 0;
                 }
-                if (tri != 0 && ((*(s8*)(tri + 3) & 0x3f) == 5 || (*(s8*)(tri + 3) & 0x3f) == 2))
+                if (tri == 0 || ((*(s8*)(tri + 3) & 0x3f) != 5 && (*(s8*)(tri + 3) & 0x3f) != 2))
+                {
+                    wallHit = 1;
+                }
+                else
                 {
                     x1 = *(f32*)(verts + *(s16*)(tri + 4) * 0xc);
                     y1 = lbl_803E7EA4;
@@ -14830,10 +14841,6 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                             wallHit = 1;
                         }
                     }
-                }
-                else
-                {
-                    wallHit = 1;
                 }
             }
             pl += 4;
@@ -15043,17 +15050,13 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 f32 dz = bz - az;
                 f32 dx = ax - bx;
-                f32 dxsq = dx * dx;
-                f32 len = sqrtf(dxsq + dz * dz);
+                f32 len = sqrtf(dx * dx + dz * dz);
                 f32 scale = lbl_803E7EE0 / len;
                 dx = dx * scale;
                 dz = dz * scale;
-                {
-                f32 dxp = dx * *(f32*)((char*)d + 0x1c);
-                if (dxp + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
+                if (dx * *(f32*)((char*)d + 0x1c) + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
                 {
                     return 0;
-                }
                 }
             }
         }
@@ -15464,7 +15467,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     return 0;
 }
 
-void fn_802ABFBC(int obj, int state, int inner)
+int fn_802ABFBC(int obj, int state, int inner)
 {
     void* sub;
     f32 dx, dy, dz;
@@ -15519,7 +15522,7 @@ void fn_802ABFBC(int obj, int state, int inner)
         ((PlayerState*)inner)->headYaw =
             (f32)((PlayerState*)inner)->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
-    return;
+    return 0;
 }
 
 int fn_8029CF30(int obj, int state, f32 fv)
@@ -18492,7 +18495,7 @@ void fn_802AAD44(int obj)
         f32 scale;
         f32 px, py, pz;
     } xf;
-    f32 mtx[16];
+    f32 mtx[12];
 
     height = *(f32*)((char*)state + 0x7d0);
     setTextColor((undefined4*)0, 0xff, 0xff, 0xff, 0x80);
@@ -18712,9 +18715,15 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 
     *(s8*)((char*)dst + 0x62) = (s8)(int)*(s8*)((char*)src + 0x53);
 
-    if (*(f32*)((char*)dst + 0x18) > lbl_803E80A4 &&
-        *(f32*)((char*)dst + 0x18) < lbl_803E80A8)
+    if (*(f32*)((char*)dst + 0x18) <= lbl_803E80A4)
     {
+        return 0;
+    }
+    if (*(f32*)((char*)dst + 0x18) >= lbl_803E80A8)
+    {
+        return 0;
+    }
+
     *(f32*)((char*)dst + 0x8) = *(f32*)((char*)src + 0xc);
     PSVECScale((f32*)((char*)src + 0x1c), pos, -lbl_803DC6B8[1]);
     PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
@@ -18760,8 +18769,6 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
         *(s8*)((char*)dst + 0x0) = 1;
     }
     return 1;
-    }
-    return 0;
 }
 
 void fn_802AEF34(int obj, int state)
