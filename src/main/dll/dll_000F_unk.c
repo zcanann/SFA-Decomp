@@ -440,7 +440,7 @@ void fn_800D8414(int* obj, int* ctx)
     {
         diff += 0xffff;
     }
-    ((BaddieState*)ctx)->turnRate = (s16)(int)((f32)diff / lbl_803E0590);
+    *(s16*)&((BaddieState*)ctx)->turnRate = ((f32)diff / lbl_803E0590);
     if (diff < 0)
     {
         *(s16*)((char*)ctx + 0x334) = -((BaddieState*)ctx)->turnRate;
