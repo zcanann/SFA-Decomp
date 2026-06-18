@@ -58,8 +58,8 @@ int fn_801B9ECC(int a, int obj)
     u16 targetDistance;
     u16 targetAnim[2];
 
-    base = (DimAnimTable*)lbl_80325960;
     state = (BaddieState*)obj;
+    base = (DimAnimTable*)lbl_80325960;
     if ((s8)state->moveDone != 0 || (s8)state->moveJustStartedB != 0)
     {
         DIM2_GetBaddieControlInterface()->queryTargetMove(a, state->targetObj, 0x10, targetAnim,
@@ -83,8 +83,8 @@ int fn_801B9ECC(int a, int obj)
             if (targetDistance > 0x1a9 &&
                 (DIM2_GetBaddieControlInterface()->checkTargetRange(a, state, lbl_803E4BB8) & 1) != 0)
             {
-                DIM2_GetPlayerInterface()->requestControlMode(
-                    a, state, base->surprised[randomGetRange(0, 5)]);
+                s16 surprisedAnim = base->surprised[randomGetRange(0, 5)];
+                DIM2_GetPlayerInterface()->requestControlMode(a, state, surprisedAnim);
             }
             else if (targetDistance < 0xfa)
             {
