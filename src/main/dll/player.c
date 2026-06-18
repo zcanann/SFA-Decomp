@@ -14059,7 +14059,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             return 0;
         }
         {
-            if (*(s8*)((char*)inner + 0x8b3) == 0)
+            if (*(u8*)((char*)inner + 0x8b3) == 0)
             {
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                 {
@@ -14077,11 +14077,11 @@ int fn_802A418C(int obj, int state, f32 fv)
                     }
                     if (ok2 != 0)
                     {
-                        if (*(s8*)((char*)inner + 0x8b4) == 2 ||
+                        if (*(u8*)((char*)inner + 0x8b4) == 2 ||
                             (inner->unk4B8 != NULL &&
                                 inner->unk4B0 < lbl_803E8054 &&
                                 inner->unk4A8 < 0x4000 &&
-                                *(s16*)((char*)inner + 0x4b4) == 1))
+                                *(u16*)((char*)inner + 0x4b4) == 1))
                         {
                             if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                             {
