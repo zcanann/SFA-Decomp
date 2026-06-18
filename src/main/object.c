@@ -1758,14 +1758,14 @@ void Obj_UpdateObject(u8* obj)
         }
         return;
     }
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
         colorFadeFlags & 2))
     {
         Obj_TickModelColorFadeRecursive(obj);
     }
-    if (*(int*)&((GameObject*)obj)->pendingParentObj != 0)
+    if (((GameObject*)obj)->pendingParentObj != NULL)
     {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
+        if (((GameObject*)obj)->childObjs[0] != NULL)
         {
             t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
             if (t != 0)
@@ -1796,7 +1796,7 @@ void Obj_UpdateObject(u8* obj)
     ((GameObject*)obj)->externalVelX = object->velocityX;
     ((GameObject*)obj)->externalVelY = object->velocityY;
     ((GameObject*)obj)->externalVelZ = object->velocityZ;
-    if (((GameObject*)obj)->colorFadeFlags != 0 && *(int*)&((GameObject*)obj)->ownerObj == 0 && (((GameObject*)obj)->
+    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
         colorFadeFlags & 1))
     {
         ((GameObject*)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
@@ -1839,7 +1839,7 @@ skip:
     hitState = (ObjHitsPriorityState*)object->hitReactState;
     if (hitState != NULL)
     {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
+        if (((GameObject*)obj)->childObjs[0] != NULL)
         {
             t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
             if (t != 0)
@@ -1852,7 +1852,7 @@ skip:
         hitState->lastHitObject = 0;
         hitState->priorityHitCount = 0;
     }
-    if (*(int*)(obj + 0x58) != 0)
+    if (*(void**)(obj + 0x58) != NULL)
     {
         *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
     }
