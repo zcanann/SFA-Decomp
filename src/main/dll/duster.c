@@ -1,3 +1,32 @@
+/*
+ * duster - a baddie-AI DLL hosting several creature behaviours that all
+ * drive the shared BaddieState control record (obj+0xB8 extra block,
+ * accessed via gBaddieControlInterface). Each creature contributes its
+ * own init/update/freeze-event handlers:
+ *   - rachnop (rachnopInit / fn_801557D4 / fn_80155884 / fn_80155948 /
+ *     rachnopUpdateWhileFrozen): wall-crawling spider; fn_801554B4 probes
+ *     the surrounding geometry (objBboxFn_800640cc) to find a wall face,
+ *     then drives roll/charge moves toward the tracked player.
+ *   - pollen spit (pollenFn_80155b10): spawns a projectile setup object
+ *     (Obj_AllocObjectSetup/Obj_SetupObject, type 0x47b) aimed at the
+ *     tracked target with randomised speed.
+ *   - day/night gated mover (baddieInit_80156188 / fn_80155F20 /
+ *     fn_80156010 / timeOfDayFn_80155cf8 / baddieUpdateWhileFrozen_80155e10):
+ *     switches move sets by sky time-of-day.
+ *   - whirlpool/water creature (wbInit / fn_8015625C / fn_8015652C /
+ *     wbUpdateWhileFrozen): path-following (RomCurveWalker) flyer/swimmer
+ *     with buoyancy clamping and periodic decoy sfx.
+ *   - mutated EBA (mutatedEbaInit / fn_80156B0C / fn_80156C34 / fn_80156950
+ *     / mutatedEbaUpdateWhileFrozen): move-table sequenced attacker
+ *     (lbl_8031F318 entries, 0xC bytes each).
+ *   - hooded Zyck flyer (fn_80156DA0 / hoodedZyckUpdateWhileFrozen):
+ *     line-probes the ground each frame and toggles its move/visibility.
+ *
+ * Shared idioms: controlFlags bit 0x40000000 = "move just landed / can
+ * react this frame"; unk2E4 bit 0x10000 = facing/tracking latch;
+ * seqEntryIndex is the per-creature phase counter. SFX ids identify each
+ * creature's voice set (fox_*, en_*, watery_*, foxcom_*).
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
@@ -5,12 +34,12 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/duster.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
 
 #pragma dont_inline on
 
+/* engine helpers and this DLL's read-only float pool (lbl_803E2A**) */
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern void* Obj_AllocObjectSetup();
@@ -26,10 +55,10 @@ extern char lbl_803DBCD8;
 extern void fn_80154D0C(int, int, ushort*, float*);
 extern uint fn_80154FB4(short*, int, uint, double);
 extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
-extern undefined4 PSVECSubtract();
-extern undefined4 PSVECNormalize();
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern undefined4 PSVECCrossProduct();
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern void fn_80293018(int angle, float* outSin, float* outCos);
 extern uint fn_80295CBC();
 
@@ -170,7 +199,7 @@ void fn_801554B4(int* obj, int state)
 
     didHit = 0;
     probeOffsets = (float*)&lbl_8031F2F8;
-    for (i = 0; didHit == 0 && i < 4; i = i + 1)
+    for (i = 0; didHit == 0 && i < 4; i++)
     {
         maxv[0] = *(float*)(obj + 3) + *probeOffsets;
         maxv[1] = *(float*)(obj + 4);
