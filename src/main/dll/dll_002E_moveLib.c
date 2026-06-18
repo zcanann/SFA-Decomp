@@ -434,6 +434,7 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
+#pragma optimization_level 2
 int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
 {
     extern void* seqFn_800394a0(void); /* #57 */
@@ -511,6 +512,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
     }
     return 0;
 }
+#pragma optimization_level 4
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
