@@ -306,7 +306,7 @@ void cfprisonguard_init(int* obj, u8* params)
 {
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
     sub->flags = 1;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
