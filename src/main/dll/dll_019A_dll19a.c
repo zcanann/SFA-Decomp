@@ -1,5 +1,6 @@
 #include "main/dll/dll199state_struct.h"
 
+/* per-file single-arg signature reduction for codegen (matching); do not "fix" to the 6-arg canonical form */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
@@ -14,12 +15,15 @@ typedef struct Dll19APlacement
     u8 unk6;
     u8 unk7;
     u8 pad8[0x1F - 0x8];
-    s8 unk1F;
+    s8 unk1F; /* gate-bit index added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child */
 } Dll19APlacement;
+
+#define GAMEBIT_DLL19A_RESET 0x5b9
+#define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
 extern u32 GameBit_Get(int eventId);
 
-extern byte framesThisStep;
+extern u8 framesThisStep;
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
@@ -38,17 +42,17 @@ void dll_19A_update(int obj)
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x5b9) != 0)
+    if (GameBit_Get(GAMEBIT_DLL19A_RESET) != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
         *state = 100;
         state[1] = 0;
-        *(u8*)(obj + 0x37) = 0xff;
+        *(u8*)(obj + 0x37) = 0xff; /* pad37[0], distinct from anim.alpha at 0x36 */
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
     else
     {
-        if ((((GameObject*)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement*)setup)->unk1F + 0x1cd) != 0))
+        if ((((GameObject*)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement*)setup)->unk1F + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
@@ -77,7 +81,7 @@ void dll_19A_update(int obj)
             *(s16*)(newObj + 0x30) = 0xffff;
             *(s8*)(newObj + 0x2a) = ((GameObject*)obj)->anim.rotX >> 8;
             *(u8*)(newObj + 0x2b) = 2;
-            if (GameBit_Get(0x1ce) != 0)
+            if (GameBit_Get(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
             {
                 *(s16*)(newObj + 0x22) = 0x49;
             }
@@ -102,8 +106,6 @@ void dll_19A_update(int obj)
         }
     }
 }
-
-void dll_199_release(void);
 
 void dll_19A_free(void)
 {
@@ -131,7 +133,7 @@ void dll_19A_init(int obj, s8* def)
     ((GameObject*)obj)->unkF8 = 0;
     *(s16*)state = 100;
     ((Dll199State*)state)->unk2 = 0;
-    *(u8*)((char*)obj + 0x37) = 0xFF;
+    *(u8*)((char*)obj + 0x37) = 0xFF; /* pad37[0], distinct from anim.alpha at 0x36 */
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
 
