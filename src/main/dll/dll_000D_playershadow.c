@@ -1368,7 +1368,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
     BoneSpawnData data;
     void* cam;
-    int found;
+    u8 found;
     int i;
     f32 dx;
     f32 dy;
@@ -1406,7 +1406,10 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
             lbl_8030FDE8[0] = dx;
             lbl_8030FDE8[1] = dy;
             lbl_8030FDE8[2] = dz;
-            len = sqrtf(dy * dy + dx * dx + dz * dz);
+            {
+                f32 dydy = dy * dy;
+                len = sqrtf(dydy + dx * dx + dz * dz);
+            }
             sc = lbl_803DF468 * len;
             if (lbl_803DF46C != len)
             {
