@@ -15,8 +15,8 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
+extern u32 GameBit_Set(int eventId, int value);
+extern u64 ObjGroup_RemoveObject();
 extern u32 randomGetRange(int min, int max);
 
 extern void* Obj_GetPlayerObject(void);
@@ -114,9 +114,9 @@ void enemymushroom_free(EnemyMushroomObject* obj)
     ObjGroup_RemoveObject((int)obj, 3);
 }
 
-void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+    extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     void* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {

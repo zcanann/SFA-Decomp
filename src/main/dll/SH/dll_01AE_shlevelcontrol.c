@@ -22,8 +22,8 @@
 
 extern void envFxActFn_800887f8(int);
 extern int mapUnload(int id, int flags);
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_80286884();
+extern u64 FUN_80286838();
+extern u32 FUN_80286884();
 extern uint countLeadingZeros();
 extern char sSPShopNumBloopsFormat[];
 extern f32 lbl_803E54B0;
@@ -295,7 +295,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     extern s16 lbl_80327618[];
     extern void* Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int eventId);
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     int player;
     u8 i;
     u8 bloopsRemaining;
@@ -432,15 +432,15 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short param_4, short param_5,
+void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short param_5,
                   int* param_6)
 {
     extern uint GameBit_Get(int eventId);
     extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId);
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     uint uVar1;
     uint uVar2;
-    undefined8 uVar3;
+    u64 uVar3;
 
     uVar3 = FUN_80286838();
     uVar2 = (uint)param_5;

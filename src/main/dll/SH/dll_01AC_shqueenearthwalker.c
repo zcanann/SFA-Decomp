@@ -16,7 +16,7 @@
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern int randomGetRange(int min, int max);
 extern int ObjTrigger_IsSetById();
 extern void* Obj_GetPlayerObject(void);
