@@ -45,8 +45,8 @@ extern uint countLeadingZeros();
 extern void voxmaps_worldToGrid(f32 * world, s16 * grid);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
 
-extern f32 lbl_803E12BC;
-extern f32 lbl_803E12C0;
+extern f32 lbl_803E063C;
+extern f32 lbl_803E0640;
 extern f32 gFloatOne;
 
 extern f32 lbl_803E05F0;
@@ -231,17 +231,17 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     s16 objGrid[4];
     s16 curveGrid[4];
     u8 traceHit;
-    int bboxHit[34];
+    int bboxHit[14];
     int curveIndex;
     int typeIndex;
 
-    bestDistance = lbl_803E12BC;
+    bestDistance = lbl_803E063C;
     bestCurve = NULL;
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
     objPos[0] = *(f32*)(obj + 0xc);
-    objPos[1] = lbl_803E12C0 + *(f32*)(obj + 0x10);
+    objPos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
     objPos[2] = *(f32*)(obj + 0x14);
     voxmaps_worldToGrid(objPos, objGrid);
 
@@ -260,7 +260,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                 if (distance < bestDistance)
                 {
                     curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E12C0 + curve->y;
+                    curvePos[1] = lbl_803E0640 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
@@ -276,7 +276,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                 if ((curve->action == action) && (distance < bestActionDistance))
                 {
                     curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E12C0 + curve->y;
+                    curvePos[1] = lbl_803E0640 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
@@ -3378,52 +3378,23 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     int low;
     int high;
     int mid;
-    int top;
     int j;
     int linkId;
     RomCurveDef* linkedCurve;
-    int candidates[7];
+    int candidates[4];
 
     if (curve == NULL)
     {
         return -1;
     }
     candidateCount = 0;
-    top = nRomCurves - 1;
     for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++)
     {
         linkId = curve->linkIds[linkIndex];
         if (linkId > -1)
         {
-            if (linkId < 0)
-            {
-                linkedCurve = NULL;
-            }
-            else
-            {
-                high = top;
-                low = 0;
-                while (low <= high)
-                {
-                    mid = (high + low) >> 1;
-                    linkedCurve = romCurves[mid];
-                    if ((u32)linkId > linkedCurve->id)
-                    {
-                        low = mid + 1;
-                    }
-                    else if ((u32)linkId < linkedCurve->id)
-                    {
-                        high = mid - 1;
-                    }
-                    else
-                    {
-                        goto foundLinkedCurve;
-                    }
-                }
-                linkedCurve = NULL;
-            }
+            linkedCurve = RomCurve_FindByIdInline(linkId);
 
-        foundLinkedCurve:
             for (typeIndex = 0; typeIndex < typeCount; typeIndex++)
             {
                 if (linkedCurve->type == types[typeIndex])
@@ -3564,35 +3535,8 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                 if (((s32)curve->blockedLinkMask & (1 << linkIndex)) == 0)
                 {
                     linkId = curve->linkIds[linkIndex];
-                    if ((s32)linkId < 0)
-                    {
-                        linkedCurve = NULL;
-                    }
-                    else
-                    {
-                        high = nRomCurves - 1;
-                        low = 0;
-                        while (low <= high)
-                        {
-                            mid = (high + low) >> 1;
-                            linkedCurve = romCurves[mid];
-                            if (linkId > linkedCurve->id)
-                            {
-                                low = mid + 1;
-                            }
-                            else if (linkId < linkedCurve->id)
-                            {
-                                high = mid - 1;
-                            }
-                            else
-                            {
-                                goto foundLinkedCurve;
-                            }
-                        }
-                        linkedCurve = NULL;
-                    }
+                    linkedCurve = RomCurve_FindByIdInline(linkId);
 
-                foundLinkedCurve:
                     if (linkedCurve != NULL)
                     {
                         segment.endX = linkedCurve->x;
@@ -3884,31 +3828,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
     for (remaining = 4; remaining != 0; remaining--)
     {
         curveId = *idCursor;
-        if ((int)curveId < 0)
-        {
-            resolvedCurve = NULL;
-        }
-        else
-        {
-            high = nRomCurves + -1;
-            low = 0;
-            while (low <= high)
-            {
-                mid = high + low >> 1;
-                resolvedCurve = romCurves[mid];
-                if (curveId > resolvedCurve->id)
-                {
-                    low = mid + 1;
-                }
-                else
-                {
-                    if (curveId >= resolvedCurve->id) goto LAB_800e48f4;
-                    high = mid + -1;
-                }
-            }
-            resolvedCurve = NULL;
-        }
-    LAB_800e48f4:
+        resolvedCurve = RomCurve_FindByIdInline(curveId);
         *windowCursor = resolvedCurve;
         resolvedCurve = *windowCursor;
         if (resolvedCurve != NULL)
@@ -4003,35 +3923,8 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     {
         return;
     }
-    if (adjacentId < 0)
-    {
-        adjacent = NULL;
-    }
-    else
-    {
-        high = nRomCurves - 1;
-        low = 0;
-        while (high >= low)
-        {
-            mid = (high + low) >> 1;
-            adjacent = romCurves[mid];
-            if (adjacentId > adjacent->id)
-            {
-                low = mid + 1;
-            }
-            else if (adjacentId < adjacent->id)
-            {
-                high = mid - 1;
-            }
-            else
-            {
-                goto foundAdjacent;
-            }
-        }
-        adjacent = NULL;
-    }
+    adjacent = RomCurve_FindByIdInline(adjacentId);
 
-foundAdjacent:
     if (adjacent == NULL)
     {
         return;
@@ -4080,35 +3973,8 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
         linkId = curve->linkIds[linkIndex];
         if ((s32)linkId > -1)
         {
-            if ((s32)linkId < 0)
-            {
-                linkedCurve = NULL;
-            }
-            else
-            {
-                high = nRomCurves - 1;
-                low = 0;
-                while (high >= low)
-                {
-                    mid = (high + low) >> 1;
-                    linkedCurve = romCurves[mid];
-                    if (linkId > linkedCurve->id)
-                    {
-                        low = mid + 1;
-                    }
-                    else if (linkId < linkedCurve->id)
-                    {
-                        high = mid - 1;
-                    }
-                    else
-                    {
-                        goto foundLinkedCurve;
-                    }
-                }
-                linkedCurve = NULL;
-            }
+            linkedCurve = RomCurve_FindByIdInline(linkId);
 
-        foundLinkedCurve:
             if (linkedCurve != NULL)
             {
                 segment.endX = linkedCurve->x;
@@ -4435,8 +4301,8 @@ void curves_remove(RomCurveDef* curve)
         return;
     }
 
-    sortedCurveCount = nRomCurves - 1;
-    nRomCurves = sortedCurveCount;
+    nRomCurves = nRomCurves - 1;
+    sortedCurveCount = nRomCurves;
     tableSlot = romCurves + removeIndex;
     remaining = sortedCurveCount - removeIndex;
     if (removeIndex >= sortedCurveCount)
