@@ -269,13 +269,13 @@ void saveGame_unsaveObjectPos(u8* obj)
         return;
     }
 
-    slot = (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET) + i;
+    slot = (SaveGameObjectPosition*)gSaveGameData + i;
     for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
     {
-        slot[0].objectId = slot[1].objectId;
-        slot[0].x = slot[1].x;
-        slot[0].y = slot[1].y;
-        slot[0].z = slot[1].z;
+        *(u32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 0) = *(u32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 16);
+        *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 20);
+        *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 24);
+        *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12) = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 28);
     }
     *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
 }
