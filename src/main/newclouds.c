@@ -1808,10 +1808,12 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 extern int lbl_8030F5A0[];
 extern const f32 lbl_803DF27C;
 
+#undef NC_CLOUD
+#define NC_CLOUD ((u8 *)lbl_8039A828[*(u16 *)(params + 0x26)])
+
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
-    u8* p;
     int id;
     u8 fl;
     f32 vec[3];
@@ -1851,8 +1853,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    p = lbl_8039A828[id];
-    if (p == NULL)
+    if (NC_CLOUD == NULL)
     {
         fl = params[0x58];
         if (!(fl & 4) && !(fl & 8) && !(fl & 0x20))
@@ -1943,7 +1944,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             }
         }
     }
-    if (p == NULL)
+    if (NC_CLOUD == NULL)
     {
         return;
     }
@@ -1952,9 +1953,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    if ((fl & 8) && p[0x144e] != 0)
+    if ((fl & 8) && NC_CLOUD[0x144e] != 0)
     {
-        env[id + 0x41] = (s8)p[0x144d];
+        env[id + 0x41] = (s8)NC_CLOUD[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
@@ -1997,9 +1998,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     else if (fl & 4)
     {
-        if (p[0x144f] != 0)
+        if (NC_CLOUD[0x144f] != 0)
         {
-            p[0x144f] = 0;
+            NC_CLOUD[0x144f] = 0;
         }
         ((NewCloud*)NC_CLOUD)->unk13F8 = 1 - ((NewCloud*)NC_CLOUD)->unk13F8;
         if (*(u16*)(params + 0x2a) != 0)
