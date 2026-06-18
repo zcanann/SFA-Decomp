@@ -1,4 +1,4 @@
-/* DLL 0x01AA (bombplantspore) — Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
+/* DLL 0x01AA (bombplantspore) - Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -260,11 +260,11 @@ void bombplantspore_update(void* obj)
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0)
     {
-        detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, (u32*)&poppedMessage, &poppedSender, NULL) != 0)
         {
-            if (poppedMessage == detonateMessage)
+            switch (poppedMessage)
             {
+            case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*gExpgfxInterface)->freeSource((u32)obj);
@@ -278,6 +278,7 @@ void bombplantspore_update(void* obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
+                break;
             }
         }
         if ((state->stateFlags >> 6 & 1) != 0)
