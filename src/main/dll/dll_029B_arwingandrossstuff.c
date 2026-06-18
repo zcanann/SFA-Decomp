@@ -1,3 +1,22 @@
+/*
+ * arwingandrossstuff (DLL 0x29B) - the Arwing's projectiles (lasers,
+ * bombs, charge shots) and Andross-fight shots.
+ *
+ * Each instance is one in-flight projectile whose behaviour is keyed off
+ * its anim.seqId: bomb (0x80d, given random tumble), the invincible/
+ * charge variants (0x6ae/0x7e4), and the basic laser kinds (0x655/0x604).
+ * init() sets the hit-target mask, particle kind and hit-
+ * volume mode per seqId; update() flies the projectile (objMove by
+ * velocity*timeDelta), counts down its lifetime/despawn timers, plays the
+ * impact sfx + particle fx, and frees it. hitDetect() handles deflection:
+ * an Arwing barrel-roll reflects the shot (half-angle of incoming
+ * velocity) and rescales its speed by deflectSpeedScale.
+ * createLinkedEffect() attaches a coloured point light to the shot.
+ *
+ * arwprojectile_placeForward and fn_8022ECE0 position a new projectile in
+ * front of the Arwing; arwprojectile_setLifetime and fn_8022ED74 configure
+ * its lifetime and speed; all four are called from wcfloortile.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"

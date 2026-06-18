@@ -1,3 +1,29 @@
+/*
+ * trigger (DLL 0x126) - generic scripted trigger object.
+ *
+ * Trigger_init dispatches on the placement's object-sequence type id
+ * (*(s16*)params: 0x4b/0x4c/0x4d/0x4e/0x50/0x54/0x230/0xf4) to set up the
+ * instance's range/timer state, then Trigger_hitDetect picks a target
+ * (player / Tricky / Arwing / camera / nearest object of a group, per the
+ * placement's mode byte at 0x43), tracks its position, and on a positive
+ * activation runs the trigger's command list through objInterpretSeq.
+ *
+ * objInterpretSeq walks up to 8 four-byte command entries. Each entry is
+ * a flags byte at [0], opcode at [1], and args at [2]/[3]. The flags byte
+ * gates whether the entry runs: bit0 = run on enter (p3 > 0), bit1 = run on
+ * exit (p3 < 0), bit2/bit3 = once-only for the enter/exit direction (latched
+ * against sflags bit0/bit1), bit4 = unconditional (ignore enter/exit), bit5 =
+ * override-disabled (run even when the trigger's disabled flag, *state & 4,
+ * is set). A zero opcode entry is skipped.
+ * On a matching entry it fires the corresponding effect: player anims, sfx,
+ * triggered camera actions, sky / cloud / lighting / time-of-day toggles,
+ * game-bit set/toggle, env effects, map-layer navigation, level
+ * lock/load/unload, save/restart points, texture preload, and NPC
+ * dialogue. p3 carries the activation direction (1 = enter, -1 = exit).
+ *
+ * Trigger_render/update/release/initialise are stubs; Trigger_free stops
+ * any sfx the trigger started.
+ */
 #include "main/dll/DR/hightop.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"

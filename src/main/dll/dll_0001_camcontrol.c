@@ -1,3 +1,26 @@
+/*
+ * camcontrol (DLL 0x0001) - the global gameplay camera controller.
+ *
+ * Owns the single camera state record (pCamera / CAMCONTROL_CAMERA) and
+ * drives it each frame from Camera_update: it caches the focus object's
+ * local/world position, optionally overrides the world position, keeps
+ * the camera's local frame in sync with the focus object's parent, runs
+ * the active handler's update vtable callback, applies queued actions,
+ * and (when no game text is up) picks the current target.
+ *
+ * camcontrol_updateTargetFeedback runs the lock-on / context-action
+ * reticle: it plays the acquire/lose SFX per target kind, glows the
+ * A-button, fades the reticle in/out via its ObjAnim move progress, and
+ * picks a per-objType reticle distance (with a baddie-control-interface
+ * fallback) to pulse the button glow as the target nears.
+ *
+ * camcontrol_loadTriggeredCamAction loads a triggered cam action record
+ * from the CAM .bin/.tab (CAMCONTROL_ACTION_FILE_ID) and dispatches it
+ * through Camera_setMode or the default handler's actionCallback.
+ *
+ * Target kinds, action ids, trigger kinds, reticle states and the
+ * camera/target flag bits are named in dll_0001_camcontrol.h.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "dolphin/os.h"

@@ -1,3 +1,22 @@
+/*
+ * hagabon (DLL 0xDF) - a flying baddie that patrols a rom curve path and,
+ * when the player closes in, breaks off to chase. Shares its TU pool and the
+ * pressureSwitch shared-resource helpers with swarmbaddie (DLL 0xE0); each TU
+ * carries a duplicate of the pressureSwitch helpers and the two object
+ * descriptors so the linker can resolve the canonical sibling from either DLL.
+ *
+ * fn_8014E1DC is the per-frame motion integrator: it advances the curve walker
+ * (relinking via gRomCurveInterface when a point is exhausted), drives the
+ * yaw/pitch/roll body wobble from three sine-wave phase accumulators, steers
+ * the velocity toward either the player (HAGABON_FLAG_CHASE) or the curve
+ * target, clamps + damps the velocity, moves the object, and turns it to face
+ * the player.
+ *
+ * hagabon_update handles the dormant-until-armed state (unkF4): while waiting it
+ * polls its placement game bit / the map-event save-time gate, then fades in.
+ * Once active it fades out on a priority hit, plays the swipe/lock/creak sfx,
+ * adds map time and sets the placement game bit, and re-evaluates chase state.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"

@@ -1,3 +1,19 @@
+/*
+ * dll_0011 (screens) - task-hint text bookkeeping and the loading/help
+ * "screens" overlay buffer.
+ *
+ * Hint tracking: the saved-game block (getLastSavedGameTexts) keeps a
+ * small history of completed task ids at [0..4], a count at [6] and the
+ * "current" task at [5]. New task completions are recorded as game bits
+ * in banks based at 0x12F (one bit per task id), and the per-task text
+ * directories named "TaskTextsNNN" are indexed through the directory-index
+ * table and the hint-slot map.
+ *
+ * Screens overlay: screens_show streams a help/loading screen entry from
+ * tab file 0x18 (entry table asset 0x19) into a heap buffer, caching the
+ * current id and size and a "dirty" flag (heap buffer / size / dirty /
+ * cached-id overlay globals).
+ */
 #include "main/asset_load.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"

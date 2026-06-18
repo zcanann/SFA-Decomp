@@ -1,3 +1,26 @@
+/*
+ * dll_80136a40 - EN v1.0 retargeted system/debug leaves.
+ *
+ * A grab-bag of low-level support code linked into this DLL:
+ *   - The fatal-error display thread (fn_80137DF8) plus its installer
+ *     (fn_80137D28 / fn_801388D0): OSSetErrorHandler hooks dump the
+ *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
+ *     register window straight into the external framebuffers, flipping
+ *     them forever in a hang loop.
+ *   - The debug text subsystem: an in-memory record log (debugPrintf /
+ *     debugPrintfxy / debugPrintSetColor write tagged records into
+ *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
+ *     twice (measure then draw) and rasterizes glyphs through
+ *     fn_80136A40 (per-glyph texture select + textRenderChar) and
+ *     fn_80136E00 (record interpreter: color/tab/newline/position tags).
+ *   - The title-screen ObjectDescriptor (gTitleScreenObjDescriptor) and
+ *     its forwarded callbacks.
+ *   - Tricky companion helpers: queued-path particle emission
+ *     (Tricky_emitQueuedPathParticles), command-target selection,
+ *     blend-channel weight animation and impress/GameBit state pokes.
+ *   - Misc object teardown (objAnimFreeChildren) and a minimap timer
+ *     readout (fn_80133F70).
+ */
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"

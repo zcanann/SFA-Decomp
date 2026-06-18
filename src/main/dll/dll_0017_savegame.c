@@ -1,3 +1,25 @@
+/*
+ * savegame (DLL 0x17) - the live save-game buffer and its persistence.
+ *
+ * Owns the in-RAM save image gSaveGameData (0xF70 bytes; the first 0x6EC
+ * are the persisted slot, mirrored to lbl_803DD498 and optionally to a
+ * restart-point allocation). Provides:
+ *   - new-game/load/save flow (gplayNewGame, trySaveGame, gplaySaveGame,
+ *     saveGame_save) over the three on-disk slots, via loadSaveGame/_saveGame.
+ *   - save-select summaries (saveSelect_getInfo): name, percent-complete
+ *     (save byte 0x55D), rank tiers and task-hint phrases.
+ *   - per-map act state and object-group status bits, backed by GameBit_*
+ *     and cached in the contiguous .bss block gTransientMapBits /
+ *     gMapObjGroupStatuses / gExtendedMapActLookup (SaveGameMapState).
+ *     Cleared group bits below an act threshold are queued as transient
+ *     bits that expire after a few frames (SaveGame_updateTransientMapBits).
+ *   - object-position persistence keyed by placement objectId
+ *     (saveGame_saveObjectPos / restore / unsave), 0x3F slots at 0x168.
+ *   - per-character save/restart points (position, angle, map) and the
+ *     time-attack record table at save offset 0x6EC.
+ *   - the high-score files (saveData, saveScoreFn_800e88b4) and unlockable
+ *     cheat/debug option bits.
+ */
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

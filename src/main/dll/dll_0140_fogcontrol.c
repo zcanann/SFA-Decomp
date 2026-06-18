@@ -1,3 +1,20 @@
+/*
+ * fogcontrol (DLL 0x140) - a placed object that drives the engine's
+ * heavy-fog volume.
+ *
+ * The fog is gated by a placement game bit (enableGameBit, -1 = always
+ * on). While the gate transitions, fogcontrol_update ramps a 0..1 blend
+ * value toward the gated target (ramp speeds lbl_803E4068/lbl_803E406C
+ * scaled by timeDelta, selected by the FOG_FLAG_FAST_* bits) and feeds
+ * the resulting fog band/density to enableHeavyFog each frame; at blend
+ * <= floor (lbl_803E4070) the fog is turned off (disableHeavyFog).
+ * fogcontrol_init primes the blend from the gate state and fogcontrol_free
+ * tears the fog down if it was left active.
+ *
+ * The fog band is derived from the object's localPosY plus the placement
+ * height fields (0x1C/0x1E/0x20), with density at 0x22/0x24 and the
+ * enableHeavyFog mode taken from FOG_FLAG_MODE.
+ */
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);

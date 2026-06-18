@@ -1,3 +1,27 @@
+/*
+ * dll0b (DLL 0x0B) - the engine-wide procedural effects DLL: the shared
+ * back end behind the model-graphics (modgfx), explosion-graphics
+ * (expgfx) and particle (partfx/projgfx) systems used across the game's
+ * effect DLLs.
+ *
+ * Responsibilities:
+ *   - expgfx slot-pool lifecycle (modgfx_allocExpgfxPools /
+ *     modgfx_releaseExpgfxPools) and per-spawn config setup.
+ *   - modgfx vertex animation: per-frame texcoord scroll, RGB / alpha /
+ *     scale / position / rotation channel lerps over a vertex command
+ *     stream, double-buffered between an active and base vertex buffer.
+ *   - the active-effect registry (modgfx_releaseActiveEffectsBy*): a
+ *     0x32-slot table reclaimed by effect type, owner object, or wholesale.
+ *   - projgfx_spawnPresetEffect: the preset-effect dispatcher keyed on
+ *     effectId 0x422..0x42d, filling an ExpgfxSpawnConfig and handing it
+ *     to gExpgfxInterface->spawnEffect.
+ *   - the partfx pending-spawn queue (dll_0B_func10..func18) and the
+ *     0x32-slot active-particle table (dll_0B_func04 allocate,
+ *     dll_0B_func05 update, dll_0B_func09 render, fn_800A1040 free).
+ *
+ * The three FUN_800a* return-0 stubs Ghidra emitted here were dead
+ * (uncalled mirrors duplicated into every effect DLL) and removed.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "main/dll/fxnode9_struct.h"

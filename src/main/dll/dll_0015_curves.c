@@ -1,3 +1,27 @@
+/*
+ * DLL 0x0015 "curves" - terrain/ROM-curve collision driver and the
+ * save-file settings shim for the main game.
+ *
+ * Two responsibilities live in this object:
+ *  1. Per-frame collision against the level's ROM curve set
+ *     (CurvesCollisionState). dll_15_func08 is the dispatcher: by
+ *     state->subtype (OBJECT / POINT / NONE) it transforms an object's
+ *     local sample points and segments into world space, traces them
+ *     against the curves via the hitDetect helpers, and writes back
+ *     world position, surface normal, tilt (pitch/roll) and water/floor/
+ *     ceiling results. updateMode selects the segment resolver
+ *     (random-point averaging, single trace, snap-to-hit, or the default
+ *     averaging path). curves_getCurves caches the last queried object's
+ *     hit list. The clamp at +/-0x3400 limits object rot Y/Z.
+ *  2. Save-file/options access: loadSaveSettings pushes the persisted
+ *     widescreen/subtitle/rumble/sound-mode/volume/HUD/camera settings to
+ *     their subsystems, and the saveFileStruct_* helpers register, enable
+ *     and query the debug/cheat option bitmask in SaveData.
+ *
+ * CurvesCollisionState->flags is a bitset of CURVES_COLLISION_STATE_*
+ * features; pointCounts packs the local-point count (low nibble) and the
+ * segment count (high nibble, CURVES_POINT_COUNT_SEGMENT_SHIFT).
+ */
 #include "dolphin/os.h"
 #include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"

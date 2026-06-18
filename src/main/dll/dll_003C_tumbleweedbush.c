@@ -1,3 +1,22 @@
+/*
+ * dll_003C - the "Link" on-screen menu / icon-bar widget (despite the
+ * TumbleweedBush DLL name, this object's symbol set is the EN v1.0 Link
+ * menu code that was retargeted into this TU).
+ *
+ * A Link menu is an array of up to 40 LinkMenuItem entries (mirror copy in
+ * lbl_803A9458). Each item carries a textId/boxId, position, a texture, and
+ * up/down/left/right navigation links. Link_setup() installs the items and
+ * the base/selected text colors; Link_update() reads analog + button input,
+ * walks the navigation links, drives the highlight pulse (linkCount_803dd90e
+ * oscillating 0..0xFF via lbl_803DD910) and returns 1 (accept) / 0 (cancel) /
+ * -1 (idle). Link_render() draws each item's text/box/texture with the pulsed
+ * highlight color and per-slot icon strip. The slot icons are picked by
+ * linkInitTextures() from a random budget over the six entries in linkTextures
+ * (LinkTextureSlot[6]).
+ *
+ * Item flag bits (LINK_FLAG_*) select draw style; navigation honors
+ * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
+ */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/titlemenuitem_struct.h"

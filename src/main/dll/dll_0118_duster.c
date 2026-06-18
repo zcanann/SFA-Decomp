@@ -1,3 +1,20 @@
+/*
+ * duster (DLL 0x118) - a drifting collectible "dust" object the player
+ * gathers and deposits, plus the shared ObjectDescriptor table for the
+ * sibling DLL objects compiled into this unit (magicplant, trickywarp,
+ * trickyguard, staypoint, curvefish).
+ *
+ * Each duster activates from its placement game bit; once active it settles
+ * to the nearest floor hit, drifts (driftDir / random heading), advances its
+ * canned move, and reacts to priority hits. When the player is close and
+ * facing it (fn_8029622C), it is either picked up (ObjMsg DUSTER_MSG_REQUEST_
+ * PICKUP, gated by game bit 0xcc0) or deposited directly if the current
+ * character's duster collection isn't full. Depositing (DUSTER_MSG_DEPOSIT)
+ * sets the object's completeGameBit, bumps the collected count, spawns the
+ * place fx and marks the duster complete. Game bits >= 0x6fe are treated as
+ * already-complete markers (completeGameBit == activeGameBit); below that the
+ * complete bit lives at activeGameBit + 0x64.
+ */
 #include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"

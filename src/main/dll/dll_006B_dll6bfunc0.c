@@ -1,3 +1,17 @@
+/*
+ * dll_006B (dll6bfunc0) - a small gameplay DLL whose only live export is
+ * func03: a one-shot spawner that builds a 6-command Modgfx draw list on
+ * the stack and submits it through (*gModgfxInterface)->spawnEffect. The
+ * command template and its geometry/colour constants are read from the
+ * lbl_80313A40 data blob and the lbl_803E0A* float pool. When the request
+ * flag bit 0 is set, the world position is taken either from the source
+ * object (sourceObj+0x18..0x20) or from the PartFxSpawnParams packet.
+ *
+ * func00/func01 are the DLL's empty lifecycle hooks. (The Ghidra dump of
+ * this TU also carried a large block of mainDol drift duplicates -
+ * save-file/cheat/map-history helpers - that the linker drops at this
+ * address range; only these three functions belong to DLL 0x6B.)
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"

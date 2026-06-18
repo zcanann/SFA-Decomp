@@ -1,3 +1,20 @@
+/*
+ * sfxplayer (DLL 0x133) - a placement-driven ambient/triggered SFX emitter.
+ *
+ * Each instance reads its behaviour from placement bytes: data[0x1d] selects
+ * the mode (SFXPLAYER_MODE_GAMEBIT / _LOOPED / _RANDOM_DELAY), data[0x1c]
+ * holds the trigger/positioning flag bits, data[0x18] a gate game bit, the
+ * sfx-id pair at data[0x1a]/data[0x22], and the random-delay range at
+ * data[0x1e]/data[0x1f].
+ *
+ * Per frame sfxplayerObj_update optionally feeds a rom-curve channel (flag
+ * 0x8) tracking either the active camera or the player object, evaluates the
+ * gate bit, and starts/stops the sfx pair via the Sfx_* API. Positioning is
+ * chosen by flags 0x10 (at object position) and 0x1 (force point form).
+ * sfxplayerObj_free tears down any still-active looped sounds.
+ *
+ * Home TU of these symbols and the SFXPLAYER_* constants is MMP_moonrock.
+ */
 #include "main/dll/MMP/MMP_asteroid.h"
 
 extern uint GameBit_Get(int eventId);

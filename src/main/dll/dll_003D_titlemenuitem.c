@@ -1,3 +1,20 @@
+/*
+ * titlemenuitem (DLL 0x3D) - one entry of the title / options menu.
+ *
+ * A TitleMenuItem comes in three kinds (TitleMenuItem.kind):
+ *   0 = slider (textId graphic dragged along a track by the stick),
+ *   1 = on/off toggle (A button flips item->value, distinct on/off textures),
+ *   2 = text window (a gameText phrase whose variant tracks item->value).
+ * Per-item state lives in item->flags (TITLE_MENU_FLAG_*). _update reads the
+ * pad each frame, moves item->value within [minValue, maxValue] (wrapping when
+ * TITLE_MENU_FLAG_WRAP is set), plays the menu sfx, and previews the master
+ * volume / music track for the audio options. _render draws the item's
+ * textures / text. The six shared menu textures are cached in lbl_803A9DB8 and
+ * loaded by id from lbl_8031C2A8; _initialise / _release manage that cache.
+ *
+ * Slider drag accumulator state (lbl_803DD918/91C/920) and the smoothing
+ * constants (lbl_803E21F0/F4/F8) live in the front-menu DLL.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"

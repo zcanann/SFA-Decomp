@@ -1,3 +1,22 @@
+/*
+ * spiritdoorlock (DLL 0x167) - a spinning, glowing lock guarding a spirit
+ * door, plus its ring of orbiting key objects.
+ *
+ * Behaviour:
+ *  - Init places the lock, scales the model from the placement scale, hides
+ *    its hits and (in mode 0) starts invisible with a red point light.
+ *  - Update arms the lock when the player walks within range
+ *    (SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) and the placement's
+ *    activeGameBit is set: once active it drives a loop sfx, spins, and lays
+ *    out the SPIRITDOORLOCK_ORBIT_OBJECT_GROUP objects evenly around itself
+ *    (one step = 0x10000 / orbitCount), fades the model in, and scrolls its
+ *    texture. When the orbit group empties the lock clears its active flag,
+ *    sets the placement's doneGameBit and disables. While inactive-but-done
+ *    it fades out, dims the point light and frees it.
+ *
+ * State lives in the obj extra block (SpiritDoorLockState); placement data is
+ * SpiritDoorLockMapData. Both are defined in IMspacecraft.h.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"

@@ -1,3 +1,31 @@
+/*
+ * dbstealerworm (DLL 0x242, object type id 0x49) - a burrowing "stealer
+ * worm" ground baddie.
+ *
+ * It is a GroundBaddieState/BaddieState baddie driven through the shared
+ * baddie-control interface (gBaddieControlInterface). Per-object state is
+ * extraSize 0x460 = the 0x410 GroundBaddieState plus a 0x50 private
+ * DbStealerwormControl record hung off GroundBaddieState.control (memset
+ * to zero in dbstealerworm_init).
+ *
+ * Behaviour is a move/transition state machine: the A00..A0F handlers
+ * (gDBStealerWormStateHandlersA, invoked from hitDetect/update) run the
+ * burrow / surface / lunge / grab / steal / flee moves, while the B00..B06
+ * handlers gate transitions between them. The worm surfaces and lunges at a
+ * target, links to a grabbed object (DbStealerwormControl.linkedObj) via
+ * ObjMsg, plays the ice-run footstep sfx, spawns burrow/impact particle fx
+ * (fn_80203000), and on a successful steal increments a placement game bit
+ * and adds map time (dbstealerworm_stateHandlerA06). chuka is the linked
+ * thrown sub-object.
+ *
+ * Unimplemented trailing functions (not in scope here):
+ *   EN v1.0 0x80206474  8b   trivial 0-returner.
+ *   EN v1.0 0x80206484  8b   trivial 0-returner.
+ *   EN v1.0 0x802064D0  48b  if (p6) objRenderFn_8003b8f4(lbl_803E6408).
+ *                            Logic-only (~91%): retail uses extsb+cmpwi,
+ *                            MWCC -O4,p folds to extsb.
+ *   EN v1.0 0x80206500  44b  if (b->_8 && (b->_8->_6 & 0x40)) clear.
+ */
 #include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"

@@ -1,3 +1,15 @@
+/*
+ * DLL 0x62 (dll62func0) - a thin gameplay-effect DLL exporting three
+ * object hooks. func01/func00 are empty no-op slots; func03 builds a
+ * fourteen-command modgfx effect list on the stack (texture/blend modes
+ * from the lbl_803E089x float constants and the lbl_803129C8 resource
+ * blob) and submits it through gModgfxInterface->spawnEffect. The list
+ * shape varies by `variant` (1 zeroes a halfword + swaps the base scale
+ * float; 2 forces six layers). When the effect's flag bit 0 is set the
+ * spawn position is offset either by the source object's local position
+ * (object 0x18/0x1c/0x20) or, if absent, by the PartFxSpawnParams packet
+ * at posSource.
+ */
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

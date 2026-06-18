@@ -1,3 +1,15 @@
+/*
+ * DLL 0x68 (dll68func0) - a thin gameplay-effect DLL.
+ *
+ * Real exports (per the DLL's .text):
+ *   dll_68_func00_nop / dll_68_func01_nop - empty entry-point stubs.
+ *   dll_68_func03 - builds an 11-command Modgfx effect command list on the
+ *     stack (textures/half-words sourced from lbl_803135C8, colours/positions
+ *     from the lbl_803E09xx float pool) and submits it via
+ *     gModgfxInterface->spawnEffect. When the caller's flags bit 0 is set the
+ *     effect is positioned from the source object (offset 0x18..0x20) or, if
+ *     none, from the PartFxSpawnParams pos fields.
+ */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"

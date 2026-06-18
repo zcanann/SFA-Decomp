@@ -1,3 +1,17 @@
+/*
+ * drakormissile (DLL 0x262) - the homing energy projectile fired by the
+ * Drakor boss (dll_024D_bossdrakor calls drakormissile_startActiveLaunch
+ * to arm a pooled missile). The extra block (0x38 bytes) holds a model
+ * light handle, a state machine (IDLE/FADEOUT/EXPLODING/STRAIGHT/HOMING),
+ * a countdown timer and five spiralling trail-render yaw/pitch phases.
+ *
+ * STRAIGHT missiles fly a precomputed line (voxel trace clamps the timer
+ * at the first wall hit); HOMING missiles re-aim each frame toward a
+ * predicted player intercept point. Either explodes on contact, timer
+ * expiry or proximity, then fades out and frees itself. The trail is
+ * drawn as DRAKORMISSILE_RENDER_TRAIL_COUNT spun copies plus the body,
+ * with an attached point light and glow.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 

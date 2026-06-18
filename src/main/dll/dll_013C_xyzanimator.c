@@ -1,3 +1,16 @@
+/*
+ * xyzanimator (DLL 0x13C) - drives a smooth offset animation of a map
+ * block's vertices/edges along the X/Y/Z axes.
+ *
+ * On first update the object copies the source map block's vertex and
+ * edge positions into a freshly mmAlloc'd buffer (fn_80194964), then on
+ * each tick walks an offset vec toward the placement's per-axis targets
+ * and writes the displaced positions back into the live block
+ * (fn_80194C40). The placement animation mode selects the drive style:
+ *   0/4 = one-shot toward target (sets the completion game bit),
+ *   1   = looping (per-axis wrap), 2 = game-bit gated forward/reverse.
+ * A game bit gates whether the animation runs.
+ */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/MMP_asteroid.h"

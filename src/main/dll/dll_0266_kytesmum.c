@@ -1,3 +1,23 @@
+/*
+ * kytesmum (DLL 0x266, object type 0x43) - the "Kyte's mum" NPC.
+ *
+ * The placement's mode byte selects one of three behaviours, wired up in
+ * kytesmum_init:
+ *   mode 1     - stationary NPC; interacting runs trigger sequence 0
+ *                (kytesmum_spawnInteractionCallback).
+ *   mode 2     - roams; flees toward Tricky/the player when they get close
+ *                and runs a random greeting sequence on contact
+ *                (kytesmum_updateNearPlayerCallback). Added to obj group 3.
+ *   mode 0 / 3 - quest-giver; walks a fixed quest-bit table and runs the
+ *                matching trigger sequence (kytesmum_updateQuestStateCallback).
+ *
+ * Every frame kytesmum_update faces the placement yaw, services the idle
+ * sound timer, advances the current animation move (picking a new random
+ * idle/look move at the end of a move), plays anim-event sfx, runs eye and
+ * model-sound anims, and forwards a contact callback to the nearest obj in
+ * group 1. Completing the active callback sets the placement's completion
+ * game bit.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"

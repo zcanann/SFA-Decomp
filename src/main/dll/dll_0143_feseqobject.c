@@ -1,3 +1,19 @@
+/*
+ * feseqobject (DLL 0x143) - the front-end sequence-driven prop object.
+ *
+ * FEseqobject_SeqFn runs the object's animation-event track: event 1 sets
+ * game bit 0x75 (sequence-complete latch read in update), events 2..6 spawn
+ * partfx 0x85 with effect variant 0..4. It also drains its object message
+ * queue, relaying messages 0xF000B/C/D to the seqId-0xF7 control object
+ * (found via ObjGroup_GetObjects group 3) as 0x130001/2/3, but only while
+ * the sequence-control "suppressed" flag (OBJSEQ_CONTROL_SUPPRESS_MSG) is
+ * clear.
+ *
+ * FEseqobject_update kicks sequence 0 once per frame until bit 0x75 is set.
+ * This TU also emits the trailing gFElevControlObjDescriptor (the sibling
+ * 0x142 elevator-control descriptor); its FElevControl_* callbacks live in
+ * dll_0142_felevcontrol.c.
+ */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"

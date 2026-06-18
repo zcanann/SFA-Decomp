@@ -1,3 +1,19 @@
+/*
+ * DLL 0x21B (Volcano Force Point family) - a single-axis sliding mover.
+ *
+ * The object slides along its local Z toward an open/closed extreme while
+ * its drive game bit is set; releasing the bit slides it back. setup[0x19]
+ * selects the slide direction (negative-Z open vs positive-Z open) and the
+ * resting/extended positions are anchored to the placement's posZ.
+ *
+ * Two enable bits (DLL_21B_ENABLE_BIT_A/B) gate completion: while moving
+ * and both enabled the MOVING bit is raised; once the object reaches its
+ * extended limit with both still enabled the REACHED bit is raised, and
+ * returning home with both clear clears the RESET/REACHED bits.
+ *
+ * Init reads rotX and the drive game bit from the placement; free releases
+ * the object's expgfx source.
+ */
 #include "main/dll/VF/vf_shared.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

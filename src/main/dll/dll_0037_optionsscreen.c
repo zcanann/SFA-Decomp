@@ -1,3 +1,17 @@
+/*
+ * optionsscreen (DLL 0x37) - the front-end Options screen, run as a
+ * title-menu sub-state through gTitleMenuLinkInterface / gTitleMenuItemInterface.
+ *
+ * lbl_803DBA28 selects the active panel: 0 = top-level options list,
+ * 1 = audio, 2 = gameplay (widescreen / rumble), 3 = misc (subtitles +
+ * cheat toggles). _run() reads the highlighted item, dispatches to the
+ * matching optionsMenu_* handler, and mirrors the chosen settings into
+ * the save-file struct (lbl_803DD708) byte fields: [2]=subtitles,
+ * [6]=widescreen, [8]=rumble, [9..12]=audio. _render() fades the panel
+ * text in/out against the screen-transition progress; _initialise()
+ * loads the text directory and the active panel's item list. Selecting
+ * Exit (panel 3, item 0) starts the transition out and reloads UI DLL 4.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"

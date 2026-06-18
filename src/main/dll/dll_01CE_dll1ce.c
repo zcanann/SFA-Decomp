@@ -1,3 +1,14 @@
+/*
+ * dll_1CE: hatch-door object. The lid coasts open under a clamped velocity
+ * while idle; once a key object (seqId 0x18F or 0x1D6) is in range it counts
+ * down, sets its placement gamebit, and - if the load isn't locked and the
+ * placement's unk1A bit matches gamebit 0x46D - spawns its contents object
+ * (subtype 0x246) seeded from the door's transform.
+ *
+ * The TU also hosts dimmagicbridge_* and explosion_* sibling exports (in
+ * DIM/dll_01CC_dimmagicbridge.c / DIM/dll_01CA_dimexplosion.c); their forward
+ * declarations and the descriptor that combines them live in this object's DLL.
+ */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dll1ceplacement_struct.h"
 #include "main/dll/fnexplosionreleasev11unusedstate_struct.h"

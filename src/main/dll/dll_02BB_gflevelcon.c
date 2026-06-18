@@ -1,3 +1,19 @@
+/*
+ * gflevelcon (DLL 0x2BB) - "GalleonForce" level controller object.
+ *
+ * Its anim-event callback (gf_levelcon_handleScriptEvents) reacts to
+ * sequence event opcodes that drive the sky/weather presets (skyFn_*
+ * + getEnvfxAct), warp/credits flow at the end of the level, and a
+ * countdown-driven on-screen text prompt (gameTextShow 0x476). It also
+ * finds the level's linked point-light and scroll objects (by their
+ * placement def ids 0x477E3 / 0x4A946 / 0x4A947) and toggles / scrolls
+ * them per frame.
+ *
+ * The fn_8023* helpers (referenced from dll_02BC_andross.c) spawn and
+ * aim the Arwing projectile/effect objects used during the boss fight,
+ * and fn_8023A3E4 is the hit-reaction handler (three breakable hit
+ * zones + texture-state swaps).
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

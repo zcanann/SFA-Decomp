@@ -1,3 +1,22 @@
+/*
+ * drakorhoverpad (DLL 0x271) - a rideable hover-pad object in the
+ * Drakor (DR) levels that follows a ROM spline/curve network.
+ *
+ * initMain seeds the pad onto its curve and selects a behaviour mode
+ * from its placement subtype; updateMain advances the pad along the
+ * active curve each step, applying a sinusoidal vertical bob, banking
+ * the model toward its travel direction, and steering the object
+ * toward the curve sample point. update() picks the next path point in
+ * the network (masked vs unmasked branch) and recomputes the per-node
+ * velocity/tangent data. handlePathPointEvent dispatches the per-node
+ * event ids: speed flips, state changes, camera shake / view offset
+ * while the player is riding, and the game bits that gate the ride.
+ * render emits the trailing particle spray on a frame cadence.
+ *
+ * Curve/velocity state lives in the object's extra block
+ * (DrakorHoverpadState, 0x17c bytes); the two flag bytes at 0x178/0x179
+ * are HoverpadFlags / Flags377.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 

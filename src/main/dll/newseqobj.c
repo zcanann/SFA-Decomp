@@ -1,3 +1,20 @@
+/*
+ * sidekick-toy baddie reaction + update handlers (EN v1.0 0x801504F8,
+ * 0x80150910, 0x80150EDC). The object is a curve-following toy/pet baddie
+ * driven by per-family anim tables keyed off BaddieState.inWhirlpoolGroup
+ * (state[0x33b]):
+ *   - fn_801504F8: hit/message reaction handler. Maps incoming message ids
+ *     (0xe..0x1f) onto reaction flags (BaddieState.reactionFlags 8/0x10/0x28),
+ *     starts a new anim move from the per-family row tables, decrements the
+ *     hit counter and plays the impact sfx (0x13/0x14/0x22).
+ *   - fn_80150910 / fn_80150EDC: per-frame update. Run the timer-driven 16B
+ *     anim chain (state[0x338] walks the SeqRow16 table), follow the rom
+ *     curve (path-chase with distance/turn speed shaping when controlFlags
+ *     0x2000 is set), and fall back to randomised idle anims otherwise.
+ * Group 5 (the whirlpool group) sets game bit 0x1c8 once it is active.
+ * Tables: lbl_8031F16C is the per-family table-of-tables (0x28-stride rows);
+ * lbl_8031DD30 holds per-anim move-progress floats.
+ */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx_ids.h"

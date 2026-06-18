@@ -1,3 +1,17 @@
+/*
+ * Tricky companion behaviour states (part of the tricky DLL, 0x00C4).
+ *
+ * Each function here is one entry of Tricky's per-frame substate machine,
+ * dispatched off state[0xa] (the substate index) either directly or through
+ * the function-pointer table walked in trickyFn_80142524
+ * (((TrickyFnRow*)(base + state[0xa]*4))->fn). They drive Tricky along ROM
+ * curve paths (rom_curve_interface), follow/feed the player, run the dig
+ * and flame-breath sequences, pick random idle moves and emit the matching
+ * object sounds (audio/sfx). trickyFoodFn_8014460c handles the shared
+ * feeding/Y-button-item interaction and is called as a guard at the top of
+ * most states. Water-vs-land animation selection (the repeated
+ * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
+ */
 #include "main/dll/grenade.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_00C4_tricky.h"

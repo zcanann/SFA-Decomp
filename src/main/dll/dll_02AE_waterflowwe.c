@@ -1,3 +1,22 @@
+/*
+ * waterflowwe (DLL 0x2AE) - water-flow weed: a foliage object that
+ * sways to a water current.
+ *
+ * Each tick calcCurrentVector sums the influence of two source groups:
+ * the foliage-current group (0x14) - only members whose currentFlags
+ * have the ENABLED bit set contribute - and the object-current source
+ * group (0x50). A source affects the weed only when it is within a
+ * vertical band and inside its planar radius; its strength falls off
+ * linearly with distance and is projected through sin/cos of the
+ * source angle. The averaged current is low-pass filtered, clamped to
+ * a maximum magnitude, scaled by timeDelta, and used to point the
+ * weed (rotX) downstream.
+ *
+ * One weed instance (lbl_803DDDA8, claimed by the first non-disabled
+ * phaseDriver) advances two shared wrapping phase accumulators
+ * (lbl_803DDDB0 / lbl_803DDDAC) that select the weed's idle vs. flowing
+ * animation move via ObjAnim_SetCurrentMove.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 

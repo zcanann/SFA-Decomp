@@ -1,3 +1,25 @@
+/*
+ * staffAction (DLL 0x00D3) - a baddie that hops/crawls along surfaces and
+ * chases the player, driven by the shared baddie-control interface
+ * (gBaddieControlInterface) and the LandedArwing movement/collision state
+ * (LandedArwingState behind GroundBaddieState->control, at +0x40c).
+ *
+ * Movement is a bounce-walker: landedarwing_moveSurfaceCrawler runs a
+ * per-axis bounce machine over surfaceMode 0-5 (X/Y/Z wall planes), while
+ * surfaceMode 6 is the swept-surface mode that does collision against a
+ * bound mesh object (fn_80165B3C / fn_80166444 / fn_80166840). flags92
+ * is a packed bit/nibble field (StaffBits) holding the per-frame movement
+ * flags and a retry counter (hi nibble).
+ *
+ * dll_D3_update drives target acquisition, contact damage, and per-frame
+ * advance through gBaddieControlInterface and gPlayerInterface vtable
+ * slots; the object id is 0x49 and its extra block is 0x4a4 bytes. The
+ * state handler table gLandedArwingStateHandlers is populated in
+ * dll_D3_initialise (slot 0 = fn_801659B8).
+ *
+ * The TU also defines a second object descriptor, gSkeetlaWallObjDescriptor
+ * (skeetlawall), an 11-slot object whose callbacks live in a sibling unit.
+ */
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"

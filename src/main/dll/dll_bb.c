@@ -1,3 +1,23 @@
+/*
+ * dll_BB - per-frame camera commit + queued-action blending.
+ *
+ * camcontrol_applyState pushes the camcontrol working state onto the live
+ * view slot each frame: it sets view orientation, optionally smooth-follows
+ * the world position (smoothingFlags bit 7) toward the target, drives the
+ * queued-action blend (eased by blendCurveMode: 2 = cubic, 1 = quadratic,
+ * else linear) across position/orientation/FOV, then steps the letterbox
+ * viewport offset toward its target.
+ *
+ * camcontrol_applyQueuedAction arms a pending queued action: it builds the
+ * blend step from the requested frame count, snapshots the current view as
+ * the blend start (or copies it straight through when no blend), records the
+ * active action, and hands off to camcontrol_activateHandler.
+ *
+ * The Camera_func* setters poke the camera target/frame flag bytes and the
+ * letterbox target; CAMCONTROL_CAMERA is the global working state.
+ *
+ * EN v1.0: camcontrol_applyState 0x80101980, camcontrol_applyQueuedAction 0x80101EBC.
+ */
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
