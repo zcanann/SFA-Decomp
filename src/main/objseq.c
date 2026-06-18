@@ -4693,6 +4693,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
 {
     RomCurveNode* from;
     RomCurveNode* to;
+    f32 segmentT;
     f32 t;
     f32 fromScale;
     f32 toScale;
@@ -4702,11 +4703,9 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     f32 xTangent;
     f32 yTangent;
     f32 zTangent;
-    f32 segmentT;
     f32 length;
     f32 scale;
     f32 angle;
-    f32* times;
     int segment;
     int i;
 
@@ -4716,34 +4715,35 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
     if (from != NULL && state->toNodeId > -1)
     {
         to = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
-        times = (f32*)state;
         i = 0;
-        while (i <= 8 && t >= times[i + 2])
+        while (i <= 8 && t >= *(f32*)((u8*)state + (i << 2) + 8))
         {
             i++;
         }
         segment = i - 1;
-        segmentT = ((f32)segment +
-                (t - times[segment + 2]) / (times[segment + 3] - times[segment + 2])) *
-            lbl_803DF01C;
+        segmentT = (f32)segment +
+            (t - *(f32*)((u8*)state + (segment << 2) + 8)) /
+                (*(f32*)((u8*)state + (segment << 2) + 12) -
+                    *(f32*)((u8*)state + (segment << 2) + 8));
+        segmentT = segmentT * lbl_803DF01C;
 
         fromScale = ROM_CURVE_NODE_SCALE(from);
         toScale = ROM_CURVE_NODE_SCALE(to);
 
         xPoints[0] = from->x;
+        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
         xPoints[1] = to->x;
         xPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->yaw));
-        xPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         yPoints[0] = from->y;
+        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
         yPoints[1] = to->y;
         yPoints[2] = fromScale * mathSinf(ROM_CURVE_NODE_ANGLE(from->pitch));
-        yPoints[3] = toScale * mathSinf(ROM_CURVE_NODE_ANGLE(to->pitch));
 
         zPoints[0] = from->z;
+        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
         zPoints[1] = to->z;
         zPoints[2] = fromScale * mathCosf(ROM_CURVE_NODE_ANGLE(from->yaw));
-        zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
         if ((s8)ignoreY == 0)
