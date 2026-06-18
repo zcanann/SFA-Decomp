@@ -1244,6 +1244,120 @@ void setGQR6_2(int a, int b, int c, int d)
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
+#pragma dont_inline on
+static u8* modelBoneTransforms_next(u8* p, int* outX, int* outY, int* outZ)
+{
+    u16 flags;
+
+    flags = *(u16*)p;
+    p += 2;
+    *outX = 0;
+    if (flags & 0x2000)
+    {
+        *outX = *(s16*)p;
+        p += 2;
+    }
+    *outY = 0;
+    if (flags & 0x4000)
+    {
+        *outY = *(s16*)p;
+        p += 2;
+    }
+    *outZ = 0;
+    if (flags & 0x8000)
+    {
+        *outZ = *(s16*)p;
+        p += 2;
+    }
+    return p;
+}
+
+void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
+{
+    u8* a;
+    u8* b;
+    int i;
+    int wHi;
+    int aIdx;
+    int bIdx;
+    int ax, ay, az;
+    int bx, by, bz;
+
+    a = *pd;
+    b = *pe;
+    i = 0;
+    wHi = 0x10000 - f;
+    while (1)
+    {
+        aIdx = (*(s16*)a & 0x1fff) - pos;
+        bIdx = (*(s16*)b & 0x1fff) - pos;
+        while (1)
+        {
+            if (i >= n)
+            {
+                *pd = a;
+                *pe = b;
+                return;
+            }
+            if (i >= aIdx)
+            {
+                break;
+            }
+            if (i >= bIdx)
+            {
+                goto onlyB;
+            }
+            *(int*)out = *(int*)p;
+            i++;
+            *(s16*)(out + 4) = *(s16*)(p + 4);
+            p += 6;
+            out += 6;
+        }
+        if (i == bIdx)
+        {
+            b = modelBoneTransforms_next(b, &bx, &by, &bz);
+            a = modelBoneTransforms_next(a, &ax, &ay, &az);
+            ax = (ax * wHi + bx * f) >> 16;
+            ay = (ay * wHi + by * f) >> 16;
+            az = (az * wHi + bz * f) >> 16;
+        }
+        else
+        {
+            a = modelBoneTransforms_next(a, &ax, &ay, &az);
+            ax = (ax * wHi) >> 16;
+            ay = (ay * wHi) >> 16;
+            az = (az * wHi) >> 16;
+            goto store;
+        }
+    store:
+        ax += *(s16*)(p + 0);
+        ay += *(s16*)(p + 2);
+        az += *(s16*)(p + 4);
+        *(s16*)(out + 0) = ax;
+        *(s16*)(out + 2) = ay;
+        *(s16*)(out + 4) = az;
+        p += 6;
+        out += 6;
+        i++;
+        continue;
+    onlyB:
+        b = modelBoneTransforms_next(b, &bx, &by, &bz);
+        bx = (bx * f) >> 16;
+        by = (by * f) >> 16;
+        bz = (bz * f) >> 16;
+        bx += *(s16*)(p + 0);
+        by += *(s16*)(p + 2);
+        bz += *(s16*)(p + 4);
+        *(s16*)(out + 0) = bx;
+        *(s16*)(out + 2) = by;
+        *(s16*)(out + 4) = bz;
+        p += 6;
+        out += 6;
+        i++;
+    }
+}
+#pragma dont_inline reset
+
 extern void debugPrintf(char* fmt, ...);
 
 extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
