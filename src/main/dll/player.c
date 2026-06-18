@@ -774,11 +774,11 @@ int fn_802A3F24(int obj, int state)
         ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
         k = lbl_803E7F10;
         ((GameObject*)obj)->anim.worldPosX =
-            k * ((PlayerState*)inner)->unk5C4 + *(f32*)((char*)inner + 0x5d4);
+            k * ((PlayerState*)inner)->unk5C4 + *(f32*)((int)inner + 0x5d4);
         ((GameObject*)obj)->anim.worldPosY =
             ((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874;
         ((GameObject*)obj)->anim.worldPosZ =
-            k * ((PlayerState*)inner)->unk5CC + *(f32*)((char*)inner + 0x5dc);
+            k * ((PlayerState*)inner)->unk5CC + *(f32*)((int)inner + 0x5dc);
         Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                        ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
                                        &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
@@ -786,16 +786,16 @@ int fn_802A3F24(int obj, int state)
         objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5d4), *(f32*)((char*)inner + 0x5d8),
-                                           *(f32*)((char*)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
+            Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
+                                           *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5ec), *(f32*)((char*)inner + 0x5f0),
-                                           *(f32*)((char*)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
+            Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
+                                           *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
                                            ((PlayerState*)inner)->unk4C4);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)inner + 0x5f8), *(f32*)((char*)inner + 0x5fc),
-                                           *(f32*)((char*)inner + 0x600), (f32*)((char*)inner + 0x5f8),
+            Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
+                                           *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
                                            ((PlayerState*)inner)->unk4C4);
             ((PlayerState*)inner)->unk5AC =
