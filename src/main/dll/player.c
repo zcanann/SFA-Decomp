@@ -15043,13 +15043,17 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 f32 dz = bz - az;
                 f32 dx = ax - bx;
-                f32 len = sqrtf(dx * dx + dz * dz);
+                f32 dxsq = dx * dx;
+                f32 len = sqrtf(dxsq + dz * dz);
                 f32 scale = lbl_803E7EE0 / len;
                 dx = dx * scale;
                 dz = dz * scale;
-                if (dx * *(f32*)((char*)d + 0x1c) + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
+                {
+                f32 dxp = dx * *(f32*)((char*)d + 0x1c);
+                if (dxp + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
                 {
                     return 0;
+                }
                 }
             }
         }
