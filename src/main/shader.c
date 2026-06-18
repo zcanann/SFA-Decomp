@@ -532,8 +532,7 @@ undefined4 FUN_80057690(int param_1)
         }
         else
         {
-            dist = (double)FUN_8001771c(&((GameObject*)param_1)->anim.worldPosX,
-                                        &((GameObject*)viewObj)->anim.worldPosX);
+            dist = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(viewObj + 0x18));
         }
         if (range < dist)
         {
@@ -676,10 +675,10 @@ extern s8 lbl_803DCDEC;
 
 void mapBlockFn_80059c2c(u8* outFlags)
 {
-    int i;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
+        int i;
         s8 limit = lbl_803DCDEC;
         for (i = 0; i < limit; i++)
         {
@@ -705,18 +704,14 @@ extern f32 lbl_803DEBCC;
 extern f32 retraceCount;
 extern f32 flushFlag;
 extern f32 retraceQueue;
-extern f32 PreCB;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
 {
     FrustumPlane* plane;
-    u8 i;
-    f32 offZ;
-    f32 offX;
-    i = 0;
-    offZ = playerMapOffsetZ;
-    offX = playerMapOffsetX;
+    u8 i = 0;
+    f32 offZ = playerMapOffsetZ;
+    f32 offX = playerMapOffsetX;
     for (; i < 5; i++)
     {
         float dot;
@@ -894,12 +889,14 @@ extern void DCStoreRange(void* p, int size);
 
 int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 {
-    int slotIdx;
-    int byteOff;
-    char* entry;
     int blockId;
+    char* entry;
     s8* statusArr;
+    int slotIdx;
+    s16* arr;
     int i;
+    void* blk;
+    int byteOff;
 
     entry = (char*)lbl_803822A0[layer];
     statusArr = (s8*)gMapBlockLayerTables[layer];
@@ -925,35 +922,37 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     }
     statusArr[slotIdx] = -1;
 
+    arr = lbl_803DCE94;
     for (i = 0; i < lbl_803DCE98; i++)
     {
-        if (lbl_803DCE94[i] == blockId)
+        if (*arr == blockId)
         {
             lbl_803DCE8C[i]++;
             statusArr[slotIdx] = (s8)i;
             return 1;
         }
+        arr++;
     }
 
-    statusArr = (s8*)MapBlock_loadFromFile(blockId);
-    if (statusArr != NULL)
+    blk = MapBlock_loadFromFile(blockId);
+    if (blk != NULL)
     {
-        MapBlock_init(statusArr);
+        MapBlock_init(blk);
         i = 0;
-        byteOff = i;
-        while (i < *(u8*)((char*)statusArr + 0xa0))
+        byteOff = 0;
+        while (i < *(u8*)((char*)blk + 0xa0))
         {
-            int v = *(int*)(*(int*)((char*)statusArr + 0x54) + byteOff);
+            int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
             v = -(int)((u32)v | 0x8000);
-            *(int*)(*(int*)((char*)statusArr + 0x54) + byteOff) = textureLoad(v, 0);
+            *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
             byteOff += 4;
             i++;
         }
-        MapBlock_initHits(statusArr, blockId);
-        MapBlock_initShaders(statusArr);
-        trackLoadBlockEnd(statusArr, blockId, slotIdx, layer);
-        *(int*)statusArr = return0_80060B90(statusArr);
-        DCStoreRange(statusArr, *(int*)((char*)statusArr + 0x8));
+        MapBlock_initHits(blk, blockId);
+        MapBlock_initShaders(blk);
+        trackLoadBlockEnd(blk, blockId, slotIdx, layer);
+        *(int*)blk = return0_80060B90(blk);
+        DCStoreRange(blk, *(int*)((char*)blk + 0x8));
     }
     return 1;
 }
@@ -1059,9 +1058,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     if (i == count)
     {
-        int cnt;
-        cnt = ++lbl_803DCE98;
-        if ((u8)cnt == 0x40)
+        lbl_803DCE98 = *(volatile u8*)&lbl_803DCE98 + 1;
+        if (*(volatile u8*)&lbl_803DCE98 == 0x40)
         {
             OSReport(sTrackLoadBlockOverrunError);
         }
@@ -1124,10 +1122,9 @@ extern int mapGetRomListAndOffsets(int p1, int b);
 void mapLoadForObject(int p1, char* p2)
 {
     int saved = lbl_803DCEC8;
-    int slot;
     int romList = mapGetRomListAndOffsets(p1, 1);
+    int slot = 0x50;
     int i;
-    slot = 0x50;
 
     for (i = 0; i < 40; i++)
     {
@@ -1163,8 +1160,8 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
         }
         e += 0x10;
     }
-    e = base;
     slot = -1;
+    e = base;
     for (idx = 0; idx < 0x3a; idx++)
     {
         if (*(u8*)(e + 0xc) == 0)
@@ -1331,14 +1328,14 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     int x, y;
 
     getTabEntry(self, 0x1d, *(int*)(lbl_803DCE7C + tabOff),
-                *(int*)((lbl_803DCE7C + 8) + tabOff) - *(int*)(lbl_803DCE7C + tabOff));
-    *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
+                *(int*)(lbl_803DCE7C + tabOff + 8) - *(int*)(lbl_803DCE7C + tabOff));
+    *(int*)(self + 0xc) = (int)self + *(int*)(lbl_803DCE7C + tabOff + 4) - *(int*)(lbl_803DCE7C + tabOff);
     rect[0] = p3 - *(s16*)(self + 4);
     rect[2] = p4 - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
-    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
-    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
+    *(u8*)((char*)rect + 8) = *(s16*)(self + 4);
+    *(u8*)((char*)rect + 9) = *(s16*)(self + 6);
     for (y = 0; (s16)y < *(s16*)(self + 2); y++)
     {
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)
@@ -1810,8 +1807,6 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
     }
 }
 
-#pragma optimization_level 4
-#pragma dont_inline on
 int mapCoordsToId(int x, int z, int layerIdx)
 {
     int x0, z0;
@@ -1829,7 +1824,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
     bits = (u8*)lbl_80382238[4];
     id = 0;
     layers = (s8*)lbl_80382238[3];
-    for (n = 128; n != 0; n--)
+    for (n = 0; n < 64; n++)
     {
         if (layer == layers[0])
         {
@@ -1849,15 +1844,33 @@ int mapCoordsToId(int x, int z, int layerIdx)
                 }
             }
         }
-        rects += 5;
         bits += 0x40;
-        layers += 1;
+        id++;
+        if (layer == layers[1])
+        {
+            x0 = rects[5];
+            if (x >= x0)
+            {
+                x1 = rects[6];
+                if (x <= x1)
+                {
+                    z0 = rects[7];
+                    if (z >= z0 && z <= rects[8])
+                    {
+                        idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
+                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                            return id;
+                    }
+                }
+            }
+        }
+        rects += 10;
+        bits += 0x40;
+        layers += 2;
         id++;
     }
     return -1;
 }
-#pragma dont_inline reset
-#pragma optimization_level reset
 
 extern f32 sAabbCornerDirections[];
 
@@ -1937,8 +1950,8 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     else
     {
-        y0 = (&retraceQueue)[1];
-        y1 = PreCB;
+        y0 = (&lbl_803DEBCC)[8];
+        y1 = (&lbl_803DEBCC)[9];
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++)
@@ -3221,7 +3234,6 @@ void doPendingMapLoads(void)
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
 
-#pragma dont_inline on
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
@@ -3252,14 +3264,11 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         slot = i2;
         if (slot == -1)
             slot = mapProcessRomList(id);
-        *(s8*)(p2 + 6 + slot * 8) = 1;
+        *(s8*)&((BlockEntry*)lbl_8038224C)[slot].field_6 = 1;
         entry = (char*)lbl_8038224C[slot].field_0;
         pairs = (s16*)lbl_80382238[2];
-        {
-            int pi = id * 2;
-            cv3 = (s8)pairs[pi];
-            cv4 = (s8)pairs[pi + 1];
-        }
+        cv3 = (s8)pairs[id * 2];
+        cv4 = (s8)pairs[id * 2 + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
@@ -3296,7 +3305,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         found3:
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
-            *(s8*)(p2 + 6 + i4 * 8) = 1;
+            *(s8*)&((BlockEntry*)lbl_8038224C)[i4].field_6 = 1;
         }
         rects = (s16*)(lbl_80382238[1] + id * 10);
         x = x - rects[0];
@@ -3329,7 +3338,6 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         *(s8*)((char*)out + 8) = 0;
     }
 }
-#pragma dont_inline reset
 
 extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
