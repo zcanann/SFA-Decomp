@@ -225,11 +225,10 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     {
         if (object->objectId == ((SaveGameObjectPosition*)(walker + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
         {
-            SaveGameObjectPosition* slot =
-                (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET) + i;
-            object->x = slot->x;
-            object->y = slot->y;
-            object->z = slot->z;
+            SaveGameObjectPosition* slot = (SaveGameObjectPosition*)gSaveGameData + i;
+            object->x = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
+            object->y = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
+            object->z = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
             return 1;
         }
     }
