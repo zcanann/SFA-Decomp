@@ -157,7 +157,7 @@ void drakorhoverpad_initMain(int obj, void* desc)
     Flags377* g = (Flags377*)(p + 0x179);
     f32 v;
 
-    *(s16*)obj = (s16)(*(s8*)((char*)desc + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)desc + 0x18) << 8);
     ((DrakorHoverpadState*)p)->unk118 = (f32) * (s16*)((char*)desc + 0x1a);
     v = lbl_803E6A3C;
     ((DrakorHoverpadState*)p)->speed = v;
@@ -571,7 +571,7 @@ void drakorhoverpad_updateMain(int obj)
             {
                 yawDelta = 0x200;
             }
-            *(s16*)obj = (s16)(*(s16*)obj + yawDelta);
+            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + yawDelta);
             if (((GameObject*)obj)->anim.rotY != 0)
             {
                 c = ((GameObject*)obj)->anim.rotY;
@@ -593,7 +593,7 @@ void drakorhoverpad_updateMain(int obj)
         phase = sqrtf(curve->tangentX * curve->tangentX +
             curve->tangentZ * curve->tangentZ);
         yawDelta = (s16)((s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) -
-            *(s16*)obj);
+            ((GameObject*)obj)->anim.rotX);
         ((GameObject*)obj)->anim.rotY = getAngle(curve->tangentY, phase);
         if (yawDelta < -0x800)
         {
@@ -620,7 +620,7 @@ void drakorhoverpad_updateMain(int obj)
         {
             c = 0x100;
         }
-        *(s16*)obj = (s16)(*(s16*)obj + c);
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + c);
         c = ((GameObject*)obj)->anim.rotY;
         if (c < -0x64)
         {
@@ -956,7 +956,7 @@ void drakorhoverpad_func17(int obj, int sel, int* out)
     switch (sel)
     {
     case 2:
-        *out = *(s16*)obj;
+        *out = ((GameObject*)obj)->anim.rotX;
         break;
     case 3:
         *out = 0x1000;
