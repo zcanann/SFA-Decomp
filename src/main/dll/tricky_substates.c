@@ -1459,7 +1459,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
         }
         else
         {
-            if (trickyState[0x1ec] != 0)
+            if ((u32)trickyState[0x1ec] != 0)
             {
                 done = *(int*)&((GameObject*)obj)->extra;
                 if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
