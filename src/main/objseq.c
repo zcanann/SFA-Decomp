@@ -2349,7 +2349,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             lbl_803DD0C0 = lbl_803DD0C0 + 1;
             *(s16*)(entry + 0x2b38) = reps;
         }
-        ((ObjSeqState*)seq)->cmdCursor = ((ObjSeqState*)seq)->cmdCursor + *(s16*)(cmd + 2);
+        ((ObjSeqState*)seq)->cmdCursor += *(s16*)(cmd + 2);
         break;
     case 4:
         if (flag8 != 0)
@@ -3039,7 +3039,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 ((GameObject*)obj)->anim.localPosY +
                 ((((GameObject*)obj)->anim.localPosY - scratch[0]) - *(f32*)(model + 0xc));
         }
-        *(u16*)obj = *(s16*)obj + ((ObjSeqState*)seq)->heading;
+        *(s16*)obj += ((ObjSeqState*)seq)->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
