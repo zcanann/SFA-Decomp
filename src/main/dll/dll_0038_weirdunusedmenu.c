@@ -3,11 +3,14 @@
  * the title-menu link interface (gTitleMenuLinkInterface). Each tick,
  * WeirdUnusedMenu_run polls the interface for the current selection
  * (slot 0xC) and the pressed action (slot 0x14):
- *   - selection 1, action 0 / selection 0: leave the menu (load UI dll
- *     1, exit the cutscene, disable buttons) with a confirm sfx.
+ *   - selection 1, action 0: leave the menu (load UI dll 1, exit the
+ *     cutscene, disable buttons) with a confirm sfx.
+ *   - selection 0: leave the menu the same way, but with the cancel sfx
+ *     (SFX_MENU_CANCEL).
  *   - selection 1, action != 0: open the save flow - it sets a 0x1000
- *     flag on two menu widgets, plays the cancel sfx and starts the
- *     save countdown (phase lbl_803DD713 == 1, the saving phase).
+ *     flag on two menu widgets, plays the save/confirm sfx
+ *     (SFXqu_shortsob1) and starts the save countdown (phase
+ *     lbl_803DD713 == 1, the saving phase).
  * During the save phase it calls saveGame_save once, advances a frame
  * timer (lbl_803DD712) by timeDelta, and once the timer passes the
  * phase-timer limit (lbl_803E1DF0) clears the widget flags and returns
@@ -17,7 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/dll/debug/dimenu.h"
+#include "ghidra_import.h"
 
 /* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
 #define TITLEMENULINK_SETUP_WIDGETS 0x4
@@ -30,7 +33,7 @@
 /* set on both menu widgets while the save dialog is up */
 #define WIDGET_FLAG_SAVING 0x1000
 
-/* sfx played on the selection==0 (cancel/back) path; no SFXqu_ name in sfx_ids.h */
+/* sfx played on the selection==0 (cancel/back) path; 0x419 has no named entry in sfx_ids.h */
 #define SFX_MENU_CANCEL 0x419
 
 typedef struct WeirdMenuWork
@@ -42,28 +45,12 @@ typedef struct WeirdMenuWork
     u8 pad54[0x78 - 0x54]; /* 0x54-0x77: unknown, not touched here */
 } WeirdMenuWork;
 
-/*
- * FUN_8011daf8 / FUN_8011dafc are dimenu debug-code spillover compiled into
- * this unit (see dll_003A_dummy3a). FUN_8011dafc throttles a repeating action
- * via the signed countdown DAT_803de3a8, decremented each call by DAT_803dc070
- * (clamped to 3); on reaching zero it fires FUN_80053c98 on FUN_80006b84(1).
- * Names/types of these symbols are not established, so they stay as imported.
- */
-extern undefined8 FUN_80006b84();
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_80053c98();
 extern void saveGame_save();
-
-extern undefined4 DAT_803dc070;  /* per-tick countdown step (clamped to 3) */
-extern undefined4 DAT_803de3a8;  /* remaining countdown ticks */
-
 extern int* gTitleMenuLinkInterface;
 extern u32 gameTextGet(int textId);
-
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 extern void textureFree(u32);
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
@@ -79,37 +66,6 @@ extern u32 lbl_803DD720;       /* cached menu text handle; written at init, not 
 extern u32 lbl_8031AD98[];     /* widget layout descriptor */
 extern u32 textureLoadAsset(int);
 
-void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-}
-
-undefined4
-FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
-{
-    byte countdownStep;
-    undefined8 obj;
-
-    FUN_80017a98();
-    countdownStep = DAT_803dc070;
-    if (3 < DAT_803dc070)
-    {
-        countdownStep = 3;
-    }
-    if ((0 < DAT_803de3a8) && (DAT_803de3a8 = DAT_803de3a8 - countdownStep, DAT_803de3a8 < 1))
-    {
-        obj = FUN_80006b84(1);
-        FUN_80053c98(obj, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x60, 1, param_11,
-                     param_12, param_13, param_14, param_15, param_16);
-    }
-    return 0;
-}
-
 void WeirdUnusedMenu_render(void)
 {
 }
@@ -118,6 +74,7 @@ void WeirdUnusedMenu_frameEnd(void)
 {
 }
 
+/* scheduling stays off from here through release; peephole off covers run + release only */
 #pragma scheduling off
 #pragma peephole off
 int WeirdUnusedMenu_run(void)
@@ -194,6 +151,7 @@ void WeirdUnusedMenu_release(void)
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }
 
+/* peephole back on for initialise; scheduling remains off (never reset in this TU) */
 #pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {
