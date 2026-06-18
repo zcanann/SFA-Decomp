@@ -264,7 +264,7 @@ void arwingandrossstuff_update(int obj)
             state->despawnTimer = lbl_803E7028;
             ((GameObject*)obj)->anim.alpha = 0;
             projectileParticleFxFn_80099660(obj, lbl_803E701C, state->param0.particleKind);
-            if (*(int*)&state->light != 0)
+            if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);
                 state->light = 0;
