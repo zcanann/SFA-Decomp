@@ -539,6 +539,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     }
 }
 
+#pragma opt_common_subs off
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
@@ -546,6 +547,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
     int* pair;
     int setup;
     int handleOffset;
+    int ri;
     s16* ringIds;
 
     ringIdWords[0] = lbl_803E6450;
@@ -556,7 +558,8 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         return 0;
     }
 
-    handleOffset = (ringIndex & 0xff) * 8;
+    ri = ringIndex & 0xff;
+    handleOffset = ri * 8;
     handles = gSfxplayerEffectHandles;
     if (*(void**)((int)handles + handleOffset) == NULL)
     {
@@ -576,7 +579,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
             SFXPLAYER_MODE_SEQUENCE)
         {
             ringIds = (s16*)ringIdWords;
-            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8)ringIds[ringIndex & 0xff];
+            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8)ringIds[ri];
         }
         else
         {
@@ -614,6 +617,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     return 1;
 }
+#pragma opt_common_subs reset
 
 int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
