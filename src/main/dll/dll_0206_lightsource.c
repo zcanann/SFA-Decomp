@@ -1,11 +1,25 @@
-/* DLL 0x0206 (lightsource) — Light source and Arwing attachment objects [0x801F33B4-0x801F3C2C). */
-#include "main/audio/sfx_ids.h"
-#include "main/dll/laserbeamstate_struct.h"
-#include "main/dll/dll200state_struct.h"
+/*
+ * DLL 0x0206 (lightsource) — a placeable point-light / flame object.
+ *
+ * init builds a ModelLightStruct (objCreateLight), sets its kind/colour
+ * (from the lbl_802C2488 colour table indexed by fxType), distance
+ * attenuation, glow and projection radius, then primes the spark/fx
+ * timers.  update toggles the lit state on a priority hit (mode 1),
+ * latches the associated game bit, drives the per-frame particle fx
+ * (fn_80098B18) and spark spawns, ramps the glow brightness byte at
+ * light+0x2F9, and adds/removes the looping ambient sfx (0x72).  render
+ * queues the glow and draws the object; free releases the light.
+ *
+ * seqId 0x705/0x712 select the Arwing-mounted variant (no looped sfx,
+ * different light position and glow scale); seqId 0x717 takes the same
+ * zero-Y-offset fx path in update.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
 
+/* Light-glow object: the bytes named here (0x4C, 0x2F8) live in the
+   shared ModelLightStruct. */
 typedef struct LightsourceState
 {
     u8 pad0[0x4C - 0x0];
@@ -15,36 +29,8 @@ typedef struct LightsourceState
     u8 pad2F9[0x300 - 0x2F9];
 } LightsourceState;
 
-STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
-
-/* lightsource_getExtraSize == 0x1c.  LightSourceState lives in the shared
- * LGTpointlight header (same 0x206 DLL); this fragment's 0x0C timer is the
- * header's unk0C field. */
-
-STATIC_ASSERT(sizeof(Dll200State) == 0x28);
-
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined8 FUN_80006ba8();
-extern uint FUN_80006c00();
-extern undefined4 FUN_8001771c();
-extern uint FUN_80017a98();
-extern undefined4 ObjMsg_SendToObject();
-extern int FUN_800632f4();
-
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6A1C;
-extern f32 lbl_803E6A20;
-extern f32 lbl_803E6A24;
-extern f32 lbl_803E6A80;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 timeDelta;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
-extern int GameBit_Get(int id);
-extern int Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void* light);
 extern void GameBit_Set(int slot, int val);
 extern void* objCreateLight(void* obj, int);
@@ -72,144 +58,10 @@ extern f32 lbl_803E5E38;
 extern f32 lbl_803E5E3C;
 extern f32 lbl_803E5E40;
 
-void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
-{
-    char hitCount;
-    float surfaceY;
-    float fadeRange;
-    float landVelY;
-    int iface;
-    u8 activated;
-    float* hit;
-    uint flags;
-    int hitOff;
-    float landedSurface;
-    int hitIdx;
-    undefined2* state;
-    int hitList[3];
-
-    state = ((GameObject*)param_9)->extra;
-    iface = FUN_80017a98();
-    if (*(char*)((int)state + 5) == '\0')
-    {
-        activated = 0;
-        if (((*(byte*)&((GameObject*)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject*)param_9)->unkF8 == 0))
-        {
-            *state = 0;
-            state[1] = 0x28;
-            FUN_80006ba8(0, 0x100);
-            activated = 1;
-        }
-        *(u8*)((int)state + 5) = activated;
-        if (*(char*)((int)state + 5) != '\0')
-        {
-            *(u8*)(state + 3) = 1;
-        }
-        if (((GameObject*)param_9)->unkF8 == 0)
-        {
-            ObjHits_EnableObject(param_9);
-            *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.
-                resetHitboxMode & 0xf7;
-            ((GameObject*)param_9)->anim.velocityY = -(lbl_803E6A1C * lbl_803DC074 - ((GameObject*)param_9)->anim.
-                velocityY);
-            ((GameObject*)param_9)->anim.localPosY =
-                ((GameObject*)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosY;
-            iface = FUN_800632f4((double)((GameObject*)param_9)->anim.localPosX,
-                                 (double)((GameObject*)param_9)->anim.localPosY,
-                                 (double)((GameObject*)param_9)->anim.localPosZ, param_9, hitList, 0, 1);
-            landVelY = lbl_803E6A24;
-            fadeRange = lbl_803E6A20;
-            landedSurface = 0.0;
-            hitIdx = 0;
-            hitOff = 0;
-            if (0 < iface)
-            {
-                do
-                {
-                    hit = *(float**)(hitList[0] + hitOff);
-                    if (*(char*)(hit + 5) != '\x0e')
-                    {
-                        surfaceY = *hit;
-                        if ((((GameObject*)param_9)->anim.localPosY < surfaceY) &&
-                            ((surfaceY - fadeRange < ((GameObject*)param_9)->anim.localPosY || (hitIdx == 0))))
-                        {
-                            landedSurface = hit[4];
-                            ((GameObject*)param_9)->anim.localPosY = surfaceY;
-                            ((GameObject*)param_9)->anim.velocityY = landVelY;
-                        }
-                    }
-                    hitOff = hitOff + 4;
-                    hitIdx = hitIdx + 1;
-                    iface = iface + -1;
-                }
-                while (iface != 0);
-            }
-            if (landedSurface != 0.0)
-            {
-                iface = *(int*)((int)landedSurface + 0x58);
-                hitCount = *(char*)(iface + 0x10f);
-                *(char*)(iface + 0x10f) = hitCount + '\x01';
-                *(uint*)(iface + hitCount * 4 + 0x100) = param_9;
-            }
-        }
-    }
-    else
-    {
-        ObjHits_DisableObject(param_9);
-        *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
-            8;
-        flags = FUN_80006c00(0);
-        if ((flags & 0x100) != 0)
-        {
-            *(u8*)(state + 3) = 0;
-            FUN_80006ba8(0, 0x100);
-        }
-        if (((GameObject*)param_9)->unkF8 == 1)
-        {
-            *(u8*)((int)state + 5) = 2;
-        }
-        if ((*(char*)((int)state + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
-        {
-            *(u8*)((int)state + 5) = 0;
-            *(u8*)(state + 3) = 0;
-        }
-        if (*(char*)(state + 3) != '\0')
-        {
-            ObjMsg_SendToObject(iface, 0x100008, param_9, CONCAT22(state[1], *state));
-        }
-    }
-    return;
-}
-
-void FUN_801f2b94(short* obj)
-{
-    int iface;
-    double dist;
-
-    if (*(char*)(*(int*)(obj + 0x5c) + 0xc) == '\x02')
-    {
-        *obj = *obj + 0x32;
-    }
-    iface = FUN_80017a98();
-    dist = (double)FUN_8001771c((float*)(iface + 0x18), (float*)(obj + 0xc));
-    if ((double)lbl_803E6A80 <= dist)
-    {
-        FUN_8000680c((int)obj, 0x40);
-    }
-    else
-    {
-        FUN_80006824((uint)obj,SFXmn_eggylaugh216);
-    }
-    return;
-}
-
 void lightsource_hitDetect(void)
 {
 }
 
-int dll_1FF_getExtraSize_ret_8(void);
 int lightsource_getExtraSize(void) { return 0x1c; }
 int lightsource_getObjectTypeId(void) { return 0x1; }
 
@@ -227,8 +79,6 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-int dll_1FF_getObjectTypeId(int* obj);
-
 void lightsource_free(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -239,23 +89,6 @@ void lightsource_free(int obj)
     }
 }
 
-/* dll_1FF_render: when obj->_f8 implies
- * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
- * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-
-void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
-
-/* dll_200_render: when visible != 0 and
- * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
- * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-
-/* dll_200_init: write a function pointer
- * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
- * fixed bytes, the three float position-quaternion from arg+8/c/10,
- * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
-#pragma opt_strength_reduction off
-
 #pragma opt_strength_reduction off
 
 typedef struct LightSourceFlagByte
@@ -265,16 +98,12 @@ typedef struct LightSourceFlagByte
 
 void lightsource_update(int obj)
 {
-    extern void*Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int id);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     extern f32 timeDelta;
-    extern f32 lbl_803E5E08;
-    extern f32 lbl_803E5E0C;
-    extern f32 lbl_803E5E10;
     extern f32 lbl_803E5E14;
     extern f32 lbl_803E5E18;
     extern f32 lbl_803E5E1C;
@@ -396,10 +225,6 @@ void lightsource_update(int obj)
     }
 }
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_strength_reduction reset
 #pragma opt_strength_reduction reset
 
 typedef struct LightColorTable
@@ -504,20 +329,11 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),
-                (int)
-            (lbl_803E5E34 * (f32)(u32)
-            colors.c[colorBase + 1]
-            )
-            ,
-            (int)
-            (lbl_803E5E34 * (f32)(u32)
-            colors.c[colorBase + 2]
-            )
-            ,
-            0xff
-            )
-            ;
+            modelLightStruct_setDiffuseTargetColor(state->light,
+                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),
+                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 1]),
+                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 2]),
+                                                   0xff);
             lightSetField4D(state->light, 1);
 
             if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW)
@@ -561,5 +377,3 @@ void lightsource_release(void)
 void lightsource_initialise(void)
 {
 }
-
-void wmworm_hitDetect(void);
