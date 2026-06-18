@@ -50,7 +50,7 @@ extern f32 lbl_803E2FC0;
 extern const f32 lbl_803E2FC4;
 extern f32 sqrtf(f32 x);
 
-void tumbleweed_updateRollingMotion(short* obj, int state)
+void tumbleweed_updateRollingMotion(int obj, int state)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
     int hitCount;
@@ -65,7 +65,7 @@ void tumbleweed_updateRollingMotion(short* obj, int state)
     hitList[0] = (undefined4*)0x0;
     bestDy = lbl_803E2F78;
     hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, (int)obj, (int*)hitList, 0, 0);
+                                 ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
     bestHit = 0;
     hitEntry = hitList[0];
     for (i = 0; i < hitCount; i++)
@@ -110,17 +110,17 @@ void tumbleweed_updateRollingMotion(short* obj, int state)
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
     hitCount = (int)((f32)(int) * (s16*)(state + 0x27c) * timeDelta + (f32)(int)
-    obj[2]
+    ((short*)obj)[2]
     )
     ;
-    obj[2] = (short)hitCount;
+    ((short*)obj)[2] = (short)hitCount;
     hitCount = (int)((f32)(int) * (s16*)(state + 0x27e) * timeDelta + (f32)(int)
-    obj[1]
+    ((short*)obj)[1]
     )
     ;
-    obj[1] = (short)hitCount;
-    hitCount = (int)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * obj);
-    *obj = (short)hitCount;
+    ((short*)obj)[1] = (short)hitCount;
+    hitCount = (int)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (short*)obj);
+    *(short*)obj = (short)hitCount;
     if (hitList[0] != (undefined4*)0x0)
     {
         if (lbl_803E2F60 + *(float*)hitList[0][bestHit] < ((GameObject*)obj)->anim.localPosY)
@@ -130,7 +130,7 @@ void tumbleweed_updateRollingMotion(short* obj, int state)
         else
         {
             ((GameObject*)obj)->anim.localPosY = lbl_803E2F60 + *(float*)hitList[0][bestHit];
-            if (obj[0x23] == 0x3fb)
+            if (((short*)obj)[0x23] == 0x3fb)
             {
                 uval = randomGetRange(0x8c, 0xb4);
                 ((GameObject*)obj)->anim.velocityY =
@@ -159,11 +159,11 @@ void tumbleweed_updateRollingMotion(short* obj, int state)
             }
             if (0x10 < bestHit)
             {
-                Sfx_PlayFromObject((int)obj, SFXsc_gethit02);
+                Sfx_PlayFromObject(obj, SFXsc_gethit02);
                 uval = randomGetRange(0, 5);
                 if ((uval == 0) && ((*(byte*)(state + 0x27a) & 8) != 0))
                 {
-                    Sfx_PlayFromObject((int)obj, SFXsc_gethit03);
+                    Sfx_PlayFromObject(obj, SFXsc_gethit03);
                 }
             }
         }
