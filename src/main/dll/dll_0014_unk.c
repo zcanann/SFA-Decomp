@@ -1304,7 +1304,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
         typeIndex = 0;
         do
         {
-            if ((curve->type == curveTypes[typeIndex]) || (typeCount < 1))
+            if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0))
             {
                 dx = curve->x - ((GameObject*)obj)->anim.localPosX;
                 dy = curve->y - ((GameObject*)obj)->anim.localPosY;
