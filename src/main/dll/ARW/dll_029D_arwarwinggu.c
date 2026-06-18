@@ -188,10 +188,13 @@ void fn_8022F270(int obj, int textureFrame)
 #pragma peephole off
 void fn_8022F27C(int obj)
 {
+    int model;
+    ObjTextureRuntimeSlot* texture;
     ArwingGuState* state = ((GameObject*)obj)->extra;
-    int model = Obj_GetActiveModel(obj);
-    ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
-    int anim = ObjModel_GetTexture(*(int*)model, 0);
+    int anim;
+    model = Obj_GetActiveModel(obj);
+    texture = objFindTexture((void*)obj, 0, 0);
+    anim = ObjModel_GetTexture(*(int*)model, 0);
     fn_800541A4(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, (int)state, (int)texture);
 }
