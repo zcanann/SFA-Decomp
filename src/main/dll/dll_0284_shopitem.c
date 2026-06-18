@@ -1,40 +1,42 @@
+/*
+ * shopitem (DLL 0x284) - a purchasable item displayed at a shopkeeper's
+ * stall. Each instance finds its nearest vendor object (ObjGroup kind 9)
+ * and drives buying through the vendor's vtable: query availability/price
+ * (slots 0x28/0x2C/0x38/0x3C) and commit a purchase (slot 0x40) when the
+ * player presses A with enough money. The behaviour branches on the
+ * object's seqId variant:
+ *   0x462  spawns an ambient particle fx on init
+ *   0x464  static item (no spline advance)
+ *   0x467  item that rides a B-spline path (Curve_EvalBSpline) with a
+ *          trailing particle stream
+ *   0x468  sparkle/lightning item with a custom post-render pass
+ *          (fn_801E83B0) and ObjGroup membership 0x4F
+ * Help text and the A-button buy prompt are raised from the per-frame
+ * resetHitboxMode interaction bits.
+ */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct ShopitemState
+typedef struct ShopSparkleSpawn
 {
-    u8 pad0[0x88 - 0x0];
-    s16 unk88;
-    u8 pad8A[0xEC - 0x8A];
-} ShopitemState;
-
-typedef struct ShopitemPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} ShopitemPlacement;
+    f32 x;
+    f32 y;
+    f32 z;
+    int owner;
+    u8 pad[0x28]; /* opaque scratch passed by address to lightningCreate */
+} ShopSparkleSpawn;
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
-
 extern void objRenderFn_8003b8f4(f32);
-
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
@@ -73,47 +75,15 @@ extern void lightningRender(void);
 extern int getHudHiddenFrameCount(void);
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
-
-undefined4 FUN_801e76a0(int obj)
-{
-    uint bit;
-    undefined4 result;
-    int target;
-
-    target = *(int*)&((GameObject*)obj)->extra;
-    bit = GameBit_Get(0xcef);
-    if (bit == 0)
-    {
-        result = 0;
-    }
-    else
-    {
-        bit = GameBit_Get(0xad3);
-        if (bit == 0)
-        {
-            GameBit_Set(0xad3, 1);
-            target = *(int*)(target + 0x9b4);
-            (**(code**)(**(int**)&((GameObject*)target)->anim.dll + 0x24))(target, 1, 2);
-        }
-        result = 2;
-    }
-    return result;
-}
-
-void fn_801E7DC8(int p1, int p2, int count);
+extern void fn_801E8660(int obj);
+extern void fn_801F4D54(int obj, int sub);
+extern void fn_801F4ECC(int obj, int sub);
+extern int getAngle(f32 a, f32 b);
 
 #pragma scheduling off
 #pragma peephole off
 int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
 {
-    extern void fn_801E8660(int obj);
-    extern void fn_801F4D54(int obj, int sub);
-    extern void fn_801F4ECC(int obj, int sub);
-    extern f32 Curve_EvalBSpline(int p, f32 t, int m);
-    extern int getAngle(f32 a, f32 b);
-    extern f32 lbl_803E5A30;
-    extern f32 lbl_803E5A60;
-    extern f32 timeDelta;
     int sub = *(int*)&((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
 
@@ -128,7 +98,7 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
 
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 1127:
+    case 0x467:
         {
             f32 t = ((ShopItemState*)sub)->splineT;
             if (t > lbl_803E5A30)
@@ -166,8 +136,6 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
     return 0;
 }
 
-void shopkeeper_hitDetect(void);
-
 void shopitem_hitDetect(void)
 {
 }
@@ -180,16 +148,12 @@ void shopitem_initialise(void)
 {
 }
 
-void spscarab_render(void);
-
-int shopitem_getExtraSize(void) { return 0xec; }
+int shopitem_getExtraSize(void) { return sizeof(ShopItemState); }
 int shopitem_getObjectTypeId(void) { return 0x0; }
-int spscarab_getExtraSize(void);
 
 void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible;
-    if (v != 0)
+    if (visible != 0)
     {
         if (((GameObject*)obj)->anim.seqId == 0x468)
         {
@@ -228,8 +192,6 @@ void fn_801E832C(int obj)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-void shopkeeper_initialise(void);
-
 void shopitem_init(int obj, int data)
 {
     ObjAnimComponent* objAnim;
@@ -260,8 +222,6 @@ void shopitem_init(int obj, int data)
         break;
     }
 }
-
-void shopkeeper_init(int obj);
 
 void fn_801E8660(int obj)
 {
@@ -299,11 +259,11 @@ void shopitem_update(int obj)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if (b->flag_80)
     {
-        ((ShopitemState*)state)->unk88 = -1;
+        ((ShopItemState*)state)->msgParam = -1;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void*)(state + 0x88));
         b->flag_80 = 0;
         b->flag_40 = 1;
@@ -318,34 +278,34 @@ void shopitem_update(int obj)
             if ((u32)item != 0)
             {
                 if ((*(int (**)(int, int))((char*)**(int***)(item + 0x68) + 0x28))(
-                        item, ((ShopitemPlacement*)def)->unk19) == 0
+                        item, *(u8*)(def + 0x19)) == 0
                     || (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x2C))(
-                        ((ShopItemState*)state)->vendorObj, ((ShopitemPlacement*)def)->unk19) != 0)
+                        ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19)) != 0)
                 {
                     b->flag_40 = 1;
                     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 ((ShopItemState*)state)->helpTextId = (s16)(
                     *(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopitemPlacement*)def)->unk19);
+                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
             }
         }
         else
         {
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4)
+            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
             {
                 forceAButtonIcon(0x12);
                 showHelpText(((ShopItemState*)state)->helpTextId);
             }
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 money = playerGetMoney(player);
                 price = (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x38))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopitemPlacement*)def)->unk19);
+                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
                 (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x40))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopitemPlacement*)def)->unk19);
+                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
                 switch (((GameObject*)obj)->anim.seqId)
                 {
                 case 0x467:
@@ -407,35 +367,19 @@ void shopitem_update(int obj)
         {
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5A60, timeDelta, NULL);
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 8) == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
         {
             objRenderFn_80041018(obj);
         }
     }
 }
 
-typedef struct ShopSparkleSpawn
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    int owner;
-    u8 pad[0x28];
-} ShopSparkleSpawn;
-
-typedef struct PushcartStateE8
-{
-    u8 flag_80 : 1;
-    u8 flag_40 : 1;
-    u8 _rest : 6;
-} PushcartStateE8;
-
 void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     u8 spawned = 0;
     ShopSparkleSpawn v;
-    PushcartStateE8* b = (PushcartStateE8*)(state + 0xE8);
+    PushcartState97* b = (PushcartState97*)(state + 0xE8);
     u8 i;
     int slot;
     f32 scale;
