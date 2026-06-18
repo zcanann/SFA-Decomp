@@ -982,10 +982,6 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
     void* curve;
     void* linkedCurve;
     u8 routeFlags;
-    f32 dx;
-    f32 dz;
-    f32 dx2;
-    f32 dz2;
     f32 cx;
     f32 cz;
     f32* p;
@@ -1030,12 +1026,14 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
 
         cz = ((ObjfsaRomCurveDef*)curve)->z;
         p = *(f32**)&((TrickyState*)state)->unk28;
-        dz = p[2] - cz;
         cx = ((ObjfsaRomCurveDef*)curve)->x;
-        dx = p[0] - cx;
-        dx2 = ((GameObject*)obj)->anim.worldPosX - cx;
-        dz2 = ((GameObject*)obj)->anim.worldPosZ - cz;
-        score = dz * dz + (dx * dx + (dx2 * dx2 + dz2 * dz2));
+        {
+            f32 sq0 = (p[2] - cz) * (p[2] - cz);
+            f32 sq1 = (p[0] - cx) * (p[0] - cx);
+            f32 sq2 = (((GameObject*)obj)->anim.worldPosX - cx) * (((GameObject*)obj)->anim.worldPosX - cx);
+            f32 sq3 = (((GameObject*)obj)->anim.worldPosZ - cz) * (((GameObject*)obj)->anim.worldPosZ - cz);
+            score = sq0 + (sq1 + (sq2 + sq3));
+        }
         if (score < bestDistances[7])
         {
             for (j = 0; j < 4; j++)
