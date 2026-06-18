@@ -810,7 +810,7 @@ int hightop_stateHandler04(int obj, int p)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = GameBit_Get(0x9c9) + GameBit_Get(0x9c7) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
+    count = GameBit_Get(0x9c7) + GameBit_Get(0x9c9) + GameBit_Get(0x9cb) + GameBit_Get(0x9cd);
     if (GameBit_Get(0x62b) != 0)
     {
         HighTopRuntime* state2;
