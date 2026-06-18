@@ -1,18 +1,26 @@
+/*
+ * barrelgener (DLL 0x282) - the barrel generator/dispenser object.
+ *
+ * Object-group member 0x3a. On init it joins that group and clears its
+ * release state. When the player approaches within range it fires
+ * trigger sequence 1 (once, gated by game bit 0xADB). A queued barrel
+ * (barrelgener_queueObjectRelease, called from the gunpowder-barrel DLL)
+ * is held until its release timer elapses: the dispense animation plays
+ * with a PDA camera-off sfx, a compass beep fires partway through, and at
+ * timer end the queued barrel is teleported to this object's position,
+ * zeroed in velocity, and added to its own update group (25).
+ *
+ * The rest of the TU is a shared curve-following / steering / voxel
+ * line-trace toolkit consumed by the Drakor-area and ArwingSquadron DLLs
+ * (Obj_UpdateRomCurveFollowVelocity[Indexed], Obj_SteerVelocityTowardVector,
+ * Obj_SmoothTurnAnglesTowardVelocity, the lightning-spawn helper, and the
+ * voxmaps_trace* world-line wrappers).
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/barrelgener_state.h"
-#include "main/dll/curve_walker.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-
-typedef struct ObjUpdateRomCurveFollowVelocityIndexedState
-{
-    u8 pad0[0x28C - 0x0];
-    f32 unk28C;
-    f32 unk290;
-    u8 pad294[0x298 - 0x294];
-} ObjUpdateRomCurveFollowVelocityIndexedState;
-
 
 typedef struct ObjUpdateRomCurveFollowVelocityState
 {
@@ -21,6 +29,9 @@ typedef struct ObjUpdateRomCurveFollowVelocityState
     f32 unk290;
     u8 pad294[0x298 - 0x294];
 } ObjUpdateRomCurveFollowVelocityState;
+
+#define BARRELGENER_OBJGROUP 0x3a
+#define GAMEBIT_BARRELGENER_TRIGGERED 0xadb
 
 int barrelgener_getLinkId(int obj)
 {
@@ -42,7 +53,7 @@ int barrelgener_getExtraSize(void) { return 0x10; }
 
 int barrelgener_getObjectTypeId(void) { return 0; }
 
-void barrelgener_free(int obj) { ObjGroup_RemoveObject(obj, 0x3a); }
+void barrelgener_free(int obj) { ObjGroup_RemoveObject(obj, BARRELGENER_OBJGROUP); }
 
 void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -60,7 +71,7 @@ void barrelgener_init(int obj)
 {
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
 
-    ObjGroup_AddObject(obj, 0x3a);
+    ObjGroup_AddObject(obj, BARRELGENER_OBJGROUP);
     state->releaseAnimPlaying = 0;
     state->queuedObject = NULL;
     storeZeroToFloatParam(&state->releaseTimer);
@@ -79,12 +90,12 @@ void barrelgener_update(int obj)
     BarrelGeneratorState* state = ((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
-    if ((u32)GameBit_Get(0xadb) == 0)
+    if ((u32)GameBit_Get(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
     {
         if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            GameBit_Set(0xadb, 1);
+            GameBit_Set(GAMEBIT_BARRELGENER_TRIGGERED, 1);
         }
     }
     if (fn_80080150((int)&state->releaseTimer) != 0)
@@ -101,7 +112,7 @@ void barrelgener_update(int obj)
             if (Obj_IsObjectAlive((int)state->queuedObject) != 0)
             {
                 GameObject* releasedBarrel = state->queuedObject;
-                f32 c2c;
+                f32 releaseVelocity;
                 releasedBarrel->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
                 releasedBarrel->anim.localPosY = ((GameObject*)obj)->anim.localPosY;
                 releasedBarrel->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
@@ -111,10 +122,10 @@ void barrelgener_update(int obj)
                 releasedBarrel->anim.worldPosX = releasedBarrel->anim.localPosX;
                 releasedBarrel->anim.worldPosY = releasedBarrel->anim.localPosY;
                 releasedBarrel->anim.worldPosZ = releasedBarrel->anim.localPosZ;
-                c2c = lbl_803E6C2C;
-                releasedBarrel->anim.velocityZ = c2c;
-                releasedBarrel->anim.velocityY = c2c;
-                releasedBarrel->anim.velocityX = c2c;
+                releaseVelocity = lbl_803E6C2C;
+                releasedBarrel->anim.velocityZ = releaseVelocity;
+                releasedBarrel->anim.velocityY = releaseVelocity;
+                releasedBarrel->anim.velocityX = releaseVelocity;
                 ObjGroup_AddObject((int)state->queuedObject, 25);
                 state->queuedObject = NULL;
             }
@@ -272,8 +283,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
-        ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk290 = scale * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityIndexedState*)state2)->unk28C = scale * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
     else
     {
@@ -298,7 +309,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int fn_80221978(int obj, void** entries, int count, void** light, f32 intensity)
+int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light, f32 intensity)
 {
     int i;
     int spawned;
@@ -370,8 +381,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     f32 dist;
     int tmp;
 
-    rate = timeDelta / (f32)(u32)(u16)
-    c;
+    rate = timeDelta / (f32)(u32)(u16)c;
     if (rate > lbl_803E6C6C)
     {
         rate = lbl_803E6C6C;
@@ -434,7 +444,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 }
 
 #pragma opt_loop_invariants off
-int fn_80221C18(int obj, f32 dt, int p3, int p4)
+int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
 {
     f32 pos[3];
     f32 step[3];
