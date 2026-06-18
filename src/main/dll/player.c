@@ -16731,7 +16731,8 @@ void fn_802ADE80(int obj, int inner, int state)
     int loopCount;
     int i;
 
-    angle = *(f32*)((char*)inner + 0x83c) +
+    angle = *(f32*)((char*)inner + 0x83c);
+    angle = angle +
         mathSinf(lbl_803E7F94 * (f32)(u32) * (u16*)((char*)inner + 0x89c) / lbl_803E7F98);
     *(s16*)((char*)inner + 0x89c) =
         lbl_803E8114 * timeDelta + (f32)(u32) * (u16*)((char*)inner + 0x89c);
