@@ -165,15 +165,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         dz = z1 - z0;
         if (((state->flags & 1) != 0) && ((state->flags & 2) == 0))
         {
-            slotPtr = &state->slots[2];
             for (i = 2; i < 10; i += 2)
             {
-                if ((u32) * slotPtr == 0)
+                if ((u32)state->slots[i] == 0)
                 {
                     state->pending[i] = 1;
                     break;
                 }
-                slotPtr += 2;
             }
             if (i >= 10)
             {
@@ -182,15 +180,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         if (((state->flags & 4) != 0) && ((state->flags & 8) == 0))
         {
-            slotPtr = &state->slots[1];
             for (i = 1; i < 10; i += 2)
             {
-                if ((u32) * slotPtr == 0)
+                if ((u32)state->slots[i] == 0)
                 {
                     state->pending[i] = 1;
                     break;
                 }
-                slotPtr += 2;
             }
             if (i >= 10)
             {
