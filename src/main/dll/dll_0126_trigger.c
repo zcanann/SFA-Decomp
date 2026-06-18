@@ -1022,8 +1022,8 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
                         else if (0x4a < seqType)
                         {
                             allSet = true;
-                            if (((int)((TriggerState*)state)->unk82 != 0xffffffff) &&
-                                (mode = FUN_80017690((int)((TriggerState*)state)->unk82), mode == 0))
+                            if (((int)*(short*)(state + 0x82) != 0xffffffff) &&
+                                (mode = FUN_80017690((int)*(short*)(state + 0x82)), mode == 0))
                             {
                                 allSet = false;
                             }
@@ -1194,9 +1194,11 @@ void Trigger_init(u8* obj, u8* params)
     sub[0] = (u8)(sub[0] | 0x40);
 }
 
+void cloudprisoncontrol_free(void);
 
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
+int cloudprisoncontrol_getExtraSize(void);
 
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).
@@ -1539,7 +1541,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if (tbl != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
@@ -1551,7 +1554,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x16:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if (tbl != NULL)
                     {
                         for (; *tbl != -1; tbl++)
                         {
@@ -1887,7 +1891,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->unk82 != -1 && (u32)GameBit_Get(((TriggerState*)state)->unk82) == 0)
+                    if (((TriggerState*)state)->unk82 != -1 && (u32)GameBit_Get(((TriggerState*)state)->unk82) == 0u)
                     {
                         ok2 = 0;
                     }
@@ -1898,7 +1902,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->unk8 = *(int*)&((TriggerState*)state)->unk8 + framesThisStep;
-                    if (((TriggerState*)state)->unk8 >= (u32)((TriggerPlacement*)def)->unk46)
+                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->unk8)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
@@ -1906,11 +1910,8 @@ void Trigger_hitDetect(int obj)
                 case 0x4d:
                     if (ok)
                     {
-                        {
-                            int extra = *(int*)&((GameObject*)obj)->extra;
-                            r1 = fn_80198B68(obj, extra + 0x28);
-                            r2 = fn_80198B68(obj, extra + 0x1c);
-                        }
+                        r1 = fn_80198B68(obj, (int)state + 0x28);
+                        r2 = fn_80198B68(obj, (int)state + 0x1c);
                         if (r1 != 0)
                         {
                             if (r2 == 0)
@@ -1922,13 +1923,13 @@ void Trigger_hitDetect(int obj)
                                 objInterpretSeq(obj, target, 2, 0);
                             }
                         }
-                        else if (r2 != 0)
+                        else if (r2 == 0)
                         {
-                            objInterpretSeq(obj, target, -1, 0);
+                            objInterpretSeq(obj, target, -2, 0);
                         }
                         else
                         {
-                            objInterpretSeq(obj, target, -2, 0);
+                            objInterpretSeq(obj, target, -1, 0);
                         }
                     }
                     break;
@@ -1945,14 +1946,14 @@ void Trigger_hitDetect(int obj)
                     p8 = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(p8 + 0x82) != -1 && (u32)GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
+                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
                         {
                             ok = 0;
                         }
                         p8 += 2;
                         i++;
                     }
-                    if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
+                    if (ok && (s8)state[0x8a] >= 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
                         objInterpretSeq(obj, t, 1, 0);
