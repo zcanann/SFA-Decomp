@@ -101,7 +101,11 @@ extern u8 lbl_803DBA91;
 extern int saveScoreFn_800e88b4(u8, u8, int, s32);
 extern int getSaveFileName(void);
 extern void* Obj_GetPlayerObject(void);
-extern u8 coordsToMapCell(f32, f32);
+extern int coordsToMapCell(f32, f32);
+extern u8 lbl_803A9440[0x18];
+extern u8 hudTextures[0x198];
+extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u);
+extern void gameTextSetColor(int r, int g, int b, int a);
 extern u8 lbl_8031B050[9];
 extern u8 lbl_803DD77A;
 extern u8 lbl_803DD77B;
@@ -425,6 +429,32 @@ extern int lbl_803DD744;
 extern int lbl_803DD740;
 extern int airMeter;
 
+/* Hoisted from per-function bodies (formerly #57 block-scope externs) so each
+ * symbol is declared exactly once with a single consistent type. */
+extern int Sfx_PlayFromObject(s32, s32);
+extern void cutsceneFadeInOut(s32);
+extern void Music_Trigger(s32, s32);
+extern void buttonDisable(s32, u32);
+extern u32 getButtonsJustPressed(s32);
+extern u32 getButtonsHeld(s32);
+extern u32 GameBit_Get(u32);
+extern int GameBit_Set(u32 eventId, u32 value);
+extern int objIsCurModelNotZero();
+extern s8 padGetCX(s32 chan);
+extern void* getArwing(void);
+extern u8 cMenuState;
+extern u8 cMenuOpen;
+extern s8 gCMenuScriptedInput;
+extern u16 yButtonState;
+extern u32 gCMenuButtons;
+extern s8 gCMenuCloseSfx;
+extern void* gameTextGetBox(s32);
+extern void* gameTextGetPhrase(s32, s32);
+extern void gameTextAppendStr(void*, s32);
+extern int cMenuSetItems(int handle, int flag);
+extern void* textureLoadAsset(int id);
+extern void* fn_802972A8(void* player);
+
 void fn_80129FB0(void)
 {
     fn_8000F478(0);
@@ -562,8 +592,7 @@ s16 GameUI_func0D(void)
  * (lbz; extsb; blr). */
 s32 CMenu_GetState(void)
 {
-    extern s8 cMenuState; /* #57 */
-    return cMenuState;
+    return *(s8*)&cMenuState;
 }
 
 /* EN v1.0 0x8012EB08  size: 28b  Three s16 UI setters. */
@@ -579,7 +608,6 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
  * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
 void GameUI_unselectAllItems(void)
 {
-    extern u8 gCMenuCloseSfx; /* #57 */
     register int* p;
     p = (int*)gCMenuSections;
     while (*(void**)p != NULL)
@@ -660,7 +688,6 @@ void viewFn_80129c74(void)
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
 void timeListFn_8012df14(void)
 {
-    extern void cutsceneFadeInOut(s32); /* #57 */
     lbl_803DD75B = 1;
     (*gCameraInterface)->loadTriggeredCamAction(1, 0x94, 1);
     cutsceneFadeInOut(1);
@@ -679,9 +706,6 @@ void timeListFn_8012df14(void)
  * was suppressed. */
 void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
-    extern void cutsceneFadeInOut(s32); /* #57 */
-    extern u8 lbl_803A9440[0x18]; /* #57 */
-    extern void* gameTextGetBox(s32); /* #57 */
     if (id == -1) return;
     if (curGameText != 0xFFFF) return;
     gameTextGetBox(0x7c);
@@ -719,7 +743,6 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
  * latch the s32 fade_target at lbl_803DBA60. */
 void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 {
-    extern u32 GameBit_Get(u32); /* #57 */
     if (flags & 0x08)
     {
         lbl_803DD77A = idx;
@@ -788,11 +811,6 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 #pragma dont_inline on
 void timeListFn_8012be84(void)
 {
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
-    extern void cutsceneFadeInOut(s32); /* #57 */
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
-    extern int GameBit_Set(u32 eventId, u32 value); /* #57 */
     s32 buttons;
     u8 prev_state;
     u8 buf[16];
@@ -853,7 +871,6 @@ void timeListFn_8012be84(void)
 #pragma dont_inline on
 int pauseMenuIsFox(void)
 {
-    extern int objIsCurModelNotZero(void); /* #57 */
     void* s;
     void* inner;
     u8 lookup;
@@ -892,8 +909,6 @@ int pauseMenuIsFox(void)
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 int registerNewScore(s8 a, int b, u8 c, int mode)
 {
-    extern void cutsceneFadeInOut(s32); /* #57 */
-    extern void Music_Trigger(s32, s32); /* #57 */
     lbl_803DBA91 = (u8)saveScoreFn_800e88b4(a, c == 0xa, b, getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1)
     {
@@ -962,8 +977,6 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 #pragma dont_inline on
 void pauseMenuInit(void)
 {
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
-    extern void Music_Trigger(s32, s32); /* #57 */
     void* obj = Obj_GetPlayerObject();
     int i = 0;
 
@@ -1027,11 +1040,6 @@ void pauseMenuInit(void)
 #pragma dont_inline on
 void npcTalkFn_8012e880(void)
 {
-    extern u32 gCMenuButtons; /* #57 */
-    extern void cutsceneFadeInOut(s32); /* #57 */
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
-    extern u8 lbl_803A9440[0x18]; /* #57 */
     Obj_GetPlayerObject();
     if ((s8)lbl_803DD7A8 != 0)
     {
@@ -1180,10 +1188,6 @@ void perspectiveFn_80129db4(void)
  */
 void pauseMenuDrawText(void)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void gameTextAppendStr(void*, s32); /* #57 */
-    extern void* gameTextGetPhrase(s32, s32); /* #57 */
-    extern void* gameTextGetBox(s32); /* #57 */
     s16 target;
     int saved;
     void* handle;
@@ -1252,8 +1256,6 @@ void pauseMenuDrawText(void)
  * offsets toward the next cell, clamping when the tween crosses zero. */
 int pauseMenuGridFn_8012b4c4(void)
 {
-    extern s8 padGetCX(s32 chan); /* #57 */
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
     int ret = 0;
     s8 cx = padGetCX(0);
     s8 dir;
@@ -1321,8 +1323,6 @@ int pauseMenuGridFn_8012b4c4(void)
  * close SFX and kicks the menu-item exit animations. */
 void pauseMenuFn_8012b77c(void)
 {
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
     u32 btn = (u16)getButtonsJustPressed(0);
     f32 speed = lbl_803DD764;
     f32 v = speed * timeDelta + lbl_803DD760;
@@ -1374,8 +1374,6 @@ void pauseMenuFn_8012b77c(void)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u); /* #57 */
     s8 idx;
     s8 j;
     int alpha;
@@ -1433,7 +1431,6 @@ void boxDrawFn_8012975c(void)
  * lights the task-progress pips according to the current hint text level. */
 void fn_80128120(int unused, int p2)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
     s16 n = 0xc8 - lbl_803DD75C;
     int v;
     u8 level;
@@ -1473,8 +1470,6 @@ void fn_80128120(int unused, int p2)
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
 void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u); /* #57 */
     drawTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
     drawScaledTexture(*(void**)(hudTextures + 0x34), (f32)x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
     drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, alpha, 0x100, 5, h, 0);
@@ -1494,7 +1489,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 #pragma dont_inline on
 void drawWorldMapHud(void)
 {
-    extern u32 GameBit_Get(u32); /* #57 */
     u16 raw = lbl_803DD776;
     s16 sv = (s16)raw;
 
@@ -1630,9 +1624,6 @@ void drawWorldMapHud(void)
  * best-time entries with a pulsing header. */
 void timeListDraw(void)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u); /* #57 */
-    extern u32 GameBit_Get(u32); /* #57 */
     u16 bits[6] = {0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8};
     char buf[0x24];
 
@@ -1706,9 +1697,6 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u); /* #57 */
-    extern void* gameTextGetBox(s32); /* #57 */
     s16 x, y, w, h;
     u8* box = gameTextGetBox(0x36);
     int pulse;
@@ -1774,10 +1762,6 @@ void highScoreScreenDraw(int p1, int p2, int p3)
  * voiceover scheduling, selection SFX, and title refresh. */
 void pauseMenuRunSubmenu(u8 p1)
 {
-    extern u32 gCMenuButtons; /* #57 */
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
     s8 sel = -1;
     u8 valid = 0;
     u32 btn = getButtonsJustPressed(0);
@@ -1946,17 +1930,6 @@ void pauseMenuRunSubmenu(u8 p1)
 #pragma dont_inline on
 void cMenuRun(void)
 {
-    extern u16 yButtonState; /* #57 */
-    extern u8 gCMenuScriptedInput; /* #57 */
-    extern u32 gCMenuButtons; /* #57 */
-    extern s8 cMenuState; /* #57 */
-    extern u8 cMenuOpen; /* #57 */
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
-    extern u8 gCMenuCloseSfx; /* #57 */
-    extern int cMenuSetItems(int handle, int flag); /* #57 */
-    extern u32 GameBit_Get(u32); /* #57 */
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
     s8 isTricky = 0;
@@ -2347,7 +2320,6 @@ void fn_80128A7C(u8 i, int p2, int p3);
 #pragma opt_common_subs off
 void fn_80128470(int p1)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
@@ -2470,9 +2442,6 @@ void fn_80128470(int p1)
  * map layout with location labels. */
 void mapScreenDrawHud(int p1, int p2, int p3)
 {
-    extern u8 hudTextures[0x198]; /* #57 */
-    extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u); /* #57 */
-    extern u32 GameBit_Get(u32); /* #57 */
     if (pauseMenuState != 0)
     {
         return;
@@ -2719,16 +2688,6 @@ void mapScreenDrawHud(int p1, int p2, int p3)
 #pragma dont_inline on
 void pauseMenuFn_80129ee0(void)
 {
-    extern int* textureLoadAsset(int id); /* #57 */
-    extern int Sfx_PlayFromObject(s32, s32); /* #57 */
-    extern void cutsceneFadeInOut(s32); /* #57 */
-    extern void Music_Trigger(s32, s32); /* #57 */
-    extern void buttonDisable(s32, u32); /* #57 */
-    extern u32 getButtonsJustPressed(s32); /* #57 */
-    extern int objIsCurModelNotZero(void); /* #57 */
-    extern int GameBit_Set(u32 eventId, u32 value); /* #57 */
-    extern u32 GameBit_Get(u32); /* #57 */
-    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     PauseTbl* tbl = &lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
@@ -3695,9 +3654,6 @@ void fn_80128A7C(u8 i, int p2, int p3)
  * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
 void fn_8012C000(void)
 {
-    extern int fn_802972A8(void* player); /* #57 */
-    extern int objIsCurModelNotZero(void); /* #57 */
-    extern int coordsToMapCell(f32, f32); /* #11/#57: int return -> cmpwi, no clrlwi */
     u8 flag;
     u8 k;
     u8 last;
@@ -3842,7 +3798,6 @@ s16 cMenuGetSelectedItem(void)
  * gCMenuCloseSfx and return 1; else return 0. */
 int GameUI_isItemBeingUsed(s32 id)
 {
-    extern s8 gCMenuCloseSfx; /* #57 */
     if (id == gCMenuActivatedId)
     {
         gCMenuCloseSfx = 0;
@@ -3868,7 +3823,6 @@ int GameUI_isAnyItemBeingUsed(void)
  * gCMenuCloseSfx and returns the matched value; on miss returns -1. */
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
-    extern s8 gCMenuCloseSfx; /* #57 */
     int i;
     for (i = 0; i < count; i++)
     {
@@ -3920,7 +3874,6 @@ int GameUI_run(void)
 #pragma dont_inline on
 void fn_8012F9B4(int idx, s16 target, s8 flag)
 {
-    extern undefined4 cMenuSetItems(); /* #57 */
     void* entry = &gCMenuSections[idx * 16];
     int count = cMenuSetItems(*(int*)entry, flag);
     s16 pos = *(s16*)((char*)entry + 4);
@@ -3944,7 +3897,6 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
 
 void fn_8012FA70(int idx, s8 flag)
 {
-    extern undefined4 cMenuSetItems(); /* #57 */
     void* entry;
     s16* posPtr;
     u8 prev = 1;
@@ -4044,16 +3996,6 @@ void GameUI_release(void)
 /* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
 void GameUI_hudDraw(int a, int b, int c)
 {
-    extern int lbl_803A9440[]; /* #57 */
-    extern void timeListDraw(int a, int b, int c); /* #57 */
-    extern void drawTexture(void* tex, int a, int b, f32 x, f32 y); /* #57 */
-    extern int objIsCurModelNotZero(void* obj); /* #57 */
-    extern void gameTextAppendStr(int phrase, int box); /* #57 */
-    extern int gameTextGetPhrase(int text, int arg); /* #57 */
-    extern void gameTextSetColor(int r, int g, int b, int a); /* #57 */
-    extern void* gameTextGetBox(int id); /* #57 */
-    extern void pauseMenuDrawText(int a, int b, int c); /* #57 */
-    extern void* getArwing(void); /* #57 */
     void* player = Obj_GetPlayerObject();
     void* arwing = getArwing();
     u8* box;
@@ -4074,19 +4016,19 @@ void GameUI_hudDraw(int a, int b, int c)
             box[0x1e] = (u8)lbl_803DD8D0;
             if (lbl_803DD8CA != -1)
             {
-                gameTextAppendStr(gameTextGetPhrase(curGameText, lbl_803A9440[1]), 0x7c);
+                gameTextAppendStr(gameTextGetPhrase(curGameText, ((int*)lbl_803A9440)[1]), 0x7c);
             }
             else
             {
-                gameTextFn_80016c18(curGameText, lbl_803A9440);
+                gameTextFn_80016c18(curGameText, (int*)lbl_803A9440);
             }
         }
-        pauseMenuDrawText(a, b, c);
+        ((void (*)(int, int, int))pauseMenuDrawText)(a, b, c);
     }
     else
     {
         pauseMenuDraw(a, b, c);
-        pauseMenuDrawText(a, b, c);
+        ((void (*)(int, int, int))pauseMenuDrawText)(a, b, c);
         if (mapScreenVisible != 0)
         {
             mapScreenDrawHud(a, b, c);
@@ -4105,7 +4047,7 @@ void GameUI_hudDraw(int a, int b, int c)
                 f3 = lbl_803E1E70;
                 x = sx - f3 * (f32)(u32) * (u16*)((char*)tex + 0xa);
                 y = sy - f3 * (f32)(u32) * (u16*)((char*)tex + 0xc);
-                drawTexture(tex, 0x96, 0x100, x, y);
+                ((void (*)(void*, int, int, f32, f32))drawTexture)(tex, 0x96, 0x100, x, y);
             }
             hudDrawFn_80121440(a, b, c);
         }
@@ -4120,18 +4062,18 @@ void GameUI_hudDraw(int a, int b, int c)
                 box[0x1e] = (u8)lbl_803DD8D0;
                 if (lbl_803DD8CA != -1)
                 {
-                    gameTextAppendStr(gameTextGetPhrase(curGameText, lbl_803A9440[1]), 0x7c);
+                    gameTextAppendStr(gameTextGetPhrase(curGameText, ((int*)lbl_803A9440)[1]), 0x7c);
                 }
                 else
                 {
-                    gameTextFn_80016c18(curGameText, lbl_803A9440);
+                    gameTextFn_80016c18(curGameText, (int*)lbl_803A9440);
                 }
             }
             drawTrickyHudOverlay(a, b, c);
         }
         if (lbl_803DD75B != 0)
         {
-            timeListDraw(a, b, c);
+            ((void (*)(int, int, int))timeListDraw)(a, b, c);
         }
         Camera_ApplyCurrentViewport(a);
     }
@@ -4149,20 +4091,6 @@ void GameUI_hudDraw(int a, int b, int c)
 /* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
 void GameUI_update(void)
 {
-    extern s8 gCMenuScriptedInput; /* #57 */
-    extern int gCMenuButtons; /* #57 */
-    extern u8 cMenuState; /* #57 */
-    extern s8 cMenuOpen; /* #57 */
-    extern s8 padGetCX(int chan); /* #57 */
-    extern int Sfx_PlayFromObject(int a, int b); /* #57 */
-    extern void cutsceneFadeInOut(int a); /* #57 */
-    extern void Music_Trigger(int a, int b); /* #57 */
-    extern void buttonDisable(int chan, int mask); /* #57 */
-    extern u32 getButtonsJustPressed(int chan); /* #57 */
-    extern u32 getButtonsHeld(int chan); /* #57 */
-    extern void* fn_802972A8(u8 * obj); /* #57 */
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
-    extern uint GameBit_Get(int eventId); /* #57 */
     u8* player = Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
     s16 angDelta;
@@ -4265,7 +4193,7 @@ void GameUI_update(void)
             }
             {
                 int closed;
-                if (cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen != 0) closed = 0;
                 else if (gCMenuOpenAnim != 0) closed = 0;
                 else closed = 1;
                 if (closed)
@@ -4328,7 +4256,7 @@ void GameUI_update(void)
             int closed;
             if ((flags & 0x20000) && tricky != 0 && (s8)cMenuState != 2)
             {
-                if (cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen != 0) closed = 0;
                 else if (gCMenuOpenAnim != 0) closed = 0;
                 else closed = 1;
                 if (closed)
@@ -4345,7 +4273,7 @@ void GameUI_update(void)
             }
             if ((flags & 0x80000) && (s8)cMenuState != 3)
             {
-                if (cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen != 0) closed = 0;
                 else if (gCMenuOpenAnim != 0) closed = 0;
                 else closed = 1;
                 if (closed)
@@ -4363,7 +4291,7 @@ void GameUI_update(void)
             }
             if ((flags & 0x40000) && (s8)cMenuState != 4)
             {
-                if (cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen != 0) closed = 0;
                 else if (gCMenuOpenAnim != 0) closed = 0;
                 else closed = 1;
                 if (closed)
@@ -4387,7 +4315,7 @@ void GameUI_update(void)
                     if (absPrev >= 0xf) goto camCheck;
                 }
                 if (gCMenuScrollTimer != 0) goto camCheck;
-                if (cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen != 0) closed = 0;
                 else closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
                 if (!closed) goto camCheck;
                 {
@@ -4437,7 +4365,7 @@ void GameUI_update(void)
 
         if ((s8)shouldOpenCMenu != 0)
         {
-            if ((s8)cMenuOpen != 0)
+            if (*(s8*)&cMenuOpen != 0)
             {
                 Sfx_PlayFromObject(0, 0x37b);
             }
@@ -4552,10 +4480,6 @@ void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
  * asm symbol set is fully present so future hunters can fill bodies. */
 void GameUI_initialise(void)
 {
-    extern s16 yButtonState; /* #57 */
-    extern void* hudTextures[]; /* #57 */
-    extern void* textureLoadAsset(int id); /* #57 */
-    extern s8 gCMenuCloseSfx; /* #57 */
     int res;
     int height;
     int width;
@@ -4577,7 +4501,7 @@ void GameUI_initialise(void)
     lbl_803DD740 = height - 240;
     for (i = 0; i < 102; i++)
     {
-        hudTextures[i] = textureLoadAsset(gHudTextureIds[i]);
+        ((void**)hudTextures)[i] = textureLoadAsset(gHudTextureIds[i]);
     }
     p = textureLoadAsset(1280);
     lbl_803DD8C4 = p;
