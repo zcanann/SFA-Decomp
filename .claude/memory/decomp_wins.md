@@ -1,5 +1,48 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17h, flat dll widthbranch): 4 %-wins + 1 correctness, ~10 attempts =====
+WINS (committed local; push rejected remote-ahead, single attempt):
+- waterfx_func05 (94.08->95.98%, e0bd88ef11): GXWGFifo.f32 drop-render block
+  compiled interleaved load-then-volatile-store per statement; target computes
+  all 3 (z-offz,y,x-offx) AFTER GXBegin then stores f0/f2/f3. Fix: temps
+  declared in the if-block, GXBegin FIRST, then `vz=..;vy=..;vx=..` (z,y,x
+  order), then 3 FIFO stores. CRITICAL: GXBegin must precede the temp computes
+  (computing temps before GXBegin REGRESSED to 87.7 - reorders the call).
+- Trigger_hitDetect (94.98->95.84%, f8aeb650f6): 3 levers. (1) fn_80198B68 args
+  re-read obj->extra twice -> reuse hoisted `state` ptr (=obj->extra),
+  `(int)state+0x28`. (2) Flip r1/r2 dispatch to `if(r1!=0){1/2}else{-2/-1}` so
+  r1!=0 block lays out first (target beq on r1==0) - resolves inline
+  objInterpretSeq -2/-1 ordering. (3) (u32)GameBit_Get(...)==0u -> cmplwi.
+- CameraModeStatic_update (94.87->96.29%, 5f01d63b0a): (1) `camObj[1] =
+  camObj[1]+(short)..` kept extsh; compound `camObj[1] += (short)..` (#20)
+  drops it. (2) `(uint)*(ushort*)(p+4)` emitted lhz; target lha+clrlwi -> spell
+  `(uint)(ushort)*(short*)(p+4)` (#46/#58).
+- drearthcal_update (94.54->99.02%, 403d9fa9ad): BIGGEST. (1) player-scan over
+  obj+0x58 child list MISSING target's top-of-loop guard - target reads count
+  (s8 +0x10f) ONCE, `cmpwi 0; ble`. Add explicit `if (0<count)` BEFORE the for
+  -> +4.5pt. (2) `==player` signed -> `(uint)*(int*)(...)==(uint)player` cmplw.
+  LESSON: a missing `if(0<count)` before `for(i=0;i<count;..)` (body is only
+  count user) is a real recoverable diff when ndiff DELETEs `lwz;lbz;extsb;
+  cmpwi 0;ble` at loop entry - NOT coloring.
+CORRECTNESS (flat %): alphaanimator_update (d405627e10): unk1C->unk1D byte-
+  offset bug (two `s->alphaLevel=d->unk1C` should be unk1D; target lbz 29 not
+  28). objdiff % flat (only load immediate changed) but real behavior bug.
+BANKED (walls): magicdust_update (79.4%, #108+big-imm equality fold: target
+  holds msgId 0x7000b in r31+cmpw, current folds >0xffff eq to addis -7;cmplwi;
+  peephole/O1/operand-swap/register-int all INERT) | dll_5E_func03 (88.2%,
+  arg-eval: target emits int arg1 `li r3,K` BEFORE lfs float args; sched/peep
+  off INERT) | SaveGame_gplaySetObjGroupStatus (85.2%, unrolled loop walker
+  addi r5,4 vs target fixed-base disp; strred-off REGRESSED -17pt globally) |
+  softbody_update (94.5%, #82 FP coloring wrap-loop; #81 launder REGRESSED) |
+  arwarwing_updateBarrelRoll (94.6%, hi/mid scheduling + reg pressure).
+LESSON: width/ext (#20 compound +=, #46/#58 lha;clrlwi, #3 (uint) cmplw) +
+  missing-loop-guard + branch-sense flips = RELIABLE flat-dll veins at 93-95%.
+  FP coloring(#82), big-imm equality folds, arg-eval/sched order = WALLS, bank.
+TOOLING: `objdiff-cli report generate` races w/ concurrent builds (transient
+  missing placeholder .o) - retry-loop until exit 0. NEVER rm build/GSAE01/obj/
+  (dtk-split target refs); restore via `rm build/GSAE01/config.json && ninja
+  build/GSAE01/config.json`.
+
 ## ===== Session (Jun17g, src/main/dll/player.c): 5 wins, ~11 attempts =====
 WINS (all clean structural levers, committed local; push rejected remote-ahead):
 - fn_8029A4A8 (95.1->98.2%, 8d969ff237) & playerDie (98.15->98.88%, b7c85a051c):
@@ -946,3 +989,116 @@ LESSON: the #11 u8-return and #87 f32-last levers are clean ABI-neutral
 structural wins still findable in creature DLLs. The u8 counter
 store/mask order and the bne;b/beq branch fold are PEEPHOLE caps - bank
 fast. Push got rejected (shared main, many agents); commits are local.
+
+## ===== Session (top-level src/main + dll_0014 RomCurve): 1 win / ~7 attempts =====
+WIN (committed local, push rejected as usual):
+- modelLightChannels_applyGXControls (modellight.c, 87.9->88.0%): (1) `u8
+  activeMask` (was int) keeps the `&0xff` mask live as a clrlwi-to-u8
+  BEFORE each `(activeMask & N)` bit test, matching target's `clrlwi r,24`
+  ([ext-delete] classifier = target HAS an extension we fold). (2) declare
+  `entry` (the walked ModelLightChannelState* base) FIRST among locals ->
+  lands in r31 matching target saved-reg coloring (was r29, swapped with
+  activeMask). (3) dropped inert `(int)` Ghidra cast on gModelLightChannelStates.
+  RESIDUAL (banked #108): base still materializes via `addi r0,r3,0; mr r31,r0`
+  (r0 detour) vs target direct `addi r31,r3,0`; the attnFn if/else vs
+  GXSetChanCtrl channel-arg scheduling order. peephole off INERT on the mr;
+  ternary-attnFn INERT (== if/else). T=C=191, 15 regions, rest reg-perm.
+
+BANKED (this band, no win):
+- RomCurve_findProjectedCurveFromStart (dll_0014, 84.1%): the while-condition
+  4-link "all blocked?" check is a SCAN LOOP in target with RUNTIME shift
+  `extsb (s8)blockedLinkMask; slw 1,k; and` + a found-flag reusing the k reg
+  (li r5,0=usable / li r5,1=all-blocked; cmpwi r5,0; beq body). Rewriting the
+  unrolled `&1/&2/&4/&8` `&&`-chain as `for(k=0;k<4;k++) if(linkIds[k]!=-1 &&
+  (blockedLinkMask&(1<<k))==0) break;` DID reproduce the exact `extsb;slw;and`
+  body (the bulk), BUT MWCC PEELED the first iteration into the prologue (curve
+  r29->r30 cascade) + emitted an extra `li r0,0/1; cmpwi; bne` flag instr that
+  target folds into the k-reg. Regressed to 47% -> reverted. The loop-rotation
+  / flag-coalesce is the open frontier; the scan-loop INSIGHT is correct
+  (commit it if the peel can be defeated; try `do{...}` or the exact flag-reuse).
+- objSeq_onMapSetup (objseq.c, 81.2%): 5-saved-reg vs target 4. 12 walking
+  pointers + i + base; target keeps base in r3 (volatile lis result, survives
+  the all-r0/f0 store loop) -> only r29/r30/r31+r28(i) saved. Current parks base
+  in r4 -> cascades one pointer into the saved range -> 5th reg + _savegpr_27
+  helper (vs target inline stw r31..r28). decl-reorder INERT; opt_level 2 WORSE
+  (75.8). 2nd loop also: target walks pointers, current uses base[i+huge_disp]
+  index form. #108 base-wants-r3 cap.
+- staffMtxFn_8003b620 (objprint.c, 86.2%): 24-saved-reg high-pressure; whole-fn
+  reg-perm shifted by one (target r24=staff, current r23). Real lever buried:
+  target `addi r0,off,24; lfsx f0,t,r0` (index = off+const, #112 K-group on the
+  runtime base) vs current `add t,off; lfs 24(...)` (reassociated to (t+off)+K).
+  Coloring cap dominates.
+- shadowRenderFn_8006b558 (newshadows.c, 78.2%): frame +32 = 2 EXTRA callee-saved
+  FP regs (target f27-f31, current f29-f31) -> target keeps more FP values live
+  (the vD/vE/m clamp + sc/objScale). #82/#26 frame-class. Also target CSEs 8.0f
+  (lbl_803DED10) AND 320.0f (lbl_803DED14) into f3 across both fmadds; current
+  rematerializes per use. Replacing 320.0f/8.0f LITERALS with the named externs
+  did NOT CSE (store between the two uses breaks it; needs `extern const f32`
+  #127) and REGRESSED to 77.6 -> reverted.
+- RomCurve_func16/func13 (dll_0014): base-into-r0+mr + 17-saved-reg coloring
+  perms. func13 has a memset countdown loop that target makes `bdnz` (mtctr) but
+  current keeps manual `addi -1; cmpwi; bne` -- buried under the coloring perm.
+- hitDetectFn_80067958 / voxmapsFn_80010ff4: speculative-unroll + frame-class +
+  17-reg coloring perms. Bank.
+
+LESSON (top-level main band 78-88%): same as creature DLLs -- DOMINATED by #108
+within-class coloring perms (often base-pointer-wants-rN, or one extra/fewer
+saved reg cascading the whole allocation) and #82/#67 FP frame-class. The
+reliable wins are the SMALL TYPE levers: u8-field to keep a mask-extension live
+([ext-delete] classifier), decl-order to place a walked base in r31. The
+named-const-CSE (#71/#127) needs `extern const` to survive a store, plain extern
+doesn't. The scan-loop-with-runtime-shift rewrite (findProjectedCurveFromStart)
+reproduces the body but MWCC peels iter-1 into prologue -- loop rotation is the
+blocker.
+
+## ===== Session (WC/SH/DF/ARW flat dll band): 2 wins committed =====
+WINS (local commits; wclevelcont superseded by remote agent's 100%):
+- wclevelcont_func10 (dll_028D, 84.95->88.56%, commit a50a2e71f2):
+  The 4 mapGetBlockOriginForPos coordinate stores compute
+  `DB4 + ((DD0+px)+DBC)`. (1) #32/#59: load lbl_803E6DB4 FIRST into a
+  SHARED `f32 base` local used by BOTH outX and outZ in each arm (CSEs
+  DB4 into one reg f3, matching target's single lfs f3,DB4 reused across
+  both stores). The shared use is KEY -- a single-use `base` gets DCE'd/
+  copy-propagated; two uses keep it live. (2) inner `f32 tx = DD0+px;`
+  2-statement so `(DD0+px)` computes before DBC loads. (3) #pragma
+  scheduling off around the fn (+1.8 alone): recovers per-fn instruction
+  adjacency. RESIDUAL: addi-arg-order (ptr args &px,&pz emit BEFORE the
+  localPos float args in BOTH scheduling states; target emits floats
+  first -- neither scheduling on/off flips it, the float-args-first is a
+  target source-order artifact I couldn't reproduce); @148-vs-lbl_803E6DC8
+  signed-int->dbl magic (#70 neutral).
+- SHthorntail_update (dll_01AD, 88.40->88.52%, commit 281f760e0e):
+  #2: behaviorFlags &= ~SHTHORNTAIL_FLAG_LEVELCONTROL_READY (0x08) not
+  & 0xf7 -> rlwinm r0,r0,0,29,27 not andi. 247. RESIDUAL (banked):
+  whole-fn r26/r29 saved-reg perm + ONE EXTRA saved reg (current 7
+  r25-r31 vs target 6 r26-r31). Target: obj(param)=r26 LOW, runtime/
+  config(copies)=r28/r29 HIGH (correct #108: param->bottom, copies->top);
+  current INVERTS (obj->r29, copies->r26/r27) because the extra r25
+  stack-walker perturbs the pool. index-form eventId loop (drops the
+  walker) was byte-NEUTRAL on score (just moved regs) -- reverted.
+
+BANKED (no win, reverted byte-clean):
+- dfptargetblock_hitDetect (dll_0235, 91.46%): the push-hit block CSEs
+  lbl_803E648C into f1 ONCE (forcing velX/velZ to f2/f3); target reloads
+  648C fresh per compare (4x) keeping velX/velZ in f1/f2. `*(f32*)&lbl`
+  launder on the compares INERT (VN-CSEs regardless of spelling). The
+  lower velX/velZ clamps (the degenerate-looking `if(v<K){if(v>=K)...}`)
+  ALREADY MATCH -- they're real clamp-to-same-symbol logic, not corrupt.
+  hitObj is stack outparam (12(r1)); target reloads, current caches r29.
+  #82/#71 FP-CSE + stack-reload cap.
+- arwsquadron_update (dll_02A6, 91.00%): `enable=GameBit_Get()!=0` ->
+  neg/or/srwi (#23 arithmetic bool). Ternary `? 1 : 0` flips to li 1;b;
+  li 0 BRANCH form (matches target li 1/0) but score NEUTRAL -- the
+  dominant gap is the enable/disable multi-arm CONTROL-FLOW MERGE (target
+  threads arms into the shared if(enable) test; current materializes 0/1
+  per arm then re-tests + extra li 0;b islands). Also if(enable) wants
+  cmplwi (unsigned, #64) vs current cmpwi. Control-flow-merge restructure
+  cap -- not cracked.
+
+LESSON: the shared-local-for-CSE (#6/#16 shared `base` used by 2+ stores)
+is the crack for "target loads a const ONCE into a reg reused across
+sibling stores" -- a single-use launder local gets DCE'd, you NEED 2+
+uses. scheduling-off still a reliable +1-2 on FP-store-heavy flat fns.
+The addi-arg-order (ptr-args-before-float-args) resists both scheduling
+states. wclevelcont got picked up by another agent (remote->100%) mid-
+session; push always rejected on shared main (commits are local only).
