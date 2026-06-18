@@ -367,7 +367,6 @@ void copyToCache(void* dst, void* src, u32 count);
 
 int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 limit)
 {
-    u32 end;
     u32 alignOffset;
     u8* dst;
 
@@ -376,11 +375,10 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
     size = size + alignOffset;
     size += 0x1f;
     size &= ~0x1f;
-    end = *cacheCursor + size;
-    if (end <= limit)
+    if (*cacheCursor + size <= limit)
     {
         srcAddr -= alignOffset;
-        *outEnd = end;
+        *outEnd = *cacheCursor + size;
         dst += *cacheCursor;
         *cacheCursor = (u32)(dst + alignOffset);
         size >>= 5;
