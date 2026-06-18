@@ -844,9 +844,9 @@ foundFirst:
                     rot.y = lbl_803DF35C;
                     rot.z = lbl_803DF35C;
                     rot.scale = lbl_803DF354;
-                    rot.angleZ = (s16)(int)((f32)slot->sourceVecZ * timeDelta);
-                    rot.angleY = (s16)(int)((f32)slot->sourceVecY * timeDelta);
-                    rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
+                    *(s16*)&rot.angleZ = ((f32)slot->sourceVecZ * timeDelta);
+                    *(s16*)&rot.angleY = ((f32)slot->sourceVecY * timeDelta);
+                    *(s16*)&rot.angleX = ((f32)slot->sourceVecX * timeDelta);
                     vecRotateZXY(&rot, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
