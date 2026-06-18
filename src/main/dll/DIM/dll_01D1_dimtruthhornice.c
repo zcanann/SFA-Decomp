@@ -31,7 +31,7 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 extern f32 timeDelta;
@@ -60,7 +60,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 extern int* getTrickyObject(void);
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;

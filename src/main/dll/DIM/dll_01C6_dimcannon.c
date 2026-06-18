@@ -15,8 +15,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjPath_GetPointWorldPosition();
 
 
 #pragma scheduling on

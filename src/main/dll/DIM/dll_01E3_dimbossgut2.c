@@ -47,13 +47,13 @@ STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int min, int max);
 extern void Obj_FreeObject(int obj);
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined8 ObjGroup_RemoveObject();
+extern u32 ObjHits_RegisterActiveHitVolumeObject();
+extern u64 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void queueGlowRender(void* light);
 
-extern undefined4* gBaddieControlInterface;
+extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
 
 extern u8 framesThisStep;
@@ -186,7 +186,7 @@ void dimbossgut2_free(int arg9)
     if (childObj != 0)
     {
         Obj_FreeObject((int)childObj);
-        *(undefined4*)(obj + 200) = 0;
+        *(u32*)(obj + 200) = 0;
     }
     (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
     return;

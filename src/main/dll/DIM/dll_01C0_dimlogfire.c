@@ -26,9 +26,9 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 
 
 extern void imicepillar_free(void);
@@ -68,9 +68,9 @@ extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern undefined4 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_SetHitVolumeSlot();
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
-extern undefined4 ObjGroup_AddObject();
+extern u32 ObjGroup_AddObject();
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);

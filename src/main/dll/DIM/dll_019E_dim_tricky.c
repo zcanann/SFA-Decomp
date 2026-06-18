@@ -23,7 +23,7 @@ extern f32 lbl_803E51DC;
 extern void objUpdateOpacity(void* obj);
 extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
 extern s8 lbl_803DDBE8;
-extern undefined4 lbl_802C23D8[4];
+extern u32 lbl_802C23D8[4];
 extern f32 lbl_803E51E0;
 extern f32 lbl_803E51E4;
 extern f32 lbl_803E51E8;
@@ -167,10 +167,10 @@ STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
 typedef struct Dll19EResArgs
 {
-    undefined4 a;
-    undefined4 b;
-    undefined4 c;
-    undefined4 d;
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
 } Dll19EResArgs;
 
 #define TRICKY_EGG_EFFECT_RESOURCE_ID  0x69
@@ -184,10 +184,10 @@ void dll_19E_update(void* obj)
     void* resource;
     struct
     {
-        undefined args[16];
+        u8 args[16];
         volatile f32 scale;
     } effectBuf;
-    undefined4 resourceArgs[4];
+    u32 resourceArgs[4];
     int i;
 
     state = ((GameObject*)obj)->extra;
@@ -247,7 +247,7 @@ void dll_19E_update(void* obj)
                 resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
                 resourceArgs[1] = (u32)state->sequenceIndex * 2 + 0x19d;
                 resourceArgs[2] = (u32)state->sequenceIndex * 2 + 0x19e;
-                (*(void (*)(void*, int, undefined*, int, int, undefined4*))(*(int*)(*(int*)resource + 4)))(
+                (*(void (*)(void*, int, u8*, int, int, u32*))(*(int*)(*(int*)resource + 4)))(
                     obj, 1, effectBuf.args, 0x10004, -1, resourceArgs);
                 Resource_Release(resource);
 
@@ -316,7 +316,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     void* resource;
     struct
     {
-        undefined args[16];
+        u8 args[16];
         volatile f32 scale;
     } stackArg;
 
@@ -344,7 +344,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
         resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
         if (setup->sequenceIndex == 0)
         {
-            (*(void (**)(u8*, int, undefined*, int, int, int))(*(int*)resource + 4))(
+            (*(void (**)(u8*, int, u8*, int, int, int))(*(int*)resource + 4))(
                 obj, 0, stackArg.args, 0x10004, -1, 0);
         }
         break;

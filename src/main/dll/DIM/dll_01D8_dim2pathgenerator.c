@@ -35,7 +35,7 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
 
@@ -88,7 +88,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define CURVE_GROUP_SNOWBALL_PATH   21
 #define OBJ_GROUP_SNOWBALL_POOL     47
 
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)

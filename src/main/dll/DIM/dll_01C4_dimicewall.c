@@ -20,7 +20,7 @@ typedef struct DimicewallPlacement
 } DimicewallPlacement;
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 extern int Sfx_PlayFromObject(int obj, int sfx);
