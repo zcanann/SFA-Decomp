@@ -2827,6 +2827,7 @@ extern u16 lbl_802C9F00[];
 extern u16 lbl_802CA100[];
 
 #pragma opt_strength_reduction off
+#pragma optimization_level 1
 #pragma scheduling off
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
@@ -2959,6 +2960,7 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)lbl_803DCA20 + 0x60, 800);
 }
+#pragma optimization_level reset
 #pragma peephole reset
 #pragma scheduling reset
 
