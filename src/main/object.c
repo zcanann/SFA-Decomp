@@ -1659,7 +1659,7 @@ void objFreeObjDef(void* objp, int flag)
     modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++)
     {
-        if (((ObjAnimComponent*)obj)->banks[i] != NULL)
+        if (*(int*)&((ObjAnimComponent*)obj)->banks[i] != 0)
         {
             ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[i]);
         }
@@ -1706,7 +1706,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(o);
         }
     }
-    if (((GameObject*)obj)->seqIndex >= 0)
+    if (((GameObject*)obj)->seqIndex > -1)
     {
         if (flag == 0)
         {
@@ -1714,7 +1714,7 @@ void objFreeObjDef(void* objp, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(s16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
