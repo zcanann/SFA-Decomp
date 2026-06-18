@@ -108,7 +108,7 @@ void MoonSeedPlantingSpot_init(int* obj, u8* init)
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)MoonSeedPlantingSpot_SeqFn;
-    *(s16*)obj = (s16)(init[0x1f] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(init[0x1f] << 8);
     sub[0] = MSPLANTING_PHASE_INIT;
     ObjGroup_AddObject((int)obj, MSPLANTING_OBJ_GROUP);
     mapId = *(int*)(init + 0x14);
