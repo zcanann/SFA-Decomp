@@ -113,8 +113,8 @@ extern u8 bButtonIcon;
 extern u8 lbl_803DD7B0;
 extern u8 lbl_803DD7B1;
 extern u8 lbl_803DD7B2;
-extern u8 lbl_803DD87C;
-extern f32 lbl_803DD878;
+extern u8 gYButtonInUse;
+extern f32 gYButtonIconAnim;
 extern f32 lbl_803DD7E8;
 extern f32 lbl_803DBA74;
 extern f32 lbl_803DBA78;
@@ -1142,7 +1142,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         }
         if ((u32)hudYButtonItemIconTexture != 0)
         {
-            if (lbl_803DD87C != 0)
+            if (gYButtonInUse != 0)
             {
                 scaleT = lbl_803E2010;
             }
@@ -1168,19 +1168,19 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
                 lbl_803DD7E8 = dv;
             }
-            lbl_803DD878 = lbl_803DD878 -
-                (lbl_803DBA74 + (timeDelta * (lbl_803DD878 - lbl_803DBA74)) / lbl_803DBA84);
-            if (lbl_803DD878 > lbl_803E1E3C)
+            gYButtonIconAnim = gYButtonIconAnim -
+                (lbl_803DBA74 + (timeDelta * (gYButtonIconAnim - lbl_803DBA74)) / lbl_803DBA84);
+            if (gYButtonIconAnim > lbl_803E1E3C)
             {
                 lbl_803DD7E8 = lbl_803E1E68;
             }
-            if (!(*(f32*)&lbl_803DD878 > *(f32*)&lbl_803E1E3C))
+            if (!(*(f32*)&gYButtonIconAnim > *(f32*)&lbl_803E1E3C))
             {
-                lbl_803DD878 = lbl_803E1E3C;
+                gYButtonIconAnim = lbl_803E1E3C;
             }
-            drawTexture(hudYButtonItemIconTexture, lbl_803DBA78 * lbl_803DD878 + lbl_803E2014,
-                        lbl_803DBA7C * lbl_803DD878 + lbl_803E1F9C, (int)(lbl_803DD7E8 * lbl_803DD83C),
-                        (int)(lbl_803DBA80 * lbl_803DD878 + lbl_803E2018));
+            drawTexture(hudYButtonItemIconTexture, lbl_803DBA78 * gYButtonIconAnim + lbl_803E2014,
+                        lbl_803DBA7C * gYButtonIconAnim + lbl_803E1F9C, (int)(lbl_803DD7E8 * lbl_803DD83C),
+                        (int)(lbl_803DBA80 * gYButtonIconAnim + lbl_803E2018));
         }
         else
         {

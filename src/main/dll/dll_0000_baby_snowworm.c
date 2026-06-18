@@ -1835,10 +1835,10 @@ extern u16 yButtonItem;
 extern s16 yButtonItemTextureId;
 extern int yButtonItemFlags;
 extern int gTrickyHudItemMask;
-extern u8 lbl_803DD87C;
-extern s16 lbl_803DD886;
-extern s16 lbl_803DD888;
-extern f32 lbl_803DD878;
+extern u8 gYButtonInUse;
+extern s16 gYButtonUsedBit;
+extern s16 gYButtonActiveBit;
+extern f32 gYButtonIconAnim;
 extern f32 lbl_803DBA84;
 
 typedef struct
@@ -1963,28 +1963,28 @@ void cMenuRun(void)
         }
         if (gTrickyHudItemMask & (1 << yButtonItem))
         {
-            lbl_803DD87C = 0;
+            gYButtonInUse = 0;
         }
         else
         {
-            lbl_803DD87C = 1;
+            gYButtonInUse = 1;
         }
         break;
     case 1:
     case 3:
         if (GameBit_Get(yButtonItem) == 0 ||
-            (lbl_803DD886 > -1 && GameBit_Get(lbl_803DD886) != 0))
+            (gYButtonUsedBit > -1 && GameBit_Get(gYButtonUsedBit) != 0))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
         }
-        else if (lbl_803DD888 > -1 && GameBit_Get(lbl_803DD888) != 0)
+        else if (gYButtonActiveBit > -1 && GameBit_Get(gYButtonActiveBit) != 0)
         {
-            lbl_803DD87C = 1;
+            gYButtonInUse = 1;
         }
         else
         {
-            lbl_803DD87C = 0;
+            gYButtonInUse = 0;
         }
         break;
     }
@@ -2145,9 +2145,9 @@ void cMenuRun(void)
                                     Sfx_PlayFromObject(0, 0x408);
                                     yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
                                     yButtonItem = (u16)cMenuSelectedItem;
-                                    lbl_803DD888 = gCMenuSelActiveBit;
-                                    lbl_803DD886 = gCMenuSelUsedBit;
-                                    lbl_803DD878 = lbl_803DBA84;
+                                    gYButtonActiveBit = gCMenuSelActiveBit;
+                                    gYButtonUsedBit = gCMenuSelUsedBit;
+                                    gYButtonIconAnim = lbl_803DBA84;
                                     if (isTricky == 0)
                                     {
                                         if ((s8)cMenuState == 4)
@@ -2216,7 +2216,7 @@ void cMenuRun(void)
             if (btn16 & 0x800)
             {
                 u16 ys = yButtonState;
-                if (ys == 3 && lbl_803DD87C == 0)
+                if (ys == 3 && gYButtonInUse == 0)
                 {
                     ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
                     gCMenuActivatedId = (s16)yButtonItem;
