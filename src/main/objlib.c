@@ -2133,13 +2133,20 @@ uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
                         mathSinf(lbl_803DE980 * (f32) - (s32)((uint)entry->pitch << 8) / lbl_803DE984);
                     f32 pitchSin =
                         mathCosf(lbl_803DE980 * (f32) - (s32)((uint)entry->pitch << 8) / lbl_803DE984);
-                    f32 deltaX = x - entry->x;
-                    f32 deltaY = y - entry->y;
-                    f32 deltaZ = z - entry->z;
-                    f32 localX = deltaX * yawSin - deltaZ * yawCos;
-                    f32 yawZ = deltaX * yawCos + deltaZ * yawSin;
-                    f32 localY = deltaY * pitchSin - yawZ * pitchCos;
-                    f32 localZ = deltaY * pitchCos + yawZ * pitchSin;
+                    f32 deltaZ;
+                    f32 deltaY;
+                    f32 deltaX;
+                    f32 localX;
+                    f32 yawZ;
+                    f32 localY;
+                    f32 localZ;
+                    deltaX = x - entry->x;
+                    deltaY = y - entry->y;
+                    deltaZ = z - entry->z;
+                    localX = deltaX * yawSin - deltaZ * yawCos;
+                    yawZ = deltaX * yawCos + deltaZ * yawSin;
+                    localY = deltaY * pitchSin - yawZ * pitchCos;
+                    localZ = deltaY * pitchCos + yawZ * pitchSin;
 
                     if (localX < 0.0f)
                     {
