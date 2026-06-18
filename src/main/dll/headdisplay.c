@@ -399,7 +399,7 @@ void pauseMenuCreateHeads(void)
 
 void drawArwingHud(void)
 {
-    char buf[8];
+    u8 buf[8];
     int* arwing;
     int shield;
     int maxShield;
@@ -489,10 +489,10 @@ void drawArwingHud(void)
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
-            sprintf(buf, &lbl_803DBB60, arwarwing_getScore(arwing));
+            sprintf((char*)buf, &lbl_803DBB60, arwarwing_getScore(arwing));
         }
         gameTextSetColor(0xff, 0xff, 0xff, arwingHudAlpha & 0xff);
-        gameTextShowStr(buf, 0x93, 0x23a, 0x41);
+        gameTextShowStr((char*)buf, 0x93, 0x23a, 0x41);
         drawFn_80125424();
     }
 }
