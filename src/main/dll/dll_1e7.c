@@ -1,6 +1,21 @@
+/*
+ * DLL 0x1E7 - SHThorntail (Thorntail Hollow) AI helpers.
+ *
+ * Three routines split out of the main thorntail DLL (0x1AD):
+ *  - SHthorntail_HasNearbyPendingEventObject: scans ObjGroup 3 for the
+ *    linked thorntails configured for this one (via gSHthorntailDataTables)
+ *    and reports whether any linked partner is in range with its linked
+ *    game bit still clear (a co-op trigger event is still pending).
+ *  - SHthorntail_updateTailSwing: drives the tail-swing windup/active/
+ *    recover timer state machine, firing the windup and active sfx.
+ *  - SHthorntail_chooseNextState: picks the next behavior state from
+ *    player distance, leash radius, facing error and frustum visibility.
+ */
 #include "main/dll/SH/dll_1E7.h"
 #include "main/frustum.h"
 
+/* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
+   floats and the debug string); the rest are engine-wide imports. */
 extern void Sfx_PlayFromObject(uint objectId, u16 volumeId);
 extern f32 getXZDistance(Vec * a, Vec * b);
 extern f32 vec3f_distanceSquared(Vec * a, Vec * b);
@@ -20,7 +35,11 @@ extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
+#define SHTHORNTAIL_OBJ_TYPE 0x4d7
+#define SHTHORNTAIL_OBJ_GROUP 3
 #define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
+/* player object pos vector lives at +0x18 */
+#define PLAYER_POS_OFFSET 0x18
 
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
 {
@@ -65,10 +84,10 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     {
         groupIndex = 5;
     }
-    objects = ObjGroup_GetObjects(3, &count);
+    objects = ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
     for (index = 0; index < count; index++)
     {
-        if (((*objects)->objType == 0x4d7) &&
+        if (((*objects)->objType == SHTHORNTAIL_OBJ_TYPE) &&
             (((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
                 ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
                 ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][3])))
@@ -80,7 +99,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
                 linkedEventPending = 1;
             }
             matchCount++;
-            if (matchCount == 3)
+            if (matchCount == SHTHORNTAIL_LINKED_CONFIG_COUNT)
             {
                 break;
             }
@@ -126,7 +145,6 @@ void SHthorntail_updateTailSwing(uint objectId, SHthorntailRuntime* runtime)
     default:
         break;
     }
-    return;
 }
 
 uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* runtime,
@@ -137,13 +155,13 @@ uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* 
     uint nextState;
     s16 facingAngle;
     s8 behaviorState;
-    f32 distanceSq;
+    f32 dist;
 
     if (config->leashRadiusByte != '\0')
     {
         value = Obj_GetPlayerObject();
-        distanceSq = getXZDistance(&object->pos, (Vec*)(value + 0x18));
-        if (distanceSq < SHTHORNTAIL_CLOSE_ATTACK_DISTANCE)
+        dist = getXZDistance(&object->pos, (Vec*)(value + PLAYER_POS_OFFSET));
+        if (dist < SHTHORNTAIL_CLOSE_ATTACK_DISTANCE)
         {
             behaviorState = runtime->behaviorState;
             if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
@@ -157,8 +175,8 @@ uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* 
             }
             return nextState;
         }
-        distanceSq = getXZDistance(&object->pos, &config->homePos);
-        if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte))
+        dist = getXZDistance(&object->pos, &config->homePos);
+        if (dist > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte))
         {
             value = getAngle(object->modelPos.x - config->homePos.x,
                              object->modelPos.z - config->homePos.z);
