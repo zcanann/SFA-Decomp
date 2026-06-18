@@ -770,11 +770,11 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-u8 fn_8016F16C(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x71); }
+u8 fn_8016F16C(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x71); }
 
 void fireball_free(int* obj)
 {
-    int* inner = ((int**)obj)[0xb8 / 4];
+    int* inner = (int*)((GameObject*)obj)->extra;
     void* ptr = *(void**)inner;
     if (ptr != NULL)
     {
