@@ -13405,8 +13405,8 @@ int fn_8029A5E4(int obj, int state)
 
 void fn_80296D20(int obj, void* arg)
 {
+    int state = (int)((GameObject*)obj)->extra;
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int state = (int)inner;
     short type;
 
     if (((GameObject*)obj)->anim.parent == arg)
