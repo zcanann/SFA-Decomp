@@ -383,7 +383,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
                     }
                     d = d * d;
                     ((f32*)state->falloffBuf)[foff] = clampMax - d;
-                    *(s16*)((char*)state->heightBuf + foff * 2) = (int)vpos[1];
+                    *(s16*)((char*)state->heightBuf + foff * 2) = (s16)vpos[1];
                     foff++;
                     vtx = (char*)vtx + 2;
                 }
