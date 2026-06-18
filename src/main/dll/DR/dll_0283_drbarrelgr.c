@@ -203,7 +203,7 @@ void drbarrelgr_update(int obj)
             PSVECNormalize(tmp, tmp);
         }
         PSVECScale(tmp, tmp, lbl_803DC3B0);
-        gunpowderbarrel_setScale(((DrbarrelgrState*)state)->heldBarrel, tmp);
+        gunpowderbarrel_addThrowVelocity(((DrbarrelgrState*)state)->heldBarrel, tmp);
         if (PSVECDistance((void*)(state + 0x14), (void*)(((DrbarrelgrState*)state)->heldBarrel + 12)) < lbl_803E6CA0 ||
             *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 16) > ((DrbarrelgrState*)state)->grabY)
         {

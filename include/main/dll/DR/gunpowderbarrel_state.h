@@ -13,7 +13,8 @@ typedef struct GunpowderBarrelState {
     int linkedTimerObject;  /* 0x10 */
     u8 pad14;
     u8 heldByCarryInterface;
-    u8 unk16;
+    u8 detonateTrigger; /* 0x16 non-zero arms detonation (4=armed, set on hit/
+                           hard fall); gunpowderbarrel_triggerExplosion fires when !=0 */
     u8 fuseFrames;
     f32 respawnTimer;
     f32 releaseTimer;
@@ -23,16 +24,17 @@ typedef struct GunpowderBarrelState {
     f32 hitRadius;
     f32 unk30;
     f32 radiusGrowthPerFrame;
-    f32 unk38;
+    f32 fallAccum; /* 0x38 running sum of anim.velocityY while airborne; when it
+                      drops below -K the barrel auto-detonates (detonateTrigger=4) */
     s16 unk3C;
     u8 unk3E;
     u8 pad3F;
     int unk40;
-    s16 unk44;
-    s16 unk46;
-    u8 configFlags; /* 0x40 = save position at the linked barrel */
-    u8 motionFlags; /* 1 sleeping, 2 in flight */
-    u8 heldFlags;   /* GpbHeldByte: held / playerHeld bits */
+    s16 homingHeadingA; /* 0x44 heading words passed to gunpowderbarrel_homeOnTarget */
+    s16 homingHeadingB; /* 0x46 */
+    u8 configFlags; /* +0x48; bit 0x40 (returnHome): save position at the linked barrel */
+    u8 motionFlags; /* +0x49; bit 0x01: sleeping, bit 0x02: in flight */
+    u8 heldFlags;   /* +0x4A; GpbFlags4A bitfield: held / playerHeld / etc. */
     u8 pad4B[5];
     s16 launchYaw;  /* 0x50 */
     u8 pad52[2];

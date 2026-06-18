@@ -2064,7 +2064,7 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
 }
 #pragma dont_inline reset
 
-int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out2)
+int findSurfaceInYRange(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out2)
 {
     void** arr;
     int n;

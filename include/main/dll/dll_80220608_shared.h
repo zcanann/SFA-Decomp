@@ -1730,7 +1730,7 @@ extern f32 lbl_803E6CD0;
 
 extern int gunpowderbarrel_isHeld(int obj);
 extern int gunpowderbarrel_canBeGrabbed(int obj);
-extern void gunpowderbarrel_setScale(int obj, void *vec);
+extern void gunpowderbarrel_addThrowVelocity(int obj, void *vec);
 extern void gunpowderbarrel_setHeldState(int obj);
 extern int timerCountDown(void *timer);
 extern void PSVECNormalize(void *src, void *dst);
