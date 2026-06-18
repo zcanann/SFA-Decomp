@@ -5232,14 +5232,14 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     endZ = segment->endZ;
     startZ = segment->startZ;
     deltaZ = endZ - startZ;
-    if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ))
+    if (((gFloatZero == deltaX) && (gFloatZero == deltaY)) && (gFloatZero == deltaZ))
     {
-        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
-            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+        projection = gFloatZero;
     }
     else
     {
-        projection = gFloatZero;
+        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
+            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
     }
     if (projection < gFloatZero)
     {
