@@ -18460,7 +18460,8 @@ void fn_802AAD44(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     u8* vp = lbl_803DAF08;
-    f32* src = lbl_802C2BF0;
+    u8* p = vp;
+    f32* src;
     int i;
     f32 height;
     f32 v;
@@ -18481,31 +18482,32 @@ void fn_802AAD44(int obj)
     GXSetColorUpdate(0);
 
     v = lbl_803E7FA4 * (lbl_803E80C4 - height);
+    src = lbl_802C2BF0;
     for (i = 0; i < 8; i++)
     {
         if (i < 4)
         {
-            *(s16*)(vp + 2) = 0x320;
+            *(s16*)(p + 2) = 0x320;
         }
         else
         {
-            *(s16*)(vp + 2) = v;
+            *(s16*)(p + 2) = v;
         }
         if (i < 4)
         {
-            *(s16*)(vp + 0) = (lbl_803E7FA4 * src[0]);
-            *(s16*)(vp + 4) = (lbl_803E7FA4 * src[2]);
+            *(s16*)(p + 0) = (lbl_803E7FA4 * src[0]);
+            *(s16*)(p + 4) = (lbl_803E7FA4 * src[2]);
         }
         else
         {
-            *(s16*)(vp + 0) = (lbl_803E7FA4 * src[0]);
-            *(s16*)(vp + 4) = (lbl_803E7FA4 * src[2]);
+            *(s16*)(p + 0) = (lbl_803E7FA4 * src[0]);
+            *(s16*)(p + 4) = (lbl_803E7FA4 * src[2]);
         }
-        vp[0xc] = 0xff;
-        vp[0xd] = 0;
-        vp[0xe] = 0;
-        vp[0xf] = 0x40;
-        vp += 0x10;
+        p[0xc] = 0xff;
+        p[0xd] = 0;
+        p[0xe] = 0;
+        p[0xf] = 0x40;
+        p += 0x10;
         src += 3;
     }
 
@@ -18519,7 +18521,7 @@ void fn_802AAD44(int obj)
     setMatrixFromObjectTransposed(&xf, mtx);
     PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
     GXLoadPosMtxImm(mtx, 0);
-    drawFn_8005cf8c(lbl_803DAF08, lbl_802C2B30, 0xc);
+    drawFn_8005cf8c(vp, lbl_802C2B30, 0xc);
 
     if (*(f32*)((char*)state + 0x7d0) >= lbl_803E80E0)
     {
