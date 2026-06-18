@@ -2297,8 +2297,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
 
     if (neighborId == -1)
     {
-        state->nodeA4 = NULL;
-        return 1;
+        goto clearAndReturn;
     }
 
     if (neighborId < 0)
@@ -2358,6 +2357,9 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
     }
     return 0;
+clearAndReturn:
+    state->nodeA4 = NULL;
+    return 1;
 }
 
 #pragma scheduling on
