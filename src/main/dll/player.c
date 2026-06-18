@@ -5135,7 +5135,7 @@ int fn_8029AF9C(int obj, int state)
             inner->unk7B8 =
                 inner->unk7B8 +
                 interpolate(c - inner->unk7B8, lbl_803E7EFC, timeDelta);
-            if (inner->unk7B8 > lbl_803E7EA4)
+            if (inner->unk7B8 > *(f32*)&lbl_803E7EA4)
             {
                 spin = inner->unk7B8 - lbl_803E7EA0;
                 if (spin < lbl_803E7EA4)
