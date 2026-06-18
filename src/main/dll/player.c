@@ -18185,8 +18185,8 @@ int fn_8029D4C0(int obj, int state, f32 fv)
         {
             ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
         }
-        ((GameObject*)obj)->anim.velocityX =
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E7EA4;
+        ((GameObject*)obj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.velocityX = lbl_803E7EA4;
         break;
     case 0xc8:
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
