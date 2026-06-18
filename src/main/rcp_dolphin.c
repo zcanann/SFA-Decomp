@@ -2148,7 +2148,7 @@ void initFn_800534f8(void)
         slot = lbl_8037E000 + lbl_803DCDA5 * 0x1c;
         half = j & 1;
         *(f32*)(slot + half * 4 + 0x10) = inv;
-        *(s8*)(slot + half + 0x18) = (int)(scaleB * v);
+        *(s8*)(slot + half + 0x18) = scaleB * v;
         slot[0x1b] = 1;
         if (half != 0)
         {
