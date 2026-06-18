@@ -374,10 +374,10 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
     u8 first;
     VoxPos cur = *start;
     VoxPos found;
-    u8* routeNode;
+    unsigned int skip;
     int stepX, stepY;
     int dx, dy, dz;
-    unsigned int skip;
+    u8* routeNode;
 
     stepX = 1;
     dx = end->x - cur.x;
