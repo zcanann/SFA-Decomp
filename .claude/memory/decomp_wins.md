@@ -813,3 +813,70 @@ except-regs) and #67 frame-class (FEseqobject psq_st). The reliable vein remains
 #3 `!= 0u` on u8 bitfield `>>N & 1` tests -> cmplwi (both wins this session were
 this exact lever; grep `>> [0-9] & 1) != 0` for more). DSE of never-escaping
 stack vectors (gunpowderbarrel sp1c) resists all source levers tried.
+
+## ===== Session (creature DLLs): 5 wins / 4 fns, ~16 attempts =====
+WINS (all committed, push rejected once = local only, never pulled):
+- nw_mammoth_update (dll_01A1, 97.25->98.81%, 2 commits):
+  (1) block-scope `extern u8 ObjHitReact_Update(...)` (was int): u8-field
+      store `state->hitReactState=ret` emits direct `stb r3` not
+      `clrlwi r0,r3,24; stb r0`. #11/#7. +0.39.
+  (2) INLINE `table->stateFlags[state->stateIndex]` at the path-control
+      bit tests (drop cached `stateFlags` local): target RE-READS the
+      flags byte fresh per bit test, current CSE'd. #80/#107. +1.17.
+  RESIDUAL (banked): base-into-r0+mr copy (objSeq class), cmpw operand
+  order (obj->currentMove read late vs target hoists), r5/r6 index reg.
+- dfropenode_func0B (dll_0175, 98.67->98.88%): name `dx` local for
+  `node[1].pos[0]-x0` before the fmadds -> first fmadds emits f1,f5
+  (diff*fraction) not canonicalized f5,f1. dy/dz already named. #27/#59.
+  RESIDUAL: r7/r8 index reg-perm (idx*52 / base+off). #108.
+- dfropenode_modelMtxFn (dll_0175, 96.67->100%): declare the f32 param
+  LAST `(int obj, float* phase, f32 distance)` -> prologue mr r30,r4
+  before fmr f31,f1 (ABI-NEUTRAL: floats use separate FPRs regardless
+  of decl position). #87. FULL MATCH. Vtable-callback so no caller fix.
+- drakormissile_startActiveLaunch (dll_0262, 98.54->98.84%): decl `p`
+  (obj->extra) before `light` -> p lands r30 matching target. Partial;
+  residual obj/light r29<->r31 swap (obj int-param wants r29 lowest,
+  light call-result wants r31). #108 within-class, not cracked.
+
+KEY LEVERS THIS SESSION:
+- #11 u8-return block-scope extern: WORKS great for u8-field = fn() stores
+  that emit a spurious store-side clrlwi. Check field type (u8) + callee
+  return (declared int). Clean, ABI-neutral.
+- #87 f32-param-LAST: ABI-NEUTRAL (PPC EABI: ints->GPR, floats->FPR
+  independently, so moving a float param to the end keeps all reg
+  assignments). Fixes prologue mr-before-fmr. Use freely on
+  vtable-callbacks (no caller to break).
+- #59 name-the-diff-local: a fmadds whose multiplicand is a fresh fsub
+  result canonicalizes to (fraction,diff); naming it as a local like its
+  siblings forces (diff,fraction). Match the spelling of adjacent terms.
+
+BANKED (uncrackable this session, all reverted byte-clean):
+- ktrex_shouldAdvanceArenaPhase (dll_0250, 98.78%): base ptr wants r3
+  (creation-order ascending), current scrambles base->r5, b->r3. Pure
+  #108 within-class. opt_level 2 REGRESSED. char* retype INERT.
+- imicemountain_updateEventState (dll_0169, 99.3%): u8 counter
+  `cnt=field-1; field=cnt; if(cnt==0)` target stores RAW then extsb;
+  current extsb then stores. peephole-off (already on) doesn't unfold;
+  peephole-on dot-merges elsewhere (98.17); scheduling-on wrecks (77.5).
+  Same as tumbleweed_updateEffects (dll_00D2, 98.78%) `hitPulseCounter++`
+  store-before-mask. PEEPHOLE-bound u8-RMW store/mask order = BANK.
+- dfropenode_render (dll_0175, 98.99%): mr r29,r5 (p3 saved copy) emitted
+  before vs after the p2 stw. #86/#108 prologue copy order. opt_prop off
+  INERT.
+- pollen fn_8016A660 / dbstealerworm_render: the recurring `bne body;
+  b end` (target) vs `beq end` (current) 1-instr branch FOLD. NOT
+  source-controllable (early-return, split-condition, peephole-off all
+  INERT). BANK ON SIGHT.
+- dfplevelcontrol_setScale (dll_0229, 93.3%): `s16* p = lbl[]` base
+  materialized `addi r0,r3,lo; mr r7,r0` (via r0+copy) vs target
+  `addi r5,r3,lo` (direct into var). decl-order/comma-init INERT. Same
+  objSeq base-into-lis-reg class.
+- grimble_stateHandlerA00/A01/A02 (dll_00D0, 96.5%): `d=sqrtf;x=d;
+  getAngle(y,(f32)d)` - target keeps d double in f0, stfs(x=d) then
+  SEPARATE frsp f2,f0 for the call arg; current merges frsp+stfs. CSE.
+  getAngle(y,x) tightens CSE (worse). frsp-scheduling, BANK.
+
+LESSON: the #11 u8-return and #87 f32-last levers are clean ABI-neutral
+structural wins still findable in creature DLLs. The u8 counter
+store/mask order and the bne;b/beq branch fold are PEEPHOLE caps - bank
+fast. Push got rejected (shared main, many agents); commits are local.
