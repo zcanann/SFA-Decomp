@@ -1011,6 +1011,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
+#pragma opt_propagation off
 int dbstealerworm_stateHandlerA0D(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -1097,6 +1098,7 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
     }
     return 0;
 }
+#pragma opt_propagation reset
 
 int dbstealerworm_stateHandlerB05(int obj, int p2)
 {
