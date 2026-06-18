@@ -12759,9 +12759,9 @@ int fn_802AB1D0(int obj)
 {
     int cur;
     int objs;
-    int i;
-    int count;
     int best;
+    int count;
+    int i;
     f32 dist;
     f32 bestDist;
     f32 scale;
@@ -12780,9 +12780,9 @@ int fn_802AB1D0(int obj)
     best = 0;
     objs = (int)ObjGroup_GetObjects(8, &count);
     bestDist = lbl_803E7EA4;
-    for (i = 0; i < count; i++)
+    for (i = 0; i < count;)
     {
-        cur = ((int*)objs)[i];
+        cur = ((int*)objs)[i++];
         if ((*(s16*)((char*)cur + 0x44) == 0x1c || *(s16*)((char*)cur + 0x44) == 0x2a) &&
             ((GameObject*)cur)->anim.alpha == 0xff)
         {
