@@ -11210,9 +11210,9 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
 
 void fn_8029A4A8(int obj, int p2)
 {
+    int i;
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sel = ((PlayerState*)p2)->baddie.controlMode;
-    int i;
 
     if (sel == 0x2a) return;
     if (sel == 0x2e) return;
