@@ -491,8 +491,11 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     SfxplayerStateFlags* flags = &state->flags;
-    s16 rotation[3];
-    f32 baseVec[4];
+    struct
+    {
+        s16 rotation[4];
+        f32 baseVec[4];
+    } buf;
     int* handles;
     s16 angleStep;
     s16 i;
@@ -520,19 +523,19 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         }
     }
 
-    baseVec[1] = lbl_803E6460;
-    baseVec[2] = lbl_803E6460;
-    baseVec[3] = lbl_803E6460;
-    baseVec[0] = lbl_803E6458;
+    buf.baseVec[1] = lbl_803E6460;
+    buf.baseVec[2] = lbl_803E6460;
+    buf.baseVec[3] = lbl_803E6460;
+    buf.baseVec[0] = lbl_803E6458;
     angleStep = 0;
-    rotation[2] = 0;
-    rotation[1] = 0;
+    buf.rotation[2] = 0;
+    buf.rotation[1] = 0;
     handles = gSfxplayerEffectHandles;
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, buf.rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, buf.rotation, angleStep);
         handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
