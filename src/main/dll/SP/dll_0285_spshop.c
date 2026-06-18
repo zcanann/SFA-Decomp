@@ -1,69 +1,106 @@
-/*
- * spshop (DLL 0x285) - the shop "stall" manager object for the SnowHorn /
- * ThornTail store. It owns the item table (lbl_80327FD0: SHOP_ITEM_COUNT
- * rows describing each purchasable item) and the interface the shopkeeper,
- * scarab coins and item beams query through object group 9.
- *
- * init() randomizes each item's current price from its price tier, opens
- * the shop (music + GAMEBIT_SHOP_LOADED + sky), and drives the spirit-vision
- * style env fx from gamebit 0xd21. buyItem() applies an item's effect
- * (health / money / inventory gamebits) and marks it bought. The remaining
- * small accessors are the object's interface vtable slots used by the
- * shopkeeper UI (price/text/availability/bought queries, selection state).
- */
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objseq.h"
+/* DLL 0x0285 — SP shop objects [801E4288-801E42F8) */
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/shipbattlestate_struct.h"
+#include "main/dll/sbkytecagestate_struct.h"
+#include "main/dll/sbfireballstate_struct.h"
+#include "main/dll/sbcloudballstate_struct.h"
+#include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/dll/player_objects.h"
 
-#define SHOP_ITEM_COUNT 0x3c
-#define SHOP_OBJGROUP 9
-#define SHOP_MUSIC_ID 0x90
-#define GAMEBIT_SHOP_LOADED 0xefe /* set while the shop is loaded (init / free) */
+extern u32 randomGetRange(int min, int max);
 
-extern void* Obj_GetPlayerObject(void);
 extern void objRenderFn_8003b8f4(f32);
+
+#include "ghidra_import.h"
+#include "main/game_object.h"
+#include "main/audio/sfx_ids.h"
+#include "main/mapEvent.h"
+#include "main/dll/TREX/TREX_trex.h"
+#include "main/effect_interfaces.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/objhits_types.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+typedef struct ShopBuyItemState
+{
+    u8 pad0[0x1 - 0x0];
+    s8 unk1;
+    u8 pad2[0x4 - 0x2];
+    u8 unk4;
+    u8 pad5[0x56 - 0x5];
+    u8 unk56;
+    u8 pad57[0x6E - 0x57];
+    s16 unk6E;
+    u8 pad70[0x90 - 0x70];
+    u8 unk90;
+    u8 pad91[0x9B0 - 0x91];
+    s32 unk9B0;
+    u8 pad9B4[0x9D6 - 0x9B4];
+    u8 unk9D6;
+    u8 pad9D7[0x9D8 - 0x9D7];
+} ShopBuyItemState;
+
+/*
+ * Per-object extra state for the ShipBattle cloud-ball projectile
+ * (SB_CloudBall_getExtraSize == 0x24).
+ */
+
+STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
+
+/*
+ * Per-object extra state for the ShipBattle fireball projectile
+ * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
+ */
+
+STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
+
+/*
+ * Per-object extra state for the ShipBattle kyte cage
+ * (SB_KyteCage_getExtraSize == 0x8).
+ */
+
+STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
+
+/*
+ * Per-object extra state for the ShipBattle chain segment
+ * (ShipBattle_getExtraSize == 0x140). The head is handed to
+ * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
+ * only the locally-evidenced fields are named.
+ */
+
+STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
-extern int GameBit_Get(int);
-extern void GameBit_Set(int slot, int val);
-extern u32 randomGetRange(int min, int max);
-extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void Music_Trigger(int a, int b);
+extern u8 lbl_80327FD0[];
+
+typedef struct ShopItemRow
+{
+    u8 pad0[0xa];
+    s16 textId;
+} ShopItemRow;
+extern void fn_80295CF4(int player, int mode);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern void fn_80295CF4(int player, int mode);
+
+extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
-extern u8 lbl_80327FD0[]; /* ShopItemRow[SHOP_ITEM_COUNT] */
+extern int GameBit_Get(int);
+extern void GameBit_Set(int slot, int val);
+extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void Music_Trigger(int a, int b);
 
-/* obj->extra layout (shop_getExtraSize == 0x5) */
-typedef struct ShopState
+void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined2* param_9, int param_10)
 {
-    s8 field0;       /* 0x00: read by shop_setScale */
-    s8 selectedItem; /* 0x01: item index applied by shop_buyItem (-1 = none) */
-    s8 unk2;         /* 0x02: shop_func15/16/17 accumulator */
-    s8 unk3;         /* 0x03 */
-    s8 unk4;         /* 0x04 */
-} ShopState;
+}
 
-STATIC_ASSERT(sizeof(ShopState) == 0x5);
-
-/* one row of the lbl_80327FD0 item table */
-typedef struct ShopItemRow
-{
-    u8 price;        /* 0x00 */
-    u8 priceTier[3]; /* 0x01: candidate prices; one is chosen into currentPrice */
-    u8 field4;       /* 0x04 */
-    u8 currentPrice; /* 0x05: this run's price, picked at init */
-    s16 availBit;    /* 0x06: GameBit gating availability (-1 = always available) */
-    s16 boughtBit;   /* 0x08: GameBit set once purchased (-1 = none) */
-    s16 textId;      /* 0x0a: description text id */
-} ShopItemRow;
-
-STATIC_ASSERT(sizeof(ShopItemRow) == 0xc);
+void SB_FireBall_release(void);
 
 void shop_hitDetect(void)
 {
@@ -77,8 +114,10 @@ void shop_initialise(void)
 {
 }
 
+int SB_CloudBall_getExtraSize(void);
 int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
+int fn_801E66DC(void);
 
 s32 shop_getStateField1(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x1); }
 s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0); }
@@ -89,8 +128,20 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E59C8);
 }
 
+/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
+ * splits at wrong addresses; these stubs ensure every asm symbol has a src
+ * definition so future hunters can fill bodies one at a time. */
+void Flag_init(int* obj, int* def);
+
+/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
+ * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
+
+/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
+ * call ObjLink_DetachChild(obj). */
+
 void shop_buyItem(int obj, int price)
 {
+    extern void* Obj_GetPlayerObject(void);
     int player;
     int state;
     int mapEventState;
@@ -102,7 +153,7 @@ void shop_buyItem(int obj, int price)
     mapEventState = (int)(*gMapEventInterface)->getCurCharacterState();
     playerAddMoney(player, -price);
 
-    switch (((ShopState*)state)->selectedItem)
+    switch (((ShopBuyItemState*)state)->unk1)
     {
     case 0:
         playerAddHealth(player, 2);
@@ -137,9 +188,8 @@ void shop_buyItem(int obj, int price)
         break;
     }
 
-    items = lbl_80327FD0;
-    items = items + ((ShopState*)state)->selectedItem * 0xc;
-    boughtBit = *(s16*)(items + 8);
+    items = lbl_80327FD0 + 8;
+    boughtBit = *(s16*)(items + ((ShopBuyItemState*)state)->unk1 * 0xc);
     if (boughtBit != -1)
     {
         GameBit_Set(boughtBit, 1);
@@ -149,9 +199,9 @@ void shop_buyItem(int obj, int price)
 void shop_free(int* obj)
 {
     skyFn_80088c94(7, 0);
-    ObjGroup_RemoveObject(obj, SHOP_OBJGROUP);
-    Music_Trigger(SHOP_MUSIC_ID, 0);
-    GameBit_Set(GAMEBIT_SHOP_LOADED, 0);
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(144, 0);
+    GameBit_Set(3838, 0);
 }
 
 void shop_func0B(int* obj, int v, int p3)
@@ -164,6 +214,8 @@ void shop_func0B(int* obj, int v, int p3)
     }
 }
 
+/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
+ * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
 void shop_func15(int* obj, int v)
 {
     s8* b = ((GameObject*)obj)->extra;
@@ -172,6 +224,8 @@ void shop_func15(int* obj, int v)
     b[4] = (s8)v;
 }
 
+/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
+ * obj->_b8[3] += p2. */
 void shop_func16(int* obj, int p2, int p3)
 {
     s8* b = ((GameObject*)obj)->extra;
@@ -179,6 +233,8 @@ void shop_func16(int* obj, int p2, int p3)
     b[3] = (s8)(b[3] + p2);
 }
 
+/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
+ * (sign-extended) into *out_b3, *out_b2, *out_b4. */
 void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 {
     s8* b = ((GameObject*)obj)->extra;
@@ -189,7 +245,7 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 
 int shop_getItemPrice(int p, int idx)
 {
-    if (idx >= 0 && idx < SHOP_ITEM_COUNT)
+    if (idx >= 0 && idx < 0x3c)
     {
         return lbl_80327FD0[idx * 0xc];
     }
@@ -198,7 +254,7 @@ int shop_getItemPrice(int p, int idx)
 
 s16 shop_getItemTextId(int p, int idx)
 {
-    if (idx >= 0 && idx < SHOP_ITEM_COUNT)
+    if (idx >= 0 && idx < 0x3c)
     {
         ShopItemRow* rows = (ShopItemRow*)lbl_80327FD0;
         return rows[idx].textId;
@@ -208,7 +264,7 @@ s16 shop_getItemTextId(int p, int idx)
 
 u8 shop_getItemField4(int p, int idx)
 {
-    if (idx >= 0 && idx < SHOP_ITEM_COUNT)
+    if (idx >= 0 && idx < 0x3c)
     {
         return lbl_80327FD0[idx * 0xc + 0x4];
     }
@@ -217,7 +273,7 @@ u8 shop_getItemField4(int p, int idx)
 
 u8 shop_getItemMinPrice(int p, int idx)
 {
-    if (idx >= 0 && idx < SHOP_ITEM_COUNT)
+    if (idx >= 0 && idx < 0x3c)
     {
         return lbl_80327FD0[idx * 0xc + 0x5];
     }
@@ -230,24 +286,26 @@ void shop_init(int obj, int objDef)
     u8* item;
 
     *(s8*)(*(int*)&((GameObject*)obj)->extra + 1) = -1;
-    ObjGroup_AddObject(obj, SHOP_OBJGROUP);
+    ObjGroup_AddObject(obj, 9);
     i = 0;
     item = lbl_80327FD0;
-    while (i < SHOP_ITEM_COUNT)
+    while (i < 0x3c)
     {
         item[5] = item[randomGetRange(0, 2) + 1];
         item += 0xc;
         i++;
     }
-    Music_Trigger(SHOP_MUSIC_ID, 1);
+    Music_Trigger(0x90, 1);
     ((GameObject*)obj)->unkF8 = 0;
-    GameBit_Set(GAMEBIT_SHOP_LOADED, 1);
+    GameBit_Set(0xefe, 1);
 }
 
-/* 1 unless the item's availability GameBit (availBit) is present and unset
-   (open by default; gated when availBit != -1). */
+/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
+ * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
+ * unset.  (i.e. open by default, gated when slot != -1.) */
 int shop_isItemAvailable(int p, int idx)
 {
+    extern void* Obj_GetPlayerObject(void);
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -260,8 +318,11 @@ int shop_isItemAvailable(int p, int idx)
     return result;
 }
 
+/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
+ * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
 int shop_isItemBought(int p, int idx)
 {
+    extern void* Obj_GetPlayerObject(void);
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -282,6 +343,7 @@ void shop_setStateField1(int* obj, int v)
 
 void shop_update(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int player;
 
     player = (int)Obj_GetPlayerObject();
