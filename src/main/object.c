@@ -1558,7 +1558,7 @@ void objFreeObjDef(void* objp, int flag)
     default:
         if (((GameObject*)obj)->anim.dll != NULL)
         {
-            fp = (void (*)(u8*, int))*(int*)(*(int*)&((GameObject*)obj)->anim.dll + 0x14);
+            fp = (void (*)(u8*, int))((int*)*(int*)*(int*)&((GameObject*)obj)->anim.dll)[5];
             if (fp != NULL)
             {
                 fp(obj, flag);
@@ -1710,7 +1710,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(o);
         }
     }
-    if (((GameObject*)obj)->seqIndex >= 0)
+    if (((GameObject*)obj)->seqIndex > -1)
     {
         if (flag == 0)
         {
