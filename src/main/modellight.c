@@ -1000,9 +1000,9 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
 void modelLightChannels_applyGXControls(void)
 {
     ModelLightChannelState* entry;
+    int channel;
     u8 activeMask;
     int lightMask;
-    int channel;
     int attnFn;
 
     activeMask = 0;
