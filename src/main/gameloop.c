@@ -513,7 +513,8 @@ void GameBit_Set(int eventId, int value)
     }
     if (eventId & 0x8000)
     {
-        value = ((u32)value & 1LL) ^ 1LL;
+        value = (u32)value & 1LL;
+        value = (u32)value ^ 1LL;
     }
     id = (s16)eventId & 0xfff;
     if (id == 0x95)
@@ -558,8 +559,8 @@ void GameBit_Set(int eventId, int value)
     }
     start = *(u16*)(gGameBitTable + id * 4);
     bit = 1;
-    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start + 1;
-    for (i = start; i < end; i++)
+    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start;
+    for (i = start; i < end + 1; i++)
     {
         int byteIdx = i >> 3;
         int mask;
