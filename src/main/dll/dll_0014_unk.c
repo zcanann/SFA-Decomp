@@ -1969,8 +1969,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 
 int mathFn_800dbff0(float* point)
 {
-    s16 down;
     s16 up;
+    s16 down;
     ObjfsaWalkGroup* g;
     f32 y;
     f32 z;
