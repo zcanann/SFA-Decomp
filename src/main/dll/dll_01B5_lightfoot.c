@@ -89,14 +89,15 @@ void lightfoot_initialise(void)
 
 void lightfoot_free(int obj, int p2)
 {
-    int i;
-    int count;
+    void* child;
     int inner = *(int*)&((GameObject*)obj)->extra;
+    int count;
+    int i;
     ObjGroup_RemoveObject(obj, 3);
     count = ((GameObject*)obj)->childCount;
     for (i = 0; i < count; i++)
     {
-        void* child = ((GameObject*)obj)->childObjs[0];
+        child = ((GameObject*)obj)->childObjs[0];
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
