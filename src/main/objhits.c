@@ -210,8 +210,6 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
     return cur != hits;
 }
-#pragma opt_propagation reset
-
 int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData,
                                   int* model, ObjHitsSkeletonHit* hits,
                                   ObjHitsSkeletonHit** outBest, f32* outAccum)
@@ -359,6 +357,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
     return cur != hits;
 }
+#pragma opt_propagation reset
 
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel,
