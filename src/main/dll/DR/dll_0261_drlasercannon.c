@@ -463,8 +463,8 @@ void drlasercannon_update(int obj)
     f32 nearDist;
     int spawnFlag;
     f32 hitPos[3];
-    f32 inv[6];
     f32 outv[6];
+    f32 inv[6];
     ((GameObject*)obj)->anim.localPosY -= state->bobOffset;
     if (state->flags.b7 != 0)
     {
@@ -510,7 +510,7 @@ void drlasercannon_update(int obj)
     }
     else
     {
-        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, (u8)(5 - (u8)state->health), lbl_803E6904);
         if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
@@ -647,7 +647,7 @@ void drlasercannon_update(int obj)
     }
     {
         int tricky = (int)getTrickyObject();
-        if (tricky != 0)
+        if ((void*)tricky != NULL)
         {
             (*(void (**)(int, int, int, int))(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
         }
