@@ -51,6 +51,7 @@ static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
     return (ObjHitsModelBank*)objAnim->banks[objAnim->bankIndex];
 }
 
+#pragma opt_propagation off
 int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData,
                                   int* model, ObjHitsSkeletonHit* hits,
                                   ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin, f32* outAccum)
@@ -209,6 +210,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
     return cur != hits;
 }
+#pragma opt_propagation reset
 
 int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData,
                                   int* model, ObjHitsSkeletonHit* hits,
