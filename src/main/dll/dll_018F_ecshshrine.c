@@ -1,20 +1,40 @@
-/* DLL 0x18F — ECSH shrine animated object controller [801C5990-801C5ED8) */
+/*
+ * DLL 0x18F - ECSH shrine animated object controller.
+ *
+ * Drives the floating shrine object at the EarthWalker/Cape Shrine: a
+ * bobbing model that orbits/wobbles toward the player (fn_801C5990) and
+ * fades with distance, plus its anim-event callback (fn_801C5CE4) which
+ * reacts to torch signals, sets camera vars, and toggles the model light.
+ *
+ * ecsh_shrine_update is the main state machine: it runs a six-slot rune
+ * puzzle whose working set lives in a shared scratch buffer (EcshPuzzleState
+ * at lbl_80326208 - color floats plus current/next rune arrays that are
+ * rotated/swapped per round), and sequences the screen transitions, object
+ * sequences and looping SFX as the puzzle advances through its phases.
+ * Several render/query helpers (modelMtxFn, func0E, render2, func0B,
+ * setScale) read the active instance through the lbl_803DDBC4 singleton.
+ *
+ * The DLL owns a cluster of GameBits set on init/free/transition (0xefa,
+ * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...) and a torch GameBit (0x58b).
+ */
 #include "main/game_object.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
-#include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/screen_transition.h"
 
+typedef struct EcshIntPair
+{
+    int a;
+    int b;
+} EcshIntPair;
+
 extern u32 randomGetRange(int min, int max);
-extern void* FUN_80017aa4();
-extern uint FUN_80017ae8();
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 mathSinf(f32 x);
 extern f32 timeDelta;
-extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E4F90;
 extern f32 lbl_803E4F94;
 extern f32 lbl_803E4F98;
@@ -27,8 +47,38 @@ extern f32 lbl_803E4FB0;
 extern f32 lbl_803E4FB4;
 extern f32 lbl_803E4FB8;
 extern f32 lbl_803E4FC8;
-extern f32 lbl_803E5C00;
-extern f32 lbl_803E5C10;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+extern f32 lbl_803E4FD4;
+extern f32 lbl_803E4FD8;
+extern f32 lbl_803E4FDC;
+extern f32 lbl_803E4FE0;
+extern f32 lbl_803E4FE4;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+extern int lbl_803DDBC0;
+extern EcshIntPair lbl_803E8470;
+extern s16 lbl_80326238[];
+
+extern u32 GameBit_Get(u32 bit);
+extern void Music_Trigger(int trackId, int restart);
+extern void ModelLightStruct_free(void* p);
+extern int objCreateLight(int a, int b);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(s16* obj, int* target, int id, int p);
+extern int objIsCurModelNotZero(int* player);
+extern void fn_80295CF4(int* player, int a);
+extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
+extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
+extern void audioStopByMask(int mask);
+extern int objGetAnimStateFlags(int* player, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
+extern void Sfx_PlayFromObject(s16* obj, int sfxId);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_AddObject(void* obj, int group);
+extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 typedef struct MmShrineAnimState
 {
@@ -52,109 +102,7 @@ typedef struct MmShrineAnimEvents
     u8 eventCount;
 } MmShrineAnimEvents;
 
-#pragma scheduling on
-#pragma peephole on
-extern s16 lbl_80326238[];
-extern undefined8 ObjGroup_RemoveObject();
-extern void Music_Trigger(int trackId, int restart);
-extern void ModelLightStruct_free(void* p);
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017830();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 DAT_803dc070;
-extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(s16* obj, int* target, int id, int p);
-extern int objIsCurModelNotZero(int* player);
-extern void fn_80295CF4(int* player, int a);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
-extern void audioStopByMask(int mask);
-extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void Music_Trigger(int id, int restart);
-extern int GameBit_Get(int bit);
-extern int lbl_803E8470;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
-extern void ModelLightStruct_free(void* light);
-extern int objCreateLight(int a, int b);
-extern int lbl_803DDBC0;
-extern f32 mathSinf(f32 angle);
-
-void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  int param_9, int param_10)
-{
-    extern undefined4 FUN_80017ae4(); /* #57 */
-    uint spawnFlag;
-    undefined2* lightObj;
-    undefined4 light;
-    int animSlot;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    int state;
-    double tmpColor;
-    double baseColor;
-
-    state = *(int*)&((GameObject*)param_9)->extra;
-    *(undefined2*)(state + 0x6a) = *(undefined2*)(param_10 + 0x1a);
-    *(undefined2*)(state + 0x6e) = 0xffff;
-    tmpColor = DOUBLE_803e5c08;
-    baseColor = (double)lbl_803E5C00;
-    *(float*)(state + 0x24) =
-        (float)(baseColor / (double)(float)(baseColor + (double)(float)((double)CONCAT44(0x43300000,
-            (uint) * (byte*)(
-                param_10 + 0x24)) - DOUBLE_803e5c08)));
-    *(undefined4*)(state + 0x28) = 0xffffffff;
-    animSlot = ((GameObject*)param_9)->unkF4;
-    if ((animSlot == 0) && (*(short*)(param_10 + 0x18) != 1))
-    {
-        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)param_10);
-        ((GameObject*)param_9)->unkF4 = *(short*)(param_10 + 0x18) + 1;
-    }
-    else if ((animSlot != 0) && ((int)*(short*)(param_10 + 0x18) != animSlot + -1))
-    {
-        (*gObjectTriggerInterface)->freeState((u8*)state);
-        if (*(short*)(param_10 + 0x18) != -1)
-        {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)param_10);
-        }
-        ((GameObject*)param_9)->unkF4 = *(short*)(param_10 + 0x18) + 1;
-    }
-    spawnFlag = FUN_80017ae8();
-    if ((spawnFlag & 0xff) != 0)
-    {
-        lightObj = FUN_80017aa4(0x24, 0x1b8);
-        *(undefined4*)(lightObj + 4) = *(undefined4*)&((GameObject*)param_9)->anim.localPosX;
-        *(undefined4*)(lightObj + 6) = *(undefined4*)&((GameObject*)param_9)->anim.localPosY;
-        *(undefined4*)(lightObj + 8) = *(undefined4*)&((GameObject*)param_9)->anim.localPosZ;
-        *(undefined*)(lightObj + 2) = 0x20;
-        *(undefined*)((int)lightObj + 5) = 4;
-        *(undefined*)((int)lightObj + 7) = 0xff;
-        light = FUN_80017ae4(tmpColor, baseColor, param_3, param_4, param_5, param_6, param_7, param_8, lightObj, 5, 0xff,
-                             0xffffffff, (uint*)0x0, in_r8, in_r9, in_r10);
-        *(undefined4*)&((GameObject*)param_9)->childObjs[0] = light;
-        *(float*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 8) =
-            *(float*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 8) * lbl_803E5C10;
-    }
-    return;
-}
-
+/* intentionally left open: every following fn compiles under these for matching */
 #pragma scheduling off
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj)
@@ -292,7 +240,7 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
 
 void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 {
-    extern int lbl_803DDBC4; /* #57 */
+    extern int lbl_803DDBC4; /* type varies per fn for coloring - #57 */
     int* obj = (int*)lbl_803DDBC4;
     int* inner;
     if (obj == NULL) return;
@@ -308,8 +256,7 @@ void ecsh_shrine_func0E(u8 v)
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
-    if ((u32)(u8)v == ((EcshShrineState*)inner)->unk2E
-    )
+    if ((u32)(u8)v == ((EcshShrineState*)inner)->unk2E)
     {
         ((EcshShrineState*)inner)->unk26 = 1;
     }
@@ -340,14 +287,12 @@ void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
     extern u8 lbl_80326208[]; /* #57 */
     extern void* lbl_803DDBC4; /* #57 */
-    int* obj;
     int j;
     if (lbl_803DDBC4 == NULL) return;
     j = lbl_80326238[idx];
     *out1 = *(f32*)((char*)lbl_80326208 + j * 8);
     j = lbl_80326238[idx];
     *out2 = *(f32*)((char*)lbl_80326208 + j * 8 + 4);
-    (void)obj;
 }
 
 void ecsh_shrine_setScale(s16* out)
@@ -398,7 +343,7 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void ecsh_shrine_free(int* obj)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int* inner = ((GameObject*)obj)->extra;
     Music_Trigger(0xd8, 0);
     Music_Trigger(0xd9, 0);
@@ -415,20 +360,12 @@ void ecsh_shrine_free(int* obj)
     GameBit_Set(0xa7f, 1);
 }
 
-/* segment pragma-stack balance (re-split): */
-
 typedef struct EcshPuzzleState
 {
     f32 f[12]; /* 0x00 */
     s16 cur[6]; /* 0x30 */
     s16 next[7]; /* 0x3c */
 } EcshPuzzleState;
-
-typedef struct EcshIntPair
-{
-    int a;
-    int b;
-} EcshIntPair;
 
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
@@ -455,6 +392,7 @@ void ecsh_shrine_update(s16* obj)
     sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     *(EcshIntPair*)&t[0] = *(EcshIntPair*)&lbl_803E8470;
+    /* raw byte-offset sub[] accesses below are load-bearing for matching */
     if (sub[0x32] == 0)
     {
         gv = GameBit_Get(0x58b);
@@ -842,80 +780,6 @@ void ecsh_shrine_update(s16* obj)
 }
 #pragma opt_strength_reduction reset
 
-void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined2* param_9)
-{
-    extern int FUN_80017ae4(); /* #57 */
-    uint spawnFlag;
-    int* iface;
-    undefined2* spawn;
-    undefined4 in_r8;
-    int in_r9;
-    undefined4 in_r10;
-    short* state;
-    int anim;
-
-    anim = *(int*)(param_9 + 0x26);
-    state = *(short**)(param_9 + 0x5c);
-    if ((*(int*)(param_9 + 0x7c) == '\0') && (spawnFlag = FUN_80017690((int)state[2]), spawnFlag != 0))
-    {
-        iface = (int*)FUN_80006b14(0x82);
-        (*(code*)(*iface + 4))(param_9, 0, 0, 1, 0xffffffff, 0);
-        in_r8 = 0;
-        in_r9 = *iface;
-        (*(code*)(in_r9 + 4))(param_9, 1, 0, 1, 0xffffffff);
-        param_1 = FUN_80006824((uint)param_9, SFXwp_mflop7_c);
-        FUN_80006b0c((undefined*)iface);
-        state[1] = 1;
-        *(undefined4*)(param_9 + 0x7c) = 1;
-    }
-    if (state[1] != 0)
-    {
-        *state = *state - state[1] * (ushort)DAT_803dc070;
-    }
-    spawnFlag = FUN_80017ae8();
-    if (((spawnFlag & 0xff) != 0) && (*state < 1))
-    {
-        spawn = (undefined2*)FUN_80017830(0x38, 0xe);
-        *(undefined4*)(spawn + 4) = *(undefined4*)(anim + 8);
-        *(undefined4*)(spawn + 6) = *(undefined4*)(anim + 0xc);
-        *(undefined4*)(spawn + 8) = *(undefined4*)(anim + 0x10);
-        *spawn = 0x11;
-        *(undefined4*)(spawn + 10) = 0xffffffff;
-        *(u8*)(spawn + 2) = *(u8*)(anim + 4);
-        *(u8*)((int)spawn + 5) = *(u8*)(anim + 5);
-        *(u8*)(spawn + 3) = *(u8*)(anim + 6);
-        *(u8*)((int)spawn + 7) = *(u8*)(anim + 7);
-        *(u8*)((int)spawn + 0x27) = 3;
-        *(u8*)(spawn + 0x14) = 0;
-        spawn[0xc] = state[2] + (short)*(char*)(anim + 0x1f);
-        spawn[0x18] = 0xffff;
-        *(char*)(spawn + 0x15) = (char)((ushort) * param_9 >> 8);
-        *(u8*)((int)spawn + 0x2b) = 2;
-        spawn[0x10] = 0;
-        spawn[0xf] = 0;
-        spawn[0x11] = 0xffff;
-        *(u8*)((int)spawn + 0x29) = 0xff;
-        *(u8*)(spawn + 0x17) = 0xff;
-        spawn[0x12] = 0;
-        spawn[0x16] = 0;
-        spawn[0x1a] = 0xffff;
-        spawn[0xd] = 0;
-        *(char*)(spawn + 0x19) = (char)state[4];
-        anim = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawn, 5,
-                             *(u8*)(param_9 + 0x56), 0xffffffff, *(uint**)(param_9 + 0x18), in_r8,
-                             in_r9, in_r10);
-        if (anim != 0)
-        {
-            *(u8*)(*(int*)&((GameObject*)anim)->extra + 0x404) = 0x20;
-        }
-        *state = 100;
-        state[1] = 0;
-    }
-    return;
-}
-
 void ecsh_shrine_release(void)
 {
 }
@@ -923,8 +787,6 @@ void ecsh_shrine_release(void)
 void ecsh_shrine_initialise(void)
 {
 }
-
-void ecsh_creator_free(void);
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
