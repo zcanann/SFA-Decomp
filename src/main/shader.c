@@ -823,6 +823,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     u8* tabEntry;
     int mapId;
     int mapY;
+    int mapCount;
     s8* arr;
 
     layer = 0;
@@ -850,7 +851,8 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     curMapLayer = 0;
     mapY = (s32)fastFloorf(c / gMapBlockWorldSize);
     mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
-    if (mapId < 0 || mapId >= (s32)((u32)getDataFileSize(0x1f) >> 5))
+    mapCount = (s32)((u32)getDataFileSize(0x1f) >> 5);
+    if (mapId < 0 || mapId >= mapCount)
     {
         curMapType = 0;
     }
