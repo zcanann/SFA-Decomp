@@ -2053,7 +2053,7 @@ extern f32 lbl_803DF270;
 extern f32 lbl_803DF274;
 extern f32 lbl_803DF278;
 
-#define D7_CLOUD ((u8 *)lbl_8039A818[i + 4])
+#define D7_CLOUD ((u8 *)clouds[i + 4])
 
 void dll_07_func06(void)
 {
@@ -2069,6 +2069,7 @@ void dll_07_func06(void)
     f32 mag;
     f32 t;
     f32 rot;
+    void** clouds;
     f32 d[3];
     f32 vec[3];
     f32 pos[3];
@@ -2087,6 +2088,7 @@ void dll_07_func06(void)
     } args;
     f32 mtx[12];
 
+    clouds = lbl_8039A818;
     nearestCloud = NULL;
     cam = Camera_GetCurrentViewSlot();
     activeCount = 0;
@@ -2094,10 +2096,10 @@ void dll_07_func06(void)
     if (lbl_803DD1C0 == 0)
     {
         lbl_803DD1C8 = textureLoadAsset(0x16a);
-        lbl_8039A818[0] = textureLoadAsset(0x5da);
-        lbl_8039A818[1] = textureLoadAsset(0x63f);
-        lbl_8039A818[2] = textureLoadAsset(0x640);
-        lbl_8039A818[3] = textureLoadAsset(0x641);
+        clouds[0] = textureLoadAsset(0x5da);
+        clouds[1] = textureLoadAsset(0x63f);
+        clouds[2] = textureLoadAsset(0x640);
+        clouds[3] = textureLoadAsset(0x641);
         lbl_803DD1C4 = textureLoadAsset(0x151);
         lbl_803DD1C0 = 1;
     }
