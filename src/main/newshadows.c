@@ -2269,6 +2269,7 @@ void allocLotsOfTextures(void)
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma ppc_unroll_speculative on
+#pragma opt_common_subs off
 void shadowCreate(int* obj)
 {
     int* cam;
@@ -2299,6 +2300,7 @@ void shadowCreate(int* obj)
         lbl_803DCF78++;
     }
 }
+#pragma opt_common_subs reset
 
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2)
 {
