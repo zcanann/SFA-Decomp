@@ -241,7 +241,7 @@ void alphaanimator_update(int* obj)
             {
                 s->alphaLevel =
                     (s16)(((AlphaanimatorPlacement*)d)->unk1C -
-                        (((AlphaanimatorPlacement*)d)->unk1D - s->alphaLevel));
+                        (int)(((AlphaanimatorPlacement*)d)->unk1D - s->alphaLevel));
             }
         }
         else
@@ -252,7 +252,7 @@ void alphaanimator_update(int* obj)
             {
                 s->alphaLevel =
                     (s16)(((AlphaanimatorPlacement*)d)->unk1D +
-                        (s->alphaLevel - ((AlphaanimatorPlacement*)d)->unk1D));
+                        (int)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->unk1D));
             }
         }
         break;
@@ -325,11 +325,13 @@ void alphaanimator_update(int* obj)
         }
         break;
     case 3:
-        absRate = (f32)(s8)((AlphaanimatorPlacement*)d)->unk1F;
-        if ((s8)((AlphaanimatorPlacement*)d)->unk1F < 0)
+    {
+        int rate = (s8)((AlphaanimatorPlacement*)d)->unk1F;
+        if (rate < 0)
         {
-            absRate = (f32)(-(s8)((AlphaanimatorPlacement*)d)->unk1F);
+            rate = -rate;
         }
+        absRate = (f32)rate;
         s->fadeA =
             absRate / lbl_803E3F80 * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)
@@ -340,5 +342,6 @@ void alphaanimator_update(int* obj)
         }
         s->fadeB = s->fadeA - lbl_803E3F84;
         break;
+    }
     }
 }
