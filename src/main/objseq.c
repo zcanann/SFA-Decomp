@@ -1161,7 +1161,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             break;
         }
         slotFlags = base + (s8)((ObjSeqState*)seq)->slot;
-        slotFlags = slotFlags + 0x3538;
+        slotFlags = (u8*)((int)slotFlags + 0x3538);
         v = *slotFlags;
         if ((v & 0x10) != 0)
         {
