@@ -1,35 +1,36 @@
+/*
+ * dll_B3 - per-render-op texture callback for the camcontrol lock-on
+ * reticle model, registered onto the active reticle model so the icon
+ * fades by distance tier. Lives in its own DLL because the reticle model
+ * is loaded on demand with the camcontrol HUD, not with the core renderer.
+ */
 #include "main/dll/dll_B3.h"
+#include "dolphin/gx/GXStruct.h"
+#include "main/dll/fx_800944A0_shared.h"
 
+/* Single render op of the lock icon model (ObjModel_GetRenderOp slot). */
 typedef struct CamcontrolLockIconRenderOp {
     u8 pad00[0x24];
-    s32 textureId;
-    u8 pad28;
-    u8 distanceTier;
+    s32 textureId;          /* 0x24 */
+    u8 pad28;               /* 0x28 */
+    u8 distanceTier;        /* 0x29: tier at which this op switches to dim */
 } CamcontrolLockIconRenderOp;
 
-typedef struct CamcontrolIconColor {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} CamcontrolIconColor;
+#define LOCK_ICON_DIM_ALPHA_SCALE 0x60
 
+/* object.c */
 extern CamcontrolLockIconRenderOp* ObjModel_GetRenderOp(int model, int idx);
+/* rcp_dolphin.c */
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
 extern void* textureIdxToPtr(int idx);
-extern void fn_80051D5C(void* tex, void* arg2, int arg3, CamcontrolIconColor* color);
-extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int op);
-extern void gxSetZMode_(u32 enable, int func, u32 update);
-extern void gxSetPeControl_ZCompLoc_(u32 ctrl);
-extern void GXSetAlphaCompare(int compA, int refA, int op, int compB, int refB);
-extern void GXSetCullMode(int mode);
+extern void fn_80051D5C(void* tex, void* arg2, int arg3, GXColor* color);
 
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
 {
     CamcontrolLockIconRenderOp* renderOp;
     u8 tier;
-    CamcontrolIconColor color;
+    GXColor color;
     f32 dist;
     int alphaVal;
 
@@ -61,7 +62,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
         color.r = 0;
         color.g = 0;
         color.b = 0;
-        alphaVal = ((obj->anim.alpha + 1) * 0x60) >> 8;
+        alphaVal = ((obj->anim.alpha + 1) * LOCK_ICON_DIM_ALPHA_SCALE) >> 8;
         color.a = alphaVal;
         fn_80051D5C(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
     }
