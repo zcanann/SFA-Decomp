@@ -471,17 +471,17 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     return;
 }
 
-#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
+#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep) \
     do { \
-        if ((void *)(handle) != NULL) { \
-            *(f32 *)((handle) + 0xc) = lbl_803E6460; \
-            *(f32 *)((handle) + 0x10) = lbl_803E6464; \
-            *(f32 *)((handle) + 0x14) = lbl_803E6468; \
+        if ((void *)(handleExpr) != NULL) { \
+            *(f32 *)((handleExpr) + 0xc) = lbl_803E6460; \
+            *(f32 *)((handleExpr) + 0x10) = lbl_803E6464; \
+            *(f32 *)((handleExpr) + 0x14) = lbl_803E6468; \
             (rot)[0] = (s16)(*(s16 *)(obj) + (angleStep)); \
-            vecRotateZXY((rot), (f32 *)((handle) + 0xc)); \
-            *(f32 *)((handle) + 0xc) += *(f32 *)((obj) + 0xc); \
-            *(f32 *)((handle) + 0x10) += *(f32 *)((obj) + 0x10); \
-            *(f32 *)((handle) + 0x14) += *(f32 *)((obj) + 0x14); \
+            vecRotateZXY((rot), (f32 *)((handleExpr) + 0xc)); \
+            *(f32 *)((handleExpr) + 0xc) += *(f32 *)((obj) + 0xc); \
+            *(f32 *)((handleExpr) + 0x10) += *(f32 *)((obj) + 0x10); \
+            *(f32 *)((handleExpr) + 0x14) += *(f32 *)((obj) + 0x14); \
         } \
     } while (0)
 
@@ -496,7 +496,6 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     int* handles;
     s16 angleStep;
     s16 i;
-    int handle;
 
     if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
     {
@@ -504,7 +503,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (int)((lbl_803E6458 + (f32)(u32)state->ringCount) * (lbl_803E645C * timeDelta));
+            *(s16*)obj += (int)((lbl_803E6458 + (f32)state->ringCount) * (lbl_803E645C * timeDelta));
         }
         else
         {
@@ -528,10 +527,9 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     angleStep = 0;
     rotation[2] = 0;
     rotation[1] = 0;
-    i = 0;
     handles = gSfxplayerEffectHandles;
 
-    for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+    for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
         SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
         SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
@@ -540,7 +538,6 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     }
 }
 
-#pragma opt_common_subs off
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
@@ -548,7 +545,6 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
     int* pair;
     int setup;
     int handleOffset;
-    int ri;
     s16* ringIds;
 
     ringIdWords[0] = lbl_803E6450;
@@ -559,8 +555,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         return 0;
     }
 
-    ri = ringIndex & 0xff;
-    handleOffset = ri * 8;
+    handleOffset = (ringIndex & 0xff) * 8;
     handles = gSfxplayerEffectHandles;
     if (*(void**)((int)handles + handleOffset) == NULL)
     {
@@ -580,7 +575,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
             SFXPLAYER_MODE_SEQUENCE)
         {
             ringIds = (s16*)ringIdWords;
-            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8)ringIds[ri];
+            ((SfxplayerRingVisualSetup*)setup)->ringId = (u8)ringIds[ringIndex & 0xff];
         }
         else
         {
@@ -618,7 +613,6 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     return 1;
 }
-#pragma opt_common_subs reset
 
 int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -656,9 +650,7 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
-        i = 0;
-        handles = (uint*)gSfxplayerEffectHandles;
-        for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        for (i = 0, handles = (uint*)gSfxplayerEffectHandles; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
             if (handles[0] != 0)
             {
