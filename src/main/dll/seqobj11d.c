@@ -191,7 +191,7 @@ void fn_801511E8(int obj, u8* state)
     u8* entry;
     u32 idx;
 
-    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
+    entry = *(u8**)(lbl_8031F16C + (state[0x33b] * 40 + 12));
     if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
@@ -215,9 +215,9 @@ void fn_801511E8(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, ((SeqEntry*)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32*)(entry + state[0x33a] * 16));
+    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], 0, 3, ((SeqEntry*)(entry + state[0x33a] * 16))->speed);
     ObjAnim_SetMoveProgress(
-        *(f32*)(lbl_8031DD30 + ((SeqEntry*)(entry + state[0x33a] * 16))->anim * 4),
+        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4),
         (ObjAnimComponent*)obj);
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
@@ -245,11 +245,11 @@ void fn_801513AC(int obj, u8* state)
                 - (u16)((GameObject*)obj)->anim.rotX;
             if (d > 0x8000)
             {
-                d -= 0xFFFF;
+                d = (d - 0x10000) + 1;
             }
             if (d < -0x8000)
             {
-                d += 0xFFFF;
+                d = (d + 0x10000) - 1;
             }
             state[0x33a] = (u8)(entry[8] + lbl_803DBC88[(s16)((u32)(u16)d >> 13)]);
         }
@@ -281,9 +281,9 @@ void fn_801513AC(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, ((SeqEntry*)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32*)(entry + state[0x33a] * 16));
+    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], 0, 3, ((SeqEntry*)(entry + state[0x33a] * 16))->speed);
     ObjAnim_SetMoveProgress(
-        *(f32*)(lbl_8031DD30 + ((SeqEntry*)(entry + state[0x33a] * 16))->anim * 4),
+        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4),
         (ObjAnimComponent*)obj);
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
