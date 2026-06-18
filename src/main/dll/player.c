@@ -18790,17 +18790,18 @@ void fn_802AEF34(int obj, int state)
         case 2:
             if (prevChanged != 0)
             {
-                Object_ObjAnimSetMove(((GameObject*)obj)->anim.currentMoveProgress, obj,
-                                      ((GameObject*)obj)->anim.currentMove, 0);
+                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                    obj, ((GameObject*)obj)->anim.currentMove,
+                    ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 p = *(void**)((char*)state + 0x4b8);
                 if (p != NULL &&
                     (*(s16*)((char*)p + 0x44) == 0x1c || *(s16*)((char*)p + 0x44) == 0x2a))
                 {
-                    Object_ObjAnimSetMove(lbl_803E7EA4, obj, 0x82, 0);
+                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x82, lbl_803E7EA4, 0);
                 }
                 else
                 {
-                    Object_ObjAnimSetMove(lbl_803E7EA4, obj, 0x8d, 0);
+                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x8d, lbl_803E7EA4, 0);
                 }
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
@@ -18822,17 +18823,18 @@ void fn_802AEF34(int obj, int state)
         case 1:
             if (prevChanged != 0)
             {
-                Object_ObjAnimSetMove(((GameObject*)obj)->anim.currentMoveProgress, obj,
-                                      ((GameObject*)obj)->anim.currentMove, 0);
+                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                    obj, ((GameObject*)obj)->anim.currentMove,
+                    ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 p = *(void**)((char*)state + 0x4b8);
                 if (p != NULL &&
                     (*(s16*)((char*)p + 0x44) == 0x1c || *(s16*)((char*)p + 0x44) == 0x2a))
                 {
-                    Object_ObjAnimSetMove(lbl_803E7F68, obj, 0x82, 0);
+                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x82, lbl_803E7F68, 0);
                 }
                 else
                 {
-                    Object_ObjAnimSetMove(lbl_803E7F68, obj, 0x8d, 0);
+                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x8d, lbl_803E7F68, 0);
                 }
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
@@ -18853,10 +18855,11 @@ void fn_802AEF34(int obj, int state)
         case 0xf:
             if (prevChanged != 0)
             {
-                Object_ObjAnimSetMove(((GameObject*)obj)->anim.currentMoveProgress, obj,
-                                      ((GameObject*)obj)->anim.currentMove, 0);
-                Object_ObjAnimSetMove(lbl_803E7EA4, obj,
-                                      lbl_8033366C[*(u8*)((char*)state + 0x8a2)], 0);
+                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                    obj, ((GameObject*)obj)->anim.currentMove,
+                    ((GameObject*)obj)->anim.currentMoveProgress, 0);
+                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                    obj, lbl_8033366C[*(u8*)((char*)state + 0x8a2)], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0)
@@ -18896,8 +18899,9 @@ void fn_802AEF34(int obj, int state)
         case 3:
             if (((GameObject*)obj)->anim.activeMove != ((GameObject*)obj)->anim.currentMove)
             {
-                Object_ObjAnimSetMove(((GameObject*)obj)->anim.currentMoveProgress, obj,
-                                      ((GameObject*)obj)->anim.currentMove, 0);
+                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                    obj, ((GameObject*)obj)->anim.currentMove,
+                    ((GameObject*)obj)->anim.currentMoveProgress, 0);
             }
             if (*(u16*)((char*)model + 0x58) == 0)
             {
