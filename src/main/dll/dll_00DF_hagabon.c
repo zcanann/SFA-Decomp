@@ -138,7 +138,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608,
                                           &lbl_803DBC70, -1) != 0))
     {
-        *flags &= 0xfe;
+        *flags &= ~1;
     }
 
     *(int*)&lbl_803DDA58 = *(int*)(curve + 0x10);
