@@ -169,7 +169,7 @@ void waveanimator_update(void);
 int groundanimator_getExtraSize(void) { return 0x30; }
 int hitanimator_getExtraSize(void);
 
-u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
+u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b); }
 
 #pragma peephole off
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
