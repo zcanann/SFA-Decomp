@@ -1763,7 +1763,7 @@ void pauseMenuRunSubmenu(u8 p1)
 {
     s8 sel = -1;
     u8 valid = 0;
-    u32 btn = getButtonsJustPressed(0);
+    int btn = getButtonsJustPressed(0);
 
     gCMenuButtons = btn;
     if (lbl_803DD75C != 0)
