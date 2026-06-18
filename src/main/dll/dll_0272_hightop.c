@@ -1174,6 +1174,7 @@ int hightop_stateHandler09(int obj, int p)
 int hightop_stateHandler10(int obj, int p)
 {
     HighTopRuntime* rt = ((GameObject*)obj)->extra;
+    int* weight;
     int r;
     int i;
     if ((s8) * (u8*)((char*)p + 0x27a) != 0)
@@ -1200,11 +1201,9 @@ int hightop_stateHandler10(int obj, int p)
     {
         if (randFn_80080100(500) != 0)
         {
-            int* weight;
-
             r = randomGetRange(0, 100);
-            weight = lbl_8032AB3C;
             i = 0;
+            weight = lbl_8032AB3C;
             while (*weight < r)
             {
                 weight++;
