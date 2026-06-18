@@ -138,7 +138,7 @@ void camcontrol_updateTargetFeedback(void)
     }
     if (gCamcontrolTargetState == '\0')
     {
-        if (gCamcontrolNormalizedMin >= reticle->currentMoveProgress)
+        if (reticle->currentMoveProgress <= gCamcontrolNormalizedMin)
         {
             if (target != NULL)
             {
@@ -167,6 +167,10 @@ void camcontrol_updateTargetFeedback(void)
     else
     {
         gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
+        if (target != NULL)
+        {
+            ObjAnim_SetMoveProgress(gCamcontrolNormalizedMin, reticle);
+        }
         if (target == NULL)
         {
             targetKind = CAMCONTROL_CAMERA->targetKind;
@@ -183,10 +187,6 @@ void camcontrol_updateTargetFeedback(void)
             {
                 Sfx_PlayFromObject(0, SFXsc_spotfox02);
             }
-        }
-        else
-        {
-            ObjAnim_SetMoveProgress(gCamcontrolNormalizedMin, reticle);
         }
     }
     result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
