@@ -6006,13 +6006,16 @@ int fn_8029F108(int obj, int state)
         }
         kind = (*(int (*)(int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x30)))(sub);
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 3);
-        if (kind >= 2)
+        if (kind < 2)
         {
-            n = 9;
-        }
-        else if (kind >= 1)
-        {
-            n = 8;
+            if (kind >= 1)
+            {
+                n = 8;
+            }
+            else
+            {
+                n = 9;
+            }
         }
         else
         {
