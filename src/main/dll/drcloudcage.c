@@ -1,6 +1,32 @@
+/*
+ * drcloudcage - "cloud cage" trail/audio effect helper DLL.
+ *
+ * Provides three routines shared with the snowbike (DLL 0x255), hightop and
+ * drshackle objects:
+ *   fn_801E9C00  builds and fades the swirling cloud-trail ribbons. Each of the
+ *                three emitters casts a transformed segment, ray-tests it
+ *                (hitDetectFn_80065e50, mask 0x20), and when it strikes ground
+ *                inserts a new fully-opaque point pair at the head of one of the
+ *                nine trail buffers; every existing pair's alpha decays by
+ *                timeDelta and exhausted trails are freed.
+ *   fn_801EA240  drives the wind/engine sfx channels (8,1,2,4) by distance and
+ *                rotZ, clamps each channel volume, and spawns two light pulses;
+ *                then advances the trails via fn_801E9C00.
+ *   fn_801EA678  returns a distance/route-rank weighted scalar (pitch/intensity)
+ *                from the checkpoint route rank, falling back to player distance
+ *                when no rank gate (lbl_803DC0BC) is set.
+ *
+ * State is addressed through raw byte offsets into the owning object's extra
+ * block; trail buffers begin at DRCLOUDCAGE_TRAILS_OFFSET (DRCLOUDCAGE_TRAIL_COUNT
+ * records of DRCLOUDCAGE_TRAIL_STRIDE bytes), with the three active head-trail
+ * pointers immediately following at +0x510/+0x514/+0x518.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/checkpoint_interface.h"
 
+/* lbl_803DC0BC/lbl_803DC0E0/lbl_803AD088 are shared route-rank state owned by
+   drhightop; the lbl_803E5* pool and lbl_802C2428 point template live in this
+   DLL's data; timeDelta is the global frame delta. */
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, uint volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -16,7 +42,7 @@ extern s32 lbl_803DC0BC;
 extern f32 lbl_803DC0E0;
 extern f32 timeDelta;
 extern f32 lbl_803DDC64;
-extern undefined4 lbl_803AD088[];
+extern u8 lbl_803AD088[];
 extern struct DRCloudCagePoints lbl_802C2428;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
@@ -49,6 +75,11 @@ extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
 
+#define DRCLOUDCAGE_TRAIL_COUNT 9
+#define DRCLOUDCAGE_TRAIL_STRIDE 8
+#define DRCLOUDCAGE_TRAILS_OFFSET 0x4c8
+#define DRCLOUDCAGE_PAIR_SIZE 0x10
+#define DRCLOUDCAGE_TRAIL_FLAG_ACTIVE 1
 
 typedef struct DRCloudCagePointPair
 {
@@ -84,6 +115,7 @@ typedef struct DRCloudCageStateFlags
     u8 hidden : 1;
     u8 rest : 7;
 } DRCloudCageStateFlags;
+STATIC_ASSERT(sizeof(DRCloudCageStateFlags) == 1);
 
 typedef struct DRCloudCageObjPos
 {
@@ -95,6 +127,7 @@ typedef struct DRCloudCageObjPos
     f32 y;
     f32 z;
 } DRCloudCageObjPos;
+STATIC_ASSERT(sizeof(DRCloudCageObjPos) == 0x18);
 
 void fn_801E9C00(int obj, int state)
 {
@@ -142,14 +175,15 @@ void fn_801E9C00(int obj, int state)
 
     localPoints = lbl_802C2428;
 
-    for (trailIndex = 0, p = (u8*)state; trailIndex < 9; p += 8, trailIndex++)
+    for (trailIndex = 0, p = (u8*)state; trailIndex < DRCLOUDCAGE_TRAIL_COUNT;
+         p += DRCLOUDCAGE_TRAIL_STRIDE, trailIndex++)
     {
-        trail = (DRCloudCageTrail*)(p + 0x4c8);
-        if (trail->flags & 1)
+        trail = (DRCloudCageTrail*)(p + DRCLOUDCAGE_TRAILS_OFFSET);
+        if (trail->flags & DRCLOUDCAGE_TRAIL_FLAG_ACTIVE)
         {
             pairIndex = trail->count - 2;
             points = (u8*)trail->points;
-            pair = (DRCloudCagePointPair*)(points + pairIndex * 0x10);
+            pair = (DRCloudCagePointPair*)(points + pairIndex * DRCLOUDCAGE_PAIR_SIZE);
             fade = lbl_803E5AF0;
             for (; pairIndex >= 0; pair--, pairIndex -= 2)
             {
@@ -178,7 +212,7 @@ void fn_801E9C00(int obj, int state)
             }
 
             pairIndex = trail->count - 2;
-            pair = (DRCloudCagePointPair*)(points + pairIndex * 0x10);
+            pair = (DRCloudCagePointPair*)(points + pairIndex * DRCLOUDCAGE_PAIR_SIZE);
             for (; pairIndex >= 0; pair--, pairIndex -= 2)
             {
                 if (pairIndex >= 2)
@@ -203,7 +237,7 @@ void fn_801E9C00(int obj, int state)
                 (trail != *(DRCloudCageTrail**)(state + 0x518)) &&
                 (trail->count == 0))
             {
-                trail->flags &= ~1;
+                trail->flags &= ~DRCLOUDCAGE_TRAIL_FLAG_ACTIVE;
             }
         }
     }
@@ -270,33 +304,34 @@ void fn_801E9C00(int obj, int state)
         if (!((DRCloudCageStateFlags*)(state + 0x428))->hidden && hitDetected)
         {
             selectedTrail = *(DRCloudCageTrail**)(slot + 0x510);
-            if (selectedTrail == (DRCloudCageTrail*)0)
+            if (selectedTrail == NULL)
             {
-                for (scanIndex = 0; scanIndex < 9; scanIndex++)
+                for (scanIndex = 0; scanIndex < DRCLOUDCAGE_TRAIL_COUNT; scanIndex++)
                 {
-                    selectedTrail = (DRCloudCageTrail*)(state + scanIndex * 8 + 0x4c8);
-                    if (!(selectedTrail->flags & 1))
+                    selectedTrail = (DRCloudCageTrail*)(state + scanIndex * DRCLOUDCAGE_TRAIL_STRIDE +
+                                                        DRCLOUDCAGE_TRAILS_OFFSET);
+                    if (!(selectedTrail->flags & DRCLOUDCAGE_TRAIL_FLAG_ACTIVE))
                     {
                         break;
                     }
                 }
-                if (scanIndex >= 9)
+                if (scanIndex >= DRCLOUDCAGE_TRAIL_COUNT)
                 {
                     break;
                 }
-                selectedTrail->flags |= 1;
+                selectedTrail->flags |= DRCLOUDCAGE_TRAIL_FLAG_ACTIVE;
                 selectedTrail->count = 0;
                 *(DRCloudCageTrail**)(slot + 0x510) = selectedTrail;
             }
             else
             {
                 copyIndex = selectedTrail->count - 1;
-                copyOffset = copyIndex * 0x10;
+                copyOffset = copyIndex * DRCLOUDCAGE_PAIR_SIZE;
                 while (copyIndex >= 0)
                 {
-                    memcpy((u8*)selectedTrail->points + (copyIndex + 2) * 0x10,
-                           (u8*)selectedTrail->points + copyOffset, 0x10);
-                    copyOffset -= 0x10;
+                    memcpy((u8*)selectedTrail->points + (copyIndex + 2) * DRCLOUDCAGE_PAIR_SIZE,
+                           (u8*)selectedTrail->points + copyOffset, DRCLOUDCAGE_PAIR_SIZE);
+                    copyOffset -= DRCLOUDCAGE_PAIR_SIZE;
                     copyIndex--;
                 }
             }
@@ -353,11 +388,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             {
                 lbl_803DDC64 = -lbl_803DDC64;
             }
-            if (lbl_803DDC64 < *(f32*)&lbl_803E5B10)
+            if (lbl_803DDC64 < *(f32*)&lbl_803E5B10) /* #81 launder */
             {
                 lbl_803DDC64 = lbl_803E5B10;
             }
-            if (lbl_803DDC64 > *(f32*)&lbl_803E5B14)
+            if (lbl_803DDC64 > *(f32*)&lbl_803E5B14) /* #81 launder */
             {
                 lbl_803DDC64 = lbl_803E5B14;
             }
@@ -392,8 +427,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                     d = clamped * (f32)((GameObject*)obj)->anim.rotZ / lbl_803E5B24;
                 }
                 lbl_803DDC64 = d;
-                fv = (f32)(f64)
-                d;
+                fv = (f32)(f64)d;
                 if (fv < 0.0f)
                 {
                     lbl_803DDC64 = -fv;
@@ -430,11 +464,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32*)(state + 0x3f8) = -(lbl_803E5B2C * timeDelta - *(f32*)(state + 0x3f8));
             }
         }
-        if (*(f32*)(state + 0x3f8) > *(f32*)&lbl_803E5B08)
+        if (*(f32*)(state + 0x3f8) > *(f32*)&lbl_803E5B08) /* #81 launder */
         {
             *(f32*)(state + 0x3f8) = lbl_803E5B08;
         }
-        if (*(f32*)(state + 0x3f8) < *(f32*)&lbl_803E5B30)
+        if (*(f32*)(state + 0x3f8) < *(f32*)&lbl_803E5B30) /* #81 launder */
         {
             *(f32*)(state + 0x3f8) = lbl_803E5B30;
         }
@@ -451,11 +485,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32*)(state + 0x3f4) = -(lbl_803E5AF8 * timeDelta - *(f32*)(state + 0x3f4));
             }
         }
-        if (*(f32*)(state + 0x3f4) > *(f32*)&lbl_803E5B40)
+        if (*(f32*)(state + 0x3f4) > *(f32*)&lbl_803E5B40) /* #81 launder */
         {
             *(f32*)(state + 0x3f4) = lbl_803E5B40;
         }
-        if (*(f32*)(state + 0x3f4) < *(f32*)&lbl_803E5B44)
+        if (*(f32*)(state + 0x3f4) < *(f32*)&lbl_803E5B44) /* #81 launder */
         {
             *(f32*)(state + 0x3f4) = lbl_803E5B44;
         }
@@ -472,34 +506,33 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                               &pulse);
     }
     fn_801E9C00(obj, state);
-    (void)unused;
 }
 
 f32 fn_801EA678(int obj, int state)
 {
     f32 result;
     f32 d;
-    f32 v7;
-    f32 v6;
-    int player;
+    f32 templateMetric;
+    f32 stateMetric;
+    int rank;
 
     if ((lbl_803DC0BC == -1) ||
-        (player = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28)),
-         lbl_803DC0BC > player))
+        (rank = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28)),
+         lbl_803DC0BC > rank))
     {
         if (lbl_803DC0BC == -1)
         {
-            player = Obj_GetPlayerObject();
-            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(player + 0x18));
+            rank = Obj_GetPlayerObject();
+            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(rank + 0x18));
             d = d * lbl_803E5AF8;
         }
         else
         {
-            v7 = lbl_803E5B48 * (f32) * (s32*)((u8*)lbl_803AD088 + 0x1c) +
+            templateMetric = lbl_803E5B48 * (f32) * (s32*)((u8*)lbl_803AD088 + 0x1c) +
                 lbl_803E5B48 * *(f32*)((u8*)lbl_803AD088 + 0xc);
-            v6 = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) +
+            stateMetric = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) +
                 lbl_803E5B48 * *(f32*)(state + 0x34);
-            d = v7 - v6;
+            d = templateMetric - stateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
         }
         if (d <= *(f32*)(state + 0x1c))
@@ -520,7 +553,7 @@ f32 fn_801EA678(int obj, int state)
         }
         if (*(u8*)(state + 0x434) == 0)
         {
-            d = v6 - v7;
+            d = stateMetric - templateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
             if (d > lbl_803DC0E0)
             {
@@ -530,8 +563,8 @@ f32 fn_801EA678(int obj, int state)
     }
     else
     {
-        player = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28));
-        if (player == 2)
+        rank = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28));
+        if (rank == 2)
         {
             result = lbl_803E5B60;
         }
