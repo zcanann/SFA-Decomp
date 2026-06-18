@@ -1,7 +1,24 @@
+/*
+ * cmbsrc (DLL 0x02B1) - a "combustible source": a placed light/effect
+ * emitter (campfire, thruster vent, T-wall/T-pole flame) that glows,
+ * pulses, cycles colour and spawns particles while active.
+ *
+ * Activation is gated three ways (cmbsrc_shouldActivate /
+ * cmbsrc_shouldDeactivate): an optional game bit, the Thorntail-gate
+ * sun-position test, and a hit-charge timer. While active the object
+ * drives a ModelLight (diffuse/specular/glow), emits light pulses and
+ * particles, and keeps a looped object sound alive. The hit logic
+ * (cmbsrc_hitDetect) lets the source be damaged/recharged, clamping
+ * hit charge to [0, CMBSRC_MAX_HIT_CHARGE].
+ *
+ * Per-instance behaviour is driven by the placement's flags /
+ * behaviorFlags / seqId (CMBSRC_MAP_*, CMBSRC_BEHAVIOR_*, CMBSRC_SEQ_*)
+ * defined in dll_02B1_cmbsrc.h.
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
-int cmbsrc_getExtraSize(void) { return 0x28; }
+int cmbsrc_getExtraSize(void) { return CMBSRC_EXTRA_STATE_BYTES; }
 
 int cmbsrc_getObjectTypeId(void) { return 0; }
 
@@ -138,8 +155,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     }
     else if (sourceState->hitCharge == 0)
     {
-        sourceState->inactiveTimer = (f32)(u32)
-        sourceState->inactiveFrameCount;
+        sourceState->inactiveTimer = (f32)(u32)sourceState->inactiveFrameCount;
         result = 1;
     }
     return result;
@@ -189,7 +205,7 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a); /* #57 */
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -214,19 +230,9 @@ int cmbsrc_cycleColor(int obj, int state)
                                               lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
                                                    (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
-                (int)
-            (lbl_803E7368 * (f32)(u32)
-            lbl_8032BD50[base + 1]
-            )
-            ,
-            (int)
-            (lbl_803E7368 * (f32)(u32)
-            lbl_8032BD50[base + 2]
-            )
-            ,
-            0xff
-            )
-            ;
+                                                   (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 1]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]),
+                                                   0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE)
@@ -487,7 +493,7 @@ int cmbsrc_update(int obj)
 
 void cmbsrc_init(int obj, u8* setup)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a); /* #57 */
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcMapData* mapData = (CmbSrcMapData*)setup;
     CmbSrcState* state = cmbsrc->state;
