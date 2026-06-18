@@ -68,7 +68,7 @@ extern f32 lbl_803E2614;
 extern f32 lbl_803E2618;
 extern f32 lbl_803E261C;
 extern f32 lbl_803E2620;
-extern f32 lbl_803E2624;
+extern const f32 lbl_803E2624;
 extern f32 lbl_803E2628;
 extern f32 lbl_803E262C;
 extern f32 lbl_803E2630;
@@ -400,7 +400,7 @@ void hagabon_update(int obj)
     }
 
     player = Obj_GetPlayerObject();
-    dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
+    dist = Vec_distance((f32*)((int)obj + 0x18), &player->anim.worldPosX);
     if (dist < lbl_803E2658)
     {
         Sfx_PlayFromObject(obj, SFXstaff_proj_outofmagic);
