@@ -1,5 +1,5 @@
 /*
- * main/dll/baddie/wispBaddie.c
+ * pausemenu - in-game pause-menu rendering (main panel + status overlay).
  *
  * Text span (EN v1.0): 0x801262CC..0x80128120 (3 functions, 7764 b)
  *  - pauseMenuDraw              @ 0x801262CC, 4564 b
@@ -8,7 +8,7 @@
  */
 
 #include "main/dll/hud_textures.h"
-#include "main/dll/baddie/wispBaddie.h"
+#include "ghidra_import.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 

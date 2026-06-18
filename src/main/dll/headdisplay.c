@@ -1,10 +1,6 @@
 /*
- * NOTE: filename is swarmbaddie.c but this TU contains HUD/overlay code,
- * not swarm-baddie logic (likely a mis-named split boundary). The
- * description below reflects the ACTUAL contents.
- *
- * HUD / overlay drawing for the in-cockpit pause-menu head display and
- * the Arwing flight HUD.
+ * headdisplay - HUD / overlay drawing for the in-cockpit pause-menu head
+ * display (the NPC "comms" portrait box) and the Arwing flight HUD.
  *
  *  - drawFn_80125424: animates the active head-display panel (the NPC
  *    "comms" box). Scrolls the panel open/closed (lbl_803DD858 width
