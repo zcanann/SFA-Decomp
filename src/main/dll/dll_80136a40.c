@@ -952,6 +952,10 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
     int a1;
     int a2;
     int a3;
+    int b0;
+    int b1;
+    int b2;
+    int b3;
 
     if (enableDebugText != 0)
     {
@@ -967,19 +971,27 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
             c1 = p1 + row1;
             a2 = c1;
             a3 = c1 + 1;
+            b0 = c0 * 2;
+            b1 = a1 * 2;
+            b2 = c1 * 2;
+            b3 = a3 * 2;
             for (; bit < 8; bit++)
             {
                 if (((1 << bit) & *grid) != 0)
                 {
-                    debugDrawFrameBuffer[a0] = 0xC080;
-                    debugDrawFrameBuffer[a1] = 0xC080;
-                    debugDrawFrameBuffer[a2] = 0xC080;
-                    debugDrawFrameBuffer[a3] = 0xC080;
+                    *(u16*)((char*)debugDrawFrameBuffer + b0) = 0xC080;
+                    *(u16*)((char*)debugDrawFrameBuffer + b1) = 0xC080;
+                    *(u16*)((char*)debugDrawFrameBuffer + b2) = 0xC080;
+                    *(u16*)((char*)debugDrawFrameBuffer + b3) = 0xC080;
                 }
                 a0++;
                 a1++;
                 a2++;
                 a3++;
+                b0 += 2;
+                b1 += 2;
+                b2 += 2;
+                b3 += 2;
             }
             DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
             DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
