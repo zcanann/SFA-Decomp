@@ -2662,7 +2662,7 @@ int ObjSeq_update(u8* obj, f32 t)
         p -= 2;
         if (*(s16*)(p + 0x30) > 0)
         {
-            *(s16*)(p + 0x30) = *(s16*)(p + 0x30) - framesThisStep;
+            *(s16*)(p + 0x30) -= (s16)framesThisStep;
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
