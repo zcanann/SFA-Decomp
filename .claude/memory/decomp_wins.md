@@ -1,5 +1,113 @@
 # Decomp Matching Wins (dll_0000-0140 scope)
 
+## ===== Session (Jun17d, baddie DLL scope): 3 wins, ~11 attempts =====
+WINS (all clean structural levers, committed locally; push rejected remote-ahead):
+- dll_00C9_enemy enemy_update (99.3->100%, 9494947eb4): controlFlags is u32 but
+  the clear used `&= ~0x8003LL` (64-bit). The LL forced a spurious `li r4,0`
+  high-word zero that MWCC HOISTED and REUSED for the adjacent `rotZ=0; rotY=0`
+  sth stores; target uses a fresh `li r0,0` at the stores. Drop the LL ->
+  single 32-bit AND + fresh zero -> BYTE MATCH. **LEVER: a `~KLL` mask on a u32
+  field is only harmful when the high-word `li r4,0` gets reused by a nearby
+  const-zero store — most `~KLL` on u32 (flags2DC etc.) are fine (already 100%);
+  the tell is `li r4,0` co-located in the diff with `sth/stb r4` zero-stores
+  near a 64-bit mask. NOT a blanket sweep — situational.**
+- dll_00D0_grimble grimble_update (94.9->98.8%, 80a42b6f30): the
+  `(*gPlayerInterface+8)` state-machine dispatcher was declared
+  `(int,char*,void*,void*,f32,f32)` (floats LAST). CANONICAL (see kaldachom
+  line 478) = `(double,double,int,int,void*,void*)` floats FIRST. Target emits
+  state(r4) then the two f32 args; the floats-last sig mis-ordered emission.
+  Rewrote sig + call to floats-first. Residual 1.2% = 1 mr-position + 2 @125
+  pool relocs (#70 neutral). **CAVEAT: this dispatcher's arg order is NOT
+  universally floats-first — fn_802BE6E8 (drearthwarrior) uses floats-MIDDLE
+  `(int,int,f32,f32,...)` and is 100%. Depends on whether target emits floats
+  before/after the int args; grimble's floats were a NAMED const (lbl_803E2EBC)
+  not timeDelta, which schedules differently. Check the diff (mr-before-fmr vs
+  fmr-before-mr) before flipping.**
+- dll_00DF_hagabon hagabon_update (88.6->89.2%, ac156073e7): `shouldNotSaveTime`
+  was cast `(u8(*)(int))` -> clrlwi;cmplwi. Interface decl is `int(*)(int)`;
+  drop the cast -> cmpwi (#11/#124 cmp-width vein). Residual = +1 saved reg
+  (`_savegpr_27` 5 regs vs target 4 individual stw, frame -80 vs -96) = the
+  CSE-into-saved-reg vein (target holds obj+3 derefs in 4 regs, current CSEs a
+  5th). Banked the saved-reg part.
+BANKED this session (no source lever, reverted byte-clean):
+- dll_00E0_swarmbaddie swarmbaddie_update (96.0%): d[3] array dead-store — target
+  keeps the d[2] store, scalars dx/dy/dz INERT (DSE direction unchanged). #8.
+- dll_0262_drakormissile drakormissile_render (96.7%): base/walker p/m r26<->r30
+  swap (target keeps orig base r26, walker r30; current swapped). decl reorder +
+  m re-derive (VN-folds) INERT. #108 single-reg.
+- dll_00D2_tumbleweed tumbleweed_updateEffects (98.8%): `field++` stb stores from
+  r4(masked) vs target r0(raw +1). separate masked var INERT. #20/#108 sub-instr.
+  (SJIS carrier file — edits warn but EXIT=0.)
+- dll_00D2_tumbleweed tumbleweed_updateTargetedStateMachine (99.0%): `player =
+  field284 ? field284 : GetPlayer()` ternary -> target r3 direct, current
+  lwz r0;mr r3 + f30/f31 FP swap (#82). if-embedded-assign form REGRESSED. Bank.
+- dll_00D9_pollen fn_8016A660 (98.9%): `if(locked){body}` guard = target
+  `bne body;b end` (2 instr) vs current `beq end` (1 instr, fused). peephole off
+  INERT. + 3 @101 pool relocs (#70). Effectively 1-instr cap. Bank.
+- dll_01A1_nwmammoth nw_mammoth_update (97.3%): multi-issue — table=lbl_803267C0
+  named-ptr extra mr (#80, (int) launder INERT) + stateFlags[stateIndex] CSE'd
+  vs target re-reads (VN-bound, #130) + slwi/lha ordering. Bank.
+LESSON: baddie core units (enemy/tricky/unk/wispbaddie) are ALL 100% already;
+  the remaining baddie work is in creature DLLs (grimble/hagabon/tumbleweed/
+  drakormissile/nwmammoth/swarmbaddie). proto report fuzzy = PERCENT (0-100) not
+  0-1; field3 fixed32 per fn. Cleanest veins THIS wave: (a) `~KLL`-on-u32 when
+  the high-word zero is reused (enemy 100%); (b) state-machine dispatcher arg
+  order floats-first when target emits floats-before-ints (grimble +3.9, A/B);
+  (c) cmp-width drop-u8-cast (#11). Remaining band is #108 saved-reg/single-reg
+  perms + #82 FP swaps + branch-fold + pool relocs.
+
+## ===== Session (Jun17c, flat dll_0000-0140 scope): 3 wins, ~7 attempts =====
+WINS (all clean structural levers, committed locally; push rejected remote-ahead):
+- dll_0271_drakorhoverpad drakorhoverpad_updateMain (86.9->88.6%, bbe34bbb2d): the
+  verticalVel clamp. (1) abs via TERNARY `v=(v>=0)?v:-v` (#63) not `if(v<0)v=-v` —
+  target uses cror eq,gt,eq + bne/fmr/b/fneg (keep-or-negate), source's if gives
+  bge;fneg. (2) FOLD both adjust arms into ONE add: `vv = vv + ((vv>*p)?-limit:limit)`
+  so MWCC emits fneg + shared fadds (#27) instead of separate fsubs(arm1)/fadds(arm2).
+  RESIDUAL banked: phase = lblA * (f32)(int)getAngle(...) / lblB — target loads lblA
+  into f2 BEFORE the int->double conversion (keeps live, fmuls f1,f2,f0); current
+  reloads lblA after. Pure multiply-operand load-scheduling, scheduling-off INERT
+  (it's isel/eval order). Bank.
+- dll_0001_camcontrol camcontrol_updateTargetFeedback (92.7->93.2%, 12d3552666):
+  (1) reticle-INACTIVE branch: target calls ObjAnim_SetMoveProgress in a STANDALONE
+  if(target!=0) BEFORE a SEPARATE if(target==0) sfx dispatch — NOT if/else. Source
+  had it as the else of the target==0 dispatch. Split into two ifs. (2) flip active-
+  branch guard `NormalizedMin >= progress` -> `progress <= NormalizedMin` so fcmpo
+  loads progress into f1 first (cror lt,eq matching target vs gt,eq). RESIDUAL: the
+  `||` FadeIn shared-block (focus==target || progress<Max) still emits inline bge vs
+  target cror+branch-to-shared. #17/#91 pinned-|| — didn't crack.
+- dll_0137_alphaanimator alphaanimator_update (93.9->94.6%, dceed61988): CORRECTNESS
+  BUG. switch case 0 both clamp arms wrote `s->alphaLevel = unk1C` but target stores
+  unk1D (offset 0x1D, the bound just compared). Verified: target `sth r3,20` where
+  r3=`lbz 29(r30)`(unk1D). Fixed both arms. Cases 1/2/3 all verified MATCH after.
+  RESIDUAL: mullw operand order (#66 inert) + case-3 FP const scheduling (lbl_803E3F90
+  neg/lfd bias) + 1 reg-perm. METHOD: ndiff `lbz K(r30)` offset diffs (28 vs 29) on a
+  byte-field-heavy dispatcher = field-ownership bug vein (#122/#46) — decode target
+  asm per case to find which clamp stores the wrong adjacent field.
+BANKED this session (no source lever, reverted byte-clean):
+- dll_0117_appleontree appleontree_update (93.6%): obj param r29(tgt)/r31(cur) +
+  derived extra(lwz184) r31/r29 swap + 1 stack slot (#67). #108/#126 pointer-param
+  copy-pool classing. Didn't risk big obj-uncache edit.
+- dll_0016_screentransition screenRectFn_800d7568 (90.5%): col2 HudColor struct at
+  stack 8(tgt)/52(cur) (#67/#120 aggregate placement) + `(span>>1)&0xffff` srwi+clrlwi
+  separate(tgt) vs fused rlwinm(cur) + spurious clrlwi before u8 col.a store. Many
+  reg-perms. Multi-issue #67/#108.
+- dll_00D5_kaldachom kaldachom_update (93.1%): control(lwz1036) r29/r28 swap + vtable
+  call-arg FP-const scheduling (mr r3,r30;mr r4,r31 before vs after lfs). #29/#82.
+- dll_0047_cameramodeteststrength fn_8010AEA8 (87.1%): target re-derives `lwz
+  lbl_803DD560` (global ptr) FRESH per store; current CSEs. Also q=lbl_803E1888 to f31
+  via extra fmr f31,f0 (target lfs f31 direct). #130 global-base CSE needs volatile
+  launder (risky). Bank.
+- dll_0141_lightning lightning_update (93.1%): the style bit-flag `(flags->style?1:0)`
+  call-arg (after the search loop) is HOISTED into saved r27 by MWCC, pushing the loop
+  counter objectIndex r27->r31. Target computes style INLINE at the lightningCreate
+  call (r0). opt_loop_invariants off INERT (not in a loop), opt_propagation off
+  REGRESSED 91.4. #108 — no source lever to stop the pre-loop hoist of an invariant.
+LESSON: clean structural veins still exist in flat dll_0000-0140 at 86-94%: (a) FP
+  clamp ternary-abs + shared-fadds restructure (#63/#27); (b) standalone-if vs if/else
+  call placement + fcmpo operand-order flip; (c) byte-field OFFSET bugs on switch
+  dispatchers (lbz 28-vs-29 in ndiff = wrong adjacent field, decode per-case asm).
+  The 93%+ band is mostly #108 pointer-param copy-pool / global-CSE / #67 frame.
+
 ## ===== Session (Jun17b, dll_0141-02FF scope): 2 wins, ~6 attempts =====
 WINS (both = drawTexture per-file extern WRONG arg order):
 - dll_003D_titlemenuitem TitleMenuItem_render (83.61->100.00%): per-file
