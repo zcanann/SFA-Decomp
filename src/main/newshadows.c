@@ -2433,11 +2433,12 @@ void fn_8006CB50(void)
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
-        int ypart = (y >> 2) * 0x20 + (y & 3) * 2;
+        int yhi = (y >> 2) * 0x20;
+        int ylo = (y & 3) * 2;
         f32 fy = (f32)y - Udchuff_803DEDAC;
         for (x = 0; x < 0x100; x++)
         {
-            char* addr = (char*)lbl_803DCFBC + ypart + (x & 3) * 8 + (x >> 2) * 0x800;
+            char* addr = (char*)lbl_803DCFBC + ylo + yhi + (x & 3) * 8 + (x >> 2) * 0x800;
             f32 fx = (f32)x - Udchuff_803DEDAC;
             f32 dist = sqrtf(fy * fy + fx * fx);
             f32 ny = fy / dist;
