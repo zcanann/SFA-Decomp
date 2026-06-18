@@ -1,62 +1,17 @@
-/* DIM2 mixed-DLL TU: 0x801B9ECC–0x801BA224. Contains the hit-reaction dispatcher
- * (fn_801B9ECC) and shared helpers for DIM2 objects (icicle, geyser, rolling rock,
- * conveyor, crusher, snowball, path generator, truth-horn ice). */
+/*
+ * DIM boss player-vs-baddie reaction dispatcher (fn_801B9ECC, address-taken
+ * into the boss anim-fn table at slot 5 from dll_01E0_dimboss).
+ */
 #include "main/dll/baddie_state.h"
-#include "main/dll/dim2pathgeneratorstate_struct.h"
-#include "main/dll/dim2snowballstate_struct.h"
-#include "main/dll/truthhornicestate_struct.h"
-#include "main/dll/dim2conveyorstate_struct.h"
-#include "main/dll/dll1d6state_struct.h"
 #include "main/gameplay_runtime.h"
-#include "main/game_object.h"
-
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-/* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
- * tables filled by the RomCurve interface). */
-
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
-static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern int* gBaddieControlInterface;
 extern int* gPlayerInterface;
 extern u8 lbl_803DDB84;
 extern u8 lbl_80325960[];
 extern u8 gDIMbossAnimController[];
-extern int DIM2icicle_updateHitResponse();
+extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 extern f32 lbl_803E4BB8;
-
-void FUN_801b9cc4(int param_1)
-{
-    char* pcVar1;
-    int iVar2;
-
-    pcVar1 = ((GameObject*)param_1)->extra;
-    if ((pcVar1[2] & 1U) == 0)
-    {
-        iVar2 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if (('\0' < *pcVar1) && (*pcVar1 = *pcVar1 + -1, *pcVar1 == '\0'))
-        {
-            pcVar1[2] = pcVar1[2] | 1;
-            GameBit_Set((int)*(short*)(iVar2 + 0x1e), 1);
-        }
-    }
-    return;
-}
-
-
-/* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
- * fall, land on contact object, clamp to floor height. */
-
-/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
- * from distance/anim-state via the interface vtables. */
 
 typedef void (*Dim2QueryTargetMoveFn)(int obj, void* targetObj, int queryFlags, u16* animId,
                                       s16* outParam, u16* targetDistance);
@@ -84,13 +39,13 @@ static inline Dim2PlayerInterface* DIM2_GetPlayerInterface(void)
     return (Dim2PlayerInterface*)*gPlayerInterface;
 }
 
-typedef struct
+typedef struct DimAnimTable
 {
-    u8 pad[0x168];
-    s16 surprised[6]; /* 0x168 */
-    s16 group3[8]; /* 0x174 */
-    s16 group2[8]; /* 0x184 */
-    s16 group1[8]; /* 0x194 */
+    u8 pad[0x168];     /* 0x000 */
+    s16 surprised[6];  /* 0x168: far random "surprised" anim ids */
+    s16 group3[8];     /* 0x174: hitPoints==3 round-robin anim ids */
+    s16 group2[8];     /* 0x184: hitPoints==2 round-robin anim ids */
+    s16 group1[8];     /* 0x194: hitPoints==1 round-robin anim ids */
 } DimAnimTable;
 
 #pragma scheduling off
@@ -177,25 +132,5 @@ int fn_801B9ECC(int a, int obj)
     DIM2icicle_updateHitResponse(a, (int)state);
     return 0;
 }
-
-
-/* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
- *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the
- *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
- *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
- *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-
-/* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
- *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
- *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
-
-/* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
- *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
- *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
- *     else do the same dest writes (different scheduling).
- *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
- *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
- *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-
-/* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
- *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
+#pragma peephole reset
+#pragma scheduling reset
