@@ -1466,7 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
