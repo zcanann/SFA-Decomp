@@ -161,7 +161,7 @@ void bossdrakor_update(int obj)
         if ((void*)player != NULL)
         {
             d = Obj_GetYawDeltaToObject(obj, player, 0);
-            *(s16*)obj += (d < -0x200) ? -0x200 : ((d > 0x200) ? 0x200 : d);
+            ((GameObject*)obj)->anim.rotX += (d < -0x200) ? -0x200 : ((d > 0x200) ? 0x200 : d);
             d = ((GameObject*)obj)->anim.rotY;
             if (d != 0)
             {
@@ -434,7 +434,7 @@ int bossdrakor_chooseNextMove(int obj, f32* speedOut)
     else
     {
         a = (u16)(s16)getAngle(dir[0], dir[2]);
-        d = *(s16*)obj - a;
+        d = ((GameObject*)obj)->anim.rotX - a;
         if (d > 0x8000)
         {
             d = (s16)((int)d - 0xffff);
