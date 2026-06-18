@@ -31,7 +31,7 @@ typedef struct BaddieAfterUpdateBonesCbState
     s16 unk2B0;
     u16 unk2B2;
     u8 pad2B4[0x2D8 - 0x2B4];
-    f32 unk2D8;
+    f32 freezeRecoverTimer;
     u32 unk2DC;
     u8 pad2E0[0x2F2 - 0x2E0];
     u8 unk2F2;
@@ -200,7 +200,7 @@ extern int isInBounds(f32 x, f32 z);
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern void hudFn_8011f38c(int a);
-extern f32 lbl_803E2600;
+extern f32 enemyRespawnDistanceSq;
 extern void fn_80151954(int obj, u8* state);
 extern void fn_801522E0(int obj, u8* state);
 extern void fn_80152A94(int obj, u8* state);
@@ -2176,7 +2176,7 @@ void enemy_update(int obj)
             }
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2205,7 +2205,7 @@ void enemy_update(int obj)
             player = Obj_GetPlayerObject();
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2238,7 +2238,7 @@ void enemy_update(int obj)
                     player = Obj_GetPlayerObject();
                     if (player != NULL)
                     {
-                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2537,7 +2537,7 @@ void enemy_init(int obj, u8* setup, int flag)
             ObjHits_EnableObject((u32)obj);
         }
     }
-    ((EnemyState*)state)->unk2D8 = lbl_803E2574;
+    ((EnemyState*)state)->freezeRecoverTimer = lbl_803E2574;
     if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
     {
         ((EnemyState*)state)->unk2A8 = lbl_803E25B0;

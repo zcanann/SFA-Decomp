@@ -2115,23 +2115,23 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         hit = ObjHits_GetPriorityHitWithPosition(obj, &attacker, &hitArg, &hitCount, &hitPos.x, &hitPos.y, &hitPos.z);
         hitPos.x += playerMapOffsetX;
         hitPos.z += playerMapOffsetZ;
-        ((TrickyState*)state)->unk2D4 -= timeDelta;
+        ((TrickyState*)state)->freezeStunTimer -= timeDelta;
         if (hit == 0x1a)
         {
-            if (((TrickyState*)state)->unk2D4 >= lbl_803E2574)
+            if (((TrickyState*)state)->freezeStunTimer >= lbl_803E2574)
             {
                 hit = 0;
             }
             else
             {
-                ((TrickyState*)state)->unk2D4 = lbl_803E2588;
+                ((TrickyState*)state)->freezeStunTimer = lbl_803E2588;
             }
         }
         ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~0x30LL;
-        ((TrickyState*)state)->unk2D8 -= timeDelta;
-        if (((TrickyState*)state)->unk2D8 < *(f32*)&lbl_803E2574)
+        ((TrickyState*)state)->freezeRecoverTimer -= timeDelta;
+        if (((TrickyState*)state)->freezeRecoverTimer < *(f32*)&lbl_803E2574)
         {
-            ((TrickyState*)state)->unk2D8 = lbl_803E2574;
+            ((TrickyState*)state)->freezeRecoverTimer = lbl_803E2574;
         }
         fn_802972B4(player, &hitEffects, &fxA, &fxB, &fxC, &impactSfx);
         frozenEnemyFn_80149bb4((int*)state, hitEffects, fxA, impactSfx);
@@ -2184,7 +2184,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                         }
                     }
                 }
-                ((TrickyState*)state)->unk2D8 += lbl_803E2598 * (f32)(int)hitCount;
+                ((TrickyState*)state)->freezeRecoverTimer += lbl_803E2598 * (f32)(int)hitCount;
                 if ((((TrickyState*)state)->flags2DC & 0x4000) != 0)
                 {
                     ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC | 0x10;

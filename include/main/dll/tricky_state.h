@@ -86,8 +86,8 @@ typedef struct TrickyState {
     f32 unk2C0;
     u8 pad2C4[0x2D0 - 0x2C4];
     f32 unk2D0;
-    f32 unk2D4;
-    f32 unk2D8;
+    f32 freezeStunTimer;
+    f32 freezeRecoverTimer;
     u32 flags2DC; /* flag word */
     u32 unk2E0;
     u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
