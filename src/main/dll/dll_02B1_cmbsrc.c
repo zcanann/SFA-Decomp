@@ -49,14 +49,15 @@ void cmbsrc_setExternalActive(int obj, u8 active)
 
 void cmbsrc_free(int obj)
 {
-    CmbSrcState* state = ((CmbSrcObject*)obj)->state;
+    CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
+    CmbSrcState* state = cmbsrc->state;
 
-    (*gExpgfxInterface)->freeSource(obj);
+    (*gExpgfxInterface)->freeSource((int)cmbsrc);
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
     }
-    Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
+    Sfx_StopObjectChannel((int)cmbsrc, CMBSRC_LOOP_SOUND_CHANNEL);
 }
 
 void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
