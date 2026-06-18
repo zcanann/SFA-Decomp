@@ -474,7 +474,7 @@ void worldplanet_update(int obj)
                     {
                         ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
                     }
-                    ((GameObject*)galleon)->anim.rotX = (s16)(int)(frac * (f32)dyaw + (f32)yaw);
+                    *(s16*)&((GameObject*)galleon)->anim.rotX = (frac * (f32)dyaw + (f32)yaw);
                     ((GameObject*)galleon)->anim.localPosX = frac * (x1 - x0) + x0;
                     ((GameObject*)galleon)->anim.localPosY = frac * (y1 - y0) + y0;
                     ((GameObject*)galleon)->anim.localPosZ = frac * (z1 - z0) + z0;
