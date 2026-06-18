@@ -35,12 +35,13 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 #define SHIPBATTLE_OBJECT_TYPE_ID 0xb
-#define SHIPBATTLE_FIRE_SEQ_ID 0x171  /* the fire/chain sequence; gates the light + trail burst */
-#define SEQINDEX_PENDING -2  /* seqIndex sentinel: sequence reached its pending/end-scan state */
+#define SHIPBATTLE_FIRE_SEQ_ID 0x171
+#define SEQINDEX_PENDING -2
+#define CLASSID_SEQUENCE_OBJECT 0x10
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern int* gTitleMenuControlInterfaceCopy;
+extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern f32 lbl_803E5958;
@@ -49,7 +50,7 @@ extern f32 lbl_803E5960;
 extern f32 lbl_803E5970;
 extern f32 lbl_803E5974;
 extern u8 lbl_803DB411;
-extern f32 lbl_803DDC50;
+extern f32 lbl_803DDC50[2];
 
 extern void ModelLightStruct_free(int* p);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
@@ -59,10 +60,6 @@ extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 extern int* ObjList_GetObjects(void* unused, int* objectCount);
 extern void Obj_FreeObject(int obj);
-
-void FUN_801e55c0(void)
-{
-}
 
 void ShipBattle_hitDetect(void)
 {
@@ -79,6 +76,7 @@ void ShipBattle_initialise(void)
 int ShipBattle_getExtraSize(void) { return 0x140; }
 int ShipBattle_getObjectTypeId(void) { return SHIPBATTLE_OBJECT_TYPE_ID; }
 
+/* int* not int: pointer param colors copy-class (CLAUDE.md #126) */
 void ShipBattle_free(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -142,10 +140,11 @@ light_setup:
         ((GameObject*)obj)->unkF8 = light;
     }
 
-    lbl_803DDC50 = lbl_803E5958;
-    *(u8*)((char*)&lbl_803DDC50 + 4) = 0;
+    lbl_803DDC50[0] = lbl_803E5958;
+    *(u8*)&lbl_803DDC50[1] = 0;
 }
 
+/* int* not int: pointer param colors copy-class (CLAUDE.md #126) */
 void ShipBattle_render(int* obj)
 {
     objRenderFn_8003b8f4(lbl_803E595C);
@@ -196,7 +195,7 @@ void ShipBattle_update(int obj)
         {
             linkedObject = current;
         }
-        if (((GameObject*)current)->seqIndex == SEQINDEX_PENDING && ((GameObject*)current)->anim.classId == 0x10 &&
+        if (((GameObject*)current)->seqIndex == SEQINDEX_PENDING && ((GameObject*)current)->anim.classId == CLASSID_SEQUENCE_OBJECT &&
             groupId == *(s8*)&((ObjSeqState*)((GameObject*)current)->extra)->slot)
         {
             sameGroupCount++;
