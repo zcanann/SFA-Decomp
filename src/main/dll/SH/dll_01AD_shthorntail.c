@@ -417,9 +417,8 @@ void SHthorntail_update(SHthorntailObject* obj)
     val = 0x19;
     uval = (uint)runtime->hitReactState;
     scratch = (float*)runtime->hitReactScratch;
-    hitResult = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
-    runtime->hitReactState = hitResult;
-    if (hitResult == 0)
+    runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
+    if (runtime->hitReactState == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
         runtime->locomotionMode = mode;
