@@ -271,21 +271,21 @@ int ktrex_isPlayerInLaneThreatRange(int obj)
         center = ((GameObject*)obj)->anim.localPosZ;
         lo = (center - lbl_803E683C) - *(f32*)((char*)lbl_803DDD50 + 0x28);
         hi = (lbl_803E683C + center) - *(f32*)((char*)lbl_803DDD50 + 0x28);
-        if (!(lo > lbl_803E6840) && !(hi < lbl_803E6840))
+        if (lo > lbl_803E6840 || hi < lbl_803E6840)
         {
-            return 1;
+            return 0;
         }
-        return 0;
+        return 1;
     case 4:
     case 8:
         center = ((GameObject*)obj)->anim.localPosX;
         lo = (center - lbl_803E683C) - *(f32*)((char*)lbl_803DDD50 + 0x24);
         hi = (lbl_803E683C + center) - *(f32*)((char*)lbl_803DDD50 + 0x24);
-        if (!(lo > lbl_803E6844) && !(hi < lbl_803E6844))
+        if (lo > lbl_803E6844 || hi < lbl_803E6844)
         {
-            return 1;
+            return 0;
         }
-        return 0;
+        return 1;
     }
     return 0;
 }
@@ -1703,7 +1703,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
-            int cond;
+            u8 cond;
             u8 fe;
             ((KTRexArenaState*)gKTRexState)->unk101 += 1;
             GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
