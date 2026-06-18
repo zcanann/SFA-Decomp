@@ -271,7 +271,7 @@ void FUN_8015b2d0(short* obj, int state)
         *(undefined*)(state + 0x33b) = 1;
     }
     ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
-    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x70) = 0;
+    *(undefined*)(*(int*)(obj + 0x2a) + 0x70) = 0;
     *obj = *obj + -0x100;
     return;
 }
@@ -526,7 +526,7 @@ FUN_8015c3b4(undefined8 param_1, double param_2, double param_3, undefined8 para
         *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0x10;
     }
     *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0xc;
-    *(undefined4*)(state + 0x280) = *(undefined4*)&((GameObject*)obj)->anim.currentMoveProgress;
+    *(undefined4*)(state + 0x280) = *(undefined4*)(obj + 0x98);
     return 0;
 }
 
@@ -919,7 +919,7 @@ FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     int control;
     int extra;
 
-    extra = *(int*)&((GameObject*)obj)->extra;
+    extra = *(int*)(obj + 0x5c);
     if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E39AC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -930,14 +930,14 @@ FUN_8015d00c(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(byte*)(control + 0x44) = *(byte*)(control + 0x44) | 0xc;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+        *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) | 8;
         *(undefined2*)(extra + 0x402) = 4;
     }
-    ((GameObject*)obj)->anim.rotX = (short)(int)(lbl_803E39F4 *
+    *obj = (short)(int)(lbl_803E39F4 *
         (((float)((double)CONCAT44(0x43300000,
                                    (int)*(short*)(state + 0x336) ^ 0x80000000)
             - DOUBLE_803e3a00) * lbl_803DC074) / lbl_803E39F8) +
-        (float)((double)CONCAT44(0x43300000, (int)((GameObject*)obj)->anim.rotX ^ 0x80000000) -
+        (float)((double)CONCAT44(0x43300000, (int)*obj ^ 0x80000000) -
             DOUBLE_803e3a00));
     *(float*)(state + 0x2a0) = lbl_803E39D0;
     *(float*)(state + 0x280) = lbl_803E39E0;
@@ -1531,9 +1531,9 @@ int mediumbasket_updateSpinState(int obj, int state)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         sub->targetState = 4;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)(lbl_803E2D5C *
+    *(s16*)obj = (s16)(lbl_803E2D5C *
         (((f32)((GroundBaddieState*)state)->baddie.turnRate * timeDelta) / lbl_803E2D60) +
-        (f32)((GameObject*)obj)->anim.rotX);
+        (f32) * (s16*)obj);
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D48;
     return 0;
@@ -1789,13 +1789,15 @@ int mediumbasket_stateHandlerB07(int obj, int state)
 void fn_8015CE68(int obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
+    f32 transformedX;
+    f32 transformedY;
+    f32 transformedZ;
     u8 transformScratch[0x18];
-    f32 pathZ;
-    f32 pathY;
     f32 pathX;
+    f32 pathY;
+    f32 pathZ;
     f32 pathMtx[16];
     f32 scale;
-    f32 effScale;
     f32 angle;
 
     memcpy(pathMtx, (void*)ObjPath_GetPointModelMtx(obj, 1), 0x40);
@@ -1810,13 +1812,9 @@ void fn_8015CE68(int obj, int state)
     {
         scale = lbl_803E2D2C;
     }
-    if (((GroundBaddieState*)state)->baddie.animSpeedA < scale)
+    if (scale < ((GroundBaddieState*)state)->baddie.animSpeedA)
     {
-        effScale = scale;
-    }
-    else
-    {
-        effScale = ((GroundBaddieState*)state)->baddie.animSpeedA;
+        scale = ((GroundBaddieState*)state)->baddie.animSpeedA;
     }
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
@@ -1829,24 +1827,23 @@ void fn_8015CE68(int obj, int state)
                                       (f32*)(control + 0x30), (f32*)(control + 0x34), 0);
     }
     *(f32*)(control + 0x30) = lbl_803E2D90 + ((GameObject*)obj)->anim.localPosY;
-    angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
+    angle = (lbl_803E2D98 * (f32) * (s16*)obj) / lbl_803E2D9C;
     *(f32*)(control + 0x2c) =
-        *(f32*)(control + 0x2c) - effScale * (lbl_803E2D94 * mathSinf(angle));
-    angle = (lbl_803E2D98 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E2D9C;
+        *(f32*)(control + 0x2c) - scale * (lbl_803E2D94 * mathSinf(angle));
+    angle = (lbl_803E2D98 * (f32) * (s16*)obj) / lbl_803E2D9C;
     *(f32*)(control + 0x34) =
-        *(f32*)(control + 0x34) - effScale * (lbl_803E2D94 * mathCosf(angle));
+        *(f32*)(control + 0x34) - scale * (lbl_803E2D94 * mathCosf(angle));
     pathX = lbl_803E2D14;
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
     ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
     if ((*(u8*)(control + 0x44) & 2) != 0)
     {
-        *(f32*)&transformScratch[0] = lbl_803E2DA8;
-        *(f32*)&transformScratch[4] = lbl_803E2DAC;
-        *(f32*)&transformScratch[8] = lbl_803E2DA4;
-        Matrix_TransformPoint(pathMtx, (f32*)&transformScratch[0], (f32*)&transformScratch[4],
-                              (f32*)&transformScratch[8]);
-        memcpy((void*)(control + 0x38), &transformScratch[0], 0xc);
+        transformedX = lbl_803E2DA8;
+        transformedY = lbl_803E2DAC;
+        transformedZ = lbl_803E2DA4;
+        Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
+        memcpy((void*)(control + 0x38), &transformedX, 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
         *(u8*)(control + 0x44) |= 1;
     }
@@ -1965,7 +1962,6 @@ void fn_8015D3C0(int obj, int sub, int state)
     u8* target;
     int hitInfo[7];
     f32 targetDelta[3];
-    f32* pd = targetDelta;
     f32 distSq;
 
     Obj_GetPlayerObject();
@@ -1976,7 +1972,7 @@ void fn_8015D3C0(int obj, int sub, int state)
         targetDelta[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         targetDelta[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)state)->baddie.targetDistance =
-            sqrtf(pd[2] * pd[2] + (pd[0] * pd[0] + pd[1] * pd[1]));
+            sqrtf(targetDelta[2] * targetDelta[2] + targetDelta[0] * targetDelta[0] + targetDelta[1] * targetDelta[1]);
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
@@ -2314,6 +2310,8 @@ int mediumbasket_checkTargetState(int obj, int state)
 return0:
     return 0;
 }
+
+/* segment pragma-stack balance (re-split): */
 
 void dll_CA_update(int obj, int p2, int p3)
 {
