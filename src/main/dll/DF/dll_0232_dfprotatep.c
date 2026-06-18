@@ -528,9 +528,10 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     angleStep = 0;
     rotation[2] = 0;
     rotation[1] = 0;
+    i = 0;
     handles = gSfxplayerEffectHandles;
 
-    for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+    for (; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
         SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, rotation, angleStep);
         SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, rotation, angleStep);
