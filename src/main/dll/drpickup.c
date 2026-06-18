@@ -1,7 +1,7 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/camera_interface.h"
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Matrix_TransformPoint(void* mtx, float x, float y, float z, float* ox, float* oy, float* oz);
 extern void PSVECAdd(const void* a, const void* b, void* ab);
 extern float powfBitEstimate(float x, float y);
@@ -115,8 +115,6 @@ void fn_801EC1AC(int obj, int state)
         ((DRPickupState*)state)->angVel414 = (v < -lim) ? -lim : ((v > lim) ? lim : v);
     }
 
-    /* Apply 0x414 * timeDelta to short at 0x40e, then chase the scaled
-       angular velocity through 0x410 with overflow normalization. */
     {
         f32 newF = (f32)(s32) * (s16*)(state + 0x40e) +
             ((DRPickupState*)state)->angVel414 * timeDelta;
