@@ -1,3 +1,14 @@
+/*
+ * effect7 (DLL 0x20) - a particle/effect spawner DLL exposing the
+ * projgfx_funcs ObjectDescriptor. Effect7_func04 is the spawn entry
+ * point: given an effectId (0x84..0xab range) it fills a PartFxSpawn
+ * request - velocities, start positions, scale and lifetime randomised
+ * per effect via randomGetRange - and submits it through
+ * gExpgfxInterface->spawnEffect. Effect7_func05 advances per-frame the
+ * shared scroll/sine animation globals used by the effects. Most other
+ * fns here (the modgfx and projgfx families) are drift duplicates of
+ * dll_000C_projgfx.c.
+ */
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"
@@ -149,7 +160,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -261,11 +271,11 @@ void modgfx_allocExpgfxPools(void)
     return;
 }
 
-void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefined colorLowByte,
+void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, undefined colorLowByte,
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;
-    ushort setupValue;
+    ushort setupValue; /* uninitialised - matches target */
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
@@ -530,10 +540,10 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     ushort rotAngle0;
     ushort rotAngle1;
     ushort rotAngle2;
-    float unusedW;
-    float unusedX;
-    float unusedY;
-    float unusedZ;
+    float unk_W;
+    float unk_X;
+    float unk_Y;
+    float unk_Z;
 
     state = (ModgfxState*)stateArg;
     biasS = DOUBLE_803e00c8;
@@ -543,10 +553,10 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             if (((state->flags & 4) != 0) || ((state->flags & 0x80000) != 0))
             {
-                unusedX = lbl_803E00B0;
-                unusedY = lbl_803E00B0;
-                unusedZ = lbl_803E00B0;
-                unusedW = lbl_803E00B4;
+                unk_X = lbl_803E00B0;
+                unk_Y = lbl_803E00B0;
+                unk_Z = lbl_803E00B0;
+                unk_W = lbl_803E00B4;
                 rotAngle0 = *(ushort*)state->unk04;
                 rotAngle1 = rotAngle0;
                 rotAngle2 = rotAngle0;
@@ -944,13 +954,6 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, un
 }
 
 undefined4
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
 projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSourceState* sourceState,
                           uint spawnFlags, undefined modelId, undefined2* extraArgs)
 {
@@ -1274,25 +1277,6 @@ projgfx_spawnPresetEffect(int sourceObj, undefined4 effectId, ExpgfxAttachedSour
     return spawnResult;
 }
 
-undefined4
-FUN_800a3828(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-undefined4
-FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3, uint param_4,
-             undefined param_5)
-{
-    return 0;
-}
-
-
-
-
-
-
 void Effect7_func03_nop(void)
 {
 }
@@ -1304,12 +1288,6 @@ void Effect7_release(void)
 void Effect7_initialise(void)
 {
 }
-
-void Effect8_func03_nop(void);
-
-
-
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1347,7 +1325,6 @@ extern int lbl_803DD380;
 extern int lbl_803DD384;
 extern f32 lbl_803DD388;
 extern f32 lbl_803DD38C;
-extern f32 lbl_803DF878;
 extern f32 lbl_803DFCD8;
 extern f32 lbl_803DFCDC;
 extern f32 lbl_803DFCE0;
@@ -1395,54 +1372,7 @@ void Effect7_func05(void)
     lbl_803DD388 = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD384 / lbl_803DFD94);
 }
 
-void Effect8_func05(void);
-
-extern FxNode9 lbl_8039C398;
-
-#define FILL9() do {                            \
-    lbl_8039C398.posX = 0.0f;             \
-    lbl_8039C398.posY = 0.0f;            \
-    lbl_8039C398.posZ = 0.0f;            \
-    lbl_8039C398.scale = 1.0f;             \
-    lbl_8039C398.unk0 = 0;                         \
-    lbl_8039C398.unk2 = 0;                         \
-    lbl_8039C398.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C398;             \
-  } while (0)
-
-#undef FILL9
-
-extern FxNode9 lbl_8039C380;
 extern void randFn_80080100();
-
-#define FILL8() do {                            \
-    lbl_8039C380.posX = 0.0f;             \
-    lbl_8039C380.posY = 0.0f;            \
-    lbl_8039C380.posZ = 0.0f;            \
-    lbl_8039C380.scale = 1.0f;             \
-    lbl_8039C380.unk0 = 0;                         \
-    lbl_8039C380.unk2 = 0;                         \
-    lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C380;             \
-  } while (0)
-
-#undef FILL8
-
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-
-#define FILL338() do {                          \
-    lbl_8039C338.posX = lbl_803DF884;             \
-    lbl_8039C338.posY = lbl_803DF884;            \
-    lbl_8039C338.posZ = lbl_803DF884;            \
-    lbl_8039C338.scale = lbl_803DF878;             \
-    lbl_8039C338.unk0 = 0;                         \
-    lbl_8039C338.unk2 = 0;                         \
-    lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C338;             \
-  } while (0)
-
-#undef FILL338
 
 extern void* Obj_GetPlayerObject();
 extern FxNode9 lbl_8039C368;
@@ -1490,9 +1420,9 @@ extern f32 lbl_803DFD84;
 
 #define FILL368() do {                          \
     lbl_8039C368.posX = lbl_803DFCEC;             \
-    lbl_8039C368.posY = lbl_803DFCEC;            \
-    lbl_8039C368.posZ = lbl_803DFCEC;            \
-    lbl_8039C368.scale = lbl_803DFCE0;             \
+    lbl_8039C368.posY = lbl_803DFCEC;             \
+    lbl_8039C368.posZ = lbl_803DFCEC;             \
+    lbl_8039C368.scale = lbl_803DFCE0;            \
     lbl_8039C368.unk0 = 0;                         \
     lbl_8039C368.unk2 = 0;                         \
     lbl_8039C368.unk4 = 0;                         \
@@ -1950,42 +1880,3 @@ int Effect7_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL368
-
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-
-#define FILL350() do {                          \
-    lbl_8039C350.posX = lbl_803DF9D0;             \
-    lbl_8039C350.posY = lbl_803DF9D0;            \
-    lbl_8039C350.posZ = lbl_803DF9D0;            \
-    lbl_8039C350.scale = lbl_803DF9D4;             \
-    lbl_8039C350.unk0 = 0;                         \
-    lbl_8039C350.unk2 = 0;                         \
-    lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C350;             \
-  } while (0)
-
-#undef FILL350
-
-// VERIFY lbl_803DF720 may already exist in modgfx.c
-// VERIFY lbl_803DF724 may already exist in modgfx.c
-// VERIFY lbl_803DF728 may already exist in modgfx.c
-// VERIFY lbl_803DF730 may already exist in modgfx.c
-extern FxNode9 lbl_8039C320;
-/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
-   already declared in modgfx.c. */
-
-/* ===== (2) FILL macro ===== */
-#define FILL320() do {                          \
-    lbl_8039C320.posX = 0.0f;             \
-    lbl_8039C320.posY = 0.0f;            \
-    lbl_8039C320.posZ = 0.0f;            \
-    lbl_8039C320.scale = 1.0f;             \
-    lbl_8039C320.unk0 = 0;                         \
-    lbl_8039C320.unk2 = 0;                         \
-    lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
-  } while (0)
-
-#undef FILL320
