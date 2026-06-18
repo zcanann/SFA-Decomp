@@ -14737,7 +14737,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         {
             mode = 4;
         }
-        else if (!(((PlayerState*)inner)->baddie.animSpeedA >= lbl_803E80A0))
+        else if (((PlayerState*)inner)->baddie.animSpeedA >= lbl_803E80A0)
         {
             mode = 5;
         }
