@@ -15466,7 +15466,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     return 0;
 }
 
-int fn_802ABFBC(int obj, int state, int inner)
+void fn_802ABFBC(int obj, int state, int inner)
 {
     void* sub;
     f32 dx, dy, dz;
@@ -15521,7 +15521,6 @@ int fn_802ABFBC(int obj, int state, int inner)
         ((PlayerState*)inner)->headYaw =
             (f32)((PlayerState*)inner)->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
-    return 0;
 }
 
 int fn_8029CF30(int obj, int state, f32 fv)
