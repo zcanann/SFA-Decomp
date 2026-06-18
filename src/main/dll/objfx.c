@@ -545,8 +545,16 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
     int screen[3];
     int i;
     int depth;
-    int n = framesThisStep > 3 ? 3 : framesThisStep;
+    int n;
 
+    if (framesThisStep > 3)
+    {
+        n = 3;
+    }
+    else
+    {
+        n = framesThisStep;
+    }
     params.f8 = fa;
     if (fb <= lbl_803DF380)
     {
