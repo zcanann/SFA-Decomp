@@ -3577,7 +3577,7 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
     segment.startY = *(f32*)(curve + 0xc);
     segment.startZ = *(f32*)(curve + 0x10);
 
-    for (i = 0; i < 4; i++, curve += 4)
+    for (i = 0; i < 4; i++)
     {
         neighborId = *(int*)(curve + 0x1c);
         if (neighborId > -1)
@@ -3602,6 +3602,7 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
                 }
             }
         }
+        curve += 4;
     }
 
     if (bestNeighborIds[0] != -1)
