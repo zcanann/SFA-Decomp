@@ -134,7 +134,7 @@ void dbegg_processMessages(int obj)
     sub = *(int*)&((GameObject*)obj)->extra;
     config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
 
-    while (ObjMsg_Pop((void*)obj, &msgType, (uint*)&msgArg, (uint*)&msgFlag) != 0)
+    while ((int)ObjMsg_Pop((void*)obj, &msgType, (uint*)&msgArg, (uint*)&msgFlag) != 0)
     {
         if (msgType == 17)
         {
