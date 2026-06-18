@@ -2038,6 +2038,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
         }
         if ((dist < sumRadius) && (dist > gObjHitsScalarZero))
         {
+            extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume,
+                                               u8 sphereIndex);
             ObjHits_RecordObjectHit(objB, objA, *(u8*)&stateA->objectPairPriority,
                                     stateA->objectPairHitVolume, 0);
             ObjHits_RecordObjectHit(objA, objB, *(u8*)&stateB->objectPairPriority,
