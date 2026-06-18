@@ -198,16 +198,14 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             if ((state->flags & 0x20) != 0)
             {
                 i = 5;
-                slotPtr = &state->slots[5];
                 for (; i < 5; i++)
                 {
-                    o = *slotPtr;
+                    o = state->slots[i];
                     if ((uint)o != 0)
                     {
                         ((GameObject*)o)->anim.flags |= 0x4000;
-                        *slotPtr = 0;
+                        state->slots[i] = 0;
                     }
-                    slotPtr++;
                 }
                 if ((state->flags & 0x10) != 0)
                 {
@@ -232,38 +230,34 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     spd = lbl_803E54E4 * state->fadeTimer;
                 }
                 j = 0;
-                slotPtr = state->slots;
                 for (; j < 5; j++)
                 {
-                    if (((u32) * slotPtr != 0) && ((u32)state->slots[4] != 0))
+                    if (((u32)state->slots[j] != 0) && ((u32)state->slots[4] != 0))
                     {
                         t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
                         bx = ((GameObject*)state->slots[4])->anim.localPosX;
-                        ((GameObject*)*slotPtr)->anim.localPosX = t * (x0 - bx) + bx;
-                        ((GameObject*)*slotPtr)->anim.localPosY =
+                        ((GameObject*)state->slots[j])->anim.localPosX = t * (x0 - bx) + bx;
+                        ((GameObject*)state->slots[j])->anim.localPosY =
                             t * (y0 - ((GameObject*)state->slots[4])->anim.localPosY) + ((GameObject*)state->slots[4])->anim.localPosY;
-                        ((GameObject*)*slotPtr)->anim.localPosZ =
+                        ((GameObject*)state->slots[j])->anim.localPosZ =
                             t * (z0 - ((GameObject*)state->slots[4])->anim.localPosZ) + ((GameObject*)state->slots[4])->anim.localPosZ;
-                        ((GameObject*)*slotPtr)->anim.rootMotionScale = spd;
+                        ((GameObject*)state->slots[j])->anim.rootMotionScale = spd;
                     }
-                    slotPtr++;
                 }
                 j = 9;
-                slotPtr = &state->slots[9];
                 for (; j > 4; j--)
                 {
-                    if (((u32) * slotPtr != 0) && ((u32)state->slots[5] != 0))
+                    if (((u32)state->slots[j] != 0) && ((u32)state->slots[5] != 0))
                     {
                         t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
                         bx = ((GameObject*)state->slots[5])->anim.localPosX;
-                        ((GameObject*)*slotPtr)->anim.localPosX = t * (x1 - bx) + bx;
-                        ((GameObject*)*slotPtr)->anim.localPosY =
+                        ((GameObject*)state->slots[j])->anim.localPosX = t * (x1 - bx) + bx;
+                        ((GameObject*)state->slots[j])->anim.localPosY =
                             t * (y1 - ((GameObject*)state->slots[5])->anim.localPosY) + ((GameObject*)state->slots[5])->anim.localPosY;
-                        ((GameObject*)*slotPtr)->anim.localPosZ =
+                        ((GameObject*)state->slots[j])->anim.localPosZ =
                             t * (z1 - ((GameObject*)state->slots[5])->anim.localPosZ) + ((GameObject*)state->slots[5])->anim.localPosZ;
-                        ((GameObject*)*slotPtr)->anim.rootMotionScale = spd;
+                        ((GameObject*)state->slots[j])->anim.rootMotionScale = spd;
                     }
-                    slotPtr--;
                 }
             }
             else
