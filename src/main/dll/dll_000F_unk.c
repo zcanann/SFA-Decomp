@@ -167,7 +167,7 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
     if (*(f32*)((char*)state + 664) > lbl_803E05B4)
     {
         f32 q = (f2 * f1) / f3;
-        *(s16*)obj = (f32) * (s16*)obj + lbl_803E05B8 * q;
+        ((GameObject*)obj)->anim.rotX = (f32) * (s16*)obj + lbl_803E05B8 * q;
     }
 }
 
