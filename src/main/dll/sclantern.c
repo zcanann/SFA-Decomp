@@ -13,9 +13,9 @@
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u32 ObjPath_GetPointWorldPosition();
 extern uint objGetAnimStateFlags(int obj, u32 mask);
-extern undefined4 Obj_GetPlayerObject();
+extern u32 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
 extern f32 timeDelta;
@@ -30,9 +30,9 @@ extern f32 lbl_803E5498;
 #define SCLANTERN_SPARK_SFX_ID 0x415
 #define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
 
-undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
+u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
-    undefined4 advanceResult;
+    u32 advanceResult;
     GameObject* lantern;
     int pointIndex;
     int i;
@@ -91,9 +91,9 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     return advanceResult;
 }
 
-undefined4 playerFn_801d6d58(void)
+u32 playerFn_801d6d58(void)
 {
-    undefined4 playerObj;
+    u32 playerObj;
 
     (*gMapEventInterface)->getCurChar();
     playerObj = Obj_GetPlayerObject();

@@ -943,7 +943,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     return 1;
 }
 
-undefined4 trickyFn_80143210(int obj, int* trickyState)
+u32 trickyFn_80143210(int obj, int* trickyState)
 {
     short move;
     int foodResult;
@@ -972,7 +972,7 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_801432cc(int obj, int* trickyState)
+u32 trickyFn_801432cc(int obj, int* trickyState)
 {
     short move;
     int foodResult;
@@ -1001,7 +1001,7 @@ undefined4 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_80143388(int obj, int* trickyState)
+u32 trickyFn_80143388(int obj, int* trickyState)
 {
     int val;
     int ref;
@@ -1254,7 +1254,7 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
     return 1;
 }
 
-undefined4 trickyFn_80143b04(int obj, int* trickyState)
+u32 trickyFn_80143b04(int obj, int* trickyState)
 {
     int val;
 
@@ -1273,7 +1273,7 @@ undefined4 trickyFn_80143b04(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_80143b78(int obj, int* trickyState)
+u32 trickyFn_80143b78(int obj, int* trickyState)
 {
     int val;
 
@@ -1374,7 +1374,7 @@ int trickyFn_80143c04(int obj, int state)
 }
 
 
-undefined4 fn_80143DD4(int obj, int* trickyState)
+u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
     uint bitVal;

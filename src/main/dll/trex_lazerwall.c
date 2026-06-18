@@ -69,7 +69,7 @@ extern void hudFn_8011f38c(int x);
 
 /* this TU sees the title-menu interface under a differently-named extern; alias
  * to the canonical name (block-scope extern reconciliation, recipe #57) */
-extern undefined4* gTitleMenuControlInterfaceCopy;
+extern u32* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern f32 lbl_803E59DC;

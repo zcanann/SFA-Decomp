@@ -31,8 +31,8 @@
 
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjLink_AttachChild();
-extern undefined8 ObjPath_GetPointWorldPosition();
+extern u32 ObjLink_AttachChild();
+extern u64 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
 
 

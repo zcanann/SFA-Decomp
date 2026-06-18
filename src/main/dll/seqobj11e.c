@@ -33,8 +33,8 @@
 #include "main/objtexture.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
+extern u32 ObjLink_DetachChild();
+extern u32 ObjLink_AttachChild();
 
 #pragma scheduling off
 #pragma peephole off

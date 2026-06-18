@@ -21,22 +21,22 @@
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_8001792c();
-extern undefined4 FUN_80051fc4();
-extern undefined4 FUN_80052778();
-extern undefined4 FUN_800528d0();
-extern undefined4 FUN_80052904();
+extern u32 FUN_80051fc4();
+extern u32 FUN_80052778();
+extern u32 FUN_800528d0();
+extern u32 FUN_80052904();
 extern uint FUN_80053078();
 extern void gxSetPeControl_ZCompLoc_(int a);
 extern void gxSetZMode_(int a, int b, int c);
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025cce8();
+extern u32 FUN_8025c754();
+extern u32 FUN_8025cce8();
 
-extern undefined4 DAT_8031c130;
-extern undefined4 DAT_803aa008;
-extern undefined4 DAT_803aa024;
-extern undefined4 DAT_803de3b8;
-extern undefined4 DAT_803e2a90;
-extern undefined4 DAT_803e2a94;
+extern u32 DAT_8031c130;
+extern u32 DAT_803aa008;
+extern u32 DAT_803aa024;
+extern u32 DAT_803de3b8;
+extern u32 DAT_803e2a90;
+extern u32 DAT_803e2a94;
 extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2c90;
 

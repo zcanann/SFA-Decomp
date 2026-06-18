@@ -29,7 +29,7 @@
 #define GAMEBIT_SFXPLAYER_VARIANT_C 0x670
 #define GAMEBIT_SFXPLAYER_VARIANT_D 0x9f5
 
-undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
+u32 sfxplayer_updateState(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     int event;
     SfxplayerState* state;
