@@ -1,28 +1,49 @@
+/*
+ * firepipe (DLL 0x273) - a cyclic flame/jet emitter placed in the world.
+ *
+ * Each tick the object emits a particle effect sub-object (a fresh
+ * spawn-def is allocated, positioned at the emitter and handed to a
+ * pooled effect slot) and drives an optional point-light glow that
+ * follows the flame. Emission runs on a duty cycle (cycleTimer /
+ * emitTimer, seeded from the placement's cycleTime/timer fields) and is
+ * gated by a placement game bit: setting the bit toggles the jet on or
+ * off, and player hits / freeze state can also start or stop it.
+ *
+ * The object-id variants select the effect flavour spawned by
+ * firepipe_init / firepipe_updateState:
+ *   0x6f9 -> effect type 10 (blue glow)   0x730 -> type 0xC
+ *   0x731 -> type 0xD                     0x732 -> type 0xE
+ *   0x4a4 / 0x70a / default -> type 9 (orange flame, clear-volume pair)
+ *
+ * Per-object boolean state lives in FirePipeExtra.flags, accessed as a
+ * FirePipeBitFlags overlay (bit0..bit7).
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "string.h"
 
-extern undefined4 modelLightStruct_freeSlot(int param_1);
-extern undefined4 GameBit_Get(int eventId);
-extern undefined4 randomGetRange(int param_1, int param_2);
+extern void modelLightStruct_freeSlot(int param_1);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int param_1, int param_2);
 extern int Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
-extern undefined4 Obj_FreeObject(int param_1);
+extern void Obj_FreeObject(int param_1);
 extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject * obj);
 extern int mmSetFreeDelay(int delay);
 extern void mm_free(void* ptr);
-extern undefined4 ObjHits_EnableObject(FirePipeObject * obj);
+extern void ObjHits_EnableObject(FirePipeObject * obj);
 extern void ObjHits_DisableObject(FirePipeObject * obj);
 extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);
 extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern int Obj_AllocObjectSetup(int size, int objectId);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
-extern undefined4 queueGlowRender(void);
+extern void ObjGroup_RemoveObject();
+extern void ObjGroup_AddObject();
+extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
+extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32 * param_1);
 extern void s16toFloat(f32* param_1, s16 param_2);
 extern void fn_80098B18(FirePipeObject* obj, f32 scale, int type, int a, int b, int c);
@@ -56,6 +77,14 @@ extern f32 lbl_803E6B90;
 extern f32 lbl_803E6B94;
 extern f32 lbl_803E6B98;
 extern f32 lbl_803E6BA8;
+
+/* objectId variants handled by this DLL (select the emitted effect). */
+#define FIREPIPE_OBJ_BLUE 0x6f9
+#define FIREPIPE_OBJ_C 0x730
+#define FIREPIPE_OBJ_D 0x731
+#define FIREPIPE_OBJ_E 0x732
+#define FIREPIPE_OBJ_FLAME_A 0x4a4
+#define FIREPIPE_OBJ_FLAME_B 0x70a
 
 typedef struct
 {
@@ -172,7 +201,7 @@ void firepipe_updateState(FirePipeObject* obj)
         priorityHit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
         switch (obj->objectId)
         {
-        case 0x70a:
+        case FIREPIPE_OBJ_FLAME_B:
             if ((priorityHit == 0xf) || (priorityHit == 0xe))
             {
                 flags->bit6 = 0;
@@ -180,12 +209,12 @@ void firepipe_updateState(FirePipeObject* obj)
                 s16toFloat(&extra->cycleTimer, 0x12c);
             }
             break;
-        case 0x6f9:
+        case FIREPIPE_OBJ_BLUE:
             break;
-        case 0x4a4:
-        case 0x730:
-        case 0x731:
-        case 0x732:
+        case FIREPIPE_OBJ_FLAME_A:
+        case FIREPIPE_OBJ_C:
+        case FIREPIPE_OBJ_D:
+        case FIREPIPE_OBJ_E:
         default:
             if (priorityHit == 0x10)
             {
@@ -276,7 +305,7 @@ void firepipe_updateState(FirePipeObject* obj)
                 {
                     modelLightStruct_setEnabled(extra->subObj, 0, lbl_803E6B74);
                     modelLightStruct_setEnabled(extra->subObj, 1, lbl_803E6B78);
-                    if (obj->objectId == 0x6f9)
+                    if (obj->objectId == FIREPIPE_OBJ_BLUE)
                     {
                         modelLightStruct_setupGlow(extra->subObj, 0, 0, 0xb4, 0xff, 0x64,
                                                    lbl_803DC34C * obj->scale);
@@ -292,7 +321,7 @@ void firepipe_updateState(FirePipeObject* obj)
                                     ? lbl_803E6B84
                                     : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
                     farAtten = lbl_803E6B8C + radius;
-                    {
+                    { /* separate local to reproduce reg assignment */
                         int light = extra->subObj;
                         modelLightStruct_setDistanceAttenuation(light, nearAtten,
                                                                 (farAtten < lbl_803E6B90)
@@ -337,6 +366,7 @@ sound_update:
         *(f32*)(spawnDef + 8) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(spawnDef + 0xc) = ((GameObject*)obj)->anim.localPosY;
         *(f32*)(spawnDef + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        /* matching: Ghidra emits this dead null-check; spawnDef cannot be NULL here */
         if (spawnDef == 0)
         {
             effectObj = 0;
@@ -374,10 +404,9 @@ sound_update:
     }
 }
 
-
 int firepipe_getExtraSize(void)
 {
-    return 0x44;
+    return sizeof(FirePipeExtra);
 }
 
 undefined4 firepipe_stateCallback(FirePipeObject* obj)
@@ -394,17 +423,17 @@ int firepipe_getObjectTypeId(void)
 void firepipe_free(FirePipeObject* obj)
 {
     int i;
-    undefined4* iter;
+    int* iter;
     FirePipeExtra* extra;
 
     extra = obj->extra;
     ObjGroup_RemoveObject(obj, 0x4a);
     i = 0;
-    iter = (undefined4*)extra;
+    iter = (int*)extra;
     while (i < (int)(uint)extra->effectCount)
     {
         Obj_FreeObject(*iter);
-        iter = iter + 1;
+        iter++;
         i++;
     }
     if ((uint)extra->subObj != 0)
@@ -420,11 +449,11 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
 
     extra = obj->extra;
     subObj = extra->subObj;
-    if ((uint)subObj != 0 && *(byte*)(subObj + 0x2f8) != 0 && *(byte*)(subObj + 0x4c) != 0)
+    if ((uint)subObj != 0 && *(u8*)(subObj + 0x2f8) != 0 && *(u8*)(subObj + 0x4c) != 0)
     {
         queueGlowRender();
     }
-    if (visible != '\0' && (uint)((extra->flags >> 1) & 1) != 0)
+    if (visible != 0 && (uint)((extra->flags >> 1) & 1) != 0)
     {
         objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
@@ -436,12 +465,6 @@ void firepipe_update(FirePipeObject* obj)
     firepipe_updateState(obj);
 }
 
-static inline f64 firepipe_u32AsDouble(u32 value)
-{
-    u64 bits = CONCAT44(0x43300000, value);
-    return *(f64*)&bits;
-}
-
 void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
 {
     FirePipeExtra* extra;
@@ -449,7 +472,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     int def;
     short startTime;
     short cycleTime;
-    undefined4 bitVal;
+    u32 bitVal;
     uint val;
 
     extra = obj->extra;
@@ -500,31 +523,30 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         }
         extra->clearVolumeA = 0;
         extra->clearVolumeB = 0;
-        cycleTime = obj->objectId;
-        switch (cycleTime)
+        switch (obj->objectId)
         {
-        case 0x6f9:
+        case FIREPIPE_OBJ_BLUE:
             extra->effectType = 10;
             extra->effectMode = 1;
             extra->effectScale = lbl_803DC340;
             break;
-        case 0x731:
+        case FIREPIPE_OBJ_D:
             extra->effectType = 0xd;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case 0x730:
+        case FIREPIPE_OBJ_C:
             extra->effectType = 0xc;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case 0x732:
+        case FIREPIPE_OBJ_E:
             extra->effectType = 0xe;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case 0x4a4:
-        case 0x70a:
+        case FIREPIPE_OBJ_FLAME_A:
+        case FIREPIPE_OBJ_FLAME_B:
         default:
             extra->effectType = 9;
             extra->effectMode = 0;
@@ -544,7 +566,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         extra->effectCount = 0;
         obj->resetTimer = 0;
         obj->modeX = (short)((int)mapData->modeX << 8);
-        obj->modeY = (ushort)mapData->modeY << 8;
+        obj->modeY = (u16)mapData->modeY << 8;
         ObjHits_EnableObject(obj);
         ((FirePipeBitFlags*)&extra->flags)->bit4 = 0;
         extra->activeSpawn = 0;
