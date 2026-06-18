@@ -14251,7 +14251,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
             {
                 int op = ObjModel_GetRenderOp(m, i);
-                if (*(s8*)((char*)op + 0x41) == 2)
+                if (*(u8*)((char*)op + 0x41) == 2)
                 {
                     Shader_getLayer(op, 1);
                     lbl_803DE428 = op;
@@ -14314,7 +14314,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             {
                 if ((((PlayerState*)inner)->unk8D8 & 8) != 0)
                 {
-                    int n;
+                    u8 n;
                     vel[0] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityX;
                     vel[1] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityY;
                     vel[2] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityZ;
