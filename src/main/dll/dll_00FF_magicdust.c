@@ -85,7 +85,7 @@ void magicdust_update(int obj)
     int state;
     double dVar9;
     char fxArg;
-    char burstArg[3];
+    u8 burstArg[3];
     int msg[1];
     f32 dist;
 
@@ -133,7 +133,7 @@ void magicdust_update(int obj)
     {
         if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) >= lbl_803E34B8)
         {
-            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xef;
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~0x10;
             (*gExpgfxInterface)->freeSource2((u32)obj);
         }
     }
@@ -142,7 +142,7 @@ void magicdust_update(int obj)
         if ((((MagicDustState*)state)->flags27A & 2) != 0)
         {
             *(short*)obj = *(short*)obj + (u16)framesThisStep * 0x100;
-            ((MagicDustState*)state)->ambientTimer -= (u16)framesThisStep;
+            ((MagicDustState*)state)->ambientTimer -= framesThisStep;
             if (((MagicDustState*)state)->ambientTimer < 0)
             {
                 Sfx_PlayFromObject(obj, SFXen_statue_wave);
@@ -178,7 +178,7 @@ void magicdust_update(int obj)
         {
             if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
             {
-                ((MagicDustState*)state)->flags27A = flagsByte & 0xfe;
+                ((MagicDustState*)state)->flags27A = flagsByte & ~1;
                 ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
                 ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
                 ((GameObject*)obj)->anim.alpha = 0xff;
@@ -203,13 +203,13 @@ void magicdust_update(int obj)
             }
             if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
             {
-                ((MagicDustState*)state)->flags27A = flagsByte & 0xfb;
+                ((MagicDustState*)state)->flags27A = flagsByte & ~4;
                 ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
                 ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
                 (*gExpgfxInterface)->freeSource2((u32)obj);
                 if (*(int*)&((GameObject*)obj)->anim.parent == 0)
                 {
-                    for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0] = burstArg[0] + -1)
+                    for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
                     {
                         (*gPartfxInterface)->spawnObject((void*)obj,
                                                          ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
