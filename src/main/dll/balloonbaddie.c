@@ -1,7 +1,7 @@
 /*
  * In-game C-menu (radial item ring) and Tricky HUD overlay rendering.
  *
- * cMenuSetItems / fn_801244B0 walk a placement-style item table (8
+ * cMenuSetItems / cMenuCountVisibleItems walk a placement-style item table (8
  * shorts per entry) gated by game bits, populating the parallel cMenu
  * arrays at lbl_803A87F0 (ids/words/state/flags/textures) and loading
  * per-item textures. The "useTricky" path filters entries through the
@@ -42,8 +42,8 @@ extern f32 FLOAT_803e2c90;
 
 extern u8 lbl_803A87F0[];
 extern CMenuItemDef gCMenuStaffAbilities[];
-extern s16 lbl_803DD894;
-extern s8 lbl_803DD896;
+extern s16 gCMenuForcedSelIndex;
+extern s8 gCMenuPreselectOwnedBit;
 extern u16 yButtonState;
 extern u16 yButtonItem;
 extern s16 yButtonItemTextureId;
@@ -100,7 +100,7 @@ extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
 extern f32 mathCosf(f32 x);
 extern s8 cMenuState;
 extern u8 framesThisStep;
-extern s16 lbl_803DD796;
+extern s16 gCMenuScrollTimer;
 extern s16 cMenuFadeCounter;
 extern s16 lbl_803DD79A;
 extern s16 lbl_803DD79C;
@@ -108,7 +108,7 @@ extern s16 lbl_803DD79E;
 extern u16 lbl_803DBA30;
 extern int gRenderModeObj;
 extern int lbl_803DD7E0;
-extern u8 lbl_803DD8B6;
+extern u8 gCMenuCurSection;
 extern u8 lbl_803DD8B7;
 extern u8 lbl_803DD8D4;
 extern f32 lbl_803DBAA4;
@@ -181,7 +181,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     *wordP = -1;
     if (useTricky == 0)
     {
-        lbl_803DD894 = -1;
+        gCMenuForcedSelIndex = -1;
         for (src = items; *src > -1; src += 8)
         {
             active = GameBit_Get(*src);
@@ -215,9 +215,9 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
                 }
                 else if (src[1] < 0 || GameBit_Get(src[1]) == 0)
                 {
-                    if (lbl_803DD896 != 0 && lbl_803DD896 == *src)
+                    if (gCMenuPreselectOwnedBit != 0 && gCMenuPreselectOwnedBit == *src)
                     {
-                        lbl_803DD894 = count;
+                        gCMenuForcedSelIndex = count;
                     }
                     *(s16*)(base + halfOff + 0x948) = src[3];
                     *(int*)(base + wordOff + 0x848) = src[0];
@@ -347,7 +347,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
 
 #pragma scheduling on
 #pragma peephole on
-int fn_801244B0(s16* table, char mode)
+int cMenuCountVisibleItems(s16* table, char mode)
 {
     uint bitVal;
     int count;
@@ -610,7 +610,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         break;
     }
     *(f32*)(lbl_803A93E0[slot] + 0x10) =
-        lbl_803E1E40 + (f32)(-lbl_803DD796 * lbl_803DBA30) / lbl_803E201C;
+        lbl_803E1E40 + (f32)(-gCMenuScrollTimer * lbl_803DBA30) / lbl_803E201C;
     sy = lbl_803DBAC8;
     sx = lbl_803DBAC4;
     lbl_803DBAA4 = Camera_GetFovY();
@@ -764,7 +764,7 @@ void cMenuRotateFn_80124d80(void)
         }
         if (t1 <= 0x2aaa)
         {
-            lbl_803DD8B6 = lbl_803DD8B7;
+            gCMenuCurSection = lbl_803DD8B7;
         }
         *(s16*)lbl_803A93EC[0] = cur;
         *(s16*)lbl_803A93E0[0] = cur;

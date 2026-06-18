@@ -35,7 +35,7 @@ extern short lbl_803DBA68;
 extern short lbl_803DBA6E;
 
 extern u8 lbl_803DBA65;
-extern short lbl_803DD796;
+extern short gCMenuScrollTimer;
 extern short lbl_803DD78E;
 extern u8 cMenuOpen;
 extern short cMenuFadeCounter;
@@ -99,9 +99,9 @@ extern void gameTextMeasureFn_800163c4(char* str, int n, int a, int b, int* x0, 
 extern void textureFree(int texture);
 extern int textureLoadAsset(int id);
 extern void fn_8005D118(int a, int b, int c, int d, int e);
-extern int lbl_803DD8B0;
-extern s16 lbl_803DD8B4;
-extern s8 lbl_803DD8B6;
+extern int gCMenuItemCount;
+extern s16 gCMenuSelIndex;
+extern s8 gCMenuCurSection;
 extern u8 lbl_803DD848[7];
 extern u8 lbl_803DD8D4;
 extern int hudYButtonItemIconTexture;
@@ -858,39 +858,39 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     {
         slotCount = 3;
         sel = 1;
-        for (i = 0; i < lbl_803DD8B0; i++)
+        for (i = 0; i < gCMenuItemCount; i++)
         {
             slots[i] = 0;
         }
-        for (i = lbl_803DD8B0; i < 3; i++)
+        for (i = gCMenuItemCount; i < 3; i++)
         {
             slots[i] = 1;
         }
-        if (lbl_803DD8B0 < 3)
+        if (gCMenuItemCount < 3)
         {
-            lbl_803DD8B0 = 3;
+            gCMenuItemCount = 3;
         }
-        if (lbl_803DD796 > 0)
+        if (gCMenuScrollTimer > 0)
         {
             sel = 2;
             slotCount = 4;
-            if (lbl_803DD796 > 0x32)
+            if (gCMenuScrollTimer > 0x32)
             {
                 sel = 3;
             }
         }
-        else if ((lbl_803DD796 < 0) && (slotCount = 4, lbl_803DD796 < -0x32))
+        else if ((gCMenuScrollTimer < 0) && (slotCount = 4, gCMenuScrollTimer < -0x32))
         {
             sel = 0;
         }
-        k = lbl_803DD8B4 - sel;
+        k = gCMenuSelIndex - sel;
         if (k < 0)
         {
-            k = k + lbl_803DD8B0;
+            k = k + gCMenuItemCount;
         }
-        if (k >= lbl_803DD8B0)
+        if (k >= gCMenuItemCount)
         {
-            k = k - lbl_803DD8B0;
+            k = k - gCMenuItemCount;
         }
         fade = cMenuFadeCounter;
         iconPtr = lbl_803DD848;
@@ -913,9 +913,9 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
             }
             k++;
-            if (k >= lbl_803DD8B0)
+            if (k >= gCMenuItemCount)
             {
-                k = k - lbl_803DD8B0;
+                k = k - gCMenuItemCount;
             }
         }
         GXSetScissor(0, 0, 0x280, 0x1E0);
@@ -927,7 +927,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             if (*iconPtr > 1)
             {
                 alpha = fade;
-                rowFade = lbl_803DD796 + yOff;
+                rowFade = gCMenuScrollTimer + yOff;
                 if (rowFade < lbl_803DBACC)
                 {
                     alpha = fade + (rowFade - lbl_803DBACC) * 8;
@@ -948,9 +948,9 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf((char*)&label, &lbl_803DBB58, *iconPtr);
                 gameTextSetColor(0, 0, 0, a16 & 0xFF);
-                gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + yOff + lbl_803DD796);
+                gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + yOff + gCMenuScrollTimer);
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
-                gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + yOff + lbl_803DD796);
+                gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + yOff + gCMenuScrollTimer);
             }
             iconPtr++;
             yOff += 0x32;
@@ -966,20 +966,20 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                           0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
-            if (lbl_803DD8B6 != 1)
+            if (gCMenuCurSection != 1)
             {
-                if (lbl_803DD8B6 < 1)
+                if (gCMenuCurSection < 1)
                 {
-                    if (lbl_803DD8B6 < 0)
+                    if (gCMenuCurSection < 0)
                     {
-                        /* icon stays 0 when lbl_803DD8B6 < 0 */
+                        /* icon stays 0 when gCMenuCurSection < 0 */
                     }
                     else
                     {
                         icon = 0x59;
                     }
                 }
-                else if (lbl_803DD8B6 < 3)
+                else if (gCMenuCurSection < 3)
                 {
                     icon = 0x58;
                 }
@@ -1202,20 +1202,20 @@ void cMenuUpdateAnims(void)
     s = (s8)lbl_803DBA65;
     if (s >= 0)
     {
-        lbl_803DD796 = lbl_803DD796 - framesThisStep * s;
-        if (lbl_803DD796 < 0)
+        gCMenuScrollTimer = gCMenuScrollTimer - framesThisStep * s;
+        if (gCMenuScrollTimer < 0)
         {
-            lbl_803DD796 = 0;
+            gCMenuScrollTimer = 0;
             lbl_803DBA65 = 0;
             lbl_803DD78E = 0;
         }
     }
     else
     {
-        lbl_803DD796 = lbl_803DD796 + framesThisStep * (-s);
-        if (lbl_803DD796 > 0)
+        gCMenuScrollTimer = gCMenuScrollTimer + framesThisStep * (-s);
+        if (gCMenuScrollTimer > 0)
         {
-            lbl_803DD796 = 0;
+            gCMenuScrollTimer = 0;
             lbl_803DBA65 = 0;
             lbl_803DD78E = 0;
         }

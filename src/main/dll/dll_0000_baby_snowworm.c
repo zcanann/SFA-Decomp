@@ -1812,10 +1812,10 @@ extern u8 lbl_803A87F0[];
 extern u8 cMenuEnabled;
 extern s8 shouldCloseCMenu;
 extern int lbl_803DD8A0;
-extern s8 lbl_803DD8B6;
+extern s8 gCMenuCurSection;
 extern s16 cMenuSelectedItem;
-extern s16 lbl_803DD8B4;
-extern int lbl_803DD8B0;
+extern s16 gCMenuSelIndex;
+extern int gCMenuItemCount;
 extern s16 lbl_803DD8BC;
 extern s16 lbl_803DD8BE;
 extern s16 lbl_803DD8D6;
@@ -1823,13 +1823,13 @@ extern s16 lbl_803DBA66;
 extern s16 aButtonIcon;
 extern u8 bButtonIcon;
 extern s16 lbl_803DD89C;
-extern s16 lbl_803DD790;
-extern s16 lbl_803DD796;
+extern s16 gCMenuPrevStickY;
+extern s16 gCMenuScrollTimer;
 extern u8 lbl_803DD7B8;
 extern s16 lbl_803DD79A;
 extern s8 lbl_803DBA65;
-extern s16 lbl_803DD7B6;
-extern s16 lbl_803DD894;
+extern s16 gCMenuScrollVel;
+extern s16 gCMenuForcedSelIndex;
 extern int lbl_803DD8A8;
 extern u16 yButtonItem;
 extern s16 yButtonItemTextureId;
@@ -1940,7 +1940,7 @@ void cMenuRun(void)
     lbl_803DD8B8 = 0;
 
     {
-        s8 mi = (s8)lbl_803DD8B6;
+        s8 mi = (s8)gCMenuCurSection;
         char* set = (char*)gCMenuSections + mi * 16;
         int handle = *(int*)set;
         cursor = (s16*)(set + 4);
@@ -1949,8 +1949,8 @@ void cMenuRun(void)
         {
             isTricky = 1;
         }
-        lbl_803DD8B4 = *cursor;
-        lbl_803DD8B0 = cMenuSetItems(handle, isTricky);
+        gCMenuSelIndex = *cursor;
+        gCMenuItemCount = cMenuSetItems(handle, isTricky);
     }
 
     switch (yButtonState)
@@ -1989,9 +1989,9 @@ void cMenuRun(void)
         break;
     }
 
-    if (lbl_803DD8B4 >= lbl_803DD8B0)
+    if (gCMenuSelIndex >= gCMenuItemCount)
     {
-        lbl_803DD8B4 = 0;
+        gCMenuSelIndex = 0;
     }
 
     {
@@ -2000,7 +2000,7 @@ void cMenuRun(void)
         else open = (lbl_803DD8D6 != lbl_803DBA66) ? 0 : 1;
         if (open)
         {
-            s16 cur = lbl_803DD8B4;
+            s16 cur = gCMenuSelIndex;
             s16 cy;
             cMenuSelectedItem = (s16)hud->ids848[cur];
             lbl_803DD8BC = (s16)hud->ids648[cur];
@@ -2024,9 +2024,9 @@ void cMenuRun(void)
             {
                 cy = padGetCY(0);
             }
-            if ((cy <= -0xa && lbl_803DD790 > -0xa) || cy < -0x3c)
+            if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
             {
-                s16 m = lbl_803DD796;
+                s16 m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
                 if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0)
                 {
@@ -2034,13 +2034,13 @@ void cMenuRun(void)
                     {
                         Sfx_PlayFromObject(0, 0xfc);
                     }
-                    lbl_803DD7B6 = 1;
+                    gCMenuScrollVel = 1;
                     goto scrolled;
                 }
             }
-            if ((cy >= 0xa && lbl_803DD790 < 0xa) || cy > 0x3c)
+            if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
             {
-                s16 m = lbl_803DD796;
+                s16 m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
                 if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0)
                 {
@@ -2048,72 +2048,72 @@ void cMenuRun(void)
                     {
                         Sfx_PlayFromObject(0, 0xfc);
                     }
-                    lbl_803DD7B6 = -1;
+                    gCMenuScrollVel = -1;
                 }
             }
         scrolled:
-            lbl_803DD790 = cy;
-            if (lbl_803DD7B6 > 0xff)
+            gCMenuPrevStickY = cy;
+            if (gCMenuScrollVel > 0xff)
             {
-                lbl_803DD7B6 = 0xff;
+                gCMenuScrollVel = 0xff;
             }
-            if (lbl_803DD7B6 < -0xff)
+            if (gCMenuScrollVel < -0xff)
             {
-                lbl_803DD7B6 = -0xff;
+                gCMenuScrollVel = -0xff;
             }
-            if (lbl_803DD894 != -1)
+            if (gCMenuForcedSelIndex != -1)
             {
-                lbl_803DD8B4 = lbl_803DD894;
+                gCMenuSelIndex = gCMenuForcedSelIndex;
             }
             {
-                s16 vel = lbl_803DD7B6;
-                if (vel != 0 && lbl_803DD796 == 0)
+                s16 vel = gCMenuScrollVel;
+                if (vel != 0 && gCMenuScrollTimer == 0)
                 {
                     if (vel > 0)
                     {
                         int count;
-                        lbl_803DD7B6 = (s16)(vel - 1);
-                        count = lbl_803DD8B0;
+                        gCMenuScrollVel = (s16)(vel - 1);
+                        count = gCMenuItemCount;
                         if (count > 1)
                         {
-                            if (count == 2 && lbl_803DD8B4 == 1)
+                            if (count == 2 && gCMenuSelIndex == 1)
                             {
-                                lbl_803DD796 = 0x64;
+                                gCMenuScrollTimer = 0x64;
                             }
                             else
                             {
-                                lbl_803DD796 = 0x32;
+                                gCMenuScrollTimer = 0x32;
                             }
                             lbl_803DBA65 = 3;
                             lbl_803DD7B8 = 0;
-                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 + 1);
-                            if (lbl_803DD8B4 >= count)
+                            gCMenuSelIndex = (s16)(gCMenuSelIndex + 1);
+                            if (gCMenuSelIndex >= count)
                             {
-                                lbl_803DD8B4 = 0;
+                                gCMenuSelIndex = 0;
                             }
                         }
                     }
                     else
                     {
                         int count;
-                        lbl_803DD7B6 = (s16)(vel + 1);
-                        count = lbl_803DD8B0;
+                        gCMenuScrollVel = (s16)(vel + 1);
+                        count = gCMenuItemCount;
                         if (count > 1)
                         {
-                            if (count == 2 && lbl_803DD8B4 == 0)
+                            if (count == 2 && gCMenuSelIndex == 0)
                             {
-                                lbl_803DD796 = -0x64;
+                                gCMenuScrollTimer = -0x64;
                             }
                             else
                             {
-                                lbl_803DD796 = -0x32;
+                                gCMenuScrollTimer = -0x32;
                             }
                             lbl_803DBA65 = -3;
                             lbl_803DD7B8 = 0;
-                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 - 1);
-                            if (lbl_803DD8B4 < 0)
+                            gCMenuSelIndex = (s16)(gCMenuSelIndex - 1);
+                            if (gCMenuSelIndex < 0)
                             {
-                                lbl_803DD8B4 = (s16)(count - 1);
+                                gCMenuSelIndex = (s16)(count - 1);
                             }
                         }
                     }
@@ -2143,7 +2143,7 @@ void cMenuRun(void)
                                 else
                                 {
                                     Sfx_PlayFromObject(0, 0x408);
-                                    yButtonItemTextureId = hud->texIds[lbl_803DD8B4];
+                                    yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
                                     yButtonItem = (u16)cMenuSelectedItem;
                                     lbl_803DD888 = lbl_803DD8BE;
                                     lbl_803DD886 = lbl_803DD8BC;
@@ -2169,13 +2169,13 @@ void cMenuRun(void)
                             buttonDisable(0, 0x900);
                             if (isTricky == 0)
                             {
-                                if (hud->enabled[lbl_803DD8B4] != 0)
+                                if (hud->enabled[gCMenuSelIndex] != 0)
                                 {
                                     if ((b2 & 0x100) || matched != 0)
                                     {
                                         ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
                                         lbl_803DD8C2 = cMenuSelectedItem;
-                                        lbl_803DD8B8 = (s8)hud->closeMode[lbl_803DD8B4];
+                                        lbl_803DD8B8 = (s8)hud->closeMode[gCMenuSelIndex];
                                         cMenuOpen = 0;
                                     }
                                     Sfx_PlayFromObject(0, 0xf7);
@@ -2189,7 +2189,7 @@ void cMenuRun(void)
                             }
                             else
                             {
-                                if (hud->enabled[lbl_803DD8B4] != 0)
+                                if (hud->enabled[gCMenuSelIndex] != 0)
                                 {
                                     if ((b2 & 0x100) || matched != 0)
                                     {
@@ -2249,14 +2249,14 @@ void cMenuRun(void)
         {
             cMenuState = 0;
             lbl_803DD8A8 = 0;
-            lbl_803DD7B6 = 0;
+            gCMenuScrollVel = 0;
         }
         if ((s8)isOpen != 0)
         {
             buttonDisable(0, 0x300);
         }
     }
-    *cursor = lbl_803DD8B4;
+    *cursor = gCMenuSelIndex;
 }
 #pragma dont_inline reset
 
@@ -4436,7 +4436,7 @@ void GameUI_update(void)
                     }
                     else
                     {
-                        switch ((s8)lbl_803DD8B6)
+                        switch ((s8)gCMenuCurSection)
                         {
                         case 0:
                             if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0 ||
@@ -4481,7 +4481,7 @@ void GameUI_update(void)
                     lbl_803DD79E = 0;
                     shouldOpenCMenu = 2;
                     lbl_803DD8B7 = 2;
-                    lbl_803DD8B6 = 2;
+                    gCMenuCurSection = 2;
                     fn_8012FA70(2, 1);
                     goto afterDispatch;
                 }
@@ -4498,7 +4498,7 @@ void GameUI_update(void)
                     lbl_803DD79E = -0x5556;
                     shouldOpenCMenu = 3;
                     lbl_803DD8B7 = 0;
-                    lbl_803DD8B6 = 0;
+                    gCMenuCurSection = 0;
                     fn_8012FA70(0, 0);
                     if (f26 != 0) fn_8012F9B4(0, 0xc1, 0);
                     goto afterDispatch;
@@ -4516,7 +4516,7 @@ void GameUI_update(void)
                     lbl_803DD79E = 0x5555;
                     shouldOpenCMenu = 4;
                     lbl_803DD8B7 = 1;
-                    lbl_803DD8B6 = 1;
+                    gCMenuCurSection = 1;
                     fn_8012FA70(1, 0);
                     goto afterDispatch;
                 }
@@ -4529,7 +4529,7 @@ void GameUI_update(void)
                     int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
                     if (absPrev >= 0xf) goto camCheck;
                 }
-                if (lbl_803DD796 != 0) goto camCheck;
+                if (gCMenuScrollTimer != 0) goto camCheck;
                 if (cMenuOpen != 0) closed = 0;
                 else closed = (lbl_803DD8D6 != lbl_803DBA66) ? 0 : 1;
                 if (!closed) goto camCheck;
@@ -4591,7 +4591,7 @@ void GameUI_update(void)
             cMenuOpen = 1;
             cMenuState = shouldOpenCMenu;
             lbl_803DD8A4 = 0;
-            lbl_803DD7B6 = 0;
+            gCMenuScrollVel = 0;
             shouldOpenCMenu = 0;
         }
 
@@ -4690,7 +4690,7 @@ extern s16 cMenuFadeCounter;
 extern int getScreenResolution(void);
 extern s16 gHudTextureIds[];
 extern u8 lbl_803A9398[];
-extern s8 lbl_803DD896;
+extern s8 gCMenuPreselectOwnedBit;
 extern int lbl_803DD744;
 extern int lbl_803DD740;
 extern int airMeter;
@@ -4714,8 +4714,8 @@ void GameUI_initialise(void)
     int i;
     void* p;
 
-    lbl_803DD896 = -1;
-    lbl_803DD894 = -1;
+    gCMenuPreselectOwnedBit = -1;
+    gCMenuForcedSelIndex = -1;
     lbl_803DD8C2 = -1;
     lbl_803DD8B8 = 0;
     gTrickyHudCachedIconIndex = -1;
