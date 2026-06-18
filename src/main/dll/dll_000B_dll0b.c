@@ -1466,6 +1466,7 @@ void dll_0B_initialise(void)
     }
 }
 
+#pragma peephole on
 void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
 {
     f32 fz;
@@ -1489,6 +1490,7 @@ void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
     gModgfxSpawnContext.byte5A = 0;
     gModgfxSpawnContext.byte5B = 0;
 }
+#pragma peephole reset
 
 void dll_0B_func0A(s16* p)
 {
@@ -1637,11 +1639,11 @@ void fn_800A02DC(ModgfxState* state, f32* in)
         cur->texCoordS = prev->texCoordS;
         cur->texCoordT = prev->texCoordT;
         cur->texCoordS = (s16)(cur->texCoordS + dx);
-        if ((s32)cur->texCoordS > 0x100) ovx++;
-        if ((s32)cur->texCoordS < -0x100) ovx++;
+        if ((s32)cur->texCoordS > 0x100) ovx = (u8)(ovx + 1);
+        if ((s32)cur->texCoordS < -0x100) ovx = (u8)(ovx + 1);
         cur->texCoordT = (s16)(cur->texCoordT + dy);
-        if ((s32)cur->texCoordT > 0x100) ovy++;
-        if ((s32)cur->texCoordT < -0x100) ovy++;
+        if ((s32)cur->texCoordT > 0x100) ovy = (u8)(ovy + 1);
+        if ((s32)cur->texCoordT < -0x100) ovy = (u8)(ovy + 1);
         cur++;
         prev++;
     }
@@ -2066,11 +2068,9 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 
     total = 0;
     found = 0;
-    scan = (void**)gPartfxActiveEffects;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
-        if (*scan == NULL) found = 1;
-        scan++;
+        if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
     }
     if (found)
     {
@@ -2797,9 +2797,12 @@ void fn_800A0524(void* state, void* p, int mode)
             *(f32*)((char*)state + 0xbc) = tr;
             *(f32*)((char*)state + 0xc0) = tg;
             *(f32*)((char*)state + 0xc4) = tb;
-            *(f32*)((char*)state + 0xd0) =
-            *(f32*)((char*)state + 0xcc) =
-            *(f32*)((char*)state + 0xc8) = lbl_803DF430;
+            {
+                f32 z = lbl_803DF430;
+                *(f32*)((char*)state + 0xc8) = z;
+                *(f32*)((char*)state + 0xcc) = z;
+                *(f32*)((char*)state + 0xd0) = z;
+            }
         }
     }
     *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
@@ -2841,7 +2844,8 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
     extern f32 lbl_803DF434;
-    char* base = (char*)state + idx * 2 * 0xc;
+    int idx2 = idx * 2;
+#define base ((char*)state + idx2 * 0xc)
     int j;
 
     if (mode == 1)
@@ -2881,24 +2885,23 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
     *(f32*)(base + 0x34) = *(f32*)(base + 0x34) + *(f32*)(base + 0x40) * lbl_803DD284;
     *(f32*)(base + 0x38) = *(f32*)(base + 0x38) + *(f32*)(base + 0x44) * lbl_803DD284;
     {
-        f32 c434 = lbl_803DF434;
         u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
         u8* buf2 = *(u8**)((char*)((u32*)state + *(u8*)((char*)state + 0x130)) + 0x78);
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            if (c434 != *(f32*)(base + 0x30))
+            if (lbl_803DF434 != *(f32*)(base + 0x30))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
                     *(f32*)(base + 0x30) *
                     (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
             }
-            if (c434 != *(f32*)(base + 0x34))
+            if (lbl_803DF434 != *(f32*)(base + 0x34))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
                     *(f32*)(base + 0x34) *
                     (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2);
             }
-            if (c434 != *(f32*)(base + 0x38))
+            if (lbl_803DF434 != *(f32*)(base + 0x38))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) =
                     *(f32*)(base + 0x38) *
@@ -2906,6 +2909,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             }
         }
     }
+#undef base
 }
 
 extern int Obj_IsLoadingLocked(void);
