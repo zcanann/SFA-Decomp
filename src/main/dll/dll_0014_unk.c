@@ -1565,7 +1565,7 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     }
     c2 = Objfsa_FindRomCurveById(linkId);
 
-    if (c2 == 0)
+    if ((void*)c2 == NULL)
     {
         *outX = *(f32*)(curve + 8);
         *outY = *(f32*)(curve + 0xc);
