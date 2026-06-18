@@ -1451,8 +1451,9 @@ void saveGame_saveObjectPos(int* obj)
     if (((GameObject*)obj)->anim.flags & 0x2000) return;
     if (saveGameLoadStatus == 0)
     {
+        i = 0;
         slot = gSaveGameData;
-        for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
             v = *(int*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET);
             if (v == 0) break;
