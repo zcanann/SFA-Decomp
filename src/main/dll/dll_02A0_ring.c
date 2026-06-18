@@ -1,7 +1,26 @@
+/*
+ * ring (DLL 0x2A0) - the collectible flight rings for the Arwing
+ * sequences. One object covers every ring variant, selected at init by
+ * the placement's seqId: Arwing gold/silver rings, the silver "and"
+ * ring, and the WeatherControl sun/moon rings (RING_OBJ_*, RING_MODE_*).
+ *
+ * Each ring follows a placement-chosen route (RING_ROUTE_*): a stationary
+ * or moving target the player shoots, or a moving-axis ring the Arwing
+ * flies through. It steps through RING_PHASE_HIDDEN -> ACTIVE ->
+ * PULL_TO_ARWING -> COLLECTED: hidden rings fade in once their activation
+ * game bit is set (or the Arwing exists); active rings fade to full alpha,
+ * test shot/Arwing collisions and award score; collected rings are pulled
+ * toward the Arwing with a spiralling particle burst before snapping back
+ * to their placement position and hiding.
+ *
+ * Per-mode timing/particle parameters come from lbl_8032B720[mode]
+ * (RingTable); the optional glow is a ModelLightStruct.
+ *
+ * Callbacks take `int obj` rather than GameObject* intentionally: the
+ * untyped handle is load-bearing for register coloring (CLAUDE.md #126).
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
-
-#define RING_EXTRA_SIZE 0x24
 
 #define RING_OBJ_ARW_GOLD 0x060b
 #define RING_OBJ_ARW_SILVER 0x060c
@@ -10,10 +29,12 @@
 #define RING_OBJ_AND_SILVER 0x0819
 
 #define RING_MODE_SILVER 0
+/* mode 1 is unused/internal (no object type maps to it) */
 #define RING_MODE_GOLD 2
 #define RING_MODE_WC_MOON 3
 #define RING_MODE_WC_SUN 4
 
+#define RING_ROUTE_MOVING_AXIS_B 1 /* shares the moving-axis update with RING_ROUTE_MOVING_AXIS_A */
 #define RING_ROUTE_STATIONARY_SHOT 2
 #define RING_ROUTE_MOVING_SHOT_A 3
 #define RING_ROUTE_MOVING_AXIS_A 4
@@ -39,7 +60,7 @@
 #define RING_MODEL_ALT 1
 #define RING_OBJFLAG_HIDDEN 0x4000
 
-int ring_getExtraSize(void) { return RING_EXTRA_SIZE; }
+int ring_getExtraSize(void) { return sizeof(RingState); }
 
 int ring_getObjectTypeId(void) { return 0; }
 
@@ -194,7 +215,7 @@ void ring_update(int obj)
         if (bit > -1)
         {
             if (GameBit_Get(bit) == 0u)
-                state->phase = RING_PHASE_ACTIVE;
+                state->phase = RING_PHASE_ACTIVE; /* original re-stores ACTIVE here (no-op write is intentional) */
         }
         switch (state->route)
         {
@@ -211,7 +232,7 @@ void ring_update(int obj)
                 if (state->light != NULL)
                 {
                     ModelLightStruct_free(state->light);
-                    *(int*)&state->light = 0;
+                    state->light = NULL;
                 }
             }
             arwbombcoll_updateMovingAxis(obj, state);
@@ -228,11 +249,11 @@ void ring_update(int obj)
                 if (state->light != NULL)
                 {
                     ModelLightStruct_free(state->light);
-                    *(int*)&state->light = 0;
+                    state->light = NULL;
                 }
             }
             break;
-        case 1:
+        case RING_ROUTE_MOVING_AXIS_B:
         case RING_ROUTE_MOVING_AXIS_A:
             arwbombcoll_updateMovingAxis(obj, state);
             break;
@@ -246,7 +267,7 @@ void ring_update(int obj)
             }
         }
         ((GameObject*)obj)->anim.rotX =
-            (f32)(int) * (s16*)(obj + 0) + lbl_803E70B8 * timeDelta;
+            (f32)(int)((GameObject*)obj)->anim.rotX + lbl_803E70B8 * timeDelta;
         break;
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > lbl_803E70A0)
@@ -347,7 +368,7 @@ void ring_update(int obj)
             state->pullTimer = lbl_803E70C0;
         }
         break;
-    case 3:
+    case RING_PHASE_COLLECTED:
         break;
     }
 
