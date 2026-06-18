@@ -14558,7 +14558,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             ok = 0;
         }
         if (ok != 0 && *(void**)((char*)inner + 0x7f8) != NULL &&
-            *(s8*)((char*)inner + 0x800) == 0)
+            *(u8*)((char*)inner + 0x800) == 0)
         {
             if ((*(int*)((char*)state + 0x310) & 0x4000) == 0)
             {
@@ -14595,7 +14595,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             s16 t = ((PlayerState*)state)->baddie.controlMode;
             if (t != 0x24 && t != 0x25 && t != 0x26 &&
                 !((ByteFlags*)((char*)inner + 0x3f6))->b20 &&
-                *(s8*)&((PlayerState*)state)->baddie.hasTarget == 1)
+                *(u8*)&((PlayerState*)state)->baddie.hasTarget == 1)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
                 return 0x25;
@@ -14667,7 +14667,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         if (((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
             ((ByteFlags*)((char*)inner + 0x3f0))->b04)
         {
-            r = fn_802A74A4(obj, inner, state, buf, fv, 0x14);
+            r = ((int (*)(int, int, int, void*, f32, u32))fn_802A74A4)(obj, inner, state, buf, fv, 0x14);
             if (r == 0xc)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
@@ -14688,7 +14688,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         if (((ByteFlags*)((char*)inner + 0x3f0))->b20)
         {
-            r = fn_802A74A4(obj, inner, state, buf, lbl_803E7EE0, 0x100);
+            r = ((int (*)(int, int, int, void*, f32, u32))fn_802A74A4)(obj, inner, state, buf, lbl_803E7EE0, 0x100);
             if (r == 5)
             {
                 lbl_803DC6A0 = -1;
