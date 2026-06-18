@@ -768,6 +768,12 @@ typedef struct TumbleweedBlendFlags {
     u8 rest : 6;
 } TumbleweedBlendFlags;
 
+typedef struct {
+    u8 pending : 1; /* 0x80 */
+    u8 active : 1;  /* 0x40 */
+    u8 rest : 6;
+} TumbleweedBlendFlags;
+
 /* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
