@@ -1001,10 +1001,12 @@ undefined4 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
+#pragma optimization_level 2
 undefined4 trickyFn_80143388(int obj, int* trickyState)
 {
     int val;
     int ref;
+    int move;
 
     val = trickyFoodFn_8014460c(obj, trickyState);
     if (val != 0)
@@ -1017,7 +1019,8 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
         if (*(char*)((int)trickyState + ref) != '\0') continue;
         ref = *(int*)&((GameObject*)obj)->extra;
         if (((u32)(*(byte*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
-        if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+        move = ((GameObject*)obj)->anim.currentMove;
+        if (move >= 0x30 || move < 0x29)
         {
             if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
             {
@@ -1039,6 +1042,7 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
     }
     return 1;
 }
+#pragma optimization_level reset
 
 int trickyFn_801434b0(int obj, int* trickyState)
 {
