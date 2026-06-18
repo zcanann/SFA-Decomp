@@ -1,5 +1,15 @@
+/*
+ * dbsh_shrine (DLL 0x195) - a rising Krazoa-shrine object in the
+ * Discovered/Bone-shop ("dbsh") map. Idle until the map-event trigger
+ * fires, it raises the spirit-vision sky and env fx, plays an idle sfx on
+ * a randomised timer, then steps a small state machine
+ * (WAITING -> RISING -> ACTIVE -> CLOSING -> RESET) gated by the
+ * DBSH_SHRINE_GB_* game bits. The sequence callback fn_801C8EBC drives
+ * level/map unlocks and toggles the attached point light.
+ */
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/objseq.h"
+#include "main/game_object.h"
 
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
@@ -18,28 +28,38 @@
 #define DBSH_SHRINE_GB_RESET_A 0xc72
 #define DBSH_SHRINE_GB_RESET_B 0xc73
 #define DBSH_SHRINE_GB_SCENE_BLOCK 0xcbb
+#define DBSH_SHRINE_GB_ACTIVE 0xefa
+#define DBSH_SHRINE_GB_INITIALIZED 0xf08
 
 #define DBSH_SHRINE_ENVFX_A 0xd4
 #define DBSH_SHRINE_ENVFX_B 0xd5
 #define DBSH_SHRINE_ENVFX_C 0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-typedef union SceneIntToDouble
-{
-    u64 bits;
-    f64 value;
-} SceneIntToDouble;
-
 extern void skyFn_80088c94(int skyId, int enabled);
 extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
-extern void fn_801C8B68(DbshShrineObject * obj);
+extern void fn_801C8B68(DbshShrineObject* obj);
 extern u32 GameBit_Get(u32 id);
+extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ModelLightStruct_free(int light);
+extern void gameTimerStop(void);
+extern void unlockLevel(int param_1, int param_2, int param_3);
+extern int mapGetDirIdx(int idx);
+extern void lockLevel(int idx, int param_2);
+extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
+extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 scale);
+extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
+extern void fn_80296518(int obj, int param_2, int param_3);
+extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
+extern void* objCreateLight(int obj, int lightType);
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
+extern f32 lbl_803E50D8;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
@@ -48,14 +68,120 @@ extern f32 lbl_803E50DC;
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
+int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
+{
+    DbshShrineRuntime* runtime;
+    int player;
+    int i;
+    u32 event;
+
+    runtime = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+
+    for (i = 0; i < (s32)animUpdate->eventCount; i++)
+    {
+        event = animUpdate->eventIds[i];
+        if (event != 0)
+        {
+            switch (event)
+            {
+            case 3:
+                runtime->flags.latchStarted = 1;
+                break;
+            case 7:
+                fn_80296518(player, 2, 1);
+                GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 1);
+                GameBit_Set(0xc6e, 1);
+                (*gMapEventInterface)->setMapAct(0xb, 3);
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(10), 0);
+                break;
+            case 0xe:
+                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+                if (runtime->light != NULL)
+                {
+                    modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+                }
+                break;
+            case 0xf:
+                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~0x4000);
+                if (runtime->light != NULL)
+                {
+                    modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+                }
+                break;
+            }
+        }
+        animUpdate->eventIds[i] = 0;
+    }
+
+    return 0;
+}
+
+int dbsh_shrine_getExtraSize(void)
+{
+    return sizeof(DbshShrineRuntime);
+}
+
+int dbsh_shrine_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void dbsh_shrine_free(int obj)
+{
+    DbshShrineRuntime* runtime;
+
+    runtime = ((GameObject*)obj)->extra;
+    if (runtime->light != NULL)
+    {
+        ModelLightStruct_free((int)runtime->light);
+        runtime->light = NULL;
+    }
+    gameTimerStop();
+    ObjGroup_RemoveObject(obj, 0xb);
+    Music_Trigger(0xd8, 0);
+    Music_Trigger(0xd9, 0);
+    Music_Trigger(8, 0);
+    Music_Trigger(0xe, 0);
+    GameBit_Set(DBSH_SHRINE_GB_ACTIVE, 0);
+    GameBit_Set(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
+}
+
+void dbsh_shrine_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
+{
+    DbshShrineRuntime* runtime;
+
+    runtime = ((GameObject*)obj)->extra;
+    if (visible == 0)
+    {
+        if (runtime->light != NULL)
+        {
+            modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+        }
+    }
+    else
+    {
+        if (runtime->light != NULL)
+        {
+            modelLightStruct_setEnabled((int)runtime->light, 1, (double)lbl_803E50D8);
+        }
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E50D8);
+        objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);
+    }
+}
+
+void dbsh_shrine_hitDetect(void)
+{
+}
+
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
-    extern void GameBit_Set(u32 id, u32 value);
     extern int randomGetRange(int min, int max);
     int player;
-    int rand;
     u8 active;
-    SceneIntToDouble randAsDouble;
     DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
@@ -92,8 +218,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
             if (t <= lbl_803E50DC)
             {
                 Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
-                runtime->idleSfxTimer = (f32)(int)
-                randomGetRange(500, 1000);
+                runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);
             }
         }
         if ((obj->mapFlags & DBSH_SHRINE_MAP_FLAG_TRIGGERED) != 0)
@@ -152,161 +277,14 @@ void dbsh_shrine_update(DbshShrineObject* obj)
     }
 }
 
-#include "main/game_object.h"
-
-extern void ObjGroup_RemoveObject(int obj, int group);
-extern void ModelLightStruct_free(int light);
-extern void gameTimerStop(void);
-extern void Music_Trigger(int id, int mode);
-extern void unlockLevel(int param_1, int param_2, int param_3);
-extern int mapGetDirIdx(int idx);
-extern void lockLevel(int idx, int param_2);
-extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
-extern void objRenderFn_8003b8f4(double scale, int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5);
-extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern void fn_80296518(int obj, int param_2, int param_3);
-
-extern f32 lbl_803E50D8;
-
-int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
-{
-    extern void GameBit_Set(int eventId, int value);
-    struct Creator1C6Flag15
-    {
-        u8 b80 : 1;
-        u8 rest : 7;
-    };
-    void** state;
-    int player;
-    int i;
-    u32 event;
-
-    state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
-    animUpdate->activeHitVolumePair = -1;
-    animUpdate->sequenceEventActive = 0;
-
-    for (i = 0; i < (s32)animUpdate->eventCount; i++)
-    {
-        event = animUpdate->eventIds[i];
-        if (event != 0)
-        {
-            switch (event)
-            {
-            case 3:
-                ((struct Creator1C6Flag15*)((u8*)state + 0x15))->b80 = 1;
-                break;
-            case 7:
-                fn_80296518(player, 2, 1);
-                GameBit_Set(0x15f, 1);
-                GameBit_Set(0xc6e, 1);
-                (*gMapEventInterface)->setMapAct(0xb, 3);
-                unlockLevel(0, 0, 1);
-                lockLevel(mapGetDirIdx(10), 0);
-                break;
-            case 0xe:
-                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-                if (state[0] != NULL)
-                {
-                    modelLightStruct_setEnabled((int)state[0], 0, (double)lbl_803E50D8);
-                }
-                break;
-            case 0xf:
-                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~0x4000);
-                if (state[0] != NULL)
-                {
-                    modelLightStruct_setEnabled((int)state[0], 0, (double)lbl_803E50D8);
-                }
-                break;
-            }
-        }
-        animUpdate->eventIds[i] = 0;
-    }
-
-    return 0;
-}
-
-int dbsh_shrine_getExtraSize(void)
-{
-    return 0x18;
-}
-
-int dbsh_shrine_getObjectTypeId(void)
-{
-    return 0;
-}
-
-void dbsh_shrine_free(int obj)
-{
-    extern void GameBit_Set(int eventId, int value);
-    void** state;
-
-    state = ((GameObject*)obj)->extra;
-    if (state[0] != NULL)
-    {
-        ModelLightStruct_free((int)state[0]);
-        state[0] = NULL;
-    }
-    gameTimerStop();
-    ObjGroup_RemoveObject(obj, 0xb);
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(8, 0);
-    Music_Trigger(0xe, 0);
-    GameBit_Set(0xefa, 0);
-    GameBit_Set(0xcbb, 1);
-}
-
-void dbsh_shrine_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
-{
-    void** state;
-
-    state = ((GameObject*)obj)->extra;
-    if (visible == 0)
-    {
-        if (state[0] != NULL)
-        {
-            modelLightStruct_setEnabled((int)state[0], 0, (double)lbl_803E50D8);
-        }
-    }
-    else
-    {
-        if (state[0] != NULL)
-        {
-            modelLightStruct_setEnabled((int)state[0], 1, (double)lbl_803E50D8);
-        }
-        ((void (*)(int, undefined4, undefined4, undefined4, undefined4, f32))objRenderFn_8003b8f4)(
-            obj, p2, p3, p4, p5, lbl_803E50D8);
-        objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)state[0]);
-    }
-}
-
-void dbsh_shrine_hitDetect(void)
-{
-}
-
-
-#define DBSH_SHRINE_GB_FIRST_RISE 0x15f
-#define DBSH_SHRINE_GB_ACTIVE 0xefa
-#define DBSH_SHRINE_GB_INITIALIZED 0xf08
-
-extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
-extern void* objCreateLight(int obj, int lightType);
-
-#define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-
 void dbsh_shrine_init(DbshShrineObject* obj)
 {
-    extern void GameBit_Set(u32 id, u32 value);
     DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
     obj->messageFn = fn_801C8EBC;
     obj->triggerRadius = 0;
-    runtime->state = 0;
+    runtime->state = DBSH_SHRINE_STATE_WAITING;
     runtime->flags.latchStarted = 0;
     runtime->resetTimer = 0;
 
