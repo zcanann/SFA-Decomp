@@ -1,7 +1,16 @@
+/*
+ * dll_BC - lock-on UI glue: A-button icon selection and target help-text
+ * reset while a camera lock-on target is held. Both helpers no-op while
+ * gameTextFn_80134be8() reports active on-screen text.
+ *   - Camera_minimapShowHelpTextForTarget: resets the help-text id and
+ *     refreshes the reticle for the camera's current focus target.
+ *   - camcontrol_playTargetTypeSfx: shows the A-button icon matching the
+ *     current target's kind (talk NPC/object, A-button hint, context-B).
+ */
 #include "main/dll/dll_BC.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 
-extern int lbl_803DD518;
+extern int lbl_803DD518; /* active camera action id (.sbss) */
 
 extern int gameTextFn_80134be8(void);
 extern void setAButtonIcon(int kind);
