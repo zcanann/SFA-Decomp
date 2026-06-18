@@ -11019,13 +11019,11 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
-    f32 pushZ;
-    f32 pushX;
-    int** nearList;
+    f32 pos[3];
     f32 queryParams[4];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
+    int** nearList;
+    f32 pushX;
+    f32 pushZ;
 
     fv2 = lbl_803E7EE0;
     found = 0;
@@ -11094,8 +11092,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (sv <= 0)
             {
                 *(s16*)((char*)state + 0x808) = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
+                ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x14, 2, 0xffffffff);
             }
             break;
         case 8:
@@ -11109,8 +11107,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 if (0x78 < *(u16*)((char*)state + 0x8a0))
                 {
                     *(u16*)((char*)state + 0x8a0) = *(u16*)((char*)state + 0x8a0) - 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                    ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                    ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x16, 2,
                                               0xffffffff);
                 }
             }
