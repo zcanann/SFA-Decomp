@@ -391,8 +391,8 @@ void Camera_setFocus(void* target)
 static inline CamcontrolHandlerEntry* camcontrol_findDefaultHandler(void)
 {
     int handlerCount;
-    int handlerIndex;
     register CamcontrolHandlerEntry** handlerEntry;
+    int handlerIndex;
 
     handlerIndex = 0;
     handlerEntry = gCamcontrolHandlerEntries;
