@@ -788,25 +788,25 @@ void* gameTextGet(int textId)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+        entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
 
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)gCurTextBuffer, (char*)strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xef0);
             break;
         }
         return lbl_803DC974;
