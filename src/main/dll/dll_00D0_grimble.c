@@ -131,22 +131,10 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
         }
         ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->unk48 - vel;
         f = ((GrimbleControl*)sub)->targetProgress;
-        if (f > lbl_803E2EBC)
-        {
-        }
-        else
-        {
-            f = lbl_803E2EBC;
-        }
+        f = (f > lbl_803E2EBC) ? f : lbl_803E2EBC;
         ((GrimbleControl*)sub)->targetProgress = f;
         f = ((GrimbleControl*)sub)->targetProgress;
-        if (f < lbl_803E2F0C)
-        {
-        }
-        else
-        {
-            f = lbl_803E2F0C;
-        }
+        f = (f < lbl_803E2F0C) ? f : lbl_803E2F0C;
         ((GrimbleControl*)sub)->targetProgress = f;
         return 4;
     }
@@ -352,24 +340,10 @@ void fn_801627F4(int obj)
             ;
             ((GrimbleControl*)sub)->targetProgress = f;
             f = ((GrimbleControl*)sub)->targetProgress;
-            if (f > lbl_803E2EBC)
-            {
-                f = f;
-            }
-            else
-            {
-                f = lbl_803E2EBC;
-            }
+            f = (f > lbl_803E2EBC) ? f : lbl_803E2EBC;
             ((GrimbleControl*)sub)->targetProgress = f;
             f = ((GrimbleControl*)sub)->targetProgress;
-            if (f < lbl_803E2F0C)
-            {
-                f = f;
-            }
-            else
-            {
-                f = lbl_803E2F0C;
-            }
+            f = (f < lbl_803E2F0C) ? f : lbl_803E2F0C;
             ((GrimbleControl*)sub)->targetProgress = f;
         }
     }
