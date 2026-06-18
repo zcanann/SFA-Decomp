@@ -16675,8 +16675,9 @@ void fn_802B0920(int obj, int state)
         {
             int h4 = ((PlayerState*)state)->bodyLeanAngle / 2;
             int h0 = -(((PlayerState*)state)->headPitch / 2);
-            vec0[1] = lbl_803E7E98 * ((f32)h4 * f30v + (f32)h0 * f31v);
-            vec0[2] = lbl_803E7E98 * ((f32)h0 * f30v + (f32)h4 * f31v);
+            f32 k = lbl_803E7E98;
+            vec0[1] = k * ((f32)h4 * f30v + (f32)h0 * f31v);
+            vec0[2] = k * ((f32)h0 * f30v + (f32)h4 * f31v);
         }
         else
         {
