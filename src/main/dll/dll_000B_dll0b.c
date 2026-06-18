@@ -2881,23 +2881,24 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
     *(f32*)(base + 0x34) = *(f32*)(base + 0x34) + *(f32*)(base + 0x40) * lbl_803DD284;
     *(f32*)(base + 0x38) = *(f32*)(base + 0x38) + *(f32*)(base + 0x44) * lbl_803DD284;
     {
+        f32 c434 = lbl_803DF434;
         u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
         u8* buf2 = *(u8**)((char*)((u32*)state + *(u8*)((char*)state + 0x130)) + 0x78);
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            if (lbl_803DF434 != *(f32*)(base + 0x30))
+            if (c434 != *(f32*)(base + 0x30))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
                     *(f32*)(base + 0x30) *
                     (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
             }
-            if (lbl_803DF434 != *(f32*)(base + 0x34))
+            if (c434 != *(f32*)(base + 0x34))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
                     *(f32*)(base + 0x34) *
                     (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2);
             }
-            if (lbl_803DF434 != *(f32*)(base + 0x38))
+            if (c434 != *(f32*)(base + 0x38))
             {
                 *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) =
                     *(f32*)(base + 0x38) *
