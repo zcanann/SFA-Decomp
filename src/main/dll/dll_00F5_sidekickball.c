@@ -80,7 +80,7 @@ enum SidekickBallMode
 
 int sidekickball_getExtraSize(void) { return 0x2cc; }
 
-int fn_801793A4(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x274) == 0; }
+int fn_801793A4(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0; }
 
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 
