@@ -1,7 +1,24 @@
+/*
+ * softbody (DLL 0x2AD) - a decorative wobbling/swaying object whose
+ * animation move is driven by a pair of shared, free-running phase
+ * accumulators (lbl_803DDDA0 / lbl_803DDD9C). The first non-disabled
+ * instance to update becomes the global "phase driver" (lbl_803DDD98)
+ * and advances both phases by timeDelta each frame, wrapping each at
+ * lbl_803E7288; every softbody then samples one of the two phases to
+ * pick its current animation move. Which phase is used depends on the
+ * object's seqId: moves in [0x6AF,0x6B2) use the first phase, all
+ * others use the second.
+ *
+ * init applies the placement's packed 1/256-turn rotations and optional
+ * scale (also scaling the hit sphere); the object has no per-instance
+ * extra state (getExtraSize returns 0).
+ */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
+
+/* seqId range whose moves are driven by the first shared phase */
 #define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
 #define SOFTBODY_MOVE_PHASE_A_END 0x6b2
 
@@ -55,8 +72,7 @@ void softbody_init(int obj, int setup)
     object->anim.rotX = (s16)(setupData->rotX << 8);
     if (setupData->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)
-        setupData->scale / lbl_803E7294;
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7294;
         if (object->anim.rootMotionScale == lbl_803E7298)
         {
             object->anim.rootMotionScale = lbl_803E7288;
@@ -96,17 +112,17 @@ void softbody_update(int obj)
 
     if ((void*)obj == lbl_803DDD98)
     {
-        f32 a;
+        f32 phase;
         f32 td = timeDelta;
-        lbl_803DDDA0 = a = lbl_803E728C * td + lbl_803DDDA0;
-        while (a > lbl_803E7288)
+        lbl_803DDDA0 = phase = lbl_803E728C * td + lbl_803DDDA0;
+        while (phase > lbl_803E7288)
         {
-            lbl_803DDDA0 = a -= lbl_803E7288;
+            lbl_803DDDA0 = phase -= lbl_803E7288;
         }
-        lbl_803DDD9C = a = lbl_803E7290 * td + lbl_803DDD9C;  /* CSE timeDelta */
-        while (a > lbl_803E7288)
+        lbl_803DDD9C = phase = lbl_803E7290 * td + lbl_803DDD9C;
+        while (phase > lbl_803E7288)
         {
-            lbl_803DDD9C = a -= lbl_803E7288;
+            lbl_803DDD9C = phase -= lbl_803E7288;
         }
     }
 
