@@ -12552,8 +12552,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     f32 arr[6];
 
     timerRec = *(int*)((char*)inner + 0x40c);
-    zero = lbl_803E8180;
-    if (*(f32*)((char*)timerRec + 0x10) != zero &&
+    if (*(f32*)((char*)timerRec + 0x10) != (zero = lbl_803E8180) &&
         (*(f32*)((char*)timerRec + 0x10) = *(f32*)((char*)timerRec + 0x10) - timeDelta,
             *(f32*)((char*)timerRec + 0x10) <= zero))
     {
