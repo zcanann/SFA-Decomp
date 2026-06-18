@@ -37,8 +37,8 @@
 
 /* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
    Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
-   trickyFn_8013b368: dll_DF (block-scope signature override of dll_DF.h's
-   int(u8*,f32,u8*) for this TU's codegen, recipe #57).
+   trickyFn_8013b368: trickyfollow (block-scope signature override of
+   trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
    lbl_803E2*: this DLL's f32 route/speed constants. */
 extern double getXZDistance(float* a, float* b);
 extern u32 randomGetRange(int min, int max);

@@ -809,7 +809,7 @@ main/dll/dll_80136a40.c:
 main/dll/skeetla.c:
 	.text       start:0x8013939C end:0x8013B368
 
-main/dll/dll_df.c:
+main/dll/trickyfollow.c:
 	.text       start:0x8013B368 end:0x8013D8F0
 
 main/dll/mmp_cratercritter.c:
@@ -1722,7 +1722,7 @@ main/dll/dll_801d4198.c:
 main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.text       start:0x801D4364 end:0x801D4CD0
 
-main/dll/dll_1e7.c:
+main/dll/SH/shthorntail_ai.c:
 	.text       start:0x801D4CD0 end:0x801D5174
 
 main/dll/SH/shthorntail.c:

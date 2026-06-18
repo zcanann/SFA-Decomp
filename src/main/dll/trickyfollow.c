@@ -1,11 +1,12 @@
 /*
- * dll_DF - Tricky sidekick follow/path-walk movement. trickyFn_8013b368 is
+ * trickyfollow - Tricky sidekick follow/path-walk movement (was mislabeled
+ * dll_DF; this is Tricky code, not the Hagabon DLL 0xDF). trickyFn_8013b368 is
  * the per-frame movement step that resolves the target's walk/patch group and
  * drives motion through a substate machine and RomCurveWalker route;
  * trickyUpdateApproachSpeed ramps the follow speed toward a target point. The
  * lbl_803E2xxx externs are this DLL's .sdata2 float constants.
  */
-#include "main/dll/baddie/dll_DF.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
