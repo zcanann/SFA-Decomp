@@ -232,8 +232,6 @@ void bombplant_init(void* obj, void* param, int flag);
 #define BOMBPLANTSPORE_MSG_DETONATE 0x7000b
 #define BOMBPLANTSPORE_MSG_HIT_PLAYER 0x7000a
 #define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
-#define BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK 0x40
-#define BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE 0x80
 #define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
 
 typedef struct BombPlantSporeStateFlags {
@@ -451,4 +449,3 @@ void bombplantspore_init(void* obj, void* param2)
     state->yawStep = (s16)randomGetRange(-0x200, 0x200);
 }
 
-void bombplantingspot_update(void* obj);

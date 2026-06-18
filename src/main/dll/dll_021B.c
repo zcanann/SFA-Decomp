@@ -46,7 +46,6 @@ typedef struct Dll21BState
     s16 driveGameBit;
 } Dll21BState;
 
-/* getExtraSize reserves 0x4; the live state is only this 2-byte field. */
 STATIC_ASSERT(sizeof(Dll21BState) == 0x2);
 
 void dll_21B_release_nop(void)
@@ -115,7 +114,6 @@ void dll_21B_update(int obj)
             if (((ObjPlacement*)setup)->posZ < ((GameObject*)obj)->anim.localPosZ)
             {
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-                /* both off (vs both-set moving check): clear the status bits */
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B))
                 {
@@ -164,7 +162,6 @@ void dll_21B_update(int obj)
             if (((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)setup)->posZ)
             {
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-                /* both off (vs both-set moving check): clear the status bits */
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
                     DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_B))
                 {

@@ -46,7 +46,6 @@ typedef struct HagabonPlacement
 #define HAGABON_FLAG_FADE_IN         0x08
 #define HAGABON_FLAG_FADE_OUT        0x10
 
-/* FUN_80006b0c / FUN_80006b14: shared-resource free/acquire (pi_dolphin) */
 extern int FUN_80006b0c(int handle);
 extern int FUN_80006b14(int id);
 extern uint GameBit_Get(int eventId);

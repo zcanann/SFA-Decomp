@@ -260,7 +260,6 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     extern void objRenderFn_8003b8f4(f32); /* #57 */
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
-/* segment pragma-stack balance (re-split): */
 
 void tumbleweed_update(int obj)
 {

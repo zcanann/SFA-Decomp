@@ -25,7 +25,6 @@ extern void DCStoreRange(void* addr, u32 nBytes);
 extern int return0_80060B90(void);
 extern void objRenderFn_8003b8f4(f32);
 
-/* map block accessors (fn_8006xxxx home TU) */
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
@@ -41,7 +40,6 @@ extern f32 lbl_803E4004;
 extern f32 lbl_803E4008;
 extern f32 lbl_803E4018;
 
-/* public getter: current world/local position for a given axis selector. */
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
     XyzAnimatorState* state;
@@ -289,8 +287,6 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible; /* s32 widening for matching cmpwi */
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4004);
 }
-
-/* segment pragma-stack balance (re-split): */
 
 void xyzanimator_update(int obj)
 {

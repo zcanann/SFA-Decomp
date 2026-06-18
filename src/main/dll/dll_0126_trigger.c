@@ -90,7 +90,6 @@ STATIC_ASSERT(offsetof(TriggerState, unk80) == 0x80);
 STATIC_ASSERT(offsetof(TriggerState, unk82) == 0x82);
 STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
 
-/* getLActions: called for its side effects; return value discarded */
 extern int getLActions();
 extern int objFn_80198fa4();
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
@@ -136,7 +135,6 @@ extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
 extern void goToNextMapLayer(void);
 extern void goToPrevMapLayer(void);
-/* unnamed f32 constants from the shared .sdata2 pool */
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
@@ -263,7 +261,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     int first;
     u16 id;
 
-    /* goto next/run reproduce the target's branch layout across the dispatch switch; required for matching */
     while (i < 8)
     {
         if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0))
@@ -932,7 +929,6 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x4e:
-                    /* int* launder re-derives unk8 to defeat CSE and match the target (CLAUDE.md #114/#106) */
                     ((TriggerState*)state)->unk8 = *(int*)&((TriggerState*)state)->unk8 + framesThisStep;
                     if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->unk8)
                     {

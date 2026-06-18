@@ -18,9 +18,7 @@ typedef struct CamcontrolLockIconRenderOp {
 
 #define LOCK_ICON_DIM_ALPHA_SCALE 0x60
 
-/* object.c */
 extern CamcontrolLockIconRenderOp* ObjModel_GetRenderOp(int model, int idx);
-/* rcp_dolphin.c */
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
 extern void* textureIdxToPtr(int idx);

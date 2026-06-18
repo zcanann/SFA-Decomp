@@ -20,7 +20,6 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 
-/* home TUs unknown; cross-TU game/audio/effect/voxmap services */
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetPlayerObject(void);

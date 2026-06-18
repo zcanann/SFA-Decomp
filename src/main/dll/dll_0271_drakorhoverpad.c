@@ -323,7 +323,6 @@ int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
 }
 #pragma dont_inline reset
 
-/* peephole off from here through end of file: update + updateMain both need it */
 #pragma peephole off
 int drakorhoverpad_update(RomCurveWalker* curve, int arg)
 {

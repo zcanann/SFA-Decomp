@@ -22,7 +22,6 @@ extern void *Obj_GetPlayerObject(void);
 
 extern f32 timeDelta;
 
-/* dust-effect tuning constants (.sdata2 shared pool) */
 extern f32 lbl_803E5460; /* 0.0   timer reset / origin base */
 extern f32 lbl_803E5464; /* 55.0  emit position y */
 extern f32 lbl_803E5468; /* 120.0 phase 1 threshold */
@@ -116,7 +115,6 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
         {
             if (runtime->dustEffectTimer < lbl_803E5488)
             {
-                /* hold until the end threshold */
             }
             else
             {

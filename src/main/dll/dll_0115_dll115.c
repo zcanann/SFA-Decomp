@@ -64,7 +64,6 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     step = state[0];
-    /* two-comparison form is load-bearing: reproduces the target's two-cmpwi sequence */
     if (step >= DLL115_STEP_DONE || step < DLL115_STEP_IDLE)
     {
         int next = step + 1;

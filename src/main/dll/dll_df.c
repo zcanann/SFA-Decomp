@@ -10,11 +10,9 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 
-/* frame timing (engine globals) */
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 
-/* this DLL's .sdata2 float constants */
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;
@@ -80,12 +78,10 @@ extern int fn_8004B218(void* search, int timeout);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, int a, int b);
 
-/* defined below */
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
-    /* all locals declared at top scope for MWCC register coloring */
     u8 moved;
     int wg;
     char* strs = (char*)lbl_8031D2E8;

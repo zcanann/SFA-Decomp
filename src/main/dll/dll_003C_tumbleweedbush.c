@@ -21,7 +21,6 @@
 #pragma peephole on
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
-/* Link-menu state lives in another TU; addresses preserved as lbl_ names. */
 extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
 extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
 extern s16 linkItemOpacity;

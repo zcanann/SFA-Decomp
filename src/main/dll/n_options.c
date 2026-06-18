@@ -53,7 +53,6 @@ extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int widt
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
-/* attract-movie globals (home TU: dll_3b / picmenu / dll_3e). */
 extern u16 gAttractMovieVolumeScale[];
 extern undefined4 lbl_803E1D30; /* TEV color-S10 / k-color constants */
 extern undefined4 lbl_803E1D34;

@@ -802,7 +802,6 @@ void mikabomb_update(int* obj)
     else
     {
         ((GameObject*)obj)->anim.velocityY -= lbl_803E31CC * timeDelta;
-        /* #81 launder pins the fcmpo operand order */
         if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E31D0)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E31D0;
@@ -928,4 +927,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

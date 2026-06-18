@@ -75,7 +75,6 @@ void coldwatercontrol_update(int obj)
 }
 
 #pragma scheduling on
-/* peephole stays off: coldwatercontrol_init needs it for a byte match */
 void coldwatercontrol_init(int obj)
 {
     int* p = (int*)((GameObject*)obj)->extra;

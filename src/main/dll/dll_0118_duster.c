@@ -55,10 +55,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               void* obj, int flags, int mask, int arg9, int arg10);
 
-void MagicPlant_update(int obj);
 
-int MagicPlant_getExtraSize(void);
-int trickywarp_getExtraSize(void);
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -84,7 +81,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #define GAMEBIT_DUSTER_CARRIED 0xcc0
 
 int duster_getExtraSize(void) { return 0x20; }
-int curvefish_getExtraSize(void);
 
 int duster_SeqFn(u8* obj)
 {
@@ -93,19 +89,12 @@ int duster_SeqFn(u8* obj)
     return 0;
 }
 
-u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
-void StayPoint_init(u16* obj);
 
-void MagicPlant_free(int obj, int param_2);
 
-void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void trickywarp_free(int obj);
 
-void trickywarp_init(s16* obj, u8* param_2);
 
-void trickyguard_init(s16* obj, u8* param_2);
 
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -405,17 +394,12 @@ void duster_update(int obj)
     ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
 }
 
-void MagicPlant_init(int obj, MagicPlantSetup* setup);
 
-void trickywarp_update(int param_1);
 
-void curvefish_update(int obj);
 
-void curvefish_init(int obj, u8* param_2);
 
 void trickyguard_update(int* obj);
 
-void StayPoint_update(int obj);
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

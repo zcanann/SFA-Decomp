@@ -98,7 +98,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern void Obj_FreeObject(int obj);
 
-/* Applies to every function below to the end of the file (never reset). */
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_free(int obj)
@@ -688,4 +687,3 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
         }
     }
 }
-

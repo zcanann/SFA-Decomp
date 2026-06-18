@@ -28,7 +28,6 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-/* collision / object-list / messaging helpers (home TUs in the engine core) */
 extern int randomGetRange(int min, int max);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();

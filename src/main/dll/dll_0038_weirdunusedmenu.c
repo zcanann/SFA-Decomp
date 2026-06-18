@@ -74,7 +74,6 @@ void WeirdUnusedMenu_frameEnd(void)
 {
 }
 
-/* scheduling stays off from here through release; peephole off covers run + release only */
 #pragma scheduling off
 #pragma peephole off
 int WeirdUnusedMenu_run(void)
@@ -151,7 +150,6 @@ void WeirdUnusedMenu_release(void)
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }
 
-/* peephole back on for initialise; scheduling remains off (never reset in this TU) */
 #pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {

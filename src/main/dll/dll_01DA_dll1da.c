@@ -10,7 +10,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 
-/* all from sibling DIM2 TUs unless noted */
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);

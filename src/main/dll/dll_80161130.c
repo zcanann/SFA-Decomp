@@ -504,7 +504,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     iceball_getExtraSize,
 };
 
-/* Proximity-band selection for the scarab AI (90-degree wedge picks the distance term). */
 int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
 {
     int* target;

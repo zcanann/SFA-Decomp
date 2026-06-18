@@ -865,7 +865,6 @@ extern int lbl_803AC638[];
 extern void* gLandedArwingStateHandlers[];
 extern void* gLandedArwingDefaultStateHandler;
 
-extern double lbl_803E3040;
 extern f32 lbl_803E3034;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;

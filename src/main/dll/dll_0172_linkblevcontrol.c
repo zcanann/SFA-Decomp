@@ -88,7 +88,6 @@ typedef struct LinkbLevState
     s16 music;
 } LinkbLevState;
 
-/* no reset: both init and update build under scheduling/peephole off */
 #pragma scheduling off
 #pragma peephole off
 void linkb_levcontrol_init(int* obj)

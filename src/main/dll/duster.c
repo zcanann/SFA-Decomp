@@ -39,7 +39,6 @@
 
 #pragma dont_inline on
 
-/* engine helpers and this DLL's read-only float pool (lbl_803E2A**) */
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern void* Obj_AllocObjectSetup();

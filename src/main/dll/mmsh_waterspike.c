@@ -45,7 +45,6 @@ void fn_801BEEA0(s16* obj, u8* state)
 
     ((GameObject*)obj)->anim.rotY = (s16)(lbl_803E4D08 * *(f32*)(motion + 0x0));
 
-    /* normalize the negated rotZ into the signed s16 angle range */
     turnDelta = (s16) - (u16)((GameObject*)obj)->anim.rotZ;
     if (turnDelta > 0x8000)
     {

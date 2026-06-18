@@ -163,12 +163,10 @@ static ModgfxVertexData* modgfx_getInactiveVertexBuffer(ModgfxState* state)
     return state->vertexBuffers[1 - (uint)state->activeVertexBufferIndex];
 }
 
-/* Keep this wrapper: inlining gModgfxActiveEffectRegistry at the call sites changes codegen (the .o bytes shift). */
 static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 {
     return gModgfxActiveEffectRegistry;
 }
-
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -1278,7 +1276,6 @@ void Effect9_release(void)
 void Effect9_initialise(void)
 {
 }
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,

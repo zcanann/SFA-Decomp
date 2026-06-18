@@ -23,7 +23,6 @@
 /* THP frame-component type id for the audio track (vs 0 = video). */
 #define THP_FRAME_COMP_AUDIO 1
 
-/* picmenu.c reader-queue accessors (signatures differ from THPRead.h there). */
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 

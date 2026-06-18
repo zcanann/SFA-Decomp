@@ -17,7 +17,6 @@
 #include "main/objseq.h"
 #include "main/dll/CF/dll_165.h"
 
-/* lbl_803E3Bxx/lbl_803E3Cxx: float constants in this DLL's .sdata2 pool. */
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3BF0;

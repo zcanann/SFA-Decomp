@@ -366,7 +366,6 @@ sound_update:
         *(f32*)(spawnDef + 8) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(spawnDef + 0xc) = ((GameObject*)obj)->anim.localPosY;
         *(f32*)(spawnDef + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-        /* matching: Ghidra emits this dead null-check; spawnDef cannot be NULL here */
         if (spawnDef == 0)
         {
             effectObj = 0;

@@ -244,6 +244,5 @@ void sfxplayerObj_update(u8* obj)
     }
 }
 
-void fn_80198A00(u8* obj, int seqArg);
 
 int sfxplayerObj_getExtraSize(void) { return 0x8; }

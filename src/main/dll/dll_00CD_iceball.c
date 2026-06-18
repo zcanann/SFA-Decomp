@@ -105,7 +105,6 @@ void fn_8015FCCC(int obj)
         {
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
-                /* ownerObj iface (+0x68) vtable slot +0x20: notifyHit(owner, 0x80) */
                 (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x20))(
                     ((GameObject*)obj)->ownerObj, 0x80);
             }
@@ -121,7 +120,6 @@ void fn_8015FCCC(int obj)
         {
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
-                /* ownerObj iface (+0x68) vtable slot +0x24: notifyHit(owner, 0x80) */
                 (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
                     ((GameObject*)obj)->ownerObj, 0x80);
             }
@@ -137,7 +135,6 @@ void fn_8015FCCC(int obj)
         {
             if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
             {
-                /* ownerObj iface (+0x68) vtable slot +0x24: notifyHit(owner, 0x80, 0) */
                 (*(void (**)(void*, int, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
                     ((GameObject*)obj)->ownerObj, 0x80, 0);
             }

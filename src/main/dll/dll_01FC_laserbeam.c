@@ -281,7 +281,6 @@ void LaserBeam_update(int obj2)
                     {
                         if (lbl_803DDC80 != NULL && b->emitterSlot == -1)
                         {
-                            /* source-faithful dead branch (matches target) */
                             if (b->emitterSlot != -1)
                             {
                                 (*gModgfxInterface)->releaseHandle(&b->emitterSlot);

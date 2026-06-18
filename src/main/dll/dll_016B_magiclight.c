@@ -45,10 +45,8 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
-/* Dll16CState is a co-tenant in this TU (same retail object) */
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
-/* CrRockfallState is a co-tenant in this TU (same retail object) */
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern undefined4 getLActions();
@@ -260,7 +258,6 @@ void magiclight_initialise(void)
 {
 }
 
-/* obj kept int* (not GameObject*): the param-pool classing matches the target. */
 #pragma scheduling off
 #pragma peephole off
 void magiclight_init(int* obj, u8* params)

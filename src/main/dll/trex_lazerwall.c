@@ -147,7 +147,6 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     }
 
     ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0xff;
-    /* always true: unk9D6 set to 0xff above; original source shape, do not simplify */
     if (((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 == 0xff)
     {
         stackHandle = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;

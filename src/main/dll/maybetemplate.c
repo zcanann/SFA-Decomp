@@ -972,7 +972,6 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 {
                     if (gCMenuCurSection < 0)
                     {
-                        /* icon stays 0 when gCMenuCurSection < 0 */
                     }
                     else
                     {

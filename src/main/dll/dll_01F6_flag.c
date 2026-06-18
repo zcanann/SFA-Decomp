@@ -15,12 +15,10 @@
  */
 #include "main/game_object.h"
 
-/* lbl_803E59xx live in this DLL's .sdata2. */
 extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E59A8;
-/* shared slot: init move-progress arg and the tied-flag slack velocityX */
 extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;
 extern f32 lbl_803E59AC;

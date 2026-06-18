@@ -56,7 +56,6 @@ extern f32 lbl_803E3F58; /* G ramp base */
 extern f32 lbl_803E3F5C; /* G ramp slope */
 extern f32 lbl_803E3F60; /* B ramp base */
 extern f32 lbl_803E3F64; /* B ramp slope */
-/* 0x803E3F68 is the f64 int->float conversion bias MWCC materializes in fn_801923F8 (no source extern). */
 extern f32 lbl_803E3F70; /* model scale */
 
 void fn_801923F8(int* cfgArg);

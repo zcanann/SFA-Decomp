@@ -27,14 +27,11 @@ typedef struct CamcontrolIconColor {
     u8 a;
 } CamcontrolIconColor;
 
-/* object.c */
 extern CamcontrolIconRenderOp* ObjModel_GetRenderOp(void* model, undefined4 idx);
-/* rcp_dolphin.c */
 extern void* textureIdxToPtr(int idx);
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
 extern void fn_80051D5C(void* tex, void* a, undefined4 b, CamcontrolIconColor* color);
-/* dolphin GX */
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);

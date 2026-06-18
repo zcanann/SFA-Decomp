@@ -27,7 +27,6 @@ extern u8 saveFileSelect_saveDirty;
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern u8 enableDebugText;
-/* retail allocates 6 u16s each (symbols.txt size 0xC); only [0..4] are matched */
 extern u16 saveFileSelect_debugCheatSequence[6];
 extern u16 saveFileSelect_slotCheatSequence[6];
 extern void* lbl_803A8680[4];

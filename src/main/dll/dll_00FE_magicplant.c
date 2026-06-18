@@ -41,7 +41,6 @@ extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
 extern void objRenderFn_8003b8f4(int obj, float arg);
-/* MAGICPLANT_MODE_HIT_REACT handler; lives in the sibling DLL 0x00FD */
 extern void fn_8017F334(int obj, MagicPlantSetup* setup, MagicPlantState* state);
 
 extern void* gCameraInterface;

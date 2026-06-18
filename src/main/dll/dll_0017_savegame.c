@@ -38,7 +38,6 @@ typedef struct SaveGameData
     u8 pad6A6[0xF70 - 0x6A6];
 } SaveGameData;
 
-/* FUN_/DAT_ below live in other binaries (audio/video settings); names+types unresolved, used only by loadSaveSettings. */
 extern undefined4 FUN_80006768();
 extern undefined4 FUN_8000676c();
 extern undefined4 FUN_80006c20();
@@ -1229,4 +1228,3 @@ void SaveGame_updateTransientMapBits(void)
 }
 
 void* fn_800E888C(u8 a, u8 b) { return (char*)saveData + a * 40 + b * 8 + 28; }
-

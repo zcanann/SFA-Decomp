@@ -18,7 +18,6 @@
  */
 #include "main/dll/fx_800944A0_shared.h"
 
-/* objfx-only externs (home TU = fx_800944A0 shared pool / math lib) */
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
 extern u8 lbl_8030FA30[];
@@ -1003,7 +1002,6 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
 
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
-    /* scale is unused in the body but kept for ABI: the caller sets up f1 */
     u8 args[16];
     int i;
 

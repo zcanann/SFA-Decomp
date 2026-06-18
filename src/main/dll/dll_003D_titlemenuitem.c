@@ -34,7 +34,6 @@
 extern u32 getButtonsJustPressed(int pad);
 extern s8 padGetStickX(int port);
 
-/* slider drag accumulator + smoothing constants, owned by the front menu */
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
@@ -64,7 +63,6 @@ int TitleMenuItem_isChanged(TitleMenuItem* item)
     return item->flags & TITLE_MENU_FLAG_CHANGED;
 }
 
-/* target emits redundant extsh before sth — MWCC -O4 strips it; left as-is for match */
 void TitleMenuItem_setVal(TitleMenuItem* item, int val)
 {
     item->value = (s16)val;
@@ -427,7 +425,6 @@ TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxV
     return item;
 }
 
-/* lazily populate the shared menu-texture cache (called from the front DLL) */
 void fn_80131F0C(void)
 {
     int i;

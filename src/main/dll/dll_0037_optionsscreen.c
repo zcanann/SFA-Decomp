@@ -16,7 +16,6 @@
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
 
-/* save-file struct accessor + menu helpers (home TUs elsewhere) */
 extern u8* getSaveFileStruct(void);
 extern void saveFileStruct_setCheatActive(uint cheatId, u8 enabled);
 extern void languageMenuInit(void);

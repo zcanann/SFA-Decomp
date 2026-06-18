@@ -27,7 +27,6 @@ extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
 extern u8 framesThisStep;
-extern f32 lbl_803E43B8;
 extern f32 lbl_803E4428;
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
@@ -65,7 +64,6 @@ void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-void cflevelcontrol_free(int param_1);
 
 undefined4
 FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -91,7 +89,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-void cfforcefield_release(void);
 
 void exploded_free(void)
 {
@@ -109,7 +106,6 @@ void exploded_initialise(void)
 {
 }
 
-int slidingdoor_getExtraSize(void);
 int exploded_getExtraSize(void) { return 0x6c; }
 
 u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)((int**)obj)[0xb8 / 4])->explodePhase; }
@@ -120,11 +116,9 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43F4);
 }
 
-void cfmagicwall_update(int obj);
 
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
 
-void cfmagicwall_init(s16* dst, void* src);
 
 void exploded_update(int* obj)
 {
@@ -218,7 +212,6 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
 /* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
  * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-void attractor_func0B(u8* obj, void** out);
 
 /* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by

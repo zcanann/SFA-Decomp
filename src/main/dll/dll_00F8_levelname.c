@@ -31,7 +31,6 @@ extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
-/* descriptor callbacks (no-op marker class; see dll_00F6_area.c) */
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 void area_free(void);

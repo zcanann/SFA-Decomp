@@ -78,7 +78,6 @@ void SpiritDoorLock_initialise(void)
 
 int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
-int RollingBarrel_getExtraSize(void);
 
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -263,4 +262,3 @@ void SpiritDoorLock_update(int obj)
 }
 #pragma opt_loop_invariants reset
 
-void RollingBarrel_update(int obj);

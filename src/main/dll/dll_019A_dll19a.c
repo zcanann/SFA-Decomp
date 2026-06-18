@@ -1,6 +1,5 @@
 #include "main/dll/dll199state_struct.h"
 
-/* per-file single-arg signature reduction for codegen (matching); do not "fix" to the 6-arg canonical form */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"

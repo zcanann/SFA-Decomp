@@ -93,7 +93,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
 extern const f32 lbl_803E3974;
-/* render callback ABI; param types are pass-throughs of unknown meaning - int. */
 extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
                                  int p5, double scale);
 extern void* Obj_GetPlayerObject(void);

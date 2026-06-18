@@ -89,7 +89,6 @@ void dustmotesou_update(int obj)
     }
     if (mapData->burstMode == DUSTMOTESOU_BURST_BOX)
     {
-        /* int-vs-(void* / u8) cast divergence from the shared.h decl is load-bearing: it pins the arg-emission order. */
         ((void (*)(int, int, f32, int, int, int, f32, f32, f32, int, int))objfx_spawnBoxBurst)(
             obj, mapData->effectId, mapData->scale, mapData->effectParamA, mapData->effectParamB,
             mapData->effectFlags, (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
@@ -104,7 +103,6 @@ void dustmotesou_update(int obj)
     }
     else
     {
-        /* int-vs-(void* / u8) cast divergence from the shared.h decl is load-bearing: it pins the arg-emission order. */
         ((void (*)(int, int, int, int, f32, int, f32, int, int))objfx_spawnDirectionalBurst)(
             obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
             mapData->scale, mapData->effectFlags, (f32)(u32)mapData->spreadX, 0, 0);

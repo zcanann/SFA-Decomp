@@ -20,7 +20,6 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-/* misc codegen externs needed by this TU (xyzanimator family) */
 extern u32 randomGetRange(int min, int max);
 extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
 extern void Obj_FreeObject(int obj);
@@ -39,7 +38,6 @@ extern void* getTrickyObject(void);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 
-/* kaldachompspit descriptor slots not declared in xyzanimator.h */
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
 extern int kaldachompspit_getObjectTypeId(void);

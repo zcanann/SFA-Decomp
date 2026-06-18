@@ -17,7 +17,6 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-/* pragma-stack / pool balance inherited from the DLL re-split: */
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -162,7 +161,6 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     result = 0;
     {
-        /* re-read: the state byte may have been mutated above */
         u32 modeAfter = ((u32)state[0] >> 5) & 7;
         if (modeAfter != 2)
         {

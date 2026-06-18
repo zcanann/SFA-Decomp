@@ -119,7 +119,6 @@ int dbstealerworm_stateHandlerB04(int obj, int p);
 int dbstealerworm_stateHandlerB02(int obj, int p);
 
 extern void Obj_RemoveFromUpdateList(int* obj);
-extern void Stack_Free(int* stack);
 extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
@@ -136,7 +135,6 @@ extern int dbstealerworm_stateHandlerA0E();
 extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerB06();
-extern void fn_80202EF0(int obj, int p2);
 
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -593,11 +591,9 @@ void dbholecontrol1_init(int* obj, u8* params)
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
 
-void dfplevelcontrol_render(void);
 
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
-int dfplevelcontrol_getExtraSize(void);
 
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -605,10 +601,8 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
 }
 
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dbholecontrol1_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
-void dfplevelcontrol_free(int x);
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
@@ -703,7 +697,6 @@ int dbstealerworm_stateHandlerA04(int obj, int param2);
 
 int dbstealerworm_stateHandlerA0E(int obj, int param2);
 
-void fn_80202EF0(int obj, int p2);
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
 

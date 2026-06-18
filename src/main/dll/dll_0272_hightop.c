@@ -257,7 +257,6 @@ int hightop_stateHandler03(int obj, u8* p2)
     if ((s8)p2[0x27a] != 0)
     {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
-        /* both arms intentionally identical in the retail build */
         if (*(u32*)&p->unkC3C == 4)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);

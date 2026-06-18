@@ -69,9 +69,6 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
-/* lbl_803AC7D8 entries: int target, s16 data, u8 unk6, u8 pad (struct-field form banked - flips walker addressing). */
-/* lbl_803AC878 entries: int message, int target, int data (struct-field form banked - flips walker addressing). */
-
 void cloudprisoncontrol_update(int obj)
 {
     int target;

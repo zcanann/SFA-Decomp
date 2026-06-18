@@ -25,7 +25,6 @@ extern void* fn_802972A8(void* obj);
 #define HUD_STATE_WORLDMAP 5
 #define HUD_STATE_HIDDEN 6
 
-/* scheduling off applies to both handlers below; resetting before fn_801AC108 regresses it. */
 #pragma scheduling off
 void fn_801AC01C(int obj)
 {

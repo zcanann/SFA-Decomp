@@ -23,12 +23,10 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-/* pi_dolphin: shared-resource acquire/free */
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern undefined4 DAT_803de6d0;
 
-/* ObjHits / ObjGroup helpers (game core) */
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -46,7 +44,6 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 timeDelta;
 
-/* per-instance tuning constants (.sdata2 of this TU) */
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;
@@ -68,7 +65,6 @@ extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
 
-/* .sdata / .sbss globals */
 extern int lbl_803DBC78;
 extern int lbl_803DDA60;
 

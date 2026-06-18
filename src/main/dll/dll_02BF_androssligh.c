@@ -42,7 +42,6 @@ STATIC_ASSERT(offsetof(AndrosslighState, boltAge) == 0x8);
 STATIC_ASSERT(offsetof(AndrosslighState, state) == 0xC);
 STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
 
-void androssligh_updateBeam(int obj, int beam);
 
 int androssligh_getExtraSize(void) { return sizeof(AndrosslighState); }
 

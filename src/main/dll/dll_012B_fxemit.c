@@ -229,7 +229,6 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             fxemit_emitEffect(obj);
         }
-        /* re-read (not `event`) is load-bearing: keeps the matching reg/load */
         if (animUpdate->eventIds[i] == 2)
         {
             state->seqToggle = (u8)(1 - state->seqToggle);
@@ -383,7 +382,6 @@ void fxemit_update(FxEmitObject* obj)
 
         if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
         {
-            /* single-case switch is load-bearing for the matching asm */
             switch (state->suppressed)
             {
             case 0:

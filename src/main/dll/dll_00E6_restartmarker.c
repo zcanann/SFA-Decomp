@@ -6,7 +6,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void FUN_8003b818(int param_1);
 
-
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -15,7 +14,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -958,10 +956,7 @@ void FUN_80170048(void)
     return;
 }
 
-
-
 void mikabombshadow_update(int* obj);
-
 
 void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -1090,27 +1085,7 @@ LAB_801725bc:
     return;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1142,17 +1117,6 @@ void shield_initialise(void);
 
 void shield_free(int obj);
 
-
-
-
-
-
-
-
-
-
-
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -1168,7 +1132,6 @@ int shield_getObjectTypeId(void);
 void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1577,26 +1540,12 @@ s16 staff_getHitReactValue(int* obj);
 
 s32 staff_func16(int* obj);
 
-
-
-
-
 void flamethrowerspe_render(void);
-/* checkpoint4_render carrier (0x801719F8): renders at the global scale lbl_803E3420 */
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 
 void flamethrowerspe_func0B(int* obj);
 
-
-
 void staff_modelMtxFn(int* obj, int p4, int p5);
-
-
-
-
-
-
 
 void gcbaddieshield_update(int* obj);
 
@@ -1632,7 +1581,6 @@ void animatedobj_init(int* obj, int* params);
 
 void flamethrowerspe_update(int* obj);
 
-
 void mikabomb_init(int* obj);
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -1658,4 +1606,3 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void staff_hitDetectGeometry(int* obj);
 
 void staff_update(int* obj);
-

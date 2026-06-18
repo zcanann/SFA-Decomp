@@ -19,10 +19,8 @@
 #include "main/dll/dll_43.h"
 #include "main/screen_transition.h"
 
-/* defined in dll_0035_saveselectscreen.c (home TU) */
 extern void saveSelectGoToChooseSlot(int arg);
 
-/* shared with dll_0035_saveselectscreen.c (home TU) */
 extern u8 lbl_803DB424;
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern u8 lbl_803DD6C4;

@@ -35,7 +35,6 @@ extern undefined4 ObjLink_AttachChild();
 extern undefined8 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
 
-extern f32 lbl_803E3954;
 
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
