@@ -60,7 +60,7 @@ void dimsnowball1c2_init(int obj, u8* p);
 void dimbarrier_init(int obj, s8* p)
 {
     char* inner;
-    *(s16*)obj = (s16)((s32)p[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     inner = ((GameObject*)obj)->extra;
     inner[3] = 1;
