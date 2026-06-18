@@ -1691,11 +1691,11 @@ void objFreeObjDef(void* objp, int flag)
     }
     else
     {
-        *(s8*)(lbl_803DCBA4 + type) -= 1;
-        if (*(s8*)(lbl_803DCBA4 + type) == 0)
+        *(u8*)(lbl_803DCBA4 + type) -= 1;
+        if (*(u8*)(lbl_803DCBA4 + type) == 0)
         {
             o = ((u8**)lbl_803DCBA8)[type];
-            if (*(int*)&((GameObject*)o)->anim.parent != 0)
+            if (*(void**)&((GameObject*)o)->anim.parent != NULL)
             {
                 mm_free(((GameObject*)o)->anim.parent);
             }
@@ -1714,7 +1714,7 @@ void objFreeObjDef(void* objp, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(int*)&((GameObject*)obj)->anim.placementData != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
