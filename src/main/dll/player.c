@@ -15807,9 +15807,8 @@ void fn_802AE650(int obj, int state, int p3)
     f32 ee0;
 
     (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
-    ee0 = lbl_803E7EE0;
     if (((GameObject*)obj)->anim.currentMoveProgress >=
-        ee0 - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
+        (ee0 = lbl_803E7EE0) - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
             *(f32*)((char*)state + 0x844) *
