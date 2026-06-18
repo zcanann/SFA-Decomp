@@ -68,7 +68,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
