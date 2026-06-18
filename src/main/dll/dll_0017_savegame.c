@@ -503,7 +503,6 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 bit;
     int i;
     MapBitTransient* transient;
-    u32* groupStatuses;
 
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
@@ -539,7 +538,6 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = newStatus;
 
-        groupStatuses = s->groupStatuses;
         if (value != 0)
         {
             if ((oldStatus & (1 << shift)) == 0)
@@ -548,7 +546,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     if (lbl_80311810[i] == lbl_80311810[idx])
                     {
-                        groupStatuses[i] |= (u32)(1 << shift);
+                        s->groupStatuses[i] |= (u32)(1 << shift);
                     }
                 }
             }
@@ -559,7 +557,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             {
                 if (lbl_80311810[i] == lbl_80311810[idx])
                 {
-                    groupStatuses[i] &= ~(u32)(1 << shift);
+                    s->groupStatuses[i] &= ~(u32)(1 << shift);
                 }
             }
 
