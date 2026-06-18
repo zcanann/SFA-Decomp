@@ -942,7 +942,6 @@ void fn_80159284(int* obj, u8* state)
     u8* t8 = d[*(u8*)(state + 0x33b)].t18;
     u8* t7 = d[*(u8*)(state + 0x33b)].tC;
     BasketSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
-    ObjHitsPriorityState* hitState;
     f32 cap;
     int i;
     u8* p;
@@ -1007,17 +1006,17 @@ void fn_80159284(int* obj, u8* state)
                     *(u8*)(state + 0x33a) = 0;
                 }
                 fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, lbl_803AC4A8);
-                i = *(u8*)(state + 0x33a) * 0xc;
-                if ((((BaddieState*)state)->controlFlags & *(u32*)(t9 + i + 4)) == 0
-                    && *(u8*)(t9 + i + 9) != 0)
+                p = t9 + *(u8*)(state + 0x33a) * 0xc;
+                if ((((BaddieState*)state)->controlFlags & *(u32*)(p + 4)) == 0
+                    && *(u8*)(p + 9) != 0)
                 {
-                    *(u8*)(state + 0x33a) = *(u8*)(t9 + i + 9);
+                    *(u8*)(state + 0x33a) = *(u8*)(p + 9);
                 }
                 i = *(u8*)(state + 0x33a) * 0xc;
                 Baddie_SetMove(obj, (int*)state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
                             *(u8*)(t9 + i + 0xa));
-                i = *(u8*)(state + 0x33a) * 0xc;
-                *(u8*)(state + 0x33a) = *(u8*)(t9 + i + 9);
+                p = t9 + *(u8*)(state + 0x33a) * 0xc;
+                *(u8*)(state + 0x33a) = *(u8*)(p + 9);
             }
             else
             {
@@ -1027,9 +1026,8 @@ void fn_80159284(int* obj, u8* state)
         }
     }
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 0;
-    hitState->hitVolumeId = 0;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
     j = 1;
     p = t8 + 0xc;
     n = *(u8*)(t8 + 8);
@@ -1037,9 +1035,9 @@ void fn_80159284(int* obj, u8* state)
     {
         if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
         {
-            hitState->hitVolumePriority = (s8) * (int*)(t8 + j * 0xc + 4);
-            hitState->hitVolumeId = (s8) * (u8*)(t8 + j * 0xc + 9);
-            if (hitState->hitVolumePriority == 0x1f)
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(t8 + j * 0xc + 4);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)(t8 + j * 0xc + 9);
+            if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
             {
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
             }
@@ -1614,7 +1612,7 @@ void fn_80158494(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
     {
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 8;
-        if ((*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BA8,
+        if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BA8,
                                              (int*)&lbl_803DBCF0, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
@@ -2109,7 +2107,7 @@ void fn_80159958(s16* obj, u8* state)
         }
         if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || base->atSegmentEnd != 0)
             && (*gRomCurveInterface)->goNextPoint(base) != 0
-            && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2C44,
+            && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2C44,
                                                 (int*)&lbl_803DBCF8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
