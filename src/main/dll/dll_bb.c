@@ -1,3 +1,4 @@
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
 extern void Obj_UpdateWorldTransform(void *obj);
@@ -18,11 +19,25 @@ extern void mm_free(void *ptr);
 
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat;
+extern f64 lbl_803E1650;
 extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyState
+ * EN v1.0 Address: 0x80101980
+ * EN v1.0 Size: 1332b
+ * EN v1.1 Address: 0x80101C1C
+ * EN v1.1 Size: 1340b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void camcontrol_applyState(CamcontrolCameraState *camera)
 {
   float prog;
@@ -56,10 +71,10 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
     view->z = camera->worldZ;
   }
   lbl_803DD4D0 = camera->fovY;
-  clamped = gCamcontrolNormalizedMin;
   if (camera->blendProgress > gCamcontrolNormalizedMin) {
     camera->blendProgress = -(camera->blendStep * timeDelta - camera->blendProgress);
     prog = camera->blendProgress;
+    clamped = gCamcontrolNormalizedMin;
     clamped = (prog < clamped) ? clamped : ((prog > gCamcontrolNormalizedMax) ? gCamcontrolNormalizedMax : prog);
     camera->blendProgress = clamped;
     if (CAMCONTROL_CAMERA->blendCurveMode == 2) {
@@ -88,7 +103,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
         camera->blendDeltaYaw = (camera->blendDeltaYaw - 0x10000) + 1;
       }
       if (camera->blendDeltaYaw < -0x8000) {
-        camera->blendDeltaYaw = (camera->blendDeltaYaw + 0x10000) + -1;
+        camera->blendDeltaYaw = (camera->blendDeltaYaw + 0x10000) - 1;
       }
       itmp = (int)((float)camera->blendDeltaYaw * blendFactor);
       view->yaw = camera->blendStartYaw - itmp;
@@ -99,7 +114,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
         camera->blendDeltaPitch = (camera->blendDeltaPitch - 0x10000) + 1;
       }
       if (camera->blendDeltaPitch < -0x8000) {
-        camera->blendDeltaPitch = (camera->blendDeltaPitch + 0x10000) + -1;
+        camera->blendDeltaPitch = (camera->blendDeltaPitch + 0x10000) - 1;
       }
       itmp = (int)((float)camera->blendDeltaPitch * blendFactor);
       view->pitch = camera->blendStartPitch - itmp;
@@ -110,7 +125,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
         camera->blendDeltaRoll = (camera->blendDeltaRoll - 0x10000) + 1;
       }
       if (camera->blendDeltaRoll < -0x8000) {
-        camera->blendDeltaRoll = (camera->blendDeltaRoll + 0x10000) + -1;
+        camera->blendDeltaRoll = (camera->blendDeltaRoll + 0x10000) - 1;
       }
       itmp = (int)((float)camera->blendDeltaRoll * blendFactor);
       view->roll = camera->blendStartRoll - itmp;
@@ -120,7 +135,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   Obj_UpdateWorldTransform(view);
   loadMapForCameraPos(camera->worldX,camera->worldY,camera->worldZ);
   itmp = Camera_GetViewportYOffset();
-  lbl_803DD4C0 = itmp;
+  lbl_803DD4C0 = (short)itmp;
   if ((int)lbl_803DD4C0 != (int)camera->letterboxTargetOffset) {
     if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
       lbl_803DD4C0 = lbl_803DD4C0 + camera->letterboxStep * (int)timeDelta;
@@ -141,6 +156,13 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyQueuedAction
+ * EN v1.0 Address: 0x80101EBC
+ * EN v1.0 Size: 400b
+ */
 #pragma opt_common_subs off
 void camcontrol_applyQueuedAction(void)
 {
