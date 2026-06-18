@@ -1078,10 +1078,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         f32 v = interpolate((f32)(s32)q->unk47C, lbl_803E8338 / q->unk428, timeDelta);
         f32 cap = timeDelta * (q->unk42C * q->unk420);
-        if (v >= cap)
-        {
-            v = cap;
-        }
+        v = (v < cap) ? v : cap;
         if (q->unk480 < 0)
         {
             v = -v;
@@ -1091,10 +1088,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     {
         f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
         f32 cap = q->unk434 * timeDelta;
-        if (v >= cap)
-        {
-            v = cap;
-        }
+        v = (v < cap) ? v : cap;
         if (q->unk48C < 0)
         {
             v = -v;
