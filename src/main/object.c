@@ -1752,7 +1752,7 @@ void Obj_UpdateObject(u8* obj)
         case 0x4f3:
         case 0x882:
         case 0x887:
-            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)((u8*)*object->dll + 8);
             cb2(obj);
             break;
         }
@@ -1770,18 +1770,16 @@ void Obj_UpdateObject(u8* obj)
             t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
             if (t != 0)
             {
-                childHitState = (ObjHitsPriorityState*)t;
-                childHitState->lastHitObject = 0;
-                childHitState->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
             }
         }
-        hitState = (ObjHitsPriorityState*)object->hitReactState;
-        if (hitState == NULL)
+        if (object->hitReactState == NULL)
         {
             return;
         }
-        hitState->lastHitObject = 0;
-        hitState->priorityHitCount = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
         return;
     }
     if ((object->flags & 8) == 0)
@@ -1799,7 +1797,7 @@ void Obj_UpdateObject(u8* obj)
     if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
         colorFadeFlags & 1))
     {
-        ((GameObject*)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
+        ((GameObject*)obj)->colorFadeFrames = (s16)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
         if (((GameObject*)obj)->colorFadeFrames <= 0)
         {
             ((GameObject*)obj)->colorFadeFrames = 0;
@@ -1826,7 +1824,7 @@ void Obj_UpdateObject(u8* obj)
             {
                 goto skip;
             }
-            cb2 = (void (*)(u8*))*(int*)(**object->dll + 8);
+            cb2 = (void (*)(u8*))*(int*)((u8*)*object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
@@ -1836,21 +1834,19 @@ void Obj_UpdateObject(u8* obj)
         Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
     }
 skip:
-    hitState = (ObjHitsPriorityState*)object->hitReactState;
-    if (hitState != NULL)
+    if (object->hitReactState != NULL)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
             t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
             if (t != 0)
             {
-                childHitState = (ObjHitsPriorityState*)t;
-                childHitState->lastHitObject = 0;
-                childHitState->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
             }
         }
-        hitState->lastHitObject = 0;
-        hitState->priorityHitCount = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
+        ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
     }
     if (*(void**)(obj + 0x58) != NULL)
     {
