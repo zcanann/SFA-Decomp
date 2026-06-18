@@ -10516,18 +10516,15 @@ void fn_8029C8C8(int obj, int p2)
         lbl_803DE42C != 0)
     {
         int i;
-        void** p;
         inner->animState = -1;
         lbl_803DE42C = 0;
-        p = lbl_80332ED4;
         for (i = 0; i < 7; i++)
         {
-            if (*p != NULL)
+            if (lbl_80332ED4[i] != NULL)
             {
-                Obj_FreeObject((int)*p);
-                *p = NULL;
+                Obj_FreeObject((int)lbl_80332ED4[i]);
+                lbl_80332ED4[i] = NULL;
             }
-            p++;
         }
         if (lbl_803DE454 != NULL)
         {
