@@ -73,7 +73,7 @@ typedef struct
     f32 speed; /* 0x0 */
     u32 flags; /* 0x4 */
     u8 anim;   /* 0x8 */
-    u8 pad9;   /* 0x9 */
+    u8 next;   /* 0x9 */
     u16 padA;  /* 0xa */
 } IdleRow;
 
@@ -359,9 +359,10 @@ void fn_80150910(int* obj, u8* state)
 {
     RomCurveWalker* path = *(RomCurveWalker**)state;
     u8* base = lbl_8031F16C;
-    u8* tbl4 = *(u8**)(base + state[0x33b] * 0x28 + 4);
-    u8* tbl0 = *(u8**)(base + state[0x33b] * 0x28);
-    u8* tbl1c = *(u8**)(base + state[0x33b] * 0x28 + 0x1c);
+    u8* slot = base + state[0x33b] * 0x28;
+    u8* tbl4 = *(u8**)(slot + 4);
+    u8* tbl0 = *(u8**)slot;
+    u8* tbl1c = *(u8**)(slot + 0x1c);
     u32 flags;
 
     if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
@@ -395,9 +396,12 @@ void fn_80150910(int* obj, u8* state)
             ((GameObject*)obj)->anim.velocityZ = z;
             ((GameObject*)obj)->anim.velocityY = z;
             ((GameObject*)obj)->anim.velocityX = z;
-            Baddie_SetMove(obj, state, tbl4[state[0x33d] * 12 + 8],
-                        *(f32*)(tbl4 + state[0x33d] * 12), 0,
-                        (u8) * (u32*)(tbl4 + state[0x33d] * 12 + 4));
+            {
+                IdleRow* row = &((IdleRow*)tbl4)[state[0x33d]];
+                Baddie_SetMove(obj, state, row->anim,
+                            *(f32*)(tbl4 + state[0x33d] * 12), 0,
+                            (u8)row->flags);
+            }
             ObjAnim_SetMoveProgress(*(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4),
                                     (ObjAnimComponent*)obj);
             state[0x33d] = tbl4[state[0x33d] * 12 + 9];
@@ -463,9 +467,10 @@ void fn_80150910(int* obj, u8* state)
         {
             if (*(u16*)(state + 0x338) != 0)
             {
-                Baddie_SetMove(obj, state, tbl1c[*(u16*)(state + 0x338) * 16 + 8],
+                SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
+                Baddie_SetMove(obj, state, row->anim,
                             *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                            (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 4));
+                            (u8)row->flags);
                 ObjAnim_SetMoveProgress(
                     *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4),
                     (ObjAnimComponent*)obj);
@@ -508,9 +513,12 @@ void fn_80150910(int* obj, u8* state)
             if (*(u16*)(state + 0x338) != 0)
             {
                 state[0x2f2] = (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 0xc);
-                Baddie_SetMove(obj, state, tbl1c[*(u16*)(state + 0x338) * 16 + 8],
-                            *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                            (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 4));
+                {
+                    SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
+                    Baddie_SetMove(obj, state, row->anim,
+                                *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
+                                (u8)row->flags);
+                }
                 ObjAnim_SetMoveProgress(
                     *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4),
                     (ObjAnimComponent*)obj);
