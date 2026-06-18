@@ -780,8 +780,9 @@ void gameBitFn_800ea2e0(u8 id)
 
     if (texts[6] == 0)
     {
+        i = 1;
         taskMap = &lbl_803119E0[1];
-        for (i = 1; (s16)i < 0xce; i++)
+        for (; (s16)i < 0xce; i++)
         {
             if ((*taskMap == 0xffff) || (*taskMap == -1))
             {
