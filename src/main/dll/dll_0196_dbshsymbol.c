@@ -1,13 +1,35 @@
+/*
+ * dbsh_symbol (DLL 0x196) - the spin-the-symbol minigame object in the
+ * DarkIce Mines SnowHorn shrine (shares the shrine's RISE_DONE/CLOSE
+ * game bits with dbshshrine, DLL 0x195).
+ *
+ * dbsh_symbol_update walks a small state machine on phase: hide the
+ * model, play a stone-scuff cue, arm trigger sequence 0, then resolve -
+ * granting CLOSE_A when the spin finished or CLOSE_B otherwise. While
+ * the trigger sequence runs, DBSH_Symbol_SeqFn accumulates spin from the
+ * A-button, drives this symbol and its mirror partner (the nearby
+ * objType-0x20F symbol) through ObjAnim moves, plays the loop/grunt/creak
+ * sfx, and reports completion once spinProgress reaches DBSH_SPIN_DONE.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dbshsymbol_types.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
+#include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
-extern uint GameBit_Get(int eventId);
+/* shared with the shrine object (DLL 0x195) */
+#define DBSH_GB_RISE_DONE 0x16a
+#define DBSH_GB_CLOSE_A 0x16b
+#define DBSH_GB_CLOSE_B 0x16c
+
+#define DBSH_PARTNER_OBJTYPE 0x20f /* mirror symbol spun alongside this one */
+#define DBSH_SPIN_DONE 0x7ef4      /* spinProgress at a full turn */
+
+extern int Obj_GetPlayerObject(void);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -35,11 +57,6 @@ extern f32 lbl_803E5100;
 extern f32 lbl_803E5104;
 extern f32 lbl_803E5108;
 
-/*
- * Per-object extra state for the DBSH spin-symbol minigame
- * (dbsh_symbol_getExtraSize == 0x24).
- */
-
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
@@ -49,7 +66,6 @@ extern f32 lbl_803E5118;
 
 int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
-    extern int Obj_GetPlayerObject(void);
     f32 maxSpeed;
     f32 spdThresh;
     f32 animDiv;
@@ -73,7 +89,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             state->flags.active = 0;
-            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
+            ((GameObject*)obj)->anim.modelState->flags |= DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
         }
     }
     if (state->flags.active == 0)
@@ -86,7 +102,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         while (idx < count)
         {
             *(int*)&state->partnerObj = list[idx];
-            if (*(s16*)(*(int*)&state->partnerObj + 0x46) == 0x20f)
+            if (*(s16*)(*(int*)&state->partnerObj + 0x46) == DBSH_PARTNER_OBJTYPE)
             {
                 break;
             }
@@ -118,14 +134,14 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
             state->spinSpeed = maxSpeed;
         }
         state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
-        if (state->spinProgress >= 0x7ef4)
+        if (state->spinProgress >= DBSH_SPIN_DONE)
         {
             gameTimerStop();
             Sfx_PlayFromObject((int)obj, 0x1d4);
             ObjAnim_SetCurrentMove(player, 0, lbl_803E50EC, 0);
             state->flags.finished = 1;
             state->flags.active = 1;
-            state->spinProgress = 0x7ef4;
+            state->spinProgress = DBSH_SPIN_DONE;
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
             return 0;
         }
@@ -225,18 +241,17 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 
 void dbsh_symbol_update(int obj)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
     s16 phase;
     uint puzzleStarted;
     DbshSymbolState* state;
 
     state = ((GameObject*)obj)->extra;
-    puzzleStarted = GameBit_Get(0x16a);
+    puzzleStarted = GameBit_Get(DBSH_GB_RISE_DONE);
     if (puzzleStarted == 0)
     {
         state->phase = 0;
         state->partnerObj = NULL;
-        GameBit_Set(0x16c, 0);
+        GameBit_Set(DBSH_GB_CLOSE_B, 0);
     }
     else
     {
@@ -254,30 +269,29 @@ void dbsh_symbol_update(int obj)
         }
         else if (phase == 1)
         {
-            if (lbl_803DBF68 != '\0')
+            if (lbl_803DBF68 != 0)
             {
                 lbl_803DBF68 = 0;
                 Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
             }
             state->phase = 2;
-            lbl_803DBF68 = '\x01';
+            lbl_803DBF68 = 1;
         }
         else if (phase == 3)
         {
             ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             if (state->flags.finished != 0)
             {
-                GameBit_Set(0x16b, 1);
+                GameBit_Set(DBSH_GB_CLOSE_A, 1);
             }
             else
             {
-                GameBit_Set(0x16c, 1);
+                GameBit_Set(DBSH_GB_CLOSE_B, 1);
             }
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags.active = 1;
         }
     }
-    return;
 }
 
 int dbsh_symbol_getExtraSize(void)
@@ -294,7 +308,6 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderFn_8003b8f4(lbl_803E5104);
 }
-
 
 void dbsh_symbol_init(int* obj)
 {
