@@ -1,7 +1,22 @@
+/*
+ * prof - title-screen Options menu panel builders.
+ *
+ * Two entry points populate the Options sub-menus through the title-menu
+ * link/item interfaces (gTitleMenuLink/Item). openAudioPanel builds the
+ * Audio panel (surround/stereo/mono toggle, music/sfx/voice sliders, and
+ * a cheat-gated extra entry); openGeneralPanel builds the General panel,
+ * unlocking option/cheat entries based on isCheatUnlocked() and toggling
+ * the per-entry "disabled" flag (0x4000) accordingly.
+ *
+ * lbl_803DBA28 tracks which panel is currently open (-1 = none); a switch
+ * away first tears down the previous link (slot +8). Built item handles
+ * are cached in lbl_803A87D0[]. lbl_803DD706 is set to 2 by both builders;
+ * its exact role is unconfirmed.
+ */
 #include "main/dll/debug/prof.h"
 
 extern int saveFileStruct_isCheatActive();
-extern int isCheatUnlocked();
+extern int isCheatUnlocked(u8);
 extern u32 OSGetSoundMode(void);
 extern int Rcp_GetColorFilterEnabled(void);
 extern int return0x64_8000A378(void);
@@ -17,15 +32,18 @@ typedef struct OptionsMenuPanels
 {
     u8 pad00[0x10];
     s8* audioEntries;
-    u32 audioUnused14;
+    u32 unk_14;
     u8 audioCount;
     u8 pad19[0x20 - 0x19];
     s8* optionEntries;
-    u32 optionUnused24;
+    u32 unk_24;
     u8 optionCount;
 } OptionsMenuPanels;
 
 extern OptionsMenuPanels lbl_8031ACB8;
+
+/* per-entry flag word (entry+0x16): set to grey-out / disable an entry */
+#define OPTION_ENTRY_DISABLED 0x4000
 
 void optionsMenu_openAudioPanel(void)
 {
@@ -43,14 +61,14 @@ void optionsMenu_openAudioPanel(void)
     {
         panels->audioEntries[0x10b] = 5;
         *(u16*)(panels->audioEntries + 0x142) =
-            (u16)(*(u16*)(panels->audioEntries + 0x142) & ~0x4000);
+            (u16)(*(u16*)(panels->audioEntries + 0x142) & ~OPTION_ENTRY_DISABLED);
         panels->audioEntries[0x146] = 4;
     }
     else
     {
         panels->audioEntries[0x10b] = -1;
         *(u16*)(panels->audioEntries + 0x142) =
-            (u16)(*(u16*)(panels->audioEntries + 0x142) | 0x4000);
+            (u16)(*(u16*)(panels->audioEntries + 0x142) | OPTION_ENTRY_DISABLED);
     }
 
     (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(
@@ -117,14 +135,14 @@ void optionsMenu_openGeneralPanel(void)
         {
             panels->optionEntries[entryOffset - 0x21] = (s8)cheatId;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~0x4000);
+                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
             lastUnlocked = cheatId;
         }
         else
         {
             panels->optionEntries[entryOffset - 0x21] = (s8)lastUnlocked;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) | 0x4000);
+                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) | OPTION_ENTRY_DISABLED);
         }
         entryOffset -= 0x3c;
         cheatId--;
@@ -140,7 +158,7 @@ void optionsMenu_openGeneralPanel(void)
         {
             panels->optionEntries[entryOffset + 0x1a] = (s8)lastUnlocked;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~0x4000);
+                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
             lastUnlocked = cheatId;
         }
         entryOffset += 0x3c;
