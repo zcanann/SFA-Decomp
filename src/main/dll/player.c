@@ -10281,22 +10281,10 @@ int objAnimFn_80296328(int obj)
         return 0;
     }
     v = inner->baddie.controlMode;
-    if (v == 1 || v == 2 || v == 0x26)
-    {
-        return 1;
-    }
-    if (v == 0x18)
-    {
-        if (GameBit_Get(0x3e3))
-        {
-            return 1;
-        }
-        if (*(s16*)((char*)inner->unk7F0 + 0x46) == 0x416)
-        {
-            return 1;
-        }
-    }
-    if (inner->baddie.targetObj != NULL)
+    if (v == 1 || v == 2 || v == 0x26 ||
+        (v == 0x18 &&
+         (GameBit_Get(0x3e3) || *(s16*)((char*)inner->unk7F0 + 0x46) == 0x416)) ||
+        inner->baddie.targetObj != NULL)
     {
         return 1;
     }
