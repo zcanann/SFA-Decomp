@@ -1052,7 +1052,7 @@ void modelLightChannels_applyGXControls(void)
                 }
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
-            activeMask = (activeMask | (1 << channel)) & 0xff;
+            activeMask |= 1 << channel;
         }
         entry++;
         channel++;
