@@ -342,10 +342,10 @@ void fn_801C8B68(int obj)
         mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x10)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotZ = (short)(int)(lbl_803E50B8 * (angB + angA));
+    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * (angB + angA));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x12)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angB + angA));
+    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * (angB + angA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);
