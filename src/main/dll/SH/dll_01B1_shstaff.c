@@ -439,6 +439,7 @@ extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
 
+#pragma optimization_level 1
 void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 {
     int player;
@@ -494,6 +495,7 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 
     state->phase = 6;
 }
+#pragma optimization_level reset
 
 void sh_staff_update(int obj)
 {
