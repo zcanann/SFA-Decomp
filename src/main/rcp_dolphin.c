@@ -3039,12 +3039,11 @@ resolved:
     if (slot == gLoadedTextureCount)
     {
         gLoadedTextureCount += 1;
-        entry = &gLoadedTextures[slot];
     }
-    entry->key = orig;
-    entry->texture = first;
-    entry->flag = flag;
-    entry->size = getHeapItemSize(entry->texture);
+    gLoadedTextures[slot].key = orig;
+    gLoadedTextures[slot].texture = first;
+    gLoadedTextures[slot].flag = flag;
+    gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
     if (gLoadedTextureCount > 0x2bc)
     {
         if (getLoadedFileFlags(0) != 0)
