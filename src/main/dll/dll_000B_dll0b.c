@@ -22,7 +22,6 @@
  * The three FUN_800a* return-0 stubs Ghidra emitted here were dead
  * (uncalled mirrors duplicated into every effect DLL) and removed.
  */
-#include "main/audio/sfx_ids.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"

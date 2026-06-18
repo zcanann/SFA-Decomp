@@ -20,8 +20,6 @@
  *   - the high-score files (saveData, saveScoreFn_800e88b4) and unlockable
  *     cheat/debug option bits.
  */
-#include "main/asset_load.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/player_status.h"

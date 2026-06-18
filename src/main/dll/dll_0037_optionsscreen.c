@@ -16,15 +16,10 @@
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
 
-extern undefined8 FUN_80006b84();
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_80053c98();
-extern undefined4 saveFileStruct_setCheatActive(uint optionIndex, u8 active);
-extern u8* getSaveFileStruct();
-extern undefined4 languageMenuInit();
-
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de3a8;
+/* save-file struct accessor + menu helpers (home TUs elsewhere) */
+extern u8* getSaveFileStruct(void);
+extern void saveFileStruct_setCheatActive(uint cheatId, u8 enabled);
+extern void languageMenuInit(void);
 
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;

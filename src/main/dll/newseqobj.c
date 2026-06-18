@@ -22,40 +22,28 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 
+/* sidekick-toy data lives in the same DLL (dll_00C9_enemy / tricky) */
+extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
+extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
+
 extern int GameBit_Set(int bit, int value);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8001FEA8(void);
 extern void fn_8015039C(void* p1, void* p2);
 extern u32 fn_8014FFB4(void* p1, void* p2, int p3);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
-
-extern u8 lbl_8031DD30[];
-
-typedef struct
-{
-    f32 speed; /* 0x0 */
-    u32 flags; /* 0x4 */
-    u8 anim; /* 0x8 */
-    u8 next; /* 0x9 */
-    u8 alt; /* 0xa */
-    u8 padB; /* 0xb */
-    u32 extra; /* 0xc */
-} SeqRow16;
-
-extern f32 timeDelta;
-extern f32 lbl_803E2740;
-extern f32 lbl_803E274C;
-extern f32 lbl_803E2768;
-extern f32 lbl_803E276C;
-extern f32 lbl_803E27A0;
-
-extern u8 lbl_8031F16C[];
-
 extern void sidekickToy_updateCurveTargetLatch(int* obj);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern u32 randomGetRange(int min, int max);
+
+extern f32 timeDelta;
+extern f32 lbl_803E2740;  /* 0.0f */
+extern f32 lbl_803E274C;
+extern f32 lbl_803E2768;
+extern f32 lbl_803E276C;
+extern f32 lbl_803E27A0;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2778;
@@ -68,6 +56,28 @@ extern f32 lbl_803E2790;
 extern f32 lbl_803E2794;
 extern f32 lbl_803E2798;
 extern f32 lbl_803E279C;
+
+/* per-family anim-table row: speed + flags + anim ids and chain links */
+typedef struct
+{
+    f32 speed; /* 0x0 */
+    u32 flags; /* 0x4 */
+    u8 anim;   /* 0x8 */
+    u8 next;   /* 0x9 */
+    u8 alt;    /* 0xa */
+    u8 padB;   /* 0xb */
+    u32 extra; /* 0xc */
+} SeqRow16;
+
+typedef struct
+{
+    f32 speed; /* 0x0 */
+    u32 unk4;  /* 0x4 */
+    u8 anim;   /* 0x8 */
+    u8 next;   /* 0x9 */
+    u8 alt;    /* 0xa */
+    u8 padB;   /* 0xb */
+} SeqRow12;
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {
@@ -225,14 +235,17 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     return ret;
 }
 
+/* EN v1.0 0x80150EDC  size: 870b  sidekick-toy anim-chain advance: timer-driven
+ * 16-stride SeqRow16 chain + curve-follow speed shaping, called from the
+ * fn_80150910 update path. */
 void fn_80150EDC(void* p1, void* p2)
 {
     u8* table = lbl_8031DD30;
     u8 idx = ((BaddieState*)p2)->inWhirlpoolGroup;
     u8* entry = table + idx * 0x28;
-    void* r30 = *(void**)(entry + 0x143c);
-    void* r29 = *(void**)(entry + 0x1454);
-    u8* r28 = *(u8**)(entry + 0x1458);
+    void* animCtrl = *(void**)(entry + 0x143c);
+    void* idleSrc = *(void**)(entry + 0x1454);
+    u8* seqRows = *(u8**)(entry + 0x1458);
 
     if (idx == 5 && (((BaddieState*)p2)->controlFlags & 0x800000) != 0)
     {
@@ -247,22 +260,23 @@ void fn_80150EDC(void* p1, void* p2)
 
     fn_8015039C(p1, p2);
 
+    /* coloring: zero cached before conditional body */
     {
         f32 zero = lbl_803E2740;
         if (*(f32*)((u8*)p2 + 0x328) != zero &&
-        *(u16*)((u8*)p2 + 0x338) != 0)
-    {
-        *(f32*)((u8*)p2 + 0x328) = *(f32*)((u8*)p2 + 0x328) - timeDelta;
-        if (*(f32*)((u8*)p2 + 0x328) <= zero)
+            *(u16*)((u8*)p2 + 0x338) != 0)
         {
-            *(f32*)((u8*)p2 + 0x328) = zero;
-            ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
+            *(f32*)((u8*)p2 + 0x328) = *(f32*)((u8*)p2 + 0x328) - timeDelta;
+            if (*(f32*)((u8*)p2 + 0x328) <= zero)
             {
-                SeqRow16* arow = (SeqRow16*)r28 + *(u16*)((u8*)p2 + 0x338);
-                *(u16*)((u8*)p2 + 0x338) = arow->alt;
+                *(f32*)((u8*)p2 + 0x328) = zero;
+                ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
+                {
+                    SeqRow16* arow = (SeqRow16*)seqRows + *(u16*)((u8*)p2 + 0x338);
+                    *(u16*)((u8*)p2 + 0x338) = arow->alt;
+                }
             }
         }
-    }
     }
 
     if ((u8)fn_8014FFB4(p1, p2, 0) != 0)
@@ -282,15 +296,15 @@ void fn_80150EDC(void* p1, void* p2)
         u16 cur338 = *(u16*)((u8*)p2 + 0x338);
         if (cur338 != 0)
         {
-            *(u8*)((u8*)p2 + 0x2f2) = (u8)((SeqRow16*)r28)[cur338].extra;
-            Baddie_SetMove(p1, p2, ((SeqRow16*)r28)[*(u16*)((u8*)p2 + 0x338)].anim,
-                        *(f32*)(r28 + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
-                        (u8)((SeqRow16*)r28)[*(u16*)((u8*)p2 + 0x338)].flags);
+            *(u8*)((u8*)p2 + 0x2f2) = (u8)((SeqRow16*)seqRows)[cur338].extra;
+            Baddie_SetMove(p1, p2, ((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].anim,
+                        *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
+                        (u8)((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].flags);
             ObjAnim_SetMoveProgress(
-                *(f32*)(table + (((SeqRow16*)r28)[*(u16*)((u8*)p2 + 0x338)].anim << 2)),
+                *(f32*)(table + (((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].anim << 2)),
                 (ObjAnimComponent*)p1);
             *(u16*)((u8*)p2 + 0x338) =
-                ((SeqRow16*)r28)[*(u16*)((u8*)p2 + 0x338)].next;
+                ((SeqRow16*)seqRows)[*(u16*)((u8*)p2 + 0x338)].next;
         }
         else
         {
@@ -299,28 +313,28 @@ void fn_80150EDC(void* p1, void* p2)
             *(u8*)((u8*)p2 + 0x2f2) = 0;
             *(u8*)((u8*)p2 + 0x2f3) = 0;
             *(u8*)((u8*)p2 + 0x2f4) = 0;
-            v8 = *(u8*)((u8*)r29 + idx2a0 * 0xc + 0x8);
+            v8 = *(u8*)((u8*)idleSrc + idx2a0 * 0xc + 0x8);
             if (v8 == 0)
             {
                 *(u8*)((u8*)p2 + 0x323) = 3;
-                ObjAnim_SetCurrentMove((int)p1, *(u8*)((u8*)r30 + 0x2c), lbl_803E2740, 0);
+                ObjAnim_SetCurrentMove((int)p1, *(u8*)((u8*)animCtrl + 0x2c), lbl_803E2740, 0);
             }
             else
             {
                 Baddie_SetMove(p1, p2, v8,
-                            *(f32*)((u8*)r29 + idx2a0 * 0xc), 0, 0xb);
+                            *(f32*)((u8*)idleSrc + idx2a0 * 0xc), 0, 0xb);
                 ObjAnim_SetMoveProgress(
-                    *(f32*)(table + (*(u8*)((u8*)r29 + (*(u16*)((u8*)p2 + 0x2a0)) * 0xc + 0x8) << 2)),
+                    *(f32*)(table + (*(u8*)((u8*)idleSrc + (*(u16*)((u8*)p2 + 0x2a0)) * 0xc + 0x8) << 2)),
                     (ObjAnimComponent*)p1);
             }
         }
     }
 
-    if ((s32)((GameObject*)p1)->anim.currentMove == *(u8*)((u8*)r30 + 0x2c))
+    if ((s32)((GameObject*)p1)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
     {
         ((BaddieState*)p2)->unk308 =
             ((BaddieState*)p2)->pathStep *
-            (((f32)(u32) * (u16*)((u8*)p2 + 0x2a4) /
+            (((f32)(u32)*(u16*)((u8*)p2 + 0x2a4) /
                     ((BaddieState*)p2)->unk2A8 / lbl_803E274C) *
                 *(f32*)(table + (((BaddieState*)p2)->inWhirlpoolGroup << 2) + 0x1538));
         if (((BaddieState*)p2)->unk308 < lbl_803E27A0)
@@ -353,6 +367,7 @@ void fn_80150910(int* obj, u8* state)
         GameBit_Set(0x1c8, 1);
     }
     fn_8015039C(obj, state);
+    /* coloring: zero cached before conditional body */
     {
         f32 t = *(f32*)(state + 0x328);
         f32 z = lbl_803E2740;

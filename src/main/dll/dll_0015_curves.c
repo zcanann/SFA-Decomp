@@ -428,7 +428,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             {
                 angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                                  (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
-            ((GameObject*)obj)->anim.rotX += (s16)(angle + 0x8000) >> 2;
+                ((GameObject*)obj)->anim.rotX += (s16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
             {

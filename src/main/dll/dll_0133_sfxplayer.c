@@ -15,13 +15,6 @@
  *
  * Home TU of these symbols and the SFXPLAYER_* constants is MMP_moonrock.
  */
-#include "main/dll/MMP/MMP_asteroid.h"
-
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
-
-extern f32 timeDelta;
-
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -254,5 +247,3 @@ void sfxplayerObj_update(u8* obj)
 void fn_80198A00(u8* obj, int seqArg);
 
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
-
-int WaterFallSpray_SeqFn(int* obj);

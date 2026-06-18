@@ -29,24 +29,31 @@
 typedef struct HagabonPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapEventId;         /* 0x14: map-event id for save-time gating / addTime */
     u8 pad18[0x19 - 0x18];
-    s8 unk19;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
+    s8 chaseRadiusScale;    /* 0x19 */
+    s16 curveStepRaw;       /* 0x1A */
+    s16 timeReward;         /* 0x1C: minutes added to the map timer on a hit */
+    s16 startInactive;      /* 0x1E: when nonzero the baddie never auto-chases */
+    s16 armGameBit;         /* 0x20: -1 = none; bit that arms/latches the spawn */
     u8 pad22[0x28 - 0x22];
 } HagabonPlacement;
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
+/* HagabonState.flags */
+#define HAGABON_FLAG_PATH_NEEDS_LINK 0x01
+#define HAGABON_FLAG_CHASE           0x02
+#define HAGABON_FLAG_PATH_RETURN     0x04
+#define HAGABON_FLAG_FADE_IN         0x08
+#define HAGABON_FLAG_FADE_OUT        0x10
 
-extern undefined4 DAT_803de6d0;
-extern f32 lbl_803DDA58;
+/* FUN_80006b0c / FUN_80006b14: shared-resource free/acquire (pi_dolphin) */
+extern int FUN_80006b0c(int handle);
+extern int FUN_80006b14(int id);
+extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void ObjGroup_RemoveObject(int obj, int group);
+
+extern undefined4 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
@@ -54,6 +61,7 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void* p);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
+extern f32 lbl_803DDA58;          /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;
 extern f32 lbl_803E260C;
 extern f32 lbl_803E2610;
@@ -95,6 +103,16 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
+void swarmbaddie_hitDetect(void);
+void swarmbaddie_release(void);
+void swarmbaddie_initialise(void);
+void swarmbaddie_free(int obj);
+void swarmbaddie_init(int obj, int data, int skip_alloc);
+int swarmbaddie_getExtraSize(void);
+int swarmbaddie_getObjectTypeId(void);
+void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void swarmbaddie_update(int obj);
+
 void pressureSwitch_freeSharedResource(void)
 {
     if (DAT_803de6d0 != 0)
@@ -102,7 +120,6 @@ void pressureSwitch_freeSharedResource(void)
         FUN_80006b0c(DAT_803de6d0);
         DAT_803de6d0 = 0;
     }
-    return;
 }
 
 void pressureSwitch_ensureSharedResource(void)
@@ -111,7 +128,6 @@ void pressureSwitch_ensureSharedResource(void)
     {
         DAT_803de6d0 = FUN_80006b14(0x5a);
     }
-    return;
 }
 
 void hagabon_release(void)
@@ -122,25 +138,13 @@ void hagabon_initialise(void)
 {
 }
 
-void swarmbaddie_hitDetect(void);
-
-void swarmbaddie_release(void);
-
-void swarmbaddie_initialise(void);
-
-typedef union PressureSwitchIntToDouble
-{
-    u64 bits;
-    f64 value;
-} PressureSwitchIntToDouble;
-
 void fn_8014E1DC(int obj, HagabonState* state)
 {
     int curve;
     GameObject* player;
     int angleDelta;
     int angle;
-    unsigned char* flags;
+    u8* flags;
     char animEvents[32];
     f32 waveA;
     f32 waveB;
@@ -157,7 +161,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608,
                                           &lbl_803DBC70, -1) != 0))
     {
-        *flags &= ~1;
+        *flags &= ~HAGABON_FLAG_PATH_NEEDS_LINK;
     }
 
     *(int*)&lbl_803DDA58 = *(int*)(curve + 0x10);
@@ -186,7 +190,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     ;
     ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
-    if ((*flags & 2) != 0)
+    if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
         player = state->player;
         ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (player->anim.localPosX - ((GameObject*)obj)->anim.
@@ -197,7 +201,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (player->anim.localPosZ - ((GameObject*)obj)->anim.
             localPosZ);
     }
-    else if ((*flags & 4) != 0)
+    else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
         ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
         ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
@@ -288,8 +292,6 @@ void hagabon_hitDetect(int obj)
     }
 }
 
-void swarmbaddie_free(int obj);
-
 void hagabon_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
@@ -301,8 +303,6 @@ void hagabon_free(int obj)
         *state = NULL;
     }
 }
-
-void swarmbaddie_init(int obj, int data, int skip_alloc);
 
 void hagabon_init(int obj, int data, int skip_alloc)
 {
@@ -320,7 +320,7 @@ void hagabon_init(int obj, int data, int skip_alloc)
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius,
                                              &lbl_803DBC70, -1) == 0)
         {
-            state->flags |= 0x1;
+            state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;
         }
     }
     if (*(s16*)(data + 0x20) != -1)
@@ -343,12 +343,12 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         case 0:
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
                 (obj, p2, p3, p4, p5, lbl_803E2650);
-            if ((state->flags & 0x10) != 0)
+            if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E2650, 3,
                                        (f32)(u32)((GameObject*)obj)->anim.alpha / lbl_803E2654, 0);
             }
-            if ((state->flags & 0x08) != 0)
+            if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E2650, 4,
                                        (f32)(u32)((GameObject*)obj)->anim.alpha / lbl_803E2654, 0);
@@ -360,12 +360,6 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_getObjectTypeId(void) { return 0xb; }
-int swarmbaddie_getExtraSize(void);
-int swarmbaddie_getObjectTypeId(void);
-
-void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-void swarmbaddie_update(int obj);
 
 void hagabon_update(int obj)
 {
@@ -377,15 +371,13 @@ void hagabon_update(int obj)
     f32 dy;
     f32 dz;
     f32 dist;
-    int hitA;
-    int hitB;
-    u32 hitC;
+    int hitObject;
+    int hitSphereIndex;
+    u32 hitVolume;
     f32 lightPos[3];
     f32 hitX;
     f32 hitZ;
     int fade;
-    PressureSwitchIntToDouble fadeAsDouble;
-    PressureSwitchIntToDouble eventAsDouble;
 
     state = *(HagabonState**)&((GameObject*)obj)->extra;
     oldCurve = state->curve;
@@ -393,17 +385,17 @@ void hagabon_update(int obj)
 
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((((HagabonPlacement*)data)->unk20 != -1) && (GameBit_Get(((HagabonPlacement*)data)->unk20) != 0))
+        if ((((HagabonPlacement*)data)->armGameBit != -1) && (GameBit_Get(((HagabonPlacement*)data)->armGameBit) != 0))
         {
             return;
         }
-        if ((*gMapEventInterface)->shouldNotSaveTime(((HagabonPlacement*)data)->unk14) == 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(((HagabonPlacement*)data)->mapEventId) == 0)
         {
             return;
         }
         ((GameObject*)obj)->unkF4 = 0;
         ((GameObject*)obj)->anim.alpha = 1;
-        state->flags |= 8;
+        state->flags |= HAGABON_FLAG_FADE_IN;
         Sfx_PlayFromObject(obj, SFXfox_treadwater122);
         return;
     }
@@ -419,9 +411,10 @@ void hagabon_update(int obj)
         Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     }
 
-    if ((((GameObject*)obj)->anim.alpha != 0) && ((state->flags & 0x18) != 0))
+    if ((((GameObject*)obj)->anim.alpha != 0) &&
+        ((state->flags & (HAGABON_FLAG_FADE_IN | HAGABON_FLAG_FADE_OUT)) != 0))
     {
-        if ((state->flags & 0x10) != 0)
+        if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
         {
             fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
@@ -429,29 +422,29 @@ void hagabon_update(int obj)
             {
                 ((GameObject*)obj)->unkF4 = 1;
                 ((GameObject*)obj)->anim.alpha = 0;
-                state->flags &= ~0x10;
+                state->flags &= ~HAGABON_FLAG_FADE_OUT;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
             }
             ObjHits_DisableObject(obj);
         }
-        if ((state->flags & 8) != 0)
+        if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
         {
             fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
             if (((GameObject*)obj)->anim.alpha >= 0xf9)
             {
                 ((GameObject*)obj)->anim.alpha = 0xff;
-                state->flags &= ~8;
+                state->flags &= ~HAGABON_FLAG_FADE_IN;
             }
         }
     }
     else
     {
-        if (ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitC, &hitX, &lightPos[1],
-                                               &hitZ) != 0)
+        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
+                                               &hitX, &lightPos[1], &hitZ) != 0)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
-            state->flags |= 0x10;
+            state->flags |= HAGABON_FLAG_FADE_OUT;
             Sfx_PlayFromObject(obj, SFXdoor_unlocked);
             Sfx_PlayFromObject(obj, SFXdoor_creak);
             Sfx_PlayFromObject(obj, SFXfox_treadwater222);
@@ -461,11 +454,11 @@ void hagabon_update(int obj)
             lightPos[0] = hitX;
             lightPos[2] = hitZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
-            (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->unk14,
-                                                   (f32)(s32)(((HagabonPlacement*)data)->unk1C * 0x3c));
-            if (((HagabonPlacement*)data)->unk20 != -1)
+            (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->mapEventId,
+                                                   (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
+            if (((HagabonPlacement*)data)->armGameBit != -1)
             {
-                GameBit_Set(((HagabonPlacement*)data)->unk20, 1);
+                GameBit_Set(((HagabonPlacement*)data)->armGameBit, 1);
             }
         }
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
@@ -488,19 +481,20 @@ void hagabon_update(int obj)
         dz = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(dz * dz + dx * dx + dy * dy);
     }
-    if (((state->flags & 2) != 0) && (lbl_803E2664 < state->pathDistance))
+    if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (lbl_803E2664 < state->pathDistance))
     {
-        state->flags &= ~2;
-        state->flags |= 4;
+        state->flags &= ~HAGABON_FLAG_CHASE;
+        state->flags |= HAGABON_FLAG_PATH_RETURN;
     }
-    if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E2668))
+    if (((state->flags & HAGABON_FLAG_PATH_RETURN) != 0) && (state->pathDistance < lbl_803E2668))
     {
-        state->flags &= ~4;
+        state->flags &= ~HAGABON_FLAG_PATH_RETURN;
     }
-    if (((state->flags & 6) == 0) && (((HagabonPlacement*)data)->unk1E == 0) &&
+    if (((state->flags & (HAGABON_FLAG_CHASE | HAGABON_FLAG_PATH_RETURN)) == 0) &&
+        (((HagabonPlacement*)data)->startInactive == 0) &&
         (state->player != 0) && (state->playerDistance < state->chaseRadius))
     {
-        state->flags |= 2;
+        state->flags |= HAGABON_FLAG_CHASE;
     }
     fn_8014E1DC(obj, state);
 }
