@@ -1,6 +1,5 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
 
-#include "ghidra_import.h"
 #include "main/game_object.h"
 
 typedef struct DIMwooddoorUpdateFallingDebrisState

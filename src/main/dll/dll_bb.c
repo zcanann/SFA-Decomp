@@ -18,7 +18,6 @@
  *
  * EN v1.0: camcontrol_applyState 0x80101980, camcontrol_applyQueuedAction 0x80101EBC.
  */
-#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
 extern void Obj_UpdateWorldTransform(s16 *obj);

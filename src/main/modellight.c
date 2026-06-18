@@ -1,7 +1,6 @@
 #include "main/game_object.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
-#include "main/objanim_internal.h"
 
 extern void mm_free(void* ptr);
 

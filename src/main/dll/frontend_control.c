@@ -12,7 +12,6 @@
  * textures, the slot name, completion percent, formatted play time
  * (HH:MM:SS derived from playTimeSeconds), life count and magic count.
  */
-#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/engine_shared.h"
