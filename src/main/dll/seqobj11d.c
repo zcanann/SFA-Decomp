@@ -425,7 +425,6 @@ void fn_801513AC(int obj, u8* state)
 void fn_8015165C(int obj, u8* state)
 {
     u8* player;
-    ObjHitsPriorityState* hitState;
     u8* p20;
     u8* p28;
     u8 t;
@@ -487,23 +486,22 @@ void fn_8015165C(int obj, u8* state)
                 }
             }
         }
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->hitVolumePriority = 0;
-        hitState->hitVolumeId = 0;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
         if (((GameObject*)obj)->anim.currentMove == p20[8])
         {
-            hitState->hitVolumePriority = (s8) * (int*)(p20 + 4);
-            hitState->hitVolumeId = (s8)p20[9];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[9];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x14])
         {
-            hitState->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
-            hitState->hitVolumeId = (s8)p20[0x15];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x15];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x20])
         {
-            hitState->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
-            hitState->hitVolumeId = (s8)p20[0x21];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x21];
         }
         if ((state[0x323] & 8) == 0)
         {
