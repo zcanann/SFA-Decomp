@@ -31,7 +31,7 @@ typedef struct BaddieAfterUpdateBonesCbState
     s16 unk2B0;
     u16 unk2B2;
     u8 pad2B4[0x2D8 - 0x2B4];
-    f32 unk2D8;
+    f32 freezeRecoverTimer;
     u32 unk2DC;
     u8 pad2E0[0x2F2 - 0x2E0];
     u8 unk2F2;
@@ -200,7 +200,7 @@ extern int isInBounds(f32 x, f32 z);
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern void hudFn_8011f38c(int a);
-extern f32 lbl_803E2600;
+extern f32 enemyRespawnDistanceSq;
 extern void fn_80151954(int obj, u8* state);
 extern void fn_801522E0(int obj, u8* state);
 extern void fn_80152A94(int obj, u8* state);
@@ -221,7 +221,7 @@ extern f32 lbl_803DBC64;
 extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
-extern f32 lbl_803E25B0;
+extern f32 enemySightRange;
 
 void objAnimFn_8014a9f0(short* obj, int state)
 {
@@ -2177,7 +2177,7 @@ void enemy_update(int obj)
             }
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2206,7 +2206,7 @@ void enemy_update(int obj)
             player = Obj_GetPlayerObject();
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2239,7 +2239,7 @@ void enemy_update(int obj)
                     player = Obj_GetPlayerObject();
                     if (player != NULL)
                     {
-                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > lbl_803E2600)
+                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2539,12 +2539,12 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->freezeRecoverTimer = lbl_803E2574;
-    if (((EnemyState*)state)->aggroRange > *(f32*)&lbl_803E25B0)
+    if (((EnemyState*)state)->aggroRange > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->aggroRange = lbl_803E25B0;
+        ((EnemyState*)state)->aggroRange = enemySightRange;
     }
-    if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
+    if (((EnemyState*)state)->unk2AC > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->unk2AC = lbl_803E25B0;
+        ((EnemyState*)state)->unk2AC = enemySightRange;
     }
 }
