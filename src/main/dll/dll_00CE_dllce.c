@@ -891,7 +891,7 @@ int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
 
-s16 dll_CE_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
+s16 dll_CE_setScale(int* obj) { return *(s16*)((char*)(int*)((GameObject*)obj)->extra + 0x274); }
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
