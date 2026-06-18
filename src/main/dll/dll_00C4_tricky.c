@@ -2064,14 +2064,14 @@ extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, i
                                              int sector);
 extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
-extern void smallbasket_nop(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void smallbasket_handleReactionEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void crawler_nop(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void crawler_handleReactionEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
 extern void fn_8014FEF8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80157EBC(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void smallbasket_handleHitStateEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void crawler_onHit(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void crawler_handleHitStateEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 
 void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
@@ -2258,11 +2258,11 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     mutatedEbaUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x851:
-                    smallbasket_nop(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_nop(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x842:
                 case 0x84b:
-                    smallbasket_handleReactionEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_handleReactionEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x4ac:
                     hoodedZyckUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -2274,10 +2274,10 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 case 0x6a3:
                 case 0x6a4:
                 case 0x6a5:
-                    fn_80157EBC(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_onHit(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x7c8:
-                    smallbasket_handleHitStateEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_handleHitStateEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 default:
                     fn_8014FEF8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);

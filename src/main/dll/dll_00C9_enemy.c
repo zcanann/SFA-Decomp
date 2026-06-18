@@ -120,15 +120,15 @@ extern void fn_8015652C(short* obj, int state);
 extern void fn_80156B0C(short* obj, int state);
 extern void fn_80156C34(short* obj, int state);
 extern void fn_80156DA0(short* obj, int state);
-extern void fn_80157004(short* obj, int state);
-extern void fn_80157558(short* obj, int state);
-extern void fn_80158494(short* obj, int state);
-extern void fn_80158C2C(short* obj, int state);
-extern void fn_80159284(short* obj, int state);
-extern void fn_80159958(short* obj, int state);
-extern void fn_80159FCC(short* obj, int state);
-extern void fn_8015A924(short* obj, int state);
-extern void smallbasket_applyReactionState(short* obj, int state);
+extern void hoodedZyck_updateB(short* obj, int state);
+extern void hoodedZyck_update(short* obj, int state);
+extern void crawler_updateC(short* obj, int state);
+extern void crawler_updateB(short* obj, int state);
+extern void crawler_update(short* obj, int state);
+extern void hagabonMK2_updateB(short* obj, int state);
+extern void hagabonMK2_update(short* obj, int state);
+extern void snowworm_update(short* obj, int state);
+extern void snowworm_applyReactionState(short* obj, int state);
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;
@@ -191,7 +191,7 @@ extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
 extern void mm_free(int p);
-extern void smallbasket_stopLoopSfx(int obj, u8* state);
+extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
 extern uint GameBit_Get(int bit);
 extern int getCurUiDll(void);
@@ -210,11 +210,11 @@ extern void fn_80153C90(int obj, u8* state);
 extern void fn_801542AC(int obj, u8* state);
 extern void mutatedEbaInit(int obj, u8* state);
 extern void mediumbasket_initWhirlpoolState(int obj, u8* state);
-extern void smallbasket_initVariantState(int obj, u8* state);
-extern void smallbasket_initScaledVariantState(int obj, u8* state);
+extern void crawler_initVariant(int obj, u8* state);
+extern void crawler_initScaledVariant(int obj, u8* state);
 extern void fn_8014FF58(int obj, u8* state);
-extern void smallbasket_initModelVariantState(int obj, u8* state);
-extern void smallbasket_initTailModelState(int obj, u8* state);
+extern void crawler_initModelVariant(int obj, u8* state);
+extern void crawler_initTailModel(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
 extern f32 lbl_803DBC60;
 extern f32 lbl_803DBC64;
@@ -316,10 +316,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x842:
             case 0x84b:
-                fn_8015A924(obj, state);
+                snowworm_update(obj, state);
                 break;
             case 0x4ac:
-                fn_80157558(obj, state);
+                hoodedZyck_update(obj, state);
                 break;
             case 0x427:
                 fn_8014FF24(obj, state);
@@ -328,10 +328,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x6a3:
             case 0x6a4:
             case 0x6a5:
-                fn_80159284(obj, state);
+                crawler_update(obj, state);
                 break;
             case 0x7c8:
-                fn_80159958(obj, state);
+                hagabonMK2_updateB(obj, state);
                 break;
             case 0x7c7:
             default:
@@ -393,10 +393,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x842:
             case 0x84b:
-                fn_8015A924(obj, state);
+                snowworm_update(obj, state);
                 break;
             case 0x4ac:
-                fn_80157004(obj, state);
+                hoodedZyck_updateB(obj, state);
                 break;
             case 0x427:
                 fn_8014FF20(obj, state);
@@ -405,10 +405,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x6a3:
             case 0x6a4:
             case 0x6a5:
-                fn_80158C2C(obj, state);
+                crawler_updateB(obj, state);
                 break;
             case 0x7c8:
-                fn_80159FCC(obj, state);
+                hagabonMK2_update(obj, state);
                 break;
             case 0x7c7:
             default:
@@ -503,7 +503,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             break;
         case 0x842:
         case 0x84b:
-            smallbasket_applyReactionState(obj, state);
+            snowworm_applyReactionState(obj, state);
             break;
         case 0x4ac:
             fn_80156DA0(obj, state);
@@ -515,10 +515,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
         case 0x6a3:
         case 0x6a4:
         case 0x6a5:
-            fn_80158494(obj, state);
+            crawler_updateC(obj, state);
             break;
         case 0x7c8:
-            fn_80159958(obj, state);
+            hagabonMK2_updateB(obj, state);
             break;
         case 0x7c7:
         default:
@@ -2053,7 +2053,7 @@ void enemy_free(int obj, int flag)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x7c8:
-        smallbasket_stopLoopSfx(obj, state);
+        hagabonMK2_stopLoopSfx(obj, state);
         break;
     case 0x851:
         if ((int)ObjGroup_ContainsObject(obj, 0x50) != 0)
@@ -2456,10 +2456,10 @@ void enemy_init(int obj, u8* setup, int flag)
             break;
         case 2114:
         case 2123:
-            smallbasket_initVariantState(obj, state);
+            crawler_initVariant(obj, state);
             break;
         case 1196:
-            smallbasket_initScaledVariantState(obj, state);
+            crawler_initScaledVariant(obj, state);
             break;
         case 1063:
             fn_8014FF58(obj, state);
@@ -2468,10 +2468,10 @@ void enemy_init(int obj, u8* setup, int flag)
         case 1699:
         case 1700:
         case 1701:
-            smallbasket_initModelVariantState(obj, state);
+            crawler_initModelVariant(obj, state);
             break;
         case 1992:
-            smallbasket_initTailModelState(obj, state);
+            crawler_initTailModel(obj, state);
             break;
         default:
             fn_8014FF58(obj, state);
