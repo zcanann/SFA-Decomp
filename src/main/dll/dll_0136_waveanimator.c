@@ -73,13 +73,13 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 
 void waveanimator_func0B(int* obj)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
+    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
     state->flags |= 2;
 }
 
 void waveanimator_setScale(int* obj, f32 fval)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
+    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
     state->flags |= 1;
     state->scaleB = fval;
 }
@@ -243,7 +243,7 @@ void waveanimator_update(void)
 #pragma scheduling off
 void waveanimator_init(int* obj, int* desc)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
+    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
     f32 scale;
     state->unk18 = ((WaveanimatorObjectDef*)desc)->unk20;
     state->originX = ((WaveanimatorObjectDef*)desc)->originX;
