@@ -147,6 +147,7 @@ void wctempledia_update(int obj)
     ((GameObject*)obj)->anim.rotZ = (s16)(td * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
+        extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         f32 ratio = state->currentSpeed / state->targetTable[2];
         Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
