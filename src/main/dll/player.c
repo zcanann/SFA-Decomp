@@ -1407,8 +1407,9 @@ int fn_8029A76C(int obj, int state, f32 fv)
             }
         }
     }
-    if (((GameObject*)obj)->anim.currentMove == 0x43f)
+    switch (((GameObject*)obj)->anim.currentMove)
     {
+    case 0x43f:
         if (((PlayerState*)state)->baddie.targetObj == NULL)
         {
             int res;
@@ -1453,8 +1454,8 @@ int fn_8029A76C(int obj, int state, f32 fv)
                 return 0x2d;
             }
         }
-    }
-    else
+        break;
+    default:
     {
         int i;
         int sub;
@@ -1488,9 +1489,11 @@ int fn_8029A76C(int obj, int state, f32 fv)
             lbl_803DE464 = lbl_803E7EA4;
         }
     }
+    break;
+    }
     if (((PlayerState*)state)->baddie.targetObj == NULL)
     {
-        if (((u16) * (s16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
+        if ((*(u16*)((char*)inner + 0x6e2) & 0x200) != 0 ||
             inner->curAnimId != 0x52)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A420;
