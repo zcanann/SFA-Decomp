@@ -1,31 +1,12 @@
-# 🛑 STOP — AUTOMATION PAUSED 🛑
-
-**If you are an automated agent (codex / agentic_loop.py), HALT NOW.**
-For this cycle, and until this block is removed:
-
-- DO NOT edit any files.
-- DO NOT commit anything.
-- DO NOT push to `main`.
-- Exit immediately and take no further action.
-
-**Why:** The loop has been re-pushing a stale patch series to `main` every
-~1–2 minutes, repeatedly reverting other contributors' commits and
-re-introducing build breaks. `main` is currently RED on the `all_source` / CI
-target — duplicate `posPtr` in `src/main/dll/dll_0000_baby_snowworm.c` and an
-`fn_802ABFBC` int/void mismatch in `src/main/dll/player.c`. The loop only builds
-the 30s strict-hash matching target, so it never sees these breaks.
-
-Paused by collaborator **JackPriceBurns** on **2026-06-18** to stop the churn.
-
-**@zcanann** — to resume safely: (1) stop `agentic_loop.py`; (2) make each cycle
-`git pull --rebase` onto the latest `origin/main` and gate commits on
-`ninja all_source` exiting 0 (not just the strict-hash target); (3) delete this
-block. Sorry for touching your runbook while you were offline — it was the only
-lever available without admin rights.
-
----
-
 # AGENTS.md - SFA-Decomp Runbook
+
+> **Automation note (resolved 2026-06-18):** JackPriceBurns paused the loop because it
+> was re-pushing a stale patch series (cherry-pick with `--theirs` conflict resolution
+> reverted other contributors' fixes) and only gated on the 30s strict-hash target, so
+> it never saw `all_source` breaks (dup `posPtr`, `fn_802ABFBC` mismatch). Both are
+> fixed and `main` is green again. Resumed by zcanann with corrected discipline: every
+> push **rebases onto fresh `origin/main`**, **never `--theirs`-clobbers** (abort + re-derive
+> on conflict), and **gates on `ninja all_source` exiting 0** — not just the match target.
 
 Keep this light. The project is still in the "recover the game" phase, not the "polish an already-understood decomp" phase.
 
