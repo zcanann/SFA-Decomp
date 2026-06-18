@@ -510,7 +510,7 @@ void drlasercannon_update(int obj)
     }
     else
     {
-        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - (u8)state->health, lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, (u8)(5 - (u8)state->health), lbl_803E6904);
         if ((void*)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
