@@ -1745,22 +1745,24 @@ void fn_800A081C(int p1, int p2, int mode)
 
     if (mode == 1)
     {
-        if (((ModgfxState*)p1)->channelFrames[((ModgfxState*)p1)->activeChannel] == 0)
+        s16* chanBase = (s16*)((u8*)p1 + 0xEE);
+        if (chanBase[((ModgfxState*)p1)->activeChannel] == 0)
         {
             int flags = ((ModgfxState*)p1)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
-                s16 buf[6];
-                f32* fbuf = (f32*)&buf[2];
-                s16 v = *((ModgfxState*)p1)->unk04;
+                s16 buf[12];
+                f32* fbuf = (f32*)&buf[4];
+                s16 v;
                 f32 fill = lbl_803DF430;
-                fbuf[3] = fill;
-                fbuf[2] = fill;
                 fbuf[1] = fill;
+                fbuf[2] = fill;
+                fbuf[3] = fill;
                 fbuf[0] = lbl_803DF434;
-                buf[2] = v;
-                buf[1] = v;
+                v = *((ModgfxState*)p1)->unk04;
                 buf[0] = v;
+                buf[1] = v;
+                buf[2] = v;
                 vecRotateZXY(buf, (f32*)(p2 + 0x4));
             }
             ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
