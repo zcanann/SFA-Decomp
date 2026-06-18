@@ -201,8 +201,8 @@ int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animU
 
 void drshackle_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    u8* p = ((GameObject*)obj)->extra;
     int* ptr;
+    u8* p = ((GameObject*)obj)->extra;
     int i;
     if (((BitFlags8*)(p + 0x1a))->b0 == 0 && visible != 0)
     {
