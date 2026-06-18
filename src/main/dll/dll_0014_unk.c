@@ -5115,8 +5115,8 @@ foundAdjacent:
 
 int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int excludeLinkId)
 {
-    f32 bestDistance[2];
     int bestLink[2];
+    f32 bestDistance[2];
     RomCurveSegmentProjection segment;
     f32 dx;
     f32 dy;
@@ -5151,7 +5151,7 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
             {
                 high = nRomCurves - 1;
                 low = 0;
-                while (low <= high)
+                while (high >= low)
                 {
                     mid = (high + low) >> 1;
                     linkedCurve = romCurves[mid];
@@ -5178,12 +5178,12 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
                 segment.endY = linkedCurve->y;
                 segment.endZ = linkedCurve->z;
                 RomCurve_distanceToSegment(x, y, z, &segment);
-                dz = segment.nearestZ - z;
                 dx = segment.nearestX - x;
                 dy = segment.nearestY - y;
-                distance = dz * dz + dx * dx + dy * dy;
+                dz = segment.nearestZ - z;
+                distance = dx * dx + dy * dy + dz * dz;
                 slot = (u32)__cntlzw(excludeLinkId - linkId) >> 5;
-                if (bestDistance[slot] < distance)
+                if (distance > bestDistance[slot])
                 {
                     bestDistance[slot] = distance;
                     bestLink[slot] = curve->linkIds[linkIndex];
@@ -5192,12 +5192,15 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
         }
     }
 
-    if ((bestLink[0] == ROMCURVE_LINK_ID_NONE) &&
-        (bestLink[0] = bestLink[1], bestLink[1] == ROMCURVE_LINK_ID_NONE))
+    if (bestLink[0] != (int)ROMCURVE_LINK_ID_NONE)
     {
-        bestLink[0] = ROMCURVE_LINK_ID_NONE;
+        return bestLink[0];
     }
-    return bestLink[0];
+    if (bestLink[1] != (int)ROMCURVE_LINK_ID_NONE)
+    {
+        return bestLink[1];
+    }
+    return (int)ROMCURVE_LINK_ID_NONE;
 }
 
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
