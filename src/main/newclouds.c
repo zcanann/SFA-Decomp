@@ -1825,7 +1825,6 @@ extern f32 lbl_803DF27C;
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
-    int id;
     u8 fl;
     f32 vec[3];
     struct
@@ -1859,8 +1858,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         posB[1] = *(f32*)(objB + 0x1c);
         posB[2] = *(f32*)(objB + 0x20);
     }
-    id = *(u16*)(params + 0x26);
-    if ((u32)id > 8)
+    if ((u32)*(u16*)(params + 0x26) > 8)
     {
         return;
     }
@@ -1966,7 +1964,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && NC_CLOUD[0x144e] != 0)
     {
-        env[id + 0x41] = (s8)NC_CLOUD[0x144d];
+        env[*(u16*)(params + 0x26) + 0x41] = (s8)NC_CLOUD[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
@@ -2005,7 +2003,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     else if (fl & 0x20)
     {
-        newclouds_snowKillSnowCloud(id, 0);
+        newclouds_snowKillSnowCloud(*(u16*)(params + 0x26), 0);
     }
     else if (fl & 4)
     {
