@@ -370,7 +370,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     byte byteVal;
-    char hitResult;
+    u8 hitResult;
     undefined mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
@@ -394,7 +394,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            if ((obj->objectFlags & 0x800U) != 0)
+            if ((obj->objectFlags & 0x800) != 0)
             {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
@@ -420,7 +420,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     scratch = (float*)runtime->hitReactScratch;
     hitResult = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, uval, scratch);
     runtime->hitReactState = hitResult;
-    if (hitResult == '\0')
+    if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
         runtime->locomotionMode = mode;
@@ -441,20 +441,20 @@ void SHthorntail_update(SHthorntailObject* obj)
             break;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) == 0)
+            SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) != 0)
         {
-            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
-            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
+            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
         }
         else
         {
-            obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+            obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
             byteVal = runtime->freezeFrameCounter + 1;
             runtime->freezeFrameCounter = byteVal;
-            if (byteVal < 0xb)
+            if (byteVal <= 0xa)
             {
                 obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
             }
@@ -475,13 +475,13 @@ void SHthorntail_update(SHthorntailObject* obj)
         val = ObjAnim_AdvanceCurrentMove(
             SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState], timeDelta,
             (int)obj, &animEvents);
-        if (val == 0)
+        if (val != 0)
         {
-            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         else
         {
-            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
             SHTHORNTAIL_STATE_FLAG_APPLY_ROOT_MOTION) != 0)
