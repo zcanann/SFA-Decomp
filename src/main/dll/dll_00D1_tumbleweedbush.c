@@ -213,7 +213,7 @@ void tumbleweedbush_update(int* obj)
 void fn_80163980(int* obj)
 {
     u8 v = 0x7;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x278) = v;
+    *((u8*)(int*)((GameObject*)obj)->extra + 0x278) = v;
 }
 
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
