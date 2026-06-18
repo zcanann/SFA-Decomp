@@ -12,7 +12,6 @@
  * textures, the slot name, completion percent, formatted play time
  * (HH:MM:SS derived from playTimeSeconds), life count and magic count.
  */
-#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/engine_shared.h"
@@ -27,7 +26,6 @@ extern u8 saveFileSelect_saveDirty;
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern u8 enableDebugText;
-/* retail allocates 6 u16s each (symbols.txt size 0xC); only [0..4] are matched */
 extern u16 saveFileSelect_debugCheatSequence[6];
 extern u16 saveFileSelect_slotCheatSequence[6];
 extern void* lbl_803A8680[4];

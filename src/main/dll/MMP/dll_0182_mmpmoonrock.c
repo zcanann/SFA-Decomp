@@ -263,7 +263,7 @@ void fn_801A7CC4(int obj)
     stk.d = lbl_803E457C;
     stk.c = 0;
     stk.b = 0;
-    stk.a = *(s16*)player;
+    stk.a = ((GameObject*)player)->anim.rotX;
     vecRotateZXY(&stk, (void*)(obj + 0x24));
     state->flags |= 0x40;
 }

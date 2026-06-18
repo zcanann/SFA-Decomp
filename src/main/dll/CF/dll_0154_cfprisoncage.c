@@ -163,7 +163,7 @@ void cfprisoncage_update(int* obj)
 void cfprisoncage_init(int* obj, u8* def)
 {
     ObjMsg_AllocQueue(obj, 1);
-    *(s16*)obj = (s16)((s32)def[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = (void*)cfprisoncage_SeqFn;
     /* switch: pose thrown/reset from the bit; cage: jump the open

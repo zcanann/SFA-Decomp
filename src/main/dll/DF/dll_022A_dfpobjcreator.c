@@ -105,7 +105,7 @@ void dfpobjcreator_free(int obj, int flag)
 void dfpobjcreator_init(int obj, s8* def)
 {
     DfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)def[0x1E] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
     state->gameBit = ((DfpobjcreatorObjectDef*)def)->gameBit;
     state->spawnPeriod = ((DfpobjcreatorObjectDef*)def)->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;

@@ -78,7 +78,6 @@ extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
 
-/* Sibling-TU object bodies referenced by the descriptor tables below. */
 extern void gcbaddieshield_update(int* obj);
 
 extern void animatedobj_init();
@@ -1171,8 +1170,6 @@ void collectible_updateIdleMotion(int obj)
         break;
     }
 }
-
-/* texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-verified). */
 
 void collectible_init(int obj, int setup)
 {

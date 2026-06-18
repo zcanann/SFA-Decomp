@@ -487,7 +487,7 @@ void babycloudrunner_init(int* obj, u8* def)
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = (void*)babycloudrunner_SeqFn;
-    *(s16*)obj = (s16)(def[0x1d] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
     sub = ((GameObject*)obj)->extra;
     sub->unkB0 = 0;
@@ -499,7 +499,7 @@ void babycloudrunner_init(int* obj, u8* def)
     sub->unkCC = 0;
     storeZeroToFloatParam(sub);
     sub->linkedObj = 0;
-    sub->roostYaw = *(s16*)obj;
+    sub->roostYaw = ((GameObject*)obj)->anim.rotX;
     sub->flags22C = 0;
     sub->animSpeed = lbl_803E422C;
     sub->runnerState = 0;
@@ -743,7 +743,7 @@ int babycloudrunner_func0B(void* p)
     {
         s16toFloat((int)sub, 0x3c);
         ((GameObject*)obj)->unkF4 = 1;
-        *(s16*)obj = sub->roostYaw;
+        ((GameObject*)obj)->anim.rotX = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
@@ -968,7 +968,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, (int)player, 0);
         fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
-        *(s16*)obj += (s16)yaw / 8;
+        ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
         {
             animUpdateBytes[0x90] |= 4;
@@ -982,7 +982,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, (int)getTrickyObject(), 0);
         fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
-        *(s16*)obj += (s16)yaw / 8;
+        ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }
     return 0;

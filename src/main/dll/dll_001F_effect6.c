@@ -176,7 +176,6 @@ extern f32 lbl_803E00B0;
 extern f32 lbl_803E00B4;
 extern f32 lbl_803E00B8;
 extern f32 lbl_803E00BC;
-/* lbl_803E0900..0944: referenced only by the dead shared projgfx_spawnPresetEffect body below. */
 extern f32 lbl_803E0900;
 extern f32 lbl_803E0904;
 extern f32 lbl_803E0908;

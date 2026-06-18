@@ -137,12 +137,6 @@ extern f32 lbl_803E09EC;
 extern f32 lbl_803E09F0;
 extern f32 lbl_803E09F4;
 extern f32 lbl_803E09F8;
-extern f32 lbl_803E0A00;
-extern f32 lbl_803E0A04;
-extern f32 lbl_803E0A08;
-extern f32 lbl_803E0A0C;
-extern f32 lbl_803E0A10;
-extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -257,7 +251,6 @@ undefined4* FUN_800e87a8(void)
     return &DAT_803a45b0;
 }
 
-int saveFn_800e8508(void);
 
 undefined FUN_800e8b98(void)
 {

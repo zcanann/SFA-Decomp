@@ -95,7 +95,7 @@ void dim2icicle_init(int obj, s8* p)
         inner[6] = 0;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
-    *(s16*)obj = (s16)((s32)p[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }

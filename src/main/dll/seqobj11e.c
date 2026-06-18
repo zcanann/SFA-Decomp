@@ -33,8 +33,8 @@
 #include "main/objtexture.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
+extern u32 ObjLink_DetachChild();
+extern u32 ObjLink_AttachChild();
 
 #pragma scheduling off
 #pragma peephole off
@@ -168,7 +168,7 @@ void fn_80152514(int* obj, u8* state)
             {
                 step = -spd;
             }
-            *(s16*)obj = *(s16*)obj - step;
+            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX - step;
             fn_8014CF7C(obj, state, path->posX, path->posZ, 0xf, 0);
             if ((int)(lbl_803E2828 * path->tangentY) >= 0)
             {
@@ -178,12 +178,12 @@ void fn_80152514(int* obj, u8* state)
             {
                 step = -spd;
             }
-            *(s16*)obj += step;
+            ((GameObject*)obj)->anim.rotX += step;
         }
         else
         {
             step = ((int)(lbl_803E2828 * path->tangentY) >= 0) ? step : -step;
-            *(s16*)obj += step;
+            ((GameObject*)obj)->anim.rotX += step;
         }
         if (((GameObject*)obj)->anim.localPosY - path->posY < lbl_803E282C)
         {
@@ -212,7 +212,7 @@ void fn_80152514(int* obj, u8* state)
         {
             ((BaddieState*)state)->seqEntryIndex = 0;
         }
-        *(s16*)obj += *(s8*)((char*)def + 0x2a);
+        ((GameObject*)obj)->anim.rotX += *(s8*)((char*)def + 0x2a);
     }
     if (((BaddieState*)state)->seqEntryIndex != 0)
     {

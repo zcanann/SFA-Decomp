@@ -321,7 +321,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     } stackArg;
 
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
+    ((GameObject*)obj)->anim.rotX = (s16)(((s32)setup->objectType & 0x3f) << 10);
     if (setup->scaleTimer > 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = (f32)setup->scaleTimer / lbl_803E51E4;

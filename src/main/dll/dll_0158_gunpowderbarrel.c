@@ -191,8 +191,6 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
     }
 }
 
-/* Drift-recovery: v1.0 function set (the FUN_801a1xxx above are v1.1-shaped). */
-
 /* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
  * (or touched while resting on a damage source) blow the barrel up, optionally
  * re-saving its position at the owning generator first. */
@@ -213,7 +211,6 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         ((GunpowderBarrelState*)sub)->detonateTrigger += 1;
         ((GunpowderBarrelState*)sub)->motionFlags = (u8)(((GunpowderBarrelState*)sub)->motionFlags | 1);
     }
-    /* Once armed, run the full detonation sequence this frame. */
     if (((GunpowderBarrelState*)sub)->detonateTrigger != 0)
     {
         /* returnHome barrels respawn at their owning generator: temporarily move
@@ -267,7 +264,6 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         Sfx_PlayFromObject((u32)obj, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
-        /* If still carried, notify the carry interface to drop us. */
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
             (*(void (**)(int*, u8*))(*(int*)gCarryableInterface + 0x30))(obj, sub);
@@ -711,7 +707,6 @@ void gunpowderbarrel_update(int obj)
         uint msg;
         msg = 0;
         arg = 0;
-        /* Drain the message queue: 0xf = picked up by player, 0x10 = released. */
         while ((int)ObjMsg_Pop((void*)obj, &msg, 0, &arg) != 0)
         {
             switch (msg)
@@ -783,7 +778,6 @@ void gunpowderbarrel_update(int obj)
             {
                 gen = ObjGroup_FindNearestObject(0x3a, obj, 0);
             }
-            /* No generator: hide and self-respawn after respawnTimer (0x3c frames). */
             if (gen == 0)
             {
                 Obj_RemoveFromUpdateList(obj);
@@ -809,7 +803,6 @@ void gunpowderbarrel_update(int obj)
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
-            /* Generator but no respawn: remove the barrel permanently. */
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

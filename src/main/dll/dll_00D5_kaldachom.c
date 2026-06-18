@@ -22,7 +22,6 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 
-/* cross-TU helpers (game-object / baddie / fx runtime) */
 extern undefined4 Sfx_PlayFromObject();
 extern u32 randomGetRange(int min, int max);
 extern int Obj_AllocObjectSetup();

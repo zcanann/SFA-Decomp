@@ -200,7 +200,6 @@ void kytesmum_update(int obj)
     nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
     if ((void*)nearest != NULL)
     {
-        /* DLL vtable slot 0x28: forwards the contact callback to the nearest obj in group 1 */
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(
             nearest, obj, 1, 2);
     }
@@ -280,7 +279,6 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     }
-    /* double-negation required for cntlzw codegen (#23) */
     {
         int move2 = runtime->moveSet->moves[2];
         return !!dll_2E_func07(obj, (u8*)animUpdate, (char*)runtime, move2, move2);

@@ -71,7 +71,7 @@ int dimdismountpoint_getObjectTypeId(void);
 void dimbridgecogmai_init(int* obj, int* def)
 {
     *(u8*)((GameObject*)obj)->extra = 100;
-    *(s16*)obj = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->rotationAngle << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u32)((DimbridgecogmaiObjectDef*)def)->rotationAngle << 8);
     ((GameObject*)obj)->animEventCallback = (void*)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject((u32)obj, DIMBRIDGECOG_GROUP);
     if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)

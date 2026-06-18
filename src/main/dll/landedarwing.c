@@ -58,7 +58,7 @@ typedef struct
     u8 bit0 : 1;
 } LandedArwingFlags;
 
-undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
+u32 LandedArwing_UpdateFlightChase(int obj, int state)
 {
     int playerObj;
     LandedArwingState* sub;

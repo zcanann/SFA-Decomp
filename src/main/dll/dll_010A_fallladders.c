@@ -101,7 +101,6 @@ void Fall_Ladders_update(int obj)
     FallLaddersState* state;
     f32 speed;
 
-    /* the ObjPlacement pointer stashed in anim.placementData at init time */
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == FALLLADDERS_SEQ_ID)

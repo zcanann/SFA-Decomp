@@ -12,7 +12,6 @@
  * else 1). The 4-byte extra holds only the countdown timer.
  */
 #include "main/game_object.h"
-#include "main/dll/dll_00EF_pushable.h"
 #include "main/objhits.h"
 
 typedef struct IceblastPlacement

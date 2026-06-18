@@ -71,7 +71,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define PARTFX_SNOWBALL_IMPACT   518
 #define GAMEBIT_SNOWBALL_LAUNCH  648
 
-extern undefined4 FUN_800067c0();
 extern f32 lbl_803E4AA0;
 extern int ObjList_FindObjectById(int id);
 extern int** ObjList_GetObjects(int* startOut, int* countOut);

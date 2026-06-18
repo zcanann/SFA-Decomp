@@ -421,7 +421,7 @@ void fn_8023A3E4(int p1, int p2)
     GfHitState* s = (GfHitState*)p2;
     int obj = p1;
     u8 adjusted;
-    u8 texIdx;
+    int texIdx;
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
@@ -443,9 +443,11 @@ void fn_8023A3E4(int p1, int p2)
         case 0:
         case 1:
         case 2:
-            if (s->hits[hitType] != 0 && s->timer[hitType] == 0)
+        {
+            u8* hp = (u8*)s + hitType;
+            if (hp[0xAE] != 0 && hp[0xB2] == 0)
             {
-                s->hits[hitType] -= 1;
+                hp[0xAE] -= 1;
                 s->timer[hitType] = 6;
                 if (s->hits[hitType] != 0)
                     Sfx_PlayFromObject(obj, 0x484);
@@ -465,6 +467,7 @@ void fn_8023A3E4(int p1, int p2)
                 }
             }
             break;
+        }
         case 3:
             if (*(s16*)(hitObj + 0x46) == 0x605 &&
                 s->timer[hitType] == 0 &&
@@ -480,25 +483,26 @@ void fn_8023A3E4(int p1, int p2)
     }
     for (i = 0; i < 3; i++)
     {
-        if (s->hits[i] != 0)
+        u8* p = (u8*)s + i;
+        if (p[0xAE] != 0)
         {
-            if (s->timer[i] != 0)
-                s->texState[i] = 1;
+            if (p[0xB2] != 0)
+                p[0xB9] = 1;
             else
-                s->texState[i] = 0;
+                p[0xB9] = 0;
         }
         else
         {
-            s->texState[i] = 2;
+            p[0xB9] = 2;
         }
-        state = s->texState[i];
+        state = p[0xB9];
         adjusted = state;
         texIdx = (&lbl_803DC4C8)[i];
-        if (texIdx < 2 && state == 1)
+        if ((uint)texIdx < 2 && state == 1)
             adjusted = 0;
         tex = objFindTexture((void *)obj, texIdx * 2, 0);
         tex->textureId = adjusted << 8;
-        if (texIdx == 2 && state == 1)
+        if ((uint)texIdx == 2 && state == 1)
             state = 0;
         tex = objFindTexture((void *)obj, texIdx * 2 + 1, 0);
         tex->textureId = state << 8;

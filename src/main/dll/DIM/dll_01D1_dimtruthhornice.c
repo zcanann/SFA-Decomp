@@ -60,7 +60,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern undefined4 FUN_800067c0();
 extern undefined4 ObjHits_DisableObject();
 extern int* getTrickyObject(void);
 extern f32 lbl_803E4A40;

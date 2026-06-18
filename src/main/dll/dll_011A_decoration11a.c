@@ -183,7 +183,7 @@ void decoration11a_init(int* obj, u8* def)
 {
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)def[25] << 8);
-    *(s16*)obj = (s16)((s32)def[26] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[26] << 8);
     if (def[27] != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[27] / lbl_803E3B88;

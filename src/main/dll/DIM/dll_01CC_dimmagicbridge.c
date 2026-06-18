@@ -87,7 +87,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     int v;
     s16 hh;
 
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
+    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
     ((GameObject*)obj)->animEventCallback = (void*)dimmagicbridge_flameSeqFn;

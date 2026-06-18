@@ -45,9 +45,9 @@ typedef struct
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 extern int FUN_80017730();
-extern undefined4 FUN_800305c4();
+extern u32 FUN_800305c4();
 extern int FUN_8014c78c();
-extern undefined4 FUN_8014d4c8();
+extern u32 FUN_8014d4c8();
 extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
 extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
 extern void fn_8001FEA8(void);
@@ -64,10 +64,10 @@ extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32 x);
 
-extern undefined4 DAT_8031e980;
-extern undefined4 DAT_803ad088;
-extern undefined4 DAT_803ad08c;
-extern undefined4 DAT_803dc8f0;
+extern u32 DAT_8031e980;
+extern u32 DAT_803ad088;
+extern u32 DAT_803ad08c;
+extern u32 DAT_803dc8f0;
 extern void* PTR_DAT_8031fdc8;
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
@@ -101,16 +101,16 @@ extern f32 lbl_803E27E8;
 #pragma scheduling on
 #pragma peephole on
 
-void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   short* param_9, int param_10)
 {
     short angleDelta;
     int entryOff;
     uint angle;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
+    u32 in_r8;
+    u32 in_r9;
+    u32 in_r10;
     u8* entry;
     double speed;
 

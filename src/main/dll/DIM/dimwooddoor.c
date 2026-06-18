@@ -131,7 +131,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
 
     launchSpeed = state->launchSpeed;
     launchScale = lbl_803E48AC * launchSpeed;
-    *(s16*)shard = *(s16*)obj + modelVec[1];
+    *(s16*)shard = ((GameObject*)obj)->anim.rotX + modelVec[1];
     angle = (lbl_803E48B0 * (f32)(s32) * (s16*)shard) / lbl_803E48B4;
     *(f32*)(shard + 0x24) = launchScale * -mathSinf(angle);
     *(f32*)(shard + 0x28) = launchSpeed;

@@ -312,7 +312,6 @@ void fn_80125D04(void)
     }
 }
 
-/* opt_common_subs off: target re-loads the lbl_8031AF34 record fields per use (no CSE merge) */
 #pragma opt_common_subs off
 void gameTextFn_80125ba4(int idx)
 {
@@ -334,7 +333,6 @@ void gameTextFn_80125ba4(int idx)
         {
             AudioStream_Play(*(int*)(base + off), AudioStream_StartPrepared);
         }
-        /* inner scope is load-bearing: keeping e declared here (not hoisted) sets decl order */
         {
             u8* e = &lbl_8031AF34[off];
             if (e[HEADREC_NPC_DIALOGUE] != 0)

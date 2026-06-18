@@ -102,7 +102,6 @@ typedef struct MmShrineAnimEvents
     u8 eventCount;
 } MmShrineAnimEvents;
 
-/* intentionally left open: every following fn compiles under these for matching */
 #pragma scheduling off
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj)
@@ -392,7 +391,6 @@ void ecsh_shrine_update(s16* obj)
     sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     *(EcshIntPair*)&t[0] = *(EcshIntPair*)&lbl_803E8470;
-    /* raw byte-offset sub[] accesses below are load-bearing for matching */
     if (sub[0x32] == 0)
     {
         gv = GameBit_Get(0x58b);

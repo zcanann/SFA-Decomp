@@ -52,7 +52,6 @@ extern f32 mathCosf(f32);
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 warpstoneUIState;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
 extern u8 lbl_803DD9AB;

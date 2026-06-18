@@ -136,7 +136,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     ((GameObject*)obj)->anim.velocityZ = dir[2];
     horizDist = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
         ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
-    *(s16*)obj = (s16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
+    ((GameObject*)obj)->anim.rotX = (s16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
     ((GameObject*)obj)->anim.rotY = -getAngle(((GameObject*)obj)->anim.velocityY, horizDist);
     ((GameObject*)obj)->anim.rotZ = 0;
     ObjHits_EnableObject(obj);
@@ -245,7 +245,7 @@ void drakormissile_update(int obj)
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
             int tmpAng = getAngle(*(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x2c));
-            *(s16*)obj = tmpAng;
+            ((GameObject*)obj)->anim.rotX = tmpAng;
             tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
             ((GameObject*)obj)->anim.rotY = tmpAng;
         }

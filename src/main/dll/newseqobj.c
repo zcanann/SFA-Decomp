@@ -22,7 +22,6 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 
-/* sidekick-toy data lives in the same DLL (dll_00C9_enemy / tricky) */
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
 extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
 
@@ -69,15 +68,6 @@ typedef struct
     u32 extra; /* 0xc */
 } SeqRow16;
 
-typedef struct
-{
-    f32 speed; /* 0x0 */
-    u32 unk4;  /* 0x4 */
-    u8 anim;   /* 0x8 */
-    u8 next;   /* 0x9 */
-    u8 alt;    /* 0xa */
-    u8 padB;   /* 0xb */
-} SeqRow12;
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {
@@ -260,7 +250,6 @@ void fn_80150EDC(void* p1, void* p2)
 
     fn_8015039C(p1, p2);
 
-    /* coloring: zero cached before conditional body */
     {
         f32 zero = lbl_803E2740;
         if (*(f32*)((u8*)p2 + 0x328) != zero &&
@@ -367,7 +356,6 @@ void fn_80150910(int* obj, u8* state)
         GameBit_Set(0x1c8, 1);
     }
     fn_8015039C(obj, state);
-    /* coloring: zero cached before conditional body */
     {
         f32 t = *(f32*)(state + 0x328);
         f32 z = lbl_803E2740;

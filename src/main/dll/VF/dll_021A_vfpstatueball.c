@@ -124,7 +124,7 @@ void vfpstatueball_update(int* obj)
             }
         }
 
-        *(s16*)obj = (s16)(*(s16*)obj + ((s32)timeDelta * 0x82));
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + ((s32)timeDelta * 0x82));
     }
 
     if ((state->active != 0) && (state->playActivateSfx != 0))

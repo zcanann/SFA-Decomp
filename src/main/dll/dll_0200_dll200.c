@@ -39,7 +39,6 @@ extern f32 lbl_803E5D98;
 #pragma dont_inline on
 void fn_801F20D4(int obj)
 {
-    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
     extern void*Obj_GetPlayerObject(void);
     extern int lbl_802C247C[];
     extern void buttonDisable(int a, int b);
@@ -98,7 +97,6 @@ void fn_801F20D4(int obj)
 #pragma dont_inline on
 void fn_801F27E4(int obj)
 {
-    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
     extern void*Obj_GetPlayerObject(void);
     extern int fn_80296A14(void);
     extern void buttonDisable(int a, int b);
@@ -357,8 +355,6 @@ typedef struct ArwAttachTarget
 
 void fn_801F2290(int obj)
 {
-    /* block-scope extern return types are load-bearing for codegen (recipe #57) */
-    /* fn_80137948(sArwingAttachmentDiffFormat, diff) is a retail debug-print remnant */
     extern void*Obj_GetPlayerObject(void);
     extern uint GameBit_Get(int id);
     extern void GameBit_Set(int slot, int val);

@@ -163,7 +163,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             rel = rel + 0xffff;
         }
-        *(s16*)obj = (s16)(*(s16*)(long)obj + rel * (u8)framesThisStep / 3);
+        ((GameObject*)obj)->anim.rotX = (s16)(*(s16*)(long)obj + rel * (u8)framesThisStep / 3);
     }
     return;
 }

@@ -69,7 +69,7 @@ extern void hudFn_8011f38c(int x);
 
 /* this TU sees the title-menu interface under a differently-named extern; alias
  * to the canonical name (block-scope extern reconciliation, recipe #57) */
-extern undefined4* gTitleMenuControlInterfaceCopy;
+extern u32* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern f32 lbl_803E59DC;
@@ -147,7 +147,6 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     }
 
     ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0xff;
-    /* always true: unk9D6 set to 0xff above; original source shape, do not simplify */
     if (((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 == 0xff)
     {
         stackHandle = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;

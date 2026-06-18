@@ -270,7 +270,6 @@ extern f32 playerMapOffsetZ;
 
 void mikabombshadow_update(int* obj);
 
-void staff_func0E(void);
 
 void staff_func0F(void);
 

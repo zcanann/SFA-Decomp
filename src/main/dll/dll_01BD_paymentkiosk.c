@@ -14,7 +14,6 @@
  * The TU also defines gFElevControlObjDescriptor for the FElevControl
  * (front-end elevator control) object, whose callbacks live in DBrockfall.
  */
-#include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

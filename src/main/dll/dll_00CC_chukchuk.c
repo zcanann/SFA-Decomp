@@ -16,7 +16,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
-#include "main/objanim_internal.h"
 
 /* sub->flags bits (see chukchukstate_struct.h) */
 #define CHUKCHUK_FLAG_PRIMED 0x1
@@ -79,7 +78,6 @@ void chukchuk_init(u8* obj, u8* params)
 void iceball_initialise(void);
 void iceball_release(void);
 void iceball_init(void* obj);
-void iceball_update(undefined2* obj, int unused);
 void iceball_hitDetect(void);
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void iceball_free(void);

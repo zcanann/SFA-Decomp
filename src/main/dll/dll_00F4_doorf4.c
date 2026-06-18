@@ -130,7 +130,7 @@ void doorf4_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)src)->posX;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)src)->posY;
         ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)src)->posZ;
-        *(s16*)obj = (s16)((s8) * (s8*)((char*)src + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)src + 0x18) << 8);
         type = ((GameObject*)obj)->anim.seqId;
         if (type == 0x151)
         {
@@ -164,7 +164,7 @@ void doorf4_init(int* obj, int* params)
     s16 type;
 
     ObjMsg_AllocQueue(obj, 4);
-    *(s16*)obj = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = (void*)doorf4_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     ((GameObject*)obj)->objectFlags |= 0x6000;

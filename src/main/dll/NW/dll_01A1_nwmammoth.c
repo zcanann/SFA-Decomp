@@ -1,22 +1,15 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
-#include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_01A1_nwmammoth.h"
-#include "main/objseq.h"
 #include "main/screen_transition.h"
-#include "main/dll/creator1D4.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/gameplay_runtime.h"
-#include "main/objanim.h"
-#include "main/objhits.h"
-#include "main/audio/sfx.h"
 #include "main/curve.h"
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 
-extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003a1c4();
@@ -673,8 +666,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
     }
 }
-
-/* segment pragma-stack balance (re-split): */
 
 void nw_mammoth_free(void* obj)
 {

@@ -34,7 +34,6 @@ extern f32 lbl_803E38A0;
 #define TRICKYWARP_OBJ_GROUP 0x4b
 #define ROMCURVE_TYPE_TRICKYWARP '$'
 
-int fn_8017FFD0(int obj, TrickyWarpState* state);
 
 void trickywarp_free(int obj)
 {

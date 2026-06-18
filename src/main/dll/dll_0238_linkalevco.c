@@ -18,7 +18,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/objseq.h"
 
-/* render scale; home TU unknown */
 extern f32 lbl_803E64D8;
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B

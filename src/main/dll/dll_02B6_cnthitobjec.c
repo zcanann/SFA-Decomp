@@ -140,7 +140,7 @@ void cnthitobjec_init(int obj, int setup)
     }
     if (setupData->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
-        *(s16*)obj = setupData->explosionSize;
+        ((GameObject*)obj)->anim.rotX = setupData->explosionSize;
     }
     else
     {

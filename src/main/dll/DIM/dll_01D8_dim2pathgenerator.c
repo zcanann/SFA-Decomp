@@ -88,7 +88,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define CURVE_GROUP_SNOWBALL_PATH   21
 #define OBJ_GROUP_SNOWBALL_POOL     47
 
-extern undefined4 FUN_800067c0();
 extern undefined8 ObjGroup_RemoveObject();
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 

@@ -25,7 +25,6 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 
-/* externs whose home TUs are the sibling object DLLs in this family */
 extern int randomGetRange(int min, int max);
 extern void FUN_8003b818(int);
 extern void ObjGroup_RemoveObject(int obj, int group);
@@ -38,7 +37,6 @@ extern f32 lbl_803E3430;
 
 void mikabomb_free(int obj, int mode);
 
-/* partial sig: only the trailing f32 scale arg is set up at this DLL's call sites */
 extern void objRenderFn_8003b8f4(f32);
 
 extern void kaldachompspit_free(void);
@@ -182,7 +180,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-/* sibling-DLL object callbacks wired into this DLL's descriptor tables */
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
 extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -798,4 +795,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

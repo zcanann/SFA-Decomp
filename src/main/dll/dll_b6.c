@@ -20,9 +20,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-/* player query (player_80295318) */
 extern void *Obj_GetPlayerObject(void);
-/* signatures below are spellings-for-match; canonical decls take int obj (player_80295318_shared.h) */
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(void *player);
 /* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
@@ -32,7 +30,6 @@ extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
 extern f32 PSVECMag(void *vec);
 extern float sqrtf(float x);
 
-/* lock-on tuning constants (this DLL's .sdata2) */
 extern f32 lbl_803E1644; /* vertical band lower bound */
 extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
 extern f32 lbl_803E1658; /* 1/5 move-average weight */
@@ -87,7 +84,6 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
            || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
            || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
            || (obj->objectFlags & 0x40)
-           /* embedded accept=1 inside the mask shift is matching-critical; the failure body clears it back to 0 */
            || (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->unkE4].flags & CAMCONTROL_TARGET_KIND_MASK))) == 0) {
             accept = 0;
         }

@@ -66,7 +66,7 @@ void ktlazerwall_free(int obj)
 void ktlazerwall_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s8)placement[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);
     ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898;
     ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0)

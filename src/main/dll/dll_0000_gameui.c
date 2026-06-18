@@ -39,7 +39,6 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
-/* ===== Externs ====================================================== */
 extern undefined4 ObjMsg_SendToObject();
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;

@@ -238,7 +238,7 @@ void CameraModeArwing_update(u8* obj)
             d += 0xffff;
         }
         step = (s32)((f32)d * timeDelta);
-        *(s16*)obj = (f32)step * lbl_803E1BAC + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = (f32)step * lbl_803E1BAC + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
@@ -280,7 +280,7 @@ void CameraModeArwing_update(u8* obj)
         {
             d += 0xffff;
         }
-        *(s16*)obj = (f32)d * timeDelta * lbl_803E1BAC + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = (f32)d * timeDelta * lbl_803E1BAC + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {

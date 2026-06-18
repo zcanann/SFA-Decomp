@@ -25,41 +25,40 @@ extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern void* PopDecodedAudioBuffer(s32 flags);
 extern void PushFreeAudioBuffer(void* buf);
-extern undefined4 GXSetTexCoordGen2();
-extern undefined4 GXSetNumTexGens();
-extern undefined4 GXSetCullMode();
-extern undefined4 GXInitTexObj();
-extern undefined4 GXInitTexObjLOD();
-extern undefined4 GXLoadTexObj();
-extern undefined4 GXSetNumIndStages();
-extern undefined4 GXSetTevDirect();
-extern undefined4 GXSetTevColorIn();
-extern undefined4 GXSetTevAlphaIn();
-extern undefined4 GXSetTevColorOp();
-extern undefined4 GXSetTevAlphaOp();
-extern undefined4 GXSetTevColorS10();
-extern undefined4 GXSetTevKColor();
-extern undefined4 GXSetTevKColorSel();
-extern undefined4 GXSetTevKAlphaSel();
-extern undefined4 GXSetTevSwapMode();
-extern undefined4 GXSetTevSwapModeTable();
-extern undefined4 GXSetAlphaCompare();
-extern undefined4 GXSetTevOrder();
-extern undefined4 GXSetNumTevStages();
-extern undefined4 GXSetBlendMode();
-extern undefined4 GXSetColorUpdate();
-extern undefined4 GXSetAlphaUpdate();
+extern u32 GXSetTexCoordGen2();
+extern u32 GXSetNumTexGens();
+extern u32 GXSetCullMode();
+extern u32 GXInitTexObj();
+extern u32 GXInitTexObjLOD();
+extern u32 GXLoadTexObj();
+extern u32 GXSetNumIndStages();
+extern u32 GXSetTevDirect();
+extern u32 GXSetTevColorIn();
+extern u32 GXSetTevAlphaIn();
+extern u32 GXSetTevColorOp();
+extern u32 GXSetTevAlphaOp();
+extern u32 GXSetTevColorS10();
+extern u32 GXSetTevKColor();
+extern u32 GXSetTevKColorSel();
+extern u32 GXSetTevKAlphaSel();
+extern u32 GXSetTevSwapMode();
+extern u32 GXSetTevSwapModeTable();
+extern u32 GXSetAlphaCompare();
+extern u32 GXSetTevOrder();
+extern u32 GXSetNumTevStages();
+extern u32 GXSetBlendMode();
+extern u32 GXSetColorUpdate();
+extern u32 GXSetAlphaUpdate();
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
-/* attract-movie globals (home TU: dll_3b / picmenu / dll_3e). */
 extern u16 gAttractMovieVolumeScale[];
-extern undefined4 lbl_803E1D30; /* TEV color-S10 / k-color constants */
-extern undefined4 lbl_803E1D34;
-extern undefined4 lbl_803E1D38;
-extern undefined4 lbl_803E1D3C;
-extern undefined4 lbl_803E1D40;
+extern u32 lbl_803E1D30; /* TEV color-S10 / k-color constants */
+extern u32 lbl_803E1D34;
+extern u32 lbl_803E1D38;
+extern u32 lbl_803E1D3C;
+extern u32 lbl_803E1D40;
 extern f32 lbl_803E1D44; /* texture LOD */
 extern s32 gAttractMovieState;
 extern s32 lbl_803DD660;       /* texture-set free queue active */
@@ -82,10 +81,10 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     u32 halfWidth;
     u32 halfHeight;
     double lod;
-    undefined4 kColor0;
-    undefined4 kColor1;
-    undefined4 kColor2;
-    undefined4 tevColorS10[2];
+    u32 kColor0;
+    u32 kColor1;
+    u32 kColor2;
+    u32 tevColorS10[2];
     GXTexObj yTexObj;
     GXTexObj uTexObj;
     GXTexObj vTexObj;
@@ -462,7 +461,7 @@ void fn_80118240(void)
     }
 }
 
-BOOL AttractMovie_DrawTextureCallback(int unused, undefined4* modelPtr, undefined4 renderOpIdx)
+BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx)
 {
     AttractMovieTextureSet* textureSet;
     u8* renderOp;

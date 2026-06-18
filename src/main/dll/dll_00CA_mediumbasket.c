@@ -655,7 +655,7 @@ int mediumbasket_updateSpinState(int obj, int state)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         sub->targetState = 4;
     }
-    *(s16*)obj = (s16)(lbl_803E2D5C *
+    ((GameObject*)obj)->anim.rotX = (s16)(lbl_803E2D5C *
         (((f32)((GroundBaddieState*)state)->baddie.turnRate * timeDelta) / lbl_803E2D60) +
         (f32) * (s16*)obj);
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
@@ -1309,7 +1309,7 @@ void mediumbasket_leaveWhirlpoolGroup(int obj, GroundBaddieState* state)
         ObjGroup_RemoveObject(obj, 80);
         state->baddie.inWhirlpoolGroup = 0;
     }
-    *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
+    *(u16*)obj = (float)(int)((GameObject*)obj)->anim.rotX - lbl_803E2CD8 * timeDelta;
 }
 
 void mediumbasket_enterWhirlpoolGroup(int obj, GroundBaddieState* state)

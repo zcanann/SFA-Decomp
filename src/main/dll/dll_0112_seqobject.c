@@ -18,7 +18,6 @@
 #include "main/objseq.h"
 
 extern void warpToMap(int id, int flags);
-/* #57: empty-param form is load-bearing -- call sites pass an int* obj; the typed (uint,int) signature rejects it */
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(f32);
@@ -232,4 +231,3 @@ void seqobject_update(int* obj)
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }
 }
-

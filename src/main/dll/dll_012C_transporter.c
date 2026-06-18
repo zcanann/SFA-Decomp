@@ -25,7 +25,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-/* gameplay_runtime / dll_80220608_shared / sky / player TUs */
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int dirIdx, int v);
 extern int mapGetDirIdx(int mapId);
@@ -318,7 +317,6 @@ void transporter_render(void)
 {
 }
 
-/* Tail `flags & 0x40` store is redundant with the unconditional prologue store. */
 void transporter_init(int obj, u8* params)
 {
     WarpPadPlacement* placement;

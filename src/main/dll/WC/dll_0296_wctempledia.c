@@ -207,7 +207,7 @@ void wctempledia_init(int obj, int setup)
     WCTempleDiaSetup* setupData = (WCTempleDiaSetup*)setup;
     int i;
 
-    *(s16*)obj = (s16)(setupData->type << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(setupData->type << 8);
     *(u8*)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {

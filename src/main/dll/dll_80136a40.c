@@ -62,10 +62,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
-extern void* minimapTexture;
-extern void* lbl_803DD940;
 
-extern u8 warpstoneUIState;
 extern void titlescreen_free(u8 * obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
@@ -73,7 +70,6 @@ extern void titlescreen_init(u8 * obj, u8 * p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
 extern f32 lbl_803E23E8;
-extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern f32 lbl_803E23B8;
 extern f32 lbl_803DD9D8;
@@ -96,7 +92,6 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
-extern void* lbl_803DD984;
 extern f32 timeDelta;
 extern u32 lbl_803DDA00;
 extern u32 lbl_803DDA08;

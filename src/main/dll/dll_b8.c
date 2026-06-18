@@ -19,7 +19,6 @@ void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
     CameraViewSlot* vs;
     f32 blendProgress;
 
-    /* return discarded intentionally — call is load-bearing for matching */
     Camera_GetCurrentViewSlot();
     blendProgress = gCamcontrolNormalizedMax;
     CAMCONTROL_CAMERA->blendProgress = blendProgress;

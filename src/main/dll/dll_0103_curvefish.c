@@ -267,7 +267,7 @@ void curvefish_update(int obj)
         ((GameObject*)obj)->anim.localPosZ += dz * state->speed;
 
         targetYaw = getAngle(dx, dz);
-        yawDelta = targetYaw - ((u16)(*(s16*)obj));
+        yawDelta = targetYaw - ((u16)(((GameObject*)obj)->anim.rotX));
         if (yawDelta > 0x8000)
         {
             yawDelta -= 0xffff;

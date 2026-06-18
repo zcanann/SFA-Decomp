@@ -326,7 +326,7 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     ((TrickyState*)state)->unk5A = targetYaw;
 
     delta = (u16)(s16)targetYaw;
-    currentYaw = *(s16*)obj;
+    currentYaw = ((GameObject*)obj)->anim.rotX;
     delta = currentYaw - delta;
     if (delta > 0x8000)
     {
@@ -357,25 +357,25 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     }
     else
     {
-        *(s16*)obj = targetYaw;
+        ((GameObject*)obj)->anim.rotX = targetYaw;
         return 0;
     }
 
     if (delta > 0x200)
     {
         step = (s32)(lbl_803E2450 * timeDelta);
-        *(s16*)obj = currentYaw - step;
+        ((GameObject*)obj)->anim.rotX = currentYaw - step;
         ((TrickyState*)state)->stateFlags |= 0x10000000LL;
     }
     else if (delta < -0x200)
     {
         step = (s32)(lbl_803E2450 * timeDelta);
-        *(s16*)obj = currentYaw + step;
+        ((GameObject*)obj)->anim.rotX = currentYaw + step;
         ((TrickyState*)state)->stateFlags |= 0x10000000LL;
     }
     else
     {
-        *(s16*)obj = targetYaw;
+        ((GameObject*)obj)->anim.rotX = targetYaw;
     }
 
     return delta;
@@ -603,7 +603,7 @@ int trickyMove(u8* obj, f32* targetPos)
         return 1;
     }
 
-    previousYaw = *(s16*)obj;
+    previousYaw = ((GameObject*)obj)->anim.rotX;
     turnDelta = 0;
     skeetla_updateFacingFromMoveVector(obj, &turnDelta);
     td = turnDelta;
@@ -652,7 +652,7 @@ int trickyMove(u8* obj, f32* targetPos)
                     animId = 10;
                 }
             }
-            *(s16*)obj = previousYaw;
+            ((GameObject*)obj)->anim.rotX = previousYaw;
             objAnimFn_8013a3f0(lbl_803E2478, (int)obj, animId, 0x1000100);
         }
     }
@@ -1114,7 +1114,7 @@ void skeetla_spawnLinkedSparks(u8* obj)
     args.x = ((TrickyState*)state)->unk3D8;
     args.y = ((TrickyState*)state)->unk3DC;
     args.z = ((TrickyState*)state)->unk3E0;
-    args.objectId = *(s16*)obj;
+    args.objectId = ((GameObject*)obj)->anim.rotX;
     if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_A)
     {
         args.sourceId =
@@ -1144,7 +1144,7 @@ void skeetla_spawnLinkedSparks(u8* obj)
     args.x = ((TrickyState*)state)->unk3E4;
     args.y = ((TrickyState*)state)->unk3E8;
     args.z = ((TrickyState*)state)->unk3EC;
-    args.objectId = *(s16*)obj;
+    args.objectId = ((GameObject*)obj)->anim.rotX;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)
     {

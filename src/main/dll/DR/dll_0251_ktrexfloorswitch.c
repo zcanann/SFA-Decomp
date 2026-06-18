@@ -113,7 +113,7 @@ void ktrexfloorswitch_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
     int curve;
-    *(s16*)obj = (s16)(((u8*)placement)[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((u8*)placement)[0x18] << 8);
     ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((u8*)placement)[0x19];
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->unkF8 = 1;

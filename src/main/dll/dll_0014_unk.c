@@ -23,19 +23,15 @@
  * it owns no game objects of its own.
  */
 #include "main/dll/objfsa_romcurve.h"
-#include "main/dll/savedata_struct.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 
 extern void OSReport(const char* fmt, ...);
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
-#include "main/dll/curve_walker.h"
 
-#include "main/dll/rom_curve_segment_projection.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 
@@ -43,11 +39,7 @@ extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7,
                               int p8, int p9, int p10);
-extern RomCurveDef* RomCurve_findByIdWithIndex(uint curveId, int* outIndex);
 extern int mathFn_800dbff0(float* point);
-extern RomCurveDef *romCurves[0x514];
-extern int nRomCurves;
-extern f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
 extern f32 sqrtf(f32 x);
 extern uint countLeadingZeros();
 extern void voxmaps_worldToGrid(f32 * world, s16 * grid);
@@ -119,7 +111,6 @@ extern f32 lbl_803E05F4;
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
@@ -134,7 +125,6 @@ extern f32 lbl_803E0648;
 extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;
 extern f32 lbl_803E0654;
-extern int curveFn_800da23c(RomCurveWalker* state, void* targetCurve);
 extern f32 lbl_803E05F8;
 extern void mapBlockFn_80059c2c(u8 * outFlags);
 extern f32 lbl_803E0600;

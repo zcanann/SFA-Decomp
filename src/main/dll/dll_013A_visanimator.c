@@ -41,7 +41,6 @@ void visanimator_initialise(void)
 int visanimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
 int visanimator_getObjectTypeId(void) { return 0x0; }
 
-/* No reset: these cover both visanimator_init and visanimator_update (#1). */
 #pragma scheduling off
 #pragma peephole off
 void visanimator_init(int* obj, int* desc)

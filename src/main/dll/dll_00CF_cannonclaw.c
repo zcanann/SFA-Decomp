@@ -17,7 +17,6 @@
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 
-/* Grimble state-handler dispatch tables (.bss); populated below. */
 extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
 
@@ -127,7 +126,6 @@ void cannonclaw_initialise(void)
 {
 }
 
-/* TumbleWeedBush object callbacks; bodies live in their own TU. */
 void tumbleweedbush_free(void);
 void tumbleweedbush_hitDetect(void);
 void tumbleweedbush_release(void);

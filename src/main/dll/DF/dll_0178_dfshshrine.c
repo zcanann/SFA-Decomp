@@ -89,7 +89,7 @@ void fn_801C2914(int obj)
     player = Obj_GetPlayerObject();
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
     {
-        *(s16*)obj = 0;
+        ((GameObject*)obj)->anim.rotX = 0;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
         return;
     }
@@ -130,7 +130,7 @@ void fn_801C2914(int obj)
             angleDelta += 0xffff;
         }
         turnStep = (s32)(((f32)angleDelta * timeDelta) / lbl_803E4E70);
-        *(s16*)obj += turnStep;
+        ((GameObject*)obj)->anim.rotX += turnStep;
 
         distance = Vec_xzDistance((void*)(obj + 0x18), player + 0x18);
         if (distance <= lbl_803E4E74)
@@ -515,7 +515,7 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
     DfshShrineState* state;
 
     state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)(init->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(init->initialYaw << 8);
     state->startDelayFrames = 0xa;
     if (init->startDelay > 0)
     {

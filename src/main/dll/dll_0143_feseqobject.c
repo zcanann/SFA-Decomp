@@ -186,20 +186,13 @@ void FEseqobject_initialise(void)
 {
 }
 
-void FElevControl_free(void);
 
-void FElevControl_hitDetect(void);
 
-void FElevControl_update(void);
 
-void FElevControl_release(void);
 
-void FElevControl_initialise(void);
 
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
-int FElevControl_getExtraSize(void);
-int FElevControl_getObjectTypeId(void);
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -207,9 +200,7 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4);
 }
 
-void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void FElevControl_init(int x);
 
 /*
  * Function: FEseqobject_init
@@ -238,7 +229,6 @@ void FEseqobject_update(int obj)
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
-int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * Function: dll_144_init

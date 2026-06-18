@@ -71,7 +71,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     DimWoodDoor2State* sub;
     ObjHitsPriorityState* hitState;
     f32 fz;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
+    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);

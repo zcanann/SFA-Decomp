@@ -140,7 +140,6 @@ void ecsh_creator_update(GameObject* obj)
         ret = Obj_SetupObject(p, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
         if ((u32)ret != 0)
         {
-            /* byte at +0x404 in the spawned shrine's extra state block */
             *(u8*)(*(int*)&((GameObject*)ret)->extra + 0x404) = 0x20;
         }
         state->countdown = ECSH_COUNTDOWN_START;

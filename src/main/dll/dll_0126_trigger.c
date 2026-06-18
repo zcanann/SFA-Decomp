@@ -90,7 +90,6 @@ STATIC_ASSERT(offsetof(TriggerState, unk80) == 0x80);
 STATIC_ASSERT(offsetof(TriggerState, unk82) == 0x82);
 STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
 
-/* getLActions: called for its side effects; return value discarded */
 extern int getLActions();
 extern int objFn_80198fa4();
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
@@ -136,7 +135,6 @@ extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
 extern void goToNextMapLayer(void);
 extern void goToPrevMapLayer(void);
-/* unnamed f32 constants from the shared .sdata2 pool */
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
@@ -200,7 +198,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = t * t;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
-        *(s16*)obj = (s16)(params[0x3d] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
@@ -212,7 +210,7 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->unk4 = ((TriggerState*)sub)->unk4 * ((TriggerState*)sub)->unk4;
         break;
     case 0x4d:
-        *(s16*)obj = (s16)(params[0x3d] << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rotY = (s16)(params[0x3e] << 8);
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
@@ -263,7 +261,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     int first;
     u16 id;
 
-    /* goto next/run reproduce the target's branch layout across the dispatch switch; required for matching */
     while (i < 8)
     {
         if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0))
@@ -615,7 +612,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
-                    d = *(s16*)obj - (u16) * (s16*)t;
+                    d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t;
                     if (d > 0x8000)
                     {
                         d = (d - 0x10000) + 1;
@@ -632,12 +629,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     if (ang > 0x4000)
                     {
                         (*gMapEventInterface)->savePoint(obj + 0xc,
-                                                            (int)(s16)(*(s16*)obj + 0x8000),
+                                                            (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000),
                                                             p[3], getCurMapLayer());
                     }
                     else
                     {
-                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)*(s16*)obj,
+                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX,
                                                             p[3], getCurMapLayer());
                     }
                     break;
@@ -655,7 +652,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     switch (((ObjInterpretSeqPlacement*)p)->unk2)
                     {
                     case 0:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
                                                                     getCurMapLayer(), 0);
                         break;
                     case 1:
@@ -665,7 +662,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*gMapEventInterface)->gotoRestartPoint();
                         break;
                     case 3:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)*(s16*)obj,
+                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
                                                                     getCurMapLayer(), 1);
                         break;
                     }
@@ -932,7 +929,6 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x4e:
-                    /* int* launder re-derives unk8 to defeat CSE and match the target (CLAUDE.md #114/#106) */
                     ((TriggerState*)state)->unk8 = *(int*)&((TriggerState*)state)->unk8 + framesThisStep;
                     if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->unk8)
                     {

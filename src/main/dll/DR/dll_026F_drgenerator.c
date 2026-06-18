@@ -104,7 +104,7 @@ void drgenerator_init(int obj, char* arg)
     ObjGroup_AddObject(obj, 0x3);
     *(int*)p = 0;
     ((BitFlags8*)(p + 0x19b))->b3 = 1;
-    *(s16*)obj = (s16)((s8)arg[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
     {
         int duration = *(s16*)(arg + 0x1a);
         switch (duration)

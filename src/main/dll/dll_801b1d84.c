@@ -1,11 +1,6 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
-#include "ghidra_import.h"
 
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIMExplosion.h"
 
 typedef struct DIMwooddoorUpdateFallingDebrisState
 {
@@ -49,7 +44,6 @@ extern f32 lbl_803DBEF0;
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-extern int* getTrickyObject(void);
 
 void DIMwooddoor_updateFallingDebris(int* obj)
 {

@@ -83,7 +83,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     kaldachompme_getExtraSize,
 };
 
-/* Whole TU compiles with scheduling and peephole off (no reset follows). */
 #pragma scheduling off
 #pragma peephole off
 void kaldachompspit_hitDetect(void)

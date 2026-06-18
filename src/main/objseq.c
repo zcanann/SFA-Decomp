@@ -4900,7 +4900,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
     if ((((u32)((ObjSeqState*)seq)->unk136[0] >> 2) & 1U) != 0U)
     {
         player = Obj_GetPlayerObject();
-        (*gMapEventInterface)->savePoint((int)(player + 0xc), *(s16*)player, 0,
+        (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0,
                                             getCurMapLayer());
         clearBit = 0;
         {

@@ -51,7 +51,6 @@ extern int playerHasKrazoaSpirit();
 extern void hudDrawMagicBar(int alpha, int p2, int p3);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 
-/* ramped/clamped fade for the viewfinder HUD */
 extern f32 gViewFinderFadeLevel;
 
 extern u8 gameUiResourcesLoaded;

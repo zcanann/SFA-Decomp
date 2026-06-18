@@ -93,7 +93,7 @@ void drearthcal_update(int obj)
 
 void drearthcal_init(int obj, int setup)
 {
-    *(s16*)obj = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
     *(u16*)(obj + DREARTHCAL_OBJECT_FLAGS_B0) |= DREARTHCAL_INIT_FLAGS;
 }
 #pragma scheduling on

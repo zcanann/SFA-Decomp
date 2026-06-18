@@ -39,7 +39,6 @@
 
 #pragma dont_inline on
 
-/* engine helpers and this DLL's read-only float pool (lbl_803E2A**) */
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern void* Obj_AllocObjectSetup();
@@ -62,7 +61,7 @@ extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern void fn_80293018(int angle, float* outSin, float* outCos);
 extern uint fn_80295CBC();
 
-extern undefined4 lbl_8031F2F8;
+extern u32 lbl_8031F2F8;
 extern u8 lbl_8031F318[];
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
@@ -254,7 +253,7 @@ void fn_801554B4(int* obj, int state)
     }
 }
 
-void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
+void rachnopUpdateWhileFrozen(uint obj, int state, u32 unused, int eventKind)
 {
     if (eventKind == 0x10)
     {
@@ -364,13 +363,13 @@ void fn_80155948(int* obj, int state)
     return;
 }
 
-void rachnopInit(undefined4 unused, int state)
+void rachnopInit(u32 unused, int state)
 {
     float fa;
     float fb;
 
     ((BaddieState*)state)->speedScale = lbl_803E2A34;
-    *(undefined4*)&((BaddieState*)state)->unk2E4 = 1;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     fa = lbl_803E2A38;
     ((BaddieState*)state)->unk308 = lbl_803E2A38;
     ((BaddieState*)state)->unk300 = fa;
@@ -394,7 +393,7 @@ void pollenFn_80155b10(uint obj, int state)
 {
     uint loadLocked;
     int ref;
-    undefined2* setup;
+    u16* setup;
     f32 spd;
     f32 t;
     f32 dx;
@@ -443,10 +442,10 @@ void pollenFn_80155b10(uint obj, int state)
         *(float*)(setup + 4) = a[0];
         *(float*)(setup + 6) = a[1];
         *(float*)(setup + 8) = a[2];
-        *(undefined*)(setup + 2) = 1;
-        *(undefined*)((int)setup + 5) = 1;
-        *(undefined*)(setup + 3) = 0xff;
-        *(undefined*)((int)setup + 7) = 0xff;
+        *(u8*)(setup + 2) = 1;
+        *(u8*)((int)setup + 5) = 1;
+        *(u8*)(setup + 3) = 0xff;
+        *(u8*)((int)setup + 7) = 0xff;
         ref = Obj_SetupObject(setup, 5, -1, -1, 0);
         if ((void*)ref != NULL)
         {
@@ -489,7 +488,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
     return;
 }
 
-void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 unused1, int eventKind, undefined4 unused2,
+void baddieUpdateWhileFrozen_80155e10(uint obj, int state, u32 unused1, int eventKind, u32 unused2,
                                       int damage)
 {
     if (eventKind == 0x10)
@@ -594,13 +593,13 @@ void fn_80156010(uint obj, int state)
     return;
 }
 
-void baddieInit_80156188(undefined4 unused, int state)
+void baddieInit_80156188(u32 unused, int state)
 {
     float fa;
     float fb;
 
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
-    *(undefined4*)&((BaddieState*)state)->unk2E4 = 1;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
@@ -618,7 +617,7 @@ void baddieInit_80156188(undefined4 unused, int state)
     return;
 }
 
-void wbUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
+void wbUpdateWhileFrozen(uint obj, int state, u32 unused, int eventKind)
 {
     if (eventKind != 0x11)
     {
@@ -846,13 +845,13 @@ void fn_8015652C(uint obj, int state)
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
-void wbInit(undefined4 unused, int state)
+void wbInit(u32 unused, int state)
 {
     float fa;
     uint ua;
 
     ((BaddieState*)state)->speedScale = lbl_803E2AE8;
-    *(undefined4*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
     ((BaddieState*)state)->unk308 = lbl_803E2ACC;
     ((BaddieState*)state)->unk300 = lbl_803E2AEC;
     ((BaddieState*)state)->unk304 = lbl_803E2AF0;
@@ -919,7 +918,7 @@ void fn_80156950(uint obj, int state)
     return;
 }
 
-void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
+void mutatedEbaUpdateWhileFrozen(uint obj, int state, u32 unused, int eventKind)
 {
     int move;
 
@@ -1007,12 +1006,12 @@ void fn_80156C34(uint obj, int state)
     return;
 }
 
-void mutatedEbaInit(undefined4 unused, int state)
+void mutatedEbaInit(u32 unused, int state)
 {
     float fa;
 
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
-    *(undefined4*)&((BaddieState*)state)->unk2E4 = 0x46001;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
@@ -1028,7 +1027,7 @@ void mutatedEbaInit(undefined4 unused, int state)
     return;
 }
 
-void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 unused, int eventKind)
+void hoodedZyckUpdateWhileFrozen(uint obj, int state, u32 unused, int eventKind)
 {
     if (eventKind == 0x10)
     {
@@ -1097,7 +1096,7 @@ void fn_80156DA0(int obj, int state)
             {
                 if (((GameObject*)obj)->anim.currentMove == 0)
                 {
-                    *(undefined2*)(state + 0x338) = 0;
+                    *(u16*)(state + 0x338) = 0;
                     Baddie_SetMove(obj, state, 0, lbl_803E2AC8, 0, 1);
                 }
                 else
@@ -1109,7 +1108,7 @@ void fn_80156DA0(int obj, int state)
                     ((GameObject*)obj)->anim.velocityY = fz;
                     ((GameObject*)obj)->anim.velocityZ = fz;
                     randBit = (ushort)randomGetRange(0, 1);
-                    *(undefined2*)(state + 0x338) = (ushort)((randBit - 1) * 0x12c);
+                    *(u16*)(state + 0x338) = (ushort)((randBit - 1) * 0x12c);
                 }
             }
         }

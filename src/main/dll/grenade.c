@@ -610,7 +610,7 @@ void trickyFn_80142524(u8* obj, u8* state)
         ((GameObject*)obj)->anim.worldPosY = *(f32*)(found + 0x1c);
         ((GameObject*)obj)->anim.worldPosZ = *(f32*)(found + 0x20);
         ObjHits_SyncObjectPosition((int)obj);
-        *(s16*)obj = *(s16*)found;
+        ((GameObject*)obj)->anim.rotX = *(s16*)found;
         state[9] = 0;
         z = lbl_803E23DC;
         ((TrickyState*)state)->prevSpeed = z;
@@ -943,7 +943,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     return 1;
 }
 
-undefined4 trickyFn_80143210(int obj, int* trickyState)
+u32 trickyFn_80143210(int obj, int* trickyState)
 {
     short move;
     int foodResult;
@@ -972,7 +972,7 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_801432cc(int obj, int* trickyState)
+u32 trickyFn_801432cc(int obj, int* trickyState)
 {
     short move;
     int foodResult;
@@ -1001,7 +1001,7 @@ undefined4 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_80143388(int obj, int* trickyState)
+u32 trickyFn_80143388(int obj, int* trickyState)
 {
     int val;
     int ref;
@@ -1254,7 +1254,7 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
     return 1;
 }
 
-undefined4 trickyFn_80143b04(int obj, int* trickyState)
+u32 trickyFn_80143b04(int obj, int* trickyState)
 {
     int val;
 
@@ -1273,7 +1273,7 @@ undefined4 trickyFn_80143b04(int obj, int* trickyState)
     return 1;
 }
 
-undefined4 trickyFn_80143b78(int obj, int* trickyState)
+u32 trickyFn_80143b78(int obj, int* trickyState)
 {
     int val;
 
@@ -1374,7 +1374,7 @@ int trickyFn_80143c04(int obj, int state)
 }
 
 
-undefined4 fn_80143DD4(int obj, int* trickyState)
+u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
     uint bitVal;
@@ -1527,7 +1527,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         break;
     case 1:
         sv = randomGetRange(0x20, 0xff);
-        ang = lbl_803E2454 * (f32)(s16)((*(s16*)obj + sv) * 0x100) / lbl_803E2458;
+        ang = lbl_803E2454 * (f32)(s16)((((GameObject*)obj)->anim.rotX + sv) * 0x100) / lbl_803E2458;
         ((TrickyState*)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
         *(f32*)&((TrickyState*)state)->unk730 = ((GameObject*)obj)->anim.localPosY;
         ((TrickyState*)state)->unk734 = (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);

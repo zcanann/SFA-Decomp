@@ -1,5 +1,4 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
-#include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
@@ -11,28 +10,16 @@ extern float mathCosf(float x);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-#include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
-#include "main/camera_object.h"
 #include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
-#include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
-#include "main/objanim.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct Dll19Placement
@@ -1109,18 +1096,6 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     }
 }
 
-/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
-/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-
-/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-
-/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
-/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-
-/* segment pragma-stack balance (re-split): */
-
 int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
 {
     extern int* gPlayerInterface;
@@ -1497,4 +1472,3 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
 
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

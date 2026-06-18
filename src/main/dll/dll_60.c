@@ -16,7 +16,6 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/game_object.h"
 
-/* combat-camera shared blend state + tuning constants (this TU only) */
 extern CameraModeCombatState* DAT_803de1e0;
 extern f32 lbl_803DC074;     /* per-frame blend-step scale */
 extern f32 lbl_803E2540;     /* blend weight reset value */

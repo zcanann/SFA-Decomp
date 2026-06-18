@@ -34,7 +34,7 @@ void magiccavebottom_update(int* obj)
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;
 
-    *(s16*)obj = (s16)((s32)def[0x1a] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     switch (*sub)
     {
     case 0:

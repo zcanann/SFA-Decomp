@@ -51,7 +51,6 @@ extern f32 timeDelta;
 extern char lbl_803AD088[];
 extern int lbl_8032852C[];
 
-/* tuning constants owned by this DLL (.data/.sdata2) */
 extern int lbl_803DC0BC;
 extern f32 lbl_803DC0C8;
 extern int lbl_803DC0CC;

@@ -56,7 +56,6 @@ extern f32 lbl_803E3F58; /* G ramp base */
 extern f32 lbl_803E3F5C; /* G ramp slope */
 extern f32 lbl_803E3F60; /* B ramp base */
 extern f32 lbl_803E3F64; /* B ramp slope */
-/* 0x803E3F68 is the f64 int->float conversion bias MWCC materializes in fn_801923F8 (no source extern). */
 extern f32 lbl_803E3F70; /* model scale */
 
 void fn_801923F8(int* cfgArg);
@@ -154,15 +153,15 @@ void fn_801923F8(int* cfgArg)
                 if (v < colorSplitZero)
                 {
                     f32 t = (v - cfg->minHeight) / negMin;
-                    ((s8*)lbl_803DDAEC)[colorIdx] = (s32)(lbl_803E3F54 * t + lbl_803E3F50);
-                    ((s8*)lbl_803DDAEC)[colorIdx + 1] = (s32)(lbl_803E3F5C * t + lbl_803E3F58);
-                    ((s8*)lbl_803DDAEC)[colorIdx + 2] = (s32)(lbl_803E3F64 * t + lbl_803E3F60);
+                    ((u8*)lbl_803DDAEC)[colorIdx] = (s32)(lbl_803E3F54 * t + lbl_803E3F50);
+                    ((u8*)lbl_803DDAEC)[colorIdx + 1] = (s32)(lbl_803E3F5C * t + lbl_803E3F58);
+                    ((u8*)lbl_803DDAEC)[colorIdx + 2] = (s32)(lbl_803E3F64 * t + lbl_803E3F60);
                 }
                 else
                 {
-                    ((s8*)lbl_803DDAEC)[colorIdx] = 255;
-                    ((s8*)lbl_803DDAEC)[colorIdx + 1] = 255;
-                    ((s8*)lbl_803DDAEC)[colorIdx + 2] = 255;
+                    ((u8*)lbl_803DDAEC)[colorIdx] = 255;
+                    ((u8*)lbl_803DDAEC)[colorIdx + 1] = 255;
+                    ((u8*)lbl_803DDAEC)[colorIdx + 2] = 255;
                 }
                 colorSrcIdx++;
                 colorIdx += 3;

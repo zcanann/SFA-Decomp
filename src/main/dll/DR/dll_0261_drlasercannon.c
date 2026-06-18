@@ -347,7 +347,7 @@ void drlasercannon_init(int obj, char* arg)
     ObjGroup_AddObject(obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;
     state->flags.b3 = 0;
-    *(s16*)obj = (s16)(setup->initialYaw << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->initialYaw << 8);
     state->trickyCooldown = DR_LASERCANNON_TRICKY_COOLDOWN;
     state->animStepScale = lbl_803E6920;
     if (GameBit_Get(setup->destroyedGameBit) != 0)
@@ -539,7 +539,7 @@ void drlasercannon_update(int obj)
         else
         {
             s16* v;
-            *(s16*)obj += lbl_803DC2AC;
+            ((GameObject*)obj)->anim.rotX += lbl_803DC2AC;
             v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
             v[0] = (s16)(v[0] >> 1);
         }

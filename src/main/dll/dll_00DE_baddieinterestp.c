@@ -295,7 +295,6 @@ void baddieinterestp_initialise(void)
 {
 }
 
-void staff_func0E(void);
 
 void staff_func0F(void);
 

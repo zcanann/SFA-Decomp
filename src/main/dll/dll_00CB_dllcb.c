@@ -398,7 +398,7 @@ void dll_CB_update(int* obj)
         }
     }
     sub->baddie.animSpeedA = lbl_803E2E98;
-    *(s16*)obj = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
+    ((GameObject*)obj)->anim.rotX = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
     ((GameObject*)obj)->anim.rotY = (s16)(getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) + 0x4000);
     ((GameObject*)obj)->anim.rotZ = (s16)(getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) + 0x4000);
     ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)path + 0x68);

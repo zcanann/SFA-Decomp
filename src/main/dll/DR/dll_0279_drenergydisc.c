@@ -82,7 +82,7 @@ void drenergydisc_init(u8* obj, u8* setup)
     s16 spawnRotX;
 
     spawnRotX = (s16)((s8)setup[0x18] << 8);
-    *(s16*)obj = spawnRotX;
+    ((GameObject*)obj)->anim.rotX = spawnRotX;
     if ((u32)GameBit_Get(*(s16*)(setup + 0x20)) != 0)
     {
         state->activated = 1;

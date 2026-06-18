@@ -70,7 +70,6 @@ STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
-/* current-tuning float constants local to this TU's .sdata2 */
 extern const f32 lbl_803E72B4;
 extern const f32 lbl_803E72B8;
 extern const f32 lbl_803E72BC;

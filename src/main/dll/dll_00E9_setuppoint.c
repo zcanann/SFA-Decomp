@@ -319,7 +319,6 @@ ObjectDescriptor gMikaBombShadowObjDescriptor = {
     mikabombshadow_getExtraSize,
 };
 
-/* StaticCamera_* callbacks live in the staticcamera DLL, not the local staticCamera_* stubs. */
 ObjectDescriptor gStaticCameraObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)StaticCamera_initialise,

@@ -76,7 +76,6 @@ void ShipBattle_initialise(void)
 int ShipBattle_getExtraSize(void) { return 0x140; }
 int ShipBattle_getObjectTypeId(void) { return SHIPBATTLE_OBJECT_TYPE_ID; }
 
-/* int* not int: pointer param colors copy-class (CLAUDE.md #126) */
 void ShipBattle_free(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -144,7 +143,6 @@ light_setup:
     *(u8*)&lbl_803DDC50[1] = 0;
 }
 
-/* int* not int: pointer param colors copy-class (CLAUDE.md #126) */
 void ShipBattle_render(int* obj)
 {
     objRenderFn_8003b8f4(lbl_803E595C);

@@ -175,7 +175,7 @@ void cfpowerbase_init(int* obj, u8* params)
 {
     CfPowerBaseState* sub = ((GameObject*)obj)->extra;
     s16 type;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     sub->typeBit = *(s16*)(params + 0x1e);
     type = sub->typeBit;
     switch (type)

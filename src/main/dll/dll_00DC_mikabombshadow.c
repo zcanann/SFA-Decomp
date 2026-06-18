@@ -7,7 +7,6 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -16,7 +15,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -970,8 +968,6 @@ void FUN_80170048(void)
     return;
 }
 
-
-
 void mikabombshadow_update(int* obj)
 {
     int* owner;
@@ -986,7 +982,6 @@ void mikabombshadow_update(int* obj)
     if (f > fz) f = fz;
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * f;
 }
-
 
 void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -1115,8 +1110,6 @@ LAB_801725bc:
     return;
 }
 
-
-
 void mikabombshadow_free(void)
 {
 }
@@ -1133,21 +1126,7 @@ void mikabombshadow_initialise(void)
 {
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1179,17 +1158,6 @@ void shield_initialise(void);
 
 void shield_free(int obj);
 
-
-
-
-
-
-
-
-
-
-
-
 int mikabombshadow_getExtraSize(void) { return 0x4; }
 int mikabombshadow_getObjectTypeId(void) { return 0x0; }
 int animatedobj_getExtraSize(void);
@@ -1207,7 +1175,6 @@ int shield_getObjectTypeId(void);
 void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1608,10 +1575,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
-
 
 void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1624,7 +1588,6 @@ void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
 
 void fireball_free(int* obj);
 
@@ -1671,7 +1634,6 @@ void animatedobj_init(int* obj, int* params);
 
 void flamethrowerspe_update(int* obj);
 
-
 void mikabomb_init(int* obj);
 
 void fireball_init(int* obj);
@@ -1689,7 +1651,6 @@ void staff_hitDetectGeometry(int* obj);
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
-/* Unreferenced in this TU; present for the opt_common_subs pragma-state / sibling-DLL data layout, not for direct calls. */
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
 {
     GXWGFifo.f32 = x;
@@ -1714,4 +1675,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 #pragma opt_common_subs off
 
 void staff_update(int* obj);
-

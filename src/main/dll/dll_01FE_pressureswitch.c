@@ -102,7 +102,7 @@ void pressureswitch_init(int* obj, u8* init)
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)PressureSwitch_SeqFn;
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     sub->retriggerTimer = (s16)(*(s16*)(init + 0x1e) * 0x3c);
     sub->chimeLatch = 0;
     mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);

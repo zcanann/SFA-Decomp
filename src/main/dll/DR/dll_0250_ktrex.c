@@ -740,16 +740,16 @@ int ktrex_stateHandlerB03(int obj, int runtime)
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
         ((KTRexRuntime*)runtime)->unk284 = z;
-        ((KTRexArenaState*)gKTRexState)->homeYaw = *(s16*)obj;
+        ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }
     if (dir != 0)
     {
-        *(s16*)obj = lbl_803E6814 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
+        ((GameObject*)obj)->anim.rotX = lbl_803E6814 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
             (KTRexArenaState*)gKTRexState)->homeYaw;
     }
     else
     {
-        *(s16*)obj = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E6814 * ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E6814 * ((GameObject*)obj)->anim.
             currentMoveProgress;
     }
     return 0;
@@ -846,7 +846,7 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     {
         ObjAnim_SetCurrentMove(obj, lbl_8032A510[((KTRexArenaState*)gKTRexState)->unkFC * 2 + dir], lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->unk2A0 = lbl_8032A528[((KTRexArenaState*)gKTRexState)->unkFC];
-        ((KTRexArenaState*)gKTRexState)->homeYaw = *(s16*)obj;
+        ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 4) != 0)
     {
@@ -882,12 +882,12 @@ int ktrex_stateHandlerB02(int obj, int runtime)
                           &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
     if (dir != 0)
     {
-        *(s16*)obj = lbl_803E681C * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
+        ((GameObject*)obj)->anim.rotX = lbl_803E681C * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
             (KTRexArenaState*)gKTRexState)->homeYaw;
     }
     else
     {
-        *(s16*)obj = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E681C * ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E681C * ((GameObject*)obj)->anim.
             currentMoveProgress;
     }
     return 0;
@@ -929,7 +929,7 @@ void ktrex_init(int obj, char* arg, int flag)
     gKTRexState = ((KTRexRuntime*)gKTRexRuntime)->arena;
     ((KTRexArenaState*)gKTRexState)->stack = allocModelStruct_800139e8(4, 4);
     yaw = (s16)((s8)arg[0x2a] << 8);
-    *(s16*)obj = yaw;
+    ((GameObject*)obj)->anim.rotX = yaw;
     ((KTRexArenaState*)gKTRexState)->homeYaw = yaw;
     pA = base + 0x4c / 4;
     pB = base + 0x3c / 4;
@@ -1597,11 +1597,11 @@ int ktrex_stateHandlerA11(int obj, int runtime)
     f32 f5;
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0u)
     {
-        *(s16*)obj = (s16)(*(s16*)obj + 0x8000);
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + 0x8000);
     }
     else
     {
-        *(s16*)obj = (s16)(*(s16*)obj - 0x8000);
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - 0x8000);
     }
     ((KTRexArenaState*)gKTRexState)->timerFA ^= 1;
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)

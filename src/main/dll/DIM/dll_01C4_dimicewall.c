@@ -40,7 +40,7 @@ void dimicewall_init(int obj, s8* p)
     {
         ((DimicewallState*)inner)->unk1 = (u8)GameBit_Get(*(s16*)(p + 0x1e));
     }
-    *(s16*)obj = (s16)((s32)p[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }
 

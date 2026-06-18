@@ -1,8 +1,5 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/model.h"
-#include "main/objanim_internal.h"
-#include "main/objseq_control.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
@@ -14500,7 +14497,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
             else
             {
-                *(u8*)((char*)inner + 0x40d) = *(u8*)((char*)inner + 0x40d) + 1;
+                *(u8*)((char*)inner + 0x40d) += 1;
             }
             *(u8*)((char*)inner + 0x40d) =
                 (*(u8*)((char*)inner + 0x40d) > 10) ? 10 : *(u8*)((char*)inner + 0x40d);
@@ -14677,7 +14674,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                 f32 hi = *(f32*)((char*)inner + 0x54c) - lbl_803E7F10;
                 f32 mid = lbl_803E8100 + ((GameObject*)obj)->anim.rootMotionScale;
                 f32 lo = lbl_803E7F30 + *(f32*)((char*)inner + 0x550);
-                if (lo <= mid && mid <= hi)
+                if (mid >= lo && mid <= hi)
                 {
                     doRumble(lbl_803E7ED8);
                     *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
