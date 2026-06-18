@@ -221,7 +221,7 @@ extern f32 lbl_803DBC64;
 extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
-extern f32 lbl_803E25B0;
+extern f32 enemySightRange;
 
 void objAnimFn_8014a9f0(short* obj, int state)
 {
@@ -2538,12 +2538,12 @@ void enemy_init(int obj, u8* setup, int flag)
         }
     }
     ((EnemyState*)state)->freezeRecoverTimer = lbl_803E2574;
-    if (((EnemyState*)state)->unk2A8 > *(f32*)&lbl_803E25B0)
+    if (((EnemyState*)state)->unk2A8 > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->unk2A8 = lbl_803E25B0;
+        ((EnemyState*)state)->unk2A8 = enemySightRange;
     }
-    if (((EnemyState*)state)->unk2AC > *(f32*)&lbl_803E25B0)
+    if (((EnemyState*)state)->unk2AC > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->unk2AC = lbl_803E25B0;
+        ((EnemyState*)state)->unk2AC = enemySightRange;
     }
 }

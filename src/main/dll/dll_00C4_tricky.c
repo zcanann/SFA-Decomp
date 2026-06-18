@@ -181,7 +181,7 @@ extern f32 lbl_803E2598;
 extern f32 lbl_803E25A0;
 extern f32 lbl_803E25A8;
 extern f32 lbl_803E25AC;
-extern f32 lbl_803E25B0;
+extern f32 enemySightRange;
 extern f32 lbl_803E25B4;
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25BC;
@@ -2442,7 +2442,7 @@ u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to)
         probe.z = *(f32*)((int)to + 8);
         voxmaps_worldToGrid(&probe, toGrid);
         PSVECSubtract((Vec*)from, &probe, &delta);
-        if (PSVECMag(&delta) < lbl_803E25B0)
+        if (PSVECMag(&delta) < enemySightRange)
         {
             if (*(u32*)&((GameObject*)obj)->anim.parent == 0)
             {
@@ -2500,7 +2500,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     }
     angleScale = lbl_803E25B4;
     angleDivisor = lbl_803E25B8;
-    maxDistance = lbl_803E25B0;
+    maxDistance = enemySightRange;
     for (i = 0; i < 4; i++)
     {
         angle = (angleScale * (f32)(s32)((s32)baseAngle + ((u32)(u16)i << 0xe))
