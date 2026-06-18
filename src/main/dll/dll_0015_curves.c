@@ -905,9 +905,10 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 void dll_15_func0A(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
-    int pointIndex;
-    int pointOffset;
     int worldIdx;
+    int pointIndex;
+    u8* worldBase;
+    int pointOffset;
     f32* localPoint;
     CurvesTransformScratch transform;
     f32 matrix[16];
@@ -933,16 +934,18 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        pointIndex = 0;
         worldIdx = 0;
-        pointOffset = 0;
+        pointIndex = worldIdx;
+        worldBase = (u8*)collision;
+        pointOffset = worldIdx;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                  &collision->localPointWorld[pointIndex][0],
+                                  (f32*)(worldBase + 228),
                                   &collision->localPointWorld[0][worldIdx + 1],
                                   &collision->localPointWorld[0][worldIdx + 2]);
+            worldBase += 0xc;
             pointOffset += 0xc;
             worldIdx += 3;
             pointIndex++;
