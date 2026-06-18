@@ -85,7 +85,7 @@ void CameraModeWorldMap_init(int* obj)
     lbl_803DD588->focusBlendTimer = 0;
     lbl_803DD588->focusObjectId = 0;
     *(f32*)((char*)obj + 0xB4) = lbl_803E1A80;
-    *(s16*)obj = -32768;
+    ((GameObject*)obj)->anim.rotX = -32768;
 }
 
 void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
