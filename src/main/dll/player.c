@@ -15787,10 +15787,12 @@ void fn_802AE650(int obj, int state, int p3)
 {
     f32 v;
     u32 b;
+    f32 ee0;
 
     (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
+    ee0 = lbl_803E7EE0;
     if (((GameObject*)obj)->anim.currentMoveProgress >=
-        lbl_803E7EE0 - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
+        ee0 - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
             *(f32*)((char*)state + 0x844) *
@@ -15802,7 +15804,7 @@ void fn_802AE650(int obj, int state, int p3)
             lbl_803E7EFC * timeDelta + *(f32*)((char*)state + 0x844);
         v = *(f32*)((char*)state + 0x844);
         *(f32*)((char*)state + 0x844) =
-            (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
+            (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > ee0) ? ee0 : v);
     }
     if ((*(int*)&((PlayerState*)p3)->baddie.eventFlags & 0x200) != 0)
     {
@@ -15810,18 +15812,23 @@ void fn_802AE650(int obj, int state, int p3)
         Sfx_PlayFromObject(obj, 0x3cd);
         *(u16*)((char*)state + 0x8d8) |= 4;
     }
-    *(f32*)((char*)state + 0x428) = lbl_803E7FA4;
-    *(f32*)((char*)state + 0x430) = lbl_803E7FA4;
+    {
+        f32 fa4 = lbl_803E7FA4;
+        *(f32*)((char*)state + 0x428) = fa4;
+        *(f32*)((char*)state + 0x430) = fa4;
+    }
     b = (*(u8*)((char*)state + 0x3f1) >> 4) & 1;
     if (b != 0)
     {
-        *(f32*)((char*)state + 0x42c) = lbl_803E7EA4;
-        *(f32*)((char*)state + 0x434) = lbl_803E7EA4;
+        f32 ea4 = lbl_803E7EA4;
+        *(f32*)((char*)state + 0x42c) = ea4;
+        *(f32*)((char*)state + 0x434) = ea4;
     }
     else
     {
-        *(f32*)((char*)state + 0x42c) = lbl_803E7ED4;
-        *(f32*)((char*)state + 0x434) = lbl_803E7ED4;
+        f32 ed4 = lbl_803E7ED4;
+        *(f32*)((char*)state + 0x42c) = ed4;
+        *(f32*)((char*)state + 0x434) = ed4;
     }
     *(f32*)((char*)state + 0x7a4) = lbl_803E80E4;
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7EE0)
