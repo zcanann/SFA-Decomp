@@ -1,3 +1,18 @@
+/*
+ * drhightop / SnowBike (DLL 0x255) - the snowbike "Hightop" ride object.
+ *
+ * Implements the per-frame logic of the snowbike vehicle: route following
+ * along a checkpoint path (fn_801EAE4C / gCheckpointInterface), the air /
+ * fuel meter and its UI + shutdown sequence (fn_801EB0D4), spawn / reset
+ * latching (fn_801EB334), the animation-event/sequence callback that seeds
+ * the launch impulse from per-step velocity (SnowBike_animEventCallback),
+ * collision response and impact particle bursts (fn_801EB634), steering /
+ * pitch-roll integration with rumble + camera shake (fn_801EB940), and the
+ * exhaust/contrail particle drivers blended toward per-state targets
+ * (fn_801EBD60). State lives in SnowBikeState (BWalphaanim.h); flags428 is
+ * a bitfield overlay byte read via the Hightop* flag structs below.
+ * Entry points are dispatched from dll_0255_snowbike.c.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
@@ -7,7 +22,6 @@
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
-#include "main/dll/DR/DRhightop.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 
@@ -17,28 +31,65 @@ extern void mtxRotateByVec3s(void* matrix, void* transform);
 extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, float* outX,
                                   float* outY, float* outZ);
 extern f32 PSVECMag(void* vec);
+extern void PSVECScale(f32* dst, f32* src, f32 s);
+extern void PSVECNormalize(void* src, void* dst);
+extern f32 PSVECDotProduct(void* a, void* b);
 extern int randomGetRange(int min, int max);
+extern void setMotionBlur(double amount, int p2);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+extern f32 mathSinf(f32 x);
+extern f32 sqrtf(f32);
+extern void fn_8009A8C8();
+extern int arrayIndexOf();
+extern void SnowBike_func15();
 
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
 extern f32 timeDelta;
+extern char lbl_803AD088[];
+extern int lbl_8032852C[];
+
+/* tuning constants owned by this DLL (.data/.sdata2) */
+extern int lbl_803DC0BC;
+extern f32 lbl_803DC0C8;
+extern int lbl_803DC0CC;
+extern int lbl_803DC0D0;
+extern int lbl_803DC0D4;
+extern f32 lbl_803DC0D8;
+extern s16 lbl_803DC0DC;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5AF4;
 extern f32 lbl_803E5AF8;
 extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
 extern f32 lbl_803E5B20;
 extern f32 lbl_803E5B2C;
 extern f32 lbl_803E5B34;
+extern f32 lbl_803E5B40;
+extern f32 lbl_803E5B68;
+extern f32 lbl_803E5B74;
+extern f32 lbl_803E5B7C;
 extern f32 lbl_803E5B80;
 extern f32 lbl_803E5B84;
 extern f32 lbl_803E5B88;
 extern f32 lbl_803E5B8C;
-extern f32 lbl_803DC0D8;
+extern f32 lbl_803E5B9C;
 extern f32 lbl_803E5BA0;
-extern void PSVECScale(f32* dst, f32* src, f32 s);
+extern f32 lbl_803E5BA8;
+extern f32 lbl_803E5BAC;
+extern f32 lbl_803E5BB0;
+extern f32 lbl_803E5BB4;
+extern f32 lbl_803E5BB8;
 extern f32 lbl_803E5BBC;
+extern f32 lbl_803E5BC0;
 extern f32 lbl_803E5BC4;
+extern f32 lbl_803E5BC8;
+extern f32 lbl_803E5BCC;
+extern f32 lbl_803E5BD0;
+extern f32 lbl_803E5BD4;
 extern f32 lbl_803E5BD8;
 extern f32 lbl_803E5BDC;
 extern f32 lbl_803E5BE0;
@@ -56,13 +107,6 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-extern int lbl_803DC0BC;
-extern s16 lbl_803DC0DC;
-extern f32 lbl_803E5B68;
-extern f32 lbl_803E5B7C;
-extern char lbl_803AD088[];
-extern void SnowBike_func15();
-
 typedef struct HightopFlags3
 {
     u8 hi : 4;
@@ -70,46 +114,14 @@ typedef struct HightopFlags3
     u8 lo : 3;
 } HightopFlags3;
 
-extern f32 lbl_803E5B9C;
-extern f32 lbl_803E5B74;
-extern f32 lbl_803E5AF4;
-extern f32 lbl_803E5BA8;
-extern f32 lbl_803E5BAC;
-extern f32 lbl_803E5BB0;
-extern int lbl_803DC0D0;
-extern f32 lbl_803DC0C8;
-extern int lbl_803DC0CC;
-extern int lbl_803DC0D4;
-extern int lbl_8032852C[];
-extern void PSVECNormalize(void* src, void* dst);
-extern f32 PSVECDotProduct(void* a, void* b);
-extern void setMotionBlur(double amount, int p2);
-extern void fn_8009A8C8();
-extern int arrayIndexOf();
-extern f32 lbl_803E5BB4;
-extern f32 lbl_803E5BB8;
-extern f32 lbl_803E5BC0;
-extern f32 lbl_803E5B40;
-extern f32 lbl_803E5BC8;
-extern f32 lbl_803E5BCC;
-extern f32 lbl_803E5BD0;
-extern f32 lbl_803E5BD4;
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 powfBitEstimate(f32 base, f32 exp);
-extern f32 mathSinf(f32 x);
-extern f32 sqrtf(f32);
-
 void fn_801EAE4C(short* obj, int stateRaw)
 {
-    float tickDir;
-    float fb;
-    uint bitVal;
+    f32 tickDir;
+    u32 bitVal;
     SnowBikeState* st = (SnowBikeState*)stateRaw;
-    short angDelta;
-    uint absDelta;
-    int val;
-    ushort uRet;
+    s16 angDelta;
+    u32 absDelta;
+    u16 uRet;
     s8 ch;
 
     if ((u32)(st->flags428 >> 3 & 1) == 0)
@@ -154,12 +166,12 @@ void fn_801EAE4C(short* obj, int stateRaw)
             {
                 angDelta = angDelta + 0xffff;
             }
-            absDelta = (uint)angDelta;
+            absDelta = (u32)angDelta;
             if ((int)absDelta < 0)
             {
                 absDelta = -absDelta;
             }
-            if ((int)((uint)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) ==
+            if ((int)((u32)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) ==
                 0)
             {
                 tickDir = timeDelta;
@@ -199,17 +211,15 @@ void fn_801EAE4C(short* obj, int stateRaw)
             ((HightopFlags3*)&st->flags428)->active = 0;
         }
     }
-    return;
 }
 
 void fn_801EB0D4(uint obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
-    float cur;
-    float lim;
-    float rate;
-    float td;
-    float v;
+    f32 cur;
+    f32 lim;
+    f32 rate;
+    f32 td;
 
     if ((u32)(st->flags428 >> 5 & 1) != 0)
     {
@@ -275,7 +285,6 @@ void fn_801EB0D4(uint obj, int stateRaw)
             }
         }
     }
-    return;
 }
 
 typedef struct HightopFlags
@@ -311,7 +320,7 @@ void fn_801EB334(int* obj)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 }
 
-undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* seq)
+int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
 {
     typedef struct HightopMatrixSeed
     {
@@ -328,11 +337,11 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
     u8 triggerType;
     int i;
     int state;
-    float matrix[16];
+    f32 matrix[16];
     HightopMatrixSeed transform;
-    double xSpeed;
-    double ySpeed;
-    double zSpeed;
+    f64 xSpeed;
+    f64 ySpeed;
+    f64 zSpeed;
 
     state = *(int*)(obj + 0x5c);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
@@ -398,12 +407,12 @@ void fn_801EB634(int obj, int stateRaw)
     int hitKind;
     int hitReact;
     int burstCount;
-    uint hit;
+    u32 hit;
     f32 dot;
     int hitOutB;
-    uint hitOutC;
+    u32 hitOutC;
     int hitObj;
-    float velNrm[3];
+    f32 velNrm[3];
 
     hitReact = *(int*)(obj + 0x54);
     if (ObjHits_IsObjectEnabled(obj) != 0)
@@ -443,15 +452,13 @@ void fn_801EB634(int obj, int stateRaw)
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
                 setMotionBlur(lbl_803E5BAC, 1);
-                st->collisionFxTimer = (f32)(s32)
-                lbl_803DC0D0;
+                st->collisionFxTimer = (f32)(s32)lbl_803DC0D0;
                 st->collisionFxDamping = lbl_803DC0C8;
-                st->unk4C4 = (f32)(s32)
-                lbl_803DC0CC;
+                st->unk4C4 = (f32)(s32)lbl_803DC0CC;
             }
             break;
         }
-        hit = *(uint*)(hitReact + 0x50);
+        hit = *(u32*)(hitReact + 0x50);
         if (((hit != 0) &&
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(lbl_8032852C, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
@@ -469,26 +476,18 @@ void fn_801EB634(int obj, int stateRaw)
             st->collisionFxDamping = lbl_803E5AEC;
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                st->collisionFxTimer = (f32)(s32)
-                lbl_803DC0D4;
+                st->collisionFxTimer = (f32)(s32)lbl_803DC0D4;
             }
         }
     }
-    return;
 }
-
-typedef struct HightopFlagsB
-{
-    u8 resetLatch : 1;
-    u8 flags : 7;
-} HightopFlagsB;
 
 void fn_801EB940(short* obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
-    float fa;
-    float fb;
-    short rotClamped;
+    f32 fa;
+    f32 fb;
+    s16 rotClamped;
     int yawDelta;
     int ival;
 
@@ -511,7 +510,7 @@ void fn_801EB940(short* obj, int stateRaw)
             {
                 st->unk584 = lbl_803E5AE8;
             }
-            ((HightopFlagsB*)&st->flags428)->resetLatch = 1;
+            ((HightopFlags*)&st->flags428)->resetLatch = 1;
         }
     }
     else
@@ -542,31 +541,23 @@ void fn_801EB940(short* obj, int stateRaw)
                 }
             }
         }
-        ((HightopFlagsB*)&st->flags428)->resetLatch = 0;
+        ((HightopFlags*)&st->flags428)->resetLatch = 0;
         st->unk424 = lbl_803E5AE8;
         st->unk4B4 = st->unk230;
     }
     fa = lbl_803E5BC8;
-    st->unk588 =
-        fa * timeDelta + (f32)(s32)
-    st->unk588;
-    st->unk58A =
-        fa * timeDelta + (f32)(s32)
-    st->unk58A;
+    st->unk588 = fa * timeDelta + (f32)(s32)st->unk588;
+    st->unk58A = fa * timeDelta + (f32)(s32)st->unk58A;
     st->haloYawDrift =
         st->haloYawDrift * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->unk590 =
         st->unk590 * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->haloPitchDrift =
         st->haloYawDrift *
-        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk588) / lbl_803E5BD4
-    )
-    ;
+        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk588) / lbl_803E5BD4);
     st->unk598 =
         st->unk590 *
-        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4
-    )
-    ;
+        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
     yawDelta = (int)*obj - ((int)st->yaw & 0xffffU);
     if (0x8000 < yawDelta)
     {
@@ -600,7 +591,6 @@ void fn_801EB940(short* obj, int stateRaw)
         rotClamped = 0x2000;
     }
     obj[2] = rotClamped;
-    return;
 }
 
 void fn_801EBD60(int obj, int stateRaw)
