@@ -1108,7 +1108,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_8011d918.c"),
             Object(NonMatching, "main/dll/tricky.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/maybetemplate.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/balloonbaddie.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/cmenu.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/swarmbaddie.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/wispbaddie.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0000_gameui.c", cflags=cflags_dll_noopt),
