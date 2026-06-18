@@ -1,16 +1,19 @@
 /*
- * largecrate (DLL 0x105) - the destructible time-bonus crate objects.
+ * largecrate (DLL 0x105) - destructible crates that drop a pickup when broken.
  *
- * The obj+0xB8 extra record is the shared "explodable" state (timer to
- * detonation, hit/explode sfx ids, spin speed, damage accumulator); init
- * decodes the placement into a CfForcefieldState view. The crate counts
- * down to a save-time bonus on the parent map, takes hits until its
- * damage threshold, then plays the explode sfx, scatters debris (the
- * fn_801833E4 spawner picks a debris object set by placement byte 0x11)
- * and re-arms. seqId selects the crate variant (A=0x3DE, B=0x49F,
- * C=0x7BE), each with its own hit/explode sfx pair. fn_80183204 is the
- * camera target-reticle distance helper read cross-DLL by camcontrol;
- * fn_80183250 drives the conveyor-belt slide for parented crates.
+ * The obj+0xB8 extra record is LargeCrateState (live-verified by reading a
+ * crate's struct in Dolphin and breaking it to trace the drop). The crate
+ * takes hits (damageTaken) until damageThreshold, then plays explodeSfxId,
+ * hides for breakTimer frames, and spawns its drop contents via
+ * largecrate_spawnDropContents (dispatch on dropType): fruit (0x3D3/0x3D4/
+ * 0x3D5) or a collectible object (type 0xB, DLL 0x00ED) such as a +health
+ * food item, launched outward. breakTimeBonus is fed to mapEvent addTime()
+ * on break; brokenGameBit persists the broken state across loads. seqId
+ * selects the crate variant (A=0x3DE, B=0x49F, C=0x7BE), each with its own
+ * hit/explode sfx pair. largecrate_getReticleDistance returns crate integrity
+ * (1.0 - damageTaken/damageThreshold) for the camera reticle, read cross-DLL
+ * by camcontrol; largecrate_updateConveyorSlide drives the conveyor-belt
+ * slide for parented crates.
  *
  * GAMEBIT_SFX_MUTE (0xa71) gates the rob-wave warning sfx.
  */
@@ -19,9 +22,8 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/explodable_state.h"
-#include "main/dll/cfforcefield.h"
-#include "main/dll/cfforcefield_state.h"
+#include "main/dll/dll_0105_largecrate.h"
+#include "main/dll/largecrate_state.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
@@ -105,9 +107,9 @@ typedef struct
     f32 scaleW;
 } ExplodeArgs;
 
-f32 fn_80183204(int obj);
-void fn_80183250(int obj, int def);
-int fn_801833E4(int obj, int player, int state);
+f32 largecrate_getReticleDistance(int obj);
+void largecrate_updateConveyorSlide(int obj, int def);
+int largecrate_spawnDropContents(int obj, int player, int state);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
 void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
@@ -119,13 +121,13 @@ void largecrate_init(int obj, u8* initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
 
-f32 fn_80183204(int obj)
+f32 largecrate_getReticleDistance(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
+    return lbl_803E39AC - (f32)(u32)((LargeCrateState*)state)->damageTaken / (f32)(u32)((LargeCrateState*)state)->damageThreshold;
 }
 
-void fn_80183250(int obj, int def)
+void largecrate_updateConveyorSlide(int obj, int def)
 {
     int state31;
     int player;
@@ -139,14 +141,14 @@ void fn_80183250(int obj, int def)
     player = (int)Obj_GetPlayerObject();
     if ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 0xb0) & 0x1000) != 0)
     {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(def + 0x24);
+        ((GameObject*)obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
         ((GameObject*)obj)->anim.velocityX = 0.0f;
     }
     else
     {
         oldVel = ((GameObject*)obj)->anim.velocityX;
-        sum = *(s16*)(*(int*)&((GameObject*)obj)->anim.parent + 0x4) + *(u16*)(def + 0x20);
-        ((GameObject*)obj)->anim.velocityX = -(f32)sum / *(f32*)(def + 0x1c);
+        sum = *(s16*)(*(int*)&((GameObject*)obj)->anim.parent + 0x4) + ((LargeCrateState*)def)->slideOffset;
+        ((GameObject*)obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
         if ((oldVel <= 0.0f && ((GameObject*)obj)->anim.velocityX >= 0.0f) ||
             (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
         {
@@ -169,13 +171,13 @@ void fn_80183250(int obj, int def)
             }
         }
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.velocityX;
-        if (((GameObject*)obj)->anim.localPosX > (limit = lbl_803E39C0 + *(f32*)(def + 0x24)))
+        if (((GameObject*)obj)->anim.localPosX > (limit = lbl_803E39C0 + ((LargeCrateState*)def)->homeX))
         {
             ((GameObject*)obj)->anim.localPosX = limit;
         }
         else
         {
-            limit = *(f32*)(def + 0x24) - lbl_803E39C4;
+            limit = ((LargeCrateState*)def)->homeX - lbl_803E39C4;
             if (((GameObject*)obj)->anim.localPosX < limit)
             {
                 ((GameObject*)obj)->anim.localPosX = limit;
@@ -184,7 +186,7 @@ void fn_80183250(int obj, int def)
     }
 }
 
-int fn_801833E4(int obj, int player, int state)
+int largecrate_spawnDropContents(int obj, int player, int state)
 {
     GameObject* playerObj;
     ExplodeArgs blk;
@@ -407,8 +409,8 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     state = *(int*)&((GameObject*)obj)->extra;
     if (((*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14)) == 0)
         ||
-        (((timer = ((ExplodableState*)state)->explodeTimer) != 0) && (timer <= 0x32)) ||
-        (((ExplodableState*)state)->animTimer > lbl_803E39B8))
+        (((timer = ((LargeCrateState*)state)->breakTimer) != 0) && (timer <= 0x32)) ||
+        (((LargeCrateState*)state)->animTimer > lbl_803E39B8))
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
@@ -466,23 +468,23 @@ void largecrate_update(int obj)
     }
     else
     {
-        if (((ExplodableState*)state)->animTimer > (thresh = lbl_803E39B8))
+        if (((LargeCrateState*)state)->animTimer > (thresh = lbl_803E39B8))
         {
             ((GameObject*)obj)->anim.alpha = 0;
-            if (*(int*)state != -1)
+            if (((LargeCrateState*)state)->breakTimeBonus != -1)
             {
-                ((ExplodableState*)state)->animTimer = -(timeDelta * animSpeed - ((ExplodableState*)state)->animTimer);
-                if (((ExplodableState*)state)->animTimer <= thresh)
+                ((LargeCrateState*)state)->animTimer = -(timeDelta * animSpeed - ((LargeCrateState*)state)->animTimer);
+                if (((LargeCrateState*)state)->animTimer <= thresh)
                 {
                     if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
                         lbl_803E39D0))
                     {
-                        ((ExplodableState*)state)->animTimer = lbl_803E39AC;
+                        ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
                     }
                     else
                     {
-                        ((ExplodableState*)state)->animTimer = lbl_803E39B8;
-                        ((ExplodableState*)state)->explodeTimer = 0;
+                        ((LargeCrateState*)state)->animTimer = lbl_803E39B8;
+                        ((LargeCrateState*)state)->breakTimer = 0;
                         ObjHits_EnableObject(obj);
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
                         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -498,19 +500,19 @@ void largecrate_update(int obj)
                 level = 0xff;
             }
             ((GameObject*)obj)->anim.alpha = level;
-            if (((ExplodableState*)state)->explodeTimer != 0)
+            if (((LargeCrateState*)state)->breakTimer != 0)
             {
                 ObjHits_DisableObject(obj);
-                if ((((ExplodableState*)state)->explodeTimer -= framesThisStep) <= 0)
+                if ((((LargeCrateState*)state)->breakTimer -= framesThisStep) <= 0)
                 {
-                    if (*(int*)state > 0)
+                    if (((LargeCrateState*)state)->breakTimeBonus > 0)
                     {
-                        ((ExplodableState*)state)->animTimer = lbl_803E39AC;
+                        ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
                         (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32) * (int*)state);
                     }
                     else
                     {
-                        ((ExplodableState*)state)->animTimer = lbl_803E39AC;
+                        ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
                     }
                     ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
                     ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
@@ -523,13 +525,13 @@ void largecrate_update(int obj)
                     ((GameObject*)obj)->anim.velocityY = thresh;
                     ((GameObject*)obj)->anim.velocityZ = thresh;
                 }
-                if (((ExplodableState*)state)->explodeTimer <= 0x32)
+                if (((LargeCrateState*)state)->breakTimer <= 0x32)
                 {
                     return;
                 }
             }
-            ((GameObject*)obj)->anim.rotY = ((ExplodableState*)state)->spinSpeed;
-            ((ExplodableState*)state)->spinSpeed = (f32)((ExplodableState*)state)->spinSpeed * lbl_803E39E0;
+            ((GameObject*)obj)->anim.rotY = ((LargeCrateState*)state)->spinSpeed;
+            ((LargeCrateState*)state)->spinSpeed = (f32)((LargeCrateState*)state)->spinSpeed * lbl_803E39E0;
             if ((((GameObject*)obj)->anim.rotY < 10) && (-10 < ((GameObject*)obj)->anim.rotY))
             {
                 ((GameObject*)obj)->anim.rotY = 0;
@@ -543,20 +545,20 @@ void largecrate_update(int obj)
             }
             if ((hit != 0) && (((GameObject*)obj)->anim.parent == NULL))
             {
-                ((ExplodableState*)state)->damageTaken = ((ExplodableState*)state)->damageTaken + hitDamage;
+                ((LargeCrateState*)state)->damageTaken = ((LargeCrateState*)state)->damageTaken + hitDamage;
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
                 pos.x = pos.x + playerMapOffsetX;
                 pos.z = pos.z + playerMapOffsetZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E39E4, &lightPos, 1, 0);
-                if (((ExplodableState*)state)->damageTaken < ((ExplodableState*)state)->damageThreshold)
+                if (((LargeCrateState*)state)->damageTaken < ((LargeCrateState*)state)->damageThreshold)
                 {
-                    if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState*)state)->hitSfxId) == 0)
+                    if (Sfx_IsPlayingFromObject(0, (u16)((LargeCrateState*)state)->hitSfxId) == 0)
                     {
-                        Sfx_PlayFromObject(obj, (u16)((ExplodableState*)state)->hitSfxId);
+                        Sfx_PlayFromObject(obj, (u16)((LargeCrateState*)state)->hitSfxId);
                     }
                     if (((GameObject*)obj)->anim.seqId == 0x3de)
                     {
-                        ((ExplodableState*)state)->spinSpeed = (s16)randomGetRange(600, 800);
+                        ((LargeCrateState*)state)->spinSpeed = (s16)randomGetRange(600, 800);
                     }
                 }
                 else
@@ -564,24 +566,24 @@ void largecrate_update(int obj)
                     Sfx_StopObjectChannel(obj, 0x7f);
                     (**(void (**)(int, int, int, int, int, int))(*lbl_803DDAC8 + 0x4))(
                         obj, 1, 0, 2, -1, 0);
-                    if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState*)state)->explodeSfxId) == 0)
+                    if (Sfx_IsPlayingFromObject(0, (u16)((LargeCrateState*)state)->explodeSfxId) == 0)
                     {
-                        Sfx_PlayFromObject(obj, (u16)((ExplodableState*)state)->explodeSfxId);
+                        Sfx_PlayFromObject(obj, (u16)((LargeCrateState*)state)->explodeSfxId);
                     }
-                    ((ExplodableState*)state)->explodeTimer = 0x32;
-                    ((ExplodableState*)state)->damageTaken = 0;
-                    fn_801833E4(obj, player, state);
+                    ((LargeCrateState*)state)->breakTimer = 0x32;
+                    ((LargeCrateState*)state)->damageTaken = 0;
+                    largecrate_spawnDropContents(obj, player, state);
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                 }
             }
             vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-            if ((((ExplodableState*)state)->randomTimer -= framesThisStep) <= 0)
+            if ((((LargeCrateState*)state)->idleTimer -= framesThisStep) <= 0)
             {
-                ((ExplodableState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((LargeCrateState*)state)->idleTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
             if (((GameObject*)obj)->anim.parent != NULL)
             {
-                fn_80183250(obj, state);
+                largecrate_updateConveyorSlide(obj, state);
             }
         }
     }
@@ -617,65 +619,65 @@ void largecrate_init(int obj, u8* initData)
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)LargeCrate_SeqFn;
     *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
-    ((CfForcefieldState*)state)->enableGameBit = *(short*)(initData + 0x1e);
+    ((LargeCrateState*)state)->brokenGameBit = *(short*)(initData + 0x1e);
 
     id = *(short*)(initData + 0x1c);
     if (id == LARGECRATE_TIMER_SENTINEL_DISABLED)
     {
-        *(int*)state = LARGECRATE_TIMER_SENTINEL_DISABLED;
+        ((LargeCrateState*)state)->breakTimeBonus = LARGECRATE_TIMER_SENTINEL_DISABLED;
     }
     else if (id == LARGECRATE_TIMER_SENTINEL_FOREVER)
     {
-        *(int*)state = -1;
+        ((LargeCrateState*)state)->breakTimeBonus = -1;
     }
     else
     {
-        *(int*)state = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
+        ((LargeCrateState*)state)->breakTimeBonus = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
     }
 
-    if (GameBit_Get((int)((CfForcefieldState*)state)->enableGameBit) != 0)
+    if (GameBit_Get((int)((LargeCrateState*)state)->brokenGameBit) != 0)
     {
-        *(float*)(state + 4) = lbl_803E39AC;
+        ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
         ObjHits_DisableObject((u32)obj);
     }
 
-    ((CfForcefieldState*)state)->unk11 = initData[0x19];
+    ((LargeCrateState*)state)->dropType = initData[0x19];
     lbl_803DDAC8 = Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
     r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
-    ((CfForcefieldState*)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
-    ((CfForcefieldState*)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;
-    ((CfForcefieldState*)state)->unk12 = (u8) * (short*)(initData + 0x1a);
+    ((LargeCrateState*)state)->idleTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
+    ((LargeCrateState*)state)->unkC = LARGECRATE_DEFAULT_COUNTDOWN;
+    ((LargeCrateState*)state)->unk12 = (u8) * (short*)(initData + 0x1a);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LARGECRATE_OBJECT_FLAGS);
     *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
 
     id = ((GameObject*)obj)->anim.seqId;
     if (id == LARGECRATE_VARIANT_A)
     {
-        ((CfForcefieldState*)state)->unk11 = (u8)constArrA.entries[((CfForcefieldState*)state)->unk11];
-        ((CfForcefieldState*)state)->sfxIdA = LARGECRATE_VARIANT_A_SFX_A;
-        ((CfForcefieldState*)state)->sfxIdB = LARGECRATE_VARIANT_A_SFX_B;
+        ((LargeCrateState*)state)->dropType = (u8)constArrA.entries[((LargeCrateState*)state)->dropType];
+        ((LargeCrateState*)state)->hitSfxId = LARGECRATE_VARIANT_A_SFX_A;
+        ((LargeCrateState*)state)->explodeSfxId = LARGECRATE_VARIANT_A_SFX_B;
     }
     else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C)
     {
-        ((CfForcefieldState*)state)->unk11 = (u8)constArrB.entries[((CfForcefieldState*)state)->unk11];
-        ((CfForcefieldState*)state)->sfxIdA = LARGECRATE_VARIANT_B_SFX_A;
-        ((CfForcefieldState*)state)->sfxIdB = LARGECRATE_VARIANT_B_SFX_B;
+        ((LargeCrateState*)state)->dropType = (u8)constArrB.entries[((LargeCrateState*)state)->dropType];
+        ((LargeCrateState*)state)->hitSfxId = LARGECRATE_VARIANT_B_SFX_A;
+        ((LargeCrateState*)state)->explodeSfxId = LARGECRATE_VARIANT_B_SFX_B;
     }
 
-    ((CfForcefieldState*)state)->unk20 = 0;
+    ((LargeCrateState*)state)->slideOffset = 0;
     r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
     fr = (float)(int)r3rand;
     fr = lbl_803E39E8 + fr;
-    *(float*)(state + 0x1c) = fr;
-    *(float*)(state + 0x24) = ((GameObject*)obj)->anim.localPosX;
+    ((LargeCrateState*)state)->slidePhase = fr;
+    ((LargeCrateState*)state)->homeX = ((GameObject*)obj)->anim.localPosX;
 
     if (((GameObject*)obj)->anim.seqId == LARGECRATE_VARIANT_C)
     {
-        ((CfForcefieldState*)state)->unk28 = 0;
+        ((LargeCrateState*)state)->damageThreshold = 0;
     }
     else
     {
-        ((CfForcefieldState*)state)->unk28 = 2;
+        ((LargeCrateState*)state)->damageThreshold = 2;
     }
 }
 
