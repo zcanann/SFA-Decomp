@@ -18742,7 +18742,7 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 
     *(f32*)((char*)dst + 0x8) = *(f32*)((char*)src + 0xc);
     PSVECScale((f32*)((char*)src + 0x1c), pos, -lbl_803DC6B8[1]);
-    PSVECAdd((f32*)((char*)dst + 0x48), pos, pos);
+    PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
     y = *(f32*)((char*)src + 0x3c);
     pos[1] = y;
     count = hitDetectFn_80065e50(obj, &hits, 0, 0x204, pos[0], y, pos[2]);
