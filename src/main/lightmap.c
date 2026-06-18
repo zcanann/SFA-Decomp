@@ -1581,11 +1581,11 @@ extern void* lbl_803DCEA0;
 
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
+    int inner_idx;
     int outer;
     int* page;
-    int* p;
-    int inner_idx;
     int total_offset;
+    int* p;
     u16 limit;
     int sz;
 
