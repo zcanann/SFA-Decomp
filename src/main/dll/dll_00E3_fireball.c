@@ -1037,7 +1037,7 @@ void fireball_update(int* obj)
             ObjHits_DisableObject(obj);
         }
     }
-    if (((FireballState*)state)->fadeoutTimer != lbl_803E3330)
+    if (((FireballState*)state)->fadeoutTimer != *(f32*)&lbl_803E3330)
     {
         ((GameObject*)obj)->anim.velocityX = lbl_803E3330;
         ((GameObject*)obj)->anim.velocityY = lbl_803E3330;
