@@ -42,13 +42,13 @@ extern f32 lbl_803E34F0;
 extern f32 lbl_803E34F4;
 extern f32 lbl_803E34F8;
 extern f32 lbl_803E3500;
-extern const f32 lbl_803E3504;
+extern f32 lbl_803E3504;
 extern f32 lbl_803E3510;
 extern f32 lbl_803E3514;
 extern f32 lbl_803E3518;
-extern const f32 lbl_803E351C;
+extern f32 lbl_803E351C;
 extern f32 lbl_803E3520;
-extern const f32 lbl_803E3524;
+extern f32 lbl_803E3524;
 extern f32 lbl_803E3528;
 extern f32 lbl_803E352C;
 extern f32 lbl_803E3548;
@@ -66,53 +66,53 @@ extern f32 lbl_803E35A4;
 
 #pragma scheduling on
 #pragma peephole on
-extern const f32 lbl_803E28B0;
-extern const f32 lbl_803E28BC;
-extern const f32 lbl_803E28D0;
-extern const f32 lbl_803E28DC;
-extern const f32 lbl_803E28E0;
-extern const f32 lbl_803E28E4;
-extern const f32 lbl_803E28E8;
+extern f32 lbl_803E28B0;
+extern f32 lbl_803E28BC;
+extern f32 lbl_803E28D0;
+extern f32 lbl_803E28DC;
+extern f32 lbl_803E28E0;
+extern f32 lbl_803E28E4;
+extern f32 lbl_803E28E8;
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
-extern const f32 lbl_803E28B4;
-extern const f32 lbl_803E28B8;
-extern const f32 lbl_803E28C0;
-extern const f32 lbl_803E28C4;
-extern const f32 lbl_803E28C8;
-extern const f32 lbl_803E28CC;
+extern f32 lbl_803E28B4;
+extern f32 lbl_803E28B8;
+extern f32 lbl_803E28C0;
+extern f32 lbl_803E28C4;
+extern f32 lbl_803E28C8;
+extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-extern const f32 lbl_803E28A0;
-extern const f32 lbl_803E28A4;
-extern const f32 lbl_803E28A8;
-extern const f32 lbl_803E28F4;
-extern const f32 lbl_803E290C;
-extern const f32 lbl_803E2910;
-extern const f32 lbl_803E2924;
-extern const f32 lbl_803E2928;
-extern const f32 lbl_803E292C;
-extern const f32 lbl_803E2930;
+extern f32 lbl_803E28A0;
+extern f32 lbl_803E28A4;
+extern f32 lbl_803E28A8;
+extern f32 lbl_803E28F4;
+extern f32 lbl_803E290C;
+extern f32 lbl_803E2910;
+extern f32 lbl_803E2924;
+extern f32 lbl_803E2928;
+extern f32 lbl_803E292C;
+extern f32 lbl_803E2930;
 extern void fn_80293018(int idx, f32* outA, f32* outB);
 extern void fn_8015355C(int obj, int p2);
-extern const f32 lbl_803E28D4;
-extern const f32 lbl_803E28D8;
-extern const f32 lbl_803E28F0;
-extern const f32 lbl_803E2900;
-extern const f32 lbl_803E2904;
-extern const f32 lbl_803E2908;
+extern f32 lbl_803E28D4;
+extern f32 lbl_803E28D8;
+extern f32 lbl_803E28F0;
+extern f32 lbl_803E2900;
+extern f32 lbl_803E2904;
+extern f32 lbl_803E2908;
 extern f64 lbl_803E2918;
 extern f64 lbl_803E2938;
 extern f32 lbl_803E2940;
 extern f32 lbl_803E2944;
 extern f32 lbl_803E2948;
-extern const f32 lbl_803E2920;
+extern f32 lbl_803E2920;
 extern f32 lbl_803E294C;
-extern const f32 lbl_803E2950;
+extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 extern u8 lbl_803DBCC0[8];
@@ -259,168 +259,168 @@ void FUN_80152fb4(ushort* obj, int state)
     return;
 }
 
-void FUN_801534d8(ushort* obj, undefined4* state)
+void FUN_801534d8(ushort* param_1, undefined4* param_2)
 {
-    int hitResult;
-    char accepted;
-    float* target;
+    int iVar1;
+    char cVar2;
+    float* pfVar3;
     ObjHitsPriorityState* hitState;
-    float dx;
-    float dy;
-    float dz;
+    float local_28;
+    float local_24;
+    float local_20;
 
-    target = (float*)*state;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    pfVar3 = (float*)*param_2;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     if (hitState != NULL)
     {
         hitState->suppressOutgoingHits = 0;
     }
-    if (*(char*)((int)state + 0x33b) != '\0')
+    if (*(char*)((int)param_2 + 0x33b) != '\0')
     {
-        state[0xba] = state[0xba] | 0x80;
+        param_2[0xba] = param_2[0xba] | 0x80;
     }
-    if ((state[0xb7] & 0x2000) != 0)
+    if ((param_2[0xb7] & 0x2000) != 0)
     {
-        hitResult = FUN_80006a10((double)(float)state[0xbf], target);
-        if ((((hitResult != 0) || (target[4] != 0.0)) &&
-                (accepted = (**(code**)(*DAT_803dd71c + 0x90))(target), accepted != '\0')) &&
-            (accepted = (**(code**)(*DAT_803dd71c + 0x8c))
-                ((double)lbl_803E3550, *state, obj, &DAT_803dc920, 0xffffffff),
-                accepted != '\0'))
+        iVar1 = FUN_80006a10((double)(float)param_2[0xbf], pfVar3);
+        if ((((iVar1 != 0) || (pfVar3[4] != 0.0)) &&
+                (cVar2 = (**(code**)(*DAT_803dd71c + 0x90))(pfVar3), cVar2 != '\0')) &&
+            (cVar2 = (**(code**)(*DAT_803dd71c + 0x8c))
+                ((double)lbl_803E3550, *param_2, param_1, &DAT_803dc920, 0xffffffff),
+                cVar2 != '\0'))
         {
-            state[0xb7] = state[0xb7] & 0xffffdfff;
+            param_2[0xb7] = param_2[0xb7] & 0xffffdfff;
         }
-        FUN_8014d3d0((short*)obj, state, 0xf, 0);
-        dx = target[0x1a] - ((GameObject*)obj)->anim.localPosX;
-        dy = target[0x1b] - ((GameObject *)obj)->anim.rootMotionScale;
-        dz = target[0x1c] - ((GameObject*)obj)->anim.localPosZ;
-        FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)obj,
-                     (int)state, &dx, '\x01');
-        state[0xc9] = (float)state[0xc9] + lbl_803DC074;
-        if (lbl_803E3560 < (float)state[0xc9])
+        FUN_8014d3d0((short*)param_1, param_2, 0xf, 0);
+        local_28 = pfVar3[0x1a] - *(float*)(param_1 + 6);
+        local_24 = pfVar3[0x1b] - ((GameObject *)param_1)->anim.rootMotionScale;
+        local_20 = pfVar3[0x1c] - *(float*)(param_1 + 10);
+        FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)param_1,
+                     (int)param_2, &local_28, '\x01');
+        param_2[0xc9] = (float)param_2[0xc9] + lbl_803DC074;
+        if (lbl_803E3560 < (float)param_2[0xc9])
         {
-            state[0xb9] = state[0xb9] & ~(u64)0x10000;
-            state[0xc9] = lbl_803E3548;
+            param_2[0xb9] = param_2[0xb9] & ~(u64)0x10000;
+            param_2[0xc9] = lbl_803E3548;
         }
     }
-    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, obj, (int)state, 0xf, '\0');
-    state[0xca] = (float)state[0xca] - lbl_803DC074;
-    if ((float)state[0xca] <= lbl_803E3548)
+    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, param_1, (int)param_2, 0xf, '\0');
+    param_2[0xca] = (float)param_2[0xca] - lbl_803DC074;
+    if ((float)param_2[0xca] <= lbl_803E3548)
     {
-        state[0xca] = lbl_803E354C;
-        FUN_80006824((uint)obj, SFXfox_healthgasp1);
+        param_2[0xca] = lbl_803E354C;
+        FUN_80006824((uint)param_1, SFXfox_healthgasp1);
     }
-    state[0xcb] = lbl_803E3548;
+    param_2[0xcb] = lbl_803E3548;
     return;
 }
 
 void FUN_80153738(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  ushort* obj, undefined4* state)
+                  ushort* param_9, undefined4* param_10)
 {
-    float resetVal;
-    uint losClear;
+    float fVar1;
+    uint uVar2;
     int iVar3;
-    char accepted;
-    float* target;
+    char cVar4;
+    float* pfVar5;
     undefined8 uVar6;
     u8 auStack_48[4];
-    short targetGrid[4];
-    short objGrid[4];
-    float objPos_x;
-    float objPos_y;
-    float objPos_z;
-    float dx;
-    float dy;
-    float dz;
+    short asStack_44[4];
+    short asStack_3c[4];
+    float local_34;
+    float local_30;
+    float local_2c;
+    float local_28;
+    float local_24;
+    float local_20;
 
-    target = (float*)*state;
-    if (*(char*)((int)state + 0x33b) != '\0')
+    pfVar5 = (float*)*param_10;
+    if (*(char*)((int)param_10 + 0x33b) != '\0')
     {
-        state[0xba] = state[0xba] | 0x80;
+        param_10[0xba] = param_10[0xba] | 0x80;
     }
-    if ((state[0xb7] & 0x80000000) != 0)
+    if ((param_10[0xb7] & 0x80000000) != 0)
     {
-        FUN_80006824((uint)obj, SFXfox_climbgrunt3);
+        FUN_80006824((uint)param_9, SFXfox_climbgrunt3);
     }
-    if ((((state[0xb7] & 0x2000) != 0) &&
-            (((iVar3 = FUN_80006a10((double)(lbl_803E356C * (float)state[0xbf]), target), iVar3 != 0
-                    || (target[4] != 0.0)) &&
-                (accepted = (**(code**)(*DAT_803dd71c + 0x90))(target), accepted != '\0')))) &&
-        (accepted = (**(code**)(*DAT_803dd71c + 0x8c))
-            ((double)lbl_803E3550, *state, obj, &DAT_803dc920, 0xffffffff),
-            accepted != '\0'))
+    if ((((param_10[0xb7] & 0x2000) != 0) &&
+            (((iVar3 = FUN_80006a10((double)(lbl_803E356C * (float)param_10[0xbf]), pfVar5), iVar3 != 0
+                    || (pfVar5[4] != 0.0)) &&
+                (cVar4 = (**(code**)(*DAT_803dd71c + 0x90))(pfVar5), cVar4 != '\0')))) &&
+        (cVar4 = (**(code**)(*DAT_803dd71c + 0x8c))
+            ((double)lbl_803E3550, *param_10, param_9, &DAT_803dc920, 0xffffffff),
+            cVar4 != '\0'))
     {
-        state[0xb7] = state[0xb7] & 0xffffdfff;
+        param_10[0xb7] = param_10[0xb7] & 0xffffdfff;
     }
-    ObjHits_SetHitVolumeSlot((int)obj, 0xe, 1, 0);
-    iVar3 = state[0xa7];
-    dx = *(float*)(iVar3 + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - ((GameObject*)obj)->anim.localPosY;
-    dz = *(float*)(iVar3 + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-    SeekTwiceBeforeRead(&dx);
-    state[0xcb] = (float)state[0xcb] + lbl_803DC074;
-    if ((state[0xd0] != 0) || (lbl_803E3560 < (float)state[0xcb]))
+    ObjHits_SetHitVolumeSlot((int)param_9, 0xe, 1, 0);
+    iVar3 = param_10[0xa7];
+    local_28 = *(float*)(iVar3 + 0xc) - *(float*)(param_9 + 6);
+    local_24 = (lbl_803E3570 + *(float*)(iVar3 + 0x10)) - *(float*)(param_9 + 8);
+    local_20 = *(float*)(iVar3 + 0x14) - *(float*)(param_9 + 10);
+    SeekTwiceBeforeRead(&local_28);
+    param_10[0xcb] = (float)param_10[0xcb] + lbl_803DC074;
+    if ((param_10[0xd0] != 0) || (lbl_803E3560 < (float)param_10[0xcb]))
     {
-        state[0xb9] = state[0xb9] | 0x10000;
-        resetVal = lbl_803E3548;
-        state[0xc9] = lbl_803E3548;
-        state[0xcb] = resetVal;
+        param_10[0xb9] = param_10[0xb9] | 0x10000;
+        fVar1 = lbl_803E3548;
+        param_10[0xc9] = lbl_803E3548;
+        param_10[0xcb] = fVar1;
     }
     else
     {
-        objPos_x = *(float*)(obj + 6);
-        objPos_y = *(float*)(obj + 8);
-        objPos_z = *(float*)(obj + 10);
-        FUN_80006a68(&objPos_x, targetGrid);
-        objPos_x = target[0x1a];
-        objPos_y = target[0x1b];
-        objPos_z = target[0x1c];
-        uVar6 = FUN_80006a68(&objPos_x, objGrid);
-        losClear = countLeadingZeros(state[0xb7]);
-        if (((losClear >> 5 & 0x1000000) != 0) &&
+        local_34 = *(float*)(param_9 + 6);
+        local_30 = *(float*)(param_9 + 8);
+        local_2c = *(float*)(param_9 + 10);
+        FUN_80006a68(&local_34, asStack_44);
+        local_34 = pfVar5[0x1a];
+        local_30 = pfVar5[0x1b];
+        local_2c = pfVar5[0x1c];
+        uVar6 = FUN_80006a68(&local_34, asStack_3c);
+        uVar2 = countLeadingZeros(param_10[0xb7]);
+        if (((uVar2 >> 5 & 0x1000000) != 0) &&
             (iVar3 = FUN_80006a64(uVar6, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                  objGrid, targetGrid, (undefined4*)0x0, auStack_48, 0), iVar3 == 0))
+                                  asStack_3c, asStack_44, (undefined4*)0x0, auStack_48, 0), iVar3 == 0))
         {
-            state[0xb9] = state[0xb9] | 0x10000;
-            resetVal = lbl_803E3548;
-            state[0xc9] = lbl_803E3548;
-            state[0xcb] = resetVal;
+            param_10[0xb9] = param_10[0xb9] | 0x10000;
+            fVar1 = lbl_803E3548;
+            param_10[0xc9] = lbl_803E3548;
+            param_10[0xcb] = fVar1;
         }
     }
-    FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)obj,
-                 (int)state, &dx, '\x01');
-    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, obj, (int)state, 0xf, '\0');
+    FUN_8014ccb8((double)lbl_803E3554, (double)lbl_803E3558, (double)lbl_803E355C, (int)param_9,
+                 (int)param_10, &local_28, '\x01');
+    enemy_free((double)lbl_803E3564, (double)lbl_803E3568, param_9, (int)param_10, 0xf, '\0');
     return;
 }
 
-void FUN_80153b00(int obj, int state)
+void FUN_80153b00(int param_1, int param_2)
 {
-    char spawnCount;
+    char cVar1;
 
-    spawnCount = '\0';
-    switch (*(undefined2*)(obj + 0xa0))
+    cVar1 = '\0';
+    switch (*(undefined2*)(param_1 + 0xa0))
     {
     case 1:
-        spawnCount = '\x01';
+        cVar1 = '\x01';
         break;
     case 2:
-        spawnCount = '\x01';
+        cVar1 = '\x01';
         break;
     case 3:
-        spawnCount = '\x01';
+        cVar1 = '\x01';
         break;
     case 5:
-        if ((*(uint*)(state + 0x2dc) & 0x80000000) != 0)
+        if ((*(uint*)(param_2 + 0x2dc) & 0x80000000) != 0)
         {
-            spawnCount = '\n';
+            cVar1 = '\n';
         }
     }
-    if ((spawnCount != '\0') && ((*(uint*)(state + 0x2dc) & 0x40000000) == 0))
+    if ((cVar1 != '\0') && ((*(uint*)(param_2 + 0x2dc) & 0x40000000) == 0))
     {
-        for (; spawnCount != '\0'; spawnCount = spawnCount + -1)
+        for (; cVar1 != '\0'; cVar1 = cVar1 + -1)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x802, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x802, NULL, 2, -1, NULL);
         }
     }
     return;
@@ -428,20 +428,20 @@ void FUN_80153b00(int obj, int state)
 
 void FUN_801544a4(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint obj, int state)
+                  uint param_9, int param_10)
 {
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
 
-    *(byte*)(state + 0x33b) = *(byte*)(state + 0x33b) & 0xbf;
-    if (((*(uint*)(state + 0x2dc) & 0x40000000) != 0) && (*(short*)(obj + 0xa0) != 1))
+    *(byte*)(param_10 + 0x33b) = *(byte*)(param_10 + 0x33b) & 0xbf;
+    if (((*(uint*)(param_10 + 0x2dc) & 0x40000000) != 0) && (*(short*)(param_9 + 0xa0) != 1))
     {
-        FUN_800067e8(obj, 0x49c, 2);
+        FUN_800067e8(param_9, 0x49c, 2);
         FUN_8014d4c8((double)lbl_803E35A4, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, state, 1, 0, 0, in_r8, in_r9, in_r10);
+                     param_9, param_10, 1, 0, 0, in_r8, in_r9, in_r10);
     }
-    FUN_80153b00(obj, state);
+    FUN_80153b00(param_9, param_10);
     return;
 }
 
@@ -789,19 +789,19 @@ void fn_80153640(int obj, int state)
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
-            ((GameObject*)newObj)->anim.velocityX = lbl_803E28F4 *
-                (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
-                 ((GameObject*)fx)->anim.rootMotionScale);
+            f32 mul = lbl_803E28F4;
+            p29c = *(int*)&((BaddieState*)state)->trackedObj;
+            ((GameObject*)newObj)->anim.velocityX = mul * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
+                fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
             {
-                f32 mul;
-                ((GameObject*)newObj)->anim.velocityY = (mul = lbl_803E28F4) *
-                    (((lbl_803E28F0 + ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY) +
-                      (f32)(s32)rnd) -
+                p29c = *(int*)&((BaddieState*)state)->trackedObj;
+                ((GameObject*)newObj)->anim.velocityY = mul *
+                    ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)rnd) -
                      ((GameObject*)fx)->anim.localPosX);
-                ((GameObject*)newObj)->anim.velocityZ = mul *
-                    (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -
-                     ((GameObject*)fx)->anim.localPosY);
+                p29c = *(int*)&((BaddieState*)state)->trackedObj;
+                ((GameObject*)newObj)->anim.velocityZ = mul * (((GameObject*)p29c)->anim.localPosZ -
+                    ((GameObject*)fx)->anim.localPosY);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
