@@ -260,8 +260,7 @@ void dll_07_func07(int arg)
 
     GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
              *(FogColor*)&lbl_803DF198);
-    total = 0;
-    for (i = 0; i < 8; i++)
+    for (i = 0, total = 0; i < 8; i++)
     {
         snow = (u8*)lbl_8039A828[i];
         if (snow != NULL && snow[0x144F] == 0)
