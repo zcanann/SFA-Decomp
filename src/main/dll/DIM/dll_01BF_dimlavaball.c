@@ -139,7 +139,7 @@ int dimlogfire_getExtraSize(void);
 
 void lavaball1bf_func11(int* obj)
 {
-    Lavaball1bfState* p = (Lavaball1bfState*)((int**)obj)[0xb8 / 4];
+    Lavaball1bfState* p = (Lavaball1bfState*)(int*)((GameObject*)obj)->extra;
     if (p->gateA == 0) return;
     if (p->pending == 0) return;
     p->pending = 0;
@@ -148,7 +148,7 @@ void lavaball1bf_func11(int* obj)
 int lavaball1bf_setScale(int* obj)
 {
     Lavaball1bfState* p;
-    obj = (int*)((int**)obj)[0xb8 / 4];
+    obj = (int*)(int*)((GameObject*)obj)->extra;
     p = (Lavaball1bfState*)obj;
     if (p->gateA == 0) return 0;
     if (p->pending == 0)
