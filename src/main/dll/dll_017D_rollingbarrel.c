@@ -35,6 +35,7 @@ extern s16 lbl_803DDB20;
 
 extern int lbl_803E4460;
 extern int lbl_803E4464;
+typedef struct { int a, b; } RollingBarrelInitPair;
 extern f32 lbl_803E4468;
 extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
@@ -109,8 +110,7 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     RollingBarrelState* state = ((GameObject*)obj)->extra;
     int tmp[2];
 
-    tmp[0] = lbl_803E4460;
-    tmp[1] = lbl_803E4464;
+    *(RollingBarrelInitPair*)tmp = *(RollingBarrelInitPair*)&lbl_803E4460;
     params->respawnParam = -1;
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     ((GameObject*)obj)->anim.rotZ = 0x4000;
