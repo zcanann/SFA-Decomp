@@ -1,6 +1,34 @@
+/*
+ * kytesmum (DLL 0x266, object type 0x43) - the "Kyte's mum" NPC.
+ *
+ * The placement's mode byte selects one of three behaviours, wired up in
+ * kytesmum_init:
+ *   mode 1     - stationary NPC; interacting runs trigger sequence 0
+ *                (kytesmum_spawnInteractionCallback).
+ *   mode 2     - roams; flees toward Tricky/the player when they get close
+ *                and runs a random greeting sequence on contact
+ *                (kytesmum_updateNearPlayerCallback). Added to obj group 3.
+ *   mode 0 / 3 - quest-giver; walks a fixed quest-bit table and runs the
+ *                matching trigger sequence (kytesmum_updateQuestStateCallback).
+ *
+ * Every frame kytesmum_update faces the placement yaw, services the idle
+ * sound timer, advances the current animation move (picking a new random
+ * idle/look move at the end of a move), plays anim-event sfx, runs eye and
+ * model-sound anims, and forwards a contact callback to the nearest obj in
+ * group 1. Completing the active callback sets the placement's completion
+ * game bit.
+ */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+
+#define KYTESMUM_OBJECT_TYPE_ID 0x43
+#define KYTESMUM_EXTRA_SIZE 0x6ec
+
+#define KYTESMUM_MODE_QUEST_A 0    /* shares the quest-state path with mode 3 */
+#define KYTESMUM_MODE_STATIONARY 1
+#define KYTESMUM_MODE_ROAMING 2
+#define KYTESMUM_MODE_QUEST_B 3
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
@@ -69,9 +97,9 @@ STATIC_ASSERT(offsetof(KytesMumObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(KytesMumObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(KytesMumObject, interactionCallback) == 0xBC);
 
-int kytesmum_getExtraSize(void) { return 0x6ec; }
+int kytesmum_getExtraSize(void) { return KYTESMUM_EXTRA_SIZE; }
 
-int kytesmum_getObjectTypeId(void) { return 0x43; }
+int kytesmum_getObjectTypeId(void) { return KYTESMUM_OBJECT_TYPE_ID; }
 
 void kytesmum_hitDetect(void)
 {
@@ -173,6 +201,7 @@ void kytesmum_update(int obj)
     nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
     if ((void*)nearest != NULL)
     {
+        /* DLL vtable slot 0x28: forwards the contact callback to the nearest obj in group 1 */
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(
             nearest, obj, 1, 2);
     }
@@ -180,11 +209,11 @@ void kytesmum_update(int obj)
 
 int kytesmum_idleCallback(void)
 {
-    Obj_GetPlayerObject();
+    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
     return 0;
 }
 
-void kytesmum_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
 {
     if (visible != 0)
     {
@@ -203,7 +232,7 @@ void kytesmum_free(int obj)
 
 int kytesmum_spawnInteractionCallback(int obj)
 {
-    Obj_GetPlayerObject();
+    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
     {
         buttonDisable(0, 0x100);
@@ -211,7 +240,7 @@ int kytesmum_spawnInteractionCallback(int obj)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-        return 0;
+        return 0; /* callback always returns 0; the interacted path carries no result */
     }
     return 0;
 }
@@ -239,7 +268,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
     KytesMumSetup* setup;
     int i;
-    Obj_GetPlayerObject();
+    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
     setup = ((KytesMumObject*)obj)->setup;
     ObjHits_EnableObject(obj);
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -252,6 +281,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     }
+    /* double-negation required for cntlzw codegen (#23) */
     {
         int move2 = runtime->moveSet->moves[2];
         int notResult = !dll_2E_func07(obj, (u8*)animUpdate, (char*)runtime, move2, move2);
@@ -259,13 +289,12 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     }
 }
 
-void kytesmum_init(int obj, char* arg)
+void kytesmum_init(int obj, KytesMumSetup* setup)
 {
     KytesMumMoveSet* moveSets = (KytesMumMoveSet*)lbl_8032A7C0;
     KytesMumObject* kytesMum = (KytesMumObject*)obj;
     KytesMumRuntime* runtime = kytesMum->runtime;
-    KytesMumSetup* setup = (KytesMumSetup*)arg;
-    int r;
+    int startMove;
     kytesMum->yaw = (s16)(setup->yaw << 8);
     if (GameBit_Get(setup->completionGameBit) != 0)
     {
@@ -273,13 +302,13 @@ void kytesmum_init(int obj, char* arg)
     }
     switch (setup->mode)
     {
-    case 1:
+    case KYTESMUM_MODE_STATIONARY:
         runtime->moveSet = &moveSets[0];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_spawnInteractionCallback;
         runtime->eventSfxTable = 0;
         kytesMum->interactionCallback = (void*)kytesmum_animEventCallback;
         break;
-    case 2:
+    case KYTESMUM_MODE_ROAMING:
         runtime->moveSet = &moveSets[1];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateNearPlayerCallback;
         runtime->eventSfxTable = (s16*)&lbl_803DC2C8;
@@ -292,8 +321,8 @@ void kytesmum_init(int obj, char* arg)
         ObjHits_RegisterActiveHitVolumeObject(obj);
         kytesMum->interactionCallback = (void*)kytesmum_animEventCallback;
         break;
-    case 0:
-    case 3:
+    case KYTESMUM_MODE_QUEST_A:
+    case KYTESMUM_MODE_QUEST_B:
         GameBit_Set(0x934, 0);
         GameBit_Set(0x933, 0);
         runtime->moveSet = &moveSets[2];
@@ -304,9 +333,9 @@ void kytesmum_init(int obj, char* arg)
     }
     runtime->idleSfxTable = &moveSets[3];
     runtime->animSpeed = lbl_803E699C;
-    r = randomGetRange(0, 1) * 2;
-    r = *(s16*)((char*)runtime->moveSet + r);
-    ObjAnim_SetCurrentMove(obj, r, lbl_803E698C, 0);
+    startMove = randomGetRange(0, 1) * 2;
+    startMove = *(s16*)((char*)runtime->moveSet + startMove);
+    ObjAnim_SetCurrentMove(obj, startMove, lbl_803E698C, 0);
     kytesMum->objectFlags |= 0x2000;
 }
 
@@ -361,12 +390,12 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     int questBits[3];
     int triggerIds[3];
     int count;
-    char* runtime;
+    KytesMumRuntime* runtime;
     *(QuestTriple*)questBits = *(QuestTriple*)lbl_802C2578;
     *(QuestTriple*)triggerIds = *(QuestTriple*)lbl_802C2584;
     count = 0;
     Obj_GetPlayerObject();
-    runtime = ((GameObject*)obj)->extra;
+    runtime = (KytesMumRuntime*)((GameObject*)obj)->extra;
     saveGame_saveObjectPos(obj);
     ObjHits_DisableObject(obj);
     for (; questBits[count] != -1 && GameBit_Get(questBits[count]) != 0; count++)
@@ -375,7 +404,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     }
     if (count > 0)
     {
-        *(int*)(runtime + 0x6d0) = (int)lbl_8032A7FC;
+        runtime->idleSfxTable = lbl_8032A7FC;
     }
     GameBit_Set(0xeb9, count == 1);
     next = triggerIds[count];
