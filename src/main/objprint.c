@@ -1559,13 +1559,15 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
         table = (void*)((GameObject*)obj)->anim.modelInstance;
         if (table != NULL)
         {
+            int bank;
             i = 0;
             j = 0;
             n = (s32)(u32)((ObjDef*)table)->jointCount;
             for (k = 0; k < n; k++)
             {
-                if ((int)*(u8*)(*(int*)((int)table + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(*(int*)((int)table + 0x10) + i) == key)
+                bank = *(int*)((int)table + 0x10);
+                if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
+                    (int)*(u8*)(bank + i) == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
