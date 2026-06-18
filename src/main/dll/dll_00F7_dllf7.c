@@ -252,7 +252,7 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 
-extern f32 lbl_803E3400;
+extern const f32 lbl_803E3400;
 extern f32 lbl_803E3404;
 extern f32 lbl_803E3408;
 extern f32 lbl_803E340C;
