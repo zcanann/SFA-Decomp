@@ -166,7 +166,6 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     s16 ang;
     int count;
     int i;
-    f32* pf;
     RomCurvePoint** list;
     f32 sum0;
     f32 sum1;
@@ -183,10 +182,9 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
         sum1 = sum0;
         sum2 = sum0;
         sum3 = sum0;
-        pf = heights;
         for (i = 0; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
-            *pf = collision->points[i][1];
+            heights[i] = collision->points[i][1];
             hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY,
                                         collision->points[i][2], &hitOut, -1, 0);
             found1 = 0;
@@ -201,7 +199,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
                         if ((pointY < lbl_803E066C + object->anim.worldPosY) &&
                             ((s8)point->type != ROMCURVE_POINT_TYPE_WATER))
                         {
-                            *pf = point->x;
+                            heights[i] = point->x;
                             sum1 = sum1 + point->y;
                             sum2 = sum2 + point->z;
                             sum3 = sum3 + point->w;
@@ -214,8 +212,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
                 }
                 while (--hits != 0);
             }
-            collision->points[i][1] = *pf;
-            pf = pf + 1;
+            collision->points[i][1] = heights[i];
         }
         if (count != 0)
         {
