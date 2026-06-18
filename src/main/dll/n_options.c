@@ -1,14 +1,30 @@
+/*
+ * THP attract-movie playback back end (AttractMoviePlayer lbl_803A5D60,
+ * attract_movie.h). Three jobs:
+ *
+ *  - Video: THPPlayerDrawCurrentFrame builds the GX TEV pipeline that
+ *    converts the decoded Y/U/V planes into RGB and blits the current
+ *    frame; AttractMovie_DrawTextureCallback / fn_80118240 are the
+ *    per-model render hooks, THPPlayerPostDrawDone recycles spent
+ *    texture sets, THPPlayerGetVideoInfo exposes the frame dimensions.
+ *  - Audio: AttractMovieAudio_Mix scales decoded PCM by a fading volume
+ *    and mixes (or copies/clears) it into the AI output, draining decoded
+ *    buffers from dll_3b's queue (PopDecodedAudioBuffer). Movie_SetVolumeFade
+ *    arms the volume ramp; AttractMovieAudio_DmaCallback double-buffers the
+ *    AI DMA and re-mixes each completed buffer.
+ *  - Timing: ProperTimingForGettingNextFrame decides, from the field/retrace
+ *    counters and the THP frame rate, when the next video frame is due.
+ */
 #include "dolphin/ai.h"
 #include "dolphin/os.h"
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
+#include "string.h"
 
-extern void* memset(void* dst, int value, uint size);
-extern void* memcpy(void* dst, const void* src, uint size);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 PopDecodedAudioBuffer(int flags);
-extern void PushFreeAudioBuffer(void* message);
+extern void* PopDecodedAudioBuffer(s32 flags);
+extern void PushFreeAudioBuffer(void* buf);
 extern undefined4 GXSetTexCoordGen2();
 extern undefined4 GXSetNumTexGens();
 extern undefined4 GXSetCullMode();
@@ -34,39 +50,45 @@ extern undefined4 GXSetBlendMode();
 extern undefined4 GXSetColorUpdate();
 extern undefined4 GXSetAlphaUpdate();
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
-extern u8* ObjModel_GetRenderOp(undefined4 model, undefined4 idx);
+extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
+/* attract-movie globals (home TU: dll_3b / picmenu / dll_3e). */
 extern u16 gAttractMovieVolumeScale[];
-extern undefined4 lbl_803E1D30;
+extern undefined4 lbl_803E1D30; /* TEV color-S10 / k-color constants */
 extern undefined4 lbl_803E1D34;
 extern undefined4 lbl_803E1D38;
 extern undefined4 lbl_803E1D3C;
 extern undefined4 lbl_803E1D40;
-extern f32 lbl_803E1D44;
+extern f32 lbl_803E1D44; /* texture LOD */
 extern s32 gAttractMovieState;
-extern s32 lbl_803DD660;
-extern AIDCallback lbl_803DD668;
-extern s32 lbl_803DD66C;
-extern u32 lbl_803DD670;
-extern u32 lbl_803DD674;
-extern u32 lbl_803DD678;
-extern f32 lbl_803E1D50;
-extern char lbl_803A57C0[0x50C];
-extern OSMessageQueue lbl_803A5CCC[1];
+extern s32 lbl_803DD660;       /* texture-set free queue active */
+extern AIDCallback lbl_803DD668; /* AI DMA done callback */
+extern s32 lbl_803DD66C;       /* DMA callback phase */
+extern u32 lbl_803DD670;       /* previous/pending DMA source addr */
+extern u32 lbl_803DD674;       /* queued next DMA source addr */
+extern u32 lbl_803DD678;       /* AI DMA double-buffer index */
+extern f32 lbl_803E1D50;       /* playback time accumulator */
+extern char lbl_803A57C0[0x50C]; /* AI DMA double buffer */
+extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
-void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, uint height)
+#define MOVIE_VOLUME_MAX 0x7f
+#define MOVIE_FADE_FRAMES_MAX 60000
+#define S16_MIN (-0x8000)
+#define S16_MAX 0x7fff
+
+void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u32 height)
 {
-    uint halfWidth;
-    uint halfHeight;
+    u32 halfWidth;
+    u32 halfHeight;
     double lod;
     undefined4 kColor0;
     undefined4 kColor1;
     undefined4 kColor2;
     undefined4 tevColorS10[2];
-    uint yTexObj[8];
-    uint uTexObj[8];
-    uint vTexObj[8];
+    GXTexObj yTexObj;
+    GXTexObj uTexObj;
+    GXTexObj vTexObj;
 
     gxSetZMode_(1, 3, 1);
     GXSetBlendMode(0, 1, 0, 0);
@@ -123,22 +145,20 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, u
     kColor2 = lbl_803E1D40;
     GXSetTevKColor(2, (byte*)&kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
-    GXInitTexObj(yTexObj, yBuf, width & 0xffff, height & 0xffff, 1, 0, 0,
-                 '\0');
+    GXInitTexObj(&yTexObj, yBuf, width & 0xffff, height & 0xffff, 1, 0, 0, 0);
     lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(yTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
-    GXLoadTexObj(yTexObj, 0);
+    GXInitTexObjLOD(&yTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXLoadTexObj(&yTexObj, 0);
     halfWidth = (int)(short)width >> 1;
     halfHeight = (int)(short)height >> 1;
-    GXInitTexObj(uTexObj, uBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, '\0');
+    GXInitTexObj(&uTexObj, uBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, 0);
     lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(uTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
-    GXLoadTexObj(uTexObj, 1);
-    GXInitTexObj(vTexObj, vBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, '\0');
+    GXInitTexObjLOD(&uTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXLoadTexObj(&uTexObj, 1);
+    GXInitTexObj(&vTexObj, vBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, 0);
     lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(vTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
-    GXLoadTexObj(vTexObj, 2);
-    return;
+    GXInitTexObjLOD(&vTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXLoadTexObj(&vTexObj, 2);
 }
 
 BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
@@ -149,17 +169,17 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
 
     if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.audioExists != 0))
     {
-        if (volume > 0x7f)
+        if (volume > MOVIE_VOLUME_MAX)
         {
-            volume = 0x7f;
+            volume = MOVIE_VOLUME_MAX;
         }
         if (volume < 0)
         {
             volume = 0;
         }
-        if (fadeFrames > 60000)
+        if (fadeFrames > MOVIE_FADE_FRAMES_MAX)
         {
-            fadeFrames = 60000;
+            fadeFrames = MOVIE_FADE_FRAMES_MAX;
         }
         if (fadeFrames < 0)
         {
@@ -186,16 +206,16 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
     return FALSE;
 }
 
-void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
+void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
 {
-    ushort volumeScale;
-    float volume;
-    uint validSamples;
+    u16 volumeScale;
+    f32 volume;
+    u32 validSamples;
     int mixed;
-    short* audioPtr;
-    uint remain;
+    s16* audioPtr;
+    u32 remain;
 
-    if (source != (short*)0x0)
+    if (source != NULL)
     {
         if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0))
         {
@@ -235,26 +255,26 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
                     }
                     lbl_803A5D60.curVolume = volume;
                     volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
-                    mixed = (int)*source + ((int)((uint)volumeScale * (int)*audioPtr) >> 0xf);
-                    if (mixed < -0x8000)
+                    mixed = (int)*source + ((int)((u32)volumeScale * (int)*audioPtr) >> 0xf);
+                    if (mixed < S16_MIN)
                     {
-                        mixed = -0x8000;
+                        mixed = S16_MIN;
                     }
-                    if (0x7fff < mixed)
+                    if (S16_MAX < mixed)
                     {
-                        mixed = 0x7fff;
+                        mixed = S16_MAX;
                     }
-                    *destination = (short)mixed;
-                    mixed = (int)source[1] + ((int)((uint)volumeScale * (int)audioPtr[1]) >> 0xf);
-                    if (mixed < -0x8000)
+                    *destination = (s16)mixed;
+                    mixed = (int)source[1] + ((int)((u32)volumeScale * (int)audioPtr[1]) >> 0xf);
+                    if (mixed < S16_MIN)
                     {
-                        mixed = -0x8000;
+                        mixed = S16_MIN;
                     }
-                    if (0x7fff < mixed)
+                    if (S16_MAX < mixed)
                     {
-                        mixed = 0x7fff;
+                        mixed = S16_MAX;
                     }
-                    destination[1] = (short)mixed;
+                    destination[1] = (s16)mixed;
                     destination = destination + 2;
                     source = source + 2;
                     audioPtr = audioPtr + 2;
@@ -309,26 +329,26 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
                 }
                 lbl_803A5D60.curVolume = volume;
                 volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
-                mixed = (int)((uint)volumeScale * (int)*audioPtr) >> 0xf;
-                if (mixed < -0x8000)
+                mixed = (int)((u32)volumeScale * (int)*audioPtr) >> 0xf;
+                if (mixed < S16_MIN)
                 {
-                    mixed = -0x8000;
+                    mixed = S16_MIN;
                 }
-                if (0x7fff < mixed)
+                if (S16_MAX < mixed)
                 {
-                    mixed = 0x7fff;
+                    mixed = S16_MAX;
                 }
-                *destination = (short)mixed;
-                mixed = (int)((uint)volumeScale * (int)audioPtr[1]) >> 0xf;
-                if (mixed < -0x8000)
+                *destination = (s16)mixed;
+                mixed = (int)((u32)volumeScale * (int)audioPtr[1]) >> 0xf;
+                if (mixed < S16_MIN)
                 {
-                    mixed = -0x8000;
+                    mixed = S16_MIN;
                 }
-                if (0x7fff < mixed)
+                if (S16_MAX < mixed)
                 {
-                    mixed = 0x7fff;
+                    mixed = S16_MAX;
                 }
-                destination[1] = (short)mixed;
+                destination[1] = (s16)mixed;
                 destination = destination + 2;
                 audioPtr = audioPtr + 2;
             }
@@ -343,7 +363,6 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
         }
         while (sampleCount != 0);
     }
-    return;
 }
 
 void AttractMovieAudio_DmaCallback(void)
@@ -371,12 +390,12 @@ void AttractMovieAudio_DmaCallback(void)
                 lbl_803DD670 = lbl_803DD674;
             }
             lbl_803DD668();
-            lbl_803DD674 = AIGetDMAStartAddr() + 0x80000000;
+            lbl_803DD674 = AIGetDMAStartAddr() + 0x80000000 /* phys -> cached RAM */;
         }
         else
         {
             lbl_803DD668();
-            lbl_803DD670 = AIGetDMAStartAddr() + 0x80000000;
+            lbl_803DD670 = AIGetDMAStartAddr() + 0x80000000 /* phys -> cached RAM */;
         }
 
         lbl_803DD678 ^= 1;
@@ -443,7 +462,7 @@ void fn_80118240(void)
     }
 }
 
-uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4* modelPtr, undefined4 renderOpIdx)
+BOOL AttractMovie_DrawTextureCallback(int unused, undefined4* modelPtr, undefined4 renderOpIdx)
 {
     AttractMovieTextureSet* textureSet;
     u8* renderOp;
