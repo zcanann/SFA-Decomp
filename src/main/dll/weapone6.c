@@ -1,3 +1,21 @@
+/*
+ * Tricky companion-AI substate handlers (TrickyState::substate machines).
+ *
+ * Each fn_* is one behavior tick dispatched off TrickyState->substate:
+ *   fn_8013F100 - fetch/carry-stick behavior (grab a thrown stick via
+ *                 fn_8017xxxx stick slots, swim or walk to it, return it).
+ *   fn_8013F9E4 - idle/eat ambient state (random bark cues, eating anim).
+ *   fn_8013FBE4 - track a TumbleweedBush target and steer Tricky toward it,
+ *                 gated by game bit 0x48b.
+ *   fn_8013FEC0 - simple swim-or-walk move toward the follow target.
+ *
+ * Common to all: water is detected by comparing waterLevel / unk2B0 / unk2B4
+ * to pick a swim anim vs a ground anim. fn_8013F100 and fn_8013F9E4 play a
+ * localized bark sfx unless one is already on object channel 16. Debug strings
+ * are emitted via
+ * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the lbl_803E*
+ * floats are this TU's tuning constants (.sdata2).
+ */
 #include "main/audio/sfx.h"
 #include "main/frustum.h"
 #include "main/gamebits.h"
@@ -10,6 +28,12 @@
 #define TRICKY_STATE_RESET_FLAG_10000 0x00010000
 #define TRICKY_STATE_RESET_FLAG_20000 0x00020000
 #define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+
+typedef struct
+{
+    u8 hi : 4;
+    u8 pad : 4;
+} TrickyNibblePair;
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
     (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
@@ -72,7 +96,7 @@ void fn_8013F100(int obj, register int state)
     int status;
     int extra;
     int useSwimAnim;
-    short move;
+    s16 move;
     double bob;
     f32 fz;
     u8* targetPos;
@@ -413,9 +437,9 @@ void fn_8013F100(int obj, register int state)
 
 void fn_8013F9E4(int obj, int state)
 {
-    int state2;
+    int extra;
     int inWater;
-    short move;
+    s16 move;
 
     if (trickyFoodFn_8014460c(obj, state) == 0)
     {
@@ -426,15 +450,15 @@ void fn_8013F9E4(int obj, int state)
             {
                 ((TrickyState*)state)->unk740 = (f32)(s32)
                 randomGetRange(500, 750);
-                state2 = *(int*)&((GameObject*)obj)->extra;
-                if ((((uint) * (u8*)(state2 + 0x58) >> 6) & 1) == 0)
+                extra = *(int*)&((GameObject*)obj)->extra;
+                if ((((uint) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
                     move = ((GameObject*)obj)->anim.currentMove;
                     if (move >= 48 || move < 41)
                     {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                         {
-                            objAudioFn_800393f8(obj, (void*)(state2 + 936), 864, 1280, -1, 0);
+                            objAudioFn_800393f8(obj, (void*)(extra + 936), 864, 1280, -1, 0);
                         }
                     }
                 }
@@ -484,12 +508,6 @@ void fn_8013F9E4(int obj, int state)
     }
 }
 
-typedef struct
-{
-    u8 hi : 4;
-    u8 lo : 4;
-} WeaponNibble;
-
 void fn_8013FBE4(int obj, register int state)
 {
     int inWater;
@@ -507,15 +525,15 @@ void fn_8013FBE4(int obj, register int state)
     {
     case 0:
         newBit = GameBit_Get(0x48b);
-        ((WeaponNibble*)(state + 0x700))->hi = newBit;
+        ((TrickyNibblePair*)(state + 0x700))->hi = newBit;
         *(int*)&((TrickyState*)state)->unk710 = 0;
         ((TrickyState*)state)->substate = 1;
     case 1:
         currentBit = GameBit_Get(0x48b);
-        bitIndex = ((WeaponNibble*)(state + 0x700))->hi;
+        bitIndex = ((TrickyNibblePair*)(state + 0x700))->hi;
         if (bitIndex != currentBit)
         {
-            ((WeaponNibble*)(state + 0x700))->hi = bitIndex + 1;
+            ((TrickyNibblePair*)(state + 0x700))->hi = bitIndex + 1;
             **(u8**)state -= 2;
         }
         targetPos = (float*)fn_801CDE70(*(int*)&((TrickyState*)state)->followObj);
@@ -588,7 +606,7 @@ void fn_8013FBE4(int obj, register int state)
 
 void fn_8013FEC0(int obj, int state)
 {
-    bool inWater;
+    int inWater;
     int result;
 
     result = trickyFn_8013b368(obj, lbl_803E247C, state);
@@ -596,21 +614,21 @@ void fn_8013FEC0(int obj, int state)
     {
         if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
         {
-            inWater = false;
+            inWater = 0;
         }
         else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
         {
-            inWater = true;
+            inWater = 1;
         }
         else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
         {
-            inWater = true;
+            inWater = 1;
         }
         else
         {
-            inWater = false;
+            inWater = 0;
         }
-        if (inWater)
+        if (inWater != 0)
         {
             objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
