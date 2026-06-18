@@ -323,8 +323,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         }
         else
         {
-            s8 b8;
-            s8 b9;
+            int b8;
+            int b9;
             void** slot;
             bestSlot = -1;
             bestVal = -1;
