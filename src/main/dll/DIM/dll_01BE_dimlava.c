@@ -165,7 +165,7 @@ int lavaball1be_getObjectTypeId(int* obj)
     return 0x2;
 }
 
-u32 lavaball1be_func11(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x10) & 0x10; }
+u32 lavaball1be_func11(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & 0x10; }
 
 int fn_801B0784(int obj, int delta);
 
