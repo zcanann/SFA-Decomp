@@ -389,7 +389,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     stateTables = (u8*)&gSHthorntailDataTables;
     runtime = obj->runtime;
     config = obj->config;
-    ref = (int)config;
     if (runtime->behaviorState == '\f')
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
