@@ -5861,7 +5861,7 @@ int fn_8029EBCC(int obj, int state)
     inner->unk418 = inner->unk418 - timeDelta;
     if (inner->unk418 < lbl_803E7EA4)
     {
-        inner->unk418 = lbl_803E7EA4;
+        inner->unk418 = *(f32*)&lbl_803E7EA4;
     }
     if ((inner->buttonsJustPressed & 0x100) != 0)
     {
@@ -5914,8 +5914,11 @@ int fn_8029EBCC(int obj, int state)
                 d = lbl_803E7EA4;
             }
         }
-        inner->targetYaw =
-            (int)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)inner->targetYaw);
+        {
+            f32 p = lbl_803E7FB4 * d;
+            inner->targetYaw =
+                (int)(p * lbl_803DC6DC + (f32)inner->targetYaw);
+        }
         inner->yaw = inner->targetYaw;
     }
     if (inner->unk7BC > lbl_803E7EA4)
