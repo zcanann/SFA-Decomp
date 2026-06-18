@@ -1,3 +1,17 @@
+/*
+ * Tricky companion behaviour states (part of the tricky DLL, 0x00C4).
+ *
+ * Each function here is one entry of Tricky's per-frame substate machine,
+ * dispatched off state[0xa] (the substate index) either directly or through
+ * the function-pointer table walked in trickyFn_80142524
+ * (((TrickyFnRow*)(base + state[0xa]*4))->fn). They drive Tricky along ROM
+ * curve paths (rom_curve_interface), follow/feed the player, run the dig
+ * and flame-breath sequences, pick random idle moves and emit the matching
+ * object sounds (audio/sfx). trickyFoodFn_8014460c handles the shared
+ * feeding/Y-button-item interaction and is called as a guard at the top of
+ * most states. Water-vs-land animation selection (the repeated
+ * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
+ */
 #include "main/dll/grenade.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_00C4_tricky.h"
@@ -13,10 +27,10 @@
 
 extern int randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjLink_AttachChild();
-extern undefined4 objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
+extern void ObjLink_AttachChild();
+extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int trickyFn_8013b368();
-extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
+extern void objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 
 extern f32 timeDelta;
 extern f32 lbl_803E23DC;
@@ -30,25 +44,11 @@ extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
 
-/*
- * --INFO--
- *
- * Function: trickyDigTunnel
- * EN v1.0 Address: 0x80141880
- * EN v1.0 Size: 1900b
- * EN v1.1 Address: 0x80141C08
- * EN v1.1 Size: 1900b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 extern void trickyDebugPrint(const char *fmt, ...);
 extern void getYButtonItem(s16 *out);
 extern void buttonDisable(int a, int b);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
-
 extern u8 lbl_8031D2E8[];
 extern f32 lbl_803E2488;
 extern f32 lbl_803E2510;
@@ -72,7 +72,7 @@ extern u32 lbl_803E23CC;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
-extern void fn_80144B50(u8 * obj, u8 * state);
+void fn_80144B50(u8* obj, u8* state);
 extern void objPosFn_80039510(int obj, int flags, float* out);
 extern f32 lbl_803E24C8;
 extern u8 Obj_IsLoadingLocked(void);
@@ -685,21 +685,21 @@ int trickyFn_80142a14(int obj, int state)
     }
     else if ((u8)trickyFn_8013b368((int)obj, lbl_803E24C8, (int)state) != 1)
     {
-    ((FlagByte728*)(state + 0x728))->bf5 = 1;
-    sfxId = randomGetRange(862, 863);
-    tex = *(int*)&((GameObject*)obj)->extra;
-    if ((((u32)*(u8*)(tex + 0x58) >> 6) & 1) == 0)
-    {
-        move = ((GameObject*)obj)->anim.currentMove;
-        if (move >= 48 || move < 41)
+        ((FlagByte728*)(state + 0x728))->bf5 = 1;
+        sfxId = randomGetRange(862, 863);
+        tex = *(int*)&((GameObject*)obj)->extra;
+        if ((((u32)*(u8*)(tex + 0x58) >> 6) & 1) == 0)
         {
-            if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+            move = ((GameObject*)obj)->anim.currentMove;
+            if (move >= 48 || move < 41)
             {
-                objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), sfxId, 1280, -1, 0);
+                if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                {
+                    objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), sfxId, 1280, -1, 0);
+                }
             }
         }
-    }
-    return 0;
+        return 0;
     }
     return 1;
 }
@@ -867,38 +867,38 @@ int trickyFn_80142eb0(int obj, int state)
     }
     case 47:
         if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
-    {
-        if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
         {
-            b = 0;
+            if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+            {
+                b = 0;
+            }
+            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            {
+                b = 1;
+            }
+            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            {
+                b = 1;
+            }
+            else
+            {
+                b = 0;
+            }
+            if (b != 0)
+            {
+                objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                trickyDebugPrint(sInWaterMessage);
+            }
+            else
+            {
+                objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                trickyDebugPrint(lbl_8031D478);
+            }
+            *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~0x10;
+            ((TrickyState*)state)->substate = 0;
         }
-        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
-        {
-            b = 1;
-        }
-        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
-        {
-            b = 1;
-        }
-        else
-        {
-            b = 0;
-        }
-        if (b != 0)
-        {
-            objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-            ((TrickyState*)state)->unk79C = lbl_803E2440;
-            ((TrickyState*)state)->unk838 = lbl_803E23DC;
-            trickyDebugPrint(sInWaterMessage);
-        }
-        else
-        {
-            objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
-            trickyDebugPrint(lbl_8031D478);
-        }
-        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~0x10;
-        ((TrickyState*)state)->substate = 0;
-    }
         break;
     }
     return 1;
@@ -965,7 +965,7 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
     case 0x24:
         if (((trickyState[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
-            *(undefined*)((int)trickyState + 10) = 0;
+            *(u8*)((int)trickyState + 10) = 0;
         }
         break;
     }
@@ -994,7 +994,7 @@ undefined4 trickyFn_801432cc(int obj, int* trickyState)
     case 0x22:
         if (((trickyState[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
-            *(undefined*)((int)trickyState + 10) = 0;
+            *(u8*)((int)trickyState + 10) = 0;
         }
         break;
     }
@@ -1013,12 +1013,12 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
     {
         return 1;
     }
-    for (val = 0; val < *(char*)((int)trickyState + 0x827); val = val + 1)
+    for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
     {
         ref = val + 0x81f;
         if (*(char*)((int)trickyState + ref) != '\0') continue;
         ref = *(int*)&((GameObject*)obj)->extra;
-        if (((u32)(*(byte*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
+        if (((u32)(*(u8*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
         move = ((GameObject*)obj)->anim.currentMove;
         if (move >= 0x30 || move < 0x29)
         {
@@ -1037,7 +1037,7 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
     {
         if (trickyState[8] == (int)((GameObject*)obj)->anim.currentMove)
         {
-            *(undefined*)((int)trickyState + 10) = 0;
+            *(u8*)((int)trickyState + 10) = 0;
         }
     }
     return 1;
@@ -1088,7 +1088,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
                 }
             }
         }
-        for (val = 0; val < *(char*)((int)trickyState + 0x827); val = val + 1)
+        for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
         {
             bval = *(char*)((int)trickyState + (val + 0x81f));
             if (bval == '\0')
@@ -1117,38 +1117,38 @@ int trickyFn_801434b0(int obj, int* trickyState)
         break;
     case 0x2b:
         if ((*(u32*)&trickyState[0x15] & 0x8000000) != 0)
-    {
-        if (lbl_803E23DC == *(float*)(trickyState + 0xab))
         {
-            b = 0;
+            if (lbl_803E23DC == *(float*)(trickyState + 0xab))
+            {
+                b = 0;
+            }
+            else if (lbl_803E2410 == *(float*)(trickyState + 0xac))
+            {
+                b = 1;
+            }
+            else if (*(float*)(trickyState + 0xad) - *(float*)(trickyState + 0xac) > lbl_803E2414)
+            {
+                b = 1;
+            }
+            else
+            {
+                b = 0;
+            }
+            if (b != 0)
+            {
+                objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                *(float*)(trickyState + 0x1e7) = lbl_803E2440;
+                *(float*)(trickyState + 0x20e) = lbl_803E23DC;
+                trickyDebugPrint(sInWaterMessage);
+            }
+            else
+            {
+                objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                trickyDebugPrint(lbl_8031D478);
+            }
+            trickyState[0x15] = trickyState[0x15] & ~0x10;
+            *(u8*)((int)trickyState + 10) = 0;
         }
-        else if (lbl_803E2410 == *(float*)(trickyState + 0xac))
-        {
-            b = 1;
-        }
-        else if (*(float*)(trickyState + 0xad) - *(float*)(trickyState + 0xac) > lbl_803E2414)
-        {
-            b = 1;
-        }
-        else
-        {
-            b = 0;
-        }
-        if (b != 0)
-        {
-            objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-            *(float*)(trickyState + 0x1e7) = lbl_803E2440;
-            *(float*)(trickyState + 0x20e) = lbl_803E23DC;
-            trickyDebugPrint(sInWaterMessage);
-        }
-        else
-        {
-            objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
-            trickyDebugPrint(lbl_8031D478);
-        }
-        trickyState[0x15] = trickyState[0x15] & ~0x10;
-        *(u8*)((int)trickyState + 10) = 0;
-    }
         break;
     }
     return 1;
@@ -1271,7 +1271,7 @@ undefined4 trickyFn_80143b04(int obj, int* trickyState)
     {
         if (trickyState[8] == (int)((GameObject*)obj)->anim.currentMove)
         {
-            *(undefined*)((int)trickyState + 10) = 0;
+            *(u8*)((int)trickyState + 10) = 0;
         }
     }
     return 1;
@@ -1291,11 +1291,11 @@ undefined4 trickyFn_80143b78(int obj, int* trickyState)
     {
         if (lbl_803E23DC == *(f32*)((int)trickyState + 0x71c))
         {
-            *(undefined*)((int)trickyState + 10) = 0;
+            *(u8*)((int)trickyState + 10) = 0;
         }
         return 1;
     }
-    *(undefined*)((int)trickyState + 10) = 0;
+    *(u8*)((int)trickyState + 10) = 0;
     return 0;
 }
 
@@ -1304,14 +1304,15 @@ int trickyFn_80143c04(int obj, int state)
     int tex;
     short move;
     u8 result;
-    int iVar4;
+    int followBase;
+    int inWater;
     float threshold;
 
     *(int*)&((TrickyState*)state)->followObj = ((TrickyState*)state)->playerObj;
-    iVar4 = *(u32*)&((TrickyState*)state)->followObj + 0x18;
-    if (*(u32*)&((TrickyState*)state)->unk28 != iVar4)
+    followBase = *(u32*)&((TrickyState*)state)->followObj + 0x18;
+    if (*(u32*)&((TrickyState*)state)->unk28 != followBase)
     {
-        *(int*)&((TrickyState*)state)->unk28 = iVar4;
+        *(int*)&((TrickyState*)state)->unk28 = followBase;
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x400LL;
         *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
@@ -1352,21 +1353,21 @@ int trickyFn_80143c04(int obj, int state)
         }
         if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
         {
-            iVar4 = 0;
+            inWater = 0;
         }
         else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
         {
-            iVar4 = 1;
+            inWater = 1;
         }
         else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
         {
-            iVar4 = 1;
+            inWater = 1;
         }
         else
         {
-            iVar4 = 0;
+            inWater = 0;
         }
-        if (iVar4 != 0)
+        if (inWater != 0)
         {
             return 0;
         }
@@ -1390,17 +1391,17 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     if (*(f32*)((int)trickyState + 0x79c) > lbl_803E23DC)
     {
         objAnimFn_8013a3f0(obj, 0x1b, lbl_803E23EC, 0);
-        *(undefined*)((int)trickyState + 10) = 2;
+        *(u8*)((int)trickyState + 10) = 2;
         *(f32*)((int)trickyState + 0x79c) = lbl_803E23DC;
         return 1;
     }
-    if ((*(byte*)(trickyState + 0x1ca) >> 7 & 1) != 0U)
+    if ((*(u8*)(trickyState + 0x1ca) >> 7 & 1) != 0U)
     {
         *(f32*)((int)trickyState + 0x724) = lbl_803E2524;
         ((FlagByte728*)((int)trickyState + 0x728))->bf7 = 0;
         ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 1;
     }
-    if ((*(byte*)(trickyState + 0x1ca) >> 6 & 1) != 0U)
+    if ((*(u8*)(trickyState + 0x1ca) >> 6 & 1) != 0U)
     {
         *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
         if (*(f32*)((int)trickyState + 0x724) <= lbl_803E23DC)
@@ -1410,7 +1411,7 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
             *(f32*)((int)trickyState + 0x724) =
                 (f32)(s32)(bitVal);
             ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 0;
-            *(undefined*)((int)trickyState + 10) = 1;
+            *(u8*)((int)trickyState + 10) = 1;
         }
         return 0;
     }
@@ -1428,7 +1429,7 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     {
         *(u32*)&trickyState[0x15] = *(u32*)&trickyState[0x15] | 0x20000000LL;
         done = *(int*)&((GameObject*)obj)->extra;
-        if (((*(byte*)(done + 0x58) >> 6 & 1) == 0U) &&
+        if (((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
             ((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                 !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
         {
@@ -1436,10 +1437,10 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
         }
         return 0;
     }
-    if (*(byte*)*trickyState <= 3)
+    if (*(u8*)*trickyState <= 3)
     {
         objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
-        *(undefined*)((int)trickyState + 10) = 3;
+        *(u8*)((int)trickyState + 10) = 3;
         *(f32*)((int)trickyState + 0x738) = lbl_803E2440;
         return 1;
     }
@@ -1449,10 +1450,10 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
         bitVal = randomGetRange(200, 500);
         *(f32*)((int)trickyState + 0x724) =
             (f32)(s32)(bitVal);
-        if (*(byte*)*trickyState <= 7)
+        if (*(u8*)*trickyState <= 7)
         {
             objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
-            *(undefined*)((int)trickyState + 10) = 3;
+            *(u8*)((int)trickyState + 10) = 3;
             *(f32*)((int)trickyState + 0x738) = lbl_803E2440;
             return 1;
         }
@@ -1473,14 +1474,14 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
             else
             {
                 done = *(int*)&((GameObject*)obj)->extra;
-                if ((((*(byte*)(done + 0x58) >> 6 & 1) == 0U) &&
+                if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
                     (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)
                     ) && !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
                 {
                     objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
                 objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
-                *(undefined*)((int)trickyState + 10) = 5;
+                *(u8*)((int)trickyState + 10) = 5;
             }
         }
         else
@@ -1578,7 +1579,7 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
         break;
     case 1:
         state = *(int*)&((GameObject*)obj)->extra;
-        if (((u32)(*(byte*)(state + 0x58) >> 6 & 1)) == 0U)
+        if (((u32)(*(u8*)(state + 0x58) >> 6 & 1)) == 0U)
         {
             if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
             {
