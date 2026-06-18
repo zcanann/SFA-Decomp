@@ -46,7 +46,7 @@ void kt_torch_init(int obj, int placement)
     }
     scale *= lbl_803E3DC4;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * scale;
-    *(s16*)obj = (s16)((*(u8*)(placement + 0x1d) & 0x3f) << 10);
+    ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)(placement + 0x1d) & 0x3f) << 10);
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         **(f32**)&((GameObject*)obj)->anim.modelState = **(f32**)&((GameObject*)obj)->anim.modelInstance * scale;
