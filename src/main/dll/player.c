@@ -11027,13 +11027,13 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
+    f32 posZ;
+    f32 posY;
+    f32 posX;
     f32 pushZ;
     f32 pushX;
     int** nearList;
     f32 queryParams[4];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
 
     fv2 = lbl_803E7EE0;
     found = 0;
