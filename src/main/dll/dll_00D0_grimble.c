@@ -454,8 +454,8 @@ void grimble_update(int obj)
             void* target;
             int r;
 
-            (*(void (**)(int, char*, void*, void*, f32, f32))(*(int*)gPlayerInterface + 0x8))(
-                obj, state, gGrimbleStateHandlersA, gGrimbleStateHandlersB, lbl_803E2EBC, lbl_803E2EBC);
+            (*(void (**)(double, double, int, char*, void*, void*))(*(int*)gPlayerInterface + 0x8))(
+                (double)lbl_803E2EBC, (double)lbl_803E2EBC, obj, state, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
             (*(void (**)(int, f32, int, int, int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) +
                 0x24))(((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48,
                        obj + 0xc, obj + 0x10, obj + 0x14);
