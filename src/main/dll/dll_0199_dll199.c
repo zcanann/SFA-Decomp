@@ -141,18 +141,18 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         }
         animUpdate->eventIds[i] = 0;
     }
-    if (((Dll197State*)st)->unkF != 7)
+    if ((int)((Dll197State*)st)->unkF != 7)
     {
     }
     else
     {
-        if ((getButtonsHeld(0) & 0x100) != 0)
+        if ((getButtonsHeld(0) & 0x100) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State*)st)->unkF = 8;
             ((Dll197State*)st)->unk2 = 0;
         }
-        else if ((getButtonsHeld(0) & 0x200) != 0)
+        else if ((getButtonsHeld(0) & 0x200) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State*)st)->unkF = 7;
