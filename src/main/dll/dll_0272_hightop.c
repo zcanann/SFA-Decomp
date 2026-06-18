@@ -560,6 +560,7 @@ void hightop_initialise(void)
 
 #pragma dont_inline on
 #pragma peephole off
+#pragma peephole on
 int hightop_handleMotionEvent(int obj, u8 event)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
@@ -589,6 +590,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
     }
     return 0;
 }
+#pragma peephole reset
 #pragma peephole reset
 #pragma dont_inline reset
 
@@ -902,7 +904,7 @@ int hightop_stateHandler04(int obj, int p)
             (dy >= lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
             state->unk9FD |= 1;
-            if (randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
+            if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
                 f32 c = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
