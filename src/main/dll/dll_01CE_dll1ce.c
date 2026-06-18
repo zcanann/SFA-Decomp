@@ -1,91 +1,24 @@
-#include "main/dll/dimmagicbridge_state.h"
+/*
+ * dll_1CE: hatch-door object. The lid coasts open under a clamped velocity
+ * while idle; once a key object (seqId 0x18F or 0x1D6) is in range it counts
+ * down, sets its placement gamebit, and - if the load isn't locked and the
+ * placement's unk1A bit matches gamebit 0x46D - spawns its contents object
+ * (subtype 0x246) seeded from the door's transform.
+ *
+ * The TU also hosts dimmagicbridge_* and explosion_* sibling exports (in
+ * DIM/dll_01CC_dimmagicbridge.c / DIM/dll_01CA_dimexplosion.c); their forward
+ * declarations and the descriptor that combines them live in this object's DLL.
+ */
 #include "main/dll/dll1ceplacement_struct.h"
-#include "main/dll/fnexplosionreleasev11unusedstate_struct.h"
-#include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
-#include "main/dll/explosionpartfxsource_struct.h"
-#include "main/dll/explosion_state.h"
 #include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/objseq.h"
 #include "main/resource.h"
-
-/*
- * Per-object extra state for the dimwooddoor2 burnable door
- * (dimwooddoor2_getExtraSize == 0xC).
- */
-
-STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-/*
- * Per-object extra state for the dll_1CE hatch door
- * (dll_1CE_getExtraSize == 0xC).
- */
 
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
-/*
- * Per-object extra state for the dimmagicbridge flame bridge
- * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
- * variants in dimmagicbridge.c use their own layout.
- */
-
-STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
-STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-/*
- * Per-object extra state for the explosion effect
- * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
- * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
- */
-
-STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
-STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
-
-extern undefined4 FUN_800067e8();
-extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017924();
-extern uint FUN_80017944();
-extern int FUN_80017a54();
-extern undefined4 FUN_8002fc3c();
-extern int FUN_80039520();
-extern undefined4 FUN_80242114();
-extern undefined8 FUN_80286834();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_802924b4();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-
-extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e56a8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DE7EC;
-extern f32 lbl_803DE7F0;
-extern f32 lbl_803E55C4;
-extern f32 lbl_803E55C8;
-extern f32 lbl_803E55D0;
-extern f32 lbl_803E55D8;
-extern f32 lbl_803E566C;
-extern f32 lbl_803E5670;
-extern f32 lbl_803E5674;
-extern f32 lbl_803E5678;
-extern f32 lbl_803E567C;
-extern f32 lbl_803E569C;
+extern void GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
@@ -100,265 +33,6 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-void FUN_801b3de4(undefined4 param_1, uint param_2)
-{
-    (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
-    return;
-}
-
-void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double param_4)
-{
-    byte slotIdx;
-    char stateByte;
-    int lifetime;
-    uint obj;
-    u8 extraout_r4;
-    int sub4c;
-    int state;
-    int slotOff;
-    int slot;
-    double extraout_f1;
-    double scale;
-    double prevVal;
-
-    obj = FUN_8028683c();
-    sub4c = *(int *)&((GameObject *)obj)->anim.placementData;
-    state = *(int *)&((GameObject *)obj)->extra;
-    slotIdx = *(byte*)(state + 0xa58);
-    *(byte*)(state + 0xa58) = slotIdx + 1;
-    slotOff = (uint)slotIdx * 0x30;
-    *(float*)(state + slotOff) = (float)param_2;
-    slot = state + slotOff;
-    *(float*)(slot + 4) = (float)param_3;
-    *(float*)(slot + 8) = (float)param_4;
-    *(float*)(slot + 0x18) = lbl_803E55C4;
-    *(undefined4*)(slot + 0xc) = *(undefined4*)(state + 0x18);
-    *(float*)(slot + 0x1c) = (float)extraout_f1;
-    *(u8*)(slot + 0x2d) = extraout_r4;
-    *(undefined4*)(slot + 0x10) = 0;
-    scale = FUN_80293900(extraout_f1);
-    *(int*)(slot + 0x14) = (int)((double)lbl_803E55C8 * scale);
-    lifetime = *(int*)(slot + 0x14);
-    if (lifetime < 0)
-    {
-        lifetime = 0;
-    }
-    else if (0x3c < lifetime)
-    {
-        lifetime = 0x3c;
-    }
-    *(int*)(slot + 0x14) = lifetime;
-    if ((*(char*)(slot + 0x2d) != '\0') || (stateByte = *(char*)(sub4c + 0x19), stateByte == '\0'))
-        goto LAB_801b44d4;
-    if (stateByte == '\x02')
-    {
-        FUN_80006824(obj, 0x4bf);
-        goto LAB_801b44d4;
-    }
-    if (stateByte == '\x03')
-    {
-        FUN_80006824(obj, 0x4c2);
-        goto LAB_801b44d4;
-    }
-    stateByte = *(char*)(obj + 0xac);
-    if (stateByte < ':')
-    {
-        if (stateByte == ',')
-        {
-        LAB_801b44b4:
-            FUN_800067e8(obj, 0x4b8, 2);
-            goto LAB_801b44d4;
-        }
-    }
-    else if (stateByte < '?') goto LAB_801b44b4;
-    FUN_80006824(obj, SFXthorntail_annoyed2);
-LAB_801b44d4:
-    obj = randomGetRange(0, 0xffff);
-    *(short*)(state + slotOff + 0x28) = (short)obj;
-    obj = randomGetRange(200, 300);
-    lifetime = state + slotOff;
-    *(short*)(lifetime + 0x2a) = (short)obj;
-    obj = randomGetRange(0, 1);
-    if (obj != 0)
-    {
-        *(short*)(lifetime + 0x2a) = -*(short*)(lifetime + 0x2a);
-    }
-    obj = randomGetRange(0, 3);
-    *(char*)(state + slotOff + 0x2c) = (char)obj;
-    prevVal = (double)*(float*)(slot + 0x1c);
-    scale = (double)FUN_802924b4();
-    *(float*)(slot + 0xc) =
-        -(float)((double)lbl_803DE7F0 *
-            (double)(float)((double)(float)(prevVal - (double)*(float*)(slot + 0x18)) * scale)
-            - prevVal);
-    scale = (double)FUN_802924b4();
-    state = state + slotOff;
-    *(char*)(state + 0x2e) =
-        (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * scale)
-            - (double)lbl_803E55D0);
-    *(int*)(state + 0x20) = (int)lbl_803E55D8;
-    *(undefined4*)(state + 0x24) = *(undefined4*)(state + 0x20);
-    *(u8*)(state + 0x2f) = 1;
-    FUN_80286888();
-    return;
-}
-
-void explosion_release(uint obj);
-
-void fn_explosion_release_v11_unused(uint param_1)
-{
-    short hitShapeId;
-    float clampedSpeed;
-    bool found;
-    int count;
-    int idx;
-    char* state;
-    short* placement;
-    ObjHitsPriorityState* hitState;
-
-    placement = *(short**)&((GameObject*)param_1)->anim.placementData;
-    state = ((GameObject*)param_1)->extra;
-    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
-    ((GameObject*)param_1)->anim.localPosZ = ((GameObject*)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
-        *)state)->unk8;
-    clampedSpeed = lbl_803E566C;
-    if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
-    {
-        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = ((FnExplosionReleaseV11UnusedState*)state)->unk8 *
-            lbl_803E5670;
-        if (((FnExplosionReleaseV11UnusedState*)state)->unk8 < clampedSpeed)
-        {
-            clampedSpeed = ((FnExplosionReleaseV11UnusedState*)state)->unk8;
-        }
-        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = clampedSpeed;
-    }
-    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
-    {
-        found = false;
-        idx = 0;
-        count = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
-        if (0 < count)
-        {
-            do
-            {
-                hitShapeId = ((GameObject*)(*(int*)(*(int*)(param_1 + 0x58) + idx + 0x100)))->anim.seqId;
-                if ((hitShapeId == 399) || (hitShapeId == 0x1d6))
-                {
-                    found = true;
-                    break;
-                }
-                idx = idx + 4;
-                count = count + -1;
-            }
-            while (count != 0);
-        }
-        if (found)
-        {
-            ((FnExplosionReleaseV11UnusedState*)state)->unk4 = lbl_803E5678;
-            ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
-            *state = '\0';
-            GameBit_Set((int)placement[0xf], 1);
-            FUN_80006824(param_1, 0x3e1);
-        }
-    }
-    else
-    {
-        count = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
-        if (count < 0)
-        {
-            count = 0;
-        }
-        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)param_1)->anim.alpha = count;
-    }
-    return;
-}
-
-void FUN_801b5b8c(void)
-{
-    int obj;
-    int* model;
-    undefined2* outVtx;
-    short* srcVtx;
-    uint fifoArg;
-    int modelData;
-    int i;
-    uint vtxCount;
-    double rnd;
-    undefined8 objHandle;
-    undefined8 local_58;
-    undefined8 local_50;
-
-    objHandle = FUN_80286834();
-    obj = (int)((ulonglong)objHandle >> 0x20);
-    model = (int*)FUN_80017a54(obj);
-    modelData = *model;
-    for (i = 0; vtxCount = (uint) * (ushort*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
-    {
-        outVtx = (undefined2*)FUN_80017944((int)model, i);
-        srcVtx = (short*)FUN_80017924(modelData, i);
-        if (*srcVtx < 1)
-        {
-            rnd = (double)FUN_80293f90();
-            local_50 = (double)CONCAT44(0x43300000, (int)*srcVtx ^ 0x80000000);
-            *outVtx = (short)(int)-(float)((double)lbl_803E569C * rnd -
-                (double)(float)(local_50 - DOUBLE_803e56a8));
-        }
-        else
-        {
-            rnd = (double)FUN_80293f90();
-            local_58 = (double)CONCAT44(0x43300000, (int)*srcVtx ^ 0x80000000);
-            *outVtx = (short)(int)((double)lbl_803E569C * rnd +
-                (double)(float)(local_58 - DOUBLE_803e56a8));
-        }
-    }
-    fifoArg = FUN_80017944((int)model, 0);
-    FUN_80242114(fifoArg, vtxCount * 6);
-    ((GameObject*)obj)->anim.alpha = *(u8*)((int)objHandle + 0x51);
-    FUN_80286880();
-    return;
-}
-
-void FUN_801b5d00(int param_1, int param_2)
-{
-    int channel;
-    uint phase;
-
-    channel = FUN_80039520(param_1, 0);
-    *(short*)(channel + 10) = *(short*)(channel + 10) + 0x14;
-    if (10000 < *(short*)(channel + 10))
-    {
-        *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
-    }
-    *(short*)(channel + 8) = *(short*)(channel + 8) + 10;
-    if (10000 < *(short*)(channel + 8))
-    {
-        *(short*)(channel + 8) = *(short*)(channel + 8) + -10000;
-    }
-    channel = FUN_80039520(param_1, 1);
-    *(short*)(channel + 10) = *(short*)(channel + 10) + 0x1e;
-    if (10000 < *(short*)(channel + 10))
-    {
-        *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
-    }
-    phase = (uint) * (ushort*)(param_2 + 0x60) + (uint)DAT_803dc070 * 0x100;
-    if (0xffff < phase)
-    {
-        phase = phase - 0xffff;
-    }
-    *(short*)(param_2 + 0x60) = (short)phase;
-    phase = (uint) * (ushort*)(param_2 + 0x62) + (uint)DAT_803dc070 * 0x80;
-    if (0xffff < phase)
-    {
-        phase = phase - 0xffff;
-    }
-    *(short*)(param_2 + 0x62) = (short)phase;
-    return;
-}
-
-void explosion_hitDetect(void);
-
 void dll_1CE_hitDetect(void)
 {
 }
@@ -371,11 +45,8 @@ void dll_1CE_initialise(void)
 {
 }
 
-void dimmagicbridge_free(void);
-
 int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
-int dimmagicbridge_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -384,8 +55,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49E8);
 }
-
-void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #pragma scheduling on
 #pragma peephole on
@@ -398,26 +67,13 @@ void dll_1CE_free(void)
     lbl_803DDB78 = NULL;
 }
 
-/* dimwooddoor2 variant: trigger-init that loads a different float into the
- * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-
-/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
- * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
- * when GameBit 0x1ef is on and the player's emission controller is lingering,
- * latch GameBit 0x1e8. */
-
-/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
- * and using mask 0x6000 + initial state byte 3 at +0. */
-
 #pragma scheduling off
 #pragma peephole off
 void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
     ObjHitsPriorityState* hitState;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
     sub = ((GameObject*)obj)->extra;
     sub->igniteCountdown = 1;
@@ -431,21 +87,6 @@ void dll_1CE_init(u8* obj, u8* params)
     sub->openVelocity = lbl_803E49F0;
 }
 
-void explosion_free(int obj);
-
-/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
- * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-#pragma dont_inline on
-#pragma dont_inline reset
-
-/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
- * every 16 frames, and ramp each active slot's alpha toward full; then update
- * the animated bridge mesh. */
-
-/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
- * the lid open with clamped velocity while idle, and once a key object is
- * nearby, count down then ring the gamebit and (if the load isn't locked)
- * spawn the contents object seeded from the door's transform. */
 #pragma opt_strength_reduction off
 void dll_1CE_update(int* obj)
 {
@@ -477,7 +118,7 @@ void dll_1CE_update(int* obj)
         int found = 0;
         int i = 0;
         int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f);
+        int n = (int)(*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f));
         for (; i < n; i++)
         {
             int* o = *(int**)((char*)list + i * 4 + 0x100);
