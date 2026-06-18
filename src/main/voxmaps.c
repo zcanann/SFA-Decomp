@@ -1162,8 +1162,8 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     int voxXand7, shiftLo, shiftHi;
     int voxX6, voxZ6, voxX, voxZ;
     int err, steps;
-    int dx2, dy2;
     int xstep, ystep;
+    int dx2, dy2;
     int dx, dy;
 
     xstep = 2;
@@ -1208,7 +1208,8 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
             bitmapCol = (voxZ << 1) + (voxX >> 3);
             for (row = 0; row < 3; row++)
             {
-                int y = row + cur.y - 1;
+                int y = row + cur.y;
+                y -= 1;
                 if (y < map->minY)
                 {
                     slot = 0;
@@ -1221,7 +1222,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 {
                     slot = y - map->minY;
                 }
-                if ((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1)
+                if (((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1u) != 0u)
                 {
                     node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
                     buf[row * 4 + 0] = (node[z6lo] >> shiftLo) & 3;
@@ -1401,8 +1402,7 @@ int fn_80011EB0(RouteState* state, int count)
                 state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
                 state->unk08[idx * 3 + 1] = (f32)(int)
                 local[1];
-                state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
-                idx++;
+                state->unk08[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
                 cur = cand;
             }
         }
@@ -1429,8 +1429,7 @@ int fn_80011EB0(RouteState* state, int count)
         state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
         state->unk08[idx * 3 + 1] = (f32)(int)
         local[1];
-        state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
-        idx++;
+        state->unk08[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
         if (idx >= 10)
         {
             idx = 10;
