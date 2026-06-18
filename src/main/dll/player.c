@@ -18717,11 +18717,8 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 
     *(s8*)((char*)dst + 0x62) = (s8)(int)*(s8*)((char*)src + 0x53);
 
-    if (*(f32*)((char*)dst + 0x18) <= lbl_803E80A4)
-    {
-        return 0;
-    }
-    if (*(f32*)((char*)dst + 0x18) >= lbl_803E80A8)
+    if (*(f32*)((char*)dst + 0x18) <= lbl_803E80A4 ||
+        *(f32*)((char*)dst + 0x18) >= lbl_803E80A8)
     {
         return 0;
     }
