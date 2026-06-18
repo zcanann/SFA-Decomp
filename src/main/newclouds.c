@@ -1521,7 +1521,7 @@ void snowReposSnowCloud(int cloudId)
         {
             *(u16*)(part + 0x10) =
                 *(u16*)(part + 0x10) + (s8)part[0x14] * framesThisStep;
-            if (*(u16*)(part + 0x10) > 0x3ff)
+            if ((int)*(u16*)(part + 0x10) > 0x3ff)
             {
                 *(u16*)(part + 0x10) -= 0x3ff;
             }
@@ -1530,7 +1530,7 @@ void snowReposSnowCloud(int cloudId)
         {
             *(u16*)(part + 0x10) = *(u16*)(part + 0x10) +
                 framesThisStep * ((s8)part[0x14] + (s8)part[0x14]);
-            if (*(u16*)(part + 0x10) > 0x3ff)
+            if ((int)*(u16*)(part + 0x10) > 0x3ff)
             {
                 *(u16*)(part + 0x10) -= 0x3ff;
             }
