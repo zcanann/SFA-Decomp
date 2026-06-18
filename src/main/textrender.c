@@ -1333,6 +1333,7 @@ extern void* lbl_8033BE54[];
 extern void* lbl_8033B240[];
 extern int lbl_803DCA14;
 
+#pragma peephole on
 void gameTextInitFn_8001bd14(void)
 {
     int i;
@@ -1388,6 +1389,7 @@ void gameTextInitFn_8001bd14(void)
     }
     while (i != 0);
 }
+#pragma peephole reset
 
 #pragma dont_inline on
 void subtitleFn_8001b700(void)
