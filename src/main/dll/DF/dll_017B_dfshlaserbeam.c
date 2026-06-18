@@ -551,7 +551,8 @@ int fn_801C49B8(void* objArg)
         runtime->swayAccel = zero;
     }
 
-    stickAccel = ((f32)(s8)padGetStickX(0) / lbl_803E4F44) * lbl_803E4F48;
+    stickAccel = (f32)(s8)padGetStickX(0) / lbl_803E4F44;
+    stickAccel = stickAccel * lbl_803E4F48;
     runtime->swayVelocity += stickAccel * timeDelta;
 
     target = runtime->swayTarget;
@@ -562,11 +563,11 @@ int fn_801C49B8(void* objArg)
             runtime->swayAccel -= lbl_803E4F48 * timeDelta;
         }
     }
-    else if (lbl_803E4F40 < target)
+    else if (target > *(volatile f32*)&lbl_803E4F40)
     {
         if (runtime->swayAccel < target)
         {
-            runtime->swayAccel += lbl_803E4F48 * timeDelta;
+            runtime->swayAccel += *(volatile f32*)&lbl_803E4F48 * timeDelta;
         }
     }
 
