@@ -30,7 +30,7 @@ extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(u32 obj);
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void *obj, int capacity);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4,

@@ -40,19 +40,19 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 extern int FUN_8005337c();
-extern undefined4 FUN_80056418();
+extern u32 FUN_80056418();
 extern int FUN_80056448();
 extern int FUN_8005af70();
 extern int FUN_8005b398();
 extern int FUN_800600e4();
-extern undefined8 FUN_8028682c();
-extern undefined4 FUN_80286878();
+extern u64 FUN_8028682c();
+extern u32 FUN_80286878();
 
 extern void mm_free(void* p);
 
@@ -102,7 +102,7 @@ void FUN_80192488(void)
     int placement;
     int vtxIdx;
     int vtx;
-    undefined8 pair;
+    u64 pair;
 
     pair = FUN_8028682c();
     ctxHi = (int)((ulonglong)pair >> 0x20);
@@ -112,7 +112,7 @@ void FUN_80192488(void)
     block = FUN_8005af70(block);
     if (block == 0)
     {
-        *(undefined*)(ctxLo + 0x10) = 1;
+        *(u8*)(ctxLo + 0x10) = 1;
     }
     else
     {

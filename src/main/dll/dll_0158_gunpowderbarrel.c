@@ -39,7 +39,7 @@ typedef struct GunpowderbarrelPlacement
     s16 unk1E;
 } GunpowderbarrelPlacement;
 
-extern undefined4* gCarryableInterface;
+extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
 extern int barrelgener_getLinkId();

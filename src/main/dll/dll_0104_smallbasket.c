@@ -52,7 +52,7 @@ typedef struct SmallbasketState
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -96,8 +96,8 @@ extern const f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
                                  int p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHits_DisableObject();
+extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern int GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfx);

@@ -73,7 +73,7 @@ extern f32 lbl_803E52F4;
 #pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     RomCurveWalker* curve;
     int sval;

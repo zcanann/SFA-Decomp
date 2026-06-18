@@ -17,11 +17,11 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
+extern u64 FUN_80017698();
+extern u32 FUN_80041ff8();
+extern u32 FUN_80042b9c();
+extern u32 FUN_80042bec();
+extern u32 FUN_80044404();
 extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
@@ -65,14 +65,14 @@ void FUN_801a45cc(short* param_1, int param_2)
 }
 
 
-undefined4
-FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-             undefined4 param_9, undefined4 param_10, ObjAnimUpdateState* animUpdate)
+u32
+FUN_801a4810(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+             u32 param_9, u32 param_10, ObjAnimUpdateState* animUpdate)
 {
-    undefined4 handle;
+    u32 handle;
     int i;
-    undefined8 obj;
+    u64 obj;
 
     for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {

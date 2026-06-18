@@ -11,7 +11,7 @@
 #include "main/sky_interface.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(float* posA, float* posB);
@@ -85,10 +85,9 @@ extern f32 lbl_803E37F4;
 extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
-extern undefined4 FUN_80017a78();
+extern u32 FUN_80017a78();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80039520();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
@@ -139,7 +138,7 @@ void appleontree_handleCollectableHit(int obj)
 {
     extern void playerAddHealth(int player, u16 amount); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject(); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
@@ -202,7 +201,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void fn_8017D854(int obj, int msg)
 {
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject(); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     int v;
 
@@ -571,13 +570,13 @@ void appleontree_update(int objArg)
     extern u8* Obj_GetPlayerObject(void); /* #57 */
     extern int FUN_8017e3c0(); /* #57 */
     extern int FUN_8017e15c(); /* #57 */
-    extern undefined4 FUN_8017de58(); /* #57 */
-    extern undefined4 FUN_8017db40(); /* #57 */
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u32 FUN_8017de58(); /* #57 */
+    extern u32 FUN_8017db40(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     float fa;
-    undefined2* obj;
+    u16* obj;
     int val;
-    undefined4* modelIdxPtrW;
+    u32* modelIdxPtrW;
     uint bitVal;
     int* modelIdxPtr;
     int placement;
@@ -589,7 +588,7 @@ void appleontree_update(int objArg)
     int msg;
     f32 sunTime;
 
-    obj = (undefined2*)objArg;
+    obj = (u16*)objArg;
     state = *(int*)(obj + 0x5c);
     placement = *(int*)(obj + 0x26);
     msg = 0;
@@ -630,10 +629,10 @@ void appleontree_update(int objArg)
         *(float*)(state + 0xc) = fa + timeDelta;
         fb = *(float*)(state + 8);
         frac = fb / *(float*)(state + 4);
-        switch (*(undefined*)(state + 0x3a))
+        switch (*(u8*)(state + 0x3a))
         {
         case 0:
-            val = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            val = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (uint*)0x0);
             if ((val != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -652,14 +651,14 @@ void appleontree_update(int objArg)
                 }
                 *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
                 *(float*)(state + 8) = timeDelta;
-                *(undefined*)(state + 0x3a) = 5;
+                *(u8*)(state + 0x3a) = 5;
             }
             else
             {
                 if (frac > *(float*)(state + 0x10))
                 {
                     *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
-                    *(undefined*)(state + 0x3a) = 1;
+                    *(u8*)(state + 0x3a) = 1;
                 }
                 else
                 {
@@ -672,7 +671,7 @@ void appleontree_update(int objArg)
             }
             break;
         case 1:
-            val = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            val = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (uint*)0x0);
             if ((val != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -691,7 +690,7 @@ void appleontree_update(int objArg)
                 }
                 *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
                 *(float*)(state + 8) = timeDelta;
-                *(undefined*)(state + 0x3a) = 5;
+                *(u8*)(state + 0x3a) = 5;
             }
             else
             {
@@ -704,7 +703,7 @@ void appleontree_update(int objArg)
                         placement = placement + 1;
                     }
                     while (placement < 8);
-                    *(undefined*)(state + 0x3a) = 2;
+                    *(u8*)(state + 0x3a) = 2;
                 }
                 else
                 {
@@ -723,12 +722,12 @@ void appleontree_update(int objArg)
             if (frac > ((GroundBaddieState*)state)->baddie.posY)
             {
                 val = *(int*)(obj + 0x5c);
-                modelIdxPtrW = (undefined4*)objFindTexture((void*)obj, 0, 0);
+                modelIdxPtrW = (u32*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtrW = 0;
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
                 FUN_80017a78((int)obj, 1);
-                *(undefined*)(state + 0x3a) = 3;
+                *(u8*)(state + 0x3a) = 3;
             }
             else
             {
@@ -745,7 +744,7 @@ void appleontree_update(int objArg)
                 *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4) * *(float*)(val + 0x24);
                 FUN_80017a78((int)obj, 1);
             }
-            state = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            state = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (uint*)0x0);
             if ((state != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -761,7 +760,7 @@ void appleontree_update(int objArg)
             }
             else
             {
-                state = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+                state = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (uint*)0x0);
                 if ((state != 0) ||
                     ((*(short*)(placement + 0x26) != -1 &&
                         (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -773,7 +772,7 @@ void appleontree_update(int objArg)
         case 4:
             if (frac > *(float*)(state + 0x20))
             {
-                *(undefined*)(state + 0x3a) = 6;
+                *(u8*)(state + 0x3a) = 6;
                 *(float*)(state + 8) = timeDelta;
             }
             else

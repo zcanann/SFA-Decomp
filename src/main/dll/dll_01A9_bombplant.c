@@ -9,9 +9,9 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
+extern u32 GameBit_Set(int eventId, int value);
+extern u32 ObjHits_ClearHitVolumes();
+extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 
 extern f32 lbl_803E5370;
@@ -34,10 +34,10 @@ extern int objIsFrozen(int* obj);
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHitbox_SetCapsuleBounds();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_MarkObjectPositionDirty();
+extern u32 ObjHits_EnableObject();
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
@@ -208,7 +208,7 @@ int bombplant_SeqFn(int* obj)
 
 void bombplant_init(void* obj, void* param, int flag)
 {
-    extern undefined4 ObjHits_RefreshObjectState(); /* #57 */
+    extern u32 ObjHits_RefreshObjectState(); /* #57 */
     void* state;
     void* p4c;
     s16 bitId;
@@ -260,7 +260,7 @@ void bombplant_update(void* obj)
     extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId); /* #57 */
     extern void Sfx_PlayFromObject(void* obj, int sndId); /* #57 */
     extern void fn_801D2B70(void* obj, void* stateEntry, void* state); /* #57 */
-    extern undefined4 ObjHits_RefreshObjectState(); /* #57 */
+    extern u32 ObjHits_RefreshObjectState(); /* #57 */
     extern int randomGetRange(int min, int max); /* #57 */
     void* state;
     u8* entry;

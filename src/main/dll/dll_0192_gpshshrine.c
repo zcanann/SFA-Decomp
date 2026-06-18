@@ -9,7 +9,7 @@
 #include "main/dll/creator1C4.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 
 extern void skyFn_80088c94(int a, int b);
 extern void audioStopByMask(int mask);

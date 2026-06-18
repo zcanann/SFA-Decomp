@@ -13,10 +13,10 @@
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 
 typedef struct ExplodeanimatorState
 {

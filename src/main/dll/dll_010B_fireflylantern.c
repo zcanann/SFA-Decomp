@@ -8,7 +8,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern int Obj_GetPlayerObject(void);
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
 extern void GameBit_Set(int eventId, int value);

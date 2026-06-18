@@ -20,7 +20,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 
-extern undefined4 FUN_8003b818();
+extern u32 FUN_8003b818();
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);

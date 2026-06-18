@@ -36,7 +36,7 @@ extern void audioStopByMask(int mask);
 extern void GameBit_Set(int eventId, int value);
 extern void fn_801C4664(int obj);
 extern int randomGetRange(int min, int max);
-extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 f);
+extern void objRenderFn_8003b8f4(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
@@ -113,7 +113,7 @@ typedef struct MMSHShrineObject
     s32 loadTriggerTimer;
 } MMSHShrineObject;
 
-int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
+int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
     u8 command;
     int i;
@@ -242,7 +242,7 @@ void mmsh_shrine_free(int obj)
     GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET3, 0);
 }
 
-void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
+void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
                         char visible)
 {
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
@@ -373,8 +373,8 @@ void mmsh_shrine_init(int obj, int def)
     state = ((GameObject*)obj)->extra;
     ((MMSHShrineObject*)obj)->yaw = 0;
     ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
-    *(undefined2*)(state + 7) = 10;
-    *(undefined*)(state + 9) = 0;
+    *(u16*)(state + 7) = 10;
+    *(u8*)(state + 9) = 0;
     if (0 < *(short*)(def + 0x1a))
     {
         *(short*)(state + 7) = *(short*)(def + 0x1a) >> 8;

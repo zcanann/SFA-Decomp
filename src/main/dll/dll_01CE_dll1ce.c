@@ -63,26 +63,26 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern undefined4 FUN_800067e8();
-extern undefined4 FUN_80006824();
+extern u32 FUN_800067e8();
+extern u32 FUN_80006824();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017924();
+extern u32 FUN_80017924();
 extern uint FUN_80017944();
 extern int FUN_80017a54();
-extern undefined4 FUN_8002fc3c();
+extern u32 FUN_8002fc3c();
 extern int FUN_80039520();
-extern undefined4 FUN_80242114();
-extern undefined8 FUN_80286834();
+extern u32 FUN_80242114();
+extern u64 FUN_80286834();
 extern uint FUN_8028683c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_802924b4();
+extern u32 FUN_80286880();
+extern u32 FUN_80286888();
+extern u32 FUN_802924b4();
 extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
+extern u32 FUN_80293f90();
 
-extern undefined4 DAT_803dc070;
+extern u32 DAT_803dc070;
 extern f64 DOUBLE_803e56a8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE7EC;
@@ -111,13 +111,13 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-void FUN_801b3de4(undefined4 param_1, uint param_2)
+void FUN_801b3de4(u32 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
     return;
 }
 
-void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double param_4)
+void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
 {
     byte slotIdx;
     char stateByte;
@@ -143,10 +143,10 @@ void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double par
     *(float*)(slot + 4) = (float)param_3;
     *(float*)(slot + 8) = (float)param_4;
     *(float*)(slot + 0x18) = lbl_803E55C4;
-    *(undefined4*)(slot + 0xc) = *(undefined4*)(state + 0x18);
+    *(u32*)(slot + 0xc) = *(u32*)(state + 0x18);
     *(float*)(slot + 0x1c) = (float)extraout_f1;
     *(u8*)(slot + 0x2d) = extraout_r4;
-    *(undefined4*)(slot + 0x10) = 0;
+    *(u32*)(slot + 0x10) = 0;
     scale = FUN_80293900(extraout_f1);
     *(int*)(slot + 0x14) = (int)((double)lbl_803E55C8 * scale);
     lifetime = *(int*)(slot + 0x14);
@@ -208,7 +208,7 @@ LAB_801b44d4:
         (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * scale)
             - (double)lbl_803E55D0);
     *(int*)(state + 0x20) = (int)lbl_803E55D8;
-    *(undefined4*)(state + 0x24) = *(undefined4*)(state + 0x20);
+    *(u32*)(state + 0x24) = *(u32*)(state + 0x20);
     *(u8*)(state + 0x2f) = 1;
     FUN_80286888();
     return;
@@ -290,16 +290,16 @@ void FUN_801b5b8c(void)
 {
     int obj;
     int* model;
-    undefined2* outVtx;
+    u16* outVtx;
     short* srcVtx;
     uint fifoArg;
     int modelData;
     int i;
     uint vtxCount;
     double rnd;
-    undefined8 objHandle;
-    undefined8 local_58;
-    undefined8 local_50;
+    u64 objHandle;
+    u64 local_58;
+    u64 local_50;
 
     objHandle = FUN_80286834();
     obj = (int)((ulonglong)objHandle >> 0x20);
@@ -307,7 +307,7 @@ void FUN_801b5b8c(void)
     modelData = *model;
     for (i = 0; vtxCount = (uint) * (ushort*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
     {
-        outVtx = (undefined2*)FUN_80017944((int)model, i);
+        outVtx = (u16*)FUN_80017944((int)model, i);
         srcVtx = (short*)FUN_80017924(modelData, i);
         if (*srcVtx < 1)
         {

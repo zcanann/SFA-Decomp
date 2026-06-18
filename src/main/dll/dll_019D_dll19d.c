@@ -32,7 +32,7 @@ typedef struct Dll19DState
     u8 pad37[0x38 - 0x37];
 } Dll19DState;
 
-extern undefined4 getLActions();
+extern u32 getLActions();
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

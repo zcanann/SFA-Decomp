@@ -11,8 +11,8 @@
  */
 #include "main/game_object.h"
 
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(f32);
 extern uint GameBit_Get(int eventId);
 extern f32 lbl_803E42B8;
