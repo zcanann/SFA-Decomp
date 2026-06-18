@@ -1695,10 +1695,13 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
-    ((KTRexArenaState*)gKTRexState)->unk4 -= timeDelta;
-    if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
     {
-        ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
+        f32 u4 = ((KTRexArenaState*)gKTRexState)->unk4 - timeDelta;
+        ((KTRexArenaState*)gKTRexState)->unk4 = u4;
+        if (u4 <= lbl_803E67B8)
+        {
+            ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
+        }
     }
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->unk0C == phase &&
