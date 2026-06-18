@@ -1336,8 +1336,8 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     rect[2] = p4 - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
-    *(u8*)((char*)rect + 8) = *(s16*)(self + 4);
-    *(u8*)((char*)rect + 9) = *(s16*)(self + 6);
+    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
+    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
     for (y = 0; (s16)y < *(s16*)(self + 2); y++)
     {
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)
