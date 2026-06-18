@@ -1244,6 +1244,7 @@ void setGQR6_2(int a, int b, int c, int d)
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
+#pragma peephole on
 #pragma dont_inline on
 static u8* modelBoneTransforms_next(u8* p, int* outX, int* outY, int* outZ)
 {
@@ -1317,16 +1318,16 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         {
             b = modelBoneTransforms_next(b, &bx, &by, &bz);
             a = modelBoneTransforms_next(a, &ax, &ay, &az);
-            ax = (ax * wHi + bx * f) >> 16;
-            ay = (ay * wHi + by * f) >> 16;
-            az = (az * wHi + bz * f) >> 16;
+            ax = (u32)(ax * wHi + bx * f) >> 16;
+            ay = (u32)(ay * wHi + by * f) >> 16;
+            az = (u32)(az * wHi + bz * f) >> 16;
         }
         else
         {
             a = modelBoneTransforms_next(a, &ax, &ay, &az);
-            ax = (ax * wHi) >> 16;
-            ay = (ay * wHi) >> 16;
-            az = (az * wHi) >> 16;
+            ax = (u32)(ax * wHi) >> 16;
+            ay = (u32)(ay * wHi) >> 16;
+            az = (u32)(az * wHi) >> 16;
             goto store;
         }
     store:
@@ -1342,9 +1343,9 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         continue;
     onlyB:
         b = modelBoneTransforms_next(b, &bx, &by, &bz);
-        bx = (bx * f) >> 16;
-        by = (by * f) >> 16;
-        bz = (bz * f) >> 16;
+        bx = (u32)(bx * f) >> 16;
+        by = (u32)(by * f) >> 16;
+        bz = (u32)(bz * f) >> 16;
         bx += *(s16*)(p + 0);
         by += *(s16*)(p + 2);
         bz += *(s16*)(p + 4);
@@ -1357,6 +1358,7 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
     }
 }
 #pragma dont_inline reset
+#pragma peephole off
 
 extern void debugPrintf(char* fmt, ...);
 
