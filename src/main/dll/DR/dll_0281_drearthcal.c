@@ -56,7 +56,7 @@ void drearthcal_update(int obj)
         if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
         for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
         {
-            if ((uint)player == (uint)((int*)*(int*)(obj + 0x58))[i + 0x40])
+            if ((uint)*(int*)(i * 4 + 0x100 + *(int*)(obj + 0x58)) == (uint)player)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
             }
