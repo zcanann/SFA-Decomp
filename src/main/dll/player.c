@@ -18708,15 +18708,9 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 
     *(s8*)((char*)dst + 0x62) = (s8)(int)*(s8*)((char*)src + 0x53);
 
-    if (*(f32*)((char*)dst + 0x18) <= lbl_803E80A4)
+    if (*(f32*)((char*)dst + 0x18) > lbl_803E80A4 &&
+        *(f32*)((char*)dst + 0x18) < lbl_803E80A8)
     {
-        return 0;
-    }
-    if (*(f32*)((char*)dst + 0x18) >= lbl_803E80A8)
-    {
-        return 0;
-    }
-
     *(f32*)((char*)dst + 0x8) = *(f32*)((char*)src + 0xc);
     PSVECScale((f32*)((char*)src + 0x1c), pos, -lbl_803DC6B8[1]);
     PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
@@ -18762,6 +18756,8 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
         *(s8*)((char*)dst + 0x0) = 1;
     }
     return 1;
+    }
+    return 0;
 }
 
 void fn_802AEF34(int obj, int state)
