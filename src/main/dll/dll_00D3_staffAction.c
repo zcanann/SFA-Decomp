@@ -1382,7 +1382,7 @@ void dll_D3_update(int* obj)
     if (((TreasureChestState*)state)->targetState != 1)
     {
         rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
-            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040),
+            (f32)(u32)((TreasureChestState*)state)->aggroRange,
             obj, state, 0x18000);
         if (rc != 0u)
         {
@@ -1403,7 +1403,7 @@ void dll_D3_update(int* obj)
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
-            (f32)((double)(u32)((TreasureChestState*)state)->aggroRange - lbl_803E3040))
+            (f32)(u32)((TreasureChestState*)state)->aggroRange)
         {
             ((TreasureChestState*)state)->targetState = 1;
         }
