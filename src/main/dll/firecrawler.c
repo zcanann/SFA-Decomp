@@ -1,20 +1,27 @@
 /*
- * smallbasket - a baddie DLL implementing three closely related
- * tentacle/whirlpool creatures, selected by anim.seqId 0x6a2/0x6a3/0x6a4
- * (initialised in smallbasket_initModelVariantState) plus a scaled variant
- * keyed off placement data. Behaviour is driven from a per-variant table at
- * lbl_8031FAE8 holding move/sequence sub-tables (BasketSeq12 / BasketSeq16 /
- * BasketDescriptor) consumed by the update handlers (fn_80157558,
- * fn_80157004, fn_80159284, fn_80158494, fn_80158C2C, fn_80159FCC,
- * fn_80159958).
+ * firecrawler - state-handler TU for a group of class-0x1C ground/air enemies
+ * in the enemy mega-DLL (0x0C9). (The SmallBasket container is the unrelated
+ * DLL 0x104.) The enemies handled here were
+ * identified from the retail OBJECTS.bin (object name at def+0x91) cross-
+ * referenced with the dispatch in dll_00C9_enemy.c:
  *
- * The creature follows ROM curve paths (RomCurveWalker / gRomCurveInterface),
- * tracks the player, reacts to hits (fn_80157EBC, smallbasket_handle*), spawns
- * a linked "firepipe" child object (smallbasket_spawnLinkedFirepipe /
- * fn_80157B58), drives particle fx (gPartfxInterface), a dynamic light
- * (objCreateLight / modelLightStruct_*), camera shake/rumble, and a looping
- * engine SFX (0x3e8). controlFlags bits 0x80000000 (just-triggered) and
- * 0x40000000 (active) gate the per-frame move dispatch.
+ *   anim.seqId  enemy          handler(s)               shipped?
+ *   0x6a2       FireCrawler    crawler_update/B/C        yes (dragrock, moonpass) - has firepipe
+ *   0x6a3       RedEye         crawler_update/B/C        yes (wallcity)
+ *   0x6a4       ShadowHunter   crawler_update/B/C        dynamic-only (e.g. Krazoa test)
+ *   0x6a5       SwampStrider   crawler_update/B/C        dynamic-only
+ *   0x4ac       HoodedZyck     hoodedZyck_update/B       dynamic-only
+ *   0x7c8       HagabonMK2     hagabonMK2_update/B          yes
+ *   0x842/0x84b snowworm(_baby) snowworm_update         yes
+ *
+ * The 0x6a2-0x6a5 crawler family shares one AI (crawler_initModelVariant sets
+ * per-variant speed/health/model). Behaviour: follows ROM curve paths
+ * (RomCurveWalker / gRomCurveInterface), tracks the player, reacts to hits
+ * (crawler_onHit), FireCrawler spawns a linked "firepipe" projectile
+ * (firecrawler_spawnFirepipe), and HagabonMK2 flies with a dynamic light +
+ * looping engine SFX (0x3e8). Move/sequence sub-tables live at lbl_8031FAE8
+ * (CrawlerSeq12 / CrawlerSeq16 / CrawlerDescriptor). controlFlags bits
+ * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -72,7 +79,7 @@ extern char lbl_8031FAE8[];
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
 extern u8 lbl_8031FD48[];
-extern void smallbasket_playReactionEffects(int* obj, int* st);
+extern void crawler_playReactionEffects(int* obj, int* st);
 extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
@@ -184,13 +191,13 @@ extern f32 lbl_803E2C68;
 extern char lbl_803DBCF8;
 extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
-void smallbasket_nop(void)
+void crawler_nop(void)
 {
 }
 
-void smallbasket_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
+void hagabonMK2_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
 
-void smallbasket_spawnLinkedFirepipe(int* obj)
+void firecrawler_spawnFirepipe(int* obj)
 {
     int* child;
     if (Obj_IsLoadingLocked() != 0)
@@ -219,7 +226,7 @@ void smallbasket_spawnLinkedFirepipe(int* obj)
     }
 }
 
-void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int sub)
+void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
     u8* base;
     u32 r;
@@ -269,7 +276,7 @@ void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, 
     Sfx_PlayFromObject(obj, SFXen_blkscrp6);
 }
 
-void smallbasket_applyReactionState(int* obj, int* st)
+void snowworm_applyReactionState(int* obj, int* st)
 {
     u8* t1 = *(u8**)((char*)lbl_8031FD48 + *(u16*)((char*)st + 0x338) * 8);
     *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
@@ -293,10 +300,10 @@ void smallbasket_applyReactionState(int* obj, int* st)
                         *(f32*)((char*)fbase + off), 0, 0);
         }
     }
-    smallbasket_playReactionEffects(obj, st);
+    crawler_playReactionEffects(obj, st);
 }
 
-void smallbasket_playReactionEffects(int* obj, int* st)
+void crawler_playReactionEffects(int* obj, int* st)
 {
     u16 flag = 0;
     switch (((GameObject*)obj)->anim.currentMove)
@@ -366,7 +373,7 @@ void smallbasket_playReactionEffects(int* obj, int* st)
     }
 }
 
-void smallbasket_initTailModelState(int* obj, int* st)
+void crawler_initTailModel(int* obj, int* st)
 {
     u8* tab;
     ((BaddieState*)st)->speedScale = lbl_803E2C7C;
@@ -398,7 +405,7 @@ void smallbasket_initTailModelState(int* obj, int* st)
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
 
-void smallbasket_initScaledVariantState(int* obj, int* st)
+void crawler_initScaledVariant(int* obj, int* st)
 {
     f32 ratio;
     f32 base_v;
@@ -437,7 +444,7 @@ void smallbasket_initScaledVariantState(int* obj, int* st)
     ObjHits_EnableObject((int)obj);
 }
 
-void smallbasket_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg)
+void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg)
 {
     f32 mtx[12];
     f32 a;
@@ -449,7 +456,7 @@ void smallbasket_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int
 }
 
 #pragma optimization_level 1
-void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
+void crawler_handleHitStateEvent(int obj, int* st, int p3, int cmd)
 {
     if (cmd == 0x11)
     {
@@ -468,7 +475,7 @@ void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
 }
 #pragma optimization_level reset
 
-void smallbasket_initVariantState(int* obj, int* st)
+void crawler_initVariant(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = lbl_803E2CC0;
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
@@ -495,7 +502,7 @@ void fn_80157CDC(int obj, int p2)
     extern void CameraShake_ApplyRadial(int, f32, f32, f32, f32, f32);
     extern f32 Vec_distance(int, int);
     extern void doRumble(f32);
-    extern void smallbasket_spawnLinkedFirepipe(int, int);
+    extern void firecrawler_spawnFirepipe(int, int);
     extern void fn_80157B58(int, int);
     extern void firepipe_setLinkedUpdateFlag(int);
     extern f32 lbl_803E2BA0;
@@ -504,9 +511,9 @@ void fn_80157CDC(int obj, int p2)
     {
         u8 pad[0x1c];
         char* p;
-    } BasketDescE;
+    } CrawlerDescE;
     char* sub;
-    BasketDescE* d = (BasketDescE*)lbl_8031FAE8;
+    CrawlerDescE* d = (CrawlerDescE*)lbl_8031FAE8;
     char* entry = d[((BaddieState*)p2)->inWhirlpoolGroup].p;
     u8 i;
 
@@ -548,7 +555,7 @@ void fn_80157CDC(int obj, int p2)
                     {
                         if (((GameObject*)obj)->childObjs[0] == NULL)
                         {
-                            smallbasket_spawnLinkedFirepipe(obj, p2);
+                            firecrawler_spawnFirepipe(obj, p2);
                         }
                         else
                         {
@@ -569,11 +576,11 @@ void fn_80157CDC(int obj, int p2)
     }
 }
 
-/* smallbasket_initModelVariantState: smallbasket variant init. Dispatches on obj->modelType
+/* crawler_initModelVariant: crawler-family variant init. Dispatches on obj->modelType
  * (offset 0x46): values 0x6a2/0x6a3/0x6a4 each pick a different float +
  * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
  * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
-void smallbasket_initModelVariantState(s16* obj, u8* state)
+void crawler_initModelVariant(s16* obj, u8* state)
 {
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0xb;
@@ -638,7 +645,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
  * loads the default triggered camera action. */
 #pragma dont_inline on
-void smallbasket_checkNearbyActiveBasket(int obj, u8* state)
+void crawler_checkNearbyActive(int obj, u8* state)
 {
     u8 count = (u8)fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, lbl_803AC4A8);
     u8 noMatch = 1;
@@ -728,7 +735,7 @@ void fn_80157B58(int* obj, u8* state)
     }
 }
 
-void fn_8015A924(int* obj, u8* state)
+void snowworm_update(int* obj, u8* state)
 {
     u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
     int i;
@@ -796,10 +803,10 @@ void fn_8015A924(int* obj, u8* state)
 
     fn_8014CF7C(obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
                 *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), lbl_803DBD30[*(u16*)(state + 0x338)], 0);
-    smallbasket_playReactionEffects(obj, (int*)state);
+    crawler_playReactionEffects(obj, (int*)state);
 }
 
-void fn_80157558(s16* obj, u8* state)
+void hoodedZyck_update(s16* obj, u8* state)
 {
     int moved;
     int turnRaw;
@@ -913,7 +920,7 @@ typedef struct
     u8 next;     /* 0x9 */
     u8 mode;     /* 0xa */
     u8 pad;
-} BasketSeq12;
+} CrawlerSeq12;
 
 typedef struct
 {
@@ -924,24 +931,25 @@ typedef struct
     u8 nextA;    /* 0xa */
     u8 pad;
     int flagC;   /* 0xc */
-} BasketSeq16;
+} CrawlerSeq16;
 
-void fn_80159284(int* obj, u8* state)
+void crawler_update(int* obj, u8* state)
 {
     typedef struct
     {
         u8 pad[0xc];
         u8* tC;
         u8* t10;
-        BasketSeq16* t14;
+        CrawlerSeq16* t14;
         u8* t18;
         u8 pad2[4];
-    } BasketDescL;
-    BasketDescL* d = (BasketDescL*)lbl_8031FAE8;
+    } CrawlerDescL;
+    CrawlerDescL* d = (CrawlerDescL*)lbl_8031FAE8;
     u8* t9 = d[*(u8*)(state + 0x33b)].t10;
     u8* t8 = d[*(u8*)(state + 0x33b)].t18;
     u8* t7 = d[*(u8*)(state + 0x33b)].tC;
-    BasketSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
+    CrawlerSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
+    ObjHitsPriorityState* hitState;
     f32 cap;
     int i;
     u8* p;
@@ -1066,13 +1074,13 @@ typedef struct
     f32 x;       /* 0xc */
     f32 y;       /* 0x10 */
     f32 z;       /* 0x14 */
-} BasketSfxParams;
+} CrawlerSfxParams;
 
-void fn_80159FCC(s16* obj, u8* state)
+void hagabonMK2_update(s16* obj, u8* state)
 {
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 d[3];
-    BasketSfxParams sp;
+    CrawlerSfxParams sp;
     int i;
     f32 pw;
 
@@ -1130,7 +1138,7 @@ void fn_80159FCC(s16* obj, u8* state)
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
         Baddie_SetMove((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
         {
-            BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+            CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
             ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
         }
     }
@@ -1182,7 +1190,7 @@ void fn_80159FCC(s16* obj, u8* state)
     }
 }
 
-void fn_80157004(s16* obj, u8* state)
+void hoodedZyck_updateB(s16* obj, u8* state)
 {
     f32 scale;
     int moved;
@@ -1360,17 +1368,17 @@ void fn_80157004(s16* obj, u8* state)
     }
 }
 
-void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
+void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
 {
     typedef struct
     {
         u8 pad[0x14];
-        BasketSeq16* seq; // 0x14
+        CrawlerSeq16* seq; // 0x14
         u8 pad2[8];
-    } BasketDesc;
+    } CrawlerDesc;
     u8 idx;
-    BasketDesc* d = (BasketDesc*)lbl_8031FAE8;
-    BasketSeq16* tbl = d[(idx = ((BaddieState*)state)->inWhirlpoolGroup)].seq;
+    CrawlerDesc* d = (CrawlerDesc*)lbl_8031FAE8;
+    CrawlerSeq16* tbl = d[(idx = ((BaddieState*)state)->inWhirlpoolGroup)].seq;
 
     if (cmd == 0xe)
     {
@@ -1478,7 +1486,7 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         }
         if (((BaddieState*)state)->hitCounter == 0 && ((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
-            smallbasket_checkNearbyActiveBasket(obj, state);
+            crawler_checkNearbyActive(obj, state);
         }
         return;
     }
@@ -1585,17 +1593,17 @@ typedef struct
     u8* tbl8; // 0x8  random move table (stride 0xc)
     u8* tblC; // 0xc  octant move table (stride 0xc)
     u8* tbl10; // 0x10 single move entry
-    BasketSeq16* seq; // 0x14
+    CrawlerSeq16* seq; // 0x14
     u8* tbl18; // 0x18 anim-id loop table (stride 0xc)
     u8 pad1C[4];
-} BasketDescriptor;
+} CrawlerDescriptor;
 
-void fn_80158494(s16* obj, u8* state)
+void crawler_updateC(s16* obj, u8* state)
 {
-    BasketDescriptor* d = (BasketDescriptor*)lbl_8031FAE8;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)lbl_8031FAE8;
     u8* t8 = d[*(u8*)(state + 0x33b)].tbl8;
     u8* t0 = d[*(u8*)(state + 0x33b)].tbl0;
-    BasketSeq16* seq = d[*(u8*)(state + 0x33b)].seq;
+    CrawlerSeq16* seq = d[*(u8*)(state + 0x33b)].seq;
     u8* tC = d[*(u8*)(state + 0x33b)].tblC;
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 scale = lbl_803E2BA4;
@@ -1619,7 +1627,7 @@ void fn_80158494(s16* obj, u8* state)
         }
         if (*(u8*)(state + 0x33b) == 0)
         {
-            smallbasket_checkNearbyActiveBasket((int)obj, state);
+            crawler_checkNearbyActive((int)obj, state);
         }
         *(u8*)(state + 0x33a) = 0;
     }
@@ -1808,13 +1816,13 @@ void fn_80158494(s16* obj, u8* state)
     fn_80157CDC((int)obj, (int)state);
 }
 
-void fn_80158C2C(s16* obj, u8* state)
+void crawler_updateB(s16* obj, u8* state)
 {
-    BasketDescriptor* d = (BasketDescriptor*)lbl_8031FAE8;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)lbl_8031FAE8;
     u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
     u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
-    BasketSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
+    CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
     u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
     u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
     ObjHitsPriorityState* hitState;
@@ -2022,12 +2030,12 @@ void fn_80158C2C(s16* obj, u8* state)
     fn_80157CDC((int)obj, (int)state);
 }
 
-void fn_80159958(s16* obj, u8* state)
+void hagabonMK2_updateB(s16* obj, u8* state)
 {
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 spd;
     f32 cap;
-    BasketSfxParams sp;
+    CrawlerSfxParams sp;
     f32 dv[3];
     int i;
 
@@ -2078,7 +2086,7 @@ void fn_80159958(s16* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
     {
-        BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+        CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].mode;
         *(f32*)(state + 0x328) = lbl_803E2C38;
         Sfx_StopFromObject((int)obj, 1000);
@@ -2119,7 +2127,7 @@ void fn_80159958(s16* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+        CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
         Baddie_SetMove((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;

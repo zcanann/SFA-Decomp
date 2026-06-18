@@ -52,7 +52,7 @@ extern void unlockLevel(int param_1, int param_2, int param_3);
 extern int mapGetDirIdx(int idx);
 extern void lockLevel(int idx, int param_2);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
-extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, f32 scale);
+extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void fn_80296518(int obj, int param_2, int param_3);
 extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
@@ -68,7 +68,7 @@ extern f32 lbl_803E50D8;
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
+int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     DbshShrineRuntime* runtime;
     int player;
@@ -150,7 +150,7 @@ void dbsh_shrine_free(int obj)
     GameBit_Set(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
 }
 
-void dbsh_shrine_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
+void dbsh_shrine_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
 {
     DbshShrineRuntime* runtime;
 

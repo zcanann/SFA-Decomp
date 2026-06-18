@@ -421,10 +421,10 @@ u8 trickyBallMove(u8* obj)
 
     if (hasFloorDepth != 0)
     {
-        f32 damping = lbl_803E36B8;
-        ((GameObject*)obj)->anim.velocityX *= damping;
-        ((GameObject*)obj)->anim.velocityY *= damping;
-        ((GameObject*)obj)->anim.velocityZ *= damping;
+        f32 damp = lbl_803E36B8;
+        ((GameObject*)obj)->anim.velocityX *= damp;
+        ((GameObject*)obj)->anim.velocityY *= damp;
+        ((GameObject*)obj)->anim.velocityZ *= damp;
         ((GameObject*)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, ((GameObject*)obj)->anim.velocityY, state->floorDepth);
         if ((((GameObject*)obj)->anim.velocityY < lbl_803E36C0) &&

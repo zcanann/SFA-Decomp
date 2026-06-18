@@ -8,8 +8,8 @@
 #include "main/game_object.h"
 
 extern void objSetSlot(void* obj, int resourceId);
-extern void objRenderFn_8003b8f4(int obj, undefined4 param_2, undefined4 param_3,
-                                 undefined4 param_4, undefined4 param_5, double scale);
+extern void objRenderFn_8003b8f4(int obj, u32 param_2, u32 param_3,
+                                 u32 param_4, u32 param_5, double scale);
 
 extern f32 timeDelta;
 extern f32 lbl_803E4C80;
@@ -30,8 +30,8 @@ void DIMbossgut_free(void)
 {
 }
 
-void DIMbossgut_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                       undefined4 p5, char shouldRender)
+void DIMbossgut_render(int obj, u32 p2, u32 p3, u32 p4,
+                       u32 p5, char shouldRender)
 {
     int visible;
 

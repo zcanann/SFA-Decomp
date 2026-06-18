@@ -847,11 +847,11 @@ void DIMSnowHorn1_func17(int obj, int value)
 
 int DIMSnowHorn1_func16(void) { return 0; }
 
-void DIMSnowHorn1_func15(s16* packed, undefined4 outX, undefined4 outY, undefined4 outZ)
+void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
 {
     extern void setMatrixFromObjectPos(void* matrix, void* packedTransform);
-    extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, undefined4 outX, undefined4 outY,
-                                      undefined4 outZ);
+    extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, u32 outX, u32 outY,
+                                      u32 outZ);
     struct
     {
         s16 rotX;
@@ -1068,8 +1068,8 @@ void fn_802BB998(int obj, int pointState, int inputState)
     u16 sfxId;
     struct
     {
-        undefined4 unk0;
-        undefined4 unk4;
+        u32 unk0;
+        u32 unk4;
         f32 scale;
         f32 x;
         f32 y;

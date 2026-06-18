@@ -23,7 +23,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 
 extern f32 timeDelta;
 

@@ -690,6 +690,12 @@ void fn_80138D7C(int obj, int p2)
 #define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
 #define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
 
+typedef struct {
+    u8 pending : 1;
+    u8 active : 1;
+    u8 rest : 6;
+} TumbleweedBlendFlags;
+
 /* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
@@ -707,10 +713,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
-            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] & ~TUMBLEWEED_BLEND_FLAG_PENDING;
-        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
-            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] | TUMBLEWEED_BLEND_FLAG_ACTIVE;
+        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->pending = 0;
+        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->active = 1;
     }
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
     {
@@ -753,8 +757,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < lbl_803E23DC)
             {
-                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23DC;
             }
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
             {
@@ -839,6 +843,7 @@ void objAnimFreeChildren(int a, int b, void** c)
     }
 }
 
+#pragma opt_strength_reduction off
 void fn_80137A00(int p1, int p2, u8* grid, int p4)
 {
     int i;
@@ -888,6 +893,7 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
         }
     }
 }
+#pragma opt_strength_reduction reset
 
 #pragma peephole off
 void debugPrintfxy(int x, int y, char* fmt, ...)

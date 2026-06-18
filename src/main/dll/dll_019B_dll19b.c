@@ -16,7 +16,7 @@ extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
 extern ModgfxInterface** gModgfxInterface;
-extern undefined4 ObjMsg_AllocQueue();
+extern u32 ObjMsg_AllocQueue();
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);

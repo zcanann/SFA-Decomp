@@ -71,18 +71,18 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-extern undefined4 FUN_80006824();
+extern u32 FUN_80006824();
 extern uint FUN_80006ab8();
-extern undefined8 FUN_80006ac4();
+extern u64 FUN_80006ac4();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
-extern undefined8 FUN_800305f8();
-extern undefined4 ObjMsg_SendToObject();
+extern u64 FUN_800305f8();
+extern u32 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_8003b818();
+extern u32 FUN_8003b818();
 extern double FUN_80293900();
 
-extern undefined4 DAT_8032a290;
+extern u32 DAT_8032a290;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
 extern f32 lbl_803DC074;
@@ -125,11 +125,11 @@ extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerB06();
 
-undefined4
-FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, uint obj, int state,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     int control;
 
@@ -141,30 +141,30 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(u8*)(state + 0x346) = 0;
     }
-    *(undefined*)(state + 0x34d) = 0x1f;
+    *(u8*)(state + 0x34d) = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(undefined4*)(control + 0x18) = *(undefined4*)(state + 0x2d0);
-        *(undefined2*)(control + 0x1c) = 0x24;
-        *(undefined4*)(control + 0x2c) = 0;
+        *(u32*)(control + 0x18) = *(u32*)(state + 0x2d0);
+        *(u16*)(control + 0x1c) = 0x24;
+        *(u32*)(control + 0x2c) = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                             *(int*)(control + 0x18), 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(u8*)(control + 0x34) = 1;
     }
     return 0;
 }
 
-undefined4
-FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, int param_10,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     float fVar1;
     uint uVar2;
@@ -172,15 +172,15 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     short* psVar4;
     int iVar5;
     double dVar6;
-    undefined4 local_48;
-    undefined4 local_44;
-    undefined4 local_40;
-    undefined4 local_3c;
-    undefined4 local_38;
-    undefined4 local_34;
-    undefined4 local_30;
-    undefined4 local_2c;
-    undefined4 local_28;
+    u32 local_48;
+    u32 local_44;
+    u32 local_40;
+    u32 local_3c;
+    u32 local_38;
+    u32 local_34;
+    u32 local_30;
+    u32 local_2c;
+    u32 local_28;
     float local_24;
     float local_20;
     float local_1c;
@@ -196,9 +196,9 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(u8*)(param_10 + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
+    *(u8*)(param_10 + 0x34d) = 0x1f;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
         (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
     {
@@ -209,7 +209,7 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         dVar6 = FUN_80293900((double)(local_1c * local_1c + local_24 * local_24 + local_20 * local_20));
         if (dVar6 < (double)lbl_803E6F50)
         {
-            local_40 = *(undefined4*)(param_10 + 0x2d0);
+            local_40 = *(u32*)(param_10 + 0x2d0);
             psVar4 = *(short**)(iVar5 + 0x24);
             local_48 = 0xe;
             local_44 = 1;
@@ -218,7 +218,7 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 FUN_80006ac4(psVar4, (uint) & local_48);
             }
-            *(undefined*)(iVar5 + 0x34) = 1;
+            *(u8*)(iVar5 + 0x34) = 1;
         }
     }
     else
@@ -232,8 +232,8 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(psVar4, (uint) & local_30);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
-        local_34 = *(undefined4*)(param_10 + 0x2d0);
+        *(u8*)(iVar5 + 0x34) = 1;
+        local_34 = *(u32*)(param_10 + 0x2d0);
         psVar4 = *(short**)(iVar5 + 0x24);
         local_3c = 7;
         local_38 = 1;
@@ -242,83 +242,83 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             FUN_80006ac4(psVar4, (uint) & local_3c);
         }
-        *(undefined*)(iVar5 + 0x34) = 1;
+        *(u8*)(iVar5 + 0x34) = 1;
     }
     return 0;
 }
 
-undefined4
-FUN_80201260(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, uint obj, int state,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     int hurt;
     uint busy;
     short* hits;
     int control;
-    undefined4 msg;
-    undefined4 msgArg;
-    undefined4 msgTarget;
+    u32 msg;
+    u32 msgArg;
+    u32 msgTarget;
 
     control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)(state + 0x27a) != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(u8*)(state + 0x346) = 0;
     }
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(undefined4*)(state + 0x2d0) = 0;
+        *(u32*)(state + 0x2d0) = 0;
         if (*(int*)(control + 0x18) != 0)
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                 *(int*)(control + 0x18), 0x11, obj, 0x10, param_13, param_14, param_15, param_16);
-            *(undefined4*)(control + 0x18) = 0;
+            *(u32*)(control + 0x18) = 0;
         }
         hurt = FUN_80017a98();
         hurt = (**(code**)(**(int**)(*(int*)(hurt + 200) + 0x68) + 0x44))();
         if (hurt == 0)
         {
             busy = randomGetRange(0, 2);
-            FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + busy * 4));
+            FUN_80006824(obj, (ushort) * (u32*)(&DAT_8032a290 + busy * 4));
         }
         else
         {
             busy = randomGetRange(3, 4);
-            FUN_80006824(obj, (ushort) * (undefined4*)(&DAT_8032a290 + busy * 4));
+            FUN_80006824(obj, (ushort) * (u32*)(&DAT_8032a290 + busy * 4));
         }
-        msgTarget = *(undefined4*)(control + 0x30);
-        msgArg = *(undefined4*)(control + 0x2c);
+        msgTarget = *(u32*)(control + 0x30);
+        msgArg = *(u32*)(control + 0x2c);
         hits = *(short**)(control + 0x24);
-        msg = *(undefined4*)(control + 0x28);
+        msg = *(u32*)(control + 0x28);
         busy = FUN_80006ab8(hits);
         if (busy == 0)
         {
             FUN_80006ac4(hits, (uint) & msg);
         }
-        *(undefined4*)(control + 0x3c) = 0;
+        *(u32*)(control + 0x3c) = 0;
     }
-    *(undefined*)(state + 0x34d) = 0x10;
+    *(u8*)(state + 0x34d) = 0x10;
     *(float*)(state + 0x2a0) = lbl_803E6FD8;
     *(float*)(state + 0x280) = lbl_803E6F40;
     if (*(char*)(state + 0x346) != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(u8*)(control + 0x34) = 1;
     }
     return 0;
 }
 
-undefined4
-FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 animId;
+    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
+    u32 animId;
     int control;
 
     control = *(int*)&((GameObject*)obj)->extra;
@@ -333,9 +333,9 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 10, 0, animId, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(u8*)(state + 0x346) = 0;
     }
-    *(undefined*)(state + 0x34d) = 1;
+    *(u8*)(state + 0x34d) = 1;
     control = *(int*)(control + 0x40c);
     *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
     if ((*(uint*)(state + 0x314) & 1) != 0)
@@ -345,22 +345,22 @@ FUN_802014c8(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     if (*(char*)(state + 0x346) != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(u8*)(control + 0x34) = 1;
     }
     return 0;
 }
 
 int dbstealerworm_stateHandlerA09(int obj, int p);
 
-undefined4
-FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
-    undefined4 animId;
+    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
+    u32 animId;
 
     if (*(char*)(state + 0x27a) != '\0')
     {
@@ -373,22 +373,22 @@ FUN_80201658(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 5, 0, animId, param_13, param_14, param_15, param_16);
-        *(undefined*)(state + 0x346) = 0;
+        *(u8*)(state + 0x346) = 0;
     }
-    *(undefined*)(state + 0x34d) = 1;
+    *(u8*)(state + 0x34d) = 1;
     return 0;
 }
 
-undefined4
-FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int obj, int state,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined4 ObjHits_SetHitVolumeSlot(); /* #57 */
+    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
     uint pick;
-    undefined4 animId;
+    u32 animId;
     int extra;
     int control;
 
@@ -409,16 +409,16 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                              obj, 7, 0, animId, param_13, param_14, param_15, param_16);
-                *(undefined*)(state + 0x346) = 0;
+                *(u8*)(state + 0x346) = 0;
             }
         }
         else if (*(char*)(state + 0x27a) != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          obj, 6, 0, animId, param_13, param_14, param_15, param_16);
-            *(undefined*)(state + 0x346) = 0;
+            *(u8*)(state + 0x346) = 0;
         }
-        *(undefined*)(state + 0x34d) = 1;
+        *(u8*)(state + 0x34d) = 1;
         *(float*)(state + 0x2a0) =
             lbl_803E6FDC +
             (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e6f78) /
@@ -427,18 +427,18 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(float*)(state + 0x280) = lbl_803E6F40;
     if (*(char*)(state + 0x346) != '\0')
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(u8*)(control + 0x34) = 1;
     }
     *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
     return 0;
 }
 
-undefined4
-FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+u32
+FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, ushort* obj,
              int target)
 {
     int yawDelta;
-    undefined4 result;
+    u32 result;
     int control;
     double absDist;
     double signedDist;
@@ -484,8 +484,8 @@ FUN_80202004(double param_1, double param_2, undefined8 param_3, double param_4,
 
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
-undefined4
-FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4, ushort* obj,
+u32
+FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, ushort* obj,
              int target)
 {
     int yawDelta;
@@ -571,7 +571,7 @@ void dbholecontrol1_update(int* obj)
 
 void dbholecontrol1_init(int* obj, u8* params)
 {
-    extern undefined4 ObjGroup_AddObject(); /* #57 */
+    extern u32 ObjGroup_AddObject(); /* #57 */
     DbHoleControl1State* sub = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
@@ -591,7 +591,7 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-void dbholecontrol1_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
+void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 

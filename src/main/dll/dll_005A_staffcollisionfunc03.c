@@ -140,8 +140,8 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spa
         m.w = lbl_803E0710;
         m.x = lbl_803E0714;
         m.rotY = 0;
-        m.rotX = (s16)(int)rb;
-        m.rotZ = (s16)(int)ra;
+        *(s16*)&m.rotX = rb;
+        *(s16*)&m.rotZ = ra;
         vecRotateZXY(&m, &ents[3].x);
         buf.v58 = 0;
         buf.ctx = sourceObj;

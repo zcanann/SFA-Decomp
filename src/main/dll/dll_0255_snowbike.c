@@ -110,7 +110,7 @@ extern int GameBit_Set(int bit, int val);
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
 extern void setMatrixFromObjectPos(void* mtx, s16* vec);
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
@@ -134,9 +134,9 @@ extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5C4C;
 extern uint GameBit_Get(int eventId);
-extern undefined4 fn_801EAE4C();
-extern undefined4 fn_801EB0D4();
-extern undefined4 fn_801EB634();
+extern u32 fn_801EAE4C();
+extern u32 fn_801EB0D4();
+extern u32 fn_801EB634();
 extern void fn_801EC1AC(int obj, int state);
 extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
@@ -479,7 +479,7 @@ void SnowBike_free(int obj)
 s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x422); }
 s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
 
-void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void SnowBike_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     void* path;
 

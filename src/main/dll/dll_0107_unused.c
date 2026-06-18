@@ -20,9 +20,9 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, s16 verticalMin, s16 verticalMax);
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 Obj_GetYawDeltaToObject();
+extern u32 ObjGroup_AddObject();
+extern u32 ObjMsg_SendToObject();
+extern u32 Obj_GetYawDeltaToObject();
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

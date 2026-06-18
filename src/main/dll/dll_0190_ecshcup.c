@@ -8,10 +8,10 @@ extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E5060;
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjGroup_FindNearestObject();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_SyncObjectPositionIfDirty();
+extern u32 ObjHits_EnableObject();
+extern u32 ObjGroup_FindNearestObject();
 extern const f32 lbl_803E5064;
 extern const f32 lbl_803E5068;
 extern const f32 lbl_803E506C;
@@ -22,7 +22,7 @@ extern const f32 lbl_803E507C;
 extern const f32 lbl_803E5080;
 extern const f32 lbl_803E5084;
 extern const f32 lbl_803E5088;
-extern undefined4 lbl_803DDBC8;
+extern u32 lbl_803DDBC8;
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern f32 lbl_802C23B8[];
 extern f32 mathSinf(f32 v);
@@ -342,10 +342,10 @@ void fn_801C8B68(int obj)
         mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x10)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotZ = (short)(int)(lbl_803E50B8 * (angB + angA));
+    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * (angB + angA));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x12)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
-    ((GameObject*)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angB + angA));
+    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * (angB + angA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);

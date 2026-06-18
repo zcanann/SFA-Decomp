@@ -12,7 +12,7 @@ typedef struct FirePipeExtra {
     u8 pad21[0x24 - 0x21];
     f32 cycleTimer;
     f32 emitTimer;
-    u32 subObj;
+    u32 glowLight;
     int activeSpawn;
     int effectType;
     f32 effectScale;
@@ -25,12 +25,12 @@ typedef struct FirePipeExtra {
 
 typedef struct FirePipeMapData {
     ObjPlacement base;
-    s8 modeX;
-    u8 modeY;
+    s8 rotX;
+    u8 rotY;
     s16 cycleTime;
     s16 scale;
     s16 gameBit;
-    s16 timer;
+    s16 startOffset;
     u8 flags;
 } FirePipeMapData;
 
@@ -38,8 +38,8 @@ typedef struct FirePipeObject {
     union {
         ObjAnimComponent anim;
         struct {
-            s16 modeX;
-            s16 modeY;
+            s16 rotX;
+            s16 rotY;
             s16 resetTimer;
             u8 pad06[0x08 - 0x06];
             f32 scale;
@@ -59,15 +59,15 @@ typedef struct FirePipeObject {
     undefined4 (*callback)(struct FirePipeObject *obj);
 } FirePipeObject;
 
-STATIC_ASSERT(offsetof(FirePipeMapData, modeX) == 0x18);
-STATIC_ASSERT(offsetof(FirePipeMapData, modeY) == 0x19);
+STATIC_ASSERT(offsetof(FirePipeMapData, rotX) == 0x18);
+STATIC_ASSERT(offsetof(FirePipeMapData, rotY) == 0x19);
 STATIC_ASSERT(offsetof(FirePipeMapData, cycleTime) == 0x1A);
 STATIC_ASSERT(offsetof(FirePipeMapData, scale) == 0x1C);
 STATIC_ASSERT(offsetof(FirePipeMapData, gameBit) == 0x1E);
-STATIC_ASSERT(offsetof(FirePipeMapData, timer) == 0x20);
+STATIC_ASSERT(offsetof(FirePipeMapData, startOffset) == 0x20);
 STATIC_ASSERT(offsetof(FirePipeMapData, flags) == 0x22);
 STATIC_ASSERT(offsetof(FirePipeObject, anim) == 0x00);
-STATIC_ASSERT(offsetof(FirePipeObject, modeX) == offsetof(ObjAnimComponent, rotX));
+STATIC_ASSERT(offsetof(FirePipeObject, rotX) == offsetof(ObjAnimComponent, rotX));
 STATIC_ASSERT(offsetof(FirePipeObject, scale) == offsetof(ObjAnimComponent, rootMotionScale));
 STATIC_ASSERT(offsetof(FirePipeObject, objectId) == offsetof(ObjAnimComponent, seqId));
 STATIC_ASSERT(offsetof(FirePipeObject, objectDef) == offsetof(ObjAnimComponent, placementData));

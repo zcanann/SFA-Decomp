@@ -11,10 +11,10 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 extern u32 randomGetRange(int min, int max);
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern u32 ObjMsg_SendToObject();
+extern u32 ObjMsg_AllocQueue();
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
@@ -129,8 +129,8 @@ void fuelcell_init(int* obj)
 void fuelcell_update(int* obj)
 {
     extern int* Obj_GetPlayerObject(void);
-    extern undefined4 ObjGroup_AddObject();
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 ObjGroup_AddObject();
+    extern u32 GameBit_Set(int eventId, int value);
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
     FuelcellState* state = ((GameObject*)obj)->extra;
     int* player;

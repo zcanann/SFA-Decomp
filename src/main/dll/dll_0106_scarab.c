@@ -22,8 +22,8 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern u32 ObjMsg_SendToObject();
+extern u32 ObjMsg_AllocQueue();
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

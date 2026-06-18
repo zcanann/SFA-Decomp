@@ -6,7 +6,7 @@
 #include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 
 
 extern void objRenderFn_8003b8f4(f32);

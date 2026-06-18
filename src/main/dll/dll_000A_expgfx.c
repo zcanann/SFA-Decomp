@@ -844,9 +844,9 @@ foundFirst:
                     rot.y = lbl_803DF35C;
                     rot.z = lbl_803DF35C;
                     rot.scale = lbl_803DF354;
-                    rot.angleZ = (s16)(int)((f32)slot->sourceVecZ * timeDelta);
-                    rot.angleY = (s16)(int)((f32)slot->sourceVecY * timeDelta);
-                    rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
+                    *(s16*)&rot.angleZ = ((f32)slot->sourceVecZ * timeDelta);
+                    *(s16*)&rot.angleY = ((f32)slot->sourceVecY * timeDelta);
+                    *(s16*)&rot.angleX = ((f32)slot->sourceVecX * timeDelta);
                     vecRotateZXY(&rot, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
@@ -2533,6 +2533,7 @@ void expgfx_free2(u32 sourceId)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void expgfx_free(u32 sourceId)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -2569,8 +2570,7 @@ void expgfx_free(u32 sourceId)
             {
                 if (slot != NULL)
                 {
-                    tableIndex = Expgfx_GetSlotTableIndex(slot);
-                    tableEntry = Expgfx_GetTableEntry(tableIndex);
+                    tableEntry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
                     if (tableEntry->sourceId == sourceId)
                     {
                         expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
@@ -2594,6 +2594,7 @@ void expgfx_free(u32 sourceId)
         poolIndex++;
     }
 }
+#pragma dont_inline reset
 
 void expgfx_resetAllPools(void)
 {

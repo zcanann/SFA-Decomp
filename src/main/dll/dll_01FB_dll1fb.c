@@ -172,7 +172,7 @@ void dll_1FB_hitDetect_nop(void)
 
 void dll_1FB_update(int* obj)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&

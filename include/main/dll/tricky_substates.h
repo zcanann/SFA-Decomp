@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_GRENADE_H_
-#define MAIN_DLL_GRENADE_H_
+#ifndef MAIN_DLL_TRICKY_SUBSTATES_H_
+#define MAIN_DLL_TRICKY_SUBSTATES_H_
 
 #include "ghidra_import.h"
 
@@ -24,4 +24,4 @@ void objAnimFn_801441c0(u8 *obj, u8 *state);
 void tricky_startRandomIdleMove(int param_1,int param_2);
 int trickyFoodFn_8014460c(int param_1,int *param_2);
 
-#endif /* MAIN_DLL_GRENADE_H_ */
+#endif /* MAIN_DLL_TRICKY_SUBSTATES_H_ */

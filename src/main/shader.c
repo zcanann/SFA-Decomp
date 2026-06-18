@@ -704,6 +704,7 @@ extern f32 lbl_803DEBCC;
 extern f32 retraceCount;
 extern f32 flushFlag;
 extern f32 retraceQueue;
+extern f32 PreCB;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
@@ -823,6 +824,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     u8* tabEntry;
     int mapId;
     int mapY;
+    int mapCount;
     s8* arr;
 
     layer = 0;
@@ -850,7 +852,8 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     curMapLayer = 0;
     mapY = (s32)fastFloorf(c / gMapBlockWorldSize);
     mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
-    if (mapId < 0 || mapId >= (s32)((u32)getDataFileSize(0x1f) >> 5))
+    mapCount = (s32)((u32)getDataFileSize(0x1f) >> 5);
+    if (mapId < 0 || mapId >= mapCount)
     {
         curMapType = 0;
     }
@@ -1334,8 +1337,8 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     rect[2] = p4 - *(s16*)(self + 6);
     rect[1] = rect[0] + *(s16*)(self + 0) - 1;
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
-    *(u8*)((char*)rect + 8) = *(s16*)(self + 4);
-    *(u8*)((char*)rect + 9) = *(s16*)(self + 6);
+    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
+    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
     for (y = 0; (s16)y < *(s16*)(self + 2); y++)
     {
         for (x = 0; (s16)x < *(s16*)(self + 0); x++)
@@ -1950,8 +1953,8 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     else
     {
-        y0 = (&lbl_803DEBCC)[8];
-        y1 = (&lbl_803DEBCC)[9];
+        y0 = (&retraceQueue)[1];
+        y1 = PreCB;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++)
@@ -3249,6 +3252,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     if (id != -1)
     {
         char* p2 = (char*)lbl_8038224C;
+        char* p6 = p2 + 6;
         char* q2 = p2;
         int i2 = 0;
         int cn = lbl_803DCDEC;
@@ -3264,11 +3268,11 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         slot = i2;
         if (slot == -1)
             slot = mapProcessRomList(id);
-        *(s8*)&((BlockEntry*)lbl_8038224C)[slot].field_6 = 1;
-        entry = (char*)lbl_8038224C[slot].field_0;
+        *(s8*)(p6 + slot * 8) = 1;
+        entry = (char*)*(u32*)(p2 + slot * 8);
         pairs = (s16*)lbl_80382238[2];
-        cv3 = (s8)pairs[id * 2];
-        cv4 = (s8)pairs[id * 2 + 1];
+        cv3 = (s8)pairs[id << 1];
+        cv4 = (s8)pairs[(id << 1) + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
@@ -3288,24 +3292,25 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         found2:
             if (i3 == -1)
                 i3 = mapProcessRomList(cv3);
-            *(s8*)(p2 + 6 + i3 * 8) = 1;
+            *(s8*)(p6 + i3 * 8) = 1;
         }
         if (cv4 != -1)
         {
+            char* q4 = p2;
             int i4 = 0;
             int cn4 = lbl_803DCDEC;
             for (k = 0; k < cn4; k++)
             {
-                if (*(void**)p2 != NULL && cv4 == *(s16*)(p2 + 4))
+                if (*(void**)q4 != NULL && cv4 == *(s16*)(q4 + 4))
                     goto found3;
-                p2 += 8;
+                q4 += 8;
                 i4++;
             }
             i4 = -1;
         found3:
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
-            *(s8*)&((BlockEntry*)lbl_8038224C)[i4].field_6 = 1;
+            *(s8*)(p6 + i4 * 8) = 1;
         }
         rects = (s16*)(lbl_80382238[1] + id * 10);
         x = x - rects[0];

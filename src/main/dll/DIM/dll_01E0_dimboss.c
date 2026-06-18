@@ -12,68 +12,68 @@
 #include "main/resource.h"
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
-extern undefined8 padUpdate();
-extern undefined4 dvdCheckError();
-extern undefined4 gameTextRun();
+extern u64 padUpdate();
+extern u32 dvdCheckError();
+extern u32 gameTextRun();
 extern uint GameBit_Get(int eventId);
-extern undefined8 GameBit_Set(int eventId, int value);
-extern undefined4 gameTextShow();
-extern undefined4 checkReset();
-extern undefined8 mmFreeTick();
-extern undefined4 ObjModel_ClearRenderAttachment();
-extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, undefined4 model, void* mtx,
+extern u64 GameBit_Set(int eventId, int value);
+extern u32 gameTextShow();
+extern u32 checkReset();
+extern u64 mmFreeTick();
+extern u32 ObjModel_ClearRenderAttachment();
+extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
 extern int Obj_GetActiveModel();
-extern undefined4 Obj_BuildWorldTransformMatrix();
-extern undefined4 getTrickyObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined8 clearLoadedFileFlags_blocks1();
-extern undefined8 setLoadedFileFlags_blocks1();
+extern u32 Obj_BuildWorldTransformMatrix();
+extern u32 getTrickyObject();
+extern u64 ObjGroup_RemoveObject();
+extern u64 clearLoadedFileFlags_blocks1();
+extern u64 setLoadedFileFlags_blocks1();
 extern uint getLoadedFileFlags();
-extern undefined4 unlockLevel();
-extern undefined4 lockLevel();
-extern undefined8 mapUnload();
-extern undefined4 defragMemory();
-extern undefined8 mapLoadDataFile();
+extern u32 unlockLevel();
+extern u32 lockLevel();
+extern u64 mapUnload();
+extern u32 defragMemory();
+extern u64 mapLoadDataFile();
 extern int mapGetDirIdx();
-extern undefined8 loadDataFiles();
-extern undefined4 GXFlush_();
-extern undefined8 waitNextFrame();
+extern u64 loadDataFiles();
+extern u32 GXFlush_();
+extern u64 waitNextFrame();
 extern void setDrawCloudsAndLights(int param_1);
 extern void skyFn_800894a8(int layer, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int layer, int red, int green, int blue, int alpha, int duration);
 extern void skyFn_80089710(int layer, int enabled, int param_3);
-extern undefined8 dll_2E_func07();
-extern undefined4 dll_2E_func09();
-extern undefined4 dll_2E_func05();
+extern u64 dll_2E_func07();
+extern u32 dll_2E_func09();
+extern u32 dll_2E_func05();
 extern void fn_801B9ECC(void);
-extern undefined4 dll_2E_func04();
+extern u32 dll_2E_func04();
 extern void OSReport(const char* msg, ...);
 
-extern undefined4 Camera_DisableViewYOffset();
-extern undefined4 getEnvfxAct();
-extern undefined4 ModelLightStruct_free();
-extern undefined4 Obj_FreeObject();
-extern undefined4 Obj_GetPlayerObject();
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern void objRenderFn_8003b8f4(DIMbossObject* obj, undefined4 param_2, undefined4 param_3,
-                                 undefined4 param_4, undefined4 param_5, f32 scale);
-extern undefined4 timeOfDayFn_80055000();
+extern u32 Camera_DisableViewYOffset();
+extern u32 getEnvfxAct();
+extern u32 ModelLightStruct_free();
+extern u32 Obj_FreeObject();
+extern u32 Obj_GetPlayerObject();
+extern u32 ObjHits_RegisterActiveHitVolumeObject();
+extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 param_2, u32 param_3,
+                                 u32 param_4, u32 param_5, f32 scale);
+extern u32 timeOfDayFn_80055000();
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(DIMbossObject* obj, void* animController, int param_3);
-extern undefined4 dll_2E_func03();
+extern u32 dll_2E_func03();
 extern f32 timeDelta;
 extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
-extern undefined4 gDIMbossRenderMtx[];
+extern u32 gDIMbossRenderMtx[];
 extern DIMbossAnimScratch gDIMbossAnimScratchBase;
-extern undefined4 gDIMbossAnimController[];
-extern undefined4 lbl_802C2338[];
+extern u32 gDIMbossAnimController[];
+extern u32 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int gPlayerInterface;
-extern undefined4* gBaddieControlInterface;
+extern u32* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
@@ -91,16 +91,16 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES 100
 #define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
-typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, undefined4 param_2, DIMbossRuntime* runtime,
+typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, u32 param_2, DIMbossRuntime* runtime,
                                    int param_4, int param_5, int param_6, u8 param_7, float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
                                         void* hitDetectAnimTable, void* animTable);
 
 typedef struct DIMbossInitVec
 {
-    undefined4 a;
-    undefined4 b;
-    undefined4 c;
+    u32 a;
+    u32 b;
+    u32 c;
 } DIMbossInitVec;
 
 typedef struct DIMbossBaddieControlInterface
@@ -170,7 +170,7 @@ static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(v
     return (DIMbossObjectTriggerInterface*)*gObjectTriggerInterface;
 }
 
-int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
+int DIMboss_updateState(DIMbossObject* obj, u32 param_2, ObjAnimUpdateState* animUpdate)
 {
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
@@ -461,8 +461,8 @@ void DIMboss_free(DIMbossObject* obj)
     timeOfDayFn_80055000();
 }
 
-void DIMboss_render(DIMbossObject* obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                    undefined4 p5, char shouldRender)
+void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
+                    u32 p5, char shouldRender)
 {
     DIMbossRuntime* runtime;
     DIMbossEffect* effect;
@@ -492,7 +492,7 @@ void DIMboss_hitDetect(DIMbossObject* obj)
 void DIMboss_update(DIMbossObject* obj)
 {
     uint gameBitCount;
-    undefined4 targetModel;
+    u32 targetModel;
     DIMbossTopState* topState;
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
@@ -599,19 +599,19 @@ void DIMboss_update(DIMbossObject* obj)
     }
 }
 
-void DIMboss_init(DIMbossObject* obj, undefined4 p2, int isAltVariant)
+void DIMboss_init(DIMbossObject* obj, u32 p2, int isAltVariant)
 {
     DIMbossRuntime* runtime;
     DIMbossTopState* topState;
-    undefined4 localVec[4];
+    u32 localVec[4];
     u8* animFlagsByte;
-    undefined4 mapDir;
+    u32 mapDir;
     u8 animFlags;
     f32 liftHeight;
 
     runtime = obj->runtime;
     *(DIMbossInitVec*)localVec = *(DIMbossInitVec*)lbl_802C2338;
-    *(undefined2*)(localVec + 3) = *(undefined2*)(lbl_802C2338 + 3);
+    *(u16*)(localVec + 3) = *(u16*)(lbl_802C2338 + 3);
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
     animFlags = 6;

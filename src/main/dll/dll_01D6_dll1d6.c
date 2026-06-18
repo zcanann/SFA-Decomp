@@ -54,7 +54,7 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
@@ -110,7 +110,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern undefined4 FUN_800067c0();
+extern u32 FUN_800067c0();
 extern f32 lbl_803E4A78;
 extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
@@ -135,7 +135,7 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
+void FUN_801b7314(int param_1, u32 param_2, float* param_3, float* param_4)
 {
     uint bitValue;
     int typeId;

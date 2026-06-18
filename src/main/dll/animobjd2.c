@@ -408,9 +408,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 *(int*)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1,
                                                                       *(int*)&((GameObject*)obj)->anim.parent);
                                 ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPackedSlots*)(st + 0x7bc))->c);
-                                *(f32*)(st + 0x7c0) = lbl_803E23DC;
-                                *(f32*)(st + 0x7c4) = lbl_803E23DC;
-                                *(f32*)(st + 0x7c8) = lbl_803E23DC;
+                                *(f32*)(st + 0x7c0) = *(f32*)(st + 0x7c4) = *(f32*)(st + 0x7c8) = lbl_803E23DC;
                             }
                         }
                     }

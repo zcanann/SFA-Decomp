@@ -3,8 +3,11 @@
  *
  * The object joins object group 3 and runs entirely off the shared
  * gPlayerInterface vtable: init() wires its move/state tables, and each
- * frame update() drives it through update() (using the lbl_803AD288 main
- * and lbl_803AD278 sub state-handler tables installed by initialise()).
+ * frame update() drives it through update() (using the gDll28BStateHandlers
+ * main and gDll28BSubstateHandlers sub state-handler tables installed by
+ * initialise(); the handler functions themselves are compiled into the
+ * dll_028A_wcearthwalker TU). Its obj+0xB8 block is also described by
+ * Dll28BAiState in earthwalker_state.h (where the handlers view it).
  * Per-frame it caches its planar distance to the player, runs the shared
  * dll_2E (moveLib) look-at/turn block at state+0x35C, the eye-animation
  * block at state+0x980, and a ROM-curve walker at state+0x9B0. render()
@@ -29,7 +32,7 @@ typedef struct Dll28BState
 
 STATIC_ASSERT(sizeof(Dll28BState) == 0xAC4);
 
-int dll_28B_getExtraSize_ret_2756(void) { return sizeof(Dll28BState); }
+int dll_28B_getExtraSize(void) { return sizeof(Dll28BState); }
 
 int dll_28B_getObjectTypeId(void) { return 0x0; }
 
@@ -64,7 +67,7 @@ void dll_28B_update(int obj)
     ((Dll28BState*)state)->playerDistance = Vec_xzDistance(obj + 0x18, player + 0x18);
     *(int*)state |= OBJFLAG_BIT_2000000;
     (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(
-        obj, state, timeDelta, timeDelta, lbl_803AD288, lbl_803AD278);
+        obj, state, timeDelta, timeDelta, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((((Dll28BState*)state)->flagsAC0 & 1) != 0)
     {
         ((Dll28BState*)state)->flags96D &= ~1;
@@ -107,12 +110,12 @@ void dll_28B_init(int obj)
 
 void dll_28B_initialise(void)
 {
-    lbl_803AD288[0] = (void*)fn_80223D10;
-    lbl_803AD288[1] = (void*)fn_80223CF0;
-    lbl_803AD288[2] = (void*)fn_80223C34;
-    lbl_803AD288[3] = (void*)fn_80223BC4;
-    lbl_803AD278[0] = (void*)fn_80223BBC;
-    lbl_803AD278[1] = (void*)fn_80223AFC;
-    lbl_803AD278[2] = (void*)fn_80223A1C;
-    lbl_803AD278[3] = (void*)fn_802239A4;
+    gDll28BStateHandlers[0] = (void*)dll_28B_stateHandler0;
+    gDll28BStateHandlers[1] = (void*)dll_28B_stateHandler1;
+    gDll28BStateHandlers[2] = (void*)dll_28B_stateHandler2;
+    gDll28BStateHandlers[3] = (void*)dll_28B_stateHandler3;
+    gDll28BSubstateHandlers[0] = (void*)dll_28B_substateHandler0;
+    gDll28BSubstateHandlers[1] = (void*)dll_28B_substateHandler1;
+    gDll28BSubstateHandlers[2] = (void*)dll_28B_substateHandler2;
+    gDll28BSubstateHandlers[3] = (void*)dll_28B_substateHandler3;
 }

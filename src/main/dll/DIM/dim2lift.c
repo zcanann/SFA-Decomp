@@ -16,8 +16,8 @@
 
 extern u32 randomGetRange(int min, int max);
 extern void Obj_FreeObject(int obj);
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 DIM2icicle_updateHitResponse();
+extern u32 ObjMsg_SendToObject();
+extern u32 DIM2icicle_updateHitResponse();
 
 
 extern f32 lbl_803E4BD8;

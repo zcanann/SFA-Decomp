@@ -6,7 +6,7 @@ extern uint GameBit_Get(int eventId);
 
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
-extern undefined4 ObjHits_RecordObjectHit();
+extern u32 ObjHits_RecordObjectHit();
 extern f32 lbl_803E3CC0;
 extern void disableHeavyFog(void);
 extern f32 Vec_distance(void* a, void* b);

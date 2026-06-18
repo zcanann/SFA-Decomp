@@ -49,18 +49,18 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern undefined4 getLActions();
-extern undefined4 FUN_8001771c();
+extern u32 getLActions();
+extern u32 FUN_8001771c();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
+extern u32 FUN_80017ac8();
+extern u32 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_800305f8();
+extern u32 FUN_800305f8();
 
-extern undefined4 DAT_802c2a88;
-extern undefined4 DAT_802c2a8c;
-extern undefined4 DAT_802c2a90;
+extern u32 DAT_802c2a88;
+extern u32 DAT_802c2a8c;
+extern u32 DAT_802c2a90;
 extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
@@ -75,19 +75,19 @@ extern f32 lbl_803E4738;
 extern void warpToMap(int mapId, int flags);
 extern void Music_Trigger(int track, int flag);
 
-void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_801ac248(u64 param_1, double param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9)
 {
 }
 
-undefined4
-FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
+u32
+FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
 {
     int lookupBase;
-    undefined4 in_r9;
-    undefined4 in_r10;
+    u32 in_r9;
+    u32 in_r10;
     float* state;
     double dist;
     double value;
@@ -118,13 +118,13 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return 0;
 }
 
-void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
-                  undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
+void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
+                  u32 param_5, u32 param_6, char param_7, int param_8, int param_9)
 {
     u8 savedAlpha;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined4 local_20[5];
+    u32 local_28;
+    u32 local_24;
+    u32 local_20[5];
 
     if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
     {
@@ -134,44 +134,44 @@ void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, 
             (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
         *(u8*)((int)param_2 + 0x37) = savedAlpha;
     }
-    *(undefined4*)(param_1 + 0x46) = *(undefined4*)(param_1 + 0xc);
-    *(undefined4*)(param_1 + 0x48) = *(undefined4*)(param_1 + 0xe);
-    *(undefined4*)(param_1 + 0x4a) = *(undefined4*)(param_1 + 0x10);
-    *(undefined4*)(param_1 + 0x40) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0x42) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 10);
+    *(u32*)(param_1 + 0x46) = *(u32*)(param_1 + 0xc);
+    *(u32*)(param_1 + 0x48) = *(u32*)(param_1 + 0xe);
+    *(u32*)(param_1 + 0x4a) = *(u32*)(param_1 + 0x10);
+    *(u32*)(param_1 + 0x40) = *(u32*)(param_1 + 6);
+    *(u32*)(param_1 + 0x42) = *(u32*)(param_1 + 8);
+    *(u32*)(param_1 + 0x44) = *(u32*)(param_1 + 10);
     (**(code**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
-    *(undefined4*)(param_1 + 6) = local_20[0];
-    *(undefined4*)(param_1 + 8) = local_24;
-    *(undefined4*)(param_1 + 10) = local_28;
+    *(u32*)(param_1 + 6) = local_20[0];
+    *(u32*)(param_1 + 8) = local_24;
+    *(u32*)(param_1 + 10) = local_28;
     *param_1 = *param_2;
     param_1[1] = param_2[1];
     param_1[2] = param_2[2];
-    *(undefined4*)(param_1 + 0xc) = *(undefined4*)(param_1 + 6);
-    *(undefined4*)(param_1 + 0xe) = *(undefined4*)(param_1 + 8);
-    *(undefined4*)(param_1 + 0x10) = *(undefined4*)(param_1 + 10);
-    *(undefined4*)(param_1 + 0x12) = *(undefined4*)(param_2 + 0x12);
-    *(undefined4*)(param_1 + 0x14) = *(undefined4*)(param_2 + 0x14);
-    *(undefined4*)(param_1 + 0x16) = *(undefined4*)(param_2 + 0x16);
+    *(u32*)(param_1 + 0xc) = *(u32*)(param_1 + 6);
+    *(u32*)(param_1 + 0xe) = *(u32*)(param_1 + 8);
+    *(u32*)(param_1 + 0x10) = *(u32*)(param_1 + 10);
+    *(u32*)(param_1 + 0x12) = *(u32*)(param_2 + 0x12);
+    *(u32*)(param_1 + 0x14) = *(u32*)(param_2 + 0x14);
+    *(u32*)(param_1 + 0x16) = *(u32*)(param_2 + 0x16);
     return;
 }
 
-undefined4
-FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15
-             , undefined4 param_16)
+u32
+FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             , ObjAnimUpdateState* param_11, u32 param_12, uint* param_13, u32 param_14, u32 param_15
+             , u32 param_16)
 {
     uint active;
-    undefined2* setup;
-    undefined4 spawned;
+    u16* setup;
+    u32 spawned;
     int modelState;
     int* extra;
     int linkedObj;
-    undefined2 uStack_2a;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined2 local_20;
+    u16 uStack_2a;
+    u32 local_28;
+    u32 local_24;
+    u16 local_20;
 
     extra = ((GameObject*)param_9)->extra;
     *(u8*)(extra + 8) = 0xff;
@@ -190,7 +190,7 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                    *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)(param_9 + 200) = 0;
+            *(u32*)(param_9 + 200) = 0;
             *(u8*)(param_9 + 0xeb) = 0;
         }
         active = FUN_80017ae8();
@@ -207,7 +207,7 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
                 param_13 = *(uint**)&((GameObject*)param_9)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                *(undefined4*)(param_9 + 200) = spawned;
+                *(u32*)(param_9 + 200) = spawned;
                 *(u8*)(param_9 + 0xeb) = 1;
             }
             *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);

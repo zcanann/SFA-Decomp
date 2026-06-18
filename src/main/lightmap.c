@@ -1581,11 +1581,11 @@ extern void* lbl_803DCEA0;
 
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
+    int inner_idx;
     int outer;
     int* page;
-    int* p;
-    int inner_idx;
     int total_offset;
+    int* p;
     u16 limit;
     int sz;
 
@@ -2366,8 +2366,8 @@ void getVisibleObjects(s8* opacity)
 
 void sortVisibleObjectKeysDescending(u32* arr, int n)
 {
-    int gap = 1;
     int i, j;
+    int gap = 1;
     u32 tmp;
     while (gap <= n / 9)
         gap = gap * 3 + 1;

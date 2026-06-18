@@ -172,7 +172,7 @@ extern u32 lbl_803E255C;
 extern u32 lbl_803E2560;
 extern u32 lbl_803E2564;
 extern u16 lbl_803E2568;
-extern f32 lbl_803E2574;
+extern const f32 lbl_803E2574;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2578;
 extern f32 lbl_803E257C;
@@ -2064,14 +2064,14 @@ extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, i
                                              int sector);
 extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
-extern void smallbasket_nop(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void smallbasket_handleReactionEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void crawler_nop(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void crawler_handleReactionEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
 extern void fn_8014FEF8(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void fn_80157EBC(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void smallbasket_handleHitStateEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
+extern void crawler_onHit(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+extern void crawler_handleHitStateEvent(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                             int sector);
 
 void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
@@ -2258,11 +2258,11 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     mutatedEbaUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x851:
-                    smallbasket_nop(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_nop(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x842:
                 case 0x84b:
-                    smallbasket_handleReactionEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_handleReactionEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x4ac:
                     hoodedZyckUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -2274,10 +2274,10 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 case 0x6a3:
                 case 0x6a4:
                 case 0x6a5:
-                    fn_80157EBC(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_onHit(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x7c8:
-                    smallbasket_handleHitStateEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_handleHitStateEvent(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 default:
                     fn_8014FEF8(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -2647,6 +2647,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     f32 defaultY;
     f32 nearestFloorDelta;
     f32 nearestSpecialDelta;
+    f32 zero;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
@@ -2658,7 +2659,8 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     nearestSpecialDelta = nearestFloorDelta = lbl_803E25C8;
     i = 0;
     ((TrickyState*)state)->flags2DC &= ~0x10000000LL;
-    ((TrickyState*)state)->unk1B8 = lbl_803E2574;
+    zero = lbl_803E2574;
+    ((TrickyState*)state)->unk1B8 = zero;
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
     for (; i < hitCount; i++)
     {
@@ -2666,7 +2668,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
         hitY = hit[0];
         dy = hitY - ((GameObject*)obj)->anim.localPosY;
         absDy = dy;
-        if (dy < lbl_803E2574)
+        if (dy < zero)
         {
             absDy = -dy;
         }
@@ -2761,8 +2763,8 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
 
 void Tricky_hitDetect(int obj)
 {
-    f32 y;
     f32 dy;
+    f32 y;
     int* objects;
     int i;
     void* firepipeObj;

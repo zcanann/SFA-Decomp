@@ -35,7 +35,7 @@ STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);

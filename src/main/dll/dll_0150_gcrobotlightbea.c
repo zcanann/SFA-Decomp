@@ -29,39 +29,39 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 
-extern undefined8 FUN_80006824();
+extern u64 FUN_80006824();
 extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017a88();
+extern u32 FUN_80017698();
+extern u32 FUN_80017748();
+extern u32 FUN_80017a88();
 extern int FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
+extern u32 FUN_8002f6ac();
 extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
+extern u32 FUN_800305f8();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjLink_DetachChild();
-extern undefined4 FUN_8006f7a0();
+extern u32 ObjMsg_SendToObject();
+extern u32 ObjLink_DetachChild();
+extern u32 FUN_8006f7a0();
 extern int FUN_8007f924();
-extern undefined4 FUN_800e8630();
+extern u32 FUN_800e8630();
 extern int FUN_801149b8();
 extern int FUN_8020a468();
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
+extern u64 FUN_8028683c();
+extern u64 FUN_80286840();
+extern u32 FUN_80286888();
+extern u32 FUN_8028688c();
 extern double FUN_80293900();
-extern undefined4 FUN_80294d40();
+extern u32 FUN_80294d40();
 
-extern undefined4 DAT_802c2a58;
-extern undefined4 DAT_802c2a5c;
-extern undefined4 DAT_802c2a60;
-extern undefined4 DAT_802c2a64;
+extern u32 DAT_802c2a58;
+extern u32 DAT_802c2a5c;
+extern u32 DAT_802c2a60;
+extern u32 DAT_802c2a64;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4EC0;
@@ -102,12 +102,12 @@ extern void PSVECScale(void* in, void* out, f32 scale);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
+void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* param_3)
 {
     uint uVar1;
     int iVar2;
     int iVar3;
-    undefined8 uVar4;
+    u64 uVar4;
 
     uVar4 = FUN_80286840();
     uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
@@ -152,26 +152,26 @@ void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
     return;
 }
 
-undefined4
-FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
-             undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
+u32
+FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32 param_5,
+             u32 param_6, u32 param_7, u32 param_8, u32 param_9)
 {
     int iVar1;
     short sVar2;
-    undefined4 uVar3;
+    u32 uVar3;
     double dVar4;
     double dVar5;
     double dVar6;
-    undefined8 in_f5;
-    undefined8 in_f6;
-    undefined8 in_f7;
-    undefined8 in_f8;
+    u64 in_f5;
+    u64 in_f6;
+    u64 in_f7;
+    u64 in_f8;
     float local_58;
     float local_54;
     float local_50[2];
-    undefined4 local_48;
+    u32 local_48;
     uint uStack_44;
-    undefined4 local_40;
+    u32 local_40;
     uint uStack_3c;
     longlong local_38;
 
@@ -235,29 +235,29 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
     return uVar3;
 }
 
-undefined4
-FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9,
-             undefined4 param_10, undefined4 param_11, float* param_12, int param_13, undefined4 param_14
-             , undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, short* param_9,
+             u32 param_10, u32 param_11, float* param_12, int param_13, u32 param_14
+             , u32 param_15, u32 param_16)
 {
     return 0;
 }
 
-undefined4
-FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
-    undefined4 uVar1;
+    u32 uVar1;
     int iVar2;
     float* pfVar3;
-    undefined4* puVar4;
-    undefined4 local_28;
-    undefined4 local_24;
-    undefined4 local_20;
-    undefined4 local_1c;
+    u32* puVar4;
+    u32 local_28;
+    u32 local_24;
+    u32 local_20;
+    u32 local_1c;
 
     pfVar3 = ((GameObject*)param_9)->extra;
     local_28 = DAT_802c2a58;
@@ -300,11 +300,11 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-undefined4
-FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , undefined4 param_10, ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, uint param_9
+             , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     int iVar1;
     uint uVar2;
@@ -358,11 +358,11 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-undefined4
-FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, uint param_9,
+             u32 param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     int iVar1;
     double dVar2;
@@ -413,7 +413,7 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void babycloudrunner_init_OLD_v1_1(int obj)
 {
-    undefined4* state;
+    u32* state;
 
     state = ((GameObject*)obj)->extra;
     *state = 0;
@@ -552,9 +552,9 @@ void FUN_8019f1dc(void)
             dVar10 = (double)*(float*)(uVar1 + 0xc);
             dVar9 = (double)*(float*)(uVar1 + 0x10);
             dVar8 = (double)*(float*)(uVar1 + 0x14);
-            *(undefined4*)(uVar1 + 0xc) = *(undefined4*)(iVar2 + 0xc);
-            *(undefined4*)(uVar1 + 0x10) = *(undefined4*)(iVar2 + 0x10);
-            *(undefined4*)(uVar1 + 0x14) = *(undefined4*)(iVar2 + 0x14);
+            *(u32*)(uVar1 + 0xc) = *(u32*)(iVar2 + 0xc);
+            *(u32*)(uVar1 + 0x10) = *(u32*)(iVar2 + 0x10);
+            *(u32*)(uVar1 + 0x14) = *(u32*)(iVar2 + 0x14);
             FUN_800e8630(uVar1);
             *(float*)(uVar1 + 0xc) = (float)dVar10;
             *(float*)(uVar1 + 0x10) = (float)dVar9;

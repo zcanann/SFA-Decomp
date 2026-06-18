@@ -697,12 +697,10 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
     extern s8 lbl_803DD911; /* #57 */
     const char* defaultText;
-    LinkMenuItem* src;
     LinkMenuItem* item;
     int linkedIndex;
     int i;
 
-    src = items;
     defaultText = lbl_8031C1A8;
     if (count <= 40)
     {
@@ -741,9 +739,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 OSReport(defaultText + 0xe8, linkedIndex);
             }
 
-            if (src->textureAssetId != -1)
+            if (items->textureAssetId != -1)
             {
-                item->texture = textureLoadAsset(src->textureAssetId);
+                item->texture = textureLoadAsset(items->textureAssetId);
             }
             else
             {
@@ -777,7 +775,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
             item->timer = 4;
             item++;
-            src++;
+            items++;
         }
 
         lbl_803DD904 = baseRed;

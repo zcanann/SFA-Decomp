@@ -34,7 +34,7 @@ typedef struct DoorPlacement
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
 
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -88,7 +88,7 @@ void Door_init(int* obj, u8* def)
         case 1101:
             {
                 s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if ((subtype < 35 && subtype >= 31) || (subtype >= 40 && subtype < 43))
+                if ((subtype >= 40 && subtype < 43) || (subtype < 35 && subtype >= 31))
                 {
                     *(s16*)state = 832;
                     *(s16*)&((CfGuardianState*)state)->sfxId = 833;

@@ -30,9 +30,9 @@ typedef struct DrExplodableChunk
     f32 height;
     int unk5C;
     int launchDelay; /* 0x60: per-fragment delay roll, -1 = none */
-    s16 unk64; /* 0x64: from def+0x1e */
-    s16 unk66; /* 0x66: from def+0x1c */
-    s16 unk68; /* 0x68: from def+0x1a */
+    s16 rotZ; /* 0x64: fragment spawn rotation, from def+0x1e */
+    s16 rotY; /* 0x66: from def+0x1c */
+    s16 rotX; /* 0x68: from def+0x1a */
     u8 gameBitMode; /* 0x6a: gamebit-gated mode */
     u8 unk6B; /* 0x6b: init 0xff */
     u8 launchFlags; /* 0x6c: axis sign bits */

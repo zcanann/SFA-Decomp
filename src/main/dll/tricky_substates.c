@@ -12,7 +12,7 @@
  * most states. Water-vs-land animation selection (the repeated
  * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
  */
-#include "main/dll/grenade.h"
+#include "main/dll/tricky_substates.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_00C4_tricky.h"
 #include "main/effect_interfaces.h"
@@ -728,7 +728,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             if (Obj_IsLoadingLocked() != 0)
             {
                 ((TrickyState*)state)->stateFlags |= 0x800;
-                for (i = 0, p = state; i < 7; i++, p += 4)
+                for (i = 0, p = state; i < 7; i++)
                 {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
@@ -783,7 +783,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
@@ -816,7 +816,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
 skip:
     if (lbl_803E23DC == ((TrickyState*)state)->unk720)
     {
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10;
         ((TrickyState*)state)->substate = 0;
     }
     if ((u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1)
@@ -1461,28 +1461,31 @@ u32 fn_80143DD4(int obj, int* trickyState)
         {
             tricky_startRandomIdleMove(obj, (int)trickyState);
         }
-        else if (*(u32*)&trickyState[0x1ec] != 0)
-        {
-            done = *(int*)&((GameObject*)obj)->extra;
-            if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
-                (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)
-                ) && !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
-            {
-                objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x357, 0, 0xffffffff, 0);
-            }
-            objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
-            *(u8*)((int)trickyState + 10) = 5;
-        }
         else
         {
-            bitVal = randomGetRange(0, 6);
-            if (((int)bitVal >= 5) || ((int)bitVal < 0))
+            if ((u32)trickyState[0x1ec] != 0)
             {
-                objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
+                done = *(int*)&((GameObject*)obj)->extra;
+                if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
+                    (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)
+                    ) && !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
+                {
+                    objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                }
+                objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
+                *(u8*)((int)trickyState + 10) = 5;
             }
             else
             {
-                tricky_startRandomIdleMove(obj, (int)trickyState);
+                bitVal = randomGetRange(0, 6);
+                if (((int)bitVal < 5) && (0 <= (int)bitVal))
+                {
+                    tricky_startRandomIdleMove(obj, (int)trickyState);
+                }
+                else
+                {
+                    objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
+                }
             }
         }
         return 1;

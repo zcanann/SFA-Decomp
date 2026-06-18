@@ -11,7 +11,7 @@
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 
 
 #pragma scheduling on

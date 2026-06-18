@@ -377,10 +377,11 @@ void CameraModeWorldMap_update(u8* obj)
                         f32 b = lbl_803E1A48 * (f32)my / lbl_803E1A4C;
                         f32 sb = mathCosf(b);
                         f32 cb = -mathSinf(b);
-                        g->anim.localPosX = lbl_803E1A60 * cb + camera->anim.worldPosX;
+                        f32 radius = lbl_803E1A60;
+                        g->anim.localPosX = radius * cb + camera->anim.worldPosX;
                         g->anim.localPosY =
                             camera->anim.worldPosY + lbl_80319DF8[(s8) * (u8*)&g->anim.bankIndex];
-                        g->anim.localPosZ = lbl_803E1A60 * sb + camera->anim.worldPosZ;
+                        g->anim.localPosZ = radius * sb + camera->anim.worldPosZ;
                         g->anim.rotX = (s16)(-0xbb8 - my);
                     }
                 }

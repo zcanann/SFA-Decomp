@@ -31,7 +31,7 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern uint getButtonsJustPressed(int controller);
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u32 ObjPath_GetPointWorldPosition();
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 
@@ -137,7 +137,7 @@ extern void mapUnload(int dirIdx, int flags);
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
+int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
 {
     s8 horizontal;
     s8 vertical;
@@ -246,7 +246,7 @@ extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 extern f32 timeDelta;
 
-int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
+int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
 {
     extern int playerFn_801d6d58(void);
     int state = *(int*)&((GameObject*)obj)->extra;

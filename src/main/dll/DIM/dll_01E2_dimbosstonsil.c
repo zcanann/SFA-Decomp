@@ -34,7 +34,7 @@ extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
 
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* p);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
@@ -62,7 +62,7 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-int dll_DIM_BossGutSpik_update(void* obj, undefined4 p2, ObjAnimUpdateState* animUpdate)
+int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
@@ -253,7 +253,7 @@ void DIMbosstonsil_free(void* obj)
 }
 
 #pragma opt_propagation off
-void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     struct
     {
@@ -366,9 +366,9 @@ void DIMbosstonsil_update(void* obj)
 }
 
 #pragma opt_propagation off
-void DIMbosstonsil_init(int obj, undefined4 p2, int isAltVariant)
+void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
 {
-    extern undefined4* gBaddieControlInterface;
+    extern u32* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* handle, int p2, f32 param_3);
     extern int GameBit_Get(int eventId);
     u8 variant;
@@ -380,7 +380,7 @@ void DIMbosstonsil_init(int obj, undefined4 p2, int isAltVariant)
     {
         variant = variant | 1;
     }
-    (*(void (**)(int, undefined4, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
+    (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     ((BaddieState*)state)->substate = 0;

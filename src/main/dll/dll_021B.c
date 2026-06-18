@@ -73,7 +73,6 @@ void dll_21B_update(int obj)
 {
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     Dll21BState* state = ((GameObject*)obj)->extra;
-    f32 limit;
 
     if ((s8)setup[0x19] == 1)
     {
@@ -86,10 +85,9 @@ void dll_21B_update(int obj)
             {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            limit = ((ObjPlacement*)setup)->posZ - lbl_803E60D0;
-            if (((GameObject*)obj)->anim.localPosZ <= limit)
+            if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)setup)->posZ - lbl_803E60D0)
             {
-                ((GameObject*)obj)->anim.localPosZ = limit;
+                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ - lbl_803E60D0;
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A))
                 {
                     return;
@@ -111,7 +109,7 @@ void dll_21B_update(int obj)
             {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            if (((ObjPlacement*)setup)->posZ < ((GameObject*)obj)->anim.localPosZ)
+            if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)setup)->posZ)
             {
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A) &&
@@ -134,10 +132,9 @@ void dll_21B_update(int obj)
             {
                 GameBit_Set(DLL_21B_MOVING_BIT, 1);
             }
-            limit = lbl_803E60D0 + ((ObjPlacement*)setup)->posZ;
-            if (((GameObject*)obj)->anim.localPosZ >= limit)
+            if (((GameObject*)obj)->anim.localPosZ >= lbl_803E60D0 + ((ObjPlacement*)setup)->posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = limit;
+                ((GameObject*)obj)->anim.localPosZ = lbl_803E60D0 + ((ObjPlacement*)setup)->posZ;
                 if (DLL_21B_BIT_CLEAR(DLL_21B_ENABLE_BIT_A))
                 {
                     return;
@@ -151,7 +148,7 @@ void dll_21B_update(int obj)
             return;
         }
         if (DLL_21B_BIT_CLEAR(state->driveGameBit) &&
-            ((ObjPlacement*)setup)->posZ < ((GameObject*)obj)->anim.localPosZ)
+            ((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)setup)->posZ)
         {
             ((GameObject*)obj)->anim.localPosZ -= lbl_803E60D4;
             if (DLL_21B_BIT_SET(DLL_21B_ENABLE_BIT_A) &&

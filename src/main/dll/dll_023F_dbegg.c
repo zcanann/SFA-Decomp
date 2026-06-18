@@ -80,11 +80,11 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
-extern undefined4 FUN_80006824();
+extern u32 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
-extern undefined8 FUN_800305f8();
+extern u64 FUN_800305f8();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
@@ -517,12 +517,12 @@ void fn_801FE774(int cam, f32* vel)
     }
 }
 
-undefined4
+u32
 #pragma peephole off
-FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
-             undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, uint param_9, int param_10,
+             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     int control;
 
@@ -534,12 +534,12 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_10 + 0x346) = 0;
+        *(u8*)(param_10 + 0x346) = 0;
     }
-    *(undefined*)(param_10 + 0x34d) = 0x1f;
+    *(u8*)(param_10 + 0x34d) = 0x1f;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        *(int*)(control + 0x18) = *(undefined4*)(param_10 + 0x2d0);
+        *(int*)(control + 0x18) = *(u32*)(param_10 + 0x2d0);
         ((DbStealerwormControl*)control)->unk1C = 0x24;
         ((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -548,7 +548,7 @@ FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     if (lbl_803E6F84 < ((GameObject*)param_9)->anim.currentMoveProgress)
     {
-        *(undefined*)(control + 0x34) = 1;
+        *(u8*)(control + 0x34) = 1;
     }
     return 0;
 }
@@ -564,7 +564,7 @@ void dbegg_initialise(void)
 void dbegg_init(int obj)
 {
     extern void dbegg_setupFromDef(int obj, int* state); /* #57 */
-    extern undefined4 ObjMsg_AllocQueue(); /* #57 */
+    extern u32 ObjMsg_AllocQueue(); /* #57 */
     ObjModelState* modelState;
     dbegg_setupFromDef(obj, ((GameObject*)obj)->extra);
     ObjMsg_AllocQueue(obj, 8);

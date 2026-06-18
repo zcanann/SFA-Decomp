@@ -1,4 +1,5 @@
-/* cannon.c is the object-file slot name; the content is Tricky flame/guard AI. */
+/* tricky_flameguard - Tricky (DLL 0x00C4) flame/guard AI sub-TU. Spawns Tricky's
+   flameblast (def 0x4F0) for the fire-breath/guard behaviour. */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
@@ -66,7 +67,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
@@ -746,7 +747,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
         if ((uint)trickyState->targetPosition != (best + 0x18))
         {
             trickyState->targetPosition = (f32*)(best + 0x18);
-            trickyState->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG;
+            trickyState->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG;
             trickyState->targetTurnTimer = 0;
         }
         trickyState->guardState = 4;

@@ -3,19 +3,19 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
+extern u32 FUN_80006b0c();
+extern u32 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
-extern undefined4 FUN_80017748();
+extern u32 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
 extern void* mmAlloc(int size, int heap, int flags);
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
+extern u64 FUN_8028683c();
+extern u32 FUN_80286888();
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -43,18 +43,18 @@ void FUN_8018f650(void)
     double roundBias;
     double in_ps31_1;
     ushort posBlock;
-    undefined2 posBlock1;
+    u16 posBlock1;
     short posBlock2;
     u8 spawnParams[8];
     float local_58;
     float offX;
     float offY;
     float offZ;
-    undefined4 local_48;
+    u32 local_48;
     uint randX;
-    undefined4 local_40;
+    u32 local_40;
     uint randY;
-    undefined4 local_38;
+    u32 local_38;
     uint randZ;
     float local_8;
     float fStack_4;
@@ -79,7 +79,7 @@ void FUN_8018f650(void)
             offZ = (f32)(s32)
             randX;
             posBlock = *(ushort*)(config + 0x1a);
-            posBlock1 = *(undefined2*)(config + 0x1c);
+            posBlock1 = *(u16*)(config + 0x1c);
             posBlock2 = *(short*)(config + 0x1e);
             if (*(int*)(emitter + 0x30) != 0)
             {
@@ -89,7 +89,7 @@ void FUN_8018f650(void)
             offX = offX + *(float*)(emitter + 0xc);
             offY = offY + *(float*)(emitter + 0x10);
             offZ = offZ + *(float*)(emitter + 0x14);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+            (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                              spawnParams, 0x200001, -1, NULL);
         }
         else
@@ -104,7 +104,7 @@ void FUN_8018f650(void)
                 randZ = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
                 offZ = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
                 posBlock = *(ushort*)(config + 0x1a);
-                posBlock1 = *(undefined2*)(config + 0x1c);
+                posBlock1 = *(u16*)(config + 0x1c);
                 posBlock2 = *(short*)(config + 0x1e);
                 if (*(int*)(emitter + 0x30) != 0)
                 {
@@ -114,7 +114,7 @@ void FUN_8018f650(void)
                 offX = offX + *(float*)(emitter + 0xc);
                 offY = offY + *(float*)(emitter + 0x10);
                 offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                  spawnParams, 0x200001, -1, NULL);
             }
         }
@@ -133,7 +133,7 @@ void FUN_8018f650(void)
                 (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
             }
         }
-        FUN_80006b0c((undefined*)effectVtbl);
+        FUN_80006b0c((u8*)effectVtbl);
     }
     else if (spawnType == 2)
     {
@@ -149,7 +149,7 @@ void FUN_8018f650(void)
                 (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(ushort*)(config + 10) & 0xff, 0);
             }
         }
-        FUN_80006b0c((undefined*)effectVtbl);
+        FUN_80006b0c((u8*)effectVtbl);
     }
     else if (spawnType == 3)
     {
@@ -165,14 +165,14 @@ void FUN_8018f650(void)
             offZ = (f32)(s32)
             randX;
             posBlock = *(ushort*)(config + 0x1a);
-            posBlock1 = *(undefined2*)(config + 0x1c);
+            posBlock1 = *(u16*)(config + 0x1c);
             posBlock2 = *(short*)(config + 0x1e);
             if (*(int*)(emitter + 0x30) != 0)
             {
                 posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
             }
             FUN_80017748(&posBlock, &offX);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+            (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                              spawnParams, 2, -1, NULL);
         }
         else
@@ -187,14 +187,14 @@ void FUN_8018f650(void)
                 randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
                 offZ = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
                 posBlock = *(ushort*)(config + 0x1a);
-                posBlock1 = *(undefined2*)(config + 0x1c);
+                posBlock1 = *(u16*)(config + 0x1c);
                 posBlock2 = *(short*)(config + 0x1e);
                 if (*(int*)(emitter + 0x30) != 0)
                 {
                     posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
                 }
                 FUN_80017748(&posBlock, &offX);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                  spawnParams, 2, -1, NULL);
             }
         }
@@ -218,12 +218,12 @@ void FUN_8018f650(void)
                 offX = offX + *(float*)(emitter + 0xc);
                 offY = offY + *(float*)(emitter + 0x10);
                 offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                  spawnParams, 0x200001, -1, NULL);
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                  spawnParams, 2, -1, NULL);
             }
         }
@@ -244,12 +244,12 @@ void FUN_8018f650(void)
                     offX = offX + *(float*)(emitter + 0xc);
                     offY = offY + *(float*)(emitter + 0x10);
                     offZ = offZ + *(float*)(emitter + 0x14);
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                    (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                      spawnParams, 0x200001, -1, NULL);
                 }
                 else
                 {
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(undefined2*)(config + 10),
+                    (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
                                                      spawnParams, 2, -1, NULL);
                 }
             }
@@ -315,7 +315,7 @@ int lfxemitter_func0B(LfxEmitterObject* obj)
     return (u32)(-v | v) >> 31;
 }
 
-void fn_8018FF48(undefined2* src, undefined2* dst)
+void fn_8018FF48(u16* src, u16* dst)
 {
     *dst = *src;
     dst[1] = src[1];
@@ -402,7 +402,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((undefined2*)lbl_803AC7B0, (undefined2*)state->config);
+                    fn_8018FF48((u16*)lbl_803AC7B0, (u16*)state->config);
                 }
             }
             else
@@ -411,7 +411,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
                 getTabEntry(state->config, 0xc, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((undefined2*)state->config, (undefined2*)lbl_803AC7B0);
+                    fn_8018FF48((u16*)state->config, (u16*)lbl_803AC7B0);
                 }
             }
             state->configLoaded = 1;

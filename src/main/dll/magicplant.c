@@ -241,8 +241,7 @@ void fn_80153248(int obj, int state)
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        *(f32*)(state + 0x324) = lbl_803E28B0;
-        *(f32*)(state + 0x32c) = lbl_803E28B0;
+        *(f32*)(state + 0x324) = *(f32*)(state + 0x32c) = lbl_803E28B0;
     }
     else
     {
@@ -259,8 +258,7 @@ void fn_80153248(int obj, int state)
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                *(f32*)(state + 0x324) = lbl_803E28B0;
-                *(f32*)(state + 0x32c) = lbl_803E28B0;
+                *(f32*)(state + 0x324) = *(f32*)(state + 0x32c) = lbl_803E28B0;
             }
         }
     }
@@ -361,16 +359,16 @@ void fn_80153640(int obj, int state)
         if ((void*)newObj != NULL)
         {
             p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            ((GameObject*)newObj)->anim.velocityX = lbl_803E28F4 * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
+            ((GameObject*)newObj)->anim.velocityX = 0.02f * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
                 fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
             {
                 p29c = *(int*)&((BaddieState*)state)->trackedObj;
-                ((GameObject*)newObj)->anim.velocityY = lbl_803E28F4 *
+                ((GameObject*)newObj)->anim.velocityY = 0.02f *
                     ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)rnd) -
                      ((GameObject*)fx)->anim.localPosX);
                 p29c = *(int*)&((BaddieState*)state)->trackedObj;
-                ((GameObject*)newObj)->anim.velocityZ = lbl_803E28F4 * (((GameObject*)p29c)->anim.localPosZ -
+                ((GameObject*)newObj)->anim.velocityZ = 0.02f * (((GameObject*)p29c)->anim.localPosZ -
                     ((GameObject*)fx)->anim.localPosY);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;

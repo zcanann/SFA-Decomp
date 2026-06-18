@@ -247,7 +247,7 @@ typedef struct FogColor
 
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern int snowPrintSnowCloud(int arg, int x);
-extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a0, u8 a1);
+extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
 extern f32 lbl_8039A8F0[];
 extern int lbl_803DF198;
 
@@ -270,8 +270,8 @@ void dll_07_func07(int arg)
     }
     if (lbl_803DD198 != 0)
     {
-        drawFn_80079e64(lbl_803DD190, lbl_803DB764, lbl_803DB768, lbl_803DD198,
-                        lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
+        drawFn_80079e64(lbl_803DD190, lbl_803DD198, lbl_8039A8F0, lbl_803DB764,
+                        lbl_803DD199, lbl_803DD19A, lbl_803DB768);
     }
 }
 
@@ -754,11 +754,7 @@ void drawSkyStars(void)
         }
         else
         {
-            if (t > lbl_803DF288)
-            {
-                return;
-            }
-            if (lbl_803DF28C == t)
+            if (t > lbl_803DF288 || lbl_803DF28C == t)
             {
                 return;
             }
@@ -1525,7 +1521,7 @@ void snowReposSnowCloud(int cloudId)
         {
             *(u16*)(part + 0x10) =
                 *(u16*)(part + 0x10) + (s8)part[0x14] * framesThisStep;
-            if (*(u16*)(part + 0x10) > 0x3ff)
+            if ((int)*(u16*)(part + 0x10) > 0x3ff)
             {
                 *(u16*)(part + 0x10) -= 0x3ff;
             }
@@ -1534,7 +1530,7 @@ void snowReposSnowCloud(int cloudId)
         {
             *(u16*)(part + 0x10) = *(u16*)(part + 0x10) +
                 framesThisStep * ((s8)part[0x14] + (s8)part[0x14]);
-            if (*(u16*)(part + 0x10) > 0x3ff)
+            if ((int)*(u16*)(part + 0x10) > 0x3ff)
             {
                 *(u16*)(part + 0x10) -= 0x3ff;
             }

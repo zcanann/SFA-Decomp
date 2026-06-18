@@ -1,5 +1,6 @@
 /*
- * DLL 0x1E7 - SHThorntail (Thorntail Hollow) AI helpers.
+ * shthorntail_ai - SHThorntail (Thorntail Hollow) AI helpers, split from the
+ * thorntail DLL 0x1AD.
  *
  * Three routines split out of the main thorntail DLL (0x1AD):
  *  - SHthorntail_HasNearbyPendingEventObject: scans ObjGroup 3 for the
@@ -11,7 +12,7 @@
  *  - SHthorntail_chooseNextState: picks the next behavior state from
  *    player distance, leash radius, facing error and frustum visibility.
  */
-#include "main/dll/SH/dll_1E7.h"
+#include "main/dll/SH/shthorntail_ai.h"
 #include "main/frustum.h"
 
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning

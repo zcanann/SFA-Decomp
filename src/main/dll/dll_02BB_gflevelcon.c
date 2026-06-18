@@ -345,7 +345,6 @@ void fn_8023A168(int p1, int p2)
 
 void fn_8023A268(int p1, int p2, int p3)
 {
-    int proj;
     f32 dx, dz, dist;
     int yaw;
     int newObj;
@@ -366,11 +365,11 @@ void fn_8023A268(int p1, int p2, int p3)
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if ((void*)proj != NULL)
+        p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if ((void*)p1 != NULL)
         {
-            arwprojectile_setLifetime(proj, lbl_803DC4DC);
-            arwprojectile_placeForward(proj, (f32)(int)lbl_803DC4D8);
+            arwprojectile_setLifetime(p1, lbl_803DC4DC);
+            arwprojectile_placeForward(p1, (f32)(int)lbl_803DC4D8);
         }
     }
 }

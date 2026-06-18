@@ -42,7 +42,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 
 extern u32 randomGetRange(int min, int max);
 
@@ -80,7 +80,7 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHits_EnableObject();
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ModelLightStruct_free(void* light);
 extern void queueGlowRender(int* obj);

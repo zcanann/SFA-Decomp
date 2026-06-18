@@ -22,12 +22,12 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
 
 extern int randomGetRange(int min, int max);
 extern uint ObjPath_GetPointModelMtx();
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u32 ObjPath_GetPointWorldPosition();
 
-extern undefined4 gDIMbossAnimTable[];
-extern undefined4 gDIMbossHitDetectAnimTable[];
+extern u32 gDIMbossAnimTable[];
+extern u32 gDIMbossHitDetectAnimTable[];
 extern int getTrickyObject(void);
-extern undefined4* gBaddieControlInterface;
+extern u32* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 timeDelta;
 extern f32 lbl_803E4BC8;

@@ -13,9 +13,7 @@
  * Field meanings recovered by live debugging (Dolphin MCP): a crate was
  * broken, the dropped collectible (type 0xB, seqId 11) was traced through
  * proximity-detect -> pickup-message -> collect, and player health was
- * watched rising 4 -> 8 on collect. This replaces the earlier mislabel
- * where the same bytes were viewed as both "CollectibleState" and a
- * borrowed "GfxEmitState"; the two are now unified here.
+ * watched rising 4 -> 8 on collect.
  *
  * Fields still prefixed unk are written/read but not yet behaviourally
  * pinned. pathState is the gPathControlInterface bounce/path blob.

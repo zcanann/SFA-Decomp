@@ -346,16 +346,16 @@ void fn_80089578(int flags, u8 red, u8 green, u8 blue)
 
 void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
 {
-    int r1, g1, b1, r2, g2, b2;
     int base;
+    int r1, g1, b1, r2, g2, b2;
     int bit;
 
     if (lbl_803DD12C == NULL)
     {
         return;
     }
-    base = 0;
     bit = 0;
+    base = 0;
     r1 = red * m1 >> 8;
     g1 = green * m1 >> 8;
     b1 = blue * m1 >> 8;
@@ -2715,7 +2715,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             else
             {
-                lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * sunT);
+                *(s16*)&lbl_803DD128 = (lbl_803DF0A4 * sunT);
             }
         }
         else
@@ -2728,7 +2728,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (sunT - lbl_803DF0A8)));
+                    *(s16*)&lbl_803DD128 = (lbl_803DF0A4 * (lbl_803DF0A0 - (sunT - lbl_803DF0A8)));
                 }
             }
             else
@@ -2800,7 +2800,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             else
             {
-                lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * moonTC);
+                *(s16*)&lbl_803DD12A = (lbl_803DF0A4 * moonTC);
             }
         }
         else
@@ -2813,7 +2813,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (moonTC - lbl_803DF0A8)));
+                    *(s16*)&lbl_803DD12A = (lbl_803DF0A4 * (lbl_803DF0A0 - (moonTC - lbl_803DF0A8)));
                 }
             }
             else

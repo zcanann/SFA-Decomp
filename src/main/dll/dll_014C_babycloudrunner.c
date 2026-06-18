@@ -19,44 +19,44 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 
-extern undefined8 FUN_80006824();
+extern u64 FUN_80006824();
 extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_80017748();
+extern u32 FUN_80017698();
+extern u32 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a88();
+extern u32 FUN_80017a88();
 extern int FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
+extern u32 FUN_8002f6ac();
 extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
+extern u32 FUN_800305f8();
+extern u32 ObjHits_DisableObject();
+extern u32 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
+extern u32 ObjMsg_SendToObject();
+extern u32 ObjMsg_AllocQueue();
 extern int Obj_GetYawDeltaToObject();
-extern undefined4 objAnimFn_80038f38();
+extern u32 objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 FUN_8006f7a0();
+extern u32 FUN_8006f7a0();
 extern int FUN_8007f924();
-extern undefined4 FUN_800e8630();
+extern u32 FUN_800e8630();
 extern int FUN_801149b8();
 extern int FUN_8020a468();
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
+extern u64 FUN_8028683c();
+extern u64 FUN_80286840();
+extern u32 FUN_80286888();
+extern u32 FUN_8028688c();
 extern double FUN_80293900();
-extern undefined4 FUN_80294d40();
+extern u32 FUN_80294d40();
 
-extern undefined4 DAT_802c2a58;
-extern undefined4 DAT_802c2a5c;
-extern undefined4 DAT_802c2a60;
-extern undefined4 DAT_802c2a64;
+extern u32 DAT_802c2a58;
+extern u32 DAT_802c2a5c;
+extern u32 DAT_802c2a60;
+extern u32 DAT_802c2a64;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4EC0;
@@ -121,12 +121,12 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* sfxTable)
+void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* sfxTable)
 {
     uint obj;
     int tailSfxSlot;
     int eventIdx;
-    undefined8 retPair;
+    u64 retPair;
 
     retPair = FUN_80286840();
     obj = (uint)((ulonglong)retPair >> 0x20);
@@ -171,26 +171,26 @@ void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* sfxTable)
     return;
 }
 
-undefined4
-FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
-             undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
+u32
+FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32 param_5,
+             u32 param_6, u32 param_7, u32 param_8, u32 param_9)
 {
     int newAng;
     short angDelta;
-    undefined4 result;
+    u32 result;
     double dist;
     double velZ;
     double dx;
-    undefined8 in_f5;
-    undefined8 in_f6;
-    undefined8 in_f7;
-    undefined8 in_f8;
+    u64 in_f5;
+    u64 in_f6;
+    u64 in_f7;
+    u64 in_f8;
     float local_58;
     float local_54;
     float local_50[2];
-    undefined4 local_48;
+    u32 local_48;
     uint uStack_44;
-    undefined4 local_40;
+    u32 local_40;
     uint uStack_3c;
     longlong local_38;
 
@@ -254,29 +254,29 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, und
     return result;
 }
 
-undefined4
-FUN_8019b650(undefined8 param_1, double param_2, double param_3, double param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9,
-             undefined4 param_10, undefined4 param_11, float* param_12, int param_13, undefined4 param_14
-             , undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, short* param_9,
+             u32 param_10, u32 param_11, float* param_12, int param_13, u32 param_14
+             , u32 param_15, u32 param_16)
 {
     return 0;
 }
 
-undefined4
-FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
-    undefined4 result;
+    u32 result;
     int hitResult;
     float* state;
-    undefined4* coordPair;
-    undefined4 coordA0;
-    undefined4 coordA1;
-    undefined4 coordB0;
-    undefined4 coordB1;
+    u32* coordPair;
+    u32 coordA0;
+    u32 coordA1;
+    u32 coordB0;
+    u32 coordB1;
 
     state = ((GameObject*)param_9)->extra;
     coordA0 = DAT_802c2a58;
@@ -319,11 +319,11 @@ FUN_8019b658(undefined8 param_1, double param_2, double param_3, undefined8 para
     return result;
 }
 
-undefined4
-FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , undefined4 param_10, ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, uint param_9
+             , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     int eventIdx;
     uint bitSet;
@@ -377,11 +377,11 @@ FUN_8019c318(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-undefined4
-FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u32
+FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, uint param_9,
+             u32 param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     int state;
     double pitch;
@@ -432,7 +432,7 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void babycloudrunner_init_OLD_v1_1(int obj)
 {
-    undefined4* state;
+    u32* state;
 
     state = ((GameObject*)obj)->extra;
     *state = 0;
@@ -641,9 +641,9 @@ void FUN_8019f1dc(void)
             savedX = (double)((GameObject *)obj)->anim.localPosX;
             savedY = (double)((GameObject *)obj)->anim.localPosY;
             savedZ = (double)((GameObject *)obj)->anim.localPosZ;
-            *(undefined4*)(obj + 0xc) = *(undefined4*)(childOrTarget + 0xc);
-            *(undefined4*)(obj + 0x10) = *(undefined4*)(childOrTarget + 0x10);
-            *(undefined4*)(obj + 0x14) = *(undefined4*)(childOrTarget + 0x14);
+            *(u32*)(obj + 0xc) = *(u32*)(childOrTarget + 0xc);
+            *(u32*)(obj + 0x10) = *(u32*)(childOrTarget + 0x10);
+            *(u32*)(obj + 0x14) = *(u32*)(childOrTarget + 0x14);
             FUN_800e8630(obj);
             ((GameObject *)obj)->anim.localPosX = (float)savedX;
             ((GameObject *)obj)->anim.localPosY = (float)savedY;

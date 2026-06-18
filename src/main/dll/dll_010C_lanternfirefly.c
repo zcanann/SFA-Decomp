@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern undefined4 ObjGroup_AddObject();
+extern u32 ObjGroup_AddObject();
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

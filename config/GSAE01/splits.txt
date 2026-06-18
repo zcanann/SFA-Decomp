@@ -809,7 +809,7 @@ main/dll/dll_80136a40.c:
 main/dll/skeetla.c:
 	.text       start:0x8013939C end:0x8013B368
 
-main/dll/dll_df.c:
+main/dll/trickyfollow.c:
 	.text       start:0x8013B368 end:0x8013D8F0
 
 main/dll/mmp_cratercritter.c:
@@ -827,13 +827,13 @@ main/dll/animobjd2.c:
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
 
-main/dll/cannon.c:
+main/dll/tricky_flameguard.c:
 	.text       start:0x8013FFB8 end:0x80141290
 
-main/dll/cannonball.c:
+main/dll/tricky_rollroute.c:
 	.text       start:0x80141290 end:0x80141880
 
-main/dll/grenade.c:
+main/dll/tricky_substates.c:
 	.text       start:0x80141880 end:0x80144E40
 
 main/dll/dll_00C4_tricky.c:
@@ -873,7 +873,7 @@ main/dll/fireflylantern.c:
 main/dll/duster.c:
 	.text       start:0x8015536C end:0x80157004
 
-main/dll/smallbasket.c:
+main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
 
 main/dll/dll_00CA_mediumbasket.c:
@@ -1722,7 +1722,7 @@ main/dll/dll_801d4198.c:
 main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.text       start:0x801D4364 end:0x801D4CD0
 
-main/dll/dll_1e7.c:
+main/dll/SH/shthorntail_ai.c:
 	.text       start:0x801D4CD0 end:0x801D5174
 
 main/dll/SH/shthorntail.c:

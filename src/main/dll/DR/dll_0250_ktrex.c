@@ -486,7 +486,7 @@ int ktrex_updateArenaPathProgress(int obj)
     return changed;
 }
 
-void ktrex_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     f32 m[12];
     void* e;

@@ -16,7 +16,14 @@
  *   0x4a4 / 0x70a / default -> type 9 (orange flame, clear-volume pair)
  *
  * Per-object boolean state lives in FirePipeExtra.flags, accessed as a
- * FirePipeBitFlags overlay (bit0..bit7).
+ * FirePipeBitFlags overlay (emitting, glowEnabled, renderEnabled, ...).
+ *
+ * Live-verified (Dolphin) against the nearest emitter in the loaded save:
+ * the object spawns pooled `flamethrowerspe` (DLL 0x0E4) flame-stream
+ * effects (FirePipeExtra.effectObjs); clearing `emitting` stops the jet and
+ * freezing `cycleTimer` keeps it off; FirePipeMapData.rotX/rotY aim the jet
+ * (changing them swings the model and the flame); `glowLight` is the
+ * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -88,14 +95,14 @@ extern f32 lbl_803E6BA8;
 
 typedef struct
 {
-    u8 bit7 : 1;
-    u8 bit6 : 1;
-    u8 bit5 : 1;
-    u8 bit4 : 1;
-    u8 bit3 : 1;
-    u8 bit2 : 1;
-    u8 bit1 : 1;
-    u8 bit0 : 1;
+    u8 lastGameBitState : 1; /* bit7: snapshot of gameBit, for change detection */
+    u8 emitting : 1;         /* bit6: jet is actively firing (live-verified) */
+    u8 wasEmitting : 1;      /* bit5: previous-frame `emitting`, for sound edge */
+    u8 restartPending : 1;   /* bit4: hit/freeze interrupted; re-enable emit when able */
+    u8 extTriggered : 1;     /* bit3: set when externally driven; not read in this DLL */
+    u8 childEmitEnabled : 1; /* bit2: emit enable when linked as a child (firecrawler) */
+    u8 renderEnabled : 1;    /* bit1: draw the emitter model (from placement flag 0x1) */
+    u8 glowEnabled : 1;      /* bit0: spawn the point-light glow (from placement flag 0x2) */
 } FirePipeBitFlags;
 
 typedef void (*FirePipeEffectInitFn)(int obj, void* spawnDef, int param_3);
@@ -160,13 +167,13 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
 
 int firepipe_clearLinkedUpdateFlag(FirePipeObject* obj)
 {
-    ((FirePipeBitFlags*)&obj->extra->flags)->bit2 = 0;
+    ((FirePipeBitFlags*)&obj->extra->flags)->childEmitEnabled = 0;
     return 1;
 }
 
 int firepipe_setLinkedUpdateFlag(FirePipeObject* obj)
 {
-    ((FirePipeBitFlags*)&obj->extra->flags)->bit2 = 1;
+    ((FirePipeBitFlags*)&obj->extra->flags)->childEmitEnabled = 1;
     return 1;
 }
 
@@ -190,11 +197,11 @@ void firepipe_updateState(FirePipeObject* obj)
     if (obj->callback != NULL)
     {
         ObjHits_DisableObject(obj);
-        if (flags->bit2 == 0)
+        if (flags->childEmitEnabled == 0)
         {
             return;
         }
-        flags->bit3 = 1;
+        flags->extTriggered = 1;
     }
     else
     {
@@ -204,7 +211,7 @@ void firepipe_updateState(FirePipeObject* obj)
         case FIREPIPE_OBJ_FLAME_B:
             if ((priorityHit == 0xf) || (priorityHit == 0xe))
             {
-                flags->bit6 = 0;
+                flags->emitting = 0;
                 storeZeroToFloatParam(&extra->cycleTimer);
                 s16toFloat(&extra->cycleTimer, 0x12c);
             }
@@ -221,17 +228,17 @@ void firepipe_updateState(FirePipeObject* obj)
                 FirePipeMapData* md0 = (FirePipeMapData*)obj->objectDef;
                 Obj_StartModelFadeIn(obj, 0x12c);
                 GameBit_Set(md0->gameBit, 1);
-                flags->bit4 = 1;
+                flags->restartPending = 1;
             }
             break;
         }
     }
 
-    if ((flags->bit4 == 0) && (mapData->gameBit != -1))
+    if ((flags->restartPending == 0) && (mapData->gameBit != -1))
     {
-        if (flags->bit7 != GameBit_Get(mapData->gameBit))
+        if (flags->lastGameBitState != GameBit_Get(mapData->gameBit))
         {
-            if ((flags->bit6 = !GameBit_Get(mapData->gameBit)) != 0)
+            if ((flags->emitting = !GameBit_Get(mapData->gameBit)) != 0)
             {
                 FirePipeExtra* ex2;
                 FirePipeMapData* md2;
@@ -242,19 +249,19 @@ void firepipe_updateState(FirePipeObject* obj)
                 cycleTime = md2->cycleTime;
                 if (cycleTime != 0)
                 {
-                    if (md2->timer != 0)
+                    if (md2->startOffset != 0)
                     {
-                        if (md2->timer < 0)
+                        if (md2->startOffset < 0)
                         {
                             s16toFloat(&ex2->cycleTimer,
                                        (s16)randomGetRange(1, cycleTime * 0x3c));
                         }
                         else
                         {
-                            s16toFloat(&ex2->cycleTimer, (s16)(md2->timer * 0x3c));
-                            if (md2->timer >= md2->cycleTime)
+                            s16toFloat(&ex2->cycleTimer, (s16)(md2->startOffset * 0x3c));
+                            if (md2->startOffset >= md2->cycleTime)
                             {
-                                ((FirePipeBitFlags*)&ex2->flags)->bit6 = 0;
+                                ((FirePipeBitFlags*)&ex2->flags)->emitting = 0;
                             }
                         }
                     }
@@ -269,10 +276,10 @@ void firepipe_updateState(FirePipeObject* obj)
                 storeZeroToFloatParam(&extra->cycleTimer);
             }
         }
-        flags->bit7 = (u8)GameBit_Get(mapData->gameBit);
+        flags->lastGameBitState = (u8)GameBit_Get(mapData->gameBit);
     }
 
-    if (flags->bit6 != 0)
+    if (flags->emitting != 0)
     {
         if (((((GameObject*)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL))
         {
@@ -282,47 +289,47 @@ void firepipe_updateState(FirePipeObject* obj)
 
     if (objIsFrozen(obj) != 0)
     {
-        flags->bit6 = 0;
-        flags->bit4 = 1;
+        flags->emitting = 0;
+        flags->restartPending = 1;
         goto sound_update;
     }
 
-    if (flags->bit4 != 0)
+    if (flags->restartPending != 0)
     {
-        flags->bit6 = 1;
-        flags->bit4 = 0;
-        GameBit_Set(mapData->gameBit, (u8)flags->bit7);
+        flags->emitting = 1;
+        flags->restartPending = 0;
+        GameBit_Set(mapData->gameBit, (u8)flags->lastGameBitState);
     }
 
-    if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->bit6 == 0))
+    if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->emitting == 0))
     {
         if (extra->cycleTimer < (f32)lbl_803DC348)
         {
-            if ((extra->subObj == 0) && (flags->bit0 != 0))
+            if ((extra->glowLight == 0) && (flags->glowEnabled != 0))
             {
-                extra->subObj = modelLightStruct_createPointLight(obj, 0xff, 0x80, 0, 0);
-                if (extra->subObj != 0)
+                extra->glowLight = modelLightStruct_createPointLight(obj, 0xff, 0x80, 0, 0);
+                if (extra->glowLight != 0)
                 {
-                    modelLightStruct_setEnabled(extra->subObj, 0, lbl_803E6B74);
-                    modelLightStruct_setEnabled(extra->subObj, 1, lbl_803E6B78);
+                    modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B74);
+                    modelLightStruct_setEnabled(extra->glowLight, 1, lbl_803E6B78);
                     if (obj->objectId == FIREPIPE_OBJ_BLUE)
                     {
-                        modelLightStruct_setupGlow(extra->subObj, 0, 0, 0xb4, 0xff, 0x64,
+                        modelLightStruct_setupGlow(extra->glowLight, 0, 0, 0xb4, 0xff, 0x64,
                                                    lbl_803DC34C * obj->scale);
                     }
                     else
                     {
-                        modelLightStruct_setupGlow(extra->subObj, 0, 0xff, 0x80, 0, 0x64,
+                        modelLightStruct_setupGlow(extra->glowLight, 0, 0xff, 0x80, 0, 0x64,
                                                    lbl_803DC34C * obj->scale);
                     }
-                    modelLightStruct_setPosition(extra->subObj, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
+                    modelLightStruct_setPosition(extra->glowLight, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
                     radius = lbl_803E6B80 * obj->scale;
                     nearAtten = (radius < lbl_803E6B84)
                                     ? lbl_803E6B84
                                     : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
                     farAtten = lbl_803E6B8C + radius;
                     { /* separate local to reproduce reg assignment */
-                        int light = extra->subObj;
+                        int light = extra->glowLight;
                         modelLightStruct_setDistanceAttenuation(light, nearAtten,
                                                                 (farAtten < lbl_803E6B90)
                                                                     ? lbl_803E6B90
@@ -333,12 +340,12 @@ void firepipe_updateState(FirePipeObject* obj)
                 }
             }
         }
-        else if (extra->subObj != 0)
+        else if (extra->glowLight != 0)
         {
-            modelLightStruct_setEnabled(extra->subObj, 0, lbl_803E6B98);
-            if (modelLightStruct_getActiveState(extra->subObj) == 0)
+            modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B98);
+            if (modelLightStruct_getActiveState(extra->glowLight) == 0)
             {
-                modelLightStruct_freeSlot((int)&extra->subObj);
+                modelLightStruct_freeSlot((int)&extra->glowLight);
             }
         }
     }
@@ -349,11 +356,11 @@ void firepipe_updateState(FirePipeObject* obj)
         {
             s16toFloat(&extra->cycleTimer, (s16)(mapData->cycleTime * 0x3c));
         }
-        flags->bit6 = (flags->bit6 == 0);
+        flags->emitting = (flags->emitting == 0);
     }
 
 sound_update:
-    if ((flags->bit6 != 0) && (timerCountDown((int)&extra->emitTimer) != 0))
+    if ((flags->emitting != 0) && (timerCountDown((int)&extra->emitTimer) != 0))
     {
         FirePipeExtra* ex3;
         FirePipeMapData* md3;
@@ -387,19 +394,19 @@ sound_update:
         s16toFloat(&extra->emitTimer, (s16)lbl_803DC350);
     }
 
-    if (flags->bit6 != 0)
+    if (flags->emitting != 0)
     {
-        if (flags->bit5 == 0)
+        if (flags->wasEmitting == 0)
         {
             Sfx_PlayFromObjectLimited(obj, SFXand_missilelaunch, 3);
         }
         Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXand_suck_lp, 2);
     }
-    flags->bit5 = flags->bit6;
+    flags->wasEmitting = flags->emitting;
 
-    if (extra->subObj != 0)
+    if (extra->glowLight != 0)
     {
-        modelLightStruct_updateGlowAlpha(extra->subObj);
+        modelLightStruct_updateGlowAlpha(extra->glowLight);
     }
 }
 
@@ -408,7 +415,7 @@ int firepipe_getExtraSize(void)
     return sizeof(FirePipeExtra);
 }
 
-undefined4 firepipe_stateCallback(FirePipeObject* obj)
+u32 firepipe_stateCallback(FirePipeObject* obj)
 {
     firepipe_updateState(obj);
     return 0;
@@ -435,20 +442,20 @@ void firepipe_free(FirePipeObject* obj)
         iter++;
         i++;
     }
-    if ((uint)extra->subObj != 0)
+    if ((uint)extra->glowLight != 0)
     {
-        modelLightStruct_freeSlot((int)&extra->subObj);
+        modelLightStruct_freeSlot((int)&extra->glowLight);
     }
 }
 
 void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char visible)
 {
     FirePipeExtra* extra;
-    int subObj;
+    int glowLight;
 
     extra = obj->extra;
-    subObj = extra->subObj;
-    if ((uint)subObj != 0 && *(u8*)(subObj + 0x2f8) != 0 && *(u8*)(subObj + 0x4c) != 0)
+    glowLight = extra->glowLight;
+    if ((uint)glowLight != 0 && *(u8*)(glowLight + 0x2f8) != 0 && *(u8*)(glowLight + 0x4c) != 0)
     {
         queueGlowRender();
     }
@@ -484,11 +491,11 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     if (mapData->gameBit != -1)
     {
         bitVal = GameBit_Get((int)mapData->gameBit);
-        ((FirePipeBitFlags*)&extra->flags)->bit6 = (u8)bitVal;
+        ((FirePipeBitFlags*)&extra->flags)->emitting = (u8)bitVal;
     }
     else
     {
-        ((FirePipeBitFlags*)&extra->flags)->bit6 = 1;
+        ((FirePipeBitFlags*)&extra->flags)->emitting = 1;
     }
     obj->sequenceCallback = firepipe_stateCallback;
     {
@@ -511,7 +518,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
                     s16toFloat(&extra2->cycleTimer, (int)(short)(startTime * 0x3c));
                     if (*(short*)(def + 0x20) >= *(short*)(def + 0x1a))
                     {
-                        ((FirePipeBitFlags*)&extra2->flags)->bit6 = 0;
+                        ((FirePipeBitFlags*)&extra2->flags)->emitting = 0;
                     }
                 }
             }
@@ -564,15 +571,15 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         extra->effectObjs[7] = 0;
         extra->effectCount = 0;
         obj->resetTimer = 0;
-        obj->modeX = (short)((int)mapData->modeX << 8);
-        obj->modeY = (u16)mapData->modeY << 8;
+        obj->rotX = (short)((int)mapData->rotX << 8);
+        obj->rotY = (u16)mapData->rotY << 8;
         ObjHits_EnableObject(obj);
-        ((FirePipeBitFlags*)&extra->flags)->bit4 = 0;
+        ((FirePipeBitFlags*)&extra->flags)->restartPending = 0;
         extra->activeSpawn = 0;
         bitVal = GameBit_Get((int)mapData->gameBit);
         {
             uint clz = __cntlzw(bitVal);
-            ((FirePipeBitFlags*)&extra->flags)->bit7 = (u8)(clz >> 5);
+            ((FirePipeBitFlags*)&extra->flags)->lastGameBitState = (u8)(clz >> 5);
         }
         if ((mapData->flags & 1) != 0)
         {
@@ -582,7 +589,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         {
             val = 1;
         }
-        ((FirePipeBitFlags*)&extra->flags)->bit1 = val;
+        ((FirePipeBitFlags*)&extra->flags)->renderEnabled = val;
         if ((mapData->flags & 2) != 0)
         {
             val = 0;
@@ -591,12 +598,12 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         {
             val = 1;
         }
-        ((FirePipeBitFlags*)&extra->flags)->bit0 = val;
+        ((FirePipeBitFlags*)&extra->flags)->glowEnabled = val;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject(obj, 0x4a);
-        ((FirePipeBitFlags*)&extra->flags)->bit2 = 0;
-        extra->subObj = 0;
+        ((FirePipeBitFlags*)&extra->flags)->childEmitEnabled = 0;
+        extra->glowLight = 0;
     }
 }
 

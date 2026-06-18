@@ -8,7 +8,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj, int collisionShapeState);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
@@ -35,18 +35,18 @@ extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern undefined4 Obj_GetActiveModel();
-extern undefined4 modelInitBones();
-extern undefined4 ObjGroup_AddObject();
+extern u32 Obj_GetActiveModel();
+extern u32 modelInitBones();
+extern u32 ObjGroup_AddObject();
 extern void fn_8003B228(int obj, int collisionShapeState);
-extern undefined4 dll_2E_func05();
-extern undefined4 dll_2E_func08();
+extern u32 dll_2E_func05();
+extern u32 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
-extern undefined4 lbl_803E5410;
+extern u32 lbl_803E5410;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f32 lbl_803E544C;
 extern f32 lbl_803E5450;
@@ -257,7 +257,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     SHthorntail_updateState(obj, runtime);
 }
 
-undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
+u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
@@ -359,7 +359,7 @@ void SHthorntail_render(SHthorntailObject* obj)
 
 typedef struct SHthorntailTailSwingEffectScratch
 {
-    undefined particleParams[12];
+    u8 particleParams[12];
     Vec position;
 } SHthorntailTailSwingEffectScratch;
 
@@ -373,7 +373,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     SHthorntailRuntime* runtime;
     byte byteVal;
     u8 hitResult;
-    undefined mode;
+    u8 mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
     uint uval;
@@ -610,8 +610,8 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     SHthorntailRuntime* runtime;
     uint randomTime;
     int moveScratch;
-    undefined4 outA[2];
-    undefined4 outB;
+    u32 outA[2];
+    u32 outB;
     uint stackPad;
 
     runtime = obj->runtime;

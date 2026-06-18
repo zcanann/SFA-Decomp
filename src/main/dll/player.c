@@ -12546,14 +12546,11 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     u8 j;
     f32 scale;
     f32 zero;
-    f32 snd0;
-    f32 snd1;
-    f32 snd2;
+    f32 snd[3];
     f32 arr[6];
 
     timerRec = *(int*)((char*)inner + 0x40c);
-    zero = lbl_803E8180;
-    if (*(f32*)((char*)timerRec + 0x10) != zero &&
+    if (*(f32*)((char*)timerRec + 0x10) != (zero = lbl_803E8180) &&
         (*(f32*)((char*)timerRec + 0x10) = *(f32*)((char*)timerRec + 0x10) - timeDelta,
             *(f32*)((char*)timerRec + 0x10) <= zero))
     {
@@ -12594,11 +12591,11 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 mode = 0;
             }
-            snd0 = lbl_803E8180;
-            snd1 = lbl_803E81C4;
-            snd2 = lbl_803E8180;
+            snd[0] = lbl_803E8180;
+            snd[1] = lbl_803E81C4;
+            snd[2] = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
-            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, &snd0);
+            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, snd);
         }
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;
@@ -12608,8 +12605,8 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void objLoadPlayerFromSave(int obj)
 {
-    int inner = *(int*)&((GameObject*)obj)->extra;
     char* base = (char*)lbl_80332EC0;
+    int inner = *(int*)&((GameObject*)obj)->extra;
     u8* pathState;
     int me;
     int off;
@@ -15807,9 +15804,8 @@ void fn_802AE650(int obj, int state, int p3)
     f32 ee0;
 
     (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
-    ee0 = lbl_803E7EE0;
     if (((GameObject*)obj)->anim.currentMoveProgress >=
-        ee0 - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
+        (ee0 = lbl_803E7EE0) - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
             *(f32*)((char*)state + 0x844) *
@@ -18186,8 +18182,8 @@ int fn_8029D4C0(int obj, int state, f32 fv)
         {
             ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
         }
-        ((GameObject*)obj)->anim.velocityX =
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E7EA4;
+        ((GameObject*)obj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.velocityX = lbl_803E7EA4;
         break;
     case 0xc8:
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;

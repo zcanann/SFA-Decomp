@@ -14,10 +14,10 @@
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_EnableObject();
+extern u32 ObjHits_DisableObject();
 extern f32 timeDelta;
 extern void doRumble(f32 v);
 extern void ModelLightStruct_free(void* light);
@@ -233,11 +233,11 @@ void dimbossfire_update(int obj)
     return;
 }
 
-void dimbossfire_init(int obj, undefined4 arg2, int placement)
+void dimbossfire_init(int obj, u32 arg2, int placement)
 {
     extern u32 randomGetRange(int min, int max);
     uint ua;
-    undefined randVal;
+    u8 randVal;
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -249,7 +249,7 @@ void dimbossfire_init(int obj, undefined4 arg2, int placement)
         ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
         randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
         randVal = randomGetRange(0, 9);
-        *(undefined*)(state + 1) = randVal;
+        *(u8*)(state + 1) = randVal;
     }
     return;
 }

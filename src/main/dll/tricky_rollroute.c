@@ -1,6 +1,7 @@
 /*
- * cannonball - Tricky's rolling cannonball, a baddie that follows a
- * rom-curve route. trickyFn_80141290 is the per-frame update.
+ * tricky_rollroute - Tricky (DLL 0x00C4) rom-curve route-walker sub-TU; Tricky
+ * cluster code sharing gTrickyObjDescriptor-adjacent data. trickyFn_80141290 is the
+ * per-frame update that rolls the object along its rom-curve route.
  *
  * Before init (init-done byte 0x0a == 0): the ball homes onto its curve
  * (CANNONBALL_CURVE). Once the owner and the ball share a walk group it
@@ -37,8 +38,8 @@
 
 /* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
    Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
-   trickyFn_8013b368: dll_DF (block-scope signature override of dll_DF.h's
-   int(u8*,f32,u8*) for this TU's codegen, recipe #57).
+   trickyFn_8013b368: trickyfollow (block-scope signature override of
+   trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
    lbl_803E2*: this DLL's f32 route/speed constants. */
 extern double getXZDistance(float* a, float* b);
 extern u32 randomGetRange(int min, int max);

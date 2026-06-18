@@ -395,7 +395,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)((u8*)(int)lbl_80396918 + slotOff + j * 8 + 4) = obj;
         }
     }
     else
@@ -3436,11 +3436,11 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
 
     shortIndex = index;
     shortYrot = yrot;
+    shortXrot = xrot;
     lbl_80399398[count * 3] = shortIndex;
     lbl_80399398[count * 3 + 2] = shortYrot;
-    shortXrot = xrot;
-    lbl_803DD0BC++;
     lbl_80399398[count * 3 + 1] = shortXrot;
+    lbl_803DD0BC++;
 }
 
 void ObjSeq_objLoadAnimData(u8* seq, u8* obj)
@@ -4156,9 +4156,10 @@ int ObjSeq_ResolveAndAssignTargetObject(u8* obj)
             for (i = 0; i < objectCount; i++)
             {
                 candidate = objects[i];
+                j = 0;
                 slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
                 entry = slotBase;
-                for (j = 0; j < 16; j++)
+                for (; j < 16; j++)
                 {
                     if (*(u8**)entry == candidate)
                     {
@@ -4304,7 +4305,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
             if (((ObjSeqState*)seq)->curFrame >= ((ObjSeqState*)seq)->unk68)
             {
                 ((ObjSeqState*)seq)->unk68 += command[1];
-                ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + 1 + *(s16*)(command + 2));
+                ((ObjSeqState*)seq)->cmdCursor = (s16)(((ObjSeqState*)seq)->cmdCursor + (*(s16*)(command + 2) + 1));
             }
             else
             {

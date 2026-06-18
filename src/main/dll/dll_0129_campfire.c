@@ -14,8 +14,8 @@ extern f32 timeDelta;
 
 extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_ClearHitVolumes();
+extern u32 ObjHits_SetHitVolumeSlot();
 extern void queueGlowRender(void* effect);
 
 extern f32 lbl_803E3D78;
