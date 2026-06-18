@@ -232,8 +232,8 @@ void duster_update(int obj)
     {
         floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-        bestFloorIndex = -1;
         bestFloorDelta = lbl_803E38C0;
+        bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
         {
             floorDelta = **(f32**)((int)floorHits + i * 4) - ((GameObject*)obj)->anim.localPosY;
