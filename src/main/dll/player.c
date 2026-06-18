@@ -11339,6 +11339,7 @@ int fn_8029D900(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma optimization_level 1
 int fn_802957B4(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
@@ -11370,6 +11371,7 @@ int fn_802957B4(int obj)
     }
     return 0;
 }
+#pragma optimization_level reset
 
 int fn_8029BC4C(int obj, int state, f32 fv)
 {
