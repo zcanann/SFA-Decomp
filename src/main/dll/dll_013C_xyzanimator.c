@@ -224,7 +224,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         shader = fn_8006070C((int*)block, *(byte*)(vertexOffset + 0x13));
         shader = Shader_getLayer(shader, 0);
         scale = lbl_803E4008;
-        if ((uint) * (byte*)((int)shader + 5) == (int)def->unk28)
+        if ((int) * (byte*)((int)shader + 5) == (int)def->unk28)
         {
             ((EdgeVerts*)vertexOffset)->a = (s16)(scale * state->unk40 +
                 (f32) * (s16*)(state->unk28 + edgeData));
