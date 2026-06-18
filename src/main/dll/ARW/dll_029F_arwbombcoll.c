@@ -195,7 +195,7 @@ int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
         f32 objZ = objAnim->localPosZ;
         f32 currentZDelta = objZ - arwingAnim->localPosZ;
         f32 previousZDelta = objZ - arwingAnim->previousLocalPosZ;
-        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0)
+        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= *(f32*)&lbl_803E70A0)
         {
             f32 dx = objAnim->localPosX - arwingAnim->localPosX;
             f32 dy = objAnim->localPosY - arwingAnim->localPosY;
