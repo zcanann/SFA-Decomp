@@ -1,84 +1,49 @@
-/* DLL 0x01F4 — lamp / ship-battle objects [801E4288-801E42F8) */
-#include "main/dll/shipbattlestate_struct.h"
-#include "main/dll/sbkytecagestate_struct.h"
-#include "main/dll/sbfireballstate_struct.h"
-#include "main/dll/sbcloudballstate_struct.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
-
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjPath_GetPointWorldPosition();
-
-extern void Sfx_StopObjectChannel();
-extern u8 framesThisStep;
-
-extern void objRenderFn_8003b8f4(f32);
-
-extern f32 timeDelta;
-
+/*
+ * DLL 0x01F4 - "lamp": a hanging-lamp set-dressing object that swings on a
+ * looped path animation and emits particle/sound effects.
+ *
+ * Lamp_init seeds the lamp's X rotation from its placement def (a different
+ * byte per seqId) and installs Lamp_SeqFn as the animation-event callback.
+ * Lamp_update advances the swing animation, plays/stops a looped object SFX
+ * based on player distance, and (when objectFlags bit 0x800 is set) spawns
+ * trail particles along the object's path each step. Lamp_SeqFn randomly
+ * latches the sequence's "A" control flag and spawns a burst of impact
+ * particles. Lamp_free stops the SFX channel and releases the exp-gfx source.
+ */
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/TREX/TREX_trex.h"
 #include "main/dll_000A_expgfx.h"
 
-typedef struct LampObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    u8 unk1A;
-    u8 pad1B[0x20 - 0x1B];
-} LampObjectDef;
-
-/*
- * Per-object extra state for the ShipBattle cloud-ball projectile
- * (SB_CloudBall_getExtraSize == 0x24).
- */
-
-STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
-
-/*
- * Per-object extra state for the ShipBattle fireball projectile
- * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
- */
-
-STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-
-/*
- * Per-object extra state for the ShipBattle kyte cage
- * (SB_KyteCage_getExtraSize == 0x8).
- */
-
-STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
-
-/*
- * Per-object extra state for the ShipBattle chain segment
- * (ShipBattle_getExtraSize == 0x140). The head is handed to
- * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
- * only the locally-evidenced fields are named.
- */
-
-STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
-
-extern f32 lbl_803E5978;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern u32 randomGetRange(int min, int max);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void* a, void* b);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern u8 framesThisStep;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 timeDelta;
+extern f32 lbl_803E5978;
 extern f32 lbl_803E597C;
 extern f32 lbl_803E5980;
 extern f32 lbl_803E5984;
 extern f32 lbl_803E5988;
 extern f32 lbl_803E598C;
 
-void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined2* param_9, int param_10)
+typedef struct LampObjectDef
 {
-}
+    u8 pad0[0x18 - 0x0];
+    s8 rotXSwing;           /* 0x18: rotX byte for the non-static swing seq */
+    u8 pad19[0x1A - 0x19];
+    u8 rotXStatic;          /* 0x1A: rotX byte for the static seq */
+    u8 pad1B[0x20 - 0x1B];
+} LampObjectDef;
 
-void SB_FireBall_release(void);
+#define LAMP_SEQ_STATIC 0x3e4    /* seqId using the static rotX byte (no swing) */
 
 int Lamp_getExtraSize(void) { return 0x1; }
-int Flag_getExtraSize(void);
-
 
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -86,18 +51,8 @@ void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5978);
 }
 
-void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
- * splits at wrong addresses; these stubs ensure every asm symbol has a src
- * definition so future hunters can fill bodies one at a time. */
-
-/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
- * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void* Obj_GetPlayerObject(void);
     u8 effectArgs[0x18];
     int i;
 
@@ -132,37 +87,32 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int fn_801E66EC(int arg1, int arg2);
-
 void Lamp_free(int* obj)
 {
-    Sfx_StopObjectChannel(obj, 64);
+    Sfx_StopObjectChannel(obj, 0x40);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void Lamp_init(int* obj, int* def)
 {
-    int* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == 996)
+    s8* state = ((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.seqId == LAMP_SEQ_STATIC)
     {
-        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->unk1A << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->rotXStatic << 8);
     }
     else
     {
-        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->rotXSwing << 8);
     }
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->unkF8 = 0;
-    *(s8*)state = 1;
+    *state = 1;
     ((GameObject*)obj)->animEventCallback = (void*)Lamp_SeqFn;
 }
 
 void Lamp_update(int obj)
 {
-    extern f32 Vec_distance(void* a, void* b);
-    extern void* Obj_GetPlayerObject(void);
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     u8 effectArgs[0x18];
     f32 distance;
     int i;
@@ -180,7 +130,7 @@ void Lamp_update(int obj)
         Sfx_StopObjectChannel((int*)obj, 0x40);
     }
 
-    if (((GameObject*)obj)->anim.seqId != 0x3e4)
+    if (((GameObject*)obj)->anim.seqId != LAMP_SEQ_STATIC)
     {
         if (((GameObject*)obj)->unkF8 == 0)
         {
@@ -219,24 +169,3 @@ void Lamp_update(int obj)
         }
     }
 }
-
-void SB_CageKyte_init(int p);
-
-/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
- * call ObjLink_DetachChild(obj). */
-
-/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
-
-/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
- * obj->_b8[3] += p2. */
-
-/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
- * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
- * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
- * unset.  (i.e. open by default, gated when slot != -1.) */
-
-/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
- * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
