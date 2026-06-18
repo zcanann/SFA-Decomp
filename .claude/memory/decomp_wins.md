@@ -1,4 +1,64 @@
 
+## ===== Session (Jun17o, flat dll 90-95% CSE-clamp-constant vein): 3 wins / ~14 attempts =====
+TOOLING: full report.json is SECTION-level only (no per-fn fuzzy in `report.json` units;
+  but `unit['functions'][].fuzzy_match_percent` DOES exist -- filter by '/dll/' in
+  unit['name'] which is like 'main/main/dll/<file>'). /tmp/onepct.sh <unit.o> <sym> WORKS
+  (1-unit objdiff). `bash tools/locked_ninja.sh build/.../X.o` sometimes returns EXIT=1 /
+  "premature end of file" on LOCK CONTENTION -- RE-RUN it, the .o builds clean (verify
+  ls mtime + EXIT=0). categorize_near_misses.py defaults to 99.9%+ band (raise --max-pct
+  for the 90-95% band, but it needs build/config.json + the functions key).
+WINS (committed local; push rejected remote-ahead as always):
+- vortex_update (dll_02B3, 93.85->94.29%, 8392129257, BIGGEST +0.44): CSE-CLAMP-CONSTANT.
+  Two clamp constants (lbl_803E73E0 active-branch, lbl_803E73D0 else-branch) each used 3x
+  (compare, compare-after-store, assign) across a `state->alpha = ...` STORE. Target keeps
+  each in ONE volatile FP reg (f2) across the store; MWCC was RELOADING the named lbl after
+  the store (the store aliases/barriers the global re-read). FIX: hoist each into a local
+  `f32 hi = lbl_X;` / `f32 lo = lbl_Y;` used at all 3 sites in that branch. Each branch
+  ~+0.2. Residual: target re-reads state->alpha (extra lfs+cmplwi;bne) where current CSEs
+  it -- inverse coloring, 2-instr, banked.
+- fn_80153640 (magicplant, 93.38->93.58%, 433e18b8b0, +0.20): same vein. lbl_803E28F4 (the
+  velocity mul factor) used for velX (direct) + velY/Z (via a `mul` local). Target CSEs all
+  3 into one reg; current rematerialized lbl for velX. FIX: use the `mul` local for velX
+  too (declare it before the velX store). NOTE: this GREW the frame (mul promoted to f31
+  saved since it spans the randomGetRange call) yet NET fuzzy ROSE +0.2 -- the collapsed
+  reload-divergences outweighed the +1 saved reg. (Target actually reloads lbl twice in
+  volatile; couldn't get both the CSE win AND volatile placement.)
+- fn_80150EDC (newseqobj, 90.72->90.74%, 0ca8296f58, +0.02 tiny): same vein. lbl_803E2740
+  used 3x across a *(p2+0x328) timeout store; hoist into `f32 zero = lbl_803E2740;` local.
+  Dropped the extra reload, collapsed diff regions 24->22 (T=C=216), but score barely moved
+  (residual is emission-order). Marginal but positive.
+LESSON (STRONG, REPEATABLE this band): **CSE-CLAMP-CONSTANT** -- a named `lbl_` FP constant
+  used 2-3x (typically compare + compare + assign, or N multiplies) that STRADDLES a STORE
+  to the same/related memory -> MWCC reloads the lbl after the store (store-aliasing barrier
+  defeats the load CSE). FIX = hoist into a `f32 local = lbl_X;` and spell the local at
+  every use in that scope. Signature in ndiff: `insert C: ['lfs fN,0(0)','RELOC lbl_X']`
+  (current has an EXTRA lbl load target lacks) WITH the lbl appearing 2-3x in
+  function_objdump. This is the #45/#71/#127 family but the trigger is the STORE-between-uses.
+  CAVEAT: if a use crosses a CALL, the hoist promotes to a SAVED reg + grows frame (#6) --
+  still may net-win (magicplant) but check.
+BANKED (real caps, reverted byte-clean):
+- dll_66_func03 (dll_0066) / dll_A2_func03 (dll_00A2): the effect-spawner dll_XX_func03
+  FAMILY -- huge stack-struct initializer (#93), near-pure reg-perm where TARGET keeps the
+  lbl_803131A8/80318B00 base in a VOLATILE reg (r8) + small consts in saved r25-r31, current
+  hoists base to saved + uses 1 EXTRA saved GPR (_savegpr_24 vs _25). opt_level 2 INERT.
+  Coloring cap.
+- fn_801B9ECC (dll_801b9ecc DIM boss dispatcher, 91.21): target RE-DERIVES *gPlayerInterface
+  fresh at each requestControlMode call (lwz;lwz x3); current CSEs it into saved r28 (extra
+  saved reg). opt_common_subs off INERT; volatile-deref REGRESSED to 81%; opt_level 1
+  REGRESSED to 71%. CSE-hoist-of-interface is a hard clean-C cap (can't force per-call reload).
+- fn_8015536C (duster, 90.18): #82 FP-clamp hi/lo volatile reg SWAP (target hi=f3/lo=f0,
+  current hi=f0/lo=f3 in the lateral clamp). decl-order INERT.
+- modgfx_stepS16VectorLerp (dll_000B, 94.50): 3 spurious extsh on int->s16 stores in the
+  ELSE branch (target plain sth). s16-typing the locals REGRESSED (if-branch then needs
+  extsh); peephole on REGRESSED; u16-store-cast INERT. int->s16 store-extension cap.
+- softbody_update (dll_02AD, 94.50): INVERSE of the vein -- target RELOADS lbl_803E7288 per
+  loop iteration (volatile), current LICM-hoists it to f3. opt_loop_invariants off REGRESSED
+  (92.4). Needs the literal value (#71) which I didn't extract.
+- iceblast_update (dll_00F2, 94.75): arg-eval order -- target sets up call args (obj->r3,
+  16->r4) BEFORE reading def->unk19 ternary; moving the `def` load REGRESSED.
+- fn_80198A00 (dll_80198a00, 93.33): pure load-scheduling (3 lfs at 0x28 vs 0x38);
+  scheduling off INERT.
+
 ## ===== Session (Jun17n, top-level main object.c cmp-width + re-read vein): 3 commits / ~6 attempts =====
 TOOLING: full report.json works. CAUTION: I `rm`'d build/GSAE01/obj/main/newshadows.o
   (the TARGET tree -- FORBIDDEN). Restored ALL obj/*.o via `build/tools/dtk dol split
