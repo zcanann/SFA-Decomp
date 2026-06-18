@@ -15243,7 +15243,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         inner->unk508 = ((GameObject*)obj)->anim.localPosZ;
         ((GameObject*)obj)->anim.localPosX = inner->unk52C;
         ((GameObject*)obj)->anim.localPosZ = inner->unk534;
-        sel = inner->unk4FC >= lbl_803E7EA4 ? 0 : 4;
+        sel = inner->unk4FC >= *(f32*)&lbl_803E7EA4 ? 0 : 4;
         tbl = flag ? lbl_80332F88 : lbl_80332F78;
         t = tbl + sel;
         inner->unk544 =
