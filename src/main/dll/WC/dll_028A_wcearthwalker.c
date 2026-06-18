@@ -68,14 +68,14 @@ void earthwalker_initialise(void)
 void earthwalker_update(int obj)
 {
     extern int GameBit_Get(int eventId);
+    extern u8 ObjHitReact_Update();
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
     EarthWalkerState* ewState = (EarthWalkerState*)state;
     int prevAnim;
 
-    ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1,
-                                                ewState->hitReactState, &ewState->hitReactStepScale);
-    if (ewState->hitReactState != 0)
+    if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1,
+                                                     ewState->hitReactState, &ewState->hitReactStepScale)) != 0)
     {
         return;
     }
