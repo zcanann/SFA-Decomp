@@ -542,7 +542,7 @@ void SnowBike_hitDetect(int obj)
     }
     if (state->unk3D6 == 0)
     {
-        if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0 && arrayIndexOf(lbl_8032855C, 10, *(s16*)(other + 0x46)) == -1)
+        if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0 && arrayIndexOf(lbl_8032855C, 10, ((GameObject*)other)->anim.seqId) == -1)
         {
         }
         else
