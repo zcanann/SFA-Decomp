@@ -341,8 +341,4 @@ static inline void OSInitFastCast(void) {
 void setForceLoadImmediately(void);
 void clearForceLoadImmediately(void);
 
-
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-void* gameTextGetStr(int textId);
-
 #endif

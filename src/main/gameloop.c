@@ -40,6 +40,7 @@ FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
 extern f32 timeDelta;
 
+void* gameTextGetStr(int textId);
 
 u32
 FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -1294,6 +1295,7 @@ extern u8 padGetCX(int port);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;
+extern void* gameTextGetStr(int textId);
 
 #pragma peephole off
 #pragma optimization_level 2

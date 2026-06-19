@@ -98,6 +98,7 @@ extern int fn_80296C2C(void* obj);
 extern void fn_80297254(void* obj);
 extern void fn_8029726C(void* obj);
 extern void fn_80297284(void* obj);
+extern void gameTextLoadTaskText(int textId);
 extern void cameraFocusNpc(int param1, u8* obj);
 
 
