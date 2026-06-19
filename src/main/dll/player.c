@@ -14661,9 +14661,11 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
             if (r == 9)
             {
+                f32 mid;
+                f32 lo;
                 f32 hi = ((PlayerState*)inner)->unk54C - lbl_803E7F10;
-                f32 mid = lbl_803E8100 + ((GameObject*)obj)->anim.localPosY;
-                f32 lo = lbl_803E7F30 + ((PlayerState*)inner)->unk550;
+                mid = lbl_803E8100 + ((GameObject*)obj)->anim.localPosY;
+                lo = lbl_803E7F30 + ((PlayerState*)inner)->unk550;
                 if (mid >= lo && mid <= hi)
                 {
                     doRumble(lbl_803E7ED8);
