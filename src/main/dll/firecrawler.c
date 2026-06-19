@@ -628,7 +628,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0xc00;
         break;
     }
-    *(f32*)(state + 0x308) = lbl_803E2BD4;
+    ((BaddieState*)state)->unk308 = lbl_803E2BD4;
     ((BaddieState*)state)->unk300 = lbl_803E2BFC;
     ((BaddieState*)state)->unk304 = lbl_803E2C00;
     ((BaddieState*)state)->pathStep = ((BaddieState*)state)->pathStep * lbl_803E2C04;
@@ -945,10 +945,10 @@ void crawler_update(int* obj, u8* state)
         u8 pad2[4];
     } CrawlerDescL;
     CrawlerDescL* d = (CrawlerDescL*)lbl_8031FAE8;
-    u8* t9 = d[*(u8*)(state + 0x33b)].t10;
-    u8* t8 = d[*(u8*)(state + 0x33b)].t18;
-    u8* t7 = d[*(u8*)(state + 0x33b)].tC;
-    CrawlerSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
+    u8* t9 = d[((BaddieState*)state)->inWhirlpoolGroup].t10;
+    u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].t18;
+    u8* t7 = d[((BaddieState*)state)->inWhirlpoolGroup].tC;
+    CrawlerSeq16* t6 = d[((BaddieState*)state)->inWhirlpoolGroup].t14;
     f32 cap;
     int i;
     u8* p;
@@ -962,7 +962,7 @@ void crawler_update(int* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
     {
-        if (*(u8*)(state + 0x33b) == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
@@ -1010,20 +1010,20 @@ void crawler_update(int* obj, u8* state)
             {
                 if (*(u16*)(state + 0x2a4) >= 0x50)
                 {
-                    *(u8*)(state + 0x33a) = 0;
+                    ((BaddieState*)state)->seqEntryIndex = 0;
                 }
                 fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, lbl_803AC4A8);
-                p = t9 + *(u8*)(state + 0x33a) * 0xc;
+                p = t9 + ((BaddieState*)state)->seqEntryIndex * 0xc;
                 if ((((BaddieState*)state)->controlFlags & *(u32*)(p + 4)) == 0
                     && *(u8*)(p + 9) != 0)
                 {
-                    *(u8*)(state + 0x33a) = *(u8*)(p + 9);
+                    ((BaddieState*)state)->seqEntryIndex = *(u8*)(p + 9);
                 }
-                i = *(u8*)(state + 0x33a) * 0xc;
+                i = ((BaddieState*)state)->seqEntryIndex * 0xc;
                 Baddie_SetMove(obj, (int*)state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
                             *(u8*)(t9 + i + 0xa));
-                p = t9 + *(u8*)(state + 0x33a) * 0xc;
-                *(u8*)(state + 0x33a) = *(u8*)(p + 9);
+                p = t9 + ((BaddieState*)state)->seqEntryIndex * 0xc;
+                ((BaddieState*)state)->seqEntryIndex = *(u8*)(p + 9);
             }
             else
             {
