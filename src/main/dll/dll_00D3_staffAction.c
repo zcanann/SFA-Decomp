@@ -471,22 +471,22 @@ undefined4 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
-    state = *(LandedArwingState**)(*(int*)(obj + 0x5c) + 0x40c);
+    state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(undefined*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((u32)obj);
-        *(f32*)(obj + 0x12) = -(state->speed) * fsin16Precise((u16) * obj);
-        *(f32*)(obj + 0x14) = lbl_803E2FDC;
-        *(f32*)(obj + 0x16) = -(state->speed) * fcos16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16) * obj);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
     }
     ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
-    *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
-    *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
+    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
+    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
     ObjHits_RegisterActiveHitVolumeObject((int)obj);
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
