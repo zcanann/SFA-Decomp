@@ -26,7 +26,7 @@ typedef struct SnowclawState
     u8 pad98[0x9C - 0x98];
     s32 attackDelay;
     u8 unkA0;
-    u8 unkA1;
+    u8 hitFlag;
     u8 dropIndex;
     s8 dropIndexApplied;
     u8 health;
@@ -542,11 +542,11 @@ void snowclaw_update(int obj)
 
     pulseTable = lbl_802C2520;
     inner = ((GameObject*)obj)->extra;
-    if (((SnowclawState*)inner)->unkA1 != 0 && (u32)((((SnowclawState*)inner)->unkAA >> 6) & 1) != 0)
+    if (((SnowclawState*)inner)->hitFlag != 0 && (u32)((((SnowclawState*)inner)->unkAA >> 6) & 1) != 0)
     {
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
     }
-    ((SnowclawState*)inner)->unkA1 = 0;
+    ((SnowclawState*)inner)->hitFlag = 0;
     ((SnowclawState*)inner)->unkA0 = 0xff;
 
     healthState = *(s8*)&((SnowclawState*)inner)->health;
@@ -680,7 +680,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
 
     dist = lbl_803E6708;
     inner = ((GameObject*)obj)->extra;
-    ((SnowclawState*)inner)->unkA1 = 1;
+    ((SnowclawState*)inner)->hitFlag = 1;
     ObjHits_DisableObject(obj);
     if (*(int**)inner != 0)
     {
