@@ -493,13 +493,13 @@ undefined4 fn_801659B8(s16* obj, u32* params)
     {
         if (state->surfaceMode == 6)
         {
-            if (((state->flags92 >> 2) & 1) == 0u)
+            if (((state->flags92 >> 2) & 1) != 0u)
             {
-                fn_80166444((int)obj, (int)state);
+                fn_80165B3C((int)obj, (int)state);
             }
             else
             {
-                fn_80165B3C((int)obj, (int)state);
+                fn_80166444((int)obj, (int)state);
             }
         }
         else
