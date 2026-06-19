@@ -327,10 +327,10 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
         rootMotionScale + ((ObjPlacement*)setup)->posY;
     ((GameObject*)obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * ((GameObject*)obj)->anim.
         rootMotionScale + ((ObjPlacement*)setup)->posZ;
-    ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
-    if ((*(u8*)(setup + 0x3c) & 1) != 0)
+    ((GameObject*)obj)->anim.rotX = ((DimbossicesmashPlacement*)setup)->unk1A;
+    ((GameObject*)obj)->anim.rotY = ((DimbossicesmashPlacement*)setup)->unk1C;
+    ((GameObject*)obj)->anim.rotZ = ((DimbossicesmashPlacement*)setup)->unk1E;
+    if ((((DimbossicesmashPlacement*)setup)->unk3C & 1) != 0)
     {
         spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
         vx = ((GameObject*)obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
