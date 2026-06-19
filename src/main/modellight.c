@@ -1233,10 +1233,10 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     ModelLightCornerBlock cornerBlock;
     f32 extent;
     f32 scaledExtent;
-    u32 clipMask;
-    u32 combinedClipMask;
-    f32 zero;
+    u8 clipMask;
     int i;
+    u8 combinedClipMask;
+    f32 zero;
 
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
     cornerBlock = *(ModelLightCornerBlock*)gModelLightCornerBlock;
@@ -1266,8 +1266,8 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         return 0;
     }
 
-    zero = lbl_803DE75C;
     combinedClipMask = 0x3f;
+    zero = lbl_803DE75C;
     for (i = 0; i < 8; i++)
     {
         worldPos[0] = localPos[0] + scaledExtent * cornerBlock.v[i * 3 + 0];
@@ -1285,7 +1285,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         {
             clipMask |= 0x10;
         }
-        if (((ModelLightStruct*)light)->projectionFarZ < worldPos[2])
+        if (worldPos[2] > ((ModelLightStruct*)light)->projectionFarZ)
         {
             clipMask |= 0x20;
         }
