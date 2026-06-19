@@ -1012,7 +1012,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
     u8 args[16];
-    int i;
+    u8 i;
 
     switch (type)
     {
