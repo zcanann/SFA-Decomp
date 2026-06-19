@@ -21,33 +21,8 @@ typedef u16 wchar_t;
 #define NAN 0.0f
 #endif
 
-#define CONCAT11(x, y) ((u16)(((u16)(u8)(x) << 8) | (u8)(y)))
-#define CONCAT12(x, y) ((u32)(((u32)(u8)(x) << 16) | (u16)(y)))
-#define CONCAT13(x, y) ((u32)(((u32)(u8)(x) << 24) | (u32)(y)))
-#define CONCAT14(x, y) ((u64)(((u64)(u8)(x) << 32) | (u32)(y)))
-#define CONCAT21(x, y) ((u32)(((u32)(u16)(x) << 8) | (u8)(y)))
-#define CONCAT22(x, y) ((u32)(((u32)(u16)(x) << 16) | (u16)(y)))
-#define CONCAT23(x, y) ((u64)(((u64)(u16)(x) << 24) | (u32)(y)))
-#define CONCAT24(x, y) ((u64)(((u64)(u16)(x) << 32) | (u32)(y)))
-#define CONCAT31(x, y) ((u32)(((u32)(x) << 8) | (u8)(y)))
-#define CONCAT32(x, y) ((u64)(((u64)(u32)(x) << 16) | (u16)(y)))
-#define CONCAT41(x, y) ((u64)(((u64)(u32)(x) << 8) | (u8)(y)))
-#define CONCAT42(x, y) ((u64)(((u64)(u32)(x) << 16) | (u16)(y)))
-#define CONCAT43(x, y) ((u64)(((u64)(u32)(x) << 24) | (u32)(y)))
-#define CONCAT44(x, y) ((u64)(((u64)(u32)(x) << 32) | (u32)(y)))
-
 static inline u32 CARRY4(u32 x, u32 y) {
     return (u32)(x + y) < x;
-}
-
-static inline s32 SCARRY4(s32 x, s32 y) {
-    s32 sum = x + y;
-    return ((x < 0) == (y < 0)) && ((sum < 0) != (x < 0));
-}
-
-static inline s32 SBORROW4(s32 x, s32 y) {
-    s32 diff = x - y;
-    return ((x < 0) != (y < 0)) && ((diff < 0) != (x < 0));
 }
 
 #endif

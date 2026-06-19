@@ -72,7 +72,8 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_ROOT_CURVE_AXIS_ROLL 5
 #define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
-#define OBJANIM_U32_DOUBLE(value) ((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, (value)))
+#define OBJANIM_U32_DOUBLE(value)                                                                  \
+    ((double)((u64)(((u64)(u32)(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD) << 32) | (u32)((value)))))
 #define OBJ_MODEL_STATE_SHADOW_VISIBLE 0x04
 #define OBJ_MODEL_STATE_SHADOW_INIT_CALLBACK_RAN 0x08
 #define OBJ_MODEL_STATE_SHADOW_FADE_OUT 0x1000
@@ -573,7 +574,7 @@ static inline ObjHitsPriorityState *ObjAnim_GetPriorityHitState(ObjAnimComponent
 }
 
 static inline f64 ObjAnim_U32AsDouble(u32 value) {
-  u64 bits = CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, value);
+  u64 bits = (u64)(((u64)(u32)(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD) << 32) | (u32)(value));
   return *(f64 *)&bits;
 }
 
