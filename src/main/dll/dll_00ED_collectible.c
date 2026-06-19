@@ -604,14 +604,14 @@ void collectible_func0B(int* obj, int flag)
 int collectible_modelMtxFn(int* obj)
 {
     int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
-    if (*(int*)((char*)inner + 0x18) == -2)
+    if (((CollectibleState*)inner)->unk18 == -2)
     {
         f32 f1 = ((GameObject*)obj)->anim.worldPosX;
         f32 f2 = ((GameObject*)obj)->anim.worldPosY;
         f32 f3 = ((GameObject*)obj)->anim.worldPosZ;
-        *(u32*)((char*)inner + 0x18) = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
+        *(u32*)&((CollectibleState*)inner)->unk18 = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
     }
-    return *(int*)((char*)inner + 0x18);
+    return ((CollectibleState*)inner)->unk18;
 }
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
