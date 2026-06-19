@@ -41,24 +41,24 @@ typedef struct BaddieAfterUpdateBonesCbState
     s32 unk36C;
 } BaddieAfterUpdateBonesCbState;
 
-extern undefined4 ABS();
+extern u32 ABS();
 extern double FUN_80017714();
-extern uint FUN_80017730();
+extern u32 FUN_80017730();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern undefined4 fn_80154870();
-extern undefined4 FUN_80247944();
-extern undefined4 FUN_80247cd8();
-extern undefined4 FUN_80247ef8();
+extern u32 fn_80154870();
+extern u32 FUN_80247944();
+extern u32 FUN_80247cd8();
+extern u32 FUN_80247ef8();
 extern double SeekTwiceBeforeRead();
-extern undefined4 FUN_80247f90();
-extern undefined4 FUN_80247fb0();
-extern ulonglong FUN_8028682c();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_80292754();
+extern u32 FUN_80247f90();
+extern u32 FUN_80247fb0();
+extern u64 FUN_8028682c();
+extern u32 FUN_80286878();
+extern u32 FUN_80292754();
 
-extern undefined4 DAT_8031e840;
-extern undefined4 DAT_8031e860;
+extern u32 DAT_8031e840;
+extern u32 DAT_8031e860;
 extern f64 DOUBLE_803e3218;
 extern f64 DOUBLE_803e3278;
 extern f32 lbl_803E31FC;
@@ -146,8 +146,8 @@ extern void fn_8015983C(void);
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern int getAngle(f32 x, f32 z);
-extern uint lbl_8031DBF0[];
-extern uint lbl_8031DC10[];
+extern u32 lbl_8031DBF0[];
+extern u32 lbl_8031DC10[];
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
@@ -164,15 +164,15 @@ extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
-extern undefined4 FUN_800305f8();
-extern uint ObjGroup_ContainsObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjLink_DetachChild();
-extern undefined4 fn_80154C24();
-extern void rachnopInit(undefined4 param_1, int param_2);
-extern void baddieInit_80156188(undefined4 param_1, int param_2);
-extern void wbInit(undefined4 param_1, int param_2);
+extern u32 FUN_800305f8();
+extern u32 ObjGroup_ContainsObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u64 ObjLink_DetachChild();
+extern u32 fn_80154C24();
+extern void rachnopInit(u32 param_1, int param_2);
+extern void baddieInit_80156188(u32 param_1, int param_2);
+extern void wbInit(u32 param_1, int param_2);
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803E3204;
@@ -193,7 +193,7 @@ extern void ModelLightStruct_free(int light);
 extern void mm_free(int p);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
-extern uint GameBit_Get(int bit);
+extern u32 GameBit_Get(int bit);
 extern int getCurUiDll(void);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int isInBounds(f32 x, f32 z);
@@ -229,7 +229,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     f32 dz;
     f32 dx;
     f32 dy;
-    uint flags;
+    u32 flags;
     int mode;
     int i;
     f32 v;
@@ -666,29 +666,29 @@ void objAnimFn_8014a9f0(short* obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* param_4)
+void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
 {
     extern double FUN_80293900();
-    ushort uVar1;
-    ushort* puVar2;
-    uint uVar3;
-    undefined4* puVar4;
+    u16 uVar1;
+    u16* puVar2;
+    u32 uVar3;
+    u32* puVar4;
     int iVar5;
     int iVar6;
     int iVar7;
     int iVar8;
     double extraout_f1;
     double dVar9;
-    ulonglong uVar10;
+    u64 uVar10;
     float local_48;
     int local_44;
     float local_40;
     float local_3c;
     float local_38;
-    longlong local_30;
+    s64 local_30;
 
     uVar10 = FUN_8028682c();
-    puVar2 = (ushort*)(uVar10 >> 0x20);
+    puVar2 = (u16*)(uVar10 >> 0x20);
     local_48 = (float)extraout_f1;
     iVar8 = *(int*)(puVar2 + 0x5c);
     local_44 = 0;
@@ -702,16 +702,16 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
             for (iVar6 = 0; iVar6 < local_44; iVar6 = iVar6 + 1)
             {
                 dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
-                if ((dVar9 < (double)local_48) && ((ushort*)puVar4[iVar6] != puVar2))
+                if ((dVar9 < (double)local_48) && ((u16*)puVar4[iVar6] != puVar2))
                 {
                     *param_4 = puVar4[iVar6];
                     dVar9 = FUN_80293900(dVar9);
-                    local_30 = (longlong)(int)
+                    local_30 = (s64)(int)
                     dVar9;
                     *(short*)(param_4 + 1) = (short)(int)dVar9;
                     if ((uVar10 & 2) != 0)
                     {
-                        if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                        if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
                         {
                             iVar5 = *param_4;
                             local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
@@ -743,11 +743,11 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                             uVar3 = uVar3 + 0xffff;
                         }
                         iVar5 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                        *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar5);
+                        *(u32*)(iVar8 + 0x2dc) = *(u32*)(iVar8 + 0x2dc) & ~*(u32*)(&DAT_8031e840 + iVar5);
                         if ((uVar10 & 4) != 0)
                         {
-                            *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                                *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar5);
+                            *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
+                                *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + iVar5);
                         }
                     }
                     param_4 = param_4 + 2;
@@ -766,12 +766,12 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
         *param_4 = iVar7;
         if (iVar7 != 0)
         {
-            local_30 = (longlong)(int)
+            local_30 = (s64)(int)
             local_48;
             *(short*)(param_4 + 1) = (short)(int)local_48;
             if ((uVar10 & 2) != 0)
             {
-                if ((*(uint*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
                 {
                     iVar7 = *param_4;
                     local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
@@ -803,11 +803,11 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                     uVar3 = uVar3 + 0xffff;
                 }
                 iVar7 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                *(uint*)(iVar8 + 0x2dc) = *(uint*)(iVar8 + 0x2dc) & ~*(uint*)(&DAT_8031e840 + iVar7);
+                *(u32*)(iVar8 + 0x2dc) = *(u32*)(iVar8 + 0x2dc) & ~*(u32*)(&DAT_8031e840 + iVar7);
                 if ((uVar10 & 4) != 0)
                 {
-                    *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                        *(uint*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(uint*)(&DAT_8031e860 + iVar7);
+                    *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
+                        *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + iVar7);
                 }
             }
         }
@@ -826,15 +826,15 @@ double FUN_8014cbcc(int param_1)
     {
         dVar2 = (double)lbl_803E31FC;
     }
-    else if ((*(ushort*)(iVar1 + 0x2b2) == 0) || (*(ushort*)(iVar1 + 0x2b0) == 0))
+    else if ((*(u16*)(iVar1 + 0x2b2) == 0) || (*(u16*)(iVar1 + 0x2b0) == 0))
     {
         dVar2 = (double)lbl_803E31FC;
     }
     else
     {
-        dVar2 = (double)((float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b0)) -
+        dVar2 = (double)((float)((double)CONCAT44(0x43300000, (u32) * (u16*)(iVar1 + 0x2b0)) -
                 DOUBLE_803e3278) /
-            (float)((double)CONCAT44(0x43300000, (uint) * (ushort*)(iVar1 + 0x2b2)) -
+            (float)((double)CONCAT44(0x43300000, (u32) * (u16*)(iVar1 + 0x2b2)) -
                 DOUBLE_803e3278));
     }
     return dVar2;
@@ -842,9 +842,9 @@ double FUN_8014cbcc(int param_1)
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_8014ccac(int param_1, undefined4 param_2)
+void FUN_8014ccac(int param_1, u32 param_2)
 {
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->extra + 0x29c) = param_2;
+    *(u32*)(*(int*)&((GameObject*)param_1)->extra + 0x29c) = param_2;
     return;
 }
 
@@ -865,8 +865,8 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     float local_ac;
     float local_a8;
     float afStack_a4[13];
-    undefined4 local_70;
-    uint uStack_6c;
+    u32 local_70;
+    u32 uStack_6c;
 
     dVar2 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
     if (dVar2 <= (double)lbl_803E31FC)
@@ -903,7 +903,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     {
         FUN_80247f90(&local_b0, &local_bc);
         dVar4 = (double)FUN_80292754();
-        uStack_6c = ((uint)(byte)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        uStack_6c = ((u32)(u8)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
         if (ABS((double)(float)((double)CONCAT44(0x43300000, uStack_6c) - DOUBLE_803e3218)) !=
             (double)lbl_803E31FC)
@@ -1217,7 +1217,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     short** arr;
     short ang;
     short* tgt;
-    uint diff;
+    u32 diff;
     int b2;
     int b4;
     f32 d2;
@@ -1272,8 +1272,8 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                 ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~lbl_8031DBF0[ang];
                 if ((flags & 4) != 0)
                 {
-                    *(uint*)(*(int*)(out->obj + 0x5c) + 0x2dc) =
-                        *(uint*)(*(int*)(out->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+                    *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) =
+                        *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
                 }
             }
         }
@@ -1333,8 +1333,8 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                         ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~lbl_8031DBF0[ang];
                         if (b4 != 0)
                         {
-                            *(uint*)(*(int*)(cur->obj + 0x5c) + 0x2dc) =
-                                *(uint*)(*(int*)(cur->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+                            *(u32*)(*(int*)(cur->obj + 0x5c) + 0x2dc) =
+                                *(u32*)(*(int*)(cur->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
                         }
                     }
                     cur++;
@@ -1817,16 +1817,16 @@ typedef struct EnemyPlacement
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
 
-void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, uint param_5,
+void FUN_8014d164(double param_1, double param_2, u16* param_3, int param_4, u32 param_5,
                   char param_6)
 {
-    extern undefined4 FUN_80293900();
-    uint uVar1;
+    extern u32 FUN_80293900();
+    u32 uVar1;
     double dVar2;
     double dVar3;
     double dVar4;
-    undefined8 local_50;
-    undefined8 local_48;
+    u64 local_50;
+    u64 local_48;
 
     dVar4 = (double)(lbl_803DC074 /
         (float)((double)CONCAT44(0x43300000, param_5 & 0xffff) - DOUBLE_803e3278));
@@ -1835,7 +1835,7 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
         dVar4 = (double)lbl_803E3200;
     }
     uVar1 = FUN_80017730();
-    local_50 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint) * param_3 ^ 0x80000000);
+    local_50 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (u32) * param_3 ^ 0x80000000);
     dVar2 = (double)(float)(local_50 - DOUBLE_803e3218);
     if ((double)lbl_803E324C < dVar2)
     {
@@ -1851,7 +1851,7 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
     {
         if (param_6 == '\0')
         {
-            param_3[2] = (ushort)(int)(lbl_803DC078 * (float)(dVar3 * param_1));
+            param_3[2] = (u16)(int)(lbl_803DC078 * (float)(dVar3 * param_1));
             if ((short)param_3[2] < 0x2001)
             {
                 if ((short)param_3[2] < -0x2000)
@@ -1889,7 +1889,7 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
     return;
 }
 
-void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_4)
+void FUN_8014d3d0(short* param_1, u32 param_2, u32 param_3, short param_4)
 {
     float fVar1;
     short sVar2;
@@ -1917,10 +1917,10 @@ void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_
     return;
 }
 
-void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5
-                  , undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, int param_10,
-                  uint param_11, uint param_12, undefined4 param_13, undefined4 param_14,
-                  undefined4 param_15, undefined4 param_16)
+void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u64 param_5
+                  , u64 param_6, u64 param_7, u64 param_8, int param_9, int param_10,
+                  u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                  u32 param_15, u32 param_16)
 {
     ObjHitsPriorityState* hitState;
 

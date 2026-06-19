@@ -23,203 +23,203 @@ typedef struct ObjModelRenderOp
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent *)(obj))->bankIndex)
 
-undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB);
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_800068f4();
-extern undefined4 FUN_80006938();
-extern undefined4 FUN_80006940();
-extern undefined4 FUN_80006974();
+u32 FUN_80043E64(u32* dstBuf, int srcIdxA, int srcIdxB);
+extern u32 FUN_80003494();
+extern u32 FUN_800068f4();
+extern u32 FUN_80006938();
+extern u32 FUN_80006940();
+extern u32 FUN_80006974();
 extern void* FUN_800069a8();
-extern undefined4 FUN_800069d4();
-extern undefined4 FUN_80006adc();
-extern undefined4 FUN_80017550();
+extern u32 FUN_800069d4();
+extern u32 FUN_80006adc();
+extern u32 FUN_80017550();
 extern int FUN_80017558();
 extern int FUN_80017570();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175d4();
-extern undefined4 FUN_800175fc();
-extern undefined4 FUN_80017600();
-extern undefined4 FUN_80017604();
-extern undefined4 FUN_80017608();
-extern undefined4 FUN_80017620();
+extern u32 FUN_8001759c();
+extern u32 FUN_800175b0();
+extern u32 FUN_800175d4();
+extern u32 FUN_800175fc();
+extern u32 FUN_80017600();
+extern u32 FUN_80017604();
+extern u32 FUN_80017608();
+extern u32 FUN_80017620();
 extern void* FUN_80017624();
-extern undefined4 FUN_80017700();
+extern u32 FUN_80017700();
 extern int FUN_80017730();
-extern undefined4 FUN_80017754();
+extern u32 FUN_80017754();
 extern int randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_80017794();
+extern u32 FUN_80017778();
+extern u32 FUN_80017794();
 extern int FUN_8001779c();
-extern undefined4 FUN_800177b4();
+extern u32 FUN_800177b4();
 extern int FUN_80017800();
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80017818();
-extern uint FUN_80017824();
-extern undefined4 FUN_8001782c();
-extern uint FUN_80017830();
-extern undefined4 FUN_800178d0();
-extern undefined4 FUN_800178d4();
-extern undefined4 FUN_800178f0();
-extern undefined4 FUN_80017914();
+extern u32 FUN_80017814();
+extern u32 FUN_80017818();
+extern u32 FUN_80017824();
+extern u32 FUN_8001782c();
+extern u32 FUN_80017830();
+extern u32 FUN_800178d0();
+extern u32 FUN_800178d4();
+extern u32 FUN_800178f0();
+extern u32 FUN_80017914();
 extern int FUN_8001792c();
-extern undefined4 FUN_8001794c();
-extern undefined4 FUN_8001795c();
-extern undefined4 FUN_80017968();
-extern undefined4 FUN_8001796c();
-extern undefined4 FUN_80017970();
-extern undefined4 FUN_80017978();
-extern undefined4 FUN_80017988();
-extern undefined4 FUN_800179c8();
-extern undefined4 FUN_800179cc();
-extern undefined4 FUN_80017a50();
-extern undefined4 FUN_80017a54();
-extern undefined4 FUN_8003bbfc();
-extern undefined4 FUN_8003c10c();
-extern undefined8 FUN_800443fc();
+extern u32 FUN_8001794c();
+extern u32 FUN_8001795c();
+extern u32 FUN_80017968();
+extern u32 FUN_8001796c();
+extern u32 FUN_80017970();
+extern u32 FUN_80017978();
+extern u32 FUN_80017988();
+extern u32 FUN_800179c8();
+extern u32 FUN_800179cc();
+extern u32 FUN_80017a50();
+extern u32 FUN_80017a54();
+extern u32 FUN_8003bbfc();
+extern u32 FUN_8003c10c();
+extern u64 FUN_800443fc();
 extern char FUN_80048094();
 extern int FUN_800480a0();
-extern undefined4 FUN_8004812c();
-extern undefined4 FUN_80048178();
-extern undefined4 FUN_80048bc4();
-extern undefined4 FUN_80048f00();
-extern undefined4 FUN_80049024();
-extern undefined4 FUN_80049260();
-extern undefined4 FUN_80049910();
-extern undefined4 FUN_8004afc0();
-extern undefined4 FUN_8004b41c();
-extern undefined4 FUN_8004b8cc();
-extern uint FUN_8004b960();
-extern undefined4 FUN_8004bc68();
-extern undefined4 FUN_8004bd68();
-extern undefined4 FUN_8004be30();
-extern undefined4 FUN_8004bf28();
-extern undefined4 FUN_8004c174();
-extern undefined4 FUN_80051868();
-extern undefined4 FUN_80051b04();
-extern undefined4 FUN_80051d64();
-extern undefined4 FUN_80051fc4();
-extern undefined4 FUN_800523e4();
-extern undefined4 FUN_80052500();
-extern undefined4 FUN_8005264c();
-extern undefined4 FUN_80052778();
-extern undefined4 FUN_800528d0();
-extern undefined4 FUN_80052904();
-extern uint FUN_80053078();
-extern undefined4 FUN_800530b4();
-extern uint FUN_8005375c();
+extern u32 FUN_8004812c();
+extern u32 FUN_80048178();
+extern u32 FUN_80048bc4();
+extern u32 FUN_80048f00();
+extern u32 FUN_80049024();
+extern u32 FUN_80049260();
+extern u32 FUN_80049910();
+extern u32 FUN_8004afc0();
+extern u32 FUN_8004b41c();
+extern u32 FUN_8004b8cc();
+extern u32 FUN_8004b960();
+extern u32 FUN_8004bc68();
+extern u32 FUN_8004bd68();
+extern u32 FUN_8004be30();
+extern u32 FUN_8004bf28();
+extern u32 FUN_8004c174();
+extern u32 FUN_80051868();
+extern u32 FUN_80051b04();
+extern u32 FUN_80051d64();
+extern u32 FUN_80051fc4();
+extern u32 FUN_800523e4();
+extern u32 FUN_80052500();
+extern u32 FUN_8005264c();
+extern u32 FUN_80052778();
+extern u32 FUN_800528d0();
+extern u32 FUN_80052904();
+extern u32 FUN_80053078();
+extern u32 FUN_800530b4();
+extern u32 FUN_8005375c();
 extern void newshadows_getShadowTextureTable4x8();
-extern undefined4 FUN_8006b03c();
+extern u32 FUN_8006b03c();
 extern int FUN_8006f690();
 extern void gxSetPeControl_ZCompLoc_(u8 zcomploc);
 extern void gxSetZMode_(u8 enable, int func, u8 update);
 extern void trackIntersect_drawColorBand(void);
 extern void trackIntersect_getColorRgb();
-extern undefined4 FUN_800709e4();
-extern undefined4 FUN_80080f88();
-extern undefined4 PlayControl();
-extern undefined4 FUN_80243e74();
-extern undefined4 FUN_80243e9c();
-extern undefined4 FUN_802475b8();
-extern undefined4 FUN_802475e4();
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247a48();
-extern undefined4 FUN_80247a7c();
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_802570dc();
-extern undefined4 FUN_80257b5c();
-extern undefined4 FUN_802585d8();
-extern undefined4 FUN_80258674();
-extern undefined4 FUN_80258944();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025a2ec();
-extern undefined4 FUN_8025a454();
-extern undefined4 FUN_8025a5bc();
-extern undefined4 FUN_8025a608();
-extern undefined4 FUN_8025be54();
-extern undefined4 FUN_8025be80();
-extern undefined4 FUN_8025c1a4();
-extern undefined4 FUN_8025c224();
-extern undefined4 FUN_8025c2a8();
-extern undefined4 FUN_8025c368();
-extern undefined4 FUN_8025c428();
-extern undefined4 FUN_8025c510();
-extern undefined4 GXSetBlendMode();
-extern undefined4 FUN_8025c5f0();
-extern undefined4 FUN_8025c65c();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025c828();
-extern undefined4 FUN_8025ca04();
-extern undefined4 FUN_8025ca38();
-extern undefined4 FUN_8025cce8();
-extern undefined4 FUN_8025d63c();
-extern undefined4 FUN_8025d80c();
-extern undefined4 FUN_8025d8c4();
-extern undefined8 FUN_80286820();
+extern u32 FUN_800709e4();
+extern u32 FUN_80080f88();
+extern u32 PlayControl();
+extern u32 FUN_80243e74();
+extern u32 FUN_80243e9c();
+extern u32 FUN_802475b8();
+extern u32 FUN_802475e4();
+extern u32 FUN_80247618();
+extern u32 FUN_80247a48();
+extern u32 FUN_80247a7c();
+extern u32 FUN_80247bf8();
+extern u32 FUN_802570dc();
+extern u32 FUN_80257b5c();
+extern u32 FUN_802585d8();
+extern u32 FUN_80258674();
+extern u32 FUN_80258944();
+extern u32 FUN_80259288();
+extern u32 FUN_8025a2ec();
+extern u32 FUN_8025a454();
+extern u32 FUN_8025a5bc();
+extern u32 FUN_8025a608();
+extern u32 FUN_8025be54();
+extern u32 FUN_8025be80();
+extern u32 FUN_8025c1a4();
+extern u32 FUN_8025c224();
+extern u32 FUN_8025c2a8();
+extern u32 FUN_8025c368();
+extern u32 FUN_8025c428();
+extern u32 FUN_8025c510();
+extern u32 GXSetBlendMode();
+extern u32 FUN_8025c5f0();
+extern u32 FUN_8025c65c();
+extern u32 FUN_8025c754();
+extern u32 FUN_8025c828();
+extern u32 FUN_8025ca04();
+extern u32 FUN_8025ca38();
+extern u32 FUN_8025cce8();
+extern u32 FUN_8025d63c();
+extern u32 FUN_8025d80c();
+extern u32 FUN_8025d8c4();
+extern u64 FUN_80286820();
 extern int FUN_80286828();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286874();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_8028688c();
+extern u64 FUN_80286834();
+extern u64 FUN_80286838();
+extern u64 FUN_80286840();
+extern u32 FUN_8028686c();
+extern u32 FUN_80286874();
+extern u32 FUN_80286880();
+extern u32 FUN_80286884();
+extern u32 FUN_8028688c();
 extern double FUN_80293900();
 
-extern byte DAT_802cbaa8;
-extern undefined4 DAT_802cbab1;
-extern undefined4 DAT_802cbac0;
+extern u8 DAT_802cbaa8;
+extern u32 DAT_802cbab1;
+extern u32 DAT_802cbac0;
 extern int DAT_802cc8a8;
-extern undefined4 DAT_802cc9d4;
-extern undefined4 DAT_80343a70;
-extern undefined DAT_80346d30;
-extern undefined DAT_8034ec70;
-extern undefined DAT_80350c70;
-extern undefined DAT_80352c70;
-extern undefined DAT_80356c70;
-extern undefined DAT_8035ac70;
-extern undefined DAT_8035db50;
-extern undefined DAT_8035fb50;
+extern u32 DAT_802cc9d4;
+extern u32 DAT_80343a70;
+extern u8 DAT_80346d30;
+extern u8 DAT_8034ec70;
+extern u8 DAT_80350c70;
+extern u8 DAT_80352c70;
+extern u8 DAT_80356c70;
+extern u8 DAT_8035ac70;
+extern u8 DAT_8035db50;
+extern u8 DAT_8035fb50;
 extern int DAT_8035fd08;
-extern uint DAT_80360048;
+extern u32 DAT_80360048;
 extern short DAT_803601a8;
-extern undefined4 DAT_803601f2;
-extern undefined4 DAT_80360236;
-extern undefined4 DAT_80397450;
-extern undefined4 DAT_803dc0c8;
-extern undefined4 DAT_803dc0cc;
-extern undefined4 DAT_803dc0d0;
-extern undefined4 DAT_803dc0d4;
-extern undefined4 DAT_803dc0d8;
-extern undefined4 DAT_803dc0d9;
-extern undefined4 DAT_803dc0dc;
-extern undefined4 DAT_803dc0e0;
-extern undefined4 DAT_803dc0e1;
-extern undefined4 DAT_803dc0e2;
-extern undefined4 DAT_803dc0e4;
-extern undefined4 DAT_803dc0e8;
-extern undefined4 DAT_803dc210;
-extern undefined4 DAT_803dd8a4;
-extern undefined4 DAT_803dd8a8;
-extern undefined4 DAT_803dd8a9;
-extern undefined4 DAT_803dd8aa;
-extern undefined4 DAT_803dd8ac;
-extern undefined4 DAT_803dd8b0;
-extern undefined4 DAT_803dd8b4;
-extern undefined4 DAT_803dd8bc;
-extern undefined4 DAT_803dd8bd;
-extern undefined4 DAT_803dd8c4;
-extern undefined4 DAT_803dd8c8;
-extern undefined4 DAT_803dd8cc;
-extern undefined4 DAT_803dd8d4;
-extern undefined4 DAT_803dd8d8;
-extern undefined4 DAT_803dd8dc;
-extern byte DAT_803dd8e0;
+extern u32 DAT_803601f2;
+extern u32 DAT_80360236;
+extern u32 DAT_80397450;
+extern u32 DAT_803dc0c8;
+extern u32 DAT_803dc0cc;
+extern u32 DAT_803dc0d0;
+extern u32 DAT_803dc0d4;
+extern u32 DAT_803dc0d8;
+extern u32 DAT_803dc0d9;
+extern u32 DAT_803dc0dc;
+extern u32 DAT_803dc0e0;
+extern u32 DAT_803dc0e1;
+extern u32 DAT_803dc0e2;
+extern u32 DAT_803dc0e4;
+extern u32 DAT_803dc0e8;
+extern u32 DAT_803dc210;
+extern u32 DAT_803dd8a4;
+extern u32 DAT_803dd8a8;
+extern u32 DAT_803dd8a9;
+extern u32 DAT_803dd8aa;
+extern u32 DAT_803dd8ac;
+extern u32 DAT_803dd8b0;
+extern u32 DAT_803dd8b4;
+extern u32 DAT_803dd8bc;
+extern u32 DAT_803dd8bd;
+extern u32 DAT_803dd8c4;
+extern u32 DAT_803dd8c8;
+extern u32 DAT_803dd8cc;
+extern u32 DAT_803dd8d4;
+extern u32 DAT_803dd8d8;
+extern u32 DAT_803dd8dc;
+extern u8 DAT_803dd8e0;
 extern int DAT_803dd8e4;
-extern undefined4 DAT_803dd8f8;
-extern undefined4 DAT_803dd900;
-extern undefined4 DAT_803df670;
+extern u32 DAT_803dd8f8;
+extern u32 DAT_803dd900;
+extern u32 DAT_803df670;
 extern f64 DOUBLE_803df6c0;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
@@ -230,21 +230,21 @@ extern f32 lbl_803DF6B8;
 extern f32 lbl_803DF6C8;
 extern f32 lbl_803DF6D8;
 extern f32 lbl_803DF6EC;
-extern undefined4 uRam803dc214;
+extern u32 uRam803dc214;
 
 void objRenderFuzzFn_8003d6f8(void* objArg)
 {
     int obj = (int)objArg;
     int* renderHandle;
     double fade;
-    uint matColor;
-    undefined4 envColor;
-    uint ambColor;
-    uint tevColor;
-    undefined4 shadowParam;
+    u32 matColor;
+    u32 envColor;
+    u32 ambColor;
+    u32 tevColor;
+    u32 shadowParam;
     int shadowStride;
     int shadowTable;
-    undefined4 savedEnvColor;
+    u32 savedEnvColor;
     float mtx[12];
 
     savedEnvColor = DAT_803df670;
@@ -262,10 +262,10 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         FUN_8025a454(2, &ambColor);
         FUN_800175fc(2, renderHandle, obj);
         FUN_80017604();
-        FUN_80017620((uint)renderHandle);
+        FUN_80017620((u32)renderHandle);
     }
     envColor = savedEnvColor;
-    FUN_8025c510(0, (byte*)&envColor);
+    FUN_8025c510(0, (u8*)&envColor);
     FUN_8025c5f0(0, 0x1c);
     GXSetBlendMode(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
@@ -286,45 +286,45 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_80259288(2);
     matColor = DAT_803dc0c8;
     fade = (double)lbl_803DF684;
-    FUN_8025ca38(fade, fade, fade, fade, 0, (uint3*)&matColor);
+    FUN_8025ca38(fade, fade, fade, fade, 0, (u32*)&matColor);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
     FUN_8025cce8(1, 4, 5, 5);
     return;
 }
 
-void FUN_8003df64(undefined4 obj, undefined4 owner, int* cmdStream, float* outMtx)
+void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
 {
-    byte boneCount0;
-    byte boneCount1;
-    undefined cmdByte1;
-    undefined cmdByte2;
-    undefined b0;
-    undefined b1;
-    undefined b2;
-    undefined cmdByte0;
+    u8 boneCount0;
+    u8 boneCount1;
+    u8 cmdByte1;
+    u8 cmdByte2;
+    u8 b0;
+    u8 b1;
+    u8 b2;
+    u8 cmdByte0;
     int cache;
     float* srcMtx;
-    uint idx;
-    uint cmd;
-    undefined* cmdPtr;
+    u32 idx;
+    u32 cmd;
+    u8* cmdPtr;
     float* dstMtx;
     int tmp;
-    byte* tag;
-    undefined8 ctx;
+    u8* tag;
+    u64 ctx;
     float localMtx[22];
 
     ctx = FUN_80286834();
-    tmp = (int)((ulonglong)ctx >> 0x20);
+    tmp = (int)((u64)ctx >> 0x20);
     cache = FUN_8001779c();
     if (DAT_803dd8c8 == 1)
     {
         srcMtx = (float*)FUN_8001779c();
-        boneCount0 = *(byte*)(tmp + 0xf3);
-        boneCount1 = *(byte*)(tmp + 0xf4);
+        boneCount0 = *(u8*)(tmp + 0xf3);
+        boneCount1 = *(u8*)(tmp + 0xf4);
         dstMtx = srcMtx + 0x9c0;
         FUN_80017794(0);
-        for (tmp = 0; tmp < (int)((uint)boneCount0 + boneCount1); tmp = tmp + 1)
+        for (tmp = 0; tmp < (int)((u32)boneCount0 + boneCount1); tmp = tmp + 1)
         {
             FUN_80247618(outMtx, dstMtx, srcMtx);
             dstMtx = dstMtx + 0x10;
@@ -333,32 +333,32 @@ void FUN_8003df64(undefined4 obj, undefined4 owner, int* cmdStream, float* outMt
         DAT_803dd8c8 = 2;
     }
     cmd = cmdStream[4];
-    cmdByte0 = *(undefined*)(*cmdStream + ((int)cmd >> 3));
+    cmdByte0 = *(u8*)(*cmdStream + ((int)cmd >> 3));
     tmp = *cmdStream + ((int)cmd >> 3);
-    cmdByte1 = *(undefined*)(tmp + 1);
-    cmdByte2 = *(undefined*)(tmp + 2);
+    cmdByte1 = *(u8*)(tmp + 1);
+    cmdByte2 = *(u8*)(tmp + 2);
     cmdStream[4] = cmd + 4;
     tag = &DAT_802cbaa8;
     for (tmp = 0;
-         tmp < (int)((uint3)(CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0xf);
+         tmp < (int)((u32)(CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0xf);
          tmp = tmp + 1)
     {
         idx = cmdStream[4];
-        cmdPtr = (undefined*)(*cmdStream + ((int)idx >> 3));
+        cmdPtr = (u8*)(*cmdStream + ((int)idx >> 3));
         b0 = *cmdPtr;
         b1 = cmdPtr[1];
         b2 = cmdPtr[2];
         cmdStream[4] = idx + 8;
-        idx = (uint3)(CONCAT12(b2, CONCAT11(b1, b0)) >> (idx & 7)) & 0xff;
+        idx = (u32)(CONCAT12(b2, CONCAT11(b1, b0)) >> (idx & 7)) & 0xff;
         if (DAT_803dd8c8 == 2)
         {
-            FUN_8025d80c((float*)(cache + idx * 0x30), (uint) * tag);
+            FUN_8025d80c((float*)(cache + idx * 0x30), (u32) * tag);
         }
         else
         {
             srcMtx = (float*)FUN_80017970((int*)ctx, idx);
             FUN_80247618(outMtx, srcMtx, localMtx);
-            FUN_8025d80c(localMtx, (uint) * tag);
+            FUN_8025d80c(localMtx, (u32) * tag);
         }
         tag = tag + 1;
     }
@@ -366,17 +366,17 @@ void FUN_8003df64(undefined4 obj, undefined4 owner, int* cmdStream, float* outMt
     return;
 }
 
-char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, int useDecal,
+char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                  int extraFlags)
 {
     char brightness;
     bool singleHit;
-    byte hitCount;
-    uint boneCount;
+    u8 hitCount;
+    u32 boneCount;
     int modelData;
-    uint* entry;
-    uint* prevEntry;
-    uint texId;
+    u32* entry;
+    u32* prevEntry;
+    u32 texId;
     int boneEntry;
     char* desc;
     float* uvPtr;
@@ -384,30 +384,30 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
     int i;
     double u;
     double v;
-    undefined8 ctx;
+    u64 ctx;
     char r;
     char g;
     char b;
     char a;
     float uvMtx[13];
-    undefined4 convHi0;
-    uint convLo0;
-    undefined4 convHi1;
-    uint convLo1;
+    u32 convHi0;
+    u32 convLo0;
+    u32 convHi1;
+    u32 convLo1;
 
     ctx = FUN_80286820();
-    modelData = (int)((ulonglong)ctx >> 0x20);
+    modelData = (int)((u64)ctx >> 0x20);
     desc = (char*)(u32)ctx;
     singleHit = true;
     if ((*node != 0) || (node[1] != 0))
     {
         hitCount = 0;
-        for (i = 0; i < (int)(uint)(byte)desc[0x41];
+        for (i = 0; i < (int)(u32)(u8)desc[0x41];
         i = i + 1
         )
         {
             boneEntry = FUN_800480a0((int)desc, i);
-            if ((*(byte*)(boneEntry + 4) & 0x80) != 0)
+            if ((*(u8*)(boneEntry + 4) & 0x80) != 0)
             {
                 hitCount = hitCount + 1;
             }
@@ -421,23 +421,23 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
     i = 0;
     do
     {
-        if ((int)(uint)(byte)desc[0x41] <= i
+        if ((int)(u32)(u8)desc[0x41] <= i
         )
         {
             FUN_8028686c();
             return '\0';
         }
-        entry = (uint*)FUN_800480a0((int)desc, i);
-        if ((*(byte*)(entry + 1) & 0x80) == phaseMask)
+        entry = (u32*)FUN_800480a0((int)desc, i);
+        if ((*(u8*)(entry + 1) & 0x80) == phaseMask)
         {
-            if (((*(uint*)(desc + 0x3c) & 0x100000) != 0) && (i == 1))
+            if (((*(u32*)(desc + 0x3c) & 0x100000) != 0) && (i == 1))
             {
                 FUN_8004bc68(*node != 0);
                 FUN_8028686c();
                 return '\x01';
             }
             brightness = (char)
-            ((*(byte*)(modelData + 0x37) + 1) * (uint)(byte)
+            ((*(u8*)(modelData + 0x37) + 1) * (u32)(u8)
             desc[0xc] >> 8
             )
             ;
@@ -543,7 +543,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                 }
                 else
                 {
-                    boneCount = *(byte*)(prevEntry + 1) & 0x7f;
+                    boneCount = *(u8*)(prevEntry + 1) & 0x7f;
                     a = -1;
                 }
                 r = -1;
@@ -572,7 +572,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                         if ((desc[0x40] & 0x10U) == 0)
                         {
                             FUN_80051fc4(texId, uvPtr, boneCount, &DAT_803dd8d4,
-                                         (uint) * (byte*)(node + 2), 1);
+                                         (u32) * (u8*)(node + 2), 1);
                         }
                         else
                         {
@@ -582,7 +582,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                 }
                 else
                 {
-                    FUN_80051fc4(texId, uvPtr, boneCount, &r, (uint) * (byte*)(node + 2), 1);
+                    FUN_80051fc4(texId, uvPtr, boneCount, &r, (u32) * (u8*)(node + 2), 1);
                 }
             }
         }
@@ -592,56 +592,56 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
     while (true);
 }
 
-void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
+void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
 {
-    undefined cmdByte1;
-    undefined cmdByte2;
-    byte renderFlags;
-    undefined cmdByte0;
+    u8 cmdByte1;
+    u8 cmdByte2;
+    u8 renderFlags;
+    u8 cmdByte0;
     bool needsAlpha;
-    ushort* modelData;
+    u16* modelData;
     int subNode;
     code* callback;
     char callbackResult;
     int* hitList;
-    uint* decalEntry;
+    u32* decalEntry;
     float* projMtx;
     int obj;
     int lightCount;
     int lightSlot;
-    uint cmd;
+    u32 cmd;
     int light;
     int lightIdx;
-    byte* lightFlags;
-    uint texMaterial;
+    u8* lightFlags;
+    u32 texMaterial;
     int* lightId;
     double u;
     double v;
-    undefined8 ctx;
-    undefined4 envColor;
-    uint matColor;
-    undefined4 litColor;
-    undefined4 alphaColor;
+    u64 ctx;
+    u32 envColor;
+    u32 matColor;
+    u32 litColor;
+    u32 alphaColor;
     int lightInfo;
     int lightType;
     float viewMtx[12];
     float localMtx[12];
     float worldMtx[12];
-    undefined4 decalMtx[12];
-    undefined4 convHi0;
-    uint convLo0;
-    undefined4 convHi1;
-    uint convLo1;
+    u32 decalMtx[12];
+    u32 convHi0;
+    u32 convLo0;
+    u32 convHi1;
+    u32 convLo1;
 
     ctx = FUN_80286820();
-    modelData = (ushort*)((ulonglong)ctx >> 0x20);
+    modelData = (u16*)((u64)ctx >> 0x20);
     obj = (int)(u32)ctx;
     needsAlpha = false;
     cmd = cmdStream[4];
-    cmdByte0 = *(undefined*)(*cmdStream + ((int)cmd >> 3));
+    cmdByte0 = *(u8*)(*cmdStream + ((int)cmd >> 3));
     subNode = *cmdStream + ((int)cmd >> 3);
-    cmdByte1 = *(undefined*)(subNode + 1);
-    cmdByte2 = *(undefined*)(subNode + 2);
+    cmdByte1 = *(u8*)(subNode + 1);
+    cmdByte2 = *(u8*)(subNode + 2);
     cmdStream[4] = cmd + 6;
     cmd = (CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0x3f;
     callback = (code*)FUN_8001795c((int)node);
@@ -651,9 +651,9 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         hitList = (int*)FUN_80017978((int)node, cmd);
         FUN_80052904();
         texMaterial = 0;
-        if (((*hitList != 0) || (hitList[1] != 0)) && (*(uint*)(subNode + 0x34) != 0))
+        if (((*hitList != 0) || (hitList[1] != 0)) && (*(u32*)(subNode + 0x34) != 0))
         {
-            texMaterial = FUN_80053078(*(uint*)(subNode + 0x34));
+            texMaterial = FUN_80053078(*(u32*)(subNode + 0x34));
             lightCount = DAT_803dd8dc + 1;
             if (*hitList != 0)
             {
@@ -663,7 +663,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
             {
                 lightCount = lightCount + 1;
             }
-            texMaterial = FUN_8004b960(texMaterial, lightCount, (uint) * (byte*)(subNode + 0x42), *(uint*)(subNode + 0x24));
+            texMaterial = FUN_8004b960(texMaterial, lightCount, (u32) * (u8*)(subNode + 0x42), *(u32*)(subNode + 0x24));
             texMaterial = texMaterial & 0xff;
         }
         if (*hitList != 0)
@@ -673,18 +673,18 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if (hitList[1] == 0)
         {
             envColor = DAT_803dc0cc;
-            FUN_8025c428(3, (byte*)&envColor);
+            FUN_8025c428(3, (u8*)&envColor);
         }
         else
         {
             alphaColor = DAT_803dd8d4 & 0xffffff00;
             if (*(int*)(subNode + 0x1c) != 0)
             {
-                alphaColor = CONCAT31(0xffffff, *(undefined*)(subNode + 0x22));
+                alphaColor = CONCAT31(0xffffff, *(u8*)(subNode + 0x22));
             }
             matColor = alphaColor;
-            FUN_8025c428(3, (byte*)&matColor);
-            FUN_8004bf28(hitList[1], *hitList != 0, (uint) * (byte*)(subNode + 0x20));
+            FUN_8025c428(3, (u8*)&matColor);
+            FUN_8004bf28(hitList[1], *hitList != 0, (u32) * (u8*)(subNode + 0x20));
             if ((char)alphaColor != '\0')
             {
                 FUN_8004be30(*hitList != 0);
@@ -713,7 +713,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
                                     needsAlpha = true;
                                 }
                                 lightSlot = FUN_80017558(*lightId);
-                                FUN_8004b41c(light, lightSlot, lightType, lightInfo, (uint) * lightFlags);
+                                FUN_8004b41c(light, lightSlot, lightType, lightInfo, (u32) * lightFlags);
                             }
                             lightId = lightId + 1;
                             lightFlags = lightFlags + 1;
@@ -742,27 +742,27 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         {
             FUN_8004b8cc(texMaterial);
         }
-        if (((*(uint*)(subNode + 0x18) != 0) && (*(int*)(subNode + 0x1c) == 0)) && (hitList[1] != 0))
+        if (((*(u32*)(subNode + 0x18) != 0) && (*(int*)(subNode + 0x1c) == 0)) && (hitList[1] != 0))
         {
-            FUN_80053078(*(uint*)(subNode + 0x18));
+            FUN_80053078(*(u32*)(subNode + 0x18));
             FUN_8004bd68();
         }
         lightIdx = 0;
-        if (((*(ushort*)(obj + 0xe2) & 2) != 0) && ((*(byte*)(obj + 0x24) & 2) == 0))
+        if (((*(u16*)(obj + 0xe2) & 2) != 0) && ((*(u8*)(obj + 0x24) & 2) == 0))
         {
             lightIdx = 1;
         }
-        callbackResult = fn_8003EA84((undefined4)(u32)modelData, (undefined4)subNode, hitList, 0x80, lightIdx, lightCount);
+        callbackResult = fn_8003EA84((u32)(u32)modelData, (u32)subNode, hitList, 0x80, lightIdx, lightCount);
         if (callbackResult == '\0')
         {
             FUN_8004bc68(*hitList != 0);
         }
-        if ((*(uint*)(subNode + 0x3c) & 0x100000) != 0)
+        if ((*(u32*)(subNode + 0x3c) & 0x100000) != 0)
         {
-            decalEntry = (uint*)FUN_800480a0(subNode, 1);
+            decalEntry = (u32*)FUN_800480a0(subNode, 1);
             light = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
             lightSlot = 0;
-            for (texMaterial = (uint) * (byte*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0x59); texMaterial != 0;
+            for (texMaterial = (u32) * (u8*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0x59); texMaterial != 0;
                  texMaterial = texMaterial - 1)
             {
                 if (*(char*)((int)decalEntry + 5) == *(char*)(light + 1))
@@ -788,14 +788,14 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
             FUN_80053078(*decalEntry);
             FUN_80048178();
         }
-        fn_8003EA84((undefined4)(u32)modelData, (undefined4)subNode, hitList, 0, lightIdx, lightCount);
+        fn_8003EA84((u32)(u32)modelData, (u32)subNode, hitList, 0, lightIdx, lightCount);
         callbackResult = FUN_80048094();
-        if ((callbackResult != '\0') && ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x100) == 0))
+        if ((callbackResult != '\0') && ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x100) == 0))
         {
-            trackIntersect_getColorRgb((undefined*)&litColor);
+            trackIntersect_getColorRgb((u8*)&litColor);
             FUN_80049910(&litColor);
         }
-        if ((*(uint*)(subNode + 0x3c) & 0x100) != 0)
+        if ((*(u32*)(subNode + 0x3c) & 0x100) != 0)
         {
             projMtx = (float*)FUN_80006974();
             FUN_80017a50(modelData, localMtx, '\0');
@@ -808,12 +808,12 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         {
             FUN_80048f00(subNode);
         }
-        if (((*(byte*)((int)modelData + 0xe5) & 2) != 0) || ((*(byte*)((int)modelData + 0xe5) & 0x10) != 0))
+        if (((*(u8*)((int)modelData + 0xe5) & 2) != 0) || ((*(u8*)((int)modelData + 0xe5) & 0x10) != 0))
         {
-            alphaColor = *(uint*)(modelData + 0x76);
+            alphaColor = *(u32*)(modelData + 0x76);
             FUN_8005264c((char*)&alphaColor);
         }
-        if ((*(uint*)(subNode + 0x3c) & 0x20000) != 0)
+        if ((*(u32*)(subNode + 0x3c) & 0x20000) != 0)
         {
             PlayControl();
         }
@@ -822,13 +822,13 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         if (callback == (code*)0x0)
         {
             cmd = 1;
-            if (((*(char*)((int)modelData + 0x37) != -1) || ((*(uint*)(subNode + 0x3c) & 0x40000000) != 0))
+            if (((*(char*)((int)modelData + 0x37) != -1) || ((*(u32*)(subNode + 0x3c) & 0x40000000) != 0))
                 || (needsAlpha))
             {
                 FUN_8025cce8(1, 4, 5, 5);
-                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
-                    if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x2000) == 0)
+                    if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x2000) == 0)
                     {
                         gxSetZMode_(1, 3, 0);
                         FUN_8025c754(7, 0, 0, 7, 0);
@@ -846,10 +846,10 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
                     FUN_8025c754(7, 0, 0, 7, 0);
                 }
             }
-            else if ((*(uint*)(subNode + 0x3c) & 0x400) == 0)
+            else if ((*(u32*)(subNode + 0x3c) & 0x400) == 0)
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -862,7 +862,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
             else
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -872,7 +872,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
                 }
                 FUN_8025c754(4, 0x40, 0, 4, 0x40);
             }
-            if ((*(uint*)(subNode + 0x3c) & 0x400) != 0)
+            if ((*(u32*)(subNode + 0x3c) & 0x400) != 0)
             {
                 cmd = 0;
             }
@@ -882,7 +882,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
         {
             (*callback)(modelData, node, cmd);
         }
-        if ((*(uint*)(subNode + 0x3c) & 8) == 0)
+        if ((*(u32*)(subNode + 0x3c) & 8) == 0)
         {
             FUN_80259288(0);
         }
@@ -895,26 +895,26 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
     return;
 }
 
-void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
+void fn_8003F8EC(u32 objArg, u32 owner, int obj)
 {
-    ushort* modelData;
+    u16* modelData;
     int* renderNode;
     float* mtx;
     code* callback;
     char callbackResult;
-    uint texId;
+    u32 texId;
     int cmdPtr;
-    undefined4* texEntry;
+    u32* texEntry;
     int cmdOffset;
-    uint colorWord;
-    undefined4 litColor;
-    undefined4 color;
+    u32 colorWord;
+    u32 litColor;
+    u32 color;
     int cmdDesc[4];
     int cmdCursor;
     float worldMtx[12];
     float localMtx[22];
 
-    modelData = (ushort*)FUN_80286840();
+    modelData = (u16*)FUN_80286840();
     renderNode = (int*)FUN_80017a54((int)modelData);
     if (DAT_803dd8a4 == 0)
     {
@@ -927,10 +927,10 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
     }
     mtx = (float*)FUN_80006974();
     FUN_80247618(mtx, localMtx, worldMtx);
-    if ((*(ushort*)(renderNode + 6) & 8) == 0)
+    if ((*(u16*)(renderNode + 6) & 8) == 0)
     {
-        *(undefined*)(renderNode + 0x18) = 0;
-        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
+        *(u8*)(renderNode + 0x18) = 0;
+        if (((*(short*)(obj + 0xec) == 0) || ((*(u16 *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
             (*(char*)(obj + 0xf3) == '\0'))
         {
             FUN_8001796c((int)renderNode);
@@ -953,31 +953,31 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
             *(char*)(cmdOffset + 0xaf) = *(char*)(cmdOffset + 0xaf) + -1;
             if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
             {
-                *(undefined*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
+                *(u8*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
             }
         }
-        *(ushort*)(renderNode + 6) = *(ushort*)(renderNode + 6) | 8;
+        *(u16*)(renderNode + 6) = *(u16*)(renderNode + 6) | 8;
     }
-    texId = (uint) * (ushort*)(obj + 0xd8) << 3;
-    FUN_80006adc(cmdDesc, *(undefined4*)(obj + 0xd4), texId, texId);
-    if ((*(ushort*)(obj + 0xe2) & 2) == 0)
+    texId = (u32) * (u16*)(obj + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(u32*)(obj + 0xd4), texId, texId);
+    if ((*(u16*)(obj + 0xe2) & 2) == 0)
     {
         color = 0xffffff00;
     }
     else if (DAT_803dd8a8 == '\0')
     {
-        FUN_80080f88((uint) * (byte*)(modelData + 0x79), (byte*)&color, (byte*)((int)&color + 1),
-                     (byte*)((int)&color + 2));
+        FUN_80080f88((u32) * (u8*)(modelData + 0x79), (u8*)&color, (u8*)((int)&color + 1),
+                     (u8*)((int)&color + 2));
     }
     else
     {
-        *(byte*)&color = *(byte*)&DAT_803dd8d8;
-        *(byte*)((int)&color + 1) = *(byte*)((int)&DAT_803dd8d8 + 1);
-        *(byte*)((int)&color + 2) = *(byte*)((int)&DAT_803dd8d8 + 2);
+        *(u8*)&color = *(u8*)&DAT_803dd8d8;
+        *(u8*)((int)&color + 1) = *(u8*)((int)&DAT_803dd8d8 + 1);
+        *(u8*)((int)&color + 2) = *(u8*)((int)&DAT_803dd8d8 + 2);
         color = color << 8;
         DAT_803dd8a8 = '\0';
     }
-    *(undefined*)((int)&color + 3) = *(undefined*)((int)modelData + 0x37);
+    *(u8*)((int)&color + 3) = *(u8*)((int)modelData + 0x37);
     callback = (code*)FUN_8001795c((int)renderNode);
     if ((DAT_803dd8aa == '\0') || (callback != (code*)0x0))
     {
@@ -986,12 +986,12 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
         {
             trackIntersect_drawColorBand();
             FUN_80052904();
-            texId = FUN_80053078(*(uint*)(*(int*)(obj + 0x38) + 0x24));
+            texId = FUN_80053078(*(u32*)(*(int*)(obj + 0x38) + 0x24));
             FUN_80051fc4(texId, 0, 0, &color, 0, 0);
             callbackResult = FUN_80048094();
             if (callbackResult != '\0')
             {
-                trackIntersect_getColorRgb((undefined*)&litColor);
+                trackIntersect_getColorRgb((u8*)&litColor);
                 FUN_80049910(&litColor);
             }
             FUN_800528d0();
@@ -1004,43 +1004,43 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
     }
     else
     {
-        texId = FUN_80053078(*(uint*)(*(int*)(obj + 0x38) + 0x24));
+        texId = FUN_80053078(*(u32*)(*(int*)(obj + 0x38) + 0x24));
         if (DAT_803dd8ac != texId)
         {
             DAT_803dd8ac = texId;
             FUN_8004812c(texId, 0);
         }
-        if ((*(byte*)&DAT_803dc0e4 != *(byte*)&color) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 1) != *(byte*)((int)&color + 1)) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 2) != *(byte*)((int)&color + 2)) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 3) != *(byte*)((int)&color + 3)))
+        if ((*(u8*)&DAT_803dc0e4 != *(u8*)&color) ||
+            (*(u8*)((int)&DAT_803dc0e4 + 1) != *(u8*)((int)&color + 1)) ||
+            (*(u8*)((int)&DAT_803dc0e4 + 2) != *(u8*)((int)&color + 2)) ||
+            (*(u8*)((int)&DAT_803dc0e4 + 3) != *(u8*)((int)&color + 3)))
         {
             colorWord = color;
-            FUN_8025c510(0, (byte*)&colorWord);
+            FUN_8025c510(0, (u8*)&colorWord);
             DAT_803dc0e4 = color;
         }
     }
     if (DAT_803dd8b0 != obj)
     {
-        FUN_802585d8(9, renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7], 6);
-        FUN_802585d8(0xd, *(uint*)(obj + 0x34), 4);
+        FUN_802585d8(9, renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7], 6);
+        FUN_802585d8(0xd, *(u32*)(obj + 0x34), 4);
         DAT_803dd8b0 = obj;
     }
-    FUN_8003f3b4((undefined4)(u32)modelData, (undefined4)obj, *(int*)(obj + 0x38));
+    FUN_8003f3b4((u32)(u32)modelData, (u32)obj, *(int*)(obj + 0x38));
     cmdCursor = cmdCursor + 4;
-    FUN_8003e358(obj, *(undefined4*)(obj + 0x38), cmdDesc);
+    FUN_8003e358(obj, *(u32*)(obj + 0x38), cmdDesc);
     cmdCursor = cmdCursor + 4;
-    FUN_8003df64((undefined4)obj, (undefined4)renderNode, cmdDesc, worldMtx);
+    FUN_8003df64((u32)obj, (u32)renderNode, cmdDesc, worldMtx);
     texId = cmdCursor + 4;
     cmdOffset = texId >> 3;
     cmdPtr = cmdDesc[0] + cmdOffset;
     cmdCursor = cmdCursor + 0xc;
-    texEntry = (undefined4*)
-        FUN_80017914(obj, (CONCAT12(*(undefined*)(cmdPtr + 2),
-                                        CONCAT11(*(undefined*)(cmdPtr + 1),
-                                                 *(undefined*)(cmdDesc[0] + cmdOffset))) >>
+    texEntry = (u32*)
+        FUN_80017914(obj, (CONCAT12(*(u8*)(cmdPtr + 2),
+                                        CONCAT11(*(u8*)(cmdPtr + 1),
+                                                 *(u8*)(cmdDesc[0] + cmdOffset))) >>
                          (texId & 7)) & 0xff);
-    FUN_8025d63c(*texEntry, (uint) * (ushort*)(texEntry + 1));
+    FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
     FUN_8028688c();
     return;
 }
@@ -1061,36 +1061,36 @@ void FUN_8003f9f8(void)
     DAT_803dc0e4 = 0;
 }
 
-void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
+void fn_8003FDA8(u32 objArg, u32 owner, int obj)
 {
     bool done;
-    uint opcode;
-    uint nextCursor;
-    ushort* childNode;
-    ushort* modelData;
+    u32 opcode;
+    u32 nextCursor;
+    u16* childNode;
+    u16* modelData;
     int* renderNode;
     float* viewMtx;
     float* jointMtx;
-    ushort* leafNode;
-    undefined4* texEntry;
+    u16* leafNode;
+    u32* texEntry;
     int node;
-    uint fadeLevel;
-    undefined* cmdPtr;
+    u32 fadeLevel;
+    u8* cmdPtr;
     int subNode;
     double fade;
-    undefined8 ctx;
-    uint colorWord;
-    undefined4 envColor;
-    undefined4 matColor;
-    undefined4 glowColor;
+    u64 ctx;
+    u32 colorWord;
+    u32 envColor;
+    u32 matColor;
+    u32 glowColor;
     int cmdDesc[4];
-    uint cmdCursor;
+    u32 cmdCursor;
     float prevMtx[16];
     float localMtx[16];
     float worldMtx[25];
 
     ctx = FUN_80286838();
-    modelData = (ushort*)((ulonglong)ctx >> 0x20);
+    modelData = (u16*)((u64)ctx >> 0x20);
     renderNode = (int*)FUN_80017a54((int)modelData);
     viewMtx = (float*)FUN_80006974();
     if (DAT_803dd8a4 == 0)
@@ -1102,12 +1102,12 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         FUN_802475e4((float*)DAT_803dd8a4, localMtx);
         DAT_803dd8a4 = 0;
     }
-    if ((*(ushort*)(renderNode + 6) & 8) == 0)
+    if ((*(u16*)(renderNode + 6) & 8) == 0)
     {
         done = false;
-        *(undefined*)(renderNode + 0x18) = 0;
+        *(u8*)(renderNode + 0x18) = 0;
         FUN_80017968((int)renderNode);
-        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
+        if (((*(short*)(obj + 0xec) == 0) || ((*(u16 *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
             (*(char*)(obj + 0xf3) == '\0'))
         {
             FUN_8001796c((int)renderNode);
@@ -1128,7 +1128,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
                 FUN_800178d0(renderNode, localMtx, (float*)&DAT_80343a70);
             }
             done = !done;
-            if ((*(code**)(modelData + 0x84) != (code*)0x0) && ((ushort*)(u32)ctx == modelData))
+            if ((*(code**)(modelData + 0x84) != (code*)0x0) && ((u16*)(u32)ctx == modelData))
             {
                 (**(code**)(modelData + 0x84))(modelData, renderNode, localMtx);
             }
@@ -1145,12 +1145,12 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
             }
             else
             {
-                node = renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7];
+                node = renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7];
             }
             FUN_800179cc(&DAT_80343a70, obj + 0x88, node, renderNode[0x10],
-                         renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7]);
+                         renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7]);
             FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int *)&((GameObject *)obj)->anim.velocityZ, renderNode[0x11],
-                         *(byte*)(obj + 0x24) & 8);
+                         *(u8*)(obj + 0x24) & 8);
         }
         if (*(char*)(obj + 0xf7) == '\0')
         {
@@ -1160,19 +1160,19 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
                 *(char*)(node + 0xaf) = *(char*)(node + 0xaf) + -1;
                 if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
                 {
-                    *(undefined*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
+                    *(u8*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
                 }
             }
         }
         else
         {
-            FUN_800178f0(renderNode, obj, modelData, (float*)0x0, (int)(ushort*)(u32)ctx);
+            FUN_800178f0(renderNode, obj, modelData, (float*)0x0, (int)(u16*)(u32)ctx);
         }
-        *(ushort*)(renderNode + 6) = *(ushort*)(renderNode + 6) | 8;
+        *(u16*)(renderNode + 6) = *(u16*)(renderNode + 6) | 8;
     }
     FUN_8003c10c(obj, renderNode);
-    fadeLevel = (uint) * (ushort*)(obj + 0xd8) << 3;
-    FUN_80006adc(cmdDesc, *(undefined4*)(obj + 0xd4), fadeLevel, fadeLevel);
+    fadeLevel = (u32) * (u16*)(obj + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(u32*)(obj + 0xd4), fadeLevel, fadeLevel);
     childNode = modelData;
     if (*(int *)&((GameObject *)obj)->anim.targetObj != 0)
     {
@@ -1182,14 +1182,14 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
     do
     {
         leafNode = childNode;
-        childNode = *(ushort**)(leafNode + 0x62);
+        childNode = *(u16**)(leafNode + 0x62);
     }
-    while (childNode != (ushort*)0x0);
-    fadeLevel = (uint) * (byte*)(*(int*)(*(int*)(leafNode + 0x32) + 0xc) + 0x65);
+    while (childNode != (u16*)0x0);
+    fadeLevel = (u32) * (u8*)(*(int*)(*(int*)(leafNode + 0x32) + 0xc) + 0x65);
     if (fadeLevel == 0xff)
     {
         matColor = DAT_803dc0c8;
-        FUN_8025c428(3, (byte*)&matColor);
+        FUN_8025c428(3, (u8*)&matColor);
         FUN_8025cce8(0, 1, 0, 5);
     }
     else
@@ -1205,7 +1205,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         glowColor = glowColor << 0x10;
         glowColor = CONCAT31((u32)glowColor >> 8, 0xff);
         envColor = glowColor;
-        FUN_8025c428(3, (byte*)&envColor);
+        FUN_8025c428(3, (u8*)&envColor);
         FUN_8025cce8(2, 1, 0, 7);
     }
     FUN_80258944(0);
@@ -1220,7 +1220,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
     FUN_8025c368(0, 0, 0, 0, 1, 0);
     colorWord = DAT_803dc0c8;
     fade = (double)lbl_803DF684;
-    FUN_8025ca38(fade, fade, fade, fade, 0, (uint3*)&colorWord);
+    FUN_8025ca38(fade, fade, fade, fade, 0, (u32*)&colorWord);
     gxSetPeControl_ZCompLoc_(1);
     FUN_8025c754(7, 0, 0, 7, 0);
     FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
@@ -1235,23 +1235,23 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         gxSetZMode_(1, 3, 1);
         FUN_80259288(1);
     }
-    FUN_802585d8(9, renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7], 6);
+    FUN_802585d8(9, renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7], 6);
     done = false;
     fadeLevel = cmdCursor;
     while (cmdCursor = fadeLevel, !done)
     {
-        cmdPtr = (undefined*)(cmdDesc[0] + ((int)cmdCursor >> 3));
+        cmdPtr = (u8*)(cmdDesc[0] + ((int)cmdCursor >> 3));
         nextCursor = cmdCursor + 4;
         opcode = (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7)) & 0xf;
         if (opcode == 3)
         {
             cmdCursor = nextCursor;
             FUN_80257b5c();
-            if (1 < *(byte*)(obj + 0xf3))
+            if (1 < *(u8*)(obj + 0xf3))
             {
                 FUN_802570dc(0, 1);
             }
-            cmdPtr = (undefined*)(cmdDesc[0] + ((int)cmdCursor >> 3));
+            cmdPtr = (u8*)(cmdDesc[0] + ((int)cmdCursor >> 3));
             if ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7) & 1) == 0)
             {
                 fadeLevel = 2;
@@ -1262,11 +1262,11 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
             }
             cmdCursor = cmdCursor + 1;
             FUN_802570dc(9, fadeLevel);
-            if ((*(byte*)(subNode + 0x40) & 1) != 0)
+            if ((*(u8*)(subNode + 0x40) & 1) != 0)
             {
                 cmdCursor = cmdCursor + 1;
             }
-            if ((*(byte*)(subNode + 0x40) & 2) != 0)
+            if ((*(u8*)(subNode + 0x40) & 2) != 0)
             {
                 cmdCursor = cmdCursor + 1;
             }
@@ -1277,7 +1277,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         {
             if (opcode == 1)
             {
-                cmdPtr = (undefined*)(cmdDesc[0] + ((int)nextCursor >> 3));
+                cmdPtr = (u8*)(cmdDesc[0] + ((int)nextCursor >> 3));
                 cmdCursor = cmdCursor + 10;
                 subNode = FUN_8001792c(obj,
                                       (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
@@ -1286,13 +1286,13 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
             }
             else if (opcode != 0)
             {
-                cmdPtr = (undefined*)(cmdDesc[0] + ((int)nextCursor >> 3));
+                cmdPtr = (u8*)(cmdDesc[0] + ((int)nextCursor >> 3));
                 cmdCursor = cmdCursor + 0xc;
-                texEntry = (undefined4*)
-                    FUN_80017914(obj, (uint) * (byte*)(obj + 0xf5) +
+                texEntry = (u32*)
+                    FUN_80017914(obj, (u32) * (u8*)(obj + 0xf5) +
                                  ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
                                      (nextCursor & 7)) & 0xff));
-                FUN_8025d63c(*texEntry, (uint) * (ushort*)(texEntry + 1));
+                FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
                 fadeLevel = cmdCursor;
             }
         }
@@ -1303,7 +1303,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         else if (opcode == 4)
         {
             cmdCursor = nextCursor;
-            FUN_8003df64((undefined4)obj, (undefined4)renderNode, cmdDesc, viewMtx);
+            FUN_8003df64((u32)obj, (u32)renderNode, cmdDesc, viewMtx);
             fadeLevel = cmdCursor;
         }
     }
@@ -1311,13 +1311,13 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
     return;
 }
 
-void FUN_800400ac(undefined4 obj, undefined4 owner, int model, uint shadowMode)
+void FUN_800400ac(u32 obj, u32 owner, int model, u32 shadowMode)
 {
 }
 
 void FUN_800400b0(void)
 {
-    ushort* obj;
+    u16* obj;
     int* renderNode;
     float* jointMtx;
     int jointIdx;
@@ -1326,14 +1326,14 @@ void FUN_800400b0(void)
     float* outVol;
     ObjDefHitVolume* vol;
 
-    obj = (ushort*)FUN_80286838();
+    obj = (u16*)FUN_80286838();
     volumes = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
     outVol = *(float**)&((GameObject*)obj)->anim.hitVolumeTransforms;
-    if ((*(byte*)((int)obj + 0xaf) & 0x28) == 0)
+    if ((*(u8*)((int)obj + 0xaf) & 0x28) == 0)
     {
         renderNode = (int*)FUN_80017a54((int)obj);
         vol = volumes;
-        for (i = 0; i < (int)(uint)((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i = i + 1)
+        for (i = 0; i < (int)(u32)((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i = i + 1)
         {
             jointIdx = vol->jointIndices[((GameObject*)obj)->anim.bankIndex];
             if (jointIdx < 0)
@@ -1354,7 +1354,7 @@ void FUN_800400b0(void)
     return;
 }
 
-void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
+void FUN_800401a0(float* mtx, float* out, short* in, int flag, u16* obj,
                   int e)
 {
     float local_98;
@@ -1363,20 +1363,20 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
     float local_8c;
     float local_88;
     float local_84;
-    ushort local_80;
-    ushort local_7e;
-    ushort local_7c;
+    u16 local_80;
+    u16 local_7e;
+    u16 local_7c;
     float local_78;
-    undefined4 local_74;
-    undefined4 local_70;
-    undefined4 local_6c;
+    u32 local_74;
+    u32 local_70;
+    u32 local_6c;
     float afStack_68[16];
-    undefined4 local_28;
-    uint uStack_24;
-    undefined4 local_20;
-    uint uStack_1c;
-    undefined4 local_18;
-    uint uStack_14;
+    u32 local_28;
+    u32 uStack_24;
+    u32 local_20;
+    u32 uStack_1c;
+    u32 local_18;
+    u32 uStack_14;
 
     uStack_24 = (int)*in ^ 0x80000000;
     local_28 = 0x43300000;
@@ -1398,9 +1398,9 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
     }
     if (mtx == (float*)0x0)
     {
-        local_74 = *(undefined4*)&((GameObject*)obj)->anim.worldPosX;
-        local_70 = *(undefined4*)&((GameObject*)obj)->anim.worldPosY;
-        local_6c = *(undefined4*)&((GameObject*)obj)->anim.worldPosZ;
+        local_74 = *(u32*)&((GameObject*)obj)->anim.worldPosX;
+        local_70 = *(u32*)&((GameObject*)obj)->anim.worldPosY;
+        local_6c = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
         if (flag == 0)
         {
             local_80 = *obj;
@@ -1439,7 +1439,7 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
     return;
 }
 
-void FUN_8004036c(undefined4 mtx)
+void FUN_8004036c(u32 mtx)
 {
     DAT_803dd8a4 = mtx;
     return;
@@ -1470,7 +1470,7 @@ void FUN_800406cc(int obj)
         if (((GameObject*)obj)->anim.classId == 1)
         {
             model = obj;
-            for (i = 0; i < (int)(uint)((GameObject*)obj)->childCount; i = i + 1)
+            for (i = 0; i < (int)(u32)((GameObject*)obj)->childCount; i = i + 1)
             {
                 if (*(int*)&((GameObject*)model)->childObjs[0] != 0)
                 {
@@ -1483,13 +1483,13 @@ void FUN_800406cc(int obj)
     return;
 }
 
-void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
+void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
 {
-    undefined2* child;
+    u16* child;
     int* parentNode;
     float* jointMtx;
-    undefined2* cam;
-    ushort* parent;
+    u16* cam;
+    u16* parent;
     int jointIdx;
     int bonePtr;
     int boneOff;
@@ -1499,20 +1499,20 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     double dx;
     double in_ps30_1;
     double in_ps31_1;
-    undefined8 pairWord;
+    u64 pairWord;
     float local_e8;
-    undefined4 local_e4;
+    u32 local_e4;
     float local_e0;
-    ushort local_dc;
-    undefined2 local_da;
-    undefined2 local_d8;
+    u16 local_dc;
+    u16 local_da;
+    u16 local_d8;
     float local_d4;
-    undefined4 local_d0;
-    undefined4 local_cc;
-    undefined4 local_c8;
+    u32 local_d0;
+    u32 local_cc;
+    u32 local_c8;
     float afStack_c4[3];
     float local_b8;
-    undefined4 local_a8;
+    u32 local_a8;
     float local_98;
     float afStack_84[27];
     float local_18;
@@ -1525,8 +1525,8 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     local_18 = (float)in_f30;
     fStack_14 = (float)in_ps30_1;
     pairWord = FUN_80286840();
-    child = (undefined2*)(ulonglong)(pairWord >> 0x20);
-    parent = (ushort*)(u32)pairWord;
+    child = (u16*)(u64)(pairWord >> 0x20);
+    parent = (u16*)(u32)pairWord;
     if (lbl_803DF684 == *(float*)(child + 4))
     {
         DAT_803dd8a4 = 0;
@@ -1535,12 +1535,12 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
     {
         FUN_80017a54((int)child);
         parentNode = (int*)FUN_80017a54((int)parent);
-        boneOff = ((ushort)child[0x58] & 7) * 0x18;
+        boneOff = ((u16)child[0x58] & 7) * 0x18;
         bonePtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
         jointIdx = (int)*(char*)(bonePtr + ((GameObject*)parent)->anim.bankIndex + 0x12);
-        local_d0 = *(undefined4*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
-        local_cc = *(undefined4*)(bonePtr + 4);
-        local_c8 = *(undefined4*)(bonePtr + 8);
+        local_d0 = *(u32*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
+        local_cc = *(u32*)(bonePtr + 4);
+        local_c8 = *(u32*)(bonePtr + 8);
         if (jointIdx == -1)
         {
             FUN_80017a50(parent, afStack_84, '\0');
@@ -1554,9 +1554,9 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
         {
             local_d4 = lbl_803DF69C;
             boneOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
-            local_dc = *(ushort*)(boneOff + 0xc);
-            local_da = *(undefined2*)(boneOff + 0xe);
-            local_d8 = *(undefined2*)(boneOff + 0x10);
+            local_dc = *(u16*)(boneOff + 0xc);
+            local_da = *(u16*)(boneOff + 0xe);
+            local_d8 = *(u16*)(boneOff + 0x10);
             FUN_80017700(&local_dc, afStack_c4);
             FUN_80247618(jointMtx, afStack_c4, afStack_c4);
         }
@@ -1570,7 +1570,7 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
             local_dc = boneOff + 0x8000;
             FUN_80293900((double)(float)(dx * dx + (double)(float)(dz * dz)));
             boneOff = FUN_80017730();
-            local_da = (undefined2)boneOff;
+            local_da = (u16)boneOff;
             local_d8 = cam[2];
             FUN_80017700(&local_dc, afStack_c4);
             local_e8 = local_b8;
@@ -1584,13 +1584,13 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
         if ((shadowFlag & 0xff) == 0)
         {
             *(float*)(child + 0xc) = local_b8 + lbl_803DDA58;
-            *(undefined4*)(child + 0xe) = local_a8;
+            *(u32*)(child + 0xe) = local_a8;
             *(float*)(child + 0x10) = local_98 + lbl_803DDA5C;
             if (*(int*)(child + 0x18) == 0)
             {
-                *(undefined4*)(child + 6) = *(undefined4*)(child + 0xc);
-                *(undefined4*)(child + 8) = *(undefined4*)(child + 0xe);
-                *(undefined4*)(child + 10) = *(undefined4*)(child + 0x10);
+                *(u32*)(child + 6) = *(u32*)(child + 0xc);
+                *(u32*)(child + 8) = *(u32*)(child + 0xe);
+                *(u32*)(child + 10) = *(u32*)(child + 0x10);
             }
             else
             {
@@ -1601,11 +1601,11 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
             FUN_8003bbfc(afStack_c4, child, child + 1, child + 2);
         }
         *(char*)((int)child + 0x37) =
-            (char)((*(byte*)(child + 0x1b) + 1) * (uint) * (byte*)((int)parent + 0x37) >> 8);
-        *(undefined*)((int)child + 0xf1) = *(undefined*)((int)parent + 0xf1);
+            (char)((*(u8*)(child + 0x1b) + 1) * (u32) * (u8*)((int)parent + 0x37) >> 8);
+        *(u8*)((int)child + 0xf1) = *(u8*)((int)parent + 0xf1);
         if ((child[3] & 0x4000) == 0)
         {
-            DAT_803dd8a4 = (undefined4)afStack_c4;
+            DAT_803dd8a4 = (u32)afStack_c4;
             if ((shadowFlag & 0xff) == 0)
             {
                 child[0x58] = child[0x58] | 0x800;
@@ -1627,7 +1627,7 @@ void FUN_80040a88(int obj)
     int* renderNode;
     int model;
     int sub;
-    undefined4 shadowColor;
+    u32 shadowColor;
     int screenZ;
     int screenY;
     int screenX;
@@ -1637,8 +1637,8 @@ void FUN_80040a88(int obj)
     int d4;
     int d3;
     float d2;
-    undefined4 d1[2];
-    longlong shadowWidth;
+    u32 d1[2];
+    s64 shadowWidth;
 
     renderNode = (int*)FUN_80017a54(obj);
     if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
@@ -1648,7 +1648,7 @@ void FUN_80040a88(int obj)
     else
     {
         model = *renderNode;
-        if ((*(ushort*)(model + 2) & 0x8000) == 0)
+        if ((*(u16*)(model + 2) & 0x8000) == 0)
         {
             sub = obj;
             if (*(int*)&((GameObject*)obj)->ownerObj != 0)
@@ -1667,7 +1667,7 @@ void FUN_80040a88(int obj)
             fn_8003F8EC(obj, sub, model);
         }
         model = obj;
-        for (sub = 0; sub < (int)(uint)((GameObject*)obj)->childCount; sub = sub + 1)
+        for (sub = 0; sub < (int)(u32)((GameObject*)obj)->childCount; sub = sub + 1)
         {
             if (*(int*)&((GameObject*)model)->childObjs[0] != 0)
             {
@@ -1714,17 +1714,17 @@ void FUN_80040a88(int obj)
             {
                 ((ObjModelState*)sub)->shadowAlpha = 0xff;
             }
-            *(undefined*)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent*)obj)->modelState->shadowAlpha;
+            *(u8*)((int)&DAT_803dc0e8 + 3) = ((ObjAnimComponent*)obj)->modelState->shadowAlpha;
             FUN_8006b03c(obj, d1, &d2, &d3, &d4);
             shadowColor = DAT_803dc0e8;
-            shadowWidth = (longlong)(int)(lbl_803DF6EC * d2);
+            shadowWidth = (s64)(int)(lbl_803DF6EC * d2);
             FUN_800709e4(d1[0], d3, d4, &shadowColor,
                          (int)(lbl_803DF6EC * d2), 1);
         }
     }
 }
 
-void FUN_80040cd0(undefined flag)
+void FUN_80040cd0(u8 flag)
 {
     DAT_803dd8a9 = flag;
     return;
@@ -1735,13 +1735,13 @@ void FUN_80040da0(void)
     bool done;
     int mode;
     int status;
-    uint newPtr;
-    undefined4 delay;
+    u32 newPtr;
+    u32 delay;
     int i;
-    uint* slotPtr;
+    u32* slotPtr;
     short* idTblPtr;
     int* sizePtr;
-    undefined* flagPtr;
+    u8* flagPtr;
     int pass;
 
     mode = FUN_80286828();
@@ -1908,13 +1908,13 @@ void FUN_80040da0(void)
     return;
 }
 
-void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_80041c10(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int charId)
 {
     int charPos;
-    undefined8 extraout_f1;
-    undefined8 acc;
+    u64 extraout_f1;
+    u64 acc;
 
     if (*(short*)(&DAT_802cc9d4 + charId * 2) != -1)
     {
@@ -1939,8 +1939,8 @@ void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-int FUN_80041ff8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                 undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+int FUN_80041ff8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                 u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                  int mapId)
 {
     int slot;
@@ -1999,9 +1999,9 @@ void FUN_80042800(void)
     return;
 }
 
-undefined4 FUN_80042838(void)
+u32 FUN_80042838(void)
 {
-    undefined4 flags;
+    u32 flags;
 
     FUN_80243e74();
     flags = DAT_803dd900;
@@ -2028,7 +2028,7 @@ int FUN_80042b9c(int val, int idx, int reset)
     return -1;
 }
 
-int FUN_80042bec(undefined4 val, int idx)
+int FUN_80042bec(u32 val, int idx)
 {
     if ((&DAT_803dc210)[idx] == -2)
     {
@@ -2038,65 +2038,65 @@ int FUN_80042bec(undefined4 val, int idx)
     return (&DAT_803dc210)[idx];
 }
 
-void FUN_80043030(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_80043030(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
 }
 
-undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
+u32 FUN_80043E64(u32* dstBuf, int srcIdxA, int srcIdxB)
 {
     bool srcADone;
     bool srcBDone;
-    uint* srcB;
+    u32* srcB;
     int writeIdx;
     int count;
-    uint val;
-    uint* srcAlt;
-    uint* srcA;
-    uint* out;
-    uint* outAlt;
+    u32 val;
+    u32* srcAlt;
+    u32* srcA;
+    u32* out;
+    u32* outAlt;
 
     writeIdx = 0;
     srcADone = false;
     srcBDone = false;
     count = 0;
-    srcA = (uint*)(&DAT_80360048)[srcIdxA];
+    srcA = (u32*)(&DAT_80360048)[srcIdxA];
     if (((srcA == 0x0) || ((&DAT_80360048)[srcIdxB] == 0)) &&
         (srcADone = srcA == 0x0, (&DAT_80360048)[srcIdxB] == 0))
     {
         srcBDone = true;
     }
-    srcB = (uint*)(&DAT_80360048)[srcIdxB];
-    if (dstBuf == (uint*)&DAT_8035db50)
+    srcB = (u32*)(&DAT_80360048)[srcIdxB];
+    if (dstBuf == (u32*)&DAT_8035db50)
     {
         count = 0x800;
     }
-    else if (dstBuf == (uint*)&DAT_8035ac70)
+    else if (dstBuf == (u32*)&DAT_8035ac70)
     {
         count = 3000;
     }
-    else if (dstBuf == (uint*)&DAT_80356c70)
+    else if (dstBuf == (u32*)&DAT_80356c70)
     {
         count = 0x1000;
     }
-    else if (dstBuf == (uint*)&DAT_80352c70)
+    else if (dstBuf == (u32*)&DAT_80352c70)
     {
         count = 0x1000;
     }
-    else if (dstBuf == (uint*)&DAT_80350c70)
+    else if (dstBuf == (u32*)&DAT_80350c70)
     {
         count = 0x800;
     }
-    else if (dstBuf == (uint*)&DAT_8034ec70)
+    else if (dstBuf == (u32*)&DAT_8034ec70)
     {
         count = 0x800;
     }
-    else if (dstBuf == (uint*)&DAT_80346d30)
+    else if (dstBuf == (u32*)&DAT_80346d30)
     {
         count = 0x1fd0;
     }
     out = dstBuf;
-    if ((dstBuf == (uint*)&DAT_80356c70) || (dstBuf == (uint*)&DAT_80352c70))
+    if ((dstBuf == (u32*)&DAT_80356c70) || (dstBuf == (u32*)&DAT_80352c70))
     {
         for (; count != 0; count = count + -1)
         {
@@ -2144,9 +2144,9 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
             out = out + 1;
         }
     }
-    else if (dstBuf == (uint*)&DAT_80350c70)
+    else if (dstBuf == (u32*)&DAT_80350c70)
     {
-        out = (uint*)&DAT_80350c70;
+        out = (u32*)&DAT_80350c70;
         srcAlt = srcA;
         outAlt = srcB;
         for (; count != 0; count = count + -1)
@@ -2210,9 +2210,9 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
             writeIdx = writeIdx + 1;
         }
     }
-    else if (dstBuf == (uint*)&DAT_8034ec70)
+    else if (dstBuf == (u32*)&DAT_8034ec70)
     {
-        out = (uint*)&DAT_8034ec70;
+        out = (u32*)&DAT_8034ec70;
         for (; count != 0; count = count + -1)
         {
             if ((srcADone) || (*srcA != 0xffffffff))
@@ -2271,9 +2271,9 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
         out = srcA;
         srcAlt = srcB;
         outAlt = dstBuf;
-        if (dstBuf == (uint*)&DAT_80346d30)
+        if (dstBuf == (u32*)&DAT_80346d30)
         {
-            out = (uint*)&DAT_80346d30;
+            out = (u32*)&DAT_80346d30;
             for (; count != 0; count = count + -1)
             {
                 if ((srcADone) || (*srcA != 0xffffffff))

@@ -5,116 +5,116 @@
 #include "main/game_object.h"
 #include "main/pi_dolphin.h"
 
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_8000697c();
-extern undefined4 FUN_80006988();
-extern uint FUN_80006a90();
-extern undefined4 FUN_80006aa8();
-extern undefined4 FUN_80006c30();
+extern u32 FUN_80003494();
+extern u32 FUN_8000697c();
+extern u32 FUN_80006988();
+extern u32 FUN_80006a90();
+extern u32 FUN_80006aa8();
+extern u32 FUN_80006c30();
 extern double FUN_80017714();
-extern undefined8 FUN_80017814();
+extern u64 FUN_80017814();
 extern int FUN_80017830();
 extern void newshadows_getBlankShadowTexture(int* textureOut);
 extern void newshadows_getShadowNoiseTexture(int* textureOut);
 extern void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 FUN_800723a0();
-extern undefined4 FUN_802420b0();
-extern undefined4 FUN_80242114();
-extern undefined4 FUN_80243e74();
-extern undefined4 FUN_80243e9c();
-extern undefined4 FUN_80246190();
-extern undefined4 FUN_802461cc();
-extern undefined8 FUN_80246298();
-extern undefined4 FUN_80246308();
-extern undefined4 FUN_802464ec();
-extern undefined4 FUN_802471c4();
-extern undefined4 FUN_80247618();
-extern undefined4 PSVECDotProduct();
+extern u32 FUN_800723a0();
+extern u32 FUN_802420b0();
+extern u32 FUN_80242114();
+extern u32 FUN_80243e74();
+extern u32 FUN_80243e9c();
+extern u32 FUN_80246190();
+extern u32 FUN_802461cc();
+extern u64 FUN_80246298();
+extern u32 FUN_80246308();
+extern u32 FUN_802464ec();
+extern u32 FUN_802471c4();
+extern u32 FUN_80247618();
+extern u32 PSVECDotProduct();
 extern int FUN_80249300();
-extern undefined4 FUN_802493c8();
-extern undefined4 FUN_8024de40();
-extern undefined4 FUN_80256b2c();
-extern undefined8 FUN_80256c08();
-extern undefined4 FUN_80258664();
-extern undefined4 FUN_80258674();
-extern undefined4 FUN_80258a04();
-extern undefined4 FUN_80258b60();
-extern undefined4 FUN_80259858();
-extern undefined8 FUN_80259a9c();
-extern undefined4 FUN_8025aeac();
-extern undefined4 FUN_8025b054();
-extern undefined4 FUN_8025b210();
-extern undefined4 FUN_8025b94c();
-extern undefined4 FUN_8025b9e8();
-extern undefined4 FUN_8025bb48();
-extern undefined4 FUN_8025bd1c();
-extern undefined4 FUN_8025be80();
-extern undefined4 FUN_8025c1a4();
-extern undefined4 FUN_8025c224();
-extern undefined4 FUN_8025c2a8();
-extern undefined4 FUN_8025c368();
-extern undefined4 FUN_8025c510();
-extern undefined4 GXSetBlendMode();
-extern undefined4 FUN_8025c65c();
-extern undefined4 FUN_8025c828();
-extern undefined8 FUN_8025ce2c();
-extern undefined4 FUN_8025d8c4();
-extern undefined4 FUN_8025dc78();
+extern u32 FUN_802493c8();
+extern u32 FUN_8024de40();
+extern u32 FUN_80256b2c();
+extern u64 FUN_80256c08();
+extern u32 FUN_80258664();
+extern u32 FUN_80258674();
+extern u32 FUN_80258a04();
+extern u32 FUN_80258b60();
+extern u32 FUN_80259858();
+extern u64 FUN_80259a9c();
+extern u32 FUN_8025aeac();
+extern u32 FUN_8025b054();
+extern u32 FUN_8025b210();
+extern u32 FUN_8025b94c();
+extern u32 FUN_8025b9e8();
+extern u32 FUN_8025bb48();
+extern u32 FUN_8025bd1c();
+extern u32 FUN_8025be80();
+extern u32 FUN_8025c1a4();
+extern u32 FUN_8025c224();
+extern u32 FUN_8025c2a8();
+extern u32 FUN_8025c368();
+extern u32 FUN_8025c510();
+extern u32 GXSetBlendMode();
+extern u32 FUN_8025c65c();
+extern u32 FUN_8025c828();
+extern u64 FUN_8025ce2c();
+extern u32 FUN_8025d8c4();
+extern u32 FUN_8025dc78();
 extern int FUN_80286718();
-extern uint FUN_80286834();
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
+extern u32 FUN_80286834();
+extern u64 FUN_8028683c();
+extern u64 FUN_80286840();
+extern u32 FUN_80286880();
+extern u32 FUN_80286888();
+extern u32 FUN_8028688c();
 extern double FUN_80286cd0();
-extern uint countLeadingZeros();
+extern u32 countLeadingZeros();
 
-extern undefined4 DAT_800000f8;
-extern undefined4 DAT_802c24e8;
-extern undefined4 DAT_802c24ec;
-extern undefined4 DAT_802c24f0;
-extern undefined4 DAT_802c24f4;
-extern undefined4 DAT_802c24f8;
-extern undefined4 DAT_802c24fc;
+extern u32 DAT_800000f8;
+extern u32 DAT_802c24e8;
+extern u32 DAT_802c24ec;
+extern u32 DAT_802c24f0;
+extern u32 DAT_802c24f4;
+extern u32 DAT_802c24f8;
+extern u32 DAT_802c24fc;
 extern int DAT_802cc8a8;
-extern undefined4 DAT_8032f2b4;
+extern u32 DAT_8032f2b4;
 extern int DAT_80360048;
-extern undefined4 DAT_80360390;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc071;
-extern undefined4 DAT_803dc22c;
-extern undefined4 DAT_803dc22e;
-extern undefined4 DAT_803dc234;
-extern undefined4 DAT_803dd5d0;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803dd927;
-extern undefined4 DAT_803dd92c;
-extern undefined4 DAT_803dd944;
-extern undefined4 DAT_803dd950;
-extern undefined4 DAT_803dd954;
-extern undefined4 DAT_803dd95c;
-extern undefined4 DAT_803dd968;
-extern undefined4 DAT_803dd96c;
-extern undefined4* DAT_803dd970;
-extern undefined4 DAT_803dd988;
-extern undefined4 DAT_803dd9a8;
-extern undefined4 DAT_803dd9b0;
-extern undefined4 DAT_803dd9b1;
-extern undefined4 DAT_803dd9e8;
-extern undefined4 DAT_803dd9e9;
-extern undefined4 DAT_803dd9ea;
-extern undefined4 DAT_803dd9ec;
-extern undefined4 DAT_803dd9f0;
-extern undefined4 DAT_803dd9f4;
-extern undefined4 DAT_803dd9fc;
-extern undefined4 DAT_803dda00;
-extern undefined4 DAT_803dda08;
-extern undefined4 DAT_803dda0c;
-extern undefined4 DAT_803dda10;
-extern undefined4 DAT_cc008000;
+extern u32 DAT_80360390;
+extern u32 DAT_803dc070;
+extern u32 DAT_803dc071;
+extern u32 DAT_803dc22c;
+extern u32 DAT_803dc22e;
+extern u32 DAT_803dc234;
+extern u32 DAT_803dd5d0;
+extern u32* DAT_803dd71c;
+extern u32 DAT_803dd927;
+extern u32 DAT_803dd92c;
+extern u32 DAT_803dd944;
+extern u32 DAT_803dd950;
+extern u32 DAT_803dd954;
+extern u32 DAT_803dd95c;
+extern u32 DAT_803dd968;
+extern u32 DAT_803dd96c;
+extern u32* DAT_803dd970;
+extern u32 DAT_803dd988;
+extern u32 DAT_803dd9a8;
+extern u32 DAT_803dd9b0;
+extern u32 DAT_803dd9b1;
+extern u32 DAT_803dd9e8;
+extern u32 DAT_803dd9e9;
+extern u32 DAT_803dd9ea;
+extern u32 DAT_803dd9ec;
+extern u32 DAT_803dd9f0;
+extern u32 DAT_803dd9f4;
+extern u32 DAT_803dd9fc;
+extern u32 DAT_803dda00;
+extern u32 DAT_803dda08;
+extern u32 DAT_803dda0c;
+extern u32 DAT_803dda10;
+extern u32 DAT_cc008000;
 extern f64 DOUBLE_803df700;
 extern f64 DOUBLE_803df728;
 extern f32 lbl_803DC074;
@@ -144,7 +144,7 @@ extern f32 lbl_803DF7A8;
 extern f32 lbl_803DF7AC;
 extern char* sResourceFileNameTable[];
 extern char sRomlistZlbPathFormat[];
-extern undefined uRam803dc24f;
+extern u8 uRam803dc24f;
 
 extern char sResourceFileNameAudioTab[];
 extern u8 lbl_80345E10[];
@@ -233,7 +233,7 @@ struct MldfTables
 
 #pragma scheduling off
 #pragma peephole off
-undefined4 mapLoadDataFile(int mapId, int fileId)
+u32 mapLoadDataFile(int mapId, int fileId)
 {
     struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
@@ -2754,19 +2754,19 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_800443fc(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_800443fc(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
 }
 
-void FUN_80044400(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, uint param_11, uint param_12, uint* param_13,
-                  int param_14, uint param_15, undefined4 param_16)
+void FUN_80044400(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9, u32 param_10, u32 param_11, u32 param_12, u32* param_13,
+                  int param_14, u32 param_15, u32 param_16)
 {
 }
 
-undefined4 FUN_80044404(int idx)
+u32 FUN_80044404(int idx)
 {
     if (0x4a < idx)
     {
@@ -2775,8 +2775,8 @@ undefined4 FUN_80044404(int idx)
     return (&DAT_802cc8a8)[idx];
 }
 
-void FUN_80044424(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_80044424(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
 }
 
@@ -2833,18 +2833,18 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, uint param_11, uint param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+void FUN_80045328(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9, u32 param_10, u32 param_11, u32 param_12,
+                  u32 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
-    uint aligned;
+    u32 aligned;
     int resIdx;
-    uint scratch;
-    uint dst;
-    undefined8 extraout_f1;
-    undefined8 src;
-    ulonglong pairWord;
+    u32 scratch;
+    u32 dst;
+    u64 extraout_f1;
+    u64 src;
+    u64 pairWord;
     int aiStack_58[22];
 
     pairWord = FUN_80286840();
@@ -2899,22 +2899,22 @@ void FUN_80045be8(void)
     return;
 }
 
-undefined4 FUN_80045c4c(char tick)
+u32 FUN_80045c4c(char tick)
 {
     bool wasFront;
-    uint one;
-    undefined4* matPtr;
-    undefined8 pairWord;
-    undefined4 mat0;
-    undefined4 uStack_24;
-    undefined4 local_20;
-    undefined4 local_1c;
-    uint local_18;
+    u32 one;
+    u32* matPtr;
+    u64 pairWord;
+    u32 mat0;
+    u32 uStack_24;
+    u32 local_20;
+    u32 local_1c;
+    u32 local_18;
 
     one = 1;
     gxSetZMode_(1, 3, 1);
     pairWord = FUN_8025ce2c(1);
-    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), pairWord, one);
+    FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, one);
     matPtr = &mat0;
     FUN_80256b2c(DAT_803dd954, &uStack_24, matPtr);
     local_20 = mat0;
@@ -2928,9 +2928,9 @@ undefined4 FUN_80045c4c(char tick)
         DAT_803dd927 = '\x01';
     }
     FUN_80243e9c();
-    FUN_80258b60((uint)DAT_803dc22e);
+    FUN_80258b60((u32)DAT_803dc22e);
     pairWord = FUN_80259a9c(DAT_803dd950, 1);
-    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), pairWord, matPtr);
+    FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, matPtr);
     DAT_803dc22e = DAT_803dc22e + 1;
     wasFront = DAT_803dd950 == DAT_803dd96c;
     DAT_803dd950 = DAT_803dd96c;
@@ -2951,39 +2951,39 @@ void fn_8004A8F8(char enabled)
 {
     if (enabled == '\0')
     {
-        *(undefined*)&DAT_cc008000 = 0x61;
+        *(u8*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x24000000;
-        *(undefined*)&DAT_cc008000 = 0x61;
+        *(u8*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x23000000;
-        *(undefined*)&DAT_cc008000 = 0x10;
-        *(undefined2*)&DAT_cc008000 = 0;
-        *(undefined2*)&DAT_cc008000 = 0x1006;
+        *(u8*)&DAT_cc008000 = 0x10;
+        *(u16*)&DAT_cc008000 = 0;
+        *(u16*)&DAT_cc008000 = 0x1006;
         DAT_cc008000 = 0;
     }
     else
     {
         FUN_8025dc78(0x23, 0x16);
-        *(undefined*)&DAT_cc008000 = 0x61;
+        *(u8*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x2402c004;
-        *(undefined*)&DAT_cc008000 = 0x61;
+        *(u8*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x23000020;
-        *(undefined*)&DAT_cc008000 = 0x10;
-        *(undefined2*)&DAT_cc008000 = 0;
-        *(undefined2*)&DAT_cc008000 = 0x1006;
+        *(u8*)&DAT_cc008000 = 0x10;
+        *(u16*)&DAT_cc008000 = 0;
+        *(u16*)&DAT_cc008000 = 0x1006;
         DAT_cc008000 = 0x84400;
     }
 }
 
 void FUN_8004600c(void)
 {
-    uint frac;
-    uint whole;
+    u32 frac;
+    u32 whole;
     double elapsed;
-    undefined8 pairWord;
+    u64 pairWord;
 
     FUN_802461cc(-0x7fc9fd20);
     pairWord = FUN_80246298(-0x7fc9fd20);
-    elapsed = FUN_80286cd0((uint)((ulonglong)pairWord >> 0x20), pairWord);
+    elapsed = FUN_80286cd0((u32)((u64)pairWord >> 0x20), pairWord);
     lbl_803DD940 =
         (float)(elapsed / (double)(float)((double)CONCAT44(0x43300000, DAT_800000f8 / 4000) -
             DOUBLE_803df700));
@@ -3003,9 +3003,9 @@ void FUN_8004600c(void)
     {
         lbl_803DC078 = lbl_803DF6F8 / lbl_803DC074;
     }
-    whole = (uint)(lbl_803DC074 + lbl_803DD934);
+    whole = (u32)(lbl_803DC074 + lbl_803DD934);
     frac = whole & 0xff;
-    DAT_803dc071 = (undefined)whole;
+    DAT_803dc071 = (u8)whole;
     lbl_803DD934 =
         (lbl_803DC074 + lbl_803DD934) -
         (float)((double)CONCAT44(0x43300000, frac) - DOUBLE_803df700);
@@ -3033,9 +3033,9 @@ void FUN_8004600c(void)
     return;
 }
 
-uint FUN_800461b4(int* ctx, int* entry)
+u32 FUN_800461b4(int* ctx, int* entry)
 {
-    uint clz;
+    u32 clz;
     int node;
     int target;
     int matchVal;
@@ -3050,14 +3050,14 @@ uint FUN_800461b4(int* ctx, int* entry)
         clz = countLeadingZeros(target - matchVal);
         return clz >> 5;
     }
-    if ((*(byte*)(entry + 3) & 0x80) == 0)
+    if ((*(u8*)(entry + 3) & 0x80) == 0)
     {
-        if (*(byte*)(target + 3) != 0)
+        if (*(u8*)(target + 3) != 0)
         {
-            clz = countLeadingZeros((uint) * (byte*)(target + 3) - matchVal);
+            clz = countLeadingZeros((u32) * (u8*)(target + 3) - matchVal);
             return clz >> 5;
         }
-        base = *(int*)(*ctx + (uint) * (byte*)(entry + 3) * 0x10);
+        base = *(int*)(*ctx + (u32) * (u8*)(entry + 3) * 0x10);
         i = 0;
         remaining = 4;
         node = base;
@@ -3065,7 +3065,7 @@ uint FUN_800461b4(int* ctx, int* entry)
         {
             if (*(int*)(target + 0x14) == *(int*)(node + 0x1c))
             {
-                clz = countLeadingZeros((uint) * (byte*)(i + base + 4) - matchVal);
+                clz = countLeadingZeros((u32) * (u8*)(i + base + 4) - matchVal);
                 return clz >> 5;
             }
             node = node + 4;
@@ -3079,51 +3079,51 @@ uint FUN_800461b4(int* ctx, int* entry)
 
 void FUN_80046270(int heap, int size, int idx)
 {
-    undefined2 tag;
-    uint* slot;
-    uint childKey;
-    uint* child;
-    uint key;
+    u16 tag;
+    u32* slot;
+    u32 childKey;
+    u32* child;
+    u32 key;
     int childIdx;
 
-    key = *(uint*)(heap + idx * 8);
-    tag = *(undefined2*)(heap + idx * 8 + 4);
+    key = *(u32*)(heap + idx * 8);
+    tag = *(u16*)(heap + idx * 8 + 4);
     while (idx <= size >> 1)
     {
         childIdx = idx * 2;
-        if ((childIdx < size) && (child = (uint*)(heap + idx * 0x10), *child < child[2]))
+        if ((childIdx < size) && (child = (u32*)(heap + idx * 0x10), *child < child[2]))
         {
             childIdx = childIdx + 1;
         }
-        child = (uint*)(heap + childIdx * 8);
+        child = (u32*)(heap + childIdx * 8);
         childKey = *child;
         if (childKey <= key) break;
-        slot = (uint*)(heap + idx * 8);
+        slot = (u32*)(heap + idx * 8);
         *slot = childKey;
-        *(undefined2*)(slot + 1) = *(undefined2*)(child + 1);
+        *(u16*)(slot + 1) = *(u16*)(child + 1);
         idx = childIdx;
     }
-    *(uint*)(heap + idx * 8) = key;
-    *(undefined2*)(heap + idx * 8 + 4) = tag;
+    *(u32*)(heap + idx * 8) = key;
+    *(u16*)(heap + idx * 8 + 4) = tag;
     return;
 }
 
-void fn_8004B11C(undefined4 ctxArg, undefined4 entryArg, undefined key)
+void fn_8004B11C(u32 ctxArg, u32 entryArg, u8 key)
 {
     int sel;
-    uint mask;
+    u32 mask;
     int ctxHi;
     int found;
-    uint uval;
+    u32 uval;
     int* ctx;
     int bit;
     int ent;
     int entCur;
     double fval;
-    undefined8 pairWord;
+    u64 pairWord;
 
     pairWord = FUN_80286834();
-    ctxHi = (int)((ulonglong)pairWord >> 0x20);
+    ctxHi = (int)((u64)pairWord >> 0x20);
     ctx = (int*)pairWord;
     ent = *ctx;
     if (*(char*)(ctxHi + 0x28) == '\0')
@@ -3132,7 +3132,7 @@ void fn_8004B11C(undefined4 ctxArg, undefined4 entryArg, undefined key)
     }
     else
     {
-        mask = (uint) * (char*)(ent + 0x1b);
+        mask = (u32) * (char*)(ent + 0x1b);
     }
     bit = 0;
     entCur = ent;
@@ -3154,7 +3154,7 @@ void fn_8004B11C(undefined4 ctxArg, undefined4 entryArg, undefined key)
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
                 uval = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, ctx[2]) -
                     DOUBLE_803df728) + fval));
-                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, key, uval, found);
+                FUN_800462f8((u32)ctxHi, (u32)(u32)ctx, key, uval, found);
                 sel = DAT_803dd988;
             }
         }
@@ -3166,7 +3166,7 @@ void fn_8004B11C(undefined4 ctxArg, undefined4 entryArg, undefined key)
     FUN_80286880();
 }
 
-undefined4 FUN_800469d0(int list)
+u32 FUN_800469d0(int list)
 {
     short cur;
 
@@ -3174,7 +3174,7 @@ undefined4 FUN_800469d0(int list)
     if ((int)cur < (int)*(short*)(list + 0x2a))
     {
         *(short*)(list + 0x2c) = cur + 1;
-        return *(undefined4*)(*(int*)(list + 8) + cur * 4);
+        return *(u32*)(*(int*)(list + 8) + cur * 4);
     }
     return 0;
 }
@@ -3185,14 +3185,14 @@ void fn_8004B394(void)
     bool done;
     int* heapCtx;
     int heapArr;
-    uint uval;
+    u32 uval;
     int* entry;
-    uint poppedKey;
+    u32 poppedKey;
     int remaining;
-    undefined8 pairWord;
+    u64 pairWord;
 
     pairWord = FUN_8028683c();
-    heapCtx = (int*)((ulonglong)pairWord >> 0x20);
+    heapCtx = (int*)((u64)pairWord >> 0x20);
     done = false;
     for (remaining = pairWord; (!done && (remaining != 0)); remaining = remaining + -1)
     {
@@ -3203,11 +3203,11 @@ void fn_8004B394(void)
         }
         else
         {
-            poppedKey = (uint) * (ushort*)(heapArr + 0xc);
-            *(undefined4*)(heapArr + 8) = *(undefined4*)(heapArr + *(short*)((int)heapCtx + 0x22) * 8);
+            poppedKey = (u32) * (u16*)(heapArr + 0xc);
+            *(u32*)(heapArr + 8) = *(u32*)(heapArr + *(short*)((int)heapCtx + 0x22) * 8);
             count = *(short*)((int)heapCtx + 0x22);
             *(short*)((int)heapCtx + 0x22) = count + -1;
-            *(undefined2*)(heapArr + 0xc) = *(undefined2*)(heapArr + count * 8 + 4);
+            *(u16*)(heapArr + 0xc) = *(u16*)(heapArr + count * 8 + 4);
             FUN_80046270(heapArr, (int)*(short*)((int)heapCtx + 0x22), 1);
         }
         if ((int)poppedKey < 0)
@@ -3221,8 +3221,8 @@ void fn_8004B394(void)
             uval = FUN_800461b4(heapCtx, entry);
             if (uval == 0)
             {
-                *(undefined*)((int)entry + 0xe) = 1;
-                fn_8004B11C((undefined4)heapCtx, (undefined4)entry, poppedKey);
+                *(u8*)((int)entry + 0xe) = 1;
+                fn_8004B11C((u32)heapCtx, (u32)entry, poppedKey);
             }
             else
             {
@@ -3234,13 +3234,13 @@ void fn_8004B394(void)
     return;
 }
 
-undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, byte flag)
+u32 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, u8 flag)
 {
-    undefined2 tag;
+    u16 tag;
     short count;
     int idx;
-    undefined4* heap;
-    uint key;
+    u32* heap;
+    u32 key;
     int off8;
     int off10;
     int* entry;
@@ -3248,29 +3248,29 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
     double dist;
 
     idx = 0;
-    *(undefined2*)((int)queue + 0x22) = 0;
-    *(undefined2*)(queue + 8) = 0;
+    *(u16*)((int)queue + 0x22) = 0;
+    *(u16*)(queue + 8) = 0;
     off8 = 0;
     off10 = 0;
     remaining = 0x1f;
     do
     {
-        *(undefined4*)(queue[1] + off8) = 0;
-        *(undefined*)(*queue + off10 + 0xe) = 0;
-        *(undefined4*)(queue[1] + off8 + 8) = 0;
-        *(undefined*)(*queue + off10 + 0x1e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x10) = 0;
-        *(undefined*)(*queue + off10 + 0x2e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x18) = 0;
-        *(undefined*)(*queue + off10 + 0x3e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x20) = 0;
-        *(undefined*)(*queue + off10 + 0x4e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x28) = 0;
-        *(undefined*)(*queue + off10 + 0x5e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x30) = 0;
-        *(undefined*)(*queue + off10 + 0x6e) = 0;
-        *(undefined4*)(queue[1] + off8 + 0x38) = 0;
-        *(undefined*)(*queue + off10 + 0x7e) = 0;
+        *(u32*)(queue[1] + off8) = 0;
+        *(u8*)(*queue + off10 + 0xe) = 0;
+        *(u32*)(queue[1] + off8 + 8) = 0;
+        *(u8*)(*queue + off10 + 0x1e) = 0;
+        *(u32*)(queue[1] + off8 + 0x10) = 0;
+        *(u8*)(*queue + off10 + 0x2e) = 0;
+        *(u32*)(queue[1] + off8 + 0x18) = 0;
+        *(u8*)(*queue + off10 + 0x3e) = 0;
+        *(u32*)(queue[1] + off8 + 0x20) = 0;
+        *(u8*)(*queue + off10 + 0x4e) = 0;
+        *(u32*)(queue[1] + off8 + 0x28) = 0;
+        *(u8*)(*queue + off10 + 0x5e) = 0;
+        *(u32*)(queue[1] + off8 + 0x30) = 0;
+        *(u8*)(*queue + off10 + 0x6e) = 0;
+        *(u32*)(queue[1] + off8 + 0x38) = 0;
+        *(u8*)(*queue + off10 + 0x7e) = 0;
         off8 = off8 + 0x40;
         off10 = off10 + 0x80;
         idx = idx + 8;
@@ -3284,8 +3284,8 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
     {
         do
         {
-            *(undefined4*)(queue[1] + off8) = 0;
-            *(undefined*)(*queue + off10 + 0xe) = 0;
+            *(u32*)(queue[1] + off8) = 0;
+            *(u8*)(*queue + off10 + 0xe) = 0;
             off8 = off8 + 8;
             off10 = off10 + 0x10;
             remaining = remaining + -1;
@@ -3295,7 +3295,7 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
     queue[6] = startNode;
     queue[3] = targetPos;
     queue[4] = param_4;
-    *(byte*)(queue + 10) = flag & 1;
+    *(u8*)(queue + 10) = flag & 1;
     queue[9] = 10000;
     count = *(short*)(queue + 8);
     if (count == 0xfe)
@@ -3308,39 +3308,39 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
         entry = (int*)(*queue + count * 0x10);
         *entry = startNode;
         entry[2] = 0;
-        *(undefined*)(entry + 3) = 0xff;
+        *(u8*)(entry + 3) = 0xff;
         dist = FUN_80017714((float*)(*entry + 8), (float*)queue[3]);
         idx = FUN_80286718(dist);
         entry[1] = idx;
     }
     off8 = entry[1];
     idx = entry[2];
-    heap = (undefined4*)queue[1];
+    heap = (u32*)queue[1];
     count = *(short*)((int)queue + 0x22) + 1;
     *(short*)((int)queue + 0x22) = count;
     *(short*)(heap + count * 2 + 1) = *(short*)(queue + 8) + -1;
     heap[*(short*)((int)queue + 0x22) * 2] = -1 - (off8 + idx);
     idx = (int)*(short*)((int)queue + 0x22);
     key = heap[idx * 2];
-    tag = *(undefined2*)(heap + idx * 2 + 1);
+    tag = *(u16*)(heap + idx * 2 + 1);
     *heap = 0xffffffff;
     while (off8 = idx >> 1, heap[off8 * 2] < key)
     {
-        *(undefined2*)(heap + idx * 2 + 1) = *(undefined2*)(heap + off8 * 2 + 1);
+        *(u16*)(heap + idx * 2 + 1) = *(u16*)(heap + off8 * 2 + 1);
         heap[idx * 2] = heap[off8 * 2];
         idx = off8;
     }
     heap[idx * 2] = key;
-    *(undefined2*)(heap + idx * 2 + 1) = tag;
+    *(u16*)(heap + idx * 2 + 1) = tag;
     return 0;
 }
 
-void FUN_80047d88(char* color, char doRgb, char doAlpha, undefined4* rgbOut, undefined4* alphaOut)
+void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alphaOut)
 {
     char comp;
     bool rgbResolved;
     bool alphaResolved;
-    undefined4 colorWord[2];
+    u32 colorWord[2];
 
     rgbResolved = false;
     alphaResolved = false;
@@ -3453,8 +3453,8 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, undefined4* rgbOut, und
     }
     if ((!rgbResolved) || (!alphaResolved))
     {
-        colorWord[0] = *(undefined4*)color;
-        FUN_8025c510(DAT_803dd9f4, (byte*)colorWord);
+        colorWord[0] = *(u32*)color;
+        FUN_8025c510(DAT_803dd9f4, (u8*)colorWord);
         DAT_803dd9f4 = DAT_803dd9f4 + 1;
         DAT_803dd9f0 = DAT_803dd9f0 + 1;
         DAT_803dd9ec = DAT_803dd9ec + 1;
@@ -3462,7 +3462,7 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, undefined4* rgbOut, und
     return;
 }
 
-void FUN_80047fdc(double value, undefined mode)
+void FUN_80047fdc(double value, u8 mode)
 {
     uRam803dc24f = mode;
     lbl_803DC250 = (float)value;
@@ -3481,7 +3481,7 @@ void FUN_80048000(void)
 }
 
 void FUN_8004800c(double param_1, double param_2, double param_3, double param_4, double param_5,
-                  undefined param_6)
+                  u8 param_6)
 {
     DAT_803dd9a8 = 1;
     lbl_803DD9C4 = (float)param_1;
@@ -3493,7 +3493,7 @@ void FUN_8004800c(double param_1, double param_2, double param_3, double param_4
     return;
 }
 
-undefined FUN_80048094(void)
+u8 FUN_80048094(void)
 {
     return DAT_803dd9a8;
 }
@@ -3509,31 +3509,31 @@ void FUN_8004812c(int tex, int arg)
     {
         if (*(char*)(tex + 0x48) == '\0')
         {
-            FUN_8025b054((uint*)(tex + 0x20), arg);
+            FUN_8025b054((u32*)(tex + 0x20), arg);
         }
         else
         {
-            FUN_8025aeac((uint*)(tex + 0x20), *(uint**)(tex + 0x40), arg);
+            FUN_8025aeac((u32*)(tex + 0x20), *(u32**)(tex + 0x40), arg);
         }
     }
     return;
 }
 
-void FUN_80049910(undefined4* obj)
+void FUN_80049910(u32* obj)
 {
     float scaleZ;
     float* viewMtx;
-    undefined4 local_100;
+    u32 local_100;
     float local_fc;
     float local_f8;
     int local_f4;
     int local_f0;
     float local_ec;
-    undefined4 local_e8;
-    undefined4 local_e4;
-    undefined4 local_e0;
-    undefined4 local_dc;
-    undefined4 local_d8;
+    u32 local_e8;
+    u32 local_e4;
+    u32 local_e0;
+    u32 local_dc;
+    u32 local_d8;
     float afStack_d4[12];
     float local_a4;
     float local_a0;
@@ -3595,17 +3595,17 @@ void FUN_80049910(undefined4* obj)
     FUN_8025d8c4(&local_44, DAT_803dda00, 0);
     FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
     local_100 = *obj;
-    FUN_8025c510(DAT_803dd9f4, (byte*)&local_100);
+    FUN_8025c510(DAT_803dd9f4, (u8*)&local_100);
     newshadows_getBlankShadowTexture(&local_f0);
     if (local_f0 != 0)
     {
         if (*(char*)(local_f0 + 0x48) == '\0')
         {
-            FUN_8025b054((uint*)(local_f0 + 0x20), DAT_803dda0c);
+            FUN_8025b054((u32*)(local_f0 + 0x20), DAT_803dda0c);
         }
         else
         {
-            FUN_8025aeac((uint*)(local_f0 + 0x20), *(uint**)(local_f0 + 0x40), DAT_803dda0c);
+            FUN_8025aeac((u32*)(local_f0 + 0x20), *(u32**)(local_f0 + 0x40), DAT_803dda0c);
         }
     }
     if (DAT_803dd9b1 == '\0')
@@ -3690,11 +3690,11 @@ void FUN_80049910(undefined4* obj)
         {
             if (*(char*)(local_f4 + 0x48) == '\0')
             {
-                FUN_8025b054((uint*)(local_f4 + 0x20), DAT_803dda0c + 1);
+                FUN_8025b054((u32*)(local_f4 + 0x20), DAT_803dda0c + 1);
             }
             else
             {
-                FUN_8025aeac((uint*)(local_f4 + 0x20), *(uint**)(local_f4 + 0x40), DAT_803dda0c + 1);
+                FUN_8025aeac((u32*)(local_f4 + 0x20), *(u32**)(local_f4 + 0x40), DAT_803dda0c + 1);
             }
         }
         GXSetBlendMode(DAT_803dda10 + 1, DAT_803dd9f0);

@@ -54,7 +54,7 @@ extern f32 lbl_803E5454;
 extern f32 lbl_803E5458;
 extern f32 lbl_803E545C;
 
-void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runtime,
+void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
@@ -63,7 +63,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runt
     int playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
-    uint gameBit;
+    u32 gameBit;
     int triggerIsSet;
 
     runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
@@ -176,7 +176,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
     int linkedEventPending;
-    uint gameBit;
+    u32 gameBit;
     int randomIdleWait;
     SHthorntailDataTables* dataTables;
 
@@ -371,12 +371,12 @@ void SHthorntail_update(SHthorntailObject* obj)
     extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
-    byte byteVal;
+    u8 byteVal;
     u8 hitResult;
     u8 mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
-    uint uval;
+    u32 uval;
     int ref;
     s8* eventId;
     u8* stateTables;
@@ -416,7 +416,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, (uint)runtime->hitReactState, (float*)runtime->hitReactScratch);
+    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, (u32)runtime->hitReactState, (float*)runtime->hitReactScratch);
     if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
@@ -427,7 +427,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             SHthorntail_updateLevelControlMode0(obj, runtime, config);
             break;
         case SHTHORNTAIL_CONTROL_MODE_LEVEL_1:
-            SHthorntail_updateLevelControlMode1((uint)obj, runtime, config);
+            SHthorntail_updateLevelControlMode1((u32)obj, runtime, config);
             break;
         case SHTHORNTAIL_CONTROL_MODE_ROOT_2:
             SHthorntail_updateRootControlMode2(obj, runtime);
@@ -521,7 +521,7 @@ void SHthorntail_update(SHthorntailObject* obj)
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
-                    (u32)obj, (ushort)SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
+                    (u32)obj, (u16)SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
@@ -549,15 +549,15 @@ void SHthorntail_update(SHthorntailObject* obj)
         runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
         {
-            uval = randomGetRange(1, (uint) * runtime->impactSfxTable);
+            uval = randomGetRange(1, (u32) * runtime->impactSfxTable);
             runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
             (*gObjectTriggerInterface)->runSequence(*(u8*)(runtime->impactSfxTable + uval), obj, -1);
         }
         if (config->leashRadiusByte != '\0')
         {
             leashDistance = getXZDistance(&obj->pos.x, (float*)&config->homePos);
-            if ((leashDistance > (f32)(s32)((uint)config->leashRadiusByte *
-                    (uint)config->leashRadiusByte)) &&
+            if ((leashDistance > (f32)(s32)((u32)config->leashRadiusByte *
+                    (u32)config->leashRadiusByte)) &&
                 (ref = ViewFrustum_IsSphereVisible(&obj->modelPos.x,
                                                      obj->cullRadius * obj->modelScale),
                     ref == 0))
@@ -607,11 +607,11 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
     extern int randomGetRange(int min, int max); /* #57 */
     SHthorntailRuntime* runtime;
-    uint randomTime;
+    u32 randomTime;
     int moveScratch;
     u32 outA[2];
     u32 outB;
-    uint stackPad;
+    u32 stackPad;
 
     runtime = obj->runtime;
     outA[0] = lbl_803E5410;

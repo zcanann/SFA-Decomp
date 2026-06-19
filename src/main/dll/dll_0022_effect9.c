@@ -207,7 +207,7 @@ extern f32 lbl_803E0944;
 void modgfx_releaseExpgfxPools(void)
 {
     int poolIndex;
-    uint* slotPoolBases;
+    u32* slotPoolBases;
 
     expgfxRemoveAll();
     poolIndex = 0;
@@ -225,11 +225,11 @@ void modgfx_allocExpgfxPools(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
     s16* poolSlotTypeIds;
-    uint allocatedPool;
+    u32 allocatedPool;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
     int poolIndex;
-    uint* slotPoolBases;
+    u32* slotPoolBases;
     int groupCount;
 
     runtime = EXPGFX_RUNTIME_DATA;
@@ -319,8 +319,8 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     int i;
     ModgfxVertexData* activeVertexData;
     ModgfxVertexData* inactiveVertexData;
-    uint wrapCountS;
-    uint wrapCountT;
+    u32 wrapCountS;
+    u32 wrapCountT;
 
     state = (ModgfxState*)stateArg;
     stepS = lbl_803E00B8 * ((ModgfxVertexGroupCmd*)command)->valueX * lbl_803DDF04;
@@ -439,7 +439,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     u64 convFrames2;
 
     biasU = DOUBLE_803e00c0;
-    vtxData = *(int*)(state + (uint) * (u8*)(state + 0x130) * 4 + 0x78);
+    vtxData = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
     if (mode == 1)
     {
         targetR = ((ModgfxVertexGroupCmd*)command)->valueX;
@@ -459,20 +459,20 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
         {
             ((ModgfxState*)state)->blendColorR =
                 (f32)((f64)CONCAT44(0x43300000,
-                                         (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                         (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
                                              0xc)) - DOUBLE_803e00c0);
             ((ModgfxState*)state)->blendColorG =
                 (f32)((f64)CONCAT44(0x43300000,
-                                         (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                         (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
                                              0xd)) - biasU);
             ((ModgfxState*)state)->blendColorB =
                 (f32)((f64)CONCAT44(0x43300000,
-                                         (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                         (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
                                              0xe)) - biasU);
             biasS = DOUBLE_803e00c8;
             ((ModgfxState*)state)->blendColorStepR =
                 (targetR - (f32)((f64)CONCAT44(0x43300000,
-                                                    (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
+                                                    (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
                                                         0x10 + 0xc)) - biasU)) /
                 (f32)((f64)CONCAT44(0x43300000, (int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000) -
@@ -480,12 +480,12 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
             convFrames = CONCAT44(0x43300000, (int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000);
             ((ModgfxState*)state)->blendColorStepG =
                 (targetG - (f32)((f64)CONCAT44(0x43300000,
-                                                    (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
+                                                    (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
                                                         0x10 + 0xd)) - biasU)) /
                 (f32)(convFrames - biasS);
             convBlueBase = CONCAT44(0x43300000,
-                                            (uint) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10
+                                            (u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10
                                                 + 0xe)
             );
             convFrames2 = CONCAT44(0x43300000, (int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000);
@@ -633,7 +633,7 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
     state->rotOffsetX = state->rotOffsetX + state->rotStepX;
 }
 
-void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
+void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
 {
     f32 targetAlpha;
     f64 biasU;
@@ -646,7 +646,7 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
     u64 convAlphaBase;
 
     biasU = DOUBLE_803e00c0;
-    curVtxData = *(int*)(state + (uint) * (u8*)(state + 0x130) * 4 + 0x78);
+    curVtxData = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
     baseVtxData = (int)((ModgfxState*)state)->baseVertexData;
     if (mode == 1)
     {
@@ -667,13 +667,13 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
         work1 = state + (channel & 0xff) * 8;
         *(f32*)(work1 + 0xac) =
             (targetAlpha - (f32)((f64)CONCAT44(0x43300000,
-                                                    (uint) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->
+                                                    (u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
                                                         0x10 + 0xf)) - DOUBLE_803e00c0))
             / (f32)((f64)CONCAT44(0x43300000, (int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000) -
                 DOUBLE_803e00c8);
         convAlphaBase = CONCAT44(0x43300000,
-                                         (uint) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
+                                         (u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
                                              0x10 + 0xf));
         *(f32*)(work1 + 0xb0) = (f32)(convAlphaBase - biasU);
     }
@@ -702,7 +702,7 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, uint channel)
     }
 }
 
-void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
+void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
 {
     f32 targetX;
     f32 targetY;
@@ -727,7 +727,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
         if ((int)((ModgfxState*)state)->blendFrameCount == 0)
         {
             work2 = (int)((ModgfxState*)state)->baseVertexData;
-            vtxBufA = *(int*)(state + (uint) * (u8*)(state + 0x130) * 4 + 0x78);
+            vtxBufA = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
             work1 = 0;
             for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
             {
@@ -771,7 +771,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, uint channel)
     *(f32*)(work0 + 0x38) = *(f32*)(work0 + 0x44) * lbl_803DDF04 + *(f32*)(work0 + 0x38);
     targetX = lbl_803E00B4;
     vtxBufA = (int)((ModgfxState*)state)->baseVertexData;
-    work1 = *(int*)(state + (uint) * (u8*)(state + 0x130) * 4 + 0x78);
+    work1 = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
     off = 0;
     for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2 = work2 + 1)
     {
@@ -943,10 +943,10 @@ void modgfx_resetActiveEffectRegistry(u64 param_1, u64 param_2, u64 param_3,
 
 u32
 projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState,
-                          uint spawnFlags, u8 modelId, u16* extraArgs)
+                          u32 spawnFlags, u8 modelId, u16* extraArgs)
 {
     u32 spawnResult;
-    uint randPick;
+    u32 randPick;
     int cfgHead[3];
     u16 cfgSourceVecX;
     u16 cfgSourceVecY;
@@ -964,11 +964,11 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     f32 cfgScale;
     u16 cfgTextureSetupFlags;
     u16 cfgTextureId;
-    uint cfgBehaviorFlags;
+    u32 cfgBehaviorFlags;
     u32 cfgRenderFlags;
     u32 cfgOverrideColor0;
-    uint cfgOverrideColor1;
-    uint cfgOverrideColor2;
+    u32 cfgOverrideColor1;
+    u32 cfgOverrideColor2;
     u16 cfgColorWord0;
     u16 cfgColorWord1;
     u16 cfgColorWord2;
@@ -977,19 +977,19 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     u8 cfgLinkGroup;
     u8 cfgModelIdByte;
     u32 convHi0;
-    uint randVal0;
+    u32 randVal0;
     u32 convHi1;
-    uint randVal1;
+    u32 randVal1;
     u32 convHi2;
-    uint randVal2;
+    u32 randVal2;
     u32 convHi3;
-    uint randVal3;
+    u32 randVal3;
     u32 convHi4;
-    uint randVal4;
+    u32 randVal4;
     u32 convHi5;
-    uint randVal5;
+    u32 randVal5;
     u32 convHi6;
-    uint randVal6;
+    u32 randVal6;
 
     lbl_803DC450 = lbl_803DC450 + lbl_803E0900;
     if (lbl_803E0908 < lbl_803DC450)

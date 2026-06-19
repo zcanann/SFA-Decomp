@@ -204,7 +204,7 @@ int EmissionController_IsLingering(int obj)
     return inner->unk8C5;
 }
 
-uint playerGetStateFlag310(int obj)
+u32 playerGetStateFlag310(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     return *(int*)((char*)inner + 0x310);
@@ -18508,7 +18508,7 @@ void fn_802AAD44(int obj)
     f32 mtx[16];
 
     height = ((PlayerState*)state)->unk7D0;
-    setTextColor((undefined4*)0, 0xff, 0xff, 0xff, 0x80);
+    setTextColor((u32*)0, 0xff, 0xff, 0xff, 0x80);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();

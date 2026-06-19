@@ -8,7 +8,7 @@
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern f32 timeDelta;
 
@@ -16,7 +16,7 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
 extern void textureFree(void* tex);
 
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int eventId, int value);
@@ -177,7 +177,7 @@ typedef struct DFSHLaserBeamObject
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
   ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
 
-void DFSH_LaserBeam_update(uint objAddr)
+void DFSH_LaserBeam_update(u32 objAddr)
 {
     extern int Sfx_PlayFromObject(void* obj, int sfxId);
     DFSHLaserBeamConfig* config;
