@@ -202,7 +202,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     slotIndex = 0;
     slotOffset = slotIndex;
     clearedState = slotIndex;
-    for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
+    for (; slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
     {
         workSlot = (ObjHitsPriorityWorkSlot*)(gObjHitsPriorityHitStates + slotOffset);
         if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj))
@@ -211,7 +211,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
         }
         slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
     }
-    hitState->stateIndex = (s8)stateIndex;
+    hitState->stateIndex = stateIndex;
     return;
 }
 #pragma optimization_level reset
@@ -299,13 +299,13 @@ void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, s16 ver
                 (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
             hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
             hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = (s32)verticalMin;
+            absVal = verticalMin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = (s32)verticalMax;
+            absVal = verticalMax;
             if (absVal < 0)
             {
                 absVal = -absVal;
@@ -331,13 +331,13 @@ void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, s16 ver
             hitState->secondaryCapsuleOffsetB = verticalMax;
             hitState->secondaryRadius = radius;
             hitState->secondaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = (s32)verticalMin;
+            absVal = verticalMin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = (s32)verticalMax;
+            absVal = verticalMax;
             if (absVal < 0)
             {
                 absVal = -absVal;
@@ -383,8 +383,8 @@ void ObjHits_SetHitVolumeMasks(int objPtr, int hitVolume, int hitType, int sourc
     ObjHitsPriorityState* hitState;
 
     hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    hitState->hitVolumePriority = (s8)hitVolume;
-    hitState->hitVolumeId = (s8)hitType;
+    hitState->hitVolumePriority = hitVolume;
+    hitState->hitVolumeId = hitType;
     if (sourceMask == 0)
     {
         return;
@@ -404,8 +404,8 @@ void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int source
     {
         return;
     }
-    hitState->hitVolumePriority = (s8)hitVolume;
-    hitState->hitVolumeId = (s8)hitType;
+    hitState->hitVolumePriority = hitVolume;
+    hitState->hitVolumeId = hitType;
     if (sourceSlot == -1)
     {
         return;
@@ -824,7 +824,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     {
         u32 entryObj =
             *(u32*)(transformState + contactOffset + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET);
-        if (entryObj == (u32)contactObj)
+        if (entryObj == contactObj)
         {
             return;
         }
@@ -833,7 +833,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     storeState = *(volatile int*)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
     contactObjectIndex = (*(u8*)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET))++;
     *(int*)(storeState + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET +
-        (s8)contactObjectIndex * 4) = contactObj;
+        contactObjectIndex * 4) = contactObj;
     return;
 }
 
@@ -853,7 +853,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
     {
         return 0;
     }
-    hitCount = (int)hitState->priorityHitCount;
+    hitCount = hitState->priorityHitCount;
     if (hitCount != 0)
     {
         bestPriority = OBJHITS_PRIORITY_INVALID;
@@ -861,25 +861,25 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
         for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
         {
             hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < (s8)bestPriority)
+            if ((s8)hitPriority < bestPriority)
             {
                 bestPriority = hitPriority;
-                bestHitSlot = (char)hitSlot;
+                bestHitSlot = hitSlot;
             }
         }
         if (bestHitSlot != -1)
         {
-            if (outHitObject != (int*)0x0)
+            if (outHitObject != 0x0)
             {
                 *outHitObject = hitState->hitObjects[bestHitSlot];
             }
-            if (outSphereIndex != (int*)0x0)
+            if (outSphereIndex != 0x0)
             {
-                *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
+                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
             }
-            if (outHitVolume != (uint*)0x0)
+            if (outHitVolume != 0x0)
             {
-                *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
+                *outHitVolume = hitState->hitVolumes[bestHitSlot];
             }
             if (outHitPosX != (float*)0x0)
             {
@@ -909,7 +909,7 @@ int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, uint
     {
         return 0;
     }
-    hitCount = (int)hitState->priorityHitCount;
+    hitCount = hitState->priorityHitCount;
     if (hitCount != 0)
     {
         bestPriority = OBJHITS_PRIORITY_INVALID;
@@ -917,25 +917,25 @@ int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, uint
         for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
         {
             hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < (s8)bestPriority)
+            if ((s8)hitPriority < bestPriority)
             {
                 bestPriority = hitPriority;
-                bestHitSlot = (char)hitSlot;
+                bestHitSlot = hitSlot;
             }
         }
         if (bestHitSlot != -1)
         {
-            if (outHitObject != (int*)0x0)
+            if (outHitObject != 0x0)
             {
                 *outHitObject = hitState->hitObjects[bestHitSlot];
             }
-            if (outSphereIndex != (int*)0x0)
+            if (outSphereIndex != 0x0)
             {
-                *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
+                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
             }
-            if (outHitVolume != (uint*)0x0)
+            if (outHitVolume != 0x0)
             {
-                *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
+                *outHitVolume = hitState->hitVolumes[bestHitSlot];
             }
             return (int)(s8)bestPriority;
         }
@@ -995,7 +995,7 @@ void ObjHits_InitWorkBuffers(void)
     gObjHitReactResetObjects =
         (ObjAnimComponent**)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(ObjAnimComponent*), 0xe, 0);
     gObjHitsPriorityHitStates =
-        (u8*)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot), 0xe, 0);
+        mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot), 0xe, 0);
     lbl_803DCBD8 = mmAlloc(0x1900, 0xe, 0);
     gObjHitsPrimaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
     gObjHitsPrimaryHitboxBufferScratch1 = mmAlloc(0x400, 0xe, 0);
@@ -1023,14 +1023,14 @@ uint ObjGroup_ContainsObject(uint obj, int group)
     {
         return 0;
     }
-    index = (uint)gObjGroupOffsets[group];
-    limit = (uint)gObjGroupOffsets[group + 1];
-    for (entry = (uint*)gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
+    index = gObjGroupOffsets[group];
+    limit = gObjGroupOffsets[group + 1];
+    for (entry = gObjGroupObjects + index; ((int)index < limit && (obj != *entry));
          entry = entry + 1, index = index + 1)
     {
     }
     limitXorIndex = limit ^ index;
-    halfDiff = (int)limitXorIndex >> 1;
+    halfDiff = limitXorIndex >> 1;
     limitXorIndex = limitXorIndex & limit;
     return (uint)(halfDiff - limitXorIndex) >> 0x1f;
 }
@@ -1051,10 +1051,10 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     {
         return 0;
     }
-    index = (uint)gObjGroupOffsets[group];
+    index = gObjGroupOffsets[group];
     limit = (uint)(&gObjGroupOffsets[group])[1];
-    entry = (uint*)gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    entry = gObjGroupObjects + index;
+    while ((int)index < limit)
     {
         if (*entry != 0)
         {
@@ -1099,10 +1099,10 @@ int ObjGroup_FindNearestObjectForObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    index = (uint)gObjGroupOffsets[group];
+    index = gObjGroupOffsets[group];
     limit = (uint)(&gObjGroupOffsets[group])[1];
-    entry = (uint*)gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    entry = gObjGroupObjects + index;
+    while ((int)index < limit)
     {
         if (*entry != obj)
         {
@@ -1146,10 +1146,10 @@ int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    index = (uint)gObjGroupOffsets[group];
+    index = gObjGroupOffsets[group];
     limit = (uint)(&gObjGroupOffsets[group])[1];
-    entry = (uint*)gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    entry = gObjGroupObjects + index;
+    while ((int)index < limit)
     {
         if (*entry != obj)
         {
@@ -1177,9 +1177,9 @@ uint* ObjGroup_GetObjects(int group, int* countOut)
     if ((group < 0) || (group >= OBJGROUP_COUNT))
     {
         *countOut = 0;
-        return (uint*)0x0;
+        return 0x0;
     }
-    *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
+    *countOut = gObjGroupOffsets[group + 1] - gObjGroupOffsets[group];
     return (uint*)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
 
@@ -1196,9 +1196,9 @@ void ObjGroup_RemoveObject(uint obj, int group)
         return;
     }
     offset = gObjGroupOffsets;
-    index = (int)offset[group];
+    index = offset[group];
     offset += group;
-    limit = (int)offset[1];
+    limit = offset[1];
     entries = gObjGroupObjects + index;
     while ((index < limit) && (*entries != obj))
     {
@@ -1268,9 +1268,9 @@ void ObjGroup_AddObject(uint obj, int group)
         return;
     }
     offset = gObjGroupOffsets;
-    insertIndex = (int)offset[group];
+    insertIndex = offset[group];
     offset += group;
-    limit = (int)offset[1];
+    limit = offset[1];
     entries = gObjGroupObjects + insertIndex;
     for (index = insertIndex; index < limit; index++)
     {
@@ -1316,22 +1316,22 @@ undefined4 ObjMsg_Peek(void* obj, uint* outMessage, uint* outSender, uint* outPa
 {
     ObjMsgQueue* queue;
 
-    if (obj == (void*)0x0)
+    if (obj == 0x0)
     {
         return 0;
     }
     queue = *(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET);
     if ((queue != (ObjMsgQueue*)0x0) && (queue->count != 0))
     {
-        if (outMessage != (uint*)0x0)
+        if (outMessage != 0x0)
         {
             *outMessage = queue->entries[0].message;
         }
-        if (outSender != (uint*)0x0)
+        if (outSender != 0x0)
         {
             *outSender = queue->entries[0].sender;
         }
-        if (outParam != (uint*)0x0)
+        if (outParam != 0x0)
         {
             *outParam = queue->entries[0].param;
         }
@@ -1346,7 +1346,7 @@ undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outPar
     ObjMsgQueueSlotBase* slot;
     uint i;
 
-    if (obj == (void*)0x0)
+    if (obj == 0x0)
     {
         return 0;
     }
@@ -1354,15 +1354,15 @@ undefined4 ObjMsg_Pop(void* obj, uint* outMessage, uint* outSender, uint* outPar
     if ((queue != (ObjMsgQueue*)0x0) && (queue->count != 0))
     {
         queue->count = queue->count - 1;
-        if (outMessage != (uint*)0x0)
+        if (outMessage != 0x0)
         {
             *outMessage = queue->entries[0].message;
         }
-        if (outSender != (uint*)0x0)
+        if (outSender != 0x0)
         {
             *outSender = queue->entries[0].sender;
         }
-        if (outParam != (uint*)0x0)
+        if (outParam != 0x0)
         {
             *outParam = queue->entries[0].param;
         }
@@ -1392,7 +1392,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     int includeSender;
     int matchAny;
 
-    objects = (int*)ObjList_GetObjects(&objectIndex, &objectCount);
+    objects = ObjList_GetObjects(&objectIndex, &objectCount);
     maskedFlags = flags & 0xffff;
     includeSender = maskedFlags & OBJMSG_SEND_INCLUDE_SENDER;
     matchAny = maskedFlags & OBJMSG_SEND_MATCH_ANY;
@@ -1400,11 +1400,11 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, uint flags, void* se
     {
         obj = (void*)objects[objectIndex];
         if (((obj != sender) || (includeSender == 0)) &&
-            ((((GameObject*)obj)->anim.seqId == (short)targetId ||
+            ((((GameObject*)obj)->anim.seqId == targetId ||
                 (matchAny != 0))) &&
             ((Vec_distance(&((GameObject*)sender)->anim.worldPosX,
                            &((GameObject*)obj)->anim.worldPosX) < radius &&
-                    (obj != (void*)0x0)) &&
+                    (obj != 0x0)) &&
                 (queue = *(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET),
                     queue != (ObjMsgQueue*)0x0)))
         {
@@ -1440,7 +1440,7 @@ void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, 
     int objectCount;
     void* obj;
 
-    objects = (int*)ObjList_GetObjects(&objectIndex, &objectCount);
+    objects = ObjList_GetObjects(&objectIndex, &objectCount);
     maskedFlags = flags & 0xffff;
     if ((maskedFlags & OBJMSG_SEND_MATCH_OBJTYPE) != 0)
     {
@@ -1450,7 +1450,7 @@ void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, 
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
                     (targetId == ((GameObject*)obj)->anim.seqId))) &&
-                ((obj != (void*)0x0 &&
+                ((obj != 0x0 &&
                     (queue = *(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET),
                         queue != (ObjMsgQueue*)0x0))))
             {
@@ -1480,7 +1480,7 @@ void ObjMsg_SendToObjects(int targetId, uint flags, void* sender, uint message, 
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
                     (targetId == ((GameObject*)obj)->anim.classId))) &&
-                ((obj != (void*)0x0 &&
+                ((obj != 0x0 &&
                     (queue = *(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET),
                         queue != (ObjMsgQueue*)0x0))))
             {
@@ -1515,7 +1515,7 @@ uint ObjMsg_SendToObject(void* obj, uint message, void* sender, uint param)
 
     dstObj = obj;
     senderObj = sender;
-    if (dstObj == (void*)0x0)
+    if (dstObj == 0x0)
     {
         return 0;
     }
@@ -1544,7 +1544,7 @@ void ObjMsg_AllocQueue(void* obj, int capacity)
     int queueBytes;
     ObjMsgQueue* queue;
 
-    if (((capacity != 0) && (obj != (void*)0x0)) &&
+    if (((capacity != 0) && (obj != 0x0)) &&
         (*(ObjMsgQueue**)((byte*)obj + OBJMSG_QUEUE_OFFSET) == (ObjMsgQueue*)0x0))
     {
         queueBytes = (capacity * 3 + 2) * 4;
@@ -1596,7 +1596,7 @@ int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObj
     {
         if (outHitPos != (float*)0x0)
         {
-            collisionType = ObjHits_GetPriorityHitWithPosition(obj, outHitObject, (int*)0x0, (uint*)0x0, outHitPos,
+            collisionType = ObjHits_GetPriorityHitWithPosition(obj, outHitObject, 0x0, 0x0, outHitPos,
                                                                outHitPos + 1, outHitPos + 2);
             if (collisionType != 0)
             {
@@ -1605,7 +1605,7 @@ int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObj
         }
         else
         {
-            collisionType = ObjHits_GetPriorityHit(obj, outHitObject, (int*)0x0, (uint*)0x0);
+            collisionType = ObjHits_GetPriorityHit(obj, outHitObject, 0x0, 0x0);
         }
         if (collisionType != 0)
         {
@@ -1626,8 +1626,8 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colo
     u32 hitObject;
 
     *cooldown = *cooldown - timeDelta;
-    collisionType = ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, (int*)0x0,
-                                                       (uint*)0x0, &hitPos[0], &hitPos[1], &hitPos[2]);
+    collisionType = ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, 0x0,
+                                                       0x0, &hitPos[0], &hitPos[1], &hitPos[2]);
     if ((*cooldown <= lbl_803DE970) && (collisionType != 0))
     {
         *cooldown = lbl_803DE978;
@@ -1668,7 +1668,7 @@ void ObjLink_DetachChild(int obj, int child)
     i = 0;
     for (p = obj; i < (int)*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET); i++)
     {
-        if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == (u32)child)
+        if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == child)
         {
             break;
         }
@@ -1720,12 +1720,12 @@ void ObjContact_DispatchCallbacks(int objA, int objB)
     count = gObjContactCallbackCount;
     while ((objARefCount != 0) && (objBRefCount != 0) && (count-- != 0))
     {
-        if (((u32)entry->objA == (u32)objA) && ((u32)entry->objB == (u32)objB))
+        if (((u32)entry->objA == objA) && ((u32)entry->objB == objB))
         {
             objARefCount = objARefCount - 1;
             entry->callback(objA, objB);
         }
-        if (((u32)entry->objA == (u32)objB) && ((u32)entry->objB == (u32)objA))
+        if (((u32)entry->objA == objB) && ((u32)entry->objB == objA))
         {
             objBRefCount = objBRefCount - 1;
             entry->callback(objB, objA);
@@ -1744,7 +1744,7 @@ void ObjContact_RemoveObjectCallbacks(int obj)
     count = gObjContactCallbackCount;
     while (count-- > 0)
     {
-        if (((u32)entry->objA == (u32)obj) || ((u32)entry->objB == (u32)obj))
+        if (((u32)entry->objA == obj) || ((u32)entry->objB == obj))
         {
             gObjContactCallbackCount--;
             count--;
@@ -1775,7 +1775,7 @@ undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback call
     count = gObjContactCallbackCount;
     for (i = 0; i != count; i++)
     {
-        if (((u32)entry->objA == (u32)obj) && ((u32)entry->objB == (u32)otherObj))
+        if (((u32)entry->objA == obj) && ((u32)entry->objB == otherObj))
         {
             return 0;
         }
@@ -1866,7 +1866,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     int* objects;
     int foundObj;
 
-    objects = (int*)ObjList_GetObjects(&startIndex, &objectCount);
+    objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
     if (defNo != -1)
@@ -1916,11 +1916,11 @@ undefined4 ObjList_ContainsObject(int obj)
     int i;
     int count;
 
-    entry = (uint*)ObjList_GetObjects(&i, &count);
+    entry = ObjList_GetObjects(&i, &count);
     i = 0;
     while (i < count)
     {
-        if (*entry == (uint)obj)
+        if (*entry == obj)
         {
             return 1;
         }
@@ -2092,7 +2092,7 @@ int Obj_GetYawDeltaToObject(ushort* obj, int target, float* distOut)
     {
         *distOut = sqrtf(dx * dx + dz * dz);
     }
-    yawDelta = (int)(short)yawDelta - (uint)(ushort) * (short*)obj;
+    yawDelta = (int)(short)yawDelta - (uint)(ushort) * obj;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;
@@ -2175,12 +2175,12 @@ uint ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
                         hitId = entry->id;
                     }
                 }
-                entryOffset += (uint)entry->wordCount * 4;
-                entry = (ObjLibRegionEntry*)((u8*)entry + (uint)entry->wordCount * 4);
+                entryOffset += entry->wordCount * 4;
+                entry = (ObjLibRegionEntry*)((u8*)entry + entry->wordCount * 4);
             }
         }
     }
-    return (uint)hitId & 0xffff;
+    return hitId & 0xffff;
 }
 
 typedef struct PlayerBlinkState
@@ -2248,7 +2248,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
         break;
     case 1:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount + (s16)step > 255)
+        if ((s16)bs->amount + step > 255)
         {
             step = (u8)(255 - bs->amount);
             bs->mode = 2;
@@ -2274,7 +2274,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
         break;
     case 3:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount - (s16)step < 0)
+        if ((s16)bs->amount - step < 0)
         {
             step = bs->amount;
             bs->mode = 0;
@@ -2282,7 +2282,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
         bs->amount -= step;
         break;
     case 4:
-        bs->timer = (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+        bs->timer = (u8)(lbl_803DE9A0 * timeDelta + bs->timer);
         bs->amount = 0xff;
         rightScale = lbl_803DE9A4;
         if (randomGetRange(0, 25) == 1)
@@ -2301,7 +2301,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
         }
         break;
     case 5:
-        bs->timer = (u8)(lbl_803DE9A0 * timeDelta + (f32)bs->timer);
+        bs->timer = (u8)(lbl_803DE9A0 * timeDelta + bs->timer);
         bs->amount = 0xff;
         leftScale = lbl_803DE9A4;
         if (randomGetRange(0, 25) == 1)
@@ -2321,9 +2321,9 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, uint flags)
         break;
     }
 
-    phase = lbl_803DE9AC * (f32)bs->timer;
+    phase = lbl_803DE9AC * bs->timer;
     wave = lbl_803DE9A8 * fn_802943F4(phase);
-    wave = wave * (f32)bs->amount / lbl_803DE9B0;
+    wave = wave * bs->amount / lbl_803DE9B0;
     rotation = (lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8;
     joint = 0;
     model = objAnim->modelInstance;

@@ -505,7 +505,7 @@ void ObjSeq_run(void)
         marks++;
     }
 
-    count = (s8)lbl_803DD0BC;
+    count = lbl_803DD0BC;
     keepCount = 0;
     cmd = base + count * 6 + 0x2a80;
     keepBase = keepBuf;
@@ -590,7 +590,7 @@ void ObjSeq_run(void)
         ((s16*)(base + 0x2a80))[k * 3] = keepBase[k * 3];
         ((s16*)(base + 0x2a80))[k * 3 + 1] = keepBase[k * 3 + 1];
     }
-    lbl_803DD0BC = (s8)keepCount;
+    lbl_803DD0BC = keepCount;
 }
 
 void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
@@ -610,7 +610,7 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
     while (lbl_803DD113 > 0)
     {
         lbl_803DD113--;
-        cmd = &lbl_8039A5BC[(s8)lbl_803DD113];
+        cmd = &lbl_8039A5BC[lbl_803DD113];
         cmdParam = cmd->param;
         cmdObj = cmd->object;
 
@@ -788,9 +788,9 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                 }
                 if (found == 0 && freeSlot != -1)
                 {
-                    seq[freeSlot + 0x12c] = (u8)arg10;
+                    seq[freeSlot + 0x12c] = arg10;
                     *(s16*)(seq + freeSlot * 2 + 0x118) =
-                        (s16)objSeqFindLabel(seq, top16);
+                        objSeqFindLabel(seq, top16);
                 }
                 result = 0;
             }
@@ -815,7 +815,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                 if ((s8)lbl_8039A60C[slot] == 0)
                 {
                     lbl_8039A60C[slot] = 1;
-                    ((ObjSeqState*)seq)->curFrame = (s16)top16;
+                    ((ObjSeqState*)seq)->curFrame = top16;
                     ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
                 }
                 return 1;
@@ -828,7 +828,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                 if ((s8)lbl_8039A60C[slot] == 0)
                 {
                     lbl_8039A60C[slot] = 1;
-                    ((ObjSeqState*)seq)->curFrame = (s16)objSeqFindLabel(seq, top16);
+                    ((ObjSeqState*)seq)->curFrame = objSeqFindLabel(seq, top16);
                     ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
                 }
                 return 1;
@@ -836,16 +836,16 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                 switch (subId)
                 {
                 case 0:
-                    ((ObjSeqState*)seq)->unk80 = (u8)top16;
+                    ((ObjSeqState*)seq)->unk80 = top16;
                     n = ((ObjSeqState*)seq)->eventCount;
                     if ((u32)n < 10)
                     {
                         ((ObjSeqState*)seq)->eventCount = n + 1;
-                        ((ObjSeqState*)seq)->eventIds[n] = (u8)top16;
+                        ((ObjSeqState*)seq)->eventIds[n] = top16;
                     }
                     break;
                 case 1:
-                    ((ObjSeqState*)seq)->unk60 = (s16)top16;
+                    ((ObjSeqState*)seq)->unk60 = top16;
                     break;
                 case 3:
                     seqGlobal1 = top16;
@@ -854,7 +854,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                     seqGlobal2 = top16;
                     break;
                 case 5:
-                    lbl_8039A45C[(s8)((ObjSeqState*)seq)->slot] = (s8)top16;
+                    lbl_8039A45C[(s8)((ObjSeqState*)seq)->slot] = top16;
                     break;
                 case 6:
                     GameBit_Set(((ObjSeqState*)seq)->unk6A, top16 != 0);
@@ -1009,7 +1009,7 @@ void ObjSeq_updateCamera(void)
                 {
                 case 0x47:
                     mode47.mode = lbl_803DD108;
-                    mode47.flag = (u8)lbl_803DD104;
+                    mode47.flag = lbl_803DD104;
                     (*gCameraInterface)->setMode(0x47, 1, 3, 8, &mode47, lbl_803DD100, 0xff);
                     break;
                 case 0x48:
@@ -1028,9 +1028,9 @@ void ObjSeq_updateCamera(void)
                     block.posB[0] = lbl_803DD0B0;
                     block.posB[1] = lbl_803DD0AC;
                     block.posB[2] = lbl_803DD0A8;
-                    block.rot[0] = (s16)lbl_803DD0A0;
-                    block.rot[1] = (s16)lbl_803DD09C;
-                    block.rot[2] = (s16)lbl_803DD098;
+                    block.rot[0] = lbl_803DD0A0;
+                    block.rot[1] = lbl_803DD09C;
+                    block.rot[2] = lbl_803DD098;
                     block.fov = lbl_803DD0A4;
                     (*gCameraInterface)->setMode(0x4c, 1, 0, 0x144, &block, 0, 0xff);
                     break;
@@ -1260,7 +1260,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         playerLock(Obj_GetPlayerObject(), cmdArg);
         break;
     case 44:
-        setMotionBlur(1, (f32)cmdArg / lbl_803DF004);
+        setMotionBlur(1, cmdArg / lbl_803DF004);
         break;
     case 45:
         setMotionBlur(0, lbl_803DEFB0);
@@ -1335,7 +1335,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         Sfx_StopObjectChannel((u32)sourceObj, 0x7f);
         break;
     case 16:
-        *(s8*)&((ObjSeqState*)seq)->unk7D = (s8)cmdArg;
+        *(s8*)&((ObjSeqState*)seq)->unk7D = cmdArg;
         break;
     case 21:
         lbl_803DD10C = 0x48;
@@ -1528,7 +1528,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         i++;
     }
 
-    ((ObjSeqState*)seq)->curFrame = (s16)found;
+    ((ObjSeqState*)seq)->curFrame = found;
     action = ObjSeq_GetActiveModel(activeObj);
     if (action != NULL)
     {
@@ -1740,7 +1740,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[18] & 0xfff, frame);
                 }
             }
-        vol = (int)val;
+        vol = val;
 
         walk = seq;
         for (i = 0; i < 3; i++)
@@ -1756,7 +1756,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
         {
             if (Sfx_IsPlayingFromObject((u32)seqObj, (u16)((ObjSeqState*)seq)->sfxId[3]) != 0)
             {
-                Sfx_SetObjectSfxVolume((u32)seqObj, (u16)((ObjSeqState*)seq)->sfxId[3], (u8)vol,
+                Sfx_SetObjectSfxVolume((u32)seqObj, (u16)((ObjSeqState*)seq)->sfxId[3], vol,
                                         lbl_803DF038);
             }
         }
@@ -2409,7 +2409,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         if ((s8)lbl_803DD113 < 10)
         {
-            entry = base + (s8)lbl_803DD113 * 8;
+            entry = base + lbl_803DD113 * 8;
             *(u8**)(entry + 0x3ca4) = activeObj;
             *(s8*)(entry + 0x3caa) = (s8)((*(s16*)(cmd + 2) >> 12) & 0xf);
             if ((s8) * (entry + 0x3caa) == 0xb || (s8) * (entry + 0x3caa) == 0xc)
@@ -2662,7 +2662,7 @@ int ObjSeq_update(u8* obj, f32 t)
         p -= 2;
         if (*(s16*)(p + 0x30) > 0)
         {
-            *(s16*)(p + 0x30) -= (s16)framesThisStep;
+            *(s16*)(p + 0x30) -= framesThisStep;
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
@@ -2696,7 +2696,7 @@ int ObjSeq_update(u8* obj, f32 t)
         slot = (s8)((ObjSeqState*)seq)->slot;
         if ((s8)base[slot + 0x3c4c] != 0 && (s8)base[slot + 0x39e8] != 0)
         {
-            ((ObjSeqState*)seq)->curFrame -= (s8)base[slot + 0x39e8];
+            ((ObjSeqState*)seq)->curFrame -= base[slot + 0x39e8];
             if (((ObjSeqState*)seq)->curFrame < 0)
             {
                 ((ObjSeqState*)seq)->curFrame = 0;
@@ -2758,7 +2758,7 @@ int ObjSeq_update(u8* obj, f32 t)
             if (found > -1)
             {
                 base[(s8)((ObjSeqState*)seq)->slot + 0x3cf4] = 1;
-                ((ObjSeqState*)seq)->curFrame = (s16)found;
+                ((ObjSeqState*)seq)->curFrame = found;
                 ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
             }
         }
@@ -3020,7 +3020,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 ((ObjSeqState*)seq)->prevFrame = ((ObjSeqState*)seq)->curFrame;
             }
             ((ObjSeqState*)seq)->sequenceControlFlags = 0;
-            base[(s8)((ObjSeqState*)seq)->slot + 0x3cf4] = (s8)restart;
+            base[(s8)((ObjSeqState*)seq)->slot + 0x3cf4] = restart;
         }
 
         ((ObjSeqState*)seq)->eventCount = 0;
@@ -3090,7 +3090,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 if (lbl_803DB724 == slot)
                 {
                     fval = lbl_803DD074;
-                    aInt = (int)fval;
+                    aInt = fval;
                     fval = fval - RecvDataLeng;
                     lbl_803DD074 = fval;
                     if (aInt != (int)fval)
@@ -3103,7 +3103,7 @@ int ObjSeq_update(u8* obj, f32 t)
                     }
                 }
                 *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3740) =
-                    (f32)step + *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3894);
+                    step + *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3894);
             }
         }
 
@@ -3915,7 +3915,7 @@ checked:
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
             }
-            *(s8*)(setup + 0x1f) = (s8)slot;
+            *(s8*)(setup + 0x1f) = slot;
             setup[0x22] = 1;
             setup[0x24] = (*(u16*)(walk2 + 4) & 0xf00) >> 8;
             setup[4] = 2;
@@ -4063,8 +4063,8 @@ gotFlags:
         }
     }
 
-    st->dists[((GameObject*)obj)->seqIndex] = (f32)seqFlags;
-    st->frames[((GameObject*)obj)->seqIndex] = (f32)seqFlags;
+    st->dists[((GameObject*)obj)->seqIndex] = seqFlags;
+    st->frames[((GameObject*)obj)->seqIndex] = seqFlags;
 
     if (slot >= 0 && slot < 0x55)
     {
@@ -4723,7 +4723,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
             i++;
         }
         segment = i - 1;
-        segmentT = (f32)segment +
+        segmentT = segment +
             (t - *(f32*)((u8*)state + (segment << 2) + 8)) /
                 (*(f32*)((u8*)state + (segment << 2) + 12) -
                     *(f32*)((u8*)state + (segment << 2) + 8));

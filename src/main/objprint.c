@@ -82,7 +82,7 @@ void objAnimFn_80038f38(int obj, char* p2)
         {
             u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1)
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 1)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
@@ -106,7 +106,7 @@ void objAnimFn_80038f38(int obj, char* p2)
                 *(f32*)(p2 + 4) = lbl_803DE9A4;
                 *(s16*)(p2 + 0x14) = 0;
             }
-            *(f32*)(p2 + 0xc) = (f32)t;
+            *(f32*)(p2 + 0xc) = t;
         }
     }
     else
@@ -207,7 +207,7 @@ int FUN_8003964c(int obj, uint key)
     {
         entryIdx = 0;
         vecOffset = 0;
-        for (remaining = (uint)OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
+        for (remaining = OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (key == *(byte*)(*(int*)(model + 0x10) + entryIdx)))
@@ -378,7 +378,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
     bool bVar6;
 
     bVar6 = (double)lbl_803DF664 < val;
-    if (((uint)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != (uint)bVar6)
+    if (((uint)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != bVar6)
     {
         *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
     }
@@ -398,7 +398,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             {
                 *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 1;
                 uVar4 = randomGetRange(100, 400);
-                *(short*)(curve + 0x1c) = (short)uVar4;
+                *(short*)(curve + 0x1c) = uVar4;
                 *(undefined2*)(curve + 0x14) = *(undefined2*)(state + 2);
             }
             else
@@ -415,7 +415,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             {
                 iVar5 = (int)*(short*)(curve + 0x14);
                 uVar4 = randomGetRange(0, 0x1fff);
-                *(short*)(curve + 0x14) = (short)uVar4;
+                *(short*)(curve + 0x14) = uVar4;
                 if (iVar5 < 1)
                 {
                     if (*(short*)(curve + 0x14) - iVar5 < 0xe38)
@@ -457,7 +457,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
         else
         {
             iVar5 = FUN_80017730();
-            *(short*)(curve + 0x14) = (short)iVar5 - *obj;
+            *(short*)(curve + 0x14) = iVar5 - *obj;
             if (0x8000 < *(short*)(curve + 0x14))
             {
                 *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 1;
@@ -468,7 +468,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             }
             fVar3 = lbl_803DF624;
             uVar4 = (uint) * (short*)(curve + 0x14);
-            if (((int)uVar4 < 0x2000) && (-0x2000 < (int)uVar4))
+            if (((int)uVar4 < 0x2000) && (-0x2000 < uVar4))
             {
                 if (*(float*)(curve + 0x10) <= lbl_803DF624)
                 {
@@ -516,13 +516,13 @@ void FUN_8003a1c4(int obj, int ctx)
     int entryIdx;
     int vecOffset;
 
-    found = (short*)0x0;
+    found = 0x0;
     model = (int)OBJPRINT_MODEL_INSTANCE(obj);
     if (model != 0)
     {
         entryIdx = 0;
         vecOffset = 0;
-        for (scaled = (uint)OBJPRINT_JOINT_COUNT(model); scaled != 0; scaled = scaled - 1)
+        for (scaled = OBJPRINT_JOINT_COUNT(model); scaled != 0; scaled = scaled - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
@@ -533,7 +533,7 @@ void FUN_8003a1c4(int obj, int ctx)
             vecOffset = vecOffset + 0x12;
         }
     }
-    if (found != (short*)0x0)
+    if (found != 0x0)
     {
         if (*found != 0)
         {
@@ -559,13 +559,13 @@ void fn_8003A328(double amount, short* obj, char* ctx)
     int entryIdx;
     int vecOffset;
 
-    found = (short*)0x0;
+    found = 0x0;
     model = (int)OBJPRINT_MODEL_INSTANCE(obj);
     if (model != 0)
     {
         entryIdx = 0;
         vecOffset = 0;
-        for (tmp = (uint)OBJPRINT_JOINT_COUNT(model); tmp != 0; tmp = tmp - 1)
+        for (tmp = OBJPRINT_JOINT_COUNT(model); tmp != 0; tmp = tmp - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
@@ -576,7 +576,7 @@ void fn_8003A328(double amount, short* obj, char* ctx)
             vecOffset = vecOffset + 0x12;
         }
     }
-    if (found != (short*)0x0)
+    if (found != 0x0)
     {
         if (*found != 0)
         {
@@ -662,7 +662,7 @@ void FUN_8003ac24(int obj, uint* keys, int count)
 
     for (idx = 0; idx < count; idx = idx + 1)
     {
-        found = (short*)0x0;
+        found = 0x0;
         hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
         if (hitDef != 0)
         {
@@ -679,7 +679,7 @@ void FUN_8003ac24(int obj, uint* keys, int count)
                 vecOffset = vecOffset + 0x12;
             }
         }
-        if (found != (short*)0x0)
+        if (found != 0x0)
         {
             found[1] = (short)(found[1] * 3 >> 2);
             *found = (short)(*found * 3 >> 2);
@@ -778,8 +778,8 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
     fStack_34 = (float)in_ps28_1;
     uVar13 = FUN_8028683c();
     psVar9 = (short*)((ulonglong)uVar13 >> 0x20);
-    iVar7 = (int)uVar13;
-    psVar12 = (short*)0x0;
+    iVar7 = uVar13;
+    psVar12 = 0x0;
     iVar8 = *(int*)(psVar9 + 0x28);
     if (iVar8 != 0)
     {
@@ -796,7 +796,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
             iVar11 = iVar11 + 0x12;
         }
     }
-    if (psVar12 != (short*)0x0)
+    if (psVar12 != 0x0)
     {
         if (iVar7 == 0)
         {
@@ -809,7 +809,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
             fVar3 = *(float*)(psVar9 + 10) - *(float*)(iVar7 + 0x14);
             FUN_80293900((double)(fVar2 * fVar2 + fVar3 * fVar3));
             iVar7 = FUN_80017730();
-            local_88[0] = (short)iVar7 - *psVar9;
+            local_88[0] = iVar7 - *psVar9;
             if (0x8000 < local_88[0])
             {
                 local_88[0] = local_88[0] + 1;
@@ -823,19 +823,19 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
                 local_88[0] = local_88[0] + -0x8000;
             }
             iVar7 = FUN_80017730();
-            local_88[1] = (short)iVar7 + -0x3fff;
+            local_88[1] = iVar7 + -0x3fff;
             uStack_7c = param_4 ^ 0x80000000;
             local_80 = 0x43300000;
             iVar7 = (int)(lbl_803DF66C *
                 (f32)(s32)(param_4));
             local_78 = (longlong)iVar7;
-            sVar5 = (short)iVar7;
+            sVar5 = iVar7;
             psVar9 = local_88;
             fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
-            iVar7 = (int)fVar2;
+            iVar7 = fVar2;
             local_68 = (double)(longlong)iVar7;
             iVar8 = -(int)(short)iVar7;
-            iVar10 = -(int)sVar5;
+            iVar10 = -sVar5;
             iVar11 = 2;
             iVar7 = state;
             do
@@ -844,16 +844,16 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
                 sVar6 = *psVar9;
                 if (sVar6 < iVar8)
                 {
-                    sVar6 = (short)iVar8;
+                    sVar6 = iVar8;
                 }
                 else
                 {
-                    iVar1 = (int)fVar2;
+                    iVar1 = fVar2;
                     local_68 = (double)(longlong)iVar1;
-                    if ((int)(short)iVar1 < (int)sVar6)
+                    if ((int)(short)iVar1 < sVar6)
                     {
                         local_70 = (double)(longlong)iVar1;
-                        sVar6 = (short)iVar1;
+                        sVar6 = iVar1;
                     }
                 }
                 *psVar9 = sVar6;
@@ -864,7 +864,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
                 }
                 if (*(short*)(iVar7 + 0x14) < iVar10)
                 {
-                    *(short*)(iVar7 + 0x14) = (short)iVar10;
+                    *(short*)(iVar7 + 0x14) = iVar10;
                 }
                 iVar7 = iVar7 + 0x30;
                 psVar9 = psVar9 + 1;
@@ -888,9 +888,9 @@ void FUN_8003b1a4(int obj, int ctx)
     int hitDef;
     int offset;
 
-    found5 = (int*)0x0;
+    found5 = 0x0;
     hitDef = (int)((GameObject*)obj)->anim.modelInstance;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
         for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
@@ -903,8 +903,8 @@ void FUN_8003b1a4(int obj, int ctx)
             offset = offset + 0x10;
         }
     }
-    found4 = (int*)0x0;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
+    found4 = 0x0;
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
         for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
@@ -917,15 +917,15 @@ void FUN_8003b1a4(int obj, int ctx)
             offset = offset + 0x10;
         }
     }
-    if (found5 == (int*)0x0)
+    if (found5 == 0x0)
     {
         return;
     }
-    if (found4 == (int*)0x0)
+    if (found4 == 0x0)
     {
         return;
     }
-    hitDef = *found4 + (uint)DAT_803dc070 * 0x30;
+    hitDef = *found4 + DAT_803dc070 * 0x30;
     if (0x1ff < hitDef)
     {
         hitDef = 0x200;
@@ -945,9 +945,9 @@ void FUN_8003b280(int obj, int ctx)
     int hitDef;
     int offset;
 
-    found5 = (int*)0x0;
+    found5 = 0x0;
     hitDef = (int)((GameObject*)obj)->anim.modelInstance;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
         for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
@@ -960,8 +960,8 @@ void FUN_8003b280(int obj, int ctx)
             offset = offset + 0x10;
         }
     }
-    found4 = (int*)0x0;
-    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != (char*)0x0))
+    found4 = 0x0;
+    if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
         for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
@@ -974,14 +974,14 @@ void FUN_8003b280(int obj, int ctx)
             offset = offset + 0x10;
         }
     }
-    if ((found5 != (int*)0x0) && (found4 != (int*)0x0))
+    if ((found5 != 0x0) && (found4 != 0x0))
     {
         state = (int)*(char*)(ctx + 0x1e) & 0xf;
         if (state == 1)
         {
             if (((int)*(char*)(ctx + 0x1e) & 0x80U) == 0)
             {
-                hitDef = *found4 + (uint)DAT_803dc070 * 0x60;
+                hitDef = *found4 + DAT_803dc070 * 0x60;
                 if (0x200 < hitDef)
                 {
                     if (hitDef + -0x200 < 0)
@@ -999,7 +999,7 @@ void FUN_8003b280(int obj, int ctx)
             }
             else
             {
-                hitDef = *found4 + (uint)DAT_803dc070 * -0x60;
+                hitDef = *found4 + DAT_803dc070 * -0x60;
                 if (hitDef < 0)
                 {
                     hitDef = 0;
@@ -1015,7 +1015,7 @@ void FUN_8003b280(int obj, int ctx)
             if (*(char*)(ctx + 0x1f) < '\x01')
             {
                 state = randomGetRange(0, 1000);
-                if (0x3de < (int)state)
+                if (0x3de < state)
                 {
                     *(undefined*)(ctx + 0x1e) = 1;
                     *(undefined*)(ctx + 0x1f) = 0;
@@ -1039,7 +1039,7 @@ void FUN_8003b444(short* obj, char* ctx)
     int entryIdx;
     int vecOffset;
 
-    found = (short*)0x0;
+    found = 0x0;
     model = *(int*)(obj + 0x28);
     if (model != 0)
     {
@@ -1056,7 +1056,7 @@ void FUN_8003b444(short* obj, char* ctx)
             vecOffset = vecOffset + 0x12;
         }
     }
-    if (found != (short*)0x0)
+    if (found != 0x0)
     {
         if (*found != 0)
         {
@@ -1125,15 +1125,15 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     {
         FUN_80017a04();
         *(ushort*)(obj + 0xb0) = *(ushort*)(obj + 0xb0) | 0x800;
-        flag = (char)renderFlag;
-        if (*(int**)(obj + 0x68) == (int*)0x0)
+        flag = renderFlag;
+        if (*(int**)(obj + 0x68) == 0x0)
         {
             if (flag != '\0')
             {
                 seqId = ((GameObject*)obj)->anim.seqId;
                 if ((seqId == 0x1f) || ((seqId < 0x1f && (seqId == 0))))
                 {
-                    FUN_802950c8(obj, ctxHi, (int)ctx, param_3, param_4, flag);
+                    FUN_802950c8(obj, ctxHi, ctx, param_3, param_4, flag);
                 }
                 else if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
                     (FUN_80040a88(obj), *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms != 0))
@@ -1147,7 +1147,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
             vfn = *(code**)(**(int**)(obj + 0x68) + 0x10);
             if (vfn != (code*)0x0)
             {
-                (*vfn)(obj, ctxHi, (int)ctx, param_3, param_4, renderFlag);
+                (*vfn)(obj, ctxHi, ctx, param_3, param_4, renderFlag);
             }
         }
         else if (((flag != '\0') &&
@@ -1312,9 +1312,9 @@ void objRenderFn_8003b8f4(int* obj)
 
 void fn_8003B5E0(int a, int b, int c, u8 d)
 {
-    lbl_803DCC0D = (u8)a;
-    lbl_803DCC0C = (u8)b;
-    lbl_803DCC0B = (u8)c;
+    lbl_803DCC0D = a;
+    lbl_803DCC0C = b;
+    lbl_803DCC0B = c;
     lbl_803DCC09 = 1;
     lbl_803DCC0A = d;
 }
@@ -1626,15 +1626,15 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
             v = found[0];
             if (v < lo) v = lo;
             else if (v > hi) v = hi;
-            found[0] = (s16)v;
+            found[0] = v;
             v = found[1];
             if (v < lo) v = lo;
             else if (v > hi) v = hi;
-            found[1] = (s16)v;
+            found[1] = v;
             v = found[2];
             if (v < lo) v = lo;
             else if (v > hi) v = hi;
-            found[2] = (s16)v;
+            found[2] = v;
         }
         keys++;
     }
@@ -1752,7 +1752,7 @@ void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
         return;
     }
     Sfx_PlayFromObjectChannel(p1, 0x10, p3);
-    *(f32*)((char*)p2 + 0xc) = (f32)p5;
+    *(f32*)((char*)p2 + 0xc) = p5;
     *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
     *(u8*)((char*)p2 + 0) = 1;
     *(f32*)((char*)p2 + 4) = lbl_803DE99C;
@@ -2129,7 +2129,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         {
             bank = *(u8**)((int)table + 0x10);
             if ((int)bank[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff &&
-                (int)bank[i] == 0)
+                bank[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -2139,7 +2139,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     }
     if (found != NULL)
     {
-        angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
+        angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
                               ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
         *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
@@ -2396,7 +2396,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
     {
     case 0:
         curve[13] = (s16)(flag << 8);
-        curve[14] = (s16)randomGetRange(0x32, 0xc8);
+        curve[14] = randomGetRange(0x32, 0xc8);
         break;
     case 1:
         curve[14] -= framesThisStep;
@@ -2436,7 +2436,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
         {
             curve[13] = (s16)(flag << 8 | 6);
             curve[10] = -curve[10];
-            curve[14] = (s16)randomGetRange(0x14, 0x64);
+            curve[14] = randomGetRange(0x14, 0x64);
         }
         break;
     case 6:
@@ -2448,7 +2448,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
         {
             curve[13] = (s16)(flag << 8 | 4);
             curve[10] = 0;
-            curve[14] = (s16)randomGetRange(0x14, 0x64);
+            curve[14] = randomGetRange(0x14, 0x64);
         }
         break;
     case 4:
@@ -2499,7 +2499,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
         else
         {
             curve[13] = (s16)(flag << 8 | 1);
-            curve[14] = (s16)randomGetRange(100, 400);
+            curve[14] = randomGetRange(100, 400);
             curve[10] = state[1];
         }
         break;
@@ -2508,7 +2508,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
         if (curve[14] < 0)
         {
             int old = curve[10];
-            curve[10] = (s16)randomGetRange(0, 0x1fff);
+            curve[10] = randomGetRange(0, 0x1fff);
             if (old > 0)
             {
                 if (old - curve[10] < 0xe38)
@@ -2575,7 +2575,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
                 if (t > lo)
                 {
                     f32 nv;
-                    state[1] = t * (f32)(curve[11] - n) + (f32)n;
+                    state[1] = t * (f32)(curve[11] - n) + n;
                     nv = -(lbl_803DE9E8 * timeDelta - *(f32*)((char*)curve + 0x10));
                     *(f32*)((char*)curve + 0x10) = nv;
                     if (nv < lo)
@@ -2621,7 +2621,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
         {
             u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 0)
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
@@ -2649,7 +2649,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             s16* ap;
             int i;
 
-            ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
+            ang[0] = getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
             if (ang[0] > 0x8000)
             {
                 ang[0] = (s16)(ang[0] - 0xffff);
@@ -2664,10 +2664,10 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             }
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
-            limA = (s16)(s32)(lbl_803DE9EC * (f32)a);
+            limA = (s16)(s32)(lbl_803DE9EC * a);
             p = p3;
             ap = ang;
-            minB = -(s16)(s32)(lbl_803DE9EC * (f32)b);
+            minB = -(s16)(s32)(lbl_803DE9EC * b);
             negA = -limA;
             for (i = 0; i < 2; i++)
             {
@@ -2676,11 +2676,11 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 v = *ap;
                 if (v < minB)
                 {
-                    v = (s16)minB;
+                    v = minB;
                 }
-                else if ((s16)(s32)(lbl_803DE9EC * (f32)b) < v)
+                else if ((s16)(s32)(lbl_803DE9EC * b) < v)
                 {
-                    v = (s16)(s32)(lbl_803DE9EC * (f32)b);
+                    v = (s16)(s32)(lbl_803DE9EC * b);
                 }
                 *ap = v;
                 *(s16*)(p + 0x14) += *ap;
@@ -2690,7 +2690,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 }
                 if (*(s16*)(p + 0x14) < negA)
                 {
-                    *(s16*)(p + 0x14) = (s16)negA;
+                    *(s16*)(p + 0x14) = negA;
                 }
                 p += 0x30;
                 ap++;
@@ -2775,7 +2775,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             va[0] = va[0] - vb[0];
             va[1] = va[1] - vb[1];
             va[2] = va[2] - vb[2];
-            ((GameObject*)staff)->anim.rotX = (s16)getAngle(va[0], va[2]);
+            ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
             ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
             ((GameObject*)staff)->anim.rotZ = 0;
         }
@@ -2897,7 +2897,7 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     {
         *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
         *(s16*)(p4 + 0x22) = (*(int*)(p4 + 0x24) < foundA->offsetS) ? -0x96 : 0x96;
-        *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
+        *(s8*)(p4 + 0x20) = randomGetRange(0x1e, 0x64);
     }
     timer = *(s8*)(p4 + 0x20);
     if (timer > 0)
@@ -2925,14 +2925,14 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
     for (i = 0, off = 0; i < *(u8*)(p1 + 0xf4); i++)
     {
         u8* grp = (u8*)(*(int*)(p1 + 0x54) + off);
-        f32* out = (f32*)ObjModel_GetJointMatrix((int*)p2, i + *(u8*)(p1 + 0xf3));
-        f32* m1 = (f32*)ObjModel_GetJointMatrix((int*)p2, grp[0]);
-        f32* m2 = (f32*)ObjModel_GetJointMatrix((int*)p2, grp[1]);
+        f32* out = ObjModel_GetJointMatrix((int*)p2, i + *(u8*)(p1 + 0xf3));
+        f32* m1 = ObjModel_GetJointMatrix((int*)p2, grp[0]);
+        f32* m2 = ObjModel_GetJointMatrix((int*)p2, grp[1]);
         f32 w;
         f32 wi;
         char* jd;
 
-        w = (f32)grp[2];
+        w = grp[2];
         w *= 0.25f;
         wi = 1.0f - w;
 
@@ -2990,7 +2990,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     dy = (pos[1] + yOff) - ((GameObject*)obj)->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
-    ang[2] = (s16)getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
+    ang[2] = getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
     if (ang[2] > 0x8000)
     {
         ang[2] = (s16)(ang[2] - 0xffff);
@@ -3048,7 +3048,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
         }
         if (found == NULL)
         {
-            int t = (s16)ret;
+            int t = ret;
             t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
         }
@@ -3071,14 +3071,14 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 }
                 v = *src;
                 *dst = v;
-                if (v > (s16)lim)
+                if (v > lim)
                 {
                     *dst = lim;
                     *src = v - lim;
                 }
-                else if (v < -(s16)lim)
+                else if (v < -lim)
                 {
-                    *dst = (s16) - (s16)lim;
+                    *dst = (s16) - lim;
                     *src = v + lim;
                 }
                 else
@@ -3118,8 +3118,8 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
             lim3 = (d2 < framesThisStep * (-t2 / div2))
                        ? framesThisStep * (-t2 / div2)
                        : ((d2 > framesThisStep * (t2 / div2)) ? framesThisStep * (t2 / div2) : d2);
-            found[0] += (s16)lim3;
-            found[1] += (s16)lim;
+            found[0] += lim3;
+            found[1] += lim;
         }
 
         if (i == 0)
@@ -3246,7 +3246,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     }
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
-    fz = (f32)lbl_803DCC44 / (f32)texCnt;
+    fz = lbl_803DCC44 / texCnt;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3290,7 +3290,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
+    GXSetIndTexMtx(1, &mtxA, lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(2, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(2, 0, 0);
@@ -3304,7 +3304,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
-    GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
+    GXSetIndTexMtx(2, &mtxB, lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
@@ -3345,7 +3345,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
         GXSetTevKAlphaSel(5, 0x1c);
         GXSetTevKColorSel(5, 0xc);
         fn_8006C4C0(&a174, &b178, &stk380);
-        selectTexture(*(void**)(a174 + ((lbl_803DCC44 - 0xc) + (u32)lbl_803DCC3D * b178) * 4), 5);
+        selectTexture(*(void**)(a174 + ((lbl_803DCC44 - 0xc) + lbl_803DCC3D * b178) * 4), 5);
         PSMTXScale(mtx5, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
         GXSetTexCoordGen2(5, 1, 4, 0x3c, 1, 0x49);
@@ -3477,7 +3477,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     }
     else
     {
-        fz = (f32)lbl_803DCC44 / (f32)texCnt;
+        fz = lbl_803DCC44 / texCnt;
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3623,7 +3623,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB48C);
+    GXSetIndTexMtx(1, &mtxA, lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(stage, 0, 0);
@@ -3639,7 +3639,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
-        GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
+        GXSetIndTexMtx(2, &mtxB, lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     }
     else

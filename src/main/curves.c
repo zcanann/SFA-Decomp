@@ -14,7 +14,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
 
     if (count != lbl_803DB270)
     {
-        step = lbl_803DE674 / (f32)count;
+        step = lbl_803DE674 / count;
         lbl_803DC8B0 = step;
         lbl_80338790[0] = step * step;
         lbl_80338790[1] = lbl_803DE660 * lbl_80338790[0];
@@ -187,7 +187,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
             }
         }
         step += lengths[seg + 1];
-        base = (f32)seg / lbl_803DE690;
+        base = seg / lbl_803DE690;
         frac = step / lengths[seg + 1];
         t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
         if (curve->px != NULL)
@@ -259,7 +259,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 seg = 19;
             }
         }
-        base = (f32)seg / lbl_803DE690;
+        base = seg / lbl_803DE690;
         frac = step / lengths[seg + 1];
         t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
         if (curve->px != NULL)
