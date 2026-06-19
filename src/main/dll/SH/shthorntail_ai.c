@@ -154,7 +154,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
     short angleDelta;
     int value;
     u32 nextState;
-    s16 facingAngle;
+    u16 facingAngle;
     s8 behaviorState;
     f32 dist;
 
