@@ -17648,12 +17648,12 @@ int fn_8029E568(int obj, int state, f32 fv)
             {
                 int pt = (int)(*gRomCurveInterface)->getById(found);
                 int pt2;
-                *(f32*)((int)inner + 0x61c) = *(f32*)((char*)pt + 0x8);
-                inner->unk620 = *(f32*)((char*)pt + 0xc);
-                inner->unk624 = *(f32*)((char*)pt + 0x10);
-                ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)pt + 0x8);
-                ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)pt + 0xc);
-                ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)pt + 0x10);
+                *(f32*)((int)inner + 0x61c) = ((ObjHitVolumeRuntimeTransform*)pt)->jointZ;
+                inner->unk620 = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
+                inner->unk624 = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
+                ((GameObject*)obj)->anim.localPosX = ((ObjHitVolumeRuntimeTransform*)pt)->jointZ;
+                ((GameObject*)obj)->anim.localPosY = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
+                ((GameObject*)obj)->anim.localPosZ = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
                 inner->targetYaw =
                     (s16)getAngle(inner->unk60C, inner->unk614);
                 inner->yaw = inner->targetYaw;
