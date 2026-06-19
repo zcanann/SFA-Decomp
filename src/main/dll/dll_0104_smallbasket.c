@@ -11,7 +11,7 @@
  * back to its placement, fade-in via anim.alpha, the carry/throw state
  * machine on unk5/unk9 (A-button grab, charged vs. normal throw via the
  * player query helpers fn_80295BF0/fn_8029669C/fn_802966B4), in-flight
- * physics integration calling fn_801821FC each step for swept-sphere
+ * physics integration calling smallbasket_resolveCollision each step for swept-sphere
  * ground/wall collision, leash to the placement origin (unkC range), and
  * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype unk1E.
  *
@@ -498,7 +498,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     return 1;
 }
 
-int fn_801821FC(u8* obj)
+int smallbasket_resolveCollision(u8* obj)
 {
     typedef struct
     {
@@ -791,7 +791,7 @@ void smallbasket_update(int obj)
     /* int-param redecls override the u8* definitions for these call sites only
        (caller passes int locals); can't live at file scope - conflicts with the
        earlier definitions. #57 */
-    extern void fn_801821FC(int obj);
+    extern void smallbasket_resolveCollision(int obj);
     extern void fn_801816F8(int obj, int player, int state);
     int player;
     int def;
@@ -1040,7 +1040,7 @@ void smallbasket_update(int obj)
                 anim.localPosY;
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
                 anim.localPosZ;
-            fn_801821FC(obj);
+            smallbasket_resolveCollision(obj);
             c = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
             if ((c != 0) && (*(s8*)&((CfperchState*)state)->throwState == 1))
             {
