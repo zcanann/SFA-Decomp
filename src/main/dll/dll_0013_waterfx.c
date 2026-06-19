@@ -99,7 +99,7 @@ int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist)
     return 0;
 }
 
-void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d)
+void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2)
 {
     int i = 0;
     WaterEntry7* p = lbl_803DD238;
@@ -473,7 +473,7 @@ void waterfx_run(void)
                 d->idx = -1;
                 lbl_803DD224 = (void*)((int)lbl_803DD224 - 1);
                 lbl_803DD20C = lbl_803DF334;
-                waterfx_spawnRipple(0, 8, d->x, wp->y, d->z, lbl_803DF300);
+                waterfx_spawnRipple(d->x, wp->y, d->z, 0, lbl_803DF300, 8);
             }
         }
     }
@@ -497,7 +497,7 @@ void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval)
                 }
             }
             lbl_803DD20C = lbl_803DF318;
-            waterfx_spawnRipple(*(s16*)p3, 4, vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, lbl_803DF300);
+            waterfx_spawnRipple(vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, *(s16*)p3, lbl_803DF300, 4);
             gWaterfxPendingImpactPosition[0] = vx;
             gWaterfxPendingImpactPosition[1] = *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4);
             gWaterfxPendingImpactPosition[2] = vz;

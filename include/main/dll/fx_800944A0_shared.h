@@ -321,7 +321,7 @@ void cloudaction_release(void);
 void cloudaction_initialise(void);
 void waterfx_setupSplashDropPointRender(void);
 int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist);
-void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d);
+void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2);
 void waterfx_setRippleScale(int flag, f32 val);
 void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d);
 void waterfx_spawnSplashBurst(void *obj, f32 a, f32 b, f32 c, f32 d);
