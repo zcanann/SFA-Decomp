@@ -204,19 +204,19 @@ void fn_801554B4(int* obj, int state)
     probeOffsets = (float*)&lbl_8031F2F8;
     for (i = 0; didHit == 0 && i < 4; i++)
     {
-        maxv[0] = *(float*)(obj + 3) + *probeOffsets;
-        maxv[1] = *(float*)(obj + 4);
-        maxv[2] = *(float*)(obj + 5) + probeOffsets[1];
-        minv[0] = *(float*)(obj + 3) - *probeOffsets;
-        minv[1] = *(float*)(obj + 4);
-        minv[2] = *(float*)(obj + 5) - probeOffsets[1];
+        maxv[0] = ((GameObject*)obj)->anim.localPosX + *probeOffsets;
+        maxv[1] = ((GameObject*)obj)->anim.localPosY;
+        maxv[2] = ((GameObject*)obj)->anim.localPosZ + probeOffsets[1];
+        minv[0] = ((GameObject*)obj)->anim.localPosX - *probeOffsets;
+        minv[1] = ((GameObject*)obj)->anim.localPosY;
+        minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[1];
         didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
         probeOffsets = probeOffsets + 2;
     }
     if (didHit != 0)
     {
-        *(float*)(obj + 3) = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
-        *(float*)(obj + 5) = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
+        ((GameObject*)obj)->anim.localPosX = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
+        ((GameObject*)obj)->anim.localPosZ = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
         *(float*)(state + 0x344) = hit[7];
         *(float*)(state + 0x348) = hit[8];
         *(float*)(state + 0x34c) = hit[9];
