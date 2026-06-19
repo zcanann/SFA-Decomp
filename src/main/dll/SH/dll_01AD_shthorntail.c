@@ -370,7 +370,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
-    u8 byteVal;
+    int byteVal;
     u8 hitResult;
     u8 mode;
     ObjHitReactEntry* hitReactEntries;
@@ -449,7 +449,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             byteVal = runtime->freezeFrameCounter + 1;
             runtime->freezeFrameCounter = byteVal;
-            if (byteVal > 0xa)
+            if ((u8)byteVal > 0xa)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
@@ -500,8 +500,8 @@ void SHthorntail_update(SHthorntailObject* obj)
             lbl_803E5458;
             facingSin = -mathCosf(facingAngleRadians);
             obj->modelPos.x = facingCos * -animEvents.rootDeltaZ + obj->modelPos.x;
-            obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
-            obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;
+            obj->modelPos.z = facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
+            obj->modelPos.x = facingSin * -animEvents.rootDeltaX + obj->modelPos.x;
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
             obj->facingAngle += animEvents.rootPitch;
         }
@@ -570,7 +570,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
         {
             gSHthorntailActiveConfigToken = obj->config->configToken;
-            obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
+            obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
             (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
             (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
             (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
@@ -583,18 +583,18 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
             }
-            if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState))
+            if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
-                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
-            }
-            else
-            {
-                obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
+                obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
                 (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
                 (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
                 (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
                 obj->pitch = runtime->moveControlPitch;
                 obj->roll = runtime->moveControlRoll;
+            }
+            else
+            {
+                (*gSHthorntailPathControlInterface)->bindObject(obj, (int)runtime->moveScratch);
             }
         }
     }
