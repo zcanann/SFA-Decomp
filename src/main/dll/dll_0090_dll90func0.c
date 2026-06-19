@@ -2,7 +2,7 @@
  * dll90func0 (DLL 0x90) - one of the foodbag effect-spawner DLLs.
  *
  * dll_90_func03 builds a fixed 21-entry FbCmd display list on the stack
- * (textures resolved as offsets into the lbl_80316E30 resource block, all
+ * (textures resolved as offsets into the gDll90EffectResourceBlock resource block, all
  * coordinates pulled from the lbl_803E11A0.. float pool) plus the
  * surrounding FbBuf header, then hands it to the modgfx interface's
  * spawnEffect. When the low flag bit is set the effect is anchored to a
@@ -16,7 +16,7 @@
 #include "main/dll/foodbag.h"
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316E30[];
+extern u8 gDll90EffectResourceBlock[];
 extern u8 lbl_803DB920;
 extern f32 lbl_803E11A0;
 extern f32 lbl_803E11A4;
@@ -36,7 +36,7 @@ extern f32 lbl_803E11D4;
 void dll_90_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
-    u8* base = (u8*)(int)lbl_80316E30;
+    u8* base = (u8*)(int)gDll90EffectResourceBlock;
     FbCmd* e = buf.entries;
 
     e[0].layer = 0;
@@ -227,7 +227,7 @@ void dll_90_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E11A0 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316E30, 0x10, base + 0xb4, 0x45, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)gDll90EffectResourceBlock, 0x10, base + 0xb4, 0x45, 0);
 }
 
 void dll_91_func01_nop(void);

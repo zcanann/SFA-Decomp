@@ -68,18 +68,18 @@ extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
 extern void* getTrickyObject(void);
 extern f32 lbl_803E3AF8;
-extern f32 lbl_803E3AFC;
+extern f32 gFlammableVineBurnDuration;
 extern f32 lbl_803E3B00;
 extern f32 lbl_803E3B04;
 extern f32 lbl_803E3B08;
 extern f32 lbl_803E3B0C;
 extern f32 lbl_803E3B10;
-extern f32 lbl_803E3B14;
+extern f32 gFlammableVineMaxAlpha;
 extern f32 lbl_803E3B18;
 extern f32 lbl_803E3B1C;
 extern f32 lbl_803E3B20;
-extern f32 lbl_803E3B24;
-extern f32 lbl_803E3B28;
+extern f32 gFlammableVineScaleParamNormalize;
+extern f32 gFlammableVineMinScale;
 extern f32 lbl_803E3B2C;
 extern f32 lbl_803E3B30;
 extern f32 lbl_803E3B34;
@@ -122,7 +122,7 @@ void flammablevine_hitDetect(int obj)
                 GameBit_Set(((FlammablevineObjectDef*)def)->burnedBit, 1);
                 Sfx_PlayFromObject(0, 0x409);
             }
-            state->burnTimer = lbl_803E3AFC;
+            state->burnTimer = gFlammableVineBurnDuration;
             state->flags = state->flags | 1;
         }
     }
@@ -138,10 +138,10 @@ void flammablevine_init(int obj, int def)
     ((GameObject*)obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
 
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)((FlammablevineObjectDef*)def)->scaleParam /
-        lbl_803E3B24);
-    if (((GameObject*)obj)->anim.rootMotionScale <= *(f32*)&lbl_803E3B28)
+        gFlammableVineScaleParamNormalize);
+    if (((GameObject*)obj)->anim.rootMotionScale <= *(f32*)&gFlammableVineMinScale)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B28;
+        ((GameObject*)obj)->anim.rootMotionScale = gFlammableVineMinScale;
     }
 
     scale = ((GameObject*)obj)->anim.rootMotionScale;
@@ -280,7 +280,7 @@ checked_vine_use:
             }
             else
             {
-                fadeAlpha = (u8)(lbl_803E3B14 * ((state->burnTimer - lbl_803E3B04) / lbl_803E3B18));
+                fadeAlpha = (u8)(gFlammableVineMaxAlpha * ((state->burnTimer - lbl_803E3B04) / lbl_803E3B18));
                 ((GameObject*)obj)->anim.alpha = fadeAlpha;
             }
         }

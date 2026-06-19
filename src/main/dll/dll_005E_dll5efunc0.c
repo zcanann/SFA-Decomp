@@ -118,7 +118,7 @@ extern u32 DAT_803de10c;
 extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
 extern u32 uRam803de108;
-extern u8 lbl_80312340[];
+extern u8 gDll5EFunc03SequenceData[];
 extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
 extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
 extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
@@ -656,7 +656,7 @@ void dll_5E_func00_nop(void)
 
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
 {
-    u8* base = (u8*)(int)lbl_80312340;
+    u8* base = (u8*)(int)gDll5EFunc03SequenceData;
     (*gModgfxInterface)->beginSequence((void*)sourceObj, (u8)variant, 0x12, 3, 9);
     (*gModgfxInterface)->setSequenceParams(&base[0x2cc]);
     (*gModgfxInterface)->addSequenceFlags(flags | 0x4004484);
@@ -684,6 +684,6 @@ void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
     (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
     (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, NULL);
     (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)lbl_80312340, 0x24, &base[0x168], 0x10, 0x120, 0);
+    (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)gDll5EFunc03SequenceData, 0x24, &base[0x168], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
