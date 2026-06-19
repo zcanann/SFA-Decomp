@@ -169,7 +169,7 @@ typedef struct LandedArwingHitFlagBits
     u8 rest : 4;
 } LandedArwingHitFlagBits;
 
-extern LandedArwingFxPoint lbl_80321A28[];
+extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
 extern f32 lbl_803E3BA0;
@@ -195,12 +195,12 @@ void landed_arwing_renderPathEffects(int obj)
         i = 0;
         while (i < 5)
         {
-            ObjPath_GetPointWorldPosition(obj, lbl_80321A28[i].pathPoint, &scratch.x, &scratch.y, &scratch.z, 0);
+            ObjPath_GetPointWorldPosition(obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y, &scratch.z, 0);
             scratch.x -= ((GameObject*)obj)->anim.localPosX;
             scratch.y -= ((GameObject*)obj)->anim.localPosY;
             scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffect(obj, ((GameObject*)obj)->anim.rootMotionScale * lbl_80321A28[i].scale, 4,
-                                       lbl_80321A28[i].arg5, lbl_80321A28[i].arg6, scratch.effectPos);
+            objfx_spawnMaskedHitEffect(obj, ((GameObject*)obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
+                                       gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
             i++;
         }
     }

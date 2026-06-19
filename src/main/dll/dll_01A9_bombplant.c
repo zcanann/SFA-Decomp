@@ -18,16 +18,16 @@ extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
-extern f32 lbl_803E5378;
+extern f32 gBombPlantExplosionScale;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void setMatrixFromObjectPos(void* mtx, void* build);
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E536C;
-extern f32 lbl_803E5374;
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
+extern f32 gBombPlantSporeOffsetScale;
+extern f32 gBombPlantGrowRateMin;
+extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
@@ -39,10 +39,10 @@ extern u32 ObjHits_EnableObject();
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
-extern f32 lbl_803E5368;
-extern f32 lbl_803E537C;
+extern f32 gBombPlantTriggerDistSq;
+extern f32 gBombPlantGrowRateDecay;
 extern f32 lbl_803E5380;
-extern u8 lbl_80326D20[];
+extern u8 gBombPlantStateTable[];
 
 int bombplant_getExtraSize(void)
 {
@@ -79,7 +79,7 @@ void fn_801D2B70(int* obj, int unused, int* p3)
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | 0x40);
     }
-    spawnExplosion((int)obj, lbl_803E5378, 0, 1, 1, 1, 0, 1, 0);
+    spawnExplosion((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
     *(u8*)((char*)p3 + 0x14) = 1;
     *(u8*)((char*)p3 + 0x15) = (u8)(*(u8*)((char*)p3 + 0x15) | 2);
     gbId = *(s16*)((char*)p4 + 0x1c);
@@ -132,10 +132,10 @@ void fn_801D29E4(int* obj, int* p2)
         bd.w = lbl_803E5370;
         setMatrixFromObjectPos(mtx, &bd);
         Matrix_TransformPoint(mtx, 0.0f, lbl_803E5370, 0.0f, &tx, &ty, &tz);
-        sx = lbl_803E5374 * tx;
+        sx = gBombPlantSporeOffsetScale * tx;
         bd.v[0] = sx;
-        bd.v[1] = lbl_803E5374 * ty;
-        bd.v[2] = lbl_803E5374 * tz;
+        bd.v[1] = gBombPlantSporeOffsetScale * ty;
+        bd.v[2] = gBombPlantSporeOffsetScale * tz;
         *(f32*)((char*)spore + 0x8) = ((GameObject*)obj)->anim.localPosX + sx;
         *(f32*)((char*)spore + 0xc) = ((GameObject*)obj)->anim.localPosY + bd.v[1];
         *(f32*)&((ObjDef*)spore)->jointData = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
@@ -168,8 +168,8 @@ int bombplant_SeqFn(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)src)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)src)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)src)->unk10;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5358;
-        ((EnemyMushroomState*)state)->riseDuration = lbl_803E535C;
+        ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
+        ((EnemyMushroomState*)state)->riseDuration = gBombPlantGrowDuration;
         ((EnemyMushroomState*)state)->heightTarget = ((EnemyMushroomState*)state)->baseScale;
         ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->heightTarget / ((EnemyMushroomState*)
             state)->riseDuration;
@@ -230,8 +230,8 @@ void bombplant_init(void* obj, void* param, int flag)
         ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->unk10;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5358;
-        ((BombPlantState*)state)->growDuration = lbl_803E535C;
+        ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
+        ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
         ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
         ((BombPlantState*)state)->growRate =
             ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
@@ -284,7 +284,7 @@ void bombplant_update(void* obj)
     }
 
     state = ((GameObject*)obj)->extra;
-    entry = &lbl_80326D20[((BombPlantState*)state)->stateIndex * 0xc];
+    entry = &gBombPlantStateTable[((BombPlantState*)state)->stateIndex * 0xc];
 
     switch (((BombPlantState*)state)->stateIndex)
     {
@@ -303,7 +303,7 @@ void bombplant_update(void* obj)
                 plr = Obj_GetPlayerObject();
                 dist =
                     vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
-                if (dist > lbl_803E5368)
+                if (dist > gBombPlantTriggerDistSq)
                 {
                     ((BombPlantState*)state)->stateIndex = 2;
                     ((BombPlantState*)state)->flags |= 0x2;
@@ -319,7 +319,7 @@ void bombplant_update(void* obj)
                 plr = Obj_GetPlayerObject();
                 dist =
                     vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
-                if (dist > lbl_803E5368)
+                if (dist > gBombPlantTriggerDistSq)
                 {
                     ((BombPlantState*)state)->stateIndex = 2;
                     ((BombPlantState*)state)->flags |= 0x2;
@@ -340,8 +340,8 @@ void bombplant_update(void* obj)
             ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->unk8;
             ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->unkC;
             ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->unk10;
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5358;
-            ((BombPlantState*)state)->growDuration = lbl_803E535C;
+            ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
+            ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
             ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
             ((BombPlantState*)state)->growRate =
                 ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
@@ -350,9 +350,9 @@ void bombplant_update(void* obj)
         }
         if (((GameObject*)obj)->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
         {
-            ((BombPlantState*)state)->growRate = ((BombPlantState*)state)->growRate / lbl_803E537C;
+            ((BombPlantState*)state)->growRate = ((BombPlantState*)state)->growRate / gBombPlantGrowRateDecay;
         }
-        if (((BombPlantState*)state)->growRate < lbl_803E5358)
+        if (((BombPlantState*)state)->growRate < gBombPlantGrowRateMin)
         {
             ((BombPlantState*)state)->growRate = lbl_803E536C;
         }

@@ -384,11 +384,11 @@ int fn_80080360(int p, int val)
     return 1;
 }
 
-extern s16 lbl_8039A3B0[];
+extern s16 gObjSeqSlotSeqIdTable[];
 
 int animatedObjGetSeqId(int obj)
 {
-    return lbl_8039A3B0[(s8) * (u8*)(obj + 0x57)] - 1;
+    return gObjSeqSlotSeqIdTable[(s8) * (u8*)(obj + 0x57)] - 1;
 }
 
 void ObjSeq_yield(ObjSeqState* seq, int value)
@@ -556,15 +556,15 @@ void objModelResetVecFn_80080548(int obj)
 }
 
 extern u8 lbl_803DD124;
-extern int lbl_8039A664[][2];
+extern int gObjSeqPreemptList[][2];
 
 void ObjSeq_preempt(int a, int b)
 {
     u8 c = lbl_803DD124;
     int i = (s8)c;
     if (i >= 40) return;
-    lbl_8039A664[i][0] = a;
-    lbl_8039A664[i][1] = b;
+    gObjSeqPreemptList[i][0] = a;
+    gObjSeqPreemptList[i][1] = b;
     lbl_803DD124++;
 }
 
@@ -750,7 +750,7 @@ extern int DVDClose(DVDFileInfoStub* fi);
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 
 extern u8 lbl_803DC968;
-extern int lbl_803DD05C;
+extern int gSaveCardImageBuffer;
 extern char sMemoryCardFileNameString[];
 
 /* EN v1.0 0x8007F358  size: 1372b  Builds the memory card comment strings
@@ -769,76 +769,76 @@ void loadMemCardImages(void)
 
     if (lbl_803DC968 != 0)
     {
-        *(u8*)(lbl_803DD05C + 0x00) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x01) = 0x58;
-        *(u8*)(lbl_803DD05C + 0x02) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x03) = 0x5e;
-        *(u8*)(lbl_803DD05C + 0x04) = 0x81;
-        *(u8*)(lbl_803DD05C + 0x05) = 0x5b;
-        *(u8*)(lbl_803DD05C + 0x06) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x07) = 0x74;
-        *(u8*)(lbl_803DD05C + 0x08) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x09) = 0x48;
-        *(u8*)(lbl_803DD05C + 0x0a) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x0b) = 0x62;
-        *(u8*)(lbl_803DD05C + 0x0c) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x0d) = 0x4e;
-        *(u8*)(lbl_803DD05C + 0x0e) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x0f) = 0x58;
-        *(u8*)(lbl_803DD05C + 0x10) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x11) = 0x41;
-        *(u8*)(lbl_803DD05C + 0x12) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x13) = 0x68;
-        *(u8*)(lbl_803DD05C + 0x14) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x15) = 0x78;
-        *(u8*)(lbl_803DD05C + 0x16) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x17) = 0x93;
-        *(u8*)(lbl_803DD05C + 0x18) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x19) = 0x60;
-        *(u8*)(lbl_803DD05C + 0x1a) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x1b) = 0x83;
-        *(u8*)(lbl_803DD05C + 0x1c) = 0x81;
-        *(u8*)(lbl_803DD05C + 0x1d) = 0x5b;
-        *(u8*)(lbl_803DD05C + 0x1e) = 0x00;
-        *(u8*)(lbl_803DD05C + 0x1f) = 0x00;
-        sprintf((char*)(lbl_803DD05C + 0x20), names + 0xa0);
+        *(u8*)(gSaveCardImageBuffer + 0x00) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x01) = 0x58;
+        *(u8*)(gSaveCardImageBuffer + 0x02) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x03) = 0x5e;
+        *(u8*)(gSaveCardImageBuffer + 0x04) = 0x81;
+        *(u8*)(gSaveCardImageBuffer + 0x05) = 0x5b;
+        *(u8*)(gSaveCardImageBuffer + 0x06) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x07) = 0x74;
+        *(u8*)(gSaveCardImageBuffer + 0x08) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x09) = 0x48;
+        *(u8*)(gSaveCardImageBuffer + 0x0a) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x0b) = 0x62;
+        *(u8*)(gSaveCardImageBuffer + 0x0c) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x0d) = 0x4e;
+        *(u8*)(gSaveCardImageBuffer + 0x0e) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x0f) = 0x58;
+        *(u8*)(gSaveCardImageBuffer + 0x10) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x11) = 0x41;
+        *(u8*)(gSaveCardImageBuffer + 0x12) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x13) = 0x68;
+        *(u8*)(gSaveCardImageBuffer + 0x14) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x15) = 0x78;
+        *(u8*)(gSaveCardImageBuffer + 0x16) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x17) = 0x93;
+        *(u8*)(gSaveCardImageBuffer + 0x18) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x19) = 0x60;
+        *(u8*)(gSaveCardImageBuffer + 0x1a) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x1b) = 0x83;
+        *(u8*)(gSaveCardImageBuffer + 0x1c) = 0x81;
+        *(u8*)(gSaveCardImageBuffer + 0x1d) = 0x5b;
+        *(u8*)(gSaveCardImageBuffer + 0x1e) = 0x00;
+        *(u8*)(gSaveCardImageBuffer + 0x1f) = 0x00;
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + 0xa0);
     }
     else
     {
-        sprintf((char*)lbl_803DD05C, names);
-        sprintf((char*)(lbl_803DD05C + 0x20), names + 0xb4);
+        sprintf((char*)gSaveCardImageBuffer, names);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + 0xb4);
     }
     if (DVDOpen(names + 0xc4, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x40), 0x1800, 0x20);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x40), 0x1800, 0x20);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0xd0, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x1840), 0x400, 0);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x1840), 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0xe8, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x1c40), 0x400, 0);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x1c40), 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x100, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2040), 0x400, 0);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2040), 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x118, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2440), 0x400, 0);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2440), 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x130, &fi))
     {
-        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2840), 0x200, 0);
+        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2840), 0x200, 0);
         DVDClose(&fi);
     }
-    p = (u64*)lbl_803DD05C;
+    p = (u64*)gSaveCardImageBuffer;
     x = 0;
     a = 1;
     for (i = 0; (int)i < 0x400; i++)
@@ -850,7 +850,7 @@ void loadMemCardImages(void)
     chk = x ^ (a + 13);
     ((u32*)p)[0xa91] = (u32)chk;
     ((u32*)p)[0xa90] = (u32)(chk >> 32);
-    q = (u64*)lbl_803DD05C;
+    q = (u64*)gSaveCardImageBuffer;
     p = q + 0x400;
     x = 0;
     a = 1;
@@ -863,7 +863,7 @@ void loadMemCardImages(void)
     chk = x ^ (a + 13);
     ((u32*)q)[0xfff] = (u32)chk;
     ((u32*)q)[0xffe] = (u32)(chk >> 32);
-    DCFlushRange((void*)lbl_803DD05C, 0x4000);
+    DCFlushRange((void*)gSaveCardImageBuffer, 0x4000);
 }
 
 typedef struct
@@ -1005,7 +1005,7 @@ int saveGame(int writeImages)
     if (fresh != 0)
     {
         m = mmAlloc(0x4000, -1, 0);
-        lbl_803DD05C = (int)m;
+        gSaveCardImageBuffer = (int)m;
         if (m != NULL)
         {
             memset(m, 0, 0x4000);
@@ -1028,10 +1028,10 @@ int saveGame(int writeImages)
     {
         if (result == 0)
         {
-            result = CARDWrite(lbl_80396900, (void*)lbl_803DD05C, 0x4000, 0);
+            result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x4000, 0);
             if (result == 0)
             {
-                result = CARDWrite(lbl_80396900, (void*)(lbl_803DD05C + 0x2000), 0x2000, 0x4000);
+                result = CARDWrite(lbl_80396900, (void*)(gSaveCardImageBuffer + 0x2000), 0x2000, 0x4000);
             }
             if (result == -5)
             {
@@ -1059,11 +1059,11 @@ int saveGame(int writeImages)
                 result = CARDSetStatus(0, lbl_80396900[1], &stat);
                 if (result == 0)
                 {
-                    lbl_803DD050 = *(u64*)(lbl_803DD05C + 0x3ff8);
+                    lbl_803DD050 = *(u64*)(gSaveCardImageBuffer + 0x3ff8);
                 }
             }
         }
-        mm_free((void*)lbl_803DD05C);
+        mm_free((void*)gSaveCardImageBuffer);
     }
     switch (result)
     {
@@ -1221,7 +1221,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     }
     if (result == 0)
     {
-        lbl_803DD05C = (int)(m = mmAlloc(0x4000, -1, 0));
+        gSaveCardImageBuffer = (int)(m = mmAlloc(0x4000, -1, 0));
         if (m == NULL)
         {
             if (lbl_803DD05A != 0)
@@ -1240,7 +1240,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         result = CARDRead(lbl_80396900, m, 0x2000, 0);
         if (result == 0)
         {
-            p = (u64*)lbl_803DD05C;
+            p = (u64*)gSaveCardImageBuffer;
             x = 0;
             acc = 1;
             for (i = 0; (int)i < 0x400; i++)
@@ -1259,16 +1259,16 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                 }
                 else
                 {
-                    memset((void*)lbl_803DD05C, 0, 0x4000);
+                    memset((void*)gSaveCardImageBuffer, 0, 0x4000);
                     loadMemCardImages();
-                    result = CARDWrite(lbl_80396900, (void*)lbl_803DD05C, 0x2000, 0);
+                    result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x2000, 0);
                     if (result == -5)
                     {
                         CARDDelete(0, sMemoryCardFileName);
                     }
                     if (result == 0)
                     {
-                        t = *(u64*)(lbl_803DD05C + 0x2a40);
+                        t = *(u64*)(gSaveCardImageBuffer + 0x2a40);
                         if (t != *(u64*)(lbl_803DD044 + 0xa40))
                         {
                             int e;
@@ -1284,7 +1284,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                 }
             }
         }
-        mm_free((void*)lbl_803DD05C);
+        mm_free((void*)gSaveCardImageBuffer);
     }
     if (result == 0 && cb != NULL)
     {
@@ -1484,25 +1484,25 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 }
 
 extern void AudioStream_StartPrepared(void);
-extern int lbl_803DD094;
+extern int gObjSeqStreamSuppressed;
 extern int lbl_803DB728;
 extern f32 lbl_803DEFB0;
 extern f32 lbl_803DD074;
 extern int lbl_803DB724;
-extern f32 lbl_8039A1AC[];
+extern f32 gObjSeqSlotStreamTimeTable[];
 
 /* EN v1.0 0x8008023C  size: 260b  Starts the prepared audio stream for a
  * sequence slot and records its subtitle timing. */
 int seqStreamFn_8008023c(int x)
 {
-    int seqId = lbl_8039A3B0[x] - 1;
+    int seqId = gObjSeqSlotSeqIdTable[x] - 1;
     f32 v;
 
-    if (lbl_803DD094 != 0 || AudioStream_IsPreparing() != 0)
+    if (gObjSeqStreamSuppressed != 0 || AudioStream_IsPreparing() != 0)
     {
         return 0;
     }
-    v = lbl_8039A1AC[x] - (f32)lbl_803DB728;
+    v = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
     lbl_803DD074 = v;
     if (lbl_803DEFB0 != lbl_803DD074)
     {
@@ -1590,5 +1590,5 @@ void endObjSequence(int seq)
         }
     }
     lbl_803DD07C = 0;
-    lbl_8039A3B0[seq] = 0;
+    gObjSeqSlotSeqIdTable[seq] = 0;
 }
