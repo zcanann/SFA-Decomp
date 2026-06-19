@@ -9,7 +9,7 @@
  *
  * flags bit 0x200000 selects an explicit source offset (otherwise the model's
  * world position at +0x18/0x1c/0x20 is used); behaviour-flag bit 0 enables that
- * positional offset. Ids that take no source default it to lbl_8039C3C8.
+ * positional offset. Ids that take no source default it to gEffect11DefaultSrcParams.
  */
 #include "main/game_object.h"
 #include "main/dll/effectsrcparams_struct.h"
@@ -21,7 +21,7 @@
 
 extern void vecRotateZXY(void* rot, f32* vec);
 
-extern EffectSrcParams lbl_8039C3C8;
+extern EffectSrcParams gEffect11DefaultSrcParams;
 extern f32 lbl_803DFF3C;
 extern f32 lbl_803DFF40;
 extern f32 lbl_803DFF44;
@@ -109,14 +109,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x12d:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.scale = lbl_803DFF44;
     p.count = randomGetRange(0, 0x1e) + 0x46;
@@ -127,14 +127,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x12e:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
     p.posY = 0.0f;
@@ -151,14 +151,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x12f:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
     p.posY = 0.0f;
@@ -175,14 +175,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x130:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
     p.posY = 0.0f;
@@ -221,14 +221,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x133:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = src->x;
     p.posY = src->y;
@@ -242,14 +242,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x134:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = lbl_803DFF78 * (f32)(int)randomGetRange(-200, 200) + src->x;
     p.posY = src->y;
@@ -263,14 +263,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x135:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
     p.posY = lbl_803DFF70 * (f32)(int)randomGetRange(-0x1e, 0);
@@ -287,14 +287,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x136:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     p.posX = (f32)(int)randomGetRange(-src->rot1, src->rot1) / lbl_803DFF88;
     p.posY = (f32)(int)randomGetRange(-src->rot1, src->rot1) / lbl_803DFF88;
@@ -307,14 +307,14 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x137:
     if (src == NULL)
     {
-      lbl_8039C3C8.x = 0.0f;
-      lbl_8039C3C8.y = 0.0f;
-      lbl_8039C3C8.z = 0.0f;
-      lbl_8039C3C8.w = lbl_803DFF40;
-      lbl_8039C3C8.rot0 = 0;
-      lbl_8039C3C8.rot1 = 0;
-      lbl_8039C3C8.rot2 = 0;
-      src = &lbl_8039C3C8;
+      gEffect11DefaultSrcParams.x = 0.0f;
+      gEffect11DefaultSrcParams.y = 0.0f;
+      gEffect11DefaultSrcParams.z = 0.0f;
+      gEffect11DefaultSrcParams.w = lbl_803DFF40;
+      gEffect11DefaultSrcParams.rot0 = 0;
+      gEffect11DefaultSrcParams.rot1 = 0;
+      gEffect11DefaultSrcParams.rot2 = 0;
+      src = &gEffect11DefaultSrcParams;
     }
     if (src == NULL)
     {

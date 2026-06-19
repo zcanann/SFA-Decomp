@@ -1356,8 +1356,8 @@ extern f32 lbl_803DFA48;
 extern f32 lbl_803DFA4C;
 extern f32 lbl_803DFA50;
 extern f32 lbl_803DFA54;
-extern f32 lbl_803DFA58;
-extern f32 lbl_803DFA5C;
+extern f32 gEffect3Pi;
+extern f32 gEffect3AngleFullScale;
 extern f32 lbl_803DFA60;
 extern f32 lbl_803DFA64;
 extern f32 lbl_803DFA68;
@@ -1835,8 +1835,8 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
             randomGetRange(0, 0x258) + lbl_803DFA54;
             cfg.velocityY = lbl_803DFA10 * (f32)(s32)
             randomGetRange(0, 0xc8) + lbl_803DF9D4;
-            cfg.velocityX = mathSinf(lbl_803DFA58 * (f32) * (s16*)sourceObj / lbl_803DFA5C);
-            cfg.velocityZ = mathCosf(lbl_803DFA58 * (f32) * (s16*)sourceObj / lbl_803DFA5C);
+            cfg.velocityX = mathSinf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
+            cfg.velocityZ = mathCosf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
             b = a * (lbl_803DFA60 * (f32)(s32)
             randomGetRange(0, 0x14)
             )

@@ -1302,16 +1302,16 @@ extern u8 framesThisStep;
 
 extern f32 lbl_803DB818;
 extern f32 lbl_803DB81C;
-extern int lbl_803DD390;
-extern int lbl_803DD394;
-extern f32 lbl_803DD398;
-extern f32 lbl_803DD39C;
+extern int gModgfxSinePhaseA;
+extern int gModgfxSinePhaseB;
+extern f32 gModgfxSineWaveB;
+extern f32 gModgfxSineWaveA;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFD98;
 extern f32 lbl_803DFD9C;
 extern f32 lbl_803DFDA8;
-extern f32 lbl_803DFE20;
+extern f32 gModgfxPi;
 extern f32 lbl_803DFE24;
 
 /*
@@ -1340,18 +1340,18 @@ void Effect8_func05(void)
     {
         lbl_803DB81C = lbl_803DFDA8;
     }
-    lbl_803DD390 = lbl_803DD390 + framesThisStep * 0x64;
-    if (lbl_803DD390 > 0x7fff)
+    gModgfxSinePhaseA = gModgfxSinePhaseA + framesThisStep * 0x64;
+    if (gModgfxSinePhaseA > 0x7fff)
     {
-        lbl_803DD390 = 0;
+        gModgfxSinePhaseA = 0;
     }
-    lbl_803DD39C = mathSinf(lbl_803DFE20 * (f32)(s16)lbl_803DD390 / lbl_803DFE24);
-    lbl_803DD394 = lbl_803DD394 + framesThisStep * 0x32;
-    if (lbl_803DD394 > 0x7fff)
+    gModgfxSineWaveA = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseA / lbl_803DFE24);
+    gModgfxSinePhaseB = gModgfxSinePhaseB + framesThisStep * 0x32;
+    if (gModgfxSinePhaseB > 0x7fff)
     {
-        lbl_803DD394 = 0;
+        gModgfxSinePhaseB = 0;
     }
-    lbl_803DD398 = mathSinf(lbl_803DFE20 * (f32)(s16)lbl_803DD394 / lbl_803DFE24);
+    gModgfxSineWaveB = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseB / lbl_803DFE24);
 }
 
 extern FxNode9 lbl_8039C398;
