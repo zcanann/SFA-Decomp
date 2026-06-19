@@ -47,7 +47,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4A38;
-extern int* getTrickyObject(void);
+extern void* getTrickyObject(void);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {

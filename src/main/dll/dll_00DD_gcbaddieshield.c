@@ -33,8 +33,8 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32 alpha);
 
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
+extern void kaldachompspit_free(int* obj);
+extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

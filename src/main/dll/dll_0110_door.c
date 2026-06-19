@@ -34,7 +34,7 @@ typedef struct DoorPlacement
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
 
-extern u32 ObjHits_DisableObject();
+extern void ObjHits_DisableObject(u32 objPtr);
 
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);

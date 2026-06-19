@@ -20,7 +20,7 @@
 #include "main/sky_interface.h"
 
 extern u32 GameBit_Get(int eventId);
-extern void Music_Trigger(int id, int p2);
+extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
 extern void* Obj_GetPlayerObject(void);
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
@@ -28,7 +28,7 @@ extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void envFxActFn_800887f8(int id);
 extern u8 lbl_803238D8[];
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern int* getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
 extern f32 timeDelta;
 extern f32 lbl_803E47C8;
@@ -92,7 +92,7 @@ typedef struct LinkbLevState
 #pragma peephole off
 void linkb_levcontrol_init(int* obj)
 {
-    extern void getEnvfxAct(int a, int b, int c, int d); /* #57 */
+    extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);

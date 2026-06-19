@@ -23,7 +23,7 @@
 #include "main/obj_placement.h"
 #include "main/resource.h"
 
-extern void textureFree(void* resource);
+extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
@@ -138,7 +138,7 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern int randomGetRange(int lo, int hi);
-extern int ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 
 void LaserBeam_update(int obj2)
 {
@@ -485,7 +485,7 @@ extern int textureLoadAsset(int id);
 
 void LaserBeam_free(s16* obj, char* arg)
 {
-    extern void* ObjMsg_AllocQueue(); /* #57 */
+    extern void ObjMsg_AllocQueue(void* obj, int capacity); /* #57 */
     extern f32 lbl_803E5D10;
     LaserBeamState* b;
 

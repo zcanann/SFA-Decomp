@@ -8,7 +8,7 @@
  */
 #include "main/dll/dll_7A.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int projsunshock_doUnsupported(void)
 {

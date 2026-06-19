@@ -7,7 +7,7 @@
  */
 #include "main/dll/dll_80.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int projcore1_doUnsupported(void)
 {

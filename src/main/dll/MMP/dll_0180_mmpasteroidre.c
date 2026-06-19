@@ -20,11 +20,11 @@
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 extern int randomGetRange(int lo, int hi);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern u32 GameBit_Get(int eventId);
 extern void setDrawLights(int v);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
 extern void doRumble(f32 v);
 extern float mathSinf(float x);

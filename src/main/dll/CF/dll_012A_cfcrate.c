@@ -45,7 +45,7 @@ extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E3DD8;
 extern void* Camera_GetCurrentViewSlot(void);
 extern void GameBit_Set(int eventId, int value);
-extern int ObjHits_GetPriorityHit(int obj, u32* outHit, int* outIdx, u32* outVol);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
@@ -152,7 +152,7 @@ void cfccrate_update(int obj)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int randomGetRange(int lo, int hi);
-    extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
+    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
     extern void* Obj_GetPlayerObject(void);
     CfCcrateState* state;
     int viewslot;

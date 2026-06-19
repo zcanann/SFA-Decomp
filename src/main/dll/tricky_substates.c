@@ -54,7 +54,7 @@ extern f32 lbl_803E2524;
 
 extern void trickyDebugPrint(const char *fmt, ...);
 extern void getYButtonItem(s16 *out);
-extern void buttonDisable(int a, int b);
+extern void buttonDisable(int port, u32 mask);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern u8 lbl_8031D2E8[];
@@ -74,7 +74,7 @@ extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 lbl_803E23D0;
 
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
-extern float getXZDistance(float* a, float* b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern float sqrtf(float x);
 extern u32 lbl_803E23CC;
 extern f32 lbl_803E2418;

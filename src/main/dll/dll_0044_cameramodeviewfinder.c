@@ -40,7 +40,7 @@ extern f32 interpolate(f32 v, f32 a, f32 b);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 extern void Rcp_SetViewFinderHudEnabled(int on);
-extern void buttonDisable(int port, int mask);
+extern void buttonDisable(int port, u32 mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char* fmt, ...);
 extern char sCam5BYDebugFormat;

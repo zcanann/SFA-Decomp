@@ -28,7 +28,7 @@ typedef struct InfopointObjectDef
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B70;
-extern void buttonDisable(int p1, int mask);
+extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);
 extern int* gameTextGet(int id);
 extern int lbl_803219A0[];

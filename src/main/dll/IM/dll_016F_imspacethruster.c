@@ -12,7 +12,7 @@
 #include "main/game_object.h"
 #include "main/objtexture.h"
 
-extern void* mmAlloc(u32 size, u32 tag, void* name);
+extern void* mmAlloc(int size, int type, int flag);
 extern void getTabEntry(void* dst, int kind, int offset, int size);
 extern void mm_free(void* p);
 extern void objRenderFn_8003b8f4(f32 scale);

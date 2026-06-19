@@ -9,11 +9,11 @@ extern u32 GameBit_Get(int eventId);
 extern u32 FUN_80017748();
 extern int randomGetRange(int lo, int hi);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
 extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 

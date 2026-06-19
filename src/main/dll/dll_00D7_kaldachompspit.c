@@ -24,7 +24,7 @@ extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 
 extern void ModelLightStruct_free(void* p);
-extern void* objCreateLight(int obj, int kind);
+extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
@@ -37,7 +37,7 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);

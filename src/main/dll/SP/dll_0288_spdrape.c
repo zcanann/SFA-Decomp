@@ -22,8 +22,8 @@ enum
 };
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Camera_GetCurrentViewSlot(void);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+extern void* Camera_GetCurrentViewSlot(void);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DC0B0; /* swing-left move-id table */
@@ -90,7 +90,7 @@ void spdrape_hitDetect(void)
 
 void spdrape_update(int obj)
 {
-    extern f32 getXZDistance(f32 * a, f32 * b);
+    extern f32 getXZDistance(f32* a, f32* b);
     extern void* Obj_GetPlayerObject(void);
     extern int randomGetRange(int lo, int hi);
     f32* state;

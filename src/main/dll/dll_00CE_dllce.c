@@ -31,7 +31,7 @@
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
-extern void ObjHits_DisableObject();
+extern void ObjHits_DisableObject(u32 objPtr);
 extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();

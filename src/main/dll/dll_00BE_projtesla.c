@@ -7,7 +7,7 @@
  */
 #include "main/dll/dll_7D.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int projtesla_doUnsupported(void)
 {

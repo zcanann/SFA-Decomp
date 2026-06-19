@@ -9,7 +9,7 @@
  */
 #include "main/dll/modgfx67.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

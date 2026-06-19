@@ -21,7 +21,7 @@ typedef struct MmpGyserventPlacement
 } MmpGyserventPlacement;
 
 extern int randomGetRange(int lo, int hi);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern u32 GameBit_Get(int eventId);
 extern u8 framesThisStep;
 

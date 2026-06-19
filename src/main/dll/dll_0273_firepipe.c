@@ -41,7 +41,7 @@ extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject * obj);
 extern int mmSetFreeDelay(int delay);
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 extern void ObjHits_EnableObject(FirePipeObject * obj);
 extern void ObjHits_DisableObject(FirePipeObject * obj);
 extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);

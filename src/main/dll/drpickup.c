@@ -2,7 +2,7 @@
 #include "main/camera_interface.h"
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Matrix_TransformPoint(void* mtx, float x, float y, float z, float* ox, float* oy, float* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void PSVECAdd(const void* a, const void* b, void* ab);
 extern float powfBitEstimate(float x, float y);
 

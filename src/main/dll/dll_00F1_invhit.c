@@ -40,7 +40,7 @@ extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-extern s16* getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern f32 sqrtf(f32 x); /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;

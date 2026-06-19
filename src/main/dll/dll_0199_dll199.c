@@ -11,7 +11,7 @@
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 extern void GameBit_Set(int eventId, int value);
-extern void getEnvfxAct(int a, int b, int c, int d);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
 extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
@@ -21,7 +21,7 @@ extern u32 GameBit_Get(int eventId);
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern u8 framesThisStep;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;

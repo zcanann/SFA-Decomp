@@ -8,9 +8,9 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
 
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+extern void ObjHits_DisableObject(u32 objPtr);
+extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 
@@ -41,7 +41,7 @@ extern f32 lbl_803E26F4;
 extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DDA68;
 extern f32 timeDelta;
@@ -53,7 +53,7 @@ extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
-extern void* mmAlloc(int size, int tag, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int value, u32 size);
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_800305c4();
@@ -774,7 +774,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 
 void fn_8015039C(int obj, int animState)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
+    extern f32 Vec_distance(f32* a, f32* b); /* #57 */
     GameObject* player;
     f32 distance;
     f32 rumbleFalloff;

@@ -36,7 +36,7 @@ typedef struct DfpseqpointPlacement
 } DfpseqpointPlacement;
 
 extern f32 lbl_803E63B8;
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 
 void dfpseqpoint_free(void)
 {
@@ -80,10 +80,10 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    extern void unlockLevel(int a, int b, int c);
+    extern int unlockLevel(s32 val, int idx, int flag);
     extern int mapGetDirIdx(int);
     extern void lockLevel(int, int);
-    extern void warpToMap(int, int);
+    extern void warpToMap(int idx, s8 transType);
     extern MapEventInterface** gMapEventInterface;
     int blob = *(int*)&((GameObject*)obj)->extra;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;

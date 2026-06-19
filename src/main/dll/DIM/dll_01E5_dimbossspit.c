@@ -36,12 +36,12 @@ typedef struct DIMbossspitState
     s32 unk40C;
 } DIMbossspitState;
 
-extern void ModelLightStruct_free(void* light);
+extern void ModelLightStruct_free(ModelLightStruct* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjHitbox_SetSphereRadius();
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_EnableObject();
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+extern void ObjHits_EnableObject(u32 objPtr);
 extern void objRenderFn_8003b8f4(f32 scale);
 
 extern f32 lbl_803E4D44;
@@ -63,7 +63,7 @@ extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
 
-extern ModelLightStruct* objCreateLight(int obj, int n);
+extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 a, f32 b);
 
 extern void lightSetField4D(ModelLightStruct* light, u8 v);

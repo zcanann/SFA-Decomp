@@ -40,8 +40,8 @@ extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 
 extern u32 getSbGalleon(void);
-extern f32 Vec_distance(void* a, void* b);
-extern void Sfx_StopObjectChannel(int obj, int ch);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern void* Obj_AllocObjectSetup(int size, int b);

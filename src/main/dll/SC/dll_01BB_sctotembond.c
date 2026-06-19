@@ -49,7 +49,7 @@ extern void hudFn_8011f38c(int visible);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
 extern f32 lbl_803E5650;
 extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int track, int param);
+extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(int p);
 
 #define SC_TOTEMBOND_ORB_COUNT 8

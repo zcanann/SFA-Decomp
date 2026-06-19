@@ -85,7 +85,7 @@ extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern void DCStoreRangeNoSync(void* addr, int len);
-extern void* mmAlloc(int size, int align, int tag);
+extern void* mmAlloc(int size, int type, int flag);
 extern u16 lbl_803DBDF0[];
 
 void FUN_80192488(void)

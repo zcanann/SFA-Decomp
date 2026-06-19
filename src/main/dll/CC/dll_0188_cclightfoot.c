@@ -16,7 +16,7 @@
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int lo, int hi);
-extern int ObjHits_GetPriorityHit();
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern u32 ObjLink_AttachChild();
 
 extern f32 timeDelta;
@@ -31,7 +31,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/player_target.h"
 
-extern u32 ObjHits_DisableObject();
+extern void ObjHits_DisableObject(u32 objPtr);
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -174,7 +174,7 @@ STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 
 void cclightfoot_update(int obj)
 {
-    extern f32 getXZDistance(void* a, void* b);
+    extern f32 getXZDistance(f32* a, f32* b);
     extern void* Obj_GetPlayerObject(void);
     extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)lbl_80323408;

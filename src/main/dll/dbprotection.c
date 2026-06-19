@@ -44,21 +44,21 @@
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
-extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_DisableObject(u32 objPtr);
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void getEnvfxAct(int effectObj, int playerObj, int action, int unused);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void setMatrixFromObjectPos(f32* matrix, void* objPos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern int fn_801E2570(void);
 

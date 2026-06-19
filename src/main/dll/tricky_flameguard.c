@@ -86,7 +86,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 
 extern void* ObjGroup_GetObjects();
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern f32 getXZDistance(float* a, float* b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern int trickyFn_8013b368(void* p1, f32 f, void* p2);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);

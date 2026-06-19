@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 
-extern void warpToMap(int id, int flags);
+extern void warpToMap(int idx, s8 transType);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(f32);

@@ -29,7 +29,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-extern f32 Vec_xzDistance(void* a, void* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
@@ -49,7 +49,7 @@ extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
 extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
 extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
-extern f32 getXZDistance(void* a, void* b);
+extern f32 getXZDistance(f32* a, f32* b);
 
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];

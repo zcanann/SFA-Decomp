@@ -27,12 +27,12 @@ extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject(u32 obj);
-extern int ObjHits_GetPriorityHit();
+extern void ObjHits_DisableObject(u32 objPtr);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void *obj, int capacity);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4,
                                 f32 x, f32 y, f32 z);
 extern int fn_8029622C(int obj);

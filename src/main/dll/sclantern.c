@@ -13,7 +13,7 @@
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u32 ObjPath_GetPointWorldPosition();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern u32 objGetAnimStateFlags(int obj, u32 mask);
 extern u32 Obj_GetPlayerObject();
 

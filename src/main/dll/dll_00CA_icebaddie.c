@@ -62,10 +62,10 @@ typedef struct IceBaddieControl
 
 extern int randomGetRange(int lo, int hi);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjMsg_SendToObjects();
 extern u32 ObjPath_GetPointModelMtx();
-extern u32 ObjPath_GetPointWorldPosition();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;

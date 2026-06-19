@@ -42,7 +42,7 @@ STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32 ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 #pragma scheduling on
 #pragma peephole on
@@ -63,7 +63,7 @@ extern f32 lbl_803E4634;
 extern f32 lbl_803E4638;
 extern f32 lbl_803E463C;
 extern f32 lbl_803E4640;
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);

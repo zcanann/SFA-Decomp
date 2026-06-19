@@ -17,8 +17,8 @@ extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 extern s16 lbl_80329848[];
-extern void unlockLevel(int a, int b, int c);
-extern void Music_Trigger(int a, int b);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern void Music_Trigger(int id, int arg);
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
@@ -144,7 +144,7 @@ void dfplevelcontrol_setScale(int unused, u8* out)
 
 void dfplevelcontrol_init(int obj, int param2)
 {
-    extern u32 ObjGroup_AddObject();
+    extern void ObjGroup_AddObject(u32 obj, int group);
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     int v;
     ObjGroup_AddObject(obj, 9);

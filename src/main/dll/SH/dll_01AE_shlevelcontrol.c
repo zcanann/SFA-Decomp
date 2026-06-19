@@ -35,12 +35,12 @@ extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int controller);
 extern void padClearAnalogInputY(int controller);
-extern void buttonDisable(int controller, int flags);
+extern void buttonDisable(int port, u32 mask);
 extern int playerHasSpell(int obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int a, f32 b);
-extern void getEnvfxAct(int a, int b, int c, int d);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
@@ -141,7 +141,7 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
     extern u32 GameBit_Get(int eventId);
-    extern int Music_Trigger(int id, int value);
+    extern void Music_Trigger(int id, int arg);
     extern void GameBit_Set(int eventId, int value);
     int hasClearIfSetBit = (-1 - clearIfSetBit) | (clearIfSetBit + 1);
     int hasClearIfClearBit = (-1 - clearIfClearBit) | (clearIfClearBit + 1);
@@ -209,7 +209,7 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
 void SH_LevelControl_setMusic(short* obj)
 {
     extern u32 GameBit_Get(int eventId);
-    extern void Music_Trigger(int trackId, int restart);
+    extern void Music_Trigger(int id, int arg);
     extern void SH_LevelControl_setMusic(void* p);
     extern void GameBit_Set(int eventId, int value);
     if ((*gSkyInterface)->getSunPosition(0) != 0)
@@ -966,7 +966,7 @@ void sh_levelcontrol_update(int obj)
 void sh_levelcontrol_init(int obj)
 {
     extern u32 GameBit_Get(int eventId);
-    extern void Music_Trigger(int track, int param);
+    extern void Music_Trigger(int id, int arg);
     extern void GameBit_Set(int eventId, int value);
     int* state = ((GameObject*)obj)->extra;
     int i;

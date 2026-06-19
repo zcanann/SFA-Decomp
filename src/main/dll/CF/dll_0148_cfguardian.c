@@ -151,10 +151,10 @@ extern int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
 extern int Curve_AdvanceAlongPath(int p1);
 extern int getAngle(float y, float x);
 extern int ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern int ObjGroup_AddObject();
-extern int ObjMsg_AllocQueue();
+extern void ObjGroup_AddObject(u32 obj, int group);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
@@ -189,7 +189,7 @@ extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
 extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
-extern void buttonDisable(int a, int b);
+extern void buttonDisable(int port, u32 mask);
 extern void characterDoEyeAnims(int* obj, void* p);
 extern int lbl_80322954[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;     /* per-event sfx-id table passed to cfguardianPlayEventSfx */

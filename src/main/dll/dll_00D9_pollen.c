@@ -38,8 +38,8 @@ extern void* getTrickyObject(void);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
+extern void kaldachompspit_free(int* obj);
+extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 

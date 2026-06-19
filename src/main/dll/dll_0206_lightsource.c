@@ -38,7 +38,7 @@ extern void modelLightStruct_setLightKind(void*, int);
 extern void modelLightStruct_setPosition(f32, f32, f32);
 extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
 extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
-extern void modelLightStruct_setDistanceAttenuation(void*, f32, f32);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void modelLightStruct_setEnabled(void*, int, f32);
 extern void modelLightStruct_startColorFade(void*, int, int);
 extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);

@@ -303,8 +303,8 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern u32 ObjHits_EnableObject(); /* #57 */
-    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
+    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
+    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
     u32 animId;
     int control;
 
@@ -345,8 +345,8 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern u32 ObjHits_EnableObject(); /* #57 */
-    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
+    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
+    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
     u32 animId;
 
     if (*(char*)(state + 0x27a) != '\0')
@@ -372,8 +372,8 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern u32 ObjHits_EnableObject(); /* #57 */
-    extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
+    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
+    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
     u32 pick;
     u32 animId;
     int extra;

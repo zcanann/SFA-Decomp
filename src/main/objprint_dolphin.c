@@ -2572,7 +2572,7 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
-extern int* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32);
 extern int getAngle(float y, float x);
 extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
@@ -3291,7 +3291,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 extern void modelMtxFn_8003be38(u8* hdr, int* model, f32* mtx, f32* m1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
-extern void OSReport(char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 #pragma optimization_level 2
 void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
@@ -5239,13 +5239,13 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 }
 
 extern u8 lbl_80345E10[];
-extern void mm_free(void*);
+extern void mm_free(void* p);
 extern void texFlagFn_80023cbc(int);
 extern void texRestructRefs(int);
 extern s16 lbl_803DCC78;
 extern void testAndSet_onlyUseHeaps1and2(int);
 extern int mmGetRegionForPtr(void*);
-extern void* mmAlloc(int size, int tag, int p3);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
 extern int mmSetFreeDelay(int);
 extern int getHeapItemSize(void*);

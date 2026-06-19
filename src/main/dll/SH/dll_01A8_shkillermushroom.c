@@ -190,7 +190,7 @@ typedef struct
  * hit reaction, pop and respawn. */
 void enemymushroom_update(int* obj)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
+    extern f32 Vec_distance(f32* a, f32* b);
     char* state = ((GameObject*)obj)->extra;
     u8* player;
     int* src;

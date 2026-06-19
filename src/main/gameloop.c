@@ -598,7 +598,7 @@ void Obj_FlushDeferredFreeList(void);
 void ObjModel_InitResourceCaches(void);
 
 extern void mapSetup();
-extern void Music_Trigger(int triggerId, int mode);
+extern void Music_Trigger(int id, int arg);
 extern u8 lbl_803DCA38;
 extern int lbl_803DCAF8;
 extern int lbl_803DCAF4;
@@ -877,7 +877,7 @@ void Obj_UpdateAllObjects(u8 flags);
 
 
 extern void uiDll_runFrameStartAndLoadNext(void);
-extern u32 getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressed(int port);
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void uiDll_runFrameEndAndLoadNext(void);
@@ -1140,9 +1140,9 @@ extern void gameTextShowStr(int str, int a, int b, int c);
 
 
 extern int saveGameGetStatus(void);
-extern void gameTextShow(int id);
+extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int id, int a, int b);
-extern void buttonDisable(int pad, int mask);
+extern void buttonDisable(int port, u32 mask);
 extern void cardSetStatusNeedInit(void);
 extern void cardDeleteFn_8007d99c(void);
 extern int lbl_803DCACC;

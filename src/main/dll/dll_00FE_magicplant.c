@@ -20,7 +20,7 @@
 #include "main/objfx.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern int Obj_IsLoadingLocked(void);
@@ -31,11 +31,11 @@ extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
-extern u32 ObjPath_GetPointWorldPosition();
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+extern f32 Vec_distance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);

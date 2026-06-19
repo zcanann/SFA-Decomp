@@ -38,12 +38,12 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 fn_801E2570(void);
 extern f32 timeDelta;
 
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
-extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;

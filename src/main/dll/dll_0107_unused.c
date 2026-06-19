@@ -20,7 +20,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, s16 verticalMin, s16 verticalMax);
-extern u32 ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
 
@@ -30,7 +30,7 @@ extern u8 framesThisStep;
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 
 #pragma dont_inline on
 extern ModgfxInterface** gModgfxInterface;
@@ -156,10 +156,10 @@ void fn_80185B74(int obj)
     extern f32 lbl_803E3A74;
     extern f64 lbl_803E3A78;
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void Sfx_StopObjectChannel(int obj, int channel);
-    extern int buttonDisable(int p1, int p2);
-    extern u32 getButtonsJustPressed(int controller);
-    extern f32 getXZDistance(void* a, void* b);
+    extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+    extern void buttonDisable(int port, u32 mask);
+    extern u32 getButtonsJustPressed(int port);
+    extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
     {
         s16 ang;

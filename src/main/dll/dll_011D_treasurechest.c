@@ -92,7 +92,7 @@ void treasurechest_hitDetect(int obj)
 #include "main/resource.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_802967E0(void* obj, int enabled);
 
 typedef struct ChestHitParams

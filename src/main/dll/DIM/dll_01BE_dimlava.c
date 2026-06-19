@@ -53,9 +53,9 @@ int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void warpToMap(int mapId, int flags);
+extern void warpToMap(int idx, s8 transType);
 
-extern void Music_Trigger(int track, int flag);
+extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
@@ -98,7 +98,7 @@ extern int ObjList_FindObjectById(int id);
 extern u8* objCreateLight(s16* obj, int b);
 extern void modelLightStruct_setLightKind(u8* light, int value);
 extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(u8* light, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
 extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
 

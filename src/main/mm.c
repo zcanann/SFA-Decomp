@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -255,7 +255,7 @@ extern void heapFree(int region, int slotIdx);
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
 extern int lbl_803DCB34;
-extern void OSReport(char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);
 extern char sMmStbfStackTooDeepError[];

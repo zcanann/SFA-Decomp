@@ -24,7 +24,7 @@ extern int coordsToMapCell(f32 x, f32 z);
 extern void* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
 extern f32 timeDelta;
 extern u8 lbl_803DB411;

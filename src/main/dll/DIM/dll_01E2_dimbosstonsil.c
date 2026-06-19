@@ -13,7 +13,7 @@
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 
-extern void Music_Trigger(s32 triggerId, s32 mode);
+extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 extern int randomGetRange(int lo, int hi);
@@ -41,7 +41,7 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* 
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
-extern void* objCreateLight(int param_1, int param_2);
+extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(void* handle, int param_2);
 extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);

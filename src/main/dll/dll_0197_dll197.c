@@ -27,13 +27,13 @@ extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void objUpdateOpacity(int obj);
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-extern int ObjHits_GetPriorityHit(int obj, int p2, int p3, int p4);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;

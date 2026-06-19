@@ -2,7 +2,7 @@
 #include "main/audio/sfx.h"
 
 extern int saveFileStruct_isCheatActive();
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -924,7 +924,7 @@ void gameTextSetDrawFunc(void* fn)
 }
 
 extern void* mmAlloc(int size, int type, int flag);
-extern void textureFree(void* tex);
+extern void textureFree(u8* tex);
 
 f32 gameTextFn_80019c00(void)
 {
@@ -977,7 +977,7 @@ int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-extern void* textureLoadAsset(int assetId);
+extern void* textureLoadAsset(int asset);
 
 extern void gameTextInitFn_8001c794(void);
 extern void gameTextLoadDir(int dirId);

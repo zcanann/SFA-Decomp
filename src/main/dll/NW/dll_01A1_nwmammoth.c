@@ -437,7 +437,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
-    extern int* getTrickyObject(void); /* #57 */
+    extern void* getTrickyObject(void); /* #57 */
     extern void GameBit_Set(int eventId, int value); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);

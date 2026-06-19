@@ -62,15 +62,15 @@ STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int lo, int hi);
-extern int ObjHits_GetPriorityHit();
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern f32 lbl_803E45DC;

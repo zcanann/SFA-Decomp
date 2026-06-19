@@ -7,7 +7,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-extern void getEnvfxAct(int obj, int target, int id, int p);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* return0_8005669C(int);
 
 extern int lbl_803DB610;
@@ -16,12 +16,12 @@ extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
 extern ModgfxInterface** gModgfxInterface;
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern u32 GameBit_Get(int eventId);
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
 extern char sShrineTimeFormat[];

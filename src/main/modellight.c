@@ -2,7 +2,7 @@
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
 
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -144,7 +144,7 @@ extern f32 lbl_803DE76C;
 extern f32 lbl_803DE790;
 extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
-extern void textureFree(void* tex);
+extern void textureFree(u8* tex);
 
 void* objCreateLight(int arg, u8 addToList)
 {
@@ -499,7 +499,7 @@ extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
-extern void* textureLoadAsset(int assetId);
+extern void* textureLoadAsset(int asset);
 extern int randomGetRange(int lo, int hi);
 
 void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* a, u8* b, u8* c, u8* d)

@@ -8,7 +8,7 @@
  */
 #include "main/dll/dll_66.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int projmagicstream_doUnsupported(void)
 {

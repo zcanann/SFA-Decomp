@@ -5696,8 +5696,8 @@ void OSReport(const char* msg, ...)
 int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
-    extern void* mmAlloc(int, int, int);
-    extern void mm_free(void*);
+    extern void* mmAlloc(int size, int type, int flag);
+    extern void mm_free(void* p);
     extern void cardSetStatusNoCard2(void);
     extern void* lbl_803DD040;
     extern volatile s32 lbl_803DB700;
@@ -5805,12 +5805,12 @@ extern u8 lbl_803DD058;
 
 int cardDeleteFn_8007d99c(void)
 {
-    extern void* mmAlloc();
+    extern void* mmAlloc(int size, int type, int flag);
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
     extern void CARDUnmount();
-    extern void mm_free();
+    extern void mm_free(void* p);
     extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
@@ -5927,7 +5927,7 @@ void showMemCardError(u8 err)
     extern void GXFlush_(int, int);
     extern char padGetStickY(int port);
     extern char padGetCY(int port);
-    extern u32 getButtonsJustPressed(int controller);
+    extern u32 getButtonsJustPressed(int port);
     extern void setGameState(int state);
     extern f32 fn_80293AC4(int v);
 
@@ -6064,7 +6064,7 @@ int memCardFn_8007dd04(u8 retry)
     extern int saveGame(int);
     extern void CARDClose(void*);
     extern void CARDUnmount(s32);
-    extern void mm_free(void*);
+    extern void mm_free(void* p);
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;

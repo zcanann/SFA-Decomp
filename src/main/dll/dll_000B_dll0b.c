@@ -1409,7 +1409,7 @@ void dll_0B_release(void)
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 extern void mm_free(void* p);
-extern void textureFree(void* resource);
+extern void textureFree(u8* tex);
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
@@ -1566,8 +1566,8 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
 
-extern void* textureLoadAsset(int id);
-extern void* mmAlloc(int size, int align, int flag);
+extern void* textureLoadAsset(int asset);
+extern void* mmAlloc(int size, int type, int flag);
 
 extern const f32 lbl_803DF438;
 

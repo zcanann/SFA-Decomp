@@ -41,7 +41,7 @@ void fn_801F20D4(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
     extern int lbl_802C247C[];
-    extern void buttonDisable(int a, int b);
+    extern void buttonDisable(int port, u32 mask);
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
@@ -99,7 +99,7 @@ void fn_801F27E4(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
     extern int fn_80296A14(void);
-    extern void buttonDisable(int a, int b);
+    extern void buttonDisable(int port, u32 mask);
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
@@ -358,7 +358,7 @@ void fn_801F2290(int obj)
     extern void*Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int eventId);
     extern void GameBit_Set(int eventId, int value);
-    extern void buttonDisable(int a, int b);
+    extern void buttonDisable(int port, u32 mask);
     extern int getAngle(float y, float x);
     extern f32 sqrtf(f32 x);
     extern void fn_80137948(char* fmt, ...);

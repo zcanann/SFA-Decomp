@@ -13,7 +13,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void showHelpText(int textId);
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

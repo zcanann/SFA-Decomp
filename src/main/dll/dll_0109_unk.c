@@ -38,10 +38,10 @@ STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
 extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
 extern void ObjHits_ClearHitVolumes();
-extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_DisableObject(u32 obj);
-extern void ObjHits_EnableObject(u32 obj);
-extern int ObjHits_GetPriorityHit();
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+extern void ObjHits_DisableObject(u32 objPtr);
+extern void ObjHits_EnableObject(u32 objPtr);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);

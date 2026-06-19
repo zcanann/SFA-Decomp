@@ -885,8 +885,8 @@ typedef struct
 } CARDStatStub;
 
 extern int cardProbe(int chan);
-extern void* mmAlloc(u32 size, int tag, int unk);
-extern void mm_free(void* ptr);
+extern void* mmAlloc(int size, int type, int flag);
+extern void mm_free(void* p);
 extern void* memset(void* dst, int c, u32 n);
 extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);

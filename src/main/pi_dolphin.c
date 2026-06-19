@@ -160,7 +160,7 @@ extern void AtomicSList_Push(int list, int e);
 extern int DVDOpen(char* fileName, void* fileInfo);
 extern int DVDRead(void* fileInfo, void* addr, int length, int offset);
 extern int DVDClose(void* fileInfo);
-extern void* mmAlloc(int size, int align, int zone);
+extern void* mmAlloc(int size, int type, int flag);
 extern void mm_free(void* p);
 extern void DCInvalidateRange(void* p, u32 n);
 extern int DVDReadAsyncPrio(void* fi, void* addr, int len, int off, void (*cb)(), int prio);
@@ -3826,7 +3826,7 @@ int fn_8004B148(int* p)
     return count;
 }
 
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 #pragma ppc_unroll_speculative off
 int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
 {
@@ -6955,7 +6955,7 @@ void fn_8004CE0C(void* viewMtx)
 #pragma opt_common_subs reset
 #pragma scheduling reset
 
-extern u32 getButtonsJustPressed(int set);
+extern u32 getButtonsJustPressed(int port);
 extern void printHeapStats(int a);
 extern void defragMemory(int a);
 extern void debugPrintSetColor(int r, int g, int b, int a);
@@ -7268,7 +7268,7 @@ extern void OSSleepThread(void* q);
 extern void Camera_ApplyFullViewport(void);
 extern void GXInvalidateVtxCache(void);
 extern void GXInvalidateTexAll(void);
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern int GXReadDrawSync(void);
 extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);

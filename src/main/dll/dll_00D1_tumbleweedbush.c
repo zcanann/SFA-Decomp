@@ -60,7 +60,7 @@ extern float sqrtf(float x);
 extern f32 lbl_803E2F44;
 extern void objRenderFn_8003b8f4(f32);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E2F58;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

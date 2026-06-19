@@ -40,8 +40,8 @@ STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int textId);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
 extern u32 GameBit_Get(int eventId);
 extern int getCurSeqNo(void);
 
@@ -49,7 +49,7 @@ extern f32 lbl_803E5E70; /* 0.0 */
 extern f32 timeDelta;
 
 extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 extern void lockLevel(int idx, int p2);
 extern f32 lbl_803E5E90; /* 300.0: intro-message duration */
 extern void setDrawLights(int mode);
@@ -64,7 +64,7 @@ extern void fn_80089578(int flags, int red, int green, int blue);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-extern void Music_Trigger(int musicId, int param);
+extern void Music_Trigger(int id, int arg);
 extern f32 lbl_802C24B8[]; /* sky light/color/fog vector table */
 extern u8 lbl_803DC110;    /* sky-color blend source triplet */
 extern u8 lbl_803DC114;    /* sky-color blend target triplet */

@@ -37,7 +37,7 @@ extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void* gameTextGet(int textId);
 extern void* gameTextGetBox(int boxId);
-extern void gameTextShow(int textId);
+extern void gameTextShow(int a);
 extern void titleScreenShowCopyright(int arg);
 extern void gameTextLoadDir(int);
 extern s8 lbl_803DD706;        /* render-stale countdown */

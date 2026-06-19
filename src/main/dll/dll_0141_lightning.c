@@ -10,7 +10,7 @@ extern u32 ObjGroup_AddObject();
 
 extern f32 timeDelta;
 
-extern void* ObjGroup_GetObjects();
+extern u32* ObjGroup_GetObjects(int group, int* countOut);
 extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;

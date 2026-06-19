@@ -15,12 +15,12 @@
 
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
-extern void Music_Trigger(int track, int param);
+extern void Music_Trigger(int id, int arg);
 extern void GameBit_Set(int eventId, int value);
 extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(int a, int b, int c, int d);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* player, int a, int b);
 

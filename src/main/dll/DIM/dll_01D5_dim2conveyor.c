@@ -110,7 +110,7 @@ void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, OBJ_GROUP_CONVEYORS); }
 
 void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
 {
-    extern void Music_Trigger(int trackId, int restart);
+    extern void Music_Trigger(int id, int arg);
     Dim2ConveyorState* state = ((GameObject*)obj)->extra;
     int id;
     if (state->musicHold == 0)
@@ -172,7 +172,7 @@ void dim2conveyor_init(int* obj, u8* params)
 
 void dim2conveyor_update(int* obj)
 {
-    extern void Music_Trigger(int trackId, int restart);
+    extern void Music_Trigger(int id, int arg);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);

@@ -25,11 +25,10 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 
-extern void gameTextShow(int p);
+extern void gameTextShow(int a);
 extern void doRumble(f32 strength);
 extern void mtxRotateByVec3s(void* matrix, void* transform);
-extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, float* outX,
-                                  float* outY, float* outZ);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern void PSVECNormalize(void* src, void* dst);

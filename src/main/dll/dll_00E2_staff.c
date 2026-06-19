@@ -29,7 +29,7 @@
 #include "main/resource.h"
 
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -41,8 +41,8 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
+extern void kaldachompspit_free(int* obj);
+extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -317,16 +317,16 @@ void dll_F7_free(int obj);
 void dim2roofrub_free(int* obj);
 
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free();
-extern void animatedobj_init();
-extern void dim2roofrub_init();
+extern void animatedobj_free(int* obj, int seqFlag);
+extern void animatedobj_init(int* obj, int* params);
+extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update();
-extern void staff_init();
-extern void staff_release();
-extern void staff_initialise();
-extern void staff_hitDetectGeometry();
+extern void staff_update(int* obj);
+extern void staff_init(int* obj);
+extern void staff_release(void);
+extern void staff_initialise(void);
+extern void staff_hitDetectGeometry(int* obj);
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
@@ -864,7 +864,7 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2)
     *(void**)(state + 0x48) = slot;
 }
 
-extern void mm_free(int* p);
+extern void mm_free(void* p);
 
 void gcbaddieshield_update(int* obj);
 

@@ -23,7 +23,7 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -60,17 +60,17 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void playerAddMoney(int player, u8 b);
 extern int scarab_sweptCollide(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void* p5, int obj, int p7, int p8, int p9, int p10);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
 void scarab_update(int obj)
 {
-    extern f32 Vec_xzDistance(f32 * a, f32 * b);
+    extern f32 Vec_xzDistance(f32* a, f32* b);
     extern void PSVECSubtract(void* a, void* b, void* out);
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     typedef struct

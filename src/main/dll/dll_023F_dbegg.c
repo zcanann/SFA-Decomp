@@ -83,7 +83,7 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern u32 FUN_80006824();
 extern int randomGetRange(int lo, int hi);
 extern u64 FUN_800305f8();
-extern int ObjHits_GetPriorityHit();
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
@@ -121,7 +121,7 @@ void dbegg_processMessages(int obj)
     extern int gameBitIncrement(int);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
-    extern int ObjMsg_Pop(void*, u32*, u32*, u32*);
+    extern u32 ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
@@ -591,12 +591,12 @@ void dbegg_update(int obj)
     extern int randomGetRange(int lo, int hi);
     extern f32 Vec_xzDistance(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern u32 getButtonsJustPressed(int);
+    extern u32 getButtonsJustPressed(int port);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char*, ...);
     extern void ObjHits_EnableObject(int);
-    extern void ObjHits_DisableObject(int);
+    extern void ObjHits_DisableObject(u32 objPtr);
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;

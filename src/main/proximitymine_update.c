@@ -25,8 +25,8 @@ extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, 
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* params, f32* vec);
 extern void Obj_FreeObject(void* obj);

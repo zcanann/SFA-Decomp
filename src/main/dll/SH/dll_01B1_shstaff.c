@@ -81,11 +81,11 @@ typedef struct ShStaffPlacement
 
 extern u32 GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
-extern u32 ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
 extern u32 ObjPath_GetPointModelMtx();
-extern u32 ObjPath_GetPointWorldPosition();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
@@ -417,7 +417,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_80295CF4(int player, int a);
 extern int fn_8029672C(int player, int a);
 extern int ObjTrigger_IsSet(int obj);

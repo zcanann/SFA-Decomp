@@ -18,7 +18,7 @@
 #include "main/dll/DF/dfropenode.h"
 
 extern f32 sqrtf(f32 x);
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;

@@ -113,7 +113,7 @@ extern int arwarwing_getBombCount(int* arwing);
 extern int arwarwing_getCollectedRingCount(int* arwing);
 extern int arwarwing_getRequiredRingCount(int* arwing);
 extern int arwarwing_getScore(int* arwing);
-extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShowStr(char* str, int x, int y, int z);
 extern void sprintf(char* buf, char* fmt, ...);
 extern u8 arwingHudVisible;

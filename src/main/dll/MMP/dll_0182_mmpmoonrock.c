@@ -29,7 +29,7 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern u32 GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
@@ -286,7 +286,7 @@ void fn_801A80F0(int obj, u8 flag)
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
 
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32*** out, int a, int b);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4548;
 
 int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
@@ -354,7 +354,7 @@ extern f32 lbl_803E4580;
 void fn_801A7D74(int obj, u8 a, u8 b)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern f32 Vec_distance(void* a, void* b);
+    extern f32 Vec_distance(f32* a, f32* b);
     extern void GameBit_Set(int eventId, int value);
     int i;
     int count;

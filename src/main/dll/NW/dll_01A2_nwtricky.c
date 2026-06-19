@@ -19,7 +19,7 @@ extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 fn_8014C5D0(int* obj);
 extern int* ObjList_FindObjectById(int objId);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_80138920(int* obj, int a, int b);
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
@@ -63,7 +63,7 @@ typedef struct NwObjPos
 #pragma opt_loop_invariants off
 void nw_tricky_update(int* obj)
 {
-    extern int* getTrickyObject(void);
+    extern void* getTrickyObject(void);
     extern void* Obj_GetPlayerObject(void);
     extern void GameBit_Set(int eventId, int value);
     int count;

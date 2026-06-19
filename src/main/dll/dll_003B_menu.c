@@ -31,7 +31,7 @@ extern f32 timeDelta;
 extern int getScreenResolution(void);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
-extern int getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressed(int port);
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 

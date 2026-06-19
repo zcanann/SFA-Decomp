@@ -140,10 +140,10 @@ void fn_80204BF8(int obj)
        types (GameObject* return, signed args) the codegen here depends on. */
     extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int eventId);
-    extern f32 Vec_xzDistance(f32*, f32*);
+    extern f32 Vec_xzDistance(f32* a, f32* b);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void Sfx_StopObjectChannel(int, int);
+    extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
     GameObject* object = (GameObject*)obj;
     ObjPlacement* placement = object->anim.placement;
     Dll22CState* blob = object->extra;

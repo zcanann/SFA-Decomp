@@ -22,11 +22,11 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjPath_GetPointModelMtx();
-extern u32 ObjPath_GetPointWorldPosition();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
-extern int getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern u32* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 timeDelta;
@@ -206,8 +206,8 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 #define GAMEBIT_DIM2_ICICLE_PHASE2_WIN 0x266
 
 extern void setShowWorldMapHud(int show);
-extern void warpToMap(int map, int p2);
-extern void getEnvfxAct(int a, int b, int c, int d);
+extern void warpToMap(int idx, s8 transType);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void skyFn_80089710(int id, int enabled, int arg);
 extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);

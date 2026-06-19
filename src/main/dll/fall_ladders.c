@@ -33,7 +33,7 @@
 #include "main/vecmath.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 
 extern f32 lbl_803E294C;

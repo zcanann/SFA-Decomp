@@ -21,7 +21,7 @@ extern f32 lbl_803E4E24;
 extern void mm_free(void* p);
 extern u32 GameBit_Get(int eventId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int soundId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
                                        int param_6);
 extern void textureSetupFn_800799c0(void);
@@ -40,8 +40,8 @@ extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
 extern u8 lbl_802C2358[];
 extern f32 lbl_803E4DF8;
-extern void textureFree(void* resource);
-extern void* textureLoadAsset(int assetId);
+extern void textureFree(u8* tex);
+extern void* textureLoadAsset(int asset);
 extern int lbl_803DBF40;
 extern f32 lbl_803DBF50;
 extern u8 lbl_803DBF58;
@@ -650,7 +650,7 @@ void dfropenode_update(DFropenodeObject* obj)
 
 void dfropenode_init(DFropenodeObject* obj, u8* objDef)
 {
-    extern void ObjGroup_AddObject(int obj, int group);
+    extern void ObjGroup_AddObject(u32 obj, int group);
     DFropenodeExtra* extra;
 
     extra = obj->extra;

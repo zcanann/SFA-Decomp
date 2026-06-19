@@ -14,7 +14,7 @@ extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern f32 Vec_distance(float* posA, float* posB);
+extern f32 Vec_distance(f32* a, f32* b);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -65,7 +65,7 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x71C),
 };
 
-extern f32 Vec_xzDistance(float* a, float* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Obj_FreeObject(int obj);
@@ -86,7 +86,7 @@ extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
 extern u32 FUN_80017a78();
-extern int ObjHits_GetPriorityHit();
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);

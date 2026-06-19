@@ -15,7 +15,7 @@ extern char lbl_8031D478[];
 
 extern int trickyFoodFn_8013db3c(u8 * arg1, u8 * arg2);
 extern u8** ObjGroup_GetObjects(int kind, int* count);
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern int trickyFn_8013b368(u8* arg1, u8* arg2, f32 dist);
 extern void objAnimFn_8013a3f0(u8* self, int a, int b, f32 f1);
 extern int trickyDebugPrint(const char* fmt, ...);

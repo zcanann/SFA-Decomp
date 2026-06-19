@@ -47,12 +47,12 @@ int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void warpToMap(int mapId, int flags);
+extern void warpToMap(int idx, s8 transType);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 
-extern void Music_Trigger(int track, int flag);
+extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;
 
 #include "main/obj_placement.h"

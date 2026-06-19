@@ -13,7 +13,7 @@
  */
 #include "main/dll/dll_64.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int projwallpower_doUnsupported(void)
 {

@@ -9,7 +9,7 @@
 #include "main/dll/dll_002E_moveLib.h"
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern int ObjTrigger_IsSet();
+extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(int obj, int collisionShapeState);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
@@ -37,7 +37,7 @@ extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, i
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 Obj_GetActiveModel();
 extern u32 modelInitBones();
-extern u32 ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(int obj, int collisionShapeState);
 extern u32 dll_2E_func05();
 extern u32 dll_2E_func08();

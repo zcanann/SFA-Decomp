@@ -76,7 +76,7 @@ typedef struct
 extern void* ObjGroup_GetObjects();
 extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
-extern int ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
@@ -84,7 +84,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
-extern void Music_Trigger(int a, int b);
+extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern u8 lbl_80322A48[];
 extern u8 lbl_80322A68[];

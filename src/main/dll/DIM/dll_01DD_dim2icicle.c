@@ -29,7 +29,7 @@ extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern u8 framesThisStep;
 
 #include "main/effect_interfaces.h"
@@ -50,7 +50,7 @@ typedef struct Dim2iciclePlacement
     s16 unk1E;
 } Dim2iciclePlacement;
 
-extern int ObjHits_GetPriorityHit();
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 #pragma scheduling on
 #pragma peephole on

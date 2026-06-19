@@ -15,8 +15,8 @@ extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int mapDir, int mode, int flags);
-extern void Music_Trigger(int trackId, int mode);
+extern int unlockLevel(s32 val, int idx, int flag);
+extern void Music_Trigger(int id, int arg);
 extern void GameBit_Set(int eventId, int value);
 extern void fn_80296518(void* obj, int arg, int enable);
 extern int getAngle(float y, float x);
@@ -50,12 +50,12 @@ typedef struct DFlanternShrineState
 } DFlanternShrineState;
 
 extern int randomGetRange(int lo, int hi);
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
 extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void playerAddRemoveMagic(int player, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);

@@ -17,8 +17,8 @@
 #include "main/mapEventTypes.h"
 
 extern u32 GameBit_Get(int eventId);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int textId, int a, int b);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern void CMenu_SetFadeCounter(int v);

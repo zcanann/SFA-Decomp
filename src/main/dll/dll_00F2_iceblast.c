@@ -25,7 +25,7 @@ typedef struct IceblastPlacement
 extern void objRenderFn_8003b8f4(int obj, int a, int b, int c, int d, f32 scale);
 extern void* Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* in, void* out);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern f32 timeDelta;
 extern f32 lbl_803E3600;
 extern f32 lbl_803E3604;

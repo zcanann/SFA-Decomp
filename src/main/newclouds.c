@@ -19,12 +19,12 @@ typedef struct LightningEffect
     u8 unk27;
 } LightningEffect;
 
-extern void* mmAlloc(int size, int heap, int flags);
-extern void mm_free(void* ptr);
+extern void* mmAlloc(int size, int type, int flag);
+extern void mm_free(void* p);
 extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
-extern s16* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int lo, int hi);
 
 extern u8 framesThisStep;
@@ -122,11 +122,11 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
     gCloudOverridePositionZ = c;
 }
 
-extern void* textureLoadAsset(int);
+extern void* textureLoadAsset(int asset);
 
-extern void textureFree(void* handle);
+extern void textureFree(u8* tex);
 extern void ModelLightStruct_free(void* p);
-extern void Music_Trigger(int id, int restart);
+extern void Music_Trigger(int id, int arg);
 extern void* lbl_8039A818[];
 extern void* lbl_8039A828[];
 extern void* lbl_803DD1C8;

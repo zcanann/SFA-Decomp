@@ -24,8 +24,8 @@ typedef struct MmpBridgePlacement
 extern u32 GameBit_Get(int eventId);
 extern f32 timeDelta;
 extern void fn_80137948(char* fmt, ...);
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
+extern void ObjHits_DisableObject(u32 objPtr);
+extern void ObjHits_EnableObject(u32 objPtr);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 

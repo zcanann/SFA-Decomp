@@ -22,8 +22,8 @@ extern void* gGrimbleStateHandlersB[6];
 
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
-extern void ObjHits_DisableObject(u32 obj);
-extern void getTrickyObject(void);
+extern void ObjHits_DisableObject(u32 objPtr);
+extern void* getTrickyObject(void);
 extern void* ObjList_FindObjectById(int id);
 extern f32 timeDelta;
 extern f32 lbl_803E2F30;

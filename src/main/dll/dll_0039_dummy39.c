@@ -15,7 +15,7 @@ extern u32 lbl_803DD72C;
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
 extern void textureFree(u32 handle);
-extern void warpToMap(int mapId, int spawnId);
+extern void warpToMap(int idx, s8 transType);
 extern void* Obj_GetPlayerObject(void);
 
 #define DUMMY39_COUNTDOWN_FRAMES 0x28

@@ -1165,7 +1165,7 @@ void gxColorFn_80052764(int* param)
 }
 
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
-extern void* mmAlloc(u32 size, int type, int p3);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void*, int, u32);
 extern void textureFn_80053d58(void* obj);
 #pragma dont_inline on
@@ -1237,7 +1237,7 @@ void textureFn_80053d58(void* vobj)
 #pragma dont_inline reset
 
 extern void findSomething(int);
-extern void mm_free(void*);
+extern void mm_free(void* p);
 
 #pragma peephole on
 void textureFree(u8* tex)
@@ -2581,7 +2581,7 @@ void gxTextureFn_80052efc(void)
 #undef mtx
 
 extern void texFlagFn_80023cbc(int flag);
-extern void OSReport(char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
 extern int testAndSet_onlyUseHeaps1and2(int val);
 extern int mmGetRegionForPtr(void* p);

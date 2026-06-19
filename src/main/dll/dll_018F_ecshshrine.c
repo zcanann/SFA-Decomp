@@ -32,7 +32,7 @@ typedef struct EcshIntPair
 } EcshIntPair;
 
 extern int randomGetRange(int lo, int hi);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern float mathSinf(float x);
 extern f32 timeDelta;
 extern f32 lbl_803E4F90;
@@ -62,7 +62,7 @@ extern EcshIntPair lbl_803E8470;
 extern s16 lbl_80326238[];
 
 extern u32 GameBit_Get(int eventId);
-extern void Music_Trigger(int trackId, int restart);
+extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
 extern void skyFn_80088c94(int a, int b);
@@ -73,7 +73,7 @@ extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, in
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
 extern void audioStopByMask(int mask);
 extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(void* obj, int group);

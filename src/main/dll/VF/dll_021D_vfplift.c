@@ -75,7 +75,7 @@ STATIC_ASSERT(offsetof(VfpLiftPlacement, mapEventNo) == 0x1C);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, toggleGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, hitDisableGameBit) == 0x20);
 
-extern void buttonDisable(int index, u32 flags);
+extern void buttonDisable(int port, u32 mask);
 extern f32 lbl_803E60E0;
 extern f32 lbl_803E60E4;
 extern f32 lbl_803E60E8;

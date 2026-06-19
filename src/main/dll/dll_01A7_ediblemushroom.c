@@ -18,10 +18,10 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
-extern void objMove(u8* obj, f32 vx, f32 vy, f32 vz);
+extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 
 
 extern f32 timeDelta;
@@ -50,15 +50,15 @@ extern f32 lbl_80326BE8[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
-extern u8* getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern int objIsFrozen(u8 * self);
 extern void gameBitIncrement(s16 bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
 extern f32 sqrtf(f32 x);
-extern void ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue();
 extern u32 GameBit_Get(int eventId);

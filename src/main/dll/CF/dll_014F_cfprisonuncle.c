@@ -15,7 +15,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop();
-extern int ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();

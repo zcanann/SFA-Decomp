@@ -55,19 +55,19 @@ typedef struct FlammablevineState
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetCapsuleBounds();
-extern void ObjHits_SetHitVolumeSlot();
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_MarkObjectPositionDirty();
 extern void ObjHits_DisableObject();
-extern void ObjHits_EnableObject();
+extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHit();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(f32);
 extern void Obj_RemoveFromUpdateList(int obj);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
 extern void* getTrickyObject(void);

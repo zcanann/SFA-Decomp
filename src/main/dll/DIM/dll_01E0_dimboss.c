@@ -11,13 +11,13 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-extern void Music_Trigger(s32 triggerId, s32 mode);
+extern void Music_Trigger(int id, int arg);
 extern u64 padUpdate();
 extern u32 dvdCheckError();
 extern u32 gameTextRun();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32 gameTextShow();
+extern void gameTextShow(int a);
 extern u32 checkReset();
 extern u64 mmFreeTick();
 extern u32 ObjModel_ClearRenderAttachment();
@@ -30,7 +30,7 @@ extern u64 ObjGroup_RemoveObject();
 extern u64 clearLoadedFileFlags_blocks1();
 extern u64 setLoadedFileFlags_blocks1();
 extern u32 getLoadedFileFlags();
-extern u32 unlockLevel();
+extern int unlockLevel(s32 val, int idx, int flag);
 extern u32 lockLevel();
 extern u64 mapUnload();
 extern u32 defragMemory();
@@ -51,7 +51,7 @@ extern u32 dll_2E_func04();
 extern void OSReport(const char* msg, ...);
 
 extern u32 Camera_DisableViewYOffset();
-extern u32 getEnvfxAct();
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u32 ModelLightStruct_free();
 extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();

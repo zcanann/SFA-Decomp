@@ -19,12 +19,12 @@
 
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void ObjHits_ClearHitVolumes();
-extern void ObjHits_DisableObject();
+extern void ObjHits_DisableObject(u32 objPtr);
 extern int ObjHits_IsObjectEnabled();
 extern int ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_801816F8(int obj, int param_2, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

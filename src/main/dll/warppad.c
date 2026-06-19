@@ -27,8 +27,8 @@
 
 extern int randomGetRange(int lo, int hi);
 extern int ObjTrigger_IsSet();
-extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
-extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
+extern f32 Vec_xzDistance(f32* a, f32* b);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);

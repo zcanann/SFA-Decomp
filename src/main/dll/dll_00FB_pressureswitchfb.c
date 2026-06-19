@@ -54,7 +54,7 @@ extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern int fn_80295C5C(void* player);
 extern void* getTrickyObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
 extern f32 lbl_803E3760;

@@ -28,9 +28,9 @@ extern void* Obj_GetPlayerObject(void);
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
 extern void* getTrickyObject(void);
-extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_80175428(int obj, int p2);
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;

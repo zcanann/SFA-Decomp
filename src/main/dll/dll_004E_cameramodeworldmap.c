@@ -35,7 +35,7 @@ extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 extern int ObjList_FindObjectById(int id);
 extern int getButtonsHeld(int pad);
-extern int getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressed(int port);
 extern int padGetCX(int pad);
 extern int padGetCY(int pad);
 extern void fn_8012DDB8(int mode);

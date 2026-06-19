@@ -37,7 +37,7 @@ extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern u32 objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);

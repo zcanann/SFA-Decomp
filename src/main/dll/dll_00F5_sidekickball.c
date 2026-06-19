@@ -30,7 +30,7 @@ extern f32 lbl_803E36A4;
 extern const f32 lbl_803E36A8;
 extern const f32 lbl_803E36AC;
 extern void getYButtonItem(s16 * out);
-extern u32 getButtonsJustPressed(int controller);
+extern u32 getButtonsJustPressed(int port);
 extern int fn_80295BF0(int* player);
 extern int fn_8029669C(int* player);
 extern void vecRotateZXY(void* inParams, f32* outVec);
@@ -42,7 +42,7 @@ extern const f32 lbl_803E3698;
 extern u32 GameBit_Get(int eventId);
 extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
-extern u8* getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern void Obj_FreeObject(u8* obj);
 extern u8 trickyBallMove(u8 * obj);
 extern int buttonGetDisabled(int unused);
@@ -506,7 +506,7 @@ u8 trickyBallMove(u8* obj)
 
 void sidekickball_init(int obj)
 {
-    extern int ObjMsg_AllocQueue();
+    extern void ObjMsg_AllocQueue(void* obj, int capacity);
     extern void GameBit_Set(int eventId, int value);
     u8 pathFlag;
     u8* state;

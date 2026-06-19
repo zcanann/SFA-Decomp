@@ -29,9 +29,9 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern int ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void vecRotateZXY(void* in, void* out);

@@ -6,7 +6,7 @@
  */
 #include "main/dll/crate2.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int dfperchwitch_getExtraSize(void) { return 0x0; }
 int dfperchwitch_getObjectTypeId(void) { return 0x0; }

@@ -16,8 +16,8 @@
 #include "main/objseq.h"
 extern u32 GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
-extern int ObjGroup_FindNearestObject(int group, int obj, float* outDist);
-extern void ObjPath_GetPointWorldPosition(int obj, int param2, float* outX, float* outY, float* outZ, int param6);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;

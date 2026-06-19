@@ -20,7 +20,7 @@
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-extern u8* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern void fn_8008DAE8(int obj);
 extern u8* Obj_GetActiveModel(int obj);
 extern void fn_800412B8(int a, int b, int c);

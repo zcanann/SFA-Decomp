@@ -18,7 +18,7 @@
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E4FF8;
-extern u8* mmAlloc(int size, int tag, int p);
+extern void* mmAlloc(int size, int type, int flag);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;

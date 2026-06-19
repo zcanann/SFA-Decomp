@@ -20,7 +20,7 @@ extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void* Obj_GetPlayerObject(void);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(int obj, void* p);
 
 extern f32 lbl_803E4660; /* render scale */

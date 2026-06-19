@@ -7,7 +7,7 @@ extern f32 timeDelta;
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 
-extern s16* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;

@@ -24,7 +24,7 @@ extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int lo, int hi);
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern int* getTrickyObject(void);
+extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;

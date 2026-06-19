@@ -53,9 +53,9 @@ extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(u32);
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
-extern void warpToMap(int mapId, int spawnId);
+extern void warpToMap(int idx, s8 transType);
 extern void cutsceneExit(void);
-extern void buttonDisable(int index, int flags);
+extern void buttonDisable(int port, u32 mask);
 extern f32 timeDelta;
 extern f32 lbl_803E1DF0;       /* save-phase timer limit */
 extern s8 lbl_803DD712;        /* save-phase frame timer */

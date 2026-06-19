@@ -34,7 +34,7 @@ STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void mm_free(void* p);
-extern void* mmAlloc(int size, int align, int tag);
+extern void* mmAlloc(int size, int type, int flag);
 extern float mathSinf(float x);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int* obj, int group);

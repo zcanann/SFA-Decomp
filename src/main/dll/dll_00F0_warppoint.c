@@ -54,13 +54,13 @@ typedef struct WarpPointState
 } WarpPointState;
 
 extern void GameBit_Set(int eventId, int value);
-extern void warpToMap(int mapId, int flag);
+extern void warpToMap(int idx, s8 transType);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 extern int getCurMapLayer(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern f32 lbl_803E35D8;

@@ -25,13 +25,13 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 extern void lockLevel(int dirIdx, int v);
 extern int mapGetDirIdx(int mapId);
 extern void loadMapAndParent(int mapId);
 extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
-extern void warpToMap(int warpId, int p2);
+extern void warpToMap(int idx, s8 transType);
 extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);

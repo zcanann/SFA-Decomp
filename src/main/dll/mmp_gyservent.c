@@ -56,9 +56,9 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
 extern void mtxRotateByVec3s(void* out, void* vec);
 extern void mtx44Transpose(void* m, void* out);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void setMatrixFromObjectPos(void* out, void* vec);
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, int legCode, int distanceSquared);
 
 extern char lbl_8032253C[]; /* OSReport format string (.data) */

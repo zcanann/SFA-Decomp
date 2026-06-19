@@ -70,10 +70,10 @@ extern f32 lbl_803E4740;
 extern f32 lbl_803E4744;
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
-extern float Vec_distance(float* a, float* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E4738;
-extern void warpToMap(int mapId, int flags);
-extern void Music_Trigger(int track, int flag);
+extern void warpToMap(int idx, s8 transType);
+extern void Music_Trigger(int id, int arg);
 
 void FUN_801ac248(u64 param_1, double param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,

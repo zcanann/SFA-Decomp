@@ -27,8 +27,8 @@
 
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
-extern int ObjHits_GetPriorityHit();
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);

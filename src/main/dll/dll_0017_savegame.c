@@ -86,7 +86,7 @@ extern u32 GameBit_Get(int eventId);
 extern void* gameTextGetPhrase(int textId, int variant);
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 extern void cutsceneExit(void);
 extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
@@ -97,7 +97,7 @@ extern void loadUiDll(int dll);
 extern void screenTransitionFn_800d7b04(int duration, int type);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddHealth(u8* player, int v);
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168

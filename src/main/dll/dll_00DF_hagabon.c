@@ -56,7 +56,7 @@ extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void mm_free(void* p);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
@@ -85,14 +85,14 @@ extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);

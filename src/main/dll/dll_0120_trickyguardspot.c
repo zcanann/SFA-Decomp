@@ -12,11 +12,11 @@ typedef struct TrickyguardspotPlacement
     s16 unk1E;
 } TrickyguardspotPlacement;
 
-extern int* getTrickyObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void objRenderFn_80041018(int obj);
 extern u8 framesThisStep;
-extern void ObjGroup_AddObject(int obj, int g);
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 void trickyguardspot_render(void)
 {

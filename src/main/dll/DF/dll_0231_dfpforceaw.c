@@ -50,7 +50,7 @@ extern f32 lbl_803E7100;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void vecRotateZXY(s16 * rotation, f32 * outVec);
+extern void vecRotateZXY(u8* p, f32* v);
 
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;

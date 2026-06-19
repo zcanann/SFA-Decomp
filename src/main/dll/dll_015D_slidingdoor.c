@@ -54,7 +54,7 @@ extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 
 void slidingdoor_free(void)
 {

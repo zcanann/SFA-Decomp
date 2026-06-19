@@ -16,7 +16,7 @@
 #include "main/resource.h"
 
 extern u64 ObjGroup_RemoveObject();
-extern u32 ObjPath_GetPointWorldPosition();
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
 
 #pragma scheduling on
@@ -25,15 +25,15 @@ extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;
-extern void ObjMsg_AllocQueue(int* obj, int n);
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E48B8;
 extern void DIMwooddoor_updateFallingDebris(int* obj);
 extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
-extern f32 getXZDistance(f32 * a, f32 * b);
+extern f32 getXZDistance(f32* a, f32* b);
 extern void* fn_802972A8(void* player);
-extern void buttonDisable(int chan, int mask);
+extern void buttonDisable(int port, u32 mask);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int lbl_803DBF10;
@@ -47,7 +47,7 @@ extern void hudFn_8011f38c(int v);
 extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
 extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
-extern u32 getButtonsJustPressed(int chan);
+extern u32 getButtonsJustPressed(int port);
 extern u32 getButtonsHeld(int chan);
 extern u32 getButtonsJustPressedIfNotBusy(int chan);
 extern u8 lbl_803DBF00;

@@ -32,8 +32,8 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
+extern void kaldachompspit_free(int* obj);
+extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -172,22 +172,22 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern f64 DOUBLE_803e3e88;
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free();
-extern void animatedobj_init();
-extern void dim2roofrub_init();
+extern void animatedobj_free(int* obj, int seqFlag);
+extern void animatedobj_init(int* obj, int* params);
+extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update();
-extern void staff_init();
-extern void staff_release();
-extern void staff_initialise();
-extern void staff_hitDetectGeometry();
+extern void staff_update(int* obj);
+extern void staff_init(int* obj);
+extern void staff_release(void);
+extern void staff_initialise(void);
+extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();

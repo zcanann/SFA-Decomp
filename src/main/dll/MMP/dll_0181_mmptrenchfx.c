@@ -19,7 +19,7 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
-extern void vecRotateZXY(void* in, void* out);
+extern void vecRotateZXY(u8* p, f32* v);
 extern f32 timeDelta;
 extern char lbl_803AC930[];
 extern f32 lbl_803E45C0;

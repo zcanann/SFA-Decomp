@@ -42,7 +42,7 @@ extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
-extern int ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -58,7 +58,7 @@ extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-extern void Sfx_StopObjectChannel(int obj, int ch);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 
 /* cfprisonguard_SeqFn: drive the guard state machine - ramp/reset the
  * alarm on cues, bail when captured or freed, watch player distance and

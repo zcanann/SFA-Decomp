@@ -28,18 +28,18 @@
    objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
    load-bearing for codegen, so they stay local to this TU. */
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void* p);
-extern void modelLightStruct_setDistanceAttenuation(void* p, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
-extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_DisableObject(u32 objPtr);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);

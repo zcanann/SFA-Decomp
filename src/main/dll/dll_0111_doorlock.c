@@ -46,7 +46,7 @@ extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E3798;
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
-extern void buttonDisable(int index, int mask);
+extern void buttonDisable(int port, u32 mask);
 
 int doorlock_getExtraSize(void) { return 0x1; }
 

@@ -5,7 +5,7 @@
 #include "main/dll/IM/IMspacecraft.h"
 
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
@@ -14,12 +14,12 @@ extern int getAngle(float y, float x);
 
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_EnableObject(int obj);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
+extern void ObjHits_DisableObject(u32 objPtr);
+extern void ObjHits_EnableObject(u32 objPtr);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
-extern void ObjGroup_AddObject(int obj, int groupId);
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
 
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);

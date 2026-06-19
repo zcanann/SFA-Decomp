@@ -36,12 +36,12 @@ extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void mtxRotateByVec3s(float* outMtx, short* angles);
-extern void Matrix_TransformPoint(float* mtx, double x, double y, double z, float* ox, float* oy, float* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void setMatrixFromObjectPos(float* mtx, void* obj);
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               s8 p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount,
                                 void* hitResults, int arg6);
 extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);

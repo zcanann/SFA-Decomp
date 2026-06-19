@@ -44,12 +44,12 @@ extern void GameBit_Set(int eventId, int value);
 
 extern void DBprotection_storeHomePosition(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Music_Trigger(s32 snd, s32 mode);
+extern void Music_Trigger(int id, int arg);
 extern const f32 lbl_803E56CC;
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern u32 fn_801E2570(void);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
@@ -103,11 +103,11 @@ extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void objSetSlot(void* obj, int slot);
-extern void* textureLoadAsset(int id);
+extern void* textureLoadAsset(int asset);
 extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
-extern void textureFree(void* tex);
+extern void textureFree(u8* tex);
 
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
 enum SbGalleonSeqEvent

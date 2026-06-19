@@ -151,7 +151,7 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
@@ -1330,7 +1330,7 @@ extern void*gBoneParticleEffectBuffers[];
 extern void* lbl_803DD2A4;
 extern void* lbl_803DD2A8;
 extern void mm_free(void* p);
-extern void textureFree(void* resource);
+extern void textureFree(u8* tex);
 
 /* scheduling-off intentionally stays in effect through end-of-file (release/update/initialise/
    spawnAtBones); peephole is re-enabled at boneParticleEffect_spawnAtBones below. Do not close. */
@@ -1613,8 +1613,8 @@ typedef struct
 } ParticleSlot;
 
 extern ParticleSlot gBoneParticleInitData[];
-extern void* textureLoadAsset(int id);
-extern void* mmAlloc(int size, int align, int flag);
+extern void* textureLoadAsset(int asset);
+extern void* mmAlloc(int size, int type, int flag);
 
 void boneParticleEffect_initialise(void)
 {

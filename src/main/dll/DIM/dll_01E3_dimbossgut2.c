@@ -78,9 +78,9 @@ extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
 extern f32 lbl_803E4D1C;
 
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void lightSetFieldBC_8001db14(int light, int v);
-extern void* objCreateLight(int obj, int n);
+extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);

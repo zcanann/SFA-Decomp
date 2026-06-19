@@ -23,7 +23,7 @@
 
 extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-extern void gameTextSetColor(u8 red, u8 green, u8 blue, u8 alpha);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern char* gameTextGetStr(int id);
 extern void gameTextShowStr(char* text, int font, int x, int y);
 extern void mapUnload(int mapId, u32 flags);
@@ -31,7 +31,7 @@ extern void loadMapAndParent(int param_1);
 extern void loadSunAndMoon(void);
 extern void gameUiLoadResources(void);
 extern void lockIconInit(void);
-extern void warpToMap(int mapId, int param_2);
+extern void warpToMap(int idx, s8 transType);
 extern void loadUiDll(int id);
 
 extern int lbl_803A4438[];

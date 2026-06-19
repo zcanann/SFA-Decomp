@@ -29,7 +29,7 @@ typedef struct GrimbleState
 
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
-extern void ObjHits_DisableObject(u32 obj);
+extern void ObjHits_DisableObject(u32 objPtr);
 
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;

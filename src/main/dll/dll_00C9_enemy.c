@@ -91,7 +91,7 @@ extern void trickyFn_80148d8c(short* obj, int state);
 extern void Tricky_resumeAfterCommand(short* obj, int state);
 extern void Tricky_applyFloorResponse(short* obj, int state);
 extern void setMatrixFromObjectPos(f32* mtx, void* rec);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
 extern f32 powfBitEstimate(f32 x, f32 y);
 extern void objMove(short* obj, f32 dx, f32 dy, f32 dz);
@@ -1353,7 +1353,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     extern void fn_8014BC98(int* node, int* sub);
     extern void baddieInstantiateWeapon(int* node, int* sub);
     extern void* Obj_GetPlayerObject(void);
-    extern int* getTrickyObject(void);
+    extern void* getTrickyObject(void);
     char* sub = *(char**)&((GameObject*)node)->extra;
     s8* n29 = *(s8**)&((GameObject*)node)->anim.placementData;
     int i;
@@ -1432,7 +1432,7 @@ void fn_8014B878(int* arg1, int* sub)
 {
     extern void fn_8014B878(int* node, int* sub);
     extern void* Obj_GetPlayerObject(void);
-    extern int* getTrickyObject(void);
+    extern void* getTrickyObject(void);
     int* player;
     int* tricky;
     int* target;
@@ -2094,7 +2094,7 @@ void enemy_update(int obj)
     extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
     extern void baddieInstantiateWeapon(int obj, u8* state);
     extern void* Obj_GetPlayerObject(void);
-    extern u8* getTrickyObject(void);
+    extern void* getTrickyObject(void);
     u8* player;
     u8* state;
     u8* setup;

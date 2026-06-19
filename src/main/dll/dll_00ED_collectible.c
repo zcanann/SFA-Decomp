@@ -28,7 +28,7 @@
 #include "main/dll/collectible_state.h"
 
 extern void ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 
 extern void* getTrickyObject(void);
@@ -61,7 +61,7 @@ extern f32 lbl_803E3488;
 extern f32 lbl_803E348C;
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8* fn_802972A8(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int fn_8029622C(u8 * player);
 extern f32 lbl_803E3490;
 extern f32 lbl_803E3478;
@@ -80,11 +80,11 @@ extern f32 lbl_803E34A0;
 
 extern void gcbaddieshield_update(int* obj);
 
-extern void animatedobj_init();
-extern void animatedobj_free();
+extern void animatedobj_init(int* obj, int* params);
+extern void animatedobj_free(int* obj, int seqFlag);
 extern int animatedobj_getExtraSize(void);
 
-extern void dim2roofrub_init();
+extern void dim2roofrub_init(int* obj, int* params);
 extern void dim2roofrub_free(int* obj);
 extern int dim2roofrub_getExtraSize(void);
 
@@ -92,17 +92,17 @@ extern void depthoffieldpoint_init();
 extern void depthoffieldpoint_update();
 extern int depthoffieldpoint_getExtraSize(void);
 
-extern void staff_initialise();
-extern void staff_release();
-extern void staff_init();
-extern void staff_update();
+extern void staff_initialise(void);
+extern void staff_release(void);
+extern void staff_init(int* obj);
+extern void staff_update(int* obj);
 extern void staff_hitDetect(void);
 extern void staff_render(void);
 extern int staff_getObjectTypeId(void);
 extern int staff_getExtraSize(void);
 extern void staff_setScale(void);
 extern void staff_func0B(void);
-extern void staff_hitDetectGeometry();
+extern void staff_hitDetectGeometry(int* obj);
 extern void staff_func0F(void);
 extern void staff_func10(int* obj, s32 v);
 extern void staff_setHitReactValue(int* obj, s32 v);

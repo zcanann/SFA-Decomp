@@ -68,7 +68,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern int objUpdateOpacity(int sub);
 extern void ObjLink_AttachChild(int obj, int child, int c);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int e);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;

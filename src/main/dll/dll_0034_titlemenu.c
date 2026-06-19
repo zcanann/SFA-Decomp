@@ -15,12 +15,12 @@ extern void titleScreenPositionElements(f32 param_1, f32 param_2);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
 
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern u32 mmSetFreeDelay(u32 delay);
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 extern void printHeapStats(int param_1);
 extern void defragMemory(int param_1);
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern void VIWaitForRetrace(void);
 
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -54,11 +54,11 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void buttonDisable(int controller, u32 buttons);
+extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputY(int controller);
 extern void padClearAnalogInputX(int controller);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
-extern u32 getButtonsJustPressed(int controller);
+extern u32 getButtonsJustPressed(int port);
 extern void loadUiDll(int id);
 extern void mapUnload(int mapId, u32 flags);
 extern void titleScreenFn_8005cdd4(int arg);

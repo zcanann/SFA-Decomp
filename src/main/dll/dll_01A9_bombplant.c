@@ -40,7 +40,7 @@ extern u32 ObjHits_MarkObjectPositionDirty();
 extern u32 ObjHits_EnableObject();
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
 extern f32 lbl_803E5368;
 extern f32 lbl_803E537C;

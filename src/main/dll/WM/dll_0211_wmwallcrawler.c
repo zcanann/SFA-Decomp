@@ -104,7 +104,7 @@ extern void Obj_RemoveFromUpdateList(int obj);
 extern int fn_80080150(void* timer);
 extern int randFn_80080100(int max);
 extern f32 sqrtf(f32 x);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32*** out, int a, int b);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803DC130;
 extern u8 lbl_803DDCB8;
 extern f32 lbl_803E5FB0;

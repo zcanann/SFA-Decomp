@@ -30,8 +30,8 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32 getButtonsJustPressed(int controller);
-extern u32 ObjPath_GetPointWorldPosition();
+extern u32 getButtonsJustPressed(int port);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 
@@ -127,7 +127,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern void loadMapAndParent(int mapId);
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int locked);
 extern void mapUnload(int dirIdx, int flags);
@@ -240,7 +240,7 @@ extern void AudioStream_CancelPrepared(void);
 extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 counter);
-extern void warpToMap(int mapId, int spawnId);
+extern void warpToMap(int idx, s8 transType);
 extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 extern f32 timeDelta;
@@ -410,7 +410,7 @@ typedef struct WarpstoneState
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
 
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDistance);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
 extern s16* objModelGetVecFn_800395d8(int obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);

@@ -13,10 +13,10 @@
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
-extern u8* Obj_GetActiveModel(u8 * obj);
+extern void* Obj_GetActiveModel(u8* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* cb);
 extern void lightSetColor(int a, int b, int c, int d);
-extern ModelLightStruct* objCreateLight(int a, int b);
+extern void* objCreateLight(int arg, u8 addToList);
 extern void objSetEventName(ModelLightStruct* p, int a);
 
 extern ModelLightStruct* lbl_803DD4C4;

@@ -13,7 +13,7 @@
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
-extern float Vec_distance(float* a, float* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_AddContactObject(int obj, int contactObj);
 extern f32 sqrtf(f32 x);

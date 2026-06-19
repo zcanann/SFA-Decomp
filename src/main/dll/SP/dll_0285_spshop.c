@@ -75,15 +75,15 @@ typedef struct ShopItemRow
 extern void fn_80295CF4(int player, int mode);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void envFxActFn_800887f8(int id);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void Music_Trigger(int a, int b);
+extern void ObjGroup_AddObject(u32 obj, int group);
+extern void Music_Trigger(int id, int arg);
 
 void FUN_801e55c0(u64 param_1, double param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,

@@ -13,7 +13,7 @@ extern f32 lbl_803E40D8;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 extern const char sMoonrockTriggerIdentFormat[];
 
 #define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)

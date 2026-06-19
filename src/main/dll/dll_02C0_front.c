@@ -45,7 +45,7 @@ extern int ObjGroup_FindNearestObject();
 extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern void gameTextShow(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern float mathCosf(float x);
@@ -307,7 +307,7 @@ void fn_80133F70(void* obj)
 }
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int* Obj_GetActiveModel(void* obj);
+extern void* Obj_GetActiveModel(u8* obj);
 
 /* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
  * matrix at lbl_803A9FE4 and derive the three normalized cursor
@@ -376,7 +376,7 @@ int gameTextFn_80134be8(void)
 
 /* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
  * trigger Music_Trigger(0x3a, 0) and clear showCredits. */
-extern void Music_Trigger(s32 triggerId, s32 mode);
+extern void Music_Trigger(int id, int arg);
 
 void titlescreen_free(u8* obj)
 {
@@ -548,7 +548,7 @@ void titlescreen_update(u8* obj)
     extern void fn_80134870(u8 * obj, u8 * arr);
     extern int ObjModel_HasActiveBlendChannels(int* model);
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-    extern void getEnvfxAct(int a, int b, int c, int d);
+    extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void skyFn_80089710(int flags, int enabled, int startComplete);
     extern void skyFn_800895e0(int id, int red, int green, int blue, int m1, int m2);
     extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);

@@ -52,8 +52,8 @@ extern u32 GameBit_Get(int eventId);
 extern int Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int boxId);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern float mathSinf(float x);
@@ -135,7 +135,7 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void viewFn_80129c74(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
-extern int* Obj_GetActiveModel(void* obj);
+extern void* Obj_GetActiveModel(u8* obj);
 extern u8 lbl_803DD92A;
 extern f32 lbl_803E2278;
 extern f32 lbl_803E227C;
@@ -151,9 +151,9 @@ extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
 extern int getButtonsHeld(int p);
-extern int getButtonsJustPressed(int p);
+extern u32 getButtonsJustPressed(int port);
 extern f32 powfCoreFast(f32 base, f32 exp);
-extern s16* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern int getAngle(float y, float x);
 extern u8 lbl_803DD945;
 extern u8 lbl_803DD929;
@@ -810,7 +810,7 @@ void fn_8013351C(void)
                     lbl_803E2278 - cc2, y - s2, &c2);
 }
 
-extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 void fn_8013396C(void)
 {

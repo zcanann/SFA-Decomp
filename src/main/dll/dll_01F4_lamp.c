@@ -16,11 +16,11 @@
 #include "main/dll_000A_expgfx.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);

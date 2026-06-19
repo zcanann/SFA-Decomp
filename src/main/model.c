@@ -6,7 +6,7 @@
 
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern void mm_free(void* ptr);
+extern void mm_free(void* p);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
 extern void* textureIdxToPtr(int textureId);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
@@ -234,7 +234,7 @@ extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern void textureFree(void* tex);
+extern void textureFree(u8* tex);
 
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {

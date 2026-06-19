@@ -40,9 +40,9 @@ extern void* saveFileSelect_saveSlots;
 extern u8 framesThisStep;
 
 extern int randomGetRange(int lo, int hi);
-extern void textureFree(void* p);
-extern void* textureLoadAsset(int id);
-extern void OSReport(const char* fmt, ...);
+extern void textureFree(u8* tex);
+extern void* textureLoadAsset(int asset);
+extern void OSReport(const char* msg, ...);
 extern char lbl_8031C234[]; /* "too many slots" overflow error format string */
 extern char lbl_8031C1A8[]; /* base of the nav-link out-of-range error format strings */
 extern int getCurLanguage(void);
@@ -50,7 +50,7 @@ extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextFn_80016810(int textId, int arg1, int arg2);
 extern void* gameTextGetBox(int boxId);
-extern void gameTextShow(int textId);
+extern void gameTextShow(int a);
 extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
@@ -59,8 +59,8 @@ extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int pad);
 extern void padClearAnalogInputX(int pad);
-extern u32 getButtonsJustPressed(int pad);
-extern void buttonDisable(int pad, int mask);
+extern u32 getButtonsJustPressed(int port);
+extern void buttonDisable(int port, u32 mask);
 extern void linkDrawFn_801302c0(void);
 extern void linkDrawFn_80130484(void);
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */

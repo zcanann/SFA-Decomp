@@ -8,7 +8,7 @@ extern void titleScreenPositionElements(f32 x, f32 y);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern void gameTextShow(int a);
 extern void gameTextShowStr(void* str, int id, int x, int y);
 extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
@@ -36,7 +36,7 @@ extern void loadUiDll(int index);
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputX(int port);
 extern s8 padGetStickX(int port);
-extern int getButtonsJustPressed(int port);
+extern u32 getButtonsJustPressed(int port);
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 extern void gplayNewGame(char* name, u8 slot);

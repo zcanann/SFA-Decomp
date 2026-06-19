@@ -23,7 +23,7 @@ extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
 
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -36,7 +36,7 @@ extern int FUN_80017a90();
 extern u64 FUN_80017ac8();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern u32 FUN_80053c98();
 extern int FUN_801365ac();
 extern u32 FUN_801365b8();

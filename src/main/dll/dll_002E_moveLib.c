@@ -54,7 +54,7 @@ extern f32 lbl_803E1CB4;
 extern f32 lbl_803E1CB8;
 extern f32 lbl_803E1CBC;
 extern f32 lbl_803E1CC0;
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
@@ -327,7 +327,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 void dll_2E_func06(int obj, char* st, int point)
 {
     extern void* seqFn_800394a0(void); /* #57 */
-    extern int ObjPath_GetPointWorldPosition(int obj, int point, f32* x, f32* y, f32* z, int flags); /* #57 */
+    extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition); /* #57 */
     extern void fn_8003AC14(int obj, void* types, int count); /* #57 */
     struct
     {

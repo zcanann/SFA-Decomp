@@ -60,7 +60,7 @@ extern f32 playerMapOffsetZ;
 extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
 extern void* Obj_GetPlayerObject(void);
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
 {
@@ -978,7 +978,7 @@ extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-extern int* Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void PSMTXMultVec(f32 * mtx, _Vec3 * in, f32 * out);
@@ -1281,7 +1281,7 @@ int mapProcessRomList(int slot)
     return i;
 }
 
-extern void* mmAlloc(int size, int heap, int flags);
+extern void* mmAlloc(int size, int type, int flag);
 extern void mapsBinGetRomlistSize(int offset, int* a, int* b, int* c);
 extern int lbl_803DCE7C;
 
@@ -2146,7 +2146,7 @@ extern f32 lbl_803DEBB8;
 extern f32 lbl_803DEBD4;
 extern f32 lbl_803DEBD8;
 extern f32 lbl_803DEBDC;
-extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY,
                                       f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outDepth);
 

@@ -57,7 +57,7 @@ extern int randomGetRange(int lo, int hi);
 #include "main/objlib.h"
 #include "main/objseq.h"
 
-extern void buttonDisable(int controller, int mask);
+extern void buttonDisable(int port, u32 mask);
 
 extern f32 timeDelta;
 extern f32 lbl_803E5D00;

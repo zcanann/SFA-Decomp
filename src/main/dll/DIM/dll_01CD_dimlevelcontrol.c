@@ -50,15 +50,15 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShow(int a);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
 extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
-extern void unlockLevel(int a, int b, int c);
+extern int unlockLevel(s32 val, int idx, int flag);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
@@ -72,7 +72,7 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 void dim_levelcontrol_free(int p1)
 {
-    extern void Music_Trigger(s32 triggerId, s32 mode);
+    extern void Music_Trigger(int id, int arg);
     Music_Trigger(0xa1, 0);
     Music_Trigger(0xed, 0);
     timeOfDayFn_80055000();
@@ -108,7 +108,7 @@ typedef struct DimLevelControlState
 
 void dim_levelcontrol_update(int obj)
 {
-    extern void Music_Trigger(int id, int value);
+    extern void Music_Trigger(int id, int arg);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     u8 a;
     u8 b;

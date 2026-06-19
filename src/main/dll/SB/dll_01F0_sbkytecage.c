@@ -27,7 +27,7 @@ extern int ObjLink_AttachChild();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern f32 lbl_803E5918; /* ObjAnim_AdvanceCurrentMove speed */
-extern void buttonDisable(int controller, int mask);
+extern void buttonDisable(int port, u32 mask);
 extern int* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E591C; /* ObjAnim_SetCurrentMove blend time */
 

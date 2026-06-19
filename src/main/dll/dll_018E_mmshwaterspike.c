@@ -35,7 +35,7 @@ extern void* ObjList_FindObjectById(int id);
 extern f32 objFn_801948c0(void* obj, int param_2);
 extern void fn_80137948(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern u8 framesThisStep;
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;

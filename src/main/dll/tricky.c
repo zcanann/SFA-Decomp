@@ -353,7 +353,7 @@ void GameUI_airMeterShutdown(void)
 }
 #pragma dont_inline reset
 
-extern void* mmAlloc(int size, int type, int x);
+extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* p, int v, int n);
 extern const f32 lbl_803E1E68;
 

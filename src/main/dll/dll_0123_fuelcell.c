@@ -14,7 +14,7 @@ extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
@@ -23,7 +23,7 @@ extern void gxSetZMode_();
 extern void objRenderFn_8003b8f4(f32);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
@@ -206,7 +206,7 @@ typedef struct
 #pragma opt_loop_invariants off
 void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    extern f32 vec3f_distanceSquared(void* a, void* b);
+    extern f32 vec3f_distanceSquared(f32* a, f32* b);
     extern void* Obj_GetActiveModel(int* obj);
     int** list;
     u8* slot;

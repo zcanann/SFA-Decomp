@@ -55,7 +55,7 @@ STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
 extern int ObjMsg_Pop();
-extern int ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E42B0;

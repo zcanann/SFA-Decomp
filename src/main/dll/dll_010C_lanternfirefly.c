@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern u32 ObjGroup_AddObject();
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -44,7 +44,7 @@ extern int randomGetRange(int lo, int hi);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern int gameBitIncrement(int eventId);
-extern f32 Vec_distance(void* a, void* b);
+extern f32 Vec_distance(f32* a, f32* b);
 
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
@@ -66,7 +66,7 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 extern float mathSinf(float x);
 extern void objRenderFn_8003b8f4(f32);

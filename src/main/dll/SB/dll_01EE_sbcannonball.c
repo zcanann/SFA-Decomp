@@ -53,7 +53,7 @@ extern u8* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(u8* p, int v);
 extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
 extern void lightSetFieldBC_8001db14(u8* p, int v);
-extern void modelLightStruct_setDistanceAttenuation(u8* p, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern f32 lbl_803E58C8;
 extern f32 lbl_803E58CC;
 extern f32 lbl_803E58D0;

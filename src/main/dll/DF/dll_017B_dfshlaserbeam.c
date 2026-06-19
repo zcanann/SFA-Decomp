@@ -14,20 +14,20 @@ extern f32 timeDelta;
 
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
-extern void textureFree(void* tex);
+extern void textureFree(u8* tex);
 
-extern u32 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern int getAngle(float y, float x);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_8011F6D4(int enable);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern int padGetStickX(int controller);
-extern void* textureLoadAsset(int id);
+extern void* textureLoadAsset(int asset);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int objGetAnimState80A(void* obj);

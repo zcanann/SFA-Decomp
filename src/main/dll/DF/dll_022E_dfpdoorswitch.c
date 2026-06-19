@@ -6,7 +6,7 @@
  */
 #include "main/dll/anim.h"
 
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 void doorswitch_render(void)
 {

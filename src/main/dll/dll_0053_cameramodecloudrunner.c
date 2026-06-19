@@ -35,7 +35,7 @@ extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E1B20;
 extern f32 lbl_803E1B24;
 extern f32 lbl_803E1B28;

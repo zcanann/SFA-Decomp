@@ -29,8 +29,8 @@ extern void GameBit_Set(int eventId, int value);
 
 
 extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
-extern void Music_Trigger(int id, int value);
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern void Music_Trigger(int id, int arg);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);

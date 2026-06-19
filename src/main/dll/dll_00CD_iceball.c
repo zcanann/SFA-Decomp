@@ -26,8 +26,8 @@
 #include "main/dll/scarab.h"
 
 extern u32 ObjHitbox_SetSphereRadius();
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_DisableObject();
+extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+extern void ObjHits_DisableObject(u32 objPtr);
 extern u32 ObjHits_EnableObject();
 
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);

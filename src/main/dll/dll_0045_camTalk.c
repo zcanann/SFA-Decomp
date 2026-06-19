@@ -18,7 +18,7 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
 extern void vecRotateZXY(void* param_1, void* outVec);
 extern u32 setMatrixFromObjectPos();
-extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
 extern float mathSinf(float x);

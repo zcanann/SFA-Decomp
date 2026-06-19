@@ -9,7 +9,7 @@ extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(int a);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void setAButtonIcon(int idx);
-extern void warpToMap(int mapId, int b);
+extern void warpToMap(int idx, s8 transType);
 
 int magiccavebottom_getExtraSize(void)
 {
@@ -18,7 +18,7 @@ int magiccavebottom_getExtraSize(void)
 
 void magiccavebottom_free(int obj)
 {
-    extern void Music_Trigger(s32 triggerId, s32 mode);
+    extern void Music_Trigger(int id, int arg);
     extern void GameBit_Set(int eventId, int value);
     (void)obj;
     GameBit_Set(0xefb, 0);
@@ -29,7 +29,7 @@ void treasurechest_init(int* obj);
 
 void magiccavebottom_update(int* obj)
 {
-    extern void Music_Trigger(int a, int b);
+    extern void Music_Trigger(int id, int arg);
     extern void GameBit_Set(int eventId, int value);
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;

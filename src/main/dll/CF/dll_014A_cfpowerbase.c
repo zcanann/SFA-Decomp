@@ -54,7 +54,7 @@ enum
 
 extern int ObjMsg_Pop();
 extern int ObjMsg_SendToObject();
-extern int ObjMsg_AllocQueue();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
