@@ -1817,6 +1817,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
     s8* layers;
     s16* rects;
     u8* bits;
+    u8* bits2;
     int id;
     int layer;
     int n;
@@ -1847,7 +1848,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
                 }
             }
         }
-        bits += 0x40;
+        bits2 = bits + 0x40;
         id++;
         if (layer == layers[1])
         {
@@ -1861,14 +1862,14 @@ int mapCoordsToId(int x, int z, int layerIdx)
                     if (z >= z0 && z <= rects[8])
                     {
                         idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
-                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                        if ((1 << (idx & 7)) & bits2[idx >> 3])
                             return id;
                     }
                 }
             }
         }
         rects += 10;
-        bits += 0x40;
+        bits = bits2 + 0x40;
         layers += 2;
         id++;
     }
