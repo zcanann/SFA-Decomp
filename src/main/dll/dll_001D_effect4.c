@@ -302,8 +302,8 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     uint wrapCountT;
 
     state = (ModgfxState*)stateArg;
-    stepS = lbl_803E00B8 * *(float*)(command + 4) * lbl_803DDF04;
-    stepT = lbl_803E00B8 * *(float*)(command + 8) * lbl_803DDF04;
+    stepS = lbl_803E00B8 * ((ModgfxVertexGroupCmd*)command)->valueX * lbl_803DDF04;
+    stepT = lbl_803E00B8 * ((ModgfxVertexGroupCmd*)command)->valueY * lbl_803DDF04;
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
     wrapCountS = 0;
@@ -564,11 +564,11 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
                 (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) -
                     DOUBLE_803e00c8);
             state->posStepY =
-                *(float*)(command + 8) /
+                ((ModgfxVertexGroupCmd*)command)->valueY /
                 (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
                 );
             state->posStepZ =
-                *(float*)(command + 0xc) /
+                ((ModgfxVertexGroupCmd*)command)->valueZ /
                 (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
                 );
         }
@@ -598,9 +598,9 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
     state = (ModgfxState*)stateArg;
     if (mode == 1)
     {
-        targetRotZ = (short)(int)*(float*)(command + 4);
-        targetRotY = (short)(int)*(float*)(command + 8);
-        targetRotX = (short)(int)*(float*)(command + 0xc);
+        targetRotZ = (short)(int)((ModgfxVertexGroupCmd*)command)->valueX;
+        targetRotY = (short)(int)((ModgfxVertexGroupCmd*)command)->valueY;
+        targetRotX = (short)(int)((ModgfxVertexGroupCmd*)command)->valueZ;
         if (state->blendFrameCount == 0)
         {
             state->rotOffsetZ = targetRotZ;
