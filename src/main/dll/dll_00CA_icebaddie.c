@@ -914,10 +914,10 @@ int iceBaddie_stateHandlerB07(int obj, int state)
 void iceBaddie_updateEffectAnchors(int obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
-    f32 transformedX;
-    f32 transformedY;
-    f32 transformedZ;
-    u8 transformScratch[0x18];
+    f32 transformScratch[6];
+#define transformedX (transformScratch[0])
+#define transformedY (transformScratch[1])
+#define transformedZ (transformScratch[2])
     f32 pathX;
     f32 pathY;
     f32 pathZ;
@@ -937,10 +937,9 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
     {
         scale = lbl_803E2D2C;
     }
-    if (scale < ((GroundBaddieState*)state)->baddie.animSpeedA)
-    {
-        scale = ((GroundBaddieState*)state)->baddie.animSpeedA;
-    }
+    scale = (scale < ((GroundBaddieState*)state)->baddie.animSpeedA)
+                ? ((GroundBaddieState*)state)->baddie.animSpeedA
+                : scale;
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
         ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
@@ -973,6 +972,9 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
         ((IceBaddieControl*)control)->effectFlags |= 1;
     }
 }
+#undef transformedX
+#undef transformedY
+#undef transformedZ
 
 void iceBaddie_updateControlEffects(int obj, int state)
 {
