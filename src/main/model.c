@@ -765,9 +765,10 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
     state->unk19 = 0;
     state->updateFlag = 0;
     state->entries = mmAlloc(count * 0xc, 0x1a, 0);
+    i = 0;
     p = (int**)models;
     off = 0;
-    for (i = 0; i < count; i++)
+    for (; i < count; i++)
     {
         *(int**)((char*)state->entries + off + 4) = *p;
         *(int*)((char*)state->entries + off + 8) = (*p)[1];
