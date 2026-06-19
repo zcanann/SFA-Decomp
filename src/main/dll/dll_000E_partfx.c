@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
+#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -1350,7 +1351,7 @@ extern f32 gPartfxOscSine1;
 extern f32 gPartfxOscSine0;
 extern f32 gPartfxPi;
 extern f32 lbl_803DF71C;
-extern float mathSinf(float x);
+
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
  * the 20 cached particle resource slots. */
@@ -1721,7 +1722,7 @@ extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
 extern s16 gPartfxResourceTimeouts[20];
 extern PartFxSpawnParams gPartfxDefaultSpawnParams;
-extern void srand(int seed);
+
 extern void vecRotateZXY(void* obj, f32* vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char* fmt, ...);

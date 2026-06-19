@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/sky_interface.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct TumbleweedBushState
 {
@@ -41,7 +42,7 @@ typedef struct TumbleweedBushState
 } TumbleweedBushState;
 
 extern u32 ObjHitbox_SetCapsuleBounds();
-extern int ObjHits_PollPriorityHitWithCooldown();
+
 extern f32 timeDelta;
 extern f32 lbl_803E2F48;
 extern f32 lbl_803E2F4C;
@@ -52,7 +53,7 @@ extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 lbl_803DDA80;
 extern void* Obj_GetPlayerObject(void);
-extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
+
 extern int Sfx_PlayFromObject(int* obj, int sfx);
 extern float sqrtf(float x);
 extern f32 lbl_803E2F44;

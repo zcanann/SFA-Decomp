@@ -17,6 +17,7 @@
 #include "main/pad.h"
 #include "main/dll/DIM/dll_01C6_dimcannon.h"
 #include "main/dll/dll_801b1d84.h"
+#include "main/sfa_shared_decls.h"
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
@@ -34,7 +35,7 @@ extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void* fn_802972A8(void* player);
-extern void buttonDisable(int port, u32 mask);
+
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int lbl_803DBF10;
@@ -42,13 +43,13 @@ extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;
 extern f32 lbl_803E48F0;
 extern f32 lbl_803DBEF4;
-extern void setAButtonIcon(int x);
-extern void setBButtonIcon(int icon);
-extern void hudFn_8011f38c(u8 x);
+
+
+
 extern void* objModelGetVecFn_800395d8(void* obj, int target);
 extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
-extern u32 getButtonsHeld(int port);
+
 extern u8 lbl_803DBF00;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

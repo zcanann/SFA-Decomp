@@ -25,8 +25,9 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
-extern void gameTextShow(int a);
-extern void doRumble(f32 duration);
+#include "main/sfa_shared_decls.h"
+
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
@@ -34,10 +35,10 @@ extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
 extern int randomGetRange(int lo, int hi);
 extern void setMotionBlur(double amount, int p2);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern float powfBitEstimate(float x, float y);
-extern float mathSinf(float x);
+
+
+
+
 extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
 extern int arrayIndexOf(int* arr, int count, int target);

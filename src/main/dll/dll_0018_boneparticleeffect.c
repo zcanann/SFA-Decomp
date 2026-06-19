@@ -8,6 +8,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/model.h"
+#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -1385,11 +1386,11 @@ extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
-extern void textureSetupFn_800799c0(void);
-extern void geomDrawFn_800796f0(void);
-extern void gxTexColorFn_80079254(void);
-extern void textRenderSetupFn_80079804(void);
-extern void gxBlendFn_80078b4c(void);
+
+
+
+
+
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */

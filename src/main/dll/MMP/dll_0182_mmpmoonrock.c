@@ -20,6 +20,7 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/MMP/dll_0182_mmpmoonrock.h"
+#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
@@ -53,7 +54,7 @@ void mmp_moonrock_initialise(void)
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);
 extern f32 lbl_803E4554;
@@ -345,7 +346,7 @@ void mmp_moonrock_init(int obj, int param2)
 }
 
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern void setAButtonIcon(int x);
+
 extern f32 gMoonRockPickupRange;
 
 void fn_801A7D74(int obj, u8 a, u8 b)
@@ -488,7 +489,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 }
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern float mathSinf(float x);
+
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);

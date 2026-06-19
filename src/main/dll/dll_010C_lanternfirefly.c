@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct LanternFireFlyPlacement
 {
@@ -42,11 +43,11 @@ extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern int gameBitIncrement(int bit);
+
 extern f32 Vec_distance(f32* a, f32* b);
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-extern int gameBitDecrement(int bit);
+
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
 extern f32 lbl_803E3AC8;
@@ -66,7 +67,7 @@ extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 
 extern f32 sqrtf(f32 value);
-extern float mathSinf(float x);
+
 extern void objRenderFn_8003b8f4(f32);
 
 int LanternFireFly_getExtraSize(void) { return 0x74; }

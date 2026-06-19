@@ -14,6 +14,7 @@
 #include "main/sky_interface.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -157,7 +158,7 @@ void fn_80185B74(int obj)
     extern f64 lbl_803E3A78;
 
 
-    extern void buttonDisable(int port, u32 mask);
+
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
     {

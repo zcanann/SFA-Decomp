@@ -17,18 +17,19 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 
-extern void envFxActFn_800887f8(u8 value);
+
 extern void Music_Trigger(int id, int arg);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern int getSaveGameLoadStatus(void);
+
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int lbl_80323548[];
-extern void gameTextShow(int a);
+
 extern f32 lbl_803E46C8; /* SeqFn explosion scale */
 extern f32 lbl_803E46CC; /* render scale */
 extern f32 lbl_803E46D0; /* help-text hold floor */

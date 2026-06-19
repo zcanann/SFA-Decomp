@@ -14,6 +14,7 @@
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
+#include "main/sfa_shared_decls.h"
 
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -21,7 +22,7 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
 }
 
 extern int randomGetRange(int lo, int hi);
-extern u32 ObjPath_GetPointModelMtx();
+
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
@@ -204,15 +205,15 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 #define GAMEBIT_DIM2_ICICLE_PHASE1_WIN 0x20b
 #define GAMEBIT_DIM2_ICICLE_PHASE2_WIN 0x266
 
-extern void warpToMap(int idx, s8 transType);
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+
+
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void doRumble(f32 duration);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+
+
+
+
 extern int gDim2IcicleSequenceSfx[];
 extern f32 lbl_803E4BC4;
 extern f32 lbl_803E4BF4;

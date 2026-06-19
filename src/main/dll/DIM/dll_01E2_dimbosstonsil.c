@@ -13,16 +13,17 @@
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 extern int randomGetRange(int lo, int hi);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+
+
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
-extern void doRumble(f32 duration);
+
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
 extern f32 timeDelta;

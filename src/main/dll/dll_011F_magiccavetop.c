@@ -7,6 +7,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/objseq.h"
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct MagiccavetopPlacement
 {
@@ -45,17 +46,17 @@ extern f32 timeDelta;
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 extern f32 gMagicCaveTopFadeMax;
-extern void stopRumble2(void);
+
 extern void staffSetGlow(void* a, int b, int c);
-extern int mapGetDirIdx(int idx);
-extern int mapUnload(int mapId, int flags);
-extern void warpToMap(int idx, s8 transType);
+
+
+
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern int loadMapAndParent(int mapId);
-extern int unlockLevel(s32 val, int idx, int flag);
-extern int lockLevel(s32 val, int idx);
+
+
+
 extern void stopRumble(void);
-extern void doRumble(f32 duration);
+
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,

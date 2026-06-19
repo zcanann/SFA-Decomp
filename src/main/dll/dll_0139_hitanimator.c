@@ -18,8 +18,9 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 extern void* mapGetBlock(int i);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
 extern void* fn_8006070C(int* obj, int idx);
 extern int fn_80065640(void);
 extern void fn_80065574(int matchVal, int obj, int flag);

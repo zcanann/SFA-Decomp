@@ -5,6 +5,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -19,13 +20,13 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
-extern void OSReport(const char* msg, ...);
+
 extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8029622C(int obj);
 extern u8 framesThisStep;
 extern char sMagicDustCollectedMessage[];
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
 extern int Obj_GetActiveModel(int obj);
 extern u16 lbl_803E34A8;
 extern u16 lbl_803E34AC;

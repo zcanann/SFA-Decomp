@@ -7,6 +7,7 @@
 #include "main/dll/sfxplayer.h"
 #include "main/dll/infopoint.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 extern u32 FUN_80006824();
 extern u32 FUN_800068c4();
 extern u32 FUN_80017690();
@@ -34,7 +35,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
-extern void gameTimerStop(void);
+
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 extern u32 lbl_803E6450;
 extern u32 lbl_803E6454;
@@ -95,9 +96,9 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #pragma scheduling on
 #pragma peephole on
 extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
-extern void gameTimerInit(s8 flags, int minutes);
-extern int isGameTimerDisabled(void);
-extern void timerSetToCountUp(void);
+
+
+
 
 void TrickyCurve_updateBoundsTrigger(int obj)
 {

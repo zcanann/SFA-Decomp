@@ -9,6 +9,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct DIMWoodDoorConfig
 {
@@ -58,8 +59,8 @@ extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int p
 extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
 extern int randomGetRange(int lo, int hi);
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

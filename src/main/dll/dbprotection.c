@@ -29,6 +29,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
+#include "main/sfa_shared_decls.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -53,8 +54,8 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);

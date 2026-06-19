@@ -6,9 +6,10 @@
 #include "main/audio/synth_delay.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
+#include "main/sfa_shared_decls.h"
 extern void dataInit(int p1, void* p2);
 
-extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
+
 
 #define S3D_UNLINK_EMITTER(emitter)                         \
     do {                                                    \

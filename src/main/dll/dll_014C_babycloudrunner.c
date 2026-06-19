@@ -19,6 +19,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern u64 FUN_80006824();
 extern u32 FUN_80017690();
 extern u32 FUN_80017698();
@@ -92,9 +93,9 @@ extern f32 timeDelta;
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern int gameBitIncrement(int bit);
 
-extern void objAudioFn_80039270(int obj, void* p, int id);
+
+
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
@@ -103,7 +104,7 @@ extern void* getTrickyObject(void);
 extern f32 lbl_803E4248;
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
-extern int randFn_80080100(int n);
+
 extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
 extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
 extern void fn_8014C66C(int* a, void* b);

@@ -24,6 +24,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
+#include "main/sfa_shared_decls.h"
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -37,15 +38,15 @@ extern f32 lbl_803E2E54;
 extern f32 lbl_803E2E58;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E2E50;
-extern void Camera_DisableViewYOffset(void);
+
 
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_8015FBEC(int obj)
 {
-    extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+
+
     s16 mode = ((GameObject*)obj)->anim.seqId;
     int i;
 
@@ -88,8 +89,8 @@ static inline u8 scarab_isObjectInList(void* o)
 
 void fn_8015FCCC(int obj)
 {
-    extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+
+
     s16 type;
     int n;
 

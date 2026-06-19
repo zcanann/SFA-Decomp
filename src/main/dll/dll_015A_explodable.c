@@ -19,6 +19,7 @@
  */
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
+#include "main/sfa_shared_decls.h"
 extern int randomGetRange(int lo, int hi);
 
 /* object group this prop registers its fragments under */
@@ -320,7 +321,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
 
 extern void vecRotateZXY(s16 * rot, f32 * vec);
 extern f32 sqrtf(f32 x);
-extern void normalize(f32 * x, f32 * y, f32 * z);
+
 extern f32 lbl_803E4370;
 extern f32 lbl_803E4374;
 extern f32 lbl_803E4378;

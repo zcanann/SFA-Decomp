@@ -23,6 +23,7 @@
 #include "main/resource.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
@@ -37,7 +38,7 @@ extern u32 fn_8003B5E0();
 extern void objRenderFn_8003b8f4(int* obj);
 extern u32 objParticleFn_80099d84();
 extern f32 sqrtf(f32);
-extern float mathSinf(float x);
+
 extern void fn_802961FC(int a, u8 type);
 
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants, the

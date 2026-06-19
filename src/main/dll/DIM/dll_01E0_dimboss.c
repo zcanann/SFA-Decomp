@@ -12,13 +12,14 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/pi_dolphin.h"
+#include "main/sfa_shared_decls.h"
 extern void Music_Trigger(int id, int arg);
-extern void padUpdate(void);
-extern void dvdCheckError(void);
-extern void gameTextRun(void);
-extern void gameTextShow(int a);
-extern void checkReset(void);
-extern void mmFreeTick(int arg);
+
+
+
+
+
+
 extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
@@ -27,27 +28,27 @@ extern u32 Obj_BuildWorldTransformMatrix();
 extern u32 getTrickyObject();
 extern u64 ObjGroup_RemoveObject();
 extern u64 clearLoadedFileFlags_blocks1();
-extern void setLoadedFileFlags_blocks1(void);
+
 extern u32 getLoadedFileFlags();
-extern int unlockLevel(s32 val, int idx, int flag);
-extern int lockLevel(s32 val, int idx);
-extern int mapUnload(int mapId, int flags);
-extern void defragMemory(int mode);
-extern int mapGetDirIdx(int idx);
+
+
+
+
+
 extern void loadDataFiles(void);
-extern int GXFlush_(u8 visible, int unused);
-extern void waitNextFrame(void);
-extern void setDrawCloudsAndLights(int v);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+
+
+
+
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
+
 extern u64 dll_2E_func07();
 extern u32 dll_2E_func09();
 extern u32 dll_2E_func05();
 extern void fn_801B9ECC(void);
 extern u32 dll_2E_func04();
-extern void OSReport(const char* msg, ...);
-extern void Camera_DisableViewYOffset(void);
+
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u32 ModelLightStruct_free();
 extern void Obj_FreeObject(u8* obj);
@@ -55,7 +56,7 @@ extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 param_2, u32 param_3,
                                  u32 param_4, u32 param_5, f32 scale);
-extern void timeOfDayFn_80055000(void);
+
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(DIMbossObject* obj, void* animController, int param_3);
 extern u32 dll_2E_func03();

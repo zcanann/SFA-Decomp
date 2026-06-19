@@ -1,9 +1,10 @@
 #include "main/audio/vsample_update.h"
 #include "main/audio/hw_stream.h"
+#include "main/sfa_shared_decls.h"
 
 
 extern u32 hwGetVirtualSampleState(int slot);
-extern u32 hwGetVirtualSampleID(int slot);
+
 extern u32 hwVoiceInStartup(int slot);
 
 extern u8 synthVirtualSampleState[];

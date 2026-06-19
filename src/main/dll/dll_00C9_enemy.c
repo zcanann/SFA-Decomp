@@ -27,6 +27,7 @@
 #include "main/vecmath.h"
 #include "main/dll/duster.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
 {
@@ -53,7 +54,7 @@ extern u32 fn_80154870();
 extern u32 FUN_80247944();
 extern u32 FUN_80247cd8();
 extern u32 FUN_80247ef8();
-extern double SeekTwiceBeforeRead();
+
 extern u32 FUN_80247f90();
 extern u32 FUN_80247fb0();
 extern u64 FUN_8028682c();
@@ -94,7 +95,7 @@ extern void Tricky_resumeAfterCommand(short* obj, int state);
 extern void Tricky_applyFloorResponse(short* obj, int state);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
-extern float powfBitEstimate(float x, float y);
+
 extern void objMove(short* obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8014FF20(short* obj, int state);
 extern void fn_8014FF24(short* obj, int state);
@@ -141,7 +142,7 @@ extern f32 lbl_803E25D4;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
-extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
+
 extern void fn_8015983C(void);
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
@@ -190,11 +191,11 @@ extern void ModelLightStruct_free(int light);
 extern void mm_free(int p);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
-extern int getCurUiDll(void);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
-extern void hudFn_8011f38c(u8 x);
+
 extern f32 enemyRespawnDistanceSq;
 extern void fn_80151954(int obj, u8* state);
 extern void fn_801522E0(int obj, u8* state);

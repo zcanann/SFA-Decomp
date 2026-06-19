@@ -4,6 +4,7 @@ extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
@@ -18,7 +19,7 @@ extern void objRenderFn_8003b8f4(int* obj);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);
-extern int gameBitIncrement(int bit);
+
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);
@@ -29,7 +30,7 @@ extern f32 lbl_803E3D10;
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* state);
-extern int getHudHiddenFrameCount(void);
+
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 extern f32 lbl_803E3CC8;
 extern f32 lbl_803E3CCC;

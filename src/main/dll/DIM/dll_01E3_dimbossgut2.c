@@ -10,6 +10,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct Dimbossgut2State
 {
@@ -56,9 +57,9 @@ extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
+
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;

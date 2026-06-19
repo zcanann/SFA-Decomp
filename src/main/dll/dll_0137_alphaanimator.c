@@ -25,6 +25,7 @@
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/mm.h"
+#include "main/sfa_shared_decls.h"
 extern void* mapGetBlock(int i);
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int* obj, int id);
@@ -101,7 +102,7 @@ void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void alphaanimator_update(int* obj)
 {
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+ /* #57 */
     int* d;
     AlphaAnimatorState* s;
     int mode;

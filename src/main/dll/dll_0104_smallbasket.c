@@ -36,6 +36,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -104,12 +105,12 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
-extern u32 buttonGetDisabled(int port);
-extern void buttonDisable(int port, u32 mask);
+
+
 extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);
 extern u32 playerGetStateFlag310(int obj);
-extern void setAButtonIcon(int x);
+
 extern int fn_80295BF0(int obj);
 extern int fn_8029669C(int obj);
 extern int fn_802966B4(int obj);

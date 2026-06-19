@@ -2,9 +2,10 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
+#include "main/sfa_shared_decls.h"
 extern u16 sndRand(void);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
-extern void sndConvertMs(u32 * p);
+
 extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */

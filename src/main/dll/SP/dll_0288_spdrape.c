@@ -13,6 +13,7 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
 #include "main/camera.h"
+#include "main/sfa_shared_decls.h"
 
 /* indices into a swing-direction move table (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) */
 enum
@@ -195,8 +196,8 @@ void spdrape_initialise(void)
 
 void spdrape_init(int* obj, u8* def)
 {
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
+
+
     extern void* Obj_GetPlayerObject(void);
     extern int randomGetRange(int lo, int hi);
     f32* state;

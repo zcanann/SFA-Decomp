@@ -4,7 +4,8 @@
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebits.h"
-extern int gameBitDecrement(int bit);
+#include "main/sfa_shared_decls.h"
+
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(int* obj);
 

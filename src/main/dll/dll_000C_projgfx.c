@@ -19,6 +19,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
+#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -159,7 +160,7 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-extern void OSReport(const char* msg, ...);
+
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;

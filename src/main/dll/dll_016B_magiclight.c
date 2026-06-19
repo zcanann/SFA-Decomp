@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMboulder.h"
+#include "main/sfa_shared_decls.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -70,7 +71,7 @@ extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E4738;
-extern void warpToMap(int idx, s8 transType);
+
 extern void Music_Trigger(int id, int arg);
 
 void FUN_801ac248(u64 param_1, double param_2, double param_3, u64 param_4,

@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct SnowclawState
 {
@@ -78,8 +79,8 @@ extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(int obj, int* child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern u32 gSnowClawHurtSfxTable[8];
 extern u8 framesThisStep;
 extern f32 lbl_803E6720;
@@ -96,7 +97,7 @@ extern f32 lbl_803E66E4;
 extern f32 lbl_803E66E8;
 extern f32 lbl_803E66F8;
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
-extern int randFn_80080100(int n);
+
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int timerCountDown(void* timer);

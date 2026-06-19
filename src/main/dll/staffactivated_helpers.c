@@ -21,9 +21,10 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern int randomGetRange(int lo, int hi);
 
-extern void doRumble(f32 duration);
+
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern u8 Obj_IsLoadingLocked(void);

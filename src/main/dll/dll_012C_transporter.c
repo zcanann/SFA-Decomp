@@ -25,17 +25,18 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objprint_dolphin.h"
-extern int unlockLevel(s32 val, int idx, int flag);
-extern int lockLevel(s32 val, int idx);
-extern int mapGetDirIdx(int idx);
-extern int loadMapAndParent(int mapId);
-extern void setLoadedFileFlags_blocks1(void);
-extern void warpToMap(int idx, s8 transType);
+#include "main/sfa_shared_decls.h"
+
+
+
+
+
+
 extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
-extern void setDrawCloudsAndLights(int v);
-extern void skyFn_80088c94(int flags, int mode);
+
+
 extern void skyFn_80088e54(int mode, f32 brightness);
-extern void timeOfDayFn_80055000(void);
+
 extern f32 lbl_803E3E98;
 extern void objRenderFn_80041018(int obj);
 extern s16 lbl_803DCEB8;

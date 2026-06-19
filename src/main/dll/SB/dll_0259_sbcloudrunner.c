@@ -29,6 +29,7 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -117,7 +118,7 @@ enum
 extern void *ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern u32 ObjPath_GetPointModelMtx();
+
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
 extern u32 FUN_80293f90();
@@ -136,7 +137,7 @@ extern f32 lbl_803E6930;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5C70;
 extern void objSetMtxFn_800412d4(u32 x);
-extern u32 getButtonsHeld(int port);
+
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -145,9 +146,9 @@ extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 extern f32 lbl_803E5CB0;
 extern f32 lbl_803E5CB4;
-extern int objGetFlagsE5_2(int obj);
+
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void doRumble(f32 duration);
+
 extern const f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 extern f32 playerMapOffsetX;
@@ -158,7 +159,7 @@ extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
-extern void setAButtonIcon(int x);
+
 extern u8 padGetStickX(int port);
 extern u8 padGetStickY(int port);
 extern const f32 lbl_803E5CBC;

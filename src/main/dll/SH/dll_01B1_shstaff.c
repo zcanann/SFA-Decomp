@@ -64,6 +64,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/objseq.h"
 #include "main/dll/DR/shstaff_state.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct ShStaffPlacement
 {
@@ -83,7 +84,7 @@ extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
-extern u32 ObjPath_GetPointModelMtx();
+
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
@@ -324,7 +325,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
-extern void hudFn_8011f38c(u8 x);
+
 extern void fn_801DA4A8(int obj, ShStaffState* state, int a);
 extern f32 lbl_803E5508;
 
@@ -419,8 +420,8 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern void fn_80295CF4(int obj, int a);
 extern void fn_8029672C(int obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
-extern int mapUnload(int mapId, int flags);
-extern int loadMapAndParent(int mapId);
+
+
 
 extern f32 lbl_803E550C;
 extern f32 gShStaffMapUnloadDistSq;

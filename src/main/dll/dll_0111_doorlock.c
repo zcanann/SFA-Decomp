@@ -20,6 +20,7 @@
 #include "main/dll/doorlockstate_struct.h"
 #include "main/dll/alphaanim.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
@@ -45,7 +46,7 @@ extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E3798;
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
-extern void buttonDisable(int port, u32 mask);
+
 
 int doorlock_getExtraSize(void) { return 0x1; }
 

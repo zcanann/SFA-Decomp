@@ -13,15 +13,16 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
+#include "main/sfa_shared_decls.h"
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern void ObjHits_DisableObject(u32 objPtr);
 extern f32 timeDelta;
-extern void doRumble(f32 duration);
+
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* p, u8 v);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
+
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);
 extern void* objCreateLight(int arg, u8 addToList);

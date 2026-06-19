@@ -40,6 +40,7 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_00CA_icebaddie.h"
+#include "main/sfa_shared_decls.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -67,7 +68,7 @@ extern int randomGetRange(int lo, int hi);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjMsg_SendToObjects();
-extern u32 ObjPath_GetPointModelMtx();
+
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;
@@ -121,7 +122,7 @@ extern f32 lbl_803E2CFC;
 extern int* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
-extern void Camera_DisableViewYOffset(void);
+
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
 extern u8 gIceBaddieStateHandlersA[];
@@ -135,10 +136,10 @@ extern s16 gIceBaddieAttackMoves[];
 extern s16 gIceBaddieAttackMovesAlt[];
 extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
+
+
 extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
 extern void voxmaps_updateRoutePath(void* from, void* to);
 extern int Obj_IsLoadingLocked(void);

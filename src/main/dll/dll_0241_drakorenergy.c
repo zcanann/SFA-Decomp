@@ -18,6 +18,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
@@ -26,7 +27,7 @@ extern f32 Vec_distance(int, int);
 extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
-extern float mathSinf(float x);
+
 extern void Obj_PredictInterceptPoint(int, int, f32*, f32);
 extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);

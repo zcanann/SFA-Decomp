@@ -19,6 +19,7 @@
 #include "main/objanim_update.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -41,16 +42,16 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 extern void getLActions();
 extern void gameBitFn_800ea2e0(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
+
 extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
 extern void objRenderFn_8003b8f4(f32);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
-extern void warpToMap(int idx, s8 transType);
+
 extern void fn_801AC01C(int* obj);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShow(int a);
+
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern f32 timeDelta;

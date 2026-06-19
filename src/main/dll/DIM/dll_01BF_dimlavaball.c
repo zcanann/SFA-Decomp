@@ -44,7 +44,7 @@ int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-extern void warpToMap(int idx, s8 transType);
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern void Music_Trigger(int id, int arg);
@@ -53,6 +53,7 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct Lavaball1bfPlacement
 {

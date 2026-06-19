@@ -18,6 +18,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int param_1, int param_2);
@@ -27,13 +28,13 @@ extern int fn_801C49B8(int obj);
 extern void fn_80296518(int obj, int flag, int set);
 extern void Music_Trigger(int id, int arg);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
-extern void skyFn_80088c94(int flags, int mode);
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
+
+
 
 extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
+
 extern void fn_801C4664(int obj);
 extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);

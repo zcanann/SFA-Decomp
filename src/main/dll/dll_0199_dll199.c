@@ -8,11 +8,12 @@
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
+#include "main/sfa_shared_decls.h"
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
-extern u32 getButtonsHeld(int port);
+
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;

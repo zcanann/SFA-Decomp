@@ -13,10 +13,11 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
+#include "main/sfa_shared_decls.h"
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
-extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
+
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
 extern int Obj_IsLoadingLocked(void);
@@ -230,9 +231,9 @@ int DIMbossAnim_finishDefeat(int obj, int p2)
 int DIMbossHitDetect_liftImpact(int obj, int p2)
 {
     f32 zeroProgress;
-    extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-    extern void doRumble(f32 duration);
+
+
+
     extern u32 gDIMbossSequenceFlags;
     extern f32 lbl_803E4BC8;
     extern f32 lbl_803E4BD8;

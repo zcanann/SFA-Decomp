@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/audio/sfx.h"
+#include "main/sfa_shared_decls.h"
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
@@ -20,8 +21,8 @@ extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-extern void doRumble(f32 duration);
+
+
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 extern s16 gRollingBarrelExplodingCount;

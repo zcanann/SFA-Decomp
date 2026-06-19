@@ -19,6 +19,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/sfa_shared_decls.h"
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
@@ -126,8 +127,8 @@ extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mod
                                           int linkId, void* parent);
 extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY,
                                           f32* outZ, int useInputPosition);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;

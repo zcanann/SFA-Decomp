@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
+#include "main/sfa_shared_decls.h"
 
 typedef struct ShopSparkleSpawn
 {
@@ -44,7 +45,7 @@ extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
-extern void hudFn_8011f38c(u8 x);
+
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
@@ -58,7 +59,7 @@ extern f32 lbl_803E5A64;
 extern f32 lbl_803E5A68;
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
-extern void buttonDisable(int port, u32 mask);
+
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 extern f32 lbl_803E5A34;
@@ -72,7 +73,7 @@ extern f32 lbl_803E5A50;
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void);
-extern int getHudHiddenFrameCount(void);
+
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
 
