@@ -514,7 +514,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 4;
                 break;
             case 4:
-                *(char*)((int)state + 0xb7) = *(char*)((int)state + 0xb7) + '\x01';
+                *(char*)&((AndrossState*)state)->unkB7 = *(char*)&((AndrossState*)state)->unkB7 + '\x01';
                 if (((AndrossState*)state)->unkB7 < 4)
                 {
                     ((AndrossState*)state)->actionState = 0;
