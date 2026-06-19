@@ -1302,19 +1302,19 @@ extern float mathSinf(float x);
 
 extern f32 lbl_803DF720;
 
-extern f32 lbl_803DB7D8;
-extern f32 lbl_803DB7DC;
-extern int lbl_803DD350;
-extern int lbl_803DD354;
-extern f32 lbl_803DD358;
-extern f32 lbl_803DD35C;
+extern f32 gEffect4TickCyclePhaseFast;
+extern f32 gEffect4TickCyclePhaseSlow;
+extern int gEffect4SinPhaseCounterA;
+extern int gEffect4SinPhaseCounterB;
+extern f32 gEffect4SinValueB;
+extern f32 gEffect4SinValueA;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFA88;
 extern f32 lbl_803DFA8C;
 extern f32 lbl_803DFA90;
 extern f32 lbl_803DFA98;
-extern f32 lbl_803DFBD8;
-extern f32 lbl_803DFBDC;
+extern f32 gEffect4Pi;
+extern f32 gEffect4SinPhaseScale;
 extern f32 lbl_803DFCE0;
 
 #pragma scheduling off
@@ -1323,30 +1323,30 @@ void Effect4_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB7D8 + (step = lbl_803DFA88 * timeDelta);
-    lbl_803DB7D8 = sum;
+    sum = gEffect4TickCyclePhaseFast + (step = lbl_803DFA88 * timeDelta);
+    gEffect4TickCyclePhaseFast = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7D8 = lbl_803DFA8C;
+        gEffect4TickCyclePhaseFast = lbl_803DFA8C;
     }
-    sum = lbl_803DB7DC + step;
-    lbl_803DB7DC = sum;
+    sum = gEffect4TickCyclePhaseSlow + step;
+    gEffect4TickCyclePhaseSlow = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7DC = lbl_803DFA98;
+        gEffect4TickCyclePhaseSlow = lbl_803DFA98;
     }
-    lbl_803DD350 = lbl_803DD350 + framesThisStep * 0x64;
-    if (lbl_803DD350 > 0x7fff)
+    gEffect4SinPhaseCounterA = gEffect4SinPhaseCounterA + framesThisStep * 0x64;
+    if (gEffect4SinPhaseCounterA > 0x7fff)
     {
-        lbl_803DD350 = 0;
+        gEffect4SinPhaseCounterA = 0;
     }
-    lbl_803DD35C = mathSinf(lbl_803DFBD8 * (f32)(s16)lbl_803DD350 / lbl_803DFBDC);
-    lbl_803DD354 = lbl_803DD354 + framesThisStep * 0x32;
-    if (lbl_803DD354 > 0x7fff)
+    gEffect4SinValueA = mathSinf(gEffect4Pi * (f32)(s16)gEffect4SinPhaseCounterA / gEffect4SinPhaseScale);
+    gEffect4SinPhaseCounterB = gEffect4SinPhaseCounterB + framesThisStep * 0x32;
+    if (gEffect4SinPhaseCounterB > 0x7fff)
     {
-        lbl_803DD354 = 0;
+        gEffect4SinPhaseCounterB = 0;
     }
-    lbl_803DD358 = mathSinf(lbl_803DFBD8 * (f32)(s16)lbl_803DD354 / lbl_803DFBDC);
+    gEffect4SinValueB = mathSinf(gEffect4Pi * (f32)(s16)gEffect4SinPhaseCounterB / gEffect4SinPhaseScale);
 }
 
 void Effect5_func05(void);
@@ -1440,9 +1440,9 @@ extern f32 lbl_803DF9D4;
 
 #undef FILL350
 
-extern f32 lbl_803DB7D0;
-extern f32 lbl_803DB7D4;
-extern f32 lbl_803DFA94;
+extern f32 gEffect4SpawnCyclePhaseFast;
+extern f32 gEffect4SpawnCyclePhaseSlow;
+extern f32 gEffect4SpawnCyclePhaseSlowStep;
 extern f32 lbl_803DFA9C;
 extern f32 lbl_803DFAA0;
 extern f32 lbl_803DFAA4;
@@ -1528,10 +1528,10 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     MtxBuildArg es;
     PartFxSpawn cfg;
 
-    lbl_803DB7D0 = lbl_803DB7D0 + lbl_803DFA88;
-    if (lbl_803DB7D0 > 1.0f) lbl_803DB7D0 = lbl_803DFA8C;
-    lbl_803DB7D4 = lbl_803DB7D4 + lbl_803DFA94;
-    if (lbl_803DB7D4 > 1.0f) lbl_803DB7D4 = lbl_803DFA98;
+    gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + lbl_803DFA88;
+    if (gEffect4SpawnCyclePhaseFast > 1.0f) gEffect4SpawnCyclePhaseFast = lbl_803DFA8C;
+    gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + gEffect4SpawnCyclePhaseSlowStep;
+    if (gEffect4SpawnCyclePhaseSlow > 1.0f) gEffect4SpawnCyclePhaseSlow = lbl_803DFA98;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {

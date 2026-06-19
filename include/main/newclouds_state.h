@@ -4,7 +4,7 @@
 #include "global.h"
 
 /*
- * NewCloud - per-cloud working record (lbl_8039A828[i] / the NC_CLOUD and
+ * NewCloud - per-cloud working record (gNewClouds[i] / the NC_CLOUD and
  * D7_CLOUD macros in newclouds.c). Only the 0x1378+ region referenced at
  * constant offsets in newclouds.c is mapped; the head is untyped.
  */

@@ -1340,17 +1340,17 @@ extern void*gPartfxResourceModule17;
 extern void*gPartfxResourceModule18;
 extern void*gPartfxResourceModule19;
 
-extern f32 lbl_803DB7A8;
-extern f32 lbl_803DB7AC;
+extern f32 gPartfxFrameAnimPhase0;
+extern f32 gPartfxFrameAnimPhase1;
 extern f32 lbl_803DF4C8;
 extern f32 lbl_803DF4CC;
 extern f32 lbl_803DF4D0;
 extern f32 lbl_803DF4D8;
-extern s32 lbl_803DD318;
-extern s32 lbl_803DD31C;
-extern f32 lbl_803DD320;
-extern f32 lbl_803DD324;
-extern f32 lbl_803DF718;
+extern s32 gPartfxOscAngle0;
+extern s32 gPartfxOscAngle1;
+extern f32 gPartfxOscSine1;
+extern f32 gPartfxOscSine0;
+extern f32 gPartfxPi;
 extern f32 lbl_803DF71C;
 extern float mathSinf(float x);
 
@@ -1358,28 +1358,28 @@ extern float mathSinf(float x);
  * the 20 cached particle resource slots. */
 void partfx_updateFrameState(void)
 {
-    lbl_803DB7A8 = lbl_803DB7A8 + lbl_803DF4C8 * timeDelta;
-    if (lbl_803DB7A8 > 1.0f)
+    gPartfxFrameAnimPhase0 = gPartfxFrameAnimPhase0 + lbl_803DF4C8 * timeDelta;
+    if (gPartfxFrameAnimPhase0 > 1.0f)
     {
-        lbl_803DB7A8 = lbl_803DF4CC;
+        gPartfxFrameAnimPhase0 = lbl_803DF4CC;
     }
-    lbl_803DB7AC = lbl_803DB7AC + lbl_803DF4C8 * timeDelta;
-    if (lbl_803DB7AC > *(f32*)&lbl_803DF4D0)
+    gPartfxFrameAnimPhase1 = gPartfxFrameAnimPhase1 + lbl_803DF4C8 * timeDelta;
+    if (gPartfxFrameAnimPhase1 > *(f32*)&lbl_803DF4D0)
     {
-        lbl_803DB7AC = lbl_803DF4D8;
+        gPartfxFrameAnimPhase1 = lbl_803DF4D8;
     }
-    lbl_803DD318 = lbl_803DD318 + framesThisStep * 100;
-    if (lbl_803DD318 > 0x7fff)
+    gPartfxOscAngle0 = gPartfxOscAngle0 + framesThisStep * 100;
+    if (gPartfxOscAngle0 > 0x7fff)
     {
-        lbl_803DD318 = 0;
+        gPartfxOscAngle0 = 0;
     }
-    lbl_803DD324 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD318 / lbl_803DF71C);
-    lbl_803DD31C = lbl_803DD31C + framesThisStep * 0x32;
-    if (lbl_803DD31C > 0x7fff)
+    gPartfxOscSine0 = mathSinf(gPartfxPi * (f32)(s16)gPartfxOscAngle0 / lbl_803DF71C);
+    gPartfxOscAngle1 = gPartfxOscAngle1 + framesThisStep * 0x32;
+    if (gPartfxOscAngle1 > 0x7fff)
     {
-        lbl_803DD31C = 0;
+        gPartfxOscAngle1 = 0;
     }
-    lbl_803DD320 = mathSinf(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
+    gPartfxOscSine1 = mathSinf(gPartfxPi * (f32)(s16)gPartfxOscAngle1 / lbl_803DF71C);
     if (gPartfxResourceTimeouts[0] != 0 && (gPartfxResourceTimeouts[0] -= framesThisStep) <= 0)
     {
         if (gPartfxResourceModule00 != NULL) Resource_Release(gPartfxResourceModule00);
@@ -1579,8 +1579,8 @@ void partfx_release(void)
     gPartfxCachedResourceCount = 0;
 }
 
-extern f32 lbl_803DB7A0;
-extern f32 lbl_803DB7A4;
+extern f32 gPartfxSpawnAnimPhase0;
+extern f32 gPartfxSpawnAnimPhase1;
 extern f32 lbl_803DF4D4;
 extern f32 lbl_803DF4DC;
 extern f32 lbl_803DF4E0;
@@ -1609,7 +1609,7 @@ extern f32 lbl_803DF538;
 extern f32 lbl_803DF53C;
 extern f32 lbl_803DF540;
 extern f32 lbl_803DF544;
-extern f32 lbl_803DF548;
+extern f32 gPartfxAlphaByteScale;
 extern f32 lbl_803DF54C;
 extern f32 lbl_803DF550;
 extern f32 lbl_803DF554;
@@ -1722,7 +1722,7 @@ extern f32 lbl_803DF700;
 extern f32 lbl_803DF704;
 extern f32 lbl_803DF708;
 extern s16 gPartfxResourceTimeouts[20];
-extern PartFxSpawnParams lbl_8039C308;
+extern PartFxSpawnParams gPartfxDefaultSpawnParams;
 extern void srand(int seed);
 extern void vecRotateZXY(void* obj, f32* vec);
 extern char sModgfxAlphaDebugFormat[];
@@ -1972,15 +1972,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         return (*(int (**)())(*(int*)gPartfxResourceModule19 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
                                                                    modelId, extraArgs);
     }
-    lbl_803DB7A0 = lbl_803DB7A0 + lbl_803DF4C8;
-    if (lbl_803DB7A0 > 1.0f)
+    gPartfxSpawnAnimPhase0 = gPartfxSpawnAnimPhase0 + lbl_803DF4C8;
+    if (gPartfxSpawnAnimPhase0 > 1.0f)
     {
-        lbl_803DB7A0 = lbl_803DF4CC;
+        gPartfxSpawnAnimPhase0 = lbl_803DF4CC;
     }
-    lbl_803DB7A4 = lbl_803DB7A4 + lbl_803DF4D4;
-    if (lbl_803DB7A4 > 1.0f)
+    gPartfxSpawnAnimPhase1 = gPartfxSpawnAnimPhase1 + lbl_803DF4D4;
+    if (gPartfxSpawnAnimPhase1 > 1.0f)
     {
-        lbl_803DB7A4 = lbl_803DF4D8;
+        gPartfxSpawnAnimPhase1 = lbl_803DF4D8;
     }
     if (sourceObj == NULL)
     {
@@ -2346,15 +2346,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.startPosY = spawnParams->posY + (f32)(s32)
         randomGetRange(0xfffffffa, 6);
@@ -2372,14 +2372,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x551:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -2392,14 +2392,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -2411,14 +2411,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x554:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF51C;
@@ -2430,14 +2430,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x553:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.velocityX = lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
@@ -2663,15 +2663,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x545:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.scale = lbl_803DF530 * spawnParams->scale;
         cfg.lifetimeFrames = 4;
@@ -2684,15 +2684,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.scale = lbl_803DF534 * spawnParams->scale;
         cfg.lifetimeFrames = 4;
@@ -2709,14 +2709,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0xffffff9c, 100);
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.scale = lbl_803DF53C;
         cfg.lifetimeFrames = 300;
@@ -2738,14 +2738,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x548:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.scale = lbl_803DF544;
         cfg.lifetimeFrames = 0x50;
@@ -2759,15 +2759,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x52d:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams != NULL)
         {
@@ -2796,15 +2796,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x531:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams != NULL)
         {
@@ -2823,7 +2823,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (extraArgs != NULL)
         {
-            intVal = (int)(lbl_803DF548 * (lbl_803DF4D0 - *extraArgs));
+            intVal = (int)(gPartfxAlphaByteScale * (lbl_803DF4D0 - *extraArgs));
             cfg.initialAlpha = intVal;
             fn_80137948(sModgfxAlphaDebugFormat, intVal);
         }
@@ -2896,15 +2896,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -2937,15 +2937,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x533:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -2985,15 +2985,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x535:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -3052,15 +3052,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -3090,15 +3090,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x51e:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -3158,15 +3158,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x2be:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams != NULL)
         {
@@ -3284,13 +3284,13 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         break;
     case 0x1:
         cfg.startPosY = lbl_803DF5C8;
-        cfg.velocityX = lbl_803DF568 * (lbl_803DB7A8 * (f32)(s32)
+        cfg.velocityX = lbl_803DF568 * (gPartfxFrameAnimPhase0 * (f32)(s32)
         randomGetRange(0xfffffff1, 0xf)
         )
         ;
         cfg.velocityY = lbl_803DF5B4 * (f32)(s32)
         randomGetRange(5, 0x14);
-        cfg.velocityZ = lbl_803DF568 * (lbl_803DB7A8 * (f32)(s32)
+        cfg.velocityZ = lbl_803DF568 * (gPartfxFrameAnimPhase0 * (f32)(s32)
         randomGetRange(0xfffffff1, 0xf)
         )
         ;
@@ -3567,15 +3567,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -3646,15 +3646,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -3959,14 +3959,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.velocityY = lbl_803DF508 * (f32)(s32)
         randomGetRange(1, 10);
@@ -4290,14 +4290,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.velocityX = lbl_803DF608;
         ftmp0 = (f32)(s32)
@@ -4355,15 +4355,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -4702,15 +4702,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x6b:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (extraArgs == NULL)
         {
@@ -4747,15 +4747,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x56:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.startPosX = (f32)(s32)
         randomGetRange(0xfffffffa, 6);
@@ -4794,15 +4794,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.startPosY = (f32)(s32)
         randomGetRange(0, 10);
@@ -4841,15 +4841,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x58:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.velocityX = spawnParams->scale * (lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffff9c, 100)
@@ -4885,14 +4885,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x323:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosX = lbl_803DF6CC * (f32)(s32)
         randomGetRange(0xffffffea, 0x15) + cfg.startPosX;
@@ -5005,14 +5005,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF6E4;
         rot.m[1] = lbl_803DF4DC;
@@ -5196,15 +5196,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x3de:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         if (spawnParams == NULL)
         {
@@ -5275,15 +5275,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.velocityX = lbl_803DF608 * (f32)(s32)
         randomGetRange(0xfffffffe, 2);
@@ -5303,15 +5303,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x321:
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.velocityY = lbl_803DF4CC * (f32)(s32)
         randomGetRange(0, 4);
@@ -5330,15 +5330,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -5354,15 +5354,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.velocityZ = lbl_803DF708;
         cfg.startPosX = spawnParams->posX;
@@ -5379,15 +5379,15 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (spawnParams == NULL)
         {
-            lbl_8039C308.posX = lbl_803DF4DC;
-            lbl_8039C308.posY = lbl_803DF4DC;
-            lbl_8039C308.posZ = lbl_803DF4DC;
-            lbl_8039C308.scale = lbl_803DF4D0;
-            lbl_8039C308.unk0 = 0;
-            lbl_8039C308.unk2 = 0;
-            lbl_8039C308.unk4 = 0;
-            lbl_8039C308.unk6 = 0;
-            spawnParams = &lbl_8039C308;
+            gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+            gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+            gPartfxDefaultSpawnParams.unk0 = 0;
+            gPartfxDefaultSpawnParams.unk2 = 0;
+            gPartfxDefaultSpawnParams.unk4 = 0;
+            gPartfxDefaultSpawnParams.unk6 = 0;
+            spawnParams = &gPartfxDefaultSpawnParams;
         }
         cfg.sourceVecX = 700;
         cfg.textureId = 0xc09;
@@ -5408,14 +5408,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         {
             if (spawnParams == NULL)
             {
-                lbl_8039C308.posX = lbl_803DF4DC;
-                lbl_8039C308.posY = lbl_803DF4DC;
-                lbl_8039C308.posZ = lbl_803DF4DC;
-                lbl_8039C308.scale = lbl_803DF4D0;
-                lbl_8039C308.unk0 = 0;
-                lbl_8039C308.unk2 = 0;
-                lbl_8039C308.unk4 = 0;
-                lbl_8039C308.unk6 = 0;
+                gPartfxDefaultSpawnParams.posX = lbl_803DF4DC;
+                gPartfxDefaultSpawnParams.posY = lbl_803DF4DC;
+                gPartfxDefaultSpawnParams.posZ = lbl_803DF4DC;
+                gPartfxDefaultSpawnParams.scale = lbl_803DF4D0;
+                gPartfxDefaultSpawnParams.unk0 = 0;
+                gPartfxDefaultSpawnParams.unk2 = 0;
+                gPartfxDefaultSpawnParams.unk4 = 0;
+                gPartfxDefaultSpawnParams.unk6 = 0;
             }
             cfg.velocityX = lbl_803DF5CC * (f32)(s32)
             randomGetRange(0xffffffd8, 0x28);

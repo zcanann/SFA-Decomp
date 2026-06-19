@@ -214,7 +214,7 @@ extern int lbl_803DB610;
 extern s8 gSky2DrawMode;
 extern u8 *gSky2State;
 extern u8 *lbl_803DD19C;
-extern u8 lbl_803DD1C0;
+extern u8 gNewCloudInitialized;
 extern void PSVECNormalize(void *src, void *dst);
 
 extern void* ObjGroup_GetObjects();
@@ -875,7 +875,7 @@ void fn_8008BDA8(void);
 
 extern void textureFree(void *handle);
 extern void Music_Trigger(int id, int restart);
-extern u8 lbl_803DD1C0;
+extern u8 gNewCloudInitialized;
 extern f32 lbl_803DF1A0;
 void snowFreeSnowCloud(int index);
 
