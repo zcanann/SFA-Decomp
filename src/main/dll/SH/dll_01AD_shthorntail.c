@@ -503,12 +503,12 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
             obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
-            obj->facingAngle = obj->facingAngle + animEvents.rootPitch;
+            obj->facingAngle += animEvents.rootPitch;
         }
-        eventId = animEvents.triggeredIds;
+        eventId = (s8*)&animEvents;
         for (val = 0; val < animEvents.triggerCount; val = val + 1)
         {
-            if (*eventId == '\0')
+            if (eventId[0x13] == '\0')
             {
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0)
                 {
@@ -516,7 +516,7 @@ void SHthorntail_update(SHthorntailObject* obj)
                         (u32)obj,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
             }
-            else if ((*eventId == '\a') &&
+            else if ((eventId[0x13] == '\a') &&
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
