@@ -4014,8 +4014,8 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
 
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)
 {
-    f32 startX;
     f32 startY;
+    f32 startX;
     f32 startZ;
     f32 endX;
     f32 endY;
@@ -4027,9 +4027,6 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     f32 nearestX;
     f32 nearestY;
     f32 nearestZ;
-    f32 diffX;
-    f32 diffY;
-    f32 diffZ;
     f32 distance;
 
     endX = segment->endX;
@@ -4047,56 +4044,32 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     }
     else
     {
-        projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
-            (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+        projection = (deltaX * (x - startX) + deltaY * (y - startY) + deltaZ * (z - startZ)) /
+            (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
     }
-    if (projection < gFloatZero)
+    if (projection < *(f32 *)&gFloatZero)
     {
-        f32 sqZ;
-        f32 sqX;
-        f32 sqY;
         nearestX = startX;
         nearestY = startY;
         nearestZ = startZ;
-        diffZ = startZ - z;
-        sqZ = diffZ * diffZ;
-        diffX = startX - x;
-        diffY = startY - y;
-        sqX = diffX * diffX;
-        sqY = diffY * diffY;
-        distance = -((sqX + sqY) + sqZ);
+        distance = -((startZ - z) * (startZ - z) +
+            ((startX - x) * (startX - x) + (startY - y) * (startY - y)));
     }
     else if (projection > gFloatOne)
     {
-        f32 sqZ;
-        f32 sqX;
-        f32 sqY;
         nearestX = endX;
         nearestY = endY;
         nearestZ = endZ;
-        diffZ = endZ - z;
-        sqZ = diffZ * diffZ;
-        diffX = endX - x;
-        diffY = endY - y;
-        sqX = diffX * diffX;
-        sqY = diffY * diffY;
-        distance = -((sqX + sqY) + sqZ);
+        distance = -((endZ - z) * (endZ - z) +
+            ((endX - x) * (endX - x) + (endY - y) * (endY - y)));
     }
     else
     {
-        f32 sqZ;
-        f32 sqX;
-        f32 sqY;
         nearestX = projection * deltaX + startX;
         nearestY = projection * deltaY + startY;
         nearestZ = projection * deltaZ + startZ;
-        diffZ = nearestZ - z;
-        sqZ = diffZ * diffZ;
-        diffX = nearestX - x;
-        diffY = nearestY - y;
-        sqX = diffX * diffX;
-        sqY = diffY * diffY;
-        distance = (sqX + sqY) + sqZ;
+        distance = (nearestZ - z) * (nearestZ - z) +
+            ((nearestX - x) * (nearestX - x) + (nearestY - y) * (nearestY - y));
     }
     segment->nearestX = nearestX;
     segment->nearestY = nearestY;
