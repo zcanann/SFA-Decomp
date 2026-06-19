@@ -12,9 +12,9 @@
  * a maximum magnitude, scaled by timeDelta, and used to point the
  * weed (rotX) downstream.
  *
- * One weed instance (lbl_803DDDA8, claimed by the first non-disabled
+ * One weed instance (gWaterFlowPhaseDriver, claimed by the first non-disabled
  * phaseDriver) advances two shared wrapping phase accumulators
- * (lbl_803DDDB0 / lbl_803DDDAC) that select the weed's idle vs. flowing
+ * (gWaterFlowIdlePhase / gWaterFlowFlowPhase) that select the weed's idle vs. flowing
  * animation move via ObjAnim_SetCurrentMove.
  */
 #include "main/dll/dll_80220608_shared.h"
@@ -70,15 +70,15 @@ STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
-extern const f32 lbl_803E72B4;
-extern const f32 lbl_803E72B8;
-extern const f32 lbl_803E72BC;
-extern const f32 lbl_803E72C0;
-extern const f32 lbl_803E72C4;
-extern const f32 lbl_803E72C8;
-extern const f32 lbl_803E72CC;
-extern const f32 lbl_803E72D0;
-extern const f32 lbl_803E72D4;
+extern const f32 gWaterFlowBandMax;
+extern const f32 gWaterFlowBandMin;
+extern const f32 gWaterFlowRadiusPerCell;
+extern const f32 gWaterFlowStrengthScale;
+extern const f32 gWaterFlowPi;
+extern const f32 gWaterFlowAngleFullScale;
+extern const f32 gWaterFlowFilterCoeff;
+extern const f32 gWaterFlowDecayCoeff;
+extern const f32 gWaterFlowMaxMagnitude;
 
 void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
 {
@@ -110,17 +110,17 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
         {
             hasCurrent = 1;
             dy = other->anim.localPosY - object->anim.localPosY;
-            if ((dy <= lbl_803E72B4) && (dy >= lbl_803E72B8))
+            if ((dy <= gWaterFlowBandMax) && (dy >= gWaterFlowBandMin))
             {
                 dx = other->anim.localPosX - object->anim.localPosX;
                 dz = other->anim.localPosZ - object->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
-                radius = lbl_803E72BC * (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
+                radius = gWaterFlowRadiusPerCell * (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
                 if (distance < radius)
                 {
-                    strength = ((radius - distance) / radius) * (lbl_803E72C0 * other->anim.rootMotionScale);
-                    currentX += strength * mathSinf((lbl_803E72C4 * other->anim.rotX) / lbl_803E72C8);
-                    currentZ += strength * mathCosf((lbl_803E72C4 * other->anim.rotX) / lbl_803E72C8);
+                    strength = ((radius - distance) / radius) * (gWaterFlowStrengthScale * other->anim.rootMotionScale);
+                    currentX += strength * mathSinf((gWaterFlowPi * other->anim.rotX) / gWaterFlowAngleFullScale);
+                    currentZ += strength * mathCosf((gWaterFlowPi * other->anim.rotX) / gWaterFlowAngleFullScale);
                 }
             }
         }
@@ -135,7 +135,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
 
         hasCurrent = 1;
         dy = other->anim.localPosY - object->anim.localPosY;
-        if ((dy <= 200.0f) && (dy >= lbl_803E72B8))
+        if ((dy <= 200.0f) && (dy >= gWaterFlowBandMin))
         {
             dx = other->anim.localPosX - object->anim.localPosX;
             dz = other->anim.localPosZ - object->anim.localPosZ;
@@ -145,7 +145,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
             if (distance < radius)
             {
                 strength = ((radius - distance) / radius) * objectStrength;
-                angle = (lbl_803E72C4 * currentAngle) / lbl_803E72C8;
+                angle = (gWaterFlowPi * currentAngle) / gWaterFlowAngleFullScale;
                 currentX += strength * mathSinf(angle);
                 currentZ += strength * mathCosf(angle);
             }
@@ -157,19 +157,19 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
         currentX = currentX / hasCurrent;
         currentZ = currentZ / hasCurrent;
         {
-            f32 k = lbl_803E72CC;
+            f32 k = gWaterFlowFilterCoeff;
             current->currentX = current->currentX - k * currentX;
             current->currentZ = current->currentZ - k * currentZ;
         }
         {
-            f32 k = lbl_803E72D0;
+            f32 k = gWaterFlowDecayCoeff;
             current->currentX = current->currentX * k;
             current->currentZ = current->currentZ * k;
         }
         distance = sqrtf(current->currentX * current->currentX + current->currentZ * current->currentZ);
-        if (distance > lbl_803E72D4)
+        if (distance > gWaterFlowMaxMagnitude)
         {
-            strength = lbl_803E72D4 / distance;
+            strength = gWaterFlowMaxMagnitude / distance;
             current->currentX = current->currentX * strength;
             current->currentZ = current->currentZ * strength;
         }
@@ -198,7 +198,7 @@ void waterflowwe_init(int obj, u8* setup)
     object->anim.rotX = (s16)(setupData->rotX << 8);
     if (setupData->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E72F4;
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / gWaterFlowScaleDivisor;
         if (object->anim.rootMotionScale == lbl_803E72B0)
         {
             object->anim.rootMotionScale = lbl_803E72E8;
@@ -211,9 +211,9 @@ void waterflowwe_init(int obj, u8* setup)
 
 void waterflowwe_free(int obj)
 {
-    if ((u32)obj == lbl_803DDDA8)
+    if ((u32)obj == gWaterFlowPhaseDriver)
     {
-        lbl_803DDDA8 = 0;
+        gWaterFlowPhaseDriver = 0;
     }
 }
 
@@ -237,36 +237,36 @@ void waterflowwe_update(int obj)
 
     waterflowwe_calcCurrentVector(obj, &vx, &vz);
     object->anim.rotX = (s16)(getAngle(vx, vz) + 0x4000);
-    if ((u32)lbl_803DDDA8 == 0 && setup->phaseDriverDisabled == 0)
+    if ((u32)gWaterFlowPhaseDriver == 0 && setup->phaseDriverDisabled == 0)
     {
-        lbl_803DDDA8 = obj;
+        gWaterFlowPhaseDriver = obj;
     }
-    if ((u32)obj == lbl_803DDDA8)
+    if ((u32)obj == gWaterFlowPhaseDriver)
     {
         f32 a;
 
-        a = lbl_803E72EC * timeDelta + lbl_803DDDB0;
-        lbl_803DDDB0 = a;
+        a = gWaterFlowIdlePhaseRate * timeDelta + gWaterFlowIdlePhase;
+        gWaterFlowIdlePhase = a;
         while (a > *(f32*)&lbl_803E72E8)
         {
             a -= *(f32*)&lbl_803E72E8;
         }
-        lbl_803DDDB0 = a;
-        a = lbl_803E72F0 * timeDelta + lbl_803DDDAC;
-        lbl_803DDDAC = a;
+        gWaterFlowIdlePhase = a;
+        a = gWaterFlowFlowPhaseRate * timeDelta + gWaterFlowFlowPhase;
+        gWaterFlowFlowPhase = a;
         while (a > *(f32*)&lbl_803E72E8)
         {
             a -= *(f32*)&lbl_803E72E8;
         }
-        lbl_803DDDAC = a;
+        gWaterFlowFlowPhase = a;
     }
     if (lbl_803E72B0 == vx && lbl_803E72B0 == vz)
     {
-        ObjAnim_SetCurrentMove(obj, 1, lbl_803DDDB0, 0);
+        ObjAnim_SetCurrentMove(obj, 1, gWaterFlowIdlePhase, 0);
     }
     else
     {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDB0, 0);
+        ObjAnim_SetCurrentMove(obj, 0, gWaterFlowIdlePhase, 0);
     }
 }
 
@@ -276,7 +276,7 @@ void waterflowwe_release(void)
 
 void waterflowwe_initialise(void)
 {
-    lbl_803DDDA8 = 0;
-    lbl_803DDDB0 = lbl_803E72B0;
-    lbl_803DDDAC = lbl_803E72B0;
+    gWaterFlowPhaseDriver = 0;
+    gWaterFlowIdlePhase = lbl_803E72B0;
+    gWaterFlowFlowPhase = lbl_803E72B0;
 }

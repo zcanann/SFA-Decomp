@@ -387,9 +387,9 @@ extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
 extern void ModelLightStruct_free(void *light);
 extern void queueGlowRender(void *light);
-extern int lbl_803DDDA8;
-extern f32 lbl_803DDDB0;
-extern f32 lbl_803DDDAC;
+extern int gWaterFlowPhaseDriver;
+extern f32 gWaterFlowIdlePhase;
+extern f32 gWaterFlowFlowPhase;
 extern f32 lbl_803E72B0;
 
 
@@ -425,11 +425,11 @@ extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
 extern f32 lbl_803E6E38;
 
 
-extern f32 lbl_803E72F4;
+extern f32 gWaterFlowScaleDivisor;
 extern void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 lbl_803E72EC;
-extern f32 lbl_803E72F0;
+extern f32 gWaterFlowIdlePhaseRate;
+extern f32 gWaterFlowFlowPhaseRate;
 
 int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate);
 

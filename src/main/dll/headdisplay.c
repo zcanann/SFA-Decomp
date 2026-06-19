@@ -3,13 +3,13 @@
  * display (the NPC "comms" portrait box) and the Arwing flight HUD.
  *
  *  - drawFn_80125424: animates the active head-display panel (the NPC
- *    "comms" box). Scrolls the panel open/closed (lbl_803DD858 width
+ *    "comms" box). Scrolls the panel open/closed (gHeadDisplayPanelWidth width
  *    clamp 0x122..0x152), renders the selected character model into a
  *    side viewport, then composites the static-wave border texture and
  *    corner/edge frame tiles (hudTextures[10..13,84]).
  *  - fn_80125D04: frees the six cached head-display model objects.
  *  - gameTextFn_80125ba4: opens the head display for entry idx (clamped
- *    0..0x14), kicking off the matching audio stream (lbl_8031AF34
+ *    0..0x14), kicking off the matching audio stream (gHeadDisplayEntryTable
  *    table, 0xC-byte records: int streamId, u16 textId@+4, u16 box@+8,
  *    u8 npcDialogue@+7) and either an NPC dialogue bubble or a text box.
  *  - pauseMenuCreateHeads: lazily sets up the head model objects for
@@ -29,7 +29,7 @@
 #define HEADPANEL_WIDTH_MIN 0x122
 #define HEADPANEL_WIDTH_OPEN 0x159
 
-/* lbl_8031AF34 head-display table: 0xC-byte records */
+/* gHeadDisplayEntryTable head-display table: 0xC-byte records */
 #define HEADREC_STRIDE 0xc
 #define HEADREC_STREAM_ID 0    /* int  */
 #define HEADREC_TEXT_ID 4      /* u16  */
@@ -59,19 +59,19 @@ extern float fsin16Approx(int angle);
 extern void drawPartialTexture(int tex, f32 a, f32 b, int alpha, int scale, int c, int d, int e, int f);
 extern void drawScaledTexture(int tex, f32 a, f32 b, int alpha, int scale, int c, int d, int e);
 extern void drawTexture(int tex, f32 x, f32 y, int alpha, int scale);
-extern u8 lbl_803DD85A;
-extern u8 lbl_803DD85B;
+extern u8 gHeadDisplayActive;
+extern u8 gHeadDisplayEntryIdx;
 extern u8 lbl_803DD7A8;
-extern u16 lbl_803DD858;
-extern u16 lbl_803DD856;
-extern s16 lbl_803DD854;
+extern u16 gHeadDisplayPanelWidth;
+extern u16 gHeadDisplayPanelHeight;
+extern s16 gHeadDisplayFadeAlpha;
 extern u16 lbl_803DD77C;
 extern int lbl_803DD7E0;
 extern f32 lbl_803DBAA4;
 extern u8* gRenderModeObj;
 extern u8 framesThisStep;
-extern u8 lbl_8031AF34[];
-extern int lbl_803A93F8[];
+extern u8 gHeadDisplayEntryTable[];
+extern int gHeadDisplayModelObjs[];
 extern f32 lbl_8031BFA8[];
 extern int hudTextures[];
 extern f32 timeDelta;
@@ -116,7 +116,7 @@ extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern int sprintf(char* s, const char* format, ...);
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
-extern char lbl_803DBB60;
+extern char sHeadDisplayScoreFmt;
 extern int lbl_803E1E08;
 extern u8 lbl_803E1E0C;
 extern f32 lbl_803E1FA0;
@@ -147,35 +147,35 @@ void drawFn_80125424(void)
     f32 waveBase1;
     f32 waveBase2;
 
-    if (lbl_803DD85A != 0)
+    if (gHeadDisplayActive != 0)
     {
         if ((s8)lbl_803DD7A8 == 0)
         {
-            lbl_803DD858 = lbl_803DD858 + framesThisStep * 5;
-            if (lbl_803DD858 > HEADPANEL_WIDTH_MAX)
+            gHeadDisplayPanelWidth = gHeadDisplayPanelWidth + framesThisStep * 5;
+            if (gHeadDisplayPanelWidth > HEADPANEL_WIDTH_MAX)
             {
-                lbl_803DD858 = HEADPANEL_WIDTH_MAX;
-                lbl_803DD85A = 0;
-                if (*(int*)(lbl_8031AF34 + lbl_803DD85B * HEADREC_STRIDE) != -1)
+                gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MAX;
+                gHeadDisplayActive = 0;
+                if (*(int*)(gHeadDisplayEntryTable + gHeadDisplayEntryIdx * HEADREC_STRIDE) != -1)
                 {
                     AudioStream_StopCurrent();
                     doNothing_8000CF54(0);
                 }
             }
-            lbl_803DD856 = lbl_803DD856 - framesThisStep * 10;
-            lbl_803DD854 = lbl_803DD854 - framesThisStep * 0x17;
+            gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;
+            gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha - framesThisStep * 0x17;
         }
         else
         {
-            lbl_803DD858 = lbl_803DD858 - framesThisStep * 5;
-            if (lbl_803DD858 < HEADPANEL_WIDTH_MIN)
+            gHeadDisplayPanelWidth = gHeadDisplayPanelWidth - framesThisStep * 5;
+            if (gHeadDisplayPanelWidth < HEADPANEL_WIDTH_MIN)
             {
-                lbl_803DD858 = HEADPANEL_WIDTH_MIN;
+                gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MIN;
             }
-            lbl_803DD856 = lbl_803DD856 + framesThisStep * 10;
-            lbl_803DD854 = lbl_803DD854 + framesThisStep * 0x17;
+            gHeadDisplayPanelHeight = gHeadDisplayPanelHeight + framesThisStep * 10;
+            gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 0x17;
         }
-        alphaI = lbl_803DD854;
+        alphaI = gHeadDisplayFadeAlpha;
         if (alphaI < 0)
         {
             alphaI = 0;
@@ -185,15 +185,15 @@ void drawFn_80125424(void)
             alphaI = 0xff;
         }
         alpha = alphaI;
-        lbl_803DD854 = alpha;
-        height = lbl_803DD856;
+        gHeadDisplayFadeAlpha = alpha;
+        height = gHeadDisplayPanelHeight;
         if (height > 0x6e)
         {
             height = 0x6e;
         }
-        lbl_803DD856 = height;
-        width = lbl_803DD858;
-        type = *(u8*)(lbl_8031AF34 + lbl_803DD85B * HEADREC_STRIDE + HEADREC_PANEL_TYPE);
+        gHeadDisplayPanelHeight = height;
+        width = gHeadDisplayPanelWidth;
+        type = *(u8*)(gHeadDisplayEntryTable + gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE);
         switch (type)
         {
         default:
@@ -222,16 +222,16 @@ void drawFn_80125424(void)
         GXSetViewport(lbl_803E2048, ypos - lbl_803E2024,
                       (f32)(u32) * (u16*)(gRenderModeObj + 4), (f32)(u32) * (u16*)(gRenderModeObj + 8),
                       lbl_803E1E3C, lbl_803E1E68);
-        if (*(u8**)&lbl_803A93F8[type] != NULL)
+        if (*(u8**)&gHeadDisplayModelObjs[type] != NULL)
         {
-            ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, lbl_803A93F8[type], NULL);
-            if (*(u32*)(lbl_803A93F8[type] + 0x4c) > 0x90000000u)
+            ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, gHeadDisplayModelObjs[type], NULL);
+            if (*(u32*)(gHeadDisplayModelObjs[type] + 0x4c) > 0x90000000u)
             {
-                *(u32*)(lbl_803A93F8[type] + 0x4c) = 0;
+                *(u32*)(gHeadDisplayModelObjs[type] + 0x4c) = 0;
             }
-            *(u8*)(lbl_803A93F8[type] + 0x37) = 0xff;
-            objRender(0, 0, 0, 0, lbl_803A93F8[type], 1);
-            *(u16*)(Obj_GetActiveModel(lbl_803A93F8[type]) + 0x18) &= ~8;
+            *(u8*)(gHeadDisplayModelObjs[type] + 0x37) = 0xff;
+            objRender(0, 0, 0, 0, gHeadDisplayModelObjs[type], 1);
+            *(u16*)(Obj_GetActiveModel(gHeadDisplayModelObjs[type]) + 0x18) &= ~8;
         }
         Camera_SetCurrentViewIndex(0);
         if (lbl_803DD7E0 != 0)
@@ -297,15 +297,15 @@ void fn_80125D04(void)
     int i;
     for (i = 0; i < 6; i++)
     {
-        int* obj = (int*)lbl_803A93F8[i];
+        int* obj = (int*)gHeadDisplayModelObjs[i];
         if (obj != NULL)
         {
             if ((u32) * &((GameObject*)obj)->anim.placementData > 0x90000000u)
             {
                 *(int*)&((GameObject*)obj)->anim.placementData = 0;
             }
-            Obj_FreeObject((int*)lbl_803A93F8[i]);
-            lbl_803A93F8[i] = 0;
+            Obj_FreeObject((int*)gHeadDisplayModelObjs[i]);
+            gHeadDisplayModelObjs[i] = 0;
         }
     }
 }
@@ -316,23 +316,23 @@ void gameTextFn_80125ba4(int idx)
     int textId;
     int boxId;
 
-    if (lbl_803DD85A == 0)
+    if (gHeadDisplayActive == 0)
     {
         if (idx < 0 || idx >= 0x15)
         {
             idx = 0x14;
         }
-        lbl_803DD85A = 1;
-        lbl_803DD85B = idx;
+        gHeadDisplayActive = 1;
+        gHeadDisplayEntryIdx = idx;
         {
         int off = idx * HEADREC_STRIDE;
-        u8* base = lbl_8031AF34;
+        u8* base = gHeadDisplayEntryTable;
         if (*(int*)(base + off) != -1 && AudioStream_IsPreparing() == 0)
         {
             AudioStream_Play(*(int*)(base + off), AudioStream_StartPrepared);
         }
         {
-            u8* e = &lbl_8031AF34[off];
+            u8* e = &gHeadDisplayEntryTable[off];
             if (e[HEADREC_NPC_DIALOGUE] != 0)
             {
                 (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + HEADREC_TEXT_ID), 0, 0, 0);
@@ -356,9 +356,9 @@ void gameTextFn_80125ba4(int idx)
             }
         }
         }
-        lbl_803DD858 = HEADPANEL_WIDTH_OPEN;
-        lbl_803DD856 = 0;
-        lbl_803DD854 = 0;
+        gHeadDisplayPanelWidth = HEADPANEL_WIDTH_OPEN;
+        gHeadDisplayPanelHeight = 0;
+        gHeadDisplayFadeAlpha = 0;
     }
 }
 #pragma opt_common_subs reset
@@ -372,24 +372,24 @@ void pauseMenuCreateHeads(void)
     {
         if (i != 3 && i != 2 && i != 1)
         {
-            lbl_803A93F8[i] = 0;
+            gHeadDisplayModelObjs[i] = 0;
         }
         else
         {
-            if (*(void**)&lbl_803A93F8[i] == NULL)
+            if (*(void**)&gHeadDisplayModelObjs[i] == NULL)
             {
-                lbl_803A93F8[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
+                gHeadDisplayModelObjs[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
                 f = lbl_803E1E3C;
-                *(f32*)(lbl_803A93F8[i] + 0xc) = f;
-                *(f32*)(lbl_803A93F8[i] + 0x10) = f;
-                *(f32*)(lbl_803A93F8[i] + 0x14) = lbl_803E1E5C;
-                *(s16*)lbl_803A93F8[i] = 0x7447;
-                *(f32*)(lbl_803A93F8[i] + 8) = lbl_803E205C;
-                if (*(u32*)(lbl_803A93F8[i] + 0x4c) > 0x90000000u)
+                *(f32*)(gHeadDisplayModelObjs[i] + 0xc) = f;
+                *(f32*)(gHeadDisplayModelObjs[i] + 0x10) = f;
+                *(f32*)(gHeadDisplayModelObjs[i] + 0x14) = lbl_803E1E5C;
+                *(s16*)gHeadDisplayModelObjs[i] = 0x7447;
+                *(f32*)(gHeadDisplayModelObjs[i] + 8) = lbl_803E205C;
+                if (*(u32*)(gHeadDisplayModelObjs[i] + 0x4c) > 0x90000000u)
                 {
-                    *(u32*)(lbl_803A93F8[i] + 0x4c) = 0;
+                    *(u32*)(gHeadDisplayModelObjs[i] + 0x4c) = 0;
                 }
-                ObjAnim_SetCurrentMove(lbl_803A93F8[i], 1, lbl_803E1E3C, 0);
+                ObjAnim_SetCurrentMove(gHeadDisplayModelObjs[i], 1, lbl_803E1E3C, 0);
             }
         }
     }
@@ -487,7 +487,7 @@ void drawArwingHud(void)
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
-            sprintf((char*)buf, &lbl_803DBB60, arwarwing_getScore(arwing));
+            sprintf((char*)buf, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
         gameTextSetColor(0xff, 0xff, 0xff, arwingHudAlpha & 0xff);
         gameTextShowStr((char*)buf, 0x93, 0x23a, 0x41);

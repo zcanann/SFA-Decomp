@@ -74,11 +74,11 @@ extern f32 lbl_803E6B74;
 extern f32 lbl_803E6B78;
 extern f32 lbl_803E6B7C;
 extern f32 lbl_803E6B80;
-extern f32 lbl_803E6B84;
-extern f32 lbl_803E6B88;
+extern f32 gFirePipeNearAttenMin;
+extern f32 gFirePipeNearAttenMax;
 extern f32 lbl_803E6B8C;
-extern f32 lbl_803E6B90;
-extern f32 lbl_803E6B94;
+extern f32 gFirePipeFarAttenMin;
+extern f32 gFirePipeFarAttenMax;
 extern f32 lbl_803E6B98;
 extern f32 lbl_803E6BA8;
 
@@ -321,17 +321,17 @@ void firepipe_updateState(FirePipeObject* obj)
                     }
                     modelLightStruct_setPosition(extra->glowLight, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
                     radius = lbl_803E6B80 * obj->scale;
-                    nearAtten = (radius < lbl_803E6B84)
-                                    ? lbl_803E6B84
-                                    : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
+                    nearAtten = (radius < gFirePipeNearAttenMin)
+                                    ? gFirePipeNearAttenMin
+                                    : ((radius > gFirePipeNearAttenMax) ? gFirePipeNearAttenMax : radius);
                     farAtten = lbl_803E6B8C + radius;
                     { /* separate local to reproduce reg assignment */
                         int light = extra->glowLight;
                         modelLightStruct_setDistanceAttenuation(light, nearAtten,
-                                                                (farAtten < lbl_803E6B90)
-                                                                    ? lbl_803E6B90
-                                                                    : ((farAtten > lbl_803E6B94)
-                                                                           ? lbl_803E6B94
+                                                                (farAtten < gFirePipeFarAttenMin)
+                                                                    ? gFirePipeFarAttenMin
+                                                                    : ((farAtten > gFirePipeFarAttenMax)
+                                                                           ? gFirePipeFarAttenMax
                                                                            : farAtten));
                     }
                 }

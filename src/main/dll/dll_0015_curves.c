@@ -58,15 +58,15 @@ extern u32 sCurvesCachedHitObj;
 extern f32 lbl_803E0668;
 extern const f32 lbl_803E066C;
 extern const f32 lbl_803E068C;
-extern const f32 lbl_803E0678;
+extern const f32 gCurvesSurfaceNormalZThreshold;
 extern const f32 lbl_803E067C;
 extern const f32 lbl_803E0680;
 extern const f32 lbl_803E0684;
 extern const f32 lbl_803E0688;
 extern const f32 lbl_803E0690;
 extern const f32 lbl_803E06A0;
-extern const f32 lbl_803E06A4;
-extern const f32 lbl_803E06A8;
+extern const f32 gCurvesBoundsMaxSeed;
+extern const f32 gCurvesBoundsMinSeed;
 extern const f32 lbl_803E06AC;
 extern const f32 lbl_803E06B0;
 extern const f32 lbl_803E06B4;
@@ -279,7 +279,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], &hitCount, 0);
     for (pointIndex = 0, point = points; pointIndex < hitCount;)
     {
-        if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > lbl_803E0678) &&
+        if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > gCurvesSurfaceNormalZThreshold) &&
             (point->x <= collision->points[1][1]) && (point->x > collision->points[0][1]))
         {
             collision->traceStart[0][0] = collision->points[1][0];
@@ -557,8 +557,8 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     f32 zero;
     f32 one;
 
-    topSentinel = lbl_803E06A4;
-    floorSentinel = lbl_803E06A8;
+    topSentinel = gCurvesBoundsMaxSeed;
+    floorSentinel = gCurvesBoundsMinSeed;
     zero = lbl_803E0668;
     one = lbl_803E068C;
     foundBelow = 0;
@@ -577,7 +577,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
         if ((s8)point->type != ROMCURVE_POINT_TYPE_WATER)
         {
             if ((foundBelow == 0) && (point->x < (lbl_803E06AC + collision->points[0][1])) &&
-                (point->z > lbl_803E0678))
+                (point->z > gCurvesSurfaceNormalZThreshold))
             {
                 collision->floorY[0] = point->x;
                 collision->floorGap[0] = collision->points[0][1] - point->x;
@@ -837,10 +837,10 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         }
         collision->surfaceFlags = 0;
         collision->surfaceHitMask = 0;
-        resetRange = lbl_803E06A4;
+        resetRange = gCurvesBoundsMaxSeed;
         collision->resultWaterY = resetRange;
         collision->resultFloorY = resetRange;
-        resetMin = lbl_803E06A8;
+        resetMin = gCurvesBoundsMinSeed;
         collision->resultCeilingY = resetMin;
         resetZero = lbl_803E0668;
         collision->resultWaterDepth = resetZero;
@@ -1506,12 +1506,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             byteOff = byteOff + 0xc;
             idx3 = idx3 + 3;
         }
-        maxX = lbl_803E06A4;
-        maxZ = lbl_803E06A4;
-        maxY = lbl_803E06A4;
-        minX = lbl_803E06A8;
-        minZ = lbl_803E06A8;
-        minY = lbl_803E06A8;
+        maxX = gCurvesBoundsMaxSeed;
+        maxZ = gCurvesBoundsMaxSeed;
+        maxY = gCurvesBoundsMaxSeed;
+        minX = gCurvesBoundsMinSeed;
+        minZ = gCurvesBoundsMinSeed;
+        minY = gCurvesBoundsMinSeed;
         for (n = 0; n < ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
             r = *radWrite;

@@ -22,7 +22,7 @@ extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
 extern f32 lbl_803E6150;
 extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDCC0;
+extern void* gVfpDragHeadResource;
 extern f32 lbl_803E6138;
 extern int fn_801FC6F4(int, int, ObjAnimUpdateState*);
 extern f32 lbl_803E6128;
@@ -38,8 +38,8 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern f32 lbl_803E6118;
 extern f32 lbl_803E6120;
 extern f32 lbl_803E6124;
-extern s16 lbl_803DDCC4;
-extern u8 lbl_803DDCC6;
+extern s16 gVfpDragHeadSpawnTimer;
+extern u8 gVfpDragHeadActiveIndex;
 extern f32 lbl_803E6108;
 
 int vfpblock1_getExtraSize(void) { return 0x2; }
@@ -345,7 +345,7 @@ typedef struct SpellStoneUseState
 
 void spellStoneUseFn_801fd270(int obj)
 {
-    extern u32 lbl_803DDCC8; /* #57 */
+    extern u32 gSpellStoneEventId; /* #57 */
     SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
@@ -357,7 +357,7 @@ void spellStoneUseFn_801fd270(int obj)
     if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
     if (cond == 0) return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
-    if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0)
+    if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
         if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
         {
@@ -373,11 +373,11 @@ void vfpdraghead_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
-    if (lbl_803DDCC0 != NULL)
+    if (gVfpDragHeadResource != NULL)
     {
-        Resource_Release(lbl_803DDCC0);
+        Resource_Release(gVfpDragHeadResource);
     }
-    lbl_803DDCC0 = NULL;
+    gVfpDragHeadResource = NULL;
 }
 
 /* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
@@ -388,7 +388,7 @@ typedef struct VfpDragHeadState
     s16 unk_04; /* init: 100 */
     s16 despawnTimer; /* variant 0x3C5: init 0x78, counts down to free */
     u8 pad08[3];
-    u8 headIndex; /* from def+0x1A; matched against lbl_803DDCC6 */
+    u8 headIndex; /* from def+0x1A; matched against gVfpDragHeadActiveIndex */
 } VfpDragHeadState;
 
 STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
@@ -418,7 +418,7 @@ void vfpdraghead_init(int obj, int data)
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }
     ((GameObject*)obj)->objectFlags |= 0x6000;
-    lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
+    gVfpDragHeadResource = Resource_Acquire(0xA5, 1);
 }
 
 void seqpoint_init(int obj, int data)
@@ -617,10 +617,10 @@ void vfpdraghead_update(int* obj)
     if (state == 2)
     {
         self2 = ((GameObject*)obj)->extra;
-        lbl_803DDCC4 -= (s16)timeDelta;
+        gVfpDragHeadSpawnTimer -= (s16)timeDelta;
         if (GameBit_Get(self2->gameBitB) != 0) return;
-        if (lbl_803DDCC4 > 0xc8) return;
-        if (self2->headIndex != lbl_803DDCC6) return;
+        if (gVfpDragHeadSpawnTimer > 0xc8) return;
+        if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     }
@@ -640,10 +640,10 @@ void vfpdraghead_update(int* obj)
     else if (state == 0)
     {
         self2 = ((GameObject*)obj)->extra;
-        lbl_803DDCC4 -= (s16)timeDelta;
+        gVfpDragHeadSpawnTimer -= (s16)timeDelta;
         if (GameBit_Get(0x522) != 0) return;
-        if (lbl_803DDCC4 > 0xc8) return;
-        if (self2->headIndex != lbl_803DDCC6) return;
+        if (gVfpDragHeadSpawnTimer > 0xc8) return;
+        if (self2->headIndex != gVfpDragHeadActiveIndex) return;
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     }
@@ -1054,7 +1054,7 @@ void dll_224_hitDetect(void* obj)
 void dll_224_update(void* objArg)
 {
     extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
-    extern int lbl_803DDCC8; /* #57 */
+    extern int gSpellStoneEventId; /* #57 */
     void* obj = objArg;
     int v;
     v = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
@@ -1062,16 +1062,16 @@ void dll_224_update(void* objArg)
     switch (v)
     {
     case 1:
-        lbl_803DDCC8 = 0x123;
+        gSpellStoneEventId = 0x123;
         break;
     case 2:
-        lbl_803DDCC8 = 0x83b;
+        gSpellStoneEventId = 0x83b;
         break;
     case 3:
-        lbl_803DDCC8 = 0x83c;
+        gSpellStoneEventId = 0x83c;
         break;
     default:
-        lbl_803DDCC8 = 0x123;
+        gSpellStoneEventId = 0x123;
         break;
     }
     spellStoneUseFn_801fd270(obj);
