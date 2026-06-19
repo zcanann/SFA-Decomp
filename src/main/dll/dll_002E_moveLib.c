@@ -702,7 +702,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
                         blendB = lbl_803E1C90;
                         blendB = (blendA < blendB) ? blendB : ((blendA > blendMax) ? blendMax : blendA);
                         blendB = lbl_803E1CA4 - blendB;
-                        blendA = lbl_803E1CA4 - blendB;
+                        blendA = *(f32*)&lbl_803E1CA4 - blendB;
                         *(float*)(state + 0x10) =
                             *(float*)(state + 0x10) * blendA + ((GameObject*)obj)->anim.localPosX * blendB;
                         *(float*)(state + 0x18) =
