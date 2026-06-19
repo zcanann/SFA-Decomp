@@ -1067,13 +1067,13 @@ void babycloudrunner_update(int* obj)
             if (randFn_80080100(500) != 0)
             {
                 int r = randomGetRange(0, 3);
-                objAudioFn_80039270((int)obj, sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
+                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
             }
-            objAnimFn_80038f38((int)obj, sub + 0x6c);
+            objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, sub + 0x124, speed, lbl_803E4238 * speed,
+                Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
@@ -1092,10 +1092,10 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), sub + 0x18) < gBabyCloudRunnerTargetNearDist)
+                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, near + 0x18) > gBabyCloudRunnerPlayerFarDist)
+                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) > gBabyCloudRunnerPlayerFarDist)
                         {
                             fn_8014C66C(near, obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)
@@ -1127,7 +1127,7 @@ void babycloudrunner_update(int* obj)
                 if (fn_80080150((char*)sub + 0x238) != 0)
                 {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
-                        sub + 0x238) != 0)
+                        (char*)sub + 0x238) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
                         (*gGameUIInterface)->airMeterSetShutdown();
@@ -1155,7 +1155,7 @@ void babycloudrunner_update(int* obj)
                     char* pp = Obj_GetPlayerObject();
                     def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
-                    if (Vec_distance(pp + 0x18, obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
+                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
                         && sub2->runnerState == 3
                         && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
                     {
