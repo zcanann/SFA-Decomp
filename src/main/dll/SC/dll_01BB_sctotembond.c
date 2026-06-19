@@ -89,8 +89,8 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
             setup[0x07] = 0x1e;
             *(s16*)(setup + 0x18) = -1;
             *(s16*)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-            *(s16*)(setup + 0x1c) = (s16)lbl_80327A70[(s8)orbIndex];
-            *(s16*)(setup + 0x30) = (s16)lbl_80327A60[(s8)orbIndex];
+            *(s16*)(setup + 0x1c) = (s16)lbl_80327A70[orbIndex];
+            *(s16*)(setup + 0x30) = (s16)lbl_80327A60[orbIndex];
             *(s8*)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
             setup[0x32] = 1;
             Obj_SetupObject(setup, 5, -1, -1, 0);

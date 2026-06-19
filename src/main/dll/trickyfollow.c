@@ -396,7 +396,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         if (isPointWithinPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->unkD0,
                                                     targetWg) != 0)
                         {
-                            if (*(s16*)&((TrickyState*)state)->unkD2 == (int)targetWg)
+                            if (*(s16*)&((TrickyState*)state)->unkD2 == targetWg)
                             {
                                 ((TrickyState*)state)->unk09 = 3;
                             }
@@ -409,7 +409,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         {
                             for (i = 0; i < 4; i++)
                             {
-                                if (*(s16*)(state + 0x98 + i * 2) == (int)targetWg)
+                                if (*(s16*)(state + 0x98 + i * 2) == targetWg)
                                 {
                                     slot = i;
                                     ((TrickyState*)state)->unk09 = 2;

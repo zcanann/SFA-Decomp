@@ -1495,7 +1495,7 @@ void fn_8014B878(int* arg1, int* sub)
     if (tricky != NULL)
     {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
-        if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000LL;
+        if (r != 0) ((TrickyState*)sub)->flags2DC |= 0x200000LL;
     }
     if (*(int**)&((TrickyState*)sub)->actionTargetObj == player)
     {
@@ -1514,7 +1514,7 @@ void fn_8014B878(int* arg1, int* sub)
         {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
                                            (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
-            if ((u8)r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
+            if (r != 0) ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
             if ((((TrickyState*)sub)->flags2DC & 0x1000000) == 0)
             {
                 ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
@@ -1639,7 +1639,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 f
     *(f32*)((char*)obj1 + 0x28) = stk_14[1] * finalScale;
     *(f32*)((char*)obj1 + 0x2c) = stk_14[2] * finalScale;
 
-    if ((u8)flag != 0)
+    if (flag != 0)
     {
         f32 y = *(f32*)((char*)obj1 + 0x28);
         if (y < lbl_803E2574)
@@ -1679,7 +1679,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
 
     if (fa != lbl_803E2574)
     {
-        if ((u8)p5 != 0)
+        if (p5 != 0)
         {
             ((GameObject*)node)->anim.rotZ = (s16)(((GameObject*)node)->anim.rotZ + (s32)(fa * (delta_f * dt)));
         }

@@ -398,7 +398,7 @@ void hagabon_update(int obj)
     }
 
     player = Obj_GetPlayerObject();
-    dist = Vec_distance((f32*)((int)obj + 0x18), &player->anim.worldPosX);
+    dist = Vec_distance((f32*)(obj + 0x18), &player->anim.worldPosX);
     if (dist < lbl_803E2658)
     {
         Sfx_PlayFromObject(obj, SFXstaff_proj_outofmagic);

@@ -990,7 +990,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
         if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-            (int)obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, (f32*)((int)p2 + 0x2a0)) == 0)
+            obj, ((EarthWarriorState*)p2)->baddie.animSpeedC, (f32*)(p2 + 0x2a0)) == 0)
         {
             ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E8354;
         }

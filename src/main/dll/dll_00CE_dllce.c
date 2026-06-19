@@ -75,7 +75,7 @@ int fn_8015E3A0(int obj, int p2)
 
     if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 10, lbl_803E2DC8, 0);
         *(u8*)(p2 + 0x346) = 0;
     }
     *(u8*)(p2 + 0x34d) = 1;
@@ -107,7 +107,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E2DC8, 0);
         *(s8*)&state->baddie.moveDone = 0;
     }
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
@@ -326,7 +326,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
         {
             if (*(char*)&p->baddie.moveJustStartedA != '\0')
             {
-                ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2DC8, 0);
+                ObjAnim_SetCurrentMove(obj, 6, lbl_803E2DC8, 0);
                 *(s8*)&p->baddie.moveDone = 0;
             }
         }
@@ -334,7 +334,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
         {
             if (*(char*)&p->baddie.moveJustStartedA != '\0')
             {
-                ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2DC8, 0);
+                ObjAnim_SetCurrentMove(obj, 7, lbl_803E2DC8, 0);
                 *(s8*)&p->baddie.moveDone = 0;
             }
         }
@@ -400,7 +400,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
     p->baddie.animSpeedB = spd;
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove((int)obj, 1, spd, 0);
+        ObjAnim_SetCurrentMove(obj, 1, spd, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     if ((p->baddie.moveEventFlags & 1) == 0)
@@ -439,7 +439,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
     sub = ((GameObject*)obj)->extra;
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 14, lbl_803E2DC8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2DE4)
@@ -456,7 +456,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
     if (*(char*)&p->baddie.moveDone != '\0')
     {
         GameBit_Set(sub->gameBitB, 0);
-        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
         *(int*)&p->baddie.targetObj = 0;
         *(s8*)&p->baddie.physicsActive = 0;
         *(s8*)&p->baddie.hasTarget = 0;
@@ -484,7 +484,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     hit = *(u8**)&sub->control;
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove((int)obj, 11, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 11, lbl_803E2DC8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
@@ -743,7 +743,7 @@ void dll_CE_init(int obj, u8* p, int flags)
     v = *(f32**)&sub->control;
     *v = (f32)(int)
     randomGetRange(10, 300);
-    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
+    ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
     sub->baddie.substate = 0;
@@ -784,7 +784,7 @@ void dll_CE_update(int obj, int p2, int p3)
                 obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
             sub->targetState = 0;
             Sfx_PlayFromObject(obj, SFXfoxcom_find);
-            ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
+            ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0x10);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -992,7 +992,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     state->baddie.moveSpeed = lbl_803E2DD8;
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2DC8, 0);
+        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2DC8, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.unk34D = 1;

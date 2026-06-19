@@ -101,7 +101,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
         detune = (args->flags >> 0x10) & 0xff;
     }
 
-    args->flags = ((u8)detune << 0x10) | 0x19 | ((k1 + (sndRand() % (((u8)k2 - (u8)k1) + 1))) << 8);
+    args->flags = (detune << 0x10) | 0x19 | ((k1 + (sndRand() % (((u8)k2 - (u8)k1) + 1))) << 8);
     args->value = 0;
     state->key = (args->flags >> 8) & 0x7f;
     state->fineTune = (s8)(args->flags >> 0x10);

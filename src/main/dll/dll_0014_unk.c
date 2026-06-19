@@ -2363,7 +2363,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                         {
                             if (pairId == sp->groupId)
                             {
-                                wg->patchIndices[slot] = (u8)found;
+                                wg->patchIndices[slot] = found;
                                 break;
                             }
                             sp++;

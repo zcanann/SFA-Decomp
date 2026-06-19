@@ -96,7 +96,7 @@ void StayPoint_update(int obj)
             if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
                 ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
             {
-                objRenderFn_80041018((int)obj);
+                objRenderFn_80041018(obj);
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAYPOINT_HITBOX_IN_RANGE) != 0)
             {

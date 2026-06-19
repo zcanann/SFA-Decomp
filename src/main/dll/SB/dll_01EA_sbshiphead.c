@@ -80,7 +80,7 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         f32 d;
     } stk;
 
-    o = (GameObject*)obj;
+    o = obj;
     if (visible != 0)
     {
         state = o->extra;
@@ -141,7 +141,7 @@ void SB_ShipHead_update(int obj)
     int tmp2[2];
     GameObject* o;
 
-    o = (GameObject*)obj;
+    o = obj;
     fireCue = 0;
     player = Obj_GetPlayerObject();
     galleon = *(u8**)&o->anim.parent;
@@ -289,7 +289,7 @@ void SB_ShipHead_free(int x) { ObjGroup_RemoveObject((u32)x, 0x3); }
 
 void SB_ShipHead_init(int obj)
 {
-    SBShipHeadState* state = ((GameObject*)obj)->extra;
+    SBShipHeadState* state = (obj)->extra;
     ObjGroup_AddObject((u32)obj, 3);
     ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;

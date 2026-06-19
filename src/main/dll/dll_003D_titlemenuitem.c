@@ -233,7 +233,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         break;
     case TITLE_MENU_KIND_SLIDER:
         stickX = padGetStickX(0);
-        sliderDelta = (s16)((s8)stickX / 16) * 0xa0;
+        sliderDelta = (s16)(stickX / 16) * 0xa0;
 
         if (((s16)sliderDelta != 0) &&
             (!(lbl_803DD91C < (f32)item->minValue) || ((s16)sliderDelta >= 0)) &&

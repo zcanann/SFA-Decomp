@@ -767,7 +767,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
         }
         cur = lbl_803DD774;
         if (cur < 0xd9) cur = 0xd9;
-        lbl_803DD774 = (u16)cur;
+        lbl_803DD774 = cur;
         lbl_803DD77F = 0;
         return;
     }
@@ -1460,7 +1460,7 @@ void fn_80128120(int unused, int p2)
     {
         s16 t = 0x11;
         if (i >= level) t = -1;
-        lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
+        lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
     }
 }
 
@@ -1475,11 +1475,11 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     {
         drawScaledTexture(*(void**)(hudTextures + 0x30), (f32)x, (f32)y, alpha, 0x100, w, h, 0);
     }
-    drawScaledTexture(*(void**)(hudTextures + 0x34), (f32)x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x + (s16)w), (f32)y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
+    drawScaledTexture(*(void**)(hudTextures + 0x34), (f32)x, (f32)(y + h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x + w), (f32)y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
 }
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
@@ -2823,7 +2823,7 @@ void pauseMenuFn_80129ee0(void)
             {
                 t = 0x400;
             }
-            lbl_803DD78C = (s16)t;
+            lbl_803DD78C = t;
         }
         switch (state)
         {
@@ -2978,7 +2978,7 @@ void pauseMenuFn_80129ee0(void)
                 else
                 {
                     int t = lbl_803DD784 + framesThisStep * 0x28;
-                    lbl_803DD784 = (s16)t;
+                    lbl_803DD784 = t;
                     if (t > 0x400)
                     {
                         lbl_803DD784 = 0x400;
@@ -3908,12 +3908,12 @@ void fn_8012FA70(int idx, s8 flag)
 
     for (i = 0; i < count * 2; i++)
     {
-        if (lbl_803A8C78[(s16)pos] != 0 && (prev != 0 || i >= count))
+        if (lbl_803A8C78[pos] != 0 && (prev != 0 || i >= count))
         {
             *posPtr = pos;
             return;
         }
-        prev = lbl_803A8C78[(s16)pos];
+        prev = lbl_803A8C78[pos];
         pos++;
         if (pos >= count)
         {
@@ -4315,7 +4315,7 @@ void GameUI_update(void)
                 else closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
                 if (!closed) goto camCheck;
                 {
-                    int absAng = (s16)angDelta < 0 ? -(s16)angDelta : (s16)angDelta;
+                    int absAng = angDelta < 0 ? -angDelta : angDelta;
                     if (absAng >= 0x2710) goto camCheck;
                 }
                 {

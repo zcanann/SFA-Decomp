@@ -1248,7 +1248,7 @@ int mediumbasket_updateControlMove5State(int* obj, GroundBaddieState* state)
     state->baddie.moveSpeed = lbl_803E2D38;
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2D14, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.unk34D = 1;
@@ -1454,7 +1454,7 @@ void dll_CA_update(int obj, int p2, int p3)
                 obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
             sub->targetState = 0;
             Sfx_PlayFromObject(obj, SFXfoxcom_find);
-            ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
+            ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0x10);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -1524,7 +1524,7 @@ void dll_CA_init(int obj, u8* params, int flags)
     {
         *(s16*)&sub->aggroRange = 0x6e;
     }
-    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
+    ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
     sub->baddie.substate = 0;

@@ -400,13 +400,13 @@ void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int** list;
         int i;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
-        ObjPath_GetPointWorldPosition((int)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
+        ObjPath_GetPointWorldPosition(obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
-        ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, runtime->pathPointWorldPositions);
-        ObjPath_GetPointWorldPosition((int)obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z,
+        ObjPath_GetPointWorldPositionArray(obj, 3, 4, runtime->pathPointWorldPositions);
+        ObjPath_GetPointWorldPosition(obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z,
                                       0);
         runtime->flagsC49.b5 = 1;
-        dll_2E_func06((int)obj, runtime->lookController, 0);
+        dll_2E_func06(obj, runtime->lookController, 0);
         if (runtime->flagsC49.b1 != 0)
         {
             list = (int**)ObjGroup_GetObjects(55, &count);
@@ -448,8 +448,8 @@ void hightop_init(void* obj, u8* arg)
     {
         *(int*)&((ObjModelState*)node)->flags |= 0xa10;
     }
-    ObjGroup_AddObject((int)obj, 38);
-    ObjGroup_AddObject((int)obj, 10);
+    ObjGroup_AddObject(obj, 38);
+    ObjGroup_AddObject(obj, 10);
     (*(void (**)(void*, char*, int, int))((char*)*gPlayerInterface + 4))(obj, (char*)runtime, 11, 1);
     runtime->baddie.gravity = lbl_803E6B4C;
     pathState = (u8*)&runtime->baddie + 4;
@@ -458,7 +458,7 @@ void hightop_init(void* obj, u8* arg)
     (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], &lbl_803DC318, 8);
     (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &local8);
     (*gPathControlInterface)->attachObject(obj, pathState);
-    dll_2E_func05((int)obj, (char*)runtime->lookController, -4551, 23665, 6);
+    dll_2E_func05(obj, (char*)runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((char*)runtime->lookController, 300, 120);
     dll_2E_func09((char*)runtime->lookController, &local2, &local1, 6);
     runtime->unk9FD |= 2;
@@ -1041,7 +1041,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC32C)[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, *(f32*)((char*)p + 0x280),
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, *(f32*)((char*)p + 0x280),
                                                                         (f32*)((char*)p + 0x2a0));
     return 0;
 }

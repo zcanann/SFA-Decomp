@@ -1005,14 +1005,14 @@ void playerEnvFxFn_80088ad4(u8 idx)
     {
         alt = 27;
     }
-    if (((s16*)lbl_803DD134)[(u8)idx] <= 0 ||
-        ((s16*)lbl_803DD134)[(s8)alt] != ((s16*)lbl_803DD134)[(u8)idx])
+    if (((s16*)lbl_803DD134)[idx] <= 0 ||
+        ((s16*)lbl_803DD134)[alt] != ((s16*)lbl_803DD134)[idx])
     {
         getEnvfxAct(player, player, 310, 0);
         getEnvfxAct(player, player, 311, 0);
         getEnvfxAct(player, player, 323, 0);
     }
-    val = ((s16*)lbl_803DD134)[(u8)idx];
+    val = ((s16*)lbl_803DD134)[idx];
     if (val > 0)
     {
         if (lbl_803DD140 & 0x20)

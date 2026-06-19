@@ -229,7 +229,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
             int other = ObjGroup_FindNearestObject(5, list[i], 0);
             if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
             {
-                count = (u8)count + 1;
+                count = count + 1;
             }
         }
     }

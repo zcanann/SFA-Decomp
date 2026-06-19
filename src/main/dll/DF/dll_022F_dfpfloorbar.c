@@ -196,7 +196,7 @@ void dfpfloorbar_update(int obj)
                 score = 1;
             }
 
-            if ((s16)score == (s16)state->requiredScore)
+            if (score == (s16)state->requiredScore)
             {
                 state->active = 1;
                 return;

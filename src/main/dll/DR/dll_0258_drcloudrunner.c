@@ -890,7 +890,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
             {
                 step = 0x50;
             }
-            lbl_803DE4DC = lbl_803DE4DC + (s16)step;
+            lbl_803DE4DC = lbl_803DE4DC + step;
             *out = lbl_803DE4DC;
         }
         break;

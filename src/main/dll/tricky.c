@@ -1586,7 +1586,7 @@ void drawViewFinderHud(void)
                                lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx);
         }
         xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
-        xc = (f32)xc;
+        xc = xc;
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
         gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);

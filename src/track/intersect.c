@@ -3005,7 +3005,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
         lbl_803DD01A = 1;
     }
     GXSetBlendMode(1, 4, 5, 5);
-    w = (s32)(((u32)(width << 2) * (u16)scale) >> 8);
+    w = (s32)(((u32)(width << 2) * scale) >> 8);
     sx = hudScale * sx;
     sy = hudScale * sy;
     u0 = (f32)(u32)u_offset / (f32)((u16*)obj)[5];
@@ -3031,14 +3031,14 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * (u16)scale) >> 8));
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * scale) >> 8));
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)sx;
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * (u16)scale) >> 8));
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * scale) >> 8));
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
@@ -3185,14 +3185,14 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
-    fbits = (u8)flags;
+    fbits = flags;
     if ((fbits & 4) != 0) {
         GXSetBlendMode(1, 4, 1, 5);
     } else {
         GXSetBlendMode(1, 4, 5, 5);
     }
-    w = (s32)(((u32)(width << 2) * (u16)scale) >> 8);
-    h = (s32)(((u32)(height << 2) * (u16)scale) >> 8);
+    w = (s32)(((u32)(width << 2) * scale) >> 8);
+    h = (s32)(((u32)(height << 2) * scale) >> 8);
     sx = hudScale * sx;
     sy = hudScale * sy;
     {

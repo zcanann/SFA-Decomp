@@ -231,11 +231,11 @@ void drakormissile_update(int obj)
             mag ||
             ((GameObject*)player)->anim.velocityZ != mag)
         {
-            mag = PSVECMag((f32*)((int)player + 0x24));
+            mag = PSVECMag((f32*)(player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
         fn_80221C18(player, mag, &((GameObject*)obj)->anim.localPosX, toTarget);
-        PSVECSubtract(toTarget, (f32*)((int)obj + 0xc), dir);
+        PSVECSubtract(toTarget, (f32*)(obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
         PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);

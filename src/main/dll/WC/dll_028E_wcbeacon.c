@@ -140,7 +140,7 @@ void wcbeacon_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
             if ((u32)tricky != 0 && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG))
             {
-                (*(void (**)(int, int, int, int, int))(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28))(
+                (*(void (**)(int, int, int, int, int))(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(
                     tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, WCBEACON_TRICKY_PROMPT_FLAG,
                     *(int*)(*(int*)(tricky + 0x68)));
             }

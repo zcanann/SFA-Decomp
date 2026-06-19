@@ -1103,11 +1103,11 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
 
     if (objectChannel != NULL)
     {
-        if ((u8)volumeByte != 0xFE)
+        if (volumeByte != 0xFE)
         {
             u32 ctrlVolume;
 
-            if ((u8)volumeByte == 0xFF)
+            if (volumeByte == 0xFF)
             {
                 volumeByte = 100;
             }
@@ -1159,11 +1159,11 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 
     if (objectChannel != NULL)
     {
-        if ((u8)volumeByte != 0xFE)
+        if (volumeByte != 0xFE)
         {
             u32 ctrlVolume;
 
-            if ((u8)volumeByte == 0xFF)
+            if (volumeByte == 0xFF)
             {
                 volumeByte = 100;
             }

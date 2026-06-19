@@ -75,7 +75,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
         {
             for (i = root; i != 0xFFFF; i = vb->prioRootList[i].next)
             {
-                if ((u16)i > prio)
+                if (i > prio)
                 {
                     break;
                 }

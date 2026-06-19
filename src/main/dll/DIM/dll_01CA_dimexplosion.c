@@ -324,7 +324,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     colA = lbl_803E4928;
     colB = lbl_803E8468;
     state = *(int*)&((GameObject*)obj)->extra;
-    model = Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel(obj);
     p = state;
     if (visible != 0)
     {

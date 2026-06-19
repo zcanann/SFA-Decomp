@@ -145,7 +145,7 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         {
             ((GameObject*)obj)->anim.flags &= ~8;
         }
-        if ((s8)visible != 0 && extra->opacity != 0)
+        if (visible != 0 && extra->opacity != 0)
         {
             u8 saved = *(u8*)((char*)obj + 0x37);
             if (hit != 0)
