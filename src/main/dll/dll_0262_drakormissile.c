@@ -240,15 +240,15 @@ void drakormissile_update(int obj)
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
         PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);
         PSVECAdd((f32*)((char*)obj + 0x24), dir, (f32*)((char*)obj + 0x24));
-        mag = sqrtf(*(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24) +
+        mag = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
-            int tmpAng = getAngle(*(f32*)((char*)obj + 0x24), ((GameObject*)obj)->anim.velocityZ);
+            int tmpAng = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
             ((GameObject*)obj)->anim.rotX = tmpAng;
             tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
             ((GameObject*)obj)->anim.rotY = tmpAng;
         }
-        objMove(obj, *(f32*)((char*)obj + 0x24) * timeDelta,
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                 ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moving = 1;
