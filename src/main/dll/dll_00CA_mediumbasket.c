@@ -1,15 +1,28 @@
 /*
- * mediumbasket (DLL 0xCA) - a GroundBaddie-driven enemy/creature.
- * Object type id 0x49, per-object extra size 0x458 (a GroundBaddieState).
+ * dll_00CA ("mediumbasket") - CUT / UNUSED content.
  *
- * dll_CA_init/update/render/hitDetect/free are the object descriptor
- * callbacks. update drives the shared baddie controller through the
- * gMediumBasketStateHandlersA/B dispatch tables, whose entries are the
- * mediumbasket_* state handlers in this file (landing/contact/impact/spin/
- * drop/open/hide/height-blend plus the A/B target-engagement handlers).
- * Behavior includes water/whirlpool grouping (enter/leave/initWhirlpool),
- * contact-object spawning, camera shake and particle fx in
- * mediumbasket_updateControlEffects, and target acquisition/motion.
+ * This is a fully-implemented GroundBaddie enemy (object type id 0x49, extra
+ * size 0x458 = GroundBaddieState) that NEVER spawns in the retail game:
+ *   - no OBJECTS.bin definition references dll-id 0xCA (no retail name -> the
+ *     "mediumbasket" name is a placeholder guessed from the DLL's numeric id);
+ *   - it appears in ZERO map romlists (no placement anywhere);
+ *   - nothing in the game reads gResourceDescriptors[0xCA] or otherwise spawns
+ *     it, even though dll_CA_update reads placementData (it was designed to be
+ *     placed, but the placements were removed before release).
+ *
+ * What it is (recovered from its code): a cut ice baddie in the ChukChuk
+ * family. It pursues the player (aggression/aggroRange, hit points), spits the
+ * retail "IceBall" projectile (object id 100, see mediumbasket_spawnIceBall),
+ * and runs a state machine of drop/land (camera-shake stomp), spin, open, hide,
+ * impact/contact-hit and height-blend states, plus an A/B target-engagement
+ * dispatch via the gMediumBasketStateHandlersA/B tables (filled in dll_CE).
+ * The whirlpool helpers here (enter/leave/initWhirlpool) are SHARED engine
+ * utilities also called by the generic enemy DLL (dll_00C9), not specific to
+ * this creature.
+ *
+ * NOTE (rename proposed): "mediumbasket"/"dll_CA_" are inaccurate placeholders;
+ * see docs/dll_00CA_rename_proposal.md for a proposed rename to an ice-baddie
+ * name (team-lead to apply via splits.txt/configure.py/symbols.txt).
  *
  * This TU also defines the descriptor structs and DLL glue for two sibling
  * objects whose handler bodies live elsewhere: the ChukChuk ice-spitter
@@ -25,37 +38,27 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 
-typedef struct MediumbasketUpdateDropStateState
+/*
+ * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
+ * fields this TU touches are named; the rest is padding. effectFlags is a
+ * per-frame bitmask consumed (and cleared) by mediumbasket_updateControlEffects
+ * to drive the contact-spawn / dust / camera-shake bursts.
+ */
+typedef struct MediumbasketControl
 {
     u8 pad0[0x4 - 0x0];
-    s16 unk4;
-    s16 unk6;
+    s16 attackPatternIndex; /* 0x04: cycles 0..6 through the attack-move tables */
+    s16 consecutiveHitCount; /* 0x06: quick re-hit counter -> ground-pound state */
     u8 pad8[0x28 - 0x8];
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
+    f32 fxScale;             /* 0x28: size-scaled effect/shake magnitude */
+    f32 effectPosX;          /* 0x2c: computed effect/impact anchor (world) */
+    f32 effectPosY;          /* 0x30 */
+    f32 effectPosZ;          /* 0x34 */
     u8 pad38[0x44 - 0x38];
-    u8 unk44;
+    u8 effectFlags;          /* 0x44: per-frame fx request bits (see updateControlEffects) */
     u8 pad45[0x46 - 0x45];
-    u16 unk46;
-} MediumbasketUpdateDropStateState;
-
-typedef struct MediumbasketUpdateHeightBlendStateState
-{
-    u8 pad0[0x4 - 0x0];
-    s16 unk4;
-    s16 unk6;
-    u8 pad8[0x28 - 0x8];
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
-    u8 pad38[0x44 - 0x38];
-    u8 unk44;
-    u8 pad45[0x46 - 0x45];
-    u16 unk46;
-} MediumbasketUpdateHeightBlendStateState;
+    u16 ambientSfxTimer;     /* 0x46: counts up to ~300 then plays an ambient grunt */
+} MediumbasketControl;
 
 extern u32 randomGetRange(int min, int max);
 extern u64 ObjGroup_RemoveObject();
@@ -118,7 +121,7 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 extern void Camera_DisableViewYOffset(void);
 extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
-extern void fn_8015CE68(int obj, int state);
+extern void mediumbasket_updateEffectAnchors(int obj, int state);
 extern u8 gMediumBasketStateHandlersA[];
 extern u8 gMediumBasketStateHandlersB[];
 extern int Obj_GetPlayerObject(void);
@@ -250,7 +253,7 @@ int mediumbasket_updateOpenHitState(int obj, int p)
 
 #pragma scheduling on
 #pragma peephole on
-void mediumbasket_spawnContactObject(int* obj, int* state);
+void mediumbasket_spawnIceBall(int* obj, int* state);
 
 #pragma scheduling off
 void dll_CA_func0B(int obj, int message)
@@ -386,7 +389,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
     ((GroundBaddieState*)state)->baddie.unk34D = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D28;
     control = *(int*)&sub->control;
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
+    ((MediumbasketControl*)control)->effectFlags |= 0xc;
     noBlend = lbl_803E2D14;
     ((GroundBaddieState*)state)->baddie.animSpeedA = noBlend;
     ((GroundBaddieState*)state)->baddie.animSpeedB = noBlend;
@@ -422,13 +425,13 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
         }
     }
     control = *(int*)&sub->control;
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 4;
+    ((MediumbasketControl*)control)->effectFlags |= 4;
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
     {
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
-        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0x10;
+        ((MediumbasketControl*)control)->effectFlags |= 0x10;
     }
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
+    ((MediumbasketControl*)control)->effectFlags |= 0xc;
     ((GroundBaddieState*)state)->baddie.animSpeedA = ((GameObject*)obj)->anim.currentMoveProgress;
     return 0;
 }
@@ -438,7 +441,7 @@ int mediumbasket_updateDropState(int obj, int state)
     int control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     int player;
 
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 4;
+    ((MediumbasketControl*)control)->effectFlags |= 4;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2D14, 0);
@@ -468,7 +471,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control = *(int*)&sub->control;
 
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 4;
+    ((MediumbasketControl*)control)->effectFlags |= 4;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -480,7 +483,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     {
         control = *(int*)&sub->control;
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~1;
-        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 2;
+        ((MediumbasketControl*)control)->effectFlags |= 2;
         Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
     }
     ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
@@ -493,7 +496,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
     int control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     f32 height;
 
-    ((MediumbasketUpdateHeightBlendStateState*)control)->unk44 |= 0xc;
+    ((MediumbasketControl*)control)->effectFlags |= 0xc;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
@@ -649,7 +652,7 @@ int mediumbasket_updateSpinState(int obj, int state)
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     control = *(int*)&sub->control;
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
+    ((MediumbasketControl*)control)->effectFlags |= 0xc;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -685,9 +688,9 @@ int mediumbasket_updateImpactHitState(int obj, int state)
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
     {
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
-        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0x10;
+        ((MediumbasketControl*)control)->effectFlags |= 0x10;
     }
-    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
+    ((MediumbasketControl*)control)->effectFlags |= 0xc;
     return 0;
 }
 
@@ -812,21 +815,21 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
+                    int attackIndex = ((MediumbasketControl*)control)->attackPatternIndex;
+                    ((MediumbasketControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
+                    int attackIndex = ((MediumbasketControl*)control)->attackPatternIndex;
+                    ((MediumbasketControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, lbl_8031FD80[attackIndex]);
                 }
-                if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
+                if (((MediumbasketControl*)control)->attackPatternIndex >= 7)
                 {
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 = 0;
+                    ((MediumbasketControl*)control)->attackPatternIndex = 0;
                 }
             }
         }
@@ -865,21 +868,21 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
+                    int attackIndex = ((MediumbasketControl*)control)->attackPatternIndex;
+                    ((MediumbasketControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
+                    int attackIndex = ((MediumbasketControl*)control)->attackPatternIndex;
+                    ((MediumbasketControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, lbl_8031FD80[attackIndex]);
                 }
-                if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
+                if (((MediumbasketControl*)control)->attackPatternIndex >= 7)
                 {
-                    ((MediumbasketUpdateDropStateState*)control)->unk4 = 0;
+                    ((MediumbasketControl*)control)->attackPatternIndex = 0;
                 }
             }
         }
@@ -910,7 +913,7 @@ int mediumbasket_stateHandlerB07(int obj, int state)
     return 0;
 }
 
-void fn_8015CE68(int obj, int state)
+void mediumbasket_updateEffectAnchors(int obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
     f32 transformedX;
@@ -961,7 +964,7 @@ void fn_8015CE68(int obj, int state)
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
     ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 2) != 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 2) != 0)
     {
         transformedX = lbl_803E2DA8;
         transformedY = lbl_803E2DAC;
@@ -969,7 +972,7 @@ void fn_8015CE68(int obj, int state)
         Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
         memcpy((void*)(control + 0x38), &transformedX, 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
-        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 1;
+        ((MediumbasketControl*)control)->effectFlags |= 1;
     }
 }
 
@@ -984,13 +987,13 @@ void mediumbasket_updateControlEffects(int obj, int state)
 
     if (((GameObject*)obj)->anim.seqId == 99)
     {
-        ((MediumbasketUpdateDropStateState*)control)->unk28 = lbl_803E2D84;
+        ((MediumbasketControl*)control)->fxScale = lbl_803E2D84;
         shakeScale = lbl_803E2D88;
     }
     else
     {
         contactScale = lbl_803E2D48;
-        ((MediumbasketUpdateDropStateState*)control)->unk28 = contactScale;
+        ((MediumbasketControl*)control)->fxScale = contactScale;
         shakeScale = contactScale;
     }
     paletteIndex = 0;
@@ -1003,23 +1006,23 @@ void mediumbasket_updateControlEffects(int obj, int state)
         }
     }
     particleArgs = &lbl_8031FE38[paletteIndex * 3];
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 1) != 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 1) != 0)
     {
-        mediumbasket_spawnContactObject((int*)obj, (int*)control);
-        ((MediumbasketUpdateDropStateState*)control)->unk44 &= ~1;
+        mediumbasket_spawnIceBall((int*)obj, (int*)control);
+        ((MediumbasketControl*)control)->effectFlags &= ~1;
     }
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 4) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 4) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
     {
         for (i = 0; i < 4; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x56, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 8) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 8) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
     }
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 0x10) != 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 0x10) != 0)
     {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D88 * shakeScale);
@@ -1028,7 +1031,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 0x20) != 0)
+    if ((((MediumbasketControl*)control)->effectFlags & 0x20) != 0)
     {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D8C * shakeScale);
@@ -1041,7 +1044,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x58, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    ((MediumbasketUpdateDropStateState*)control)->unk44 = 0;
+    ((MediumbasketControl*)control)->effectFlags = 0;
 }
 
 void mediumbasket_updateTargetMotion(int obj, int sub, int state)
@@ -1050,10 +1053,10 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
     extern int* gBaddieControlInterface; /* #57 */
     int control = *(int*)&((GroundBaddieState*)sub)->control;
 
-    ((MediumbasketUpdateDropStateState*)control)->unk46 += framesThisStep;
-    if (((MediumbasketUpdateDropStateState*)control)->unk46 >= 300)
+    ((MediumbasketControl*)control)->ambientSfxTimer += framesThisStep;
+    if (((MediumbasketControl*)control)->ambientSfxTimer >= 300)
     {
-        ((MediumbasketUpdateDropStateState*)control)->unk46 = randomGetRange(0, 200);
+        ((MediumbasketControl*)control)->ambientSfxTimer = randomGetRange(0, 200);
         if (((GroundBaddieState*)state)->baddie.controlMode == 7 || ((GroundBaddieState*)state)->baddie.controlMode ==
             8)
         {
@@ -1078,7 +1081,7 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
 }
 
 #pragma fp_contract off
-void fn_8015D3C0(int obj, int sub, int state)
+void mediumbasket_updateTargetCollision(int obj, int sub, int state)
 {
     extern int* gPlayerInterface; /* #57 */
     extern int* gBaddieControlInterface; /* #57 */
@@ -1115,17 +1118,17 @@ void fn_8015D3C0(int obj, int sub, int state)
     {
         if (*(f32*)control < lbl_803E2DB4)
         {
-            ((MediumbasketUpdateDropStateState*)control)->unk6 += 1;
+            ((MediumbasketControl*)control)->consecutiveHitCount += 1;
         }
         else
         {
-            ((MediumbasketUpdateDropStateState*)control)->unk6 = 0;
+            ((MediumbasketControl*)control)->consecutiveHitCount = 0;
         }
         *(f32*)control = lbl_803E2D14;
-        if ((s8)((GroundBaddieState*)state)->baddie.hitPoints > 0 && ((MediumbasketUpdateDropStateState*)control)->unk6 >= 2)
+        if ((s8)((GroundBaddieState*)state)->baddie.hitPoints > 0 && ((MediumbasketControl*)control)->consecutiveHitCount >= 2)
         {
             ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
-            ((MediumbasketUpdateDropStateState*)control)->unk6 = 0;
+            ((MediumbasketControl*)control)->consecutiveHitCount = 0;
             ((GroundBaddieState*)state)->baddie.substate = 5;
         }
     }
@@ -1178,7 +1181,7 @@ render:
         fn_8003B5E0(0xc8, 0, 0, state->unk3E8);
     }
     objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
-    fn_8015CE68(obj, (int)state);
+    mediumbasket_updateEffectAnchors(obj, (int)state);
 done:;
 }
 
@@ -1213,7 +1216,7 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState* state)
 }
 
 #pragma peephole off
-void mediumbasket_spawnContactObject(int* obj, int* state)
+void mediumbasket_spawnIceBall(int* obj, int* state)
 {
     void* alloc;
     int* new_obj;
@@ -1431,7 +1434,7 @@ return0:
 void dll_CA_update(int obj, int p2, int p3)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
-    extern int fn_8015D3C0(int obj, int sub, int sub2);
+    extern int mediumbasket_updateTargetCollision(int obj, int sub, int sub2);
     extern void mediumbasket_updateControlEffects(int obj, int sub);
     extern void mediumbasket_tryAcquireTarget(int obj, int sub, int sub2);
     extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
@@ -1476,7 +1479,7 @@ void dll_CA_update(int obj, int p2, int p3)
         }
         else
         {
-            fn_8015D3C0(obj, (int)sub, (int)sub);
+            mediumbasket_updateTargetCollision(obj, (int)sub, (int)sub);
             mediumbasket_updateControlEffects(obj, (int)sub);
             if (sub->targetState == 0)
             {
