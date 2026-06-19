@@ -1387,10 +1387,10 @@ int fn_8029A76C(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = lbl_80332ED4;
             int i;
+            void** p;
             lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            for (i = 0, p = lbl_80332ED4; i < 7; i++)
             {
                 if (*p != NULL)
                 {
