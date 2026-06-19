@@ -1220,7 +1220,7 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 void voxmaps_worldToGrid(f32* in, s16* out);
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
-u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
+u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void* loadFileByPath(char* path, int* outSize);
 int AudioStream_Play(int id, void (*preparedCallback)(void));
 void gameTimerRun(void);

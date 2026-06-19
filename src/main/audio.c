@@ -2105,7 +2105,7 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
     return 1;
 }
 
-u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit)
+u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
 {
     SfxObjectChannel* ch = Sfx_FindObjectChannel(0, 0, sfxId, 3);
     if (ch != NULL && (int)gSfxObjectChannelMatchCount > limit)
