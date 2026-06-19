@@ -402,10 +402,10 @@ void FUN_8005ff90(short* in, float* out)
 
     scale = lbl_803DF8A0;
     bias = DOUBLE_803df840;
-    *out = (float)((double)CONCAT44(0x43300000, (int)*in ^ 0x80000000) - DOUBLE_803df840) *
+    *out = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*in ^ 0x80000000))) - DOUBLE_803df840) *
         lbl_803DF8A0;
-    out[1] = (float)((double)CONCAT44(0x43300000, in[1] ^ 0x80000000) - bias) * scale;
-    out[2] = (float)((double)CONCAT44(0x43300000, in[2] ^ 0x80000000) - bias) * scale;
+    out[1] = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(in[1] ^ 0x80000000))) - bias) * scale;
+    out[2] = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(in[2] ^ 0x80000000))) - bias) * scale;
     return;
 }
 
@@ -913,62 +913,62 @@ void trackDolphin_buildSweptBounds(u32* boundsOut, float* startPoints, float* en
     {
         do
         {
-            convTmp = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(*boundsOut ^ 0x80000000)));
             if (*startPoints - *radii < (float)(convTmp - bias))
             {
                 *boundsOut = (int)(*startPoints - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[3] ^ 0x80000000)));
             if ((float)(convTmp - bias) < *startPoints + *radii)
             {
                 boundsOut[3] = (int)(*startPoints + *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[1] ^ 0x80000000)));
             if (startPoints[1] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[1] = (int)(startPoints[1] - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[4] ^ 0x80000000)));
             if ((float)(convTmp - bias) < startPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(startPoints[1] + *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[2] ^ 0x80000000)));
             if (startPoints[2] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[2] = (int)(startPoints[2] - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[5] ^ 0x80000000)));
             if ((float)(convTmp - bias) < startPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(startPoints[2] + *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(*boundsOut ^ 0x80000000)));
             if (*endPoints - *radii < (float)(convTmp - bias))
             {
                 *boundsOut = (int)(*endPoints - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[3] ^ 0x80000000)));
             if ((float)(convTmp - bias) < *endPoints + *radii)
             {
                 boundsOut[3] = (int)(*endPoints + *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[1] ^ 0x80000000)));
             if (endPoints[1] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[1] = (int)(endPoints[1] - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[4] ^ 0x80000000)));
             if ((float)(convTmp - bias) < endPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(endPoints[1] + *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[2] ^ 0x80000000)));
             if (endPoints[2] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[2] = (int)(endPoints[2] - *radii);
             }
-            convTmp = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[5] ^ 0x80000000)));
             if ((float)(convTmp - bias) < endPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(endPoints[2] + *radii);
