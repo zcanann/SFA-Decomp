@@ -23,7 +23,7 @@ static inline DfpLightniState* dfplightni_getState(DfpLightniObject* obj)
 
 static inline f64 dfplightni_u32AsDouble(u32 value)
 {
-    u64 bits = CONCAT44(0x43300000, value);
+    u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(value)));
     return *(f64*)&bits;
 }
 

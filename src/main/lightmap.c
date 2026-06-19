@@ -277,8 +277,7 @@ int FUN_8005b398(u64 param_1, double y)
             {
                 block = *(int*)(DAT_803ddb1c + block * 4);
                 if (((double)(f32)(s32)((int)*(short*)(block + 0x8a) - 0x32U) < y) &&
-                    (cvtTmp = (double)CONCAT44(0x43300000,
-                                                 (int)*(short*)(block + 0x8c) + 0x32U ^ 0x80000000),
+                    (cvtTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(block + 0x8c) + 0x32U ^ 0x80000000))),
                         y < (double)(float)(cvtTmp - DOUBLE_803df840)))
                 {
                     return (int)*(char*)(*layerTable + cellX);
@@ -580,8 +579,7 @@ void FUN_8005bdbc(void)
             iVar8 = 0;
             uStack_7c = uVar10 ^ 0x80000000;
             local_80 = 0x43300000;
-            dVar14 = (double)(float)(dVar15 * (double)(float)((double)CONCAT44(0x43300000,
-                                                                               uVar10 ^ 0x80000000) -
+            dVar14 = (double)(float)(dVar15 * (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(uVar10 ^ 0x80000000))) -
                 dVar16));
             pcVar4 = extraout_r4;
             do

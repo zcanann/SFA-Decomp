@@ -141,7 +141,7 @@ static inline f64 Expgfx_U16AsDouble(u16 value)
 {
     u64 bits;
 
-    bits = CONCAT44(0x43300000, value);
+    bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(value)));
     return *(f64*)&bits - lbl_803DF378;
 }
 
@@ -1919,7 +1919,7 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
             bit = 1 << (signedPoolIndex >> 1);
             highBits = (u32)((s32)bit >> 31);
             mask = &gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1];
-            if ((CONCAT44(mask->highWord, mask->lowWord) & CONCAT44(highBits, bit)) != 0)
+            if ((((u64)(((u64)(u32)(mask->highWord) << 32) | (u32)(mask->lowWord))) & ((u64)(((u64)(u32)(highBits) << 32) | (u32)(bit)))) != 0)
             {
                 *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
                 if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A)

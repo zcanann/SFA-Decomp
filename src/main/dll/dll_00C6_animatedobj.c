@@ -400,7 +400,7 @@ void staticCamera_init(short* param_1, int param_2, int param_3)
     dest = *(u8**)(param_1 + 0x5c);
     *dest = *(u8*)(param_2 + 0x19);
     *(float*)(dest + 4) =
-        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(param_2 + 0x1a)))) - DOUBLE_803e3e88);
     dest[1] = 0;
     if (param_3 == 0)
     {
@@ -879,7 +879,7 @@ void FUN_80170048(void)
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(dC + dA) * dB));
                 state[5] = *colorTbl;
                 rand = randomGetRange(0x78, 0x7f);
-                randBits = (double)CONCAT44(0x43300000, iTmp * rand ^ 0x80000000);
+                randBits = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(iTmp * rand ^ 0x80000000)));
                 *(short*)(walk + 0xf) = (short)(int)(dE + (double)(float)(randBits - dD));
                 walk = (int*)((int)walk + 2);
                 scaleTbl = scaleTbl + 1;
@@ -980,7 +980,7 @@ void FUN_80170048(void)
             walk[9] = (int)(*scaleTbl * (float)((double)(float)(dE + dA) * dB));
             walk[5] = *colorTbl;
             rand = randomGetRange(0x78, 0x7f);
-            randBits2 = (double)CONCAT44(0x43300000, iTmp * rand ^ 0x80000000);
+            randBits2 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(iTmp * rand ^ 0x80000000)));
             *(short*)(state + 0xf) = (short)(int)(dC + (double)(float)(randBits2 - dD));
             state = (int*)((int)state + 2);
             scaleTbl = scaleTbl + 1;

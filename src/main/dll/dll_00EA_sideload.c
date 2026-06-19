@@ -275,7 +275,7 @@ void staticCamera_init(short* obj, int placementData, int addToGroup)
     colorState = *(u8**)(obj + 0x5c);
     *colorState = *(u8*)(placementData + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(placementData + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(placementData + 0x1a)))) - DOUBLE_803e3e88);
     colorState[1] = 0;
     if (addToGroup == 0)
     {

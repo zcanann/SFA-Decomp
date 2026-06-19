@@ -824,8 +824,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     uStack_10c = texSize;
                     uStack_104 = texSize;
                     FUN_8025da64(dVar28, dVar28,
-                                 (double)(float)((double)CONCAT44(0x43300000, texSize) - DOUBLE_803dfa08),
-                                 (double)(float)((double)CONCAT44(0x43300000, texSize) - DOUBLE_803dfa08), dVar28
+                                 (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(texSize))) - DOUBLE_803dfa08),
+                                 (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(texSize))) - DOUBLE_803dfa08), dVar28
                                  , (double)lbl_803DF9AC);
                     FUN_80247dfc(dVar27, dVar22, dVar27, dVar22, (double)lbl_803DF9AC, (double)lbl_803DF9EC,
                                  projMtx);
@@ -1218,7 +1218,7 @@ void newshadows_updateFrameState(void)
     DAT_803ddbf8 = 0;
     DAT_803ddc68 = (int)FUN_800069a8();
     DAT_803ddc20 = DAT_803ddc20 + (u16)DAT_803dc070 * 0x28a;
-    local_20 = CONCAT44(0x43300000, DAT_803ddc20);
+    local_20 = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(DAT_803ddc20)));
     depth = (double)FUN_802947f8();
     lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
@@ -1302,12 +1302,12 @@ void newshadows_buildShadowDirectionTexture(void)
     do
     {
         x = 0;
-        convBias = (double)CONCAT44(0x43300000, y ^ 0x80000000);
+        convBias = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(y ^ 0x80000000)));
         dy = (double)((float)(convBias - convBiasConst) - centerOffset);
         xCount = 0x100;
         do
         {
-            convBias = (double)CONCAT44(0x43300000, x ^ 0x80000000);
+            convBias = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(x ^ 0x80000000)));
             dx = (double)((float)(convBias - convBiasConst) - centerOffset);
             len = (double)(float)(dy * dy + (double)(float)(dx * dx));
             if (epsilon < len)

@@ -270,7 +270,7 @@ void FUN_8007f6e4(u32* timer)
 
 void FUN_8007f718(float* out, short val)
 {
-    *out = (float)((double)CONCAT44(0x43300000, (int)val ^ 0x80000000) - DOUBLE_803dfc28);
+    *out = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)val ^ 0x80000000))) - DOUBLE_803dfc28);
     return;
 }
 

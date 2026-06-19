@@ -340,7 +340,7 @@ void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
     cmdStream[4] = cmd + 4;
     tag = &DAT_802cbaa8;
     for (tmp = 0;
-         tmp < (int)((u32)(CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0xf);
+         tmp < (int)((u32)(((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cmd & 7)) & 0xf);
          tmp = tmp + 1)
     {
         idx = cmdStream[4];
@@ -349,7 +349,7 @@ void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
         b1 = cmdPtr[1];
         b2 = cmdPtr[2];
         cmdStream[4] = idx + 8;
-        idx = (u32)(CONCAT12(b2, CONCAT11(b1, b0)) >> (idx & 7)) & 0xff;
+        idx = (u32)(((u32)(((u32)(u8)(b2) << 16) | (u16)(((u16)(((u16)(u8)(b1) << 8) | (u8)(b0)))))) >> (idx & 7)) & 0xff;
         if (DAT_803dd8c8 == 2)
         {
             FUN_8025d80c((float*)(cache + idx * 0x30), (u32) * tag);
@@ -512,11 +512,11 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                             convLo0 = slot->offsetS ^ 0x80000000;
                             convHi0 = 0x43300000;
                             u = (double)(lbl_803DF6C8 *
-                                (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
+                                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo0))) - DOUBLE_803df6c0));
                             convLo1 = slot->offsetT ^ 0x80000000;
                             convHi1 = 0x43300000;
                             v = (double)(lbl_803DF6C8 *
-                                (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
+                                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo1))) - DOUBLE_803df6c0));
                             goto LAB_8003eca4;
                         }
                         boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
@@ -643,7 +643,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     cmdByte1 = *(u8*)(subNode + 1);
     cmdByte2 = *(u8*)(subNode + 2);
     cmdStream[4] = cmd + 6;
-    cmd = (CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0x3f;
+    cmd = (((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cmd & 7)) & 0x3f;
     callback = (code*)FUN_8001795c((int)node);
     if ((callback == (code*)0x0) || (callbackResult = (*callback)(modelData, node, cmd), callbackResult == '\0'))
     {
@@ -680,7 +680,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             alphaColor = DAT_803dd8d4 & 0xffffff00;
             if (*(int*)(subNode + 0x1c) != 0)
             {
-                alphaColor = CONCAT31(0xffffff, *(u8*)(subNode + 0x22));
+                alphaColor = ((u32)(((u32)(0xffffff) << 8) | (u8)(*(u8*)(subNode + 0x22))));
             }
             matColor = alphaColor;
             FUN_8025c428(3, (u8*)&matColor);
@@ -771,11 +771,11 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
                     convLo0 = (int)*(short*)(light + 8) ^ 0x80000000;
                     convHi0 = 0x43300000;
                     u = (double)(lbl_803DF6C8 *
-                        (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
+                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo0))) - DOUBLE_803df6c0));
                     convLo1 = (int)*(short*)(light + 10) ^ 0x80000000;
                     convHi1 = 0x43300000;
                     v = (double)(lbl_803DF6C8 *
-                        (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
+                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo1))) - DOUBLE_803df6c0));
                     goto LAB_8003f328;
                 }
                 light = light + 2;
@@ -1036,9 +1036,7 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     cmdPtr = cmdDesc[0] + cmdOffset;
     cmdCursor = cmdCursor + 0xc;
     texEntry = (u32*)
-        FUN_80017914(obj, (CONCAT12(*(u8*)(cmdPtr + 2),
-                                        CONCAT11(*(u8*)(cmdPtr + 1),
-                                                 *(u8*)(cmdDesc[0] + cmdOffset))) >>
+        FUN_80017914(obj, (((u32)(((u32)(u8)(*(u8*)(cmdPtr + 2)) << 16) | (u16)(((u16)(((u16)(u8)(*(u8*)(cmdPtr + 1)) << 8) | (u8)(*(u8*)(cmdDesc[0] + cmdOffset))))))) >>
                          (texId & 7)) & 0xff);
     FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
     FUN_8028688c();
@@ -1203,7 +1201,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
             glowColor = (1 << (fadeLevel - 8)) & 0xff;
         }
         glowColor = glowColor << 0x10;
-        glowColor = CONCAT31((u32)glowColor >> 8, 0xff);
+        glowColor = ((u32)(((u32)((u32)glowColor >> 8) << 8) | (u8)(0xff)));
         envColor = glowColor;
         FUN_8025c428(3, (u8*)&envColor);
         FUN_8025cce8(2, 1, 0, 7);
@@ -1242,7 +1240,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
     {
         cmdPtr = (u8*)(cmdDesc[0] + ((int)cmdCursor >> 3));
         nextCursor = cmdCursor + 4;
-        opcode = (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7)) & 0xf;
+        opcode = (((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >> (cmdCursor & 7)) & 0xf;
         if (opcode == 3)
         {
             cmdCursor = nextCursor;
@@ -1252,7 +1250,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
                 FUN_802570dc(0, 1);
             }
             cmdPtr = (u8*)(cmdDesc[0] + ((int)cmdCursor >> 3));
-            if ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7) & 1) == 0)
+            if ((((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >> (cmdCursor & 7) & 1) == 0)
             {
                 fadeLevel = 2;
             }
@@ -1280,7 +1278,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
                 cmdPtr = (u8*)(cmdDesc[0] + ((int)nextCursor >> 3));
                 cmdCursor = cmdCursor + 10;
                 subNode = FUN_8001792c(obj,
-                                      (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
+                                      (((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >>
                                           (nextCursor & 7)) & 0x3f);
                 fadeLevel = cmdCursor;
             }
@@ -1290,7 +1288,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
                 cmdCursor = cmdCursor + 0xc;
                 texEntry = (u32*)
                     FUN_80017914(obj, (u32) * (u8*)(obj + 0xf5) +
-                                 ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
+                                 ((((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >>
                                      (nextCursor & 7)) & 0xff));
                 FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
                 fadeLevel = cmdCursor;

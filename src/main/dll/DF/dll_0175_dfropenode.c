@@ -49,13 +49,13 @@ extern f32 lbl_803E4E28;
 
 static inline f32 DFRope_S32AsFloat(s32 value)
 {
-    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32)value ^ 0x80000000)));
     return (f32)(*(f64*)&bits - lbl_803E4DF0);
 }
 
 static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
 {
-    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32)value ^ 0x80000000)));
     return (f32) * (f64*)&bits - (f32)lbl_803E4DF0;
 }
 

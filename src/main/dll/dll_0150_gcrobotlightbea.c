@@ -210,7 +210,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
-                    (float)((double)CONCAT44(0x43300000, uStack_3c) - DOUBLE_803e4db0
+                    (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(uStack_3c))) - DOUBLE_803e4db0
                     )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
             )
             ;

@@ -408,7 +408,7 @@ int cMenuItemModelRenderFn(int shader, int* block, int idx)
     colorWord = DAT_803e2a94;
     rec = FUN_8001792c(*block, idx);
     FUN_80052904();
-    colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
+    colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(*(u8*)(shader + 0x37))));
     texHandle = FUN_80053078(*(u32*)(rec + 0x24));
     FUN_80051fc4(texHandle, 0, 0, &colorWord, 0, 1);
     FUN_800528d0();
@@ -440,13 +440,13 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
             if (tabB[rec] == 0)
             {
                 level = (int)(FLOAT_803e2c90 *
-                    (f32)((double)CONCAT44(0x43300000, (u32) * (u8*)(shader + 0x37)) -
+                    (f32)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(shader + 0x37)))) -
                         DOUBLE_803e2b08));
-                colorWord = CONCAT31(colorWord >> 8, level);
+                colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(level)));
             }
             else
             {
-                colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
+                colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(*(u8*)(shader + 0x37))));
             }
             FUN_80051fc4(tabA[rec], 0, 0, &colorWord, 0, 1);
         }
