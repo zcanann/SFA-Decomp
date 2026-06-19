@@ -21,6 +21,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
+#include "main/sfa_shared_decls.h"
 
 /* Per-object extra state for the doorf4 door (doorf4_getExtraSize == 0x24). */
 typedef struct DoorF4State
@@ -68,8 +69,8 @@ extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 gDoorF4Pi;
 extern f32 gDoorF4BinaryAngleScale;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 sqrtf(f32 x);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
