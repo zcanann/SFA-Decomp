@@ -4192,7 +4192,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                b = *(u8*)(p2 + 0x3f0);
+                b = ((PlayerState*)p2)->unk3F0;
                 if ((u32)b >> 3 & 1)
                 {
                     continue;
@@ -4218,7 +4218,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
         case 3:
         case 5:
             {
-                u8 b = *(u8*)(p2 + 0x3f0);
+                u8 b = ((PlayerState*)p2)->unk3F0;
                 if ((u32)b >> 3 & 1 || (u32)b >> 2 & 1)
                 {
                     ok = 1;
@@ -4231,13 +4231,13 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 u8 b2;
                 if (((u32) * (u8*)(p2 + 0x3f1) & 1) == 0)
                 {
-                    u8 b = *(u8*)(p2 + 0x3f0);
+                    u8 b = ((PlayerState*)p2)->unk3F0;
                     if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0)
                     {
                         continue;
                     }
                 }
-                b2 = *(u8*)(p2 + 0x3f0);
+                b2 = ((PlayerState*)p2)->unk3F0;
                 if ((u32)b2 >> 3 & 1 || (u32)b2 >> 2 & 1)
                 {
                     ok = 1;
@@ -4250,13 +4250,13 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 u8 b2;
                 if (((u32) * (u8*)(p2 + 0x3f1) & 1) == 0)
                 {
-                    u8 b = *(u8*)(p2 + 0x3f0);
+                    u8 b = ((PlayerState*)p2)->unk3F0;
                     if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0)
                     {
                         continue;
                     }
                 }
-                b2 = *(u8*)(p2 + 0x3f0);
+                b2 = ((PlayerState*)p2)->unk3F0;
                 if ((u32)b2 >> 3 & 1 || (u32)b2 >> 2 & 1)
                 {
                     ok = 1;
@@ -4318,7 +4318,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
         hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         if (flagA != 0 && hit != 0)
         {
-            *(f32*)(p2 + 0x778) = buf.dist;
+            ((PlayerState*)p2)->unk778 = buf.dist;
         }
         if (flagB != 0 && hit != 0)
         {
@@ -4425,28 +4425,28 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                *(u32*)(p2 + 0x360) |= 0x100LL;
+                *(u32*)&((PlayerState*)p2)->flags360 |= 0x100LL;
                 if ((*(int*)&((PlayerState*)p3)->baddie.unk31C & 0x100) == 0)
                 {
                     continue;
                 }
-                *(f32*)(p2 + 0x654) = buf.nx;
-                *(f32*)(p2 + 0x658) = buf.ny;
-                *(f32*)(p2 + 0x65c) = buf.nz;
-                *(f32*)(p2 + 0x660) = buf.g38;
-                *(u8*)(p2 + 0x681) = 0;
+                ((PlayerState*)p2)->unk654 = buf.nx;
+                ((PlayerState*)p2)->unk658 = buf.ny;
+                ((PlayerState*)p2)->unk65C = buf.nz;
+                ((PlayerState*)p2)->unk660 = buf.g38;
+                *(u8*)&((PlayerState*)p2)->unk681 = 0;
                 if ((u32)buf.hitObj != 0)
                 {
                     Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(p2 + 0x664), (f32*)(p2 + 0x668),
                                                    (f32*)(p2 + 0x66c), buf.hitObj);
-                    *(int*)(p2 + 0x67c) = buf.hitObj;
+                    ((PlayerState*)p2)->unk67C = buf.hitObj;
                 }
                 else
                 {
                     *(f32*)(p2 + 0x664) = end[0];
                     *(f32*)(p2 + 0x668) = end[1];
                     *(f32*)(p2 + 0x66c) = end[2];
-                    *(int*)(p2 + 0x67c) = 0;
+                    ((PlayerState*)p2)->unk67C = 0;
                 }
                 return 6;
             }
@@ -4459,23 +4459,23 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
             {
                 continue;
             }
-            *(f32*)(p2 + 0x654) = buf.nx;
-            *(f32*)(p2 + 0x658) = buf.ny;
-            *(f32*)(p2 + 0x65c) = buf.nz;
-            *(f32*)(p2 + 0x660) = buf.g38;
-            *(u8*)(p2 + 0x681) = 0;
+            ((PlayerState*)p2)->unk654 = buf.nx;
+            ((PlayerState*)p2)->unk658 = buf.ny;
+            ((PlayerState*)p2)->unk65C = buf.nz;
+            ((PlayerState*)p2)->unk660 = buf.g38;
+            *(u8*)&((PlayerState*)p2)->unk681 = 0;
             if ((u32)buf.hitObj != 0)
             {
                 Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(p2 + 0x664), (f32*)(p2 + 0x668),
                                                (f32*)(p2 + 0x66c), buf.hitObj);
-                *(int*)(p2 + 0x67c) = buf.hitObj;
+                ((PlayerState*)p2)->unk67C = buf.hitObj;
             }
             else
             {
                 *(f32*)(p2 + 0x664) = end[0];
                 *(f32*)(p2 + 0x668) = end[1];
                 *(f32*)(p2 + 0x66c) = end[2];
-                *(int*)(p2 + 0x67c) = 0;
+                ((PlayerState*)p2)->unk67C = 0;
             }
             return 0xd;
         case 3:
@@ -4555,10 +4555,10 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                *(f32*)(p2 + 0x60c) = buf.nx;
-                *(f32*)(p2 + 0x610) = buf.ny;
-                *(f32*)(p2 + 0x614) = buf.nz;
-                *(f32*)(p2 + 0x618) = buf.nw;
+                ((PlayerState*)p2)->unk60C = buf.nx;
+                ((PlayerState*)p2)->unk610 = buf.ny;
+                ((PlayerState*)p2)->unk614 = buf.nz;
+                ((PlayerState*)p2)->unk618 = buf.nw;
                 return 0xb;
             }
         case 11:
@@ -4573,7 +4573,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                if (*(f32*)(p2 + 0x878) <= lbl_803E7EA4)
+                if (((PlayerState*)p2)->unk878 <= lbl_803E7EA4)
                 {
                     for (k = 0; k < 0x4b; k++)
                     {
@@ -4592,7 +4592,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
                                                          -1, NULL);
                     }
-                    *(f32*)(p2 + 0x878) = lbl_803E7F30;
+                    ((PlayerState*)p2)->unk878 = lbl_803E7F30;
                 }
             }
             else
@@ -4614,7 +4614,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
             if ((*(int (*)(int, int))*(int*)((char*)*(int*)(cur + 0x68) + 0x20))(cur, obj) !=
                 0)
             {
-                *(int*)(p2 + 0x7f0) = cur;
+                ((PlayerState*)p2)->unk7F0 = cur;
                 return 0xa;
             }
             objs++;
