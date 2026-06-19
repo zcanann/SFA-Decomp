@@ -2497,7 +2497,6 @@ extern void GXSetCopyFilter(int a, void* b, int c, void* d);
 extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);
-extern int isWidescreen(void);
 extern void* memcpy(void* d, const void* s, int n);
 extern f32 lbl_803DED28, lbl_803DED2C, lbl_803DED30, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, lbl_803DED78, lbl_803DED7C;

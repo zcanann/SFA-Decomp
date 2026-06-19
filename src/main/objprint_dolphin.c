@@ -3526,7 +3526,6 @@ extern void lightGetColor(int light, u8* r, u8* g, u8* b);
 extern void modelLightStruct_selectObjectLights(u8* model, int* arr, u32 n, s32* cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
 extern int modelLightStruct_getProjectedLightChannelPreference(int light);
-extern void modelLightChannels_applyGXControls(void);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);

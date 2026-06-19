@@ -745,7 +745,6 @@ void fn_80059A50(int pageIndex)
 extern f32 lbl_803DCE5C;
 extern f32 lbl_803DCE60;
 extern f32 lbl_803DCE64;
-extern void doPendingMapLoads(void);
 
 void loadMapForCameraPos(float x, float y, float z)
 {
@@ -1467,7 +1466,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
-extern void Obj_ResetObjectSystem(void);
 extern void textureFree(int id);
 extern void voxmaps_resetLoadedMaps(void);
 extern void textureFreeFn_8012fcec(void);
@@ -2553,11 +2551,9 @@ extern f32 lbl_803DB62C;
 extern int lbl_803DCE00;
 extern u8 lbl_803DCEBD;
 extern f32 lbl_803DEBD0;
-extern void mapInitFn_80069990(void);
 extern void mapInitFn_8006fccc(void);
 extern void setSaveGameLoadingFlag(void);
 extern void clearSaveGameLoadingFlag(void);
-extern void trackIntersect(void);
 extern void mapSetupPlayer(void);
 extern int SaveGame_getCamActionNo(void);
 extern u8* saveGameGetEnvState(void);
@@ -2565,8 +2561,6 @@ extern void getEnvfxActImmediately(void* obj, void* target, int effectId, int fl
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void skyFn_80088c94(int idx, u8 on);
 extern void skyFn_80088e54(f32 a, int on);
-extern void Pause_SetDisabled(int);
-extern void Pause_ResetMenuFrameCounter(void);
 
 void beginLoadingMap(void)
 {
@@ -2778,9 +2772,7 @@ void beginLoadingMap(void)
 extern int mapGetDirIdx(int mapId);
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);
-extern void loadModelAndAnimTabs(void);
 extern int getCurrentDataFile(int id);
-extern void setShadowFlag_803db658(int v);
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;
 extern int lbl_803DCE1C;

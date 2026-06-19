@@ -29,7 +29,6 @@
 
 extern u32 randomGetRange(int min, int max);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int atan2_8002178c(f32 dx, f32 dz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
@@ -873,7 +872,6 @@ extern void LandedArwing_UpdateBounceFade(void);
 extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
 
-extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 extern void fn_80167550(int* obj);
 
 void dll_D3_update(int* obj)

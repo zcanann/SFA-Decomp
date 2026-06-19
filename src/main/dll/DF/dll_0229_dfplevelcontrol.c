@@ -17,7 +17,6 @@ extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 extern s16 lbl_80329848[];
-extern int dbstealerworm_stateHandlerB06();
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
 

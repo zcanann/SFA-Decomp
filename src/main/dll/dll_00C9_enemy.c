@@ -196,7 +196,6 @@ extern void Obj_FreeObject(int obj);
 extern u32 GameBit_Get(int bit);
 extern int getCurUiDll(void);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int isInBounds(f32 x, f32 z);
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern void hudFn_8011f38c(int a);

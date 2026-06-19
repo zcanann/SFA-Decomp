@@ -36,4 +36,9 @@ STATIC_ASSERT(offsetof(PathControlInterface, advance) == 0x18);
 STATIC_ASSERT(offsetof(PathControlInterface, attachObject) == 0x20);
 STATIC_ASSERT(offsetof(PathControlInterface, sampleHeight) == 0x24);
 
+
+/* extern-cleanup: consolidated prototypes */
+void walkPath_writeU16LE(int pathId, u8* out);
+int fn_8004B218(void* search, int timeout);
+
 #endif /* MAIN_DLL_PATH_CONTROL_INTERFACE_H_ */

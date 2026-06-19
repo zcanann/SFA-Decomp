@@ -462,7 +462,6 @@ int timerCountDown(f32* p)
 extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int);
-extern void subtitleFn_8001b700(void);
 extern void subtitleStart(int);
 extern u32 lbl_803DB718;
 
@@ -663,7 +662,6 @@ void objSeqInitFn_80080078(SeqSortPair* arr, int n)
 
 extern void debugPrintf(char* fmt, ...);
 extern char sEndObjSequenceMaxFreesError[];
-extern void Pause_ResetMenuFrameCounter(void);
 extern void AudioStream_CancelPrepared(void);
 extern void Obj_FreeObject(int obj);
 extern void* lbl_803DD0B8;

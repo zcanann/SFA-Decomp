@@ -64,11 +64,8 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
 
 extern void titlescreen_free(u8 * obj);
-extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
-extern void titlescreen_release(void);
-extern void titlescreen_initialise(void);
 extern f32 lbl_803E23E8;
 extern void Obj_FreeObject(void*);
 extern f32 lbl_803E23B8;
@@ -167,7 +164,6 @@ extern void OSRestoreInterrupts(int level);
 extern void VISetPreRetraceCallback(void* cb);
 extern void VISetPostRetraceCallback(void* cb);
 extern void GXSetBreakPtCallback(void* cb);
-extern void __GXAbortWaitPECopyDone(void);
 extern void VISetNextFrameBuffer(void* fb);
 extern void VIFlush(void);
 extern void VIWaitForRetrace(void);

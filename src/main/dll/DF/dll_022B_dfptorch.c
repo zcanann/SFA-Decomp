@@ -16,7 +16,6 @@ extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
 extern ModgfxInterface** gModgfxInterface;
 extern f32 timeDelta;
-extern void fn_80202EF0(int obj, int p2);
 extern f32 lbl_803E63E4;
 extern f32 lbl_803E63E8;
 extern f32 lbl_803E63E0;
@@ -82,7 +81,6 @@ void DFP_Torch_init(int obj, int def)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }
 
-void fn_80202EF0(int obj, int p2);
 
 #pragma opt_common_subs off
 #pragma fp_contract off

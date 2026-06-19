@@ -822,7 +822,6 @@ extern u8* lbl_803DCE78;
 extern s16 lbl_803DCEBA;
 extern u8 lbl_803DCEBC;
 extern u8 lbl_803DCEBD;
-extern void Pause_SetDisabled(int);
 
 #pragma peephole off
 void warpToMap(int idx, s8 transType)
@@ -2061,7 +2060,6 @@ extern void modelLightStruct_setSpecularAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setAngularAttenuation(void* light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, int a);
 extern void modelLightStruct_loadChannelLight(int idx, void* light, int model);
-extern void modelLightChannels_applyGXControls(void);
 extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;
 
@@ -2235,7 +2233,6 @@ void loadTextureFiles(void)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern u8 lbl_803DCA40;
-extern void gameUiResetMenuState(void);
 extern void mapReload(void);
 extern void blankScreen(int);
 

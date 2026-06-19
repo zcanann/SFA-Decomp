@@ -82,7 +82,6 @@ extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
-extern int fn_8004B218(void* search, int timeout);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
 extern void** ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void** ObjGroup_GetObjects(int group, int* countOut);

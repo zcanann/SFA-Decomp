@@ -9,11 +9,9 @@
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void gameTextSetDrawFunc(void* callback);
-extern void creditsStart_(void);
 extern void titleScreenShowCopyright(u8 param_1);
 extern void gameTextBoxFn_80134d40(int param_1, int param_2, int param_3);
 extern void titleScreenPositionElements(f32 param_1, f32 param_2);
-extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
 
@@ -62,7 +60,6 @@ extern void padClearAnalogInputX(int controller);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern u32 getButtonsJustPressed(int controller);
 extern void loadUiDll(int id);
-extern void doNothing_onSaveSelectScreenExit(void);
 extern void mapUnload(int mapId, u32 flags);
 extern void titleScreenFn_8005cdd4(int arg);
 extern void setDrawLights(int arg);
@@ -76,7 +73,6 @@ extern void titleScreenFn_80130464(u8 v);
 extern void setLinkNotRotated(void);
 extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
-extern void titleScreenFn_801368d4(void);
 extern void saveFn_8007d960(int);
 extern u8 framesThisStep;
 extern u8 lbl_803DB424;

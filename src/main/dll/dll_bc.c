@@ -12,7 +12,6 @@
 
 extern int lbl_803DD518; /* active camera action id (.sbss) */
 
-extern int gameTextFn_80134be8(void);
 extern void setAButtonIcon(int kind);
 
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)

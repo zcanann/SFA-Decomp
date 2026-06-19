@@ -52,10 +52,7 @@ extern f32 sqrtf(f32 x);
 extern int isInWalkGroupOrPatch(f32 * pos);
 extern void ObjHits_SyncObjectPosition(u8 * obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
-extern int getPatchGroup(f32* pos, int patchGroup);
-extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int trickyDebugPrint(const char* fmt, ...);
-extern void trickyReportError(const char* fmt, ...);
 extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
 extern u16 Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
@@ -75,7 +72,6 @@ extern void curveFn_800da23c(RomCurveWalker* route);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
-extern int fn_8004B218(void* search, int timeout);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, int a, int b);
 

@@ -16,4 +16,8 @@ typedef struct DimMagicBridgeState {
     u8 pad66[2];
 } DimMagicBridgeState;
 
+
+/* extern-cleanup: consolidated prototypes */
+void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
+
 #endif

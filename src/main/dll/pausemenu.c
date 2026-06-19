@@ -33,7 +33,6 @@ extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern int randomGetRange(int lo, int hi);
 extern void drawFn_8011e8d8(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void drawFn_8011eb3c(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 gameTextFn_80019c00(void);
 extern void Camera_SetCurrentViewIndex(s32 idx);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_SetFovY(f32 fovy);

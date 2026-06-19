@@ -28,7 +28,6 @@ extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* poi
                                 void* scratch, f32 scaleX, f32 scaleZ);
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
-extern void fn_8003A230(int obj, void* p, f32 f);
 extern void characterDoEyeAnims(int obj, void* p);
 extern u8 lbl_803268B4[];
 extern f32 timeDelta;

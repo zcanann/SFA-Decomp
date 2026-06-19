@@ -348,4 +348,9 @@
 #define SFXand_spitout 820
 #define SFXdrak_roar1 826
 
+
+/* extern-cleanup: consolidated prototypes */
+void titleScreenTextDrawFunc(void);
+void creditsStart_(void);
+
 #endif /* MAIN_AUDIO_SFX_IDS_H_ */

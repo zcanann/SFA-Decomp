@@ -30,12 +30,10 @@
 #include "main/objlib.h"
 
 extern f32 Vec_xzDistance(void* a, void* b);
-extern int atan2_8002178c(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
-extern void trickyReportError(const char* fmt, ...);
 
 extern void trickyDebugPrint(char* fmt, ...);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);

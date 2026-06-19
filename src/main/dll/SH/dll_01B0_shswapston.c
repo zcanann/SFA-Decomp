@@ -241,7 +241,6 @@ extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 counter);
 extern void warpToMap(int mapId, int spawnId);
-extern void subtitleFn_8001b700(void);
 extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 extern f32 timeDelta;

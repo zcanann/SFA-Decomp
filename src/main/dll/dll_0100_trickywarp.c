@@ -26,7 +26,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
-extern int getPatchGroup(f32* pos, int patchGroup);
 
 extern f32 lbl_803E38A0;
 

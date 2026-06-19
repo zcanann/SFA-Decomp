@@ -17,4 +17,8 @@ typedef struct DfpTorchState
     u8 unk0E[2];
 } DfpTorchState;
 
+
+/* extern-cleanup: consolidated prototypes */
+void fn_80202EF0(int obj, int p2);
+
 #endif

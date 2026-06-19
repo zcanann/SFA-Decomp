@@ -14,7 +14,6 @@ extern u32 GameBit_Set(int eventId, int value);
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern u8 fn_801334E0(void);
 extern void showHelpText(int textId);
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

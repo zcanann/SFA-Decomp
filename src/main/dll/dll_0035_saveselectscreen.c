@@ -30,7 +30,6 @@ typedef struct SaveSelectPanel
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void textureFree(void* resource);
-extern void doNothing_onSaveSelectScreenExit(void);
 extern void loadUiDll(int id);
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* textureLoadAsset(int id);
@@ -82,7 +81,6 @@ extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 extern int sprintf(char* dst, const char* fmt, ...);
 extern void gameTextSetDrawFunc(void* fn);
-extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern void gameTextSetColor(int r, int g, int b, u8 a);
@@ -107,7 +105,6 @@ extern void gplayNewGame(char* name, int slot);
 extern char* loadFileByPath(char* path, int a, int b);
 extern void* memcpy(void* dst, void* src, int n);
 extern void fn_80296B70(int arg);
-extern void titleScreenFn_801368d4(void);
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 extern char sFrontendFoxName;

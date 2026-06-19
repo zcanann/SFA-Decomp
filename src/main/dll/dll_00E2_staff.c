@@ -772,7 +772,6 @@ void objSetAnimField48to0(int* obj)
 }
 
 
-extern void quakeSpellFn_8016cee8(int* obj, int* x);
 void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
 
 #pragma dont_inline on

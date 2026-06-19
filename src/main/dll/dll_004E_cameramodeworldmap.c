@@ -38,7 +38,6 @@ extern int getButtonsHeld(int pad);
 extern int getButtonsJustPressed(int pad);
 extern int padGetCX(int pad);
 extern int padGetCY(int pad);
-extern int isWidescreen(void);
 extern void fn_8012DDB8(int mode);
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;

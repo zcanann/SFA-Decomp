@@ -12,7 +12,6 @@
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E3058;
 
-extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 
 typedef struct SkeetlaWallState
 {

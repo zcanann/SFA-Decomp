@@ -8,7 +8,6 @@ extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern u32 ObjHits_RecordObjectHit();
 extern f32 lbl_803E3CC0;
-extern void disableHeavyFog(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
 extern f32 lbl_803E3C90;

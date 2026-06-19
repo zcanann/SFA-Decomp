@@ -242,9 +242,7 @@ typedef struct
 extern AssetReq lbl_8033BF88;
 extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
-extern void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 extern int textureLoad(int id, int flag);
-extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 #pragma scheduling on
 #pragma peephole on
@@ -631,7 +629,6 @@ void gameTextInitFn_8001a234(void);
 
 void gameTextRun(void);
 
-void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 
 extern void videoInit(void* rmode, int arg);
 extern void setDisplayCopyFilter(void);
@@ -656,9 +653,7 @@ extern void loadTextureFiles(void);
 extern void initMapBlocks(void);
 extern void ObjModel_InitResourceCaches(void);
 extern void gameTextInit(void);
-extern void Obj_InitObjectSystem(void);
 extern void fn_80137998(void);
-extern void mapInitFn_80069990(void);
 extern void initTextures(void);
 extern void mapInitFn_8006fccc(void);
 extern void initGameTimer(void);
@@ -879,17 +874,13 @@ void init(void)
 
 void Obj_UpdateAllObjects(u8 flags);
 
-extern void playerUpdateFn_8005649c(void);
 
-void Obj_InitObjectSystem(void);
 
 extern void uiDll_runFrameStartAndLoadNext(void);
 extern u32 getButtonsJustPressed(int pad);
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void uiDll_runFrameEndAndLoadNext(void);
-extern void trackIntersect(void);
-extern void doPendingMapLoads(void);
 extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern void curUiDllDraw(int a, int b, int c, int d);
@@ -1023,7 +1014,6 @@ extern void debugPrintDraw(int a);
 extern void drawRect(f32 a, f32 b, int w, int h);
 extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
 extern void objRenderFuzz(void);
-extern void subtitleUpdateAndDraw(int a);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
 
@@ -1086,10 +1076,8 @@ extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
 extern void mapUnload(int a, int b);
 extern void fn_801375A0(void);
-extern void setForceLoadImmediately(void);
 extern void loadMapAndParent(int map);
 extern void mapLoadDataFiles(int map);
-extern void clearForceLoadImmediately(void);
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)
@@ -1147,11 +1135,9 @@ void doQueuedLoads(void)
     }
 }
 
-void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 
-void subtitleUpdateAndDraw(int a);
 
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int id);

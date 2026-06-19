@@ -135,7 +135,6 @@ extern void* mmAlloc(int size, int heap, int flags);
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
-extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern void loadAssetFileById(void** out, int id);
 

@@ -131,7 +131,6 @@ extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
-extern void trickyReportError(const char* fmt, ...);
 extern void objParticleFn_80099d84(int obj, f32 param_1, int param_4, f32 param_2, int param_5);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int param_7,
                               int param_8, int param_9, int param_10);
@@ -311,7 +310,6 @@ typedef struct
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void mapBlockFn_80059c2c(u8 * outFlags);
 extern int ObjModel_ClearBlendChannels(int model);
 extern void characterDoEyeAnims(int obj, void* p);
 extern int fn_80138D7C(int obj, int state);
@@ -846,7 +844,6 @@ extern void fn_801DA9CC(void);
 extern void wcbeacon_aButtonCallback(void);
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
-extern void fn_8003A230(int obj, void* p, f32 f);
 
 #define TRICKY_RESET_COMMAND(state) \
   *(u8 *)((state) + 8) = 1; \
@@ -2926,7 +2923,6 @@ int Tricky_getCurrentCommandType(int* obj, int* out)
 
 extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int param_2);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
-extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
 
 int trickyFn_801451d8(int obj, int state)

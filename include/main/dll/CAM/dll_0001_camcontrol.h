@@ -310,4 +310,8 @@ void Camera_init(void *focus,f32 x,f32 y,f32 z);
 void Camera_release(void);
 void Camera_initialise(void);
 
+
+/* extern-cleanup: consolidated prototypes */
+int gameTextFn_80134be8(void);
+
 #endif /* MAIN_DLL_CAM_CAMCONTROL_H_ */

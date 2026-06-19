@@ -23,4 +23,8 @@ typedef struct HudTextures {
     u8 pad150[0x198 - 0x150];
 } HudTextures;
 
+
+/* extern-cleanup: consolidated prototypes */
+f32 gameTextFn_80019c00(void);
+
 #endif

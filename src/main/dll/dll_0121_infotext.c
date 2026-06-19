@@ -6,8 +6,6 @@ extern int ObjTrigger_IsSet();
 
 extern void objRenderFn_80041018(int obj);
 
-extern void objSetHintTextIdx(int obj, int idx);
-extern u8 fn_801334E0(void);
 extern void showHelpText(s16 id);
 extern f32 timeDelta;
 extern f32 lbl_803E3C80;

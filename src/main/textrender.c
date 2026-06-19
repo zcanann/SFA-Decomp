@@ -2702,7 +2702,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
 
 void* mmAlloc(int size, int type, int flag);
 
-extern void subtitleUpdateAndDraw(int a);
 
 extern int lbl_803DCA08;
 extern f32 lbl_803DCA0C;

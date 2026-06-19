@@ -38,7 +38,6 @@ extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E4A20;
-extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void timeOfDayFn_80055000(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -80,7 +79,6 @@ void dim_levelcontrol_free(int p1)
 }
 
 #pragma dont_inline on
-void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 #pragma dont_inline reset
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);

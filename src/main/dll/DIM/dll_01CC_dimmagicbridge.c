@@ -43,7 +43,6 @@ extern void fn_80065574(int a, int b, int c);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E4A18;
 extern void* Obj_GetPlayerObject(void);
-extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
 extern u8 framesThisStep;

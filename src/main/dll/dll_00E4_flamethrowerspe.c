@@ -316,7 +316,6 @@ extern void dll_F7_free();
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E3388;
-extern void quakeSpellFn_8016cee8(int* obj, int* x);
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
 extern f32 lbl_803E338C;
@@ -1788,4 +1787,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 void staff_update(int* obj);
 
 
-void quakeSpellFn_8016cee8(int* obj, int* obj2);

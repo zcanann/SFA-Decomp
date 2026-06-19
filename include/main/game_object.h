@@ -80,4 +80,38 @@ STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 void Obj_SetActiveHitVolumeBounds(GameObject *obj, int xBound, int zBound, int yBound,
                                   u8 radiusOrHeight, u8 flags);
 
+
+/* extern-cleanup: consolidated prototypes */
+void disableHeavyFog(void);
+void subtitleFn_8001b700(void);
+void trickyReportError(const char* fmt, ...);
+int getCurGameText(void);
+u8 fn_801334E0(void);
+int dbstealerworm_stateHandlerA02();
+int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
+int dbstealerworm_stateHandlerB06();
+void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
+void renderResetFn_8003fc60(void);
+int isWidescreen(void);
+void modelLightChannels_applyGXControls(void);
+void __GXAbortWaitPECopyDone(void);
+void gameUiResetMenuState(void);
+int atan2_8002178c(f32 dx, f32 dz);
+void mapBlockFn_80059c2c(u8 * outFlags);
+void fn_8003A230(int obj, void* p, f32 f);
+int isInBounds(f32 x, f32 z);
+void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
+int getPatchGroup(f32* pos, int patchGroup);
+void objSetHintTextIdx(int obj, int idx);
+void DBstealerwo_setFuncPtrs_80203c78(void);
+int dbstealerworm_stateHandlerA04();
+int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
+int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
+int dbstealerworm_stateHandlerA0A();
+int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
+int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
+int dbstealerworm_stateHandlerA0D();
+int dbstealerworm_stateHandlerA0E();
+int dbstealerworm_stateHandlerB05();
+
 #endif

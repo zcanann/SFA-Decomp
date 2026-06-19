@@ -21,7 +21,6 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern void Rcp_DisableBlurFilter(void);
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
 extern u32 Obj_GetYawDeltaToObject(); /* #57 */

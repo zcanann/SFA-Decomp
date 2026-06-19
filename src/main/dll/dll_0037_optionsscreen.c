@@ -31,8 +31,6 @@ extern f32 lbl_803E1DDC;
 extern f32 lbl_803E1DE0;
 extern f32 lbl_803E1DE4;
 extern u8 shouldShowCredits(void);
-extern void creditsStart_(void);
-extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void gameTextSetDrawFunc(void* fn);
 extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);

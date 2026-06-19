@@ -57,7 +57,6 @@ typedef struct FogcontrolPlacement
 
 extern f32 timeDelta;
 
-extern void disableHeavyFog(void);
 extern f32 lbl_803E4070; /* blend floor (fog off at/below this) */
 extern f32 lbl_803E4074; /* blend ceiling (fully on) */
 extern f32 lbl_803E4078; /* density divisor */

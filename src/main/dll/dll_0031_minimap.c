@@ -121,11 +121,8 @@ extern f32 lbl_803E224C;
 #pragma scheduling off
 #pragma peephole off
 extern void titlescreen_free(u8 * obj);
-extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
-extern void titlescreen_release(void);
-extern void titlescreen_initialise(void);
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(void*);
 extern int Obj_AllocObjectSetup(int a, int b);

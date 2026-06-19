@@ -28,7 +28,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
 extern void gameTimerStop(void);
-extern void disableHeavyFog(void);
 extern void Music_Trigger(int track, int param);
 extern void GameBit_Set(int bit, int val);
 extern int GameBit_Get(int bit);

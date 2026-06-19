@@ -28,4 +28,9 @@ STATIC_ASSERT(offsetof(ScreenTransitionInterface, getProgress) == 0x18);
 
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
+
+/* extern-cleanup: consolidated prototypes */
+void doNothing_onSaveSelectScreenExit(void);
+void titleScreenFn_801368d4(void);
+
 #endif

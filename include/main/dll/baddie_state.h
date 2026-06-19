@@ -179,4 +179,8 @@ STATIC_ASSERT(sizeof(GroundBaddieState) == 0x410);
 STATIC_ASSERT(offsetof(GroundBaddieState, targetState) == 0x402);
 STATIC_ASSERT(offsetof(GroundBaddieState, control) == 0x40C);
 
+
+/* extern-cleanup: consolidated prototypes */
+void fn_8001FEA8(void);
+
 #endif /* MAIN_DLL_BADDIE_STATE_H_ */

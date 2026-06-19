@@ -271,7 +271,6 @@ void mm_free(void* p);
 extern void setGQR7(u32 v);
 
 extern int textureLoad(int id, int flag);
-extern void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 asm
 void setGQR6(register u32 v)

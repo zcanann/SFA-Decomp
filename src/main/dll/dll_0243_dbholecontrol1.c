@@ -110,20 +110,7 @@ int dbstealerworm_stateHandlerB02(int obj, int p);
 extern void Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
 extern int gDBStealerWormStateHandlersB[];
-extern int dbstealerworm_stateHandlerA02();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerB06();
 
 u32
 FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
@@ -695,15 +682,10 @@ int dbstealerworm_stateHandlerB06(int obj, int p2);
 
 int dbstealerworm_stateHandlerA0A(int obj, int p2);
 
-int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
 
-int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
 
-int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
 
-int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
-int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

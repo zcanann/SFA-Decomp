@@ -50,7 +50,6 @@ extern int FUN_8014c78c();
 extern u32 FUN_8014d4c8();
 extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
 extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
-extern void fn_8001FEA8(void);
 extern u8* Obj_GetPlayerObject(void);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);

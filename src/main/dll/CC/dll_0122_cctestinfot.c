@@ -10,10 +10,8 @@
 
 extern void *Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet();
-extern void objSetHintTextIdx(int obj, int idx);
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
-extern u8 fn_801334E0(void);
 extern void showHelpText(s16 id);
 extern f32 timeDelta;
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */

@@ -27,7 +27,6 @@ extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
 
 extern int GameBit_Set(int bit, int value);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
-extern void fn_8001FEA8(void);
 extern void fn_8015039C(void* p1, void* p2);
 extern u32 fn_8014FFB4(void* p1, void* p2, int p3);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);

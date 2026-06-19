@@ -71,4 +71,11 @@ STATIC_ASSERT(offsetof(CameraInterface, func1D) == 0x6C);
 
 extern CameraInterface **gCameraInterface;
 
+
+/* extern-cleanup: consolidated prototypes */
+void Pause_ResetMenuFrameCounter(void);
+void setShadowFlag_803db658(int v);
+void Obj_ResetObjectSystem(void);
+void loadModelAndAnimTabs(void);
+
 #endif /* MAIN_CAMERA_INTERFACE_H_ */

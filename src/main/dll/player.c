@@ -7130,10 +7130,8 @@ int fn_802AD2F4(int obj, int inner, int state)
     return 0;
 }
 
-extern void Pause_ResetMenuFrameCounter(void);
 extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();
-extern int isInBounds(f32 x, f32 z);
 extern int getCurUiDll(void);
 extern void fn_802B249C(int obj, int inner, int state);
 extern void fn_802AFB0C(int obj, int inner, int state);

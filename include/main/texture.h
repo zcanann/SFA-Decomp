@@ -56,4 +56,10 @@ STATIC_ASSERT(sizeof(Texture) == 0x60);
 void *textureLoadAsset(int asset);
 void textureFree(u8 *tex);
 
+
+/* extern-cleanup: consolidated prototypes */
+void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void titlescreen_release(void);
+void titlescreen_initialise(void);
+
 #endif

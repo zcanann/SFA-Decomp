@@ -7275,7 +7275,6 @@ extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8 * a, u8 * b, u8 * c, u8 * d, u8 * e);
 extern void gxErrorFn_80060b40(void);
 extern void modelFn_800292e0(void);
-extern void __GXAbortWaitPECopyDone(void);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
 extern void GXSetCPUFifo(void* fifo);
 extern void GXSetGPFifo(void* fifo);

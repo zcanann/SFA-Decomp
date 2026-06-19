@@ -103,7 +103,6 @@ extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
-extern void renderResetFn_8003fc60(void);
 extern int textureLoadAsset(int id);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);

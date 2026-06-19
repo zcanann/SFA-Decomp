@@ -36,7 +36,6 @@ typedef struct DfpseqpointPlacement
 } DfpseqpointPlacement;
 
 extern f32 lbl_803E63B8;
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern void unlockLevel(int a, int b, int c);
 
 void dfpseqpoint_free(void)
@@ -248,5 +247,4 @@ void dfpseqpoint_update(int obj)
     }
 }
 
-int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 

@@ -100,4 +100,8 @@ extern PollenFragmentConfig lbl_80320574;
 extern PollenFragmentConfig lbl_80320588;
 extern PollenFragmentConfig *lbl_8032059C[];
 
+
+/* extern-cleanup: consolidated prototypes */
+void quakeSpellFn_8016cee8(int* obj, int* x);
+
 #endif /* MAIN_DLL_DLL_13C_H_ */
