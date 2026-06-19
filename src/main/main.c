@@ -47,73 +47,73 @@ void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9)
 {
-    char cVar1;
-    u32 uVar2;
-    int iVar3;
-    short* psVar4;
-    double dVar5;
+    char mode;
+    u32 bit;
+    int extra;
+    short* extraS;
+    double dt;
 
-    cVar1 = *(char*)(*(int*)&((GameObject*)param_9)->anim.placementData + 0x19);
-    if (cVar1 == '\x02')
+    mode = *(char*)(*(int*)&((GameObject*)param_9)->anim.placementData + 0x19);
+    if (mode == '\x02')
     {
-        iVar3 = *(int*)&((GameObject*)param_9)->extra;
+        extra = *(int*)&((GameObject*)param_9)->extra;
         DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-        uVar2 = GameBit_Get((int)*(short*)(iVar3 + 2));
-        if (((uVar2 == 0) && (DAT_803de944 < 0xc9)) &&
-            ((*(char*)(iVar3 + 0xb) == DAT_803de946 && (uVar2 = randomGetRange(0, 2), uVar2 == 0))))
+        bit = GameBit_Get((int)*(short*)(extra + 2));
+        if (((bit == 0) && (DAT_803de944 < 0xc9)) &&
+            ((*(char*)(extra + 0xb) == DAT_803de946 && (bit = randomGetRange(0, 2), bit == 0))))
         {
             (*gPartfxInterface)->spawnObject((void*)param_9, 0x391, NULL, 4, -1, NULL);
         }
     }
     else if (((GameObject*)param_9)->anim.seqId == 0x3c5)
     {
-        iVar3 = *(int*)&((GameObject*)param_9)->extra;
-        *(short*)(iVar3 + 6) = *(short*)(iVar3 + 6) - (short)(int)lbl_803DC074;
+        extra = *(int*)&((GameObject*)param_9)->extra;
+        *(short*)(extra + 6) = *(short*)(extra + 6) - (short)(int)lbl_803DC074;
         ((GameObject*)param_9)->anim.localPosX =
             ((GameObject*)param_9)->anim.velocityX * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosX;
         ((GameObject*)param_9)->anim.localPosY =
             ((GameObject*)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject*)param_9)->anim.localPosY;
-        dVar5 = (double)lbl_803DC074;
+        dt = (double)lbl_803DC074;
         ((GameObject*)param_9)->anim.localPosZ =
-            (float)((double)((GameObject*)param_9)->anim.velocityZ * dVar5 + (double)((GameObject*)param_9)->anim.
+            (float)((double)((GameObject*)param_9)->anim.velocityZ * dt + (double)((GameObject*)param_9)->anim.
                 localPosZ);
-        if (*(short*)(iVar3 + 6) < 1)
+        if (*(short*)(extra + 6) < 1)
         {
-            FUN_80017ac8(dVar5, (double)((GameObject*)param_9)->anim.velocityZ, param_3, param_4, param_5, param_6,
+            FUN_80017ac8(dt, (double)((GameObject*)param_9)->anim.velocityZ, param_3, param_4, param_5, param_6,
                          param_7,
                          param_8, param_9);
         }
     }
-    else if (cVar1 == '\0')
+    else if (mode == '\0')
     {
-        iVar3 = *(int*)&((GameObject*)param_9)->extra;
+        extra = *(int*)&((GameObject*)param_9)->extra;
         DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-        uVar2 = GameBit_Get(0x522);
-        if ((((uVar2 == 0) && (DAT_803de944 < 0xc9)) && (*(char*)(iVar3 + 0xb) == DAT_803de946)) &&
-            (uVar2 = randomGetRange(0, 2), uVar2 == 0))
+        bit = GameBit_Get(0x522);
+        if ((((bit == 0) && (DAT_803de944 < 0xc9)) && (*(char*)(extra + 0xb) == DAT_803de946)) &&
+            (bit = randomGetRange(0, 2), bit == 0))
         {
             (*gPartfxInterface)->spawnObject((void*)param_9, 0x391, NULL, 4, -1, NULL);
         }
     }
-    else if (cVar1 == '\x01')
+    else if (mode == '\x01')
     {
-        psVar4 = ((GameObject*)param_9)->extra;
-        uVar2 = GameBit_Get((int)*psVar4);
-        if (uVar2 != 0)
+        extraS = ((GameObject*)param_9)->extra;
+        bit = GameBit_Get((int)*extraS);
+        if (bit != 0)
         {
             (*gPartfxInterface)->spawnObject((void*)param_9, 0x390, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)param_9, 0x390, NULL, 4, -1, NULL);
-            uVar2 = randomGetRange(0, 1);
-            if (uVar2 != 0)
+            bit = randomGetRange(0, 1);
+            if (bit != 0)
             {
                 (*gPartfxInterface)->spawnObject((void*)param_9, 0x391, NULL, 4, -1, NULL);
             }
         }
-        iVar3 = ObjHits_GetPriorityHit(param_9, 0x0, 0x0, 0x0);
-        if ((short)iVar3 != 0)
+        extra = ObjHits_GetPriorityHit(param_9, 0x0, 0x0, 0x0);
+        if ((short)extra != 0)
         {
-            uVar2 = GameBit_Get((int)*psVar4);
-            GameBit_Set((int)*psVar4, 1 - uVar2);
+            bit = GameBit_Get((int)*extraS);
+            GameBit_Set((int)*extraS, 1 - bit);
         }
     }
     return;
