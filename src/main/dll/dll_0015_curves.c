@@ -1598,7 +1598,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->segmentLocalPoints = segmentLocalPoints;
     for (i = 0; i < count; i++)
     {
-        state->segmentSourceTypes[i] = types[i];
+        state->segmentSourceTypes[i] = (s8)types[i];
         state->segmentHitTypes[i] = -1;
         state->segmentRadii[i] = radii[i];
     }
