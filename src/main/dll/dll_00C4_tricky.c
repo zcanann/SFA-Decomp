@@ -117,7 +117,7 @@ extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
-extern int trickyFindNearestUsableBaddie(int obj, int param_2, f32 maxRadius);
+extern int trickyFindNearestUsableBaddie(int obj, f32 maxRadius, int param_3);
 extern void fn_8013ADFC(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
@@ -540,7 +540,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else
         {
-            ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), 1, lbl_803E2524);
+            ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), lbl_803E2524, 1);
             if ((void*)ref != NULL)
             {
                 promptA = true;
@@ -1301,7 +1301,7 @@ void Tricky_update(int obj)
             default:
                 if (((TrickyState*)state)->unk08 == 1 && ((TrickyState*)state)->unkD != 0 && (f & 0x20000) == 0)
                 {
-                    step = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, 0, lbl_803E24D8);
+                    step = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E24D8, 0);
                     if (step != 0)
                     {
                         *(int*)&((TrickyState*)state)->followObj = step;
