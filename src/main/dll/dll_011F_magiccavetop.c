@@ -44,7 +44,7 @@ typedef struct MagiccavetopState
 extern f32 timeDelta;
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
-extern f32 lbl_803E3C4C;
+extern f32 gMagicCaveTopFadeMax;
 extern void stopRumble2(void);
 extern void staffSetGlow(void* a, int b, int c);
 extern int mapGetDirIdx(int idx);
@@ -67,7 +67,7 @@ extern f32 lbl_803E3C3C;
 extern f32 lbl_803E3C40;
 extern f32 lbl_803E3C44;
 extern f32 lbl_803E3C48;
-extern f32 lbl_803E3C50;
+extern f32 gMagicCaveTopAlphaMax;
 extern f32 lbl_803E3C54;
 extern f32 lbl_803E3C58;
 extern f32 lbl_803E3C5C;
@@ -85,7 +85,7 @@ void magiccavetop_init(int* obj, s8* def)
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | 0x6000);
     if (GameBit_Get(((MagiccavetopObjectDef*)def)->unk1C) != 0)
     {
-        ((MagiccavetopState*)state)->unk4 = lbl_803E3C4C;
+        ((MagiccavetopState*)state)->unk4 = gMagicCaveTopFadeMax;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
@@ -324,15 +324,15 @@ void magiccavetop_update(int* obj)
             Sfx_PlayFromObject(obj, 0x4a2);
         }
         ((MagiccavetopState*)sub)->unk4 += timeDelta;
-        if (((MagiccavetopState*)sub)->unk4 > lbl_803E3C4C)
+        if (((MagiccavetopState*)sub)->unk4 > gMagicCaveTopFadeMax)
         {
-            ((MagiccavetopState*)sub)->unk4 = lbl_803E3C4C;
+            ((MagiccavetopState*)sub)->unk4 = gMagicCaveTopFadeMax;
             ((GameObject*)obj)->anim.alpha = 0xff;
         }
         else
         {
             ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(lbl_803E3C50 * (((MagiccavetopState*)sub)->unk4 / lbl_803E3C4C));
+                (u8)(int)(gMagicCaveTopAlphaMax * (((MagiccavetopState*)sub)->unk4 / gMagicCaveTopFadeMax));
         }
     }
     else

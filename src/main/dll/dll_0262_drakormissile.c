@@ -257,7 +257,7 @@ void drakormissile_update(int obj)
         {
             f32 life = *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) + timeDelta;
             *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) = life;
-            if (life > lbl_803E6968)
+            if (life > gDrakorMissileFadeOutDuration)
             {
                 Obj_FreeObject(obj);
                 return;
@@ -290,7 +290,7 @@ void drakormissile_update(int obj)
         {
             player = (int)Obj_GetPlayerObject();
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-                lbl_803DC2BC)
+                gDrakorMissileProximityDetonateDist)
             {
                 result |= 1;
             }

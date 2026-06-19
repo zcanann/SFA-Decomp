@@ -82,8 +82,8 @@ typedef union LargeCrateVariantRemap
     int words[3];
 } LargeCrateVariantRemap;
 
-extern LargeCrateVariantRemap lbl_802C2280;
-extern LargeCrateVariantRemap lbl_802C228C;
+extern LargeCrateVariantRemap gLargeCrateVariantARemap;
+extern LargeCrateVariantRemap gLargeCrateVariantBRemap;
 
 typedef struct
 {
@@ -599,8 +599,8 @@ void largecrate_init(int obj, u8* initData)
     LargeCrateVariantRemap constArrB;
     short id;
 
-    constArrA = lbl_802C2280;
-    constArrB = lbl_802C228C;
+    constArrA = gLargeCrateVariantARemap;
+    constArrB = gLargeCrateVariantBRemap;
 
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = LargeCrate_SeqFn;

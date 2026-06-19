@@ -3,7 +3,7 @@
  *
  * On init the per-rock scale is derived from the placement params, the
  * capsule hitbox is sized from the sub-object bounds, and a config-table
- * variant is chosen by seqId (entry 1 of lbl_803236B8 for seqId 0x600,
+ * variant is chosen by seqId (entry 1 of gRockfallCfgTable for seqId 0x600,
  * else entry 0). update() runs the fall state machine:
  *   mode 0 armed   - count down fallDelay while the player is in xz range
  *   mode 1 falling - gravity integrate Y, scrape sfx, until floorY+restOffsetY
@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);
-extern void* lbl_803DDB40;
+extern void* gRockfallResource;
 extern f32 lbl_803E4708;
 extern void objRenderFn_8003b8f4(int* obj);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -34,8 +34,8 @@ extern f32 lbl_803E4704;
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern u8 lbl_803236B8[];
-extern f32 lbl_803E4730;
+extern u8 gRockfallCfgTable[];
+extern f32 gRockfallScaleDivisor;
 extern void fn_800628CC(int* obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfx);
@@ -49,7 +49,7 @@ extern f32 lbl_803E4710;
 extern f32 lbl_803E4714;
 extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
-extern f32 lbl_803E4720;
+extern f32 gRockfallGravity;
 
 void crrockfall_free(void)
 {
@@ -62,7 +62,7 @@ void crrockfall_hitDetect(void)
 int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_getObjectTypeId(void) { return 0x0; }
 
-void crrockfall_initialise(void) { lbl_803DDB40 = NULL; }
+void crrockfall_initialise(void) { gRockfallResource = NULL; }
 
 #pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -113,11 +113,11 @@ f32 fn_801ACCFC(int obj)
 #pragma peephole on
 void crrockfall_release(void)
 {
-    if (lbl_803DDB40 != NULL)
+    if (gRockfallResource != NULL)
     {
-        Resource_Release(lbl_803DDB40);
+        Resource_Release(gRockfallResource);
     }
-    lbl_803DDB40 = NULL;
+    gRockfallResource = NULL;
 }
 
 #pragma scheduling off
@@ -132,7 +132,7 @@ void crrockfall_init(int* obj, u8* params)
     state->startY = ((GameObject*)obj)->anim.localPosY;
     state->fallDelay = *(s16*)((char*)params + 0x1e);
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-    params[0x1b] / lbl_803E4730;
+    params[0x1b] / gRockfallScaleDivisor;
 
     sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
     if (sub != NULL)
@@ -157,11 +157,11 @@ void crrockfall_init(int* obj, u8* params)
 
     if (((GameObject*)obj)->anim.seqId == 0x600)
     {
-        state->cfg = (CrRockfallCfgEntry*)&lbl_803236B8[0xc];
+        state->cfg = (CrRockfallCfgEntry*)&gRockfallCfgTable[0xc];
     }
     else
     {
-        state->cfg = (CrRockfallCfgEntry*)lbl_803236B8;
+        state->cfg = (CrRockfallCfgEntry*)gRockfallCfgTable;
     }
 }
 
@@ -172,9 +172,9 @@ void crrockfall_update(int* obj)
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (lbl_803DDB40 == NULL)
+    if (gRockfallResource == NULL)
     {
-        lbl_803DDB40 = Resource_Acquire(91, 1);
+        gRockfallResource = Resource_Acquire(91, 1);
     }
 
     if (state->floorFound == 0)
@@ -292,7 +292,7 @@ void crrockfall_update(int* obj)
                 *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
                 *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
                 ((GameObject*)obj)->anim.velocityY =
-                    lbl_803E4720 * timeDelta + ((GameObject*)obj)->anim.velocityY;
+                    gRockfallGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.localPosY =
                     ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
                 if (((GameObject*)obj)->anim.localPosY <

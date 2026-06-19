@@ -12,7 +12,7 @@ typedef struct CrRockfallCfgEntry
 
 typedef struct CrRockfallState
 {
-    CrRockfallCfgEntry* cfg; /* lbl_803236B8 entry 0, or entry 1 for type 0x600 */
+    CrRockfallCfgEntry* cfg; /* gRockfallCfgTable entry 0, or entry 1 for type 0x600 */
     f32 floorY; /* probed landing height */
     f32 startY; /* obj Y at init; fade fraction reference */
     u8 mode; /* 0 armed, 1 falling, 2 resting, 3 shattered */
