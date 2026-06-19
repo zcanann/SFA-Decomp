@@ -24,8 +24,6 @@ extern u32 FUN_8003b818();
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -170,35 +168,22 @@ extern f32 lbl_803E3420;
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 extern void animatedobj_free();
-extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update(int* obj);
 extern void animatedobj_init();
-extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-extern void dim2roofrub_update(int* obj);
 extern void dim2roofrub_init();
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_free(int* obj);
 extern void staff_update();
 extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
-extern void staff_modelMtxFn(int* obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
-extern s16 staff_getHitReactValue(int* obj);
-extern s32 staff_func16(int* obj);
 extern void fireball_free();
-extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
-extern void flamethrowerspe_func0B(int* obj);
-extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void shield_update();
-extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E33F0;

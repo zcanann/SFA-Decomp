@@ -43,8 +43,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -320,44 +318,31 @@ void dim2roofrub_free(int* obj);
 
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
-extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update(int* obj);
 extern void animatedobj_init();
-extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-extern void dim2roofrub_update(int* obj);
 extern void dim2roofrub_init();
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_free(int* obj);
 extern void staff_update();
 extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
-extern void staff_modelMtxFn(int* obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
-extern s16 staff_getHitReactValue(int* obj);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-extern s32 staff_func16(int* obj);
 extern void fireball_free();
-extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
-extern void flamethrowerspe_func0B(int* obj);
-extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void shield_update();
 
 void restartmarker_init(int* obj, int* state);
 
-extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 void staffFn_80170380(int* obj, int cmd);
@@ -786,7 +771,6 @@ void objSetAnimField48to0(int* obj)
     *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x48) = v;
 }
 
-void flamethrowerspe_func0B(int* obj);
 
 extern void quakeSpellFn_8016cee8(int* obj, int* x);
 void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
@@ -967,7 +951,6 @@ void staff_init(int* obj)
     *(int*)(lbl_803AC6B8 + 0x1c) = 0;
 }
 
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 lbl_803E32B4;
 extern f32 lbl_803E3320;
@@ -1030,11 +1013,8 @@ extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
-void dim2roofrub_update(int* obj);
 
 void fireball_init(int* obj);
 extern f32 mathSinf(f32 v);
@@ -1042,7 +1022,6 @@ extern f32 mathCosf(f32 x);
 
 void fireball_update(int* obj);
 
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void shield_update(int* obj);
 
@@ -1085,7 +1064,6 @@ void staff_initialise(void)
     }
 }
 
-void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void quakeSpellTextureFn_8007366c(int param);
 extern f32* Camera_GetViewMatrix(void);

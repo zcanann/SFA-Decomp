@@ -53,8 +53,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -247,36 +245,23 @@ extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
-extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update(int* obj);
 extern void animatedobj_init();
-extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-extern void dim2roofrub_update(int* obj);
 extern void dim2roofrub_init();
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_free(int* obj);
 extern void staff_update();
 extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
-extern void staff_modelMtxFn(int* obj, int p4, int p5);
 extern void staff_hitDetectGeometry(int* obj);
-extern s16 staff_getHitReactValue(int* obj);
-extern s32 staff_func16(int* obj);
 extern void fireball_free();
-extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
-extern void flamethrowerspe_func0B(int* obj);
-extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void shield_update(int* obj);
 extern void dll_F7_free();
-extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);
@@ -839,7 +824,6 @@ int* fn_801702D4(int* obj, f32 fv)
 
 void gcbaddieshield_update(int* obj);
 
-void staff_free(int* obj);
 
 void fireball_free(int* obj);
 
@@ -859,7 +843,6 @@ void animatedobj_free(int* obj, int seqFlag);
 
 void staff_init(int* obj);
 
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void dll_F7_init(int* obj, int* params);
 
@@ -875,19 +858,14 @@ void mikabomb_init(int* obj);
 
 void baddieinterestp_update(int* obj);
 
-void animatedobj_update(int* obj);
 
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
-void dim2roofrub_update(int* obj);
 
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void shield_update(int* obj)
 {

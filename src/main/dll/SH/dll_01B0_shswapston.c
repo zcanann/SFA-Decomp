@@ -411,7 +411,6 @@ typedef struct WarpstoneState
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
 
-extern u32 GameBit_Get(int eventId);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDistance);
 extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
 extern s16* objModelGetVecFn_800395d8(int obj, int index);

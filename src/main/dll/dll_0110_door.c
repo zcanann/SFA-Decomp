@@ -47,7 +47,6 @@ extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
-extern u32 GameBit_Get(int eventId);
 
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);

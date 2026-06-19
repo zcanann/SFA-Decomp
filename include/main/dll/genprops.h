@@ -175,4 +175,20 @@ extern ObjectDescriptor dll_F7;
 int depthoffieldpoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 int Fireball_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
+int kaldachompspit_getObjectTypeId(void);
+int kaldachompspit_getExtraSize(void);
+void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void animatedobj_update(int* obj);
+void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
+void dim2roofrub_update(int* obj);
+void staff_free(int* obj);
+void staff_modelMtxFn(int* obj, int p4, int p5);
+s16 staff_getHitReactValue(int* obj);
+s32 staff_func16(int* obj);
+void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void flamethrowerspe_func0B(int* obj);
+void flamethrowerspe_render(void);
+void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+
 #endif /* MAIN_DLL_GENPROPS_H_ */

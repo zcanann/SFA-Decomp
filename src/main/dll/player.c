@@ -14691,7 +14691,6 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
 }
 
 extern f32 lbl_803E80C0;
-extern f32 lbl_803DC6B8;
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
