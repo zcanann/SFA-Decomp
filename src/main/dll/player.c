@@ -11149,7 +11149,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
             {
                 int inner = *(int*)&((GameObject*)obj)->extra;
-                s8* p = *(s8**)&((PlayerState *)inner)->flags360;
+                s8* p = *(s8**)&((PlayerState *)inner)->playerStatus;
                 int n = *p - 1;
                 if (n < 0)
                 {
@@ -11160,7 +11160,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     n = p[1];
                 }
                 *p = (s8)n;
-                if (**(s8**)&((PlayerState *)inner)->flags360 <= 0)
+                if (**(s8**)&((PlayerState *)inner)->playerStatus <= 0)
                 {
                     playerDie(obj);
                 }
