@@ -139,7 +139,7 @@ extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
-extern u32 DAT_803e3058;
+extern u32 lbl_803E23C8;
 extern char sSidekickCommandDebugTextBlock[];
 extern u32 gTrickyHelperObject;
 extern int gTrickyNearestObject;
@@ -160,6 +160,7 @@ extern f32 lbl_803E24B8;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
 extern f32 lbl_803E247C;
+extern f32 lbl_803E24F8;
 extern f32 lbl_803E2524;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
@@ -488,6 +489,13 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     return;
 }
 
+typedef struct PromptSlotByte
+{
+    u8 slotA : 2;
+    u8 slotB : 2;
+    u8 unk4 : 4;
+} PromptSlotByte;
+
 int Tricky_updateSideCommandPrompts(int obj)
 {
     char cmdByte;
@@ -514,7 +522,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     promptA = false;
     promptB = false;
     promptC = false;
-    promptTable[0] = DAT_803e3058;
+    promptTable[0] = lbl_803E23C8;
     bitVal = GameBit_Get(0x4e4);
     if (bitVal != 0)
     {
@@ -585,15 +593,15 @@ int Tricky_updateSideCommandPrompts(int obj)
         *(u8*)(state + 0xb) = 0;
         if ((cond) && ((*(u32*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7b4) = lbl_803E3188;
-            if ((*(int*)(state + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0))
+            *(float*)(state + 0x7b4) = lbl_803E24F8;
+            if ((*(void**)(state + 0x7b0) == NULL) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0) &&
                     (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                        (cond = FUN_800067f0(objVal, 0x10), !cond))))
+                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
@@ -601,15 +609,15 @@ int Tricky_updateSideCommandPrompts(int obj)
                 flagsB[0] = -1;
                 flagsB[1] = -1;
                 flagsB[2] = -1;
-                if (*(int*)(state + 0x7a8) != 0)
+                if (*(void**)(state + 0x7a8) != NULL)
                 {
-                    flagsB[*(u8*)(state + 0x7bc) >> 6] = '\x01';
+                    flagsB[*(u8*)(state + 0x7bc) >> 6 & 3] = '\x01';
                 }
-                if (*(int*)(state + 0x7b0) != 0)
+                if (*(void**)(state + 0x7b0) != NULL)
                 {
                     flagsB[*(u8*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(int*)(state + 0x7b8) != 0)
+                if (*(void**)(state + 0x7b8) != NULL)
                 {
                     flagsB[*(u8*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
@@ -633,25 +641,24 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     bitVal = 0xffffffff;
                 }
-                *(u8*)(state + 0x7bc) =
-                    (u8)((bitVal & 0xff) << 4) & 0x30 | *(u8*)(state + 0x7bc) & 0xcf;
-                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
+                ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
+                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
                 *(u32*)(state + 0x7b0) = spawnedObj;
                 ObjLink_AttachChild(objVal, *(int*)(state + 0x7b0), *(u8*)(state + 0x7bc) >> 4 & 3);
             }
         }
-        else if (*(int*)(state + 0x7b0) != 0)
+        else if (*(void**)(state + 0x7b0) != NULL)
         {
-            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - lbl_803DC074;
-            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
+            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
             }
         }
         if ((promptA) && ((*(u32*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(state + 0x7ac) = lbl_803E3188;
-            if ((*(int*)(state + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0))
+            *(float*)(state + 0x7ac) = lbl_803E24F8;
+            if ((*(void**)(state + 0x7a8) == NULL) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 3);
                 if (bitVal == 0)
@@ -661,7 +668,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                                (cond = FUN_800067f0(objVal, 0x10), !cond))))
+                                (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
@@ -669,7 +676,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(u8*)(ref + 0x58) >> 6 & 1) == 0)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
-                        (cond = FUN_800067f0(objVal, 0x10), !cond))
+                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
@@ -678,15 +685,15 @@ int Tricky_updateSideCommandPrompts(int obj)
                 flagsA[0] = -1;
                 flagsA[1] = -1;
                 flagsA[2] = -1;
-                if (*(int*)(state + 0x7a8) != 0)
+                if (*(void**)(state + 0x7a8) != NULL)
                 {
-                    flagsA[*(u8*)(state + 0x7bc) >> 6] = '\x01';
+                    flagsA[*(u8*)(state + 0x7bc) >> 6 & 3] = '\x01';
                 }
-                if (*(int*)(state + 0x7b0) != 0)
+                if (*(void**)(state + 0x7b0) != NULL)
                 {
                     flagsA[*(u8*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(int*)(state + 0x7b8) != 0)
+                if (*(void**)(state + 0x7b8) != NULL)
                 {
                     flagsA[*(u8*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
@@ -710,16 +717,16 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     bitVal = 0xffffffff;
                 }
-                *(u8*)(state + 0x7bc) = (u8)((bitVal & 0xff) << 6) | *(u8*)(state + 0x7bc) & 0x3f;
-                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
+                ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
+                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
                 *(u32*)(state + 0x7a8) = spawnedObj;
-                ObjLink_AttachChild(objVal, *(int*)(state + 0x7a8), (u16)(*(u8*)(state + 0x7bc) >> 6));
+                ObjLink_AttachChild(objVal, *(int*)(state + 0x7a8), *(u8*)(state + 0x7bc) >> 6 & 3);
             }
         }
-        else if (*(int*)(state + 0x7a8) != 0)
+        else if (*(void**)(state + 0x7a8) != NULL)
         {
-            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - lbl_803DC074;
-            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
+            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8));
             }
