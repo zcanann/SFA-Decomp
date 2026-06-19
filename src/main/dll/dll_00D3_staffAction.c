@@ -865,6 +865,7 @@ extern void LandedArwing_UpdateBounceFade(void);
 extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
 
+#pragma fp_contract off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -933,7 +934,7 @@ void dll_D3_update(int* obj)
     {
         rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
             (f32)(u32)((TreasureChestState*)state)->aggroRange,
-            obj, state, 0x18000);
+            obj, state, 0x8000);
         if (rc != 0u)
         {
             ((void (*)(int*, int*, int, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x28 /
@@ -987,7 +988,7 @@ void dll_D3_update(int* obj)
             lbl_803202E8, lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
-            (*(void (**)(void))(*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))();
+            (*(void (**)(void))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))();
             *(f32*)((char*)gStaffActionHitLightParams + 0xc) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)((char*)gStaffActionHitLightParams + 0x10) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)((char*)gStaffActionHitLightParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
@@ -1022,6 +1023,7 @@ void dll_D3_update(int* obj)
         }
     }
 }
+#pragma fp_contract on
 
 void dll_D3_init(int obj, int def, int flag)
 {
