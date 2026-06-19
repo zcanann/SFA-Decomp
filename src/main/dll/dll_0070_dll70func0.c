@@ -4,7 +4,7 @@
  * The unit owns three entry points:
  *   dll_70_func00_nop / dll_70_func01_nop - empty stubs.
  *   dll_70_func03 - builds a 27-command graphics command list (GfxCmd[])
- *     on the stack from a layout table (lbl_80313E98) and a set of shared
+ *     on the stack from a layout table (gDll70Func03GfxLayoutTable) and a set of shared
  *     float constants, then submits it via gModgfxInterface->spawnEffect.
  *     Bit 0 of the spawn-context flags word (buf.flags) enables
  *     world-position override: a non-null sourceObj uses the GameObject
@@ -24,7 +24,7 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u8 lbl_80313E98[];
+extern u8 gDll70Func03GfxLayoutTable[];
 extern int lbl_803DB8D0; /* symbols.txt size:0x8; only &lbl is taken so width is inert */
 extern f32 lbl_803E0AF8;
 extern f32 lbl_803E0AFC;
@@ -70,7 +70,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* base = (u8*)(int)lbl_80313E98;
+    u8* base = (u8*)(int)gDll70Func03GfxLayoutTable;
     buf.entries[0].layer = 0;
     buf.entries[0].flags = 0x12;
     buf.entries[0].tex = &base[336];
@@ -301,5 +301,5 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0B30 + *(f32*)(sourceObj + 0x20);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80313E98, 0x10, &base[180], 0x45, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)gDll70Func03GfxLayoutTable, 0x10, &base[180], 0x45, 0);
 }

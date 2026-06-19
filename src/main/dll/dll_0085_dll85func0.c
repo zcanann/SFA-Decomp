@@ -9,14 +9,14 @@
  * angle from randomGetRange. The two trailing _nop entry points are the
  * dll's unused func00/func01 slots. Externs (gModgfxInterface, the
  * lbl_803E0Fxx float-constant pool, the lbl_803DB8Fx texture handles and
- * the lbl_80315FA8 effect-template table) live in the foodbag base TU.
+ * the gFoodbagEffectTemplate effect-template table) live in the foodbag base TU.
  */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80315FA8[];
+extern u8 gFoodbagEffectTemplate[];
 extern u8 lbl_803DB8F0;
 extern u8 lbl_803DB8F4;
 extern u8 lbl_803DB8FC;
@@ -39,7 +39,7 @@ extern f32 lbl_803E0FA0;
 void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
-    u8* base = (u8*)(int)lbl_80315FA8;
+    u8* base = (u8*)(int)gFoodbagEffectTemplate;
     s16* tableHw = (s16*)base;
     FbCmd* p;
     FbCmd* e = buf.entries;
@@ -250,7 +250,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] += *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 4, (u8*)(int)lbl_80315FA8, 2, base + 0x28,
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 4, (u8*)(int)gFoodbagEffectTemplate, 2, base + 0x28,
                                      tableHw[variant * 2 + randomGetRange(0, 1) + 0x22], 0);
 }
 

@@ -141,8 +141,8 @@ extern u32 DAT_803de10c;
 extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
 extern u32 uRam803de108;
-extern u8 lbl_80313CC0[];
-extern u8 lbl_803DB8C8;
+extern u8 gDll6FGfxCmdResourceTable[];
+extern u8 gDll6FGfxCmdTexture;
 extern f32 lbl_803E0AB8;
 extern f32 lbl_803E0ABC;
 extern f32 lbl_803E0AC0;
@@ -721,7 +721,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* base = lbl_80313CC0;
+    u8* base = gDll6FGfxCmdResourceTable;
     int ctx;
     buf.entries[0].layer = 0;
     buf.entries[0].flags = 0x18;
@@ -809,7 +809,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[11].z = lbl_803E0ADC;
     buf.entries[12].layer = 1;
     buf.entries[12].flags = 4;
-    buf.entries[12].tex = &lbl_803DB8C8;
+    buf.entries[12].tex = &gDll6FGfxCmdTexture;
     buf.entries[12].mode = 4;
     buf.entries[12].x = lbl_803E0AE0;
     buf.entries[12].y = lbl_803E0AC0;

@@ -279,15 +279,15 @@ extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int fla
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 void fn_8016F260(int* obj, int* state, int* other);
-extern const f32 lbl_803E3334;
-extern const f32 lbl_803E3338;
-extern const f32 lbl_803E333C;
+extern const f32 gFireballSpiralAmplitude;
+extern const f32 gFireballPi;
+extern const f32 gFireballAngleScale;
 extern const f32 lbl_803E335C;
 extern const f32 lbl_803E3360;
 extern const f32 lbl_803E3364;
 extern const f32 lbl_803E3368;
 extern const f32 lbl_803E336C;
-extern u8 lbl_803DBD58[8];
+extern u8 gFireballColorIndexTable[8];
 extern void queueGlowRender(int light);
 extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
@@ -1058,10 +1058,10 @@ void fireball_update(int* obj)
         ((GameObject*)obj)->anim.localPosZ = ((FireballState*)state)->posZ;
         if (other != NULL)
         {
-            ((GameObject*)obj)->anim.localPosX += lbl_803E3334 *
-                mathSinf(lbl_803E3338 * (f32)((FireballState*)state)->spiralPhase / lbl_803E333C);
-            ((GameObject*)obj)->anim.localPosZ += lbl_803E3334 *
-                mathCosf(lbl_803E3338 * (f32)((FireballState*)state)->spiralPhase / lbl_803E333C);
+            ((GameObject*)obj)->anim.localPosX += gFireballSpiralAmplitude *
+                mathSinf(gFireballPi * (f32)((FireballState*)state)->spiralPhase / gFireballAngleScale);
+            ((GameObject*)obj)->anim.localPosZ += gFireballSpiralAmplitude *
+                mathCosf(gFireballPi * (f32)((FireballState*)state)->spiralPhase / gFireballAngleScale);
         }
         if ((((GameObject*)obj)->unkF4 -= framesThisStep) < 0)
         {
@@ -1092,7 +1092,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         ((ObjAnimComponent*)obj)->bankIndex = 1;
         model = Obj_GetActiveModel((int)obj);
-        *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = lbl_803DBD58[((FireballState*)state)->colorIndex];
+        *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
         savedRot4 = ((GameObject*)obj)->anim.rotZ;
         savedRot2 = ((GameObject*)obj)->anim.rotY;
         savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
@@ -1112,7 +1112,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject*)obj)->anim.rootMotionScale = savedF8;
         ((ObjAnimComponent*)obj)->bankIndex = 0;
         *(u8*)((char*)*(int**)((char*)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
-            lbl_803DBD58[((FireballState*)state)->colorIndex];
+            gFireballColorIndexTable[((FireballState*)state)->colorIndex];
         ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         if (*(int**)state != NULL)
         {
@@ -1145,7 +1145,7 @@ void fn_8016F260(int* obj, int* state, int* other)
     if (hitVolume != NULL)
     {
         f32 dx = hitVolume->jointX - ((FireballState*)state)->posX;
-        f32 dy = hitVolume->jointY - lbl_803E3334 - ((FireballState*)state)->posY;
+        f32 dy = hitVolume->jointY - gFireballSpiralAmplitude - ((FireballState*)state)->posY;
         f32 dz = hitVolume->jointZ - ((FireballState*)state)->posZ;
         s16 angY;
         s16 angP;
@@ -1204,10 +1204,10 @@ void fn_8016F260(int* obj, int* state, int* other)
         angY += framesThisStep * difY;
         angP += framesThisStep * difP;
 
-        f = lbl_803E3338 * angY / lbl_803E333C;
+        f = gFireballPi * angY / gFireballAngleScale;
         ((GameObject*)obj)->anim.velocityX = mathSinf(f);
         ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
-        f = lbl_803E3338 * angP / lbl_803E333C;
+        f = gFireballPi * angP / gFireballAngleScale;
         c = mathSinf(f);
         {
             f32 cosP = mathCosf(f);

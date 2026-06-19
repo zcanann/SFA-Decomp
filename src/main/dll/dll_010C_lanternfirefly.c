@@ -49,7 +49,7 @@ extern int gameBitDecrement(int bit);
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
 extern f32 lbl_803E3AC8;
-extern f32 lbl_803E3ACC;
+extern f32 gLanternFireflyPi;
 extern f32 lbl_803E3AD0;
 extern f32 lbl_803E3AD4;
 extern f32 lbl_803E3AD8;
@@ -312,7 +312,7 @@ void LanternFireFly_update(int obj)
             f32 atten;
 
             atten = state->timer *
-                mathSinf((lbl_803E3ACC * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
+                mathSinf((gLanternFireflyPi * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }

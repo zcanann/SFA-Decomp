@@ -1195,7 +1195,7 @@ char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer suppo
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
-extern u32 lbl_802C2160[];
+extern u32 gPlayerShadowDefaultParams[];
 extern const f32 lbl_803DF46C; /* 0.0f */
 extern const f32 lbl_803DF488;
 extern const f32 lbl_803DF48C;
@@ -1249,7 +1249,7 @@ void playerShadow_renderObject(void* obj)
     f32 minZ;
     f32 maxZ;
 
-    defaults = lbl_802C2160;
+    defaults = gPlayerShadowDefaultParams;
     *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
     hitTable = 0;
 
@@ -1338,9 +1338,9 @@ void playerShadow_renderObject(void* obj)
 }
 
 extern f32 sqrtf(f32 x);
-extern f32 lbl_8030FDE8[];
+extern f32 gPlayerShadowCamDelta[];
 extern s16 lbl_803DD29A;
-extern s16 lbl_803DD29C;
+extern s16 gPlayerShadowCamRotY;
 extern const f32 lbl_803DF468;
 extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
@@ -1376,7 +1376,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
     found = 0;
     cam = Camera_GetCurrentViewSlot();
     lbl_803DD29A = *(s16*)cam;
-    lbl_803DD29C = ((GameObject*)cam)->anim.rotY;
+    gPlayerShadowCamRotY = ((GameObject*)cam)->anim.rotY;
     dx = ((GameObject*)cam)->anim.localPosX - ((GameObject*)ctx)->anim.localPosX;
     dy = ((GameObject*)cam)->anim.localPosY - ((GameObject*)ctx)->anim.localPosY;
     dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
@@ -1385,9 +1385,9 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
         int t = *(s8*)((char*)table + i * 0x4c + 0x48);
         if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17)
         {
-            lbl_8030FDE8[0] = dx;
-            lbl_8030FDE8[1] = dy;
-            lbl_8030FDE8[2] = dz;
+            gPlayerShadowCamDelta[0] = dx;
+            gPlayerShadowCamDelta[1] = dy;
+            gPlayerShadowCamDelta[2] = dz;
             {
                 f32 dydy = dy * dy;
                 len = sqrtf(dydy + dx * dx + dz * dz);
