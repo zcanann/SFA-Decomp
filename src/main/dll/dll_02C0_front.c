@@ -141,8 +141,8 @@ void titlescreen_release(void)
 
 extern s8 lbl_803DBC08;
 extern s8 lbl_803DBC09;
-extern u8 lbl_803DD990;
-extern u8 lbl_803DD991;
+extern s8 lbl_803DD990;
+extern s8 lbl_803DD991;
 extern u8 lbl_803DC968;
 extern f32 lbl_803DD9D0;
 extern f32 lbl_803DD9CC;
@@ -323,8 +323,8 @@ void titleScreenPositionElements(f32 a, f32 b)
 #pragma scheduling off
 void titleScreenFn_801368a4(s8 arg)
 {
-    u8 cur;
-    if (arg == (s8)(cur = lbl_803DD991)) return;
+    s8 cur;
+    if (arg == (cur = lbl_803DD991)) return;
     lbl_803DBC09 = cur;
     lbl_803DD991 = arg;
 }
