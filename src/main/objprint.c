@@ -2180,9 +2180,9 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
             int j;
             for (j = 0; j < n; j++)
             {
-                u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-                int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-                if ((int)entries[idx] != 0xff && key == entries[entryIdx])
+                int entries = *(int*)&((ObjDef*)m)->jointData;
+                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                    key == (int)*(u8*)(entries + entryIdx))
                 {
                     found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
                 }
