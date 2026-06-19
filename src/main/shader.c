@@ -675,10 +675,10 @@ extern s8 lbl_803DCDEC;
 
 void mapBlockFn_80059c2c(u8* outFlags)
 {
+    int i;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
-        int i;
         s8 limit = lbl_803DCDEC;
         for (i = 0; i < limit; i++)
         {
