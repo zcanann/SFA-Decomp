@@ -102,10 +102,10 @@ void nw_levcontrol_update(int objArg)
             }
         }
     }
-    SCGameBitLatch_Update(state + 2, 8, -1, -1, 0x3a0, (int*)0x35);
+    SCGameBitLatch_Update(state + 2, 8, -1, -1, 0x3a0, 0x35);
     SCGameBitLatch_Update(state + 2, 0x10, -1, -1, 0x3a1, (int*)(int)*(short*)(state + 4));
-    SCGameBitLatch_Update(state + 2, 0x20, -1, -1, 0x393, (int*)0x36);
-    SCGameBitLatch_Update(state + 2, 0x40, -1, -1, 0xcbb, (int*)0xc4);
+    SCGameBitLatch_Update(state + 2, 0x20, -1, -1, 0x393, 0x36);
+    SCGameBitLatch_Update(state + 2, 0x40, -1, -1, 0xcbb, 0xc4);
     bitVal4 = 0;
     bitVal = GameBit_Get(0x19f);
     bitVal3 = GameBit_Get(0x19d);
@@ -114,7 +114,7 @@ void nw_levcontrol_update(int objArg)
         bitVal4 = 1;
     }
     GameBit_Set(0xf31, bitVal4);
-    SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, (int*)0xaf);
+    SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, 0xaf);
     bitVal = GameBit_Get(0x398);
     if ((bitVal != 0) &&
         (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == 0)

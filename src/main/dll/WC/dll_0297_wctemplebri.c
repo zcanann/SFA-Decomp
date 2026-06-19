@@ -104,10 +104,10 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     v = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
     if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
-    state->wavePhaseA = (u16)v;
+    state->wavePhaseA = v;
     v = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
     if (v > WCTEMPLEBRI_WAVE_WRAP) v = (v - 0x10000) + 1;
-    state->wavePhaseB = (u16)v;
+    state->wavePhaseB = v;
 }
 
 #pragma peephole off
@@ -161,12 +161,12 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
         int idx = wave + state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
-                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
                     (f32) * (s16*)(base + 0));
         else
             *(s16*)(curr + 0) =
                 (s16)((f32) * (s16*)(base + 0) -
-                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     return 0;
 }
@@ -239,12 +239,12 @@ void wctemplebri_update(int obj)
         int idx = wave + state->wavePhaseA;
         if (*(s16*)(base + 0) > 0)
             *(s16*)(curr + 0) =
-                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
                     (f32) * (s16*)(base + 0));
         else
             *(s16*)(curr + 0) =
                 (s16)((f32) * (s16*)(base + 0) -
-                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     if (state->active != 0)
     {
@@ -276,7 +276,7 @@ void wctemplebri_update(int obj)
     if ((void*)Obj_GetPlayerObject() != NULL)
     {
         if (PSVECDistance((void*)&((GameObject*)obj)->anim.worldPosX,
-            (void*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
+            &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
             lbl_803E6E94)
         {
             GameBit_Set(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
@@ -300,7 +300,7 @@ void wctemplebri_init(int obj, int initData)
     *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)wctemplebri_interactCallback;
+    ((GameObject*)obj)->animEventCallback = wctemplebri_interactCallback;
     state = ((GameObject*)obj)->extra;
     maxY = 0;
     model = Obj_GetActiveModel(obj);
@@ -329,7 +329,7 @@ void wctemplebri_init(int obj, int initData)
         }
     }
     state->partCount = 0xa;
-    state->maxY = (f32)maxY;
+    state->maxY = maxY;
     if ((u32)GameBit_Get(setup->solvedBit) != 0)
     {
         state->active = 1;

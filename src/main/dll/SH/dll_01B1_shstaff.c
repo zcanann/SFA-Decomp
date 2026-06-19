@@ -233,7 +233,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if (((u32)state->slots[j] != 0) && ((u32)state->slots[4] != 0))
                     {
-                        t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
+                        t = lbl_803E54E8 + j / lbl_803E54EC;
                         bx = ((GameObject*)state->slots[4])->anim.localPosX;
                         ((GameObject*)state->slots[j])->anim.localPosX = t * (x0 - bx) + bx;
                         ((GameObject*)state->slots[j])->anim.localPosY =
@@ -278,7 +278,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if ((u32)state->slots[j] != 0)
                     {
-                        t = lbl_803E54F0 * (f32)j;
+                        t = lbl_803E54F0 * j;
                         t = t + (f32)(int)
                         randomGetRange(-0x32, 0x32) / lbl_803E54F4;
                         ((GameObject*)state->slots[j])->anim.localPosX = dx * t + x0;
@@ -514,7 +514,7 @@ void sh_staff_update(int obj)
             ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent*)obj);
             ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
             ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
-            ((GameObject*)obj)->animEventCallback = (void*)sh_staff_SeqFn;
+            ((GameObject*)obj)->animEventCallback = sh_staff_SeqFn;
             state->phase = 1;
             if (Obj_IsLoadingLocked() == 0)
             {
@@ -535,7 +535,7 @@ void sh_staff_update(int obj)
     {
         if (ObjTrigger_IsSet(obj) != 0)
         {
-            int target = ObjGroup_FindNearestObject(0xf, (u32)obj, 0);
+            int target = ObjGroup_FindNearestObject(0xf, obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
             state->phase = 2;
             state->fadeTimer = lbl_803E54E0;

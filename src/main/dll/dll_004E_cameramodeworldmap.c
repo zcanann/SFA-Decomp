@@ -139,7 +139,7 @@ void CameraModeWorldMap_update(u8* obj)
     focus = (GameObject*)camera->anim.targetObj;
     objA = (GameObject*)ObjList_FindObjectById(0x42fff);
     objB = (GameObject*)ObjList_FindObjectById(0x4325b);
-    buttons = (u16)getButtonsHeld(0);
+    buttons = getButtonsHeld(0);
     getButtonsJustPressed(0);
 
     switch (lbl_803DD588->mode)
@@ -253,7 +253,7 @@ void CameraModeWorldMap_update(u8* obj)
                     cur = lbl_803DD588->distance;
                     lbl_803DD588->distance =
                         cur + (f32)((s16)(s32)(lbl_803E1A44 - cur) /
-                            (s32)lbl_803DD588->focusBlendTimer);
+                            lbl_803DD588->focusBlendTimer);
                     lbl_803DD588->focusBlendTimer -= 1;
                 }
                 camera->anim.rotX += dYaw;
@@ -270,8 +270,8 @@ void CameraModeWorldMap_update(u8* obj)
                     f32 snYaw, csYaw, snPit, csPit;
                     f32 r, vy, h, px, pz;
                     f32 dxx, dyy, dzz;
-                    snYaw = -mathCosf(lbl_803E1A48 * (f32)camera->anim.rotX / lbl_803E1A4C);
-                    csYaw = mathSinf(lbl_803E1A48 * (f32)camera->anim.rotX / lbl_803E1A4C);
+                    snYaw = -mathCosf(lbl_803E1A48 * camera->anim.rotX / lbl_803E1A4C);
+                    csYaw = mathSinf(lbl_803E1A48 * camera->anim.rotX / lbl_803E1A4C);
                     snPit = mathCosf(lbl_803E1A48 * (f32)(camera->anim.rotY + 0x320) / lbl_803E1A4C);
                     csPit = mathSinf(lbl_803E1A48 * (f32)(camera->anim.rotY + 0x320) /
                         lbl_803E1A4C);
@@ -284,11 +284,11 @@ void CameraModeWorldMap_update(u8* obj)
                     dyy = camera->anim.worldPosY - ((lbl_803E1A50 + focus->anim.worldPosY) + vy);
                     dzz = camera->anim.worldPosZ - (focus->anim.worldPosZ + pz);
                     camera->anim.worldPosX =
-                        camera->anim.worldPosX - dxx / (f32)lbl_803DD588->settleFrames;
+                        camera->anim.worldPosX - dxx / lbl_803DD588->settleFrames;
                     camera->anim.worldPosY =
-                        camera->anim.worldPosY - dyy / (f32)lbl_803DD588->settleFrames;
+                        camera->anim.worldPosY - dyy / lbl_803DD588->settleFrames;
                     camera->anim.worldPosZ =
-                        camera->anim.worldPosZ - dzz / (f32)lbl_803DD588->settleFrames;
+                        camera->anim.worldPosZ - dzz / lbl_803DD588->settleFrames;
                 }
             }
         }
@@ -334,7 +334,7 @@ void CameraModeWorldMap_update(u8* obj)
                         d += 0xffff;
                     }
                     camera->anim.rotX = camera->anim.rotX + d / lbl_803DD588->settleFrames;
-                    d = (s16)(0x7d0 - (u16)camera->anim.rotY);
+                    d = (s16)(0x7d0 - camera->anim.rotY);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -362,11 +362,11 @@ void CameraModeWorldMap_update(u8* obj)
                             (lbl_803E1A5C + (focus->anim.worldPosY + t6));
                         dzz = camera->anim.worldPosZ - (focus->anim.worldPosZ + pz);
                         camera->anim.worldPosX =
-                            camera->anim.worldPosX - dxx / (f32)lbl_803DD588->settleFrames;
+                            camera->anim.worldPosX - dxx / lbl_803DD588->settleFrames;
                         camera->anim.worldPosY =
-                            camera->anim.worldPosY - dyy / (f32)lbl_803DD588->settleFrames;
+                            camera->anim.worldPosY - dyy / lbl_803DD588->settleFrames;
                         camera->anim.worldPosZ =
-                            camera->anim.worldPosZ - dzz / (f32)lbl_803DD588->settleFrames;
+                            camera->anim.worldPosZ - dzz / lbl_803DD588->settleFrames;
                     }
                     my = (u16)(camera->anim.rotX + 0x1388);
                     if (isWidescreen() != 0)
@@ -374,13 +374,13 @@ void CameraModeWorldMap_update(u8* obj)
                         my = (u16)(my + 0x514);
                     }
                     {
-                        f32 b = lbl_803E1A48 * (f32)my / lbl_803E1A4C;
+                        f32 b = lbl_803E1A48 * my / lbl_803E1A4C;
                         f32 sb = mathCosf(b);
                         f32 cb = -mathSinf(b);
                         f32 radius = lbl_803E1A60;
                         g->anim.localPosX = radius * cb + camera->anim.worldPosX;
                         g->anim.localPosY =
-                            camera->anim.worldPosY + lbl_80319DF8[(s8) * (u8*)&g->anim.bankIndex];
+                            camera->anim.worldPosY + lbl_80319DF8[(s8) * &g->anim.bankIndex];
                         g->anim.localPosZ = radius * sb + camera->anim.worldPosZ;
                         g->anim.rotX = (s16)(-0xbb8 - my);
                     }
@@ -417,7 +417,7 @@ void CameraModeWorldMap_update(u8* obj)
             (mathCosf(lbl_803E1A48 * (f32)((objB->anim.rotX - 0x2198) * 2) / lbl_803E1A4C) *
                 mathCosf(lbl_803E1A48 * (f32)((objB->anim.rotY - 0x4000) * 2) / lbl_803E1A4C));
         }
-        objB->anim.alpha = (s32)lim;
+        objB->anim.alpha = lim;
     }
     else
     {

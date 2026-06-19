@@ -122,9 +122,9 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
         newObj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
-        dir[0] = (f32)setup->velocityX / lbl_803E7140;
-        dir[1] = (f32)setup->velocityY / lbl_803E7140;
-        dir[2] = (f32)setup->velocityZ / lbl_803E7140;
+        dir[0] = setup->velocityX / lbl_803E7140;
+        dir[1] = setup->velocityY / lbl_803E7140;
+        dir[2] = setup->velocityZ / lbl_803E7140;
         fn_8023137C(newObj, (int)dir);
         fn_8023134C(newObj, setup->projectileSpeed);
     }
@@ -150,9 +150,9 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
         newObj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
-        dir[0] = (f32)setup->velocityX / lbl_803E7140;
-        dir[1] = (f32)setup->velocityY / lbl_803E7140;
-        dir[2] = (f32)setup->velocityZ / lbl_803E7140;
+        dir[0] = setup->velocityX / lbl_803E7140;
+        dir[1] = setup->velocityY / lbl_803E7140;
+        dir[2] = setup->velocityZ / lbl_803E7140;
         fn_80231058(newObj, (int)dir);
         fn_80231028(newObj, setup->projectileSpeed);
     }

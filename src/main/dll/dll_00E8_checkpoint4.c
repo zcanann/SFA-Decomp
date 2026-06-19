@@ -289,7 +289,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     do
     {
         heading = randomGetRange(0, CHECKPOINT4_RANDOM_HEADING_MAX);
-        state->randomHeadings[i] = (s16)heading;
+        state->randomHeadings[i] = heading;
         i++;
     }
     while (i < CHECKPOINT4_RANDOM_HEADING_COUNT);

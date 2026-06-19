@@ -322,7 +322,7 @@ void dimlogfire_init(int obj, int def)
     int radius;
     DimLogFireState* state;
 
-    ((GameObject*)obj)->animEventCallback = (void*)dimlogfire_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dimlogfire_SeqFn;
     ObjGroup_AddObject(obj, DIMLOGFIRE_GROUP);
     state = ((GameObject*)obj)->extra;
     state->unk20 = 0;
@@ -347,7 +347,7 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setDistanceAttenuation(state->light, (f32)radius, lbl_803E4834 + (f32)radius);
+        modelLightStruct_setDistanceAttenuation(state->light, radius, lbl_803E4834 + radius);
         modelLightStruct_setEnabled(state->light, 1, lbl_803E4828);
         modelLightStruct_setPosition(state->light, lbl_803E4828, lbl_803E4838, *(f32*)&lbl_803E4828);
         modelLightStruct_startColorFade(state->light, 1, 3);

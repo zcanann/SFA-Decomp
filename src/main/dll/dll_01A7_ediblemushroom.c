@@ -118,7 +118,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         else if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
         {
-            if (((EdibleMushroomState*)state)->currentTargetDistance < (f32)other[0x19])
+            if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x19])
             {
                 if (((EdibleMushroomState*)state)->flags & 2)
                 {
@@ -152,7 +152,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 Sfx_PlayFromObject((u32)obj, 0xa0);
                 ((GameObject*)obj)->anim.rotX = (s16)(((EdibleMushroomState*)state)->moveAngle - 0x4000);
             }
-            else if (((EdibleMushroomState*)state)->currentTargetDistance < (f32)other[0x1f])
+            else if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x1f])
             {
                 ((EdibleMushroomState*)state)->animState = 3;
             }
@@ -213,11 +213,11 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             ang = getAngle(-(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX),
                            -(((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ));
             ((GameObject*)obj)->anim.rotX = ang;
-            if (((EdibleMushroomState*)state)->currentTargetDistance > lbl_803E5294 + (f32)other[0x1f])
+            if (((EdibleMushroomState*)state)->currentTargetDistance > lbl_803E5294 + other[0x1f])
             {
                 ((EdibleMushroomState*)state)->animState = 7;
             }
-            else if (((EdibleMushroomState*)state)->currentTargetDistance < (f32)other[0x19])
+            else if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x19])
             {
                 Sfx_PlayFromObject((u32)obj, 0xa0);
                 if (speed >= lbl_803E5298)
@@ -295,7 +295,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         {
             ((EdibleMushroomState*)state)->animState = 9;
         }
-        if (((EdibleMushroomState*)state)->currentTargetDistance > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState
+        if (((EdibleMushroomState*)state)->currentTargetDistance > lbl_803E5294 + other[0x19] && (((EdibleMushroomState
             *)state)->flags & 1))
         {
             ((EdibleMushroomState*)state)->animState = 4;
@@ -481,7 +481,7 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 
     angle = getAngle(-(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX),
                      -(((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ));
-    rad = (lbl_803E52B4 * (f32)angle) / lbl_803E52B8;
+    rad = (lbl_803E52B4 * angle) / lbl_803E52B8;
     c = mathSinf(rad);
     s = mathCosf(rad);
     vec[0] = ((GameObject*)obj)->anim.localPosX - dist * c;
@@ -691,7 +691,7 @@ void ediblemushroom_init(int obj, int aux)
     curveInitParam = 0x19;
     player = (int)Obj_GetPlayerObject();
 
-    ((GameObject*)obj)->animEventCallback = (void*)EdibleMushroom_SeqFn;
+    ((GameObject*)obj)->animEventCallback = EdibleMushroom_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 
     if (GameBit_Get(*(short*)(aux + 0x1a)) != 0)

@@ -180,7 +180,7 @@ void WM_ObjCreator_update(int obj)
                     {
                         state = (WmObjCreatorState*)0;
                     }
-                    objs = (int*)ObjGroup_GetObjects(3, &count);
+                    objs = ObjGroup_GetObjects(3, &count);
                     k = 0;
                     while (k < count && (s8)(int)state)
                     {

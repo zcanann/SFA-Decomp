@@ -163,7 +163,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             rel = rel + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(*(s16*)(long)obj + rel * (u8)framesThisStep / 3);
+        ((GameObject*)obj)->anim.rotX = (s16)(*(s16*)(long)obj + rel * framesThisStep / 3);
     }
     return;
 }
@@ -269,7 +269,7 @@ void dimbossgut2_update(int obj)
                 *(u16*)((int)posData + 0x16) = 0;
             }
         }
-        *(u16*)((int)posData + 0x16) += (u8)framesThisStep;
+        *(u16*)((int)posData + 0x16) += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
@@ -290,7 +290,7 @@ void dimbossgut2_update(int obj)
                     *(u8*)(((Dimbossgut2Curve*)val)->light + 0x2fa) = 0;
                 }
             }
-            *(u8*)(((Dimbossgut2Curve*)val)->light + 0x2f9) = (u8)n;
+            *(u8*)(((Dimbossgut2Curve*)val)->light + 0x2f9) = n;
         }
     }
     return;

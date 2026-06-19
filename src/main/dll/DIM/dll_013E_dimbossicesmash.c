@@ -174,7 +174,7 @@ void dimbossicesmash_update(u8* obj)
                 {
                     alphaVal = 0;
                 }
-                ((GameObject*)obj)->anim.alpha = (u8)alphaVal;
+                ((GameObject*)obj)->anim.alpha = alphaVal;
             }
             ((GameObject*)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + ((GameObject*)obj)
                 ->anim.velocityX;
@@ -300,7 +300,7 @@ void dimbossicesmash_update(u8* obj)
                 i = 0;
                 do
                 {
-                    k = (f32)i * lbl_803E405C;
+                    k = i * lbl_803E405C;
                     stk.pos[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
                     stk.pos[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
                     stk.pos[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;

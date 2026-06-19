@@ -690,7 +690,7 @@ void fn_801DFA28(u8* obj)
             {
                 ((SBGalleonState*)state)->sweepDir = -((SBGalleonState*)state)->sweepDir;
             }
-            ((SBGalleonState*)state)->phase = (s8)nextState;
+            ((SBGalleonState*)state)->phase = nextState;
         }
         wrap = (getAngle(dx, dz) & 0xFFFF) + 0x8000;
         angY = getAngle(dy, dist) & 0xFFFF;
@@ -745,7 +745,7 @@ void fn_801DFA28(u8* obj)
         {
             dv = -0x3C;
         }
-        ((GameObject*)obj)->anim.rotZ = (f32)dv * timeDelta + (f32) * (s16*)(int)(obj + 0x4);
+        ((GameObject*)obj)->anim.rotZ = dv * timeDelta + (f32) * (s16*)(int)(obj + 0x4);
         objPos.vec[0] = lbl_803E56CC;
         objPos.vec[1] = lbl_803E56CC;
         objPos.vec[2] = lbl_803E56CC;
@@ -802,7 +802,7 @@ void fn_801DFA28(u8* obj)
                 ((GameObject*)obj)->anim.localPosZ = *(f32*)(spawnData + 0x10);
                 Sfx_StopObjectChannel((int)obj, 1);
                 DBPROT_MAP_EVENT(*(u8 *)(obj + 0x34), 2, 1);
-                OBJECT_TRIGGER_REFRESH(0, (int *)obj, -1);
+                OBJECT_TRIGGER_REFRESH(0, obj, -1);
                 goto end;
             }
         }
@@ -957,7 +957,7 @@ void DBprotection_updateShield(int* obj)
     CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
     CLOUD_ACTION_ENABLE(0);
 
-    angleCos = mathSinf((lbl_803E56E4 * (f32)state->shieldAngle) / lbl_803E56E8);
+    angleCos = mathSinf((lbl_803E56E4 * state->shieldAngle) / lbl_803E56E8);
     if (state->shieldSfxLatch == 0)
     {
         if (angleCos < lbl_803E57CC)
@@ -983,7 +983,7 @@ void DBprotection_updateShield(int* obj)
     }
 
     *(u16*)&((GameObject*)obj)->anim.rotZ = lbl_803E57DC * angleCos;
-    state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)state->shieldAngle);
+    state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + state->shieldAngle);
 }
 
 void DBprotection_storeHomePosition(int* obj)

@@ -126,7 +126,7 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             if (GameBit_Get(898) == 0) return;
         }
         extra = ((GameObject*)obj)->extra;
-        p = (int*)extra->linkedObj;
+        p = extra->linkedObj;
         hit = 0;
         if (p != NULL)
         {
@@ -138,7 +138,7 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         if (hit != 0)
         {
             ((GameObject*)obj)->anim.flags |= 8;
-            visible = (s8)objUpdateOpacity(p);
+            visible = objUpdateOpacity(p);
             dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, extra->opacity, 1);
         }
         else
@@ -167,7 +167,7 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 void dll_16C_init(void* obj, void* arg2)
 {
     Dll16CState* extra;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_16C_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_16C_SeqFn;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0x4000;
@@ -356,7 +356,7 @@ void dll_16C_update(int* obj)
 
     if (((GameObject*)obj)->anim.seqId == 883 || GameBit_Get(0x3a2) != 0)
     {
-        int* sub = (int*)extra->linkedObj;
+        int* sub = extra->linkedObj;
         f32 b;
         f32 blend;
         f32 a;

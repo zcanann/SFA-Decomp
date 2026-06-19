@@ -340,12 +340,12 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             if (i == 0)
             {
                 cmd = cmds->primaryCommand;
-                val = (f32)cmds->primaryValue;
+                val = cmds->primaryValue;
             }
             else
             {
                 cmd = cmds->secondaryCommand;
-                val = (f32)cmds->secondaryValue;
+                val = cmds->secondaryValue;
             }
             switch ((u8)cmd)
             {
@@ -585,8 +585,8 @@ void arwsquadron_followLeader(int p1, int p2)
     f32 mtx[12];
     f32 out[3];
 
-    *(s16*)&state->swayPhaseX = (f32)state->swaySpeedX * timeDelta + (f32)state->swayPhaseX;
-    *(s16*)&state->swayPhaseY = (f32)state->swaySpeedY * timeDelta + (f32)state->swayPhaseY;
+    *(s16*)&state->swayPhaseX = state->swaySpeedX * timeDelta + state->swayPhaseX;
+    *(s16*)&state->swayPhaseY = state->swaySpeedY * timeDelta + state->swayPhaseY;
     src.pos[0] = leaderAnim->localPosX;
     src.pos[1] = leaderAnim->localPosY;
     src.pos[2] = leaderAnim->localPosZ;
@@ -594,11 +594,11 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = leaderAnim->rotX;
     src.rot[1] = leaderAnim->rotY;
     src.rot[2] = leaderAnim->rotZ;
-    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)state->swayPhaseX / lbl_803E7198) +
-        lbl_803E718C * (f32)setup->leaderOffsetX;
-    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)state->swayPhaseY / lbl_803E7198) +
-        lbl_803E718C * (f32)setup->leaderOffsetY;
-    out[2] = lbl_803E718C * (f32)setup->leaderOffsetZ;
+    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * state->swayPhaseX / lbl_803E7198) +
+        lbl_803E718C * setup->leaderOffsetX;
+    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * state->swayPhaseY / lbl_803E7198) +
+        lbl_803E718C * setup->leaderOffsetY;
+    out[2] = lbl_803E718C * setup->leaderOffsetZ;
     setMatrixFromObjectTransposed(&src, mtx);
     PSMTXMultVec(mtx, out, &objAnim->localPosX);
     objAnim->velocityX = leaderAnim->velocityX;
@@ -610,8 +610,8 @@ void arwsquadron_followLeader(int p1, int p2)
     {
         objAnim->rotZ =
             leaderState->rollAmplitude *
-            mathSinf(lbl_803E7194 * (f32)state->swayPhaseX / lbl_803E7198) +
-            (f32)leaderAnim->rotZ;
+            mathSinf(lbl_803E7194 * state->swayPhaseX / lbl_803E7198) +
+            leaderAnim->rotZ;
     }
     state->flags.cmd.f80 = leaderState->flags.cmd.f80;
     if (state->rotZSpeed > 0)
@@ -778,14 +778,14 @@ void arwsquadron_update(int obj)
                 if (setup->pathMode != 2)
                 {
                     ((GameObject*)obj)->anim.rotX =
-                        (f32)state->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
+                        state->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
                     ((GameObject*)obj)->anim.rotY =
-                        (f32)state->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY;
+                        state->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY;
                 }
                 if (flags->f08 || setup->pathMode != 2)
                 {
                     ((GameObject*)obj)->anim.rotZ =
-                        (f32)state->rotZSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
+                        state->rotZSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
                 }
             }
             if ((u32)state->leaderObj != 0)

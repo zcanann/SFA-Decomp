@@ -198,7 +198,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
 
     hdr.v0 = 0;
     hdr.target = target;
-    hdr.b = (s16)variant;
+    hdr.b = variant;
     hdr.bx = lbl_803E1370;
     if (variant == 0)
     {

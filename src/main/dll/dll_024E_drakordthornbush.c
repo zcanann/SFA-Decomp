@@ -289,7 +289,7 @@ void drakord_thornbush_init(int obj, u8* init)
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
             lbl_803E65C4;
         ObjHitbox_SetSphereRadius(obj, (s16)(*(s16*)((char*)init + 0x1c) / 7));
-        s16toFloat((f32*)((char*)inner + 0x10), (int)lbl_803DC1B0);
+        s16toFloat((f32*)((char*)inner + 0x10), lbl_803DC1B0);
         ((DrakordThornbushState*)inner)->baseScale = lbl_803E65C8;
         ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c) / 5;
         ((DrakordThornbushState*)inner)->lightScale = lbl_803E6594;

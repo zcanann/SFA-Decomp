@@ -73,7 +73,7 @@ void fn_80185868(int obj, f32 arg)
     {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x60004, obj, 0);
     }
-    ObjHitbox_SetCapsuleBounds(obj, (int)sub->radius, -5, 10);
+    ObjHitbox_SetCapsuleBounds(obj, sub->radius, -5, 10);
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
     ObjHits_EnableObject(obj);
 }
@@ -199,7 +199,7 @@ void fn_80185B74(int obj)
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     sub = *(int*)&((GameObject*)player)->extra;
-    dist = Vec_distance((void*)&((GameObject*)player)->anim.worldPosX, (void*)&((GameObject*)obj)->anim.worldPosX);
+    dist = Vec_distance((void*)&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if (state->liftTimer <= 0)
     {
         state->ventState = 1;

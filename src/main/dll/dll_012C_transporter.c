@@ -258,7 +258,7 @@ void transporter_hitDetect(int obj)
     if ((int)lbl_803DCEB8 > -1)
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
+            (u32) * &((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
         state->flags = (u8)((u32)state->flags | 1);
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
@@ -273,22 +273,22 @@ void transporter_hitDetect(int obj)
         if (state->triggerMode != 0 || state->countdownActive != 0)
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
+                (u32) * &((GameObject*)self)->anim.resetHitboxMode | 0x8);
             state->flags = (u8)((u32)state->flags & ~1);
         }
         else if ((int)setup->enableGameBit != -1
             && GameBit_Get((int)setup->enableGameBit) == 0)
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
+                (u32) * &((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x10);
+                (u32) * &((GameObject*)self)->anim.resetHitboxMode | 0x10);
             state->flags = (u8)((u32)state->flags & ~1);
         }
         else
         {
             *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
+                (u32) * &((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
             state->flags = (u8)((u32)state->flags | 1);
         }
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
@@ -301,14 +301,14 @@ void transporter_hitDetect(int obj)
     if ((state->flags & 0x40) != 0)
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
+            (u32) * &((GameObject*)self)->anim.resetHitboxMode | 0x8);
     }
     else
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
+            (u32) * &((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
-            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x10);
+            (u32) * &((GameObject*)self)->anim.resetHitboxMode | 0x10);
     }
     state->flags = (u8)((u32)state->flags & ~1);
 }
@@ -329,7 +329,7 @@ void transporter_init(int obj, u8* params)
     state->flags = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
     ((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)Transporter_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Transporter_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
 
     id = placement->destinationId;

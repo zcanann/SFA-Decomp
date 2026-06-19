@@ -238,7 +238,7 @@ void CameraModeArwing_update(u8* obj)
             d += 0xffff;
         }
         step = (s32)((f32)d * timeDelta);
-        ((GameObject*)obj)->anim.rotX = (f32)step * lbl_803E1BAC + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = step * lbl_803E1BAC + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
@@ -249,7 +249,7 @@ void CameraModeArwing_update(u8* obj)
             d += 0xffff;
         }
         step = (s32)((f32)d * timeDelta);
-        ((GameObject*)obj)->anim.rotY = (f32)step * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotY;
+        ((GameObject*)obj)->anim.rotY = step * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotY;
     }
     else if (arwarwing_isExplodingOrWarping((int)state) != 0)
     {
@@ -270,7 +270,7 @@ void CameraModeArwing_update(u8* obj)
         {
             d += 0xffff;
         }
-        ((GameObject*)obj)->anim.rotZ = (f32)d * timeDelta * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotZ;
+        ((GameObject*)obj)->anim.rotZ = d * timeDelta * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotZ;
         d = yaw0 - (u16)((GameObject*)obj)->anim.rotX;
         if (d > 0x8000)
         {
@@ -280,7 +280,7 @@ void CameraModeArwing_update(u8* obj)
         {
             d += 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = (f32)d * timeDelta * lbl_803E1BAC + (f32) * (s16*)obj;
+        ((GameObject*)obj)->anim.rotX = d * timeDelta * lbl_803E1BAC + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
@@ -290,7 +290,7 @@ void CameraModeArwing_update(u8* obj)
         {
             d += 0xffff;
         }
-        ((GameObject*)obj)->anim.rotY = (f32)d * timeDelta * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotY;
+        ((GameObject*)obj)->anim.rotY = d * timeDelta * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotY;
     }
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                    ((GameObject*)obj)->anim.worldPosZ,

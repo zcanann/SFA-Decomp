@@ -149,7 +149,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     pos[2] = ((GameObject*)obj)->anim.localPosZ;
     dir[0] = lbl_803E6898;
     {
-        f32 fr = (f32)angle;
+        f32 fr = angle;
         fr = fr * ((KtrexfloorswitchSpawnEnergyArcState*)runtime)->unkC;
         dir[1] = -(fr * lbl_803E689C);
     }
@@ -159,7 +159,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     dir[1] += ((GameObject*)obj)->anim.localPosY;
     dir[2] += ((GameObject*)obj)->anim.localPosZ;
     ((KtrexfloorswitchSpawnEnergyArcState*)runtime)->unk8 = (f32)(int)randomGetRange(10, angle);
-    *(void**)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
+    *(void**)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, angle, 96, 0);
 }
 
 void ktrexfloorswitch_update(int obj)
@@ -249,7 +249,7 @@ void ktrexfloorswitch_update(int obj)
     }
     if ((s8) * (s8*)(*(int*)((char*)obj + 0x58) + 0x10f) > 0 && ((GameObject*)obj)->unkF4 == 2)
     {
-        player = (int*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         if (player != 0)
         {
             PSMTXRotRad(mtx, 0x79, (f32)(lbl_803E6860 * (f64) * (s16*)obj / lbl_803E6868));
@@ -425,7 +425,7 @@ void ktrexfloorswitch_update(int obj)
             {
                 ((KtrexfloorswitchState*)state)->scrollSpeed = lbl_803E6880;
             }
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x200 - (scroll - 0x200);
@@ -440,7 +440,7 @@ void ktrexfloorswitch_update(int obj)
         }
         else
         {
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x200 - (scroll - 0x200);
@@ -462,7 +462,7 @@ void ktrexfloorswitch_update(int obj)
     {
         if (tex->textureId != 0)
         {
-            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + (f32)tex->textureId);
+            scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + tex->textureId);
             if (scroll > 0x200)
             {
                 scroll = 0x200 - (scroll - 0x200);

@@ -307,8 +307,8 @@ void SHthorntail_free(SHthorntailObject* obj)
 {
     u32 activeConfigToken;
 
-    activeConfigToken = (u32)gSHthorntailActiveConfigToken;
-    if (activeConfigToken == (u32)obj->config->configToken)
+    activeConfigToken = gSHthorntailActiveConfigToken;
+    if (activeConfigToken == obj->config->configToken)
     {
         gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
     }
@@ -416,7 +416,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, (u32)runtime->hitReactState, (float*)runtime->hitReactScratch);
+    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, runtime->hitReactState, (float*)runtime->hitReactScratch);
     if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
@@ -460,10 +460,10 @@ void SHthorntail_update(SHthorntailObject* obj)
             }
         }
         if ((int)obj->currentMove !=
-            (int)SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState])
+            SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState])
         {
             ObjAnim_SetCurrentMove((int)obj,
-                                   (int)SHTHORNTAIL_STATE_MOVE_IDS(stateTables)
+                                   SHTHORNTAIL_STATE_MOVE_IDS(stateTables)
                                    [runtime->behaviorState],
                                    SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->facingAngle;
@@ -521,7 +521,7 @@ void SHthorntail_update(SHthorntailObject* obj)
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
-                    (u32)obj, (u16)SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
+                    (u32)obj, SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
@@ -564,7 +564,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 ref = getAngle(obj->modelPos.x - config->homePos.x,
                                  obj->modelPos.z - config->homePos.z);
-                obj->facingAngle = (short)ref;
+                obj->facingAngle = ref;
             }
         }
         runtime->activeMoveValid = 1;
@@ -652,8 +652,8 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
                                                         gSHthorntailPathHeaders,
                                                         gSHthorntailPathData, outA);
     (*gSHthorntailPathControlInterface)->bindObject(obj, moveScratch);
-    obj->animEventCallback = (void*)SHthorntail_updateLevelControlState;
-    dll_2E_func05((int)obj, (int)runtime, 0xffffdc72, 0x2aaa, 3);
+    obj->animEventCallback = SHthorntail_updateLevelControlState;
+    dll_2E_func05((int)obj, runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_func08((int)runtime, 400, 0x78);
     ObjGroup_AddObject((int)obj, 0x4d);
 }

@@ -131,7 +131,7 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             ((u8*)animUpdate)[0x90] = (u8)(((u8*)animUpdate)[0x90] | 4);
         }
-        for (i = 0; i < (int)animUpdate->eventCount; i++)
+        for (i = 0; i < animUpdate->eventCount; i++)
         {
             if (animUpdate->eventIds[i] == 1)
             {
@@ -380,7 +380,7 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
         break;
     case 0x726:
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
         break;
     case 0x71b:
@@ -464,7 +464,7 @@ void cfccrate_init(int obj, int aux)
         state->unk20 = lbl_803E3E38;
         state->oscVelA = state->oscVelB = lbl_803E3DEC;
         ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
         break;
     case 0x7de:
         ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
@@ -492,7 +492,7 @@ void cfccrate_init(int obj, int aux)
         state->homeY = ((CfccratePlacement*)aux)->unkC;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
         state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
         break;
     case 0x125:
         ((GameObject*)obj)->anim.rotX = 0;
@@ -504,9 +504,9 @@ void cfccrate_init(int obj, int aux)
         state->oscVelB = lbl_803E3E40;
         state->oscVelA = lbl_803E3DEC;
         state->unk32 = 0;
-        state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
+        state->unk34 = randomGetRange(0x3e8, 0x1388);
         state->proximityLatch = 1;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
         break;
     case 0x10d:
         *(int*)&((GameObject*)obj)->anim.hitReactState = 0;
@@ -516,7 +516,7 @@ void cfccrate_init(int obj, int aux)
             state->sfxCount = 1;
         }
         state->sfxPeriod = (u16)((CfccratePlacement*)aux)->param1C;
-        state->sfxTimer = (short)state->sfxPeriod;
+        state->sfxTimer = state->sfxPeriod;
         break;
     }
 }

@@ -98,7 +98,7 @@ int pressureswitchfb_updateStateMode(int obj, int unused, int stateParam)
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
              i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
         {
-            trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            trackedObjectSlot = runtime + i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
             *(int*)(trackedObjectSlot + 0x0) = 0;
             *(int*)(trackedObjectSlot + 0x4) = 0;
             *(int*)(trackedObjectSlot + 0x8) = 0;
@@ -229,7 +229,7 @@ void pressureswitchfb_update(int obj)
             *state = 0;
         }
         nearDist = lbl_803E3758;
-        nearest = (u32)ObjGroup_FindNearestObject(5, obj, &nearDist);
+        nearest = ObjGroup_FindNearestObject(5, obj, &nearDist);
         if (nearest != 0)
         {
             *state = 5;
@@ -471,7 +471,7 @@ void pressureswitchfb_init(u8* obj, u8* params)
     flags = (PressureSwitchFbFlags*)(sub + 0x84);
     ((GameObject*)obj)->anim.rotX = (s16)(params[0x18] << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    objAnim->bankIndex = (s8)params[0x19];
+    objAnim->bankIndex = params[0x19];
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
@@ -527,5 +527,5 @@ void pressureswitchfb_init(u8* obj, u8* params)
     ((CfGuardianState*)sub)->unk20 = 0;
     ((CfGuardianState*)sub)->unk24 = 0;
     ((CfGuardianState*)sub)->unk28 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)pressureswitchfb_updateStateMode;
+    ((GameObject*)obj)->animEventCallback = pressureswitchfb_updateStateMode;
 }

@@ -131,7 +131,7 @@ void drbarrelgr_update(int obj)
         {
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
             match = 0;
-            if ((u32)nearest != 0 && (u32)held == (u32)nearest)
+            if ((u32)nearest != 0 && (u32)held == nearest)
             {
                 match = 1;
             }
@@ -145,7 +145,7 @@ void drbarrelgr_update(int obj)
     }
 
     gameBit = ((DrbarrelgrPlacement*)setup)->gameBit;
-    if (gameBit != -1 && (u32)GameBit_Get(gameBit) == 0)
+    if (gameBit != -1 && GameBit_Get(gameBit) == 0)
     {
         flags->bit40 = 0;
         return;
@@ -319,7 +319,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     {
         nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
         match = 0;
-        if ((u32)nearest != 0 && (u32)objRef == (u32)nearest)
+        if ((u32)nearest != 0 && (u32)objRef == nearest)
         {
             match = 1;
         }

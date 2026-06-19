@@ -181,7 +181,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
             {
                 int start;
                 int end;
-                int* arr = (int*)ObjList_GetObjects(&start, &end);
+                int* arr = ObjList_GetObjects(&start, &end);
                 for (i = start; i < end; i++)
                 {
                     if (((GameObject*)arr[i])->anim.seqId == SBGALLEON_ROMLIST_LINKED)
@@ -267,7 +267,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
     }
     if (state->textAlpha > lbl_803E56CC)
     {
-        gameTextSetColor(0xff, 0xff, 0xff, (int)state->textAlpha);
+        gameTextSetColor(0xff, 0xff, 0xff, state->textAlpha);
         gameTextShow(SBGALLEON_GAMETEXT);
     }
     state->posX = ((GameObject*)obj)->anim.localPosX;
@@ -315,41 +315,41 @@ void fn_801E1588(int obj, int state)
     }
     {
         int v0 = lbl_803DC080[0];
-        lbl_803DDC38[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC084[0] - v0);
+        lbl_803DDC38[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC084[0] - v0);
     }
     {
         int v1 = lbl_803DC080[1];
-        lbl_803DDC38[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC084[1] - v1);
+        lbl_803DDC38[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC084[1] - v1);
     }
     {
         int v2 = lbl_803DC080[2];
-        lbl_803DDC38[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
+        lbl_803DDC38[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
     }
     skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC38[0], *(volatile u8*)&lbl_803DDC38[1], *(volatile u8*)&lbl_803DDC38[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
-        lbl_803DDC34[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
+        lbl_803DDC34[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
     }
     {
         int v1 = lbl_803DC078[1];
-        lbl_803DDC34[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC07C[1] - v1);
+        lbl_803DDC34[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC07C[1] - v1);
     }
     {
         int v2 = lbl_803DC078[2];
-        lbl_803DDC34[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
+        lbl_803DDC34[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
     }
     fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC34[0], *(volatile u8*)&lbl_803DDC34[1], *(volatile u8*)&lbl_803DDC34[2]);
     {
         int v0 = lbl_803DC088[0];
-        lbl_803DDC30[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
+        lbl_803DDC30[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
     }
     {
         int v1 = lbl_803DC088[1];
-        lbl_803DDC30[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC08C[1] - v1);
+        lbl_803DDC30[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC08C[1] - v1);
     }
     {
         int v2 = lbl_803DC088[2];
-        lbl_803DDC30[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
+        lbl_803DDC30[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
     }
     fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC30[0], *(volatile u8*)&lbl_803DDC30[1], *(volatile u8*)&lbl_803DDC30[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
@@ -517,7 +517,7 @@ void SB_Galleon_update(GameObject* obj)
             fn_801DFA28((int)obj);
             break;
         case SBGALLEON_CAM_START_INTRO:
-            (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(3, obj, -1);
             state->cameraState = SBGALLEON_CAM_SHIELD;
             break;
         case SBGALLEON_CAM_SHIELD:
@@ -526,7 +526,7 @@ void SB_Galleon_update(GameObject* obj)
         case SBGALLEON_CAM_END:
             (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
             obj->anim.mapEventSlot = -1;
-            (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
             state->cameraState = SBGALLEON_CAM_DONE;
             break;
         }
@@ -541,7 +541,7 @@ void SB_Galleon_init(GameObject* obj)
     gSbGalleon = (u32)obj;
     ObjGroup_AddObject((u32)obj, 3);
     objSetSlot(obj, 0x5a);
-    obj->animEventCallback = (void*)SB_Galleon_animEventCallback;
+    obj->animEventCallback = SB_Galleon_animEventCallback;
     state->posX = obj->anim.localPosX;
     state->posY = obj->anim.localPosY;
     state->posZ = obj->anim.localPosZ;

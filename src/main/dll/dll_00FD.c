@@ -97,7 +97,7 @@ void dll_14D_update(u16* obj)
         else
         {
             bitVal = GameBit_Get(*(s16*)(placement + 0x1a));
-            state[1] = (u8)bitVal;
+            state[1] = bitVal;
         }
         if ((state[1] != 0) && (*(s16*)(placement + 0x1e) != -1))
         {

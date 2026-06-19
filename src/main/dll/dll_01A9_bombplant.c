@@ -193,7 +193,7 @@ int bombplant_SeqFn(int* obj)
             int v;
             ((EnemyMushroomState*)state)->flags = (u8)(flags & ~0x2);
             v = ((BombplantPlacement*)base)->unk1A + randomGetRange(-0x32, 0x32);
-            ((EnemyMushroomState*)state)->timer = (f32)v;
+            ((EnemyMushroomState*)state)->timer = v;
         }
         if (((GameObject*)obj)->objectFlags & 0x800)
         {
@@ -216,7 +216,7 @@ void bombplant_init(void* obj, void* param, int flag)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * ((u8*)param + 0x1f) << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    ((GameObject*)obj)->animEventCallback = (void*)bombplant_SeqFn;
+    ((GameObject*)obj)->animEventCallback = bombplant_SeqFn;
     ((BombPlantState*)state)->growTargetScale = ((GameObject*)obj)->anim.rootMotionScale;
 
     if (flag != 0)

@@ -69,7 +69,7 @@ void OptionsScreen_render(int arg)
     int fade;
     int* item;
     int i;
-    u16* panel = &lbl_8031ACB8[(s8)lbl_803DBA28 * 8];
+    u16* panel = &lbl_8031ACB8[lbl_803DBA28 * 8];
 
     if (shouldShowCredits() != 0)
     {
@@ -96,7 +96,7 @@ void OptionsScreen_render(int arg)
     if (panel[5] != 0xffff)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel[5]) + 4)) + 0x1e) = (u8)fade;
+        *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel[5]) + 4)) + 0x1e) = fade;
         gameTextShow(panel[5]);
     }
     if (panel[6] != 0xffff)
@@ -210,7 +210,7 @@ int OptionsScreen_run(void)
     switch ((s8)lbl_803DBA28)
     {
     case 0:
-        lbl_803DD70C = (s8)item;
+        lbl_803DD70C = item;
         if (optionsMenu_openSelectedSubmenu(selection, item) != 0)
         {
             return 0;

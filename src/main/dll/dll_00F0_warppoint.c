@@ -100,7 +100,7 @@ int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 void WarpPoint_init(int* obj, u8* def)
 {
     s16* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)WarpPoint_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WarpPoint_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
     ((WarpPointState*)state)->triggerRadius = (f32)((s32) * (s8*)((char*)def + 0x1e) << 2);
@@ -137,7 +137,7 @@ void WarpPoint_update(int* obj)
 
     def = *(char**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (player == NULL)
     {
         return;

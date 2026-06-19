@@ -180,7 +180,7 @@ void wcpushblock_init(int obj, int setup)
         objAnim->bankIndex = 0;
     }
     ObjHitbox_SetStateIndex(obj, *(int*)&((GameObject*)obj)->anim.hitReactState, objAnim->bankIndex);
-    state->initialTile = (u8)setupData->initialTile;
+    state->initialTile = setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
 
@@ -398,7 +398,7 @@ void wcpushblock_update(int obj)
                 dist = lbl_803E6D74;
             }
             Sfx_KeepAliveLoopedObjectSound(obj, SFXsc_lockon2_off);
-            Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, (int)dist, lbl_803E6D78);
+            Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, dist, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
         objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E6D64,
@@ -661,7 +661,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         }
         break;
     default:
-        if (!(state->completionFlags & 0x40) && (u32)GameBit_Get(0x2b1) != 0)
+        if (!(state->completionFlags & 0x40) && GameBit_Get(0x2b1) != 0)
         {
             GameBit_Set(0xef1, 1);
             GameBit_Set(0xe6d, 0);
@@ -730,27 +730,27 @@ void fn_802251B4(int obj, WcLevelControlState* state)
 
     if (!(state->completionFlags & 0x80))
     {
-        if ((u32)GameBit_Get(0xc58) != 0 && (u32)GameBit_Get(0xc59) != 0 &&
-            (u32)GameBit_Get(0xc5a) != 0)
+        if ((u32)GameBit_Get(0xc58) != 0 && GameBit_Get(0xc59) != 0 &&
+            GameBit_Get(0xc5a) != 0)
         {
             GameBit_Set(0x205, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             state->completionFlags |= 0x80;
         }
         else if (!state->dialogueFlags.b40 &&
-            (u32)GameBit_Get(0xc58) != 0)
+            GameBit_Get(0xc58) != 0)
         {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             state->dialogueFlags.b40 = 1;
         }
         else if (!state->dialogueFlags.b20 &&
-            (u32)GameBit_Get(0xc59) != 0)
+            GameBit_Get(0xc59) != 0)
         {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             state->dialogueFlags.b20 = 1;
         }
         else if (!state->dialogueFlags.b18 &&
-            (u32)GameBit_Get(0xc5a) != 0)
+            GameBit_Get(0xc5a) != 0)
         {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             state->dialogueFlags.b18 = 1;
@@ -882,7 +882,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
     case 7:
         break;
     default:
-        if (!(state->completionFlags & 0x4) && (u32)GameBit_Get(0x7ed) != 0)
+        if (!(state->completionFlags & 0x4) && GameBit_Get(0x7ed) != 0)
         {
             GameBit_Set(0x7ef, 1);
             state->eventTimer = lbl_803E6DB0;
@@ -890,7 +890,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
             state->completionFlags |= 0x2;
             break;
         }
-        if (!(state->completionFlags & 0x8) && (u32)GameBit_Get(0x7ee) != 0)
+        if (!(state->completionFlags & 0x8) && GameBit_Get(0x7ee) != 0)
         {
             GameBit_Set(0x7f0, 1);
             state->eventTimer = lbl_803E6DB0;

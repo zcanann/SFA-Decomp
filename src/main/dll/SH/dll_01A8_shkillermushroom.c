@@ -69,9 +69,9 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
     f32 fr;
 
     mapData = obj->mapData;
-    obj->rotZ = (s16)randomGetRange(-0x5dc, 0x5dc);
-    obj->rotY = (s16)randomGetRange(-0x5dc, 0x5dc);
-    obj->rotX = (s16)randomGetRange(-0x5dc, 0x5dc);
+    obj->rotZ = randomGetRange(-0x5dc, 0x5dc);
+    obj->rotY = randomGetRange(-0x5dc, 0x5dc);
+    obj->rotX = randomGetRange(-0x5dc, 0x5dc);
     obj->alpha = 0xff;
     obj->flags = (s16)(obj->flags & ~0x4000);
     obj->posX = mapData->posX;
@@ -163,7 +163,7 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     state->timer = z;
     state->hitRadius = z;
     state->baseScale = obj->scale;
-    state->respawnFrameLimit = (s16)arg->respawnFrameLimit;
+    state->respawnFrameLimit = arg->respawnFrameLimit;
     if (state->respawnFrameLimit < 0x708)
     {
         state->respawnFrameLimit = 0x708;
@@ -200,7 +200,7 @@ void enemymushroom_update(int* obj)
     u32 hitVolume;
     int hitType;
 
-    player = (u8*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
     ObjHits_ClearHitVolumes((int)obj);
     ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
@@ -275,7 +275,7 @@ void enemymushroom_update(int* obj)
             {
                 t = 0;
             }
-            ((GameObject*)obj)->anim.alpha = (u8)t;
+            ((GameObject*)obj)->anim.alpha = t;
             ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
             if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
             {
