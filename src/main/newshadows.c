@@ -1302,13 +1302,13 @@ void newshadows_buildShadowDirectionTexture(void)
     do
     {
         x = 0;
-        convBias = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(y ^ 0x80000000)));
-        dy = (double)((float)(convBias - convBiasConst) - centerOffset);
+        convBias = (double)(int)y;
+        dy = (double)((float)(convBias) - centerOffset);
         xCount = 0x100;
         do
         {
-            convBias = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(x ^ 0x80000000)));
-            dx = (double)((float)(convBias - convBiasConst) - centerOffset);
+            convBias = (double)(int)x;
+            dx = (double)((float)(convBias) - centerOffset);
             len = (double)(float)(dy * dy + (double)(float)(dx * dx));
             if (epsilon < len)
             {

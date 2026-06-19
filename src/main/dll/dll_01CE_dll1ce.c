@@ -312,16 +312,16 @@ void FUN_801b5b8c(void)
         if (*srcVtx < 1)
         {
             rnd = (double)FUN_80293f90();
-            local_50 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*srcVtx ^ 0x80000000)));
+            local_50 = (double)(int)*srcVtx;
             *outVtx = (short)(int)-(float)((double)lbl_803E569C * rnd -
-                (double)(float)(local_50 - DOUBLE_803e56a8));
+                (double)(float)(local_50));
         }
         else
         {
             rnd = (double)FUN_80293f90();
-            local_58 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*srcVtx ^ 0x80000000)));
+            local_58 = (double)(int)*srcVtx;
             *outVtx = (short)(int)((double)lbl_803E569C * rnd +
-                (double)(float)(local_58 - DOUBLE_803e56a8));
+                (double)(float)(local_58));
         }
     }
     fifoArg = FUN_80017944((int)model, 0);

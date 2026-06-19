@@ -277,8 +277,8 @@ int FUN_8005b398(u64 param_1, double y)
             {
                 block = *(int*)(DAT_803ddb1c + block * 4);
                 if (((double)(f32)(s32)((int)*(short*)(block + 0x8a) - 0x32U) < y) &&
-                    (cvtTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(block + 0x8c) + 0x32U ^ 0x80000000))),
-                        y < (double)(float)(cvtTmp - DOUBLE_803df840)))
+                    (cvtTmp = (double)(int)*(short*)(block + 0x8c) + 0x32U,
+                        y < (double)(float)(cvtTmp)))
                 {
                     return (int)*(char*)(*layerTable + cellX);
                 }

@@ -913,63 +913,63 @@ void trackDolphin_buildSweptBounds(u32* boundsOut, float* startPoints, float* en
     {
         do
         {
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(*boundsOut ^ 0x80000000)));
-            if (*startPoints - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)*boundsOut;
+            if (*startPoints - *radii < (float)(convTmp))
             {
                 *boundsOut = (int)(*startPoints - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[3] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < *startPoints + *radii)
+            convTmp = (double)(int)boundsOut[3];
+            if ((float)(convTmp) < *startPoints + *radii)
             {
                 boundsOut[3] = (int)(*startPoints + *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[1] ^ 0x80000000)));
-            if (startPoints[1] - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)boundsOut[1];
+            if (startPoints[1] - *radii < (float)(convTmp))
             {
                 boundsOut[1] = (int)(startPoints[1] - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[4] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < startPoints[1] + *radii)
+            convTmp = (double)(int)boundsOut[4];
+            if ((float)(convTmp) < startPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(startPoints[1] + *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[2] ^ 0x80000000)));
-            if (startPoints[2] - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)boundsOut[2];
+            if (startPoints[2] - *radii < (float)(convTmp))
             {
                 boundsOut[2] = (int)(startPoints[2] - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[5] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < startPoints[2] + *radii)
+            convTmp = (double)(int)boundsOut[5];
+            if ((float)(convTmp) < startPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(startPoints[2] + *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(*boundsOut ^ 0x80000000)));
-            if (*endPoints - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)*boundsOut;
+            if (*endPoints - *radii < (float)(convTmp))
             {
                 *boundsOut = (int)(*endPoints - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[3] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < *endPoints + *radii)
+            convTmp = (double)(int)boundsOut[3];
+            if ((float)(convTmp) < *endPoints + *radii)
             {
                 boundsOut[3] = (int)(*endPoints + *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[1] ^ 0x80000000)));
-            if (endPoints[1] - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)boundsOut[1];
+            if (endPoints[1] - *radii < (float)(convTmp))
             {
                 boundsOut[1] = (int)(endPoints[1] - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[4] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < endPoints[1] + *radii)
+            convTmp = (double)(int)boundsOut[4];
+            if ((float)(convTmp) < endPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(endPoints[1] + *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[2] ^ 0x80000000)));
-            if (endPoints[2] - *radii < (float)(convTmp - bias))
+            convTmp = (double)(int)boundsOut[2];
+            if (endPoints[2] - *radii < (float)(convTmp))
             {
                 boundsOut[2] = (int)(endPoints[2] - *radii);
             }
-            convTmp = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(boundsOut[5] ^ 0x80000000)));
-            if ((float)(convTmp - bias) < endPoints[2] + *radii)
+            convTmp = (double)(int)boundsOut[5];
+            if ((float)(convTmp) < endPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(endPoints[2] + *radii);
             }

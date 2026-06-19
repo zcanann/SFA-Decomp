@@ -879,8 +879,8 @@ void FUN_80170048(void)
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(dC + dA) * dB));
                 state[5] = *colorTbl;
                 rand = randomGetRange(0x78, 0x7f);
-                randBits = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(iTmp * rand ^ 0x80000000)));
-                *(short*)(walk + 0xf) = (short)(int)(dE + (double)(float)(randBits - dD));
+                randBits = (double)(int)(iTmp * rand);
+                *(short*)(walk + 0xf) = (short)(int)(dE + (double)(float)(randBits));
                 walk = (int*)((int)walk + 2);
                 scaleTbl = scaleTbl + 1;
                 state = state + 1;
@@ -980,8 +980,8 @@ void FUN_80170048(void)
             walk[9] = (int)(*scaleTbl * (float)((double)(float)(dE + dA) * dB));
             walk[5] = *colorTbl;
             rand = randomGetRange(0x78, 0x7f);
-            randBits2 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(iTmp * rand ^ 0x80000000)));
-            *(short*)(state + 0xf) = (short)(int)(dC + (double)(float)(randBits2 - dD));
+            randBits2 = (double)(int)(iTmp * rand);
+            *(short*)(state + 0xf) = (short)(int)(dC + (double)(float)(randBits2));
             state = (int*)((int)state + 2);
             scaleTbl = scaleTbl + 1;
             walk = walk + 1;

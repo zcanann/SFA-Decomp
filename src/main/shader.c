@@ -562,8 +562,8 @@ u32 FUN_80057690(int param_1)
         }
         if (projSize < lbl_803DF868)
         {
-            local_30 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(alpha ^ 0x80000000)));
-            alpha = (u32)(((float)(local_30 - DOUBLE_803df840) * (projSize - lbl_803DF860)) /
+            local_30 = (double)(int)alpha;
+            alpha = (u32)(((float)(local_30) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
         *(char*)(param_1 + 0x37) = (char)(alpha * (((GameObject*)param_1)->anim.alpha + 1) >> 8);

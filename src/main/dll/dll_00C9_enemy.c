@@ -1833,8 +1833,8 @@ void FUN_8014d164(double param_1, double param_2, u16* param_3, int param_4, u32
         dVar4 = (double)lbl_803E3200;
     }
     uVar1 = FUN_80017730();
-    local_50 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((uVar1 & 0xffff) - (u32) * param_3 ^ 0x80000000)));
-    dVar2 = (double)(float)(local_50 - DOUBLE_803e3218);
+    local_50 = (double)(int)((uVar1 & 0xffff) - (u32) * param_3);
+    dVar2 = (double)(float)(local_50);
     if ((double)lbl_803E324C < dVar2)
     {
         dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
@@ -1872,8 +1872,8 @@ void FUN_8014d164(double param_1, double param_2, u16* param_3, int param_4, u32
         FUN_80293900((double)(*(float*)(param_4 + 0x2c0) * *(float*)(param_4 + 0x2c0) +
             *(float*)(param_4 + 0x2b8) * *(float*)(param_4 + 0x2b8)));
         uVar1 = FUN_80017730();
-        local_48 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((uVar1 & 0xffff) - param_3[1] ^ 0x80000000)));
-        dVar2 = (double)(float)(local_48 - DOUBLE_803e3218);
+        local_48 = (double)(int)((uVar1 & 0xffff) - param_3[1]);
+        dVar2 = (double)(float)(local_48);
         if ((double)lbl_803E324C < dVar2)
         {
             dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);

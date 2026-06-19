@@ -792,8 +792,8 @@ void FUN_80170048(void)
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(phase + cosVal) * base));
                 state[5] = *src;
                 randVal = randomGetRange(0x78, 0x7f);
-                local_78 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(scratch * randVal ^ 0x80000000)));
-                *(short*)(elem + 0xf) = (short)(int)(offset + (double)(float)(local_78 - bias));
+                local_78 = (double)(int)(scratch * randVal);
+                *(short*)(elem + 0xf) = (short)(int)(offset + (double)(float)(local_78));
                 elem = (int*)((int)elem + 2);
                 scaleTbl = scaleTbl + 1;
                 state = state + 1;
@@ -893,8 +893,8 @@ void FUN_80170048(void)
             elem[9] = (int)(*scaleTbl * (float)((double)(float)(offset + cosVal) * base));
             elem[5] = *src;
             randVal = randomGetRange(0x78, 0x7f);
-            local_70 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(scratch * randVal ^ 0x80000000)));
-            *(short*)(state + 0xf) = (short)(int)(phase + (double)(float)(local_70 - bias));
+            local_70 = (double)(int)(scratch * randVal);
+            *(short*)(state + 0xf) = (short)(int)(phase + (double)(float)(local_70));
             state = (int*)((int)state + 2);
             scaleTbl = scaleTbl + 1;
             elem = elem + 1;

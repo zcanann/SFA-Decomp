@@ -468,17 +468,16 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
                                                         indices *
                                                         0x10 + 0xc))) /
                 (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
-            convFrames = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000)));
+            convFrames = (double)(int)((ModgfxState*)state)->blendFrameCount;
             ((ModgfxState*)state)->blendColorStepG =
                 (targetG - (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
                                                         0x10 + 0xd))) /
-                (float)(convFrames - biasS);
-            convBlueBase = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10
-                                                + 0xe))));
-            convFrames2 = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000)));
-            ((ModgfxState*)state)->blendColorStepB = (targetB - (float)(convBlueBase - biasU)) / (float)(convFrames2 -
-                biasS);
+                (float)(convFrames);
+            convBlueBase = (double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10
+                                                + 0xe);
+            convFrames2 = (double)(int)((ModgfxState*)state)->blendFrameCount;
+            ((ModgfxState*)state)->blendColorStepB = (targetB - (float)(convBlueBase)) / (float)(convFrames2);
         }
     }
     ((ModgfxState*)state)->blendColorR = ((ModgfxState*)state)->blendColorR + ((ModgfxState*)state)->blendColorStepR;
@@ -672,9 +671,9 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
                                                         indices *
                                                         0x10 + 0xf)))
             / (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
-        convAlphaBase = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
-                                             0x10 + 0xf))));
-        *(float*)(work1 + 0xb0) = (float)(convAlphaBase - biasU);
+        convAlphaBase = (double)(u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
+                                             0x10 + 0xf);
+        *(float*)(work1 + 0xb0) = (float)(convAlphaBase);
     }
     work1 = (channel & 0xff) * 8;
     work0 = state + work1;
@@ -738,8 +737,8 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
                 *(short*)(work2 + off) =
                     (short)(int)((float)((double)(int)*(short*)(work2 + off)) * targetY);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 4;
-                convA = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(work2 + off) ^ 0x80000000)));
-                *(short*)(work2 + off) = (short)(int)((float)(convA - biasS) * targetZ);
+                convA = (double)(int)*(short*)(work2 + off);
+                *(short*)(work2 + off) = (short)(int)((float)(convA) * targetZ);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10;
                 *(u16*)(vtxBufA + off) = *(u16*)(work2 + off);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 2;
@@ -754,8 +753,8 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
         *(float*)(work1 + 0x3c) =
             (targetX - *(float*)(work1 + 0x30)) /
             (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
-        convFrames = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000)));
-        *(float*)(work1 + 0x40) = (targetY - *(float*)(work1 + 0x34)) / (float)(convFrames - biasS);
+        convFrames = (double)(int)((ModgfxState*)state)->blendFrameCount;
+        *(float*)(work1 + 0x40) = (targetY - *(float*)(work1 + 0x34)) / (float)(convFrames);
         *(float*)(work1 + 0x44) =
             (targetZ - *(float*)(work1 + 0x38)) /
             (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
@@ -773,23 +772,23 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
         if (targetX != *(float*)(work0 + 0x30))
         {
             vtxOff = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + off) * 0x10;
-            convB = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(vtxBufA + vtxOff) ^ 0x80000000)));
+            convB = (double)(int)*(short*)(vtxBufA + vtxOff);
             *(short*)(work1 + vtxOff) =
-                (short)(int)(*(float*)(work0 + 0x30) * (float)(convB - DOUBLE_803e00c8));
+                (short)(int)(*(float*)(work0 + 0x30) * (float)(convB));
         }
         if (targetX != *(float*)(work0 + 0x34))
         {
             vtxOff = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + off) * 0x10 + 2;
-            convB = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(vtxBufA + vtxOff) ^ 0x80000000)));
+            convB = (double)(int)*(short*)(vtxBufA + vtxOff);
             *(short*)(work1 + vtxOff) =
-                (short)(int)(*(float*)(work0 + 0x34) * (float)(convB - DOUBLE_803e00c8));
+                (short)(int)(*(float*)(work0 + 0x34) * (float)(convB));
         }
         if (targetX != *(float*)(work0 + 0x38))
         {
             vtxOff = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + off) * 0x10 + 4;
-            convB = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(vtxBufA + vtxOff) ^ 0x80000000)));
+            convB = (double)(int)*(short*)(vtxBufA + vtxOff);
             *(short*)(work1 + vtxOff) =
-                (short)(int)(*(float*)(work0 + 0x38) * (float)(convB - DOUBLE_803e00c8));
+                (short)(int)(*(float*)(work0 + 0x38) * (float)(convB));
         }
         off = off + 2;
     }
