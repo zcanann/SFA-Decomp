@@ -161,9 +161,9 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u64 in_f6;
     u64 in_f7;
     u64 in_f8;
-    float local_58;
-    float local_54;
-    float local_50[2];
+    float deltaZ;
+    float deltaY;
+    float deltaX[2];
     u32 local_48;
     u32 uStack_44;
     u32 local_40;
@@ -176,18 +176,18 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     }
     else
     {
-        local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dVar6 = (double)local_50[0];
-        local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
-        local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dVar4 = FUN_80293900((double)(local_58 * local_58 + (float)(dVar6 * dVar6) + local_54 * local_54
+        deltaX[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
+        dVar6 = (double)deltaX[0];
+        deltaY = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
+        deltaZ = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
+        dVar4 = FUN_80293900((double)(deltaZ * deltaZ + (float)(dVar6 * dVar6) + deltaY * deltaY
         ));
         if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
         {
-            FUN_8006f7a0(local_50, &local_54, &local_58);
-            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
-            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
-            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
+            FUN_8006f7a0(deltaX, &deltaY, &deltaZ);
+            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * param_1);
+            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)deltaY * param_1);
+            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)deltaZ * param_1);
             sVar2 = (*param_3 + -0x8000) - *param_2;
             if (0x8000 < sVar2)
             {
@@ -304,41 +304,41 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     int iVar1;
     u32 uVar2;
     short* psVar3;
-    u32 local_28;
-    u32 local_24;
-    u32 local_20[4];
+    u32 msgSender;
+    u32 msgId;
+    u32 msgData[4];
 
     psVar3 = ((GameObject*)param_9)->extra;
-    local_28 = 0;
-    while (iVar1 = ObjMsg_Pop(param_9, &local_24, local_20, &local_28), iVar1 != 0)
+    msgSender = 0;
+    while (iVar1 = ObjMsg_Pop(param_9, &msgId, msgData, &msgSender), iVar1 != 0)
     {
-        if (local_24 == 0x110001)
+        if (msgId == 0x110001)
         {
             if ((*psVar3 == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110001, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((int)local_24 < 0x110001)
+        else if ((int)msgId < 0x110001)
         {
-            if (local_24 == 0xa0005)
+            if (msgId == 0xa0005)
             {
                 param_1 = FUN_80017698((int)*psVar3, 1);
             }
         }
-        else if (local_24 == 0x110003)
+        else if (msgId == 0x110003)
         {
             if ((*psVar3 == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110003, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((((int)local_24 < 0x110003) && (*psVar3 == 0x55)) &&
+        else if ((((int)msgId < 0x110003) && (*psVar3 == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, local_20[0],
+            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
