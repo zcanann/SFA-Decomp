@@ -518,21 +518,21 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
     }
     if (b < 5)
     {
-        if (lbl_803DF35C != gExpgfxFrameTimerB)
+        if (gExpgfxFrameTimerB != lbl_803DF35C)
         {
             frame = 0;
         }
         else
         {
-            frame = t2.v[b];
+            frame = t2.v[b] & 0xff;
         }
-        vec[0] = lbl_803DF35C;
+        vec[0] = *(f32*)&lbl_803DF35C;
         vec[1] = d;
-        vec[2] = lbl_803DF35C;
+        vec[2] = *(f32*)&lbl_803DF35C;
         switch (a)
         {
         case 1:
-            fn_80098B18(obj, c, t1.v[b], frame, 0, vec);
+            fn_80098B18(obj, c, (u8)t1.v[b], frame, 0, vec);
             break;
         }
     }
