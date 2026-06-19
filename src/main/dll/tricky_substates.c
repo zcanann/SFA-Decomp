@@ -360,7 +360,8 @@ void trickyFn_80141fec(u8* obj, u8* state)
                 if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk70C + 8)
                 {
                     ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk70C + 8;
-                    ((TrickyState*)state)->stateFlags &= ~0x400LL;
+                    ret = *(u32*)&((TrickyState*)state)->stateFlags;
+                    *(u32*)&((TrickyState*)state)->stateFlags = ret & ~0x400LL;
                     ((TrickyState*)state)->unkD2 = 0;
                 }
             }
