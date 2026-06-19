@@ -71,19 +71,19 @@ int fn_8015E3A0(int obj, int p2)
         }
     }
 
-    *(f32*)(p2 + 0x2a0) = lbl_803E2DD8;
+    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_803E2DD8;
 
     if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2DC8, 0);
-        *(u8*)(p2 + 0x346) = 0;
+        ((GroundBaddieState*)p2)->baddie.moveDone = 0;
     }
-    *(u8*)(p2 + 0x34d) = 1;
+    ((GroundBaddieState*)p2)->baddie.unk34D = 1;
 
-    if ((*(u32*)(p2 + 0x314) & 0x1) != 0U)
+    if ((((GroundBaddieState*)p2)->baddie.eventFlags & 0x1) != 0U)
     {
         int child = *(int*)&sub->control;
-        *(u32*)(p2 + 0x314) = *(u32*)(p2 + 0x314) & ~0x1;
+        ((GroundBaddieState*)p2)->baddie.eventFlags = ((GroundBaddieState*)p2)->baddie.eventFlags & ~0x1;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
         Sfx_PlayFromObject(obj, SFXfoxcom_heel);
     }
@@ -575,7 +575,7 @@ void fn_8015EB6C(int obj, int p2, int p3)
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
     extern f32 lbl_803E2E00;
-    int sub = *(int*)(p2 + 0x40c);
+    int sub = *(int*)&((GroundBaddieState*)p2)->control;
     char* r;
 
     r = (char*)(**(int (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
