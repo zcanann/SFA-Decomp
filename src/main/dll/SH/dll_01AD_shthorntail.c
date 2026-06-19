@@ -113,7 +113,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runt
             closeToPlayer = FALSE;
         }
     }
-    switch ((s8)runtime->behaviorState)
+    switch (runtime->behaviorState)
     {
     case SHTHORNTAIL_STATE_IDLE:
         if (!closeToPlayer)
@@ -235,7 +235,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
             runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
             return;
         }
-        if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE)
+        if (runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE)
         {
             Sfx_PlayFromObject(0, SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;

@@ -198,15 +198,15 @@ void GXSetGPFifo(GXFifoObj* fifo) {
     GX_SET_CP_REG(24, realFifo->count & 0xFFFF);
     GX_SET_CP_REG(26, (u32)realFifo->wrPtr & 0xFFFF);
     GX_SET_CP_REG(28, (u32)realFifo->rdPtr & 0xFFFF);
-    GX_SET_CP_REG(20, (u32)realFifo->hiWatermark & 0xFFFF);
-    GX_SET_CP_REG(22, (u32)realFifo->loWatermark & 0xFFFF);
+    GX_SET_CP_REG(20, realFifo->hiWatermark & 0xFFFF);
+    GX_SET_CP_REG(22, realFifo->loWatermark & 0xFFFF);
     GX_SET_CP_REG(17, ((u32)realFifo->base & 0x3FFFFFFF) >> 16);
     GX_SET_CP_REG(19, ((u32)realFifo->top & 0x3FFFFFFF) >> 16);
     GX_SET_CP_REG(25, realFifo->count >> 16);
     GX_SET_CP_REG(27, ((u32)realFifo->wrPtr & 0x3FFFFFFF) >> 16);
     GX_SET_CP_REG(29, ((u32)realFifo->rdPtr & 0x3FFFFFFF) >> 16);
-    GX_SET_CP_REG(21, (u32)realFifo->hiWatermark >> 16);
-    GX_SET_CP_REG(23, (u32)realFifo->loWatermark >> 16);
+    GX_SET_CP_REG(21, realFifo->hiWatermark >> 16);
+    GX_SET_CP_REG(23, realFifo->loWatermark >> 16);
 
     __sync();
 

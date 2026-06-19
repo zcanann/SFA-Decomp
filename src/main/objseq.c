@@ -4986,7 +4986,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
             deltaPrev = -deltaPrev;
         }
         values[2] = (deltaNext + deltaPrev) * lbl_803DF000 *
-            (f32)((s8)prev->tangentAndMode >> 2);
+            (f32)(prev->tangentAndMode >> 2);
     }
 
     span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
@@ -5010,7 +5010,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
                 deltaPrev = -deltaPrev;
             }
             values[3] = (deltaNext + deltaPrev) * lbl_803DF000 *
-                (f32)((s8)key->tangentAndMode >> 2);
+                (f32)(key->tangentAndMode >> 2);
         }
     }
 

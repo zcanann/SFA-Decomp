@@ -50,7 +50,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
         lantern->anim.rotX += gSClanternObjAnimEvents.rootPitch;
     }
     i = 0;
-    while (i < (s8)gSClanternObjAnimEvents.triggerCount)
+    while (i < gSClanternObjAnimEvents.triggerCount)
     {
         switch (gSClanternObjAnimEvents.triggeredIds[i])
         {

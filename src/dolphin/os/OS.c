@@ -226,7 +226,7 @@ void OSInit(void)
         // if the debug info address exists, grab some debug info
         if (DebugInfo != NULL) {
             BI2DebugFlag = &DebugInfo->debugFlag; // debug flag from DVD BI2
-            __PADSpec = (u32)DebugInfo->padSpec; // some other info from DVD BI2
+            __PADSpec = DebugInfo->padSpec; // some other info from DVD BI2
             *((u8 *)DEBUGFLAG_ADDR) = (u8)*BI2DebugFlag; // store flag in mem
             *((u8 *)OS_DEBUG_ADDRESS_2) = (u8)__PADSpec; // store other info in mem
         }
@@ -325,7 +325,7 @@ void OSInit(void)
         }
 
         // report memory size
-        OSReport("Memory %d MB\n", (u32)BootInfo->memorySize >> 0x14U);
+        OSReport("Memory %d MB\n", BootInfo->memorySize >> 0x14U);
         // report heap bounds
         OSReport("Arena : 0x%x - 0x%x\n", OSGetArenaLo(), OSGetArenaHi());
         // report OS version

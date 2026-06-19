@@ -114,7 +114,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
         stable = 1;
         j = 0;
         p = (f32*)sub;
-        while (j < (int)sub->segmentCount - 1)
+        while (j < sub->segmentCount - 1)
         {
             a = p[1];
             b = p[2];
@@ -139,7 +139,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     }
     if (sub->ignited != 0)
     {
-        for (i = 0; i < (int)sub->segmentCount; i++)
+        for (i = 0; i < sub->segmentCount; i++)
         {
             sub->segmentGlow[i] = 0xff;
             sub->segmentLit[i] = 1;

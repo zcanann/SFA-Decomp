@@ -122,7 +122,7 @@ void SB_Propeller_update(int obj)
         parentTimer = ((GameObject*)objAnim->parent)->unkF4;
         if ((objAnim->seqId != SB_PROPELLER_SEQ_ID) && (parentTimer < 4))
         {
-            state->spinBlend = (f32)state->spinRate / lbl_803E581C;
+            state->spinBlend = state->spinRate / lbl_803E581C;
             if (state->spinBlend < lbl_803E5814)
             {
                 state->spinBlend = -state->spinBlend;
@@ -169,7 +169,7 @@ void SB_Propeller_update(int obj)
         {
             ((ObjHitsPriorityState*)objAnim->hitReactState)->objectPairPriority = 0;
         }
-        objAnim->rotZ = -((f32)state->spinRate * timeDelta - (
+        objAnim->rotZ = -(state->spinRate * timeDelta - (
             f32)objAnim->rotZ);
     }
 }

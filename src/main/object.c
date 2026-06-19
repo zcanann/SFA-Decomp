@@ -2272,7 +2272,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     object->previousLocalPosX = object->localPosX;
     object->previousLocalPosY = object->localPosY;
     object->previousLocalPosZ = object->localPosZ;
-    Obj_RunInitCallback(obj, (int)object->placementData, 0);
+    Obj_RunInitCallback(obj, object->placementData, 0);
     hitState = (ObjHitsPriorityState*)object->hitReactState;
     if (hitState != NULL)
     {

@@ -98,7 +98,7 @@ void dll_127_init(short* obj, int def)
     {
         *(float*)objAnim->modelState = *(float*)objAnim->modelInstance * scale;
     }
-    objAnim->bankIndex = (s8)placement->bankIndex;
+    objAnim->bankIndex = placement->bankIndex;
     yawBits = placement->yawBits & 0x3f;
     objAnim->rotX = (short)(yawBits << 10);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)

@@ -23,7 +23,7 @@ static void CreateCallbackFat(s32 chan, s32 result) {
         ent->copyTimes = 0;
 
         ASSERTLINE(111, CARDIsValidBlockNo(card, card->startBlock));
-        ent->startBlock = (u16)card->startBlock;
+        ent->startBlock = card->startBlock;
         ent->bannerFormat = 0;
         ent->iconAddr = -1;
         ent->iconFormat = 0;

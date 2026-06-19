@@ -34,7 +34,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
     int nextState;
     int randomValue;
 
-    switch ((s8)runtime->behaviorState)
+    switch (runtime->behaviorState)
     {
     case SHTHORNTAIL_STATE_IDLE:
         alertTriggered =
@@ -101,7 +101,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
             (float)framesThisStep;
         if (runtime->comboTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            if ((s8)runtime->comboRepeatCount <= 0)
+            if (runtime->comboRepeatCount <= 0)
             {
                 runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;
             }
@@ -202,7 +202,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
                 gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
                 if (gameBitValue != 0)
                 {
-                    if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT)
+                    if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT)
                     {
                         runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
                         randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
@@ -272,7 +272,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
             runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
             return;
         }
-        if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE)
+        if (runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE)
         {
             Sfx_PlayFromObject(0, SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
@@ -282,7 +282,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
         runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_7:
-        if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT)
+        if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT)
         {
             triggerEventId = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
             triggerIsSet = GameBit_Get(triggerEventId);
