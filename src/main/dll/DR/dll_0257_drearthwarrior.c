@@ -607,8 +607,8 @@ int fn_802BC830(int obj, int p2, int p3)
     }
     if (((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b80 != 0)
     {
-        f32 lim = *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10);
-        if (((BaddieState*)p3)->animSpeedC <= lim && ((BaddieState*)p3)->animSpeedA <= lim)
+        f32 lim;
+        if (((BaddieState*)p3)->animSpeedC <= (lim = *(f32*)((char*)((EarthWarriorSub*)p2)->configRow + 0x10)) && ((BaddieState*)p3)->animSpeedA <= lim)
         {
             ((EarthWarriorSub*)p2)->savedYaw = ((EarthWarriorSub*)p2)->currentYaw;
             ((ByteFlags*)&((EarthWarriorSub*)p2)->flags3F0)->b40 = 0;
