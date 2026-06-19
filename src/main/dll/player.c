@@ -15824,7 +15824,7 @@ void fn_802AE650(int obj, int state, int p3)
             ((PlayerState*)state)->unk844 *
             ((lbl_803E7F14 + *(f32*)((char*)((PlayerState*)state)->unk400 + 0x14)) -
                 ((PlayerState*)p3)->baddie.animSpeedA) +
-            ((PlayerState*)p3)->baddie.animSpeedA;
+            *(f32*)&((PlayerState*)p3)->baddie.animSpeedA;
         ((PlayerState*)p3)->baddie.animSpeedC = ((PlayerState*)p3)->baddie.animSpeedA;
         ((PlayerState*)state)->unk844 =
             lbl_803E7EFC * timeDelta + ((PlayerState*)state)->unk844;
