@@ -12,15 +12,15 @@
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int lbl_8032A1B4[5];
-extern u8 lbl_803DC1B8[8];
-extern u8 lbl_803DC1C0[8];
-extern int lbl_803DC1F0;
-extern int lbl_803DDD04;
-extern u8 lbl_803DDD08;
-extern s16 lbl_803DDD0A;
-extern int lbl_803DDD28;
-extern f32 lbl_803DDD2C;
+extern int gWorldPlanetGameBitTable[5];
+extern u8 gWorldPlanetHintFlagTable[8];
+extern u8 gWorldPlanetDefaultSelectOrder[8];
+extern int gWorldPlanetSavedSelection;
+extern int gWorldPlanetSelectConfirmTimer;
+extern u8 gWorldPlanetExitWarpTimer;
+extern s16 gWorldPlanetInputLockTimer;
+extern int gWorldPlanetLoadedMapId;
+extern f32 gWorldPlanetPathProgress;
 extern f32 lbl_803E65F8;
 extern u16 getNextTaskHintText(void);
 extern void setDrawLights(int v);
@@ -43,14 +43,14 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void setIsOvercast(int v);
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
-extern s16 lbl_803DDD0C;
+extern s16 gWorldPlanetReselectDelayTimer;
 extern int lbl_803DDD10;
-extern int lbl_8032A178[];
-extern u8 lbl_803DC1C8[8];
-extern u8 lbl_803DC1D0[8];
-extern u8 lbl_803DC1E8[8];
-extern u8 lbl_803DC1E0[6];
-extern u8 lbl_803DC1D8[6];
+extern int gWorldPlanetObjectIdTable[];
+extern u8 gWorldPlanetSelectionToIndex[8];
+extern u8 gWorldPlanetTitleStringIds[8];
+extern u8 gWorldPlanetKrazoaControlBytes[8];
+extern u8 gWorldPlanetLoadMapIndices[6];
+extern u8 gWorldPlanetWarpMapIndices[6];
 extern int getAngle(float y, float x);
 extern int loadMapAndParent(int mapId);
 extern int lockLevel(s32 val, int idx);
@@ -59,12 +59,12 @@ extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int idx, s8 transType);
 extern float fsin16Approx(int angle);
 extern float fcos16Approx(int angle);
-extern f32 lbl_803E661C;
-extern f32 lbl_803E6620;
-extern f32 lbl_803E6624;
-extern f32 lbl_803E6628;
-extern f32 lbl_803E662C;
-extern f32 lbl_803E6630;
+extern f32 gWorldPlanetPfxOffsetX;
+extern f32 gWorldPlanetPfxOffsetY;
+extern f32 gWorldPlanetPfxOffsetZ;
+extern f32 gWorldPlanetPathProgressStep;
+extern f32 gWorldPlanetPathProgressMax;
+extern f32 gWorldPlanetOrbitRadius;
 
 int worldplanet_getExtraSize(void)
 {
@@ -118,13 +118,13 @@ void worldplanet_init(int obj)
     int j;
 
     state = ((GameObject*)obj)->extra;
-    lbl_803DDD04 = 0;
+    gWorldPlanetSelectConfirmTimer = 0;
     GameBit_Set(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     mask = 0;
     for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++) {
-        if (GameBit_Get(lbl_8032A1B4[i]) != 0) {
+        if (GameBit_Get(gWorldPlanetGameBitTable[i]) != 0) {
             flag = 1;
-            if (lbl_803DC1B8[i] != 0) {
+            if (gWorldPlanetHintFlagTable[i] != 0) {
                 if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD) {
                     flag = 0;
                 }
@@ -136,31 +136,31 @@ void worldplanet_init(int obj)
         }
     }
     state->unlockedPlanetMask = mask;
-    if (lbl_803DC1F0 != -1)
+    if (gWorldPlanetSavedSelection != -1)
     {
-        state->selectedPlanet = lbl_803DC1F0;
+        state->selectedPlanet = gWorldPlanetSavedSelection;
     } else {
         for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++) {
-            if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
-                state->selectedPlanet = lbl_803DC1C0[j];
+            if (GameBit_Get(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0) {
+                state->selectedPlanet = gWorldPlanetDefaultSelectOrder[j];
                 break;
             }
         }
     }
-    lbl_803DDD08 = 0;
+    gWorldPlanetExitWarpTimer = 0;
     setDrawLights(0);
     audioStopByMask(0xf);
     Music_Trigger(WORLDPLANET_BOOT_MUSIC_TRIGGER, 1);
-    lbl_803DDD2C = lbl_803E65F8;
+    gWorldPlanetPathProgress = lbl_803E65F8;
     setShowWorldMapHud(1);
-    lbl_803DDD28 = -1;
+    gWorldPlanetLoadedMapId = -1;
     unlockLevel(0, 0, 1);
     mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
     layer = getCurMapLayer();
     (*gMapEventInterface)->savePoint((int)&((GameObject*)obj)->anim.localPosX, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
-    lbl_803DDD0A = WORLDPLANET_COUNTDOWN_FRAMES;
-    GameBit_Set(lbl_8032A1B4[2], 1);
+    gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
+    GameBit_Set(gWorldPlanetGameBitTable[2], 1);
     state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
     envFxActFn_800887f8(0);
 }
@@ -252,7 +252,7 @@ void worldplanet_update(int obj)
     s8 inX[3];
     u8 inY;
 
-    tbl = lbl_8032A178;
+    tbl = gWorldPlanetObjectIdTable;
     state = ((GameObject*)obj)->extra;
     done = 0;
     state->foxSpawnTimer -= 1;
@@ -279,19 +279,19 @@ void worldplanet_update(int obj)
         state->foxSpawnTimer = 0;
     }
     worldplanet_updateMapLighting(obj);
-    if (lbl_803DDD0A != 0)
+    if (gWorldPlanetInputLockTimer != 0)
     {
-        lbl_803DDD0A -= 1;
+        gWorldPlanetInputLockTimer -= 1;
     }
-    if (lbl_803DDD08 != 0)
+    if (gWorldPlanetExitWarpTimer != 0)
     {
-        lbl_803DDD08 -= 1;
-        if (lbl_803DDD08 == 0)
+        gWorldPlanetExitWarpTimer -= 1;
+        if (gWorldPlanetExitWarpTimer == 0)
         {
             setIsOvercast(1);
             setDrawCloudsAndLights(1);
             setDrawLights(1);
-            warpToMap(lbl_803DC1D8[lbl_803DC1C8[state->selectedPlanet]], 0);
+            warpToMap(gWorldPlanetWarpMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]], 0);
         }
     }
     else
@@ -305,12 +305,12 @@ void worldplanet_update(int obj)
         }
         else if ((state->flags & 8) == 0)
         {
-            objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
+            objId = tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
             (*gCameraInterface)->releaseAction(&objId, 2);
             state->flags |= 8;
             {
                 int krazoa = ObjList_FindObjectById(0x43077);
-                ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = lbl_803DC1E8[state->selectedPlanet];
+                ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->selectedPlanet];
             }
             AudioStream_StopCurrent();
         }
@@ -323,9 +323,9 @@ void worldplanet_update(int obj)
         }
         buttons = getButtonsJustPressed(0);
         pfx.dispatchTimer = 100;
-        pfx.offsetX = lbl_803E661C;
-        pfx.offsetY = lbl_803E6620;
-        pfx.offsetZ = lbl_803E6624;
+        pfx.offsetX = gWorldPlanetPfxOffsetX;
+        pfx.offsetY = gWorldPlanetPfxOffsetY;
+        pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, 0x6f2, &pfx, 2, -1, NULL);
         worldplanet_readMapInput(obj, (u8*)inX, &inY);
         ((GameObject*)obj)->anim.rotZ -= 10;
@@ -344,7 +344,7 @@ void worldplanet_update(int obj)
             u32 m = 0;
             int k = m;
             int* ids = &tbl[15];
-            u8* hints = lbl_803DC1B8;
+            u8* hints = gWorldPlanetHintFlagTable;
             do
             {
                 if (GameBit_Get(*ids) != 0)
@@ -366,7 +366,7 @@ void worldplanet_update(int obj)
             while (k < 5);
             state->unlockedPlanetMask = m;
         }
-        if (lbl_803DDD04 == 0 && state->selectionLocked == 0)
+        if (gWorldPlanetSelectConfirmTimer == 0 && state->selectionLocked == 0)
         {
             while (!done)
             {
@@ -381,29 +381,29 @@ void worldplanet_update(int obj)
                 }
                 done = 1;
             }
-            pauseMenuSetupTitle(0x2a7, lbl_803DC1D0[state->selectedPlanet], 0x19, 0);
+            pauseMenuSetupTitle(0x2a7, gWorldPlanetTitleStringIds[state->selectedPlanet], 0x19, 0);
             if (prevPlanet != state->selectedPlanet || ((GameObject*)obj)->unkF4 == 0)
             {
                 if (((GameObject*)obj)->unkF4 != 0)
                 {
-                    objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
+                    objId = tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
                     Sfx_PlayFromObject(0, 0x97);
                 }
-                lbl_803DDD2C = lbl_803E65F8;
+                gWorldPlanetPathProgress = lbl_803E65F8;
                 {
-                    int p = ObjList_FindObjectById(tbl[lbl_803DC1C8[prevPlanet]]);
+                    int p = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[prevPlanet]]);
                     ((WorldObjState*)((GameObject*)p)->extra)->effectState = 0;
-                    p = ObjList_FindObjectById(tbl[lbl_803DC1C8[state->selectedPlanet]]);
+                    p = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)((GameObject*)p)->extra)->effectState = 1;
                 }
                 ((GameObject*)obj)->unkF4 = 1;
             }
         }
-        lbl_803DDD2C = lbl_803DDD2C + lbl_803E6628;
-        if (lbl_803E662C <= lbl_803DDD2C)
+        gWorldPlanetPathProgress = gWorldPlanetPathProgress + gWorldPlanetPathProgressStep;
+        if (gWorldPlanetPathProgressMax <= gWorldPlanetPathProgress)
         {
-            lbl_803DDD2C = lbl_803E65F8;
+            gWorldPlanetPathProgress = lbl_803E65F8;
         }
         for (i = 0; i < 5; i++)
         {
@@ -428,9 +428,9 @@ void worldplanet_update(int obj)
                 if ((int)i == state->selectedPlanet)
                 {
                     extern int getAngle(float y, float x);
-                    u32 fi = (int)lbl_803DDD2C & 0xff;
+                    u32 fi = (int)gWorldPlanetPathProgress & 0xff;
                     u32 ni = (fi + 2) & 0xff;
-                    f32 frac = lbl_803DDD2C - fi;
+                    f32 frac = gWorldPlanetPathProgress - fi;
                     char* seg = WorldObj_GetPathPointWork(pstate, fi);
                     f32 x0 = *(f32*)(seg + 0x10);
                     f32 x1 = *(f32*)(seg + 0x28);
@@ -479,47 +479,47 @@ void worldplanet_update(int obj)
                 }
             }
         }
-        objId = ObjList_FindObjectById(tbl[lbl_803DC1C8[state->selectedPlanet]]);
-        if (getLoadedFileFlags(0) == 0 && lbl_803DDD0A == 0)
+        objId = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        if (getLoadedFileFlags(0) == 0 && gWorldPlanetInputLockTimer == 0)
         {
             switch (state->selectionLocked)
             {
             case 0:
-                if (lbl_803DDD0C == 0)
+                if (gWorldPlanetReselectDelayTimer == 0)
                 {
-                    if (lbl_803DDD04 == 0 &&
+                    if (gWorldPlanetSelectConfirmTimer == 0 &&
                         ((u32)state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
                         (buttons & 0x100) != 0)
                     {
-                        lbl_803DDD04 = 10;
-                        mapUnload(lbl_803DDD28, 0x20000000);
+                        gWorldPlanetSelectConfirmTimer = 10;
+                        mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
                     }
                 }
                 else
                 {
-                    lbl_803DDD0C -= 1;
+                    gWorldPlanetReselectDelayTimer -= 1;
                 }
-                if (lbl_803DDD04 != 0)
+                if (gWorldPlanetSelectConfirmTimer != 0)
                 {
                     Pause_ResetMenuFrameCounter();
-                    lbl_803DDD04 -= 1;
-                    if (lbl_803DDD04 < 2)
+                    gWorldPlanetSelectConfirmTimer -= 1;
+                    if (gWorldPlanetSelectConfirmTimer < 2)
                     {
-                        lbl_803DDD04 = 0;
+                        gWorldPlanetSelectConfirmTimer = 0;
                         Sfx_PlayFromObject(0, 0x98);
                         (*gCameraInterface)->setFocus((void*)objId, 0x50);
                         state->selectionLocked = 1;
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                         {
                             int krazoa = ObjList_FindObjectById(0x43077);
-                            ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = lbl_803DC1E8[state->
+                            ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->
                                 selectedPlanet];
                         }
-                        lbl_803DDD28 = loadMapAndParent(lbl_803DC1E0[lbl_803DC1C8[state->selectedPlanet]]);
-                        lockLevel(lbl_803DDD28, 1);
+                        gWorldPlanetLoadedMapId = loadMapAndParent(gWorldPlanetLoadMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                        lockLevel(gWorldPlanetLoadedMapId, 1);
                         loadModelAndAnimTabs();
                         lbl_803DDD00 = lbl_803E65F8;
-                        lbl_803DC1F0 = state->selectedPlanet;
+                        gWorldPlanetSavedSelection = state->selectedPlanet;
                     }
                 }
                 break;
@@ -539,11 +539,11 @@ void worldplanet_update(int obj)
                     streamFn_8000a380(2, 2, 1000);
                     (*gCameraInterface)->setFocus((void*)obj, 0x50);
                     state->selectionLocked = 0;
-                    lbl_803DDD0C = 0x1e;
+                    gWorldPlanetReselectDelayTimer = 0x1e;
                     (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
-                    unlockLevel(lbl_803DDD28, 1, 0);
-                    mapUnload(lbl_803DDD28, 0x20000000);
-                    lbl_803DDD0A = 10;
+                    unlockLevel(gWorldPlanetLoadedMapId, 1, 0);
+                    mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
+                    gWorldPlanetInputLockTimer = 10;
                 }
                 else if ((buttons & 0x100) != 0)
                 {
@@ -552,9 +552,9 @@ void worldplanet_update(int obj)
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, 0x98);
                     setShowWorldMapHud(0);
-                    lbl_803DDD08 = 5;
+                    gWorldPlanetExitWarpTimer = 5;
                     lbl_803DDD10 = 0;
-                    mapUnload(lbl_803DDD28, 0x10000000);
+                    mapUnload(gWorldPlanetLoadedMapId, 0x10000000);
                 }
                 break;
             }
@@ -571,7 +571,7 @@ void worldplanet_update(int obj)
                 int p = ObjList_FindObjectById(tbl[b + 10]);
                 ((GameObject*)p)->anim.rotZ = -ang;
             }
-            r = lbl_803E6630;
+            r = gWorldPlanetOrbitRadius;
             for (b = 0; b < 5; b++)
             {
                 s16* p = (s16*)ObjList_FindObjectById(tbl[b]);

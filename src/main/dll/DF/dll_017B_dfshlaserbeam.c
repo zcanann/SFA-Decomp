@@ -13,7 +13,7 @@
 extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
 extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDBB8;
+extern void* gLaserBeamEffectResource;
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
@@ -32,8 +32,8 @@ extern f32 lbl_803E4EC8;
 extern f32 lbl_803E4ECC;
 extern const f32 lbl_803E4ED0;
 extern const f32 lbl_803E4ED4;
-extern const f32 lbl_803E4ED8;
-extern const f32 lbl_803E4EDC;
+extern const f32 gLaserBeamAimPi;
+extern const f32 gLaserBeamAimAngleScale;
 extern const f32 lbl_803E4EE0;
 extern const f32 lbl_803E4EE4;
 extern const f32 lbl_803E4EE8;
@@ -45,8 +45,8 @@ extern const f32 lbl_803E4F08;
 extern const f32 lbl_803E4F0C;
 extern const f32 lbl_803E4F10;
 extern const f32 lbl_803E4F14;
-extern const f32 lbl_803E4F18;
-extern const f32 lbl_803E4F1C;
+extern const f32 gLaserBeamOrbitPi;
+extern const f32 gLaserBeamOrbitAngleScale;
 extern const f32 lbl_803E4F20;
 extern const f32 lbl_803E4F24;
 extern const f32 lbl_803E4F28;
@@ -61,8 +61,8 @@ void DFSH_LaserBeam_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(lbl_803DDBB8);
-    lbl_803DDBB8 = NULL;
+    Resource_Release(gLaserBeamEffectResource);
+    gLaserBeamEffectResource = NULL;
     if (*(void**)state != NULL)
     {
         textureFree(*(void**)state);
@@ -169,7 +169,7 @@ typedef struct DFSHLaserBeamObject
 #define PARTFX_SPAWN(obj,id,a,b,c,d) \
   (*gPartfxInterface)->spawnObject((obj),(id),(void *)(a),(b),(c),(void *)(d))
 #define RESOURCE_SPAWN(obj,id,a,flags,owner,unk) \
-  ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)lbl_803DDBB8 + 0x4)))(obj,id,a,flags,owner,unk)
+  ((void (*)(void *,int,int,int,int,int))(*(int *)((u8 *)*(int *)gLaserBeamEffectResource + 0x4)))(obj,id,a,flags,owner,unk)
 
 void DFSH_LaserBeam_update(u32 objAddr)
 {
@@ -222,7 +222,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     Sfx_PlayFromObject(obj, SFXmn_lummy311);
                 }
                 DFSH_LASER_BLAST_PHASE(runtime) = 1;
-                if (lbl_803DDBB8 != NULL)
+                if (gLaserBeamEffectResource != NULL)
                 {
                     RESOURCE_SPAWN(obj, 10, 0, 0x10004, -1, 0);
                 }
@@ -241,7 +241,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 if (DFSH_LASER_BLAST_PHASE(runtime) == 1)
                 {
                     DFSH_LASER_BLAST_PHASE(runtime) = 2;
-                    if (lbl_803DDBB8 != NULL)
+                    if (gLaserBeamEffectResource != NULL)
                     {
                         RESOURCE_SPAWN(obj, 0xB, 0, 0x10004, -1, 0);
                     }
@@ -262,8 +262,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     range = (f32)(int)config->rangeAngle;
     rangeSq = range * range;
-    yawSin = mathCosf((lbl_803E4ED8 * obj->yaw) / lbl_803E4EDC);
-    yawCos = mathSinf((lbl_803E4ED8 * obj->yaw) / lbl_803E4EDC);
+    yawSin = mathCosf((gLaserBeamAimPi * obj->yaw) / gLaserBeamAimAngleScale);
+    yawCos = mathSinf((gLaserBeamAimPi * obj->yaw) / gLaserBeamAimAngleScale);
     beamPlane = -(obj->localPosX * yawSin + obj->localPosZ * yawCos);
     playerObj = Obj_GetPlayerObject();
 
@@ -417,7 +417,7 @@ void DFSH_LaserBeam_free(void* objArg, void* configArg)
     timer = randomGetRange(-0x50, 0x50);
     runtime->lockTimer = (s16)(timer + 0x190);
     *(u8*)((u8*)runtime + 0x49) = 0;
-    lbl_803DDBB8 = Resource_Acquire(0x81, 1);
+    gLaserBeamEffectResource = Resource_Acquire(0x81, 1);
     runtime->beamVolumeScale = lbl_803E4EC0;
     *(u8*)((u8*)runtime + 0x4A) = config->proximityMode;
     runtime->cycleTimer = 0x118;
@@ -472,19 +472,19 @@ void fn_801C4664(void* objArg)
 
     obj->localPosY = lbl_803E4F14 +
     (*(f32*)((u8*)config + 0xC) +
-        mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
-            lbl_803E4F1C));
+        mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) /
+            gLaserBeamOrbitAngleScale));
 
-    trigA = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_B(runtime)) /
-        lbl_803E4F1C);
-    trigB = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
-        lbl_803E4F1C);
+    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) /
+        gLaserBeamOrbitAngleScale);
+    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) /
+        gLaserBeamOrbitAngleScale);
     obj->roll = (s16)(lbl_803E4F20 * (trigB + trigA));
 
-    trigA = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_C(runtime)) /
-        lbl_803E4F1C);
-    trigB = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
-        lbl_803E4F1C);
+    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) /
+        gLaserBeamOrbitAngleScale);
+    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) /
+        gLaserBeamOrbitAngleScale);
     obj->pitch = (s16)(lbl_803E4F20 * (trigB + trigA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4F24, timeDelta,

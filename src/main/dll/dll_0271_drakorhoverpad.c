@@ -368,30 +368,30 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
         *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 8);
         *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             currentMove + 0x2e) * mathSinf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             activeMoveProgress + 0x2e) * mathSinf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
-            lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
+            gDrakorHoverpadAngleScale));
         *(f32*)(p + 0xd8) = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
         *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0xc);
         *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
             mathSinf(
-                lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
-                lbl_803E6A58));
+                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
+                gDrakorHoverpadAngleScale));
         *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2e)
             * mathSinf(
-                lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2d) << 8) /
-                lbl_803E6A58));
+                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2d) << 8) /
+                gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->unkF8 = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
         ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x10);
         ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
             0x2e) * mathCosf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             activeMoveProgress + 0x2e) * mathCosf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
-            lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
+            gDrakorHoverpadAngleScale));
     }
     else
     {
@@ -399,28 +399,28 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
         *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
         *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             currentMove + 0x2e) * mathSinf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             currentMove + 0x2e) * mathSinf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         *(f32*)(p + 0xd8) = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
         *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
         *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
             mathSinf(
-                lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
-                lbl_803E6A58));
+                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
+                gDrakorHoverpadAngleScale));
         *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
             mathSinf(
-                lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
-                lbl_803E6A58));
+                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
+                gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->unkF8 = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
         ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
         ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
             0x2e) * mathCosf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
             0x2e) * mathCosf(
-            lbl_803E6A54 * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
     }
     if (*(int*)&((GameObject*)p)->anim.previousWorldPosY != 0)
     {
@@ -483,12 +483,12 @@ void drakorhoverpad_updateMain(int obj)
     curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
-        phase = lbl_803E6A54 *
+        phase = gDrakorHoverpadPi *
             (f32)(int)
         getAngle(sqrtf(curve->tangentX * curve->tangentX +
                      curve->tangentZ * curve->tangentZ),
                  curve->tangentY) /
-            lbl_803E6A58;
+            gDrakorHoverpadAngleScale;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0)
@@ -552,9 +552,9 @@ void drakorhoverpad_updateMain(int obj)
     curvePos[0] = curve->posX;
     curvePos[1] = curve->posY;
     curvePos[2] = curve->posZ;
-    curvePos[1] = curvePos[1] + (lbl_803E6A48 + mathSinf(lbl_803E6A54 *
+    curvePos[1] = curvePos[1] + (lbl_803E6A48 + mathSinf(gDrakorHoverpadPi *
         (f32)(int)((DrakorHoverpadUpdateMainState*)p)->anglePhase /
-        lbl_803E6A58));
+        gDrakorHoverpadAngleScale));
     ((DrakorHoverpadUpdateMainState*)p)->anglePhase = (s16)(
         ((DrakorHoverpadUpdateMainState*)p)->anglePhase + framesThisStep * 0x320);
     if (g->f10 != 0)
@@ -1010,7 +1010,7 @@ void drakorhoverpad_func16(int obj, f32 scale)
     pos.ry = 0;
     pos.rz = 0;
     pos.scale = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    setMatrixFromObjectPos(lbl_803AD1C8, &pos);
-    mtx44_mult(lbl_803AD1C8, mtx, lbl_803AD1C8);
-    fn_8003B950(lbl_803AD1C8);
+    setMatrixFromObjectPos(gDrakorHoverpadMtx, &pos);
+    mtx44_mult(gDrakorHoverpadMtx, mtx, gDrakorHoverpadMtx);
+    fn_8003B950(gDrakorHoverpadMtx);
 }

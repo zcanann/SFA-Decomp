@@ -34,14 +34,14 @@ extern f32 lbl_803E52A4;
 extern f32 lbl_803E52A8;
 extern f32 lbl_803E52AC;
 extern f32 lbl_803E52B0;
-extern f32 lbl_803E52B4;
-extern f32 lbl_803E52B8;
+extern f32 gEdibleMushroomPi;
+extern f32 gEdibleMushroomAngleToRadDivisor;
 extern f32 lbl_803E52D0;
 extern f32 lbl_803E52D4;
 extern f32 lbl_803E52D8;
 extern f32 lbl_803E52DC;
-extern s16 lbl_80326BD0[];
-extern f32 lbl_80326BE8[];
+extern s16 gEdibleMushroomMoveIdTable[];
+extern f32 gEdibleMushroomAnimEventTable[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
@@ -58,7 +58,7 @@ extern void ObjMsg_AllocQueue();
 extern f32 Vec_distance(int a, int b);
 extern f32 lbl_803E52E0;
 extern f32 lbl_803E52E4;
-extern f32 lbl_803E52E8;
+extern f32 gEdibleMushroomByteNormScale;
 extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
@@ -404,14 +404,14 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     }
 
     curMove = ((GameObject*)obj)->anim.currentMove;
-    moveId = lbl_80326BD0[((EdibleMushroomState*)state)->animState];
+    moveId = gEdibleMushroomMoveIdTable[((EdibleMushroomState*)state)->animState];
     if (curMove != moveId && moveId != -1)
     {
         ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E52B0, 0);
     }
 
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-        (int)obj, lbl_80326BE8[((EdibleMushroomState*)state)->animState], timeDelta, (ObjAnimEventList*)animOut) != 0)
+        (int)obj, gEdibleMushroomAnimEventTable[((EdibleMushroomState*)state)->animState], timeDelta, (ObjAnimEventList*)animOut) != 0)
     {
         ((EdibleMushroomState*)state)->flags |= 1;
     }
@@ -443,9 +443,9 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     }
 
     ((GameObject*)obj)->anim.velocityX =
-        speed * mathSinf((lbl_803E52B4 * (f32)((EdibleMushroomState*)state)->moveAngle) / lbl_803E52B8);
+        speed * mathSinf((gEdibleMushroomPi * (f32)((EdibleMushroomState*)state)->moveAngle) / gEdibleMushroomAngleToRadDivisor);
     ((GameObject*)obj)->anim.velocityZ =
-        speed * mathCosf((lbl_803E52B4 * (f32)((EdibleMushroomState*)state)->moveAngle) / lbl_803E52B8);
+        speed * mathCosf((gEdibleMushroomPi * (f32)((EdibleMushroomState*)state)->moveAngle) / gEdibleMushroomAngleToRadDivisor);
 
     objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E5288,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
@@ -472,7 +472,7 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 
     angle = getAngle(-(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX),
                      -(((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ));
-    rad = (lbl_803E52B4 * angle) / lbl_803E52B8;
+    rad = (gEdibleMushroomPi * angle) / gEdibleMushroomAngleToRadDivisor;
     c = mathSinf(rad);
     s = mathCosf(rad);
     vec[0] = ((GameObject*)obj)->anim.localPosX - dist * c;
@@ -693,7 +693,7 @@ void ediblemushroom_init(int obj, int aux)
 
     ((EdibleMushroomState*)state)->lungeRootSpeedScale = lbl_803E52E0;
     ((EdibleMushroomState*)state)->mapParamScale = lbl_803E52E4 *
-        ((f32) * (u8*)(aux + 0x1c) / lbl_803E52E8);
+        ((f32) * (u8*)(aux + 0x1c) / gEdibleMushroomByteNormScale);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32*)&lbl_803E52A8, &animEvents);

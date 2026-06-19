@@ -36,7 +36,7 @@ typedef struct WindliftObjectDef
     f32 unk10;
     u8 pad14[0x18 - 0x14];
     s8 unk18;
-    s8 heightByte; /* 0x19: lift height in lbl_803E41C8 units (0 = default) */
+    s8 heightByte; /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
     s16 unk1A;
     s16 delay;
     s16 seqId;
@@ -86,10 +86,10 @@ extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
 extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern u8 lbl_80322A48[];
-extern u8 lbl_80322A68[];
-extern f32 lbl_803E41C8;
-extern f32 lbl_803E41CC;
+extern u8 gWindLiftSeqDurationTable[];
+extern u8 gWindLiftSeqGamebitTable[];
+extern f32 gWindLiftHeightByteScale;
+extern f32 gWindLiftDefaultHeight;
 extern const f32 lbl_803E4168;
 extern f32 Vec_xzDistance(void* a, void* b);
 extern f32 lbl_803E4170;
@@ -507,8 +507,8 @@ void windlift_init(int* obj, u8* def)
     int i;
     WindLiftSub* sub = ((GameObject*)obj)->extra;
     sub->seqId = ((WindliftObjectDef*)def)->seqId;
-    sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
-    sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
+    sub->duration = seqStreamLookupFn_8007fff8(gWindLiftSeqDurationTable, 4, sub->seqId);
+    sub->gamebit = seqStreamLookupFn_8007fff8(gWindLiftSeqGamebitTable, 3, sub->seqId);
     if (sub->gamebit == 0)
     {
         sub->gamebit = -1;
@@ -521,14 +521,14 @@ void windlift_init(int* obj, u8* def)
     sub->timer = 0;
     if (((WindliftObjectDef*)def)->heightByte != 0)
     {
-        sub->liftHeight = lbl_803E41C8 * (f32)((WindliftObjectDef*)def)->heightByte;
+        sub->liftHeight = gWindLiftHeightByteScale * (f32)((WindliftObjectDef*)def)->heightByte;
     }
     else
     {
-        sub->liftHeight = lbl_803E41CC;
+        sub->liftHeight = gWindLiftDefaultHeight;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
-        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / lbl_803E41CC;
+        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / gWindLiftDefaultHeight;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
     if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)

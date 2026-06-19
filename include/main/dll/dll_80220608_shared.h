@@ -1678,8 +1678,8 @@ extern f32 lbl_803E71B4;
 extern void setMatrixFromObjectTransposed(void *transform, f32 *mtx);
 extern f32 lbl_803E718C;
 extern f32 lbl_803E7190;
-extern f32 lbl_803E7194;
-extern f32 lbl_803E7198;
+extern f32 gArwingSquadronPi;
+extern f32 gArwingSquadronSwayPhaseToAngleDiv;
 
 
 extern f32 lbl_803E7164;

@@ -594,9 +594,9 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = leaderAnim->rotX;
     src.rot[1] = leaderAnim->rotY;
     src.rot[2] = leaderAnim->rotZ;
-    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * state->swayPhaseX / lbl_803E7198) +
+    out[0] = lbl_803E7190 * mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
         lbl_803E718C * setup->leaderOffsetX;
-    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * state->swayPhaseY / lbl_803E7198) +
+    out[1] = lbl_803E7190 * mathSinf(gArwingSquadronPi * state->swayPhaseY / gArwingSquadronSwayPhaseToAngleDiv) +
         lbl_803E718C * setup->leaderOffsetY;
     out[2] = lbl_803E718C * setup->leaderOffsetZ;
     setMatrixFromObjectTransposed(&src, mtx);
@@ -610,7 +610,7 @@ void arwsquadron_followLeader(int p1, int p2)
     {
         objAnim->rotZ =
             leaderState->rollAmplitude *
-            mathSinf(lbl_803E7194 * state->swayPhaseX / lbl_803E7198) +
+            mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
             leaderAnim->rotZ;
     }
     state->flags.cmd.f80 = leaderState->flags.cmd.f80;
