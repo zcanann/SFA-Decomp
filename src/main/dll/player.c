@@ -8612,7 +8612,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         {
             damage = 0;
             ((ByteFlags*)((char*)inner + 0x3f6))->b10 = 1;
-            if (hitObj != NULL && *(s16*)(hitObj + 0x46) != 0x2c5)
+            if (hitObj != NULL && ((GameObject*)hitObj)->anim.seqId != 0x2c5)
             {
                 if (lbl_803DE470 == 0)
                 {
@@ -8682,7 +8682,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             lbl_803DE474 = 0;
             if (hitObj != NULL)
             {
-                switch (*(s16*)(hitObj + 0x46))
+                switch (((GameObject*)hitObj)->anim.seqId)
                 {
                 case 0x11:
                 case 0x33:
@@ -8713,8 +8713,8 @@ void fn_802AFB0C(int obj, int inner, int state)
             switch (orig)
             {
             case 0x16:
-                if (hitObj != NULL && (*(s16*)(hitObj + 0x46) == 0x613 ||
-                    *(s16*)(hitObj + 0x46) == 0x70f))
+                if (hitObj != NULL && (((GameObject*)hitObj)->anim.seqId == 0x613 ||
+                    ((GameObject*)hitObj)->anim.seqId == 0x70f))
                 {
                     Sfx_PlayFromObject(obj,
                                        (u16)(((PlayerState*)inner)->characterId == 0 ? 0x1f : 0x24));
@@ -8748,7 +8748,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x1f : 0x24));
                 if (hitObj != NULL)
                 {
-                    switch (*(s16*)(hitObj + 0x46))
+                    switch (((GameObject*)hitObj)->anim.seqId)
                     {
                     case 0x33:
                         Sfx_PlayFromObject(obj, 0x36e);
