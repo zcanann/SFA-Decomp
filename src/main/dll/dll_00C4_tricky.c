@@ -1403,7 +1403,7 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & 0x100) != 0)
     {
-        diff = ((TrickyState*)state)->unk5A - (u16) * (s16*)obj;
+        diff = ((TrickyState*)state)->unk5A - (u16)((GameObject*)obj)->anim.rotX;
         if (diff > 0x8000)
         {
             diff -= 0xffff;
@@ -2191,7 +2191,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 dp[0] = ((GameObject*)obj)->anim.worldPosX - hitPos.x;
                 dp[1] = ((GameObject*)obj)->anim.worldPosY - hitPos.y;
                 dp[2] = ((GameObject*)obj)->anim.worldPosZ - hitPos.z;
-                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16) * (s16*)obj;
+                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16)((GameObject*)obj)->anim.rotX;
                 if (diff > 0x8000)
                 {
                     diff -= 0xffff;
