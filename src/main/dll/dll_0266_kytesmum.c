@@ -162,8 +162,7 @@ void kytesmum_update(int obj)
             runtime->animSpeed = lbl_803E699C;
         }
     }
-    runtime->idleSfxTimer -= framesThisStep;
-    if (runtime->idleSfxTimer < 0)
+    if ((s16)(runtime->idleSfxTimer -= framesThisStep) < 0)
     {
         runtime->idleSfxTimer = randomGetRange(0x32, 0x1f4);
         objSoundFn_800392f0(obj, (int)runtime->modelSoundState,
