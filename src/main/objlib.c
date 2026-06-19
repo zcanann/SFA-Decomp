@@ -773,9 +773,9 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                *(u8*)&hitState->sphereIndices[hitSlot] = sphereIndex;
-                hitState->priorities[hitSlot] = priority;
                 hitState->hitVolumes[hitSlot] = hitVolume;
+                hitState->priorities[hitSlot] = priority;
+                hitState->sphereIndices[hitSlot] = sphereIndex;
                 hitState->hitPosX[hitSlot] = hitPosX;
                 hitState->hitPosY[hitSlot] = hitPosY;
                 hitState->hitPosZ[hitSlot] = hitPosZ;
