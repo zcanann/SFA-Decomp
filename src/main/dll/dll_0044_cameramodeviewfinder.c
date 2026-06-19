@@ -141,7 +141,8 @@ void firstPersonDoControls(s16* obj)
         zoom2 = *(f32*)(obj + 0x5a);
         stickX = padGetCY(0);
         t = (f32) - (int)stickX;
-        zoom2 = t * lbl_803E1810 * timeDelta + zoom2;
+        t = lbl_803E1810 * t;
+        zoom2 = t * timeDelta + zoom2;
         viewFinderSetZoom(Camera_GetFovY());
         fovTarget = (zoom2 < lbl_803E17FC)
                         ? lbl_803E17FC
