@@ -987,7 +987,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     *(f32*)(p3 + 644) = lbl_803E1C2C;
     if (p2[50] != 0)
     {
-        p3[852] = p2[50];
+        *(s8*)&p3[852] = (s8)p2[50];
     }
     else
     {
