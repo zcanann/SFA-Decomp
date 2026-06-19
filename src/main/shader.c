@@ -815,7 +815,7 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
 extern s8 lbl_803DB624;
 extern u8* lbl_803DCE78;
 extern int mapCoordsToId(int x, int z, int layer);
-extern int getDataFileSize(int kind);
+extern u32 getDataFileSize(int idx);
 
 void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 {

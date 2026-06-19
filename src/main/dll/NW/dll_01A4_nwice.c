@@ -10,7 +10,7 @@ typedef struct NwIcePlacement
     u8 pad1C[0x20 - 0x1C];
 } NwIcePlacement;
 
-extern void fn_80296D20(int playerObj, int* obj);
+extern void fn_80296D20(int obj, void* arg);
 
 extern f32 lbl_803E5270;
 extern f32 lbl_803E5274;

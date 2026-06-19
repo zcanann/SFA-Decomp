@@ -67,7 +67,7 @@ extern void audioSetSoundMode(u8 mode, u8 enabled);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 extern void setWidescreen(u8 enabled);
 extern void stopRumble2(void);
-extern void setRumbleEnabled(u8 value);
+extern void setRumbleEnabled(u8 enabled);
 extern void doRumble(f32 duration);
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);

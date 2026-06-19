@@ -58,7 +58,7 @@ extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
-extern void fn_80293018(int angle, float* outSin, float* outCos);
+extern void fn_80293018(int q, float* sin_out, float* cos_out);
 extern u32 fn_80295CBC();
 
 extern u32 gDusterWallProbeOffsets;

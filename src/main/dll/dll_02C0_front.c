@@ -221,7 +221,7 @@ typedef struct TitleAnimMoves
 
 extern TitleAnimMoves gTitleScreenAnimMoves[];
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
-extern void AttractMovie_DrawTextureCallback(void);
+extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 /* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
  * state from its descriptor id (obj->_46), pick the anim move and blend

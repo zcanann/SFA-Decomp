@@ -21,7 +21,7 @@ extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void ObjHits_ClearHitVolumes();
 extern void ObjHits_DisableObject(u32 objPtr);
 extern int ObjHits_IsObjectEnabled();
-extern int ObjHits_RecordObjectHit();
+extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32* a, f32* b);

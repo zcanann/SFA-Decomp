@@ -107,7 +107,7 @@ extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;
 extern f32 SendMailData;
 extern u32 getButtonsJustPressed(int port);
-extern int isTalkingToNpc(void);
+extern s32 isTalkingToNpc(void);
 extern void setJoypadDisabled(void);
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;

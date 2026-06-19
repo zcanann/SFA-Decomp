@@ -33,7 +33,7 @@ extern void objRenderFn_8003b8f4(f32);
 
 void portalspelldoor_update(int obj)
 {
-    extern int playerHasSpell(int player, int spell);
+    extern int playerHasSpell(int obj, int spell);
     extern int objGetAnimState80A(int player);
     extern void fn_80296B78(int player, int v);
     extern int getTrickyObject(void);

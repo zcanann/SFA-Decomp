@@ -4625,7 +4625,7 @@ found:
 }
 
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void GXSetAlphaUpdate(u8 v);
+extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void GXFlush(void);
 extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
 extern void Queue_Push(void* q, void* item);
@@ -5019,7 +5019,7 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
     lbl_803DCD6A += 1;
 }
 
-extern void gxTextureFn_8004bf88(void* buf, u8 a, u8 b, int* out1, int* out2);
+extern void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
 extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 
 void textureFn_80051348(void* p1, u8 p2)

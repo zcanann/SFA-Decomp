@@ -17,7 +17,7 @@
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
-extern u32 DIM2icicle_updateHitResponse();
+extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 
 
 extern f32 lbl_803E4BD8;

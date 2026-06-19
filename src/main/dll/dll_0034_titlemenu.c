@@ -56,7 +56,7 @@ extern f32 lbl_803E1D18;
 #pragma dont_inline on
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void buttonDisable(int port, u32 mask);
-extern void padClearAnalogInputY(int controller);
+extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern u32 getButtonsJustPressed(int port);

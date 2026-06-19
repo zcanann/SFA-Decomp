@@ -3175,7 +3175,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void modelLightStruct_setDirection(int* lt, f32 x, f32 y, f32 z);
     extern void modelLightStruct_setDiffuseColor(int* lt, int r, int g, int b, int a);
     extern void modelLightChannels_reset(int x);
-    extern void modelLightChannel_configure(int a, int b, int c);
+    extern void modelLightChannel_configure(int i, int a, int b);
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
     extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
     extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);

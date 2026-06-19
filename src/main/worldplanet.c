@@ -63,7 +63,7 @@ extern void loadModelAndAnimTabs(void);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int idx, s8 transType);
 extern float fsin16Approx(int angle);
-extern f32 fcos16Approx(int angle);
+extern float fcos16Approx(int angle);
 extern f32 lbl_803E661C;
 extern f32 lbl_803E6620;
 extern f32 lbl_803E6624;

@@ -3,7 +3,7 @@
 extern u8 lbl_803CC1E0[];
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
-extern void DCFlushRangeNoSync(void* addr, int len);
+extern asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes);
 
 typedef struct SalVoice
 {
@@ -85,7 +85,7 @@ extern int adsrSetup(ADSR_VARS * adsr); /* adsrSetup */
 extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime); /* adsrStartRelease */
 extern int adsrRelease(ADSR_VARS * adsr); /* adsrRelease */
 extern u32 adsrHandle(ADSR_VARS * adsr, u16 * adsr_start, u16 * adsr_delta); /* adsrHandle */
-extern void DCStoreRangeNoSync(void* addr, u32 len);
+extern asm void DCStoreRangeNoSync(register void* addr, register u32 nBytes);
 extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern void* memset(void* dst, int c, u32 n);
 int salSynthSendMessage(int synth, int msg);

@@ -32,7 +32,7 @@ typedef struct MmshWaterspikeObjectDef
 extern int randomGetRange(int lo, int hi);
 
 extern void* ObjList_FindObjectById(int id);
-extern f32 objFn_801948c0(void* obj, int param_2);
+extern f32 objFn_801948c0(u8* obj, u8 coord);
 extern void fn_80137948(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);

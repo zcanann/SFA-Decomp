@@ -76,7 +76,7 @@ extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
 extern u8 gCrawlerModelChainIds[];
 extern char gCrawlerDescriptorTable[];
-extern int baddieAfterUpdateBonesCb(void);
+extern void baddieAfterUpdateBonesCb(int obj, int* p2);
 extern f32 lbl_803E2CBC;
 extern u8 gCrawlerReactionTables[];
 extern void crawler_playReactionEffects(int* obj, int* st);

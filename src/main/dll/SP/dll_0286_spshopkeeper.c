@@ -93,7 +93,7 @@ extern void setAButtonIcon(int x);
 extern void setBButtonIcon(int icon);
 extern void warpToMap(int idx, s8 transType);
 extern int getCurUiDll(void);
-extern int* getDLL16(void);
+extern void* getDLL16(void);
 extern void playerAddMoney(void* player, int amount);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;

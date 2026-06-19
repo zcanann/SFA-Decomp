@@ -65,7 +65,7 @@ extern void drawHudBox(int id, int x, int y, int w, int alpha, int p6);
 extern void gameTextSetCursor(int a, int b, int c);
 extern void gameTextResetCursor(int n);
 extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int a, int b);
+extern void gameTextSetCharset(int charset, int flags);
 
 extern u8 gMinimapEnabled;
 extern u8 lbl_803DD7BA;

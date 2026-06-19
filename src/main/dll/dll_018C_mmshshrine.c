@@ -21,7 +21,7 @@ extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int param_1, int param_2);
 extern int Obj_GetPlayerObject(void);
-extern void fn_8011F6D4(int p);
+extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
 extern void fn_80296518(int obj, int flag, int set);
 extern void Music_Trigger(int id, int arg);

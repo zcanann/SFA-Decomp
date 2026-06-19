@@ -2118,7 +2118,7 @@ extern void* gGameTextBoxCornerTexture;
 extern void* gGameTextBoxBgTexture;
 extern u32 gGameTextBoxFillColor;
 extern u8* gameTextGetCurBox(void);
-extern void gameTextFn_8001628c(int id, int a, int b, int* x0, int* x1, int* y0, int* y1);
+extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, int* y1);
 extern void drawTexture(f32 x, f32 y, void* tex, int alpha, int scale);
 extern void drawScaledTexture(f32 x, f32 y, void* tex, int alpha, int scale, int w, int h, int flag);

@@ -117,7 +117,7 @@ extern f32 lbl_803E240C;
 extern f32 lbl_803E2418;
 extern f32 getXZDistance(f32* a, f32* b);
 extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
-extern int dll_19_func1B(int);
+extern int dll_19_func1B(int p);
 extern int* gBaddieControlInterface;
 extern f32 fn_8014C5D0(register int obj);
 extern f32 vec3f_distanceSquared(int, int);

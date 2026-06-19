@@ -13,7 +13,7 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 
-extern int trickyFoodFn_8013db3c(u8 * arg1, u8 * arg2);
+extern int trickyFoodFn_8013db3c(u8* tricky, u8* critter);
 extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern f32 getXZDistance(f32* a, f32* b);
 extern int trickyFn_8013b368(u8* arg1, u8* arg2, f32 dist);

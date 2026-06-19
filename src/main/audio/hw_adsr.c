@@ -3,7 +3,7 @@
 extern u8 voiceAdsrDecayTable[];
 extern u8* dspVoice;
 
-extern u32 voiceConvertDbToLinear(u32 value);
+extern u32 voiceConvertDbToLinear(u32 dbCents);
 
 typedef struct HwAdsrEnvelope
 {

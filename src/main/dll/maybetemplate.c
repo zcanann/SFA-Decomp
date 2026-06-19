@@ -60,7 +60,7 @@ extern int lbl_803DBADC;
 extern u8 lbl_803DD7B3;
 
 extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int charset, int arg);
+extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern int sprintf(char* s, const char* format, ...);
@@ -95,7 +95,7 @@ extern f32 lbl_803E1FC8;
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
-extern void gameTextMeasureFn_800163c4(char* str, int n, int a, int b, int* x0, int* x1, int* y0, int* y1);
+extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern void textureFree(int texture);
 extern int textureLoadAsset(int id);
 extern void fn_8005D118(int a, int b, int c, int d, int e);

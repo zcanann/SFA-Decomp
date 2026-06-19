@@ -1,6 +1,6 @@
 #include "main/audio/voice_manage.h"
 
-extern u32 __cvt_fp2unsigned(double x);
+extern asm u32 __cvt_fp2unsigned(register f64 d);
 extern f32 powf(f32 x, f32 y);
 
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];

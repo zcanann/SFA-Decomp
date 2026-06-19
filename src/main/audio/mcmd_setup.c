@@ -10,7 +10,7 @@ void DoSetPitch(McmdVoiceState * svoice);
 extern void sndConvertMs(u32 * p);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState * state);
-extern u32 voiceConvertDbToLinear(s32 value);
+extern u32 voiceConvertDbToLinear(u32 dbCents);
 extern int adsrSetup(McmdEnvelopeState * state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];

@@ -39,7 +39,7 @@ extern s8 padGetStickX(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
-extern void gplayNewGame(char* name, u8 slot);
+extern int gplayNewGame(char* name, int slot);
 extern s32 lbl_803A8730[];
 extern u8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;

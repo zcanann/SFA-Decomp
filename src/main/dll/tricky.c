@@ -240,7 +240,7 @@ void GameUI_airMeterSetField24(float v)
     *(f32*)((char*)p + 0x24) = v;
 }
 
-extern void cutsceneFadeInOut(int x);
+extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
 extern int getCurGameText(void);

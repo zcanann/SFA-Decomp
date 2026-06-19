@@ -3519,7 +3519,7 @@ typedef struct
 } ObjGXColor;
 
 extern void modelLightChannels_reset(int);
-extern void modelLightChannel_configure(u8 chan, int p2, int p3);
+extern void modelLightChannel_configure(int i, int a, int b);
 extern void modelTextureFn_80089970(int idx);
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
 extern void lightGetColor(int light, u8* r, u8* g, u8* b);
@@ -5243,7 +5243,7 @@ extern void mm_free(void* p);
 extern void texFlagFn_80023cbc(int);
 extern void texRestructRefs(int);
 extern s16 lbl_803DCC78;
-extern void testAndSet_onlyUseHeaps1and2(int);
+extern int testAndSet_onlyUseHeaps1and2(int v);
 extern int mmGetRegionForPtr(void*);
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
@@ -5480,7 +5480,7 @@ extern u32 lbl_803DCC84;
 extern void* lbl_803DCC8C;
 extern u32 lbl_8035F3E8[];
 extern u32 lbl_80345F70[];
-extern void AtomicSList_Push(void* list, void* item);
+extern void AtomicSList_Push(void** list, void* node);
 extern int DVDClose(void* fileInfo);
 
 void tex0tab1readCb(s32 result, void* fileInfo)
@@ -5929,7 +5929,7 @@ void voxMapTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-extern void mapLoadDataFiles(int idx);
+extern void mapLoadDataFiles(int mapIdx);
 extern int sMapFileNameIndexRemapTable[];
 extern s16 sMapFileNameAdjacencyTable[];
 

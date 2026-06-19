@@ -884,7 +884,7 @@ extern void uiDll_runFrameEndAndLoadNext(void);
 extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern void curUiDllDraw(int a, int b, int c, int d);
-extern void Camera_ApplyCurrentViewport(int a);
+extern void Camera_ApplyCurrentViewport(void* viewportArg);
 extern int lbl_803DCAD0;
 extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7B8;
@@ -1077,7 +1077,7 @@ extern void unloadMap(void);
 extern int mapUnload(int mapId, int flags);
 extern void fn_801375A0(void);
 extern int loadMapAndParent(int mapId);
-extern void mapLoadDataFiles(int map);
+extern void mapLoadDataFiles(int mapIdx);
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)

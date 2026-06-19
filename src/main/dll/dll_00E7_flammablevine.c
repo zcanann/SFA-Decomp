@@ -56,7 +56,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetCapsuleBounds();
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_MarkObjectPositionDirty();
+extern void ObjHits_MarkObjectPositionDirty(int objPtr);
 extern void ObjHits_DisableObject();
 extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHit();

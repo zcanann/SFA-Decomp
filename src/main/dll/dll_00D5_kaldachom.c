@@ -38,7 +38,7 @@ extern u32 objRenderFn_8003b8f4();
 extern u32 objParticleFn_80099d84();
 extern f32 sqrtf(f32);
 extern float mathSinf(float x);
-extern u32 fn_802961FC();
+extern void fn_802961FC(int a, u8 type);
 
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants, the
    lbl_803DDAxx are mutable scratch globals (fx spawn position / radius). */

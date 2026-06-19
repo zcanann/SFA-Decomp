@@ -35,8 +35,8 @@
 #include "string.h"
 
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern int dll_19_func1B(); /* nonzero = obj is baddie-control managed (use its reticle distance) */
-extern int isTalkingToNpc();
+extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
+extern s32 isTalkingToNpc(void);
 extern f32 fn_8014C5D0(register int obj); /* target reticle distance for the enemy objType group */
 extern f32 largecrate_getReticleDistance(int obj); /* target reticle distance for the largecrate objType group */
 extern f32 sqrtf(f32 x);

@@ -24,7 +24,7 @@ extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void fn_8011F6D4(int enable);
+extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
 extern void* textureLoadAsset(int asset);

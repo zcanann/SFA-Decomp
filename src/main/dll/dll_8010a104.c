@@ -23,7 +23,7 @@
 
 extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
-extern f32 fn_8010AC48(int* window, f32 x, f32 y, f32 z);
+extern f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz);
 
 #define PATHCAM_NEAR_THRESHOLD lbl_803E1888
 #define PATHCAM_FAR_THRESHOLD lbl_803E188C

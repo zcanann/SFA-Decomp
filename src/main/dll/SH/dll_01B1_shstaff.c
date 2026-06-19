@@ -419,7 +419,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern void fn_80295CF4(int obj, int a);
-extern int fn_8029672C(int player, int a);
+extern void fn_8029672C(int obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);

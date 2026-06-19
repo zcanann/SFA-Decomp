@@ -39,7 +39,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern void fn_80065574(int a, int b, int c);
+extern void fn_80065574(int matchVal, int obj, int flag);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E4A18;
 extern void* Obj_GetPlayerObject(void);

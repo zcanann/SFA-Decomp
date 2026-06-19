@@ -45,8 +45,8 @@ extern u8 lbl_803BD964[0x40];
 extern u16 lbl_803BCC90[8][0x10];
 extern int gSynthCurrentVoiceSlotIndex;
 extern void fn_8026E864(void);
-extern void synthVolume(u8 volume, u16 time, u8 vGroup, u8 mode, u32 seqId);
-extern void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
+extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
+extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 

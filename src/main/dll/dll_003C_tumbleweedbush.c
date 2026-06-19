@@ -57,7 +57,7 @@ extern void MWTRACE(int boxId);
 extern u32 GameBit_Get(int eventId);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
-extern void padClearAnalogInputY(int pad);
+extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void buttonDisable(int port, u32 mask);

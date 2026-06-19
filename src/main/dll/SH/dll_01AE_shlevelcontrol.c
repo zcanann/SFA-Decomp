@@ -34,7 +34,7 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
-extern void padClearAnalogInputY(int controller);
+extern void padClearAnalogInputY(int port);
 extern void buttonDisable(int port, u32 mask);
 extern int playerHasSpell(int obj, int spell);
 extern void gameTextShow(int a);

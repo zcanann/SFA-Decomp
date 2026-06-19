@@ -21,7 +21,7 @@ extern f32 lbl_803E6678;
 extern int randomGetRange(int lo, int hi);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void Camera_ApplyCurrentViewport(int cam);
-extern int fn_8012DDAC(void);
+extern u8 fn_8012DDAC(void);
 extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);

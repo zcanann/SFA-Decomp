@@ -5,7 +5,7 @@ typedef unsigned int size_t;
 extern void DBInit(void);
 extern void OSInit(void);
 extern void OSResetSystem(int reset, unsigned long resetCode, int forceMenu);
-extern void InitMetroTRK(void);
+extern asm void InitMetroTRK();
 extern void __OSPSInit(void);
 extern void __OSCacheInit(void);
 extern void __init_user(void);

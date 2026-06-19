@@ -5,9 +5,9 @@
 
 extern void* memset(void* dst, int val, u32 n);
 extern asm void DCFlushRange(register void* addr, register u32 nBytes);
-extern void DCFlushRangeNoSync(void* p, u32 n);
+extern asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes);
 extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
-extern void DCStoreRangeNoSync(void* p, u32 n);
+extern asm void DCStoreRangeNoSync(register void* addr, register u32 nBytes);
 extern void* salMalloc(u32 size);
 extern void salFree(void* ptr);
 extern u32 aramGetBaseAddress(void);

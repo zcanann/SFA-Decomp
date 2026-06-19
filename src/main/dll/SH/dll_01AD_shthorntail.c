@@ -40,7 +40,7 @@ extern u32 modelInitBones();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(int obj, int p2);
 extern u32 dll_2E_func05();
-extern u32 dll_2E_func08();
+extern void dll_2E_func08(int obj, int v1, int v2);
 extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
 extern float mathSinf(float x);
 extern float mathCosf(float x);

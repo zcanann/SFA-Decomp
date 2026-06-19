@@ -1039,7 +1039,7 @@ void gxColorFn_800523d0(void)
 
 extern void GXSetTevColor(int id, int* color);
 extern void GXSetTevKColorSel(int tev, int sel);
-extern void gxTextureFn_8004bf88(int* p, int a, int b, int* out_sel, int* out_other);
+extern void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
 
 extern f32 LastCommandWasRead_803DEB60;
 extern f32 sDvdfsCurrentDirEntry;
@@ -2055,7 +2055,7 @@ void lightFn_80052974(f32 a, f32 b)
 extern void* fn_80089A58(void);
 extern void* fn_80089A50(void);
 extern void modelLightChannels_reset(int n);
-extern void modelLightChannel_configure(int idx, int a, int b);
+extern void modelLightChannel_configure(int i, int a, int b);
 extern void modelLightStruct_setSpecularAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setAngularAttenuation(void* light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, int a);
@@ -2583,7 +2583,7 @@ void gxTextureFn_80052efc(void)
 extern void texFlagFn_80023cbc(int flag);
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
-extern int testAndSet_onlyUseHeaps1and2(int val);
+extern int testAndSet_onlyUseHeaps1and2(int v);
 extern int mmGetRegionForPtr(void* p);
 extern int getHeapItemSize(void* p);
 extern int mmSetFreeDelay(int v);

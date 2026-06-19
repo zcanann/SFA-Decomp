@@ -83,7 +83,7 @@ extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
-extern void* gameTextGetPhrase(int textId, int variant);
+extern void* gameTextGetPhrase(int textId, int phraseIndex);
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern int unlockLevel(s32 val, int idx, int flag);

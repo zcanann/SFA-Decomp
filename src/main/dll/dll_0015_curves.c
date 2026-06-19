@@ -51,7 +51,7 @@ extern f32 sqrtf(f32 x);
 
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
-extern void setRumbleEnabled(u8 value);
+extern void setRumbleEnabled(u8 enabled);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 

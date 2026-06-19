@@ -49,10 +49,10 @@ extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-extern void* gameTextGetPhrase(int textId, int variant);
+extern void* gameTextGetPhrase(int textId, int phraseIndex);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
-extern void gameTextAppendStr(void* str, int windowId);
+extern void gameTextAppendStr(char* str, int arg2);
 extern void mm_free(void); /* no-arg: r3 forwarded from caller to match target */
 extern void* textureLoadAsset(int asset);
 extern void textureFree(u8* tex);

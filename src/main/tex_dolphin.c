@@ -11,8 +11,8 @@ extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f
 extern int Shader_getLayer();
 extern void selectTexture();
 extern void fn_8004CE0C();
-extern void fn_8004D928();
-extern void fn_8004D230();
+extern void fn_8004D928(void);
+extern void fn_8004D230(void);
 extern void fn_8004DA54();
 extern void fn_8004E0FC();
 extern void renderHeavyFog();
@@ -27,7 +27,7 @@ extern void fn_8004FDA0();
 extern void fn_80051528();
 extern void fn_80051868();
 extern void fn_80051B00();
-extern void gxColorFn_800523d0();
+extern void gxColorFn_800523d0(void);
 extern void textureFn_800524ec();
 extern int textureCrazyPointerFollowFn_80054c30();
 extern void textureFn_800528bc(void);
@@ -36,7 +36,7 @@ extern void fn_8005D3B4();
 extern void textureFn_8006c4e0();
 extern void fn_80088730();
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
-extern u32 AttractMovie_DrawTextureCallback();
+extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 extern u8 isHeavyFogEnabled();
 
 extern f32 lbl_803DEBC8;

@@ -47,8 +47,8 @@ extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare 
 extern u32 GXSetTevOrder();
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
-extern u32 GXSetColorUpdate();
-extern u32 GXSetAlphaUpdate();
+extern void GXSetColorUpdate(GXBool update_enable);
+extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);

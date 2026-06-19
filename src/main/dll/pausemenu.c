@@ -31,7 +31,7 @@ extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern int randomGetRange(int lo, int hi);
-extern void drawFn_8011e8d8(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void drawFn_8011eb3c(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);

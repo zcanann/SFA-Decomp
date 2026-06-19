@@ -300,7 +300,7 @@ void fn_80152514(int* obj, u8* state)
 /* EN v1.0 0x80152B90  size: 816b  firefly hover update: circle drift, bob
  * between heights, periodically drop a spawned object, ambient sfx timers. */
 
-extern void fn_80293018(int idx, f32* outA, f32* outB);
+extern void fn_80293018(int q, float* sin_out, float* cos_out);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* loadObjectAtObject(int* obj, u8* setup);

@@ -156,7 +156,7 @@ extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
 extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
-extern void fn_80295918(int player, int p2, f32 p3);
+extern void fn_80295918(int obj, int sel, f32 fval);
 extern void textureFree(u8* tex);
 extern void* textureLoadAsset(int asset);
 extern void setAButtonIcon(int x);

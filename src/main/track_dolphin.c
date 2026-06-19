@@ -110,7 +110,7 @@ extern f32 lbl_803DCEDC;
 extern f32 lbl_803DB650;
 extern void* textureLoad(int texId, u8 flag);
 extern int textureAlloc512(void);
-extern int textureFn_8006c5c4(void);
+extern u32 textureFn_8006c5c4(void);
 extern f32 lbl_803DB654;
 extern f32 lbl_803DEC90[2];
 extern int lbl_803DCFB8;
@@ -2555,7 +2555,7 @@ int objShadowFn_80062498(int* obj, int param2)
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
 extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1,
                        f64 y1, f32 z1);
-extern int modelFileHeaderGetCullDistance(void* hdr);
+extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern u32 lbl_803DCF70;
 extern s16 lbl_803DCF6E;
 extern f32 lbl_803DECC4;
@@ -3898,7 +3898,7 @@ extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32* 
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
 extern int pauseMenuGetState(void);
-extern void fn_8008912C(void);
+extern void* fn_8008912C(void);
 extern void getAmbientColor(int a, u8* r, u8* g, u8* b);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int sSynthFadeUnit;
