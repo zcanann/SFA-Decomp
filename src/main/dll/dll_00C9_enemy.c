@@ -676,29 +676,29 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
     double extraout_f1;
     double dVar9;
     u64 uVar10;
-    float local_48;
-    int local_44;
-    float local_40;
-    float local_3c;
-    float local_38;
+    float nearestDist;
+    int numObjects;
+    float deltaX;
+    float deltaY;
+    float deltaZ;
     s64 local_30;
 
     uVar10 = FUN_8028682c();
     puVar2 = (u16*)(uVar10 >> 0x20);
-    local_48 = (float)extraout_f1;
+    nearestDist = (float)extraout_f1;
     iVar8 = *(int*)(puVar2 + 0x5c);
-    local_44 = 0;
+    numObjects = 0;
     iVar7 = 0;
     if ((uVar10 & 1) == 0)
     {
-        local_48 = (float)extraout_f1 * (float)extraout_f1;
-        puVar4 = ObjGroup_GetObjects(3, &local_44);
-        if (local_44 != 0)
+        nearestDist = (float)extraout_f1 * (float)extraout_f1;
+        puVar4 = ObjGroup_GetObjects(3, &numObjects);
+        if (numObjects != 0)
         {
-            for (iVar6 = 0; iVar6 < local_44; iVar6 = iVar6 + 1)
+            for (iVar6 = 0; iVar6 < numObjects; iVar6 = iVar6 + 1)
             {
                 dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
-                if ((dVar9 < (double)local_48) && ((u16*)puVar4[iVar6] != puVar2))
+                if ((dVar9 < (double)nearestDist) && ((u16*)puVar4[iVar6] != puVar2))
                 {
                     *param_4 = puVar4[iVar6];
                     dVar9 = FUN_80293900(dVar9);
@@ -710,15 +710,15 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
                         if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
                         {
                             iVar5 = *param_4;
-                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
-                            local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar5 + 0x1c);
-                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar5 + 0x20);
+                            deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
+                            deltaY = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar5 + 0x1c);
+                            deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar5 + 0x20);
                         }
                         else
                         {
-                            local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
-                            local_3c = lbl_803E31FC;
-                            local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                            deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                            deltaY = lbl_803E31FC;
+                            deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                         }
                         uVar3 = FUN_80017730();
                         if (*(short**)(puVar2 + 0x18) == 0x0)
@@ -750,7 +750,7 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
                     iVar7 = iVar7 + 1;
                     if (param_3 <= iVar7)
                     {
-                        iVar6 = local_44;
+                        iVar6 = numObjects;
                     }
                 }
             }
@@ -758,27 +758,27 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
     }
     else
     {
-        iVar7 = ObjGroup_FindNearestObject(3, puVar2, &local_48);
+        iVar7 = ObjGroup_FindNearestObject(3, puVar2, &nearestDist);
         *param_4 = iVar7;
         if (iVar7 != 0)
         {
             local_30 = (s64)(int)
-            local_48;
-            *(short*)(param_4 + 1) = (short)(int)local_48;
+            nearestDist;
+            *(short*)(param_4 + 1) = (short)(int)nearestDist;
             if ((uVar10 & 2) != 0)
             {
                 if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
                 {
                     iVar7 = *param_4;
-                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
-                    local_3c = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar7 + 0x1c);
-                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar7 + 0x20);
+                    deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
+                    deltaY = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar7 + 0x1c);
+                    deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar7 + 0x20);
                 }
                 else
                 {
-                    local_40 = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
-                    local_3c = lbl_803E31FC;
-                    local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                    deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                    deltaY = lbl_803E31FC;
+                    deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                 }
                 uVar3 = FUN_80017730();
                 if (*(short**)(puVar2 + 0x18) == 0x0)
@@ -852,12 +852,12 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     double dVar3;
     double dVar4;
     float afStack_c8[3];
-    float local_bc;
-    float local_b8;
-    float local_b4;
-    float local_b0;
-    float local_ac;
-    float local_a8;
+    float vec2X;
+    float vec2Y;
+    float vec2Z;
+    float vec1X;
+    float vec1Y;
+    float vec1Z;
     float afStack_a4[13];
     u32 local_70;
     u32 uStack_6c;
@@ -865,37 +865,37 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     dVar2 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
     if (dVar2 <= (double)lbl_803E31FC)
     {
-        local_b0 = lbl_803E31FC;
-        local_ac = lbl_803E31FC;
-        local_a8 = lbl_803E31FC;
+        vec1X = lbl_803E31FC;
+        vec1Y = lbl_803E31FC;
+        vec1Z = lbl_803E31FC;
     }
     else
     {
-        local_a8 = (float)((double)lbl_803E3200 / dVar2);
-        local_b0 = *(float*)(param_5 + 0x2b8) * local_a8;
-        local_ac = *(float*)(param_5 + 700) * local_a8;
-        local_a8 = *(float*)(param_5 + 0x2c0) * local_a8;
-        FUN_80247ef8(&local_b0, &local_b0);
+        vec1Z = (float)((double)lbl_803E3200 / dVar2);
+        vec1X = *(float*)(param_5 + 0x2b8) * vec1Z;
+        vec1Y = *(float*)(param_5 + 700) * vec1Z;
+        vec1Z = *(float*)(param_5 + 0x2c0) * vec1Z;
+        FUN_80247ef8(&vec1X, &vec1X);
     }
     dVar3 = SeekTwiceBeforeRead(param_6);
     if (dVar3 <= (double)lbl_803E31FC)
     {
-        local_bc = lbl_803E31FC;
-        local_b8 = lbl_803E31FC;
-        local_b4 = lbl_803E31FC;
+        vec2X = lbl_803E31FC;
+        vec2Y = lbl_803E31FC;
+        vec2Z = lbl_803E31FC;
     }
     else
     {
-        local_b4 = (float)((double)lbl_803E3200 / dVar3);
-        local_bc = *param_6 * local_b4;
-        local_b8 = param_6[1] * local_b4;
-        local_b4 = param_6[2] * local_b4;
+        vec2Z = (float)((double)lbl_803E3200 / dVar3);
+        vec2X = *param_6 * vec2Z;
+        vec2Y = param_6[1] * vec2Z;
+        vec2Z = param_6[2] * vec2Z;
     }
-    FUN_80247fb0(&local_b0, &local_bc, afStack_c8);
+    FUN_80247fb0(&vec1X, &vec2X, afStack_c8);
     dVar4 = SeekTwiceBeforeRead(afStack_c8);
     if ((double)lbl_803E31FC < dVar4)
     {
-        FUN_80247f90(&local_b0, &local_bc);
+        FUN_80247f90(&vec1X, &vec2X);
         dVar4 = (double)FUN_80292754();
         uStack_6c = ((u32)(u8)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
@@ -908,7 +908,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
                 fVar1 = lbl_803E3200;
             }
             FUN_80247944((double)(float)(param_3 * (double)fVar1), afStack_a4, afStack_c8);
-            FUN_80247cd8(afStack_a4, &local_b0, &local_bc);
+            FUN_80247cd8(afStack_a4, &vec1X, &vec2X);
         }
     }
     dVar4 = (double)(float)(dVar3 * (double)lbl_803E3280);
@@ -921,9 +921,9 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     {
         dVar3 = param_1;
     }
-    *(float*)(param_4 + 0x24) = (float)((double)local_bc * dVar3);
-    *(float*)(param_4 + 0x28) = (float)((double)local_b8 * dVar3);
-    *(float*)(param_4 + 0x2c) = (float)((double)local_b4 * dVar3);
+    *(float*)(param_4 + 0x24) = (float)((double)vec2X * dVar3);
+    *(float*)(param_4 + 0x28) = (float)((double)vec2Y * dVar3);
+    *(float*)(param_4 + 0x2c) = (float)((double)vec2Z * dVar3);
     if ((param_7 != '\0') && (*(float*)(param_4 + 0x28) < lbl_803E31FC))
     {
         fVar1 = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
