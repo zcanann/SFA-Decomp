@@ -353,9 +353,9 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
         if ((s8)animUpdate->movementState != 2)
         {
             animUpdate->posOffsetScale = lbl_803E3588;
-            animUpdate->posOffsetX = *(float*)(obj + 6) - *(float*)(refObj + 6);
-            animUpdate->posOffsetY = *(float*)(obj + 8) - *(float*)(refObj + 8);
-            animUpdate->posOffsetZ = *(float*)(obj + 10) - *(float*)(refObj + 10);
+            animUpdate->posOffsetX = ((GameObject*)obj)->anim.localPosX - *(float*)(refObj + 6);
+            animUpdate->posOffsetY = ((GameObject*)obj)->anim.localPosY - *(float*)(refObj + 8);
+            animUpdate->posOffsetZ = ((GameObject*)obj)->anim.localPosZ - *(float*)(refObj + 10);
             animUpdate->rotOffsetX = *obj - (u16)*refObj;
             if (0x8000 < animUpdate->rotOffsetX)
             {
@@ -391,9 +391,9 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
             animUpdate->movementState = 0;
         }
     }
-    if (*(int*)(obj + 0x7c) == 0)
+    if (((GameObject*)obj)->unkF8 == 0)
     {
-        *(int*)(obj + 0x7c) = 2;
+        ((GameObject*)obj)->unkF8 = 2;
     }
     if ((obj[0x23] == 0x21e) || (obj[0x23] == 0x411))
     {
@@ -405,8 +405,8 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
             GameBit_Set(0x103, 1);
             *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) & ~8;
             player = Obj_GetPlayerObject();
-            dx = *(float*)(obj + 6) - ((GameObject*)player)->anim.localPosX;
-            dz = *(float*)(obj + 10) - ((GameObject*)player)->anim.localPosZ;
+            dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
+            dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             len = sqrtf(dx * dx + dz * dz);
             if (len != lbl_803E3528)
             {
