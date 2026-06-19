@@ -171,7 +171,7 @@ int fn_80174668(int obj, PushableState* state)
         return 0;
     }
     dx = *(f32*)((int)state->nearestObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    if (dx < lbl_803E3528)
+    if (dx < *(f32 *)&lbl_803E3528)
     {
         dx = dx * lbl_803E3554;
     }
