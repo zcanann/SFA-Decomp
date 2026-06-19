@@ -123,7 +123,7 @@ void kytesmum_update(int obj)
     int moveIdx;
     int nearest;
 
-    nearDist = lbl_803E6998;
+    nearDist = gKytesMumNearestSearchDist;
     if (runtime->questComplete == 0)
     {
         if (runtime->updateCallback(obj) != 0)
@@ -286,7 +286,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
 
 void kytesmum_init(int obj, KytesMumSetup* setup)
 {
-    KytesMumMoveSet* moveSets = (KytesMumMoveSet*)lbl_8032A7C0;
+    KytesMumMoveSet* moveSets = (KytesMumMoveSet*)gKytesMumMoveSets;
     KytesMumObject* kytesMum = (KytesMumObject*)obj;
     KytesMumRuntime* runtime = kytesMum->runtime;
     int startMove;
@@ -306,7 +306,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
     case KYTESMUM_MODE_ROAMING:
         runtime->moveSet = &moveSets[1];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateNearPlayerCallback;
-        runtime->eventSfxTable = (s16*)&lbl_803DC2C8;
+        runtime->eventSfxTable = (s16*)&gKytesMumRoamEventSfxTable;
         ObjGroup_AddObject(obj, 0x3);
         if (runtime->questComplete != 0)
         {
@@ -355,9 +355,9 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
         }
     }
     if ((tricky != 0 && Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) <
-            lbl_803E6988) ||
+            gKytesMumFleeDistance) ||
         (player != 0 && Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            lbl_803E6988))
+            gKytesMumFleeDistance))
     {
         if (((GameObject*)obj)->anim.currentMove != 9)
         {
@@ -386,8 +386,8 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     int triggerIds[3];
     int count;
     KytesMumRuntime* runtime;
-    *(QuestTriple*)questBits = *(QuestTriple*)lbl_802C2578;
-    *(QuestTriple*)triggerIds = *(QuestTriple*)lbl_802C2584;
+    *(QuestTriple*)questBits = *(QuestTriple*)gKytesMumQuestBits;
+    *(QuestTriple*)triggerIds = *(QuestTriple*)gKytesMumTriggerIds;
     count = 0;
     Obj_GetPlayerObject();
     runtime = (KytesMumRuntime*)((GameObject*)obj)->extra;
@@ -399,7 +399,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     }
     if (count > 0)
     {
-        runtime->idleSfxTable = lbl_8032A7FC;
+        runtime->idleSfxTable = gKytesMumQuestIdleSfxTable;
     }
     GameBit_Set(0xeb9, count == 1);
     next = triggerIds[count];

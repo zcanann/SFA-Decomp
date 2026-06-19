@@ -39,7 +39,7 @@ extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 extern f32 sqrtf(f32);
 extern f32 lbl_803E2EB0;
-extern f32 lbl_803E2EB4;
+extern f32 gScarabTargetStandoffDist;
 extern f32 lbl_803E2EBC;
 extern f32 lbl_803E2EC0;
 extern f32 lbl_803E2EC4;
@@ -527,7 +527,7 @@ int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
         }
         else
         {
-            dx = sqrtf(dx * dx + dz * dz) - lbl_803E2EB4;
+            dx = sqrtf(dx * dx + dz * dz) - gScarabTargetStandoffDist;
         }
         magAbs = dx < lbl_803E2EB8 ? -dx : dx;
         if (magAbs < lbl_803E2EBC)

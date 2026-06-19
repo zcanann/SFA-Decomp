@@ -198,7 +198,7 @@ void arwingandrossstuff_hitDetect(int obj)
         {
             s16 a = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
                                      objAnim->localPosY - arwingAnim->localPosY);
-            f32 ang = lbl_803E7030 * a / lbl_803E7034;
+            f32 ang = gArwingAndrossPi * a / gArwingAndrossBinAngScale;
 
             v.x = lbl_803E702C * mathSinf(ang);
             v.y = lbl_803E7038 * mathCosf(ang);

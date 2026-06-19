@@ -5,7 +5,7 @@
  * lets the player interact (A-button) to spend magic and grant game
  * bits, runs trigger sequences (dll_200_SeqFn / fn_801F2974), and in
  * mode 2 (fn_801F2290) steers a wandering attachment toward scripted
- * targets (lbl_80328974) via getAngle/sqrtf. Object body is Dll200State
+ * targets (gArwingAttachmentTargets) via getAngle/sqrtf. Object body is Dll200State
  * (0x28); render scales through objRenderFn_8003b8f4 and gates on
  * GameBit 0x2bd when the placement's map-act is 4.
  */
@@ -30,7 +30,7 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void fn_80296474(int player, int a, int b);
-extern ObjHitReactEntry lbl_80328898[];
+extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
 extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
 
@@ -38,19 +38,19 @@ extern f32 lbl_803E5D98;
 void fn_801F20D4(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern int lbl_802C247C[];
+    extern int gArwingAttachmentItemSetIdle[];
     extern void buttonDisable(int port, u32 mask);
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
-    extern f32 lbl_803E5DA0;
+    extern f32 gArwingAttachmentU32ToDoubleBias;
 
     int sub;
     IntVec3 stk;
 
     sub = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    stk = *(IntVec3*)lbl_802C247C;
+    stk = *(IntVec3*)gArwingAttachmentItemSetIdle;
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= 0x8;
@@ -100,7 +100,7 @@ void fn_801F27E4(int obj)
     extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
-    extern f32 lbl_803E5DA0;
+    extern f32 gArwingAttachmentU32ToDoubleBias;
 
     int sub;
 
@@ -301,7 +301,7 @@ void dll_200_update(int obj)
     Dll200State* b;
 
     b = ((GameObject*)obj)->extra;
-    ret = ObjHitReact_Update(obj, lbl_80328898, 11,
+    ret = ObjHitReact_Update(obj, gArwingAttachmentHitReactTable, 11,
                              (u8)((b->mode & 0x80) ? 1 : 0),
                              &b->hitReactVec);
     if (ret != 0)
@@ -353,8 +353,8 @@ void fn_801F2290(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern void buttonDisable(int port, u32 mask);
-    extern int lbl_802C2470[];
-    extern ArwAttachTarget lbl_80328974[];
+    extern int gArwingAttachmentItemSetWander[];
+    extern ArwAttachTarget gArwingAttachmentTargets[];
     extern char sArwingAttachmentDiffFormat[];
     extern u8 framesThisStep;
     extern f32 timeDelta;
@@ -376,7 +376,7 @@ void fn_801F2290(int obj)
 
     b = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    stk = *(IntVec3*)lbl_802C2470;
+    stk = *(IntVec3*)gArwingAttachmentItemSetWander;
     ((GameObject*)obj)->anim.localPosY = b->homeY;
     if (GameBit_Get(0x1fc) != 0)
     {
@@ -429,8 +429,8 @@ void fn_801F2290(int obj)
             m = b->mode;
             if (m == 12)
             {
-                ang = getAngle(lbl_80328974[b->prevMode].x,
-                               lbl_80328974[b->prevMode].y);
+                ang = getAngle(gArwingAttachmentTargets[b->prevMode].x,
+                               gArwingAttachmentTargets[b->prevMode].y);
                 diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
                 fn_80137948(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000)
@@ -446,9 +446,9 @@ void fn_801F2290(int obj)
                 }
                 else
                 {
-                    ObjAnim_SetCurrentMove(obj, lbl_80328974[b->prevMode].moveId,
+                    ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[b->prevMode].moveId,
                                            lbl_803E5D98, 0);
-                    b->animSpeed = lbl_80328974[b->prevMode].speed;
+                    b->animSpeed = gArwingAttachmentTargets[b->prevMode].speed;
                     b->mode = 13;
                 }
             }
@@ -458,12 +458,12 @@ void fn_801F2290(int obj)
                     (obj, b->animSpeed, timeDelta, &animEvents) != 0)
                 {
                     if ((f32)(int)((GameObject*)obj)->anim.currentMove ==
-                        lbl_80328974[b->prevMode].moveId)
+                        gArwingAttachmentTargets[b->prevMode].moveId)
                     {
                         ObjAnim_SetCurrentMove(obj,
-                                               lbl_80328974[b->prevMode].altMoveId,
+                                               gArwingAttachmentTargets[b->prevMode].altMoveId,
                                                lbl_803E5D98, 0);
-                        b->animSpeed = lbl_80328974[b->prevMode].speed;
+                        b->animSpeed = gArwingAttachmentTargets[b->prevMode].speed;
                     }
                 }
                 b->modeTimer -= framesThisStep;
@@ -474,8 +474,8 @@ void fn_801F2290(int obj)
             }
             else
             {
-                dx = lbl_80328974[m].x - (((GameObject*)obj)->anim.localPosX - b->homeX);
-                dy = lbl_80328974[m].y - (((GameObject*)obj)->anim.localPosZ - b->homeZ);
+                dx = gArwingAttachmentTargets[m].x - (((GameObject*)obj)->anim.localPosX - b->homeX);
+                dy = gArwingAttachmentTargets[m].y - (((GameObject*)obj)->anim.localPosZ - b->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
                 diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);

@@ -847,8 +847,8 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E7014;
 extern f32 lbl_803E7028;
 extern f32 lbl_803E702C;
-extern f32 lbl_803E7030;
-extern f32 lbl_803E7034;
+extern f32 gArwingAndrossPi;
+extern f32 gArwingAndrossBinAngScale;
 extern f32 lbl_803E7038;
 extern f32 lbl_803E703C;
 
