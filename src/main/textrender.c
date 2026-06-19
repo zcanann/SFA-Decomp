@@ -690,7 +690,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         return gGameTextLastEntry;
     }
 
-    entry = gameTextGet();
+    entry = gameTextGet(textId);
     if (*entry == 0xffff)
     {
         gGameTextBufferIndex = gGameTextBufferIndex + 1;
