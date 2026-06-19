@@ -287,7 +287,7 @@ void tree_update(int obj)
     f32 dx, dz, dist;
     int hitObject;      /* out-params required by API, not read by this fn */
     int hitSphereIndex; /* out-params required by API, not read by this fn */
-    uint hitVolume;     /* out-params required by API, not read by this fn */
+    u32 hitVolume;     /* out-params required by API, not read by this fn */
     f32 colorVec[3]; /* dual role: hit world-position outparam, then scaled effect colour */
     f32 burstVec[3];
     f32 intensity;

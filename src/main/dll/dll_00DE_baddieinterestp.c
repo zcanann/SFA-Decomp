@@ -22,7 +22,7 @@
 #include "main/dll/genprops.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8003b818();
+extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
 
@@ -191,8 +191,8 @@ typedef struct BaddieinterestpPlacement
 } BaddieinterestpPlacement;
 
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 
 extern f64 DOUBLE_803e3e88;
 
@@ -256,15 +256,15 @@ void staticCamera_render(int obj, int param_2, int param_3, int param_4, int par
 
 void staticCamera_init(short* obj, int params, int deferAdd)
 {
-    undefined* colorState;
+    u8* colorState;
 
     *obj = -*(short*)(params + 0x1c);
     obj[1] = -*(short*)(params + 0x1e);
     obj[2] = -*(short*)(params + 0x20);
-    colorState = *(undefined**)(obj + 0x5c);
-    *colorState = *(undefined*)(params + 0x19);
+    colorState = *(u8**)(obj + 0x5c);
+    *colorState = *(u8*)(params + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(params + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(params + 0x1a)) - DOUBLE_803e3e88);
     colorState[1] = 0;
     if (deferAdd == 0)
     {

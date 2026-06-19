@@ -32,7 +32,7 @@
 extern s8 padGetCY(int port);
 extern s8 padGetStickX(int port);
 extern s8 padGetStickY(int port);
-extern uint getAngle();
+extern u32 getAngle();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);

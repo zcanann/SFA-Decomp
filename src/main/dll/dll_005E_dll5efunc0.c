@@ -19,121 +19,121 @@
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern undefined4 FUN_800033a8();
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_80006768();
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006770();
+extern u32 FUN_800033a8();
+extern u64 FUN_80003494();
+extern u32 FUN_80006768();
+extern u32 FUN_8000676c();
+extern u32 FUN_80006770();
 extern int FUN_80006b7c();
-extern undefined4 FUN_80006b84();
-extern undefined4 FUN_80006b8c();
-extern undefined4 FUN_80006c20();
-extern undefined4 FUN_80017488();
-extern undefined4 FUN_80017498();
-extern undefined4 FUN_80017500();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_800176cc();
-extern undefined4 FUN_800176dc();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_8005d018();
-extern undefined4 FUN_80072564();
-extern undefined4 FUN_800d783c();
-extern undefined4 FUN_8011e80c();
-extern longlong FUN_80286830();
-extern uint FUN_80286834();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern undefined4 DAT_802c28f0;
-extern undefined4 DAT_802c28f4;
-extern undefined4 DAT_802c28f8;
+extern u32 FUN_80006b84();
+extern u32 FUN_80006b8c();
+extern u32 FUN_80006c20();
+extern u32 FUN_80017488();
+extern u32 FUN_80017498();
+extern u32 FUN_80017500();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
+extern u32 FUN_800176cc();
+extern u32 FUN_800176dc();
+extern u32 FUN_80042b9c();
+extern u32 FUN_8005d018();
+extern u32 FUN_80072564();
+extern u32 FUN_800d783c();
+extern u32 FUN_8011e80c();
+extern s64 FUN_80286830();
+extern u32 FUN_80286834();
+extern u64 FUN_80286840();
+extern u32 FUN_8028687c();
+extern u32 FUN_80286880();
+extern u32 FUN_8028688c();
+extern u32 DAT_802c28f0;
+extern u32 DAT_802c28f4;
+extern u32 DAT_802c28f8;
 extern short DAT_80312370;
 extern short DAT_80312460;
-extern undefined4 DAT_80312630;
+extern u32 DAT_80312630;
 extern short DAT_80312632;
 extern char DAT_803a3be0;
-extern undefined4 DAT_803a3be1;
-extern undefined4 DAT_803a3be2;
-extern uint DAT_803a3c1c;
-extern undefined4 DAT_803a3dac;
-extern undefined1 gGameplayPreviewSettings;
-extern undefined4 DAT_803a3e26;
-extern undefined4 DAT_803a3e27;
-extern undefined4 DAT_803a3e28;
-extern undefined4 DAT_803a3e2a;
-extern undefined4 DAT_803a3e2c;
-extern undefined4 DAT_803a3e2d;
-extern undefined4 gGameplayPreviewColorRed;
-extern undefined4 gGameplayPreviewColorGreen;
-extern undefined4 gGameplayPreviewColorBlue;
-extern undefined4 gGameplayRegisteredDebugOptions;
-extern undefined1 DAT_803a3f08;
-extern undefined4 DAT_803a3f09;
-extern undefined4 DAT_803a3f0c;
-extern undefined4 DAT_803a3f0e;
-extern undefined4 DAT_803a3f12;
-extern undefined4 DAT_803a3f14;
-extern undefined4 DAT_803a3f15;
-extern undefined4 DAT_803a3f18;
-extern undefined4 DAT_803a3f1a;
-extern undefined4 DAT_803a3f1e;
-extern undefined4 DAT_803a3f21;
+extern u32 DAT_803a3be1;
+extern u32 DAT_803a3be2;
+extern u32 DAT_803a3c1c;
+extern u32 DAT_803a3dac;
+extern u8 gGameplayPreviewSettings;
+extern u32 DAT_803a3e26;
+extern u32 DAT_803a3e27;
+extern u32 DAT_803a3e28;
+extern u32 DAT_803a3e2a;
+extern u32 DAT_803a3e2c;
+extern u32 DAT_803a3e2d;
+extern u32 gGameplayPreviewColorRed;
+extern u32 gGameplayPreviewColorGreen;
+extern u32 gGameplayPreviewColorBlue;
+extern u32 gGameplayRegisteredDebugOptions;
+extern u8 DAT_803a3f08;
+extern u32 DAT_803a3f09;
+extern u32 DAT_803a3f0c;
+extern u32 DAT_803a3f0e;
+extern u32 DAT_803a3f12;
+extern u32 DAT_803a3f14;
+extern u32 DAT_803a3f15;
+extern u32 DAT_803a3f18;
+extern u32 DAT_803a3f1a;
+extern u32 DAT_803a3f1e;
+extern u32 DAT_803a3f21;
 extern char DAT_803a3f24;
-extern undefined4 DAT_803a3f25;
-extern undefined4 DAT_803a3f26;
-extern undefined4 DAT_803a3f27;
-extern undefined4 DAT_803a3f28;
-extern undefined4 DAT_803a3f29;
-extern undefined4 DAT_803a3f2b;
-extern undefined4 DAT_803a4070;
-extern undefined4 DAT_803a4074;
-extern undefined4 DAT_803a4078;
-extern undefined4 DAT_803a407c;
-extern undefined4 DAT_803a4460;
-extern undefined4 DAT_803a4465;
-extern undefined4 DAT_803a458c;
-extern undefined4 DAT_803a4590;
-extern undefined4 DAT_803a4594;
-extern undefined4 DAT_803a4599;
-extern undefined4 DAT_803a459a;
-extern undefined4 DAT_803a45aa;
-extern undefined4 DAT_803a45ac;
-extern undefined4 DAT_803a45b0;
-extern undefined4 DAT_803a45b4;
-extern undefined4 DAT_803a45b6;
-extern undefined4 DAT_803a45ba;
-extern undefined4 DAT_803a45bc;
-extern undefined4 DAT_803a45be;
-extern undefined4 DAT_803a45c0;
-extern undefined4 DAT_803a45c2;
-extern undefined4 DAT_803a45f0;
-extern undefined4 DAT_803a45f1;
-extern undefined4 DAT_803a45f2;
-extern undefined4 DAT_803a45f3;
-extern undefined4 DAT_803a4e78;
-extern undefined4 DAT_803dc4f0;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6e8;
-extern undefined4 DAT_803de100;
-extern undefined4 DAT_803de104;
-extern undefined4 DAT_803de10c;
-extern undefined4* DAT_803de110;
+extern u32 DAT_803a3f25;
+extern u32 DAT_803a3f26;
+extern u32 DAT_803a3f27;
+extern u32 DAT_803a3f28;
+extern u32 DAT_803a3f29;
+extern u32 DAT_803a3f2b;
+extern u32 DAT_803a4070;
+extern u32 DAT_803a4074;
+extern u32 DAT_803a4078;
+extern u32 DAT_803a407c;
+extern u32 DAT_803a4460;
+extern u32 DAT_803a4465;
+extern u32 DAT_803a458c;
+extern u32 DAT_803a4590;
+extern u32 DAT_803a4594;
+extern u32 DAT_803a4599;
+extern u32 DAT_803a459a;
+extern u32 DAT_803a45aa;
+extern u32 DAT_803a45ac;
+extern u32 DAT_803a45b0;
+extern u32 DAT_803a45b4;
+extern u32 DAT_803a45b6;
+extern u32 DAT_803a45ba;
+extern u32 DAT_803a45bc;
+extern u32 DAT_803a45be;
+extern u32 DAT_803a45c0;
+extern u32 DAT_803a45c2;
+extern u32 DAT_803a45f0;
+extern u32 DAT_803a45f1;
+extern u32 DAT_803a45f2;
+extern u32 DAT_803a45f3;
+extern u32 DAT_803a4e78;
+extern u32 DAT_803dc4f0;
+extern u32* DAT_803dd6d0;
+extern u32* DAT_803dd6e8;
+extern u32 DAT_803de100;
+extern u32 DAT_803de104;
+extern u32 DAT_803de10c;
+extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
-extern undefined4 uRam803de108;
+extern u32 uRam803de108;
 extern u8 lbl_80312340[];
 extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
 extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
 extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
 
-void saveFileStruct_unlockCheat(uint cheatId)
+void saveFileStruct_unlockCheat(u32 cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
     return;
 }
 
-uint isCheatUnlocked(uint cheatId)
+u32 isCheatUnlocked(u32 cheatId)
 {
     return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
@@ -151,36 +151,36 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                      undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                      undefined8 param_8)
+void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                      u64 param_5, u64 param_6, u64 param_7,
+                      u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
     (**(code**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((uint)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorBlue, 10, 0, 0, 1);
+    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
     return;
 }
 
-undefined* FUN_800e82d8(void)
+u8* FUN_800e82d8(void)
 {
-    return (undefined*)&DAT_803a4460;
+    return (u8*)&DAT_803a4460;
 }
 
 void FUN_800e8630(int param_1)
 {
     int objId;
-    undefined1* entry;
+    u8* entry;
     int slotBase;
     int slotIdx;
     int groupsLeft;
 
-    if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -216,50 +216,50 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    (&DAT_803a4070)[slotIdx * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[slotIdx * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
+    (&DAT_803a4070)[slotIdx * 4] = *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosZ;
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(u32*)&((GameObject*)param_1)->anim
         .localPosX;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(u32*)&((GameObject*)param_1)->
         anim.localPosY;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(u32*)&((GameObject*)param_1)->
         anim.localPosZ;
     return;
 }
 
-undefined4* FUN_800e87a8(void)
+u32* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
 
-undefined FUN_800e8b98(void)
+u8 FUN_800e8b98(void)
 {
     return DAT_803de100;
 }
 
-void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 savedX;
-    undefined4 savedY;
-    undefined4 savedZ;
+    u32 savedX;
+    u32 savedY;
+    u32 savedZ;
     char* dst;
     int act;
     short* actFlags;
     char* src;
     char c;
-    undefined8 saveHandle;
-    undefined8 result;
+    u64 saveHandle;
+    u64 result;
 
     result = FUN_80286840();
     savedZ = DAT_802c28f8;
     savedY = DAT_802c28f4;
     savedX = DAT_802c28f0;
-    src = (char*)((ulonglong)result >> 0x20);
+    src = (char*)((u64)result >> 0x20);
     FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
-    if ((*(byte*)(DAT_803de110 + 0x21) & 0x80) == 0)
+    if ((*(u8*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
         FUN_800033a8(DAT_803de110, 0, 0x6ec);
     }
@@ -314,9 +314,9 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(uint)DAT_803a3f28 * 4] = savedX;
-    (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = savedY;
-    (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = savedZ;
+    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = savedX;
+    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = savedY;
+    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
     if (src == NULL)
     {
@@ -342,41 +342,41 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     c = (char)result;
     if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
-        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)result & 0xff,
+        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
     return;
 }
 
-void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 {
     bool isClearMode;
     char slotIdx;
-    uint flagWord;
+    u32 flagWord;
     char slotBase;
     short* actPtr;
     char* histScan;
-    uint* wordPtr;
-    uint bitIndex;
-    uint newWord;
-    uint flagId;
+    u32* wordPtr;
+    u32 bitIndex;
+    u32 newWord;
+    u32 flagId;
     char* histPtr;
     int i;
     int j;
-    longlong rawId;
+    s64 rawId;
 
     rawId = FUN_80286830();
-    flagId = (uint)((ulonglong)rawId >> 0x20);
-    bitIndex = (uint)rawId;
+    flagId = (u32)((u64)rawId >> 0x20);
+    bitIndex = (u32)rawId;
     histPtr = &DAT_803a3be0;
     if (0x4fffffffff < rawId)
     {
-        flagId = (uint)(byte)(&DAT_803a3dac)[flagId];
+        flagId = (u32)(u8)(&DAT_803a3dac)[flagId];
     }
     if ((int)flagId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[flagId] != 0)
+        if ((u16)(&DAT_80312460)[flagId] != 0)
         {
             if (param_3 == -1)
             {
@@ -387,7 +387,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             {
                 param_3 = 0;
             }
-            flagWord = FUN_80017690((uint)(ushort)(&DAT_80312460)[flagId]);
+            flagWord = FUN_80017690((u32)(u16)(&DAT_80312460)[flagId]);
             if (param_3 == 0)
             {
                 newWord = flagWord & ~(1 << bitIndex);
@@ -396,7 +396,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             {
                 newWord = flagWord | 1 << bitIndex;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[flagId], newWord);
+            FUN_80017698((u32)(u16)(&DAT_80312460)[flagId], newWord);
             DAT_803de104 = flagId;
             uRam803de108 = newWord;
             if (param_3 == 0)
@@ -443,13 +443,13 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                     histScan = histPtr;
                     do
                     {
-                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == (byte)histScan[1])) ||
-                                    ((slotIdx = slotBase + '\x01', flagId == (int)histScan[3] && (bitIndex == (byte)histScan[4])))
+                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == (u8)histScan[1])) ||
+                                    ((slotIdx = slotBase + '\x01', flagId == (int)histScan[3] && (bitIndex == (u8)histScan[4])))
                                 ) || ((slotIdx = slotBase + '\x02', flagId == (int)histScan[6] &&
-                                    (bitIndex == (byte)histScan[7])))) ||
-                                ((slotIdx = slotBase + '\x03', flagId == (int)histScan[9] && (bitIndex == (byte)histScan[10]))))
+                                    (bitIndex == (u8)histScan[7])))) ||
+                                ((slotIdx = slotBase + '\x03', flagId == (int)histScan[9] && (bitIndex == (u8)histScan[10]))))
                             || ((flagId == (int)histScan[0xc] &&
-                                (slotIdx = slotBase + '\x04', bitIndex == (byte)histScan[0xd]))))
+                                (slotIdx = slotBase + '\x04', bitIndex == (u8)histScan[0xd]))))
                             goto LAB_800e9628;
                         histScan = histScan + 0xf;
                         slotBase = slotBase + '\x05';
@@ -529,9 +529,9 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 
 void FUN_800e9e9c(void)
 {
-    uint slotIdx;
+    u32 slotIdx;
     int saveResult;
-    undefined4 sizeArg;
+    u32 sizeArg;
 
     DAT_803de10c = 0xff;
     DAT_803de104 = 0xffffffff;
@@ -542,7 +542,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    slotIdx = (uint)DAT_803a3f28;
+    slotIdx = (u32)DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
                  (double)(float)(&DAT_803a4594)[slotIdx * 4],
                  (int)(char)(&DAT_803a4599)[slotIdx * 0x10], sizeArg);
@@ -556,26 +556,26 @@ void FUN_800e9e9c(void)
     return;
 }
 
-undefined4
-FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+u32
+FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 uVar1;
-    undefined* puVar2;
+    u32 uVar1;
+    u8* puVar2;
 
     uVar1 = FUN_80017498();
     puVar2 = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)puVar2[5] * 2)
+                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)puVar2[5] * 2)
     ]
     )
     ;
     return uVar1;
 }
 
-undefined FUN_800ea9ac(void)
+u8 FUN_800ea9ac(void)
 {
-    undefined* puVar1;
+    u8* puVar1;
 
     puVar1 = FUN_800e82d8();
     return puVar1[5];
@@ -583,15 +583,15 @@ undefined FUN_800ea9ac(void)
 
 void FUN_800ea9b8(void)
 {
-    uint mapId;
-    undefined* history;
+    u32 mapId;
+    u8* history;
     short i;
-    uint flagWord;
-    uint bit;
-    uint flagId;
-    uint flagWordCache;
-    uint cachedFlagId;
-    uint scanId;
+    u32 flagWord;
+    u32 bit;
+    u32 flagId;
+    u32 flagWordCache;
+    u32 cachedFlagId;
+    u32 scanId;
     short* mapFlags;
 
     mapId = FUN_80286834();
@@ -605,7 +605,7 @@ void FUN_800ea9b8(void)
             if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
                 bit = 1 << (scanId & 0x1f);
-                flagId = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                flagId = (u32)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
                 flagWord = FUN_80017690(flagId);
                 if ((flagWord & bit) == 0)
                 {
@@ -616,7 +616,7 @@ void FUN_800ea9b8(void)
         }
     }
     flagId = 1 << (mapId & 0x1f);
-    flagWord = (uint)(short)((short)((mapId & 0xff) >> 5) + 0x12f);
+    flagWord = (u32)(short)((short)((mapId & 0xff) >> 5) + 0x12f);
     scanId = FUN_80017690(flagWord);
     if ((scanId & flagId) == 0)
     {
@@ -630,20 +630,20 @@ void FUN_800ea9b8(void)
             history[i] = history[i + -1];
         }
         *history = (char)mapId;
-        if ((uint)(byte)history[5] == (mapId & 0xff)
+        if ((u32)(u8)history[5] == (mapId & 0xff)
         )
         {
             do
             {
                 history[5] = history[5] + '\x01';
-                mapId = (uint)(short)(((byte)history[5] >> 5) + 0x12f);
+                mapId = (u32)(short)(((u8)history[5] >> 5) + 0x12f);
                 if (mapId != (int)(short)cachedFlagId)
                 {
                     flagWordCache = FUN_80017690(mapId);
                     cachedFlagId = mapId;
                 }
             }
-            while ((flagWordCache & 1 << ((byte)history[5] & 0x1f)) != 0);
+            while ((flagWordCache & 1 << ((u8)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
@@ -658,7 +658,7 @@ void dll_5E_func00_nop(void)
 {
 }
 
-void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
+void dll_5E_func03(int sourceObj, int variant, u8* posSource, u32 flags)
 {
     u8* base = (u8*)(int)lbl_80312340;
     (*gModgfxInterface)->beginSequence((void*)sourceObj, (u8)variant, 0x12, 3, 9);

@@ -1381,7 +1381,7 @@ int trickyFn_80143c04(int obj, int state)
 u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
-    uint bitVal;
+    u32 bitVal;
 
     done = trickyFoodFn_8014460c(obj, trickyState);
     if (done != 0)

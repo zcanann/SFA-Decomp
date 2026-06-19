@@ -42,7 +42,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern const f32 lbl_803E61C8;
@@ -121,7 +121,7 @@ void dbegg_processMessages(int obj)
     extern int gameBitIncrement(int);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
-    extern int ObjMsg_Pop(void*, u32*, uint*, uint*);
+    extern int ObjMsg_Pop(void*, u32*, u32*, u32*);
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
@@ -134,7 +134,7 @@ void dbegg_processMessages(int obj)
     sub = *(int*)&((GameObject*)obj)->extra;
     config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
 
-    while ((int)ObjMsg_Pop((void*)obj, &msgType, (uint*)&msgArg, (uint*)&msgFlag) != 0)
+    while ((int)ObjMsg_Pop((void*)obj, &msgType, (u32*)&msgArg, (u32*)&msgFlag) != 0)
     {
         if (msgType == 17)
         {
@@ -520,15 +520,15 @@ void fn_801FE774(int cam, f32* vel)
 u32
 #pragma peephole off
 FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, uint param_9, int param_10,
+             u64 param_6, u64 param_7, u64 param_8, u32 param_9, int param_10,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
     int control;
 
     control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) | 4;
+    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
+    *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
     *(float*)(param_10 + 0x2a0) = lbl_803E6F80;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -591,7 +591,7 @@ void dbegg_update(int obj)
     extern int randomGetRange(int, int);
     extern f32 Vec_xzDistance(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern uint getButtonsJustPressed(int);
+    extern u32 getButtonsJustPressed(int);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char*, ...);

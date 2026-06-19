@@ -413,7 +413,7 @@ void fn_80239FCC(int p1, int p2)
 void fn_8023A3E4(int p1, int p2)
 {
     u8 i;
-    uint hitVol;
+    u32 hitVol;
     int hitType;
     int hitObj;
     int got;
@@ -497,11 +497,11 @@ void fn_8023A3E4(int p1, int p2)
         state = p[0xB9];
         adjusted = state;
         texIdx = (&lbl_803DC4C8)[i];
-        if ((uint)texIdx < 2 && state == 1)
+        if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
         tex = objFindTexture((void *)obj, texIdx * 2, 0);
         tex->textureId = adjusted << 8;
-        if ((uint)texIdx == 2 && state == 1)
+        if ((u32)texIdx == 2 && state == 1)
             state = 0;
         tex = objFindTexture((void *)obj, texIdx * 2 + 1, 0);
         tex->textureId = state << 8;

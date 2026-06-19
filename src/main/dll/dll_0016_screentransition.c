@@ -1,9 +1,9 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 
-extern undefined4 DAT_803de0af;
+extern u32 DAT_803de0af;
 
-void FUN_800d7780(undefined param_1)
+void FUN_800d7780(u8 param_1)
 {
     DAT_803de0af = param_1;
     return;
@@ -232,16 +232,16 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     int sw;
     int sh;
     HudColor col;
-    uint halfSpan;
-    uint cur;
-    uint span;
-    uint edge;
-    uint hiEdge;
-    uint hStep;
-    uint loEdge;
-    uint inset;
-    uint maxAlpha;
-    uint H;
+    u32 halfSpan;
+    u32 cur;
+    u32 span;
+    u32 edge;
+    u32 hiEdge;
+    u32 hStep;
+    u32 loEdge;
+    u32 inset;
+    u32 maxAlpha;
+    u32 H;
     u8 step;
     u8 fadeAlpha;
     int screenX;
@@ -264,7 +264,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     halfSpan = (span >> 1) & 0xffff;
     inset = inset & 0xffff;
     conv = (f32)(int)(inset * halfSpan);
-    edge = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+    edge = (u32)(int)(conv * lbl_803E0548) & 0xffff;
     if (edge == halfSpan)
     {
         int sh2;
@@ -319,7 +319,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
         edge = (H >> 1) & 0xffff;
         conv = (f32)(int)(inset * edge);
-        inset = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+        inset = (u32)(int)(conv * lbl_803E0548) & 0xffff;
         halfSpan = (edge - inset) & 0xffff;
         loEdge = (edge + inset) & 0xffff;
         inset = ((edge - 1) - inset) & 0xffff;

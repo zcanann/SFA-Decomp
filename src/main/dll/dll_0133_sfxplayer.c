@@ -20,7 +20,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern u8* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);

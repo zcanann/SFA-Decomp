@@ -9,7 +9,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int bit);
+extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 extern f32 sqrtf(f32 x);
@@ -31,15 +31,15 @@ extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 lbl_803E3590;
 extern f32 lbl_803E3594;
-extern undefined4 FUN_80017748();
+extern u32 FUN_80017748();
 extern int FUN_80017a90();
-extern undefined8 FUN_80017ac8();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_80053c98();
+extern u64 FUN_80017ac8();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u32 ObjMsg_AllocQueue();
+extern u32 FUN_80053c98();
 extern int FUN_801365ac();
-extern undefined4 FUN_801365b8();
+extern u32 FUN_801365b8();
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
@@ -329,11 +329,11 @@ void fn_80174BFC(int obj, int ext)
     memcpy(((PushableState*)ext)->cornerWorld, points, ((PushableState*)ext)->pointCount * 0xc);
 }
 
-undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
+u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
     extern void GameBit_Set(int bit, int value); /* #57 */
-    uint bitVal;
+    u32 bitVal;
     int player;
     PushableState* state;
     f32 dx;
@@ -397,13 +397,13 @@ undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate
     }
     if ((obj[0x23] == 0x21e) || (obj[0x23] == 0x411))
     {
-        *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) | 8;
+        *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) | 8;
         if (('\0' < *(char*)(*(int*)(obj + 0x2c) + 0x10f)) &&
             ((*(short*)(*(int*)(*(int*)(obj + 0x2c) + 0x100) + 0x44) == 0x24 &&
                 (bitVal = GameBit_Get(0x103), bitVal == 0))))
         {
             GameBit_Set(0x103, 1);
-            *(byte*)((int)obj + 0xaf) = *(byte*)((int)obj + 0xaf) & ~8;
+            *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) & ~8;
             player = Obj_GetPlayerObject();
             dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
@@ -468,9 +468,9 @@ int pushable_render2(int obj)
 void pushable_modelMtxFn(int obj, int modelNo)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
-    uint flags = *(uint*)(extra + 0xa8);
+    u32 flags = *(u32*)(extra + 0xa8);
 
-    *(uint*)(extra + 0xa8) = flags | (1 << modelNo);
+    *(u32*)(extra + 0xa8) = flags | (1 << modelNo);
 }
 
 int pushable_func0B(int obj, int other)
@@ -522,11 +522,11 @@ static inline int* Transporter_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-undefined4
-FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     int iVar1;
 
@@ -547,17 +547,17 @@ void FUN_801778d0(int param_1)
     return;
 }
 
-undefined4
-FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9,
+u32
+FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9,
              int param_10)
 {
     float fVar1;
     short* psVar2;
-    undefined4 uVar3;
+    u32 uVar3;
     int iVar4;
     float* pfVar5;
-    ushort local_28;
+    u16 local_28;
     short local_26;
     short local_24;
     float local_20;
@@ -973,7 +973,7 @@ void pushable_hitDetect(int* obj)
 {
     extern void setMatrixFromObjectPos(f32* mtx, void* vec); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
-    extern undefined4 fn_80174BFC(); /* #57 */
+    extern u32 fn_80174BFC(); /* #57 */
     PushableState* state;
     f32* w;
     f32* wp;
@@ -1207,7 +1207,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
-    extern undefined4 fn_80174BFC(); /* #57 */
+    extern u32 fn_80174BFC(); /* #57 */
     SetScaleParams* pp;
     PushableState* state;
     char ret;

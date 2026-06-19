@@ -20,7 +20,7 @@ extern u32 ObjMsg_AllocQueue();
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);

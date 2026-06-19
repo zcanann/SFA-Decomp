@@ -501,7 +501,7 @@ void arwsquadron_handleDamage(int obj, int state)
     ArwSquadronState* squad = (ArwSquadronState*)state;
     SquadCmdFlags* flags = &squad->flags.cmd;
     int hitObj;
-    uint hitVol;
+    u32 hitVol;
     int arwing;
 
     if (((GameObject*)obj)->anim.hitReactState == NULL)

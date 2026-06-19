@@ -50,7 +50,7 @@ typedef struct DFlanternShrineState
 } DFlanternShrineState;
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjMsg_AllocQueue();
+extern u32 ObjMsg_AllocQueue();
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
@@ -82,7 +82,7 @@ void fn_801C2914(int obj)
     f32 distance;
     int angleDelta;
     int turnStep;
-    undefined animEvents[32];
+    u8 animEvents[32];
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;

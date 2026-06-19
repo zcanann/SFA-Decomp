@@ -212,7 +212,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
     }
 }
 
-void fn_801EB0D4(uint obj, int stateRaw)
+void fn_801EB0D4(u32 obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     f32 cur;
@@ -346,7 +346,7 @@ int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
     ObjHits_DisableObject((u32)obj);
 
-    for (i = 0; i < (int)(uint)seq->eventCount; i++)
+    for (i = 0; i < (int)(u32)seq->eventCount; i++)
     {
         triggerType = seq->eventIds[i];
         switch (triggerType)

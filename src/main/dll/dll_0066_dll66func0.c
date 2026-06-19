@@ -45,109 +45,109 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern undefined4 FUN_800033a8();
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_80006768();
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006770();
+extern u32 FUN_800033a8();
+extern u64 FUN_80003494();
+extern u32 FUN_80006768();
+extern u32 FUN_8000676c();
+extern u32 FUN_80006770();
 extern int FUN_80006b7c();
-extern undefined4 FUN_80006b84();
-extern undefined4 FUN_80006b8c();
-extern undefined4 FUN_80006c20();
-extern undefined4 FUN_80017488();
-extern undefined4 FUN_80017498();
-extern undefined4 FUN_80017500();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_800176cc();
-extern undefined4 FUN_800176dc();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_8005d018();
-extern undefined4 FUN_80072564();
-extern undefined4 FUN_800d783c();
-extern undefined4 FUN_8011e80c();
-extern longlong FUN_80286830();
-extern uint FUN_80286834();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern undefined4 DAT_802c28f0;
-extern undefined4 DAT_802c28f4;
-extern undefined4 DAT_802c28f8;
+extern u32 FUN_80006b84();
+extern u32 FUN_80006b8c();
+extern u32 FUN_80006c20();
+extern u32 FUN_80017488();
+extern u32 FUN_80017498();
+extern u32 FUN_80017500();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
+extern u32 FUN_800176cc();
+extern u32 FUN_800176dc();
+extern u32 FUN_80042b9c();
+extern u32 FUN_8005d018();
+extern u32 FUN_80072564();
+extern u32 FUN_800d783c();
+extern u32 FUN_8011e80c();
+extern s64 FUN_80286830();
+extern u32 FUN_80286834();
+extern u64 FUN_80286840();
+extern u32 FUN_8028687c();
+extern u32 FUN_80286880();
+extern u32 FUN_8028688c();
+extern u32 DAT_802c28f0;
+extern u32 DAT_802c28f4;
+extern u32 DAT_802c28f8;
 extern short DAT_80312370;
 extern short DAT_80312460;
-extern undefined4 DAT_80312630;
+extern u32 DAT_80312630;
 extern short DAT_80312632;
 extern char DAT_803a3be0;
-extern undefined4 DAT_803a3be1;
-extern undefined4 DAT_803a3be2;
-extern uint DAT_803a3c1c;
-extern undefined4 DAT_803a3dac;
-extern undefined1 gGameplayPreviewSettings;
-extern undefined4 DAT_803a3e26;
-extern undefined4 DAT_803a3e27;
-extern undefined4 DAT_803a3e28;
-extern undefined4 DAT_803a3e2a;
-extern undefined4 DAT_803a3e2c;
-extern undefined4 DAT_803a3e2d;
-extern undefined4 gGameplayPreviewColorRed;
-extern undefined4 gGameplayPreviewColorGreen;
-extern undefined4 gGameplayPreviewColorBlue;
-extern undefined4 gGameplayRegisteredDebugOptions;
-extern undefined1 DAT_803a3f08;
-extern undefined4 DAT_803a3f09;
-extern undefined4 DAT_803a3f0c;
-extern undefined4 DAT_803a3f0e;
-extern undefined4 DAT_803a3f12;
-extern undefined4 DAT_803a3f14;
-extern undefined4 DAT_803a3f15;
-extern undefined4 DAT_803a3f18;
-extern undefined4 DAT_803a3f1a;
-extern undefined4 DAT_803a3f1e;
-extern undefined4 DAT_803a3f21;
+extern u32 DAT_803a3be1;
+extern u32 DAT_803a3be2;
+extern u32 DAT_803a3c1c;
+extern u32 DAT_803a3dac;
+extern u8 gGameplayPreviewSettings;
+extern u32 DAT_803a3e26;
+extern u32 DAT_803a3e27;
+extern u32 DAT_803a3e28;
+extern u32 DAT_803a3e2a;
+extern u32 DAT_803a3e2c;
+extern u32 DAT_803a3e2d;
+extern u32 gGameplayPreviewColorRed;
+extern u32 gGameplayPreviewColorGreen;
+extern u32 gGameplayPreviewColorBlue;
+extern u32 gGameplayRegisteredDebugOptions;
+extern u8 DAT_803a3f08;
+extern u32 DAT_803a3f09;
+extern u32 DAT_803a3f0c;
+extern u32 DAT_803a3f0e;
+extern u32 DAT_803a3f12;
+extern u32 DAT_803a3f14;
+extern u32 DAT_803a3f15;
+extern u32 DAT_803a3f18;
+extern u32 DAT_803a3f1a;
+extern u32 DAT_803a3f1e;
+extern u32 DAT_803a3f21;
 extern char DAT_803a3f24;
-extern undefined4 DAT_803a3f25;
-extern undefined4 DAT_803a3f26;
-extern undefined4 DAT_803a3f27;
-extern undefined4 DAT_803a3f28;
-extern undefined4 DAT_803a3f29;
-extern undefined4 DAT_803a3f2b;
-extern undefined4 DAT_803a4070;
-extern undefined4 DAT_803a4074;
-extern undefined4 DAT_803a4078;
-extern undefined4 DAT_803a407c;
-extern undefined4 DAT_803a4460;
-extern undefined4 DAT_803a4465;
-extern undefined4 DAT_803a458c;
-extern undefined4 DAT_803a4590;
-extern undefined4 DAT_803a4594;
-extern undefined4 DAT_803a4599;
-extern undefined4 DAT_803a459a;
-extern undefined4 DAT_803a45aa;
-extern undefined4 DAT_803a45ac;
-extern undefined4 DAT_803a45b0;
-extern undefined4 DAT_803a45b4;
-extern undefined4 DAT_803a45b6;
-extern undefined4 DAT_803a45ba;
-extern undefined4 DAT_803a45bc;
-extern undefined4 DAT_803a45be;
-extern undefined4 DAT_803a45c0;
-extern undefined4 DAT_803a45c2;
-extern undefined4 DAT_803a45f0;
-extern undefined4 DAT_803a45f1;
-extern undefined4 DAT_803a45f2;
-extern undefined4 DAT_803a45f3;
-extern undefined4 DAT_803a4e78;
-extern undefined4 DAT_803dc4f0;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6e8;
-extern undefined4 DAT_803de100;
-extern undefined4 DAT_803de104;
-extern undefined4 DAT_803de10c;
-extern undefined4* DAT_803de110;
+extern u32 DAT_803a3f25;
+extern u32 DAT_803a3f26;
+extern u32 DAT_803a3f27;
+extern u32 DAT_803a3f28;
+extern u32 DAT_803a3f29;
+extern u32 DAT_803a3f2b;
+extern u32 DAT_803a4070;
+extern u32 DAT_803a4074;
+extern u32 DAT_803a4078;
+extern u32 DAT_803a407c;
+extern u32 DAT_803a4460;
+extern u32 DAT_803a4465;
+extern u32 DAT_803a458c;
+extern u32 DAT_803a4590;
+extern u32 DAT_803a4594;
+extern u32 DAT_803a4599;
+extern u32 DAT_803a459a;
+extern u32 DAT_803a45aa;
+extern u32 DAT_803a45ac;
+extern u32 DAT_803a45b0;
+extern u32 DAT_803a45b4;
+extern u32 DAT_803a45b6;
+extern u32 DAT_803a45ba;
+extern u32 DAT_803a45bc;
+extern u32 DAT_803a45be;
+extern u32 DAT_803a45c0;
+extern u32 DAT_803a45c2;
+extern u32 DAT_803a45f0;
+extern u32 DAT_803a45f1;
+extern u32 DAT_803a45f2;
+extern u32 DAT_803a45f3;
+extern u32 DAT_803a4e78;
+extern u32 DAT_803dc4f0;
+extern u32* DAT_803dd6d0;
+extern u32* DAT_803dd6e8;
+extern u32 DAT_803de100;
+extern u32 DAT_803de104;
+extern u32 DAT_803de10c;
+extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
-extern undefined4 uRam803de108;
+extern u32 uRam803de108;
 extern u8 lbl_803131A8[];
 extern f32 lbl_803E0990;
 extern f32 lbl_803E0994;
@@ -169,12 +169,12 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
-void saveFileStruct_unlockCheat(uint cheatId)
+void saveFileStruct_unlockCheat(u32 cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
 }
 
-uint isCheatUnlocked(uint cheatId)
+u32 isCheatUnlocked(u32 cheatId)
 {
     return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
@@ -191,35 +191,35 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                      undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                      undefined8 param_8)
+void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                      u64 param_5, u64 param_6, u64 param_7,
+                      u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
     (**(code**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((uint)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorBlue, 10, 0, 0, 1);
+    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
 }
 
-undefined* FUN_800e82d8(void)
+u8* FUN_800e82d8(void)
 {
-    return (undefined*)&DAT_803a4460;
+    return (u8*)&DAT_803a4460;
 }
 
 void FUN_800e8630(int obj)
 {
     int placementId;
-    undefined1* slot;
+    u8* slot;
     int baseIndex;
     int slotIndex;
     int remaining;
 
-    if ((*(ushort*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -255,50 +255,50 @@ void FUN_800e8630(int obj)
     {
         return;
     }
-    (&DAT_803a4070)[slotIndex * 4] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-    (&DAT_803a4074)[slotIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosX;
-    (&DAT_803a4078)[slotIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosY;
-    (&DAT_803a407c)[slotIndex * 4] = *(undefined4*)&((GameObject*)obj)->anim.localPosZ;
-    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(undefined4*)&((GameObject*)obj)->anim
+    (&DAT_803a4070)[slotIndex * 4] = *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosX;
+    (&DAT_803a4078)[slotIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosY;
+    (&DAT_803a407c)[slotIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosZ;
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(u32*)&((GameObject*)obj)->anim
         .localPosX;
-    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)obj)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(u32*)&((GameObject*)obj)->
         anim.localPosY;
-    *(undefined4*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)obj)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(u32*)&((GameObject*)obj)->
         anim.localPosZ;
     return;
 }
 
-undefined4* FUN_800e87a8(void)
+u32* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
 
-undefined FUN_800e8b98(void)
+u8 FUN_800e8b98(void)
 {
     return DAT_803de100;
 }
 
-void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 savedX;
-    undefined4 savedY;
-    undefined4 savedZ;
+    u32 savedX;
+    u32 savedY;
+    u32 savedZ;
     char* dst;
     int actIndex;
     short* actPtr;
     char* name;
     char cVar8;
-    undefined8 uVar9;
-    undefined8 uVar10;
+    u64 uVar9;
+    u64 uVar10;
 
     uVar10 = FUN_80286840();
     savedZ = DAT_802c28f8;
     savedY = DAT_802c28f4;
     savedX = DAT_802c28f0;
-    name = (char*)((ulonglong)uVar10 >> 0x20);
+    name = (char*)((u64)uVar10 >> 0x20);
     FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
-    if ((*(byte*)(DAT_803de110 + 0x21) & 0x80) == 0)
+    if ((*(u8*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
         FUN_800033a8(DAT_803de110, 0, 0x6ec);
     }
@@ -353,9 +353,9 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(uint)DAT_803a3f28 * 4] = savedX;
-    (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = savedY;
-    (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = savedZ;
+    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = savedX;
+    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = savedY;
+    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
     if (name == (char*)0x0)
     {
@@ -381,40 +381,40 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     cVar8 = (char)uVar10;
     if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, name != (char*)0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)uVar10 & 0xff,
+        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)uVar10 & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
 }
 
-void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
+void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
 {
     bool isClearMode;
     char foundIndex;
-    uint maskWord;
+    u32 maskWord;
     char rowBase;
     short* idPtr;
     char* rowPtr;
-    uint* flagPtr;
-    uint bit;
-    uint newMask;
-    uint actId;
+    u32* flagPtr;
+    u32 bit;
+    u32 newMask;
+    u32 actId;
     char* table;
     int i;
     int j;
-    longlong packed;
+    s64 packed;
 
     packed = FUN_80286830();
-    actId = (uint)((ulonglong)packed >> 0x20);
-    bit = (uint)packed;
+    actId = (u32)((u64)packed >> 0x20);
+    bit = (u32)packed;
     table = &DAT_803a3be0;
     if (0x4fffffffff < packed)
     {
-        actId = (uint)(byte)(&DAT_803a3dac)[actId];
+        actId = (u32)(u8)(&DAT_803a3dac)[actId];
     }
     if ((int)actId < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[actId] != 0)
+        if ((u16)(&DAT_80312460)[actId] != 0)
         {
             if (mode == -1)
             {
@@ -425,7 +425,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
             {
                 mode = 0;
             }
-            maskWord = FUN_80017690((uint)(ushort)(&DAT_80312460)[actId]);
+            maskWord = FUN_80017690((u32)(u16)(&DAT_80312460)[actId]);
             if (mode == 0)
             {
                 newMask = maskWord & ~(1 << bit);
@@ -434,7 +434,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
             {
                 newMask = maskWord | 1 << bit;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[actId], newMask);
+            FUN_80017698((u32)(u16)(&DAT_80312460)[actId], newMask);
             DAT_803de104 = actId;
             uRam803de108 = newMask;
             if (mode == 0)
@@ -481,13 +481,13 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
                     rowPtr = table;
                     do
                     {
-                        if ((((((actId == (int)*rowPtr) && (foundIndex = rowBase, bit == (byte)rowPtr[1])) ||
-                                    ((foundIndex = rowBase + '\x01', actId == (int)rowPtr[3] && (bit == (byte)rowPtr[4])))
+                        if ((((((actId == (int)*rowPtr) && (foundIndex = rowBase, bit == (u8)rowPtr[1])) ||
+                                    ((foundIndex = rowBase + '\x01', actId == (int)rowPtr[3] && (bit == (u8)rowPtr[4])))
                                 ) || ((foundIndex = rowBase + '\x02', actId == (int)rowPtr[6] &&
-                                    (bit == (byte)rowPtr[7])))) ||
-                                ((foundIndex = rowBase + '\x03', actId == (int)rowPtr[9] && (bit == (byte)rowPtr[10]))))
+                                    (bit == (u8)rowPtr[7])))) ||
+                                ((foundIndex = rowBase + '\x03', actId == (int)rowPtr[9] && (bit == (u8)rowPtr[10]))))
                             || ((actId == (int)rowPtr[0xc] &&
-                                (foundIndex = rowBase + '\x04', bit == (byte)rowPtr[0xd]))))
+                                (foundIndex = rowBase + '\x04', bit == (u8)rowPtr[0xd]))))
                             goto LAB_800e9628;
                         rowPtr = rowPtr + 0xf;
                         rowBase = rowBase + '\x05';
@@ -566,20 +566,20 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int mode)
 
 void FUN_800e9e9c(void)
 {
-    uint slotIdx;
+    u32 slotIdx;
     int saveResult;
-    undefined4 extraout_r4;
-    undefined4 sizeArg;
-    undefined4 in_r6;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined8 in_f4;
-    undefined8 in_f5;
-    undefined8 in_f6;
-    undefined8 in_f7;
-    undefined8 in_f8;
+    u32 extraout_r4;
+    u32 sizeArg;
+    u32 in_r6;
+    u32 in_r7;
+    u32 in_r8;
+    u32 in_r9;
+    u32 in_r10;
+    u64 in_f4;
+    u64 in_f5;
+    u64 in_f6;
+    u64 in_f7;
+    u64 in_f8;
 
     DAT_803de10c = 0xff;
     DAT_803de104 = 0xffffffff;
@@ -590,7 +590,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    slotIdx = (uint)DAT_803a3f28;
+    slotIdx = (u32)DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
                  (double)(float)(&DAT_803a4594)[slotIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[slotIdx * 0x10], extraout_r4, sizeArg, in_r6, in_r7, in_r8, in_r9,
@@ -604,26 +604,26 @@ void FUN_800e9e9c(void)
     DAT_803de100 = 2;
 }
 
-undefined4
-FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+u32
+FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 result;
-    undefined* hist;
+    u32 result;
+    u8* hist;
 
     result = FUN_80017498();
     hist = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)hist[5] * 2)
+                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)hist[5] * 2)
     ]
     )
     ;
     return result;
 }
 
-undefined FUN_800ea9ac(void)
+u8 FUN_800ea9ac(void)
 {
-    undefined* hist;
+    u8* hist;
 
     hist = FUN_800e82d8();
     return hist[5];
@@ -631,15 +631,15 @@ undefined FUN_800ea9ac(void)
 
 void FUN_800ea9b8(void)
 {
-    uint id;
-    undefined* hist;
+    u32 id;
+    u8* hist;
     short i;
-    uint mask;
-    uint bit;
-    uint wordId;
-    uint cachedMask;
-    uint lastWordId;
-    uint scanId;
+    u32 mask;
+    u32 bit;
+    u32 wordId;
+    u32 cachedMask;
+    u32 lastWordId;
+    u32 scanId;
     short* idPtr;
 
     id = FUN_80286834();
@@ -653,7 +653,7 @@ void FUN_800ea9b8(void)
             if ((*idPtr == 0xffff) || (*idPtr == -1))
             {
                 bit = 1 << (scanId & 0x1f);
-                wordId = (uint)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
+                wordId = (u32)(short)((short)((scanId & 0xff) >> 5) + 0x12f);
                 mask = FUN_80017690(wordId);
                 if ((mask & bit) == 0)
                 {
@@ -664,7 +664,7 @@ void FUN_800ea9b8(void)
         }
     }
     wordId = 1 << (id & 0x1f);
-    mask = (uint)(short)((short)((id & 0xff) >> 5) + 0x12f);
+    mask = (u32)(short)((short)((id & 0xff) >> 5) + 0x12f);
     scanId = FUN_80017690(mask);
     if ((scanId & wordId) == 0)
     {
@@ -678,20 +678,20 @@ void FUN_800ea9b8(void)
             hist[i] = hist[i + -1];
         }
         *hist = (char)id;
-        if ((uint)(byte)hist[5] == (id & 0xff)
+        if ((u32)(u8)hist[5] == (id & 0xff)
         )
         {
             do
             {
                 hist[5] = hist[5] + '\x01';
-                id = (uint)(short)(((byte)hist[5] >> 5) + 0x12f);
+                id = (u32)(short)(((u8)hist[5] >> 5) + 0x12f);
                 if (id != (int)(short)lastWordId)
                 {
                     cachedMask = FUN_80017690(id);
                     lastWordId = id;
                 }
             }
-            while ((cachedMask & 1 << ((byte)hist[5] & 0x1f)) != 0);
+            while ((cachedMask & 1 << ((u8)hist[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
@@ -709,7 +709,7 @@ void dll_66_func00_nop(void)
 
 void dll_67_func01_nop(void);
 
-void dll_66_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {
@@ -909,4 +909,4 @@ void dll_66_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &lbl_803131A8[212], 0x155, 0);
 }
 
-void dll_67_func03(int sourceObj, int variant, int posSource, uint flags);
+void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags);

@@ -10,7 +10,7 @@
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
 

@@ -112,7 +112,7 @@ void dll_1FF_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern void buttonDisable(int a, int b);
-    extern uint getButtonsJustPressed(int pad);
+    extern u32 getButtonsJustPressed(int pad);
     extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* list, int a, int b);
     extern f32 timeDelta;
     extern const f32 lbl_803E5D84;

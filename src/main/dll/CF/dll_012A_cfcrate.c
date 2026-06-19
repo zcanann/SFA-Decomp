@@ -41,7 +41,7 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E3DD8;
 extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Set(int bit, int value);
@@ -309,7 +309,7 @@ void cfccrate_update(int obj)
         state->sfxTimer -= framesThisStep;
         if (state->sfxTimer < 0)
         {
-            uint r;
+            u32 r;
             int tbl;
             r = randomGetRange(0, state->sfxCount - 1) << 1;
             tbl = *(int volatile*)&state->sfxTable;

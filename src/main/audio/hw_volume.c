@@ -18,7 +18,7 @@ extern f32 lbl_803E78E4;
  * EN v1.0 Address: 0x8028383C
  * EN v1.0 Size: 720b (0x2D0)
  */
-void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefined4 p7)
+void hwSetVolume(int slot, u32 p2, f32 a, f32 b, f32 c, u32 aux, u32 p7)
 {
     DSPvoice* voice;
     DSPstudioinfo* aux_entry;

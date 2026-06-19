@@ -10,16 +10,16 @@
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 
-extern undefined4 ObjGroup_FindNearestObject();
+extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003a1c4();
-extern undefined4 fn_8003A328();
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
-extern undefined4 objAudioFn_8006ef38();
-extern uint countLeadingZeros();
+extern u32 FUN_8003a1c4();
+extern u32 fn_8003A328();
+extern u32 FUN_8003b1a4();
+extern u32 FUN_8003b280();
+extern u32 objAudioFn_8006ef38();
+extern u32 countLeadingZeros();
 
-extern undefined4 DAT_803274f4;
+extern u32 DAT_803274f4;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;
@@ -74,7 +74,7 @@ extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern f32 lbl_803E5210;
-extern undefined4 ObjGroup_AddObject();
+extern u32 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById();
 extern void fn_8003A168(int obj, void* p);
 extern void characterDoEyeAnims(int obj, void* p);
@@ -85,14 +85,14 @@ extern u8 lbl_803267E8[];
 extern u8 lbl_80326818[];
 extern ObjHitReactEntry DAT_80327400;
 extern ObjHitReactEntry DAT_80327414;
-extern undefined4 DAT_80327468;
-extern undefined4 DAT_80327498;
+extern u32 DAT_80327468;
+extern u32 DAT_80327498;
 extern NwMammothPathControlInterface** gPathControlInterface;
 extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 lbl_803E5258;
 
-void FUN_801ce078(undefined2* param_1, int param_2)
+void FUN_801ce078(u16* param_1, int param_2)
 {
 }
 
@@ -101,16 +101,16 @@ void FUN_801ce340(short* param_1, int param_2, int param_3)
     if (((param_3 == 0) || (*(int*)(param_2 + 0x28) == 0)) ||
         (lbl_803E5EAC <= *(float*)(param_2 + 0x18)))
     {
-        *(undefined*)(param_2 + 0x40c) = 0;
+        *(u8*)(param_2 + 0x40c) = 0;
     }
     else
     {
-        *(undefined*)(param_2 + 0x40c) = 1;
-        *(undefined4*)(param_2 + 0x410) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0xc);
-        *(undefined4*)(param_2 + 0x414) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0x10);
-        *(undefined4*)(param_2 + 0x418) = *(undefined4*)(*(int*)(param_2 + 0x28) + 0x14);
+        *(u8*)(param_2 + 0x40c) = 1;
+        *(u32*)(param_2 + 0x410) = *(u32*)(*(int*)(param_2 + 0x28) + 0xc);
+        *(u32*)(param_2 + 0x414) = *(u32*)(*(int*)(param_2 + 0x28) + 0x10);
+        *(u32*)(param_2 + 0x418) = *(u32*)(*(int*)(param_2 + 0x28) + 0x14);
     }
-    if (((&DAT_803274f4)[*(byte*)(param_2 + 0x408)] & 2) == 0)
+    if (((&DAT_803274f4)[*(u8*)(param_2 + 0x408)] & 2) == 0)
     {
         fn_8003A328((double)lbl_803E5EA4, param_1, (char*)(param_2 + 0x40c));
         FUN_8003b280((int)param_1, param_2 + 0x40c);
@@ -132,7 +132,7 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
@@ -194,7 +194,7 @@ void fn_801CEE0C(int p1, int p2)
 
 void fn_801CED2C(int p1, int p2)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     extern int ObjTrigger_IsSetById(int, int);
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
@@ -438,7 +438,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     extern int* getTrickyObject(void); /* #57 */
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
@@ -680,10 +680,10 @@ void nw_mammoth_free(void* obj)
     }
 }
 
-void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void nw_mammoth_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag); /* #57 */
-    extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
+    extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale); /* #57 */
     int i;
     void* node;
 

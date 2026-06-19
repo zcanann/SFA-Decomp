@@ -156,9 +156,9 @@ void DIMbossspit_updateBurst(int obj)
 void DIMbossspit_free(int objArg)
 {
     int obj = objArg;
-    uint state;
+    u32 state;
 
-    state = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
+    state = *(u32*)(*(int*)&((GameObject*)obj)->extra + 4);
     if (state != 0)
     {
         ModelLightStruct_free((void*)state);

@@ -5,7 +5,7 @@
 
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern u64 ObjGroup_RemoveObject();
@@ -34,7 +34,7 @@ extern void mm_free(void* p);
 
 void FUN_8018f650(void)
 {
-    byte spawnType;
+    u8 spawnType;
     int emitter;
     int config;
     int* effectVtbl;
@@ -42,7 +42,7 @@ void FUN_8018f650(void)
     double in_f31;
     double roundBias;
     double in_ps31_1;
-    ushort posBlock;
+    u16 posBlock;
     u16 posBlock1;
     short posBlock2;
     u8 spawnParams[8];
@@ -51,11 +51,11 @@ void FUN_8018f650(void)
     float offY;
     float offZ;
     u32 local_48;
-    uint randX;
+    u32 randX;
     u32 local_40;
-    uint randY;
+    u32 randY;
     u32 local_38;
-    uint randZ;
+    u32 randZ;
     float local_8;
     float fStack_4;
 
@@ -64,21 +64,21 @@ void FUN_8018f650(void)
     emitter = FUN_8028683c();
     config = *(int*)(emitter + 0xb8);
     local_58 = FLOAT_803e4b00;
-    spawnType = *(byte*)(config + 8);
+    spawnType = *(u8*)(config + 8);
     if (spawnType == 0)
     {
         if (*(short*)(config + 0xc) < 1)
         {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
             offZ = (f32)(s32)
             randX;
-            posBlock = *(ushort*)(config + 0x1a);
+            posBlock = *(u16*)(config + 0x1a);
             posBlock1 = *(u16*)(config + 0x1c);
             posBlock2 = *(short*)(config + 0x1e);
             if (*(int*)(emitter + 0x30) != 0)
@@ -97,13 +97,13 @@ void FUN_8018f650(void)
             roundBias = DOUBLE_803e4af8;
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+                randX = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
                 offX = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
                 offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+                randZ = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
                 offZ = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                posBlock = *(ushort*)(config + 0x1a);
+                posBlock = *(u16*)(config + 0x1a);
                 posBlock1 = *(u16*)(config + 0x1c);
                 posBlock2 = *(short*)(config + 0x1e);
                 if (*(int*)(emitter + 0x30) != 0)
@@ -121,7 +121,7 @@ void FUN_8018f650(void)
     }
     else if (spawnType == 1)
     {
-        effectVtbl = (int*)FUN_80006b14(*(ushort*)(config + 10) + 0x58 & 0xffff);
+        effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0x58 & 0xffff);
         if (*(short*)(config + 0xc) < 1)
         {
             (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
@@ -137,16 +137,16 @@ void FUN_8018f650(void)
     }
     else if (spawnType == 2)
     {
-        effectVtbl = (int*)FUN_80006b14(*(ushort*)(config + 10) + 0xab & 0xffff);
+        effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0xab & 0xffff);
         if (*(short*)(config + 0xc) < 1)
         {
-            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(ushort*)(config + 10) & 0xff, 0);
+            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
         }
         else
         {
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(ushort*)(config + 10) & 0xff, 0);
+                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
             }
         }
         FUN_80006b0c((u8*)effectVtbl);
@@ -155,16 +155,16 @@ void FUN_8018f650(void)
     {
         if (*(short*)(config + 0xc) < 1)
         {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
             offZ = (f32)(s32)
             randX;
-            posBlock = *(ushort*)(config + 0x1a);
+            posBlock = *(u16*)(config + 0x1a);
             posBlock1 = *(u16*)(config + 0x1c);
             posBlock2 = *(short*)(config + 0x1e);
             if (*(int*)(emitter + 0x30) != 0)
@@ -180,13 +180,13 @@ void FUN_8018f650(void)
             roundBias = DOUBLE_803e4af8;
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+                randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
                 offX = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
                 offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+                randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
                 offZ = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                posBlock = *(ushort*)(config + 0x1a);
+                posBlock = *(u16*)(config + 0x1a);
                 posBlock1 = *(u16*)(config + 0x1c);
                 posBlock2 = *(short*)(config + 0x1e);
                 if (*(int*)(emitter + 0x30) != 0)
@@ -203,16 +203,16 @@ void FUN_8018f650(void)
     {
         if (*(short*)(config + 0xc) < 1)
         {
-            randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
             offZ = (f32)(s32)
             randX;
-            FUN_80017748((ushort*)(config + 0x1a), &offX);
+            FUN_80017748((u16*)(config + 0x1a), &offX);
             if (*(char*)(config + 8) == '\x06')
             {
                 offX = offX + *(float*)(emitter + 0xc);
@@ -232,13 +232,13 @@ void FUN_8018f650(void)
             roundBias = DOUBLE_803e4af8;
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                randZ = randomGetRange(-(uint) * (ushort*)(config + 0x14), (uint) * (ushort*)(config + 0x14));
+                randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
                 offX = (float)((double)CONCAT44(0x43300000, randZ) - roundBias);
-                randY = randomGetRange(-(uint) * (ushort*)(config + 0x18), (uint) * (ushort*)(config + 0x18));
+                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
                 offY = (float)((double)CONCAT44(0x43300000, randY) - roundBias);
-                randX = randomGetRange(-(uint) * (ushort*)(config + 0x16), (uint) * (ushort*)(config + 0x16));
+                randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
                 offZ = (float)((double)CONCAT44(0x43300000, randX) - roundBias);
-                FUN_80017748((ushort*)(config + 0x1a), &offX);
+                FUN_80017748((u16*)(config + 0x1a), &offX);
                 if (*(char*)(config + 8) == '\x06')
                 {
                     offX = offX + *(float*)(emitter + 0xc);

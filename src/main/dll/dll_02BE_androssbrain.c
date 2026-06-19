@@ -106,7 +106,7 @@ void androssbrain_update(int obj)
     u8 stateChanged = 0;
     int hitObj;
     int sphereIdx;
-    uint hitVol;
+    u32 hitVol;
     int hit;
     int flashTimer;
     u8 currentState;

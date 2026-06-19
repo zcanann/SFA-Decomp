@@ -44,7 +44,7 @@ void dll_64_func00_nop(void)
 {
 }
 
-void dll_64_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
+void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {
@@ -64,7 +64,7 @@ void dll_64_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    uint flag;
+    u32 flag;
     u8* base = (u8*)(int)lbl_80312D18;
     if (variant == 1)
     {

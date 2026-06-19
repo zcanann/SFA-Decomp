@@ -160,7 +160,7 @@ extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
 extern int dll_2E_func03();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec lbl_802C22C0; /* hitbox template copied at init */
 extern GuardianVec lbl_802C22CC; /* hitbox template copied at init */

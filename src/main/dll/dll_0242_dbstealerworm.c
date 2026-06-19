@@ -35,7 +35,7 @@
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -112,7 +112,7 @@ typedef struct DbStealerwormFlags44
 } DbStealerwormFlags44;
 
 extern u32 randomGetRange(int min, int max);
-extern uint ObjGroup_ContainsObject();
+extern u32 ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObjectForObject();
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjMsg_SendToObject();
@@ -2023,7 +2023,7 @@ void dbstealerworm_update(u8* objp)
 {
     extern void Stack_Push(int sp, int* args);
     extern int allocModelStruct_800139e8(int, int);
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     extern void ObjGroup_AddObject(int, int);
     extern int ObjMsg_Pop(int, u32*, int*, int*);
     extern void ObjMsg_SendToObject(int, int, int, int);

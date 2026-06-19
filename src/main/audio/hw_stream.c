@@ -3,8 +3,8 @@
 
 extern void salRemoveStudioInput(void* p, void* input);
 extern int aramGetStreamBufferAddress(int stream, void* out);
-extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 callback,
-                           undefined4 callbackArg);
+extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback,
+                           u32 callbackArg);
 extern void DCStoreRange(void* addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];
@@ -59,13 +59,13 @@ int hwChangeStudio(int slot)
     }
 }
 
-void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
-              undefined4 callbackArg)
+void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback,
+              u32 callbackArg)
 {
     int uploadDest;
     int uploadSize;
-    undefined4 uploadCallbackArg;
-    undefined4 uploadCallback;
+    u32 uploadCallbackArg;
+    u32 uploadCallback;
     u32 size;
     int offset;
     u8 stack[8];

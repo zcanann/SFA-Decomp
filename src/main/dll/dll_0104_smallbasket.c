@@ -81,7 +81,7 @@ extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* 
                               int p7, int p8, int p9, int p10);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
                                             f32* radii, int pointCount);
-extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
+extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
                                void* outHits, int flags);
 extern const f32 lbl_803E3970;

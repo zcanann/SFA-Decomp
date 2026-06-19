@@ -75,7 +75,7 @@ void trickyGrowl(void* obj, void* trickyState)
         if (trickyFn_8013b368(obj, lbl_803E24C8, trickyState) == 0)
         {
             state = ((GameObject*)obj)->extra;
-            if ((((uint)((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
+            if ((((u32)((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
             {
                 s16 move = ((GameObject*)obj)->anim.currentMove;
                 if (move >= 0x30 || move < 0x29)

@@ -21,16 +21,16 @@ extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
-extern uint GameBit_Get(int bit);
+extern u32 GameBit_Get(int bit);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 /* per-critter packed flags at byte 0x58; bits 27..30 hold a countdown mode */
 struct CritterFlags
 {
-    uint pad_high : 3;
-    uint mode : 4;
-    uint pad_low : 1;
+    u32 pad_high : 3;
+    u32 mode : 4;
+    u32 pad_low : 1;
 };
 
 int trickyFoodFn_8013db3c(u8* tricky, u8* critter)

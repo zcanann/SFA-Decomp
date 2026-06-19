@@ -17,7 +17,7 @@
 
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
    floats and the debug string); the rest are engine-wide imports. */
-extern void Sfx_PlayFromObject(uint objectId, u16 volumeId);
+extern void Sfx_PlayFromObject(u32 objectId, u16 volumeId);
 extern f32 getXZDistance(Vec * a, Vec * b);
 extern f32 vec3f_distanceSquared(Vec * a, Vec * b);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -110,7 +110,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     return linkedEventPending;
 }
 
-void SHthorntail_updateTailSwing(uint objectId, SHthorntailRuntime* runtime)
+void SHthorntail_updateTailSwing(u32 objectId, SHthorntailRuntime* runtime)
 {
     u8 tailSwingState;
     int moveComplete;
@@ -148,12 +148,12 @@ void SHthorntail_updateTailSwing(uint objectId, SHthorntailRuntime* runtime)
     }
 }
 
-uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* runtime,
+u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* runtime,
                                  SHthorntailConfig* config)
 {
     short angleDelta;
     int value;
-    uint nextState;
+    u32 nextState;
     s16 facingAngle;
     s8 behaviorState;
     f32 dist;

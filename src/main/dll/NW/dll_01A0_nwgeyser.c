@@ -19,7 +19,7 @@
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/dll/dim2conveyor.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -48,7 +48,7 @@ void fn_801CDF94(int obj, int state, int flag);
 
 void nw_geyser_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
     ((GameObject*)obj)->animEventCallback = (void*)NW_geyser_SeqFn;
 }
 
