@@ -534,8 +534,8 @@ int Tricky_updateSideCommandPrompts(int obj)
         if (((*(u8*)(state + 8) == 8) || (*(u8*)(state + 8) == 0xd)) ||
             ((*(u8*)(state + 8) == 0xe && (*(u8*)(state + 10) == 1))))
         {
-            promptA = true;
             commandMask |= 0x10;
+            promptA = true;
         }
         else
         {
