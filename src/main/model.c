@@ -2351,10 +2351,11 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     {
         if (ModelList_getHeader(lbl_803DCB50, (i = id), &ptr) == 0)
         {
+            u8* np;
             v = ((u32*)lbl_803DCB4C)[i];
             loadAndDecompressDataFile(0x30, 0, v, 0, (int)&size, i, 1);
-            ptr = mmAlloc(size, 10, 0);
-            loadAndDecompressDataFile(0x30, ptr, v, size, (int)&tmp, i, 0);
+            ptr = np = mmAlloc(size, 10, 0);
+            loadAndDecompressDataFile(0x30, np, v, size, (int)&tmp, i, 0);
             *ptr = 1;
             modelInitModelList(lbl_803DCB50, id, &ptr);
         }
