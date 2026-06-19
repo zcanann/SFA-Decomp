@@ -360,13 +360,13 @@ void FUN_8016d188(int param_1, int param_2)
     short fxArgsCount;
     float fxArgsScale;
     u16 fxId;
-    u16 local_32;
-    u16 local_30;
+    u16 fxIdB;
+    u16 fxIdC;
     short fxCount;
     float fxScale;
     float fxParam28;
     float fxParam24;
-    u32 local_20;
+    u32 ownerZ;
     s64 tmpLL;
 
     stateExtra = *(int*)&((GameObject*)param_1)->extra;
@@ -403,8 +403,8 @@ void FUN_8016d188(int param_1, int param_2)
         }
         FUN_80294c60(param_2, &spawnType, &intensity);
         fxId = 0;
-        local_32 = 0;
-        local_30 = 0;
+        fxIdB = 0;
+        fxIdC = 0;
         fxScale = lbl_803E3F20;
         if (spawnType == 0x87)
         {
@@ -539,7 +539,7 @@ void FUN_8016d188(int param_1, int param_2)
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerData);
                 fxParam28 = *(float*)(ownerData + 0xc);
                 fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(u32*)(ownerData + 0x14);
+                ownerZ = *(u32*)(ownerData + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
                                                  0x200001, -1, fxArgs);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
@@ -553,7 +553,7 @@ void FUN_8016d188(int param_1, int param_2)
                 fxArgsScale = lbl_803E3F64 * (intensity / lbl_803E3F60) + lbl_803E3F44;
                 fxParam28 = *(float*)(ownerData + 0xc);
                 fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(u32*)(ownerData + 0x14);
+                ownerZ = *(u32*)(ownerData + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &fxId,
                                                  0x200001, -1, fxArgs);
             }
