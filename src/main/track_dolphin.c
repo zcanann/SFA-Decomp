@@ -290,7 +290,7 @@ void renderMapBlock(void* objp, u8 type)
     }
     else
     {
-        ptr = *(int*)((char*)o + 0x78);
+        ptr = *(int*)&((GameObject*)o)->anim.hitVolumeBounds;
         count = *(u16*)((char*)o + 0x84);
         flag = 1;
     }
