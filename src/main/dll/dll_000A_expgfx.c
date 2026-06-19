@@ -1856,8 +1856,8 @@ int expgfx_addToTable(uint resourceHandle, uint sourceId, uint attachedTableKey,
     int freeIndex;
 
     tableIndex = 0;
-    freeScan = gExpgfxTableEntries;
-    entry = freeScan;
+    entry = gExpgfxTableEntries;
+    freeScan = entry;
     for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++)
     {
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
