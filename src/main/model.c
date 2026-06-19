@@ -1386,7 +1386,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
     p4 = stk;
     for (; i < n; i++)
     {
-        if (*(u16*)(hdr + 2) & 0x40)
+        if (((ModelFileHeader*)hdr)->flags & 0x40)
         {
             p6 = *(u8**)(stk + *(u16*)(p2 + 0x44) * 4 + 0x1c);
             p5 = p6;
@@ -1394,16 +1394,16 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
         }
         else
         {
-            p5 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x44) * (((*(u8*)(hdr + 0xf3) - 1) & ~7) + 8);
+            p5 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
             p6 = *(u8**)(*(u8**)(hdr + 0x64) + *(u16*)(p2 + 0x44) * 4);
         }
         bv = *(u8*)(*(u8**)(p4 + 0x34) + 2);
         k = 0;
         off = 0;
         q = p5;
-        while (k < *(u8*)(hdr + 0xf3))
+        while (k < ((ModelFileHeader*)hdr)->jointCount)
         {
-            *(u8*)(i + *(int*)(hdr + 0x3c) + off + 2) = *q;
+            *(u8*)(i + *(int*)&((ModelFileHeader*)hdr)->jointData + off + 2) = *q;
             off += 0x1c;
             k++;
             q++;
@@ -1453,7 +1453,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
     }
     *(f32*)(c + 4) = e * *(f32*)(c + 0x14);
     fl = 0;
-    if (*(u16*)(hdr + 2) & 8)
+    if (((ModelFileHeader*)hdr)->flags & 8)
     {
         *(u32*)(stk + 0x1c) = *(u32*)(c + 0x1c);
         *(u32*)(stk + 0x20) = *(u32*)(c + 0x20);
@@ -1486,7 +1486,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
         {
             fl |= 0x20;
         }
-        lbl_80006C6C(&px, a, stk, *(int*)(hdr + 0x3c), *(u8*)(hdr + 0xf3), lbl_80340740, d, fl | 0x40);
+        lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, lbl_80340740, d, fl | 0x40);
     }
     else
     {
@@ -1529,7 +1529,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                 *(f32*)(stk + 0x18) = fa;
                 *(f32*)(stk + 8) = fb;
                 *(u32*)(stk + 0x38) = *(u32*)(p4 + 0x3c);
-                if (*(u16*)(hdr + 2) & 0x40)
+                if (((ModelFileHeader*)hdr)->flags & 0x40)
                 {
                     *(u16*)(stk + 0x44) = 0;
                     *(u16*)(stk + 0x46) = 1;
@@ -1543,7 +1543,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                 }
                 *(u16*)(stk + 0x58) = (u16)v;
                 modelAnimUpdateChannels(hdr, stk, 2);
-                lbl_80006C6C(&px, a, stk, *(int*)(hdr + 0x3c), *(u8*)(hdr + 0xf3), lbl_80340740, d, m);
+                lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, lbl_80340740, d, m);
                 if (m != 0)
                 {
                     fl |= 1 << i;
@@ -1582,7 +1582,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
             {
                 fl |= 0x20;
             }
-            lbl_80006C6C(&px, a, stk, *(int*)(hdr + 0x3c), *(u8*)(hdr + 0xf3), lbl_80340740, d, fl);
+            lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, lbl_80340740, d, fl);
         }
     }
 }
@@ -1639,9 +1639,9 @@ void modelAnimResetState(void* m, void* data)
     *(f32*)(p2 + 4) = f;
     *(f32*)(p2 + 0x14) = f;
     *(u8*)(p2 + 0x60) = 0;
-    if (*(u16*)(hdr + 0xec) != 0)
+    if (((ModelFileHeader*)hdr)->animationCount != 0)
     {
-        if (*(u16*)(hdr + 2) & 0x40)
+        if (((ModelFileHeader*)hdr)->flags & 0x40)
         {
             LOADCOLOR_BLOCK(0x1c)
             LOADCOLOR_BLOCK(0x20)
@@ -1697,15 +1697,15 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* p2, u8* hdr)
     int v2;
     u8* b2;
 
-    if (*(u16*)(hdr + 2) & 0x40)
+    if (((ModelFileHeader*)hdr)->flags & 0x40)
     {
         b1 = *(u8**)(p2 + *(u16*)(p2 + 0x44) * 4 + 0x1c);
         b2 = *(u8**)(p2 + *(u16*)(p2 + 0x46) * 4 + 0x1c);
     }
     else
     {
-        b1 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x44) * (((*(u8*)(hdr + 0xf3) - 1) & ~7) + 8);
-        b2 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x46) * (((*(u8*)(hdr + 0xf3) - 1) & ~7) + 8);
+        b1 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        b2 = *(u8**)(hdr + 0x68) + *(u16*)(p2 + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
     }
     objAnim = (ObjAnimComponent*)obj;
     modelDef = objAnim->modelInstance;
@@ -2216,10 +2216,10 @@ void fn_80026928(int* obj, int b, int* p3)
 
         idx = e;
         hdr = *(u8**)obj;
-        n = *(u8*)(hdr + 0xf3);
+        n = ((ModelFileHeader*)hdr)->jointCount;
         if (n != 0)
         {
-            lim = n + *(u8*)(hdr + 0xf4);
+            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
         }
         else
         {
@@ -2233,10 +2233,10 @@ void fn_80026928(int* obj, int b, int* p3)
 
         idx = e;
         hdr = *(u8**)obj;
-        n = *(u8*)(hdr + 0xf3);
+        n = ((ModelFileHeader*)hdr)->jointCount;
         if (n != 0)
         {
-            lim = n + *(u8*)(hdr + 0xf4);
+            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
         }
         else
         {
@@ -2250,10 +2250,10 @@ void fn_80026928(int* obj, int b, int* p3)
 
         idx = e;
         hdr = *(u8**)obj;
-        n = *(u8*)(hdr + 0xf3);
+        n = ((ModelFileHeader*)hdr)->jointCount;
         if (n != 0)
         {
-            lim = n + *(u8*)(hdr + 0xf4);
+            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
         }
         else
         {
@@ -2317,8 +2317,8 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
         loadAndDecompressDataFile(0x51, 0, flags, 0, (int)&size, id, 1);
         buf = out + 0x80;
         loadAndDecompressDataFile(0x51, buf, flags, size, (int)&out2, id, 0);
-        stride = ((*(u8*)(hdr + 0xf3) - 1) & ~7) + 8;
-        fileLoadToBufferOffset(0x32, out, *(int*)(hdr + 0x80) + idx * stride, stride);
+        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        fileLoadToBufferOffset(0x32, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     }
     else
     {
@@ -2326,8 +2326,8 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
         loadAndDecompressDataFile(0x30, 0, flags, 0, (int)&size, id, 1);
         buf = out + 0x80;
         loadAndDecompressDataFile(0x30, buf, flags, size, (int)&out2, id, 0);
-        stride = ((*(u8*)(hdr + 0xf3) - 1) & ~7) + 8;
-        fileLoadToBufferOffset(0x32, out, *(int*)(hdr + 0x80) + idx * stride, stride);
+        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        fileLoadToBufferOffset(0x32, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     }
     return buf;
 }
@@ -2916,7 +2916,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     i2 = (u8)g;
     p = c + 0x34;
     *(int*)(stk + 0x38) = *(int*)(p + i2 * 4);
-    if (*(u16*)(hdr + 2) & 0x40)
+    if (((ModelFileHeader*)hdr)->flags & 0x40)
     {
         *(u16*)(stk + 0x44) = 0;
         *(u16*)(stk + 0x46) = 1;
@@ -2962,7 +2962,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
             h = (u8)(h | 0x20);
         }
     }
-    lbl_80006C6C(&px, a, stk, *(int*)(hdr + 0x3c), *(u8*)(hdr + 0xf3), lbl_80340740, d, (u8)h);
+    lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, lbl_80340740, d, (u8)h);
 }
 
 extern void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
@@ -2973,7 +2973,7 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
 
     setGQR7Packed(hdr[6], 7, hdr[6], 7);
     ObjModel_InitScratchBuffers();
-    if (*(u16*)(hdr + 2) != 0)
+    if (((ModelFileHeader*)hdr)->flags != 0)
     {
         u8* q;
         int words;
@@ -2990,7 +2990,7 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
         w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
         copyToCache(*(u8**)((int)lbl_80340898 + 4), *(u8**)(q + 0x64), w2);
         cp = lbl_80340898;
-        for (i = 0; i < (u32)(*(u16*)(hdr + 2) - 1); i++)
+        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
         {
             q = *(u8**)(hdr + 0xc) + i * 0x74;
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
@@ -3033,7 +3033,7 @@ void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs,
 
     setGQR7Packed(hdr[6], 6, hdr[6], 6);
     ObjModel_InitScratchBuffers();
-    if (*(u16*)(hdr + 2) != 0)
+    if (((ModelFileHeader*)hdr)->flags != 0)
     {
         u8* q;
         int words;
@@ -3048,7 +3048,7 @@ void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs,
         sizes[0] = words;
         w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
         copyToCache(*(u8**)((int)lbl_80340898 + 4), *(u8**)(q + 0x64), w2);
-        for (i = 0; i < (u32)(*(u16*)(hdr + 2) - 1); i++)
+        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
         {
             q = *(u8**)(hdr + 0xc) + i * 0x74;
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
