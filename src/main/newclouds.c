@@ -1547,7 +1547,7 @@ void snowReposSnowCloud(int cloudId)
     }
 }
 
-extern char lbl_8030F500[];
+extern char sNewCloudData[];
 extern int lbl_803DB76C;
 extern const f32 lbl_803DF1FC;
 extern const f32 lbl_803DF214;
@@ -1569,7 +1569,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     u8 fl;
     WindSource* w;
 
-    strs = lbl_8030F500;
+    strs = sNewCloudData;
     ok = 1;
     id = *(u16*)(params + 0x26);
     if (lbl_8039A828[id] != NULL)
