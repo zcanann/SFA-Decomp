@@ -233,7 +233,7 @@ void bossdrakor_update(int obj)
         {
             ObjAnim_SetCurrentMove(obj, ((BossDrakorState*)state)->moveState, lbl_803E6510, 0);
         }
-        if (arrayIndexOf(lbl_80329FB8, 5, ((BossDrakorState*)state)->moveState) != -1)
+        if (arrayIndexOf(gBossDrakorTurnMoveStates, 5, ((BossDrakorState*)state)->moveState) != -1)
         {
             switch (((BossDrakorState*)state)->moveState)
             {
@@ -314,8 +314,8 @@ void bossdrakor_update(int obj)
         shakeScaleZ = ((BossDrakorState*)state)->unk180;
         shake = ((BossDrakorState*)state)->unk178;
         tbl = seqFn_800394a0();
-        shakeX = (int)(lbl_803E6530 * shake);
-        shakeY = (int)(lbl_803E6530 * (shake * shakeScaleZ));
+        shakeX = (int)(gBossDrakorDegToAngle * shake);
+        shakeY = (int)(gBossDrakorDegToAngle * (shake * shakeScaleZ));
         i = 0;
         do
         {
@@ -484,8 +484,8 @@ int bossdrakor_chooseNextMove(int obj, f32* speedOut)
             }
         }
     }
-    v = lbl_80329F90[idx];
-    *speedOut = lbl_80329FA4[idx];
+    v = gBossDrakorMoveStateTable[idx];
+    *speedOut = gBossDrakorMoveSpeedTable[idx];
     return v;
 }
 
@@ -607,7 +607,7 @@ void bossdrakor_free(int obj)
 
 void bossdrakor_handleActionEvent(int obj, int state, int action)
 {
-    int* tbl = lbl_80329F90;
+    int* tbl = gBossDrakorMoveStateTable;
     f32 t;
     int found;
     switch (action)

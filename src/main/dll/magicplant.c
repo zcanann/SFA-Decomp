@@ -68,7 +68,7 @@ extern f32 lbl_803E294C;
 extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
-extern u8 lbl_803DBCC0[8];
+extern u8 gMagicPlantSeqEntryTable[8];
 extern int lbl_803DBCC8;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -480,7 +480,7 @@ void fn_8015383C(int obj, int state)
             else if (((GameObject*)obj)->anim.currentMove != 5 && losDetected)
             {
                 mode = 5;
-                ((BaddieState*)state)->seqEntryIndex = lbl_803DBCC0[((BaddieState*)state)->inWhirlpoolGroup & 3];
+                ((BaddieState*)state)->seqEntryIndex = gMagicPlantSeqEntryTable[((BaddieState*)state)->inWhirlpoolGroup & 3];
                 ((BaddieState*)state)->inWhirlpoolGroup = (u8)(
                     (*(s8*)&((BaddieState*)state)->inWhirlpoolGroup + 1) & 0xc3);
             }

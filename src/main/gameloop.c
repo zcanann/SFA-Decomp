@@ -94,7 +94,7 @@ int getGameState(void)
     return gameState;
 }
 
-extern u8 lbl_803DCA49;
+extern u8 gGameLoopInitComplete;
 extern void init(void);
 extern void checkReset(void);
 extern void gameLoop(void);
@@ -102,9 +102,9 @@ extern void gameLoop(void);
 void main(void)
 {
     gameState = 0;
-    lbl_803DCA49 = 0;
+    gGameLoopInitComplete = 0;
     init();
-    lbl_803DCA49 = 1;
+    gGameLoopInitComplete = 1;
     gameState = 1;
     do
     {
@@ -151,8 +151,8 @@ void crash(void)
     *(u8*)0 = 0;
 }
 
-extern int lbl_803DCAE8[2];
-extern u8 lbl_803DCA48;
+extern int gGameLoopButtonObjects[2];
+extern u8 gGameLoopButtonObjectCount;
 
 void gameTextSetDrawFunc(void* fn);
 
@@ -160,25 +160,25 @@ extern void* memset(void* dst, int val, int n);
 
 u8 getButtonObjects(void** p)
 {
-    *p = lbl_803DCAE8;
-    return lbl_803DCA48;
+    *p = gGameLoopButtonObjects;
+    return gGameLoopButtonObjectCount;
 }
 
 extern u16 lbl_803DCA42;
-extern u8 lbl_803DCAF0;
+extern u8 gGameLoopPendingMusicId;
 
 #pragma scheduling off
 #pragma peephole off
 void fn_8001FE90(void)
 {
     lbl_803DCA42++;
-    lbl_803DCAF0 = 0xd0;
+    gGameLoopPendingMusicId = 0xd0;
 }
 
 void fn_8001FEA8(void)
 {
     lbl_803DCA42++;
-    lbl_803DCAF0 = 0xc9;
+    gGameLoopPendingMusicId = 0xc9;
 }
 
 void mainLoopDoGameText(void);
@@ -196,9 +196,9 @@ void blankScreen(int frames)
 #pragma peephole on
 void addButtonObject(void* v)
 {
-    int i = lbl_803DCA48;
-    lbl_803DCA48 = i + 1;
-    lbl_803DCAE8[i] = (int)v;
+    int i = gGameLoopButtonObjectCount;
+    gGameLoopButtonObjectCount = i + 1;
+    gGameLoopButtonObjects[i] = (int)v;
 }
 
 int mmSetFreeDelay(int v);
@@ -223,7 +223,7 @@ void* Obj_GetPlayerObject(void);
 
 extern void mapReloadWithFadeout(void);
 extern void* loadAsset(void* req);
-extern u8 lbl_803DCA39;
+extern u8 gGameLoopReloadRequested;
 
 typedef struct
 {
@@ -239,7 +239,7 @@ typedef struct
     int f24;
 } AssetReq;
 
-extern AssetReq lbl_8033BF88;
+extern AssetReq gGameLoopAssetReq;
 extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
 extern void* textureLoad(int texId, u8 flag);
@@ -295,39 +295,39 @@ void* loadAsset(void* reqVoid)
 void mapReload(void)
 {
     mapReloadWithFadeout();
-    lbl_803DCA39 = 1;
+    gGameLoopReloadRequested = 1;
 }
 
 #pragma dont_inline on
 void* loadAssetFileById(int id, int arg)
 {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 0;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
+    gGameLoopAssetReq.f0 = 1;
+    gGameLoopAssetReq.f1 = 0;
+    gGameLoopAssetReq.f4 = arg;
+    gGameLoopAssetReq.f8 = id;
+    return loadAsset(&gGameLoopAssetReq);
 }
 
 void* loadTextureFile(int id, int arg)
 {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 3;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
+    gGameLoopAssetReq.f0 = 1;
+    gGameLoopAssetReq.f1 = 3;
+    gGameLoopAssetReq.f4 = arg;
+    gGameLoopAssetReq.f8 = id;
+    return loadAsset(&gGameLoopAssetReq);
 }
 
 void gameTextLoadDir(int dirId);
 
 void* getTabEntry(void* dst, int fileId, int offset, int size)
 {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 2;
-    lbl_8033BF88.f4 = fileId;
-    lbl_8033BF88.f8 = (int)dst;
-    lbl_8033BF88.f10 = offset;
-    lbl_8033BF88.fc = size;
-    return loadAsset(&lbl_8033BF88);
+    gGameLoopAssetReq.f0 = 1;
+    gGameLoopAssetReq.f1 = 2;
+    gGameLoopAssetReq.f4 = fileId;
+    gGameLoopAssetReq.f8 = (int)dst;
+    gGameLoopAssetReq.f10 = offset;
+    gGameLoopAssetReq.fc = size;
+    return loadAsset(&gGameLoopAssetReq);
 }
 
 typedef f32 Mtx[3][4];
@@ -403,14 +403,14 @@ void ObjModel_InitRenderBuffers(void);
 #pragma dont_inline on
 void* animationLoad(int id, s16 a, s16 b, int e, int f)
 {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 7;
-    lbl_8033BF88.f4 = a;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.fc = b;
-    lbl_8033BF88.f20 = e;
-    lbl_8033BF88.f24 = f;
-    return loadAsset(&lbl_8033BF88);
+    gGameLoopAssetReq.f0 = 1;
+    gGameLoopAssetReq.f1 = 7;
+    gGameLoopAssetReq.f4 = a;
+    gGameLoopAssetReq.f8 = id;
+    gGameLoopAssetReq.fc = b;
+    gGameLoopAssetReq.f20 = e;
+    gGameLoopAssetReq.f24 = f;
+    return loadAsset(&gGameLoopAssetReq);
 }
 
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
@@ -600,29 +600,29 @@ void ObjModel_InitResourceCaches(void);
 extern void mapSetup();
 extern void Music_Trigger(int id, int arg);
 extern u8 lbl_803DCA38;
-extern int lbl_803DCAF8;
-extern int lbl_803DCAF4;
+extern int gGameLoopPendingMapId;
+extern int gGameLoopPendingMapDataFileId;
 extern u8 lbl_803DCA40;
-extern u8 lbl_803DCA41;
-extern u8 lbl_8033BFB8[];
-extern int lbl_803DCAD4;
-extern u8 lbl_803DCA44;
+extern u8 gGameLoopMapLoadPending;
+extern u8 gGameLoopPlayerTrailBuffer[];
+extern int gGameLoopPlayerTrailIndex;
+extern u8 gGameLoopMusicActive;
 extern f32 lbl_803DE7B4;
-extern f32 lbl_803DB420;
+extern f32 gGameLoopMusicFadeTimer;
 
 void mapLoadByCoords(int arg)
 {
     lbl_803DCA38 = 0;
-    mapSetup(arg, &lbl_803DCAF8, &lbl_803DCAF4);
+    mapSetup(arg, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId);
     lbl_803DCA40 = 1;
-    lbl_803DCA41 = 1;
-    memset(lbl_8033BFB8, 0, 0x3c0);
-    lbl_803DCAD4 = 0;
-    lbl_803DCA39 = 1;
-    lbl_803DCA44 = 0;
+    gGameLoopMapLoadPending = 1;
+    memset(gGameLoopPlayerTrailBuffer, 0, 0x3c0);
+    gGameLoopPlayerTrailIndex = 0;
+    gGameLoopReloadRequested = 1;
+    gGameLoopMusicActive = 0;
     Music_Trigger(0xc9, 0);
     Music_Trigger(0xd0, 0);
-    lbl_803DB420 = lbl_803DE7B4;
+    gGameLoopMusicFadeTimer = lbl_803DE7B4;
 }
 
 void gameTextInitFn_8001a234(void);
@@ -673,9 +673,9 @@ extern void tvInit(void);
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
 extern void* gRenderModeObj;
-extern u8 lbl_803DCAE4;
+extern u8 gGameLoopProgressiveMode;
 extern u8 lbl_8033C3B8[];
-extern u8 lbl_8033C378[];
+extern u8 gGameLoopRenderModeCopy[];
 extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
@@ -711,8 +711,8 @@ void init(void)
     LCEnable();
     OSInitFastCast();
     gRenderModeObj = GXNtsc480IntDf;
-    lbl_803DCAE4 = OSGetProgressiveMode();
-    if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1)
+    gGameLoopProgressiveMode = OSGetProgressiveMode();
+    if (OSGetResetCode() != 0 && gGameLoopProgressiveMode == 1)
     {
         gRenderModeObj = GXNtsc480Prog;
         OSSetProgressiveMode(1);
@@ -770,11 +770,11 @@ void init(void)
             dtv = 0;
             if (VIGetDTVStatus() != 0)
             {
-                if (OSGetResetCode() != 0 && lbl_803DCAE4 != 1 && (getButtonsHeld(0) & 0x200) != 0)
+                if (OSGetResetCode() != 0 && gGameLoopProgressiveMode != 1 && (getButtonsHeld(0) & 0x200) != 0)
                 {
                     dtv = 1;
                 }
-                if (OSGetResetCode() == 0 && (lbl_803DCAE4 == 1 || (getButtonsHeld(0) & 0x200) != 0))
+                if (OSGetResetCode() == 0 && (gGameLoopProgressiveMode == 1 || (getButtonsHeld(0) & 0x200) != 0))
                 {
                     dtv = 1;
                 }
@@ -863,8 +863,8 @@ void init(void)
         askProgressiveScanMode();
     }
     OSSetSaveRegion(NULL, NULL);
-    memcpy(lbl_8033C378, gRenderModeObj, 0x3c);
-    gRenderModeObj = lbl_8033C378;
+    memcpy(gGameLoopRenderModeCopy, gRenderModeObj, 0x3c);
+    gRenderModeObj = gGameLoopRenderModeCopy;
     initViewport();
     tvInit();
     OSReport(sMainFinishedInitMessage);
@@ -880,7 +880,7 @@ extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern void curUiDllDraw(int a, int b, int c, int d);
 extern void Camera_ApplyCurrentViewport(void* viewportArg);
-extern int lbl_803DCAD0;
+extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7B8;
 
@@ -909,20 +909,20 @@ void gameUpdate(void)
         updateEnvironment(0);
         (*gMapEventInterface)->updateTimes();
         player = Obj_GetPlayerObject();
-        idx = lbl_803DCAD4;
-        rec = lbl_8033BFB8 + idx * 16;
-        t = lbl_803DCAD0 + framesThisStep;
-        lbl_803DCAD0 = t;
+        idx = gGameLoopPlayerTrailIndex;
+        rec = gGameLoopPlayerTrailBuffer + idx * 16;
+        t = gGameLoopPlayerTrailTime + framesThisStep;
+        gGameLoopPlayerTrailTime = t;
         if (player != 0)
         {
             *(f32*)(rec + 0) = ((GameObject*)player)->anim.localPosX;
             *(f32*)(rec + 4) = ((GameObject*)player)->anim.localPosY;
             *(f32*)(rec + 8) = ((GameObject*)player)->anim.localPosZ;
             *(int*)(rec + 0xc) = t;
-            lbl_803DCAD4 = idx + 1;
-            if (lbl_803DCAD4 >= 0x3c)
+            gGameLoopPlayerTrailIndex = idx + 1;
+            if (gGameLoopPlayerTrailIndex >= 0x3c)
             {
-                lbl_803DCAD4 = 0;
+                gGameLoopPlayerTrailIndex = 0;
             }
         }
     }
@@ -938,12 +938,12 @@ void gameUpdate(void)
     {
         sceneRender(0, 0, 0, 0, 0, 0);
         (*(void (**)(int))(*(int*)gScreensInterface + 0xc))(0);
-        if (lbl_803DCA48 == 0)
+        if (gGameLoopButtonObjectCount == 0)
         {
             curUiDllDraw(0, 0, 0, 0);
         }
         (*(void (**)(void))(*(int*)gMinimapInterface + 8))();
-        if (lbl_803DCA48 == 0)
+        if (gGameLoopButtonObjectCount == 0)
         {
             dvdCheckError();
         }
@@ -959,35 +959,35 @@ void gameUpdate(void)
     }
     if (lbl_803DCA42 != 0)
     {
-        if (lbl_803DCA44 == 0)
+        if (gGameLoopMusicActive == 0)
         {
-            lbl_803DB420 = lbl_803DB420 + timeDelta;
-            if (lbl_803DB420 >= lbl_803DE7B0)
+            gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer + timeDelta;
+            if (gGameLoopMusicFadeTimer >= lbl_803DE7B0)
             {
-                Music_Trigger(lbl_803DCAF0, 1);
-                lbl_803DCA44 = 1;
+                Music_Trigger(gGameLoopPendingMusicId, 1);
+                gGameLoopMusicActive = 1;
             }
         }
-        if (lbl_803DB420 >= lbl_803DE7B0)
+        if (gGameLoopMusicFadeTimer >= lbl_803DE7B0)
         {
-            lbl_803DB420 = lbl_803DE7B8;
+            gGameLoopMusicFadeTimer = lbl_803DE7B8;
         }
     }
     else
     {
-        if (lbl_803DCA44 != 0)
+        if (gGameLoopMusicActive != 0)
         {
-            lbl_803DB420 = lbl_803DB420 - timeDelta;
-            if (lbl_803DB420 <= lbl_803DE7B0)
+            gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer - timeDelta;
+            if (gGameLoopMusicFadeTimer <= lbl_803DE7B0)
             {
                 Music_Trigger(0xc9, 0);
                 Music_Trigger(0xd0, 0);
-                lbl_803DCA44 = 0;
+                gGameLoopMusicActive = 0;
             }
         }
-        if (lbl_803DB420 <= lbl_803DE7B0)
+        if (gGameLoopMusicFadeTimer <= lbl_803DE7B0)
         {
-            lbl_803DB420 = lbl_803DE7B4;
+            gGameLoopMusicFadeTimer = lbl_803DE7B4;
         }
     }
     Camera_ApplyCurrentViewport(0);
@@ -1029,7 +1029,7 @@ void gameLoop(void)
     (*gScreenTransitionInterface)->init(0, 0, 0);
     if (gameState == 1)
     {
-        if (lbl_803DCA48 != 0)
+        if (gGameLoopButtonObjectCount != 0)
         {
             if (screenBlankFrameCount == 0)
             {
@@ -1038,8 +1038,8 @@ void gameLoop(void)
 
                 drawRect(lbl_803DE7B0, lbl_803DE7B0, 0x280, 0x1e0);
                 i = 0;
-                p = (int*)&lbl_803DCAE8;
-                for (; i < lbl_803DCA48; i++)
+                p = (int*)&gGameLoopButtonObjects;
+                for (; i < gGameLoopButtonObjectCount; i++)
                 {
                     objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
                     if (((GameObject*)*p)->anim.seqId == 0x882 ||
@@ -1065,7 +1065,7 @@ void gameLoop(void)
 }
 
 extern u8 lbl_803DCAC4;
-extern int lbl_803DB41C;
+extern int gGameLoopPendingUiDllId;
 extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
 extern void fn_801375A0(void);
@@ -1073,7 +1073,7 @@ extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)
 {
-    if ((s8)lbl_803DCA39 != 0)
+    if ((s8)gGameLoopReloadRequested != 0)
     {
         int old;
 
@@ -1095,26 +1095,26 @@ void doQueuedLoads(void)
             }
         }
         old = mmSetFreeDelay(0);
-        lbl_803DCA39 = 0;
+        gGameLoopReloadRequested = 0;
         Camera_InitState();
         fn_801375A0();
-        if (lbl_803DB41C > -1)
+        if (gGameLoopPendingUiDllId > -1)
         {
-            loadUiDll(lbl_803DB41C);
-            lbl_803DB41C = -1;
+            loadUiDll(gGameLoopPendingUiDllId);
+            gGameLoopPendingUiDllId = -1;
         }
         mmFreeTick(1);
         mmFreeTick(1);
-        if (lbl_803DCA41 != 0 && lbl_803DCAF8 != -1)
+        if (gGameLoopMapLoadPending != 0 && gGameLoopPendingMapId != -1)
         {
             setForceLoadImmediately();
-            loadMapAndParent(lbl_803DCAF8);
-            if (lbl_803DCAF4 != -1)
+            loadMapAndParent(gGameLoopPendingMapId);
+            if (gGameLoopPendingMapDataFileId != -1)
             {
-                mapLoadDataFiles(lbl_803DCAF4);
+                mapLoadDataFiles(gGameLoopPendingMapDataFileId);
             }
             clearForceLoadImmediately();
-            lbl_803DCA41 = 0;
+            gGameLoopMapLoadPending = 0;
         }
         beginLoadingMap();
         if (lbl_803DCA94 != 0)
@@ -1259,8 +1259,8 @@ void removeButtonObject(u32 h)
 
     idx = -1;
     i = 0;
-    p = lbl_803DCAE8;
-    n = lbl_803DCA48;
+    p = gGameLoopButtonObjects;
+    n = gGameLoopButtonObjectCount;
     for (; i < n; i++)
     {
         if (*p == h)
@@ -1272,9 +1272,9 @@ void removeButtonObject(u32 h)
     }
     for (i = idx; i < n - 1; i++)
     {
-        lbl_803DCAE8[i] = lbl_803DCAE8[i + 1];
+        gGameLoopButtonObjects[i] = gGameLoopButtonObjects[i + 1];
     }
-    lbl_803DCA48--;
+    gGameLoopButtonObjectCount--;
 }
 #pragma peephole reset
 
@@ -1423,11 +1423,11 @@ extern u8 gDvdErrorPauseActive;
 extern int gDvdLastDriveStatus;
 extern u8 lbl_803DCCA6;
 extern u8 gDvdCoverOpenErrorActive;
-extern u8 lbl_803DB425;
-extern f32 lbl_803DCAC8;
-extern f32 lbl_803DCB00;
-extern u8 lbl_803DCAC5;
-extern char lbl_802CA460[];
+extern u8 gGameLoopResetComboDebounce;
+extern f32 gGameLoopResetHoldTimer;
+extern f32 gGameLoopResetFadeOutTimer;
+extern u8 gGameLoopHardReset;
+extern char sGameLoopResetMessages[];
 extern f32 lbl_803DE7AC;
 
 void checkReset(void)
@@ -1437,7 +1437,7 @@ void checkReset(void)
     f32 t;
     int status;
 
-    msg = lbl_802CA460;
+    msg = sGameLoopResetMessages;
     if (lbl_803DCCA6 == 0 || gDvdCoverOpenErrorActive != 0)
     {
         return;
@@ -1459,15 +1459,15 @@ void checkReset(void)
         else
         {
             pressed = 0;
-            if (lbl_803DB425 != 0)
+            if (gGameLoopResetComboDebounce != 0)
             {
-                lbl_803DB425--;
+                gGameLoopResetComboDebounce--;
             }
         }
-        if (pressed != 0 && lbl_803DB425 == 0)
+        if (pressed != 0 && gGameLoopResetComboDebounce == 0)
         {
-            t = lbl_803DCAC8 + lbl_803DE7A8;
-            lbl_803DCAC8 = t;
+            t = gGameLoopResetHoldTimer + lbl_803DE7A8;
+            gGameLoopResetHoldTimer = t;
             if (t >= lbl_803DE7AC)
             {
                 gameState = 2;
@@ -1475,34 +1475,34 @@ void checkReset(void)
         }
         else
         {
-            lbl_803DCAC8 = lbl_803DE7B0;
+            gGameLoopResetHoldTimer = lbl_803DE7B0;
         }
         break;
     case 2:
     case 6:
         OSReport(msg + 0xd0);
-        if (lbl_803DCA49 != 0)
+        if (gGameLoopInitComplete != 0)
         {
             (*gScreenTransitionInterface)->start(0x1e, 1);
         }
         if (gameState == 6)
         {
-            lbl_803DCAC5 = 1;
+            gGameLoopHardReset = 1;
         }
         else
         {
-            lbl_803DCAC5 = 0;
+            gGameLoopHardReset = 0;
         }
         stopRumble2();
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
         audioStopAll();
         gameState = 3;
-        lbl_803DCB00 = lbl_803DE7AC;
+        gGameLoopResetFadeOutTimer = lbl_803DE7AC;
         break;
     case 3:
-        t = lbl_803DCB00 - lbl_803DE7A8;
-        lbl_803DCB00 = t;
+        t = gGameLoopResetFadeOutTimer - lbl_803DE7A8;
+        gGameLoopResetFadeOutTimer = t;
         if (t <= lbl_803DE7B0)
         {
             gameState = 4;
@@ -1549,7 +1549,7 @@ void checkReset(void)
         VIWaitForRetrace();
         OSReport(msg + 0x12c);
         gameState = 5;
-        if (lbl_803DCAC5 != 0)
+        if (gGameLoopHardReset != 0)
         {
             OSResetSystem(1, 0x80000000, 1);
         }

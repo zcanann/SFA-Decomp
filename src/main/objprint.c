@@ -2094,7 +2094,7 @@ void fn_8003A230(int obj, void* p2, f32 val)
 }
 
 extern int getAngle(f32 dx, f32 dy);
-extern f32 lbl_803DE9EC;
+extern f32 gObjPrintDegToAngle;
 
 void fn_8003B0D0(int obj, int p2, int p3, int p4)
 {
@@ -2132,7 +2132,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
                               ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
         *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
-        limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
+        limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit)
         {
             *(s16*)((char*)p3 + 0x14) = limit;
@@ -2270,10 +2270,10 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
     extern f32 __kernel_sin(f32);
     extern f32 __kernel_cos(f32, f32);
     extern f32 lbl_803DEA04;
-    extern f32 lbl_803DEA08;
-    extern f32 lbl_803DEA0C;
-    extern const f32 lbl_803DEA10;
-    extern const f32 lbl_803DEA14;
+    extern f32 gObjPrintHalfPi;
+    extern f32 gObjPrintNegHalfPi;
+    extern const f32 gObjPrintAngleUnitScale;
+    extern const f32 gObjPrintTwoPi;
     f32 buf[12];
     f32 x;
     f32 y;
@@ -2284,9 +2284,9 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
         return 0;
     }
     x = __kernel_sin(-buf[6]);
-    if (x < lbl_803DEA08)
+    if (x < gObjPrintHalfPi)
     {
-        if (x > lbl_803DEA0C)
+        if (x > gObjPrintNegHalfPi)
         {
             y = __kernel_cos(buf[2], buf[10]);
             z = __kernel_cos(buf[4], buf[5]);
@@ -2304,9 +2304,9 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
         z = lbl_803DEA04;
         y = y - z;
     }
-    *outC = (s16)(s32)(lbl_803DEA10 * z / lbl_803DEA14);
-    *outB = (s16)(s32)(lbl_803DEA10 * x / lbl_803DEA14);
-    *outA = (s16)(s32)(lbl_803DEA10 * y / lbl_803DEA14);
+    *outC = (s16)(s32)(gObjPrintAngleUnitScale * z / gObjPrintTwoPi);
+    *outB = (s16)(s32)(gObjPrintAngleUnitScale * x / gObjPrintTwoPi);
+    *outA = (s16)(s32)(gObjPrintAngleUnitScale * y / gObjPrintTwoPi);
     return 1;
 }
 
@@ -2595,7 +2595,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
 void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
-    extern f32 lbl_803DE9EC;
+    extern f32 gObjPrintDegToAngle;
     s16 ang[2];
     s16* found;
     void* m;
@@ -2654,10 +2654,10 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             }
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
-            limA = (s16)(s32)(lbl_803DE9EC * a);
+            limA = (s16)(s32)(gObjPrintDegToAngle * a);
             p = p3;
             ap = ang;
-            minB = -(s16)(s32)(lbl_803DE9EC * b);
+            minB = -(s16)(s32)(gObjPrintDegToAngle * b);
             negA = -limA;
             for (i = 0; i < 2; i++)
             {
@@ -2668,9 +2668,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 {
                     v = minB;
                 }
-                else if ((s16)(s32)(lbl_803DE9EC * b) < v)
+                else if ((s16)(s32)(gObjPrintDegToAngle * b) < v)
                 {
-                    v = (s16)(s32)(lbl_803DE9EC * b);
+                    v = (s16)(s32)(gObjPrintDegToAngle * b);
                 }
                 *ap = v;
                 *(s16*)(p + 0x14) += *ap;
@@ -2958,7 +2958,7 @@ typedef struct ObjPrintFlipFlag
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
-    extern f32 lbl_803DE9EC;
+    extern f32 gObjPrintDegToAngle;
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
     extern int lbl_803DB460;
@@ -3053,11 +3053,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 s16 v;
                 if (n2 % 2 != 0)
                 {
-                    lim = (s32)(lbl_803DE9EC * (f32) * sp2);
+                    lim = (s32)(gObjPrintDegToAngle * (f32) * sp2);
                 }
                 else
                 {
-                    lim = (s32)(lbl_803DE9EC * (f32) * sp1);
+                    lim = (s32)(gObjPrintDegToAngle * (f32) * sp1);
                 }
                 v = *src;
                 *dst = v;
@@ -3097,13 +3097,13 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
             int div2;
             int lim3;
 
-            lim = (d1 < framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) - *sp1) / lbl_803DB460))
-                      ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) - *sp1) / lbl_803DB460)
-                      : ((d1 > framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) * sp1) / lbl_803DB460))
-                             ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) * sp1) / lbl_803DB460)
+            lim = (d1 < framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *sp1) / lbl_803DB460))
+                      ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *sp1) / lbl_803DB460)
+                      : ((d1 > framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * sp1) / lbl_803DB460))
+                             ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * sp1) / lbl_803DB460)
                              : d1);
             d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
-            t2 = (s16)(s32)(lbl_803DE9EC * (f32) * sp2);
+            t2 = (s16)(s32)(gObjPrintDegToAngle * (f32) * sp2);
             div2 = lbl_803DB460 << 1;
             lim3 = (d2 < framesThisStep * (-t2 / div2))
                        ? framesThisStep * (-t2 / div2)

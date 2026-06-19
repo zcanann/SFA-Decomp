@@ -312,7 +312,7 @@ extern f32 lbl_803E82D0;
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 
-extern void *lbl_803DE4D0;
+extern void *gEarthWarriorResource;
 
 extern int gDRCloudRunnerStateHandlers[];
 extern void *gDRCloudRunnerDefaultStateHandler;
@@ -375,7 +375,7 @@ int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 
-extern f32 lbl_803DB170[];
+extern f32 gEarthWarriorMatrix[];
 
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);

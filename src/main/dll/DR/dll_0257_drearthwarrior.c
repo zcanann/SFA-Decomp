@@ -209,7 +209,7 @@ extern f32 lbl_803E8334;
 extern f32 lbl_803E833C;
 extern f32 lbl_803E8340;
 extern f32 lbl_803E8344;
-extern f32 lbl_803E8348;
+extern f32 gEarthWarriorDegToAngle;
 extern f32 lbl_803E834C;
 extern f32 lbl_803E8350;
 extern f32 lbl_803E8358;
@@ -233,7 +233,7 @@ extern u8 gDREarthWarriorRowIndices[];
 extern EWPathRange lbl_802C2CA8;
 extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
-extern char lbl_803DC768;
+extern char gEarthWarriorTailChainDesc;
 extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void fn_80113F94(int p, f32 f);
@@ -320,10 +320,10 @@ void DR_EarthWarrior_func18(int obj, f32* a, int* b)
 
 void DR_EarthWarrior_release(void)
 {
-    if (lbl_803DE4D0 != NULL)
+    if (gEarthWarriorResource != NULL)
     {
-        Resource_Release(lbl_803DE4D0);
-        lbl_803DE4D0 = NULL;
+        Resource_Release(gEarthWarriorResource);
+        gEarthWarriorResource = NULL;
     }
 }
 
@@ -377,9 +377,9 @@ void DR_EarthWarrior_initialise(void)
     ((void**)gDREarthWarriorStateHandlers)[2] = DR_EarthWarrior_stateHandler02;
     ((void**)gDREarthWarriorStateHandlers)[3] = DR_EarthWarrior_stateHandler03;
     gDREarthWarriorDefaultStateHandler = DR_EarthWarrior_defaultStateHandler;
-    if (lbl_803DE4D0 == NULL)
+    if (gEarthWarriorResource == NULL)
     {
-        lbl_803DE4D0 = Resource_Acquire(0x5a, 1);
+        gEarthWarriorResource = Resource_Acquire(0x5a, 1);
     }
 }
 
@@ -487,9 +487,9 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     v.angles[1] = 0;
     v.angles[2] = 0;
     v.mat[0] = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    setMatrixFromObjectPos(lbl_803DB170, v.angles);
-    mtx44_mult(lbl_803DB170, (void*)mtx, lbl_803DB170);
-    fn_8003B950((int)lbl_803DB170);
+    setMatrixFromObjectPos(gEarthWarriorMatrix, v.angles);
+    mtx44_mult(gEarthWarriorMatrix, (void*)mtx, gEarthWarriorMatrix);
+    fn_8003B950((int)gEarthWarriorMatrix);
 }
 
 int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -853,7 +853,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             {
                 v = -v;
             }
-            *(s16*)&((EarthWarriorSub*)q)->unk478 = (lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
+            *(s16*)&((EarthWarriorSub*)q)->unk478 = (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->unk478);
         }
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
@@ -869,7 +869,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                 v = -v;
             }
             *(s16*)&((EarthWarriorSub*)q)->currentYaw = (
-                lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub*)q)->currentYaw);
+                gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->currentYaw);
         }
         else if (((EarthWarriorState*)p2)->baddie.animSpeedC <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0x4) &&
             ((EarthWarriorState*)p2)->baddie.animSpeedA <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
@@ -1078,7 +1078,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         {
             v = -v;
         }
-        *(s16*)&q->unk478 = (lbl_803E8348 * v + (f32)(s32)q->unk478);
+        *(s16*)&q->unk478 = (gEarthWarriorDegToAngle * v + (f32)(s32)q->unk478);
     }
     {
         f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
@@ -1088,7 +1088,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         {
             v = -v;
         }
-        *(s16*)&q->currentYaw = (lbl_803E8348 * v + (f32)(s32)q->currentYaw);
+        *(s16*)&q->currentYaw = (gEarthWarriorDegToAngle * v + (f32)(s32)q->currentYaw);
     }
     fn_802BCA10(obj, (int)q, p2);
     return 0;
@@ -1129,7 +1129,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[1] = hitState->contactPosX;
             v.mat[2] = hitState->contactPosY;
             v.mat[3] = hitState->contactPosZ;
-            (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)lbl_803DE4D0 + 0x4)))(
+            (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)gEarthWarriorResource + 0x4)))(
                 0, 1, &v, 0x401, -1, rows.m[gDREarthWarriorRowIndices[i]]);
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);
@@ -1436,7 +1436,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     {
         ((DREarthWarriorState*)inner)->unk14ED = 1;
     }
-    ((DREarthWarriorState*)inner)->tailSimHandle = (s32)ObjModelChain_Alloc(&lbl_803DC768, 1);
+    ((DREarthWarriorState*)inner)->tailSimHandle = (s32)ObjModelChain_Alloc(&gEarthWarriorTailChainDesc, 1);
     ObjModelChain_SetOrigin((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C, lbl_803E8394);
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);

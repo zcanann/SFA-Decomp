@@ -347,7 +347,7 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
     }
     else
     {
-        modelMatrix = lbl_80338190;
+        modelMatrix = gCameraDefaultModelMatrix;
     }
 
     transform->x -= playerMapOffsetX;
@@ -379,22 +379,22 @@ void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32*
 
     if (outX != NULL)
     {
-        t = ndcX * (f32)(lbl_802C5ED0[0] >> 2);
-        t = t + (f32)(lbl_802C5ED0[4] >> 2);
+        t = ndcX * (f32)(gCameraViewportScreenParams[0] >> 2);
+        t = t + (f32)(gCameraViewportScreenParams[4] >> 2);
         *outX = t;
     }
 
     if (outY != NULL)
     {
-        t = ndcY * (f32)(lbl_802C5ED0[1] >> 2);
-        t = t + (f32)(lbl_802C5ED0[5] >> 2);
+        t = ndcY * (f32)(gCameraViewportScreenParams[1] >> 2);
+        t = t + (f32)(gCameraViewportScreenParams[5] >> 2);
         *outY = t;
         *outY = 0x1E0 - *outY;
     }
 
     if (outZ != NULL)
     {
-        *outZ = (s32)(lbl_803DE620 * (lbl_803DE5F0 + ndcZ));
+        *outZ = (s32)(gCameraDepth24BitMax * (lbl_803DE5F0 + ndcZ));
     }
 }
 
@@ -411,7 +411,7 @@ void screenFn_8000e944(void* viewportArg)
     resolution = getScreenResolution();
     width = resolution >> 16;
     height = resolution & 0xFFFF;
-    viewportFlags = (u32*)(lbl_802C5E00 + 0x30);
+    viewportFlags = (u32*)(gCameraViewportEntries + 0x30);
 
     if ((*(int*)((u8*)viewportFlags + gCameraCurrentViewIndex * 0x34) & 1) == 0)
     {
@@ -421,11 +421,11 @@ void screenFn_8000e944(void* viewportArg)
         if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0)
         {
             s16 halfHeight;
-            lbl_802C5ED0[viewIndex * 8 + 4] = (s16)(t << 2);
+            gCameraViewportScreenParams[viewIndex * 8 + 4] = (s16)(t << 2);
             halfHeight = (s16)((width >> 1) << 2);
-            lbl_802C5ED0[viewIndex * 8 + 5] = halfHeight;
-            lbl_802C5ED0[viewIndex * 8 + 0] = (s16)(t << 2);
-            lbl_802C5ED0[viewIndex * 8 + 1] = halfHeight;
+            gCameraViewportScreenParams[viewIndex * 8 + 5] = halfHeight;
+            gCameraViewportScreenParams[viewIndex * 8 + 0] = (s16)(t << 2);
+            gCameraViewportScreenParams[viewIndex * 8 + 1] = halfHeight;
         }
     }
     else
@@ -434,10 +434,10 @@ void screenFn_8000e944(void* viewportArg)
         viewIndex = gCameraCurrentViewIndex;
         if ((*(int*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0)
         {
-            lbl_802C5ED0[viewIndex * 8 + 4] = 0;
-            lbl_802C5ED0[viewIndex * 8 + 5] = 0;
-            lbl_802C5ED0[viewIndex * 8 + 0] = 0;
-            lbl_802C5ED0[viewIndex * 8 + 1] = 0;
+            gCameraViewportScreenParams[viewIndex * 8 + 4] = 0;
+            gCameraViewportScreenParams[viewIndex * 8 + 5] = 0;
+            gCameraViewportScreenParams[viewIndex * 8 + 0] = 0;
+            gCameraViewportScreenParams[viewIndex * 8 + 1] = 0;
         }
     }
 
@@ -601,15 +601,15 @@ void viewportEffectFn_8000e380(void)
     f32 sinePhase;
     s32 i;
 
-    lbl_803DC884 = cameraViewportYOffset;
-    if (lbl_803DC880 != 0)
+    gCameraViewportYOffset = cameraViewportYOffset;
+    if (gCameraFarPlaneTransitionFramesLeft != 0)
     {
-        lbl_803DC880 -= framesThisStep;
-        if (lbl_803DC880 < 0)
+        gCameraFarPlaneTransitionFramesLeft -= framesThisStep;
+        if (gCameraFarPlaneTransitionFramesLeft < 0)
         {
-            lbl_803DC880 = 0;
+            gCameraFarPlaneTransitionFramesLeft = 0;
         }
-        gCameraFarPlane = ((f32)lbl_803DC880 / lbl_803DC882) * (lbl_803DC8AC - lbl_803DC8A8) + lbl_803DC8A8;
+        gCameraFarPlane = ((f32)gCameraFarPlaneTransitionFramesLeft / gCameraFarPlaneTransitionFrames) * (gCameraFarPlaneTransitionStart - gCameraFarPlaneTransitionTarget) + gCameraFarPlaneTransitionTarget;
     }
 
     gObjTransformMatrixSlot = 0;
@@ -621,7 +621,7 @@ void viewportEffectFn_8000e380(void)
         while (slot->shakeFlipTimer < 0)
         {
             slot->shakeFlipTimer++;
-            slot->shakeMagnitude = lbl_803DE5F4 * -slot->shakeMagnitude;
+            slot->shakeMagnitude = gCameraShakeMagnitudeDecay * -slot->shakeMagnitude;
         }
     }
     else if (slot->shakeActive == 1)
@@ -679,9 +679,9 @@ void viewportEffectFn_8000e380(void)
             factorial *= n;
         }
 
-        sinePhase = (lbl_803DE5F8 * (lbl_803DE5FC * slot->shakeDuration * shakeTimer)) / lbl_803DE600;
+        sinePhase = (gCameraPi * (lbl_803DE5FC * slot->shakeDuration * shakeTimer)) / lbl_803DE600;
         slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * mathCosf(sinePhase);
-        if ((slot->shakeMagnitude < lbl_803DE604) && (slot->shakeMagnitude > lbl_803DE608))
+        if ((slot->shakeMagnitude < gCameraShakeStopThreshold) && (slot->shakeMagnitude > gCameraShakeStopThresholdNeg))
         {
             slot->shakeMagnitude = lbl_803DE60C;
             slot->shakeActive = -1;
@@ -700,7 +700,7 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     clipped = getScreenResolution();
     height = clipped;
     clipped = clipped >> 16;
-    viewportY = lbl_803DC884 + 6;
+    viewportY = gCameraViewportYOffset + 6;
     clipped = clipped - viewportY;
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
@@ -714,14 +714,14 @@ void Camera_UpdateProjection(void* viewportArg)
     u32 resolution = getScreenResolution();
     u32 screenWidth = resolution >> 16;
     u32 screenHeight = resolution & 0xffff;
-    u8* viewportEntry = lbl_802C5E00 + viewIndex * 0x34;
+    u8* viewportEntry = gCameraViewportEntries + viewIndex * 0x34;
 
     if ((*(int*)(viewportEntry + 0x30) & 1) != 0)
     {
         u8 savedViewIndex = gCameraCurrentViewIndex;
 
         gCameraCurrentViewIndex = viewIndex;
-        viewportEntry = lbl_802C5E00 + viewIndex * 0x34;
+        viewportEntry = gCameraViewportEntries + viewIndex * 0x34;
         gxSetScissorRect(0, 0,
                          *(s32*)(viewportEntry + 0x20),
                          *(s32*)(viewportEntry + 0x24),
@@ -729,20 +729,20 @@ void Camera_UpdateProjection(void* viewportArg)
                          *(s32*)(viewportEntry + 0x2c));
 
         activeViewIndex = gCameraCurrentViewIndex;
-        viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
+        viewportEntry = gCameraViewportEntries + activeViewIndex * 0x34;
         if ((*(int*)(viewportEntry + 0x30) & 1) == 0)
         {
-            lbl_802C5ED0[activeViewIndex * 8 + 4] = 0;
-            lbl_802C5ED0[activeViewIndex * 8 + 5] = 0;
-            lbl_802C5ED0[activeViewIndex * 8 + 0] = 0;
-            lbl_802C5ED0[activeViewIndex * 8 + 1] = 0;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 4] = 0;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 5] = 0;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 0] = 0;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 1] = 0;
         }
 
         gCameraCurrentViewIndex = savedViewIndex;
         if (gCameraProjectionMode == 1)
         {
-            C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
-                       lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+            C_MTXOrtho(gCameraProjectionMatrix, gCameraOrthoTop, gCameraOrthoBottom, gCameraOrthoLeft,
+                       gCameraOrthoRight, gCameraNearPlane, gCameraFarPlane);
         }
         else
         {
@@ -764,24 +764,24 @@ void Camera_UpdateProjection(void* viewportArg)
         u32 halfScreenWidth = screenWidth >> 1;
 
         activeViewIndex = gCameraCurrentViewIndex;
-        viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
+        viewportEntry = gCameraViewportEntries + activeViewIndex * 0x34;
         if ((*(int*)(viewportEntry + 0x30) & 1) == 0)
         {
             s16 scaledHalfHeight;
             s16 scaledHalfWidth;
 
             scaledHalfHeight = (s16)(halfScreenHeight << 2);
-            lbl_802C5ED0[activeViewIndex * 8 + 4] = scaledHalfHeight;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 4] = scaledHalfHeight;
             scaledHalfWidth = (s16)(halfScreenWidth << 2);
-            lbl_802C5ED0[activeViewIndex * 8 + 5] = scaledHalfWidth;
-            lbl_802C5ED0[activeViewIndex * 8 + 0] = scaledHalfHeight;
-            lbl_802C5ED0[activeViewIndex * 8 + 1] = scaledHalfWidth;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 5] = scaledHalfWidth;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 0] = scaledHalfHeight;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 1] = scaledHalfWidth;
         }
 
         if (gCameraProjectionMode == 1)
         {
-            C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
-                       lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+            C_MTXOrtho(gCameraProjectionMatrix, gCameraOrthoTop, gCameraOrthoBottom, gCameraOrthoLeft,
+                       gCameraOrthoRight, gCameraNearPlane, gCameraFarPlane);
         }
         else
         {
@@ -807,8 +807,8 @@ void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWid
 
     *outX = 0;
     *outHeight = resolution & 0xffff;
-    *outY = lbl_803DC884 + 6;
-    *outWidth = (resolution >> 16) - (lbl_803DC884 + 6);
+    *outY = gCameraViewportYOffset + 6;
+    *outWidth = (resolution >> 16) - (gCameraViewportYOffset + 6);
 }
 
 void Camera_SetCurrentViewIndex(int index)
@@ -1031,8 +1031,8 @@ void Camera_RebuildProjectionMatrix(void)
 {
     if (gCameraProjectionMode == 1)
     {
-        C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
-                   lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+        C_MTXOrtho(gCameraProjectionMatrix, gCameraOrthoTop, gCameraOrthoBottom, gCameraOrthoLeft,
+                   gCameraOrthoRight, gCameraNearPlane, gCameraFarPlane);
     }
     else
     {
@@ -1059,10 +1059,10 @@ void Camera_SetFarPlane(f32 farPlane, int transitionFrames)
     if (transitionFrames != 0)
     {
         s16 frames = transitionFrames;
-        lbl_803DC882 = frames;
-        lbl_803DC880 = frames;
-        lbl_803DC8AC = gCameraFarPlane;
-        lbl_803DC8A8 = farPlane;
+        gCameraFarPlaneTransitionFrames = frames;
+        gCameraFarPlaneTransitionFramesLeft = frames;
+        gCameraFarPlaneTransitionStart = gCameraFarPlane;
+        gCameraFarPlaneTransitionTarget = farPlane;
     }
     else
     {
@@ -1115,9 +1115,9 @@ void Camera_InitState(void)
         slot->roll = 0;
         slot->yaw = 0;
         slot->pitch = 0x7FF8;
-        slot->x = lbl_803DE650;
-        slot->y = lbl_803DE650;
-        slot->z = lbl_803DE650;
+        slot->x = gCameraDefaultPosition;
+        slot->y = gCameraDefaultPosition;
+        slot->z = gCameraDefaultPosition;
         *(f32*)((u8*)slot + 0x20) = lbl_803DE60C;
         *(f32*)((u8*)slot + 0x24) = lbl_803DE60C;
         *(f32*)((u8*)slot + 0x28) = lbl_803DE60C;
@@ -1130,17 +1130,17 @@ void Camera_InitState(void)
     gCameraCurrentViewIndex = 0;
     cameraViewYOffsetEnabled = 0;
     gObjTransformMatrixSlot = 0;
-    lbl_803DC884 = 0;
+    gCameraViewportYOffset = 0;
     cameraViewportYOffset = 0;
-    gCameraFarPlane = lbl_803DE64C;
-    lbl_803DC880 = 0;
+    gCameraFarPlane = gCameraDefaultFarPlane;
+    gCameraFarPlaneTransitionFramesLeft = 0;
     gCameraFovY = lbl_803DE610;
     gCameraProjectionMode = 0;
 
     if (gCameraProjectionMode == 1)
     {
-        C_MTXOrtho((f32*)(base + 5824), lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
-                   lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+        C_MTXOrtho((f32*)(base + 5824), gCameraOrthoTop, gCameraOrthoBottom, gCameraOrthoLeft,
+                   gCameraOrthoRight, gCameraNearPlane, gCameraFarPlane);
     }
     else
     {
