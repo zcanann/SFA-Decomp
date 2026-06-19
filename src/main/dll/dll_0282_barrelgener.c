@@ -207,13 +207,12 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
 int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
 {
     int result;
-    RomCurveWalker* route;
+    RomCurveWalker* route = (RomCurveWalker*)routePtr;
     f32 d[3];
     f32 dist, ang, scale;
 
     result = 0;
     scale = c;
-    route = (RomCurveWalker*)routePtr;
     d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
     d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
@@ -234,9 +233,11 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
+        s16 raw;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
-        ang = gBarrelGenPi * (f32)(-(s16)getAngle(d[0], d[2])) / gBarrelGenAngleHalfRange;
+        raw = (s16)getAngle(d[0], d[2]);
+        ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -251,13 +252,12 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
 int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b, f32 c, int flag, int* pickIdx)
 {
     int result;
-    RomCurveWalker* route;
+    RomCurveWalker* route = (RomCurveWalker*)routePtr;
     f32 d[3];
     f32 dist, ang, scale;
 
     result = 0;
     scale = c;
-    route = (RomCurveWalker*)routePtr;
     d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
     d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
@@ -279,9 +279,11 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
     if ((u8)flag == 0)
     {
         int state2 = *(int*)&((GameObject*)obj)->extra;
+        s16 raw;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
-        ang = gBarrelGenPi * (f32)(-(s16)getAngle(d[0], d[2])) / gBarrelGenAngleHalfRange;
+        raw = (s16)getAngle(d[0], d[2]);
+        ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
