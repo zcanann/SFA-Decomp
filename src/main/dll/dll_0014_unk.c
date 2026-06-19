@@ -1521,6 +1521,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
 
 void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
 {
+    f32 dx;
     f32 dy;
     f32 dz;
     int linkId;
@@ -1562,7 +1563,8 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     {
         dy = *(f32*)(c2 + 0xc) - *(f32*)(curve + 0xc);
         dz = *(f32*)(c2 + 0x10) - *(f32*)(curve + 0x10);
-        *outX = (*(f32*)(c2 + 8) - *(f32*)(curve + 8)) * phase + *(f32*)(curve + 8);
+        dx = *(f32*)(c2 + 8) - *(f32*)(curve + 8);
+        *outX = dx * phase + *(f32*)(curve + 8);
         *outY = dy * phase + *(f32*)(curve + 0xc);
         *outZ = dz * phase + *(f32*)(curve + 0x10);
     }
