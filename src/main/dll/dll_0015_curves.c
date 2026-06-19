@@ -803,7 +803,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             setMatrixFromObjectPos(matrix, &transform);
             pointIndex = 0;
             pointOffset = 0;
-            while (pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
+            while (pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
                 localPoint = (f32*)((u8*)collision->segmentLocalPoints + pointOffset);
                 Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
@@ -816,7 +816,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             }
             raisedPointOffset = lbl_803E06B8;
             for (pointIndex = 0;
-                 pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
+                 pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
                  pointIndex++)
             {
                 collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
@@ -847,7 +847,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         collision->resultFloorGap = resetZero;
         collision->contactObj = 0;
         for (pointIndex = 0;
-             pointIndex < ((s8)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
+             pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
              pointIndex++)
         {
             collision->waterY[pointIndex] = resetRange;
