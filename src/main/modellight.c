@@ -1,8 +1,12 @@
 #include "main/game_object.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/camera.h"
+#include "main/texture.h"
 
-extern void mm_free(void* p);
+
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -124,9 +128,9 @@ extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_f
 extern void GXGetLightAttnK(u8 * lt_obj, f32 * k0, f32 * k1, f32 * k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
 extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void* memset(void* dst, int val, int n);
-extern f32* Camera_GetViewMatrix(void);
+
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern void Vec_normalize(f32 * dst, f32 * src);
@@ -144,7 +148,7 @@ extern f32 lbl_803DE76C;
 extern f32 lbl_803DE790;
 extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
-extern void textureFree(u8* tex);
+
 
 void* objCreateLight(int arg, u8 addToList)
 {
@@ -499,8 +503,8 @@ extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
-extern void* textureLoadAsset(int asset);
-extern int randomGetRange(int lo, int hi);
+
+
 
 void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* a, u8* b, u8* c, u8* d)
 {

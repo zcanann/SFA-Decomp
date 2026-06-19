@@ -23,6 +23,8 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/checkpoint_interface.h"
+#include "main/vecmath.h"
+#include "string.h"
 
 /* lbl_803DC0BC/lbl_803DC0E0/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and lbl_802C2428 point template live in this
@@ -33,10 +35,10 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(int* from, int* to);
 extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern void* memcpy(void* dst, const void* src, u32 n);
+
 
 extern s32 lbl_803DC0BC;
 extern f32 lbl_803DC0E0;

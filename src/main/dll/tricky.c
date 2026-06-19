@@ -24,6 +24,8 @@
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
 
 typedef struct GameUIWork10
 {
@@ -328,7 +330,7 @@ void GameUI_airMeterSetShutdown(void)
 }
 
 extern int lbl_803A9398[];
-extern void mm_free(void* p);
+
 #pragma dont_inline on
 void GameUI_airMeterShutdown(void)
 {
@@ -353,7 +355,7 @@ void GameUI_airMeterShutdown(void)
 }
 #pragma dont_inline reset
 
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void* memset(void* p, int v, int n);
 extern const f32 lbl_803E1E68;
 
@@ -991,7 +993,7 @@ void fearTestMeterDraw(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-extern void* Obj_GetPlayerObject(void);
+
 extern int getHudHiddenFrameCount(void);
 extern s8 lbl_803DBAEC;
 extern u8 gTrickyAirMeterFillSpeed;
@@ -1225,7 +1227,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     return 1;
 }
 
-extern void* getTrickyObject(void);
+
 extern int objIsCurModelNotZero(void* obj);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int fn_802972A8(int* player);

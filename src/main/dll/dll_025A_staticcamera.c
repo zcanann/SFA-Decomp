@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct StaticCameraState
 {
@@ -60,7 +61,7 @@ int StaticCamera_getObjectTypeId(void) { return 0x0; }
 
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(f32 scale);
+
     extern f32 lbl_803E31E8;
     s32 v = visible;
     if (v != 0)

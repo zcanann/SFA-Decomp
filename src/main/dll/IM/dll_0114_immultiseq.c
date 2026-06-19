@@ -14,12 +14,15 @@
 #include "main/dll/immultiseqstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void ObjGroup_AddObject();
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void objRenderFn_8003b8f4(f32 scale);
+
+
 extern f32 lbl_803E37A8;
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);

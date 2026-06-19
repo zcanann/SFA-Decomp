@@ -17,6 +17,9 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -59,12 +62,12 @@ typedef struct MoonSeedPlantingSpotState
 
 STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
+
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;

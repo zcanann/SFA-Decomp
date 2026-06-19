@@ -21,11 +21,12 @@
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/gamebits.h"
 
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
 extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
 
-extern void GameBit_Set(int eventId, int value);
+
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8015039C(void* p1, void* p2);
 extern u32 fn_8014FFB4(void* p1, void* p2, int p3);

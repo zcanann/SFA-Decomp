@@ -3,6 +3,9 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "util/carry.h"
+#include "string.h"
+#include "dolphin/os/OSCache.h"
+#include "main/mm.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_802420b0();
@@ -23,7 +26,7 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DFC20;
 
 extern int lbl_803DD044;
-extern void* memcpy(void* dst, const void* src, u32 n);
+
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
@@ -675,8 +678,8 @@ extern int lbl_803DD064;
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
+
+
 extern int lbl_80396900[];
 extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
@@ -885,9 +888,9 @@ typedef struct
 } CARDStatStub;
 
 extern int cardProbe(int chan);
-extern void* mmAlloc(int size, int type, int flag);
-extern void mm_free(void* p);
-extern void* memset(void* dst, int c, u32 n);
+
+
+
 extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);
 extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);

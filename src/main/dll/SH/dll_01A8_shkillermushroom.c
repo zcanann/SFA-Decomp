@@ -14,8 +14,9 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
+#include "main/gamebits.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int randomGetRange(int lo, int hi);
 

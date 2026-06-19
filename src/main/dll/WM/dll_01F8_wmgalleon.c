@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 /* TU-boundary copies of the WM_ObjCreator records (canonical copies in
    dll_01F9_wmobjcreator.c) - this TU hosts WM_ObjCreator_init. */
@@ -45,7 +46,7 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern u32 GameBit_Get(int eventId);
+
 extern int randomGetRange(int lo, int hi);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 
@@ -88,7 +89,7 @@ extern f32 lbl_803E5CF4;
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     int i;
 
     lbl_803DC0F0 = framesThisStep;
@@ -348,7 +349,7 @@ void WM_Galleon_update(int* obj)
 
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     WMGalleonState* state;
     int i;
 

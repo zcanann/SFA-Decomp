@@ -7,6 +7,9 @@
 #include "main/rcp_dolphin.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
+#include "main/mm.h"
+#include "dolphin/os/OSCache.h"
+#include "dolphin/gx/GXDispList.h"
 
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
@@ -1164,7 +1167,7 @@ void gxColorFn_80052764(int* param)
 }
 
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void* memset(void*, int, u32);
 extern void textureFn_80053d58(void* obj);
 #pragma dont_inline on
@@ -1236,7 +1239,7 @@ void textureFn_80053d58(void* vobj)
 #pragma dont_inline reset
 
 extern void findSomething(int);
-extern void mm_free(void* p);
+
 
 #pragma peephole on
 void textureFree(u8* tex)
@@ -1961,10 +1964,10 @@ void fn_80053C40(u8* tex, u8* obj)
 }
 
 extern void GXSetMisc(int token, u32 val);
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
-extern void GXBeginDisplayList(void* list, u32 size);
-extern u32 GXEndDisplayList(void);
-extern void GXCallDisplayList(void* list, u32 nbytes);
+
+
+
+
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern f32 sqrtf(f32 x);
 extern u8 lbl_803DCD98;
@@ -2579,7 +2582,7 @@ void gxTextureFn_80052efc(void)
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
 extern int mmSetFreeDelay(int v);
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 extern void defragMemory(int mode);
 extern char lbl_8030D058[];
 

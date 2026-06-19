@@ -12,8 +12,9 @@
  */
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern void vecRotateZXY(void* params, void* outVec);
 
 extern f32 lbl_803E5EAC;

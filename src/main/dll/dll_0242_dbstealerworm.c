@@ -35,13 +35,13 @@
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
+
+
+
 
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -49,6 +49,10 @@ extern f32 sqrtf(f32 x);
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
 #include "main/objfx.h"
+#include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/objhits.h"
+#include "main/vecmath.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -111,7 +115,7 @@ typedef struct DbStealerwormFlags44
     u8 low : 4;
 } DbStealerwormFlags44;
 
-extern int randomGetRange(int lo, int hi);
+
 extern u32 ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObjectForObject();
 extern int ObjGroup_FindNearestObject();
@@ -119,7 +123,7 @@ extern u32 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 
 extern void Stack_Free(int* stack);
-extern void Obj_FreeObject(int obj);
+
 extern void** gBaddieControlInterface;
 extern int* gPlayerInterface;
 extern f32 gDbStealerwormZero;
@@ -333,7 +337,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
 
 int dbstealerworm_stateHandlerA05(int obj, int p)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     extern int gDbStealerwormSfxIds[];
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int Stack_IsFull(int sp);
@@ -779,7 +783,7 @@ void fn_80202EF0(int obj, int p2)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern void* Obj_AllocObjectSetup(int size, int b);
-    extern u8* Obj_SetupObject(u8*, int, int, int, int);
+
     extern f32 gDbStealerwormF15;
     extern f32 gDbStealerwormF200;
     extern f32 gDbStealerwormF50;
@@ -1010,7 +1014,7 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int* args);
-    extern f32 sqrtf(f32 x);
+
     extern f32 gDbStealerwormF1_5;
     extern f32 gDbStealerwormF0_01;
     extern f32 gDbStealerwormF0_3;
@@ -1191,8 +1195,8 @@ void fn_80203144(int obj, int p2, int p3)
     extern void ObjGroup_AddObject(int, int);
     extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern f32 sqrtf(f32 x);
-    extern int randomGetRange(int lo, int hi);
+
+
     extern void** gBaddieControlInterface;
     extern int lbl_80329640[];
     extern f32 gDbStealerwormF100;
@@ -1451,7 +1455,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     extern void Stack_Push(int sp, int* args);
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern int Obj_GetYawDeltaToObject(int, int, f32*);
-    extern f32 sqrtf(f32 x);
+
     extern f32 gDbStealerwormF0_015625;
     extern f32 gDbStealerwormF140;
     extern f32 gDbStealerwormFNeg1_7;
@@ -1785,8 +1789,8 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
     extern void Stack_Push(int sp, int* args);
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern void ObjHits_EnableObject(int);
-    extern void ObjHits_ClearHitVolumes(int);
-    extern int RandomTimer_UpdateRangeTrigger(void*, f32, f32);
+
+
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32*);
@@ -2017,11 +2021,11 @@ void dbstealerworm_update(u8* objp)
 {
     extern void Stack_Push(int sp, int* args);
     extern int allocModelStruct_800139e8(int, int);
-    extern u32 GameBit_Get(int eventId);
+
     extern void ObjGroup_AddObject(int, int);
     extern int ObjMsg_Pop(int, u32*, int*, int*);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern f32 sqrtf(f32);
+
     extern MapEventInterface** gMapEventInterface;
     extern void** gBaddieControlInterface;
     extern f32 timeDelta;
@@ -2160,7 +2164,7 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int* args);
     extern void ObjHits_EnableObject(int);
-    extern void ObjHits_ClearHitVolumes(int);
+
     extern int Obj_GetPlayerObject(void);
     extern int Obj_GetYawDeltaToObject(int, int, f32*);
     extern int* seqFn_800394a0(void);
@@ -2376,7 +2380,7 @@ int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t)
     extern f32 Vec_xzDistance(int, int);
     extern f32 vec3f_distanceSquared(int, int);
     extern f32 sqrtf(f32);
-    extern int randomGetRange(int lo, int hi);
+
     extern f32 gDbStealerwormF100;
     extern f32 gDbStealerwormF50;
     extern f32 gDbStealerwormF0_018;

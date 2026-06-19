@@ -22,6 +22,8 @@
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
+#include "main/pad.h"
+#include "main/gameplay_runtime.h"
 
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);
@@ -29,9 +31,9 @@ extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void buttonDisable(int port, u32 mask);
 extern int padGetAnalogInput(int, char*, char*);
-extern u32 getButtonsJustPressed(int port);
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
+
+
+
 extern int ObjTrigger_IsSet(void*);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(u8 x);

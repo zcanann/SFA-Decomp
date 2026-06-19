@@ -36,6 +36,8 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -81,7 +83,7 @@ STATIC_ASSERT(offsetof(Dll22CMapData, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit2) == 0x1E);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 extern f32 timeDelta;
 extern f32 lbl_803E6398; /* render scale */
@@ -138,8 +140,8 @@ void fn_80204BF8(int obj)
 {
     /* block-scope to override the engine_shared.h prototypes' return/param
        types (GameObject* return, signed args) the codegen here depends on. */
-    extern void* Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int eventId);
+
+
     extern f32 Vec_xzDistance(f32* a, f32* b);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

@@ -23,6 +23,7 @@
 #include "main/dll/debug/prof.h"
 #include "main/dll/gameplay.h"
 #include "main/screen_transition.h"
+#include "main/engine_shared.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE 0
 #define OPTIONS_MENU_ACTION_SELECT 1
@@ -63,12 +64,12 @@ extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
 
-extern void audioSetSoundMode(int mode, u8 forceFlag);
-extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
+
+
 extern void setWidescreen(u8 enabled);
-extern void stopRumble2(void);
-extern void setRumbleEnabled(u8 enabled);
-extern void doRumble(f32 duration);
+
+
+
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 

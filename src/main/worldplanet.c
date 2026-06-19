@@ -8,6 +8,7 @@
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
 #include "main/worldplanet.h"
+#include "main/pad.h"
 
 extern void objRenderFn_8003b8f4(double scale);
 
@@ -43,7 +44,7 @@ extern int ObjList_FindObjectById(int id);
 extern void AudioStream_StopCurrent(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void setIsOvercast(int v);
-extern u32 getButtonsJustPressed(int port);
+
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 lbl_803DDD0C;

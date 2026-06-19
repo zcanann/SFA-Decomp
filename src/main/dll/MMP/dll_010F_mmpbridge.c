@@ -9,6 +9,8 @@
 
 #include "main/game_object.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
+#include "main/dll/dll_80220608_shared.h"
 
 #define BRIDGE_TEX_OFFSET_START 0x800
 #define BRIDGE_TEX_OFFSET_MAX 0x131f
@@ -21,11 +23,11 @@ typedef struct MmpBridgePlacement
     s16 enableBit;     /* 0x1E: gamebit that deploys the bridge */
 } MmpBridgePlacement;
 
-extern u32 GameBit_Get(int eventId);
+
 extern f32 timeDelta;
-extern void fn_80137948(char* fmt, ...);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
+
+
+
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 

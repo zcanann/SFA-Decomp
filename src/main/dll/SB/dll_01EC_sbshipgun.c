@@ -23,6 +23,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/objhits.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -52,7 +53,7 @@ STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
 extern int randomGetRange(int lo, int hi);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);

@@ -22,6 +22,7 @@
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa.h"
+#include "main/gameplay_runtime.h"
 
 #define CANNONBALL_INIT_DONE 0x0a
 #define CANNONBALL_SPEED 0x14
@@ -42,7 +43,7 @@
    trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
    lbl_803E2*: this DLL's f32 route/speed constants. */
 extern f32 getXZDistance(f32* a, f32* b);
-extern int randomGetRange(int lo, int hi);
+
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern void trickyMove(int obj, void* moveState);

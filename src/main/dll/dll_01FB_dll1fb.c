@@ -41,8 +41,8 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
@@ -56,6 +56,8 @@ extern int randomGetRange(int lo, int hi);
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 extern void buttonDisable(int port, u32 mask);
 
@@ -172,7 +174,7 @@ void dll_1FB_hitDetect_nop(void)
 
 void dll_1FB_update(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&

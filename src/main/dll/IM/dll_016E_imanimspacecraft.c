@@ -13,9 +13,11 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
-extern void objRenderFn_8003b8f4(f32 scale);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);

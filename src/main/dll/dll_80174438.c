@@ -5,7 +5,7 @@
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 
-extern u32 GameBit_Get(int eventId);
+
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -17,10 +17,12 @@ extern u32 GameBit_Get(int eventId);
 #include "main/objtexture.h"
 #include "main/game_object.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
-extern void GameBit_Set(int eventId, int value);
+
 extern int randomGetRange(int lo, int hi);
 extern u32 fn_80174BFC();
 extern void* Obj_GetPlayerObject(void);
@@ -30,7 +32,7 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 extern void* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+
 extern void fn_80175428(int obj, int p2);
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;

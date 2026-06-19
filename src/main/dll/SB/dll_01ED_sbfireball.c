@@ -11,10 +11,11 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_trex.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern u8 framesThisStep;
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E58D8; /* fireball render scale */
 extern f32 timeDelta;
 
@@ -98,7 +99,7 @@ void SB_FireBall_init(GameObject* obj)
 
 void SB_FireBall_update(GameObject* obj)
 {
-    extern void Obj_FreeObject(int obj);
+
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
     f32 particleArgs[7];

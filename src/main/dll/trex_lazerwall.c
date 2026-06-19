@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/gameplay_runtime.h"
 
 #define GAMEBIT_LAZERWALL_START 0x617
 #define GAMEBIT_LAZERWALL_WIN 0x624
@@ -55,7 +56,7 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
     u8 pad9D7[0x9D8 - 0x9D7];
 } TREXLazerwallUpdateTimedChallengeState;
 
-extern void* Obj_GetPlayerObject(void);
+
 
 extern int Stack_IsEmpty(int stack);
 extern int Stack_IsFull(int stack);

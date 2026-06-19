@@ -12,13 +12,15 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/player_control_interface.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 duration);
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
+
 
 extern void* gBaddieControlInterface;
 extern f32 lbl_803DDB98;

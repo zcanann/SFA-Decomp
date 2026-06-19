@@ -7,13 +7,14 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/SH/shthorntail_ai.h"
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
+
 
 extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;

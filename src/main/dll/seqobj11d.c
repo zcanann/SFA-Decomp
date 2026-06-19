@@ -28,6 +28,7 @@
 #include "main/object_transform.h"
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct
 {
@@ -44,17 +45,17 @@ typedef struct
 /* Routines live in sibling baddie/seq TUs (fn_8014*, getAngle, math*,
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
-extern int FUN_80017730();
+
 extern u32 FUN_800305c4();
 extern int FUN_8014c78c();
 extern u32 FUN_8014d4c8();
 extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
 extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
-extern void* Obj_GetPlayerObject(void);
+
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern int getAngle(float y, float x);
+
 extern int playerGetMoney(u8 * player);
 extern void playerAddMoney(u8* player, int amount);
 extern void hudFn_8011f38c(u8 x);

@@ -24,8 +24,9 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);

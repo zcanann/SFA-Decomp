@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
+#include "main/gameplay_runtime.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
@@ -47,7 +48,7 @@ typedef struct
         *(s8 *)((st) + 0xd) = -1; \
     }
 
-extern int randomGetRange(int lo, int hi);
+
 extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFn_8013b368(int obj, f32 speed, int state);

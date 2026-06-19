@@ -7,6 +7,11 @@
 #include "main/objlib.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
+#include "main/gameplay_runtime.h"
+#include "dolphin/gx/GXManage.h"
+#include "main/sky_state.h"
+#include "main/mm.h"
+#include "string.h"
 
 extern u32 FUN_80006934();
 extern u32 FUN_8000694c();
@@ -1632,7 +1637,7 @@ extern int* Obj_GetActiveModel(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
-extern int* Obj_GetPlayerObject(void);
+
 extern int playerIsDisguised(int* obj);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern void objRenderFuzz(int* obj);
@@ -1658,13 +1663,13 @@ extern void drawReflectionTexture(void);
 void getVisibleObjects(s8 * opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
-extern void GXPixModeSync(void);
+
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);
 extern u8 lbl_803DCE05;
 extern void screenImageDraw(void);
 extern void lightningRenderActive(void);
-extern void getAmbientColor(int slot, u8* r, u8* g, u8* b);
+
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
@@ -2412,9 +2417,9 @@ void objDrawFn_8005da48(int* obj)
     }
 }
 
-extern void* mmAlloc(int size, int heap, int flags);
+
 extern void loadAssetFileById(void** out, int id);
-extern void* memset(void* dst, int val, u32 n);
+
 extern void* lbl_803DCE94;
 extern void* lbl_803DCE8C;
 extern void* lbl_803DCE78;

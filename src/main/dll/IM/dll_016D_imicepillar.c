@@ -5,8 +5,9 @@
  * object render helper. A 4-byte extra block is reserved but unused.
  */
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void objRenderFn_8003b8f4(f32 scale);
+
 extern f32 lbl_803E4768;
 
 int imicepillar_getExtraSize(void) { return 0x4; }

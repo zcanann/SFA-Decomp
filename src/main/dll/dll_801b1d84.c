@@ -1,6 +1,7 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
 
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct DIMwooddoorUpdateFallingDebrisState
 {
@@ -18,7 +19,7 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
-extern u32 GameBit_Get(int eventId);
+
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */

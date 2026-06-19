@@ -1,8 +1,13 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
+#include "main/gameplay_runtime.h"
+#include "dolphin/gx/GXCull.h"
+#include "main/mm.h"
+#include "main/texture.h"
+#include "dolphin/os/OSCache.h"
 
 extern int saveFileStruct_isCheatActive();
-extern void mm_free(void* p);
+
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -89,7 +94,7 @@ extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
@@ -923,8 +928,8 @@ void gameTextSetDrawFunc(void* fn)
     gameTextDrawFunc = fn;
 }
 
-extern void* mmAlloc(int size, int type, int flag);
-extern void textureFree(u8* tex);
+
+
 
 f32 gameTextFn_80019c00(void)
 {
@@ -977,7 +982,7 @@ int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-extern void* textureLoadAsset(int asset);
+
 
 extern void gameTextInitFn_8001c794(void);
 extern void gameTextLoadDir(int dirId);
@@ -1277,7 +1282,7 @@ int subtitleIsActive(void)
 
 int mmCreateMemoryStore(int size);
 
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
+
 
 extern void* memcpy(void* dst, const void* src, int n);
 
@@ -1509,7 +1514,7 @@ void gameTextOpenCallback_8001b3d0(int status, u8* match)
     }
 }
 
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 
 typedef struct
 {

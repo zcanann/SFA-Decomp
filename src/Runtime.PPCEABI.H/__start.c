@@ -1,16 +1,21 @@
 #include "__ppc_eabi_linker.h"
+#include "dolphin/db.h"
+#include "dolphin/os.h"
+#include "dolphin/os/OSReset.h"
+#include "dolphin/os/OSCache.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.h"
 
 typedef unsigned int size_t;
 
-extern void DBInit(void);
-extern void OSInit(void);
-extern void OSResetSystem(int reset, unsigned long resetCode, int forceMenu);
+
+
+
 extern asm void InitMetroTRK();
-extern void __OSPSInit(void);
-extern void __OSCacheInit(void);
+
+
 extern void __init_user(void);
 extern int main(int argc, char** argv);
-extern void exit(int status);
+
 extern void* memcpy(void* dst, const void* src, size_t n);
 extern void* memset(void* dst, int val, size_t n);
 

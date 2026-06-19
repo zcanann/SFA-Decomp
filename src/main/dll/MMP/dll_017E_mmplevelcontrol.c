@@ -13,6 +13,7 @@
 
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/gamebits.h"
 
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int arg);
@@ -27,7 +28,7 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int setBit, int textId);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 timeDelta;
 extern f32 lbl_803E44C0;
 extern f32 lbl_803E44C4;
@@ -196,7 +197,7 @@ void MMP_levelcontrol_initialise(void)
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     ((GameObject*)obj)->objectFlags |= 0x6000;
     if (getSaveGameLoadStatus() != 0)
     {

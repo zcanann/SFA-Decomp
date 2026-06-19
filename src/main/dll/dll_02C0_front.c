@@ -23,6 +23,7 @@
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/objseq.h"
+#include "main/dll/FRONT/dll_0034_n_filemenu.h"
 
 typedef struct TitlescreenState
 {
@@ -907,7 +908,7 @@ void fn_80134870(int obj, u8* arr)
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
 extern void loadUiDll(int index);
-extern void TitleMenu_setSelection(int sel);
+
 extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int a, int b, int c);
 

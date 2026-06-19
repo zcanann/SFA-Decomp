@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/mapEventTypes.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
@@ -30,7 +31,7 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern u32 GameBit_Get(int eventId);
+
 extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
 
@@ -355,7 +356,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 Vec_distance(f32* a, f32* b);
-    extern void GameBit_Set(int eventId, int value);
+
     int i;
     int count;
     int* list;

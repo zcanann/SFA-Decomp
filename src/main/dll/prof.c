@@ -14,12 +14,13 @@
  * its exact role is unconfirmed.
  */
 #include "main/dll/debug/prof.h"
+#include "main/engine_shared.h"
 
 extern int saveFileStruct_isCheatActive();
 extern int isCheatUnlocked(u8);
-extern u32 OSGetSoundMode(void);
+
 extern int Rcp_GetColorFilterEnabled(void);
-extern int return0x64_8000A378(void);
+
 
 extern int* gTitleMenuLinkInterface;
 extern int* gTitleMenuItemInterface;

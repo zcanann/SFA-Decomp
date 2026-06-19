@@ -10,9 +10,11 @@
  * its own (getExtraSize == 0); all parameters come from the placement.
  */
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void objRenderFn_8003b8f4(f32);
+
+
 extern f32 timeDelta;
 
 extern f32 lbl_803E3DB0;

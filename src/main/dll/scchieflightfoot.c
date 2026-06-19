@@ -16,9 +16,10 @@
  */
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/effect_interfaces.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
+
+
 
 extern f32 timeDelta;
 

@@ -18,10 +18,12 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern u8 framesThisStep;
-extern u32 GameBit_Get(int eventId);
+
 
 /* anim.resetHitboxMode bit forced on each SeqFn / update tick. */
 #define SB_CAGEKYTE_HITBOX_RESET_BIT 0x8
@@ -94,7 +96,7 @@ void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void SB_CageKyte_update(GameObject* obj)
 {
     extern f32 Vec_distance(f32* a, f32* b);
-    extern void* Obj_GetPlayerObject(void);
+
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
     GameObject* player;

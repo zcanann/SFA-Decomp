@@ -36,17 +36,18 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #pragma dont_inline on
 
 extern int getAngle(float y, float x);
-extern int randomGetRange(int lo, int hi);
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
 extern int Obj_IsLoadingLocked(void);
 extern u8 objBboxFn_800640cc();
-extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
-                                                f32 drag);
+
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 dt);
 extern char lbl_803DBCD8;

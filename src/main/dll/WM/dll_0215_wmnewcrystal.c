@@ -14,6 +14,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/camera.h"
 
 #define WMNEWCRYSTAL_GAMEBIT_ACTIVE 0xd27
 #define WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX 0xe49
@@ -48,7 +49,7 @@ STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, pathPoint) == 0x06);
 STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, x) == 0x0C);
 STATIC_ASSERT(sizeof(WmNewCrystalParticleParams) == 0x18);
 
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);

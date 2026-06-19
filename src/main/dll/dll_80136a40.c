@@ -30,6 +30,8 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "stdarg.h"
+#include "dolphin/gx/GXCull.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
 typedef struct TrickyImpressState
 {
@@ -59,7 +61,7 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
 
@@ -76,13 +78,13 @@ extern void* lbl_803DDA24;
 extern void* debugLogEnd;
 extern u8 debugLogBuffer[0x1100];
 extern u32 getScreenResolution(void);
-extern int vsprintf(char* s, const char* format, va_list arg);
+
 extern int lbl_803DD9E4;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern int sprintf(char* s, const char* format, ...);
+
 extern f32 lbl_803E22A0;
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;

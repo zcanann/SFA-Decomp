@@ -31,8 +31,9 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 

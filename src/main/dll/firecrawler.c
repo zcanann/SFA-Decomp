@@ -35,8 +35,9 @@
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
+#include "main/dll/modgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();

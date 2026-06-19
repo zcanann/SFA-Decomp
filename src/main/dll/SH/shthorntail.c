@@ -14,8 +14,9 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/vecmath.h"
+#include "main/dll/SH/shthorntail_ai.h"
 
-extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
+
 
 extern u8 framesThisStep;
 extern f32 timeDelta;

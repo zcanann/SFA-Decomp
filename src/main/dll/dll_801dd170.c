@@ -5,6 +5,7 @@
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
 #include "main/obj_placement.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -16,7 +17,7 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 int fn_801DD170(void)
 {
-    extern u32 GameBit_Get(int eventId); /* #57 */
+ /* #57 */
     int r;
     if (GameBit_Get(0x639) != 0) { r = 0; }
     else { r = 1; }

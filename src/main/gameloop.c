@@ -16,6 +16,8 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/pad.h"
 
 extern u64 camcontrol_playTargetTypeSfx();
 extern u64 runLoadingScreens();
@@ -666,7 +668,7 @@ extern void initMaps(void);
 extern void initFn_800534f8(void);
 extern void titleScreenDrawFn_80093db4(void);
 extern int getDataFileSize(int id);
-extern void loadUiDll(int index);
+
 extern void doNothing_beforeTitleScreen(void);
 extern void setDrawCloudsAndLights(int v);
 extern void askProgressiveScanMode(void);
@@ -877,7 +879,7 @@ void Obj_UpdateAllObjects(u8 flags);
 
 
 extern void uiDll_runFrameStartAndLoadNext(void);
-extern u32 getButtonsJustPressed(int port);
+
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void uiDll_runFrameEndAndLoadNext(void);
@@ -1012,7 +1014,7 @@ extern void loadDataFiles(void);
 extern void audioUpdate(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 a, f32 b, int w, int h);
-extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
+
 extern void objRenderFuzz(void);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
@@ -1074,9 +1076,9 @@ extern u8 lbl_803DCAC4;
 extern int lbl_803DB41C;
 extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
-extern int mapUnload(int mapId, int flags);
+
 extern void fn_801375A0(void);
-extern int loadMapAndParent(int mapId);
+
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)

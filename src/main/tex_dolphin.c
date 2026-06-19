@@ -2,8 +2,9 @@
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
+#include "main/model_light.h"
 
-extern void modelLightStruct_getDiffuseColor(void* light, u8* a, u8* b, u8* c, u8* d);
+
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,

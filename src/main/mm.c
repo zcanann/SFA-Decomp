@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
+#include "main/gameplay_runtime.h"
+#include "main/dll/gameplay.h"
+#include "dolphin/os/OSCache.h"
 
-extern void mm_free(void* p);
+
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -407,7 +410,7 @@ typedef struct
     MmRegion regions[8];
 } MmGlobal;
 
-extern void SaveGame_updateTransientMapBits(void);
+
 extern int lbl_803DCB30;
 extern int lbl_803DCB1C;
 extern char sMemStatsFormat[];
@@ -608,7 +611,7 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
 extern void* OSAllocFromHeap(int heap, int size);
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
+
 extern int __OSCurrHeap;
 extern int lbl_803DCB18;
 extern void* lbl_803DD498;
@@ -986,7 +989,7 @@ void* AtomicSList_Pop(void** list)
 }
 
 extern void* memcpy(void* dst, const void* src, int n);
-extern void LCLoadBlocks(void* destTag, void* srcAddr, u32 numBlocks);
+
 
 void copyToCache(void* dst, void* src, u32 count)
 {
@@ -1009,7 +1012,7 @@ void copyToCache(void* dst, void* src, u32 count)
     }
 }
 
-extern void LCStoreBlocks(void* destAddr, void* srcTag, u32 numBlocks);
+
 
 void memcpyToCache(void* dst, void* src, u32 count)
 {

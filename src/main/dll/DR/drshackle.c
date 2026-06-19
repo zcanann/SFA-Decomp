@@ -17,11 +17,13 @@
 #include "main/dll/DR/DRshackle.h"
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
+#include "main/dll/dll_80220608_shared.h"
+#include "main/dll/DR/DRcloudcage.h"
 
 extern f32 sqrtf(f32 x);
-extern int getAngle(float y, float x);
-extern f32 fn_801EA678(int p1, int p2);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+
+
 extern int fn_801EC870(int p1, int p2);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 

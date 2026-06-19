@@ -14,11 +14,13 @@
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
-extern int randomGetRange(int lo, int hi);
-extern u32 GameBit_Get(int eventId);
+
+
 extern void vecRotateZXY(u8* p, f32* v);
 extern f32 timeDelta;
 extern char lbl_803AC930[];

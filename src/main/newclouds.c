@@ -5,6 +5,13 @@
 #include "main/object_transform.h"
 #include "main/objtexture.h"
 #include "main/sky_interface.h"
+#include "main/mm.h"
+#include "main/camera.h"
+#include "main/gameplay_runtime.h"
+#include "main/texture.h"
+#include "dolphin/gx/GXDispList.h"
+#include "dolphin/os/OSCache.h"
+#include "main/sky_state.h"
 
 typedef struct LightningEffect
 {
@@ -19,13 +26,13 @@ typedef struct LightningEffect
     u8 flags;
 } LightningEffect;
 
-extern void* mmAlloc(int size, int type, int flag);
-extern void mm_free(void* p);
+
+
 extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
-extern void* Camera_GetCurrentViewSlot(void);
-extern int randomGetRange(int lo, int hi);
+
+
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -122,9 +129,9 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
     gCloudOverridePositionZ = c;
 }
 
-extern void* textureLoadAsset(int asset);
 
-extern void textureFree(u8* tex);
+
+
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int id, int arg);
 extern void* gNewCloudLayerTextures[];
@@ -518,7 +525,7 @@ extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
 extern void selectTexture(char* tex, int slot);
 extern void Camera_UpdateViewMatrices(void);
-extern f32* Camera_GetViewMatrix(void);
+
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(u32 id);
 extern int rand(void);
@@ -707,9 +714,9 @@ extern u8 isOvercast(void);
 extern void fn_800790AC(void);
 extern void gxBlendFn_800789ac(void);
 extern void textRenderSetupFn_800795e8(void);
-extern f32* Camera_GetViewRotationMatrix(void);
+
 extern void GXSetPointSize(int size, int fmt);
-extern void GXCallDisplayList(void* list, u32 nbytes);
+
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
 extern u8 gNewCloudStarColorRanges[];
@@ -1199,9 +1206,9 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 }
 
 extern void GXSetMisc(int token, u32 val);
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
-extern void GXBeginDisplayList(void* list, u32 size);
-extern u32 GXEndDisplayList(void);
+
+
+
 extern void GXResetWriteGatherPipe(void);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 extern u8 gNewCloudStarsInitialized;
@@ -2379,7 +2386,7 @@ extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * a, f32 * b, f32 * out);
 extern void mtx44Transpose(f32 * in, f32 * out);
-extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
+
 extern void gxBlendFn_80078b4c(void);
 extern int gNewCloudFlashRotAngle;
 extern const f32 lbl_803DF204;

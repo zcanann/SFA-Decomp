@@ -14,10 +14,11 @@
  * visible.
  */
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern u8 framesThisStep;
-extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
+
+
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;

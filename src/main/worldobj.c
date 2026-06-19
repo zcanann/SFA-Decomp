@@ -3,6 +3,9 @@
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
+#include "dolphin/gx/GXCull.h"
+#include "main/objlib.h"
+#include "main/camera.h"
 
 typedef struct
 {
@@ -19,7 +22,7 @@ extern void ModelLightStruct_free(int model);
 extern void objRenderFn_8003b8f4(f32 e);
 extern f32 lbl_803E6678;
 extern int randomGetRange(int lo, int hi);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void Camera_ApplyCurrentViewport(int cam);
 extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
@@ -89,9 +92,9 @@ extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int 
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-extern void* Camera_GetCurrentViewSlot(void);
+
+
+
 extern f32 lbl_8032A200[];
 extern f32 lbl_803E667C;
 extern f32 lbl_803E6680;

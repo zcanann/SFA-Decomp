@@ -15,6 +15,8 @@
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
+#include "main/pad.h"
+#include "main/gamebits.h"
 
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -22,14 +24,14 @@ extern u32 Sfx_KeepAliveLoopedObjectSound();
 extern int randomGetRange(int lo, int hi);
 extern void setAButtonIcon(int x);
 extern void* Obj_GetPlayerObject(void);
-extern u32 getButtonsJustPressedIfNotBusy(int port);
+
 extern int isGameTimerDisabled(void);
 extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);
 extern void objRenderFn_8003b8f4(f32);
-extern void GameBit_Set(int eventId, int value);
+
 extern int lbl_803DDC10;
 extern int lbl_803DC070;
 extern u8 framesThisStep;

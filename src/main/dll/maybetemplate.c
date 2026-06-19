@@ -20,9 +20,11 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_status.h"
+#include "main/gameplay_runtime.h"
+#include "dolphin/gx/GXCull.h"
 
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
+
+
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
@@ -92,7 +94,7 @@ extern f32 lbl_803E1FBC;
 extern f32 lbl_803E1FC0;
 extern f32 lbl_803E1FC4;
 extern f32 lbl_803E1FC8;
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);

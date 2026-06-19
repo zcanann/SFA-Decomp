@@ -15,6 +15,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
+#include "main/gamebits.h"
 
 extern f32 timeDelta;
 
@@ -24,8 +25,8 @@ extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern f32 lbl_803E5918; /* ObjAnim_AdvanceCurrentMove speed */
 extern void buttonDisable(int port, u32 mask);
 extern int* objModelGetVecFn_800395d8(int obj, int idx);
@@ -168,7 +169,7 @@ void SB_KyteCage_update(int obj)
 {
     extern int* ObjList_GetObjects(int* out_head, int* out_count);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    extern u32 GameBit_Get(int eventId);
+
     SBKyteCageState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.resetHitboxFlags =
         (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);

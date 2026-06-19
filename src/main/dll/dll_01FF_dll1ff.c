@@ -11,6 +11,9 @@
  * gates model-state shadow fade-out on the active trigger sequence.
  */
 #include "main/game_object.h"
+#include "main/objhits.h"
+#include "main/gameplay_runtime.h"
+#include "main/pad.h"
 
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 typedef struct Dll1FFState
@@ -40,8 +43,8 @@ typedef struct Dll1FFSlots
 #define DLL1FF_BUTTON_ACTION 0x100  /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB 0x100008    /* ObjMsg kind sent on release */
 
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
+
+
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, int param);
 
 extern const f32 lbl_803E5D80;
@@ -110,9 +113,9 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void dll_1FF_update(int obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     extern void buttonDisable(int port, u32 mask);
-    extern u32 getButtonsJustPressed(int port);
+
     extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
     extern f32 timeDelta;
     extern const f32 lbl_803E5D84;

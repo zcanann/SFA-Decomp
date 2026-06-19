@@ -11,6 +11,8 @@
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 typedef struct MmpGyserventPlacement
 {
@@ -20,9 +22,9 @@ typedef struct MmpGyserventPlacement
     u8 pad21[0x28 - 0x21];
 } MmpGyserventPlacement;
 
-extern int randomGetRange(int lo, int hi);
+
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern u32 GameBit_Get(int eventId);
+
 extern u8 framesThisStep;
 
 void mmp_gyservent_free(void)

@@ -12,6 +12,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/gamebits.h"
 
 extern f32 timeDelta;
 
@@ -63,9 +64,9 @@ typedef struct NwObjPos
 #pragma opt_loop_invariants off
 void nw_tricky_update(int* obj)
 {
-    extern void* getTrickyObject(void);
-    extern void* Obj_GetPlayerObject(void);
-    extern void GameBit_Set(int eventId, int value);
+
+
+
     int count;
     NwTrickyIds ids;
     char* state;

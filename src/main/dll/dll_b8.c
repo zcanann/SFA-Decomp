@@ -10,8 +10,9 @@
  */
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_B8.h"
+#include "main/camera.h"
 
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern f32 Camera_GetFovY(void);
 
 void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)

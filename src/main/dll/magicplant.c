@@ -20,8 +20,9 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;

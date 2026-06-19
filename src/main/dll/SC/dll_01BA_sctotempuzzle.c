@@ -206,6 +206,7 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
+#include "main/gamebits.h"
 
 extern int ObjHits_GetPriorityHitWithPosition();
 
@@ -219,8 +220,8 @@ extern f32 lbl_803E5624;
 extern f32 lbl_803E5628;
 
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern s16 lbl_80327A18[];
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;

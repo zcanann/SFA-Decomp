@@ -29,10 +29,11 @@
 #include "main/game_object.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "string.h"
+#include "main/gamebits.h"
 
 extern void modelLightStruct_freeSlot(int param_1);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);

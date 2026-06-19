@@ -12,6 +12,7 @@
  */
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
+#include "main/camera.h"
 
 /* indices into a swing-direction move table (lbl_803DC0B0 / lbl_803DC0B4) */
 enum
@@ -23,7 +24,7 @@ enum
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DC0B0; /* swing-left move-id table */

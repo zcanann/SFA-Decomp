@@ -1,4 +1,7 @@
 #include "main/game_object.h"
+#include "dolphin/os/OSCache.h"
+#include "dolphin/gx/GXManage.h"
+#include "main/camera.h"
 
 extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
@@ -162,7 +165,7 @@ extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
 
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
+
 
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
@@ -1586,7 +1589,7 @@ void drawReflectionTexture(void)
 #pragma optimization_level reset
 
 extern void GXInvalidateTexAll(void);
-extern void GXPixModeSync(void);
+
 
 void updateReflectionTextures(void)
 {
@@ -1893,9 +1896,9 @@ void initFn_8006d020(void)
 }
 
 extern int textureLoadAsset(int);
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
+
 extern void fn_80069EB8();
-extern void GXTexModeSync(void);
+
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
@@ -2321,7 +2324,7 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
 
 extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern u8 framesThisStep;
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
@@ -2472,7 +2475,7 @@ extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_UpdateProjection(int a, int b);
-extern f32* Camera_GetViewMatrix(void);
+
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern int fn_800626C8(int* obj, int frames);

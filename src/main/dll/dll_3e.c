@@ -22,24 +22,26 @@
 #include "dolphin/os.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
+#include "main/dll/FRONT/n_options.h"
+#include "main/dll/FRONT/dll_3B.h"
 
 void InitAllMessageQueue(void);
 
-extern int ProperTimingForGettingNextFrame(void);
+
 extern OSMessage PopDecodedTextureSet(s32 flags);
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern BOOL CreateVideoDecodeThread(int priority, void* param);
 extern BOOL CreateAudioDecodeThread(int priority, void* param);
 extern BOOL CreateReadThread(int priority);
 extern void VideoDecodeThreadStart(void);
-extern void AudioDecodeThreadStart(void);
+
 extern void ReadThreadStart(void);
 extern void VideoDecodeThreadCancel(void);
-extern void AudioDecodeThreadCancel(void);
+
 extern void ReadThreadCancel(void);
 extern void PushFreeReadBuffer(OSMessage msg);
 extern void PushFreeTextureSet(OSMessage msg);
-extern void PushFreeAudioBuffer(void* message);
+
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];

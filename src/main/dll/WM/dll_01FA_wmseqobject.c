@@ -41,13 +41,15 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 extern u8 lbl_803DDC78;
 extern f32 lbl_803E5CF8;
@@ -161,7 +163,7 @@ void WM_seqobject_hitDetect(void)
 
 void WM_seqobject_update(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     int count;
     int countdown;
     int* objects;

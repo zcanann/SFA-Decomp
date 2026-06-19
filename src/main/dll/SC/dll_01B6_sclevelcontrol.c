@@ -12,6 +12,7 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
 
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
@@ -29,8 +30,8 @@ extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);
-extern void GameBit_Set(int eventId, int value);
-extern u32 GameBit_Get(int eventId);
+
+
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);

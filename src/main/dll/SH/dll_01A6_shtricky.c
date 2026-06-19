@@ -9,8 +9,9 @@
  */
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern void* getTrickyObject(void);
+
 
 int sh_tricky_getExtraSize(void)
 {

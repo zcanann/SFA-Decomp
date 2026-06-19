@@ -3,6 +3,8 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/baddie/trickyfollow.h"
+#include "main/engine_shared.h"
 
 typedef struct TrickyState
 {
@@ -87,7 +89,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 extern void* ObjGroup_GetObjects();
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern f32 getXZDistance(f32* a, f32* b);
-extern int trickyFn_8013b368(u8* obj, f32 vel, u8* state);
+
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
@@ -98,16 +100,16 @@ extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
-extern int Obj_IsLoadingLocked(void);
+
 extern void objSetAnimSpeedTo1(int* obj);
 extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
 
 extern char lbl_8031D2E8[];
 extern f32 timeDelta;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern int getAngle(float y, float x);
-extern int randomGetRange(int lo, int hi);
+
 extern void* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F4;

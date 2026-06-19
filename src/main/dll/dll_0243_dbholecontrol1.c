@@ -10,7 +10,7 @@
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -20,6 +20,9 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -78,7 +81,7 @@ extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
-extern int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut);
+
 extern u32 FUN_8003b818();
 extern double FUN_80293900();
 
@@ -310,8 +313,8 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
-    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
+ /* #57 */
+ /* #57 */
     u32 animId;
     int control;
 
@@ -352,8 +355,8 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
-    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
+ /* #57 */
+ /* #57 */
     u32 animId;
 
     if (*(char*)(state + 0x27a) != '\0')
@@ -379,8 +382,8 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    extern void ObjHits_EnableObject(u32 objPtr); /* #57 */
-    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot); /* #57 */
+ /* #57 */
+ /* #57 */
     u32 pick;
     u32 animId;
     int extra;
@@ -547,7 +550,7 @@ void dbholecontrol1_initialise(void)
 
 void dbholecontrol1_update(int* obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk1E) != 0)
@@ -601,7 +604,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern void memcpy(int, void*, int);
     extern void loadObjectAtObject(int, int);
     extern int*ObjGroup_GetObjects(int, int*);
-    extern void ObjGroup_RemoveObject(u32 obj, int group);
+
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
     extern int lbl_803DDCE0;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;

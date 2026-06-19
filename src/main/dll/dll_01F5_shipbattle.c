@@ -18,6 +18,7 @@
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct ShipBattleObjectDef
 {
@@ -39,7 +40,7 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SEQINDEX_PENDING -2
 #define CLASSID_SEQUENCE_OBJECT 0x10
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -59,7 +60,7 @@ extern void modelLightStruct_setLightKind(int light, int v);
 extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 extern int* ObjList_GetObjects(void* unused, int* objectCount);
-extern void Obj_FreeObject(int obj);
+
 
 void ShipBattle_hitDetect(void)
 {

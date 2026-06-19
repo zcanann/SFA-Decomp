@@ -41,9 +41,12 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
+#include "main/gamebits.h"
+#include "main/pad.h"
+#include "main/objhits.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern const f32 lbl_803E61C8;
 extern const f32 lbl_803E61D0;
@@ -120,7 +123,7 @@ void dbegg_processMessages(int obj)
     extern int gameBitIncrement(int bit);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
-    extern u32 ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
+
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
@@ -590,12 +593,12 @@ void dbegg_update(int obj)
     extern int randomGetRange(int lo, int hi);
     extern f32 Vec_xzDistance(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern u32 getButtonsJustPressed(int port);
+
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
-    extern void ObjHits_DisableObject(u32 objPtr);
+
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;

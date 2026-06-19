@@ -15,18 +15,19 @@
 #include "main/dll/pushcartstate97_types.h"
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
+#include "main/engine_shared.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+
+
+
 extern f32 timeDelta;
-extern f32 sqrtf(f32 x);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
+
 extern int getAngle(float y, float x);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
@@ -160,7 +161,7 @@ void spscarab_update(int obj)
 void spscarab_init(int obj, int def)
 {
     extern int Obj_GetActiveModel(int obj);
-    extern int randomGetRange(int lo, int hi);
+
     ObjAnimComponent* objAnim;
     int p_b8;
     int model;

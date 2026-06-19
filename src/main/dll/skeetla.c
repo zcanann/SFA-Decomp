@@ -21,6 +21,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/objfsa.h"
+#include "main/gamebits.h"
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
@@ -39,7 +42,7 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern u8* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
+
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
@@ -48,7 +51,7 @@ extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2450;
 extern f32 getXZDistance(f32* a, f32* b);
-extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
+
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2420;
@@ -69,16 +72,16 @@ extern char lbl_803DBC4C;
 extern char lbl_8031D2E8[];
 extern u32 lbl_803E23D4;
 extern u16 lbl_803E23D8;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
+
+
+
 extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags);
 extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guardPoint);
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);

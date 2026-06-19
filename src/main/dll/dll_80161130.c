@@ -13,6 +13,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
+#include "main/objhits.h"
+#include "main/gamebits.h"
 
 typedef struct GrimbleState
 {
@@ -28,13 +30,13 @@ typedef struct GrimbleState
 } GrimbleState;
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
-extern void ObjHits_DisableObject(u32 objPtr);
+
+
 
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
 extern int getAngle(float y, float x);
-extern void GameBit_Set(int eventId, int value);
+
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;
 extern f32 lbl_803E2EB8;

@@ -14,6 +14,7 @@
  */
 #include "main/carryable_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct WmColumnPlacement
 {
@@ -29,7 +30,7 @@ typedef struct WmColumnPlacement
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
-extern void GameBit_Set(int eventId, int value);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_AddObject(u32 obj, int group);

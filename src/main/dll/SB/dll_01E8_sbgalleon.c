@@ -32,14 +32,16 @@
 #include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
+#include "main/gamebits.h"
+#include "main/texture.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 getLActions();
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 
 extern void DBprotection_storeHomePosition(int obj);
@@ -103,11 +105,11 @@ extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void objSetSlot(void* obj, int slot);
-extern void* textureLoadAsset(int asset);
+
 extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
-extern void textureFree(u8* tex);
+
 
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
 enum SbGalleonSeqEvent

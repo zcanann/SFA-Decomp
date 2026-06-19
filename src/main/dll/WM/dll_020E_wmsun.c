@@ -39,6 +39,7 @@
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
+#include "main/mm.h"
 
 #define WM_SUN_GLARE_COUNT 20
 
@@ -88,7 +89,7 @@ STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
-extern void* mmAlloc(int size, int type, int flag);
+
 extern f32 lbl_803E5F8C;  /* 1000.0f */
 extern s16 lbl_803DDCA8;  /* finale countdowns, see file-top comment */
 extern s16 lbl_803DDCAA;

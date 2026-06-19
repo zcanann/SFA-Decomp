@@ -16,13 +16,14 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern u32 GameBit_Get(int eventId);
+
 extern void setDrawLights(int v);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
@@ -83,7 +84,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
@@ -170,7 +171,7 @@ void mmp_asteroid_re_update(int obj)
 {
     extern void CameraShake_Start(f32 a, f32 b, f32 c);
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-    extern void GameBit_Set(int eventId, int value);
+
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & 0x80) == 0)
     {

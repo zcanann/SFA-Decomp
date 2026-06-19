@@ -19,6 +19,8 @@
 #include "main/objtexture.h"
 #include "main/player_control_interface.h"
 #include "main/screen_transition.h"
+#include "main/objlib.h"
+#include "main/engine_shared.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
@@ -77,14 +79,14 @@ extern f32 lbl_803E5A20;
 extern f32 timeDelta;
 extern f32 lbl_803E59DC;
 extern void gameTextShow(int a);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+
 extern int playerGetMoney(void* player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
 extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
-extern void* allocModelStruct_800139e8(int, int);
+
 extern void dll_2E_func05(int, int, int, int, int);
 extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
 extern void DRlaserturret_startTimedChallenge(int);
@@ -92,10 +94,10 @@ extern void DRlaserturret_handlePromptChoice(int);
 extern void setAButtonIcon(int x);
 extern void setBButtonIcon(int icon);
 extern void warpToMap(int idx, s8 transType);
-extern int getCurUiDll(void);
-extern void* getDLL16(void);
+
+
 extern void playerAddMoney(void* player, int amount);
-extern f32 sqrtf(f32 x);
+
 extern f32 lbl_803E5A24;
 
 #pragma scheduling off

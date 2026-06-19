@@ -22,6 +22,7 @@
  */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX 0x152
@@ -36,7 +37,7 @@
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX 8          /* u16  */
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern void AudioStream_StopCurrent(void);
 extern void doNothing_8000CF54(int a);

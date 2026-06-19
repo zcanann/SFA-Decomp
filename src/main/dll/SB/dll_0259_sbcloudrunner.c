@@ -26,6 +26,8 @@
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/texture.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -111,7 +113,7 @@ enum
 
 #define COLORFADE_RUMBLE_PRESET 4000     /* anim.rotY written on a fade hit */
 
-extern u32 GameBit_Get(int eventId);
+
 extern void *ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
@@ -157,8 +159,8 @@ extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
-extern void textureFree(u8* tex);
-extern void* textureLoadAsset(int asset);
+
+
 extern void setAButtonIcon(int x);
 extern u8 padGetStickX(int port);
 extern u8 padGetStickY(int port);

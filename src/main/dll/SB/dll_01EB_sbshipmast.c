@@ -9,6 +9,7 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/VF/vf_shared.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -23,7 +24,7 @@ extern const f32 lbl_803E586C; /* 0.0f: pins localPos to the origin */
 extern f32 lbl_803E5870;       /* fast play speed (phase >= 0xc) */
 extern f32 lbl_803E5874;       /* medium play speed (0xa <= phase < 0xc) */
 extern f32 lbl_803E5878;       /* idle play speed */
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E5868;
 
 void SB_ShipMast_free(void)

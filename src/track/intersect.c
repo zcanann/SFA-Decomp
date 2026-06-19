@@ -10,6 +10,11 @@
 #include "main/texture.h"
 #include "main/dll/player_state.h"
 #include "main/sky_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/camera.h"
+#include "dolphin/gx/GXPixel.h"
+#include "main/mm.h"
+#include "main/pad.h"
 
 /* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
  * only the fields evidenced in this TU are typed. */
@@ -114,8 +119,8 @@ extern f32 Vachuff_803DEE20;
 extern f32 __THPHuffmanBits_803DEE24;
 extern f32 __THPHuffmanSizeTab_803DEE28;
 extern u8 lbl_8030E8B0[];
-extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
+
+
 
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
 {
@@ -276,9 +281,9 @@ void drawFn_8006f500(void)
     extern f32 __THPHuffmanBits_803DEE24;
     extern void selectTexture(void *tex, int slot);
     extern void fn_8000F9B4(void);
-    extern f32* Camera_GetViewMatrix(void);
+
     extern void Camera_ApplyFullViewport(void);
-    extern void* Obj_GetPlayerObject(void);
+
 
     GXColor color;
     Mtx camTrans;
@@ -808,7 +813,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_8030EAA0[3][3];
     extern int ObjModel_GetRenderOp(void* model, int slot);
     extern int* Shader_getLayer(void* op, int slot);
-    extern void* textureIdxToPtr(int idx);
+
     extern void selectTexture(void* tex, int slot);
     extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
@@ -1809,7 +1814,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
         pcb(obj_a, obj_b, slot);
     } else {
         extern int fn_8003BB74(void);
-        extern void GXSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color);
+
         extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
         u8 zCompLoc = 1;
         int ref0;
@@ -1940,7 +1945,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern f32* Camera_GetViewMatrix(void);
+
     extern void selectReflectionTexture(int);
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
@@ -2449,7 +2454,7 @@ u32 objCallback_80074d04(int handle, void* model)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern f32* Camera_GetViewMatrix(void);
+
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
     extern void selectReflectionTexture(int);
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
@@ -5696,8 +5701,8 @@ void OSReport(const char* msg, ...)
 int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
-    extern void* mmAlloc(int size, int type, int flag);
-    extern void mm_free(void* p);
+
+
     extern void cardSetStatusNoCard2(void);
     extern void* lbl_803DD040;
     extern volatile s32 lbl_803DB700;
@@ -5805,12 +5810,12 @@ extern u8 lbl_803DD058;
 
 int cardDeleteFn_8007d99c(void)
 {
-    extern void* mmAlloc(int size, int type, int flag);
+
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
     extern void CARDUnmount();
-    extern void mm_free(void* p);
+
     extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
@@ -5927,7 +5932,7 @@ void showMemCardError(u8 err)
     extern int GXFlush_(u8 visible, int unused);
     extern char padGetStickY(int port);
     extern char padGetCY(int port);
-    extern u32 getButtonsJustPressed(int port);
+
     extern void setGameState(int state);
     extern f32 fn_80293AC4(int v);
 
@@ -6064,7 +6069,7 @@ int memCardFn_8007dd04(u8 retry)
     extern int saveGame(int);
     extern void CARDClose(void*);
     extern void CARDUnmount(s32);
-    extern void mm_free(void* p);
+
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
@@ -6102,7 +6107,7 @@ int memCardFn_8007dd04(u8 retry)
 
 int cardProbe(u8 retry)
 {
-    extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
+
     extern volatile s32 lbl_803DB700;
     s32 memSize;
     s32 sectorSize;
@@ -6268,7 +6273,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void** gScreenTransitionInterface;
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
-    extern void drawRect(f32, f32, int, int);
+
     extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;

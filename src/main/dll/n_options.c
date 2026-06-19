@@ -20,14 +20,17 @@
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "string.h"
+#include "main/dll/FRONT/dll_3B.h"
+#include "dolphin/gx/GXCull.h"
+#include "dolphin/gx/GXPixel.h"
 
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void* PopDecodedAudioBuffer(s32 flags);
-extern void PushFreeAudioBuffer(void* message);
+
+
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetCullMode(GXCullMode mode);
+
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, GXTexFmt format, GXTexWrapMode wrap_s, GXTexWrapMode wrap_t, GXBool mipmap);
 extern u32 GXInitTexObjLOD();
 extern void GXLoadTexObj(GXTexObj* obj, GXTexMapID id);
@@ -46,9 +49,9 @@ extern u32 GXSetTevSwapModeTable();
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern u32 GXSetTevOrder();
 extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
-extern void GXSetColorUpdate(GXBool update_enable);
-extern void GXSetAlphaUpdate(GXBool update_enable);
+
+
+
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);

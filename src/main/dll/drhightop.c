@@ -24,10 +24,11 @@
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
+#include "main/vecmath.h"
 
 extern void gameTextShow(int a);
 extern void doRumble(f32 duration);
-extern void mtxRotateByVec3s(void* matrix, void* transform);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
@@ -533,7 +534,7 @@ void fn_801EB940(short* obj, int stateRaw)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->unk424;
                 {
-                    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale); /* #11 */
+ /* #11 */
                     Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
                 }
             }

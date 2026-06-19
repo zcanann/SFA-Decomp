@@ -9,6 +9,7 @@
 #include "main/curve.h"
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
+#include "main/gamebits.h"
 
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
@@ -132,7 +133,7 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
@@ -194,7 +195,7 @@ void fn_801CEE0C(int p1, int p2)
 
 void fn_801CED2C(int p1, int p2)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern int ObjTrigger_IsSetById(int, int);
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
@@ -236,7 +237,7 @@ typedef struct
 
 int fn_801CE078(int* obj, u8* st)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
+ /* #57 */
     u8 cv;
     int snd;
     f32 sunTime;
@@ -437,8 +438,8 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
-    extern void* getTrickyObject(void); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
+ /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
@@ -746,7 +747,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
     extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
-    extern int randomGetRange(int lo, int hi); /* #57 */
+ /* #57 */
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     NwMammothTables* table = (NwMammothTables*)lbl_803267C0;

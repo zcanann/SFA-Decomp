@@ -9,6 +9,9 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
+#include "main/camera.h"
+#include "main/gameplay_runtime.h"
+#include "main/sky_state.h"
 
 typedef struct TrackP6Entry
 {
@@ -257,7 +260,7 @@ void setupToRenderMapBlock(int* block, void* posMtx)
 }
 #pragma dont_inline reset
 
-extern f32* Camera_GetViewMatrix(void);
+
 extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
@@ -3690,7 +3693,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
 }
 
-extern void* Obj_GetPlayerObject(void);
+
 extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
@@ -3891,14 +3894,14 @@ extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
-extern void fn_800897D4(int a, f32* x, f32* y, f32* z);
+
 extern void skyBuildSunModelMatrix(f32 * out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
 extern int pauseMenuGetState(void);
 extern void* fn_8008912C(void);
-extern void getAmbientColor(int a, u8* r, u8* g, u8* b);
+
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int sSynthFadeUnit;
 extern int renderFlags;

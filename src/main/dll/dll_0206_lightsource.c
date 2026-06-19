@@ -17,6 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
+#include "main/gamebits.h"
 
 /* Light-glow object: the bytes named here (0x4C, 0x2F8) live in the
    shared ModelLightStruct. */
@@ -32,7 +33,7 @@ typedef struct LightsourceState
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 extern void ModelLightStruct_free(void* light);
-extern void GameBit_Set(int eventId, int value);
+
 extern void* objCreateLight(void* obj, int);
 extern void modelLightStruct_setLightKind(void*, int);
 extern void modelLightStruct_setPosition(f32, f32, f32);
@@ -98,7 +99,7 @@ typedef struct LightSourceFlagByte
 
 void lightsource_update(int obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
     extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);

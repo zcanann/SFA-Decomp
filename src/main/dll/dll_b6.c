@@ -19,8 +19,9 @@
 #include "main/dll/dll_B6.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/gameplay_runtime.h"
 
-extern void* Obj_GetPlayerObject(void);
+
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(void *player);
 /* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match

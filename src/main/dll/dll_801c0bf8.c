@@ -11,8 +11,9 @@ extern float mathCosf(float x);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 #include "main/game_object.h"
+#include "string.h"
 
-extern void* memcpy(void* dst, const void* src, u32 size);
+
 
 extern f32 lbl_803E4DE0;
 extern f32 lbl_803E4DE4;

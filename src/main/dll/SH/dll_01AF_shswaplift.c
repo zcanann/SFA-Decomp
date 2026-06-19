@@ -9,10 +9,12 @@
  * disables its hit volume.
  */
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void objRenderFn_8003b8f4(f32);
+
+
+
 
 extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */

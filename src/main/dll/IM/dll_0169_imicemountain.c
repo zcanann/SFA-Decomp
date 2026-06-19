@@ -18,6 +18,7 @@
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -39,8 +40,8 @@ typedef struct IMIceMountainState
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 extern void getLActions();
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void gameBitFn_800ea2e0(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern f32 lbl_803E46E0;

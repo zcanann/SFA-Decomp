@@ -24,15 +24,16 @@
 #include "main/dll/CF/warp_pad.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern int ObjTrigger_IsSet();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern void* Obj_GetPlayerObject(void);
+
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;

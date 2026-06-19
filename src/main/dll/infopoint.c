@@ -7,9 +7,10 @@
  * (requires all three = axisCount 3) then fires a random horizontal nudge.
  */
 #include "main/dll/infopoint.h"
+#include "main/gameplay_runtime.h"
 
-extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
+
+
 extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 
 extern f32 lbl_803E644C;

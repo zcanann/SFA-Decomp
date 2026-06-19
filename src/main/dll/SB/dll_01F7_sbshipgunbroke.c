@@ -15,9 +15,10 @@
 
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
 
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 lbl_803E59C0;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 

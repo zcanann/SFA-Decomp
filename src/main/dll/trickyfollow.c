@@ -10,6 +10,8 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/modgfx.h"
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
@@ -64,9 +66,9 @@ extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
 extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
 extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern s16 getAngle(f32 x, f32 z);
-extern u32 GameBit_Get(int eventId);
+
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
-extern u32 randomGetRange(int min, int max);
+
 extern void objAnimFn_8013a3f0(u8* obj, int animId, f32 speed, int flags);
 extern void curveFn_800da23c(RomCurveWalker* route);
 extern void fn_800D9F38(RomCurveWalker* route);

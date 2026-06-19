@@ -11,13 +11,14 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/gameplay_runtime.h"
 
 /* raw offsets — kept as-is to match staffAction.c handlers */
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
 #define BADDIESTATE_JUST_LAUNCHED 0x27a
 
-extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
+
+
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
 

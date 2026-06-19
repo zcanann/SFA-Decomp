@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/objlib.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -43,7 +44,7 @@ extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;

@@ -53,13 +53,13 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int randomGetRange(int lo, int hi);
+
+
+
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern void* Obj_GetPlayerObject(void);
+
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -88,6 +88,10 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/asset_load.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/vecmath.h"
 
 typedef struct Dll1D6Placement
 {
@@ -112,14 +116,14 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern u32 FUN_800067c0();
 extern const f32 lbl_803E4A78;
-extern void mm_free(void* p);
+
 extern u8 lbl_803DBF20;
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
 extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
 extern s16 lbl_803DBF18;
 extern f32 lbl_803E4A88;
-extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern const f32 lbl_803E4A7C;
 extern f32 lbl_803E4A80;

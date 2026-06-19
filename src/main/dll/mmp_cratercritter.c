@@ -1,4 +1,7 @@
 #include "main/dll/tricky_state.h"
+#include "main/dll/baddie/MMP_critterspit.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2410;
@@ -13,12 +16,12 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 
-extern int trickyFoodFn_8013db3c(u8* tricky, u8* critter);
+
 extern u8** ObjGroup_GetObjects(int kind, int* count);
-extern f32 getXZDistance(f32* a, f32* b);
+
 extern int trickyFn_8013b368(u8* arg1, u8* arg2, f32 dist);
 extern void objAnimFn_8013a3f0(u8* self, int a, int b, f32 f1);
-extern void trickyDebugPrint(const char* fmt, ...);
+
 
 void trickyFn_8013d8f0(u8* self, u8* state)
 {

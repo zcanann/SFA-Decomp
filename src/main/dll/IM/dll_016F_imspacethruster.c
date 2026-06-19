@@ -11,11 +11,13 @@
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
+#include "main/mm.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void getTabEntry(void* dst, int kind, int offset, int size);
-extern void mm_free(void* p);
-extern void objRenderFn_8003b8f4(f32 scale);
+
+
 extern u8 framesThisStep;
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);

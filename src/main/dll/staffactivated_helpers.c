@@ -19,8 +19,9 @@
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
+#include "main/gamebits.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void doRumble(f32 duration);

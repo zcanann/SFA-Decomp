@@ -5,6 +5,7 @@
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
 #include "main/sky_80080E58_shared.h"
+#include "main/pad.h"
 
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
@@ -106,7 +107,7 @@ extern int lbl_803DB724;
 extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;
 extern f32 SendMailData;
-extern u32 getButtonsJustPressed(int port);
+
 extern void setJoypadDisabled(void);
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;

@@ -18,6 +18,7 @@
  * distance against nearRadiusSq.
  */
 #include "main/game_object.h"
+#include "main/dll/dll_80220608_shared.h"
 
 /* placement instance id (+0x14) of the one vent that emits a debug OSReport */
 #define MMP_GYSERVENT_DEBUG_INSTANCE_ID 0x46a31
@@ -56,8 +57,8 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
 extern void mtxRotateByVec3s(void* out, void* vec);
 extern void mtx44Transpose(void* m, void* out);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void setMatrixFromObjectPos(void* out, void* vec);
+
+
 extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, int legCode, int distanceSquared);
 

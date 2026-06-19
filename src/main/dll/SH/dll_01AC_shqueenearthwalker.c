@@ -14,9 +14,11 @@
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/vecmath.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
 extern int ObjTrigger_IsSetById();
 extern void* Obj_GetPlayerObject(void);
@@ -30,7 +32,7 @@ extern void* getTrickyObject(void);
 extern int playerHasSpell(void* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
-extern int RandomTimer_UpdateRangeTrigger(f32* state, f32 min, f32 max);
+
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;

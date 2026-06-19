@@ -14,10 +14,12 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-extern u32 GameBit_Get(int eventId);
+#include "main/gamebits.h"
+#include "main/objlib.h"
+
 extern void objRenderFn_8003b8f4(int obj, float arg);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+
+
 
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;

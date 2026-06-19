@@ -15,14 +15,15 @@
 #include "main/dll/flybaddie1D7.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
 
 extern u32 Music_Trigger();
 extern u32 gameTimerIsRunning(void);
 extern f32 fn_80014668(void);
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern u32 SCGameBitLatch_Update();
 extern void* Obj_GetPlayerObject(void);
 extern void gameTextShow(int a);
