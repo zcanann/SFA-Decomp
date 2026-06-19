@@ -208,7 +208,7 @@ void RollingBarrel_update(int obj)
             if (state->pitchRising != 0)
             {
                 ((GameObject*)obj)->anim.rotZ =
-                    (s32)(lbl_803E44A8 * timeDelta + (f32)(int)((GameObject*)obj)->anim.rotZ);
+                    (s16)(lbl_803E44A8 * timeDelta + (f32)(int)((GameObject*)obj)->anim.rotZ);
                 if (((GameObject*)obj)->anim.rotZ > 0x5000)
                 {
                     state->pitchRising = 0;
@@ -217,7 +217,7 @@ void RollingBarrel_update(int obj)
             else
             {
                 ((GameObject*)obj)->anim.rotZ =
-                    (s32) - (lbl_803E44A8 * timeDelta - (f32)(int)((GameObject*)obj)->anim.rotZ);
+                    (s16) - (lbl_803E44A8 * timeDelta - (f32)(int)((GameObject*)obj)->anim.rotZ);
                 if (((GameObject*)obj)->anim.rotZ < 0x3a00)
                 {
                     state->pitchRising = 1;
@@ -225,7 +225,7 @@ void RollingBarrel_update(int obj)
             }
 
             ((GameObject*)obj)->anim.rotY =
-                (s32)(lbl_803E44AC * timeDelta * state->curveSpeed +
+                (s16)(lbl_803E44AC * timeDelta * state->curveSpeed +
                     (f32)(int)((GameObject*)obj)->anim.rotY);
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
