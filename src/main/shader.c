@@ -1761,7 +1761,7 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
     idx2 = index * 2;
     if (f1 == 0)
     {
-        v = ((int*)tbl)[idx2];
+        v = *(int*)(tbl + idx2 * 4);
         o0[0] = ((v >> 12) & 0xf) - 7;
         o0[2] = ((v >> 8) & 0xf) - 7;
         o0[1] = ((v >> 4) & 0xf) - 7;
@@ -1770,7 +1770,7 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
         o1[2] = ((v >> 24) & 0xf) - 7;
         o1[1] = ((v >> 20) & 0xf) - 7;
         o1[3] = ((v >> 16) & 0xf) - 7;
-        v2 = ((int*)tbl)[idx2 + 1];
+        v2 = *(int*)((tbl + 4) + idx2 * 4);
         o2[0] = ((v2 >> 12) & 0xf) - 7;
         o2[2] = ((v2 >> 8) & 0xf) - 7;
         o2[1] = ((v2 >> 4) & 0xf) - 7;
