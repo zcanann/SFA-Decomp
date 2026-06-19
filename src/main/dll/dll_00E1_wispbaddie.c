@@ -645,7 +645,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     u8* row;
     u32 sf2;
 
-    sequenceIndex = *(u8*)(state + 0x33b);
+    sequenceIndex = ((BaddieState*)state)->inWhirlpoolGroup;
     eventRows = *(u8**)(base + sequenceIndex * 0x28 + 0x1444);
     stateFlags = ((BaddieState*)state)->controlFlags;
     if ((stateFlags & 0x4000) != 0)
@@ -737,9 +737,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     {
         int pos = *(int*)&((BaddieState*)state)->trackedObj;
         fn_8014CF7C(obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
-        if (*(f32*)(state + 0x308) > lbl_803E2750)
+        if (((BaddieState*)state)->unk308 > lbl_803E2750)
         {
-            *(f32*)(state + 0x308) = *(f32*)(state + 0x308) - lbl_803E2754;
+            ((BaddieState*)state)->unk308 = ((BaddieState*)state)->unk308 - lbl_803E2754;
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
