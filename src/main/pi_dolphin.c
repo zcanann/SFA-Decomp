@@ -7575,11 +7575,11 @@ void videoSwapFrameBuffers(void)
 #pragma peephole off
 void videoFn_800499e8(void)
 {
-    char peek[8];
+    char peek[12];
     int tok[3];
-    int i;
     u16* src;
     u16* dst;
+    int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
     {
@@ -7600,7 +7600,7 @@ void videoFn_800499e8(void)
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (*(void**)(peek + 4) == displayFrameBuffer)
+    if (*(void**)(peek + 8) == displayFrameBuffer)
     {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
