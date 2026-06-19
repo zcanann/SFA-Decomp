@@ -257,7 +257,7 @@ void dll_199_update(int obj)
         found = ObjGroup_FindNearestObject(0xe, player, &dist);
         if ((found != 0) && (dist < lbl_803E5160) && (dist > lbl_803E5164))
         {
-            dz = *(f32*)(found + 0x14) - *(f32*)(player + 0x14);
+            dz = *(f32*)(found + 0x14) - ((GameObject*)player)->anim.localPosZ;
             if (dz <= lbl_803E5168)
             {
                 if (dz < lbl_803E5168)
