@@ -11035,10 +11035,9 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 pushX;
     f32 pushZ;
 
-    fv2 = lbl_803E7EE0;
     found = 0;
     ((PlayerState*)state)->unk82C = lbl_803E7EE0;
-    ((PlayerState*)state)->unk834 = fv2;
+    ((PlayerState*)state)->unk834 = lbl_803E7EE0;
     ((PlayerState*)state)->unk830 = lbl_803E8144;
     ((PlayerState*)state)->surfaceType = 0;
     b = ((PlayerState*)state)->unk3F0 >> 5 & 1;
