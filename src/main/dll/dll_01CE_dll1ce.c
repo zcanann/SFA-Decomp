@@ -518,7 +518,7 @@ void dll_1CE_update(int* obj)
         *(s16*)((char*)no + 0x24) = -1;
         *(s16*)((char*)no + 0x2c) = -1;
         *(u8*)((char*)no + 0x1a) = 5;
-        *(u8*)((char*)no + 0x1b) = (u8)((s16) * (s16*)obj >> 8);
+        *(u8*)((char*)no + 0x1b) = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
         Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
