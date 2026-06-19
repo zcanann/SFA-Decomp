@@ -58,7 +58,6 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
 int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
                       float* phaseOut, u8* sideOut)
 {
-    int result;
     int offset;
     int i;
     DFropenodeExtra* extra;
@@ -74,6 +73,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     f32 dy;
     f32 dz;
     f32 distance;
+    int result;
 
     extra = ((GameObject*)obj)->extra;
     if ((*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) & 1) == 0)
