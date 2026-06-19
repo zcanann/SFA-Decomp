@@ -385,6 +385,7 @@ void fn_80151954(int obj, u8* state)
 {
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     f32 fz;
+    f32 fz2;
     int z;
 
     ((GroundBaddieState*)state)->baddie.unk2E4 = 11;
@@ -469,11 +470,12 @@ void fn_80151954(int obj, u8* state)
         state[0x33b] = 5;
         z = 0;
         state[0x320] = z;
-        *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz;
+        fz2 = lbl_803E2748;
+        *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz2;
         state[0x321] = 21;
         ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
         state[0x322] = z;
-        ((GroundBaddieState*)state)->baddie.unk31C = fz;
+        ((GroundBaddieState*)state)->baddie.unk31C = fz2;
         *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&lbl_803DBC98, 1);
         ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
         *(int*)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
