@@ -1367,7 +1367,7 @@ void mediumbasket_tryAcquireTarget(int obj, int sub, int state)
         int v = -1;
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
             obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8, v);
-        *(int*)(state + 0x2d0) = acquired;
+        *(int*)&((BaddieState*)state)->targetObj = acquired;
         *(u8*)(state + 0x349) = 0;
         ((GroundBaddieState*)sub)->targetState = 1;
     }
