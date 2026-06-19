@@ -67,8 +67,7 @@ void CameraModeShipBattle_update(short* cam)
         lbl_803DD570->startVerticalOffset = lbl_803DD570->verticalOffset;
         lbl_803DD570->blendTimer = lbl_803E1954;
     }
-    fa = lbl_803E195C;
-    if (lbl_803DD570->blendTimer < lbl_803E195C)
+    if (lbl_803DD570->blendTimer < (fa = lbl_803E195C))
     {
         lbl_803DD570->blendTimer = lbl_803E1960 * timeDelta + lbl_803DD570->blendTimer;
         if (lbl_803DD570->blendTimer > fa)
@@ -87,10 +86,12 @@ void CameraModeShipBattle_update(short* cam)
         lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->
             smoothedYOffset);
         fc = lbl_803E196C;
-        fa = lbl_803E196C * lbl_803DD570->smoothedZOffset;
-        lbl_803DD570->smoothedZOffset = -(fa * timeDelta - lbl_803DD570->smoothedZOffset);
-        fa = fc * lbl_803DD570->smoothedYOffset;
-        lbl_803DD570->smoothedYOffset = -(fa * timeDelta - lbl_803DD570->smoothedYOffset);
+        fb = lbl_803DD570->smoothedZOffset;
+        fa = fc * fb;
+        lbl_803DD570->smoothedZOffset = -(fa * timeDelta - fb);
+        fb = lbl_803DD570->smoothedYOffset;
+        fa = fc * fb;
+        lbl_803DD570->smoothedYOffset = -(fa * timeDelta - fb);
         ((CameraObject*)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->
             verticalOffset);
     }
@@ -101,10 +102,12 @@ void CameraModeShipBattle_update(short* cam)
         lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->
             smoothedYOffset);
         fc = lbl_803E196C;
-        fa = lbl_803E196C * lbl_803DD570->smoothedZOffset;
-        lbl_803DD570->smoothedZOffset = -(fa * timeDelta - lbl_803DD570->smoothedZOffset);
-        fa = fc * lbl_803DD570->smoothedYOffset;
-        lbl_803DD570->smoothedYOffset = -(fa * timeDelta - lbl_803DD570->smoothedYOffset);
+        fb = lbl_803DD570->smoothedZOffset;
+        fa = fc * fb;
+        lbl_803DD570->smoothedZOffset = -(fa * timeDelta - fb);
+        fb = lbl_803DD570->smoothedYOffset;
+        fa = fc * fb;
+        lbl_803DD570->smoothedYOffset = -(fa * timeDelta - fb);
         ((CameraObject*)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->
             verticalOffset);
     }
