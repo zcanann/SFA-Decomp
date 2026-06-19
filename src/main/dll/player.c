@@ -15196,8 +15196,13 @@ int fn_802A2918(int obj, int state, f32 fv)
         s16* tbl;
         s16* t;
         int sel;
-        f32 vx, vy, vz;
-        f32 sp1c;
+        struct
+        {
+            f32 vx;
+            f32 sp1c;
+            f32 vy;
+            f32 vz;
+        } vb;
         ObjHits_MarkObjectPositionDirty(obj);
         if (lbl_803DE44C != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
@@ -15208,21 +15213,21 @@ int fn_802A2918(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
         *(s16*)((char*)state + 0x278) = 0xe;
         inner->unk898 = (int)fn_8029FFD0;
-        sp1c = lbl_803E7EA4;
+        vb.sp1c = lbl_803E7EA4;
         if (flag)
         {
-            vx = -inner->unk50C;
-            vy = -inner->unk514;
-            vz = -inner->unk518;
+            vb.vx = -inner->unk50C;
+            vb.vy = -inner->unk514;
+            vb.vz = -inner->unk518;
         }
         else
         {
-            vx = inner->unk50C;
-            vy = inner->unk514;
-            vz = inner->unk518;
+            vb.vx = inner->unk50C;
+            vb.vy = inner->unk514;
+            vb.vz = inner->unk518;
         }
         {
-            int delta = (u16)getAngle(vx, vy) - inner->targetYaw;
+            int delta = (u16)getAngle(vb.vx, vb.vy) - inner->targetYaw;
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -15242,7 +15247,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         tbl = flag ? lbl_80332F88 : lbl_80332F78;
         t = tbl + sel;
         inner->unk544 =
-            fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)&vx,
+            fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
