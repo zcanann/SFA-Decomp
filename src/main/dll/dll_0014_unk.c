@@ -45,7 +45,7 @@ extern uint countLeadingZeros();
 extern void voxmaps_worldToGrid(f32 * world, s16 * grid);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
 
-extern f32 lbl_803E063C;
+extern const f32 lbl_803E063C;
 extern f32 lbl_803E0640;
 extern f32 gFloatOne;
 
