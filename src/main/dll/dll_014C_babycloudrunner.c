@@ -184,9 +184,9 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u64 in_f6;
     u64 in_f7;
     u64 in_f8;
-    float local_58;
-    float local_54;
-    float local_50[2];
+    float deltaZ;
+    float deltaY;
+    float deltaX[2];
     u32 local_48;
     u32 uStack_44;
     u32 local_40;
@@ -199,18 +199,18 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     }
     else
     {
-        local_50[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dx = (double)local_50[0];
-        local_54 = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
-        local_58 = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dist = FUN_80293900((double)(local_58 * local_58 + (float)(dx * dx) + local_54 * local_54
+        deltaX[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
+        dx = (double)deltaX[0];
+        deltaY = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
+        deltaZ = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
+        dist = FUN_80293900((double)(deltaZ * deltaZ + (float)(dx * dx) + deltaY * deltaY
         ));
         if ((double)(float)((double)lbl_803E4DBC * param_1) <= dist)
         {
-            FUN_8006f7a0(local_50, &local_54, &local_58);
-            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)local_50[0] * param_1);
-            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)local_54 * param_1);
-            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)local_58 * param_1);
+            FUN_8006f7a0(deltaX, &deltaY, &deltaZ);
+            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * param_1);
+            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)deltaY * param_1);
+            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)deltaZ * param_1);
             angDelta = (*param_3 + -0x8000) - *param_2;
             if (0x8000 < angDelta)
             {
@@ -566,7 +566,7 @@ void FUN_8019f1dc(void)
     double in_ps30_1;
     double in_ps31_1;
     u64 objPair;
-    int local_68;
+    int numObjects;
     u16 local_64[4];
     float local_5c;
     float local_58;
@@ -622,9 +622,9 @@ void FUN_8019f1dc(void)
         }
         else
         {
-            objs = ObjGroup_GetObjects(0x3a, &local_68);
+            objs = ObjGroup_GetObjects(0x3a, &numObjects);
             objIter = objs;
-            for (idx = 0; idx < local_68; idx = idx + 1)
+            for (idx = 0; idx < numObjects; idx = idx + 1)
             {
                 objId = FUN_8020a468(*objIter);
                 if (*(short*)(subObj + 0x1a) == objId)
