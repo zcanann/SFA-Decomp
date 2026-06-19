@@ -335,6 +335,7 @@ int dbstealerworm_stateHandlerA05(int obj, int p)
 {
     extern void* Obj_GetPlayerObject(void);
     extern int gDbStealerwormSfxIds[];
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int* args);
     extern f32 gDbStealerwormF0_015;
