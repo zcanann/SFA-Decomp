@@ -2563,7 +2563,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 
     if (mode == 1)
     {
-        f32 target = *(f32*)((char*)p + 0x4);
+        f32 target = ((ModgfxVertexGroupCmd*)p)->valueX;
         s16 frames = ((ModgfxState*)state)->blendFrameCount;
         if (frames != 0)
         {
@@ -2578,7 +2578,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
             bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
             goto animate;
         }
-        for (j = 0; j < *(s16*)((char*)p + 0x14); j++)
+        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
             bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = (int)target;
             bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
@@ -2600,7 +2600,7 @@ animate:
     }
     {
         int ofs = k * 4 + 0xb0;
-        for (j = 0; j < *(s16*)((char*)p + 0x14); j++)
+        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
             bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = (int)*(f32*)((char*)state + ofs);
             bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
@@ -2618,9 +2618,9 @@ void fn_800A0524(void* state, void* p, int mode)
 
     if (mode == 1)
     {
-        f32 tr = *(f32*)((char*)p + 0x4);
-        f32 tg = *(f32*)((char*)p + 0x8);
-        f32 tb = *(f32*)((char*)p + 0xc);
+        f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
+        f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
+        f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
         if (((ModgfxState*)state)->blendFrameCount != 0)
         {
             ((ModgfxState*)state)->blendColorR = (f32)(u32)
@@ -2688,7 +2688,7 @@ void fn_800A0524(void* state, void* p, int mode)
     {
         ((ModgfxState*)state)->blendColorB = lbl_803DF43C;
     }
-    for (j = 0; j < *(s16*)((char*)p + 0x14); j++)
+    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
     {
         buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
         buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
