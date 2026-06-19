@@ -808,17 +808,17 @@ void dll_F7_init(int* obj, int* params)
             modelState->flags |= 0x810;
         }
     }
-    *(u8*)((char*)state + 0xa) = 2;
-    *(u8*)((char*)state + 0xb) = *(u8*)((char*)params + 0x19);
-    if (*(s8*)((char*)state + 0xb) == 0)
+    *(u8*)&((DllF7State*)state)->hitsRemaining = 2;
+    *(u8*)&((DllF7State*)state)->byteB = *(u8*)((char*)params + 0x19);
+    if (((DllF7State*)state)->byteB == 0)
     {
         int r = (*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)params + 0x14));
         if (r == 0)
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags &= ~1;
-            *(u8*)((char*)state + 9) = 1;
-            *(u8*)((char*)state + 8) = 0;
+            *(u8*)&((DllF7State*)state)->byte9 = 1;
+            ((DllF7State*)state)->byte8 = 0;
         }
     }
 }
