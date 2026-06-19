@@ -13773,11 +13773,12 @@ int fn_8029C9C8(int obj, int state)
     }
     {
         f32 az = ((PlayerState*)state)->baddie.animSpeedB;
-        f32 ax = ((PlayerState*)state)->baddie.animSpeedA;
+        f32 ax;
         if (az < lbl_803E7EA4)
         {
             az = -az;
         }
+        ax = ((PlayerState*)state)->baddie.animSpeedA;
         if (ax < lbl_803E7EA4)
         {
             ax = -ax;
