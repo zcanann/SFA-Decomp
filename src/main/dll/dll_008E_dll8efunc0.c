@@ -3,25 +3,25 @@
  * (dll_NN_func03 family, see foodbag.h). func03 builds a multi-command
  * FbBuf and hands it to the modgfx interface to spawn a randomized
  * particle burst (a flame/spark fan: textured layer-0/1/2 commands plus
- * mode-0x80 emitter markers, the lone &lbl_803DB918 texture). variant 0
+ * mode-0x80 emitter markers, the lone &gDll8EEffectTexture texture). variant 0
  * vs 1 selects two different random spawn-box ranges for the lead
  * command; flag bit 0 offsets the burst position from sourceObj
  * (offsets 0x18/0x1c/0x20) and/or posSource (offsets 0xc/0x10/0x14).
  * func00/func01 are unused stub slots; effect params come from the
- * resource tables lbl_80316C60 (the halfword parameter block copied
- * into buf.hw[]) and lbl_80316C40 (the vertex/color table passed to
- * spawnEffect). lbl_803DB910 is the lone extra resource handed to
- * spawnEffect alongside the &lbl_803DB918 texture.
+ * resource tables gDll8EEffectHwParams (the halfword parameter block copied
+ * into buf.hw[]) and gDll8EEffectVtxColorTable (the vertex/color table passed to
+ * spawnEffect). gDll8EEffectSpawnResource is the lone extra resource handed to
+ * spawnEffect alongside the &gDll8EEffectTexture texture.
  */
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316C60[];
-extern u8 lbl_80316C40[];
-extern u8 lbl_803DB918;
-extern u8 lbl_803DB910[8];
+extern u8 gDll8EEffectHwParams[];
+extern u8 gDll8EEffectVtxColorTable[];
+extern u8 gDll8EEffectTexture;
+extern u8 gDll8EEffectSpawnResource[8];
 extern f32 lbl_803E1138;
 extern f32 lbl_803E113C;
 extern f32 lbl_803E1140;
@@ -52,7 +52,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         p->layer = 0;
         p->flags = 3;
-        p->tex = &lbl_803DB918;
+        p->tex = &gDll8EEffectTexture;
         p->mode = 8;
         p->x = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
         p->y = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
@@ -63,7 +63,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         p->layer = 0;
         p->flags = 3;
-        p->tex = &lbl_803DB918;
+        p->tex = &gDll8EEffectTexture;
         p->mode = 8;
         p->x = (f32)(int)(randomGetRange(0, 0x1e) + 0xe1);
         p->y = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
@@ -83,14 +83,14 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[0].z = rz;
     p[1].layer = 0;
     p[1].flags = 3;
-    p[1].tex = &lbl_803DB918;
+    p[1].tex = &gDll8EEffectTexture;
     p[1].mode = 4;
     p[1].x = lbl_803E1138;
     p[1].y = lbl_803E1138;
     p[1].z = lbl_803E1138;
     p[2].layer = 0;
     p[2].flags = 3;
-    p[2].tex = &lbl_803DB918;
+    p[2].tex = &gDll8EEffectTexture;
     p[2].mode = 2;
     p[2].x = lbl_803E113C;
     p[2].y = lbl_803E1144 * (f32)(int)
@@ -99,7 +99,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     randomGetRange(0, 0x14) + lbl_803E1148;
     p[3].layer = 1;
     p[3].flags = 3;
-    p[3].tex = &lbl_803DB918;
+    p[3].tex = &gDll8EEffectTexture;
     p[3].mode = 4;
     if ((int)randomGetRange(0, 0xa) == 0)
     {
@@ -123,7 +123,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     randomGetRange(0, 0xfffe);
     p[5].layer = 1;
     p[5].flags = 3;
-    p[5].tex = &lbl_803DB918;
+    p[5].tex = &gDll8EEffectTexture;
     p[5].mode = 2;
     p[5].x = lbl_803E1154;
     p[5].y = lbl_803E1158;
@@ -138,14 +138,14 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     randomGetRange(0, 0xfffe);
     p[7].layer = 2;
     p[7].flags = 3;
-    p[7].tex = &lbl_803DB918;
+    p[7].tex = &gDll8EEffectTexture;
     p[7].mode = 4;
     p[7].x = lbl_803E1138;
     p[7].y = lbl_803E1138;
     p[7].z = lbl_803E1138;
     p[8].layer = 2;
     p[8].flags = 3;
-    p[8].tex = &lbl_803DB918;
+    p[8].tex = &gDll8EEffectTexture;
     p[8].mode = 2;
     p[8].x = lbl_803E1160;
     p[8].y = lbl_803E1164;
@@ -173,7 +173,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0;
     buf.count = (FbCmd*)((u8*)p + 0xd8) - e;
-    base = lbl_80316C60;
+    base = gDll8EEffectHwParams;
     buf.hw[0] = *(s16*)(base + 0);
     buf.hw[1] = *(s16*)(base + 2);
     buf.hw[2] = *(s16*)(base + 4);
@@ -205,7 +205,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] += *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80316C40, 1, &lbl_803DB910, 0x26a, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 3, gDll8EEffectVtxColorTable, 1, &gDll8EEffectSpawnResource, 0x26a, 0);
 }
 #pragma opt_propagation reset
 

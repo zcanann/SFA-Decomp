@@ -133,7 +133,7 @@ extern u32 DAT_803de10c;
 extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
 extern u32 uRam803de108;
-extern u8 lbl_80314CB0[];
+extern u8 gDll7BEffectResourceData[];
 extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
 extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
 extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
@@ -716,7 +716,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     } buf;
     GfxCmd* entries = buf.entries;
     GfxCmd* e;
-    u8* base = lbl_80314CB0;
+    u8* base = gDll7BEffectResourceData;
     if (variant == 1)
     {
         *(s16*)&base[0x128] = 0x1130;

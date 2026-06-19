@@ -8,8 +8,8 @@
  * position/orientation onto the object. dll_CB_seqFn drives an objseq
  * sub-state machine (unk405 0/1/2) handling player tracking, route paths
  * (route35C) and game-bit gating (gameBitC / DllCBPlacement.gameBitId yield).
- * dll_CB_initialise installs the two callback tables lbl_803AC5E8 /
- * lbl_803AC5D0 used by the player-interface update.
+ * dll_CB_initialise installs the two callback tables gDllCBMoveHandlers /
+ * gDllCBStateHandlers used by the player-interface update.
  *
  * This TU also defines the co-located ChukChuk (gChukChukObjDescriptor) and
  * IceBall (gIceBallObjDescriptor) object descriptors, whose bodies live in
@@ -130,8 +130,8 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
 {
     extern int* gBaddieControlInterface;
-    extern void* lbl_803AC5D0[];
-    extern void* lbl_803AC5E8[];
+    extern void* gDllCBStateHandlers[];
+    extern void* gDllCBMoveHandlers[];
     extern f32 timeDelta;
     extern f32 lbl_803E2E9C;
     int setup;
@@ -160,7 +160,7 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
                                                                               lbl_803E2E9C, 1);
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-    (*gPlayerInterface)->update((void*)obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
+    (*gPlayerInterface)->update((void*)obj, p, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 #pragma dont_inline reset
@@ -220,8 +220,8 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     extern int Curve_AdvanceAlongPath(int* p, f32 t);
     extern int getAngle(float y, float x);
     extern int* gBaddieControlInterface;
-    extern void* lbl_803AC5D0[];
-    extern void* lbl_803AC5E8[];
+    extern void* gDllCBStateHandlers[];
+    extern void* gDllCBMoveHandlers[];
     extern f32 lbl_803E2E8C;
     extern f32 lbl_803E2E98;
     extern f32 lbl_803E2E9C;
@@ -257,14 +257,14 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
                 (*gPlayerInterface)->update(obj, (void*)sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C,
-                                            lbl_803AC5E8, lbl_803AC5D0);
+                                            gDllCBMoveHandlers, gDllCBStateHandlers);
                 *(s8*)(e + 0x56) = 0;
             }
             break;
         case 1:
             if ((*(int (**)(short*, u8*, int, void*, void*, int))(*(int*)gBaddieControlInterface +
                 0x34))(
-                obj, e, sub, lbl_803AC5E8, lbl_803AC5D0, 0) != 0)
+                obj, e, sub, gDllCBMoveHandlers, gDllCBStateHandlers, 0) != 0)
             {
                 (*(void (**)(short*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, sub, lbl_803E2E9C, 1);
             }
@@ -446,12 +446,12 @@ int fn_801603E8(int* obj, u8* obj2)
     return 0;
 }
 
-extern u8 lbl_803AC5E8[];
+extern u8 gDllCBMoveHandlers[];
 #pragma peephole on
 void dll_CB_hitDetect(int* obj)
 {
     void* a = ((GameObject*)obj)->extra;
-    (*gPlayerInterface)->updateVelocityState(obj, a, lbl_803AC5E8);
+    (*gPlayerInterface)->updateVelocityState(obj, a, gDllCBMoveHandlers);
 }
 
 extern f32 lbl_803E2E8C;
@@ -532,7 +532,7 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-extern void* lbl_803AC5D0[];
+extern void* gDllCBStateHandlers[];
 int fn_80160534(int* obj);
 
 extern f32 lbl_803E2E90;
@@ -557,16 +557,16 @@ int fn_801605D4(int* obj, GroundBaddieState* def)
 
 void dll_CB_initialise(void)
 {
-    ((void**)lbl_803AC5E8)[0] = fn_80160690;
-    ((void**)lbl_803AC5E8)[1] = fn_801605D4;
-    ((void**)lbl_803AC5E8)[2] = fn_801605A8;
-    ((void**)lbl_803AC5E8)[3] = fn_80160534;
-    lbl_803AC5D0[0] = fn_8016052C;
-    lbl_803AC5D0[1] = fn_8016050C;
-    lbl_803AC5D0[2] = fn_8016043C;
-    lbl_803AC5D0[3] = fn_801603E8;
-    lbl_803AC5D0[4] = fn_8016032C;
-    lbl_803AC5D0[5] = fn_801601C4;
+    ((void**)gDllCBMoveHandlers)[0] = fn_80160690;
+    ((void**)gDllCBMoveHandlers)[1] = fn_801605D4;
+    ((void**)gDllCBMoveHandlers)[2] = fn_801605A8;
+    ((void**)gDllCBMoveHandlers)[3] = fn_80160534;
+    gDllCBStateHandlers[0] = fn_8016052C;
+    gDllCBStateHandlers[1] = fn_8016050C;
+    gDllCBStateHandlers[2] = fn_8016043C;
+    gDllCBStateHandlers[3] = fn_801603E8;
+    gDllCBStateHandlers[4] = fn_8016032C;
+    gDllCBStateHandlers[5] = fn_801601C4;
 }
 
 #pragma peephole on
