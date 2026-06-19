@@ -9440,8 +9440,8 @@ s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     f32 buf1[3];
     f32 buf2[2];
     model = (int)Player_GetActiveModel(obj);
-    uf = (u8)flags;
     mf = 0;
+    uf = (u8)flags;
     if (uf & 0x2)
     {
         mf |= 0x2;
