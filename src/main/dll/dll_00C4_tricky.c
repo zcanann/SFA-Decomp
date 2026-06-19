@@ -2858,48 +2858,48 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     int player;
     double dist;
     u64 packed;
-    char local_a0[4];
+    char hitFlag[4];
     short asStack_9c[4];
     short asStack_94[4];
     float afStack_8c[3];
-    float local_80;
-    float local_7c;
-    float local_78;
+    float pointX;
+    float pointY;
+    float pointZ;
     int aiStack_74[29];
 
     packed = FUN_8028683c();
     target = (int*)((u64)packed >> 0x20);
     player = packed;
-    local_a0[0] = '\0';
+    hitFlag[0] = '\0';
     blocked = '\0';
     if (*(int*)(player + 0x29c) != 0)
     {
-        local_80 = *param_11;
-        local_7c = param_11[1];
-        local_78 = param_11[2];
+        pointX = *param_11;
+        pointY = param_11[1];
+        pointZ = param_11[2];
         applyOffset = true;
         objId = *(short*)((int)target + 0x46);
         if (((((objId != 0x613) && (objId != 0x642)) && (objId != 0x3fe)) &&
             ((objId != 0x7c6 && (objId != 0x7c8)))) && ((objId != 0x251 && (objId != 0x851))))
         {
-            local_7c = local_7c + lbl_803E3234;
+            pointY = pointY + lbl_803E3234;
             applyOffset = false;
         }
-        FUN_80006a68(&local_80, asStack_9c);
-        local_80 = *param_12;
-        local_7c = lbl_803E3234 + param_12[1];
-        local_78 = param_12[2];
-        FUN_80006a68(&local_80, asStack_94);
-        FUN_80247eb8(param_11, &local_80, afStack_8c);
+        FUN_80006a68(&pointX, asStack_9c);
+        pointX = *param_12;
+        pointY = lbl_803E3234 + param_12[1];
+        pointZ = param_12[2];
+        FUN_80006a68(&pointX, asStack_94);
+        FUN_80247eb8(param_11, &pointX, afStack_8c);
         dist = SeekTwiceBeforeRead(afStack_8c);
         if (dist < (double)lbl_803E3244)
         {
             if (target[0xc] == 0)
             {
                 blocked = FUN_80006a64(dist, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                     asStack_94, asStack_9c, (u32*)0x0, local_a0, 0);
+                                     asStack_94, asStack_9c, (u32*)0x0, hitFlag, 0);
             }
-            if ((!applyOffset) && (local_a0[0] == '\x01'))
+            if ((!applyOffset) && (hitFlag[0] == '\x01'))
             {
                 blocked = '\x01';
             }
@@ -2907,7 +2907,7 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     }
     if ((blocked != '\0') && ((*(u32*)(player + 0x2e4) & 8) != 0))
     {
-        FUN_800620e8(param_11, &local_80, (float*)0x0, aiStack_74, target, (u32) * (u8*)(player + 0x261),
+        FUN_800620e8(param_11, &pointX, (float*)0x0, aiStack_74, target, (u32) * (u8*)(player + 0x261),
                      0xffffffff, 0, 0);
     }
     FUN_80286888();
