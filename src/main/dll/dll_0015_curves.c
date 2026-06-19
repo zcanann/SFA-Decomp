@@ -662,7 +662,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
             *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
             collision->localHitPlanes, obj, collision->primaryHitType, -1, 0,
-            collision->activeTimer) << pointIndex;
+            (s8)collision->activeTimer) << pointIndex;
         flags = collision->flags;
         if ((s32)(flags & 0x2000000) != 0)
         {
@@ -678,7 +678,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
                                collision->localPointWorld[pointIndex],
                                *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
                                collision->localHitPlanes, obj, collision->secondaryHitType, -1, 0,
-                               collision->activeTimer);
+                               (s8)collision->activeTimer);
         }
         radiusOffset += sizeof(f32);
         pointIndex++;
