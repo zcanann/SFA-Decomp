@@ -762,12 +762,13 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
         if (cur == 0) return;
         if (cur < 0x7f)
         {
-            cur = (u16)(0xff - cur);
-            lbl_803DD774 = cur;
+            lbl_803DD774 = (u16)(0xff - cur);
         }
-        cur = lbl_803DD774;
-        if (cur < 0xd9) cur = 0xd9;
-        lbl_803DD774 = cur;
+        {
+            u32 clamped = lbl_803DD774;
+            if (clamped < 0xd9) clamped = 0xd9;
+            lbl_803DD774 = (u16)clamped;
+        }
         lbl_803DD77F = 0;
         return;
     }
