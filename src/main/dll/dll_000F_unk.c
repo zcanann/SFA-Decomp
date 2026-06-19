@@ -835,7 +835,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     keepPathControls = 1;
     lbl_803DD44E = 0;
 
-    attachment = *(int*)(state + 0x2d0);
+    attachment = *(int*)&((BaddieState*)state)->targetObj;
     if ((void*)attachment != NULL)
     {
         dx = *(f32*)(attachment + 0xc) - *(f32*)(pos + 0xc);
