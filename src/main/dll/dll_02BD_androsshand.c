@@ -121,8 +121,8 @@ void androsshand_update(int obj)
             prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
         state->zSpringOffset = state->zSpringOffset + state->zSpringVelocity;
 
-        angle = lbl_803E75B8 *
-            (f32)(s16)(int)((f32)((GameObject*)state->androssObj)->anim.rotX + fScale) / lbl_803E75BC;
+        angle = gAndrossHandPi *
+            (f32)(s16)(int)((f32)((GameObject*)state->androssObj)->anim.rotX + fScale) / gAndrossHandHalfAngleScale;
         fScale = mathSinf(angle);
         cosAngle = mathCosf(angle);
         ((GameObject*)obj)->anim.localPosX =
@@ -147,14 +147,14 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[0];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_EXIT:
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[4];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[4];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -166,7 +166,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[5];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[5];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -178,7 +178,7 @@ void androsshand_update(int obj)
         {
             state->soundGate = 0;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[1];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[1];
         }
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -218,7 +218,7 @@ void androsshand_update(int obj)
         {
             state->soundGate = 0;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[2];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[2];
         }
         if (state->sideFlag != 0 && ((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -272,7 +272,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[3];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[3];
             state->shotTimer = -1;
         }
         state->shotTimer -= framesThisStep;
@@ -301,7 +301,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[0];
+            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_DEAD:
@@ -429,7 +429,7 @@ void androsshand_init(int obj, u8* setup)
     *(u8*)&state->prevState = ANDROSSHAND_STATE_IDLE2;
     state = gobj->extra;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-    state->animSpeed = lbl_8032C270[4];
+    state->animSpeed = gAndrossHandMoveAnimSpeeds[4];
     gobj->anim.currentMoveProgress = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }
@@ -449,13 +449,13 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         dz = pt[2] - ((GameObject*)state->arwingObj)->anim.localPosZ;
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz) + 0x8000;
-        lbl_803DDDD0 = (u16)getAngle(pt[1] - ((GameObject*)state->arwingObj)->anim.localPosY, dist) >> 8;
+        gAndrossHandShotPitch = (u16)getAngle(pt[1] - ((GameObject*)state->arwingObj)->anim.localPosY, dist) >> 8;
         setup = Obj_AllocObjectSetup(0x20, 0x7e4);
         ((ObjPlacement*)setup)->posX = pt[0];
         ((ObjPlacement*)setup)->posY = pt[1];
         ((ObjPlacement*)setup)->posZ = pt[2];
         *(u8*)(setup + 0x1a) = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
-        *(u8*)(setup + 0x19) = lbl_803DDDD0;
+        *(u8*)(setup + 0x19) = gAndrossHandShotPitch;
         *(u8*)(setup + 0x18) = 0;
         *(u8*)(setup + 4) = 1;
         *(u8*)(setup + 5) = 1;

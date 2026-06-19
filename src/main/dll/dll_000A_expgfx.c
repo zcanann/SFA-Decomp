@@ -28,7 +28,7 @@ extern volatile f32 lbl_803DF418;
 extern f32 lbl_803DF358;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f64 lbl_803DF378;
+extern f64 gExpgfxU16ToDoubleBias;
 extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;
 extern f32 gExpgfxYVelocitySlowStep;
@@ -68,8 +68,8 @@ extern f32 lbl_803DF3B0;
 extern const f32 lbl_803DF3C8;
 extern const f32 lbl_803DF3CC;
 extern const f32 lbl_803DF3D0;
-extern const f32 lbl_803DF3D4;
-extern const f32 lbl_803DF3D8;
+extern const f32 gExpgfxBoundsInitMin;
+extern const f32 gExpgfxBoundsInitMax;
 extern const f32 lbl_803DF3DC;
 extern const f32 lbl_803DF3E0;
 extern const f32 lbl_803DF3E4;
@@ -83,7 +83,7 @@ extern const f32 lbl_803DF400;
 extern const f32 lbl_803DF404;
 extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
-extern const f32 lbl_803DF410;
+extern const f32 gExpgfxU16ToUnitScale;
 extern int getHudHiddenFrameCount(void);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
@@ -140,7 +140,7 @@ static inline f64 Expgfx_U16AsDouble(u16 value)
     u64 bits;
 
     bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(value)));
-    return *(f64*)&bits - lbl_803DF378;
+    return *(f64*)&bits - gExpgfxU16ToDoubleBias;
 }
 
 static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
@@ -735,8 +735,8 @@ foundFirst:
         ambRPlus1 = ambScaled[2] + 1;
         ambGPlus1 = ambScaled[1] + 1;
         ambBPlus1 = ambScaled[0] + 1;
-        boundsMin = lbl_803DF3D4;
-        boundsMax = lbl_803DF3D8;
+        boundsMin = gExpgfxBoundsInitMin;
+        boundsMax = gExpgfxBoundsInitMax;
         while (pool > -1)
         {
             bounds = &runtime->poolBounds[pool];
@@ -1355,7 +1355,7 @@ foundFirst:
                         axisX = lbl_803DF408 * (workA / norm);
                         axisY = lbl_803DF408 * (workB / norm);
                         axisZ = lbl_803DF408 * (attractRatio / norm);
-                        attractRatio = lbl_803DF40C / (lbl_803DF410 * (f32)(u16)
+                        attractRatio = lbl_803DF40C / (gExpgfxU16ToUnitScale * (f32)(u16)
                         slot->scaleTarget
                         )
                         ;
@@ -2218,7 +2218,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sx = slot->renderX;
         sy = slot->renderY;
         sz = slot->renderZ;
-        scaleSize = lbl_803DF410 * (f32)(u32)(u16)
+        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)(u16)
         slot->scaleCurrent;
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
         {

@@ -972,7 +972,7 @@ extern int ObjList_FindObjectById(int id);
 extern void androsshand_handleDamage(int obj, int hand);
 extern void androsshand_spawnShot(int p1, int p2, int p3);
 extern f32 lbl_803E75AC;
-extern f32 lbl_8032C270[];
+extern f32 gAndrossHandMoveAnimSpeeds[];
 extern f32 lbl_803DC4F0;
 extern f32 lbl_803DC4F4;
 extern f32 lbl_803DC4F8;
@@ -980,8 +980,8 @@ extern int lbl_803DC4FC;
 extern int lbl_803DC500;
 extern int lbl_803DC504;
 extern f32 lbl_803E75B4;
-extern f32 lbl_803E75B8;
-extern f32 lbl_803E75BC;
+extern f32 gAndrossHandPi;
+extern f32 gAndrossHandHalfAngleScale;
 extern f32 lbl_803E75C0;
 extern f32 lbl_803E75C4;
 extern f32 lbl_803E75C8;
@@ -1022,7 +1022,7 @@ extern f32 lbl_803E75A8;
 
 
 extern f32 lbl_803E75AC;
-extern f32 lbl_8032C270[];
+extern f32 gAndrossHandMoveAnimSpeeds[];
 
 
 
@@ -1597,7 +1597,7 @@ extern void lockLevel(int idx, int p2);
 extern int loadMapAndParent(int mapId);
 
 
-extern int lbl_803DDDD0;
+extern int gAndrossHandShotPitch;
 extern int lbl_803DC50C;
 extern int lbl_803DC510;
 

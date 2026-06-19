@@ -446,19 +446,19 @@ extern s16 lbl_803DD416;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-extern f32 lbl_803DB858;
-extern f32 lbl_803DB85C;
+extern f32 gEffect17AnimProgressC;
+extern f32 gEffect17AnimProgressD;
 extern f32 lbl_803E01B8;
 extern f32 lbl_803E01BC;
 extern f32 lbl_803E01C8;
-extern s32 lbl_803DD3D0;
-extern s32 lbl_803DD3D4;
-extern f32 lbl_803DD3D8;
-extern f32 lbl_803DD3DC;
-extern f32 lbl_803E0218;
-extern f32 lbl_803E021C;
-extern f32 lbl_803DB850;
-extern f32 lbl_803DB854;
+extern s32 gEffect17SinPhaseA;
+extern s32 gEffect17SinPhaseB;
+extern f32 gEffect17SinValueB;
+extern f32 gEffect17SinValueA;
+extern f32 gEffect17Pi;
+extern f32 gEffect17AngleScale;
+extern f32 gEffect17AnimProgressA;
+extern f32 gEffect17AnimProgressB;
 extern f32 lbl_803E01C4;
 extern f32 lbl_803E01CC;
 extern f32 lbl_803E01D0;
@@ -500,18 +500,18 @@ void Effect17_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB858 + (step = lbl_803E01B8 * timeDelta);
-    lbl_803DB858 = sum;
-    if (sum > 1.0f) lbl_803DB858 = lbl_803E01BC;
-    sum = lbl_803DB85C + step;
-    lbl_803DB85C = sum;
-    if (sum > 1.0f) lbl_803DB85C = lbl_803E01C8;
-    lbl_803DD3D0 = lbl_803DD3D0 + framesThisStep * 0x64;
-    if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
-    lbl_803DD3DC = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
-    lbl_803DD3D4 = lbl_803DD3D4 + framesThisStep * 0x32;
-    if (lbl_803DD3D4 > 0x7fff) lbl_803DD3D4 = 0;
-    lbl_803DD3D8 = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
+    sum = gEffect17AnimProgressC + (step = lbl_803E01B8 * timeDelta);
+    gEffect17AnimProgressC = sum;
+    if (sum > 1.0f) gEffect17AnimProgressC = lbl_803E01BC;
+    sum = gEffect17AnimProgressD + step;
+    gEffect17AnimProgressD = sum;
+    if (sum > 1.0f) gEffect17AnimProgressD = lbl_803E01C8;
+    gEffect17SinPhaseA = gEffect17SinPhaseA + framesThisStep * 0x64;
+    if (gEffect17SinPhaseA > 0x7fff) gEffect17SinPhaseA = 0;
+    gEffect17SinValueA = mathSinf(gEffect17Pi * (f32)(s16)gEffect17SinPhaseA / gEffect17AngleScale);
+    gEffect17SinPhaseB = gEffect17SinPhaseB + framesThisStep * 0x32;
+    if (gEffect17SinPhaseB > 0x7fff) gEffect17SinPhaseB = 0;
+    gEffect17SinValueB = mathSinf(gEffect17Pi * (f32)(s16)gEffect17SinPhaseB / gEffect17AngleScale);
 }
 
 void Effect18_func05(void);
@@ -522,10 +522,10 @@ int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     int spawnResult;
     PartFxSpawn cfg;
 
-    lbl_803DB850 = lbl_803DB850 + lbl_803E01B8;
-    if (lbl_803DB850 > 1.0f) lbl_803DB850 = lbl_803E01BC;
-    lbl_803DB854 = lbl_803DB854 + lbl_803E01C4;
-    if (lbl_803DB854 > 1.0f) lbl_803DB854 = lbl_803E01C8;
+    gEffect17AnimProgressA = gEffect17AnimProgressA + lbl_803E01B8;
+    if (gEffect17AnimProgressA > 1.0f) gEffect17AnimProgressA = lbl_803E01BC;
+    gEffect17AnimProgressB = gEffect17AnimProgressB + lbl_803E01C4;
+    if (gEffect17AnimProgressB > 1.0f) gEffect17AnimProgressB = lbl_803E01C8;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {

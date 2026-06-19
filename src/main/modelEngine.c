@@ -276,77 +276,77 @@ void fn_8001404C(s32 value)
 
 u32 gameTimerIsRunning(void)
 {
-    return lbl_803DC8F8 & 4;
+    return gModelEngineTimerState & 4;
 }
 
 void hudNumberFn_80014060(void)
 {
-    if (lbl_803DB278 != -1)
+    if (gModelEngineHudNumber != -1)
     {
-        sprintf(lbl_803398A0, &lbl_803DB290, lbl_803DB278);
-        gameTextShowStr(lbl_803398A0, 13, 0, 0);
+        sprintf(gModelEngineTextBuf, &lbl_803DB290, gModelEngineHudNumber);
+        gameTextShowStr(gModelEngineTextBuf, 13, 0, 0);
     }
 }
 
 void set_hudNumber_803db278(s32 value)
 {
-    lbl_803DB278 = value;
+    gModelEngineHudNumber = value;
 }
 
 u32 isGameTimerDisabled(void)
 {
-    return lbl_803DC8F8 & 2;
+    return gModelEngineTimerState & 2;
 }
 
 void gameTimerStop(void)
 {
-    lbl_803DC8F8 &= ~4;
-    lbl_803DC8F8 |= 2;
+    gModelEngineTimerState &= ~4;
+    gModelEngineTimerState |= 2;
 }
 
 f32 fn_8001461C(void)
 {
-    if (((s8)lbl_803DC8F9 & 1) != 0)
+    if (((s8)gModelEngineTimerFlags & 1) != 0)
     {
-        return lbl_803DE6E0 * ((lbl_803DC8FC - lbl_803DC900) / lbl_803DE6D4);
+        return lbl_803DE6E0 * ((gModelEngineTimerDuration - gModelEngineTimerValue) / lbl_803DE6D4);
     }
-    return lbl_803DE6E0 * (lbl_803DC900 / lbl_803DE6D4);
+    return lbl_803DE6E0 * (gModelEngineTimerValue / lbl_803DE6D4);
 }
 
 f32 fn_80014668(void)
 {
-    return lbl_803DC900;
+    return gModelEngineTimerValue;
 }
 
 void timerSetToCountUp(void)
 {
-    if ((lbl_803DC8F8 & 1) != 0)
+    if ((gModelEngineTimerState & 1) != 0)
     {
-        lbl_803DC8F8 &= ~1;
+        gModelEngineTimerState &= ~1;
     }
 }
 
 void gameTimerInit(s8 flags, int minutes)
 {
-    lbl_803DC8F9 = flags;
+    gModelEngineTimerFlags = flags;
     if ((flags & 1) != 0)
     {
-        lbl_803DC900 = minutes * 60;
+        gModelEngineTimerValue = minutes * 60;
     }
     else
     {
-        lbl_803DC900 = lbl_803DE6B8;
+        gModelEngineTimerValue = lbl_803DE6B8;
     }
-    lbl_803DC8FC = minutes * 60;
-    lbl_803DC8F8 |= 1;
-    lbl_803DC8F8 &= ~2;
+    gModelEngineTimerDuration = minutes * 60;
+    gModelEngineTimerState |= 1;
+    gModelEngineTimerState &= ~2;
     if ((flags & 3) != 0)
     {
-        lbl_803DC8F8 |= 4;
+        gModelEngineTimerState |= 4;
     }
     else
     {
-        lbl_803DC8F8 &= ~4;
+        gModelEngineTimerState &= ~4;
     }
 }
 
@@ -354,9 +354,9 @@ void curUiDllDraw(int a, int b, int c, int d)
 {
     UiDllVTable* callbacks;
 
-    if (lbl_803DC8E8 != NULL)
+    if (gModelEngineCurUiDllRes != NULL)
     {
-        callbacks = *lbl_803DC8E8;
+        callbacks = *gModelEngineCurUiDllRes;
         ((void (*)(int, int, int))callbacks->draw)(a, b, c);
     }
 }
@@ -366,34 +366,34 @@ void uiDll_runFrameEndAndLoadNext(void)
     UiDllVTable* callbacks;
     s32 resourceId;
 
-    if (lbl_803DC8E8 != NULL)
+    if (gModelEngineCurUiDllRes != NULL)
     {
-        callbacks = *lbl_803DC8E8;
+        callbacks = *gModelEngineCurUiDllRes;
         callbacks->frameEnd();
     }
 
-    if (lbl_803DC8EC != 0)
+    if (gModelEnginePendingUiDll != 0)
     {
-        lbl_803DC8EC--;
-        lbl_803DC8F4 = curUiDll;
-        if (lbl_803DC8E8 != NULL)
+        gModelEnginePendingUiDll--;
+        gModelEnginePrevUiDll = curUiDll;
+        if (gModelEngineCurUiDllRes != NULL)
         {
-            Resource_Release(lbl_803DC8E8);
-            lbl_803DC8E8 = NULL;
+            Resource_Release(gModelEngineCurUiDllRes);
+            gModelEngineCurUiDllRes = NULL;
         }
 
-        resourceId = lbl_802C6E08[lbl_803DC8EC];
+        resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
         if (resourceId != -1)
         {
-            lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
+            gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
         }
         else
         {
-            lbl_803DC8E8 = NULL;
-            lbl_803DC8EC = 0;
+            gModelEngineCurUiDllRes = NULL;
+            gModelEnginePendingUiDll = 0;
         }
-        curUiDll = lbl_803DC8EC;
-        lbl_803DC8EC = 0;
+        curUiDll = gModelEnginePendingUiDll;
+        gModelEnginePendingUiDll = 0;
     }
 }
 
@@ -404,34 +404,34 @@ int uiDll_runFrameStartAndLoadNext(void)
     s32 resourceId;
 
     result = 0;
-    if (lbl_803DC8E8 != NULL)
+    if (gModelEngineCurUiDllRes != NULL)
     {
-        callbacks = *lbl_803DC8E8;
+        callbacks = *gModelEngineCurUiDllRes;
         result = callbacks->frameStart();
     }
 
-    if (lbl_803DC8EC != 0)
+    if (gModelEnginePendingUiDll != 0)
     {
-        lbl_803DC8EC--;
-        lbl_803DC8F4 = curUiDll;
-        if (lbl_803DC8E8 != NULL)
+        gModelEnginePendingUiDll--;
+        gModelEnginePrevUiDll = curUiDll;
+        if (gModelEngineCurUiDllRes != NULL)
         {
-            Resource_Release(lbl_803DC8E8);
-            lbl_803DC8E8 = NULL;
+            Resource_Release(gModelEngineCurUiDllRes);
+            gModelEngineCurUiDllRes = NULL;
         }
 
-        resourceId = lbl_802C6E08[lbl_803DC8EC];
+        resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
         if (resourceId != -1)
         {
-            lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
+            gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
         }
         else
         {
-            lbl_803DC8E8 = NULL;
-            lbl_803DC8EC = 0;
+            gModelEngineCurUiDllRes = NULL;
+            gModelEnginePendingUiDll = 0;
         }
-        curUiDll = lbl_803DC8EC;
-        lbl_803DC8EC = 0;
+        curUiDll = gModelEnginePendingUiDll;
+        gModelEnginePendingUiDll = 0;
     }
     return result;
 }
@@ -443,7 +443,7 @@ void set_uiDllIdx_803dc8f0(int idx)
 
 int getUiDllFn_80014930(void)
 {
-    return lbl_803DC8F4;
+    return gModelEnginePrevUiDll;
 }
 
 int getCurUiDll(void)
@@ -453,7 +453,7 @@ int getCurUiDll(void)
 
 void* getDLL16(void)
 {
-    return lbl_803DC8E8;
+    return gModelEngineCurUiDllRes;
 }
 
 void loadUiDll(int index)
@@ -466,43 +466,43 @@ void loadUiDll(int index)
     if (index != current)
     {
         next = index + 1;
-        lbl_803DC8EC = next;
-        if (lbl_803DC8E8 == NULL && next != 0)
+        gModelEnginePendingUiDll = next;
+        if (gModelEngineCurUiDllRes == NULL && next != 0)
         {
-            lbl_803DC8EC = next - 1;
-            lbl_803DC8F4 = current;
-            if (lbl_803DC8E8 != NULL)
+            gModelEnginePendingUiDll = next - 1;
+            gModelEnginePrevUiDll = current;
+            if (gModelEngineCurUiDllRes != NULL)
             {
-                Resource_Release(lbl_803DC8E8);
-                lbl_803DC8E8 = NULL;
+                Resource_Release(gModelEngineCurUiDllRes);
+                gModelEngineCurUiDllRes = NULL;
             }
 
-            resourceId = lbl_802C6E08[lbl_803DC8EC];
+            resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
             if (resourceId != -1)
             {
-                lbl_803DC8E8 = Resource_Acquire((u16)resourceId, 1);
+                gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
             }
             else
             {
-                lbl_803DC8E8 = NULL;
-                lbl_803DC8EC = 0;
+                gModelEngineCurUiDllRes = NULL;
+                gModelEnginePendingUiDll = 0;
             }
-            curUiDll = lbl_803DC8EC;
-            lbl_803DC8EC = 0;
+            curUiDll = gModelEnginePendingUiDll;
+            gModelEnginePendingUiDll = 0;
         }
     }
 }
 
 void initGameTimer(void)
 {
-    lbl_803DC8E8 = NULL;
-    lbl_803DC8EC = 0;
-    lbl_803DC8F4 = 0;
+    gModelEngineCurUiDllRes = NULL;
+    gModelEnginePendingUiDll = 0;
+    gModelEnginePrevUiDll = 0;
     curUiDll = 0;
-    lbl_803DC8F8 = 2;
-    lbl_803DC8F9 = 0;
-    lbl_803DC900 = 0.0f;
-    lbl_803DC8FC = 0.0f;
+    gModelEngineTimerState = 2;
+    gModelEngineTimerFlags = 0;
+    gModelEngineTimerValue = 0.0f;
+    gModelEngineTimerDuration = 0.0f;
 }
 
 void gameTimerRun(void)
@@ -518,34 +518,34 @@ void gameTimerRun(void)
     int totalSecs;
     int mins;
 
-    if ((lbl_803DC8F8 & 1) || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerState & 1) || getHudHiddenFrameCount() != 0)
     {
         dt = lbl_803DE6B8;
     }
 
     clamped = 0;
-    if ((lbl_803DC8F9 & 1) != 0)
+    if ((gModelEngineTimerFlags & 1) != 0)
     {
-        lbl_803DC900 -= dt;
-        if (lbl_803DC900 <= lbl_803DE6B8)
+        gModelEngineTimerValue -= dt;
+        if (gModelEngineTimerValue <= lbl_803DE6B8)
         {
             clamped = 1;
-            lbl_803DC900 = lbl_803DE6B8;
+            gModelEngineTimerValue = lbl_803DE6B8;
         }
-        if (lbl_803DC900 < lbl_803DE6BC)
+        if (gModelEngineTimerValue < lbl_803DE6BC)
         {
             colorFlag = 1;
         }
     }
     else
     {
-        lbl_803DC900 += dt;
-        if (lbl_803DC900 > lbl_803DC8FC)
+        gModelEngineTimerValue += dt;
+        if (gModelEngineTimerValue > gModelEngineTimerDuration)
         {
             clamped = 1;
-            lbl_803DC900 = lbl_803DC8FC;
+            gModelEngineTimerValue = gModelEngineTimerDuration;
         }
-        if (lbl_803DC900 > lbl_803DC8FC - lbl_803DE6BC)
+        if (gModelEngineTimerValue > gModelEngineTimerDuration - lbl_803DE6BC)
         {
             colorFlag = 1;
         }
@@ -553,42 +553,42 @@ void gameTimerRun(void)
 
     if (clamped)
     {
-        if ((lbl_803DC8F9 & 8) != 0)
+        if ((gModelEngineTimerFlags & 8) != 0)
         {
             Sfx_PlayFromObject(0, SFXsc_clubhit02);
         }
-        lbl_803DC8F8 &= ~4;
-        lbl_803DC8F8 |= 2;
+        gModelEngineTimerState &= ~4;
+        gModelEngineTimerState |= 2;
     }
 
-    if ((lbl_803DC8F9 & 4) != 0)
+    if ((gModelEngineTimerFlags & 4) != 0)
     {
         f32 panByte;
         f32 volume;
         Sfx_KeepAliveLoopedObjectSound(0, SFXsc_clubhit01);
-        if ((lbl_803DC8F9 & 1) != 0)
+        if ((gModelEngineTimerFlags & 1) != 0)
         {
-            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * (lbl_803DC900 / lbl_803DC8FC)) & 0xFF));
-            volume = lbl_803DE6C4 - lbl_803DE6C8 * (lbl_803DC900 / lbl_803DC8FC);
+            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
+            volume = lbl_803DE6C4 - lbl_803DE6C8 * (gModelEngineTimerValue / gModelEngineTimerDuration);
         }
         else
         {
-            panByte = (f32)(((int)(lbl_803DE6C0 * (lbl_803DC900 / lbl_803DC8FC)) & 0xFF) + 0x2F);
-            volume = lbl_803DE6C8 * (lbl_803DC900 / lbl_803DC8FC) + lbl_803DE6CC;
+            panByte = (f32)(((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF) + 0x2F);
+            volume = lbl_803DE6C8 * (gModelEngineTimerValue / gModelEngineTimerDuration) + lbl_803DE6CC;
         }
         Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, volume);
     }
 
-    if ((lbl_803DC8F9 & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerFlags & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0)
     {
         return;
     }
 
-    totalSecs = lbl_803DC900;
+    totalSecs = gModelEngineTimerValue;
     mins = totalSecs / 60;
     hours = mins / 60;
     minutes = mins - hours * 60;
-    hundredths = (int)(lbl_803DE6D0 * (lbl_803DC900 / lbl_803DE6D4));
+    hundredths = (int)(lbl_803DE6D0 * (gModelEngineTimerValue / lbl_803DE6D4));
     hundredths = hundredths - hundredths / 100 * 100;
 
     boxY = getMinimapY() - 0x28;
@@ -604,18 +604,18 @@ void gameTimerRun(void)
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
     }
 
-    sprintf(lbl_803398A0, lbl_803DB294, hours / 10);
-    gameTextShowStr(lbl_803398A0, 0xD, 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, hours % 10);
-    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, minutes / 10);
-    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, minutes % 10);
-    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, hundredths / 10);
-    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 * 2 + 5, 3);
-    sprintf(lbl_803398A0, lbl_803DB294, hundredths % 10);
-    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, hours / 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, hours % 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes / 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes % 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths / 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
+    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths % 10);
+    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
     if (minutes & 1)
     {
         gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
