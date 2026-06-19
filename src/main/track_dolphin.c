@@ -3129,7 +3129,7 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
     f32 arrB[4];
     f32 arrA[4];
 
-    if (*(int*)desc == 0)
+    if (*(void**)desc == NULL)
     {
         a -= (f32)((int*)lbl_8038DE44)[0];
         b -= (f32)((int*)lbl_8038DE44)[2];
