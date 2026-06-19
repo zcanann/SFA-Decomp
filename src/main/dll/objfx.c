@@ -355,9 +355,9 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
         params.vec[1] = (f29 - lbl_803DF358) * hi;
         if (origin != NULL)
         {
-            params.vec[0] += *(f32*)((char*)origin + 0xc);
-            params.vec[1] += *(f32*)((char*)origin + 0x10);
-            params.vec[2] += *(f32*)((char*)origin + 0x14);
+            params.vec[0] += ((GameObject*)origin)->anim.localPosX;
+            params.vec[1] += ((GameObject*)origin)->anim.localPosY;
+            params.vec[2] += ((GameObject*)origin)->anim.localPosZ;
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];
@@ -439,9 +439,9 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* o
         params.vec[2] = params.vec[2] * mulZ;
         if (origin != NULL)
         {
-            params.vec[0] += *(f32*)((char*)origin + 0xc);
-            params.vec[1] += *(f32*)((char*)origin + 0x10);
-            params.vec[2] += *(f32*)((char*)origin + 0x14);
+            params.vec[0] += ((GameObject*)origin)->anim.localPosX;
+            params.vec[1] += ((GameObject*)origin)->anim.localPosY;
+            params.vec[2] += ((GameObject*)origin)->anim.localPosZ;
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];
@@ -1118,9 +1118,9 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
     if (light != NULL)
     {
         modelLightStruct_setLightKind(light, 2);
-        modelLightStruct_setPosition(light, *(f32*)((char*)origin + 0xc),
-                                     lbl_803DF384 + *(f32*)((char*)origin + 0x10),
-                                     *(f32*)((char*)origin + 0x14));
+        modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
+                                     lbl_803DF384 + ((GameObject*)origin)->anim.localPosY,
+                                     ((GameObject*)origin)->anim.localPosZ);
         modelLightStruct_setDiffuseColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1],
                                          lbl_8030FA30[type * 3 + 2], 0xff);
         modelLightStruct_setSpecularColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1],
