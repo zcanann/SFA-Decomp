@@ -441,10 +441,10 @@ void DFSH_LaserBeam_initialise(void)
 #pragma opt_common_subs off
 void fn_801C4664(void* objArg)
 {
-    DFSHLaserBeamObject* obj;
-    DFSHLaserBeamRuntime* runtime;
     DFSHLaserBeamConfig* config;
+    DFSHLaserBeamRuntime* runtime;
     void* playerObj;
+    DFSHLaserBeamObject* obj;
     f32 trigA;
     f32 trigB;
     s32 angleDelta;
@@ -479,13 +479,15 @@ void fn_801C4664(void* objArg)
         gLaserBeamOrbitAngleScale);
     trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) /
         gLaserBeamOrbitAngleScale);
-    obj->roll = (s16)(lbl_803E4F20 * (trigB + trigA));
+    trigB = trigB + trigA;
+    obj->roll = (s16)(lbl_803E4F20 * trigB);
 
     trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) /
         gLaserBeamOrbitAngleScale);
     trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) /
         gLaserBeamOrbitAngleScale);
-    obj->pitch = (s16)(lbl_803E4F20 * (trigB + trigA));
+    trigB = trigB + trigA;
+    obj->pitch = (s16)(lbl_803E4F20 * trigB);
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4F24, timeDelta,
                                                                  &animEvents);
