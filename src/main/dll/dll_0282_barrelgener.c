@@ -397,18 +397,9 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         delta = gBarrelGenAngleWrapPos + delta;
     }
     delta *= rate;
-    if (delta < gBarrelGenTurnRateClampMin)
-    {
-        clamped = gBarrelGenTurnRateClampMin;
-    }
-    else if (delta > gBarrelGenTurnRateClampMax)
-    {
-        clamped = gBarrelGenTurnRateClampMax;
-    }
-    else
-    {
-        clamped = delta;
-    }
+    clamped = (delta < gBarrelGenTurnRateClampMin)
+                  ? gBarrelGenTurnRateClampMin
+                  : ((delta > gBarrelGenTurnRateClampMax) ? gBarrelGenTurnRateClampMax : delta);
     *(s16*)(a + 0) += (int)clamped;
 
     if (d != lbl_803E6C38)
