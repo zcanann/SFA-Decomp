@@ -12421,18 +12421,8 @@ void fn_802AC32C(int p1, int p2, int p3)
             (((PlayerState*)p3)->maxSpeed - lbl_803E7E9C);
         clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
         f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
-        if ((f32)delta < lbl_803E80F8 * -f5)
-        {
-            result = lbl_803E80F8 * -f5;
-        }
-        else if ((f32)delta > lbl_803E80F8 * f5)
-        {
-            result = lbl_803E80F8 * f5;
-        }
-        else
-        {
-            result = (f32)delta;
-        }
+        result = ((f32)delta < lbl_803E80F8 * -f5) ? lbl_803E80F8 * -f5
+            : (((f32)delta > lbl_803E80F8 * f5) ? lbl_803E80F8 * f5 : (f32)delta);
         angle1 = (int)result;
     }
     else
