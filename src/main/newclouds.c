@@ -918,9 +918,13 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     {
         if (i == 0)
         {
-            GXWGFifo.f32 = from[0];
-            GXWGFifo.f32 = from[1];
-            GXWGFifo.f32 = from[2];
+            f32 a0, a1, a2;
+            a2 = from[2];
+            a1 = from[1];
+            a0 = from[0];
+            GXWGFifo.f32 = a0;
+            GXWGFifo.f32 = a1;
+            GXWGFifo.f32 = a2;
             GXWGFifo.f32 = lbl_803DF1A0;
             GXWGFifo.f32 = lbl_803DF1A0;
             px = from[0];
@@ -955,9 +959,13 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
         }
         else
         {
-            GXWGFifo.f32 = to[0];
-            GXWGFifo.f32 = to[1];
-            GXWGFifo.f32 = to[2];
+            f32 b0, b1, b2;
+            b2 = to[2];
+            b1 = to[1];
+            b0 = to[0];
+            GXWGFifo.f32 = b0;
+            GXWGFifo.f32 = b1;
+            GXWGFifo.f32 = b2;
             GXWGFifo.f32 = lbl_803DF1A0;
             GXWGFifo.f32 = lbl_803DF1A0;
         }
