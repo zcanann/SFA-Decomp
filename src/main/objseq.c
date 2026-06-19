@@ -4542,31 +4542,31 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     nextScale = ROM_CURVE_NODE_SCALE(next);
 
     xPoints[0] = curve->x;
-    xPoints[1] = next->x;
     xPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    xPoints[1] = next->x;
     xPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     yPoints[0] = curve->y;
-    yPoints[1] = next->y;
     yPoints[2] = curveScale * mathSinf(ROM_CURVE_NODE_ANGLE(curve->pitch));
+    yPoints[1] = next->y;
     yPoints[3] = nextScale * mathSinf(ROM_CURVE_NODE_ANGLE(next->pitch));
 
     zPoints[0] = curve->z;
-    zPoints[1] = next->z;
     zPoints[2] = curveScale * mathCosf(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    zPoints[1] = next->z;
     zPoints[3] = nextScale * mathCosf(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                               Curve_BuildHermiteCoeffs);
 
-    times = &out->fromTime;
-    times[0] = lbl_803DEFB0;
+    times = (f32*)out;
+    times[2] = lbl_803DEFB0;
     for (i = 0; i < 8; i++)
     {
         dx = xSamples[i + 1] - xSamples[i];
         dy = ySamples[i + 1] - ySamples[i];
         dz = zSamples[i + 1] - zSamples[i];
-        times[i + 1] = times[i] + sqrtf(dx * dx + dy * dy + dz * dz);
+        times[i + 3] = times[i + 2] + sqrtf(dx * dx + dy * dy + dz * dz);
     }
     if ((s8)flag == 1)
     {
@@ -4574,7 +4574,7 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
     }
     for (i = 0; i <= 8; i++)
     {
-        times[i] += t;
+        times[i + 2] += t;
     }
 }
 
