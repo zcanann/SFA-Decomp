@@ -154,7 +154,7 @@ void dll_19D_update(int obj)
 {
     register int self = obj;
     register int state = *(int*)&((GameObject*)self)->extra;
-    int def = *(int*)(self + 0x4c);
+    int def = *(int*)&((GameObject*)self)->anim.placementData;
     int linkObj;
     float vec[6];
     int lifetime;
@@ -169,13 +169,13 @@ void dll_19D_update(int obj)
 
     if ((((Dll19DState*)state)->unk36 & 1) == 0)
     {
-        ((Dll19DState*)state)->unk8 = *(f32*)(self + 0xc);
-        ((Dll19DState*)state)->unkC = *(f32*)(self + 0x10);
-        ((Dll19DState*)state)->unk10 = *(f32*)(self + 0x14);
+        ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.localPosX;
+        ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.localPosY;
+        ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.localPosZ;
         ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 1);
     }
 
-    linkObj = *(int*)(self + 0x54);
+    linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
     if (*(s8*)(linkObj + 0xad) != 0)
     {
         Sfx_PlayFromObject(self, SFXsc_mpick1_b);
@@ -193,9 +193,9 @@ void dll_19D_update(int obj)
             ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 2);
         }
         zero = lbl_803E51B8;
-        *(f32*)(self + 0x24) = zero;
-        *(f32*)(self + 0x28) = zero;
-        *(f32*)(self + 0x2c) = zero;
+        ((GameObject*)self)->anim.velocityX = zero;
+        ((GameObject*)self)->anim.velocityY = zero;
+        ((GameObject*)self)->anim.velocityZ = zero;
         ObjHits_ClearHitVolumes(self);
         ((Dll19DState*)state)->unk32 -= 1;
         if (((Dll19DState*)state)->unk32 <= 0)
@@ -205,12 +205,12 @@ void dll_19D_update(int obj)
     }
     else
     {
-        *(f32*)(self + 0x80) = *(f32*)(self + 0xc);
-        *(f32*)(self + 0x84) = *(f32*)(self + 0x10);
-        *(f32*)(self + 0x88) = *(f32*)(self + 0x14);
+        ((GameObject*)self)->anim.previousLocalPosX = ((GameObject*)self)->anim.localPosX;
+        ((GameObject*)self)->anim.previousLocalPosY = ((GameObject*)self)->anim.localPosY;
+        ((GameObject*)self)->anim.previousLocalPosZ = ((GameObject*)self)->anim.localPosZ;
 
-        *(s16*)(self + 0x0) = (s16)(*(s16*)(self + 0x0) + ((Dll19DState*)state)->unk2E * (u16)framesThisStep);
-        *(s16*)(self + 0x4) = (s16)(*(s16*)(self + 0x4) + ((Dll19DState*)state)->unk2C * (u16)framesThisStep);
+        ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->unk2E * (u16)framesThisStep);
+        ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->unk2C * (u16)framesThisStep);
         (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
 
         if ((((Dll19DState*)state)->unk30 -= framesThisStep) <= 0)
@@ -221,13 +221,13 @@ void dll_19D_update(int obj)
             ((Dll19DState*)state)->unk30 = 0x32;
         }
 
-        ((Dll19DState*)state)->unk8 = *(f32*)(self + 0x24) * timeDelta + ((Dll19DState*)state)->unk8;
-        ((Dll19DState*)state)->unkC = *(f32*)(self + 0x28) * timeDelta + ((Dll19DState*)state)->unkC;
-        ((Dll19DState*)state)->unk10 = *(f32*)(self + 0x2c) * timeDelta + ((Dll19DState*)state)->unk10;
+        ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->unk8;
+        ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.velocityY * timeDelta + ((Dll19DState*)state)->unkC;
+        ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.velocityZ * timeDelta + ((Dll19DState*)state)->unk10;
         ((Dll19DState*)state)->unk34 = ((Dll19DState*)state)->unk34 + (u16)framesThisStep * 0x5dc;
-        *(f32*)(self + 0xc) = ((Dll19DState*)state)->unk8;
-        *(f32*)(self + 0x10) = ((Dll19DState*)state)->unkC;
-        *(f32*)(self + 0x14) = ((Dll19DState*)state)->unk10;
+        ((GameObject*)self)->anim.localPosX = ((Dll19DState*)state)->unk8;
+        ((GameObject*)self)->anim.localPosY = ((Dll19DState*)state)->unkC;
+        ((GameObject*)self)->anim.localPosZ = ((Dll19DState*)state)->unk10;
 
         frames = framesThisStep;
         lifetime = *(int*)(self + 0xf4);
