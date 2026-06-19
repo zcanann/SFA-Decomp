@@ -10,4 +10,9 @@
 
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void flamethrowerspe_update(int* obj);
+void flamethrowerspe_init(int* obj, int* params);
+
 #endif

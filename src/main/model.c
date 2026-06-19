@@ -8,6 +8,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/sfa_extern_decls.h"
 #include "main/rcp_dolphin.h"
+#include "main/objprint_dolphin.h"
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
@@ -367,7 +368,7 @@ int modelGetAmapSize(int a, int b, int c)
     return size;
 }
 
-extern void* getCurrentDataFile(int id);
+
 extern int gModelTabEntryCount;
 extern void* gModelAnimFlagsTable;
 extern int lbl_803DCB58;

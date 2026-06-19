@@ -159,18 +159,22 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/dll/CAM/cutCam.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00E5_shield.h"
+#include "main/dll/dll_00F7_dllf7.h"
 
 void depthoffieldpoint_init(int* obj);
 void depthoffieldpoint_update(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
-extern void shield_update(int* obj);
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
+
+
+
+
+
+
+
+
+
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 
 void staff_func0F(void);

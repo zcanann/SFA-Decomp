@@ -32,6 +32,11 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00E5_shield.h"
+#include "main/dll/dll_00F7_dllf7.h"
 extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -236,17 +241,17 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
-extern void shield_update(int* obj);
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
+
+
+
+
+
+
+
+
+
+
+
 extern int* Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
 extern void ObjModel_SetPostRenderCallback(int* model, void* callback);

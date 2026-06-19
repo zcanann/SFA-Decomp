@@ -16,6 +16,7 @@
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
+#include "main/pi_dolphin.h"
 
 /* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
  * only the fields evidenced in this TU are typed. */
@@ -819,7 +820,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
     extern void newshadows_getReflectionScrollOffsets(void* a, void* b);
-    extern u8 isHeavyFogEnabled(void);
+
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
@@ -5168,7 +5169,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void selectReflectionTexture(int);
-    extern u8 isHeavyFogEnabled(void);
+
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -5334,7 +5335,7 @@ void fn_8007C664(int texHandle)
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void selectReflectionTexture(int);
-    extern u8 isHeavyFogEnabled(void);
+
     extern void selectTexture(int handle, int slot);
     u8 ignoredLightColor;
     f32 sOff;
@@ -5427,7 +5428,7 @@ void fn_8007CAF4(void)
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void selectReflectionTexture(int);
-    extern u8 isHeavyFogEnabled(void);
+
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
     f32 sOff;
@@ -5524,7 +5525,7 @@ void gxTextureSetupFn_8007cf7c(void)
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void selectReflectionTexture(int);
-    extern u8 isHeavyFogEnabled(void);
+
     extern void selectTexture(int handle, int slot);
     Mtx mtx_cc;
     Mtx mtx_9c;

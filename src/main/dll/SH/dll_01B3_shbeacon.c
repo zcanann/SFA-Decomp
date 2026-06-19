@@ -17,6 +17,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/gameloop.h"
 
 typedef struct ShBeaconPlacement
 {
@@ -28,7 +29,7 @@ typedef struct ShBeaconPlacement
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-extern int gameBitDecrement(int bit);
+
 extern f32 timeDelta;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);

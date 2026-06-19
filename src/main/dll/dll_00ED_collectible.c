@@ -32,6 +32,8 @@
 #include "main/dll/dll_00ED_collectible.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -80,8 +82,8 @@ extern void gcbaddieshield_update(int* obj);
 
 
 
-extern void depthoffieldpoint_init(int* obj);
-extern void depthoffieldpoint_update(int* obj);
+
+
 
 
 
@@ -98,16 +100,16 @@ extern void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 extern void staffFn_80170380(int* obj, int cmd);
 
 
-extern void fireball_init(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_free(int* obj);
 
 
 
 
-extern void flamethrowerspe_init(int* obj, int* params);
-extern void flamethrowerspe_update(int* obj);
+
+
+
+
+
+
 
 
 

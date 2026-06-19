@@ -14,4 +14,8 @@
 void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
 void synthDispatchFadeAction(SynthFade* fade);
 
+
+/* extern-cleanup: defining-file public prototypes */
+int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
+
 #endif

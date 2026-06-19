@@ -12,4 +12,8 @@
 
 void shield_init(int* obj, void* initData);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void shield_update(int* obj);
+
 #endif

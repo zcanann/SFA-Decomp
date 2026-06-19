@@ -22,6 +22,10 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00F7_dllf7.h"
 
 void mikabomb_hitDetect(void);
 
@@ -171,17 +175,17 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
+
+
+
+
+
+
+
+
 extern void shield_update(int* obj);
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
+
+
 
 void mikabombshadow_update(int* obj);
 void mikabombshadow_init(int* obj);

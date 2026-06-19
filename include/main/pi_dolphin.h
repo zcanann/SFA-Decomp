@@ -118,4 +118,8 @@ void tvInit(void);
 void fn_8004AFA0(int* q, int* elem, int idx);
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
 
+
+/* extern-cleanup: defining-file public prototypes */
+u8 isHeavyFogEnabled(void);
+
 #endif /* MAIN_PI_DOLPHIN_H_ */

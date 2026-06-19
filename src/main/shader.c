@@ -16,6 +16,7 @@
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/dll/savegame.h"
 #include "main/track_dolphin.h"
+#include "main/objprint_dolphin.h"
 extern float ABS();
 extern u32 FUN_8000693c();
 extern u32 FUN_80006958();
@@ -2767,7 +2768,7 @@ void beginLoadingMap(void)
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
-extern void* getCurrentDataFile(int id);
+
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;
 extern int lbl_803DCE1C;

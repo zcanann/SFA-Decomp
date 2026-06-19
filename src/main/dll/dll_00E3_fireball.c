@@ -24,6 +24,9 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -250,14 +253,14 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
+
+
+
+
+
+
+
+
 extern void shield_update(int* obj);
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);

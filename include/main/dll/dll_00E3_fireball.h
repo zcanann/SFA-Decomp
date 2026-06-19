@@ -10,4 +10,11 @@
 
 u8 fn_8016F16C(int* obj);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void fireball_free(int* obj);
+void fireball_hitDetect(int* obj);
+void fireball_update(int* obj);
+void fireball_init(int* obj);
+
 #endif

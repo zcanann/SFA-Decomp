@@ -160,6 +160,9 @@ extern u8 framesThisStep;
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();
@@ -256,14 +259,14 @@ extern f32 lbl_803E31DC;
 extern f32 lbl_803E31E0;
 extern f32 lbl_803E31E4;
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
+
+
+
+
+
+
+
+
 extern void shield_update(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void dll_F7_update(int* obj);

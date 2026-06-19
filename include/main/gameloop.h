@@ -30,4 +30,8 @@ void setShouldResetNextFrame(int v);
 void mapReload(void);
 void setGameState(int state);
 
+
+/* extern-cleanup: defining-file public prototypes */
+int gameBitDecrement(int bit);
+
 #endif

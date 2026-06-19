@@ -26,6 +26,10 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objprint.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00F7_dllf7.h"
 
 void mikabomb_free(int obj, int mode);
 
@@ -169,17 +173,17 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
+
+
+
+
+
+
+
+
 extern void shield_update(int* obj);
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
+
+
 
 void staticCamera_free(int obj)
 {

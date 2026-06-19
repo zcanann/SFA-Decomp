@@ -15,6 +15,7 @@
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objlib.h"
+#include "main/dll/SB/dll_01E9_sbpropeller.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -34,7 +35,7 @@ extern int randomGetRange(int lo, int hi);
 extern u32 DAT_803de8c0;
 extern f32 lbl_803E64A8;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u32 fn_801E2570(void);
+
 extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);

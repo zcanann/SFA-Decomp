@@ -165,6 +165,10 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"
+#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00F7_dllf7.h"
 
 typedef struct Dim2roofrubPlacement
 {
@@ -221,17 +225,17 @@ typedef struct Dim2roofrubState
 extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update(int* obj);
-extern void depthoffieldpoint_init(int* obj);
-extern void fireball_free(int* obj);
-extern void fireball_hitDetect(int* obj);
-extern void fireball_update(int* obj);
-extern void fireball_init(int* obj);
-extern void flamethrowerspe_update(int* obj);
-extern void flamethrowerspe_init(int* obj, int* params);
+
+
+
+
+
+
+
+
 extern void shield_update(int* obj);
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
+
+
 extern int* Obj_GetActiveModel(int obj);
 extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
