@@ -953,7 +953,7 @@ void fn_8014C66C(int* obj, int x) { *(int*)((char*)(int*)((GameObject*)obj)->ext
 void fn_8014C5C0(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    *(s16*)((char*)state + 688) = 0;
+    ((EnemyState*)state)->unk2B0 = 0;
 }
 
 void fn_8014C63C(int* obj)
@@ -974,7 +974,7 @@ null_obj:
     return 0;
 have_state:
     if (state == NULL) goto null_state;
-    val = *(f32*)((char*)state + 728);
+    val = ((EnemyState*)state)->freezeRecoverTimer;
     if (val != lbl_803E2574)
     {
         return (u8)((s32)(val / lbl_803E2598) + 1);
@@ -1044,10 +1044,10 @@ f32 fn_8014C5D0(register int obj)
     u16 b;
     state = ((GameObject*)obj)->extra;
     if (state == NULL) return lbl_803E2574;
-    a = *(u16*)((char*)state + 690);
+    a = ((EnemyState*)state)->unk2B2;
     if (a != 0)
     {
-        b = *(u16*)((char*)state + 688);
+        b = *(u16*)&((EnemyState*)state)->unk2B0;
         if (b != 0)
         {
             return (f32)(u32)
@@ -1178,7 +1178,7 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     extern u8 lbl_803DBC58;
     u8* state = ((GameObject*)obj)->extra;
     u8* data = *(u8**)state;
-    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0)
+    if ((((EnemyState*)state)->controlFlags & 0x2000) != 0)
     {
         if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject*)obj)->anim.worldPosX, data + 0x68) != 0)
         {
@@ -1188,11 +1188,11 @@ void sidekickToy_updateCurveTargetLatch(int obj)
     if ((*gRomCurveInterface)->initCurve(*(u8**)state, (void*)obj, lbl_803E25DC,
                                          (int*)&lbl_803DBC58, -1) != 0)
     {
-        *(u32*)(state + 0x2dc) &= ~0x2000LL;
+        ((EnemyState*)state)->controlFlags &= ~0x2000LL;
     }
     else
     {
-        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
+        ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags | 0x2000;
     }
 }
 
