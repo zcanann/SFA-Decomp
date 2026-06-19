@@ -10697,9 +10697,7 @@ void fn_802A96D8(void)
     s8 i;
 
     if (!Obj_IsLoadingLocked()) return;
-    idx3 = 0;
-    p = gPlayerSpawnedObjects;
-    for (i = 0; i < 7; i++)
+    for (i = 0, p = gPlayerSpawnedObjects, idx3 = 0; i < 7; i++)
     {
         if (*p == NULL)
         {
