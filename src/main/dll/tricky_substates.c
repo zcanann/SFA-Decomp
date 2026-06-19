@@ -728,7 +728,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             if (Obj_IsLoadingLocked() != 0)
             {
                 ((TrickyState*)state)->stateFlags |= 0x800;
-                for (i = 0, p = state; i < 7; i++)
+                for (i = 0, p = state; i < 7; p += 4, i++)
                 {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
@@ -747,7 +747,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             {
                 ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
-                for (i = 0, p = state; i < 7; i++, p += 4)
+                for (i = 0, p = state; i < 7; p += 4, i++)
                 {
                     objSetAnimSpeedTo1(*(u8**)(p + 0x700));
                 }
