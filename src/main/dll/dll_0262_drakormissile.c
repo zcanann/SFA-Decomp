@@ -243,7 +243,7 @@ void drakormissile_update(int obj)
         mag = sqrtf(*(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24) +
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
-            int tmpAng = getAngle(*(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x2c));
+            int tmpAng = getAngle(*(f32*)((char*)obj + 0x24), ((GameObject*)obj)->anim.velocityZ);
             ((GameObject*)obj)->anim.rotX = tmpAng;
             tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
             ((GameObject*)obj)->anim.rotY = tmpAng;
