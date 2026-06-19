@@ -1824,7 +1824,6 @@ void crawler_updateB(s16* obj, u8* state)
     CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
     u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
     u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
-    ObjHitsPriorityState* hitState;
     f32 cap;
     int count;
     int i;
@@ -1993,9 +1992,8 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    hitState->hitVolumePriority = 0;
-    hitState->hitVolumeId = 0;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
     {
         int j = 1;
         u8* p = t18 + 0xc;
@@ -2004,9 +2002,9 @@ void crawler_updateB(s16* obj, u8* state)
         {
             if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
             {
-                hitState->hitVolumePriority = (s8) * (int*)((char*)t18 + j * 0xc + 4);
-                hitState->hitVolumeId = (s8) * (u8*)((char*)t18 + j * 0xc + 9);
-                if (hitState->hitVolumePriority == 0x1f)
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)((char*)t18 + j * 0xc + 4);
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)((char*)t18 + j * 0xc + 9);
+                if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
                 {
                     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
                 }
