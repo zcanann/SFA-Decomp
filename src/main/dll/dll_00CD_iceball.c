@@ -163,13 +163,13 @@ void iceball_update(undefined2* obj, int unused)
     }
     /* raw offsets (rotX/rotZ/rotY +0/4/2, velocity +0x24/0x28/0x2c): the
        named-field form is fuzzy-100 but perturbs the .o; raw is byte-exact */
-    *(float*)(p + 0x28) = *(float*)(p + 0x28) - lbl_803E2E54 * timeDelta;
-    *(float*)(p + 0x28) = *(float*)(p + 0x28) * lbl_803E2E58;
-    *(s16*)(p + 0) += 910;
-    *(s16*)(p + 4) += 910;
-    *(s16*)(p + 2) += 910;
-    objMove(p, *(float*)(p + 0x24) * timeDelta, *(float*)(p + 0x28) * timeDelta,
-            *(float*)(p + 0x2c) * timeDelta);
+    ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY - lbl_803E2E54 * timeDelta;
+    ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY * lbl_803E2E58;
+    ((GameObject*)p)->anim.rotX += 910;
+    ((GameObject*)p)->anim.rotZ += 910;
+    ((GameObject*)p)->anim.rotY += 910;
+    objMove(p, ((GameObject*)p)->anim.velocityX * timeDelta, ((GameObject*)p)->anim.velocityY * timeDelta,
+            ((GameObject*)p)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot(p, 10, 1, 0);
     ObjHitbox_SetSphereRadius(p, 5);
     ObjHits_EnableObject(p);
