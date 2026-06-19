@@ -309,13 +309,13 @@ void CameraModeViewfinder_update(s16* obj)
     u8* shadow2;
     u8* shadow;
 
-    camObj = *(int*)(obj + 0x52);
+    camObj = *(int*)&((GameObject*)obj)->anim.targetObj;
     getButtonsJustPressed(0);
     firstPersonPlaceCamera((GameObject*)camObj, 0);
     switch (lbl_803DD548->mode)
     {
     case 0:
-        lbl_803DD548->mode = firstPersonEnter((u8*)obj, (s16*)*(int*)(obj + 0x52));
+        lbl_803DD548->mode = firstPersonEnter((u8*)obj, (s16*)*(int*)&((GameObject*)obj)->anim.targetObj);
         break;
     case 1:
         if (Curve_AdvanceAlongPath(&lbl_803DD548->viewCurve, lbl_803E1820) != 0)
@@ -358,7 +358,7 @@ void CameraModeViewfinder_update(s16* obj)
             lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
             lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
             curvesMove(&lbl_803DD548->viewCurve);
-            *(s16*)(*(int*)(obj + 0x52) + 6) = *(s16*)(*(int*)(obj + 0x52) + 6) & ~0x4000;
+            *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) = *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) & ~0x4000;
             firstPersonZoomOutOnExit(0xf, 0xfe);
             lbl_803DD548->mode = 4;
             if (lbl_803DD548->flags.sfxEnabled)
@@ -369,11 +369,11 @@ void CameraModeViewfinder_update(s16* obj)
         *(u8*)(obj + 0x9f) = 1;
         break;
     case 4:
-        *(f32*)(obj + 0xc) = lbl_803DD548->posXCurve.end;
-        *(f32*)(obj + 0xe) = lbl_803DD548->posYCurve.end;
-        *(f32*)(obj + 0x10) = lbl_803DD548->posZCurve.end;
+        ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
+        ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->posYCurve.end;
+        ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
         {
-            f32 fade = (lbl_803E17E8 - *(f32*)(obj + 0x7a)) - lbl_803E1824;
+            f32 fade = (lbl_803E17E8 - *(f32*)&((GameObject*)obj)->unkF4) - lbl_803E1824;
             if (fade < lbl_803E17C4)
             {
                 fade = lbl_803E17C4;
@@ -407,7 +407,7 @@ void CameraModeViewfinder_update(s16* obj)
             }
         }
         brightness = 0;
-        if (*(f32*)(obj + 0x7a) <= lbl_803E17C4)
+        if (*(f32*)&((GameObject*)obj)->unkF4 <= lbl_803E17C4)
         {
             brightness = 1;
         }
@@ -419,7 +419,7 @@ void CameraModeViewfinder_update(s16* obj)
         }
         else
         {
-            hitY = *(f32*)(obj + 0xe) - (*(f32*)(camObj + 0x1c) + lbl_803E17C0);
+            hitY = ((GameObject*)obj)->anim.worldPosY - (*(f32*)(camObj + 0x1c) + lbl_803E17C0);
             angleDiff = (getAngle() & 0xffff) - (obj[1] & 0xffffU);
             if (angleDiff > 0x8000)
             {
@@ -457,18 +457,18 @@ void CameraModeViewfinder_update(s16* obj)
     case 5:
         break;
     }
-    if (ObjHits_GetPriorityHit(*(int*)(obj + 0x52), 0, 0, 0) != 0)
+    if (ObjHits_GetPriorityHit(*(int*)&((GameObject*)obj)->anim.targetObj, 0, 0, 0) != 0)
     {
         firstPersonExit((CameraObject*)obj);
-        *(f32*)(obj + 0xc) = lbl_803DD548->posXCurve.end;
-        *(f32*)(obj + 0xe) = lbl_803DD548->posYCurve.end;
-        *(f32*)(obj + 0x10) = lbl_803DD548->posZCurve.end;
+        ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
+        ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->posYCurve.end;
+        ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0);
     }
-    fn_80137948(&sCam5BYDebugFormat, *(f32*)(obj + 0xe));
-    Obj_TransformWorldPointToLocal(*(f32*)(obj + 0xc), *(f32*)(obj + 0xe), *(f32*)(obj + 0x10),
+    fn_80137948(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
+    Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
                                    (f32*)(obj + 6), (f32*)(obj + 8), (f32*)(obj + 10),
-                                   *(int*)(obj + 0x18));
+                                   *(int*)&((GameObject*)obj)->anim.parent);
 }
 
 void CameraModeViewfinder_init(s16* obj, int mode, int* args)
@@ -514,8 +514,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->viewCurve.dir = 0;
     lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
     lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
-    dx = *(f32*)(obj + 0xc) - *(f32*)(camObj + 0xc);
-    dz = *(f32*)(obj + 0x10) - *(f32*)(camObj + 0x10);
+    dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)(camObj + 0xc);
+    dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(camObj + 0x10);
     dist = sqrtf(dx * dx + dz * dz);
     if (lbl_803E17C4 != dist)
     {
@@ -525,16 +525,16 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     firstPersonPlaceCamera((GameObject*)camObj, 1);
     cosv = -mathSinf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
     sinv = -mathCosf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
-    lbl_803DD548->posXCurve.start = *(f32*)(obj + 0xc);
+    lbl_803DD548->posXCurve.start = ((GameObject*)obj)->anim.worldPosX;
     lbl_803DD548->posXCurve.end = lbl_803DD548->camPosX;
     lbl_803DD548->posXCurve.startTangent = -dz * spinRate;
     lbl_803DD548->posXCurve.endTangent = cosv * rollRate;
-    lbl_803DD548->posYCurve.start = *(f32*)(obj + 0xe);
+    lbl_803DD548->posYCurve.start = ((GameObject*)obj)->anim.worldPosY;
     lbl_803DD548->posYCurve.end = lbl_803DD548->camPosY;
     zero = lbl_803E17C4;
     lbl_803DD548->posYCurve.startTangent = zero;
     lbl_803DD548->posYCurve.endTangent = zero;
-    lbl_803DD548->posZCurve.start = *(f32*)(obj + 0x10);
+    lbl_803DD548->posZCurve.start = ((GameObject*)obj)->anim.worldPosZ;
     lbl_803DD548->posZCurve.end = lbl_803DD548->camPosZ;
     lbl_803DD548->posZCurve.startTangent = dx * spinRate;
     lbl_803DD548->posZCurve.endTangent = sinv * rollRate;
@@ -545,8 +545,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->posZCurve.startTangent = zero;
     lbl_803DD548->posZCurve.endTangent = zero;
     curvesMove(&lbl_803DD548->viewCurve);
-    a2 = obj[0] - (u16)(0x8000 - getAngle(*(f32*)(obj + 0xc) - lbl_803DD548->posXCurve.end,
-                                              *(f32*)(obj + 0x10) - lbl_803DD548->posZCurve.end));
+    a2 = obj[0] - (u16)(0x8000 - getAngle(((GameObject*)obj)->anim.worldPosX - lbl_803DD548->posXCurve.end,
+                                              ((GameObject*)obj)->anim.worldPosZ - lbl_803DD548->posZCurve.end));
     if (a2 > 0x8000)
     {
         a2 = a2 - 0xffff;
