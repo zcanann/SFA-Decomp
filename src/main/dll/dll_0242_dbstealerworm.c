@@ -1245,7 +1245,7 @@ void fn_80203144(int obj, int p2, int p3)
         {
             stk.d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
             stk.d[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-            stk.d[2] = *(f32*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+            stk.d[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
             dist = sqrtf(stk.d[2] * stk.d[2] + (stk.d[0] * stk.d[0] + stk.d[1] * stk.d[1]));
         }
         else
