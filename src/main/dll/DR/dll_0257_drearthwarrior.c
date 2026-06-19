@@ -581,6 +581,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     ((GameObject*)obj)->anim.rotX = ((EarthWarriorSub*)q)->unk478;
 }
 
+#pragma dont_inline on
 int fn_802BC830(int obj, int p2, int p3)
 {
     *(u32*)&((EarthWarriorSub*)p2)->unk360 |= 0x1000000LL;
@@ -621,6 +622,7 @@ int fn_802BC830(int obj, int p2, int p3)
     }
     return 0;
 }
+#pragma dont_inline reset
 
 #pragma opt_common_subs off
 void fn_802BCA10(int obj, int q, int p2)
@@ -833,7 +835,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         (((EarthWarriorSub*)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub*)q)->frameCounter >= 0x96))
     {
         ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 = 1;
-        ((EarthWarriorSub*)q)->unk360 |= 0x1000000;
+        *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorSub*)q)->unk844 = ((EarthWarriorState*)p2)->baddie.animSpeedA;
         ObjAnim_SetCurrentMove(obj, *(s16*)(((EarthWarriorSub*)q)->moveTable + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E82EC;
