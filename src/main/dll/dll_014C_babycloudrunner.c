@@ -966,7 +966,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, player, 0);
-        fn_8003ADC4(obj, (int*)player, sub + 0x3c, 0x28, 0, 3);
+        fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += yaw / 8;
         if (inRange != 0)
         {
@@ -980,7 +980,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, getTrickyObject(), 0);
-        fn_8003ADC4(obj, getTrickyObject(), sub + 0x3c, 0x28, 0, 3);
+        fn_8003ADC4(obj, getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += yaw / 8;
         break;
     }
