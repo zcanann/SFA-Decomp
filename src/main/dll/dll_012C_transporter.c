@@ -43,9 +43,9 @@ extern s16 lbl_803DCEB8;
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    int i;
     WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
     WarpPadState* state = ((GameObject*)obj)->extra;
+    int i;
     int id;
 
     for (i = 0; i < animUpdate->eventCount; i++)
