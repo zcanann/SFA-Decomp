@@ -129,8 +129,7 @@ void DFRopeLink_AttachNodes(DFRopeLink* linkSelf, DFRopeNode* firstNode, DFRopeN
         nodeLinkIter += 4;
         secondLinkIndex++;
     }
-    if (firstLinkIndex > firstNode->linkCount) return;
-    if (secondLinkIndex > secondNode->linkCount) return;
+    if (firstLinkIndex > firstNode->linkCount || secondLinkIndex > secondNode->linkCount) return;
     firstNode->links[firstLinkIndex] = linkSelf;
     secondNode->links[secondLinkIndex] = linkSelf;
     linkSelf->a = firstNode;
