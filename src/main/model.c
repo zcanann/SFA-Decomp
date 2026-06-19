@@ -1156,8 +1156,8 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
         header = ObjModel_LoadModelData(realId);
         ObjModel_RelocateModelData(header);
         h = header;
-        i = 0;
-        off = i;
+        off = 0;
+        i = off;
         for (; i < h[0xf2]; i++)
         {
             tex = textureLoad(-(*(int*)(*(int*)(h + 0x20) + off) | 0x8000), 1);
