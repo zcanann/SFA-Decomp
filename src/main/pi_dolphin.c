@@ -2849,14 +2849,14 @@ void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
     pairWord = FUN_80286840();
     resIdx = (int)(pairWord >> 0x20);
-    dst = (uint)pairWord;
+    dst = pairWord;
     if (param_12 != 0)
     {
         if ((&DAT_80360048)[resIdx] == 0)
         {
             src = extraout_f1;
             FUN_80249300(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         sResourceFileNameTable[resIdx], (int)aiStack_58);
+                         sResourceFileNameTable[resIdx], aiStack_58);
             if (((pairWord & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
             {
                 FUN_802420b0(dst, param_12);
@@ -2914,14 +2914,14 @@ undefined4 FUN_80045c4c(char tick)
     one = 1;
     gxSetZMode_(1, 3, 1);
     pairWord = FUN_8025ce2c(1);
-    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), (int)pairWord, one);
+    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), pairWord, one);
     matPtr = &mat0;
     FUN_80256b2c(DAT_803dd954, &uStack_24, matPtr);
     local_20 = mat0;
     local_1c = 0;
     local_18 = DAT_803dd950;
     FUN_80243e74();
-    FUN_80006aa8((short*)&DAT_80360390, (uint) & local_20);
+    FUN_80006aa8((short*)&DAT_80360390,  & local_20);
     if (DAT_803dd927 == '\0')
     {
         FUN_80256c08(mat0);
@@ -2930,7 +2930,7 @@ undefined4 FUN_80045c4c(char tick)
     FUN_80243e9c();
     FUN_80258b60((uint)DAT_803dc22e);
     pairWord = FUN_80259a9c(DAT_803dd950, 1);
-    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), (int)pairWord, (uint)matPtr);
+    FUN_80258a04((int)((ulonglong)pairWord >> 0x20), pairWord, matPtr);
     DAT_803dc22e = DAT_803dc22e + 1;
     wasFront = DAT_803dd950 == DAT_803dd96c;
     DAT_803dd950 = DAT_803dd96c;
@@ -2983,7 +2983,7 @@ void FUN_8004600c(void)
 
     FUN_802461cc(-0x7fc9fd20);
     pairWord = FUN_80246298(-0x7fc9fd20);
-    elapsed = FUN_80286cd0((uint)((ulonglong)pairWord >> 0x20), (uint)pairWord);
+    elapsed = FUN_80286cd0((uint)((ulonglong)pairWord >> 0x20), pairWord);
     lbl_803DD940 =
         (float)(elapsed / (double)(float)((double)CONCAT44(0x43300000, DAT_800000f8 / 4000) -
             DOUBLE_803df700));
@@ -3194,7 +3194,7 @@ void fn_8004B394(void)
     pairWord = FUN_8028683c();
     heapCtx = (int*)((ulonglong)pairWord >> 0x20);
     done = false;
-    for (remaining = (int)pairWord; (!done && (remaining != 0)); remaining = remaining + -1)
+    for (remaining = pairWord; (!done && (remaining != 0)); remaining = remaining + -1)
     {
         heapArr = heapCtx[1];
         if (*(short*)((int)heapCtx + 0x22) == 0)
@@ -3222,7 +3222,7 @@ void fn_8004B394(void)
             if (uval == 0)
             {
                 *(undefined*)((int)entry + 0xe) = 1;
-                fn_8004B11C((undefined4)heapCtx, (undefined4)entry, (char)poppedKey);
+                fn_8004B11C((undefined4)heapCtx, (undefined4)entry, poppedKey);
             }
             else
             {
@@ -3300,7 +3300,7 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
     count = *(short*)(queue + 8);
     if (count == 0xfe)
     {
-        entry = (int*)0x0;
+        entry = 0x0;
     }
     else
     {
@@ -3324,7 +3324,7 @@ undefined4 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, b
     key = heap[idx * 2];
     tag = *(undefined2*)(heap + idx * 2 + 1);
     *heap = 0xffffffff;
-    while (off8 = idx >> 1, (uint)heap[off8 * 2] < key)
+    while (off8 = idx >> 1, heap[off8 * 2] < key)
     {
         *(undefined2*)(heap + idx * 2 + 1) = *(undefined2*)(heap + off8 * 2 + 1);
         heap[idx * 2] = heap[off8 * 2];
@@ -3792,7 +3792,7 @@ int fn_8004B148(int* p)
     while ((cur = *(u8*)(node + 0xc)) != 0xff)
     {
         node = *p + cur * 0x10;
-        *(u8*)(node + 0xd) = (u8)prev;
+        *(u8*)(node + 0xd) = prev;
         prev = cur;
     }
     if (*(u8*)(node + 0xd) == 0xff)
@@ -3823,7 +3823,7 @@ int fn_8004B148(int* p)
             entry = (int*)(*p + (u32) * (u8*)((int)entry + 0xd) * 0x10);
         }
     }
-    *(s16*)((int)p + 0x2a) = (s16)count;
+    *(s16*)((int)p + 0x2a) = count;
     *(u16*)(p + 0xb) = 0;
     return count;
 }
@@ -4083,7 +4083,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
                 {
                     int v = *(int*)(buf + 0xc);
                     *outA = *(int*)(buf + 8);
-                    if (strncmp(&sDirBlockTag, (char*)buf, 3) == 0)
+                    if (strncmp(&sDirBlockTag, buf, 3) == 0)
                     {
                         *outB = 0xffffffff;
                     }
@@ -4209,7 +4209,7 @@ void viFn_8004a56c(int val)
     int v = val;
     VISetBlack(1);
     VIFlush();
-    lbl_803DB5CC = (u8)v;
+    lbl_803DB5CC = v;
 }
 
 void freeAndNull(void** p)
@@ -4336,13 +4336,13 @@ extern void fn_8004AFA0(int* q, int* elem, int idx);
 int fn_8004B218(void* q_, u32 n_)
 {
     int n;
-    int* q = (int*)q_;
+    int* q = q_;
     int idx;
     int done;
     int result;
     int* elem;
     int* heap;
-    n = (int)n_;
+    n = n_;
     done = 0;
     result = 0;
     while (done == 0 && n != 0)
@@ -4512,7 +4512,7 @@ found:
     if (idx2 >= 0 && visited == 0)
     {
         int* node3 = (int*)(*q + idx2 * 0x10);
-        if (d < (u32)node3[2])
+        if (d < node3[2])
         {
             u32 newpri;
             int s2;
@@ -4575,7 +4575,7 @@ found:
         }
         if (node4 != NULL)
         {
-            if ((u32)node4[1] > (u32)q[9])
+            if ((u32)node4[1] > q[9])
             {
                 u32 newpri = node4[1] + node4[2];
                 heap = (u32*)q[1];
@@ -4599,7 +4599,7 @@ found:
             else
             {
                 u32 newpri;
-                if ((u32)node4[1] < (u32)q[9])
+                if ((u32)node4[1] < q[9])
                 {
                     q[9] = node4[1];
                 }
@@ -4654,7 +4654,7 @@ int GXFlush_(u8 visible, int unused)
     GXFlush();
     GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
     item[0] = fifo_put;
-    item[1] = (void*)0;
+    item[1] = 0;
     item[2] = renderFrameBuffer;
     s = OSDisableInterrupts();
     Queue_Push(&lbl_8035F730[0], item);
@@ -7217,7 +7217,7 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
 void fn_80050A28(int scale)
 {
     f32 m[3][4];
-    PSMTXScale(m, (f32)scale, (f32)scale, lbl_803DEACC);
+    PSMTXScale(m, scale, scale, lbl_803DEACC);
     m[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, lbl_803DCD80);
@@ -7463,7 +7463,7 @@ void waitNextFrame(void)
     u32 frames;
 
     OSStopStopwatch(lbl_8035F680);
-    lbl_803DCCC0 = (f32)OSCheckStopwatch(lbl_8035F680) /
+    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) /
         (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(lbl_8035F680);
     OSStartStopwatch(lbl_8035F680);
@@ -7828,15 +7828,15 @@ void videoInit(void)
     u32 x;
     lo = (u32)OSGetArenaLo();
     hi = (u32)OSGetArenaHi();
-    memcpy((void*)(hi - 0x40000), (char*)lbl_802CC6A0, 0x40000);
+    memcpy((void*)(hi - 0x40000), lbl_802CC6A0, 0x40000);
     DCStoreRange((void*)(hi - 0x40000), 0x40000);
     lbl_803DCCE4 = (void*)0x40000;
-    lbl_803DCCD8 = (void*)lbl_802CC6A0;
+    lbl_803DCCD8 = lbl_802CC6A0;
     DCInvalidateRange((char*)lbl_802CC6A0, 0x40000);
     lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
-    lbl_803DCCB8 = GXSetDispCopyYScale((f32) gRenderModeObj->xfbHeight / (f32) gRenderModeObj->efbHeight);
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32) gRenderModeObj->xfbHeight /  gRenderModeObj->efbHeight);
     fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
     externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
@@ -7856,7 +7856,7 @@ void videoInit(void)
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoFn_800499e8);
-    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32) gRenderModeObj->fbWidth, (f32) gRenderModeObj->xfbHeight,
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70,  gRenderModeObj->fbWidth,  gRenderModeObj->xfbHeight,
                   lbl_803DEA70, lbl_803DEA78);
     GXSetFieldMode(gRenderModeObj->field_rendering, (u32)(gRenderModeObj->xfbHeight - gRenderModeObj->viHeight) >> 31);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
@@ -7980,9 +7980,9 @@ extern u8 lbl_8036F880[];
 
 #define ZROT1(b) ((u32)__rlwnm((b), sh, 31, 31))
 #define ZROT8(b) ((u32)__rlwnm((b), sh, 24, 31))
-#define ZGB8() (ZROT8(src[0]) | (u32)src[1] << (8 - pos))
-#define ZGB16() (ZROT8(src[0]) | (u32)src[1] << (8 - pos) | (u32)src[2] << (0x10 - pos))
-#define ZADV(n) (pos += (n), src += (int)pos >> 3, pos &= 7, sh = 0x20 - pos)
+#define ZGB8() (ZROT8(src[0]) | src[1] << (8 - pos))
+#define ZGB16() (ZROT8(src[0]) | src[1] << (8 - pos) | src[2] << (0x10 - pos))
+#define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
 
 /* NOT MWCC: retail zlbDecompress is a foreign GCC (SN ProDG family) object
    (mflr-first prologue, stmw, andi. masks, mcrxr/addme. loops). 42.5% is the
@@ -8150,10 +8150,10 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     extra = 0;
                     if (pos > 8 - lenMax)
                     {
-                        extra = (u32)src[1] << (8 - pos);
+                        extra = src[1] << (8 - pos);
                     }
                     v = (ZROT8(src[0]) | extra) & ((1 << lenMax) - 1);
-                    sym = lbl_803778D4[(u32)__rlwnm(lbl_8030CDE0[v], lenMax + 0x18, 24, 31)];
+                    sym = lbl_803778D4[__rlwnm(lbl_8030CDE0[v], lenMax + 0x18, 24, 31)];
                     ZADV(lbl_80377880[sym]);
                     if (sym == 0x10)
                     {
@@ -8252,8 +8252,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 u32 t;
                 u32 code2;
                 t = ZGB16() & ((1 << lenMax) - 1);
-                code2 = (u32)__rlwnm(lbl_8030CDE0[t & 0xff], lenMax - 8, 16, 31) |
-                    (u32)__rlwnm(lbl_8030CDE0[t >> 8], lenMax + 0x10, 24, 31);
+                code2 = __rlwnm(lbl_8030CDE0[t & 0xff], lenMax - 8, 16, 31) |
+                    __rlwnm(lbl_8030CDE0[t >> 8], lenMax + 0x10, 24, 31);
                 sym = lenTblP[code2];
                 ZADV(lenBitsP[sym]);
                 if ((int)sym < 0x100)
@@ -8277,8 +8277,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         ZADV(eb);
                     }
                     dt = ZGB16() & ((1 << distMax) - 1);
-                    dcode = (u32)__rlwnm(lbl_8030CDE0[dt & 0xff], distMax - 8, 16, 31) |
-                        (u32)__rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
+                    dcode = __rlwnm(lbl_8030CDE0[dt & 0xff], distMax - 8, 16, 31) |
+                        __rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
                     dsym = distTblP[dcode];
                     ZADV(distBitsP[dsym]);
                     dist = gInflateDistCodes[dsym].base;

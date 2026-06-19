@@ -312,12 +312,12 @@ int d;
     ch->volume = 0x64;
     *(f32*)((u8*)ch + 0x20) = lbl_803DE590;
     *(f32*)((u8*)ch + 0x24) = lbl_803DE594;
-    ch->globalCtrlDisabled = (u8)d;
+    ch->globalCtrlDisabled = d;
 
     {
         u64 age = gSfxObjectChannelAgeLo | ((u64)gSfxObjectChannelAgeHi << 32);
         u64 next = age + 1;
-        gSfxObjectChannelAgeLo = (u32)next;
+        gSfxObjectChannelAgeLo = next;
         gSfxObjectChannelAgeHi = (u32)(next >> 32);
         ch->age = age;
     }
@@ -332,11 +332,11 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
     f32 x = v[0];
     f32 y = v[1];
     f32 z = v[2];
-    f32 ra = lbl_803DE5AC * (f32)angX / lbl_803DE5B0;
+    f32 ra = lbl_803DE5AC * angX / lbl_803DE5B0;
     f32 ca = mathSinf(ra);
-    f32 rb = lbl_803DE5AC * (f32)angY / lbl_803DE5B0;
+    f32 rb = lbl_803DE5AC * angY / lbl_803DE5B0;
     f32 cb = mathSinf(rb);
-    f32 rc = lbl_803DE5AC * (f32)angZ / lbl_803DE5B0;
+    f32 rc = lbl_803DE5AC * angZ / lbl_803DE5B0;
     f32 cc = mathSinf(rc);
     f32 sa = mathCosf(ra);
     f32 sb = mathCosf(rb);
@@ -867,7 +867,7 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     op += 96;
     ip = (u16*)&table->flags[i << 1];
     ip += 64;
-    sfx16 = (u16)sfxId;
+    sfx16 = sfxId;
     for (; i >= 0; i--)
     {
         if (*op == obj && sfx16 == *ip)
@@ -1223,7 +1223,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
     }
     volf = (f32)(u32)
     objectChannel->volume;
-    level = (int)volf;
+    level = volf;
     near = *(f32*)((u8*)objectChannel + 0x20);
     far = *(f32*)((u8*)objectChannel + 0x24);
     dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
@@ -1394,7 +1394,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
         return;
     }
     ch->sfxId = sfxId;
-    ch->channelMask = (u16)i9;
+    ch->channelMask = i9;
     ch->object = obj;
     if (pos != NULL)
     {
@@ -1407,7 +1407,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
             {
                 t = 1;
             }
-            ch->tracksObjectPosition = (u8)t;
+            ch->tracksObjectPosition = t;
         }
         ch->x = pos[0];
         ch->y = pos[1];
@@ -2820,7 +2820,7 @@ void audioSetSoundMode(int mode, u8 forceFlag)
             OSSetSoundMode(1);
         }
     }
-    gAudioSoundMode = (s8)mode;
+    gAudioSoundMode = mode;
 }
 
 #pragma dont_inline on
@@ -2845,7 +2845,7 @@ void audioLoadTriggerData(void)
     gSfxTriggersCount = (u32)info >> 5;
     gAudioPendingLoadFlags |= 0x4;
     gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
-    gStreamsCount = (u32)info / sizeof(StreamEntry);
+    gStreamsCount = info / sizeof(StreamEntry);
 }
 #pragma dont_inline reset
 
@@ -2895,7 +2895,7 @@ int audioInit(void)
         *(f32*)&lbl_80335C40[0x144] = lbl_803DE55C;
         sndAuxCallbackUpdateSettingsReverbSTD(lbl_80335C40);
         reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, (void*)sndAuxCallbackReverbSTD, lbl_80335C40, 0xff, 0, 0, 0,
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, lbl_80335C40, 0xff, 0, 0, 0,
                                      0xff, reverbWork);
         if (!sndIsInstalled())
         {
@@ -2964,7 +2964,7 @@ int audioInit(void)
     {
         for (v = 1; v <= 0x37; v++)
         {
-            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, (u16)v, gAudioStarfoxSSampleBufferHandle,
+            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, v, gAudioStarfoxSSampleBufferHandle,
                              gAudioStarfoxSSampleDirectoryHandle, gAudioStarfoxSPoolDataHandle) == 0)
             {
                 OSReport(base + 0x2c8, v);

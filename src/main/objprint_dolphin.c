@@ -249,7 +249,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 
     savedEnvColor = DAT_803df670;
     renderHandle = FUN_80017624(obj, '\0');
-    if (renderHandle != (int*)0x0)
+    if (renderHandle != 0x0)
     {
         FUN_800175b0((int)renderHandle, 4);
         FUN_800175d4((double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684, renderHandle);
@@ -269,7 +269,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025c5f0(0, 0x1c);
     GXSetBlendMode(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
-    FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + (uint)DAT_803dd8bd * shadowStride) * 4), 0);
+    FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + DAT_803dd8bd * shadowStride) * 4), 0);
     FUN_80247a7c((double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C, mtx);
     FUN_8025d8c4(mtx, 0x40, 0);
     FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
@@ -324,7 +324,7 @@ void FUN_8003df64(undefined4 obj, undefined4 owner, int* cmdStream, float* outMt
         boneCount1 = *(byte*)(tmp + 0xf4);
         dstMtx = srcMtx + 0x9c0;
         FUN_80017794(0);
-        for (tmp = 0; tmp < (int)((uint)boneCount0 + (uint)boneCount1); tmp = tmp + 1)
+        for (tmp = 0; tmp < (int)((uint)boneCount0 + boneCount1); tmp = tmp + 1)
         {
             FUN_80247618(outMtx, dstMtx, srcMtx);
             dstMtx = dstMtx + 0x10;
@@ -417,7 +417,7 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
             singleHit = false;
         }
     }
-    prevEntry = (uint*)0x0;
+    prevEntry = 0x0;
     i = 0;
     do
     {
@@ -509,11 +509,11 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                         {
                             ObjTextureRuntimeSlot* slot =
                                 &((GameObject*)modelData)->anim.textureSlots[boneIndex];
-                            convLo0 = (int)slot->offsetS ^ 0x80000000;
+                            convLo0 = slot->offsetS ^ 0x80000000;
                             convHi0 = 0x43300000;
                             u = (double)(lbl_803DF6C8 *
                                 (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
-                            convLo1 = (int)slot->offsetT ^ 0x80000000;
+                            convLo1 = slot->offsetT ^ 0x80000000;
                             convHi1 = 0x43300000;
                             v = (double)(lbl_803DF6C8 *
                                 (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
@@ -571,12 +571,12 @@ char fn_8003EA84(undefined4 obj, undefined4 owner, int* node, uint phaseMask, in
                         *(char*)((int)&DAT_803dd8d4 + 3) = a;
                         if ((desc[0x40] & 0x10U) == 0)
                         {
-                            FUN_80051fc4(texId, uvPtr, boneCount, (char*)&DAT_803dd8d4,
+                            FUN_80051fc4(texId, uvPtr, boneCount, &DAT_803dd8d4,
                                          (uint) * (byte*)(node + 2), 1);
                         }
                         else
                         {
-                            FUN_80051b04(texId, uvPtr, boneCount, (char*)&DAT_803dd8d4);
+                            FUN_80051b04(texId, uvPtr, boneCount, &DAT_803dd8d4);
                         }
                     }
                 }
@@ -837,7 +837,7 @@ void fn_8003EEEC(undefined4 objArg, undefined4 owner, int* node, int* cmdStream)
                     {
                         cmd = 0;
                         gxSetZMode_(1, 3, 1);
-                        FUN_8025c754(4, (uint)DAT_803dd8bc, 0, 4, (uint)DAT_803dd8bc);
+                        FUN_8025c754(4, DAT_803dd8bc, 0, 4, DAT_803dd8bc);
                     }
                 }
                 else
@@ -944,7 +944,7 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
         }
         else
         {
-            FUN_80017988(renderNode, obj, (int)modelData, &DAT_802cbac0);
+            FUN_80017988(renderNode, obj, modelData, &DAT_802cbac0);
             FUN_8003c10c(obj, renderNode);
         }
         cmdOffset = *(int*)(modelData + 0x2a);
@@ -987,7 +987,7 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
             trackIntersect_drawColorBand();
             FUN_80052904();
             texId = FUN_80053078(*(uint*)(*(int*)(obj + 0x38) + 0x24));
-            FUN_80051fc4(texId, 0, 0, (char*)&color, 0, 0);
+            FUN_80051fc4(texId, 0, 0, &color, 0, 0);
             callbackResult = FUN_80048094();
             if (callbackResult != '\0')
             {
@@ -1032,7 +1032,7 @@ void fn_8003F8EC(undefined4 objArg, undefined4 owner, int obj)
     cmdCursor = cmdCursor + 4;
     FUN_8003df64((undefined4)obj, (undefined4)renderNode, cmdDesc, worldMtx);
     texId = cmdCursor + 4;
-    cmdOffset = (int)texId >> 3;
+    cmdOffset = texId >> 3;
     cmdPtr = cmdDesc[0] + cmdOffset;
     cmdCursor = cmdCursor + 0xc;
     texEntry = (undefined4*)
@@ -1119,12 +1119,12 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
             done = *(int *)&((GameObject *)obj)->anim.targetObj == 0;
             if (done)
             {
-                FUN_80017988(renderNode, obj, (int)modelData, localMtx);
+                FUN_80017988(renderNode, obj, modelData, localMtx);
             }
             else
             {
                 FUN_802475b8(prevMtx);
-                FUN_80017988(renderNode, obj, (int)modelData, prevMtx);
+                FUN_80017988(renderNode, obj, modelData, prevMtx);
                 FUN_800178d0(renderNode, localMtx, (float*)&DAT_80343a70);
             }
             done = !done;
@@ -1147,9 +1147,9 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
             {
                 node = renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7];
             }
-            FUN_800179cc(&DAT_80343a70, obj + 0x88, node, (int*)renderNode[0x10],
+            FUN_800179cc(&DAT_80343a70, obj + 0x88, node, renderNode[0x10],
                          renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7]);
-            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int *)&((GameObject *)obj)->anim.velocityZ, (uint*)renderNode[0x11],
+            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int *)&((GameObject *)obj)->anim.velocityZ, renderNode[0x11],
                          *(byte*)(obj + 0x24) & 8);
         }
         if (*(char*)(obj + 0xf7) == '\0')
@@ -1166,7 +1166,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
         }
         else
         {
-            FUN_800178f0(renderNode, obj, (int)modelData, (float*)0x0, (int)(ushort*)(u32)ctx);
+            FUN_800178f0(renderNode, obj, modelData, (float*)0x0, (int)(ushort*)(u32)ctx);
         }
         *(ushort*)(renderNode + 6) = *(ushort*)(renderNode + 6) | 8;
     }
@@ -1177,7 +1177,7 @@ void fn_8003FDA8(undefined4 objArg, undefined4 owner, int obj)
     if (*(int *)&((GameObject *)obj)->anim.targetObj != 0)
     {
         FUN_80247618(viewMtx, localMtx, worldMtx);
-        FUN_8025d80c(worldMtx, (uint)DAT_802cbab1);
+        FUN_8025d80c(worldMtx, DAT_802cbab1);
     }
     do
     {
@@ -1335,7 +1335,7 @@ void FUN_800400b0(void)
         vol = volumes;
         for (i = 0; i < (int)(uint)((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i = i + 1)
         {
-            jointIdx = (int)vol->jointIndices[((GameObject*)obj)->anim.bankIndex];
+            jointIdx = vol->jointIndices[((GameObject*)obj)->anim.bankIndex];
             if (jointIdx < 0)
             {
                 jointMtx = (float*)0x0;
@@ -1382,11 +1382,11 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, ushort* obj,
     local_28 = 0x43300000;
     local_8c = (f32)(s32)
     uStack_24;
-    uStack_1c = (int)in[1] ^ 0x80000000;
+    uStack_1c = in[1] ^ 0x80000000;
     local_20 = 0x43300000;
     local_88 = (f32)(s32)
     uStack_1c;
-    uStack_14 = (int)in[2] ^ 0x80000000;
+    uStack_14 = in[2] ^ 0x80000000;
     local_18 = 0x43300000;
     local_84 = (f32)(s32)
     uStack_14;
@@ -1567,7 +1567,7 @@ void FUN_80040784(undefined4 obj, undefined4 owner, uint shadowFlag)
             dx = (double)(*(float*)(child + 6) - *(float*)(cam + 6));
             dz = (double)(*(float*)(child + 10) - *(float*)(cam + 10));
             boneOff = FUN_80017730();
-            local_dc = (short)boneOff + 0x8000;
+            local_dc = boneOff + 0x8000;
             FUN_80293900((double)(float)(dx * dx + (double)(float)(dz * dz)));
             boneOff = FUN_80017730();
             local_da = (undefined2)boneOff;
@@ -1836,7 +1836,7 @@ void FUN_80040da0(void)
                             if (((((mode != 2) && (pass != 0)) && ((*slotPtr != 0 && (*idTblPtr != -1)))) &&
                                     ((status = FUN_80017800(*slotPtr), status == 1 ||
                                         (status = FUN_80017800(*slotPtr), status == 2)))) &&
-                                ((newPtr = FUN_80017824(*slotPtr), 0x2fff < (int)newPtr &&
+                                ((newPtr = FUN_80017824(*slotPtr), 0x2fff < newPtr &&
                                     (newPtr = FUN_80017830(*sizePtr + 0x20, 0x7d7d7d7d), newPtr != 0))))
                             {
                                 status = FUN_80017800(newPtr);
@@ -1919,7 +1919,7 @@ void FUN_80041c10(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     if (*(short*)(&DAT_802cc9d4 + charId * 2) != -1)
     {
         charPos = (int)(*gMapEventInterface)->getCurCharPos();
-        *(char*)(charPos + 0xe) = (char)charId;
+        *(char*)(charPos + 0xe) = charId;
         param_1 = extraout_f1;
     }
     acc = FUN_800443fc(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
@@ -2061,8 +2061,8 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
     srcBDone = false;
     count = 0;
     srcA = (uint*)(&DAT_80360048)[srcIdxA];
-    if (((srcA == (uint*)0x0) || ((&DAT_80360048)[srcIdxB] == 0)) &&
-        (srcADone = srcA == (uint*)0x0, (&DAT_80360048)[srcIdxB] == 0))
+    if (((srcA == 0x0) || ((&DAT_80360048)[srcIdxB] == 0)) &&
+        (srcADone = srcA == 0x0, (&DAT_80360048)[srcIdxB] == 0))
     {
         srcBDone = true;
     }
@@ -2190,7 +2190,7 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
                 else
                 {
                     *out = val & 0xffffff | 0x20000000;
-                    if ((srcA != (uint*)0x0) && (*srcAlt == 0xffffffff))
+                    if ((srcA != 0x0) && (*srcAlt == 0xffffffff))
                     {
                         srcADone = true;
                     }
@@ -2199,7 +2199,7 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
             else
             {
                 *out = val;
-                if ((srcB != (uint*)0x0) && (*outAlt == 0xffffffff))
+                if ((srcB != 0x0) && (*outAlt == 0xffffffff))
                 {
                     srcBDone = true;
                 }
@@ -2344,9 +2344,9 @@ undefined4 FUN_80043E64(uint* dstBuf, int srcIdxA, int srcIdxB)
                 {
                     if (((srcBDone) || (val = *srcAlt, val == 0xffffffff)) || ((val & 0x10000000) == 0))
                     {
-                        if ((srcADone) || (srcA == (uint*)0x0))
+                        if ((srcADone) || (srcA == 0x0))
                         {
-                            if ((srcBDone) || (srcB == (uint*)0x0))
+                            if ((srcBDone) || (srcB == 0x0))
                             {
                                 *outAlt = 0;
                             }
@@ -3085,7 +3085,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
                 u32 w;
                 int pos = bs->pos;
                 int off = pos >> 3;
-                u8* p = (u8*)(off + (char*)bs->data);
+                u8* p = (u8*)(off + bs->data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -3300,7 +3300,7 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
 {
     u8* tbl = lbl_802CAED0;
     char* cache = getCache();
-    u8* hdr = (u8*)hdrArg;
+    u8* hdr = hdrArg;
     if (lbl_803DCC48 == 1)
     {
         if (skip == 0)
@@ -3355,7 +3355,7 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
                 u32 w;
                 int pos = bs->pos;
                 int off = pos >> 3;
-                u8* p = (u8*)(off + (char*)bs->data);
+                u8* p = (u8*)(off + bs->data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -3420,7 +3420,7 @@ extern void GXBegin(int prim, int fmt, u16 count);
 
 void objRenderFn_8003d980(void* objArg, int* p2)
 {
-    u8* obj = (u8*)objArg;
+    u8* obj = objArg;
     f32 wm[16];
     f32 cm[16];
     f32 sm[12];
@@ -4232,7 +4232,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         {
             u32 w;
             int pos = bs.pos;
-            u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+            u8* p = (u8*)((pos >> 3) + bs.data);
             w = p[0];
             w |= p[1] << 8;
             w |= p[2] << 16;
@@ -4250,7 +4250,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             {
                 u32 w;
                 int pos = bs.pos;
-                u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+                u8* p = (u8*)((pos >> 3) + bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -4285,7 +4285,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 u8* dl;
                 u32 w;
                 int pos = bs.pos;
-                u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+                u8* p = (u8*)((pos >> 3) + bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -4665,7 +4665,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         {
             u32 w;
             int pos = bs.pos;
-            u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+            u8* p = (u8*)((pos >> 3) + bs.data);
             w = p[0];
             w |= p[1] << 8;
             w |= p[2] << 16;
@@ -4690,7 +4690,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                     u32 idx;
                     u32 w;
                     int pos = bs.pos;
-                    u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+                    u8* p = (u8*)((pos >> 3) + bs.data);
                     w = p[0];
                     w |= p[1] << 8;
                     w |= p[2] << 16;
@@ -4707,7 +4707,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 u8* dl;
                 u32 w;
                 int pos = bs.pos;
-                u8* p = (u8*)((pos >> 3) + (char*)bs.data);
+                u8* p = (u8*)((pos >> 3) + bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -4822,8 +4822,8 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                                 {
                                     if ((int)jid2 == q2->materialIndex)
                                     {
-                                        tx = lbl_803DEA48 * (f32)slots2[k2].offsetS;
-                                        ty = lbl_803DEA48 * (f32)slots2[k2].offsetT;
+                                        tx = lbl_803DEA48 * slots2[k2].offsetS;
+                                        ty = lbl_803DEA48 * slots2[k2].offsetT;
                                         goto trans;
                                     }
                                     q2++;
@@ -5118,8 +5118,8 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 {
                     if ((int)jid == q->materialIndex)
                     {
-                        tx = lbl_803DEA48 * (f32)slots[k].offsetS;
-                        ty = lbl_803DEA48 * (f32)slots[k].offsetT;
+                        tx = lbl_803DEA48 * slots[k].offsetS;
+                        ty = lbl_803DEA48 * slots[k].offsetT;
                         goto trans2;
                     }
                     q++;
@@ -5965,7 +5965,7 @@ void mapLoadDataFiles(int mapIdx)
     if (sMapFileNameAdjacencyTable[mapIdx] != -1)
     {
         int* r = (int*)(*gMapEventInterface)->getCurCharPos();
-        *(s8*)((char*)r + 0xe) = (s8)mapIdx;
+        *(s8*)((char*)r + 0xe) = mapIdx;
     }
     mapLoadDataFile(mapIdx, 0x20);
     mapLoadDataFile(mapIdx, 0x21);
