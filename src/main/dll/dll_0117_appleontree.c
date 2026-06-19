@@ -558,7 +558,7 @@ typedef struct AppleontreeObjectDef
     u8 unk23;
     u8 unk24;
     s8 unk25;
-    s16 unk26;
+    s16 gameBit;
 } AppleontreeObjectDef;
 
 void appleontree_update(int objArg)
@@ -896,7 +896,7 @@ void appleontree_init(int obj, int def)
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
         Obj_SetActiveModelIndex(obj, 0);
 
-        eventBit = ((AppleontreeObjectDef*)def)->unk26;
+        eventBit = ((AppleontreeObjectDef*)def)->gameBit;
         if ((eventBit != -1) && (GameBit_Get(eventBit) != 0))
         {
             ((CrackAnimState*)state)->elapsed = lbl_803E3838;
