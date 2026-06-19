@@ -95,7 +95,7 @@ void dimtruthhornice_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
     {
         s16 slot = state->gameBit;
-        if (slot != -1 && (u32)GameBit_Get(slot) != 0u)
+        if (slot != -1 && GameBit_Get(slot) != 0u)
         {
             ObjHits_DisableObject(obj);
             state->phase = 2;
@@ -126,7 +126,7 @@ void dimtruthhornice_update(int* obj)
         }
         else
         {
-            int* tricky = (int*)getTrickyObject();
+            int* tricky = getTrickyObject();
             if (tricky != NULL)
             {
                 if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)

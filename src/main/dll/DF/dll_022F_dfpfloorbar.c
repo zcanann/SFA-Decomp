@@ -119,7 +119,7 @@ void dfpfloorbar_update(int obj)
     {
         state->active = 0;
     }
-    state->lastSequenceValue = (u8)sequenceValue;
+    state->lastSequenceValue = sequenceValue;
 
     if (state->linkedObject == NULL)
     {
@@ -127,7 +127,7 @@ void dfpfloorbar_update(int obj)
         int idx_init;
         int count;
         int idx;
-        items = (int*)ObjList_GetObjects(&idx_init, &count);
+        items = ObjList_GetObjects(&idx_init, &count);
         idx = idx_init;
         for (; idx < count; idx++)
         {
@@ -216,7 +216,7 @@ void dfpfloorbar_init(int obj, int params)
     DfpFloorbarState* state = ((GameObject*)obj)->extra;
 
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(params + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dfpfloorbar_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dfpfloorbar_SeqFn;
     state->modeIndex = *(u8*)(params + 0x19);
     state->triggerGameBit = *(s16*)(params + 0x1e);
     state->completionGameBit = *(s16*)(params + 0x20);

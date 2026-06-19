@@ -96,7 +96,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;
-            actionPayload.y = (s16)gCamcontrolPathState->actionParamY;
+            actionPayload.y = gCamcontrolPathState->actionParamY;
             (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &actionPayload, 0, 0xff);
         }
     }
@@ -221,7 +221,7 @@ void camclimb_update(CameraObject* cam)
 #pragma peephole on
 static f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
-    return (lbl_803E1760 * (f32)angle) / lbl_803E1764;
+    return (lbl_803E1760 * angle) / lbl_803E1764;
 }
 
 #pragma scheduling off

@@ -94,7 +94,7 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     lbl_803DC0F0 = framesThisStep;
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
@@ -362,7 +362,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
         return;
     }
     objSetSlot(obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = (void*)WM_Galleon_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WM_Galleon_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;
     state->savedX = OBJ_F32(obj, 0xc);

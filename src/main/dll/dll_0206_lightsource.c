@@ -188,7 +188,7 @@ void lightsource_update(int obj)
             }
         }
     }
-    t = (char*)b->light;
+    t = b->light;
     if (t != NULL && *(u8*)(t + 0x2f8) != 0 && *(u8*)(t + 0x4c) != 0)
     {
         sum = (s16)(*(u8*)(t + 0x2f9) + *(s8*)(t + 0x2fa));
@@ -202,7 +202,7 @@ void lightsource_update(int obj)
             sum = 255;
             *(u8*)(t + 0x2fa) = 0;
         }
-        *(u8*)((char*)b->light + 0x2f9) = (u8)sum;
+        *(u8*)((char*)b->light + 0x2f9) = sum;
     }
     if (((GameObject*)obj)->anim.seqId != 0x705 && ((GameObject*)obj)->anim.seqId != 0x712)
     {
@@ -246,7 +246,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     range = setup->range;
     if (range > 0)
     {
-        obj->anim.rootMotionScale = (f32)range / lbl_803E5E20;
+        obj->anim.rootMotionScale = range / lbl_803E5E20;
     }
     else
     {

@@ -134,7 +134,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     u8 flags;
     u8 fl;
     int fe;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     dy = ((GameObject*)rider)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if (dy < lbl_803E416C)
     {
@@ -395,11 +395,11 @@ void windlift_update(int* obj)
         Obj_SetActiveModelIndex(obj, 1);
         gb2 = GameBit_Get(sub->delay);
         {
-            int m = (u16)framesThisStep * 0xb6;
+            int m = framesThisStep * 0xb6;
             ((GameObject*)obj)->anim.rotX -= m * ((gb2 << 2) + 0xe);
         }
         pull = (f32)((WindliftPlacement*)def)->unk1A;
-        player = (char*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         if (GameBit_Get(sub->seqId) != 0)
         {
             if (!sub->musicOn)
@@ -433,7 +433,7 @@ void windlift_update(int* obj)
                 sub->slots[0].b10 &= ~0xf1;
             }
         }
-        objs = (int**)ObjGroup_GetObjects(0x16, &count);
+        objs = ObjGroup_GetObjects(0x16, &count);
         count = count + 1;
         if (count > 0xe)
         {

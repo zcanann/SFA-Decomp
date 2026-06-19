@@ -361,7 +361,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 param_2, ObjAnimUpdateState* ani
         if ((runtime->eventGameBit != -1) &&
             (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0))
         {
-            DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate, (int)config->eventId);
+            DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate, config->eventId);
             runtime->eventGameBit = -1;
         }
         hitReactMode = runtime->hitReactMode;
@@ -527,7 +527,7 @@ void DIMboss_update(DIMbossObject* obj)
             if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0)
             {
                 DIMboss_GetBaddieControlInterface()->startMove(
-                    obj, runtime, runtime->moveScratch, (int)runtime->activeMoveId, &runtime->hitReactMode,
+                    obj, runtime, runtime->moveScratch, runtime->activeMoveId, &runtime->hitReactMode,
                     0, 0, 0, 1);
                 runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
                 obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;

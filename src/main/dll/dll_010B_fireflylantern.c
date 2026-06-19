@@ -134,7 +134,7 @@ void FireFlyLantern_init(int obj, int def)
     u32 childCount;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)FireFlyLantern_SeqFn;
+    ((GameObject*)obj)->animEventCallback = FireFlyLantern_SeqFn;
     player = (void*)Obj_GetPlayerObject();
     if (((GameObject*)player)->anim.seqId != 0)
     {

@@ -56,16 +56,16 @@ void ccpedstal_init(int* obj, u8* params)
     switch (*(int*)(params + 0x14))
     {
     case PEDSTAL_DEF_ALT:
-        state->think = (void*)ccpedstal_updateAltVariant;
+        state->think = ccpedstal_updateAltVariant;
         state->gameBit = 0xaa;
         Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
         break;
     case PEDSTAL_DEF_GATE_A:
-        state->think = (void*)ccpedstal_updateGameBitGate;
+        state->think = ccpedstal_updateGameBitGate;
         state->gameBit = 0xf1;
         break;
     case PEDSTAL_DEF_GATE_B:
-        state->think = (void*)ccpedstal_updateGameBitGate;
+        state->think = ccpedstal_updateGameBitGate;
         state->gameBit = 0xfe;
         break;
     }

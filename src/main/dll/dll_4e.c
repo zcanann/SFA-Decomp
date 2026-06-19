@@ -153,7 +153,7 @@ void optionsMenu_applyGameplaySetting(int action, int option)
             setWidescreen((u8)(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]));
             break;
         case GAMEPLAY_OPTION_RUMBLE:
-            newState = (u8)!(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            newState = !(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
             if (newState == 0)
             {
                 stopRumble2();

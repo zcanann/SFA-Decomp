@@ -216,9 +216,9 @@ void arwproximit_update(int obj)
             state->phase = ARWPROXIMIT_PHASE_DONE;
         }
         ((GameObject*)obj)->anim.rotZ =
-            timeDelta * (f32)state->spinSpeed + (f32)((GameObject*)obj)->anim.rotZ;
+            timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotZ;
         ((GameObject*)obj)->anim.rotY =
-            timeDelta * (f32)state->spinSpeed + (f32)((GameObject*)obj)->anim.rotY;
+            timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotY;
     }
 
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
@@ -231,13 +231,13 @@ void arwproximit_init(int obj, int setup, int p3)
     ARWProximitState* state = ((GameObject*)obj)->extra;
     ARWProximitSetup* mapData = (ARWProximitSetup*)setup;
 
-    state->spinSpeed = (s16)randomGetRange(0x64, 0x12c);
+    state->spinSpeed = randomGetRange(0x64, 0x12c);
     state->textVariant = mapData->textVariant;
     if (p3 == 0)
     {
-        ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
-        ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
-        ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotY = randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotZ = randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }

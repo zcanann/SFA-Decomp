@@ -156,7 +156,7 @@ void dll_92_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     e[8].z = lbl_803E1214;
     buf.unk_58 = 0;
     buf.ctx = sourceObj;
-    buf.unk_44 = (s16)variant;
+    buf.unk_44 = variant;
     buf.pos[0] = lbl_803E1214;
     buf.pos[1] = lbl_803E1214;
     buf.pos[2] = lbl_803E1214;

@@ -297,7 +297,7 @@ void wmseqpoint_update(int obj)
     switch (state->triggerMode)
     {
     case WMSEQPOINT_TRIGGER_PROXIMITY:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)&((GameObject*)player)->anim.worldPosX) < state->triggerRadius)
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
@@ -328,7 +328,7 @@ void wmseqpoint_update(int obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_SET:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)&((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
             state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) != 0)
         {
             if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_1)
@@ -346,7 +346,7 @@ void wmseqpoint_update(int obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_CLEAR:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)&((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
             state->conditionGameBit != -1 && GameBit_Get(state->conditionGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
@@ -380,9 +380,9 @@ void wmseqpoint_init(int obj, int setup)
 
     state = ((GameObject*)obj)->extra;
     mapData = (WmSeqPointMapData*)setup;
-    ((GameObject*)obj)->animEventCallback = (void*)wmseqpoint_SeqFn;
+    ((GameObject*)obj)->animEventCallback = wmseqpoint_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
-    state->triggerRadius = (f32)mapData->triggerRadius;
+    state->triggerRadius = mapData->triggerRadius;
     state->sequenceId = mapData->sequenceId;
     state->doneLatch = 0;
     state->triggerMode = mapData->triggerMode;

@@ -85,7 +85,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         sub->guardState = 6;
         return 0;
     case 5:
-        sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
+        sub->alarmRamp = lbl_803E4264 * framesThisStep + sub->alarmRamp;
         break;
     }
     if (((GameObject*)obj)->seqIndex < 0)
@@ -110,7 +110,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     moved = 0;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     switch (sub->guardState)
     {
     case 0:
@@ -256,7 +256,7 @@ void cfprisonguard_update(int* obj)
     f32 dist;
 
     sub = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (((u32)sub->flags39 >> 7) & 1u)
     {
@@ -307,7 +307,7 @@ void cfprisonguard_init(int* obj, u8* params)
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
     sub->flags = 1;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
+    ((GameObject*)obj)->animEventCallback = cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
     if (GameBit_Get(0x4d) != 0)

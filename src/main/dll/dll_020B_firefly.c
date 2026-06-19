@@ -152,7 +152,7 @@ void FireFlyFn_801f4f88(int obj)
     ((GameObject*)obj)->anim.localPosZ = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(
         state->splineZ, state->splineT, 0);
     state->splineT = state->splineSpeed * timeDelta + state->splineT;
-    ((GameObject*)obj)->anim.rotX = (s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+    ((GameObject*)obj)->anim.rotX = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                                                   ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
     if (state->kind == FIREFLY_KIND_BLUE_MAIN || state->kind == FIREFLY_KIND_BLUE_NEAR)
     {
@@ -295,7 +295,7 @@ void firefly_update(int obj)
         if (state->despawnTimer > lbl_803E5EC4) /* 0.0f */
         {
             state->despawnTimer -= timeDelta;
-            if (state->despawnTimer > (f32)lbl_803DC128) /* 170 */
+            if (state->despawnTimer > lbl_803DC128) /* 170 */
             {
                 itemPickupDoParticleFx(obj, lbl_803E5EDC, 4, 5);
             }

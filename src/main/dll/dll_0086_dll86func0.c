@@ -65,7 +65,7 @@ void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     e = buf.entries;
     e[0].layer = 0;
-    *(s16*)&e[0].flags = (s16)fl;
+    *(s16*)&e[0].flags = fl;
     e[0].tex = NULL;
     e[0].mode = 0x20000000;
     e[0].x = lbl_803E0FD0;
@@ -103,7 +103,7 @@ void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[4].z = fy;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     rx = (f32)(int)randomGetRange(-0x64, 0x64);
     buf.pos[0] = rx;
     buf.pos[1] = lbl_803E0FD4;

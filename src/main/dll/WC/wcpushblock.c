@@ -223,14 +223,14 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
 
     (*gCloudActionInterface)->setRotorAngle(state->rotorAngle);
 
-    angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
+    angle = (lbl_803E5C84 * state->rotorAngle) / lbl_803E5C88;
     rotorCos = mathCosf(angle);
-    angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
+    angle = (lbl_803E5C84 * state->rotorAngle) / lbl_803E5C88;
     rotorSin = mathSinf(angle);
 
     if (state->linkedPushBlock != NULL)
     {
-        targetLift = (f32)state->pushRoll / lbl_803E5C8C;
+        targetLift = state->pushRoll / lbl_803E5C8C;
     }
     else
     {
@@ -264,12 +264,12 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
     int pitch;
     int roll;
 
-    targetPitch = (-(s32)state->stickY * WCPUSHBLOCK_PITCH_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
-    targetRoll = (-(s32)state->stickX * WCPUSHBLOCK_ROLL_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
+    targetPitch = (-state->stickY * WCPUSHBLOCK_PITCH_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
+    targetRoll = (-state->stickX * WCPUSHBLOCK_ROLL_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
 
     {
         f32 t = (f32)(state->stickX << 3) / lbl_803E5C98;
-        state->cloudYawDrift = (s16)(-(t * timeDelta - (f32)state->cloudYawDrift));
+        state->cloudYawDrift = (s16)(-(t * timeDelta - state->cloudYawDrift));
     }
     state->cloudYawDrift =
         (s16)(state->cloudYawDrift -
@@ -309,7 +309,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
     {
         pitch = WCPUSHBLOCK_MAX_PITCH;
     }
-    obj->pitch = (s16)pitch;
+    obj->pitch = pitch;
 
     roll = state->pushRoll;
     if (roll < -WCPUSHBLOCK_MAX_ROLL)
@@ -320,7 +320,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
     {
         roll = WCPUSHBLOCK_MAX_ROLL;
     }
-    state->pushRoll = (s16)roll;
+    state->pushRoll = roll;
 
     obj->yaw = (s16)(state->cloudYawDrift + 0x4000);
     obj->roll = state->pushRoll;

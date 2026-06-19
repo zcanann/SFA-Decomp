@@ -55,7 +55,7 @@ void fn_801BEEA0(s16* obj, u8* state)
         turnDelta = (s16)((turnDelta + 0x10000) - 1);
     }
 
-    *(f32*)(motion + 0x4) = *(f32*)(motion + 0x4) + (f32)((int)(turnDelta / 16) * (int)framesThisStep);
+    *(f32*)(motion + 0x4) = *(f32*)(motion + 0x4) + (f32)((int)(turnDelta / 16) * framesThisStep);
     ((GameObject*)obj)->anim.rotZ = (s16)((f32)(int)((GameObject*)obj)->anim.rotZ + *(f32*)(motion + 0x4));
 
     *(f32*)(motion + 0x0) = *(f32*)(motion + 0x0) / lbl_803E4D0C;

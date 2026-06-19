@@ -92,7 +92,7 @@ void sh_beacon_init(int obj, int defData)
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 
-    ((ShBeaconState*)state)->mode = (u8)GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
+    ((ShBeaconState*)state)->mode = GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
     if (((ShBeaconState*)state)->mode == 0)
     {
         if (GameBit_Get(((ShBeaconPlacement*)defData)->igniteGameBit) != 0)
@@ -113,7 +113,7 @@ void sh_beacon_init(int obj, int defData)
         ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
     }
 
-    ((GameObject*)obj)->animEventCallback = (void*)sh_beacon_SeqFn;
+    ((GameObject*)obj)->animEventCallback = sh_beacon_SeqFn;
 }
 
 void sh_beacon_update(int obj)

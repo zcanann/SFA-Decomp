@@ -188,7 +188,7 @@ void cfforcefield_update(u8* obj)
         }
         else
         {
-            state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
+            state->flags.disabled = GameBit_Get(data->collapseEvent);
         }
     }
 }
@@ -201,7 +201,7 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
         s16 t = v << 8;
         obj->anim.rotX = t;
     }
-    state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
+    state->flags.disabled = GameBit_Get(data->collapseEvent);
     storeZeroToFloatParam(&state->timer);
 }
 

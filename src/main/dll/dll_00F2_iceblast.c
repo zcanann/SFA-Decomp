@@ -56,7 +56,7 @@ void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f
 #pragma scheduling off
 void iceblast_init(int obj, IceblastPlacement* p)
 {
-    *(f32*)((GameObject*)obj)->extra = (f32)p->unk1A;
+    *(f32*)((GameObject*)obj)->extra = p->unk1A;
     ObjHits_SetTargetMask(obj, 1);
 }
 #pragma reset
@@ -74,7 +74,7 @@ void iceblast_update(int* obj)
         s16 pad;
         f32 pos[4];
     } vec;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     def = *(int**)&((GameObject*)obj)->anim.placementData;
     if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)

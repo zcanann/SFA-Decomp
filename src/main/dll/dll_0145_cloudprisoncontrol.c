@@ -101,7 +101,7 @@ void cloudprisoncontrol_update(int obj)
                 n = lbl_803DDB09;
                 for (i = 0; i < n; i++)
                 {
-                    if (*(u32*)p == (u32)target)
+                    if (*(u32*)p == target)
                     {
                         *(s16*)((char*)p + 4) = dval;
                         found = 1;
@@ -127,7 +127,7 @@ void cloudprisoncontrol_update(int obj)
             break;
         case CPMSG_UNREGISTER:
             i = 0;
-            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *(u32*)p != (u32)target; p += 2)
+            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *(u32*)p != target; p += 2)
             {
                 i++;
             }

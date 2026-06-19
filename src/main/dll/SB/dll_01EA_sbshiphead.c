@@ -152,7 +152,7 @@ void SB_ShipHead_update(int obj)
         camState = DBprotection_getCameraState(getSbGalleon());
         if (camState == 2)
         {
-            if (Vec_distance((void*)(player + 0x18), (void*)&o->anim.worldPosX) < lbl_803E5840)
+            if (Vec_distance((void*)(player + 0x18), &o->anim.worldPosX) < lbl_803E5840)
             {
                 Sfx_PlayFromObject(obj, SFXfend_rob_armin);
             }
@@ -165,7 +165,7 @@ void SB_ShipHead_update(int obj)
         hs = o->extra;
         if (*(void**)&hs->target == 0)
         {
-            int* arr = (int*)ObjList_GetObjects(&start, &end);
+            int* arr = ObjList_GetObjects(&start, &end);
             for (i = start; i < end; i++)
             {
                 if (((GameObject*)arr[i])->anim.seqId == SB_SHIPHEAD_TARGET_SEQID)

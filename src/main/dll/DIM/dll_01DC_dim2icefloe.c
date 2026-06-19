@@ -152,9 +152,9 @@ void dim2icefloe_init(int obj, int p)
     ((Dim2IceFloeState*)sub)->yawJitter = (f32)(s32)
     randomGetRange(-0x1e, 0x1e);
     *(int*)(p + 0x14) = -1;
-    objAnim->bankIndex = (s8)randomGetRange(0, objAnim->modelInstance->modelCount - 1);
+    objAnim->bankIndex = randomGetRange(0, objAnim->modelInstance->modelCount - 1);
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(p + 0x18) << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
+    ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
     ((GameObject*)obj)->anim.alpha = 0;
     switch (((GameObject*)obj)->anim.seqId)
     {

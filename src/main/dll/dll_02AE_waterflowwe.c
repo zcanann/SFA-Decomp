@@ -119,8 +119,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
                 if (distance < radius)
                 {
                     strength = ((radius - distance) / radius) * (lbl_803E72C0 * other->anim.rootMotionScale);
-                    currentX += strength * mathSinf((lbl_803E72C4 * (f32)other->anim.rotX) / lbl_803E72C8);
-                    currentZ += strength * mathCosf((lbl_803E72C4 * (f32)other->anim.rotX) / lbl_803E72C8);
+                    currentX += strength * mathSinf((lbl_803E72C4 * other->anim.rotX) / lbl_803E72C8);
+                    currentZ += strength * mathCosf((lbl_803E72C4 * other->anim.rotX) / lbl_803E72C8);
                 }
             }
         }
@@ -145,7 +145,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
             if (distance < radius)
             {
                 strength = ((radius - distance) / radius) * objectStrength;
-                angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
+                angle = (lbl_803E72C4 * currentAngle) / lbl_803E72C8;
                 currentX += strength * mathSinf(angle);
                 currentZ += strength * mathCosf(angle);
             }
@@ -154,8 +154,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
 
     if (hasCurrent != 0)
     {
-        currentX = currentX / (f32)hasCurrent;
-        currentZ = currentZ / (f32)hasCurrent;
+        currentX = currentX / hasCurrent;
+        currentZ = currentZ / hasCurrent;
         {
             f32 k = lbl_803E72CC;
             current->currentX = current->currentX - k * currentX;
@@ -211,7 +211,7 @@ void waterflowwe_init(int obj, u8* setup)
 
 void waterflowwe_free(int obj)
 {
-    if ((u32)obj == (u32)lbl_803DDDA8)
+    if ((u32)obj == lbl_803DDDA8)
     {
         lbl_803DDDA8 = 0;
     }
@@ -241,7 +241,7 @@ void waterflowwe_update(int obj)
     {
         lbl_803DDDA8 = obj;
     }
-    if ((u32)obj == (u32)lbl_803DDDA8)
+    if ((u32)obj == lbl_803DDDA8)
     {
         f32 a;
 

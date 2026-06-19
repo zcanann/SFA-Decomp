@@ -58,7 +58,7 @@ void drearthcal_update(int obj)
         {
             {
                 int elem = ((int*)*(int*)(obj + 0x58))[i + 0x40];
-                if ((u32)elem == (u32)player)
+                if ((u32)elem == player)
                 {
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
                 }

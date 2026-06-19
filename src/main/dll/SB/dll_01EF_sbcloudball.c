@@ -255,7 +255,7 @@ void SB_FireBall_init(GameObject* obj);
  * call ObjLink_DetachChild(obj). */
 
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
+ * and obj->_b8[3], stash v in obj->_b8[4]. */
 
 /* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
  * obj->_b8[3] += p2. */

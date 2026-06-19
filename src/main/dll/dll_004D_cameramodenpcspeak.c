@@ -202,7 +202,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         break;
     }
 
-    yawA = (u16)getAngle(camera->anim.worldPosX - lbl_803DD584->anchorX,
+    yawA = getAngle(camera->anim.worldPosX - lbl_803DD584->anchorX,
                          camera->anim.worldPosZ - lbl_803DD584->anchorZ);
     yawB = (u16)getAngle(target->anim.worldPosX - lbl_803DD584->anchorX,
                          target->anim.worldPosZ - lbl_803DD584->anchorZ);
@@ -253,7 +253,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
             sd += 0xffff;
         }
         dd = sd - (u16)(s16)
-        Obj_GetYawDeltaToObject((int)target, (int)npc, 0);
+        Obj_GetYawDeltaToObject((int)target, npc, 0);
         if (dd > 0x8000)
         {
             dd -= 0xffff;
@@ -270,7 +270,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     }
 
     fn_8010DB7C(target, &va, &vb, &vc);
-    camcontrol_traceMove(&camera->anim.worldPosX, &va, (void*)&lbl_803DD584->cameraX, traceWork, 3, 1,
+    camcontrol_traceMove(&camera->anim.worldPosX, &va, &lbl_803DD584->cameraX, traceWork, 3, 1,
                          1, lbl_803E1A20);
 }
 #undef target
@@ -293,7 +293,7 @@ void CameraModeNpcSpeak_update(u8* obj)
     if (speakState->mode == 6)
     {
         speakState->orbitAngleOffset =
-            (s32)((f32)speakState->orbitAngleVelocity * timeDelta + (f32)speakState->orbitAngleOffset);
+            (s32)((f32)speakState->orbitAngleVelocity * timeDelta + speakState->orbitAngleOffset);
         if (lbl_803DD584->orbitAngleVelocity > 0 && lbl_803DD584->orbitAngleOffset > 0xd6d8)
         {
             lbl_803DD584->orbitAngleOffset = 0xd6d8;
@@ -349,7 +349,7 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
     dx = target->anim.worldPosX - state->anchorX;
     dz = target->anim.worldPosZ - state->anchorZ;
     dist = sqrtf(dx * dx + dz * dz);
-    angle = (u16)getAngle(dx, dz);
+    angle = getAngle(dx, dz);
 
     {
         f32 scale = lbl_803DD584->anchorLerpScale;

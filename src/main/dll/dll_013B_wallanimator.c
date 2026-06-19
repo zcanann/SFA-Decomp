@@ -120,7 +120,7 @@ f32 wallanimator_setScale(int obj, int target)
         offset[0] = jitterX * (f32)(int)randomGetRange(-0x64, 0x64);
         offset[1] = baseSpread;
         offset[2] = baseSpread;
-        spawn.rot[2] = (s16)randomGetRange(-0x7fff, 0x8000);
+        spawn.rot[2] = randomGetRange(-0x7fff, 0x8000);
         spawn.rot[1] = 0;
         spawn.rot[0] = 0;
         vecRotateZXY(spawn.rot, offset);
@@ -154,7 +154,7 @@ f32 wallanimator_setScale(int obj, int target)
         else
         {
             state->timer += 0x3c;
-            scale = (f32)state->timer / lbl_803E3FEC;
+            scale = state->timer / lbl_803E3FEC;
         }
     }
     return scale;

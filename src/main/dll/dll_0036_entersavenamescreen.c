@@ -62,7 +62,7 @@ void EnterSaveNameScreen_render(void)
     buf[1] = 0;
     gameTextSetDrawFunc(nameEntryTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
-    fn_80135814((int)(lbl_803DD6E0 + (f32)lbl_803DD6DC - lbl_803E1D88), 0);
+    fn_80135814((int)(lbl_803DD6E0 + lbl_803DD6DC - lbl_803E1D88), 0);
     gameTextBoxFn_80134d40(0xff, 1, 1);
     gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
     gameTextShow(0x3ae);
@@ -76,12 +76,12 @@ void EnterSaveNameScreen_render(void)
         gameTextShowStr(buf, i + 0x2a, 0, 0);
     }
 
-    lbl_803DD6D8 = (f32)lbl_803DD6D8 + timeDelta;
+    lbl_803DD6D8 = lbl_803DD6D8 + timeDelta;
 
     gameTextSetColor(
-        (int)(mathSinf(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D98 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D9C * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D94 * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D98 * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D9C * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
         0xff);
 
     i = lbl_803DD6E4;
@@ -122,7 +122,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
     if (stickX != 0)
     {
         lbl_803DD6DA = 0;
-        lbl_803DD6D4 = 0.08f * (f32)stickX;
+        lbl_803DD6D4 = 0.08f * stickX;
         if (lbl_803DD6D4 * lbl_803DD6D0 < 0.0f)
         {
             lbl_803DD6D4 = 0.0f;
@@ -152,7 +152,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
         lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6D0;
         if (lbl_803DD6E0 <= (f32)(-lbl_803A8730[ENTER_SAVE_NAME_DONE_INDEX] / 2))
         {
-            lbl_803DD6E0 = lbl_803DD6E0 + (f32)lbl_803DD6E8;
+            lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6E8;
             moved = 1;
         }
         if ((0 < lbl_803DD6E4) &&
@@ -184,7 +184,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
         lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6D0;
         if (lbl_803DD6E0 >= (f32)(lbl_803DD6E8 + lbl_803A8730[0] / 2))
         {
-            lbl_803DD6E0 = lbl_803DD6E0 - (f32)lbl_803DD6E8;
+            lbl_803DD6E0 = lbl_803DD6E0 - lbl_803DD6E8;
             moved = 1;
         }
         if ((lbl_803DD6E4 < ENTER_SAVE_NAME_DONE_INDEX) &&
@@ -318,7 +318,7 @@ void EnterSaveNameScreen_initialise(void)
     {
         gameTextMeasureString((u8*)gameTextGetStr(lbl_8031A880[i]), 1.0f, &width, NULL,
                               NULL, NULL, -1);
-        lbl_803A8730[i] = (s32)width;
+        lbl_803A8730[i] = width;
         lbl_803A8690[i] = lbl_803DD6E8;
         lbl_803DD6E8 += lbl_803A8730[i];
     }

@@ -162,7 +162,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
         {
             if ((stateParam->idleTimer -= framesThisStep) <= 0)
             {
-                stateParam->idleTimer = (s16)randomGetRange(300, 600);
+                stateParam->idleTimer = randomGetRange(300, 600);
             }
             else if (((GameObject*)obj)->anim.currentMove != 4)
             {
@@ -275,7 +275,7 @@ void MagicPlant_update(int obj)
         {
             fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
             state->mode = MAGICPLANT_MODE_ACTIVE;
-            state->idleTimer = (s16)randomGetRange(300, 600);
+            state->idleTimer = randomGetRange(300, 600);
         }
         else
         {
@@ -285,7 +285,7 @@ void MagicPlant_update(int obj)
             {
                 divisor = 100;
             }
-            progress /= (f32)divisor;
+            progress /= divisor;
             if (progress > 1.0f)
             {
                 progress = 1.0f;
@@ -326,7 +326,7 @@ void MagicPlant_update(int obj)
                 ObjAnim_SetCurrentMove(obj, 0, resetProgress, 0);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E385C);
             }
-            plant->objAnim.alpha = (u8)alpha;
+            plant->objAnim.alpha = alpha;
         }
         ((ObjHitsPriorityState*)plant->objAnim.hitReactState)->flags &= ~1;
         break;
@@ -338,9 +338,9 @@ void MagicPlant_update(int obj)
         {
             alpha = 0xff;
             state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
-            (*gMapEventInterface)->addTime(setup->eventId, (f32)setup->eventDuration);
+            (*gMapEventInterface)->addTime(setup->eventId, setup->eventDuration);
         }
-        plant->objAnim.alpha = (u8)alpha;
+        plant->objAnim.alpha = alpha;
         ((ObjHitsPriorityState*)plant->objAnim.hitReactState)->flags |= 1;
         break;
     }
@@ -425,7 +425,7 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
         progress = (*gMapEventInterface)->getTime(setup->eventId);
         divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
-        progress /= (f32)divisor;
+        progress /= divisor;
         if (progress > lbl_803E3858)
         {
             progress = lbl_803E3858;
@@ -445,7 +445,7 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
     objAnim->rotX = (s16)((u32)setup->yawByte << 8);
     plant->objectFlags |= MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS;
-    objAnim->bankIndex = (s8)setup->modelIndex;
+    objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
@@ -454,7 +454,7 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0x810;
     }
-    plant->seqCallback = (void*)MagicPlant_SeqFn;
+    plant->seqCallback = MagicPlant_SeqFn;
 }
 
 ObjectDescriptor gMagicPlantObjDescriptor = {

@@ -143,7 +143,7 @@ void cfprisonuncle_update(int* obj)
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    sub->released = (s8)GameBit_Get(0x4d);
+    sub->released = GameBit_Get(0x4d);
     if (sub->released == 0)
     {
         player = Obj_GetPlayerObject();
@@ -181,7 +181,7 @@ void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;
     ObjMsg_AllocQueue(obj, 1);
-    ((GameObject*)obj)->animEventCallback = (void*)fn_8019FC84;
+    ((GameObject*)obj)->animEventCallback = fn_8019FC84;
     state = ((GameObject*)obj)->extra;
     state->unk64 = 464;
     state->unk68 = 465;

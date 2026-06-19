@@ -65,7 +65,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
     int i;
     int child;
     int alloc;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         u8 v = animUpdate->eventIds[i];
         switch (v)

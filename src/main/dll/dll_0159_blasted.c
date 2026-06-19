@@ -232,7 +232,7 @@ void blasted_init(int obj, int placement)
     gbid = *(s16*)(placement + 0x20);
     if (gbid != -1)
     {
-        v = (u8)GameBit_Get(gbid);
+        v = GameBit_Get(gbid);
         ((BlastedState*)state)->unk11 = v;
         if (v != 0)
         {

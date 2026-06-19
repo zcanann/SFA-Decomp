@@ -153,7 +153,7 @@ void SB_KyteCage_free(GameObject* obj)
 void SB_KyteCage_init(GameObject* obj, int* params)
 {
     SBKyteCageState* state = obj->extra;
-    obj->animEventCallback = (void*)SB_KyteCage_SeqFn;
+    obj->animEventCallback = SB_KyteCage_SeqFn;
     obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
     obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
     state->seqLatch = 0;

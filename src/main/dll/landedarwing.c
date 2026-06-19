@@ -117,7 +117,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         if ((scriptFlags & LANDED_ARWING_FLAG_SCRIPT_TARGET) != 0)
         {
             targetMode = LANDED_ARWING_TARGET_SCRIPT;
-            if ((s32)sub->scriptTimer <= (s32)framesThisStep)
+            if ((s32)sub->scriptTimer <= framesThisStep)
             {
                 ((LandedArwingFlags*)&sub->flags92)->bit0 = 0;
             }
@@ -145,12 +145,12 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         }
         break;
     case LANDED_ARWING_TARGET_WANDER:
-        if ((s32)sub->wanderTimer <= (s32)framesThisStep)
+        if ((s32)sub->wanderTimer <= framesThisStep)
         {
-            sub->wanderTargetX = (f32)(s32)randomGetRange((s32)sub->boundsMinX, (s32)sub->boundsMaxX);
-            sub->wanderTargetY = (f32)(s32)randomGetRange((s32)sub->boundsMinY, (s32)sub->boundsMaxY);
-            sub->wanderTargetZ = (f32)(s32)randomGetRange((s32)sub->boundsMinZ, (s32)sub->boundsMaxZ);
-            sub->wanderTimer = (u16)randomGetRange(LANDED_ARWING_WANDER_TIME_MIN, LANDED_ARWING_WANDER_TIME_MAX);
+            sub->wanderTargetX = (f32)(s32)randomGetRange((s32)sub->boundsMinX, sub->boundsMaxX);
+            sub->wanderTargetY = (f32)(s32)randomGetRange((s32)sub->boundsMinY, sub->boundsMaxY);
+            sub->wanderTargetZ = (f32)(s32)randomGetRange((s32)sub->boundsMinZ, sub->boundsMaxZ);
+            sub->wanderTimer = randomGetRange(LANDED_ARWING_WANDER_TIME_MIN, LANDED_ARWING_WANDER_TIME_MAX);
         }
         else
         {

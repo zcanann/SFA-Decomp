@@ -133,7 +133,7 @@ void levelname_init(int obj, int objDef)
     int* text;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)levelname_SeqFn;
+    ((GameObject*)obj)->animEventCallback = levelname_SeqFn;
     text = (int*)gameTextGet(*(int*)(objDef + 0x1c));
     ((TFrameAnimatorState*)state)->unk4 = **(int**)(text + 2);
     ((TFrameAnimatorState*)state)->duration = 0x64;

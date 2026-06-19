@@ -271,7 +271,7 @@ active :
         if (flags->b40 != 0)
         {
             if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
-                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
+                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == getArwing())
             {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
@@ -291,7 +291,7 @@ active :
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
             if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
-                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
+                (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == getArwing())
             {
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);

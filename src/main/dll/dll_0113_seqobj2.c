@@ -125,7 +125,7 @@ void seqObject_update(int obj)
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
         bitValue = FUN_80017690(def->triggerGameBit);
-        flagBits = (u8)bitValue;
+        flagBits = bitValue;
         if ((flagBits != state->triggerBitState) && (state->triggerBitState = flagBits, flagBits != 0))
         {
             if (def->triggerId != -1)
@@ -268,11 +268,11 @@ void seqobj2_init(int* obj, SeqObjectPlacement* def)
     SeqObj2State* state = ((GameObject*)obj)->extra;
     OSReport(sSeqObjNeedBitUsedBitFormat, def->base.mapId, def->triggerGameBit, def->openGameBit);
     ((GameObject*)obj)->anim.rotX = (s16)((u32)def->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)seqobj2_SeqFn;
+    ((GameObject*)obj)->animEventCallback = seqobj2_SeqFn;
     if (def->preemptSequenceId > -1)
     {
         s16 slot = def->openGameBit;
-        if (slot != -1 && (u32)GameBit_Get(slot) != 0u)
+        if (slot != -1 && GameBit_Get(slot) != 0u)
         {
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }

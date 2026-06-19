@@ -145,7 +145,7 @@ void dll_9C_func03(int a, int b, int p, u32 flags)
 
     hdr.v0 = 0;
     hdr.target = a;
-    hdr.b = (s16)b;
+    hdr.b = b;
     hdr.bx = lbl_803E13C8;
     hdr.by = lbl_803E13C8;
     hdr.bz = lbl_803E13C8;

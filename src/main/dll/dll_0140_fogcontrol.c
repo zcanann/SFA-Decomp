@@ -109,7 +109,7 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
         }
         else
         {
-            cv = (u8)GameBit_Get(placement->enableGameBit);
+            cv = GameBit_Get(placement->enableGameBit);
         }
         if (cv != 0)
         {
@@ -117,12 +117,12 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
             st->on = 1;
             st->blend = lbl_803E4074;
             t = ((GameObject*)obj)->anim.localPosY +
-                (st->blend * ((f32)placement->unk1C - (f32)placement->unk20) +
-                 (f32)placement->unk20);
+                (st->blend * ((f32)placement->unk1C - placement->unk20) +
+                 placement->unk20);
             enableHeavyFog(t,
-                           ((f32)placement->unk1E + t) - (f32)placement->unk1C,
-                           (f32)placement->unk24,
-                           (f32)placement->unk22 / lbl_803E4078,
+                           ((f32)placement->unk1E + t) - placement->unk1C,
+                           placement->unk24,
+                           placement->unk22 / lbl_803E4078,
                            lbl_803E407C, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }
     }
@@ -144,7 +144,7 @@ void fogcontrol_update(int obj)
     }
     else
     {
-        cv = (u8)GameBit_Get(((FogcontrolPlacement*)setup)->enableGameBit);
+        cv = GameBit_Get(((FogcontrolPlacement*)setup)->enableGameBit);
     }
     if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0))
     {

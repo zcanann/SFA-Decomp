@@ -365,9 +365,9 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
-        lbl_80329B78[0] = (int)obj->x;
-        lbl_80329B78[1] = (int)obj->y;
-        lbl_80329B78[2] = (int)obj->z;
+        lbl_80329B78[0] = obj->x;
+        lbl_80329B78[1] = obj->y;
+        lbl_80329B78[2] = obj->z;
     }
     else
     {
@@ -393,14 +393,14 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
                     if ((point.x == *(float*)(entry + 4)) && (point.z == *(float*)(entry + 12)))
                     {
                         found = true;
-                        j = (int)pointCount;
+                        j = pointCount;
                     }
                 }
                 if (!found)
                 {
                     state->floorPoints[(int)pointCount].x = point.x;
-                    state->floorPoints[(int)state->floorPointCount].y = point.y;
-                    state->floorPoints[(int)state->floorPointCount].z = point.z;
+                    state->floorPoints[state->floorPointCount].y = point.y;
+                    state->floorPoints[state->floorPointCount].z = point.z;
                     state->floorPointCount = state->floorPointCount + '\x01';
                 }
             }

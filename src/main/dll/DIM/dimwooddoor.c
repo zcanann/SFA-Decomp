@@ -211,14 +211,14 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         {
             pitch = modelVec[1];
             absPitch = (pitch < 0) ? -pitch : pitch;
-            if ((s32)absPitch > (s32)lbl_803DBF02 - (s32)lbl_803DBF04)
+            if ((s32)absPitch > (s32)lbl_803DBF02 - lbl_803DBF04)
             {
                 turnSign = (turnStep < 0) ? -1 : ((turnStep > 0) ? 1 : 0);
                 pitchSign = (modelVec[1] < 0) ? -1 : ((modelVec[1] > 0) ? 1 : 0);
                 if (pitchSign == turnSign)
                 {
-                    turnStep *= (s32)lbl_803DBF02 - (s32)absPitch;
-                    turnStep /= (s32)lbl_803DBF04;
+                    turnStep *= lbl_803DBF02 - (s32)absPitch;
+                    turnStep /= lbl_803DBF04;
                 }
             }
             modelVec[1] = (s16)(*(s16*)((char*)modelVec + 2) + turnStep);

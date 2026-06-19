@@ -214,12 +214,12 @@ void treasurechest_init(int* obj)
     register ChestFlags* state = ((GameObject*)obj)->extra;
     register TreasureChestSetup* cfg = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
 
-    ((GameObject*)obj)->animEventCallback = (void*)treasurechest_SeqFn;
+    ((GameObject*)obj)->animEventCallback = treasurechest_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)cfg->type << 8);
 
     if (cfg->openGameBit != -1)
     {
-        state->open = (u8)GameBit_Get(cfg->openGameBit);
+        state->open = GameBit_Get(cfg->openGameBit);
     }
     else
     {

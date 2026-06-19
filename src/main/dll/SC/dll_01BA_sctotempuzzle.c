@@ -118,7 +118,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                     solvedCount++;
                     if (peer == obj)
                     {
-                        state->angleTarget = lbl_803E55F0 * (f32)state->step;
+                        state->angleTarget = lbl_803E55F0 * state->step;
                         obj->angle = (s16)(s32)state->angleTarget;
                         solvedThisObject = 1;
                     }
@@ -369,7 +369,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     f32 fz;
 
     state = obj->state;
-    obj->puzzleIndex = (s8)params->puzzleIndex;
+    obj->puzzleIndex = params->puzzleIndex;
     if (obj->puzzleIndex < 0 || obj->puzzleIndex > SC_TOTEMPUZZLE_CAP_INDEX)
     {
         obj->puzzleIndex = 0;
@@ -382,7 +382,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
             tex->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
         }
     }
-    state->stepIndex = (s16)obj->puzzleIndex;
+    state->stepIndex = obj->puzzleIndex;
     if (GameBit_Get(0x639) == 0)
     {
         state->angle = (f32)(s32)lbl_80327A18[state->stepIndex];
@@ -398,7 +398,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     }
     obj->yaw = (s16)(s32)state->angle;
     r = randomGetRange(7, 10);
-    fz = (f32)r;
+    fz = r;
     fz = lbl_803E5630 * fz;
     state->pulseTimerReset = fz;
     state->pulseTimer = fz;

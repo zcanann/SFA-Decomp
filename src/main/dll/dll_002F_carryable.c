@@ -187,7 +187,7 @@ int Carryable_updateHeld(u8* obj)
             }
             cnt = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, &list, 0, 1);
-            hit = (u8*)0;
+            hit = 0;
             i = 0;
             p = list;
             for (j = cnt; j > 0; j--)
