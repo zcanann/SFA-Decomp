@@ -18,7 +18,6 @@
  * placement def and random spread; explodable_spawnFragmentObject spawns the fragment object.
  */
 #include "main/dll/dll_015A_explodable.h"
-#include "main/obj_placement.h"
 #include "main/game_object.h"
 
 extern u32 randomGetRange(int min, int max);

@@ -1109,7 +1109,6 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
     }
 }
 
-void mtxRotateByVec3s(f32* mtx, void* transform);
 
 typedef struct LoadedObj
 {

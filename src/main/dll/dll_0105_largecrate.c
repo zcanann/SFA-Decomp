@@ -109,17 +109,8 @@ typedef struct
 
 f32 largecrate_getReticleDistance(int obj);
 void largecrate_updateConveyorSlide(int obj, int def);
-int largecrate_spawnDropContents(int obj, int player, int state);
-int largecrate_getExtraSize(void);
-int largecrate_getObjectTypeId(void);
-void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
-void largecrate_hitDetect(int obj);
 void largecrate_update(int obj);
 void largecrate_free(int obj);
-int LargeCrate_SeqFn(int* obj);
-void largecrate_init(int obj, u8* initData);
-void largecrate_release(void);
-void largecrate_initialise(void);
 
 f32 largecrate_getReticleDistance(int obj)
 {

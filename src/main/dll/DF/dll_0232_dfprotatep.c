@@ -97,7 +97,6 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
-void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on

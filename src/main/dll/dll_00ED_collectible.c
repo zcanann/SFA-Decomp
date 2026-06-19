@@ -109,7 +109,6 @@ extern void staff_setScale(void);
 extern void staff_func0B(void);
 extern void staff_modelMtxFn(int* obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
-extern void staff_func0E(void);
 extern void staff_func0F(void);
 extern void staff_func10(int* obj, s32 v);
 extern void staff_setHitReactValue(int* obj, s32 v);
