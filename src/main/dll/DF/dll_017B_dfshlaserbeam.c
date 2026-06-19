@@ -323,8 +323,8 @@ void DFSH_LaserBeam_update(uint objAddr)
     if (((playerObj != NULL) && (DFSH_LASER_DAMAGE_COOLDOWN(runtime) == 0)) &&
         (DFSH_LASER_ACTIVE(runtime) != 0))
     {
-        heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
         heightThreshold = lbl_803E4EE0 + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
+        heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
         if ((heightDelta < heightThreshold) &&
             (-(lbl_803E4EE4 + heightThreshold) < heightDelta))
         {
