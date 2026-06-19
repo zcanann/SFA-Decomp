@@ -132,17 +132,17 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
             {
                 angle = (uint)(short)((short)angle + -1);
             }
-            *(u8*)(param_10 + 0x33a) =
+            ((GroundBaddieState*)param_10)->baddie.seqEntryIndex =
                 entry[8] + (&DAT_803dc8f0)[(short)((angle & 0xffff) >> 0xd)];
         }
         else if (DAT_803ad08c < 0x47)
         {
             while ((entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10] & 1) != 0)
             {
-                *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
+                *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
                 if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
                 {
-                    *(u8*)(param_10 + 0x33a) = 1;
+                    ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
                 }
             }
         }
@@ -150,18 +150,18 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
     speed = (double)(f32)(u32) * (u16*)(param_10 + 0x2a4);
     if (speed < (double)(lbl_803E3440 * ((GroundBaddieState*)param_10)->baddie.speedScale))
     {
-        *(char*)(param_10 + 0x33a) = entry[8] + '\x01';
+        *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = entry[8] + '\x01';
     }
     while (true)
     {
         if ((*(uint*)(entry + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4) == 0) ||
-            ((*(uint*)(param_10 + 0x2dc) &
+            ((((GroundBaddieState*)param_10)->baddie.controlFlags &
                 *(uint*)(entry + (uint) * (byte*)(param_10 + 0x33a) * 0x10 + 4)) != 0))
             break;
-        *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
+        *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
         if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
         {
-            *(u8*)(param_10 + 0x33a) = 1;
+            ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
         }
     }
     *(u8*)(param_10 + 0x2f2) = entry[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10];
@@ -175,10 +175,10 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
                  4), (int)param_9
     )
     ;
-    *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
+    *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
     if ((byte)entry[8] < *(byte*)(param_10 + 0x33a))
     {
-        *(u8*)(param_10 + 0x33a) = 1;
+        ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
     }
 }
 
