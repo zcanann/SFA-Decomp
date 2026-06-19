@@ -989,13 +989,13 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
 
 f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
 {
-    u32 hitCount;
+    int hitCount;
     f32 maxY;
     RomCurvePoint* point;
     int i;
     RomCurvePoint* points;
 
-    points = curves_getCurves(obj, x, z, &hitCount, 1);
+    points = curves_getCurves(obj, x, z, (u32*)&hitCount, 1);
     i = 0;
     point = points;
     maxY = baseY + height;
