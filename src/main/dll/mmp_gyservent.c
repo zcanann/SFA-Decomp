@@ -76,8 +76,8 @@ void objFn_80198fa4(s16* obj, void* placement)
     void* state;
     s16 rot[3];
     f32 rotMtx[15];
-    f32 outZ;
     f32 outY;
+    f32 outZ;
     f32 outX;
     f32 mtx[24];
 
@@ -102,8 +102,8 @@ void objFn_80198fa4(s16* obj, void* placement)
     ((MmpGyserventState*)state)->planeNormalZ = outX;
     ((MmpGyserventState*)state)->planeOffset =
         -(((GameObject*)obj)->anim.worldPosZ * outX +
-            ((GameObject*)obj)->anim.worldPosX * outY +
-            ((GameObject*)obj)->anim.worldPosY * outZ);
+            (((GameObject*)obj)->anim.worldPosX * outY +
+                ((GameObject*)obj)->anim.worldPosY * outZ));
 
     rot[0] = (s16)(-obj[0]);
     rot[1] = (s16)(-obj[1]);
