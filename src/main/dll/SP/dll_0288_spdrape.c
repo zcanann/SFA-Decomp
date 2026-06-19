@@ -5,7 +5,7 @@
  * Init builds a vertical plane through the drape (planeNormal / planeD,
  * derived from its facing angle and world position). The plane's signed
  * distance to the player picks which of two swing-direction move tables
- * (lbl_803DC0B0 / lbl_803DC0B4) to play, so the cloth always parts away
+ * (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) to play, so the cloth always parts away
  * from the approaching player. The update() switch is the swing state
  * machine keyed on the active animation move; it rustles (sfx 0x13f),
  * swings (0x140) and flutters (0x141) and re-opens if the player lingers.
@@ -14,7 +14,7 @@
 #include "main/game_object.h"
 #include "main/camera.h"
 
-/* indices into a swing-direction move table (lbl_803DC0B0 / lbl_803DC0B4) */
+/* indices into a swing-direction move table (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) */
 enum
 {
     SPDRAPE_MOVE_OPEN = 0,
@@ -26,19 +26,19 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 lbl_803DC0B0; /* swing-left move-id table */
-extern f32 lbl_803DC0B4; /* swing-right move-id table */
+extern f32 gSpDrapeSwingLeftMoveTable; /* swing-left move-id table */
+extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
 extern f32 lbl_803E5AA0;
-extern f32 lbl_803E5AA4; /* squared player-proximity radius */
+extern f32 gSpDrapeNearRadiusSq; /* squared player-proximity radius */
 extern f32 lbl_803E5AA8;
-extern f32 lbl_803E5AAC; /* player-left radius (re-close) */
+extern f32 gSpDrapeLeaveRadius; /* player-left radius (re-close) */
 extern f32 lbl_803E5AB0;
 extern f32 lbl_803E5AB4;
-extern f32 lbl_803E5AB8;
+extern f32 gSpDrapeReopenProgress;
 extern f32 lbl_803E5ABC;
 extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
-extern f32 lbl_803E5AC8;
+extern f32 gSpDrapePi;
 extern f32 lbl_803E5ACC;
 
 typedef struct SpdrapeObjectDef
@@ -106,17 +106,17 @@ void spdrape_update(int obj)
             Sfx_PlayFromObject(obj, 0x13f);
             ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
         }
-        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5AA4)
+        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < gSpDrapeNearRadiusSq)
         {
             if (player != 0)
             {
                 if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B0;
+                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
                 }
                 else
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B4;
+                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
                 }
             }
             ObjAnim_SetCurrentMove(obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
@@ -129,7 +129,7 @@ void spdrape_update(int obj)
     case 4:
         if (((SpdrapeState*)state)->moveActive != 0)
         {
-            if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > lbl_803E5AAC)
+            if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
             {
                 ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
                 Sfx_PlayFromObject(obj, 0x140);
@@ -145,7 +145,7 @@ void spdrape_update(int obj)
     case 2: /* held open: flutter, close when the player leaves */
     case 5:
         Sfx_PlayFromObject(obj, 0x141);
-        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > lbl_803E5AAC)
+        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
         {
             ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
             Sfx_StopObjectChannel(obj, 0x40);
@@ -155,18 +155,18 @@ void spdrape_update(int obj)
         break;
     case 3: /* closing: re-open if the player returns, else settle to idle */
     case 6:
-        if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E5AB8) && (getXZDistance(
-            &((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5AA4))
+        if ((((GameObject*)obj)->anim.currentMoveProgress > gSpDrapeReopenProgress) && (getXZDistance(
+            &((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < gSpDrapeNearRadiusSq))
         {
             if (player != 0)
             {
                 if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B0;
+                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
                 }
                 else
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B4;
+                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
                 }
             }
             ObjAnim_SetCurrentMove(obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
@@ -211,8 +211,8 @@ void spdrape_init(int* obj, u8* def)
             lbl_803E5AC0;
     }
     state[0] = lbl_803E5ABC;
-    state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
-    state[2] = mathCosf(lbl_803E5AC8 * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
+    state[1] = mathSinf(gSpDrapePi * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
+    state[2] = mathCosf(gSpDrapePi * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
     state[3] = -(state[1] * ((GameObject*)obj)->anim.localPosX + state[2] * ((GameObject*)obj)->anim.localPosZ);
     ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
     player = Obj_GetPlayerObject();
@@ -221,11 +221,11 @@ void spdrape_init(int* obj, u8* def)
         if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ + state[
             3] < lbl_803E5AA0)
         {
-            ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B0;
+            ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
         }
         else
         {
-            ((SpdrapeState*)state)->moveTable = (int)&lbl_803DC0B4;
+            ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
         }
     }
 }

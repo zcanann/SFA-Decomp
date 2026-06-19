@@ -59,7 +59,7 @@ extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int idx, s8 transType);
 
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern u16 lbl_803DC060[4];
+extern u16 gScLevelControlMusicStepSequence[4];
 extern f32 timeDelta;
 extern const f32 lbl_803E5558;
 extern f32 lbl_803E555C;
@@ -407,7 +407,7 @@ void sc_levelcontrol_update(int obj)
     if ((u32)GameBit_Get(0x7d) != 0)
     {
         GameBit_Set(0x7d, 0);
-        if (lbl_803DC060[((ScLevelControlState*)state)->musicStep] == 0x7d)
+        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7d)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
         }
@@ -419,7 +419,7 @@ void sc_levelcontrol_update(int obj)
     else if ((u32)GameBit_Get(0x7e) != 0)
     {
         GameBit_Set(0x7e, 0);
-        if (lbl_803DC060[((ScLevelControlState*)state)->musicStep] == 0x7e)
+        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7e)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
         }
@@ -431,7 +431,7 @@ void sc_levelcontrol_update(int obj)
     else if ((u32)GameBit_Get(0x7f) != 0)
     {
         GameBit_Set(0x7f, 0);
-        if (lbl_803DC060[((ScLevelControlState*)state)->musicStep] == 0x7f)
+        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7f)
         {
             ((ScLevelControlState*)state)->musicStep += 1;
         }

@@ -18,7 +18,7 @@ typedef struct ScLevelControlState
     f32 timer10; /* 0x10 */
     f32 fadeTimer; /* 0x14 */
     u8 pad18[4];
-    u8 musicStep; /* 0x1c: index into the lbl_803DC060 cue table */
+    u8 musicStep; /* 0x1c: index into the gScLevelControlMusicStepSequence cue table */
     u8 mode; /* 0x1d: anim-event mode latch */
     u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
     u8 flags1F; /* 0x1f */
