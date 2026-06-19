@@ -292,7 +292,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         cnt = *(int*)(gameTextFonts + 8);
         while (cnt-- != 0)
         {
-            if (*(u32*)g == (u32)ch && g[0xe] == glyphLang)
+            if (*(u32*)g == ch && g[0xe] == glyphLang)
             {
                 goto matched;
             }
@@ -561,7 +561,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         cnt = *(int*)(gameTextFonts + 8);
         while (cnt-- != 0)
         {
-            if (*(u32*)g == (u32)ch && g[0xe] == glyphLang)
+            if (*(u32*)g == ch && g[0xe] == glyphLang)
             {
                 goto matched;
             }
