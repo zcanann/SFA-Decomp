@@ -2341,8 +2341,9 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     u8* ptr;
     u32 v;
     int i;
+    u32 ftype;
 
-    if ((getLoadedFileFlags(0) & 0x100000) != 0 && *(u16*)(hdr + 4) != 1 && *(u16*)(hdr + 4) != 3)
+    if ((getLoadedFileFlags(0) & 0x100000) != 0 && (ftype = *(u16*)(hdr + 4)) != 1 && ftype != 3)
     {
         return 0;
     }
