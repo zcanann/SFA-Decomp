@@ -1225,8 +1225,7 @@ void pauseMenuDrawText(void)
         target = (s16)(0xff - lbl_803DD774);
     }
     target = (s16)(target - 0x14);
-    if (target < 0) target = 0;
-    target = (s16)(target << 4);
+    target = (s16)((target < 0 ? 0 : target) << 4);
     if (target > 0x10e) target = 0x10e;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
