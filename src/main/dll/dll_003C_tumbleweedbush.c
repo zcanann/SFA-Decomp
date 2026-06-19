@@ -909,9 +909,9 @@ void linkDrawFn_80130484(void)
     minX = 480;
     maxX = 0;
     i = 0;
-    p = lbl_803A9458;
     for (; i < (s8)lbl_803DD911; i++)
     {
+        p = &lbl_803A9458[i];
         if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
         {
             tex = *(void**)(linkTextures + (s8)p->slots[0] * 8);
@@ -946,7 +946,6 @@ void linkDrawFn_80130484(void)
         {
             maxX = right;
         }
-        p++;
     }
 }
 #pragma peephole reset
