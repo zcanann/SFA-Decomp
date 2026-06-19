@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "util/carry.h"
 
 extern u32 randomGetRange(int min, int max);
 extern u32 FUN_802420b0();
@@ -67,7 +68,7 @@ int FUN_8007eb04(u32 slot)
     {
         wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
         uVar12 = wp[1];
-        carry = CARRY4(uVar6, uVar12);
+        carry = addCarryOut32(uVar6, uVar12);
         uVar3 = uVar6 + uVar12;
         uVar15 = wp[3];
         uVar5 = uVar3 + uVar15;
@@ -86,10 +87,10 @@ int FUN_8007eb04(u32 slot)
         uVar1 = uVar1 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
             wp[0xc] ^ wp[0xe];
         uVar6 = uVar11 + uVar21;
-        iVar13 = iVar13 + *wp + (u32)carry + wp[2] + (u32)CARRY4(uVar3, uVar15) +
-            wp[4] + (u32)CARRY4(uVar5, uVar16) + wp[6] + (u32)CARRY4(uVar24, uVar17) +
-            wp[8] + (u32)CARRY4(uVar8, uVar18) + wp[10] + (u32)CARRY4(uVar9, uVar19) +
-            wp[0xc] + (u32)CARRY4(uVar10, uVar20) + wp[0xe] + (u32)CARRY4(uVar11, uVar21);
+        iVar13 = iVar13 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(uVar3, uVar15) +
+            wp[4] + (u32)addCarryOut32(uVar5, uVar16) + wp[6] + (u32)addCarryOut32(uVar24, uVar17) +
+            wp[8] + (u32)addCarryOut32(uVar8, uVar18) + wp[10] + (u32)addCarryOut32(uVar9, uVar19) +
+            wp[0xc] + (u32)addCarryOut32(uVar10, uVar20) + wp[0xe] + (u32)addCarryOut32(uVar11, uVar21);
     }
     for (; i < 0x3ff; i = i + 1)
     {
@@ -98,7 +99,7 @@ int FUN_8007eb04(u32 slot)
         uVar5 = wp[1];
         uVar2 = uVar2 ^ uVar5;
         uVar1 = uVar1 ^ uVar3;
-        carry = CARRY4(uVar6, uVar5);
+        carry = addCarryOut32(uVar6, uVar5);
         uVar6 = uVar6 + uVar5;
         iVar13 = iVar13 + uVar3 + carry;
     }
@@ -131,7 +132,7 @@ int FUN_8007eb04(u32 slot)
             {
                 wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
                 uVar15 = wp[1];
-                carry = CARRY4(uVar7, uVar15);
+                carry = addCarryOut32(uVar7, uVar15);
                 uVar5 = uVar7 + uVar15;
                 uVar16 = wp[3];
                 uVar24 = uVar5 + uVar16;
@@ -150,12 +151,12 @@ int FUN_8007eb04(u32 slot)
                 uVar6 = uVar6 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
                     wp[0xc] ^ wp[0xe];
                 uVar7 = uVar12 + uVar22;
-                sum2 = sum2 + *wp + (u32)carry + wp[2] + (u32)CARRY4(uVar5, uVar16) +
-                    wp[4] + (u32)CARRY4(uVar24, uVar17) + wp[6] + (u32)CARRY4(uVar8, uVar18)
-                    + wp[8] + (u32)CARRY4(uVar9, uVar19) +
-                    wp[10] + (u32)CARRY4(uVar10, uVar20) +
-                    wp[0xc] + (u32)CARRY4(uVar11, uVar21) +
-                    wp[0xe] + (u32)CARRY4(uVar12, uVar22);
+                sum2 = sum2 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(uVar5, uVar16) +
+                    wp[4] + (u32)addCarryOut32(uVar24, uVar17) + wp[6] + (u32)addCarryOut32(uVar8, uVar18)
+                    + wp[8] + (u32)addCarryOut32(uVar9, uVar19) +
+                    wp[10] + (u32)addCarryOut32(uVar10, uVar20) +
+                    wp[0xc] + (u32)addCarryOut32(uVar11, uVar21) +
+                    wp[0xe] + (u32)addCarryOut32(uVar12, uVar22);
             }
             for (; i < 0x3ff; i = i + 1)
             {
@@ -164,7 +165,7 @@ int FUN_8007eb04(u32 slot)
                 uVar24 = wp[1];
                 uVar3 = uVar3 ^ uVar24;
                 uVar6 = uVar6 ^ uVar5;
-                carry = CARRY4(uVar7, uVar24);
+                carry = addCarryOut32(uVar7, uVar24);
                 uVar7 = uVar7 + uVar24;
                 sum2 = sum2 + uVar5 + carry;
             }

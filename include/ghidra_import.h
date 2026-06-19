@@ -21,8 +21,4 @@ typedef u16 wchar_t;
 #define NAN 0.0f
 #endif
 
-static inline u32 CARRY4(u32 x, u32 y) {
-    return (u32)(x + y) < x;
-}
-
 #endif

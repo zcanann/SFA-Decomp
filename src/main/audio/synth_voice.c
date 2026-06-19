@@ -1,6 +1,7 @@
 #include "global.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/dll/synthfade_struct.h"
+#include "util/carry.h"
 
 typedef struct SynthDelayedNode
 {
@@ -1148,7 +1149,7 @@ void audioFn_80271498(u32 delta)
         }
         hwFrameDone();
         {
-            u32 carry = CARRY4(synthRealTimeLo, delta);
+            u32 carry = addCarryOut32(synthRealTimeLo, delta);
             synthRealTimeLo += delta;
             synthRealTimeHi += carry;
         }
