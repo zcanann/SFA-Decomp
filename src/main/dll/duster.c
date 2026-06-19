@@ -1054,11 +1054,11 @@ void fn_80156DA0(int obj, int state)
     float hitOut[24];
 
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-    if (*(float*)(state + 0x324) <= lbl_803E2A60)
+    if (*(float*)(state + 0x324) <= lbl_803E2B18)
     {
         *(float*)(state + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
     }
-    if (lbl_803E2A60 != *(float*)(state + 0x328))
+    if (lbl_803E2B18 != *(float*)(state + 0x328))
     {
         ObjHits_DisableObject(obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
@@ -1068,7 +1068,7 @@ void fn_80156DA0(int obj, int state)
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             ObjHits_EnableObject(obj);
-            *(float*)(state + 0x328) = lbl_803E2A60;
+            *(float*)(state + 0x328) = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         resetting = true;
@@ -1088,8 +1088,8 @@ void fn_80156DA0(int obj, int state)
         toPos[1] = lbl_803E2AC0 + ((GameObject*)obj)->anim.localPosY;
         toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2ABC * cosYaw;
         *(int*)hitOut = 0;
-        groundHit = objBboxFn_800640cc(fromPos, toPos, (float*)0x3, hitOut, obj,
-                                   (uint) * (byte*)(state + 0x261), 0xff, 0xffffffff, 0);
+        groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj,
+                                   (uint) * (byte*)(state + 0x261), 0xffffffff, 0xff, 0);
         if (((groundHit & 0xff) == 0) || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
         {
             if ((groundHit & 0xff) != 0)
