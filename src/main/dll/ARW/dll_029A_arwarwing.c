@@ -1079,7 +1079,7 @@ void arwarwing_handlePathDamage(int obj, int state)
 
     if (((ArwingState*)state)->hitShake == 0 || ((ArwingState*)state)->mode == ARWING_MODE_DEAD)
     {
-        dmg = pathBlock[0x260];
+        dmg = (s8)pathBlock[0x260];
         if (dmg == 0)
             return;
         if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
@@ -1090,7 +1090,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
-        if ((dmg & 1) && pathBlock[0xb8] == 8)
+        if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
             ((ArwingState*)state)->shield = 0;
         else
             ((ArwingState*)state)->shield--;
@@ -1124,8 +1124,10 @@ void arwarwing_handlePathDamage(int obj, int state)
     }
     else
     {
-        ((ArwingState*)state)->shakeYaw = lbl_803E6F3C * timeDelta + (f32) * &((ArwingState*)state)->shakeYaw;
-        ((ArwingState*)state)->shakePitch = lbl_803E6F40 * timeDelta + (f32) * &((ArwingState*)state)->shakePitch;
+        ((ArwingState*)state)->shakeYaw =
+            lbl_803E6F3C * timeDelta + (f32)*(u16*)&((ArwingState*)state)->shakeYaw;
+        ((ArwingState*)state)->shakePitch =
+            lbl_803E6F40 * timeDelta + (f32)*(u16*)&((ArwingState*)state)->shakePitch;
     }
 }
 #pragma scheduling reset
