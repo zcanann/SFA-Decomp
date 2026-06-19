@@ -267,16 +267,14 @@ extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* sta
 
 #pragma push
 #pragma scheduling off
-void renderMapBlock(void* objp, u8 type)
+void renderMapBlock(int* o, u8 type)
 {
-    int* o = objp;
     int state[5];
     f32 m[16];
     int ptr;
     int count;
     int shader;
     int flag;
-    int done;
     void* viewMtx;
 
     shader = 0;
@@ -304,8 +302,8 @@ void renderMapBlock(void* objp, u8 type)
     )
     setupToRenderMapBlock(o, m);
     modelRenderInstrsState_init(state, ptr, (u16)count << 3, (u16)count << 3);
-    done = 0;
-    while (!done)
+    ptr = 0;
+    while (!ptr)
     {
         u32 word;
         int op;
@@ -345,7 +343,7 @@ void renderMapBlock(void* objp, u8 type)
                 break;
             }
         case 5:
-            done = 1;
+            ptr = 1;
             break;
         }
     }
@@ -1628,6 +1626,7 @@ extern int lbl_803DCF24;
 
 void fn_80062808(void)
 {
+    int v;
     if ((s8)gShadowFlag == 0)
     {
         return;
@@ -1638,11 +1637,12 @@ void fn_80062808(void)
     lbl_803DCEEC = 1 - lbl_803DCEEC;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
-    lbl_803DCF08 = (&lbl_803DCF24)[lbl_803DCEEC];
+    v = (&lbl_803DCF24)[lbl_803DCEEC];
+    lbl_803DCF08 = v;
     lbl_803DCEF4 = 0;
     lbl_803DCF10 = lbl_803DCF20;
     lbl_803DCF18 = lbl_803DCF1C;
-    lbl_803DCF04 = (&lbl_803DCF24)[lbl_803DCEEC];
+    lbl_803DCF04 = v;
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
