@@ -1094,8 +1094,8 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
 void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
 {
     f32 dx;
-    f32 dz;
     f32 dy2;
+    f32 dz;
     f32 scale;
     f32 rate;
     f32 dy;
