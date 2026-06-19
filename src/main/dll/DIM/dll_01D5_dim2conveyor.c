@@ -31,13 +31,13 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -62,7 +62,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define MUSIC_TRACK_CONVEYOR       0xdf
 
 extern f32 lbl_803E4A58;
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern f32 lbl_803E4A5C;
 extern f32 lbl_803E4A60;
 extern f32 lbl_803E4A64;
@@ -173,7 +173,7 @@ void dim2conveyor_init(int* obj, u8* params)
 void dim2conveyor_update(int* obj)
 {
     extern void Music_Trigger(int trackId, int restart);
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
     if (extra->musicHold != 0)

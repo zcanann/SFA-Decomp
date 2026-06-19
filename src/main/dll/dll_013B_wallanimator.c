@@ -30,15 +30,15 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int ObjGroup_FindNearestObject();
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void vecRotateZXY(void* in, void* out);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_80041018(int obj);
 extern int getTrickyObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 extern const f32 lbl_803E3FFC; /* nearest-object search radius seed */
 extern const f32 lbl_803E3FD0; /* debris jitter-X scale */

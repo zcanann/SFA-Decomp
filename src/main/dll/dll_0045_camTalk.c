@@ -7,10 +7,10 @@
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/object_transform.h"
 
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 extern CameraModeBikeState* lbl_803DD540;
 
@@ -21,8 +21,8 @@ extern u32 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 timeDelta;

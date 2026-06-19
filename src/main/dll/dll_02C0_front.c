@@ -48,7 +48,7 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
-extern f32 mathCosf(f32);
+extern float mathCosf(float x);
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
@@ -540,7 +540,7 @@ void fn_80134870(int obj, u8* arr);
  * setup. */
 void titlescreen_update(u8* obj)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern void characterDoEyeAnims(u8* obj, void* state);
     extern void fn_8003B228(u8* obj, void* p);
     extern void Sfx_StopFromObject(u8* obj, u32 sfxId);

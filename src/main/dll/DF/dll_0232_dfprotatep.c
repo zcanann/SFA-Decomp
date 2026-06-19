@@ -11,7 +11,7 @@ extern u32 FUN_800068c4();
 extern u32 FUN_80017690();
 extern u64 FUN_80017698();
 extern u32 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u32 ObjMsg_SendToObject();
 extern void TrickyCurve_updateCooldownTrigger(int obj);

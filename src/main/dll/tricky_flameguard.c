@@ -97,7 +97,7 @@ extern int trickyUpdateApproachSpeed(int p1, int p2, f32 f, void* target, int p4
 extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
-extern void* Obj_AllocObjectSetup(int p1, int p2);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern int Obj_IsLoadingLocked(void);
 extern void objSetAnimSpeedTo1(void* obj);
@@ -105,10 +105,10 @@ extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p
 
 extern char lbl_8031D2E8[];
 extern f32 timeDelta;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int getAngle(f32 x, f32 z);
-extern int randomGetRange(int min, int max);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern int getAngle(float y, float x);
+extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E23F4;

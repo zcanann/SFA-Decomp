@@ -1,7 +1,7 @@
 /* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void FUN_8003b818(int param_1);
@@ -183,7 +183,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern u32 FUN_80017ac8();
 extern u64 FUN_8002fc3c();
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern u32 FUN_800810f8();
 extern u32 FUN_80081118();

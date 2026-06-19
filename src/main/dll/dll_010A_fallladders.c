@@ -57,7 +57,7 @@ typedef struct FallLaddersState
 
 extern u32 GameBit_Get(int eventId);
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50; /* gravity accel */
 extern f32 lbl_803E3B54; /* bounce damping */

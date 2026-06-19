@@ -39,11 +39,11 @@
 
 #pragma dont_inline on
 
-extern int getAngle(f32 dx, f32 dz);
-extern u32 randomGetRange();
-extern void* Obj_AllocObjectSetup();
+extern int getAngle(float y, float x);
+extern int randomGetRange(int lo, int hi);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
-extern u32 Obj_IsLoadingLocked();
+extern int Obj_IsLoadingLocked(void);
 extern void fn_80292E20(u32, float*, float*);
 extern u8 objBboxFn_800640cc();
 extern f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,

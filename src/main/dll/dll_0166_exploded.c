@@ -2,7 +2,7 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 

@@ -17,9 +17,9 @@
 #include "main/objlib.h"
 
 extern u32 Sfx_SetObjectSfxVolume();
-extern u32 Sfx_PlayFromObject();
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 Sfx_KeepAliveLoopedObjectSound();
-extern u32 randomGetRange();
+extern int randomGetRange(int lo, int hi);
 extern u32 setAButtonIcon();
 extern void* Obj_GetPlayerObject(void);
 extern u32 getButtonsJustPressedIfNotBusy(int pad);

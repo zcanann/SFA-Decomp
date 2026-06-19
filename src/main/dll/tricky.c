@@ -62,7 +62,7 @@ extern int lbl_8031BF90[];
 extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
-extern char* Obj_AllocObjectSetup(int size, int id);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(char* obj);
 extern void ObjModel_SetRenderCallback(void* model, void* cb);
@@ -1447,9 +1447,9 @@ void hudDrawFn_80121440(void)
 
 extern int Camera_GetCurrentViewSlot(void);
 extern u8 Rcp_GetViewFinderHudEnabled(void);
-extern int getAngle(f32, f32);
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
 extern f32 fn_8029454C(f32);
 extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;

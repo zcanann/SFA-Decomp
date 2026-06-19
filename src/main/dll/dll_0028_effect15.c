@@ -14,7 +14,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 lbl_803E0110;
 extern f32 lbl_803E0114;

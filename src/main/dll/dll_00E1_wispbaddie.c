@@ -12,7 +12,7 @@ extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 extern f32 lbl_803DC074;
 
@@ -26,7 +26,7 @@ void swarmbaddie_release(void);
 
 void swarmbaddie_initialise(void);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void mm_free(void* p);
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
@@ -49,13 +49,13 @@ extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 extern void* mmAlloc(int size, int tag, int flags);
 extern void* memset(void* dst, int value, u32 size);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 FUN_800305c4();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void doRumble(f32 duration);

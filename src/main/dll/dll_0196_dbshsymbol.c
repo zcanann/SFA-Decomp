@@ -30,7 +30,7 @@
 #define DBSH_SPIN_DONE 0x7ef4      /* spinProgress at a full turn */
 
 extern int Obj_GetPlayerObject(void);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 

@@ -9,7 +9,7 @@
 #include "main/audio/sfx_ids.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -22,14 +22,14 @@ extern void* Obj_GetPlayerObject(void);
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void fn_8011F6D4(int enable);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern int padGetStickX(int controller);
 extern void* textureLoadAsset(int id);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern int objGetAnimState80A(void* obj);
 extern u8 framesThisStep;
 extern f32 lbl_803E4EC0;

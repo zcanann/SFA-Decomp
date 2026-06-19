@@ -5,7 +5,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objtexture.h"
 
-extern void GameBit_Set(int gameBit, int value);
+extern void GameBit_Set(int eventId, int value);
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -27,7 +27,7 @@ void area_initialise(void);
 extern u8 framesThisStep;
 
 extern void GameBit_Set(int eventId, int value);
-extern void Sfx_PlayFromObject(int obj, int soundId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(u32 a, u32 b, u32 c);

@@ -53,14 +53,14 @@ typedef struct DIMWoodDoorShardState
 
 extern u8 Obj_IsLoadingLocked(void);
 extern s16* objModelGetVecFn_800395d8(int obj, int target);
-extern u8* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
 extern int Obj_GetPlayerObject(void);
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
-extern f32 mathCosf(f32 value);
-extern f32 mathSinf(f32 value);
-extern u32 randomGetRange(int min, int max);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
+extern int randomGetRange(int lo, int hi);
 
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

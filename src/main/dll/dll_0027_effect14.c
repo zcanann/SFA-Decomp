@@ -20,7 +20,7 @@
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void* params, f32* vec);

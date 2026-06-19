@@ -32,7 +32,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -302,7 +302,7 @@ void fn_80152514(int* obj, u8* state)
 
 extern void fn_80293018(int idx, f32* outA, f32* outB);
 extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* loadObjectAtObject(int* obj, u8* setup);
 extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
 extern f32 sqrtf(f32 x);

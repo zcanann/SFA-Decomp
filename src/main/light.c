@@ -611,7 +611,7 @@ void seqpoint_update(int* obj)
 void vfpdraghead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj); /* #57 */
-    extern int randomGetRange(int min, int max); /* #57 signed return -> cmpwi */
+    extern int randomGetRange(int lo, int hi); /* #57 signed return -> cmpwi */
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 

@@ -12,7 +12,7 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float sqrtf(float x);
 extern u32 buttonGetDisabled(int index);
 extern void buttonDisable(int index, u32 flags);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void setMatrixFromObjectTransposed(void* transform, float* mtx);
 extern float vec3f_distanceSquared(float* posA, float* posB);
 extern float Vec_distance(float* param_1, float* param_2);
@@ -28,9 +28,9 @@ extern ObjLibRegionList** RomList_GetLoadedPages(void);
 extern void debugPrintf(const char* fmt, ...);
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern f32 fn_802943F4(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern int playerIsDisguised(int obj);
 extern int objGetAnimState80A(void* obj);
 
@@ -2193,7 +2193,7 @@ typedef struct PlayerBlinkState
 
 void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
     ObjAnimComponent* objAnim;
     u8 step;

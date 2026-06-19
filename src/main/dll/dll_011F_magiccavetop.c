@@ -140,7 +140,7 @@ typedef struct MagicCaveTopFxArgs
 
 void magiccavetop_update(int* obj)
 {
-    extern u64 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     MagicCaveTopFxArgs fx;
     int* player;
     u8* sub;

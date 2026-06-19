@@ -63,7 +63,7 @@ extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern f32 lbl_803E2F58;
 extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);
 extern int** ObjList_GetObjects(int* idx, int* count);
 extern f32 lbl_803E2F40;

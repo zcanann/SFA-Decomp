@@ -5,7 +5,7 @@
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -79,8 +79,8 @@ extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
-extern int GameBit_Get(int);
-extern void GameBit_Set(int slot, int val);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void Music_Trigger(int a, int b);

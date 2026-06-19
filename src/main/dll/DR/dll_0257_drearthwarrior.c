@@ -244,8 +244,8 @@ extern void objAudioFn_8006edcc(int obj, int a, int b, int c, int d, f32 v, f32 
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
 extern void doRumble(f32 v);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
 extern void fn_802BC788(void);

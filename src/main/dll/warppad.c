@@ -25,7 +25,7 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjTrigger_IsSet();
 extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);

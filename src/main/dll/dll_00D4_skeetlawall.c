@@ -9,7 +9,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+ * objRenderFn_8003b8f4 only when unkF4 == 0 (default/inactive shape).
 extern f32 lbl_803E3058;
 
 

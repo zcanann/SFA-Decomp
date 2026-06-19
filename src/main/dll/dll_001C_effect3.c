@@ -1310,8 +1310,8 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern void Sfx_PlayFromObject(void* obj, int id);
 
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

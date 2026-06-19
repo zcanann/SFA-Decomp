@@ -42,7 +42,7 @@ typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flag
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E5DEC; /* 90.0: unk04 default */
 extern f32 lbl_803E5DF0; /* flame param */
@@ -51,7 +51,7 @@ extern f32 lbl_803E5DF8; /* model scale factor */
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E5DE8; /* sound-loop radius */
-extern void Obj_FreeObject(void* o);
+extern void Obj_FreeObject(u8* obj);
 
 int wmtorch_getExtraSize(void) { return sizeof(WmTorchState); }
 int wmtorch_getObjectTypeId(void) { return 0x1; }

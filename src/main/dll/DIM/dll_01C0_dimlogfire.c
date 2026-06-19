@@ -26,8 +26,8 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 
 

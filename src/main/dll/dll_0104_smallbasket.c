@@ -52,14 +52,14 @@ typedef struct SmallbasketState
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 
 extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int typeId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 sqrtf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* in, void* out);
 
 extern f32 lbl_803AC790[];
@@ -91,7 +91,7 @@ void smallbasket_render(int obj, int param_2, int param_3, int param_4,
                         int param_5, char param_6);
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
-extern void ObjGroup_RemoveObject(int obj, int flag);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
                                  int p5, double scale);
@@ -99,8 +99,8 @@ extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern int GameBit_Get(int id);
-extern void Sfx_PlayFromObject(int obj, int sfx);
+extern u32 GameBit_Get(int eventId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);

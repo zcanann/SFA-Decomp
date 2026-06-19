@@ -32,14 +32,14 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void textureFree(int tex);
 extern int lbl_803AC960[4];
 extern int Obj_GetActiveModel(int obj);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern void ModelLightStruct_free(void*);
 extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;
 extern f32 lbl_803E4934;

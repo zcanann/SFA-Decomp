@@ -24,7 +24,7 @@
  */
 #include "main/checkpoint_route.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
@@ -32,8 +32,8 @@ extern s16 lbl_803DD416;
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 extern f32 sqrtf(f32);
 

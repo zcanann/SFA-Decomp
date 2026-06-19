@@ -21,13 +21,13 @@ STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern void Sfx_RemoveLoopedObjectSound(int x, int y);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern f32 timeDelta;
 extern f32 sqrtf(f32 x);
-extern f32 mathCosf(double x);
-extern f32 mathSinf(double x);
-extern s16 getAngle(f32 dx, f32 dz);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
+extern int getAngle(float y, float x);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);

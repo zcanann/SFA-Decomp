@@ -43,7 +43,7 @@ extern f32 lbl_803E3124;
 extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
 extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);

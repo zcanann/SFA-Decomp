@@ -20,7 +20,7 @@ typedef struct MmpGyserventPlacement
     u8 pad21[0x28 - 0x21];
 } MmpGyserventPlacement;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 extern u8 framesThisStep;

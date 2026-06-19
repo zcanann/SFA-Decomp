@@ -10,7 +10,7 @@
  */
 #include "main/game_object.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern u8 framesThisStep;

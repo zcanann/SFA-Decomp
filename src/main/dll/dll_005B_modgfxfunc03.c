@@ -30,7 +30,7 @@ STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* p, f32* v);
 extern void* textureIdxToPtr(int idx);
 extern void debugPrintf(char* fmt, ...);

@@ -2,7 +2,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 FUN_8003b818();
@@ -220,7 +220,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern u32 FUN_80017ac8();
 extern u64 FUN_8002fc3c();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u32 FUN_800810f8();
 extern u32 FUN_80081118();

@@ -102,7 +102,7 @@ void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimbossfire_update(int obj)
 {
-    extern u32 randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     u32 bitVal;
     ModelLightStruct* light;
     int ref;
@@ -235,7 +235,7 @@ void dimbossfire_update(int obj)
 
 void dimbossfire_init(int obj, u32 arg2, int placement)
 {
-    extern u32 randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     u32 ua;
     u8 randVal;
     int state;

@@ -37,7 +37,7 @@ typedef struct DIMbossspitState
 } DIMbossspitState;
 
 extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();

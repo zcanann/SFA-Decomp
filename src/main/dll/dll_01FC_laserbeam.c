@@ -137,19 +137,19 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_SendToObject();
 
 void LaserBeam_update(int obj2)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern u32 GameBit_Get(int eventId); /* #57 */
     extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern int objGetAnimState80A(void* obj);
-    extern f32 mathCosf(f32 x);
-    extern f32 mathSinf(f32 x);
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     extern int* lbl_803DDC80;
     extern u8 framesThisStep;
     extern f32 timeDelta;

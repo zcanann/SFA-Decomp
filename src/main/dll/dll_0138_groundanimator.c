@@ -40,7 +40,7 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();

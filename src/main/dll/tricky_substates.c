@@ -25,7 +25,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -68,7 +68,7 @@ extern void* Objfsa_FindNearestCurveType24(void* pos, int a, int b);
 extern int Objfsa_GetWalkGroupIndexAtPoint(void* pos, int a);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, u8* pos, int flag);
 extern int trickyMove(u8 * obj, u8 * pos);
-extern int getAngle(f32 x, f32 z);
+extern int getAngle(float y, float x);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 lbl_803E23D0;
@@ -84,7 +84,7 @@ void fn_80144B50(u8* obj, u8* state);
 extern void objPosFn_80039510(int obj, int flags, float* out);
 extern f32 lbl_803E24C8;
 extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int id);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
 extern void objSetAnimSpeedTo1(u8 * e);
 extern f32 lbl_803E24AC;
@@ -95,8 +95,8 @@ extern f32 lbl_803E249C;
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
 extern int cMenuGetSelectedItem(void);
-extern f32 mathSinf(f64 x);
-extern f32 mathCosf(f64 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern f64 lbl_803E2528;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;

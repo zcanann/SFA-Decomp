@@ -49,7 +49,7 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
 #define DOORMSG_PARTNER_CLOSE 0x30005
 #define DOORMSG_PARTNER_OPEN 0x30006
 
-extern void ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject();
 extern int ObjMsg_Peek();
 extern int ObjMsg_Pop();
@@ -69,8 +69,8 @@ extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 sqrtf(f32 x);
 extern f32* Camera_GetCurrentViewSlot(void);

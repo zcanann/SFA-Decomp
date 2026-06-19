@@ -42,7 +42,7 @@ typedef struct WmGalleonState
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
@@ -172,7 +172,7 @@ void dll_1FB_hitDetect_nop(void)
 
 void dll_1FB_update(int* obj)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&

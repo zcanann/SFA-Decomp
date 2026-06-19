@@ -1,8 +1,8 @@
 /* DLL 0x801C0BF8 - DIM level control [801C0BF8-...) */
 #include "main/dll_000A_expgfx.h"
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 /* Trivial 4b 0-arg blr leaves. */
 

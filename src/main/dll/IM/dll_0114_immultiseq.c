@@ -16,9 +16,9 @@
 #include "main/objseq.h"
 
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_AddObject();
-extern void ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 lbl_803E37A8;
 

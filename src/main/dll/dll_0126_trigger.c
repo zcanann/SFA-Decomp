@@ -120,7 +120,7 @@ extern int getLoadedTexture(int idx);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void textureFree(int tex);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void GameBit_Set(int bit, int val);
+extern void GameBit_Set(int eventId, int value);
 extern int getCurMapLayer(void);
 extern int getTrickyObject(void);
 extern void mapLoadDataFiles(int map);

@@ -25,9 +25,9 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void FUN_8003b818(int);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern f32 lbl_803E3420;
 extern f32 lbl_803E3424;

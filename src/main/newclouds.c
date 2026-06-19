@@ -25,7 +25,7 @@ extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
 extern s16* Camera_GetCurrentViewSlot(void);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -234,8 +234,8 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
     return p;
 }
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 typedef struct FogColor
 {

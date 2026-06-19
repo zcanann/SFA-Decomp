@@ -10,7 +10,7 @@ extern void gameTextBoxFn_80134d40(int p1, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void gameTextShowStr(void* str, int id, int x, int y);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenShowCopyright(u8 arg);
@@ -30,7 +30,7 @@ extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
-extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void set_uiDllIdx_803dc8f0(int idx);
 extern void loadUiDll(int index);
 extern void buttonDisable(int port, u32 mask);

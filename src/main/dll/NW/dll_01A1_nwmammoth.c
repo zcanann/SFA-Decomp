@@ -55,7 +55,7 @@ extern int lbl_803DBF98;
 extern int lbl_803DBF9C;
 extern int lbl_803DBFA0;
 extern int lbl_803DBFA4;
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5228;
 extern f32 lbl_803E522C;
@@ -132,7 +132,7 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
@@ -194,7 +194,7 @@ void fn_801CEE0C(int p1, int p2)
 
 void fn_801CED2C(int p1, int p2)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern int ObjTrigger_IsSetById(int, int);
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
@@ -236,7 +236,7 @@ typedef struct
 
 int fn_801CE078(int* obj, u8* st)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     u8 cv;
     int snd;
     f32 sunTime;
@@ -438,7 +438,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     extern int* getTrickyObject(void); /* #57 */
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
@@ -746,7 +746,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
     extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     NwMammothTables* table = (NwMammothTables*)lbl_803267C0;

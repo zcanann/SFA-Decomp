@@ -22,8 +22,8 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 
-extern u32 Sfx_PlayFromObject();
-extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern u32 Obj_SetModelColorFadeRecursive();
@@ -31,13 +31,13 @@ extern u32 ObjHitbox_SetSphereRadius();
 extern u8 Obj_IsLoadingLocked();
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_DisableObject();
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 fn_8003B5E0();
 extern u32 objRenderFn_8003b8f4();
 extern u32 objParticleFn_80099d84();
 extern f32 sqrtf(f32);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern u32 fn_802961FC();
 
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants, the

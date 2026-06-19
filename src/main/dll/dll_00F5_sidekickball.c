@@ -43,7 +43,7 @@ extern u32 GameBit_Get(int eventId);
 extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
 extern u8* getTrickyObject(void);
-extern void Obj_FreeObject(u8 * obj);
+extern void Obj_FreeObject(u8* obj);
 extern u8 trickyBallMove(u8 * obj);
 extern int buttonGetDisabled(int unused);
 extern void OSReport(const char* msg, ...);
@@ -135,7 +135,7 @@ void fn_801796BC(int obj, f32 a, f32 b, f32 c)
 
 void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     SidekickBallState* params = (SidekickBallState*)paramsRaw;
     int* player;
     int* playerState;
@@ -352,7 +352,7 @@ typedef struct TrickyBallState
 
 u8 trickyBallMove(u8* obj)
 {
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     TrickyBallState* state;
     f32 collisionNormal[3];
     f32 dx;
@@ -507,7 +507,7 @@ u8 trickyBallMove(u8* obj)
 void sidekickball_init(int obj)
 {
     extern int ObjMsg_AllocQueue();
-    extern void GameBit_Set(int gameBit, int value);
+    extern void GameBit_Set(int eventId, int value);
     u8 pathFlag;
     u8* state;
     int objDef;

@@ -13,9 +13,9 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern u64 ObjGroup_RemoveObject();
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 
 typedef struct ExplodeanimatorState

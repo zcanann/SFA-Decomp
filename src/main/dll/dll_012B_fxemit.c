@@ -25,12 +25,12 @@
 
 /* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
    (the per-file spelling is load-bearing for codegen). */
-extern u32 GameBit_Get(int bit);
-extern u32 randomGetRange(int min, int max);
+extern u32 GameBit_Get(int eventId);
+extern int randomGetRange(int lo, int hi);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
-extern int Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_80137948(char* fmt, ...);
 extern ModgfxInterface** gModgfxInterface;

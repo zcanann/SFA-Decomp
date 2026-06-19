@@ -25,7 +25,7 @@ typedef struct DFDoorSpeciExtra
 } DFDoorSpeciExtra;
 
 extern u32 GameBit_Get(int eventId);
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern u8 framesThisStep;
 extern f32 lbl_803E4E30;
 extern f32 lbl_803E4E34;

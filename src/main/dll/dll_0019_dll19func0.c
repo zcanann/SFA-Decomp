@@ -3,9 +3,9 @@
 #include "main/mm.h"
 #include "main/objseq.h"
 
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern float mathCosf(float x);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
@@ -36,7 +36,7 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern u32 FUN_80017ac8();
@@ -68,8 +68,8 @@ extern f32 lbl_803E265C;
 #pragma scheduling on
 #pragma peephole on
 extern void* memset(void* dst, int val, u32 n);
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
@@ -77,9 +77,9 @@ extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern const f32 lbl_803E1C2C;
 extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
-extern void Obj_FreeObject(void* obj);
+extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
-extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
@@ -109,7 +109,7 @@ extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
 extern GameObject* lbl_803DD5E4;
-extern int GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
 extern f32 lbl_803E1C38;
@@ -121,9 +121,9 @@ extern f32 lbl_803E1AD0;
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
-extern s16 getAngle(f32 x, f32 z);
+extern int getAngle(float y, float x);
 extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
 extern u8 framesThisStep;

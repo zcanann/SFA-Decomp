@@ -60,11 +60,11 @@ extern void ObjHits_MarkObjectPositionDirty();
 extern void ObjHits_DisableObject();
 extern void ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject();
 
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(f32);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);

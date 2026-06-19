@@ -179,7 +179,7 @@ typedef struct Dll19EResArgs
 
 void dll_19E_update(void* obj)
 {
-    extern int GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     Dll19EState* state;
     void* resource;
     struct

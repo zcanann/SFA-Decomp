@@ -121,13 +121,13 @@ typedef struct WCPushBlockCloudActionInterface
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void vecRotateZXY(void* angles, void* out);
-extern WCPushBlockObjectSetup* Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer,
                                           int linkId, void* parent);
 extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY,
                                           f32* outZ, int useInputPosition);
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern u8 framesThisStep;

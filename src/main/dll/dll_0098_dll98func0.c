@@ -46,7 +46,7 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern u8 lbl_803178B0[];
 

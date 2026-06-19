@@ -6,7 +6,7 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 
-extern u32 getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
                                  void* outHits, int flags);
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
@@ -14,7 +14,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
                                             int pointCount);
 extern void debugPrintf(char* message, ...);
 extern f32 sqrtf(f32 v);
-extern f32 mathCosf(f32 v);
+extern float mathCosf(float x);
 
 extern ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];

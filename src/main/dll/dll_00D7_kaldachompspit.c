@@ -17,10 +17,10 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 
 extern void ModelLightStruct_free(void* p);

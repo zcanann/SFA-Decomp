@@ -39,10 +39,10 @@ extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);     /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(int);  /* gates mode 0x44 */
 extern int objFn_80296700(int);  /* gates mode 0x49 (with fn_80295C0C) */
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern f64 sqrtf(f64 x);
-extern int getAngle(f32 dx, f32 dy);
+extern int getAngle(float y, float x);
 extern u32 OSGetTick(void);
 
 extern u8 lbl_803DD528;       /* last bbox-hit result */

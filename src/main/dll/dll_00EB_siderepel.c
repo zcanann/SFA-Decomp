@@ -171,7 +171,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 
 extern f32 lbl_803E3420;

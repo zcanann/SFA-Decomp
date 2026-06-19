@@ -31,9 +31,9 @@ typedef struct EcshIntPair
     int b;
 } EcshIntPair;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern f32 timeDelta;
 extern f32 lbl_803E4F90;
 extern f32 lbl_803E4F94;
@@ -61,7 +61,7 @@ extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
 extern s16 lbl_80326238[];
 
-extern u32 GameBit_Get(u32 bit);
+extern u32 GameBit_Get(int eventId);
 extern void Music_Trigger(int trackId, int restart);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
@@ -75,7 +75,7 @@ extern void audioStopByMask(int mask);
 extern int objGetAnimStateFlags(int* player, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(void* obj, int group);
 extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
@@ -106,7 +106,7 @@ typedef struct MmShrineAnimEvents
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj)
 {
-    extern s16 getAngle(f32 deltaX, f32 deltaZ); /* #57 */
+    extern int getAngle(float y, float x); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* config;
     MmShrineAnimState* state;
@@ -372,7 +372,7 @@ void ecsh_shrine_update(s16* obj)
     extern void* Obj_GetPlayerObject(void); /* #57 */
     extern void fn_801C5990(s16 * obj); /* #57 */
     extern u8 lbl_80326208[]; /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     f32 t[2];
     int msgC;
     int msgA;
@@ -789,7 +789,7 @@ void ecsh_shrine_initialise(void)
 void ecsh_shrine_init(s16* obj, s8* def)
 {
     extern s16* lbl_803DDBC4; /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int* sub = ((GameObject*)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;

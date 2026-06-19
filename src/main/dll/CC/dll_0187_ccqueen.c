@@ -10,7 +10,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 extern u32 ObjHits_DisableObject();

@@ -67,7 +67,7 @@ extern void titlescreen_free(u8 * obj);
 extern void titlescreen_update(u8 * obj);
 extern void titlescreen_init(u8 * obj, u8 * p);
 extern f32 lbl_803E23E8;
-extern void Obj_FreeObject(void*);
+extern void Obj_FreeObject(u8* obj);
 extern f32 lbl_803E23B8;
 extern f32 lbl_803DD9D8;
 extern f32 lbl_803DD9DC;

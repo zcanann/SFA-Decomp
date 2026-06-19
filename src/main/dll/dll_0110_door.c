@@ -140,7 +140,7 @@ void mmp_bridge_update(int* obj);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int i;
     int state;
     int def;

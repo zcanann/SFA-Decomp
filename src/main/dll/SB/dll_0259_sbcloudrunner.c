@@ -136,7 +136,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5C70;
 extern void objSetMtxFn_800412d4();
 extern u32 getButtonsHeld(int pad);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E5C98;

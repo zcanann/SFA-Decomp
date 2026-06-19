@@ -13,7 +13,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop();
 extern int ObjMsg_AllocQueue();
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);

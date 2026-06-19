@@ -16,7 +16,7 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 int fn_801DD170(void)
 {
-    extern u32 GameBit_Get(int id); /* #57 */
+    extern u32 GameBit_Get(int eventId); /* #57 */
     int r;
     if (GameBit_Get(0x639) != 0) { r = 0; }
     else { r = 1; }

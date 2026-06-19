@@ -20,7 +20,7 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80316B60[];

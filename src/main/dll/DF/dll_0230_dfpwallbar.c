@@ -55,7 +55,7 @@ void chuka_hitDetect(int obj)
 void chuka_update(int obj)
 {
     extern int*ObjList_GetObjects(int*, int*);
-    extern u32 GameBit_Get(int);
+    extern u32 GameBit_Get(int eventId);
     extern void Obj_SetActiveModelIndex(int, int);
     extern u8 gChukaModeTable[];
     extern f32 lbl_803E63F8;

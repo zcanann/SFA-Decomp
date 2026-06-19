@@ -8,7 +8,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
 extern void skyFn_80088c94(int a, int b);
@@ -22,7 +22,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void fn_80296518(int* player, int a, int b);
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
@@ -35,7 +35,7 @@ extern f32 lbl_803E501C;
 extern f32 lbl_803E5020;
 extern f32 lbl_803E5024;
 extern f32 lbl_803E5028;
-extern f32 mathSinf(f32 angle);
+extern float mathSinf(float x);
 extern void* ObjGroup_GetObjects();
 extern int mapGetDirIdx(int a);
 extern int unlockLevel(int a, int b, int c);
@@ -57,8 +57,8 @@ int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 void gpsh_shrine_free(int* obj)
 {
     extern void Music_Trigger(int id, int restart); /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
-    extern int GameBit_Get(int bit); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Get(int eventId); /* #57 */
     void** state = ((GameObject*)obj)->extra;
     void* light = state[0];
 
@@ -109,7 +109,7 @@ typedef struct EcshShrineByte15
 
 int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* sub;
     int* player;
@@ -245,9 +245,9 @@ void gpsh_shrine_update(int obj)
     extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e); /* #57 */
     extern void fn_801C70F0(int obj); /* #57 */
     extern int getEnvfxAct(int obj, int player, int id, int p); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfx); /* #57 */
-    extern int GameBit_Set(int bit, int val); /* #57 */
-    extern u32 GameBit_Get(int bit); /* #57 */
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Get(int eventId); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     int count;
     int data = *(int*)&((GameObject*)obj)->extra;
@@ -477,7 +477,7 @@ void gpsh_shrine_update(int obj)
 
 void gpsh_shrine_init(int* obj, int* def)
 {
-    extern int GameBit_Set(int bit, int val); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern void* objCreateLight(int obj, int kind); /* #57 */
     u8* state;
 

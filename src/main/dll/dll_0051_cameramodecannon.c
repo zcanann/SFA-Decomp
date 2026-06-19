@@ -18,8 +18,8 @@
 
 typedef struct CameraModeCloudRunnerState CameraModeCloudRunnerState;
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
 extern CameraModeCannonState* lbl_803DD5A0;

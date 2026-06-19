@@ -71,7 +71,7 @@ extern bool FUN_800067f0();
 extern char FUN_80006a64();
 extern u32 FUN_80006a68();
 extern u32 FUN_80017690();
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Sfx_RemoveLoopedObjectSound(int param_1, int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1, int param_2);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -113,7 +113,7 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern void gameBitIncrement(int eventId);
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
@@ -134,8 +134,8 @@ extern int fn_80296448(int obj);
 extern void objParticleFn_80099d84(int obj, f32 param_1, int param_4, f32 param_2, int param_5);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int param_7,
                               int param_8, int param_9, int param_10);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 extern u32 lbl_802C21F0[4];
 extern char lbl_8031D2E8[];
@@ -2020,7 +2020,7 @@ typedef struct
 } FrozenByte2F6;
 
 extern f32 sqrtf(f32 x);
-extern int getAngle(f32 x, f32 z);
+extern int getAngle(float y, float x);
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;

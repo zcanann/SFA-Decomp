@@ -115,7 +115,7 @@ extern f32 __THPHuffmanBits_803DEE24;
 extern f32 __THPHuffmanSizeTab_803DEE28;
 extern u8 lbl_8030E8B0[];
 extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
 {
@@ -626,8 +626,8 @@ extern f32 lbl_803DEE7C;
 extern f32 Gq;
 extern int lbl_803DD03C;
 extern int lbl_803968C0[];
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)

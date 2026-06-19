@@ -2,7 +2,7 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 
 extern u8 framesThisStep;

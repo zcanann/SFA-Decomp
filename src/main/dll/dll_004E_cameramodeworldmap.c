@@ -22,9 +22,9 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern float mathCosf(float x);
 
 #pragma scheduling on

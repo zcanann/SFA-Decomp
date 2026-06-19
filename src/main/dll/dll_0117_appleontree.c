@@ -10,7 +10,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/sky_interface.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

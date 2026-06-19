@@ -34,7 +34,7 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5A30;
@@ -78,7 +78,7 @@ extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, in
 extern void fn_801E8660(int obj);
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 
 #pragma scheduling off
 #pragma peephole off

@@ -139,10 +139,10 @@ void fn_80204BF8(int obj)
     /* block-scope to override the engine_shared.h prototypes' return/param
        types (GameObject* return, signed args) the codegen here depends on. */
     extern void* Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int);
+    extern u32 GameBit_Get(int eventId);
     extern f32 Vec_xzDistance(f32*, f32*);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);
-    extern void Sfx_PlayFromObject(int, int);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_StopObjectChannel(int, int);
     GameObject* object = (GameObject*)obj;
     ObjPlacement* placement = object->anim.placement;

@@ -119,8 +119,8 @@ void dfpobjcreator_init(int obj, s8* def)
 void dfpobjcreator_update(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern u32 GameBit_Get(int);
-    extern u8*Obj_AllocObjectSetup(int, int);
+    extern u32 GameBit_Get(int eventId);
+    extern void* Obj_AllocObjectSetup(int size, int b);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
     extern f32 timeDelta;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;

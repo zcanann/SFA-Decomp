@@ -21,12 +21,12 @@ typedef struct MagicmakerPlacement
     u8 unk7;
 } MagicmakerPlacement;
 
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
 extern void GameBit_Set(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern char* Obj_AllocObjectSetup(int size, int typeId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
 extern u16 lbl_80325CE8[];

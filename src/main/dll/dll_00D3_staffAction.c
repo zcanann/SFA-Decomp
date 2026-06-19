@@ -27,7 +27,7 @@
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);

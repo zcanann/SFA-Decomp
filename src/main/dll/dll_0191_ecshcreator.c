@@ -16,7 +16,7 @@
 #include "main/resource.h"
 
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern int GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E4FF8;
 extern u8* mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);

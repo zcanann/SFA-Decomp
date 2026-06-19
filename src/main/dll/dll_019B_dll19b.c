@@ -159,7 +159,7 @@ typedef struct Dll19BState
 void dll_19B_update(int obj)
 {
     extern void* gTitleMenuControlInterface;
-    extern int GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     s16* st;
     int player;
     int near;
@@ -388,7 +388,7 @@ void dll_19C_free(void);
 void dll_19B_init(u8* obj, u8* params)
 {
     extern void* gTitleMenuControlInterface;
-    extern int GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     register u8* sub;
     void* res;
 

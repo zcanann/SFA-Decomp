@@ -40,7 +40,7 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 extern void getLActions();
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E46E0;

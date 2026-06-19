@@ -16,7 +16,7 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void vecRotateZXY(void* rot, f32* vec);
 

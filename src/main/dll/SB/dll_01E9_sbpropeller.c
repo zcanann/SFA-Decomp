@@ -29,7 +29,7 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_SFX_HIT 0x2c7
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern u32 DAT_803de8c0;
 extern f32 lbl_803E64A8;

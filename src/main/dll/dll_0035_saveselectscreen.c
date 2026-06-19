@@ -28,7 +28,7 @@ typedef struct SaveSelectPanel
     u8 padA[2];
 } SaveSelectPanel;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(void* resource);
 extern void loadUiDll(int id);
 extern void* mmAlloc(int size, int heap, int flags);

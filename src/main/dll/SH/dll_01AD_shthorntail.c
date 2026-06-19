@@ -8,7 +8,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj, int collisionShapeState);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
@@ -42,8 +42,8 @@ extern void fn_8003B228(int obj, int collisionShapeState);
 extern u32 dll_2E_func05();
 extern u32 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern u32 lbl_803E5410;
@@ -58,7 +58,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
                                          SHthorntailConfig* config)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     extern f32 getXZDistance(int posA, int posB); /* #57 */
     int playerObj;
     int randomIdleWait;
@@ -174,7 +174,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
 void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     int linkedEventPending;
     u32 gameBit;
     int randomIdleWait;
@@ -260,7 +260,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused,
                                                ObjAnimUpdateState* animUpdate)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     SHthorntailRuntime* runtime;
     int randomIdleWait;
     int impactHandled;
@@ -366,7 +366,7 @@ typedef struct SHthorntailTailSwingEffectScratch
 #pragma optimization_level 2
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
     extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
@@ -605,7 +605,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     SHthorntailRuntime* runtime;
     u32 randomTime;
     int moveScratch;

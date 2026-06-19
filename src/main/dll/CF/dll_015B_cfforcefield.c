@@ -63,16 +63,16 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 /* frames the collapse spin-down runs for */
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
-extern f32 mathCosf(f32 angle);
-extern f32 mathSinf(f32 angle);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 extern int fn_80080150(void* timer);
 extern void s16toFloat(void* p, int duration);
 extern int timerCountDown(void* timer);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void storeZeroToFloatParam(void* p);
 extern f32 timeDelta;
 extern f32 lbl_803DBE90; /* ring radius scale */

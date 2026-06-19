@@ -16,7 +16,7 @@ extern u64 padUpdate();
 extern u32 dvdCheckError();
 extern u32 gameTextRun();
 extern u32 GameBit_Get(int eventId);
-extern u64 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern u32 gameTextShow();
 extern u32 checkReset();
 extern u64 mmFreeTick();
@@ -53,7 +53,7 @@ extern void OSReport(const char* msg, ...);
 extern u32 Camera_DisableViewYOffset();
 extern u32 getEnvfxAct();
 extern u32 ModelLightStruct_free();
-extern u32 Obj_FreeObject();
+extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 param_2, u32 param_3,

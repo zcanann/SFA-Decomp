@@ -11,7 +11,7 @@
  */
 #include "main/game_object.h"
 
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 

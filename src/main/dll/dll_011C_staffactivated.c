@@ -30,10 +30,10 @@ extern f32 lbl_803E3C10;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
 
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void objRenderFn_8003b8f4(f32);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern void* Obj_GetPlayerObject(void);

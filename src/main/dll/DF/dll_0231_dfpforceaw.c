@@ -27,7 +27,7 @@ extern u32 FUN_800068c4();
 extern u32 FUN_80017690();
 extern u64 FUN_80017698();
 extern u32 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern int Obj_GetPlayerObject(void);
 extern u32 ObjMsg_SendToObject();
@@ -47,7 +47,7 @@ extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);

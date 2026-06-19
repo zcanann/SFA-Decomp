@@ -12,7 +12,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjHits_GetPriorityHit();
 extern ModgfxInterface** gModgfxInterface;
 extern f32 timeDelta;
@@ -90,7 +90,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     extern void voxmaps_worldToGrid(f32*, s16*);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     extern f32 sqrtf(f32 x);
-    extern u32 randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E63C8;
     extern f32 lbl_803E63CC;
     extern f32 lbl_803E63D0;
@@ -187,8 +187,8 @@ void DFP_Torch_update(int obj)
     extern void Sfx_StopObjectChannel(int, int);
     extern void objUpdateOpacity(int);
     extern int ObjHits_GetPriorityHit(int, int, int, int);
-    extern u32 GameBit_Get(int);
-    extern void GameBit_Set(int, int);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;

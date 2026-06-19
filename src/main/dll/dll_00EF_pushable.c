@@ -9,8 +9,8 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 
-extern u32 GameBit_Get(int bit);
-extern u32 randomGetRange(int min, int max);
+extern u32 GameBit_Get(int eventId);
+extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 extern f32 sqrtf(f32 x);
 
@@ -24,9 +24,9 @@ extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
 
 extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int getAngle(f32 a, f32 b);
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 lbl_803E3590;
@@ -83,8 +83,8 @@ extern f32 lbl_803E35BC;
 extern f32 lbl_803E35C0;
 extern f32 lbl_803E35C4;
 extern f32 lbl_803E35C8;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
 extern f32 lbl_803E359C;
 extern f32 lbl_803E35A0;
@@ -93,7 +93,7 @@ extern void fn_8003B5E0(int a, int b, int c, int d);
 
 void fn_80174A80(int obj, PushableState* ext)
 {
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int def;
     ObjTextureRuntimeSlot* tex;
     f32 f;
@@ -174,7 +174,7 @@ void fn_80174BFC(int obj, int ext)
     extern int Sfx_PlayFromObject(int a, int b); /* #57 */
     extern int Obj_GetPlayerObject(); /* #57 */
     extern void saveGame_saveObjectPos(int obj); /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int def;
     int i;
     s8 bits;
@@ -332,7 +332,7 @@ void fn_80174BFC(int obj, int ext)
 u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     u32 bitVal;
     int player;
     PushableState* state;
@@ -615,7 +615,7 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 void pushable_free(int* obj)
 {
     extern int saveGame_saveObjectPos(int* obj); /* #57 */
-    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     PushableState* sub = ((GameObject*)obj)->extra;
     s16 type = ((GameObject*)obj)->anim.seqId;
@@ -662,7 +662,7 @@ void pushable_update(int* obj)
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     extern int saveGame_saveObjectPos(int* obj); /* #57 */
-    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     PushableState* state;
     u8* def;
     void* player;
@@ -1206,7 +1206,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     extern void setMatrixFromObjectPos(f32* mtx, void* vec); /* #57 */
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
-    extern unsigned long GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern u32 fn_80174BFC(); /* #57 */
     SetScaleParams* pp;
     PushableState* state;

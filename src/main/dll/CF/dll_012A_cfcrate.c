@@ -44,7 +44,7 @@ extern f32 timeDelta;
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E3DD8;
 extern void* Camera_GetCurrentViewSlot(void);
-extern u32 GameBit_Set(int bit, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int ObjHits_GetPriorityHit(int obj, u32* outHit, int* outIdx, u32* outVol);
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
@@ -150,7 +150,7 @@ void cfccrate_hitDetect(void)
 
 void cfccrate_update(int obj)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int randomGetRange(int lo, int hi);
     extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
     extern void* Obj_GetPlayerObject(void);
@@ -348,7 +348,7 @@ void cfccrate_update(int obj)
 
 void cfccrate_init(int obj, int aux)
 {
-    extern u32 randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     ObjAnimComponent* objAnim;
     CfCcrateState* state;
     short id;

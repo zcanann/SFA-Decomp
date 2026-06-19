@@ -25,8 +25,8 @@ extern const f32 lbl_803E5088;
 extern u32 lbl_803DDBC8;
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern f32 lbl_802C23B8[];
-extern f32 mathSinf(f32 v);
-extern int getAngle(f32 dx, f32 dz);
+extern float mathSinf(float x);
+extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(float* a, float* b);
 extern const f32 lbl_803E50A0;
 extern const f32 lbl_803E50A4;
@@ -268,7 +268,7 @@ void ecsh_cup_release(void)
 #pragma peephole off
 void ecsh_cup_init(int obj, int def)
 {
-    extern int randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     int state;
     f32 dist;
 

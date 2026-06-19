@@ -64,7 +64,7 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjLink_DetachChild(int parent, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 flags);

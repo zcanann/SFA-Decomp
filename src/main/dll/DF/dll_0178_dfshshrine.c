@@ -17,11 +17,11 @@ extern void gameTimerStop(void);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int mapDir, int mode, int flags);
 extern void Music_Trigger(int trackId, int mode);
-extern void GameBit_Set(int bit, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void fn_80296518(void* obj, int arg, int enable);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(void* a, void* b);
-extern f32 mathSinf(f32 angle);
+extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
 extern f32 timeDelta;
@@ -49,7 +49,7 @@ typedef struct DFlanternShrineState
     u8 flags;
 } DFlanternShrineState;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_AllocQueue();
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
@@ -60,7 +60,7 @@ extern void playerAddRemoveMagic(int player, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void gameTimerInit(int timerId, int value);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
@@ -308,7 +308,7 @@ typedef struct DfshShrineFlagsBits
 
 void dfsh_shrine_update(int obj)
 {
-    extern int GameBit_Get(int bit);
+    extern u32 GameBit_Get(int eventId);
     extern int Obj_GetPlayerObject(void);
     u16* base = lbl_80325F88;
     int player;

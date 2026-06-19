@@ -24,7 +24,7 @@
 #include "main/objhits.h"
 
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern char fn_80296448(int playerObj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
@@ -36,7 +36,7 @@ extern void PSVECSubtract(float*, float*, float*);
 extern f32 PSVECDotProduct(float*, float*);
 extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
-extern u32 getAngle(f32, f32);
+extern int getAngle(float y, float x);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
 extern f32 fn_80293DA4(f32);

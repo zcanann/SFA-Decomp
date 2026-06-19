@@ -18,7 +18,7 @@
 #include "main/objseq.h"
 
 extern void warpToMap(int id, int flags);
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A0;

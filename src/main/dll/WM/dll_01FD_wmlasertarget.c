@@ -38,7 +38,7 @@ STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5D90; /* 1.0: render scale */
-extern int GameBit_Get(int id);
+extern u32 GameBit_Get(int eventId);
 
 int wmlasertarget_getExtraSize(void) { return sizeof(WmLaserTargetState); }
 int wmlasertarget_getObjectTypeId(void) { return 0x0; }
@@ -60,8 +60,8 @@ void wmlasertarget_hitDetect(void)
 void wmlasertarget_update(int* obj)
 {
     extern u8 framesThisStep;
-    extern void GameBit_Set(int slot, int val);
-    extern u32 GameBit_Get(int slot); /* #57: u32 return -> cmplwi */
+    extern void GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Get(int eventId); /* #57: u32 return -> cmplwi */
     u8* def;
     WmLaserTargetState* sub;
 

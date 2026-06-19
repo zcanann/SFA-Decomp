@@ -15,7 +15,7 @@
 #include "main/objtexture.h"
 
 extern void objRenderFn_8003b8f4(f32 scale);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);

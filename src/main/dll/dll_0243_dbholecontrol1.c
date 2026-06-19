@@ -74,7 +74,7 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern u32 FUN_80006824();
 extern u32 FUN_80006ab8();
 extern u64 FUN_80006ac4();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
@@ -540,7 +540,7 @@ void dbholecontrol1_initialise(void)
 
 void dbholecontrol1_update(int* obj)
 {
-    extern u32 GameBit_Get(int);
+    extern u32 GameBit_Get(int eventId);
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk1E) != 0)
@@ -594,7 +594,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern void memcpy(int, void*, int);
     extern void loadObjectAtObject(int, int);
     extern int*ObjGroup_GetObjects(int, int*);
-    extern void ObjGroup_RemoveObject(int, int);
+    extern void ObjGroup_RemoveObject(u32 obj, int group);
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
     extern int lbl_803DDCE0;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;

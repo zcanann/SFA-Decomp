@@ -40,7 +40,7 @@ typedef struct CfLevelControlFlags
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void s16toFloat(void* p, int duration);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void storeZeroToFloatParam(void* p);
 extern s16 lbl_80323008[];
 extern void objRenderFn_8003b8f4(f32);

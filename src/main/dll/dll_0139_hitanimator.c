@@ -18,7 +18,7 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 
-extern u32 GameBit_Get(u32 bit);
+extern u32 GameBit_Get(int eventId);
 extern u8* mapGetBlock(int idx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern char* fn_8006070C(void* block, int idx);

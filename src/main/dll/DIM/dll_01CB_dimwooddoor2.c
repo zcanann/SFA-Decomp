@@ -22,9 +22,9 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 #define DIMWOODDOOR2_KEY_MOVE_B    0x1d6
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E49D0;

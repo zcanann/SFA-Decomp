@@ -32,8 +32,8 @@ extern int objFn_80296700(int obj);
 extern f32 timeDelta;
 extern void memset(void* ptr, int value, int size);
 extern f32 sqrtf(f32 value);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1758;
@@ -118,7 +118,7 @@ void CameraModeStaffAnim_copyToCurrent_nop(void)
 #pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
-    extern u32 getAngle();
+    extern int getAngle(float y, float x);
     extern int camcontrol_samplePathState();
     u8 needsReset;
     u32 angle;
@@ -228,7 +228,7 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
 #pragma peephole off
 void CameraModeStaffAnim_init(CameraObject* camera, int param_2, u8* settings)
 {
-    extern int getAngle(f32 dx, f32 dz);
+    extern int getAngle(float y, float x);
     GameObject* target;
     int view;
     f32 sinFacing;

@@ -142,7 +142,7 @@ void linkb_levcontrol_init(int* obj)
 
 void linkb_levcontrol_update(int* obj)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     LinkbLevState* state;
     int* tricky;
     int* player;

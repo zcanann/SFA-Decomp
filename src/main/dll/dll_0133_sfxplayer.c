@@ -21,7 +21,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);

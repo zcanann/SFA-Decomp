@@ -16,8 +16,8 @@
 extern void ModelLightStruct_free(void* light);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern int randomGetRange(int lo, int hi);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);

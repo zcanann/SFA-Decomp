@@ -28,7 +28,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
 extern void ObjHits_DisableObject();
@@ -160,7 +160,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 int fn_8015DC04(int obj, GroundBaddieState* p)
 {
     extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
     extern f64 lbl_803E2DC0;
@@ -292,7 +292,7 @@ void fn_8015DAE8(void)
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
     extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DDC;
     extern f32 lbl_803E2DE0;
@@ -429,7 +429,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
 
 int fn_8015E798(int obj, GroundBaddieState* p)
 {
-    extern void GameBit_Set(int bit, int val);
+    extern void GameBit_Set(int eventId, int value);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
     extern f32 lbl_803E2DE4;
@@ -471,7 +471,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
 
 int fn_8015E8BC(int obj, GroundBaddieState* p)
 {
-    extern void GameBit_Set(int bit, int val);
+    extern void GameBit_Set(int eventId, int value);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DE8;
     extern f32 lbl_803E2DEC;
@@ -527,7 +527,7 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern int Obj_AllocObjectSetup(int size, int id);
-    extern u8*Obj_SetupObject(int setup, int a, int b, int c, int d);
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     extern f64 lbl_803E2DC0;
     extern f32 lbl_803E2DF4;
     extern f32 lbl_803E2DF8;
@@ -718,7 +718,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_CE_init(int obj, u8* p, int flags)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
     extern f32 lbl_803E2DC8;

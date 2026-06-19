@@ -22,7 +22,7 @@
 #define CHUKCHUK_FLAG_DEAD 0x2
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
@@ -97,7 +97,7 @@ void fn_8015F5B0(short* obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern int Obj_AllocObjectSetup(int size, int id);
-    extern u8*Obj_SetupObject(int setup, int a, int b, int c, int d);
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     extern int Obj_GetPlayerObject(void);
     extern f32 lbl_803E2E20;
     extern f32 lbl_803E2E24;
@@ -133,9 +133,9 @@ void chukchuk_update(short* obj)
 {
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
     extern int Obj_GetPlayerObject(void);
-    extern int getAngle(f32 deltaX, f32 deltaZ);
+    extern int getAngle(float y, float x);
     extern f32 sqrtf(f32);
-    extern void GameBit_Set(int bit, int val);
+    extern void GameBit_Set(int eventId, int value);
     extern void fn_8015F5B0(short* obj);
     extern u8 lbl_8031FF80[];
     extern f32 timeDelta;

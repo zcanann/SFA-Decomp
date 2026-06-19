@@ -32,7 +32,7 @@ typedef struct LightsourceState
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 extern void ModelLightStruct_free(void* light);
-extern void GameBit_Set(int slot, int val);
+extern void GameBit_Set(int eventId, int value);
 extern void* objCreateLight(void* obj, int);
 extern void modelLightStruct_setLightKind(void*, int);
 extern void modelLightStruct_setPosition(f32, f32, f32);
@@ -98,8 +98,8 @@ typedef struct LightSourceFlagByte
 
 void lightsource_update(int obj)
 {
-    extern u32 GameBit_Get(int id);
-    extern void Sfx_PlayFromObject(int obj, int sfx);
+    extern u32 GameBit_Get(int eventId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);

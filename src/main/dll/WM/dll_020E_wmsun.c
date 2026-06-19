@@ -145,7 +145,7 @@ extern f32 lbl_803E5F60; /* 0.001f */
 extern f32 lbl_803E5F64; /* -0.001f */
 extern f32 lbl_803E5F68; /* 0.01f */
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16 * ang, WmSunVec3 * vec);
 

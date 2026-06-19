@@ -58,7 +58,7 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(void* a, void* b);
 extern void playerAddMoney(int player, u8 b);

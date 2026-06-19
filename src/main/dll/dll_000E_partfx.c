@@ -1352,7 +1352,7 @@ extern f32 lbl_803DD320;
 extern f32 lbl_803DD324;
 extern f32 lbl_803DF718;
 extern f32 lbl_803DF71C;
-extern f32 mathSinf(f32);
+extern float mathSinf(float x);
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
  * the 20 cached particle resource slots. */

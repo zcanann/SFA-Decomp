@@ -39,7 +39,7 @@ extern const char* lbl_803DD908;    /* default message text */
 extern void* saveFileSelect_saveSlots;
 extern u8 framesThisStep;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void textureFree(void* p);
 extern void* textureLoadAsset(int id);
 extern void OSReport(const char* fmt, ...);

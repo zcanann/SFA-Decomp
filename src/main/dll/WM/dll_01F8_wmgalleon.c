@@ -46,7 +46,7 @@ typedef struct WmGalleonState
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 
 extern u32 lbl_803DC0F0;
@@ -88,7 +88,7 @@ extern f32 lbl_803E5CF4;
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern u64 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     int i;
 
     lbl_803DC0F0 = framesThisStep;
@@ -348,7 +348,7 @@ void WM_Galleon_update(int* obj)
 
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     WMGalleonState* state;
     int i;
 

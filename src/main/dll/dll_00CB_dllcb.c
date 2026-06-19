@@ -215,9 +215,9 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
 
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
-    extern u32 GameBit_Get(int bit);
+    extern u32 GameBit_Get(int eventId);
     extern int Curve_AdvanceAlongPath(int* p, f32 t);
-    extern int getAngle(f32 a, f32 b);
+    extern int getAngle(float y, float x);
     extern int* gBaddieControlInterface;
     extern void* lbl_803AC5D0[];
     extern void* lbl_803AC5E8[];
@@ -359,7 +359,7 @@ void dll_CB_init(int* obj, u8* params, int extra)
 }
 
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern f32 lbl_803E2E98;
 
 void dll_CB_update(int* obj)

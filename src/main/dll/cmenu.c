@@ -97,7 +97,7 @@ extern void Camera_SetFovY(f32 fov);
 extern int Obj_GetActiveModel(int obj);
 extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
 extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern s8 cMenuState;
 extern u8 framesThisStep;
 extern s16 gCMenuScrollTimer;

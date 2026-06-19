@@ -21,7 +21,7 @@ extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 

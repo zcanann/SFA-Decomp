@@ -7,7 +7,7 @@ extern u32 GameBit_Get(int eventId);
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern int gameBitDecrement(int bit);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(void* obj);
@@ -19,7 +19,7 @@ extern void objRenderFn_80041018(void* obj);
 
 void bombplantingspot_update(void* obj)
 {
-    extern int GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     BombPlantingSpotMapData* mapData = *(BombPlantingSpotMapData**)&((GameObject*)obj)->anim.placementData;
     s32 trigBit;
 

@@ -20,7 +20,7 @@
 #include "main/dll/CAM/camera_mode_54_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 
 extern int FUN_80017730();

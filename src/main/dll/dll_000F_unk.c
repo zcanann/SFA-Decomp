@@ -19,7 +19,7 @@
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
 
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern void* memset(void* dst, int val, u32 n);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -240,8 +240,8 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 #pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
-    extern f32 mathCosf(f32 x); /* #57 */
-    extern f32 mathSinf(f32 x); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     f32 ang, vx, vz, q, w, dist, c, s;
 
     *(s8*)((char*)state + 0x34c) |= 1;
@@ -980,8 +980,8 @@ void player_updateVel(char* p, char* obj, int unused)
 {
     /* #57: this site needs the double-param spelling (fmul+frsp setup) to match;
      * dll_0F_func13 needs the f32-param spelling - asymmetry is load-bearing per call site */
-    extern float mathCosf(double x);
-    extern float mathSinf(double angle);
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     float fcos, fsin;
     if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
     {

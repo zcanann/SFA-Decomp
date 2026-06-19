@@ -25,7 +25,7 @@
 #include "main/dll/tframeanimator_state.h"
 #include "main/engine_shared.h"
 
-extern void GameBit_Set(int gameBit, int value);
+extern void GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;

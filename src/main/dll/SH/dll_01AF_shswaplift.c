@@ -10,8 +10,8 @@
  */
 #include "main/game_object.h"
 
-extern u32 GameBit_Get(u32 id);
-extern void GameBit_Set(u32 id, u32 value);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E54C8;

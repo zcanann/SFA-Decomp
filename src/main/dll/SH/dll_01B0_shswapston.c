@@ -29,7 +29,7 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 } WarpstoneUpdateMenuAnimObjState;
 
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern u32 getButtonsJustPressed(int controller);
 extern u32 ObjPath_GetPointWorldPosition();
 extern int playerHasKrazoaSpirit();
@@ -65,7 +65,7 @@ void warpstone_free(int obj, int mode)
 }
 
 extern int randFn_80080100(int max);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;

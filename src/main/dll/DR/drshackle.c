@@ -19,7 +19,7 @@
 #include "main/checkpoint_interface.h"
 
 extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 fn_801EA678(int p1, int p2);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern int fn_801EC870(int p1, int p2);

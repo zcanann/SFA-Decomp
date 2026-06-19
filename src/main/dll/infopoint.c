@@ -9,7 +9,7 @@
 #include "main/dll/infopoint.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 
 extern f32 lbl_803E644C;

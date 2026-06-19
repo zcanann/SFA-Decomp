@@ -26,8 +26,8 @@ extern f32 lbl_803E1B7C;
 extern f32 lbl_803E1B80;
 extern f32 lbl_803E1B84;
 extern f32 lbl_803E1B88;
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 
 #pragma scheduling off
 #pragma peephole off

@@ -4,7 +4,7 @@
 #include "main/objseq.h"
 #include "util/carry.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 FUN_802420b0();
 extern u32 FUN_802420e0();
 extern int FUN_802640ac();
@@ -1320,7 +1320,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 }
 
 extern int Obj_GetPlayerObject(void);
-extern s16 getAngle(f32 x, f32 z);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 

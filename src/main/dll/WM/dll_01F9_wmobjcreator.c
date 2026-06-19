@@ -16,7 +16,7 @@
 extern u32 GameBit_Get(int eventId);
 
 extern u8 framesThisStep;
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
@@ -141,7 +141,7 @@ STATIC_ASSERT(offsetof(WmWallcrawlerSpawnSetup, heightOffset) == 0x1C);
 
 void WM_ObjCreator_update(int obj)
 {
-    extern u64 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern void* ObjGroup_GetObjects(); /* #57 */
     /* setup/spawned/n are FN-SCOPE on purpose: live-range splitting
        re-creates per-arm webs in the retail saved-reg spread, where

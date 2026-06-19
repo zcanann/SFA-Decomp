@@ -38,7 +38,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 timeDelta;

@@ -36,7 +36,7 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH     0x1e8
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -51,7 +51,7 @@ extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern void DCStoreRange(void* p, int n);
 
 void dimmagicbridge_free(void)

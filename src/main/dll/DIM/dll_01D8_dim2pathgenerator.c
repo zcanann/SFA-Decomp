@@ -35,7 +35,7 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
 
@@ -170,8 +170,8 @@ void dimtruthhornice_init(int* obj, int* def);
 void dim2pathgenerator_update(int* obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-    extern int Obj_AllocObjectSetup(int kind, int id);
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
+    extern void* Obj_AllocObjectSetup(int size, int b);
     int* def;
     int* extra = ((GameObject*)obj)->extra;
     int toggle;

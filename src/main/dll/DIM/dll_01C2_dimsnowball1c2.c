@@ -33,14 +33,14 @@ typedef struct Dimsnowball1c2Placement
     s16 unk1E;
 } Dimsnowball1c2Placement;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 lbl_803E4860;
 extern void objRenderFn_8003b8f4(f32);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern u32 fn_802972A8(int player);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 lbl_803E4864;
 
 int dimsnowball1c2_getExtraSize(void)

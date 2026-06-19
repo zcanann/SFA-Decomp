@@ -31,7 +31,7 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void FUN_8003b818(int obj);
 
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -233,14 +233,14 @@ typedef struct ShieldState
 } ShieldState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 
 extern f64 DOUBLE_803e3e88;
 
 extern f32 lbl_803E3420;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void gcbaddieshield_update(int* obj);

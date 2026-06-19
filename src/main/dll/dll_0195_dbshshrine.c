@@ -39,13 +39,13 @@
 extern void skyFn_80088c94(int skyId, int enabled);
 extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern u32 GameBit_Get(u32 id);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
 extern void unlockLevel(int param_1, int param_2, int param_3);
@@ -179,7 +179,7 @@ void dbsh_shrine_hitDetect(void)
 
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     int player;
     u8 active;
     DbshShrineRuntime* runtime;

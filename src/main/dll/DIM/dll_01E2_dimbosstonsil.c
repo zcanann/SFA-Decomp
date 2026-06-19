@@ -16,7 +16,7 @@
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void skyFn_80089710(int id, int enabled, int arg);
 extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
@@ -370,7 +370,7 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
 {
     extern u32* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* handle, int p2, f32 param_3);
-    extern int GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     u8 variant;
     int state;
 

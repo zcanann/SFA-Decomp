@@ -56,7 +56,7 @@ typedef struct SCTotemPuzzleParticleBox
     f32 z;
 } SCTotemPuzzleParticleBox;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
@@ -220,7 +220,7 @@ extern f32 lbl_803E5628;
 
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern s16 lbl_80327A18[];
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;

@@ -14,7 +14,7 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern ModgfxInterface** gModgfxInterface;
 

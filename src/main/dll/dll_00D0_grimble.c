@@ -31,10 +31,10 @@ typedef struct GrimblePlacement
     s32 unk14;
 } GrimblePlacement;
 
-extern u32 randomGetRange(int min, int max);
-extern u64 ObjGroup_RemoveObject();
+extern int randomGetRange(int lo, int hi);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern void* Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
@@ -143,7 +143,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
     extern double sqrtf(double x); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId); /* #57 */
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -201,7 +201,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
     extern double sqrtf(double x); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId); /* #57 */
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;

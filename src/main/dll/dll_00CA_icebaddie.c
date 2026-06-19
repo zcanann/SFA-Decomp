@@ -60,8 +60,8 @@ typedef struct IceBaddieControl
     u16 ambientSfxTimer;     /* 0x46: counts up to ~300 then plays an ambient grunt */
 } IceBaddieControl;
 
-extern u32 randomGetRange(int min, int max);
-extern u64 ObjGroup_RemoveObject();
+extern int randomGetRange(int lo, int hi);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u64 ObjMsg_SendToObjects();
 extern u32 ObjPath_GetPointModelMtx();
@@ -136,12 +136,12 @@ extern u8 lbl_8031FE48[];
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void* memcpy(void* dst, const void* src, u32 size);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
 extern void voxmaps_updateRoutePath(void* from, void* to);
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
@@ -150,7 +150,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #pragma peephole off
 int iceBaddie_updateOpenState(int obj, int p)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 lbl_803E2D70;
     extern f32 lbl_803E2D74;
@@ -201,7 +201,7 @@ int iceBaddie_updateOpenState(int obj, int p)
 
 int iceBaddie_updateOpenHitState(int obj, int p)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 lbl_803E2D78;
     extern f32 lbl_803E2D7C;
@@ -284,7 +284,7 @@ int iceBaddie_stateHandlerB04(int obj, int state)
 
 int iceBaddie_stateHandlerB03(int obj, int state)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     GroundBaddieState* sub;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -696,7 +696,7 @@ int iceBaddie_updateImpactHitState(int obj, int state)
 
 int iceBaddie_updateHideResetState(int obj, int state)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
 

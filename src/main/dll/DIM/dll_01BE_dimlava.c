@@ -44,7 +44,7 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHits_DisableObject();
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 void imicepillar_free(void);
 
@@ -92,8 +92,8 @@ extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
 extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
 extern u8 lbl_802C2318[];
 extern void vecRotateZXY(void* in, void* out);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern int ObjList_FindObjectById(int id);
 extern u8* objCreateLight(s16* obj, int b);
 extern void modelLightStruct_setLightKind(u8* light, int value);

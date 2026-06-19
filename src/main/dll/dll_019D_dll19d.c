@@ -39,7 +39,7 @@ extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
 extern void Obj_FreeObject(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E51B8;
 
 void dll_19D_render(void)

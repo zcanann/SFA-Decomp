@@ -19,9 +19,9 @@
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u8 framesThisStep;
-extern int GameBit_Get(int);
+extern u32 GameBit_Get(int eventId);
 
 /* anim.resetHitboxMode bit forced on each SeqFn / update tick. */
 #define SB_CAGEKYTE_HITBOX_RESET_BIT 0x8

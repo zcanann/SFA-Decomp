@@ -36,8 +36,8 @@ extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern void Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern void* Obj_AllocObjectSetup(int size, int b);
+extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 extern int ObjList_FindObjectById(int id);
@@ -55,7 +55,7 @@ extern u8 lbl_803DC1D0[8];
 extern u8 lbl_803DC1E8[8];
 extern u8 lbl_803DC1E0[6];
 extern u8 lbl_803DC1D8[6];
-extern s16 getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern u8 fn_8012DDAC(void);
 extern int loadMapAndParent(int mapId);
 extern void lockLevel(int idx, int p2);
@@ -431,7 +431,7 @@ void worldplanet_update(int obj)
             {
                 if ((int)i == state->selectedPlanet)
                 {
-                    extern int getAngle(f32, f32);
+                    extern int getAngle(float y, float x);
                     u32 fi = (int)lbl_803DDD2C & 0xff;
                     u32 ni = (fi + 2) & 0xff;
                     f32 frac = lbl_803DDD2C - fi;

@@ -23,7 +23,7 @@
 extern u32 GameBit_Get(int eventId);
 extern void* getTrickyObject(void);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 

@@ -44,7 +44,7 @@ extern f32 lbl_803E21F8;
 extern void* lbl_803A9DB8[6];   /* cached menu textures */
 extern s16 lbl_8031C2A8[6];     /* texture asset ids for the cache */
 
-extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Music_PlayTrackByIndex(int index);

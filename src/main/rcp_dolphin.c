@@ -10,7 +10,7 @@
 
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 FUN_80017830();
 extern int FUN_80042838();
 extern u32 FUN_80047d88();

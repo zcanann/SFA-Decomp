@@ -6,7 +6,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 
 extern void objRenderFn_8003b8f4(f32);
@@ -50,7 +50,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E4048;
 extern f32 sqrtf(f32);
-extern void Obj_FreeObject(u8 * obj);
+extern void Obj_FreeObject(u8* obj);
 extern u8 lbl_803DDB00;
 extern f32 lbl_803E4034;
 extern f32 lbl_803E404C;

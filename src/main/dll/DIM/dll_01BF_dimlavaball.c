@@ -38,7 +38,7 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 GameBit_Get(int eventId);
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 void imicepillar_free(void);
 
@@ -196,7 +196,7 @@ void lavaball1bf_free(int obj, int mode)
 
 void lavaball1bf_update(int* obj)
 {
-    extern void Obj_SetupObject(int obj, int a, int b, int c, int d); /* #57 */
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e); /* #57 */
     u8* setup;
     Lavaball1bfState* state;
     int* spawned;

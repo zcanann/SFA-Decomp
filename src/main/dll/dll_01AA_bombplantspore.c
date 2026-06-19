@@ -23,11 +23,11 @@ typedef struct BombplantsporeUpdateDriftPlacement
 } BombplantsporeUpdateDriftPlacement;
 
 extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 
 extern u8 framesThisStep;
@@ -44,7 +44,7 @@ extern const f32 lbl_803E53B4;
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern void Obj_FreeObject(void* obj);
+extern void Obj_FreeObject(u8* obj);
 extern void objMove(f32 x, f32 y, f32 z, void* obj);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);

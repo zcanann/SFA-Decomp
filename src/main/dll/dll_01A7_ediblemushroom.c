@@ -8,15 +8,15 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/objhits.h"
 
-extern void ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
                               int p7, int p8, int p9, int p10);
 
-extern int getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern u32 randomGetRange(int min, int max);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
+extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
@@ -61,7 +61,7 @@ extern f32 sqrtf(f32 x);
 extern void ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue();
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern f32 Vec_distance(int a, int b);
 extern f32 lbl_803E52E0;
 extern f32 lbl_803E52E4;
@@ -73,7 +73,7 @@ extern f32 lbl_803E52F4;
 #pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
-    extern u32 GameBit_Set(int eventId, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     RomCurveWalker* curve;
     int sval;
@@ -577,7 +577,7 @@ void ediblemushroom_hitDetect(u8* obj)
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
-    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* state;
     u8* other;

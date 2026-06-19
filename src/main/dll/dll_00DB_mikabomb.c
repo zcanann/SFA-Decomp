@@ -24,7 +24,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void FUN_8003b818(int obj);
@@ -40,8 +40,8 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();

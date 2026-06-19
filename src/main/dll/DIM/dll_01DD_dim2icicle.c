@@ -23,8 +23,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 timeDelta;
 
@@ -54,7 +54,7 @@ extern int ObjHits_GetPriorityHit();
 
 #pragma scheduling on
 #pragma peephole on
-extern u32 GameBit_Get(int id);
+extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E4B80;
 extern f32 lbl_803E4B6C;
 extern f32 lbl_803E4B70;
@@ -103,7 +103,7 @@ void dim2icicle_init(int obj, s8* p)
 void dim2icicle_update(int obj)
 {
     extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* out, int a, int b);
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     ObjHitsPriorityState* hitState;
     int sub;
     int state;

@@ -65,7 +65,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern void objRenderFn_80041018(int* obj);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 void dll_FC_initialise_nop(void);
 void dll_FC_release_nop(void);

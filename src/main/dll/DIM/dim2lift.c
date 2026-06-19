@@ -14,7 +14,7 @@
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
 extern u32 DIM2icicle_updateHitResponse();
@@ -22,8 +22,8 @@ extern u32 DIM2icicle_updateHitResponse();
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void** gPlayerInterface;
 extern f32 lbl_803E4C00;

@@ -30,7 +30,7 @@ void treasurechest_init(int* obj);
 void magiccavebottom_update(int* obj)
 {
     extern void Music_Trigger(int a, int b);
-    extern u64 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;
 

@@ -13,7 +13,7 @@
 #include "main/objfx.h"
 #include "main/player_control_interface.h"
 
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);

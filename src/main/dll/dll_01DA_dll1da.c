@@ -55,7 +55,7 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_1DA_hitDetect(int obj)
 {
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     void* hi;
     void* player;
     f32 k;

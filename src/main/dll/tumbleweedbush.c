@@ -32,11 +32,11 @@ typedef struct TrickyGrowlState
 
 extern int trickyDebugPrint(const char* fmt, ...);
 extern int trickyFn_8013b368(void* param_1, float threshold, void* param_2);
-extern void* Obj_AllocObjectSetup(int p1, int p2);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern int Obj_IsLoadingLocked(void);
 extern int randomGetRange(int lo, int hi);
-extern int getAngle(float x, float z);
+extern int getAngle(float y, float x);
 extern void objAudioFn_800393f8(void* obj, void* p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern void trickyTurnTowardYaw(void* obj, s16 angle);

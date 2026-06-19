@@ -20,8 +20,8 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
-extern f32 mathSinf(f32 x);
+extern int randomGetRange(int lo, int hi);
+extern float mathSinf(float x);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

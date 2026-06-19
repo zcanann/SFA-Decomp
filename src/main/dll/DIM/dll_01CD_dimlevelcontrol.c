@@ -34,8 +34,8 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 lbl_803E4A20;
 extern void timeOfDayFn_80055000(void);
@@ -109,7 +109,7 @@ typedef struct DimLevelControlState
 void dim_levelcontrol_update(int obj)
 {
     extern void Music_Trigger(int id, int value);
-    extern int Sfx_PlayFromObject(int obj, int id);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     u8 a;
     u8 b;
     u8 c;

@@ -24,7 +24,7 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
 
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -185,7 +185,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 
 typedef struct FireballPlacement
 {
@@ -250,7 +250,7 @@ typedef struct FireballState
 } FireballState;
 
 extern u32 ObjHits_ClearHitVolumes();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 
 extern void ModelLightStruct_free(void* p);
@@ -289,8 +289,8 @@ extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
 extern f32 Vec3_Length(f32 * v);
 extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern f32 mathSinf(f32 v);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 void fn_8016F260(int* obj, int* state, int* other);
 extern const f32 lbl_803E3334;
 extern const f32 lbl_803E3338;

@@ -17,11 +17,11 @@
 
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
    floats and the debug string); the rest are engine-wide imports. */
-extern void Sfx_PlayFromObject(u32 objectId, u16 volumeId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 getXZDistance(Vec * a, Vec * b);
 extern f32 vec3f_distanceSquared(Vec * a, Vec * b);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject * obj, SHthorntailObject * other);

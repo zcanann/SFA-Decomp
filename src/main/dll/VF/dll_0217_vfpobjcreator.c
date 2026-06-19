@@ -73,7 +73,7 @@ STATIC_ASSERT(offsetof(VfpObjCreatorSetup, unk24) == 0x24);
 STATIC_ASSERT(sizeof(VfpObjCreatorSetup) == 0x28);
 
 extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int typeId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16 * angles, f32 * vec);
 extern f32 lbl_803E6068;

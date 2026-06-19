@@ -27,7 +27,7 @@ extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void fn_801816F8(int obj, int param_2, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 
 extern int lbl_803DBDA0;

@@ -30,9 +30,9 @@ extern u32 DAT_803de6d0;
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 extern void mm_free(void* p);
 extern void* mmAlloc(int size, int heap, int flags);
@@ -41,7 +41,7 @@ extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern f32 timeDelta;
 
 extern f32 lbl_803E2678;

@@ -40,20 +40,20 @@
 #define GAMEBIT_SFX_MUTE 0xa71
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int GameBit_Set(int bit, int value);
-extern char* Obj_AllocObjectSetup(int size, int typeId);
+extern void GameBit_Set(int eventId, int value);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* p, f32* v);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int Sfx_IsPlayingFromObject(int obj, u32 sfxId);
-extern void Sfx_PlayFromObject(int obj, u32 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern u32 GameBit_Get(int eventId);
 extern ModgfxInterface** gModgfxInterface;

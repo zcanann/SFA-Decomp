@@ -2,7 +2,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -13,7 +13,7 @@ extern f32 timeDelta;
 #include "main/sky_interface.h"
 
 extern void ModelLightStruct_free(void* effect);
-extern u32 GameBit_Get(int bit);
+extern u32 GameBit_Get(int eventId);
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void queueGlowRender(void* effect);

@@ -41,7 +41,7 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern u32 ObjGroup_FindNearestObject();
 
 #pragma scheduling on
@@ -53,7 +53,7 @@ extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int id);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 extern f32 lbl_803E4624;
 extern f32 lbl_803E4628;

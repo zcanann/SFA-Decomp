@@ -27,13 +27,13 @@ typedef struct GrimbleState
     u8 pad5A[0x60 - 0x5A];
 } GrimbleState;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
 extern void ObjHits_DisableObject(u32 obj);
 
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern void GameBit_Set(int eventId, int value);
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;
@@ -218,7 +218,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
 {
-    extern int randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2EF0;
     extern f32 lbl_803E2EF4;
     extern f32 lbl_803E2EF8;

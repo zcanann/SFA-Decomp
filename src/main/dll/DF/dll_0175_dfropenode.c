@@ -20,7 +20,7 @@ extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
 extern void mm_free(void* p);
 extern u32 GameBit_Get(int eventId);
-extern void Sfx_PlayFromObject(int obj, int soundId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int soundId);
 extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
                                        int param_6);
@@ -33,7 +33,7 @@ extern void fn_80078740(void);
 extern void selectTexture(void* texture, int param_2);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u8 framesThisStep;
 extern void* lbl_803DBF48;
 extern u8 lbl_80325E00[];
@@ -232,7 +232,7 @@ void dfropenode_setScale(int* obj, f32* out)
 #pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
 {
-    extern int getAngle(f32 dx, f32 dz);
+    extern int getAngle(float y, float x);
     DFropenodeExtra* extra;
     DFropenodeObject* endObj;
     DFropenodeObject* baseObj;
@@ -516,7 +516,7 @@ void dfropenode_hitDetect(void)
 
 void dfropenode_update(DFropenodeObject* obj)
 {
-    extern s32 getAngle(f32 dx, f32 dz);
+    extern int getAngle(float y, float x);
     extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
     DFropenodeExtra* extra;
     u8* objDef;

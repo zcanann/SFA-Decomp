@@ -27,7 +27,7 @@ void trickyguardspot_render(void)
 
 void trickyguardspot_update(TrickyGuardSpotObject* obj)
 {
-    extern u64 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     u8* sub;
     u8* def;
     ObjAnimComponent* tricky;

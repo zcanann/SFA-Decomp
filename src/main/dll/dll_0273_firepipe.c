@@ -33,7 +33,7 @@
 extern void modelLightStruct_freeSlot(int param_1);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern int randomGetRange(int param_1, int param_2);
+extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_FreeObject(int param_1);
@@ -46,7 +46,7 @@ extern void ObjHits_EnableObject(FirePipeObject * obj);
 extern void ObjHits_DisableObject(FirePipeObject * obj);
 extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);
 extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
-extern int Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);

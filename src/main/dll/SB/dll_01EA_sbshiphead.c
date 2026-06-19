@@ -29,7 +29,7 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
@@ -44,7 +44,7 @@ extern f32 Vec_distance(void* a, void* b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern u8* Obj_AllocObjectSetup(int size, int objId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern u8 lbl_803DC090;
 extern int lbl_803DDC48;

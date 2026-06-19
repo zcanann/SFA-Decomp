@@ -151,7 +151,7 @@ ObjectDescriptor11 projgfx_funcs = {
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-extern f32 mathSinf(f32);
+extern float mathSinf(float x);
 
 extern f32 lbl_803DB7E8;
 extern f32 lbl_803DB7EC;

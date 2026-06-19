@@ -50,7 +50,7 @@ extern int* gTitleMenuLinkInterface;
 extern u32 gameTextGet(int textId);
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(u32);
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);

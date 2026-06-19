@@ -17,7 +17,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void mm_free(void* ptr);
 extern int mmAlloc(int size, int pool, int tag);

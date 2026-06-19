@@ -15,7 +15,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);

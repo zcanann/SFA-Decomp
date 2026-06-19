@@ -213,7 +213,7 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
-    extern u64 ObjGroup_RemoveObject();
+    extern void ObjGroup_RemoveObject(u32 obj, int group);
     ObjGroup_RemoveObject((u32)obj, 4);
     (*gCarryableInterface)->free(obj);
 }
@@ -353,9 +353,9 @@ extern f32 lbl_803E4580;
 
 void fn_801A7D74(int obj, u8 a, u8 b)
 {
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 Vec_distance(void* a, void* b);
-    extern u32 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     int i;
     int count;
     int* list;
@@ -492,7 +492,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern f32 mathSinf(f32);
+extern float mathSinf(float x);
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
@@ -509,7 +509,7 @@ extern f32 lbl_803E45A0;
 
 void mmp_moonrock_update(int obj)
 {
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void* Obj_GetPlayerObject(void);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;

@@ -4,7 +4,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 

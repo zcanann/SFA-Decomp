@@ -29,7 +29,7 @@ typedef struct MmshWaterspikeObjectDef
     u8 pad25[0x28 - 0x25];
 } MmshWaterspikeObjectDef;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void* ObjList_FindObjectById(int id);
 extern f32 objFn_801948c0(void* obj, int param_2);

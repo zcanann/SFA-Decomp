@@ -20,7 +20,7 @@
 #include "main/objseq.h"
 
 extern void objRenderFn_8003b8f4(f32);
-extern int GameBit_Get(int);
+extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E5920;
 
 /* The sequence-door seqId and the GameBit that arms it. */

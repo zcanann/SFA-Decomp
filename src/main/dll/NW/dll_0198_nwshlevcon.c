@@ -16,7 +16,7 @@
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int track, int param);
-extern int GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
 extern void skyFn_80088c94(int a, int b);

@@ -7,7 +7,7 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 FUN_80017ac8();
 
 extern ModgfxInterface** gModgfxInterface;
@@ -41,7 +41,7 @@ extern f32 lbl_803E6198;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
 extern void* getTrickyObject(void);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 
 void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,

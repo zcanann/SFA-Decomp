@@ -44,8 +44,8 @@ extern void ObjHits_EnableObject(u32 obj);
 extern int ObjHits_GetPriorityHit();
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 extern f32 timeDelta;
 extern f32 lbl_803E3B44; /* respawn timer reset value */

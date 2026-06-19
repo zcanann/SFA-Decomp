@@ -2,7 +2,7 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/objlib.h"
 
-extern void GameBit_Set(int gameBit, int value);
+extern void GameBit_Set(int eventId, int value);
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -165,7 +165,7 @@ void InvisibleHitSwitch_update(int obj)
 
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {
-    extern int GameBit_Get(int bitId);
+    extern u32 GameBit_Get(int eventId);
     extern void ObjHitbox_SetSphereRadius(int obj, int radius);
     u8* info;
 

@@ -35,9 +35,9 @@ typedef struct MmshScalesState
     u8 pad70[0x140 - 0x70];
 } MmshScalesState;
 
-extern void Obj_FreeObject(void* obj);
+extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 extern void objRenderFn_8003b8f4(f32);
 

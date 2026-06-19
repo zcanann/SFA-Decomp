@@ -150,7 +150,7 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 }
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void* mmAlloc(int size, int heap, int flags);
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;

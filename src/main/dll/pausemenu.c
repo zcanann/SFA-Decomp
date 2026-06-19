@@ -12,7 +12,7 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 
 extern u8 hudTextures[0x198];
@@ -25,7 +25,7 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextLoadDir(int dirId);
 extern void gameTextFn_80016810(int textId, int arg1, int arg2);
 extern void pauseMenuDoSave(void);
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern f32 fn_802943F4(f32 x);
 extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 extern int* Obj_GetActiveModel(void* obj);

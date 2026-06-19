@@ -12,7 +12,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 void fn_80204320(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int);
+    extern u32 GameBit_Get(int eventId);
     extern u8 lbl_803DC182;
     extern s16 lbl_80329848[];
     DfpLevelControlState* sub;
@@ -175,9 +175,9 @@ void dfplevelcontrol_init(int obj, int param2)
 void dfplevelcontrol_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int);
-    extern void GameBit_Set(int, int);
-    extern void Sfx_PlayFromObject(int, u16);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void coordsToMapCell(f32, f32);
     extern void fn_80204098(int);
     extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
@@ -238,9 +238,9 @@ void dfplevelcontrol_update(int obj)
 void fn_80204098(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int);
-    extern void GameBit_Set(int, int);
-    extern void Sfx_PlayFromObject(int, u16);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void ObjMsg_SendToObject(void*, int, int, int);
     extern u8 lbl_803DC183;
     extern s16 lbl_80329848[];

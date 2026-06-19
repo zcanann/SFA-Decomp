@@ -3,14 +3,14 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 
 extern f32 lbl_803DB868;
 extern f32 lbl_803DB86C;

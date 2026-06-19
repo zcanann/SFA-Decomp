@@ -1,6 +1,6 @@
 #include "global.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 lbl_803E5ED8;
 

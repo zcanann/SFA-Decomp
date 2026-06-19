@@ -25,7 +25,7 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
@@ -68,7 +68,7 @@ extern f32 lbl_803DFF30;
 extern f32 lbl_803DFF34;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 
 /* flags arg bits */
 #define EFFECT10_FLAG_USE_SRC 0x200000 /* copy caller's EffectSrcParams into the spawn */

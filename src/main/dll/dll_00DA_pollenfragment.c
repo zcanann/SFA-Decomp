@@ -17,7 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);

@@ -19,8 +19,8 @@
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
 extern u32 Obj_GetYawDeltaToObject(); /* #57 */

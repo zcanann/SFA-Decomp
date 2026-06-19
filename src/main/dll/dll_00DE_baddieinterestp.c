@@ -21,7 +21,7 @@
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -189,7 +189,7 @@ typedef struct BaddieinterestpPlacement
 } BaddieinterestpPlacement;
 
 extern void* ObjGroup_GetObjects();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 
 extern f64 DOUBLE_803e3e88;

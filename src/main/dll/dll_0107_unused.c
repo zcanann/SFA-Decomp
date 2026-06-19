@@ -28,7 +28,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 extern int Obj_GetPlayerObject(void);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(void* a, void* b);
 
@@ -42,7 +42,7 @@ void fn_80185868(int obj, f32 arg)
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;
     extern f32 lbl_803E3A58;
-    extern void Sfx_PlayFromObject(int obj, int sfx);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     struct
     {
         u8 pad[8];
@@ -155,7 +155,7 @@ void fn_80185B74(int obj)
     extern f32 lbl_803E3A70;
     extern f32 lbl_803E3A74;
     extern f64 lbl_803E3A78;
-    extern void Sfx_PlayFromObject(int obj, int sfx);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_StopObjectChannel(int obj, int channel);
     extern int buttonDisable(int p1, int p2);
     extern u32 getButtonsJustPressed(int controller);

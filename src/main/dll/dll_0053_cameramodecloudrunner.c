@@ -29,9 +29,9 @@
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
 
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
-extern s16 getAngle(f32 dx, f32 dz);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
+extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32* matrix, void* objpos);

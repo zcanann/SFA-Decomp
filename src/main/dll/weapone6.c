@@ -47,7 +47,7 @@ typedef struct
         *(s8 *)((st) + 0xd) = -1; \
     }
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFn_8013b368(int obj, f32 speed, int state);
@@ -61,8 +61,8 @@ extern void fn_80179678(int slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void Obj_FreeObject(int obj);
 
 extern char sInWaterMessage[];

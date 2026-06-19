@@ -5153,7 +5153,7 @@ extern u8* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e
 extern u32 randomGetRange(int min, int max);
 extern void DCFlushRange(void* p, u32 n);
 extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
 extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
 extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod,
@@ -5371,7 +5371,7 @@ void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
 
 extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0;
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 extern void fn_80293C64(f32 angle, f32* s, f32* c);
 extern void fn_8006C504(void* out);
 extern void getTextureFn_8006c5e4(void* out);

@@ -2,7 +2,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 FUN_8003b818();
@@ -243,7 +243,7 @@ extern int FUN_80017a98();
 extern u32 FUN_80017ac8();
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern u64 FUN_8002fc3c();
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
@@ -319,8 +319,8 @@ extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
 
 extern f32 lbl_803E3420;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void gcbaddieshield_update(int* obj);
@@ -1679,7 +1679,7 @@ void flamethrowerspe_init(int* obj, int* params);
 
 void animatedobj_free(int* obj, int seqFlag)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void Obj_FreeObject(u8* obj); /* #57 */
     (*gObjectTriggerInterface)
         ->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
@@ -1759,7 +1759,7 @@ void mikabomb_init(int* obj);
 #pragma opt_loop_invariants off
 void animatedobj_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void Obj_FreeObject(u8* obj); /* #57 */
     ObjSeqState* seq = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 

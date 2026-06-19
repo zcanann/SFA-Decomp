@@ -26,9 +26,9 @@
 #pragma scheduling on
 #pragma peephole on
 extern void* memset(void* dst, int val, u32 n);
-extern s16 getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern f32 timeDelta;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 
@@ -131,7 +131,7 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
         s = -mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
     }
     {
-        extern int getAngle(f32 dx, f32 dz); /* #57 */
+        extern int getAngle(float y, float x); /* #57 */
         target->anim.rotX = getAngle(c, s);
     }
     camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);

@@ -11,7 +11,7 @@
 #include "main/objseq.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 
 #pragma scheduling on
@@ -20,7 +20,7 @@ extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, u32* b);
-extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);

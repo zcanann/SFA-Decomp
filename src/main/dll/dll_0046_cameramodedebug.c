@@ -16,8 +16,8 @@
 extern u32 getButtonsHeld(int port);
 extern char padGetCX(int port);
 extern char padGetCY(int port);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42

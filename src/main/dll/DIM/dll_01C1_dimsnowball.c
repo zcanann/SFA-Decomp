@@ -106,7 +106,7 @@ void dimsnowball_update(int obj)
 {
     extern void Obj_FreeObject(int obj); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
     s16 idx[4];
     f32 x[4];
     f32 y[4];

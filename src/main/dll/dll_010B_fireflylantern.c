@@ -8,7 +8,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern u64 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -18,7 +18,7 @@ extern void* getTrickyObject(void);
 extern void trickyImpress(void* trickyObj);
 extern f32 lbl_803E3AF0;
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int* obj, void* setup);
 extern f32 lbl_803E3AE8;
 

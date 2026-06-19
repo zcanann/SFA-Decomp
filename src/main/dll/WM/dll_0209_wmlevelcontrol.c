@@ -38,7 +38,7 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int textId);

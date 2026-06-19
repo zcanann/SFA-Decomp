@@ -1,7 +1,7 @@
 /* DLL 0x004F — Camera mode misc handler [0x8010F2F8-0x8010F540). */
 #include "main/mm.h"
 
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern float mathCosf(float x);
 
 #include "main/camera_object.h"
@@ -32,8 +32,8 @@ extern f32 lbl_803E265C;
 extern f32 lbl_803E1A88;
 extern CameraMode4FState* lbl_803DD590;
 extern f32 Curve_EvalHermite(f32* pts, f32 t, int mode);
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 extern f32 timeDelta;
 extern f32 lbl_803E1A8C;
 extern f32 lbl_803E1A90;
@@ -47,7 +47,7 @@ extern f32 lbl_803E1AAC;
 extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 
 void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
 {

@@ -32,7 +32,7 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
 extern f32 sqrtf(f32 x);
 

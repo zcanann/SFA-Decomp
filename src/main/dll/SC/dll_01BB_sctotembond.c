@@ -28,15 +28,15 @@
 
 extern f32 timeDelta;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
-extern u8* Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern void GameBit_Set(int eventId, int value);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5638;

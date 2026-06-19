@@ -39,9 +39,9 @@ extern f32 lbl_803E19C8;
 
 extern CameraModeClimbState* lbl_803DD578;
 
-extern int getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
+extern int getAngle(float y, float x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 

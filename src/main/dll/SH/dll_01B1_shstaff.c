@@ -80,7 +80,7 @@ typedef struct ShStaffPlacement
 
 
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
@@ -324,7 +324,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern void hudFn_8011f38c(int a);
 extern void fn_801DA4A8(int obj, ShStaffState* state, int a);
@@ -423,7 +423,7 @@ extern int fn_8029672C(int player, int a);
 extern int ObjTrigger_IsSet(int obj);
 extern void mapUnload(int idx, int flags);
 extern void loadMapAndParent(int mapId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;

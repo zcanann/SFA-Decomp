@@ -25,7 +25,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit();
 extern f32 getXZDistance(f32 * a, f32 * b);

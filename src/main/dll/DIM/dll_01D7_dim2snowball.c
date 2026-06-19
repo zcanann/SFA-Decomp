@@ -35,7 +35,7 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -76,7 +76,7 @@ extern int ObjList_FindObjectById(int id);
 extern int** ObjList_GetObjects(int* startOut, int* countOut);
 extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
 extern f32 oneOverTimeDelta;
@@ -154,7 +154,7 @@ void dll_1CF_init(int* obj, int* def);
 void dim2snowball_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj);
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     int* extra = ((GameObject*)obj)->extra;
     int** results;
     int count;

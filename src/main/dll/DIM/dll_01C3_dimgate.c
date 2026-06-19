@@ -21,7 +21,7 @@ typedef struct DimgatePlacement
 } DimgatePlacement;
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
 
 extern void objRenderFn_8003b8f4(f32);

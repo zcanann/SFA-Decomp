@@ -40,7 +40,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 
 extern void mtxRotateByVec3s(void* matrix, void* angles);
 extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 extern f32 PSVECMag(f32* vec);
 extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance scalar */
 extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */

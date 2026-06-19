@@ -71,7 +71,7 @@ extern f32 lbl_803E1BDC;
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern int arwarwing_isDead(int state);
 extern int arwarwing_isExplodingOrWarping(int state);
-extern s16 getAngle(f32 x, f32 z);
+extern int getAngle(float y, float x);
 
 #pragma scheduling off
 #pragma peephole off

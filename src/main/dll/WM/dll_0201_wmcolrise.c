@@ -57,7 +57,7 @@ void WM_colrise_hitDetect(void)
 {
 }
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
 extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise (#127 const: hoistable past the timer store) */

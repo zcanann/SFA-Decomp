@@ -10,7 +10,7 @@
 #include "main/objseq.h"
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet(int obj);
 void ccpedstal_updateGameBitGate(int obj, u8* state2);

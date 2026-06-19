@@ -10,8 +10,8 @@ extern f32 lbl_803E40C8;
 extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;
 
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void OSReport(const char* fmt, ...);
 extern const char sMoonrockTriggerIdentFormat[];

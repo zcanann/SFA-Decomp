@@ -51,7 +51,7 @@ STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern int ObjHits_GetPriorityHit();
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
@@ -62,7 +62,7 @@ extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Sfx_StopObjectChannel(int obj, int ch);
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* rot, void* vec);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
@@ -149,8 +149,8 @@ void SB_ShipGun_update(int obj)
 {
     extern f32 Vec_distance(float* a, float* b);
     extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
-    extern void* Obj_AllocObjectSetup(int size, int objType);
-    extern int Sfx_PlayFromObject();
+    extern void* Obj_AllocObjectSetup(int size, int b);
+    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern void* Obj_GetPlayerObject(void);
     extern u32 ObjPath_GetPointWorldPosition();
@@ -294,7 +294,7 @@ void SB_ShipGun_update(int obj)
                 fdy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
                 dist = sqrtf(fdx * fdx + fdz * fdz);
                 {
-                    extern int getAngle(f32 dx, f32 dz);
+                    extern int getAngle(float y, float x);
                     *(short*)((int)state + 6) = getAngle(-fdy, dist);
                 }
                 if (*(short*)((int)state + 6) > SB_SHIPGUN_MAX_PITCH)

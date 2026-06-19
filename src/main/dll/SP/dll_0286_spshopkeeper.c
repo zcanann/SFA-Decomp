@@ -54,7 +54,7 @@ enum
     SHOPKEEPER_FLAG_TICK = 0x20       /* per-frame tick effect this frame */
 };
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void dll_2E_func06();
 
 extern f32 lbl_803E59D8;
@@ -105,7 +105,7 @@ void fn_801E7DC8(int p1, int p2, int count)
     extern u8 Obj_IsLoadingLocked(void);
     extern void hitDetectFn_800658a4(int, f32, f32, f32, f32*, int);
     extern int Obj_AllocObjectSetup(int, int);
-    extern void Obj_SetupObject(int, int, int, int, int);
+    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     extern MapEventInterface** gMapEventInterface;
     int i;
     int local;

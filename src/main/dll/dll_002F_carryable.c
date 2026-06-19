@@ -38,7 +38,7 @@ extern u32 buttonGetDisabled(int idx);
 extern void buttonDisable(int index, u32 flags);
 extern u32 getButtonsJustPressed(int idx);
 extern int fn_80295BF0(void* player);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 timeDelta;
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;

@@ -50,11 +50,11 @@ extern int FUN_80006b0c(int handle);
 extern int FUN_80006b14(int id);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void ObjGroup_RemoveObject(int obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void* p);
@@ -96,8 +96,8 @@ extern f32 Vec_distance(void* a, void* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
+extern float mathSinf(float x);
+extern int getAngle(float y, float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);

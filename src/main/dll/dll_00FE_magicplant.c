@@ -19,12 +19,12 @@
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void mm_free(void* ptr);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int extraSize, int objectId);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
@@ -34,7 +34,7 @@ extern u32 ObjLink_AttachChild();
 extern u32 ObjPath_GetPointWorldPosition();
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern void Obj_ResetModelColorState(int obj);

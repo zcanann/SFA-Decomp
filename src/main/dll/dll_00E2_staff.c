@@ -250,7 +250,7 @@ void staticCamera_init(s16* obj, int params, int flag)
 
 extern u8 Obj_IsLoadingLocked(void);
 extern u32 GameBit_Get(int eventId);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 
 void mikabombshadow_update(int* obj);
 
@@ -1016,8 +1016,8 @@ extern f32 playerMapOffsetZ;
 
 
 void fireball_init(int* obj);
-extern f32 mathSinf(f32 v);
-extern f32 mathCosf(f32 x);
+extern float mathSinf(float x);
+extern float mathCosf(float x);
 
 void fireball_update(int* obj);
 

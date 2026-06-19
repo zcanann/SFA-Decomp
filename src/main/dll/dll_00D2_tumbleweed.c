@@ -52,7 +52,7 @@ extern f32 sqrtf(f32 x);
 
 void tumbleweed_updateRollingMotion(int obj, int state)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     int hitCount;
     u32 uval;
     u32* hitEntry;
@@ -507,7 +507,7 @@ void tumbleweed_updateStateMachine(int obj)
 
 void tumbleweed_init(int obj, int defData)
 {
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     int aux = *(int*)&((GameObject*)obj)->extra;
 
     ((BackpackState*)aux)->unk288 = ((GameObject*)obj)->anim.localPosX;

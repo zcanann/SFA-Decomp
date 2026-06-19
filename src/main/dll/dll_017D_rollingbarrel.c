@@ -6,11 +6,11 @@
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern u32 randomGetRange(int min, int max);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int randomGetRange(int lo, int hi);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
 
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);

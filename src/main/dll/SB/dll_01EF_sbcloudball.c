@@ -16,9 +16,9 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern u8 framesThisStep;
 
 extern void objRenderFn_8003b8f4(f32);

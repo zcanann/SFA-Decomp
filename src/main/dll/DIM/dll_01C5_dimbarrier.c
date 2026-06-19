@@ -22,11 +22,11 @@ typedef struct DimbarrierState
 } DimbarrierState;
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4898;
-extern int Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;
 
 void dimbarrier_free(void)

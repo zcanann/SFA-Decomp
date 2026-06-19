@@ -39,7 +39,7 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 getLActions();
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 
 
 extern void DBprotection_storeHomePosition(int obj);

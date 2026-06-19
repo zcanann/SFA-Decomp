@@ -30,7 +30,7 @@ extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, i
 extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
-extern int getAngle(f32 a, f32 b);
+extern int getAngle(float y, float x);
 extern f32 sqrtf(f32);
 extern void* memset(void* p, int c, int n);
 extern u8 framesThisStep;

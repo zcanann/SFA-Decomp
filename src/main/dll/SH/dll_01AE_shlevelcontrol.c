@@ -30,7 +30,7 @@ extern f32 lbl_803E54B0;
 extern f32 lbl_803E54B4;
 extern f32 timeDelta;
 extern void fn_80137948(char* fmt, ...);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int controller);
@@ -54,7 +54,7 @@ int sh_levelcontrol_getExtraSize(void)
 void sh_levelcontrol_free(void)
 {
     extern u32 GameBit_Get(int eventId);
-    extern int GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     envFxActFn_800887f8(0);
     if (GameBit_Get(0x13F) == 0)
     {
@@ -95,8 +95,8 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
 #pragma dont_inline on
 void mapUnloadFn_801d7c94(void* obj, void* p2)
 {
-    extern u32 GameBit_Get(int bit);
-    extern int GameBit_Set(int bit, int value);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
     SCTotemLogPuzzleObject* puzzleObj;
     SCTotemLogPuzzleRuntime* runtime;
     puzzleObj = (SCTotemLogPuzzleObject*)obj;
@@ -140,9 +140,9 @@ dec:
 void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
-    extern u32 GameBit_Get(int bit);
+    extern u32 GameBit_Get(int eventId);
     extern int Music_Trigger(int id, int value);
-    extern int GameBit_Set(int bit, int value);
+    extern void GameBit_Set(int eventId, int value);
     int hasClearIfSetBit = (-1 - clearIfSetBit) | (clearIfSetBit + 1);
     int hasClearIfClearBit = (-1 - clearIfClearBit) | (clearIfClearBit + 1);
     u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
@@ -198,7 +198,7 @@ end:
 void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
-    extern u32 GameBit_Get(int bit);
+    extern u32 GameBit_Get(int eventId);
     extern void GameBit_Set(int eventId, int value);
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
     SCGameBitLatch_Update(state, mask, clearIfSetBit, clearIfClearBit, latchBit, musicId);
@@ -208,7 +208,7 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
 #pragma dont_inline on
 void SH_LevelControl_setMusic(short* obj)
 {
-    extern u32 GameBit_Get(int bit);
+    extern u32 GameBit_Get(int eventId);
     extern void Music_Trigger(int trackId, int restart);
     extern void SH_LevelControl_setMusic(void* p);
     extern void GameBit_Set(int eventId, int value);
@@ -295,7 +295,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     extern s16 lbl_80327618[];
     extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int eventId);
-    extern u32 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     int player;
     u8 i;
     u8 bloopsRemaining;
@@ -437,7 +437,7 @@ void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short 
 {
     extern u32 GameBit_Get(int eventId);
     extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId);
-    extern u32 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     u32 bitValue;
     u32 eventId;
     u64 latchState;
@@ -499,8 +499,8 @@ typedef struct ShopkeeperObject
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(u32 id);
-    extern void GameBit_Set(u32 id, u32 value);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
     ShopkeeperObject* thornTailObj;
     ShopkeeperObject* playerObj;
 
@@ -588,8 +588,8 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
 void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(u32 id);
-    extern void GameBit_Set(u32 id, u32 value);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
     ShopkeeperObject* playerObj;
 
     SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x1ab);
@@ -652,9 +652,9 @@ void sh_levelcontrol_update(int obj)
     extern void SH_LevelControl_doThornTailEvents(int param_1, u32* param_2);
     extern void SH_LevelControl_runBloopEvent(int param_1, u32* param_2);
     extern int Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(u32 id);
+    extern u32 GameBit_Get(int eventId);
     extern void SH_LevelControl_setMusic(u32 * param_1);
-    extern void GameBit_Set(u32 id, u32 value);
+    extern void GameBit_Set(int eventId, int value);
     u32* state;
     u32 val;
     u32 val2;
@@ -965,9 +965,9 @@ void sh_levelcontrol_update(int obj)
 
 void sh_levelcontrol_init(int obj)
 {
-    extern u32 GameBit_Get(u32 id);
+    extern u32 GameBit_Get(int eventId);
     extern void Music_Trigger(int track, int param);
-    extern void GameBit_Set(u32 id, u32 value);
+    extern void GameBit_Set(int eventId, int value);
     int* state = ((GameObject*)obj)->extra;
     int i;
     u32 v;

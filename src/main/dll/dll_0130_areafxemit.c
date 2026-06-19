@@ -23,7 +23,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void vecRotateZXY(s16 * in, f32 * out);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 

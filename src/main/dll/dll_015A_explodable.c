@@ -20,7 +20,7 @@
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 /* object group this prop registers its fragments under */
 #define EXPLODABLE_OBJ_GROUP 0x21
@@ -192,7 +192,7 @@ void explodable_init(int obj, int setup)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 lbl_803E4350;
 extern f32 lbl_803E4354;

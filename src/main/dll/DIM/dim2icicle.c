@@ -20,7 +20,7 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   return (int *)objAnim->banks[objAnim->bankIndex];
 }
 
-extern int randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjPath_GetPointModelMtx();
 extern u32 ObjPath_GetPointWorldPosition();
 

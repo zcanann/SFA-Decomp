@@ -14,7 +14,7 @@
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern u8 lbl_80317260[];
 extern f32 lbl_803E1240;

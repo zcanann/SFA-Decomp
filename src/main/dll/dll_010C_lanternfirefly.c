@@ -40,7 +40,7 @@ extern f32 lbl_803E3AC4;
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern int gameBitIncrement(int eventId);
@@ -68,7 +68,7 @@ extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
-extern f32 mathSinf(f32 value);
+extern float mathSinf(float x);
 extern void objRenderFn_8003b8f4(f32);
 
 int LanternFireFly_getExtraSize(void) { return 0x74; }

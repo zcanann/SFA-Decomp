@@ -26,9 +26,9 @@ typedef struct IntVec3
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-extern u32 randomGetRange(int min, int max);
-extern int GameBit_Get(int id);
-extern void GameBit_Set(int slot, int val);
+extern int randomGetRange(int lo, int hi);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern int Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
@@ -46,8 +46,8 @@ void fn_801F20D4(int obj)
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
-    extern void GameBit_Set(int slot, int val);
-    extern u32 GameBit_Get(int id);
+    extern void GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Get(int eventId);
     int sub;
     IntVec3 stk;
 
@@ -104,8 +104,8 @@ void fn_801F27E4(int obj)
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
-    extern void GameBit_Set(int slot, int val);
-    extern u32 GameBit_Get(int id);
+    extern void GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Get(int eventId);
     int sub;
 
     sub = *(int*)&((GameObject*)obj)->extra;
@@ -356,10 +356,10 @@ typedef struct ArwAttachTarget
 void fn_801F2290(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
-    extern u32 GameBit_Get(int id);
-    extern void GameBit_Set(int slot, int val);
+    extern u32 GameBit_Get(int eventId);
+    extern void GameBit_Set(int eventId, int value);
     extern void buttonDisable(int a, int b);
-    extern int getAngle(f32 x, f32 y);
+    extern int getAngle(float y, float x);
     extern f32 sqrtf(f32 x);
     extern void fn_80137948(char* fmt, ...);
     extern int lbl_802C2470[];

@@ -21,7 +21,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
@@ -73,13 +73,13 @@ extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 extern u8 lbl_803DBCC0[8];
 extern int lbl_803DBCC8;
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 PSVECMag(f32 * v);
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 
 void fn_80152EC0(int obj, int state)
 {

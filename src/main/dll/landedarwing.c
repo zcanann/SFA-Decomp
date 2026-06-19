@@ -17,7 +17,7 @@
 #define BADDIESTATE_JUST_LAUNCHED 0x27a
 
 extern void* Obj_GetPlayerObject(void);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
 

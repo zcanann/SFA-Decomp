@@ -14,13 +14,13 @@
 #define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
 
 extern u32 GameBit_Get(int eventId);
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 extern int ObjHits_GetPriorityHit();
 extern u32 ObjLink_AttachChild();
 
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int id);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
@@ -154,7 +154,7 @@ extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
 extern u8 lbl_80323408[];
 extern u8 lbl_803DDB38[8];
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern f32 fn_8014C5D0(int obj);
 extern void fn_8014C66C(int obj, int target);
 extern u8 Obj_IsLoadingLocked(void);

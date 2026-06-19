@@ -31,7 +31,7 @@ typedef struct KaldachomPlacement
     u8 aggroChance; /* 0x2F: 0..99 chance to lunge instead of return */
 } KaldachomPlacement;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 timeDelta;
 extern f32 lbl_803E3060; /* 0.0f */

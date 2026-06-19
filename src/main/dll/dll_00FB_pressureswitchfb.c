@@ -47,7 +47,7 @@
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
-extern void ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
 extern f32 timeDelta;

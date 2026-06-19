@@ -65,7 +65,7 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern f32 lbl_803E4740;
 extern f32 lbl_803E4744;
 extern f32 lbl_803E473C;

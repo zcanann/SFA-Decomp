@@ -21,8 +21,8 @@
 #include "main/objhits.h"
 
 extern void GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int randomGetRange(int lo, int hi);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void doRumble(f32 strength);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);

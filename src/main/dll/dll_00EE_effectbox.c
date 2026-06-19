@@ -16,8 +16,8 @@
 #include "main/objlib.h"
 
 extern void objRenderFn_8003b8f4(f32);
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
+extern float mathCosf(float x);
+extern float mathSinf(float x);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void fn_8002B758(void);

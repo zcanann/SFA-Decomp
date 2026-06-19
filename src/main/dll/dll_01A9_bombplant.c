@@ -9,7 +9,7 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-extern u32 GameBit_Set(int eventId, int value);
+extern void GameBit_Set(int eventId, int value);
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -22,7 +22,7 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern void fn_801D29E4(int* obj, int* p2);
 extern f32 lbl_803E5378;
 extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern void setMatrixFromObjectPos(void* mtx, void* build);
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
@@ -158,7 +158,7 @@ int bombplant_SeqFn(int* obj)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id); /* #57 */
     extern void ObjHits_RefreshObjectState(int* obj); /* #57 */
-    extern u32 randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     float* state = ((GameObject*)obj)->extra;
 
     if (((EnemyMushroomState*)state)->resetToSpawn != 0)
@@ -261,7 +261,7 @@ void bombplant_update(void* obj)
     extern void Sfx_PlayFromObject(void* obj, int sndId); /* #57 */
     extern void fn_801D2B70(void* obj, void* stateEntry, void* state); /* #57 */
     extern u32 ObjHits_RefreshObjectState(); /* #57 */
-    extern int randomGetRange(int min, int max); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     void* state;
     u8* entry;
     void* param;

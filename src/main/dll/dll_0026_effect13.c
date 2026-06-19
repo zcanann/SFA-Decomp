@@ -3,7 +3,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 #if 0
 u32
@@ -434,7 +434,7 @@ extern f32 lbl_803E01A0;
 extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8;
 extern f32 lbl_803E01AC;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 extern WaterfxCfg lbl_8039C440;
 

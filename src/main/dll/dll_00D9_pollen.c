@@ -20,7 +20,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
 extern void Obj_FreeObject(int obj);
 
@@ -30,7 +30,7 @@ extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern f32 timeDelta;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(f32);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
@@ -47,7 +47,7 @@ extern int kaldachompspit_getExtraSize(void);
 void fn_8016A660(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern u8* Obj_AllocObjectSetup(int size, int type);
+    extern void* Obj_AllocObjectSetup(int size, int b);
     extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
     extern f32 lbl_803E3144;
     int burstCounter;

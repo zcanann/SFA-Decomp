@@ -5,7 +5,7 @@ extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_IsLoadingLocked(void);
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -31,7 +31,7 @@ typedef struct GpshObjcreatorObjectDef
 
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
-extern void* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern f32 lbl_803E504C;
 extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;
@@ -57,7 +57,7 @@ void gpsh_objcreator_initialise(void)
 void gpsh_objcreator_update(int* obj)
 {
     extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
-    extern u32 GameBit_Get(int bit); /* #57 */
+    extern u32 GameBit_Get(int eventId); /* #57 */
     u8* sub;
     void* setup;
 

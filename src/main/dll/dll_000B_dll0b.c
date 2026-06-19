@@ -2193,7 +2193,7 @@ extern void* Camera_GetViewMatrix(void);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void selectTexture(void* tex, int slot);
-extern int getAngle(f32 dx, f32 dz);
+extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void setMatrixFromObjectPos(f32 * mtx, s16 * src);
 extern void mtx44Transpose(f32 * src, f32 * dst);
@@ -2751,7 +2751,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 }
 
 extern int Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern void ObjList_GetObjects(int* idx, int* count);
 extern void Sfx_StopObjectChannel(void* obj, int ch);

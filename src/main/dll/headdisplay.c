@@ -36,7 +36,7 @@
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX 8          /* u16  */
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern void AudioStream_StopCurrent(void);
 extern void doNothing_8000CF54(int a);
@@ -102,7 +102,7 @@ extern void AudioStream_Play(int stream, void (*cb)(void));
 extern void gameTextGetBox(int box);
 extern void gameTextFreePhrase(u8 * phrase);
 extern int lbl_8031BF90[];
-extern u8* Obj_AllocObjectSetup(int size, int def);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;

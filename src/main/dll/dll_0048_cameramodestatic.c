@@ -13,7 +13,7 @@ typedef struct CameraModeStaticPlacement
     u8 pad22[0x28 - 0x22];
 } CameraModeStaticPlacement;
 
-extern u32 getAngle();
+extern int getAngle(float y, float x);
 extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
 

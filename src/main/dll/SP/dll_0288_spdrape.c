@@ -92,7 +92,7 @@ void spdrape_update(int obj)
 {
     extern f32 getXZDistance(f32 * a, f32 * b);
     extern void* Obj_GetPlayerObject(void);
-    extern u32 randomGetRange(int min, int max);
+    extern int randomGetRange(int lo, int hi);
     f32* state;
     char* player;
 
@@ -195,10 +195,10 @@ void spdrape_initialise(void)
 
 void spdrape_init(int* obj, u8* def)
 {
-    extern f32 mathCosf(f32 x);
-    extern f32 mathSinf(f32 x);
+    extern float mathCosf(float x);
+    extern float mathSinf(float x);
     extern void* Obj_GetPlayerObject(void);
-    extern unsigned long randomGetRange(int a, int b);
+    extern int randomGetRange(int lo, int hi);
     f32* state;
     int* player;
     state = ((GameObject*)obj)->extra;

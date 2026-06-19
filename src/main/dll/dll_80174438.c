@@ -20,8 +20,8 @@ extern u32 GameBit_Get(int eventId);
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
-extern u32 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern void GameBit_Set(int eventId, int value);
+extern int randomGetRange(int lo, int hi);
 extern u32 fn_80174BFC();
 extern void* Obj_GetPlayerObject(void);
 

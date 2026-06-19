@@ -19,11 +19,11 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 mathSinf(f32 x);
+extern float mathSinf(float x);
 
 extern f32 lbl_803DB888;
 extern f32 lbl_803DB88C;
@@ -40,7 +40,7 @@ extern f32 lbl_803E0348;
 
 #pragma dont_inline on
 
-extern f32 mathCosf(f32 x);
+extern float mathCosf(float x);
 
 #pragma dont_inline off
 

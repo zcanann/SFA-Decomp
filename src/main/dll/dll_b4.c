@@ -11,7 +11,7 @@
 #include "main/dll/dll_B2.h"
 #include "main/model_light.h"
 
-extern u8* Obj_AllocObjectSetup(int size, int type);
+extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern u8* Obj_GetActiveModel(u8 * obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* cb);

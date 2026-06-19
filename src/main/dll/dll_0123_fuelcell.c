@@ -9,7 +9,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 #include "main/game_object.h"
 
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
@@ -130,7 +130,7 @@ void fuelcell_update(int* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern u32 ObjGroup_AddObject();
-    extern u32 GameBit_Set(int eventId, int value);
+    extern void GameBit_Set(int eventId, int value);
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
     FuelcellState* state = ((GameObject*)obj)->extra;
     int* player;

@@ -57,7 +57,7 @@ extern void setWidescreen(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 #pragma scheduling off
 #pragma peephole off
