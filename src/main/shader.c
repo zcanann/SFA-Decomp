@@ -2572,8 +2572,8 @@ void beginLoadingMap(void)
     char* base;
     int i;
     int j;
-    u8* a;
-    u8* b;
+    s8* a;
+    s8* b;
     int k2, k3;
     int mapKind;
     f32* p;
@@ -2594,12 +2594,12 @@ void beginLoadingMap(void)
     mapInitFn_80069990();
     for (i = 0; i < 5; i++)
     {
-        a = *(u8**)(base + 0x41F4 + i * 4);
-        b = *(u8**)(base + 0x41E0 + i * 4);
+        a = ((s8**)(base + 0x41F4))[i];
+        b = ((s8**)(base + 0x41E0))[i];
         for (j = 0; j < 256; j++)
         {
-            a[j] = 0xFF;
-            b[j * 12 + 9] = 0xFF;
+            a[j] = -1;
+            b[j * 12 + 9] = -1;
         }
     }
     for (j = 0; j < 64; j++)
