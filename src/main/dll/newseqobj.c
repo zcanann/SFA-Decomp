@@ -457,7 +457,7 @@ void fn_80150910(int* obj, u8* state)
             }
         }
         delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 -
-            (u16) * (s16*)obj);
+            (u16)((GameObject*)obj)->anim.rotX);
         if (delta > lbl_803E2788)
         {
             delta = lbl_803E2784 + delta;
