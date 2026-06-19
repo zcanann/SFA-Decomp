@@ -1968,9 +1968,9 @@ int modelLoadAnimations(void* model, int id, void* animBase)
         debugPrintf(sModelAnimationBufferOverflowWarning, sz);
     }
     fileLoadToBufferOffset(0x31, lbl_803DCB60, (id & ~3) << 2, 0x20);
-    ((ModelFileHeader*)hdr)->animationDataFileOffset = *(int*)((u8*)lbl_803DCB60 + (id & 3) * 4);
-    sz4 = *(int*)((u8*)lbl_803DCB60 + (id & 3) * 4);
-    id = *(int*)((u8*)lbl_803DCB60 + (id & 3) * 4 + 4) - sz4;
+    ((ModelFileHeader*)hdr)->animationDataFileOffset = lbl_803DCB60[id & 3];
+    sz4 = lbl_803DCB60[id & 3];
+    id = lbl_803DCB60[(id & 3) + 1] - sz4;
     if (((ModelFileHeader*)hdr)->flags & 0x40)
     {
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = buf;
