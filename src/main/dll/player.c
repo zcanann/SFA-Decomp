@@ -9794,8 +9794,9 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
         ((PlayerState*)p2)->targetYaw = *(s16*)((char*)p3 + 0x0);
     }
-    ((PlayerState*)p2)->yaw = ((PlayerState*)p2)->targetYaw;
-    ((GameObject*)p1)->anim.rotX = ((PlayerState*)p2)->targetYaw;
+    v = ((PlayerState*)p2)->targetYaw;
+    ((PlayerState*)p2)->yaw = v;
+    ((GameObject*)p1)->anim.rotX = v;
     ((GameObject*)p1)->anim.worldPosX = ((GameObject*)p1)->anim.localPosX;
     ((GameObject*)p1)->anim.worldPosY = ((GameObject*)p1)->anim.localPosY;
     ((GameObject*)p1)->anim.worldPosZ = ((GameObject*)p1)->anim.localPosZ;
