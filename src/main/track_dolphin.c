@@ -463,9 +463,9 @@ void FUN_80061a80(short* obj, short* newParent, int mode)
     int outObj;
     short* prevParent;
     int angle;
-    float local_28;
-    float local_24;
-    float afStack_20[4];
+    float localZ;
+    float localX;
+    float localY[4];
 
     prevParent = *(short**)(obj + 0x18);
     if (prevParent != newParent)
@@ -488,8 +488,8 @@ void FUN_80061a80(short* obj, short* newParent, int mode)
             outObj = *(int*)(obj + 0x2a);
             if (prevParent == 0x0)
             {
-                local_24 = *(float*)(obj + 0x12);
-                local_28 = *(float*)(obj + 0x16);
+                localX = *(float*)(obj + 0x12);
+                localZ = *(float*)(obj + 0x16);
                 angle = (int)*obj;
             }
             else
@@ -501,7 +501,7 @@ void FUN_80061a80(short* obj, short* newParent, int mode)
                              (double)*(float*)(obj + 0x44), (float*)(obj + 0x46),
                              (float*)(obj + 0x48), (float*)(obj + 0x4a), prevParent);
                 FUN_800068ec((double)*(float*)(obj + 0x12), (double)lbl_803DF934,
-                             (double)*(float*)(obj + 0x16), &local_24, afStack_20, &local_28, prevParent);
+                             (double)*(float*)(obj + 0x16), &localX, localY, &localZ, prevParent);
                 angle = (int)*prevParent + (int)*obj;
             }
             if (mode != 0)
@@ -514,8 +514,8 @@ void FUN_80061a80(short* obj, short* newParent, int mode)
                     *(u32*)(obj + 0x40) = *(u32*)(obj + 0x46);
                     *(u32*)(obj + 0x42) = *(u32*)(obj + 0x48);
                     *(u32*)(obj + 0x44) = *(u32*)(obj + 0x4a);
-                    *(float*)(obj + 0x12) = local_24;
-                    *(float*)(obj + 0x16) = local_28;
+                    *(float*)(obj + 0x12) = localX;
+                    *(float*)(obj + 0x16) = localZ;
                     *obj = angle;
                 }
                 else
@@ -526,8 +526,8 @@ void FUN_80061a80(short* obj, short* newParent, int mode)
                     FUN_800068f4((double)*(float*)(obj + 0x46), (double)*(float*)(obj + 0x48),
                                  (double)*(float*)(obj + 0x4a), (float*)(obj + 0x40),
                                  (float*)(obj + 0x42), (float*)(obj + 0x44), *(int*)(obj + 0x18));
-                    FUN_800068f0((double)local_24, (double)lbl_803DF934, (double)local_28,
-                                 (float*)(obj + 0x12), afStack_20, (float*)(obj + 0x16),
+                    FUN_800068f0((double)localX, (double)lbl_803DF934, (double)localZ,
+                                 (float*)(obj + 0x12), localY, (float*)(obj + 0x16),
                                  *(int*)(obj + 0x18));
                     angle = angle - **(short**)(obj + 0x18);
                     if (0x8000 < angle)
