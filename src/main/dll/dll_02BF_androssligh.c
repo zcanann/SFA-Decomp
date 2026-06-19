@@ -77,7 +77,7 @@ void androssligh_setState(int obj, int newState, u8 force)
             return;
         }
     }
-    state->state = (s8)newState;
+    state->state = newState;
 }
 
 void androssligh_hitDetect(void)
@@ -102,7 +102,7 @@ void androssligh_update(int obj)
         ((GameObject*)obj)->anim.localPosY = *(f32*)((int)state->anchor + 0x10);
         ((GameObject*)obj)->anim.localPosZ = *(f32*)((int)state->anchor + 0x14);
     }
-    state->prevState = (u8)state->state;
+    state->prevState = state->state;
     switch (state->state)
     {
     case ANDROSSLIGH_IDLE:
@@ -152,7 +152,7 @@ void androssligh_updateBeam(int obj, int beam)
     if (*(void**)(beam + 4) == NULL)
     {
         *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C,
-                                                 (int)lbl_803DC520, (int)lbl_803DC524, 0);
+                                                 lbl_803DC520, lbl_803DC524, 0);
         *(f32*)(beam + 8) = lbl_803E7608;
     }
     else

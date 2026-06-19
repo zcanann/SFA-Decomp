@@ -565,7 +565,7 @@ void wmspiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
     WmSpiritPlaceState* state;
 
     state = obj->extra;
-    obj->animEventCallback = (void*)wmspiritplace_SeqFn;
+    obj->animEventCallback = wmspiritplace_SeqFn;
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->anim.rotY = (s16)(placement->rotYAngle << 8);
     state->heightOffset = ((f32)placement->heightOffset / 32767.0f) / 100.0f;

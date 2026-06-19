@@ -106,7 +106,7 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
                     gDIMbosstonsilLight->glowIntensityStep = 0;
                 }
             }
-            gDIMbosstonsilLight->glowIntensity = (u8)lightValue;
+            gDIMbosstonsilLight->glowIntensity = lightValue;
         }
     }
 
@@ -167,7 +167,7 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
         if ((state->eventGameBit != -1) &&
             (GameBit_Get(state->eventGameBit) != 0))
         {
-            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, (int)config->eventId);
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, config->eventId);
             state->eventGameBit = -1;
         }
 
@@ -343,9 +343,9 @@ void DIMbosstonsil_update(void* obj)
     {
         s16 r30_local;
         int sum;
-        sum = (int)gDIMbosstonsilLight->glowIntensity +
-            (int)gDIMbosstonsilLight->glowIntensityStep;
-        r30_local = (s16)sum;
+        sum = gDIMbosstonsilLight->glowIntensity +
+            gDIMbosstonsilLight->glowIntensityStep;
+        r30_local = sum;
         if (r30_local < 0)
         {
             r30_local = 0;
@@ -361,7 +361,7 @@ void DIMbosstonsil_update(void* obj)
                 gDIMbosstonsilLight->glowIntensityStep = 0;
             }
         }
-        gDIMbosstonsilLight->glowIntensity = (u8)r30_local;
+        gDIMbosstonsilLight->glowIntensity = r30_local;
     }
 }
 
@@ -381,10 +381,10 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
         variant = variant | 1;
     }
     (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, p2, state, 2, 2, 0x102, variant, lbl_803E4CCC);
-    ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
+    ((GameObject*)obj)->animEventCallback = dll_DIM_BossGutSpik_update;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     ((BaddieState*)state)->substate = 0;
-    gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
+    gDIMbosstonsilRoutePhase = GameBit_Get(0x20c);
     if (gDIMbosstonsilRoutePhase < 3)
     {
         *(s8*)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 3 - gDIMbosstonsilRoutePhase;

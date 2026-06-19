@@ -49,7 +49,7 @@ void fn_801CDF94(int obj, int state, int flag);
 void nw_geyser_init(int obj)
 {
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    ((GameObject*)obj)->animEventCallback = (void*)NW_geyser_SeqFn;
+    ((GameObject*)obj)->animEventCallback = NW_geyser_SeqFn;
 }
 
 char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }

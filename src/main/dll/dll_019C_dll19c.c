@@ -91,7 +91,7 @@ void dll_19C_update(int* obj)
     {
         ((Dll19CState*)sub)->unk4 = (s16)(((Dll19CState*)sub)->unk4 - ((Dll19CState*)sub)->unk6 * framesThisStep);
     }
-    if (((Dll19CState*)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0)
+    if (((Dll19CState*)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
         ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;

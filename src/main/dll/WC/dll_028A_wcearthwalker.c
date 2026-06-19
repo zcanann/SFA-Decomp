@@ -433,7 +433,7 @@ int dll_28B_substateHandler2(int obj, int ai)
     {
         if (((Dll28BAiState*)state)->randomTimer <= lbl_803E6CF8)
         {
-            ((Dll28BAiState*)state)->randomTimer = (f32)randomGetRange(0x78, 0xfa);
+            ((Dll28BAiState*)state)->randomTimer = randomGetRange(0x78, 0xfa);
             return 4;
         }
     }
@@ -541,7 +541,7 @@ void earthwalker_init(int obj, int setup)
     int local;
 
     local = lbl_803E6CD8;
-    ewObj->animEventCallback = (void*)earthwalker_animEventCallback;
+    ewObj->animEventCallback = earthwalker_animEventCallback;
     dll_2E_func05(obj, state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
     fn_80113F94(state, lbl_803E6CE8);

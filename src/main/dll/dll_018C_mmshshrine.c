@@ -372,7 +372,7 @@ void mmsh_shrine_init(int obj, int def)
 
     state = ((GameObject*)obj)->extra;
     ((MMSHShrineObject*)obj)->yaw = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
+    ((GameObject*)obj)->animEventCallback = MMSH_Shrine_SeqFn;
     *(u16*)(state + 7) = 10;
     *(u8*)(state + 9) = 0;
     if (0 < *(short*)(def + 0x1a))

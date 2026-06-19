@@ -164,7 +164,7 @@ void SB_MiniFire_update(GameObject* obj)
     buf[2] = lbl_803E5928;
     if (obj->unkF4 <= 0x3c)
     {
-        buf[2] = (f32)obj->unkF4 / lbl_803E5930;
+        buf[2] = obj->unkF4 / lbl_803E5930;
         obj->anim.alpha =
             (u8)(int)(lbl_803E5934 * ((f32)obj->unkF4 / *(f32*)&lbl_803E5930));
     }
@@ -195,7 +195,7 @@ void SB_MiniFire_update(GameObject* obj)
 void SB_SeqDoor_init(int* obj, int* def);
 
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
+ * and obj->_b8[3], stash v in obj->_b8[4]. */
 
 /* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
  * obj->_b8[3] += p2. */

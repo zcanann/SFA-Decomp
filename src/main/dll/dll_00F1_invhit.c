@@ -184,7 +184,7 @@ void invhit_update(int* obj)
     {
     case 0:
         {
-            char* victim = (char*)Obj_GetPlayerObject();
+            char* victim = Obj_GetPlayerObject();
             while (victim != NULL)
             {
                 f32 dx = ((GameObject*)obj)->anim.localPosX - ((PushableState*)victim)->cullDistance;
