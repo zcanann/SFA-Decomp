@@ -216,9 +216,9 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     xSide = '\0';
     ySide = '\0';
     zSide = '\0';
-    dx = (double)(*(float*)(ref + 0xc) - ((GameObject *)obj)->anim.localPosX);
-    dy = (double)(*(float*)(ref + 0x10) - ((GameObject *)obj)->anim.localPosY);
-    ftmp = (double)*(float*)(ref + 0x14);
+    dx = (double)(((GameObject*)ref)->anim.localPosX - ((GameObject *)obj)->anim.localPosX);
+    dy = (double)(((GameObject*)ref)->anim.localPosY - ((GameObject *)obj)->anim.localPosY);
+    ftmp = (double)((GameObject*)ref)->anim.localPosZ;
     dz = (double)(float)(ftmp - (double)((GameObject *)obj)->anim.localPosZ);
     if (((int)state[4] == 0xffffffff) || (bitVal = FUN_80017690((int)state[4]), bitVal == 0))
     {
