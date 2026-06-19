@@ -14,18 +14,18 @@ extern u8 framesThisStep;
 
 
 
-extern f32 lbl_803E51C8;
+extern f32 gDimTrickyLosMinDist;
 extern f32 lbl_803E51CC;
-extern f32 lbl_803E51D0;
-extern f32 lbl_803E51D4;
+extern f32 gDimTrickyLosObjOffsetDist;
+extern f32 gDimTrickyLosCamOffsetDist;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
 extern int objUpdateOpacity(char* obj);
 extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
-extern s8 lbl_803DDBE8;
-extern u32 lbl_802C23D8[4];
+extern s8 gDimTrickyEggSequenceStage;
+extern u32 gDimTrickyEggResArgsTemplate[4];
 extern f32 lbl_803E51E0;
-extern f32 lbl_803E51E4;
+extern f32 gDimTrickyScaleTimerDivisor;
 extern f32 lbl_803E51E8;
 
 int dll_19E_getExtraSize(void) { return 0x10; }
@@ -91,7 +91,7 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
         stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
         stk.delta[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
         dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
-        if (dist > lbl_803E51C8)
+        if (dist > gDimTrickyLosMinDist)
         {
             invDist = lbl_803E51CC / dist;
             nx = stk.delta[0] * invDist;
@@ -100,20 +100,20 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
             stk.delta[1] = ny;
             nz = stk.delta[2] * invDist;
             stk.delta[2] = nz;
-            facx = lbl_803E51D0 * nx;
+            facx = gDimTrickyLosObjOffsetDist * nx;
             midA[0] = facx;
-            facy = lbl_803E51D0 * ny;
+            facy = gDimTrickyLosObjOffsetDist * ny;
             midA[1] = facy;
-            facz = lbl_803E51D0 * nz;
+            facz = gDimTrickyLosObjOffsetDist * nz;
             midA[2] = facz;
             midA[0] = facx + ((GameObject*)obj)->anim.localPosX;
             midA[1] = facy + ((GameObject*)obj)->anim.localPosY;
             midA[2] = facz + ((GameObject*)obj)->anim.localPosZ;
-            facx2 = lbl_803E51D4 * nx;
+            facx2 = gDimTrickyLosCamOffsetDist * nx;
             midB[0] = facx2;
-            facy2 = lbl_803E51D4 * ny;
+            facy2 = gDimTrickyLosCamOffsetDist * ny;
             midB[1] = facy2;
-            facz2 = lbl_803E51D4 * nz;
+            facz2 = gDimTrickyLosCamOffsetDist * nz;
             midB[2] = facz2;
             midB[0] = facx2 + *(f32*)(camera + 0xc);
             midB[1] = facy2 + *(f32*)(camera + 0x10);
@@ -191,7 +191,7 @@ void dll_19E_update(void* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)lbl_802C23D8;
+    *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)gDimTrickyEggResArgsTemplate;
 
     ((void (*)(void*, int))Sfx_PlayFromObject)(obj, SFXmn_eggylaugh216);
     objUpdateOpacity(obj);
@@ -215,7 +215,7 @@ void dll_19E_update(void* obj)
             if (state->settleTimer != 0)
             {
                 state->settleTimer = 0;
-                lbl_803DDBE8 = 3;
+                gDimTrickyEggSequenceStage = 3;
                 state->resetTimer = 300;
                 if (state->sequenceIndex == 2)
                 {
@@ -263,21 +263,21 @@ void dll_19E_update(void* obj)
                 {
                     GameBit_Set(state->gameBitId, 1);
                 }
-                if ((lbl_803DDBE8 == 0) && (state->sequenceIndex == 0) &&
+                if ((gDimTrickyEggSequenceStage == 0) && (state->sequenceIndex == 0) &&
                     (GameBit_Get(state->gameBitId) != 0))
                 {
-                    lbl_803DDBE8 = 1;
+                    gDimTrickyEggSequenceStage = 1;
                 }
-                if ((lbl_803DDBE8 == 1) && (state->sequenceIndex == 1) &&
+                if ((gDimTrickyEggSequenceStage == 1) && (state->sequenceIndex == 1) &&
                     (GameBit_Get(state->gameBitId) != 0))
                 {
-                    lbl_803DDBE8 = 2;
+                    gDimTrickyEggSequenceStage = 2;
                 }
-                if ((lbl_803DDBE8 == 2) && (state->sequenceIndex == 2) &&
+                if ((gDimTrickyEggSequenceStage == 2) && (state->sequenceIndex == 2) &&
                     (GameBit_Get(state->gameBitId) != 0))
                 {
                     GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 1);
-                    lbl_803DDBE8 = 3;
+                    gDimTrickyEggSequenceStage = 3;
                 }
                 state->needsOpenSfx = 1;
                 state->delayTimer = 1;
@@ -291,19 +291,19 @@ void dll_19E_update(void* obj)
                 {
                     GameBit_Set(state->gameBitId, 0);
                 }
-                if ((lbl_803DDBE8 == 1) && (state->sequenceIndex == 0))
+                if ((gDimTrickyEggSequenceStage == 1) && (state->sequenceIndex == 0))
                 {
-                    lbl_803DDBE8 = 0;
+                    gDimTrickyEggSequenceStage = 0;
                 }
-                if ((lbl_803DDBE8 == 2) && (state->sequenceIndex == 1))
+                if ((gDimTrickyEggSequenceStage == 2) && (state->sequenceIndex == 1))
                 {
-                    lbl_803DDBE8 = 0;
+                    gDimTrickyEggSequenceStage = 0;
                 }
-                if ((lbl_803DDBE8 == 3) && (state->sequenceIndex == 2) &&
+                if ((gDimTrickyEggSequenceStage == 3) && (state->sequenceIndex == 2) &&
                     (GameBit_Get(GAMEBIT_TRICKY_EGG_CUTSCENE_DONE) == 0))
                 {
                     GameBit_Set(GAMEBIT_TRICKY_EGG_SEQUENCE_DONE, 0);
-                    lbl_803DDBE8 = 0;
+                    gDimTrickyEggSequenceStage = 0;
                 }
             }
         }
@@ -324,7 +324,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     ((GameObject*)obj)->anim.rotX = (s16)(((s32)setup->objectType & 0x3f) << 10);
     if (setup->scaleTimer > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = setup->scaleTimer / lbl_803E51E4;
+        ((GameObject*)obj)->anim.rootMotionScale = setup->scaleTimer / gDimTrickyScaleTimerDivisor;
     }
     else
     {

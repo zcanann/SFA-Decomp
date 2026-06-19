@@ -1319,13 +1319,13 @@ extern void modelLightStruct_setGlowColor(void *light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;
 extern f32 lbl_803E71E0;
-extern f32 lbl_803E71E8;
-extern f32 lbl_803E71EC;
+extern f32 gArwProximityTauntDistance;
+extern f32 gArwProximityActivateDistance;
 extern f32 lbl_803E71F0;
 extern f32 lbl_803E71F4;
 extern f32 lbl_803E71F8;
-extern f32 lbl_803E71FC;
-extern f32 lbl_803E7200;
+extern f32 gArwProximityFadeInRate;
+extern f32 gArwProximityWarningDistance;
 
 
 extern f32 lbl_803E71A8;

@@ -56,8 +56,8 @@ extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 lbl_803E4624;
-extern f32 lbl_803E4628;
+extern f32 gCcGasVentAirMeterMax;
+extern f32 gCcGasVentFogRiseMax;
 extern f32 lbl_803E462C;
 extern f32 lbl_803E4630;
 extern f32 lbl_803E4634;
@@ -135,7 +135,7 @@ void ccgasventcontrol_update(int obj)
         break;
     case 2:
         (*gGameUIInterface)->initAirMeter(6000, 0x603);
-        ((CcgasventcontrolState*)ex)->airMeter = lbl_803E4624;
+        ((CcgasventcontrolState*)ex)->airMeter = gCcGasVentAirMeterMax;
         *(u8*)ex = 3;
         ((CcgasventcontrolState*)ex)->ventCount = b;
         break;
@@ -144,9 +144,9 @@ void ccgasventcontrol_update(int obj)
         {
             int player = Obj_GetPlayerObject();
             ((CcgasventcontrolState*)ex)->fogRise = ((CcgasventcontrolState*)ex)->fogRise + timeDelta / lbl_803E4618;
-            if (((CcgasventcontrolState*)ex)->fogRise > lbl_803E4628)
+            if (((CcgasventcontrolState*)ex)->fogRise > gCcGasVentFogRiseMax)
             {
-                ((CcgasventcontrolState*)ex)->fogRise = *(f32*)&lbl_803E4628;
+                ((CcgasventcontrolState*)ex)->fogRise = *(f32*)&gCcGasVentFogRiseMax;
             }
             if (((GameObject*)player)->anim.localPosY <= ((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)
                 ex)->fogRise)
@@ -156,9 +156,9 @@ void ccgasventcontrol_update(int obj)
             else
             {
                 ((CcgasventcontrolState*)ex)->airMeter = lbl_803E462C * timeDelta + ((CcgasventcontrolState*)ex)->airMeter;
-                if (((CcgasventcontrolState*)ex)->airMeter > lbl_803E4624)
+                if (((CcgasventcontrolState*)ex)->airMeter > gCcGasVentAirMeterMax)
                 {
-                    ((CcgasventcontrolState*)ex)->airMeter = *(f32*)&lbl_803E4624;
+                    ((CcgasventcontrolState*)ex)->airMeter = *(f32*)&gCcGasVentAirMeterMax;
                 }
             }
             enableHeavyFog(((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->fogRise,

@@ -17,10 +17,10 @@ extern void getTabEntry(void* dst, int kind, int offset, int size);
 extern u8 framesThisStep;
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
-extern s16 lbl_80323818[], lbl_80323824[];
-extern f32 lbl_803E4788;
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4;
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
+extern f32 gImSpaceThrusterWeightMax;
+extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23, gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
+extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
 
 static inline int* getActiveModel(void* obj)
 {
@@ -41,7 +41,7 @@ void imspacethruster_free(int obj)
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4788);
+    if (v != 0) objRenderFn_8003b8f4(gImSpaceThrusterWeightMax);
 }
 
 void imspacethruster_hitDetect(void)
@@ -104,10 +104,10 @@ void imspacethruster_update(GameObject* obj)
         }
         if (state->kind < 5)
         {
-            f32 weight = obj->anim.alpha / lbl_803E4794;
-            if (weight > lbl_803E4788)
+            f32 weight = obj->anim.alpha / gImSpaceThrusterAlphaToWeightScale;
+            if (weight > gImSpaceThrusterWeightMax)
             {
-                weight = lbl_803E4788;
+                weight = gImSpaceThrusterWeightMax;
             }
             else if (weight < lbl_803E4798)
             {
@@ -149,31 +149,31 @@ void imspacethruster_init(GameObject* obj, u8* placement)
     {
     case 0:
     case 1:
-        obj->anim.rootMotionScale = lbl_803E47A8;
+        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind01;
         break;
     case 2:
     case 3:
-        obj->anim.rootMotionScale = lbl_803E47AC;
+        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind23;
         break;
     case 5:
     case 6:
-        obj->anim.rootMotionScale = lbl_803E47B0;
+        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind56;
         break;
     case 4:
-        obj->anim.rootMotionScale = lbl_803E47B4;
+        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind4;
         break;
     }
     model = getActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
+    ObjModel_SetBlendChannelWeight(model, 0, gImSpaceThrusterWeightMax);
     {
         u32 kind = state->kind;
         if (kind < 5)
         {
             *(int*)&state->bufA = (int)mmAlloc(0x28, 0x12, 0);
-            getTabEntry(state->bufA, 0xc, lbl_80323818[kind] * 0x28, 0x28);
+            getTabEntry(state->bufA, 0xc, gImSpaceThrusterKeyframeIndexA[kind] * 0x28, 0x28);
             *(int*)&state->bufB = (int)mmAlloc(0x28, 0x12, 0);
-            getTabEntry(state->bufB, 0xc, lbl_80323824[kind] * 0x28, 0x28);
+            getTabEntry(state->bufB, 0xc, gImSpaceThrusterKeyframeIndexB[kind] * 0x28, 0x28);
         }
     }
     obj->anim.alpha = 0;

@@ -16,7 +16,7 @@ extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
 extern f32 timeDelta;
-extern f32 lbl_803E63E4;
+extern f32 gDfpTorchMotionRateScale;
 extern f32 lbl_803E63E8;
 extern f32 lbl_803E63E0;
 
@@ -57,7 +57,7 @@ void DFP_Torch_init(int obj, int def)
     motionRate = *(s16*)(def + 0x1a);
     if (motionRate > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = motionRate / lbl_803E63E4;
+        ((GameObject*)obj)->anim.rootMotionScale = motionRate / gDfpTorchMotionRateScale;
     }
     else
     {
@@ -91,7 +91,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     extern f32 sqrtf(f32 x);
     extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E63C8;
-    extern f32 lbl_803E63CC;
+    extern f32 gDfpTorchOcclusionCheckDistMin;
     extern f32 lbl_803E63D0;
     extern f32 lbl_803E63D4;
     extern f32 lbl_803E63D8;
@@ -132,7 +132,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             stk2.d[1] = *(f32*)(cam + 0x10) - ((GameObject*)obj)->anim.localPosY;
             stk2.d[2] = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
-            if (dist > lbl_803E63CC)
+            if (dist > gDfpTorchOcclusionCheckDistMin)
             {
                 scale = lbl_803E63C8 / dist;
                 stk2.d[0] *= scale;
@@ -185,10 +185,10 @@ void DFP_Torch_update(int obj)
     extern void Sfx_PlayFromObject(int, int);
 
     extern void objUpdateOpacity(int);
-    extern u8 lbl_803DDCE8;
+    extern u8 gDfpTorchSequenceState;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;
-    extern int lbl_802C2510[];
+    extern int gDfpTorchEffectParams[];
     typedef struct
     {
         int m0;
@@ -202,7 +202,7 @@ void DFP_Torch_update(int obj)
     f32 buf[5];
     TorchPrm prm;
 
-    prm = *(TorchPrm*)lbl_802C2510;
+    prm = *(TorchPrm*)gDfpTorchEffectParams;
     Sfx_PlayFromObject(obj, 0x72);
     objUpdateOpacity(obj);
     switch (state->mode)
@@ -258,14 +258,14 @@ void DFP_Torch_update(int obj)
                         GameBit_Set(state->gameBit, 1);
                     }
                 }
-                if ((s8)lbl_803DDCE8 == 0 && state->colorIdx == 0 && GameBit_Get(state->gameBit) != 0)
+                if ((s8)gDfpTorchSequenceState == 0 && state->colorIdx == 0 && GameBit_Get(state->gameBit) != 0)
                 {
-                    lbl_803DDCE8 = 1;
+                    gDfpTorchSequenceState = 1;
                 }
-                if ((s8)lbl_803DDCE8 == 1 && state->colorIdx == 1 && GameBit_Get(state->gameBit) != 0)
+                if ((s8)gDfpTorchSequenceState == 1 && state->colorIdx == 1 && GameBit_Get(state->gameBit) != 0)
                 {
                     GameBit_Set(0x5e2, 1);
-                    lbl_803DDCE8 = 2;
+                    gDfpTorchSequenceState = 2;
                 }
                 state->sfxPending = 1;
                 state->flickerTimer = 1;
@@ -282,14 +282,14 @@ void DFP_Torch_update(int obj)
                         GameBit_Set(state->gameBit, 0);
                     }
                 }
-                if ((s8)lbl_803DDCE8 == 1 && state->colorIdx == 0)
+                if ((s8)gDfpTorchSequenceState == 1 && state->colorIdx == 0)
                 {
-                    lbl_803DDCE8 = 0;
+                    gDfpTorchSequenceState = 0;
                 }
-                if ((s8)lbl_803DDCE8 == 2 && state->colorIdx == 1 && GameBit_Get(0x5e2) == 0)
+                if ((s8)gDfpTorchSequenceState == 2 && state->colorIdx == 1 && GameBit_Get(0x5e2) == 0)
                 {
                     GameBit_Set(0x5e2, 0);
-                    lbl_803DDCE8 = 0;
+                    gDfpTorchSequenceState = 0;
                 }
             }
         }

@@ -88,7 +88,7 @@ void arwproximit_update(int obj)
         GameObject* arwing = (GameObject*)getArwing();
         if (arwing == NULL)
             arwing = (GameObject*)Obj_GetPlayerObject();
-        if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E71E8)
+        if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityTauntDistance)
         {
             gameTextFn_80125ba4(0xb);
             state->textVariant = 0;
@@ -102,7 +102,7 @@ void arwproximit_update(int obj)
             GameObject* arwing = (GameObject*)getArwing();
             if (arwing == NULL)
                 arwing = (GameObject*)Obj_GetPlayerObject();
-            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E71EC)
+            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityActivateDistance)
             {
                 state->light = objCreateLight(obj, 1);
                 if (state->light != NULL)
@@ -128,7 +128,7 @@ void arwproximit_update(int obj)
         {
             GameObject* arwing;
             int alpha = (int)
-            (lbl_803E71FC * timeDelta + (f32)(u32)
+            (gArwProximityFadeInRate * timeDelta + (f32)(u32)
             objAnim->alpha
             )
             ;
@@ -138,7 +138,7 @@ void arwproximit_update(int obj)
             arwing = (GameObject*)getArwing();
             if (arwing == NULL)
                 arwing = (GameObject*)Obj_GetPlayerObject();
-            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < lbl_803E7200)
+            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityWarningDistance)
             {
                 if (state->light != NULL)
                 {
