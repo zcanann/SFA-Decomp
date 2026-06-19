@@ -2608,9 +2608,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
         int j;
         for (j = 0; j < n; j++)
         {
-            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-            int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 0)
+            int entries = *(int*)&((ObjDef*)m)->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                (int)*(u8*)(entries + entryIdx) == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
