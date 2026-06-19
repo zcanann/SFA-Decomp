@@ -29,9 +29,9 @@ void Obj_UpdateWorldTransform(s16* obj)
     parent = *(s16**)(obj + 0x20);
     if (parent == (s16*)0)
     {
-        *(f32*)(obj + 0x22) = *(f32*)(obj + 6);
-        *(f32*)(obj + 0x24) = *(f32*)(obj + 8);
-        *(f32*)(obj + 0x26) = *(f32*)(obj + 10);
+        *(f32*)(obj + 0x22) = ((GameObject*)obj)->anim.localPosX;
+        *(f32*)(obj + 0x24) = ((GameObject*)obj)->anim.localPosY;
+        *(f32*)(obj + 0x26) = ((GameObject*)obj)->anim.localPosZ;
         obj[0x28] = obj[0];
         obj[0x29] = obj[1];
         obj[0x2A] = obj[2];
@@ -40,7 +40,7 @@ void Obj_UpdateWorldTransform(s16* obj)
     {
         matrixIndex = *(s8*)((u8*)parent + 0x35) << 4;
         matrix = (f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2));
-        Matrix_TransformPoint(matrix, *(f32*)(obj + 6), *(f32*)(obj + 8), *(f32*)(obj + 10),
+        Matrix_TransformPoint(matrix, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
                               (f32*)(obj + 0x22), (f32*)(obj + 0x24), (f32*)(obj + 0x26));
         obj[0x28] = obj[0] - parent[0];
         obj[0x29] = obj[1];
