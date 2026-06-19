@@ -5,7 +5,7 @@
  * (one indexed by placement particleIndex, plus a fixed glow burst).
  * The animEventCallback (dimbosscrackpar_SeqFn) does the same on sequence ticks.
  * NOTE: GameBit_Get is used implicitly (no include); adding gamebits.h changes
- * codegen at the (u32) cast call sites — leave it implicit.
+ * codegen at the  cast call sites — leave it implicit.
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -72,7 +72,7 @@ void dimbosscrackpar_init(s16* obj, s8* def)
 {
     ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4D98;
-    ((GameObject*)obj)->animEventCallback = (void*)dimbosscrackpar_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dimbosscrackpar_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x24] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x23] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);

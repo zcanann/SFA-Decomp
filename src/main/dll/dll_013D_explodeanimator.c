@@ -114,6 +114,6 @@ void explodeanimator_init(int* obj, int* def)
     {
         v = 0;
     }
-    ((ExplodeanimatorState*)state)->flags = (u8)v;
+    ((ExplodeanimatorState*)state)->flags = v;
     ObjGroup_AddObject(obj, 26);
 }

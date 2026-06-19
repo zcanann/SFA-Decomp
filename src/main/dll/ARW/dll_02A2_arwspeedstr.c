@@ -80,10 +80,10 @@ void arwspeedstr_update(int obj)
     {
         f32 camOffset[3];
         camOffset[0] = (f32)(int)
-        randomGetRange((int)-state->spreadX, (int)state->spreadX);
+        randomGetRange((int)-state->spreadX, state->spreadX);
         camOffset[1] =
             (f32)(int)
-        randomGetRange((int)-state->spreadY, (int)state->spreadY);
+        randomGetRange((int)-state->spreadY, state->spreadY);
         camOffset[2] = state->viewZ;
         PSMTXMultVec(Camera_GetInverseViewMatrix(), &camOffset[0], (f32*)((char*)obj + 12));
         ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;
@@ -124,5 +124,5 @@ void fn_80231058(int obj, int src)
 void fn_80231028(int obj, int speed)
 {
     ARWSpeedStrState* state = ((GameObject*)obj)->extra;
-    state->speed = (f32)speed;
+    state->speed = speed;
 }

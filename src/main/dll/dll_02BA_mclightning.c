@@ -73,7 +73,7 @@ void mclightning_init(int obj, u8* setup)
     f32 v;
 
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->animEventCallback = (void*)mclightning_handleScriptEvents;
+    ((GameObject*)obj)->animEventCallback = mclightning_handleScriptEvents;
     ObjGroup_AddObject(obj, 0x48);
     state->flags.spawnFlags = setup[0x1a];
     v = lbl_803E745C;

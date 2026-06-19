@@ -80,7 +80,7 @@ int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
 
-    for (i = 0; i < (s32)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         event = animUpdate->eventIds[i];
         if (event != 0)

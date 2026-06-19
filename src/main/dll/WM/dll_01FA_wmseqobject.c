@@ -125,7 +125,7 @@ int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
 
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == 1)
         {
@@ -236,7 +236,7 @@ void WM_seqobject_init(int* obj, s8* def)
 
     angle = (s16)((s32)setup->yawByte << 8);
     OBJ_S16(obj, 0) = angle;
-    ((GameObject*)obj)->animEventCallback = (void*)WM_seqobject_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WM_seqobject_SeqFn;
     OBJ_S32(obj, 0xf8) = 0x14;
 }
 

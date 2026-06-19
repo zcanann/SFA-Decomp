@@ -216,7 +216,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         p[8].z = c94;
         buf.v58 = 0;
         buf.ctx = sourceObj;
-        buf.v44 = (s16)variant;
+        buf.v44 = variant;
         buf.pos[0] = zero;
         buf.pos[1] = zero;
         buf.pos[2] = zero;

@@ -116,7 +116,7 @@ void dim2icicle_update(int obj)
         {
             break;
         }
-        ((Dim2IcicleState*)sub)->unk4 = (s16)randomGetRange(0x320, 0x4b0);
+        ((Dim2IcicleState*)sub)->unk4 = randomGetRange(0x320, 0x4b0);
         ((Dim2IcicleState*)sub)->mode = 3;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;

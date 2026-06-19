@@ -162,9 +162,9 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
     state->lowerGameBit = def->lowerGameBit;
     state->restYOffset = (f32)(s32)def->restYOffset;
     ((GameObject*)obj)->objectFlags |= 0x6000;
-    ((GameObject*)obj)->animEventCallback = (void*)Fall_Ladders_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Fall_Ladders_SeqFn;
     ((GameObject*)obj)->anim.localPosY = def->base.posY + state->restYOffset;
-    Obj_SetActiveModelIndex(obj, (s32)def->modelIndex);
+    Obj_SetActiveModelIndex(obj, def->modelIndex);
     state->motionState = 0;
     if (GameBit_Get(state->upperGameBit) == 0)
     {

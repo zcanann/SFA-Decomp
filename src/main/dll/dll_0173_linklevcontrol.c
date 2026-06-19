@@ -99,7 +99,7 @@ void link_levcontrol_free(int obj)
 void link_levcontrol_update(int* obj)
 {
     LinkLevControlState* state = ((GameObject*)obj)->extra;
-    f32* player = (f32*)Obj_GetPlayerObject();
+    f32* player = Obj_GetPlayerObject();
     if (player == NULL) return;
 
     if ((s32)state->areaCell != (s32)((GameObject*)obj)->anim.mapEventSlot)
@@ -117,7 +117,7 @@ void link_levcontrol_update(int* obj)
     {
         link_levcontrol_updateAreaMusic(obj);
     }
-    state->areaCell = (s8)coordsToMapCell(player[3], player[5]);
+    state->areaCell = coordsToMapCell(player[3], player[5]);
 }
 
 void link_levcontrol_updateAreaMusic(int* obj)

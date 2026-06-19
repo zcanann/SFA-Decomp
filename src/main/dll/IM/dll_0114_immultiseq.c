@@ -60,7 +60,7 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
                 {
                     int bitValue = GameBit_Get(gbit);
                     int expected = !((def->polarityMask >> next) & 1);
-                    if ((u32)expected == (u32)bitValue)
+                    if ((u32)expected == bitValue)
                     {
                         (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
                     }
@@ -102,7 +102,7 @@ void immultiseq_update(int* obj)
     {
         step = state->step;
         bitId = def->completionGameBits[step];
-        GameBit_Set(bitId, (u32)!((def->polarityMask >> (step + 4)) & 1));
+        GameBit_Set(bitId, !((def->polarityMask >> (step + 4)) & 1));
         state->flags = (u8)(state->flags & ~IMMULTISEQ_LATCH_ADVANCE_BIT);
         state->step++;
     }
@@ -151,9 +151,9 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
     objAnim = (ObjAnimComponent*)obj;
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)immultiseq_SeqFn;
+    ((GameObject*)obj)->animEventCallback = immultiseq_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    objAnim->bankIndex = (s8)params->modelBankIndex;
+    objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
@@ -168,7 +168,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
         }
         i++;
     }
-    state->step = (u8)i;
+    state->step = i;
 }
 
 void immultiseq_release(void)

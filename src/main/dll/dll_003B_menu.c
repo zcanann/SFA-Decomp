@@ -37,7 +37,7 @@ extern int getButtonsJustPressed(int pad);
 
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
-void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
+void Menu_func0A(int v) { lbl_803DD8E8 = v; }
 #pragma peephole reset
 void Menu_func09_nop(void)
 {
@@ -72,9 +72,9 @@ int Menu_func08(int* sel)
     }
     if (*sel < 0)
     {
-        *sel = (s8)lbl_803DD8F0 - 1;
+        *sel = lbl_803DD8F0 - 1;
     }
-    if (*sel >= (s8)lbl_803DD8F0)
+    if (*sel >= lbl_803DD8F0)
     {
         *sel = 0;
     }
@@ -96,15 +96,15 @@ int Menu_func08(int* sel)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole off
-void Menu_func07(int v) { lbl_803DD8F4 = (s8)v; }
+void Menu_func07(int v) { lbl_803DD8F4 = v; }
 #pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5)
 {
-    if (arg5 == (s32)lbl_803DD8F0)
+    if (arg5 == lbl_803DD8F0)
     {
-        lbl_803DD8F5 = (s8)arg1;
+        lbl_803DD8F5 = arg1;
     }
     lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg4);
     lbl_803DD8F0++;
@@ -112,9 +112,9 @@ void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5)
 
 void Menu_func05(int arg1, int unused2, int arg3, int arg4)
 {
-    if (arg4 == (s32)lbl_803DD8F0)
+    if (arg4 == lbl_803DD8F0)
     {
-        lbl_803DD8F5 = (s8)arg1;
+        lbl_803DD8F5 = arg1;
     }
     lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg3);
     lbl_803DD8F0++;
@@ -126,7 +126,7 @@ void Menu_func05(int arg1, int unused2, int arg3, int arg4)
 void Menu_func04(int unused, int v)
 {
     getScreenResolution();
-    lbl_803DD8F2 = (s16)v;
+    lbl_803DD8F2 = v;
     lbl_803DD8F0 = 0;
     lbl_803DD8F4 = -1;
 }
@@ -136,7 +136,7 @@ void Menu_func04(int unused, int v)
 #pragma peephole off
 void Menu_func03(int v)
 {
-    lbl_803DD8F2 = (s16)v;
+    lbl_803DD8F2 = v;
     lbl_803DD8F0 = 0;
     lbl_803DD8F4 = -1;
 }

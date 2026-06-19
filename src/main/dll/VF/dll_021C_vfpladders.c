@@ -105,7 +105,7 @@ void vfpladders_update(int obj)
         }
         else
         {
-            if (state->phase == VFPLADDERS_PHASE_WAIT && (u32)GameBit_Get(state->triggerGameBit) != 0)
+            if (state->phase == VFPLADDERS_PHASE_WAIT && GameBit_Get(state->triggerGameBit) != 0)
             {
                 state->delayTimer = VFPLADDERS_DROP_DELAY;
             }
@@ -140,7 +140,7 @@ void vfpladders_init(int* obj, u8* init)
     state->triggerGameBit = setup->triggerGameBit;
     state->baseGameBit = setup->baseGameBit;
     ((GameObject*)obj)->objectFlags |= 0x6000;
-    ((GameObject*)obj)->animEventCallback = (void*)vfpladders_SeqFn;
+    ((GameObject*)obj)->animEventCallback = vfpladders_SeqFn;
 }
 
 void vfpladders_free(int obj)

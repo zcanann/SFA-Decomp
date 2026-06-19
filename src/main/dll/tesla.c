@@ -117,7 +117,7 @@ void fn_80206968(TrickyCurveObject* obj)
     }
     if (xDelta > 0.0f)
     {
-        if (xDelta < (f32)state->xExtent)
+        if (xDelta < state->xExtent)
         {
             insideAxes++;
             xSide--;
@@ -133,7 +133,7 @@ void fn_80206968(TrickyCurveObject* obj)
     }
     if (zDelta > 0.0f)
     {
-        if (zDelta < (f32)state->zExtent)
+        if (zDelta < state->zExtent)
         {
             insideAxes++;
             zSide--;
@@ -149,7 +149,7 @@ void fn_80206968(TrickyCurveObject* obj)
     }
     if (yDelta > 0.0f)
     {
-        if (yDelta < (f32)state->yExtent)
+        if (yDelta < state->yExtent)
         {
             insideAxes++;
             ySide--;
@@ -215,7 +215,7 @@ void fn_80206C18(TrickyCurveObject* obj)
     }
     if (xDelta > 0.0f)
     {
-        if (xDelta < (f32)state->xExtent)
+        if (xDelta < state->xExtent)
         {
             insideAxes++;
             xSide--;
@@ -231,7 +231,7 @@ void fn_80206C18(TrickyCurveObject* obj)
     }
     if (zDelta > 0.0f)
     {
-        if (zDelta < (f32)state->zExtent)
+        if (zDelta < state->zExtent)
         {
             insideAxes++;
             zSide--;
@@ -247,7 +247,7 @@ void fn_80206C18(TrickyCurveObject* obj)
     }
     if (yDelta > 0.0f)
     {
-        if (yDelta < (f32)state->yExtent)
+        if (yDelta < state->yExtent)
         {
             insideAxes++;
             ySide--;

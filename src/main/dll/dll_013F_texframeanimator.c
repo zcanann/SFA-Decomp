@@ -132,7 +132,7 @@ void texframeanimator_init(int* obj, u8* params)
     state->endFrame = *(s16*)(params + 0x1a) << 8;
     state->speed = (u8) * (s16*)(params + 0x1c);
     state->wrapFrame = (s8)params[0x18] << 8;
-    done = (u8)GameBit_Get(*(s16*)(params + 0x1e));
+    done = GameBit_Get(*(s16*)(params + 0x1e));
     if ((state->done = done) != 0)
     {
         state->frame = state->endFrame;

@@ -133,13 +133,13 @@ void imspaceringgen_update(GameObject* obj)
                 ((ImSpaceRingSetup*)ring)->base.posX = obj->anim.localPosX;
                 ((ImSpaceRingSetup*)ring)->base.posY = obj->anim.localPosY;
                 ((ImSpaceRingSetup*)ring)->base.posZ = obj->anim.localPosZ;
-                ((ImSpaceRingSetup*)ring)->spinPhase = (s8)randomGetRange(0, 0xffff);
-                ((ImSpaceRingSetup*)ring)->spinSpeed = (s16)randomGetRange(200, 400);
+                ((ImSpaceRingSetup*)ring)->spinPhase = randomGetRange(0, 0xffff);
+                ((ImSpaceRingSetup*)ring)->spinSpeed = randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
                     ((ImSpaceRingSetup*)ring)->spinSpeed = -((ImSpaceRingSetup*)ring)->spinSpeed;
                 }
-                ((ImSpaceRingSetup*)ring)->tiltSpeed = (s16)randomGetRange(200, 400);
+                ((ImSpaceRingSetup*)ring)->tiltSpeed = randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
                     ((ImSpaceRingSetup*)ring)->tiltSpeed = -((ImSpaceRingSetup*)ring)->tiltSpeed;

@@ -184,6 +184,6 @@ void nw_tricky_update(int* obj)
 
 void nw_tricky_init(int* obj)
 {
-    ((GameObject*)obj)->animEventCallback = (void*)nw_tricky_SeqFn;
+    ((GameObject*)obj)->animEventCallback = nw_tricky_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }

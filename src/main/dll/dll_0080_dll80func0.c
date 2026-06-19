@@ -83,7 +83,7 @@ void dll_80_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[2].y = lbl_803E0E58;
     p[2].z = lbl_803E0E58;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0E58;
     buf.pos[1] = lbl_803E0E58;
     buf.pos[2] = lbl_803E0E58;

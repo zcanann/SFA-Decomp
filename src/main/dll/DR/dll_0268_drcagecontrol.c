@@ -55,7 +55,7 @@ void cagecontrol_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 void cagecontrol_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)cagecontrol_updateTriggerCallback;
+    ((GameObject*)obj)->animEventCallback = cagecontrol_updateTriggerCallback;
     if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b2 = 1;

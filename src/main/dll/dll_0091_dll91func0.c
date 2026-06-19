@@ -207,7 +207,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[18].z = lbl_803E1208;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E11D8;
     buf.pos[1] = lbl_803E11D8;
     buf.pos[2] = lbl_803E11D8;

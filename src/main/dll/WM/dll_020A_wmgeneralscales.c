@@ -62,14 +62,14 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             a = 0xff;
         }
-        state->fadeAlpha = (u8)a;
+        state->fadeAlpha = a;
         Obj_SetModelRenderOpAlpha(obj, (u8)a);
     }
     else
     {
         Obj_SetModelRenderOpAlpha(obj, 0);
     }
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
@@ -165,7 +165,7 @@ void wmgeneralscales_update(void)
 void wmgeneralscales_init(int* obj)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)wmgeneralscales_SeqFn;
+    ((GameObject*)obj)->animEventCallback = wmgeneralscales_SeqFn;
     state->unk00 = lbl_803E5E98;
     state->phase = 1;
     *(int*)&((GameObject*)obj)->childObjs[0] = 0;

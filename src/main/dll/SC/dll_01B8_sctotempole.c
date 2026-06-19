@@ -61,7 +61,7 @@ int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
 
     for (i = 0; i < 3; i++)
     {
-        u16 v = (u16)GameBit_Get(recordBits[i]);
+        u16 v = GameBit_Get(recordBits[i]);
         times[i] = v;
     }
     times[3] = newTime;
@@ -83,7 +83,7 @@ int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
     }
     for (i = 0; i < 3; i++)
     {
-        GameBit_Set(recordBits[i], (u32)times[i]);
+        GameBit_Set(recordBits[i], times[i]);
     }
     return changed;
 }
@@ -115,7 +115,7 @@ void sc_totempole_update(int obj)
     int i;
 
     state->previousState = state->currentState;
-    state->currentState = (u8)GameBit_Get(state->gameBit);
+    state->currentState = GameBit_Get(state->gameBit);
     if (state->previousState != state->currentState)
     {
         if (state->currentState != 0)

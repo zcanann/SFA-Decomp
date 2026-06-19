@@ -134,7 +134,7 @@ void dll_FC_update(int obj)
         else
         {
             gameBitValue = GameBit_Get((int)placement->rememberedGameBit);
-            state->rememberedGameBitValue = (u8)gameBitValue;
+            state->rememberedGameBitValue = gameBitValue;
         }
         state->mode = 1;
     }
@@ -176,8 +176,8 @@ void dll_FC_update(int obj)
             }
             if ((placement->flags & BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER) != 0)
             {
-                randomTrigger = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
-                state->triggerId = (u8)randomTrigger;
+                randomTrigger = randomGetRange((int)placement->triggerIdMin, placement->triggerIdMax);
+                state->triggerId = randomTrigger;
             }
             else
             {

@@ -110,12 +110,12 @@ void dll_28B_init(int obj)
 
 void dll_28B_initialise(void)
 {
-    gDll28BStateHandlers[0] = (void*)dll_28B_stateHandler0;
-    gDll28BStateHandlers[1] = (void*)dll_28B_stateHandler1;
-    gDll28BStateHandlers[2] = (void*)dll_28B_stateHandler2;
-    gDll28BStateHandlers[3] = (void*)dll_28B_stateHandler3;
-    gDll28BSubstateHandlers[0] = (void*)dll_28B_substateHandler0;
-    gDll28BSubstateHandlers[1] = (void*)dll_28B_substateHandler1;
-    gDll28BSubstateHandlers[2] = (void*)dll_28B_substateHandler2;
-    gDll28BSubstateHandlers[3] = (void*)dll_28B_substateHandler3;
+    gDll28BStateHandlers[0] = dll_28B_stateHandler0;
+    gDll28BStateHandlers[1] = dll_28B_stateHandler1;
+    gDll28BStateHandlers[2] = dll_28B_stateHandler2;
+    gDll28BStateHandlers[3] = dll_28B_stateHandler3;
+    gDll28BSubstateHandlers[0] = dll_28B_substateHandler0;
+    gDll28BSubstateHandlers[1] = dll_28B_substateHandler1;
+    gDll28BSubstateHandlers[2] = dll_28B_substateHandler2;
+    gDll28BSubstateHandlers[3] = dll_28B_substateHandler3;
 }

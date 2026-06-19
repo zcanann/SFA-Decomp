@@ -145,10 +145,10 @@ void wmplanets_init(int* obj, u8* init)
     {
         inner->orbitRadius = lbl_803E5F9C; /* 0.0f */
     }
-    inner->orbitYawStep = (s16)randomGetRange(0x64, 0xc8);
-    inner->yawStep = (s16)randomGetRange(0xc8, 0x190);
+    inner->orbitYawStep = randomGetRange(0x64, 0xc8);
+    inner->yawStep = randomGetRange(0xc8, 0x190);
     inner->orbitYaw = 0;
-    inner->orbitPitch = (s16)randomGetRange(0, 0x960);
+    inner->orbitPitch = randomGetRange(0, 0x960);
     inner->baseX = ((GameObject*)obj)->anim.localPosX;
     inner->baseY = ((GameObject*)obj)->anim.localPosY;
     inner->baseZ = ((GameObject*)obj)->anim.localPosZ;

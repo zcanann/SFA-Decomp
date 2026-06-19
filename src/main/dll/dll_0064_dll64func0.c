@@ -115,7 +115,7 @@ void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.entries[5].z = lbl_803E0920;
     buf.entries[6].layer = 3;
     buf.entries[6].flags = 1;
-    buf.entries[6].tex = (void*)0;
+    buf.entries[6].tex = 0;
     buf.entries[6].mode = 0x2000;
     buf.entries[6].x = lbl_803E0918;
     buf.entries[6].y = lbl_803E0918;
@@ -145,7 +145,7 @@ void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.col[2] = lbl_803E0918;
     if (flag != 0)
     {
-        buf.scale = lbl_803E0924 * (f32)flag;
+        buf.scale = lbl_803E0924 * flag;
     }
     else
     {

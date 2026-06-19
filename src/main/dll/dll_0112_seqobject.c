@@ -67,7 +67,7 @@ void seqobject_init(int* obj, SeqObjectPlacement* params)
     objAnim = (ObjAnimComponent*)obj;
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)seqobject_SeqFn;
+    ((GameObject*)obj)->animEventCallback = seqobject_SeqFn;
     *(u8*)&objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {

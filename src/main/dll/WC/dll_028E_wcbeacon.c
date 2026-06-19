@@ -127,8 +127,8 @@ void wcbeacon_update(int obj)
         int tricky = getTrickyObject();
         if ((u32)GameBit_Get(setup->armBit) == 0)
         {
-            u32 owner = (u32)fn_80138F84(tricky);
-            if (owner != (u32)obj || trickyFn_80138f14(tricky) != 0)
+            u32 owner = fn_80138F84(tricky);
+            if (owner != obj || trickyFn_80138f14(tricky) != 0)
             {
                 (*gObjectTriggerInterface)
                     ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);

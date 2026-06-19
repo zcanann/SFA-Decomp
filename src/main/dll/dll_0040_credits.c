@@ -71,7 +71,7 @@ int Credits_frameStart(void)
     {
         t = lbl_803DD968;
         lbl_803DD968 = t + timeDelta;
-        if (lbl_803DD968 >= (f32)gCreditsPages[idx].endTime)
+        if (lbl_803DD968 >= gCreditsPages[idx].endTime)
         {
             lbl_803DD970 = idx + 1;
         }
@@ -82,13 +82,13 @@ int Credits_frameStart(void)
             page = &gCreditsPages[lbl_803DD970];
             for (; i < page->count; i++)
             {
-                if (cur < (f32)page->lines[i].t0)
+                if (cur < page->lines[i].t0)
                 {
                     a = 0;
                 }
-                else if (cur < (f32)page->lines[i].t1)
+                else if (cur < page->lines[i].t1)
                 {
-                    frac = (cur - (f32)page->lines[i].t0) /
+                    frac = (cur - page->lines[i].t0) /
                         (f32)(page->lines[i].t1 - page->lines[i].t0);
                     if (frac < lbl_803E22A8)
                     {
@@ -100,13 +100,13 @@ int Credits_frameStart(void)
                     }
                     a = lbl_803E22B0 * frac;
                 }
-                else if (cur < (f32)page->lines[i].t2)
+                else if (cur < page->lines[i].t2)
                 {
                     a = 0xff;
                 }
-                else if (cur < (f32)page->lines[i].t3)
+                else if (cur < page->lines[i].t3)
                 {
-                    frac = (cur - (f32)page->lines[i].t2) /
+                    frac = (cur - page->lines[i].t2) /
                         (f32)(page->lines[i].t3 - page->lines[i].t2);
                     if (frac < lbl_803E22A8)
                     {
@@ -123,8 +123,8 @@ int Credits_frameStart(void)
                     a = 0;
                 }
                 page->lines[i].alpha = a;
-                if (cur >= (f32)page->lines[i].t0 && cur <= (f32)page->lines[i].t3 &&
-                    cur >= (f32)gCreditsPages[lbl_803DD970].scrollStartTime)
+                if (cur >= page->lines[i].t0 && cur <= page->lines[i].t3 &&
+                    cur >= gCreditsPages[lbl_803DD970].scrollStartTime)
                 {
                     page->lines[i].y = lbl_803E22B4 * (timeDelta / lbl_803E22B8) + page->lines[i].y;
                 }

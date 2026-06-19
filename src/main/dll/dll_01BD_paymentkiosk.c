@@ -77,7 +77,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
     int player;
     u32 r;
 
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     r = getButtonsJustPressed(0);
     if ((r & 0x100) == 0)
     {
@@ -120,7 +120,7 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int player;
     int i;
     u8 ev;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)PaymentKiosk_testEvent;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -194,14 +194,14 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
     PaymentKioskState* state = ((GameObject*)self)->extra;
     u32 secondaryFlag;
 
-    ((GameObject*)self)->animEventCallback = (void*)PaymentKiosk_SeqFn;
+    ((GameObject*)self)->animEventCallback = PaymentKiosk_SeqFn;
     *(short*)self = (short)((int)setup->facingByte << 8);
     state->payState = 0;
     ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
     ((GameObject*)self)->anim.resetHitboxFlags =
         (u8)(((GameObject*)self)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
-    state->textVariant = (u8)secondaryFlag;
+    state->textVariant = secondaryFlag;
 }
 
 void paymentkiosk_release(void)

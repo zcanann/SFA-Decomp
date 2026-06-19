@@ -149,7 +149,7 @@ void linkb_levcontrol_update(int* obj)
     u8* cur;
 
     state = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     cur = (*gMapEventInterface)->getTrickyEnergy();
     if ((*gSkyInterface)->getSunPosition(0) != 0)

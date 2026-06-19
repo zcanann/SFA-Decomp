@@ -194,12 +194,12 @@ void dll_1FB_init(int* obj, u8* def)
     state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
     setup = (Dll1FBSetup*)def;
     ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->animEventCallback = (void*)dll_1FB_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_1FB_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S16(obj, 2) = setup->objectParam;
     state->baseMove = setup->baseMove;
     state->triggerMode = setup->triggerMode;
-    ObjAnim_SetCurrentMove((int)obj, (int)state->baseMove + 0x100, lbl_803E5D08, 0);
+    ObjAnim_SetCurrentMove((int)obj, state->baseMove + 0x100, lbl_803E5D08, 0);
 }
 
 void dll_1FB_release_nop(void)

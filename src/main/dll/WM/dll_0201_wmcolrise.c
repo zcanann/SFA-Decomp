@@ -98,7 +98,7 @@ void WM_colrise_update(int* obj)
        3.0 above the column */
     if ((s8)OBJ_RIDER_REGISTRY(obj)->riderCount > 0)
     {
-        for (i = 0; i < (s8)OBJ_RIDER_REGISTRY(obj)->riderCount; i++)
+        for (i = 0; i < OBJ_RIDER_REGISTRY(obj)->riderCount; i++)
         {
             GameObject* rider = (GameObject*)OBJ_RIDER_REGISTRY(obj)->riders[i];
             if (rider->anim.localPosY - ((GameObject*)obj)->anim.localPosY > lbl_803E5DCC)
@@ -157,7 +157,7 @@ void WM_colrise_update(int* obj)
 void WM_colrise_init(s16* obj, s8* def)
 {
     WMColriseState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)WM_colrise_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WM_colrise_SeqFn;
     obj[0] = (s16)((s32)def[0x18] << 8);
     state->gameBit = *(s16*)(def + 0x1e);
 }

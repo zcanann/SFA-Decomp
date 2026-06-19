@@ -125,7 +125,7 @@ void dfsh_door2speci_init(int obj, int def)
     ObjTextureRuntimeSlot* texture;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)DFSH_Door2Speci_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DFSH_Door2Speci_SeqFn;
     if (GameBit_Get((int)*(short*)(def + 0x22)) != 0)
     {
         *(unsigned char*)(state + 3) = 2;

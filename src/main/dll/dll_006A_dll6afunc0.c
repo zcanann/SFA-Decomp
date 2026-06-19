@@ -110,7 +110,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     e[5].z = lbl_803E0A40;
     e[6].layer = 4;
     e[6].flags = 2;
-    e[6].tex = (void*)0;
+    e[6].tex = 0;
     e[6].mode = 0x2000;
     e[6].x = lbl_803E0A28;
     e[6].y = lbl_803E0A28;
@@ -131,7 +131,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     e[8].z = lbl_803E0A44;
     e[9].layer = 5;
     e[9].flags = 0x7a;
-    e[9].tex = (void*)0;
+    e[9].tex = 0;
     e[9].mode = 0x10000;
     e[9].x = lbl_803E0A28;
     e[9].y = lbl_803E0A28;

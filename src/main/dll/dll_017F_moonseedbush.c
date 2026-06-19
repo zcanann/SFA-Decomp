@@ -92,7 +92,7 @@ void MoonSeedBush_update(int obj)
         preemptSlot = -1;
     }
     {
-        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence; (u8*) load + (s8) sign-extend is load-bearing */
+        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence;  load +  sign-extend is load-bearing */
         if (idx != -1)
         {
             (*gObjectTriggerInterface)->runSequence(idx, (void*)obj, preemptSlot);
@@ -143,7 +143,7 @@ void MoonSeedBush_init(int obj, int data)
     MoonSeedBushPlacement* placement = (MoonSeedBushPlacement*)data;
     state->flags = 1;
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)MoonSeedBush_SeqFn;
+    ((GameObject*)obj)->animEventCallback = MoonSeedBush_SeqFn;
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
     if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E44D8)
@@ -154,7 +154,7 @@ void MoonSeedBush_init(int obj, int data)
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     if (placement->grownGameBit != -1)
     {
-        state->seedState = (u8)GameBit_Get(placement->grownGameBit);
+        state->seedState = GameBit_Get(placement->grownGameBit);
     }
     else
     {
