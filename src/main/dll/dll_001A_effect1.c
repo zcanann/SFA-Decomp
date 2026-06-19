@@ -1324,43 +1324,43 @@ extern f32 lbl_803DF720;
 extern f32 lbl_803DF724;
 extern f32 lbl_803DF730;
 extern f32 lbl_803DF868;
-extern f32 lbl_803DF86C;
-extern f32 lbl_803DB7B8;
-extern f32 lbl_803DB7BC;
-extern int lbl_803DD328;
-extern int lbl_803DD32C;
-extern f32 lbl_803DD330;
-extern f32 lbl_803DD334;
+extern f32 gEffect1SinePhaseScale;
+extern f32 gEffect1AnimRampA;
+extern f32 gEffect1AnimRampB;
+extern int gEffect1SineWaveAPhase;
+extern int gEffect1SineWaveBPhase;
+extern f32 gEffect1SineWaveB;
+extern f32 gEffect1SineWaveA;
 
 #pragma scheduling off
 void Effect1_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB7B8 + (step = lbl_803DF720 * timeDelta);
-    lbl_803DB7B8 = sum;
+    sum = gEffect1AnimRampA + (step = lbl_803DF720 * timeDelta);
+    gEffect1AnimRampA = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7B8 = lbl_803DF724;
+        gEffect1AnimRampA = lbl_803DF724;
     }
-    sum = lbl_803DB7BC + step;
-    lbl_803DB7BC = sum;
+    sum = gEffect1AnimRampB + step;
+    gEffect1AnimRampB = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7BC = lbl_803DF730;
+        gEffect1AnimRampB = lbl_803DF730;
     }
-    lbl_803DD328 = lbl_803DD328 + framesThisStep * 0x64;
-    if (lbl_803DD328 > 0x7fff)
+    gEffect1SineWaveAPhase = gEffect1SineWaveAPhase + framesThisStep * 0x64;
+    if (gEffect1SineWaveAPhase > 0x7fff)
     {
-        lbl_803DD328 = 0;
+        gEffect1SineWaveAPhase = 0;
     }
-    lbl_803DD334 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD328 / lbl_803DF86C);
-    lbl_803DD32C = lbl_803DD32C + framesThisStep * 0x32;
-    if (lbl_803DD32C > 0x7fff)
+    gEffect1SineWaveA = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveAPhase / gEffect1SinePhaseScale);
+    gEffect1SineWaveBPhase = gEffect1SineWaveBPhase + framesThisStep * 0x32;
+    if (gEffect1SineWaveBPhase > 0x7fff)
     {
-        lbl_803DD32C = 0;
+        gEffect1SineWaveBPhase = 0;
     }
-    lbl_803DD330 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
+    gEffect1SineWaveB = mathSinf(lbl_803DF868 * (f32)(s16)gEffect1SineWaveBPhase / gEffect1SinePhaseScale);
 }
 
 extern f32 lbl_803DF878;
@@ -1455,8 +1455,8 @@ extern f32 lbl_803DF9D4;
 
 #undef FILL350
 
-extern f32 lbl_803DB7B0;
-extern f32 lbl_803DB7B4;
+extern f32 gEffect1AnimRampC;
+extern f32 gEffect1AnimRampD;
 // VERIFY lbl_803DF720 may already exist in modgfx.c
 // VERIFY lbl_803DF724 may already exist in modgfx.c
 // VERIFY lbl_803DF728 may already exist in modgfx.c
@@ -1560,10 +1560,10 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     MtxBuildArg es;
     PartFxSpawn cfg;
 
-    lbl_803DB7B0 = lbl_803DB7B0 + lbl_803DF720;
-    if (lbl_803DB7B0 > 1.0f) lbl_803DB7B0 = lbl_803DF724;
-    lbl_803DB7B4 = lbl_803DB7B4 + lbl_803DF72C;
-    if (lbl_803DB7B4 > 1.0f) lbl_803DB7B4 = lbl_803DF730;
+    gEffect1AnimRampC = gEffect1AnimRampC + lbl_803DF720;
+    if (gEffect1AnimRampC > 1.0f) gEffect1AnimRampC = lbl_803DF724;
+    gEffect1AnimRampD = gEffect1AnimRampD + lbl_803DF72C;
+    if (gEffect1AnimRampD > 1.0f) gEffect1AnimRampD = lbl_803DF730;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {

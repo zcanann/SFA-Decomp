@@ -5,7 +5,7 @@
 
 /*
  * SkyState - the global sky/time-of-day state block pointed to by
- * lbl_803DD12C (sky.c). Three 0xA4-byte light slots (sun/moon/...) sit
+ * gSkyState (sky.c). Three 0xA4-byte light slots (sun/moon/...) sit
  * between the header and the time-of-day globals. Only fields with
  * read/write evidence in sky.c are named; everything else is padded.
  */

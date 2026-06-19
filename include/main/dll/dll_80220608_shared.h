@@ -960,7 +960,7 @@ extern void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *se
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
 extern void lightningRender(void *p);
-extern f32 lbl_803E74DC;
+extern f32 gAndrossOne;
 extern f32 lbl_803E75B0;
 extern f32 lbl_803E7600;
 
@@ -999,12 +999,12 @@ extern f32 lbl_803E75F8;
 extern void fn_8006CB50(void);
 extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern f32 lbl_803E74B4;
-extern f32 lbl_803E74D4;
-extern f32 lbl_803E7530;
-extern f32 lbl_803E7590;
-extern f32 lbl_803E7594;
-extern f32 lbl_803E7598;
+extern f32 gAndrossAlpha255;
+extern f32 gAndrossZero;
+extern f32 gAndrossSpringDamping;
+extern f32 gAndrossInitAnimSpeed;
+extern f32 gAndrossInitSpawnCooldown;
+extern f32 gAndrossSpringStiffness;
 
 
 
@@ -1516,7 +1516,7 @@ extern int lbl_803DC4E8;
 
 extern f32 lbl_803E74AC;
 extern f32 lbl_803E74B0;
-extern f32 lbl_803E74D4;
+extern f32 gAndrossZero;
 extern f32 lbl_803E74D8;
 
 
@@ -1536,7 +1536,7 @@ extern f32 lbl_803E74A8;
 
 
 extern f32 lbl_803DC4C0;
-extern f32 lbl_803DC4C4;
+extern f32 gAndrossArwingVelDamp;
 
 
 extern u8 lbl_803DC4C8;
