@@ -780,7 +780,8 @@ int trickyFoodFn_80142d2c(int obj, int state)
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        result = *(u32*)&((TrickyState*)state)->stateFlags;
+        *(u32*)&((TrickyState*)state)->stateFlags = result & ~0x10LL;
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
@@ -813,7 +814,8 @@ int trickyFoodFn_80142d2c(int obj, int state)
 skip:
     if (lbl_803E23DC == ((TrickyState*)state)->unk720)
     {
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+        result = *(u32*)&((TrickyState*)state)->stateFlags;
+        *(u32*)&((TrickyState*)state)->stateFlags = result & ~0x10LL;
         ((TrickyState*)state)->substate = 0;
     }
     if ((u8)trickyFn_8013b368(obj, lbl_803E2408, state) == 1)
