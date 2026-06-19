@@ -699,7 +699,7 @@ extern void* gCarryableInterface;
 extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
-#pragma dont_inline on
+#pragma dont_inline off
 #pragma peephole off
 void init(void)
 {
