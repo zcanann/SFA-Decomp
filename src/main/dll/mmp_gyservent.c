@@ -76,9 +76,9 @@ void objFn_80198fa4(s16* obj, void* placement)
     void* state;
     s16 rot[3];
     f32 rotMtx[15];
-    f32 outX;
-    f32 outY;
     f32 outZ;
+    f32 outY;
+    f32 outX;
     f32 mtx[24];
 
     state = ((GameObject*)obj)->extra;
@@ -117,7 +117,7 @@ void objFn_80198fa4(s16* obj, void* placement)
 
     ((MmpGyserventState*)state)->reach = lbl_803E40E4 * *(f32*)(obj + 4);
     ((MmpGyserventState*)state)->nearRadiusSq =
-        lbl_803E40E8 * *(f32*)(obj + 4) * lbl_803E40E8 * *(f32*)(obj + 4);
+        (lbl_803E40E8 * *(f32*)(obj + 4)) * (lbl_803E40E8 * *(f32*)(obj + 4));
     if (*(int*)((char*)placement + MMP_GYSERVENT_PLACE_INSTANCE) == MMP_GYSERVENT_DEBUG_INSTANCE_ID)
     {
         OSReport(lbl_8032253C);
