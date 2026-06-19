@@ -119,7 +119,6 @@ int fn_80174668(int obj, PushableState* state)
 {
     u8 flag;
     ObjTextureRuntimeSlot* tex;
-    void* effectResource;
     f32 dy;
     f32 dx;
     f32 cur;
@@ -208,10 +207,10 @@ int fn_80174668(int obj, PushableState* state)
             {
                 GameBit_Set(0x1c9, 0);
             }
-            effectResource = Resource_Acquire(0x5b, 1);
-            ((VtableFn*)(*(int*)effectResource))[1](obj, 0x14, 0, 2, -1, 0);
-            ((VtableFn*)(*(int*)effectResource))[1](obj, 0x14, 0, 2, -1, 0);
-            Resource_Release(effectResource);
+            tex = (ObjTextureRuntimeSlot*)Resource_Acquire(0x5b, 1);
+            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
+            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
+            Resource_Release(tex);
             Sfx_PlayFromObject(obj, 0x65);
         }
         else
