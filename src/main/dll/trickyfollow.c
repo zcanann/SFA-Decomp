@@ -994,7 +994,7 @@ state_selected:
             f32 dx;
             f32 dz;
             node = (u8*)route->nodeA0;
-            dx = *(f32*)(node + 8) - ((GameObject*)obj)->anim.worldPosX;
+            dx = ((GameObject*)node)->anim.rootMotionScale - ((GameObject*)obj)->anim.worldPosX;
             dz = ((GameObject*)node)->anim.localPosY - ((GameObject*)obj)->anim.worldPosZ;
             len = sqrtf(dx * dx + dz * dz);
             *(f32*)(state + 0x64) = len / lbl_803E24A4;
@@ -1002,8 +1002,8 @@ state_selected:
             *(u32*)(state + 0x74) = *(u32*)&((GameObject*)obj)->anim.worldPosX;
             *(u32*)(state + 0x70) = *(u32*)&((GameObject*)obj)->anim.worldPosY;
             *(u32*)(state + 0x78) = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
-            *(u32*)(state + 0x7c) = *(u32*)(node + 8);
-            *(u32*)(state + 0x80) = *(u32*)(node + 0x10);
+            *(u32*)(state + 0x7c) = *(u32*)&((GameObject*)node)->anim.rootMotionScale;
+            *(u32*)(state + 0x80) = *(u32*)&((GameObject*)node)->anim.localPosY;
             k = *(f32*)(state + 0x64);
             *(f32*)(state + 0x6c) =
                 -(lbl_803E24B0 * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
