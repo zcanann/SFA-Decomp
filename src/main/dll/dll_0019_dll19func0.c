@@ -789,7 +789,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             v24 = 0;
         }
-        p2[852] = (s8)(p2[852] - v24);
+        *(s8*)(p2 + 852) = (s8)(p2[852] - v24);
         if (*(s8*)(p2 + 852) < 1)
         {
             ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
