@@ -9069,7 +9069,7 @@ void fn_802B249C(int obj, int inner, int state)
             }
         case 0x100008:
             ((PlayerState*)inner)->unk800 = 1;
-            if (((PlayerState*)inner)->heldObj == 0)
+            if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
@@ -9091,7 +9091,7 @@ void fn_802B249C(int obj, int inner, int state)
             break;
         case 0x100010:
             ((PlayerState*)inner)->unk800 = 1;
-            if (((PlayerState*)inner)->heldObj == 0)
+            if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
