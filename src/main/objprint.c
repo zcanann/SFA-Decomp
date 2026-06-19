@@ -223,9 +223,9 @@ int FUN_8003964c(int obj, u32 key)
 
 u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
 {
-    u32 uVar1;
-    double dVar2;
-    double dVar3;
+    u32 done;
+    double clamped;
+    double ratio;
     float local_48;
     float local_44;
     float local_40;
@@ -244,7 +244,7 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
     local_3c = (float)-b;
     if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
-        uVar1 = 1;
+        done = 1;
     }
     else
     {
@@ -253,7 +253,7 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
         uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
         local_30 = 0x43300000;
         local_20 = 0x43300000;
-        dVar3 = (double)
+        ratio = (double)
         (((f32)(s32)
         uStack_34 -
             (f32)(s32)
@@ -266,37 +266,37 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
         )
         )
         ;
-        dVar2 = (double)lbl_803DF61C;
-        if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624))
+        clamped = (double)lbl_803DF61C;
+        if ((ratio <= clamped) && (clamped = ratio, ratio < (double)lbl_803DF624))
         {
-            dVar2 = (double)lbl_803DF624;
+            clamped = (double)lbl_803DF624;
         }
         uStack_1c = uStack_2c;
-        dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
+        ratio = FUN_80006a30(clamped, &local_48, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
-            dVar3 = -dVar3;
+            ratio = -ratio;
         }
-        *outAngle = (short)(int)(dVar3 * (double)lbl_803DC074 +
+        *outAngle = (short)(int)(ratio * (double)lbl_803DC074 +
             (double)(float)((double)(int)*outAngle));
-        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *outAngle)) || (*outAngle < -0x1ffe))
+        if ((((double)lbl_803DF61C == clamped) || (0x1ffe < *outAngle)) || (*outAngle < -0x1ffe))
         {
             *outAngle = *(short*)(curve + 0x14);
-            uVar1 = 1;
+            done = 1;
         }
         else
         {
-            uVar1 = 0;
+            done = 0;
         }
     }
-    return uVar1;
+    return done;
 }
 
 u32 FUN_80039a28(int curve, int state)
 {
-    u32 uVar1;
-    double dVar2;
-    double dVar3;
+    u32 done;
+    double clamped;
+    double ratio;
     float local_48;
     float local_44;
     float local_40;
@@ -315,7 +315,7 @@ u32 FUN_80039a28(int curve, int state)
     local_3c = lbl_803DF660;
     if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
-        uVar1 = 1;
+        done = 1;
     }
     else
     {
@@ -324,7 +324,7 @@ u32 FUN_80039a28(int curve, int state)
         uStack_2c = (int)*(short*)(curve + 0x16) ^ 0x80000000;
         local_30 = 0x43300000;
         local_20 = 0x43300000;
-        dVar3 = (double)
+        ratio = (double)
         (((f32)(s32)
         uStack_34 -
             (f32)(s32)
@@ -337,32 +337,32 @@ u32 FUN_80039a28(int curve, int state)
         )
         )
         ;
-        dVar2 = (double)lbl_803DF61C;
-        if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624))
+        clamped = (double)lbl_803DF61C;
+        if ((ratio <= clamped) && (clamped = ratio, ratio < (double)lbl_803DF624))
         {
-            dVar2 = (double)lbl_803DF624;
+            clamped = (double)lbl_803DF624;
         }
         uStack_1c = uStack_2c;
-        dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
+        ratio = FUN_80006a30(clamped, &local_48, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
-            dVar3 = -dVar3;
+            ratio = -ratio;
         }
         *(short*)(state + 2) =
-            (short)(int)(dVar3 * (double)lbl_803DC074 +
+            (short)(int)(ratio * (double)lbl_803DC074 +
                 (double)(float)((double)(int)*(short*)(state + 2)));
-        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(state + 2))) ||
+        if ((((double)lbl_803DF61C == clamped) || (0x1ffe < *(short*)(state + 2))) ||
             (*(short*)(state + 2) < -0x1ffe))
         {
             *(u16*)(state + 2) = *(u16*)(curve + 0x14);
-            uVar1 = 1;
+            done = 1;
         }
         else
         {
-            uVar1 = 0;
+            done = 0;
         }
     }
-    return uVar1;
+    return done;
 }
 
 void FUN_80039e6c(double val, short* obj, char* curve, int state)
