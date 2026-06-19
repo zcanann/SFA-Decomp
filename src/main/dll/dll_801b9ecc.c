@@ -96,7 +96,7 @@ int fn_801B9ECC(int a, int obj)
                 {
                     lbl_803DDB84 = 0;
                 }
-                switch (state->hitPoints)
+                switch ((s8)state->hitPoints)
                 {
                 case 3:
                     DIM2_GetPlayerInterface()->requestControlMode(
