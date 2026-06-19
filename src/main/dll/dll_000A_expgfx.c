@@ -177,8 +177,7 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
 
     if (skipTextureFree == 0)
     {
-        ExpgfxTableEntry* expTab = runtime->expTab;
-        u8* resBase = (u8*)&expTab[0].resource;
+        u8* resBase = (u8*)&runtime->expTab[0].resource;
 
         if (*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) != 0)
         {
@@ -187,13 +186,13 @@ void expgfxRemove(uint slotPoolBase, int poolIndex, int slotIndex, int skipTextu
             gExpgfxTextureFreeInProgress = 0;
         }
 
-        if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount != 0)
+        if (runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount != 0)
         {
-            expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount--;
-            if (expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount == 0)
+            runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount--;
+            if (runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].refCount == 0)
             {
-                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].resource = 0;
-                expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].sourceId = 0;
+                *(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) = 0;
+                runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].sourceId = 0;
             }
         }
         else
