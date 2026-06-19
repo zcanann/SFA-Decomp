@@ -26,7 +26,7 @@ extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern u32 lbl_803E39F0;
+extern u32 gScarabMoneyValues;
 extern f32 lbl_803E39F4;
 extern f32 lbl_803E39F8;
 extern f32 lbl_803E39FC;
@@ -142,7 +142,7 @@ void scarab_update(int obj)
             switch (msg)
             {
             case 0x7000b:
-                money1 = lbl_803E39F0;
+                money1 = gScarabMoneyValues;
                 playerAddMoney(player, *((u8*)&money1 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;
                 ((ScarabState*)state)->mode = 0;
@@ -494,7 +494,7 @@ void scarab_update(int obj)
                     }
                     else
                     {
-                        money2 = lbl_803E39F0;
+                        money2 = gScarabMoneyValues;
                         playerAddMoney(player, *((u8*)&money2 + ((ScarabState*)state)->moneyKind));
                         ((ScarabState*)state)->despawnTimer = 0x50;
                         ((ScarabState*)state)->mode = 0;
@@ -539,7 +539,7 @@ void scarab_update(int obj)
                 ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
             {
                 Sfx_PlayFromObject(obj, SFXen_mossyloop16);
-                money3 = lbl_803E39F0;
+                money3 = gScarabMoneyValues;
                 playerAddMoney(player, *((u8*)&money3 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;
                 ((ScarabState*)state)->mode = 0;
@@ -548,9 +548,9 @@ void scarab_update(int obj)
     }
 }
 
-extern u8 lbl_803DBDB0;
-extern u8 lbl_803DBDB4;
-extern u8 lbl_803DBDB8;
+extern u8 gScarabColorVariantsA;
+extern u8 gScarabColorVariantsB;
+extern u8 gScarabColorVariantsC;
 
 void scarab_init(int* obj, u8* def)
 {
@@ -565,21 +565,21 @@ void scarab_init(int* obj, u8* def)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x3d3:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&lbl_803DBDB0)[randomGetRange(0, 2)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsA)[randomGetRange(0, 2)];
         state->pickupSfx = 0x41;
         state->particleId = 4;
         state->unk22 = 2;
         state->moneyKind = 0;
         break;
     case 0x3d4:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&lbl_803DBDB4)[randomGetRange(0, 1)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsB)[randomGetRange(0, 1)];
         state->pickupSfx = 0x42;
         state->particleId = 1;
         state->unk22 = 5;
         state->moneyKind = 1;
         break;
     case 0x3d5:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&lbl_803DBDB8)[randomGetRange(0, 3)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsC)[randomGetRange(0, 3)];
         state->pickupSfx = 0x43;
         state->particleId = 2;
         state->unk22 = 4;
@@ -602,7 +602,7 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                                         f32 alpha, int flags, int unused);
 
-extern u8 lbl_803DBDBC;
+extern u8 gScarabColorVariantsD;
 extern f32 lbl_803E3A04;
 
 typedef struct GuardianAngleParams
@@ -704,7 +704,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (((GameObject*)obj)->anim.seqId == 0x3d6)
     {
         i = 0;
-        shellColors = &lbl_803DBDBC;
+        shellColors = &gScarabColorVariantsD;
         for (; i < 7; i++)
         {
             if (*shellColors == *(u8*)(*(int*)(model + 0x34) + 8))
@@ -714,7 +714,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     i = 0;
                 }
-                *(u8*)(*(int*)(model + 0x34) + 8) = (&lbl_803DBDBC)[i];
+                *(u8*)(*(int*)(model + 0x34) + 8) = (&gScarabColorVariantsD)[i];
                 break;
             }
             shellColors++;
@@ -749,7 +749,7 @@ int scarab_sweptCollide(int obj)
     extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount);
     extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
     extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
-    extern f32 lbl_803AC7A0[4];
+    extern f32 gScarabSweptHitInfo[4];
 
     typedef struct HitDetectResults
     {
@@ -811,10 +811,10 @@ int scarab_sweptCollide(int obj)
         ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
         ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
         ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
-        lbl_803AC7A0[0] = results.hitInfo[idx][0];
-        lbl_803AC7A0[1] = results.hitInfo[idx][1];
-        lbl_803AC7A0[2] = results.hitInfo[idx][2];
-        lbl_803AC7A0[3] = results.hitInfo[idx][3];
+        gScarabSweptHitInfo[0] = results.hitInfo[idx][0];
+        gScarabSweptHitInfo[1] = results.hitInfo[idx][1];
+        gScarabSweptHitInfo[2] = results.hitInfo[idx][2];
+        gScarabSweptHitInfo[3] = results.hitInfo[idx][3];
 
         if (results.solidFlags[idx] != 0)
         {

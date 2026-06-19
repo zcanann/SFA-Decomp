@@ -29,7 +29,7 @@ extern s8 lbl_803DD7A0;
 extern short lbl_803DD7A2;
 extern u8 framesThisStep;
 extern short lbl_803DD8D2;
-extern short lbl_803DBA68;
+extern short gMinimapRevealMax;
 extern short lbl_803DBA6E;
 extern u8 lbl_803DBA65;
 extern short gCMenuScrollTimer;
@@ -95,27 +95,27 @@ extern void fn_8005D118(int a, int b, int c, int d, int e);
 extern int gCMenuItemCount;
 extern s16 gCMenuSelIndex;
 extern s8 gCMenuCurSection;
-extern u8 lbl_803DD848[7];
+extern u8 gCMenuItemIcons[7];
 extern u8 lbl_803DD8D4;
 extern int hudYButtonItemIconTexture;
 extern s16 yButtonItemTextureId;
-extern s16 lbl_803DD876;
+extern s16 gHudYButtonItemTextureCache;
 extern s16 aButtonIcon;
 extern s16 prevAButtonIcon;
 extern u8 bButtonIcon;
-extern u8 lbl_803DD7B0;
-extern u8 lbl_803DD7B1;
-extern u8 lbl_803DD7B2;
+extern u8 gHudPrevBButtonIcon;
+extern u8 gHudAButtonFlashTimer;
+extern u8 gHudBButtonFlashTimer;
 extern u8 gYButtonInUse;
 extern f32 gYButtonIconAnim;
-extern f32 lbl_803DD7E8;
+extern f32 gHudYButtonIconScale;
 extern f32 lbl_803DBA74;
 extern f32 lbl_803DBA78;
 extern f32 lbl_803DBA7C;
 extern f32 lbl_803DBA80;
 extern f32 lbl_803DBA84;
-extern s16 lbl_803DBACC;
-extern s16 lbl_803DBACE;
+extern s16 gCMenuRowFadeInThreshold;
+extern s16 gCMenuRowFadeOutThreshold;
 extern u8 gHudButtonIcons[];
 extern char lbl_803DBB5C;
 extern u32 lbl_803E1E18;
@@ -778,9 +778,9 @@ void minimapFn_8012310c(void)
     if ((lbl_803DD7A0 != '\0') && (lbl_803DD7A2 == 0xff))
     {
         lbl_803DD8D2 = lbl_803DD8D2 + framesThisStep * 4;
-        if (lbl_803DD8D2 > lbl_803DBA68)
+        if (lbl_803DD8D2 > gMinimapRevealMax)
         {
-            lbl_803DD8D2 = lbl_803DBA68;
+            lbl_803DD8D2 = gMinimapRevealMax;
         }
     }
     else
@@ -886,7 +886,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             k = k - gCMenuItemCount;
         }
         fade = cMenuFadeCounter;
-        iconPtr = lbl_803DD848;
+        iconPtr = gCMenuItemIcons;
         for (i = 0; i < 7; i++)
         {
             ((int*)(base + 0xBD4))[i] = 0;
@@ -902,7 +902,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 ((int*)(base + 0xBB8))[(i + 3) - sel] = ((u8*)(base + 0x488))[k];
                 if (((u8*)(base + 0x448))[k] > 1)
                 {
-                    lbl_803DD848[(i + 3) - sel] = ((u8*)(base + 0x448))[k];
+                    gCMenuItemIcons[(i + 3) - sel] = ((u8*)(base + 0x448))[k];
                 }
             }
             k++;
@@ -921,13 +921,13 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             {
                 alpha = fade;
                 rowFade = gCMenuScrollTimer + yOff;
-                if (rowFade < lbl_803DBACC)
+                if (rowFade < gCMenuRowFadeInThreshold)
                 {
-                    alpha = fade + (rowFade - lbl_803DBACC) * 8;
+                    alpha = fade + (rowFade - gCMenuRowFadeInThreshold) * 8;
                 }
-                if (rowFade > lbl_803DBACE)
+                if (rowFade > gCMenuRowFadeOutThreshold)
                 {
-                    alpha = alpha - (rowFade - lbl_803DBACE) * 8;
+                    alpha = alpha - (rowFade - gCMenuRowFadeOutThreshold) * 8;
                 }
                 if (alpha < 0)
                 {
@@ -984,15 +984,15 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                         0x100);
         }
     }
-    if (((u32)hudYButtonItemIconTexture != 0) && (lbl_803DD876 != yButtonItemTextureId))
+    if (((u32)hudYButtonItemIconTexture != 0) && (gHudYButtonItemTextureCache != yButtonItemTextureId))
     {
         textureFree(hudYButtonItemIconTexture);
-        lbl_803DD876 = -1;
+        gHudYButtonItemTextureCache = -1;
         hudYButtonItemIconTexture = 0;
     }
     if (((u32)hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0))
     {
-        lbl_803DD876 = yButtonItemTextureId;
+        gHudYButtonItemTextureCache = yButtonItemTextureId;
         hudYButtonItemIconTexture = textureLoadAsset(yButtonItemTextureId);
     }
     if (lbl_803DD83C != lbl_803E1E3C)
@@ -1000,7 +1000,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         drawTexture(((int*)(base + 0x1C0))[0], lbl_803E1FE0, lbl_803E1F9C, lbl_803DD83C, 0x100);
         drawTexture(((int*)(base + 0x1C0))[1], lbl_803E1FE4, lbl_803E1FE8, lbl_803DD83C, 0x100);
         drawTexture(((int*)(base + 0x1C0))[2], lbl_803E1FEC, lbl_803E1FF0, lbl_803DD83C, 0x100);
-        if ((lbl_803DD7B1 & 8) == 0)
+        if ((gHudAButtonFlashTimer & 8) == 0)
         {
             drawTexture(((int*)(base + 0x1C0))[9], lbl_803E1FF4, lbl_803E1FF8, lbl_803DD83C, 0x100);
         }
@@ -1008,13 +1008,13 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         {
             if (aButtonIcon != prevAButtonIcon)
             {
-                lbl_803DD7B1 = 0x3F;
+                gHudAButtonFlashTimer = 0x3F;
             }
-            if (lbl_803DD7B1 != 0)
+            if (gHudAButtonFlashTimer != 0)
             {
-                lbl_803DD7B1--;
+                gHudAButtonFlashTimer--;
             }
-            if (lbl_803DD7B1 & 8)
+            if (gHudAButtonFlashTimer & 8)
             {
                 gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
@@ -1070,19 +1070,19 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         {
             drawTexture(((int*)(base + 0x1C0))[3], lbl_803E1FCC, lbl_803E1FFC, lbl_803DD83C, 0x100);
             prevAButtonIcon = 0;
-            lbl_803DD7B1 = 0;
+            gHudAButtonFlashTimer = 0;
         }
         if (bButtonIcon != 0)
         {
-            if (bButtonIcon != lbl_803DD7B0)
+            if (bButtonIcon != gHudPrevBButtonIcon)
             {
-                lbl_803DD7B2 = 0x3F;
+                gHudBButtonFlashTimer = 0x3F;
             }
-            if (lbl_803DD7B2 != 0)
+            if (gHudBButtonFlashTimer != 0)
             {
-                lbl_803DD7B2--;
+                gHudBButtonFlashTimer--;
             }
-            if (lbl_803DD7B2 & 8)
+            if (gHudBButtonFlashTimer & 8)
             {
                 gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
@@ -1123,14 +1123,14 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             {
                 drawTexture(((int*)(base + 0x1C0))[7], lbl_803E2008, lbl_803E2004, lbl_803DD83C, 0x100);
             }
-            lbl_803DD7B0 = bButtonIcon;
+            gHudPrevBButtonIcon = bButtonIcon;
             drawTexture(((int*)(base + 0x1C0))[6], lbl_803E1FCC, lbl_803E200C, lbl_803DD83C, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
             drawTexture(((int*)(base + 0x1C0))[4], lbl_803E1FCC, lbl_803E200C, lbl_803DD83C, 0x100);
-            lbl_803DD7B0 = 0;
+            gHudPrevBButtonIcon = 0;
         }
         if ((u32)hudYButtonItemIconTexture != 0)
         {
@@ -1142,36 +1142,36 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             {
                 scaleT = lbl_803E1E68;
             }
-            if (lbl_803DD7E8 > scaleT)
+            if (gHudYButtonIconScale > scaleT)
             {
-                dv = lbl_803DD7E8 - lbl_803E1EA8;
+                dv = gHudYButtonIconScale - lbl_803E1EA8;
                 if (scaleT > dv)
                 {
                     dv = scaleT;
                 }
-                lbl_803DD7E8 = dv;
+                gHudYButtonIconScale = dv;
             }
             else
             {
-                dv = lbl_803E1EA8 + lbl_803DD7E8;
+                dv = lbl_803E1EA8 + gHudYButtonIconScale;
                 if (scaleT < dv)
                 {
                     dv = scaleT;
                 }
-                lbl_803DD7E8 = dv;
+                gHudYButtonIconScale = dv;
             }
             gYButtonIconAnim = gYButtonIconAnim -
                 (lbl_803DBA74 + (timeDelta * (gYButtonIconAnim - lbl_803DBA74)) / lbl_803DBA84);
             if (gYButtonIconAnim > lbl_803E1E3C)
             {
-                lbl_803DD7E8 = lbl_803E1E68;
+                gHudYButtonIconScale = lbl_803E1E68;
             }
             if (!(*(f32*)&gYButtonIconAnim > *(f32*)&lbl_803E1E3C))
             {
                 gYButtonIconAnim = lbl_803E1E3C;
             }
             drawTexture(hudYButtonItemIconTexture, lbl_803DBA78 * gYButtonIconAnim + lbl_803E2014,
-                        lbl_803DBA7C * gYButtonIconAnim + lbl_803E1F9C, (int)(lbl_803DD7E8 * lbl_803DD83C),
+                        lbl_803DBA7C * gYButtonIconAnim + lbl_803E1F9C, (int)(gHudYButtonIconScale * lbl_803DD83C),
                         (int)(lbl_803DBA80 * gYButtonIconAnim + lbl_803E2018));
         }
         else

@@ -95,8 +95,8 @@ extern float mathCosf(float x);
 extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern f32 lbl_803E4338;
-extern f32 lbl_803E433C;
-extern f32 lbl_803E4340;
+extern f32 gGunpowderBarrelPi;
+extern f32 gGunpowderBarrelHalfAngleUnit;
 extern f32 lbl_803DBE80;
 extern void gunpowderbarrel_launchAtTarget(int obj, u8 flag);
 extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
@@ -109,7 +109,7 @@ extern f32 lbl_803E42E0;
 extern f32 lbl_803E42E4;
 extern const f32 lbl_803E42E8;
 extern f32 lbl_803E42EC;
-extern f32 lbl_803E42F0;
+extern f32 gGunpowderBarrelAngleUnit;
 
 /* Bit flags at GunpowderBarrelState+0x4a (heldFlags). */
 typedef struct
@@ -858,16 +858,16 @@ void gunpowderbarrel_update(int obj)
             else if (state->fuseFrames == 0)
             {
                 ((GameObject*)obj)->anim.velocityX = state->throwVelX =
-                    mathSinf(lbl_803E433C * (f32) ((GameObject*)player)->anim.rotX / lbl_803E4340);
+                    mathSinf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit);
                 ((GameObject*)obj)->anim.velocityY = state->throwVelY = lbl_803E42C0;
                 ((GameObject*)obj)->anim.velocityZ = state->throwVelZ =
-                    mathCosf(lbl_803E433C * (f32) ((GameObject*)player)->anim.rotX / lbl_803E4340);
+                    mathCosf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit);
                 ((GameObject*)obj)->anim.localPosX =
-                    lbl_803DBE80 * -mathSinf(lbl_803E433C * (f32) ((GameObject*)player)->anim.rotX /
-                        lbl_803E4340) +
+                    lbl_803DBE80 * -mathSinf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX /
+                        gGunpowderBarrelHalfAngleUnit) +
                     ((GameObject*)obj)->anim.localPosX;
                 ((GameObject*)obj)->anim.localPosZ =
-                    lbl_803DBE80 * -mathCosf(lbl_803E433C * (f32) ((GameObject*)player)->anim.rotX / lbl_803E4340) +
+                    lbl_803DBE80 * -mathCosf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit) +
                     ((GameObject*)obj)->anim.localPosZ;
                 ObjGroup_AddObject(obj, 0x16);
             }
@@ -1157,7 +1157,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         f32 t;
         if (v == 1)
         {
-            t = (lbl_803E42F0 - (f32)(u16)((GameObject*)obj)->anim.rotY) * rate;
+            t = (gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY) * rate;
         }
         else
         {

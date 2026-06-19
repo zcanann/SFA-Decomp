@@ -236,7 +236,7 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
         int state2 = *(int*)&((GameObject*)obj)->extra;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
-        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
+        ang = gBarrelGenPi * (f32)(-(s16)getAngle(d[0], d[2])) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -281,7 +281,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
         int state2 = *(int*)&((GameObject*)obj)->extra;
         d[0] = ((GameObject*)obj)->anim.localPosX - route->posX;
         d[2] = ((GameObject*)obj)->anim.localPosZ - route->posZ;
-        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
+        ang = gBarrelGenPi * (f32)(-(s16)getAngle(d[0], d[2])) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
     }
@@ -388,22 +388,22 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     }
 
     delta = (f32)(int)((u16)getAngle(-*(f32*)(b + 0), -*(f32*)(b + 8)) - (u16) * (s16*)(a + 0));
-    if (delta > lbl_803E6C64)
+    if (delta > gBarrelGenAngleHalfRange)
     {
-        delta = lbl_803E6C84 + delta;
+        delta = gBarrelGenAngleWrapNeg + delta;
     }
-    if (delta < lbl_803E6C8C)
+    if (delta < gBarrelGenAngleWrapThreshold)
     {
-        delta = lbl_803E6C88 + delta;
+        delta = gBarrelGenAngleWrapPos + delta;
     }
     delta *= rate;
-    if (delta < lbl_803E6C90)
+    if (delta < gBarrelGenTurnRateClampMin)
     {
-        clamped = lbl_803E6C90;
+        clamped = gBarrelGenTurnRateClampMin;
     }
-    else if (delta > lbl_803E6C94)
+    else if (delta > gBarrelGenTurnRateClampMax)
     {
-        clamped = lbl_803E6C94;
+        clamped = gBarrelGenTurnRateClampMax;
     }
     else
     {
@@ -431,13 +431,13 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     {
         dist = sqrtf(*(f32*)(b + 0) * *(f32*)(b + 0) + *(f32*)(b + 8) * *(f32*)(b + 8));
         delta = (f32)(int)((u16)getAngle(*(f32*)(b + 4) * e, dist) - (u16) * (s16*)(a + 2));
-        if (delta > lbl_803E6C64)
+        if (delta > gBarrelGenAngleHalfRange)
         {
-            delta = lbl_803E6C84 + delta;
+            delta = gBarrelGenAngleWrapNeg + delta;
         }
-        if (delta < lbl_803E6C8C)
+        if (delta < gBarrelGenAngleWrapThreshold)
         {
-            delta = lbl_803E6C88 + delta;
+            delta = gBarrelGenAngleWrapPos + delta;
         }
         *(s16*)(a + 2) += (int)(delta * rate);
     }

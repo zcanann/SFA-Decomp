@@ -13,7 +13,7 @@
  * contact. When its life timer expires it flees and either re-perches,
  * despawns, or plays its death anim (WMWALLCRAWLER_FLAG_DEATH_ANIM).
  * Per-placement behaviour comes from the variant flag table
- * lbl_80328DD0. All crawlers despawn for good once the six progress
+ * gWallCrawlerVariantFlags. All crawlers despawn for good once the six progress
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
@@ -38,7 +38,7 @@ typedef struct WmwallcrawlerState
     s16 heightOffset;    /* 0x28E: from placement, added to homeY for the perch */
     s16 lifeTimer;       /* 0x290: frames until the crawler retreats/expires */
     s16 counterGameBit;  /* 0x292: incremented when the death anim completes (0/-1 = none) */
-    u16 flags;           /* 0x294: WMWALLCRAWLER_FLAG_*, from lbl_80328DD0[variant] */
+    u16 flags;           /* 0x294: WMWALLCRAWLER_FLAG_*, from gWallCrawlerVariantFlags[variant] */
     s8 mode;             /* 0x296: WMWALLCRAWLER_MODE_* */
     u8 pad297;
     u8 variant;          /* 0x298: placement byte indexing the flag table */
@@ -63,7 +63,7 @@ typedef struct WmwallcrawlerMapData
 {
     ObjPlacement base;
     s8 rotXByte;        /* 0x18: rotX in 1/256 turns */
-    u8 variant;         /* 0x19: index into the flag table lbl_80328DD0 */
+    u8 variant;         /* 0x19: index into the flag table gWallCrawlerVariantFlags */
     s16 triggerRadius;  /* 0x1A */
     s16 heightOffset;   /* 0x1C */
     s16 counterGameBit; /* 0x1E */
@@ -76,13 +76,13 @@ STATIC_ASSERT(offsetof(WmwallcrawlerMapData, heightOffset) == 0x1C);
 STATIC_ASSERT(offsetof(WmwallcrawlerMapData, counterGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
 
-/* state->flags, from the per-variant table lbl_80328DD0 */
+/* state->flags, from the per-variant table gWallCrawlerVariantFlags */
 #define WMWALLCRAWLER_FLAG_START_ACTIVE 0x1    /* spawn already diving (rotZ 0) */
 #define WMWALLCRAWLER_FLAG_PATH_CONTROL 0x2    /* drive movement through gPathControlInterface */
 #define WMWALLCRAWLER_FLAG_FLOOR_SNAP 0x4      /* snap Y to the nearest floor (hitDetectFn_80065e50) */
 #define WMWALLCRAWLER_FLAG_TIMED_EXPLODE 0x8   /* burst into particles when explodeTimer expires */
 #define WMWALLCRAWLER_FLAG_TARGET_NEAREST 0x10 /* chase the nearest group-10 object, not the player */
-#define WMWALLCRAWLER_FLAG_CLAMP_SPEED 0x20    /* cap velocity at lbl_803DC130 */
+#define WMWALLCRAWLER_FLAG_CLAMP_SPEED 0x20    /* cap velocity at gWallCrawlerSpeedCap */
 #define WMWALLCRAWLER_FLAG_FADE_IN 0x40        /* spawn at alpha 0, fade in during render */
 #define WMWALLCRAWLER_FLAG_NO_RETREAT 0x80     /* ignore lifeTimer (never re-perch/expire) */
 #define WMWALLCRAWLER_FLAG_DEATH_ANIM 0x100    /* play the death anim instead of despawning */
@@ -105,8 +105,8 @@ extern int fn_80080150(void* timer);
 extern int randFn_80080100(int n);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern f32 lbl_803DC130;
-extern u8 lbl_803DDCB8;
+extern f32 gWallCrawlerSpeedCap;
+extern u8 gWallCrawlerHitCount;
 extern f32 lbl_803E5FB0;
 extern f32 lbl_803E5FBC;
 extern f32 lbl_803E5FC0;
@@ -135,9 +135,9 @@ extern f32 lbl_803E6018;
 extern void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData);
 extern void vecRotateZXY(void* mtx, f32* vec);
 extern f32 lbl_803E5FB8;
-extern u16 lbl_80328DD0[];
-extern u8 lbl_80328DE0[];
-extern u8 lbl_803DC134;
+extern u16 gWallCrawlerVariantFlags[];
+extern u8 gWallCrawlerPointCollision[];
+extern u8 sWallCrawlerCollisionBone;
 extern f32 lbl_803E6030;
 extern f32 lbl_803E6034;
 
@@ -294,7 +294,7 @@ void wmwallcrawler_update(int obj)
     if (player != 0)
     {
         sq = GameBit_Get(0x789);
-        lbl_803DC130 = lbl_803E5FC0 * sq + lbl_803E5FC0;
+        gWallCrawlerSpeedCap = lbl_803E5FC0 * sq + lbl_803E5FC0;
         if (((WmwallcrawlerState*)st)->mode == WMWALLCRAWLER_MODE_DIE)
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -598,12 +598,12 @@ void wmwallcrawler_update(int obj)
                                 if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_CLAMP_SPEED) != 0 &&
                                     sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
                                         (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                                        ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY)) > lbl_803DC130)
+                                        ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY)) > gWallCrawlerSpeedCap)
                                 {
                                     Vec3_Normalize((f32*)(obj + 0x24));
-                                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (timeDelta * lbl_803DC130);
-                                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (timeDelta * lbl_803DC130);
-                                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * (timeDelta * lbl_803DC130);
+                                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (timeDelta * gWallCrawlerSpeedCap);
+                                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (timeDelta * gWallCrawlerSpeedCap);
+                                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * (timeDelta * gWallCrawlerSpeedCap);
                                 }
                                 if (((GameObject*)obj)->anim.currentMove == 0 && (((WmwallcrawlerState*)st)->flags &
                                     WMWALLCRAWLER_FLAG_ATTACK_MOVE) != 0 && dist < lbl_803E5FF4)
@@ -616,19 +616,19 @@ void wmwallcrawler_update(int obj)
                                         (hitState->flags & 8) != 0 &&
                                         dist < lbl_803E5FFC))
                                 {
-                                    lbl_803DDCB8 += 1;
+                                    gWallCrawlerHitCount += 1;
                                     if (((GameObject*)obj)->anim.currentMove == 2 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6000
                                         && ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E6004)
                                     {
                                         ObjMsg_SendToObject(player, 0x60004, obj, 1);
-                                        lbl_803DDCB8 = 0;
+                                        gWallCrawlerHitCount = 0;
                                     }
                                     if (GameBit_Get(0x1d9) != 0)
                                     {
-                                        lbl_803DDCB8 = 0;
+                                        gWallCrawlerHitCount = 0;
                                     }
-                                    else if (lbl_803DDCB8 >= 3 || ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
-                                        lbl_803DDCB8 >= 3))
+                                    else if (gWallCrawlerHitCount >= 3 || ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
+                                        gWallCrawlerHitCount >= 3))
                                     {
                                         Sfx_PlayFromObject(obj, 0x75);
                                         if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
@@ -639,7 +639,7 @@ void wmwallcrawler_update(int obj)
                                         {
                                             ((WcHitBits*)(st + 0x299))->hit = 1;
                                         }
-                                        lbl_803DDCB8 = 0;
+                                        gWallCrawlerHitCount = 0;
                                     }
                                     if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                     {
@@ -731,7 +731,7 @@ void wmwallcrawler_init(int obj, int spawn)
     state->homeZ = mapData->base.posZ;
     state->triggerRadius = (f32)(int)mapData->triggerRadius;
     state->variant = mapData->variant;
-    state->flags = lbl_80328DD0[state->variant];
+    state->flags = gWallCrawlerVariantFlags[state->variant];
     storeZeroToFloatParam(&state->explodeTimer);
     storeZeroToFloatParam(&state->despawnTimer);
     storeZeroToFloatParam(&state->attackTimer);
@@ -768,8 +768,8 @@ void wmwallcrawler_init(int obj, int spawn)
     {
         state->pathState[0x25b] = 1;
         (*gPathControlInterface)->init((void*)state, 0, 0, 1);
-        (*gPathControlInterface)->setLocalPointCollision((void*)state, 1, lbl_80328DE0,
-                                                         &lbl_803DC134, 4);
+        (*gPathControlInterface)->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision,
+                                                         &sWallCrawlerCollisionBone, 4);
         (*gPathControlInterface)->attachObject((void*)obj, state);
         *(u32*)state |= 0x40008;
     }

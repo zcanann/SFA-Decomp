@@ -134,15 +134,15 @@ extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hi
                               int param_8, int param_9, int param_10);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern u32 lbl_802C21F0[4];
+extern u32 gTrickyVisibilityBitsInit[4];
 extern char lbl_8031D2E8[];
-extern char lbl_8031D300[];
+extern char gTrickyPathPointCollision[];
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern u32 DAT_803e3058;
 extern char sSidekickCommandDebugTextBlock[];
-extern u32 lbl_803DDA48;
-extern int lbl_803DDA54;
+extern u32 gTrickyHelperObject;
+extern int gTrickyNearestObject;
 extern u32 lbl_803DBC40;
 extern u32 lbl_803DBC48;
 extern f32 lbl_803DC074;
@@ -779,10 +779,10 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         ObjLink_DetachChild(obj, *(int*)&((TrickyState*)state)->unk7CC);
         Obj_FreeObject(*(int*)&((TrickyState*)state)->unk7CC);
     }
-    if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (lbl_803DDA48 != 0))
+    if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (gTrickyHelperObject != 0))
     {
-        Obj_FreeObject(lbl_803DDA48);
-        lbl_803DDA48 = 0;
+        Obj_FreeObject(gTrickyHelperObject);
+        gTrickyHelperObject = 0;
     }
     return;
 }
@@ -817,7 +817,7 @@ typedef struct
     u16 b;
 } TrickySfxPair;
 
-extern int lbl_802C21C8[];
+extern int gTrickyCmdQueryInit[];
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E2408;
 extern f32 lbl_803E23EC;
@@ -923,7 +923,7 @@ void Tricky_update(int obj)
     base = lbl_8031D2E8;
     state = *(int*)&((GameObject*)obj)->extra;
     found = 0;
-    cmdQuery = *(TrickyCmdQuery*)lbl_802C21C8;
+    cmdQuery = *(TrickyCmdQuery*)gTrickyCmdQueryInit;
     pair = lbl_803E23C4;
     walkgroupFindExitPointFn_800dc398();
     if (GameBit_Get(0x186) != 0 && *(void**)&((TrickyState*)state)->unk7CC == NULL && Obj_IsLoadingLocked())
@@ -1686,7 +1686,7 @@ void Tricky_init(int obj)
     *(u8*)(*(int*)(model + 0x34) + 8) = ((TrickyState*)state)->modelVariant;
     pathState = (int)&((TrickyState*)state)->pathControlFlags;
     (*gPathControlInterface)->init((void*)pathState, 1, 0xa7, 1);
-    (*gPathControlInterface)->setLocalPointCollision((void*)pathState, 1, lbl_8031D300,
+    (*gPathControlInterface)->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision,
                                                      &lbl_803DBC48, 2);
     (*gPathControlInterface)->setup((void*)pathState, 2, lbl_8031D2E8, &lbl_803DBC40, startPath);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)pathState);
@@ -1929,23 +1929,23 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
                 ((GameObject*)obj)->anim.worldPosZ = *(f32*)(parentSetup + 0x10);
             }
             nearestDistance = lbl_803E25A8;
-            lbl_803DDA54 = ObjGroup_FindNearestObject(4, obj, &nearestDistance);
+            gTrickyNearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDistance);
             ((GameObject*)obj)->anim.worldPosX = savedX;
             ((GameObject*)obj)->anim.worldPosY = savedY;
             ((GameObject*)obj)->anim.worldPosZ = savedZ;
-            if ((void*)lbl_803DDA54 != NULL)
+            if ((void*)gTrickyNearestObject != NULL)
             {
                 v = ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)lbl_803DDA54)->anim.worldPosX = v;
-                ((GameObject*)lbl_803DDA54)->anim.localPosX = v;
+                ((GameObject*)gTrickyNearestObject)->anim.worldPosX = v;
+                ((GameObject*)gTrickyNearestObject)->anim.localPosX = v;
                 v = lbl_803E25AC + ((GameObject*)obj)->anim.localPosY;
-                ((GameObject*)lbl_803DDA54)->anim.worldPosY = v;
-                ((GameObject*)lbl_803DDA54)->anim.localPosY = v;
+                ((GameObject*)gTrickyNearestObject)->anim.worldPosY = v;
+                ((GameObject*)gTrickyNearestObject)->anim.localPosY = v;
                 v = ((GameObject*)obj)->anim.localPosZ;
-                ((GameObject*)lbl_803DDA54)->anim.worldPosZ = v;
-                ((GameObject*)lbl_803DDA54)->anim.localPosZ = v;
+                ((GameObject*)gTrickyNearestObject)->anim.worldPosZ = v;
+                ((GameObject*)gTrickyNearestObject)->anim.localPosZ = v;
             }
-            return lbl_803DDA54;
+            return gTrickyNearestObject;
         default:
             return 0;
         }
@@ -1982,15 +1982,15 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     *(u8*)(setup + 6) = *(u8*)(parentSetup + 6);
     *(u8*)(setup + 5) = *(u8*)(parentSetup + 5);
     *(u8*)(setup + 7) = *(u8*)(parentSetup + 7);
-    lbl_803DDA54 = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+    gTrickyNearestObject = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                    *(int*)&((GameObject*)obj)->anim.parent);
-    if ((((GameObject*)lbl_803DDA54)->anim.seqId == 0x3cd) ||
-        (((GameObject*)lbl_803DDA54)->anim.seqId == 0xb))
+    if ((((GameObject*)gTrickyNearestObject)->anim.seqId == 0x3cd) ||
+        (((GameObject*)gTrickyNearestObject)->anim.seqId == 0xb))
     {
-        (*(void (**)(f32, f32, f32))(*(int*)(*(int*)&((GameObject*)lbl_803DDA54)->anim.dll) + 0x2c))
+        (*(void (**)(f32, f32, f32))(*(int*)(*(int*)&((GameObject*)gTrickyNearestObject)->anim.dll) + 0x2c))
             (lbl_803E2574, lbl_803E256C, lbl_803E2574);
     }
-    return lbl_803DDA54;
+    return gTrickyNearestObject;
 }
 
 /* baddie_updateWhileFrozen: 2796b - shared frozen-state update + per-baddie reaction dispatch. */
@@ -2020,7 +2020,7 @@ extern int getAngle(float y, float x);
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern int lbl_802C2200[];
+extern int gTrickyFrozenFxColors[];
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
@@ -2086,7 +2086,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
     u16 impactSfx;
 
     player = Obj_GetPlayerObject();
-    colors = *(FrozenFxColors*)lbl_802C2200;
+    colors = *(FrozenFxColors*)gTrickyFrozenFxColors;
     result = 2;
     if ((((TrickyState*)state)->flags2DC & 0x1800) == 0)
     {
@@ -2469,8 +2469,8 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     f32 maxDistance;
     s16 setupId;
 
-    *(s64*)&visibilityBits[0] = *(s64*)&lbl_802C21F0[0];
-    *(s64*)&visibilityBits[2] = *(s64*)&lbl_802C21F0[2];
+    *(s64*)&visibilityBits[0] = *(s64*)&gTrickyVisibilityBitsInit[0];
+    *(s64*)&visibilityBits[2] = *(s64*)&gTrickyVisibilityBitsInit[2];
     probe.x = ((GameObject*)obj)->anim.localPosX;
     probe.y = lbl_803E25A0 + ((GameObject*)obj)->anim.localPosY;
     probe.z = ((GameObject*)obj)->anim.localPosZ;
@@ -2952,10 +2952,10 @@ int trickyFn_801451d8(int obj, int state)
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x40000LL;
         ((TrickyState*)state)->unkD = -1;
     }
-    if (lbl_803DDA48 == 0)
+    if (gTrickyHelperObject == 0)
     {
         int setup = Obj_AllocObjectSetup(0x18, 0x25);
-        lbl_803DDA48 = Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
     {
         int ret = 1;

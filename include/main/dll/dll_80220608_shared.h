@@ -1629,8 +1629,8 @@ extern f32 lbl_803E6C70;
 extern f32 lbl_803E6C74;
 
 
-extern f32 lbl_803E6C60;
-extern f32 lbl_803E6C64;
+extern f32 gBarrelGenPi;
+extern f32 gBarrelGenAngleHalfRange;
 extern f32 lbl_803E6C78;
 extern f32 lbl_803E6C7C;
 extern f32 lbl_803E6C80;
@@ -1800,11 +1800,11 @@ extern u16 lbl_803DC3AC;
 
 
 extern f32 lbl_803E6C5C;
-extern f32 lbl_803E6C84;
-extern f32 lbl_803E6C88;
-extern f32 lbl_803E6C8C;
-extern f32 lbl_803E6C90;
-extern f32 lbl_803E6C94;
+extern f32 gBarrelGenAngleWrapNeg;
+extern f32 gBarrelGenAngleWrapPos;
+extern f32 gBarrelGenAngleWrapThreshold;
+extern f32 gBarrelGenTurnRateClampMin;
+extern f32 gBarrelGenTurnRateClampMax;
 extern f32 lbl_803E6C98;
 
 
