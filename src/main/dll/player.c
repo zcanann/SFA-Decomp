@@ -3796,15 +3796,15 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     {
                         int prt = *(int*)&((GameObject*)obj)->ownerObj;
                         obj2 = (int)((GameObject*)prt)->extra;
-                        if (*(u32*)(prt + 0x54) != 0)
+                        if (*(u32*)&((GameObject*)prt)->anim.hitReactState != 0)
                         {
-                            spd = (f32) * (s16*)(*(int*)(prt + 0x54) + 0x5a);
+                            spd = (f32) * (s16*)(*(int*)&((GameObject*)prt)->anim.hitReactState + 0x5a);
                         }
                         else
                         {
-                            spd = *(f32*)(prt + 0xa8) * *(f32*)(prt + 8);
+                            spd = ((GameObject*)prt)->anim.hitboxScale * ((GameObject*)prt)->anim.rootMotionScale;
                         }
-                        dy2 = (((GameObject*)prt)->anim.hitVolumeTransforms->jointY - *(f32*)(prt + 0x10)) -
+                        dy2 = (((GameObject*)prt)->anim.hitVolumeTransforms->jointY - ((GameObject*)prt)->anim.localPosY) -
                             lbl_803E8158;
                     }
                     sp3 = spd *
