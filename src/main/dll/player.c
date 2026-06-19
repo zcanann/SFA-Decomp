@@ -18687,13 +18687,16 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
         ((ByteFlags*)((char*)dst + 0x63))->b80 = 0;
     }
 
-    *(f32*)((char*)dst + 0x48) =
-        *(f32*)((char*)src + 0x4) +
-        lbl_803E7E98 * (*(f32*)((char*)src + 0x8) - *(f32*)((char*)src + 0x4));
-    *(f32*)((char*)dst + 0x4c) = *(f32*)((char*)src + 0xc);
-    *(f32*)((char*)dst + 0x50) =
-        *(f32*)((char*)src + 0x14) +
-        lbl_803E7E98 * (*(f32*)((char*)src + 0x18) - *(f32*)((char*)src + 0x14));
+    {
+        f32 t = lbl_803E7E98;
+        *(f32*)((char*)dst + 0x48) =
+            *(f32*)((char*)src + 0x4) +
+            t * (*(f32*)((char*)src + 0x8) - *(f32*)((char*)src + 0x4));
+        *(f32*)((char*)dst + 0x4c) = *(f32*)((char*)src + 0xc);
+        *(f32*)((char*)dst + 0x50) =
+            *(f32*)((char*)src + 0x14) +
+            t * (*(f32*)((char*)src + 0x18) - *(f32*)((char*)src + 0x14));
+    }
 
     if (flag != 0)
     {
