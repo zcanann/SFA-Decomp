@@ -367,40 +367,40 @@ u32 FUN_80039a28(int curve, int state)
 
 void FUN_80039e6c(double val, short* obj, char* curve, int state)
 {
-    float fVar1;
-    u16 uVar2;
-    float fVar3;
-    u32 uVar4;
-    int iVar5;
-    bool bVar6;
+    float limit;
+    u16 phase;
+    float minVal;
+    u32 tmp;
+    int prevAngle;
+    bool active;
 
-    bVar6 = (double)lbl_803DF664 < val;
-    if (((u32)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != bVar6)
+    active = (double)lbl_803DF664 < val;
+    if (((u32)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != active)
     {
-        *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
+        *(u16*)(curve + 0x1a) = (u16)active << 8;
     }
-    uVar2 = *(u16*)(curve + 0x1a) & 0xff;
-    if (uVar2 == 2)
+    phase = *(u16*)(curve + 0x1a) & 0xff;
+    if (phase == 2)
     {
-        if ((*curve != '\0') || (iVar5 = FUN_80039a28((int)curve, state), iVar5 != 0))
+        if ((*curve != '\0') || (prevAngle = FUN_80039a28((int)curve, state), prevAngle != 0))
         {
-            *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
+            *(u16*)(curve + 0x1a) = (u16)active << 8;
         }
     }
-    else if (uVar2 < 2)
+    else if (phase < 2)
     {
-        if (uVar2 == 0)
+        if (phase == 0)
         {
             if (*curve == '\0')
             {
-                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 1;
-                uVar4 = randomGetRange(100, 400);
-                *(short*)(curve + 0x1c) = uVar4;
+                *(u16*)(curve + 0x1a) = (u16)active << 8 | 1;
+                tmp = randomGetRange(100, 400);
+                *(short*)(curve + 0x1c) = tmp;
                 *(u16*)(curve + 0x14) = *(u16*)(state + 2);
             }
             else
             {
-                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 3;
+                *(u16*)(curve + 0x1a) = (u16)active << 8 | 3;
                 *(u16*)(curve + 0x16) = *(u16*)(state + 2);
                 *(float*)(curve + 0x10) = lbl_803DF61C;
             }
@@ -410,12 +410,12 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             *(u16*)(curve + 0x1c) = *(short*)(curve + 0x1c) - (u16)DAT_803dc070;
             if (*(short*)(curve + 0x1c) < 0)
             {
-                iVar5 = (int)*(short*)(curve + 0x14);
-                uVar4 = randomGetRange(0, 0x1fff);
-                *(short*)(curve + 0x14) = uVar4;
-                if (iVar5 < 1)
+                prevAngle = (int)*(short*)(curve + 0x14);
+                tmp = randomGetRange(0, 0x1fff);
+                *(short*)(curve + 0x14) = tmp;
+                if (prevAngle < 1)
                 {
-                    if (*(short*)(curve + 0x14) - iVar5 < 0xe38)
+                    if (*(short*)(curve + 0x14) - prevAngle < 0xe38)
                     {
                         *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 0xe38;
                     }
@@ -427,7 +427,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                 }
                 else
                 {
-                    if (iVar5 - *(short*)(curve + 0x14) < 0xe38)
+                    if (prevAngle - *(short*)(curve + 0x14) < 0xe38)
                     {
                         *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 0xe38;
                     }
@@ -438,23 +438,23 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                     }
                     *(short*)(curve + 0x14) = -*(short*)(curve + 0x14);
                 }
-                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 2;
+                *(u16*)(curve + 0x1a) = (u16)active << 8 | 2;
                 curve[0x1c] = '\0';
                 curve[0x1d] = '\0';
                 *(u16*)(curve + 0x16) = *(u16*)(state + 2);
             }
         }
     }
-    else if (uVar2 < 4)
+    else if (phase < 4)
     {
         if (*curve == '\0')
         {
-            *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
+            *(u16*)(curve + 0x1a) = (u16)active << 8;
         }
         else
         {
-            iVar5 = FUN_80017730();
-            *(short*)(curve + 0x14) = iVar5 - *obj;
+            prevAngle = FUN_80017730();
+            *(short*)(curve + 0x14) = prevAngle - *obj;
             if (0x8000 < *(short*)(curve + 0x14))
             {
                 *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + 1;
@@ -463,9 +463,9 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             {
                 *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + -1;
             }
-            fVar3 = lbl_803DF624;
-            uVar4 = (u32) * (short*)(curve + 0x14);
-            if (((int)uVar4 < 0x2000) && (-0x2000 < uVar4))
+            minVal = lbl_803DF624;
+            tmp = (u32) * (short*)(curve + 0x14);
+            if (((int)tmp < 0x2000) && (-0x2000 < tmp))
             {
                 if (*(float*)(curve + 0x10) <= lbl_803DF624)
                 {
@@ -475,20 +475,20 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                 {
                     *(short*)(state + 2) =
                         (short)(int)(*(float*)(curve + 0x10) *
-                            (float)((double)(int)*(short*)(curve + 0x16) - uVar4) +
-                            (float)((double)(int)uVar4
+                            (float)((double)(int)*(short*)(curve + 0x16) - tmp) +
+                            (float)((double)(int)tmp
                             ));
-                    fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float*)(curve + 0x10));
-                    *(float*)(curve + 0x10) = fVar1;
-                    if (fVar1 < fVar3)
+                    limit = -(lbl_803DF668 * lbl_803DC074 - *(float*)(curve + 0x10));
+                    *(float*)(curve + 0x10) = limit;
+                    if (limit < minVal)
                     {
-                        *(float*)(curve + 0x10) = fVar3;
+                        *(float*)(curve + 0x10) = minVal;
                     }
                 }
             }
             else
             {
-                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
+                *(u16*)(curve + 0x1a) = (u16)active << 8;
             }
         }
     }
