@@ -201,7 +201,7 @@ void arwlevelcon_init(int obj, u8* setup)
     ARWLevelConState* state = ((GameObject*)obj)->extra;
     ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;
 
-    ((GameObject*)obj)->animEventCallback = (void*)arwlevelcon_ringEventCallback;
+    ((GameObject*)obj)->animEventCallback = arwlevelcon_ringEventCallback;
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {

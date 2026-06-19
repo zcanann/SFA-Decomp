@@ -54,7 +54,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     state = ((GameObject*)obj)->extra;
     i = 0;
-    while (i < (int)animUpdate->eventCount)
+    while (i < animUpdate->eventCount)
     {
         cmd = animUpdate->eventIds[i];
         switch (cmd)
@@ -197,7 +197,7 @@ void treebird_init(int obj, int setup)
     TreeBirdState* state;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)TreeBird_SeqFn;
+    ((GameObject*)obj)->animEventCallback = TreeBird_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(((NwTreeBirdMapData*)setup)->rotXByte << 8);
     ((GameObject*)obj)->anim.rotY = ((NwTreeBirdMapData*)setup)->rotY;
     ((GameObject*)obj)->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;

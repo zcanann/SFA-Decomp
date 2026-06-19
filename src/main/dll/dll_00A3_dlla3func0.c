@@ -169,7 +169,7 @@ void dll_A3_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.col[2] = lbl_803E0968;
     if (variantByte != 0)
     {
-        buf.scale = lbl_803E0980 * (f32)variantByte;
+        buf.scale = lbl_803E0980 * variantByte;
     }
     else
     {

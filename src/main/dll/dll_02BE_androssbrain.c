@@ -80,7 +80,7 @@ void androssbrain_setState(int obj, int newState, u8 force)
     state = ((GameObject*)obj)->extra;
     if (state->brainState != BRAIN_DEFEATED || force != 0)
     {
-        state->brainState = (s8)newState;
+        state->brainState = newState;
         if (force != 0)
         {
             state->health = BRAIN_MAX_HEALTH;
@@ -156,7 +156,7 @@ void androssbrain_update(int obj)
         {
             flashTimer = 0;
         }
-        state->flashTimer = (u8)flashTimer;
+        state->flashTimer = flashTimer;
         if (hit != 0)
         {
             if (state->flashTimer == 0)

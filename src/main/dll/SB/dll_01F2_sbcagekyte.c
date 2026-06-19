@@ -79,7 +79,7 @@ int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 
 void SB_CageKyte_init(GameObject* p)
 {
-    p->animEventCallback = (void*)SB_CageKyte_SeqFn;
+    p->animEventCallback = SB_CageKyte_SeqFn;
     p->objectFlags = (u16)((u32)p->objectFlags | 0x6000u);
 }
 
@@ -117,6 +117,6 @@ void SB_CageKyte_update(GameObject* obj)
         {
             Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep3);
         }
-        *timer = (s16)randomGetRange(SB_CAGEKYTE_CHIRP_MIN, SB_CAGEKYTE_CHIRP_MAX);
+        *timer = randomGetRange(SB_CAGEKYTE_CHIRP_MIN, SB_CAGEKYTE_CHIRP_MAX);
     }
 }

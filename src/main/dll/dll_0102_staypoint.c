@@ -52,7 +52,7 @@ void StayPoint_init(u16* obj)
     u32 flags;
     flags = ((GameObject*)obj)->objectFlags;
     flags |= STAYPOINT_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = (u16)flags;
+    ((GameObject*)obj)->objectFlags = flags;
 }
 
 void StayPoint_update(int obj)

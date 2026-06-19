@@ -100,7 +100,7 @@ void wmlasertarget_init(char* obj, s8* def)
 {
     WmLaserTargetState* inner = ((GameObject*)obj)->extra;
     ((ObjAnimComponent*)obj)->bankIndex =
-        (s8)GameBit_Get(((WmLaserTargetPlacement*)def)->toggleGameBit);
+        GameBit_Get(((WmLaserTargetPlacement*)def)->toggleGameBit);
     inner->cooldown = ((WmLaserTargetPlacement*)def)->cooldown;
     inner->toggleQueued = 0;
 }

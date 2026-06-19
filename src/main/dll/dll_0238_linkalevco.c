@@ -186,7 +186,7 @@ void fireObj_init(FireObject* obj)
     obj->animEventCallback = fire_updateState;
     unlockLevel(0, 0, 1);
     flags = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
-    obj->flags = (u16)flags;
+    obj->flags = flags;
     envFxActFn_800887f8(0);
     GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
     GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);

@@ -65,7 +65,7 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
         ObjGroup_AddObject((u32)obj, CCRIVERFLOW_OBJECT_GROUP);
         obj->state->active = 1;
     }
-    obj->angle = (u16)params->angleByte << 8;
+    obj->angle = params->angleByte << 8;
     obj->height = obj->model->baseHeight;
     obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0 + obj->height;
     if (obj->height < lbl_803E4DD4)

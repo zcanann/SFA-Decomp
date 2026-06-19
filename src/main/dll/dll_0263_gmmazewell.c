@@ -63,7 +63,7 @@ void gmmazewell_init(int obj)
     state->unk0 = 0;
     GameBit_Set(GAMEBIT_MAZEWELL_ACTIVE, 1);
     Music_Trigger(MUSIC_MAZEWELL, 1);
-    ((GameObject*)obj)->animEventCallback = (void*)gmmazewell_clearPendingTriggerCallback;
+    ((GameObject*)obj)->animEventCallback = gmmazewell_clearPendingTriggerCallback;
 }
 
 int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -93,7 +93,7 @@ void gmmazewell_update(int obj)
 
     if (state->savepointSet == 0)
     {
-        player = (u8*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         if (player != 0)
         {
             (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0,

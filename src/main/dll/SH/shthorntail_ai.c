@@ -182,7 +182,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
             value = getAngle(object->modelPos.x - config->homePos.x,
                              object->modelPos.z - config->homePos.z);
             facingAngle = object->facingAngle;
-            angleDelta = (short)value - (u16)facingAngle;
+            angleDelta = value - facingAngle;
             if (0x8000 < angleDelta)
             {
                 angleDelta = angleDelta - 0xFFFF;
@@ -191,7 +191,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
             {
                 angleDelta = angleDelta + 0xFFFF;
             }
-            value = (int)angleDelta;
+            value = angleDelta;
             value = (value >= 0) ? value : -value;
             if (0x20 < value)
             {

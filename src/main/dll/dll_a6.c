@@ -75,7 +75,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
             break;
         }
 
-        paletteIdx = (int)target->targetPaletteIndex;
+        paletteIdx = target->targetPaletteIndex;
         if (paletteIdx >= 4) paletteIdx = 0;
         gCamcontrolTargetHelpTextId = targetObject->anim.modelInstance->helpTextIds[paletteIdx];
 
@@ -110,7 +110,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
     *(u16 *)((u8 *)activeBank + 0x18) = (u16)(*(u16 *)((u8 *)activeBank + 0x18) & ~8);
 
     if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
-        gCamcontrolTargetState = (s8)savedReticleState;
+        gCamcontrolTargetState = savedReticleState;
         reticle->anim.alpha = savedReticleAlpha;
     }
 end:

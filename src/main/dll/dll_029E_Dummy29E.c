@@ -47,5 +47,5 @@ void Dummy29E_initialise(void)
 void fn_8022F558(int obj, int lifetime)
 {
     ARWBombCollState* state = ((GameObject*)obj)->extra;
-    state->lifetime = (f32)lifetime;
+    state->lifetime = lifetime;
 }

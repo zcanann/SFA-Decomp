@@ -108,7 +108,7 @@ void directionallight_debugEdit(int obj, int statePtr)
 {
     DirectionalLightState* state = (DirectionalLightState*)statePtr;
     u8* desc = gDirectionalLightObjDescriptor;
-    u16 buttons = (u16)getButtonsJustPressed(0);
+    u16 buttons = getButtonsJustPressed(0);
 
     if ((buttons & PAD_TRIGGER_Z) != 0)
     {

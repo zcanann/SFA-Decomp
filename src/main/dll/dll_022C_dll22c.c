@@ -96,13 +96,13 @@ void dll_22C_init(int obj, char* p)
     Dll22CMapData* md = (Dll22CMapData*)p;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_22C_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_22C_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(md->rotXByte << 8);
     state->mode = 0;
     state->gameBit = md->gameBit;
     state->gameBit2 = md->gameBit2;
-    state->raiseHeight = (f32)md->raiseHeight;
-    state->unk0C = (u8)md->unk1C;
+    state->raiseHeight = md->raiseHeight;
+    state->unk0C = md->unk1C;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E63A8;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }

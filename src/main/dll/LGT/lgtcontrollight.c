@@ -66,8 +66,8 @@ void fn_801F4C28(u8* obj, u8* rec)
     ((LgtFireFlyRec*)rec)->unk68 = 0;
     ((LgtFireFlyRec*)rec)->unk67 = 0;
     ((LgtFireFlyRec*)rec)->angleStep =
-        (s16)randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
-    ((LgtFireFlyRec*)rec)->angle = (s16)randomGetRange(0, FIREFLY_ANGLE_INIT_MAX);
+        randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
+    ((LgtFireFlyRec*)rec)->angle = randomGetRange(0, FIREFLY_ANGLE_INIT_MAX);
     ((LgtFireFlyRec*)rec)->ampMax = FIREFLY_AMP_MAX;
     ((LgtFireFlyRec*)rec)->unk66 = 4;
     ((LgtFireFlyRec*)rec)->radiusMin = lbl_803E5EB8;

@@ -40,7 +40,7 @@ void nw_animice_free(int obj) { ObjGroup_RemoveObject(obj, NW_ANIMICE_GROUP_ID);
 
 void nw_animice_init(int* obj)
 {
-    ((GameObject*)obj)->animEventCallback = (void*)nw_animice_SeqFn;
+    ((GameObject*)obj)->animEventCallback = nw_animice_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
     ObjGroup_AddObject((u32)obj, NW_ANIMICE_GROUP_ID);
 }

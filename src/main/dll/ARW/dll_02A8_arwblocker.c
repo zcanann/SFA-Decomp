@@ -77,7 +77,7 @@ void arwblocker_init(int obj, int setup)
 
     ((GameObject*)obj)->anim.rotX = -0x8000;
     ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)arwblocker_getBlockState;
+    ((GameObject*)obj)->animEventCallback = arwblocker_getBlockState;
     state->sequenceMode = mapData->sequenceMode;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;

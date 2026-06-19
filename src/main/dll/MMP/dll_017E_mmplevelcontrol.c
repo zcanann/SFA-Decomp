@@ -207,7 +207,7 @@ void MMP_levelcontrol_init(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
     *(u32*)&((GameObject*)obj)->unkF8 = GameBit_Get(0xF33);
-    ((GameObject*)obj)->animEventCallback = (void*)MMP_LevelControl_SeqFn;
+    ((GameObject*)obj)->animEventCallback = MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = lbl_803E44C8;
     lbl_803DDB2C = 0;

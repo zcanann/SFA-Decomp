@@ -89,7 +89,7 @@ void dll_9F_func03(short* sourceObj, int variant, int posSource, u32 flags)
         e->mode = 0x80;
         e->x = lbl_803E1448;
         e->y = lbl_803E1448;
-        e->z = (f32)head;
+        e->z = head;
         e = base + 1;
     }
     e[0].layer = 0;

@@ -54,7 +54,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
     if (deltaX <= 0.0f)
     {
-        bound = (f32)state->halfWidthX;
+        bound = state->halfWidthX;
         if (deltaX > -bound)
         {
             axisCount = 1;
@@ -62,7 +62,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
     }
     if (deltaX > 0.0f)
     {
-        bound = (f32)state->halfWidthX;
+        bound = state->halfWidthX;
         if (deltaX < bound)
         {
             axisCount = axisCount + 1;
@@ -71,7 +71,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
     if (deltaZ <= 0.0f)
     {
-        bound = (f32)state->halfWidthZ;
+        bound = state->halfWidthZ;
         if (deltaZ > -bound)
         {
             axisCount = axisCount + 1;
@@ -79,7 +79,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
     }
     if (deltaZ > 0.0f)
     {
-        bound = (f32)state->halfWidthZ;
+        bound = state->halfWidthZ;
         if (deltaZ < bound)
         {
             axisCount = axisCount + 1;
@@ -88,7 +88,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
     if (deltaY <= 0.0f)
     {
-        bound = (f32)state->halfHeightY;
+        bound = state->halfHeightY;
         if (deltaY > -bound)
         {
             axisCount = axisCount + 1;
@@ -96,7 +96,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
     }
     if (deltaY > 0.0f)
     {
-        bound = (f32)state->halfHeightY;
+        bound = state->halfHeightY;
         if (deltaY < bound)
         {
             axisCount = axisCount + 1;
@@ -105,8 +105,8 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
     if ((u8)axisCount == 3)
     {
-        randomX = lbl_803E644C * (f32)randomGetRange(-0x17, 0x17);
-        randomZ = lbl_803E644C * (f32)randomGetRange(-0x17, 0x17);
+        randomX = lbl_803E644C * randomGetRange(-0x17, 0x17);
+        randomZ = lbl_803E644C * randomGetRange(-0x17, 0x17);
         fn_802960E4((int)player, randomX, randomZ);
     }
     return;

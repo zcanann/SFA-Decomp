@@ -80,7 +80,7 @@ void imicemountain_init(int* obj)
 {
     IMIceMountainState* sub = ((GameObject*)obj)->extra;
     int i;
-    ((GameObject*)obj)->animEventCallback = (void*)IMIceMountain_SeqFn;
+    ((GameObject*)obj)->animEventCallback = IMIceMountain_SeqFn;
     for (i = 1; (u8)i <= 0xd; i++)
     {
         gameBitFn_800ea2e0(i);

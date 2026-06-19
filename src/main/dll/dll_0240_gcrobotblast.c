@@ -65,9 +65,9 @@ void GCRobotBlast_update(void)
 void GCRobotBlast_init(int obj, s8* p)
 {
     GCRobotBlastState* state = ((GameObject*)obj)->extra;
-    state->mode = (s8)p[0x19];
+    state->mode = p[0x19];
     ((BlastFlags4*)&state->flags04)->b80 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)GCRobotBlast_SeqFn;
+    ((GameObject*)obj)->animEventCallback = GCRobotBlast_SeqFn;
 }
 
 void GCRobotBlast_release(void)

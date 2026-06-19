@@ -47,7 +47,7 @@ void trickyguard_init(s16* obj, u8* placement)
     *obj = (s16)((u32)((TrickyguardPlacement*)placement)->yawByte << 8);
     flags = ((GameObject*)obj)->objectFlags;
     flags |= TRICKYGUARD_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = (u16)flags;
+    ((GameObject*)obj)->objectFlags = flags;
 }
 
 void trickyguard_update(int* obj)
@@ -59,7 +59,7 @@ void trickyguard_update(int* obj)
     {
         if ((u32)GameBit_Get(placement->armingGameBit) == 0) return;
     }
-    tricky = (int*)getTrickyObject();
+    tricky = getTrickyObject();
     if (tricky == NULL) return;
     if ((u8)((int (*)(int*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0) return;
     if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)

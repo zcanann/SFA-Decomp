@@ -52,9 +52,9 @@ void visanimator_init(int* obj, int* desc)
     ((GameObject*)obj)->objectFlags |= 0x6000;
     vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
     baseVisBit = *(s8*)((char*)desc + 0x1B);
-    vstate->visBit = (s8)baseVisBit;
+    vstate->visBit = baseVisBit;
     vstate->gateMask = (u8)(1 << *(u8*)&((WaveanimatorObjectDef*)desc)->spanX);
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
+    gate = GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
     if ((vstate->gateMask & gate) != 0)
     {
         vstate->visBit = vstate->visBit ^ 1;
@@ -62,7 +62,7 @@ void visanimator_init(int* obj, int* desc)
     mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                     (double)((GameObject*)obj)->anim.localPosY,
                                     (double)((GameObject*)obj)->anim.localPosZ));
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
+    gate = GameBit_Get(((WaveanimatorObjectDef*)desc)->originX);
     gateBit = (u8)(vstate->gateMask & gate);
     vstate->gateNow = gateBit;
     vstate->gatePrev = gateBit;

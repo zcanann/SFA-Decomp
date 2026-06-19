@@ -130,7 +130,7 @@ void deathgas_update(int* obj)
             state->timer = lbl_803E3CA8;
             state->draining = 1;
         }
-        state->timer -= (timeDelta * (f32)setup->drainRate) / lbl_803E3CAC;
+        state->timer -= (timeDelta * setup->drainRate) / lbl_803E3CAC;
         if (state->timer <= lbl_803E3CB0)
         {
             f32 floor = lbl_803E3CB0;
@@ -145,7 +145,7 @@ void deathgas_update(int* obj)
     }
     else if (state->draining)
     {
-        state->timer += (timeDelta * (f32)setup->fillRate) / lbl_803E3CAC;
+        state->timer += (timeDelta * setup->fillRate) / lbl_803E3CAC;
         if (state->timer > lbl_803E3CA8)
         {
             (*gGameUIInterface)->airMeterShutdown();

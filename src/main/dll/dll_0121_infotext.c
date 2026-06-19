@@ -20,7 +20,7 @@ void infotext_init(int obj, s8* def)
 {
     u32 v;
     v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
+    ((GameObject*)obj)->objectFlags = v;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
     objSetHintTextIdx(obj, (int)(u8)def[0x19]);
 }

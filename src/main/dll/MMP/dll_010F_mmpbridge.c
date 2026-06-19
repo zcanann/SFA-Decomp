@@ -81,13 +81,13 @@ void mmp_bridge_update(int* obj)
         if (tex != NULL)
         {
             frame = tex->offsetS + ((int)timeDelta << 3);
-            tex->offsetS = (s16)frame;
+            tex->offsetS = frame;
             frame = tex->offsetS + ((int)timeDelta << 3);
             if (frame >= BRIDGE_TEX_OFFSET_MAX)
             {
                 tex->offsetS = BRIDGE_TEX_OFFSET_MAX;
             }
-            fn_80137948(lbl_803DBD90, (int)tex->offsetS);
+            fn_80137948(lbl_803DBD90, tex->offsetS);
         }
         ObjHits_EnableObject((int)obj);
     }

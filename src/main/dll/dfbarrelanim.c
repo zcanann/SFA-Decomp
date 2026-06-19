@@ -62,7 +62,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
         rope->nodes = (DFRopeNode*)((u8*)rope + sizeof(DFRope));
         rope->links = (DFRopeLink*)((u8*)rope + nodesSize + sizeof(DFRope));
     }
-    rope->count = (u8)count;
+    rope->count = count;
     rope->totalLength = length;
     rope->start[0] = startX;
     rope->start[1] = startY;
@@ -88,9 +88,9 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     node = nodes;
     for (i = 0; i < count; i++, node++)
     {
-        node->pos[0] = (f32)i * dx + rope->start[0];
-        node->pos[1] = (f32)i * dy + rope->start[1];
-        node->pos[2] = (f32)i * dz + rope->start[2];
+        node->pos[0] = i * dx + rope->start[0];
+        node->pos[1] = i * dy + rope->start[1];
+        node->pos[2] = i * dz + rope->start[2];
         node->velocity[2] = zero;
         node->velocity[1] = zero;
         node->velocity[0] = zero;
@@ -127,7 +127,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     linkCount = count - 1;
     for (i = 0; i < linkCount; i++)
     {
-        link->restLength = rope->totalLength / (f32)linkCount;
+        link->restLength = rope->totalLength / linkCount;
         link->stiffness = lbl_803E4E10;
         link->force[2] = zero;
         link->force[1] = zero;
@@ -164,7 +164,7 @@ void dfropenode_func10(int obj, int value)
     bit = (value == 0);
     bitByte = bit;
     extra->hidden = bitByte;
-    linkedObj = (void*)extra->linkedObj;
+    linkedObj = extra->linkedObj;
     if (linkedObj != NULL)
     {
         extra = ((DFropenodeObject*)linkedObj)->extra;

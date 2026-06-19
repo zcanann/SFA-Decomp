@@ -138,7 +138,7 @@ void arwprojectile_setLifetime(int obj, int lifetime)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
 
-    state->lifetime = (f32)lifetime;
+    state->lifetime = lifetime;
 }
 
 int arwingandrossstuff_getExtraSize(void) { return 0x20; }
@@ -198,7 +198,7 @@ void arwingandrossstuff_hitDetect(int obj)
         {
             s16 a = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
                                      objAnim->localPosY - arwingAnim->localPosY);
-            f32 ang = lbl_803E7030 * (f32)a / lbl_803E7034;
+            f32 ang = lbl_803E7030 * a / lbl_803E7034;
 
             v.x = lbl_803E702C * mathSinf(ang);
             v.y = lbl_803E7038 * mathCosf(ang);
@@ -379,5 +379,5 @@ void fn_8022ECE0(int obj, f32 param)
 void fn_8022ED74(int obj, int v)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    state->param0.scalar = (f32)v;
+    state->param0.scalar = v;
 }

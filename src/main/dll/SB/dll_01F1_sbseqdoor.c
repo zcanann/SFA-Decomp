@@ -93,7 +93,7 @@ int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
 
 void SB_SeqDoor_init(GameObject* obj, SBSeqDoorPlacement* placement)
 {
-    obj->animEventCallback = (void*)SB_SeqDoor_SeqFn;
+    obj->animEventCallback = SB_SeqDoor_SeqFn;
     obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
     {
         s8 bankSelect = placement->bankSelect;

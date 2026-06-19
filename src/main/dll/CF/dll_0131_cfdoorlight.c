@@ -120,9 +120,9 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
     state->textureId = 0;
     obj->anim.rotX = (s16)(mapData->rotXByte << 9);
     state->maxFrame = mapData->maxFrame << 8;
-    state->frameStep = (u8)mapData->frameStep;
+    state->frameStep = mapData->frameStep;
     state->resetFrame = mapData->resetFrame << 8;
-    if (state->flags.done = (u8)GameBit_Get(mapData->doneEvent))
+    if (state->flags.done = GameBit_Get(mapData->doneEvent))
     {
         state->currentFrame = state->maxFrame;
         state->flags.active = 1;

@@ -68,7 +68,7 @@ void controllight_init(int obj, int setup)
     ControlLightState* state = ((GameObject*)obj)->extra;
 
     state->gameBit = setupData->gameBit;
-    state->radius = (f32)setupData->radius;
+    state->radius = setupData->radius;
     state->invertMode = setupData->invertMode % 2;
     state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }

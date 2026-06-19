@@ -83,7 +83,7 @@ void fn_80133F70(void* obj)
     {
         gameTimerRun(obj);
     }
-    player = (void*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &maxDist);
     if (nearest != NULL)
     {

@@ -57,7 +57,7 @@ void hitanimator_update(HitAnimatorObject* obj)
         state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
         return;
     }
-    state->gameBitValue = (u8)GameBit_Get(desc->gameBit);
+    state->gameBitValue = GameBit_Get(desc->gameBit);
     if (state->previousGameBitValue != state->gameBitValue)
     {
         state->activeBit = state->activeBit ^ 1;
@@ -136,7 +136,7 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     {
         state->flags |= HITANIMATOR_STATE_FLAG_BLOCK_UPDATE_PENDING;
     }
-    gameBitValue = (u8)GameBit_Get(desc->gameBit);
+    gameBitValue = GameBit_Get(desc->gameBit);
     state->gameBitValue = gameBitValue;
     state->previousGameBitValue = gameBitValue;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
@@ -151,7 +151,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
     {
         for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
         {
-            poly = (char*)mapBlockFn_800606ec(block, i);
+            poly = mapBlockFn_800606ec(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(poly))
             {
                 if (state->activeBit != 0)

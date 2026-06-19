@@ -111,7 +111,7 @@ void cnthitobjec_hitDetect(int obj)
                 CNTHIT_MODEL_NO_EXPLOSION_C &&
                 model != CNTHIT_MODEL_NO_EXPLOSION_D)
             {
-                spawnExplosion(obj, (f32)amount, 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosion(obj, amount, 1, 1, 1, 1, 0, 1, 0);
             }
             if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
             {
@@ -134,7 +134,7 @@ void cnthitobjec_init(int obj, int setup)
     setupData->hitSourceProfile = (s8)((u32)setupData->hitSourceProfile % CNTHIT_PROFILE_COUNT);
     state->allowedHitSources = lbl_8032BEF8[setupData->hitSourceProfile];
     state->allowedHitSourceCount = (&lbl_803DC42C)[setupData->hitSourceProfile];
-    if ((void*)state->allowedHitSources == (void*)&lbl_803DC428)
+    if ((void*)state->allowedHitSources == &lbl_803DC428)
     {
         ObjHits_ClearSourceMask(obj, 8);
     }
@@ -151,7 +151,7 @@ void cnthitobjec_init(int obj, int setup)
         state->flags.disabled = 1;
         ObjHits_DisableObject(obj);
     }
-    ((GameObject*)obj)->animEventCallback = (void*)cnthitobjec_emitHitEvents;
+    ((GameObject*)obj)->animEventCallback = cnthitobjec_emitHitEvents;
 }
 
 void cnthitobjec_update(int obj)
@@ -170,7 +170,7 @@ void cnthitobjec_update(int obj)
     }
 
     if (state->flags.disabled == 0 && state->remainingHealth == 0 &&
-        (u32)GameBit_Get(setup->startGameBit) != 0)
+        GameBit_Get(setup->startGameBit) != 0)
     {
         ObjHits_EnableObject(obj);
         state->remainingHealth = setup->startHealth;

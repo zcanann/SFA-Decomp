@@ -21,7 +21,7 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
     s16 loopBit;
 
     state = obj->state;
-    loopBit = (s16)GameBit_Get(state->loopSfxId);
+    loopBit = GameBit_Get(state->loopSfxId);
     if ((state->loopActive == 0) && (loopBit != 0) &&
         (GameBit_Get(0xedf) != 0))
     {
