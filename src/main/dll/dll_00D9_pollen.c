@@ -74,7 +74,7 @@ void fn_8016A660(int obj)
         if (fragment != 0)
         {
             ((GameObject*)fragment)->anim.rotY = 0;
-            ((GameObject*)fragment)->anim.rotX = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
+            ((GameObject*)fragment)->anim.rotX = randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
             ((GameObject*)fragment)->anim.velocityX =
                 lbl_803E3144 *
                 (f32)(s32)
@@ -279,12 +279,12 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 void pollen_init(int obj)
 {
     s16* state = ((GameObject*)obj)->extra;
-    state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
+    state[0] = randomGetRange(-0x8000, 0x7fff);
     *(f32*)&((XyzAnimatorState*)state)->dataBuffer = lbl_803E3148 * (f32)(s32)
     randomGetRange(0xfa0, 0x1388);
-    *(s16*)((char*)state + 4) = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(s16*)((char*)state + 4) = randomGetRange(-0x8000, 0x7fff);
     *(f32*)&((XyzAnimatorState*)state)->unk8 = lbl_803E313C;
-    *(s16*)((char*)state + 6) = (s16)randomGetRange(0xe6, 0x1f4);
+    *(s16*)((char*)state + 6) = randomGetRange(0xe6, 0x1f4);
     *(s16*)((char*)state + 0x10) = 0;
     *(s16*)((char*)state + 0x12) = 0;
     ((GameObject*)obj)->anim.alpha = 0xff;

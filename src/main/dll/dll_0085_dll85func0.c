@@ -200,7 +200,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[1].z = lbl_803E0F8C;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0F74;
     buf.pos[1] = lbl_803E0F74;
     buf.pos[2] = lbl_803E0F74;
@@ -253,7 +253,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 4, (u8*)(int)lbl_80315FA8, 2, base + 0x28,
-                                     tableHw[variant * 2 + (int)randomGetRange(0, 1) + 0x22], 0);
+                                     tableHw[variant * 2 + randomGetRange(0, 1) + 0x22], 0);
 }
 
 void dll_85_func01_nop(void)

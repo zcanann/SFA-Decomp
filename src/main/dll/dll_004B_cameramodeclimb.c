@@ -200,7 +200,7 @@ void CameraModeClimb_init(int arg1, int mode, s8* args)
                                                   &defaultMaxHeight, &defaultRelPos);
         (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
                                                  arg1, &outX, &outY, &outZ, &defaultDistXZ, 0);
-        lbl_803DD578->startRelativePosition = (s16)defaultRelPos;
+        lbl_803DD578->startRelativePosition = defaultRelPos;
         lbl_803DD578->startMinHeight = defaultMinHeight;
         lbl_803DD578->startMaxHeight = defaultMaxHeight;
         lbl_803DD578->startDistance = defaultDistXZ;

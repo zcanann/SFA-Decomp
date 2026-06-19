@@ -65,7 +65,7 @@ int TitleMenuItem_isChanged(TitleMenuItem* item)
 
 void TitleMenuItem_setVal(TitleMenuItem* item, int val)
 {
-    item->value = (s16)val;
+    item->value = val;
     item->frameDelay = 2;
 }
 
@@ -83,7 +83,7 @@ void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
         if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
         {
             lbl_803DD918 = 0;
-            lbl_803DD91C = (f32)item->value;
+            lbl_803DD91C = item->value;
         }
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_ENABLED);
     }
@@ -111,14 +111,14 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     switch (item->kind)
     {
     case TITLE_MENU_KIND_SLIDER:
-        drawTexture(lbl_803A9DB8[1], (f32)item->x, (f32)item->y,
+        drawTexture(lbl_803A9DB8[1], item->x, item->y,
                     (u8)(((u8)alpha * 0xb4) >> 8), 0x100);
 
         texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
             ((f32)(item->value - item->minValue) /
                 (f32)(item->maxValue - item->minValue)) +
-            (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
+            item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
         drawTexture(texture, markerX, (f32)(item->y - 4),
                     (u8)(((u8)alpha * 0xff) >> 8), 0x100);
         break;
@@ -151,8 +151,8 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         {
             drawAlpha = (u8)alpha;
         }
-        drawTexture(lbl_803A9DB8[textureIndex], (f32)item->x, (f32)item->y,
-                    (u8)drawAlpha, 0x100);
+        drawTexture(lbl_803A9DB8[textureIndex], item->x, item->y,
+                    drawAlpha, 0x100);
         break;
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
@@ -216,7 +216,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         {
             gatedMove = 0;
         }
-        lbl_803DD920 = (s8)move;
+        lbl_803DD920 = move;
 
         if (gatedMove < 0)
         {
@@ -236,11 +236,11 @@ void TitleMenuItem_update(TitleMenuItem* item)
         sliderDelta = (s16)(stickX / 16) * 0xa0;
 
         if (((s16)sliderDelta != 0) &&
-            (!(lbl_803DD91C < (f32)item->minValue) || ((s16)sliderDelta >= 0)) &&
-            (!(lbl_803DD91C > (f32)item->maxValue) || ((s16)sliderDelta <= 0)))
+            (!(lbl_803DD91C < item->minValue) || ((s16)sliderDelta >= 0)) &&
+            (!(lbl_803DD91C > item->maxValue) || ((s16)sliderDelta <= 0)))
         {
             lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
-                (f32)lbl_803DD918);
+                lbl_803DD918);
             Sfx_KeepAliveLoopedObjectSound(0, 0x3b9);
         }
         else
@@ -248,7 +248,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             lbl_803DD918 = 0;
         }
 
-        lbl_803DD91C += (f32)lbl_803DD918 / lbl_803E21F4;
+        lbl_803DD91C += lbl_803DD918 / lbl_803E21F4;
         item->value = (s16)(lbl_803E21F8 + lbl_803DD91C);
 
         if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
@@ -262,7 +262,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             {
                 previewVolume = 0x7f;
             }
-            Sfx_SetObjectSfxVolume(0, 0x3b9, (u8)previewVolume, lbl_803E21F8);
+            Sfx_SetObjectSfxVolume(0, 0x3b9, previewVolume, lbl_803E21F8);
         }
         break;
     default:

@@ -100,7 +100,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     setAButtonIcon(0xf);
     lbl_803DDC10 = 0;
     st->linkedObject = 0;
-    list = (int*)ObjList_GetObjects(&idx1, &cnt1);
+    list = ObjList_GetObjects(&idx1, &cnt1);
     while (idx1 < cnt1)
     {
         st->linkedObject = list[idx1++];
@@ -123,7 +123,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             (*gObjectTriggerInterface)->setCamVars(0x48, 3, 0, 0);
             break;
         case 3:
-            list = (int*)ObjList_GetObjects(&idx2, &cnt2);
+            list = ObjList_GetObjects(&idx2, &cnt2);
             for (; idx2 < cnt2; idx2++)
             {
                 if ((GameObject*)list[idx2] != self &&
@@ -136,7 +136,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 4:
-            list = (int*)ObjList_GetObjects(&idx3, &cnt3);
+            list = ObjList_GetObjects(&idx3, &cnt3);
             for (; idx3 < cnt3; idx3++)
             {
                 if ((GameObject*)list[idx3] != self &&
@@ -220,13 +220,13 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
-            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E5690;
+            diff = ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E5690;
             if (st->currentTrackOffset < PLATFORM1_TRACK_EXIT_NEG)
             {
                 st->transitionStep = 0;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                 st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_NEGATIVE);
-                list = (int*)ObjList_GetObjects(&idx4, &cnt4);
+                list = ObjList_GetObjects(&idx4, &cnt4);
                 for (; idx4 < cnt4; idx4++)
                 {
                     if ((GameObject*)list[idx4] != self &&
@@ -253,7 +253,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->transitionStep = 3;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                 st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_POSITIVE);
-                list = (int*)ObjList_GetObjects(&idx5, &cnt5);
+                list = ObjList_GetObjects(&idx5, &cnt5);
                 for (; idx5 < cnt5; idx5++)
                 {
                     if ((GameObject*)list[idx5] != self &&
@@ -283,14 +283,14 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                    player, ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E569C,
+                    player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E569C,
                     timeDelta, 0) != 0 &&
                 playerObj->anim.currentMoveProgress < lbl_803E5678)
             {
                 playerObj->anim.currentMoveProgress = lbl_803E567C + playerObj->anim.currentMoveProgress;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                st->linkedObject, ((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / lbl_803E569C,
+                st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C,
                 timeDelta, 0) != 0)
             {
                 t = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
@@ -376,7 +376,7 @@ void sc_totemstrength_init(int* obj)
 {
     GameObject* self = (GameObject*)obj;
     Platform1State* st = self->extra;
-    self->animEventCallback = (void*)platform1_control;
+    self->animEventCallback = platform1_control;
     self->objectFlags |= 0x6000;
     self->anim.rotX = (s16) - 10496;
     st->currentTrackOffset = -10496;

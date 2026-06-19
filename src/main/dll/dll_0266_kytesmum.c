@@ -249,7 +249,7 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8* arg)
     f32 dist;
     ObjHits_DisableObject(obj);
     dist = Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-    if (dist < (f32)setup->interactionRange)
+    if (dist < setup->interactionRange)
     {
         arg[0x90] |= 4;
     }
@@ -301,7 +301,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
         runtime->moveSet = &moveSets[0];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_spawnInteractionCallback;
         runtime->eventSfxTable = 0;
-        kytesMum->interactionCallback = (void*)kytesmum_animEventCallback;
+        kytesMum->interactionCallback = kytesmum_animEventCallback;
         break;
     case KYTESMUM_MODE_ROAMING:
         runtime->moveSet = &moveSets[1];
@@ -314,7 +314,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);
-        kytesMum->interactionCallback = (void*)kytesmum_animEventCallback;
+        kytesMum->interactionCallback = kytesmum_animEventCallback;
         break;
     case KYTESMUM_MODE_QUEST_A:
     case KYTESMUM_MODE_QUEST_B:
@@ -323,7 +323,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
         runtime->moveSet = &moveSets[2];
         runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateQuestStateCallback;
         runtime->eventSfxTable = (s16*)&lbl_803DC2D0;
-        kytesMum->interactionCallback = (void*)kytesmum_updateInteractionRangeCallback;
+        kytesMum->interactionCallback = kytesmum_updateInteractionRangeCallback;
         break;
     }
     runtime->idleSfxTable = &moveSets[3];
@@ -410,7 +410,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     }
     if (ObjTrigger_IsSet(obj) != 0)
     {
-        ((GameObject*)obj)->animEventCallback = (void*)kytesmum_idleCallback;
+        ((GameObject*)obj)->animEventCallback = kytesmum_idleCallback;
         (*gObjectTriggerInterface)->runSequence(next, (void*)obj, -1);
     }
     return 0;
@@ -428,13 +428,13 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
         case 0:
             if (sfxData != 0)
             {
-                Sfx_PlayFromObject(obj, (u16)sfxData[0]);
+                Sfx_PlayFromObject(obj, sfxData[0]);
             }
             break;
         case 1:
             if (sfxData != 0)
             {
-                Sfx_PlayFromObject(obj, (u16)sfxData[1]);
+                Sfx_PlayFromObject(obj, sfxData[1]);
             }
             break;
         case 2:
@@ -456,7 +456,7 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
     }
     if (flags != 0 && sfxData != 0)
     {
-        Sfx_PlayFromObject(obj, (u16)sfxData[3]);
+        Sfx_PlayFromObject(obj, sfxData[3]);
     }
 }
 #pragma reset

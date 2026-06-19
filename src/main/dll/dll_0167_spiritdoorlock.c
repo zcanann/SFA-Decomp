@@ -104,7 +104,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     state->orbitCount = params->orbitCount;
     state->active = 0;
 
-    scale = (f32)params->scale * lbl_803E4448;
+    scale = params->scale * lbl_803E4448;
     atDefault = (scale != lbl_803E4430);
     atDefault = !atDefault;
     if (atDefault)
@@ -215,7 +215,7 @@ void SpiritDoorLock_update(int obj)
         }
         orbitObjs = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
         angleStep = (s16)(0x10000 / state->orbitCount);
-        angle = (s16)state->spinAngle;
+        angle = state->spinAngle;
         orbitOffset[1] = lbl_803E4454;
         maxDist = lbl_803E4458;
         for (i = 0; i < orbitCount; i++)
@@ -224,7 +224,7 @@ void SpiritDoorLock_update(int obj)
             {
                 continue;
             }
-            ((GameObject*)obj)->anim.rotZ = (s16)angle;
+            ((GameObject*)obj)->anim.rotZ = angle;
             Obj_TransformLocalVectorByWorldMatrix(obj, orbitOffset, worldOffset);
             PSVECAdd(&((GameObject*)obj)->anim.localPosX, worldOffset, (f32*)((char*)orbitObjs[i] + 0xc));
             *(s16*)orbitObjs[i] = *(s16*)obj;
@@ -232,7 +232,7 @@ void SpiritDoorLock_update(int obj)
             *(f32*)((char*)orbitObjs[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
             angle += angleStep;
         }
-        state->spinAngle += (int)lbl_803DBED0;
+        state->spinAngle += lbl_803DBED0;
         ((GameObject*)obj)->anim.rotZ = 0;
         if (orbitCount == 0)
         {
@@ -243,8 +243,8 @@ void SpiritDoorLock_update(int obj)
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != NULL)
         {
-            tex->offsetT = (s16)(tex->offsetT + lbl_803DBED4 * (s32)framesThisStep);
-            tex->offsetS = (s16)(tex->offsetS + lbl_803DBED4 * (s32)framesThisStep);
+            tex->offsetT = (s16)(tex->offsetT + lbl_803DBED4 * framesThisStep);
+            tex->offsetS = (s16)(tex->offsetS + lbl_803DBED4 * framesThisStep);
             if ((s32)tex->offsetT > (s32)(lbl_803DBED8 << 8))
             {
                 tex->offsetT = (s16)(tex->offsetT - (lbl_803DBED8 << 8));

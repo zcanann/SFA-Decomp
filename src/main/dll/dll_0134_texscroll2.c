@@ -65,7 +65,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
         state->needsApply = 1;
         return;
     }
-    tables = (int*)getTablesBinEntry(TEXSCROLL_TABLE_ID);
+    tables = getTablesBinEntry(TEXSCROLL_TABLE_ID);
     if (tables == NULL) return;
     tex = getLoadedTexture(-tables[(s32) * (s16*)((char*)placement + 0x18)]);
     if (tex == NULL) return;
@@ -92,11 +92,11 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
                         {
                             mapTextureScrollSetStep(
                                 (s32) * (u8*)((char*)material + 0x2a),
-                                (s32)state->stepX,
-                                (s32)state->stepY,
+                                state->stepX,
+                                state->stepY,
                                 texWidthFixed, texHeightFixed,
-                                (s32)state->secondaryStepX,
-                                (s32)state->secondaryStepY,
+                                state->secondaryStepX,
+                                state->secondaryStepY,
                                 texWidthFixed, texHeightFixed);
                         }
                     }
@@ -104,22 +104,22 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
                     {
                         mapTextureScrollSetStep(
                             (s32) * (u8*)((char*)material + 0x2a),
-                            (s32)state->stepX,
-                            (s32)state->stepY,
+                            state->stepX,
+                            state->stepY,
                             texWidthFixed, texHeightFixed,
-                            (s32)state->secondaryStepX,
-                            (s32)state->secondaryStepY,
+                            state->secondaryStepX,
+                            state->secondaryStepY,
                             texWidthFixed, texHeightFixed);
                     }
                 }
                 else
                 {
-                    *(u8*)((char*)material + 0x2a) = (u8)mapTextureScrollAcquire(
-                        (s32)state->stepX,
-                        (s32)state->stepY,
+                    *(u8*)((char*)material + 0x2a) = mapTextureScrollAcquire(
+                        state->stepX,
+                        state->stepY,
                         texWidthFixed, texHeightFixed,
-                        (s32)state->secondaryStepX,
-                        (s32)state->secondaryStepY,
+                        state->secondaryStepX,
+                        state->secondaryStepY,
                         texWidthFixed, texHeightFixed);
                 }
             }

@@ -209,8 +209,8 @@ void dll_19D_update(int obj)
         ((GameObject*)self)->anim.previousLocalPosY = ((GameObject*)self)->anim.localPosY;
         ((GameObject*)self)->anim.previousLocalPosZ = ((GameObject*)self)->anim.localPosZ;
 
-        ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->unk2E * (u16)framesThisStep);
-        ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->unk2C * (u16)framesThisStep);
+        ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->unk2E * framesThisStep);
+        ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->unk2C * framesThisStep);
         (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
 
         if ((((Dll19DState*)state)->unk30 -= framesThisStep) <= 0)
@@ -224,7 +224,7 @@ void dll_19D_update(int obj)
         ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->unk8;
         ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.velocityY * timeDelta + ((Dll19DState*)state)->unkC;
         ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.velocityZ * timeDelta + ((Dll19DState*)state)->unk10;
-        ((Dll19DState*)state)->unk34 = ((Dll19DState*)state)->unk34 + (u16)framesThisStep * 0x5dc;
+        ((Dll19DState*)state)->unk34 = ((Dll19DState*)state)->unk34 + framesThisStep * 0x5dc;
         ((GameObject*)self)->anim.localPosX = ((Dll19DState*)state)->unk8;
         ((GameObject*)self)->anim.localPosY = ((Dll19DState*)state)->unkC;
         ((GameObject*)self)->anim.localPosZ = ((Dll19DState*)state)->unk10;

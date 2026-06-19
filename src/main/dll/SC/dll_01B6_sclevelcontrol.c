@@ -195,7 +195,7 @@ void sc_levelcontrol_init(int obj)
     ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
     ((ScLevelControlState*)state)->areaCell = 0xff;
     ((ScLevelControlState*)state)->mode = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)sc_levelcontrol_processAnimEventsCallback;
+    ((GameObject*)obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
     GameBit_Set(0x4bd, 1);

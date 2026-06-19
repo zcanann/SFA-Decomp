@@ -262,7 +262,7 @@ void sidekickball_update(u8* self)
     if (player == NULL
         || (*(u16*)(player + 0xB0) & 0x1000) != 0
         || other == NULL
-        || (otherStatusZeroWord = (u32)__cntlzw((u32) * (u16*)(other + 0xB0)),
+        || (otherStatusZeroWord = __cntlzw((u32) * (u16*)(other + 0xB0)),
             otherStatusMask = otherStatusZeroWord >> 5,
             (otherStatusMask & 0x1000) != 0)
         || GameBit_Get(0xD00) != 0)
@@ -301,7 +301,7 @@ void sidekickball_update(u8* self)
             ObjHits_DisableObject((u32)self);
             gotHit = 1;
         }
-        state->triggerHit = (u8)gotHit;
+        state->triggerHit = gotHit;
         if (state->triggerHit != 0)
         {
             state->triggerArmed = 0;

@@ -158,14 +158,14 @@ void bombplantspore_updateDrift(void* obj, void* state)
 
     if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->unk2a0 <= lbl_803E5394)
     {
-        ((BombPlantSporeState*)state)->spinAngle = (s16)randomGetRange(2000, 4000);
+        ((BombPlantSporeState*)state)->spinAngle = randomGetRange(2000, 4000);
         if (randomGetRange(0, 1) != 0)
         {
             ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
         }
         ((BombPlantSporeState*)state)->spinAngle =
             ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->unk2a8;
-        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
+        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - baseAngle;
         if (0x8000 < angleDelta)
         {
             angleDelta -= 0xffff;
@@ -211,7 +211,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
     {
         angleDelta += 0xffff;
     }
-    ((BombPlantSporeState*)state)->unk2a8 += (s16)((angleDelta * (s32)framesThisStep) >> 4);
+    ((BombPlantSporeState*)state)->unk2a8 += (s16)((angleDelta * framesThisStep) >> 4);
     ((BombPlantSporeState*)state)->unk278 =
         lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->unk278) *
         timeDelta +
@@ -287,7 +287,7 @@ void bombplantspore_update(void* obj)
 
     if (state->detonateTimer != lbl_803E5394)
     {
-        *(s16*)obj += (u16)framesThisStep * 0x40;
+        *(s16*)obj += framesThisStep * 0x40;
         state->detonateTimer -= timeDelta;
         if (state->detonateTimer <= lbl_803E5394)
         {
@@ -426,7 +426,7 @@ void bombplantspore_init(void* obj, void* param2)
     ((GameObject*)obj)->objectFlags |= 0x6000;
     ((GameObject*)obj)->anim.velocityY = lbl_803E53F4;
     ObjHits_DisableObject((u32)obj);
-    state->spinAngle = (s16)randomGetRange(0, 0xffff);
+    state->spinAngle = randomGetRange(0, 0xffff);
 
     state->randomPhase = (f32)(int)
     randomGetRange(0, 1000) / lbl_803E5390;
@@ -446,6 +446,6 @@ void bombplantspore_init(void* obj, void* param2)
     }
     state->light = light;
     ObjMsg_AllocQueue(obj, 2);
-    state->yawStep = (s16)randomGetRange(-0x200, 0x200);
+    state->yawStep = randomGetRange(-0x200, 0x200);
 }
 

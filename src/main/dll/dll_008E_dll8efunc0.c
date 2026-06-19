@@ -154,7 +154,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[8].z = lbl_803E1168;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1138;
     if (variant == 0)
     {

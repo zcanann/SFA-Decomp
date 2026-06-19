@@ -78,7 +78,7 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
     int i;
     puzzleObj = (SCTotemLogPuzzleObject*)obj;
     i = 0;
-    while (i < (int)updateState->eventCount)
+    while (i < updateState->eventCount)
     {
         switch (*(u8*)&updateState->eventHandled[i])
         {
@@ -353,7 +353,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
         }
         else
         {
-            ((ShLevelcontrolState*)state)->timer8 -= (f32)bloopsRemaining * timeDelta;
+            ((ShLevelcontrolState*)state)->timer8 -= bloopsRemaining * timeDelta;
             if (((ShLevelcontrolState*)state)->timer8 >= lbl_803E54B4)
             {
                 (*gGameUIInterface)->runAirMeter((int)((ShLevelcontrolState*)state)->timer8);
@@ -443,11 +443,11 @@ void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short 
     u64 latchState;
 
     latchState = FUN_80286838();
-    eventId = (u32)param_5;
+    eventId = param_5;
     bitValue = GameBit_Get(eventId);
     bitValue = countLeadingZeros(bitValue);
     GameBit_Set(eventId, bitValue >> 5);
-    SCGameBitLatch_Update((int)((u64)latchState >> 0x20), (int)latchState, param_3, param_4,
+    SCGameBitLatch_Update((int)((u64)latchState >> 0x20), latchState, param_3, param_4,
                           param_5, (int)param_6);
     bitValue = GameBit_Get(eventId);
     bitValue = countLeadingZeros(bitValue);
@@ -972,9 +972,9 @@ void sh_levelcontrol_init(int obj)
     int i;
     u32 v;
 
-    ((GameObject*)obj)->animEventCallback = (void*)SH_LevelControl_SeqFn;
+    ((GameObject*)obj)->animEventCallback = SH_LevelControl_SeqFn;
     v = (u32)((GameObject*)obj)->objectFlags | 0x4000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
+    ((GameObject*)obj)->objectFlags = v;
     ((GameObject*)obj)->unkF8 = 3;
 
     if (getSaveGameLoadStatus() != 0)

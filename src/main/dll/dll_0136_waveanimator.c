@@ -65,10 +65,10 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
     int* state = ((GameObject*)obj)->extra;
     u32 v;
     v = (u32)((WaveanimatorModelMtxCtx*)state)->flags | 4;
-    ((WaveanimatorModelMtxCtx*)state)->flags = (u8)v;
-    ((WaveanimatorModelMtxCtx*)state)->arg0 = (u8)a;
-    ((WaveanimatorModelMtxCtx*)state)->arg1 = (u8)b;
-    ((WaveanimatorModelMtxCtx*)state)->arg2 = (u8)c;
+    ((WaveanimatorModelMtxCtx*)state)->flags = v;
+    ((WaveanimatorModelMtxCtx*)state)->arg0 = a;
+    ((WaveanimatorModelMtxCtx*)state)->arg1 = b;
+    ((WaveanimatorModelMtxCtx*)state)->arg2 = c;
 }
 
 void waveanimator_func0B(int* obj)
@@ -105,9 +105,9 @@ void fn_801923F8(int* cfgArg)
     lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
 
     x = cfg->originX;
-    stepX = (s32)((lbl_803E3F40 * (f32)cfg->spanX) / (f32)cfg->period);
+    stepX = (s32)((lbl_803E3F40 * cfg->spanX) / cfg->period);
     y = cfg->originY;
-    stepY = (s32)((lbl_803E3F40 * (f32)cfg->spanY) / (f32)cfg->period);
+    stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
 
     z = lbl_803E3F44;
     cfg->maxHeight = z;
@@ -118,10 +118,10 @@ void fn_801923F8(int* cfgArg)
     waveDivisor = lbl_803E3F4C;
     for (i = 0; i < cfg->period; i++)
     {
-        f32 xv = waveScale * (f32)x;
+        f32 xv = waveScale * x;
         for (j = 0; j < cfg->period; j++)
         {
-            f32 s1 = mathSinf((waveScale * (f32)y) / waveDivisor);
+            f32 s1 = mathSinf((waveScale * y) / waveDivisor);
             f32 a = cfg->ampY * s1;
             f32 s2 = mathSinf(xv / waveDivisor);
             ((f32*)lbl_803DDAF4)[heightIdx] = cfg->ampX * s2 + a;

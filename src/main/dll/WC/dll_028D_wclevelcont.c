@@ -11,8 +11,8 @@ void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
         {
             if (value == lbl_8032B0C8[i][j])
             {
-                *outRow = (s16)i;
-                *outCol = (s16)j;
+                *outRow = i;
+                *outCol = j;
                 return;
             }
         }
@@ -29,8 +29,8 @@ void wclevelcont_func15(s16 value, s16* outRow, s16* outCol)
         {
             if (value == lbl_8032B088[i][j])
             {
-                *outRow = (s16)i;
-                *outCol = (s16)j;
+                *outRow = i;
+                *outCol = j;
                 return;
             }
         }
@@ -52,7 +52,7 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     {
         return;
     }
-    lbl_803AD298[i][j] = (u8)value;
+    lbl_803AD298[i][j] = value;
 }
 
 void wclevelcont_func12(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
@@ -90,8 +90,8 @@ void wclevelcont_func0F(s16 value, s16* outRow, s16* outCol)
         {
             if (value == lbl_8032B048[i][j])
             {
-                *outRow = (s16)i;
-                *outCol = (s16)j;
+                *outRow = i;
+                *outCol = j;
                 return;
             }
         }
@@ -108,8 +108,8 @@ void wclevelcont_func0E(s16 value, s16* outRow, s16* outCol)
         {
             if (value == lbl_8032B008[i][j])
             {
-                *outRow = (s16)i;
-                *outCol = (s16)j;
+                *outRow = i;
+                *outCol = j;
                 return;
             }
         }
@@ -131,7 +131,7 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     {
         return;
     }
-    lbl_803AD2D8[i][j] = (u8)value;
+    lbl_803AD2D8[i][j] = value;
 }
 
 void wclevelcont_func0B(int obj, f32 px, f32 pz, s16* outRow, s16* outCol)
@@ -419,7 +419,7 @@ void wclevelcont_init(int obj)
     WcLevelControlState* state = ((GameObject*)obj)->extra;
     u16 flags;
 
-    ((GameObject*)obj)->animEventCallback = (void*)wcpushblock_levelControlTriggerCallback;
+    ((GameObject*)obj)->animEventCallback = wcpushblock_levelControlTriggerCallback;
     GameBit_Set(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     GameBit_Set(0x811, 0);

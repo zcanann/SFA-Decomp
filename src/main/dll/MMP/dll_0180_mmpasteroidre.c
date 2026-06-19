@@ -87,7 +87,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         u8 type = animUpdate->eventIds[i];
         switch (type)
@@ -111,8 +111,8 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 int r;
                 state->eventFlags = state->eventFlags & ~0x20;
                 state->eventFlags = state->eventFlags | 0x50;
-                r = (int)randomGetRange(10, 60);
-                state->periodicFxTimer = (f32)r;
+                r = randomGetRange(10, 60);
+                state->periodicFxTimer = r;
                 state->phase = 1;
                 GameBit_Set(0x87b, state->phase);
                 break;
@@ -132,10 +132,10 @@ void mmp_asteroid_re_init(int obj)
 {
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= 0x6000;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801A6F4C;
+    ((GameObject*)obj)->animEventCallback = fn_801A6F4C;
     state->eventFlags = 0;
-    state->intensity = (u8)GameBit_Get(0x88C);
-    state->phase = (u8)GameBit_Get(0x87B);
+    state->intensity = GameBit_Get(0x88C);
+    state->phase = GameBit_Get(0x87B);
     switch ((s32)state->phase)
     {
     case 0:
@@ -204,23 +204,23 @@ void mmp_asteroid_re_update(int obj)
             {
                 ((GameObject*)obj)->anim.velocityY = -(lbl_803E4508 * timeDelta - speed);
             }
-            *(s16*)&state->bobPhase = lbl_803E450C * timeDelta + (f32)state->bobPhase;
-            *(s16*)&state->rollPhase = lbl_803E4510 * timeDelta + (f32)state->rollPhase;
-            *(s16*)&state->pitchPhase = lbl_803E4514 * timeDelta + (f32)state->pitchPhase;
+            *(s16*)&state->bobPhase = lbl_803E450C * timeDelta + state->bobPhase;
+            *(s16*)&state->rollPhase = lbl_803E4510 * timeDelta + state->rollPhase;
+            *(s16*)&state->pitchPhase = lbl_803E4514 * timeDelta + state->pitchPhase;
             ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, ((GameObject*)obj)->anim.velocityY * timeDelta,
                                                     *(f32*)&lbl_803E4518);
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + mathSinf(
-                (lbl_803E451C * (f32)state->bobPhase) / lbl_803E4520);
+                (lbl_803E451C * state->bobPhase) / lbl_803E4520);
             if (((GameObject*)obj)->anim.localPosY < state->baseY)
             {
                 ((GameObject*)obj)->anim.localPosY = state->baseY;
             }
             ((GameObject*)obj)->anim.rotZ = (s16)(
                 ((GameObject*)obj)->anim.rotZ + (int)(lbl_803E4524 * mathSinf(
-                    (lbl_803E451C * (f32)state->rollPhase) / lbl_803E4520)));
+                    (lbl_803E451C * state->rollPhase) / lbl_803E4520)));
             ((GameObject*)obj)->anim.rotY = (s16)(
                 ((GameObject*)obj)->anim.rotY + (int)(lbl_803E4524 * mathSinf(
-                    (lbl_803E451C * (f32)state->pitchPhase) / lbl_803E4520)));
+                    (lbl_803E451C * state->pitchPhase) / lbl_803E4520)));
             *(f32*)(lbl_803AC900 + 8) = lbl_803E44F8;
             *(f32*)(lbl_803AC900 + 0xC) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)(lbl_803AC900 + 0x10) = state->baseY - lbl_803E4528;

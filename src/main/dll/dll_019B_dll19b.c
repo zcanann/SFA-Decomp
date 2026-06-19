@@ -266,7 +266,7 @@ void dll_19B_update(int obj)
         switch (((Dll19BState*)st)->unk13)
         {
         case 0:
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < (f32)st[0])
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st[0])
             {
                 ((Dll19BState*)st)->unk13 = 1;
                 GameBit_Set(0x129, 0);
@@ -293,7 +293,7 @@ void dll_19B_update(int obj)
             }
             break;
         case 2:
-            if (((Dll19BState*)st)->unk12 == 0 && (u32)GameBit_Get(0x1d3) == 0)
+            if (((Dll19BState*)st)->unk12 == 0 && GameBit_Get(0x1d3) == 0)
             {
                 GameBit_Set(0x1d3, 1);
             }
@@ -403,7 +403,7 @@ void dll_19B_init(u8* obj, u8* params)
     sub[0x14] = 0;
     ((Dll19CState*)sub)->unk2 = 0;
     sub[0x12] = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_19B_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1d2, 0);

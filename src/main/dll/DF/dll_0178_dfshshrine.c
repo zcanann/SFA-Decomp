@@ -101,15 +101,15 @@ void fn_801C2914(int obj)
     ((GameObject*)obj)->anim.localPosY =
         lbl_803E4E5C +
         (((ObjPlacement*)def)->posY +
-            mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
+            mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64));
 
-    trigA = mathSinf((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
-    trigB = mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((lbl_803E4E60 * state->orbitB) / lbl_803E4E64);
+    trigB = mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64);
     trigB = trigB + trigA;
     ((GameObject*)obj)->anim.rotZ = lbl_803E4E68 * trigB;
 
-    trigA = mathSinf((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
-    trigB = mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((lbl_803E4E60 * state->orbitC) / lbl_803E4E64);
+    trigB = mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64);
     trigB = trigB + trigA;
     ((GameObject*)obj)->anim.rotY = lbl_803E4E68 * trigB;
 
@@ -524,7 +524,7 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
     state->mode = 4;
     ((DfshShrineFlags*)&state->flags)->openedBySequence = 0;
     state->transitionTimer = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)dfsh_shrine_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     state->rewardIndex = 0;

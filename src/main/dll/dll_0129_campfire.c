@@ -147,7 +147,7 @@ void campfire_init(int obj, int p2)
     size = *(u8*)(p2 + 0x1a);
     if (size != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3D88 * (f32)size;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3D88 * size;
     }
     if (GameBit_Get(0x8c) != 0)
     {
@@ -181,7 +181,7 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setDiffuseColor(*state, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
         atten = (int)(lbl_803E3D8C * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setDistanceAttenuation(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
+        modelLightStruct_setDistanceAttenuation(*state, atten, lbl_803E3D90 + atten);
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);

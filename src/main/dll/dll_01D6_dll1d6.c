@@ -46,7 +46,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
  * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
  * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
  * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
+ *  casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
  * (recipe #36/#77); the layout is documented here for a future pass.
  */
 
@@ -367,7 +367,7 @@ void dll_1D6_update(int* obj)
         }
         tex->offsetT = -v;
     }
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     mtx[0] = -((GameObject*)obj)->anim.localPosX;
     mtx[1] = -((GameObject*)obj)->anim.localPosY;
     mtx[2] = -((GameObject*)obj)->anim.localPosZ;

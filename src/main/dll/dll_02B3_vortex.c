@@ -30,7 +30,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
 
-    hudHidden = (u8)getHudHiddenFrameCount();
+    hudHidden = getHudHiddenFrameCount();
     if (hudHidden != 0)
     {
         dt = lbl_803E73D0;
@@ -93,7 +93,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             ((GameObject*)obj)->anim.rotZ = lbl_803DC414[i];
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = (f32)state->angles[i] + dt * (f32)lbl_803DC410[i];
+            state->angles[i] = state->angles[i] + dt * lbl_803DC410[i];
             ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / lbl_803E73DC) * state->alpha *
                 (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
@@ -127,7 +127,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         for (i = 0; i < 3; i++)
         {
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = (f32)state->angles[i] + dt * (f32)lbl_803DC3E8[i];
+            state->angles[i] = state->angles[i] + dt * lbl_803DC3E8[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -167,7 +167,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         for (i = 0; i < 3; i++)
         {
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = (f32)state->angles[i] + dt * (f32)lbl_803DC3F0[i];
+            state->angles[i] = state->angles[i] + dt * lbl_803DC3F0[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -196,7 +196,7 @@ void vortex_init(int obj, int initData)
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
     {
-        state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
+        state->flags.active = GameBit_Get(setup->activeGameBit);
     }
     if (((GameObject*)obj)->anim.seqId == 0x835)
     {
@@ -204,7 +204,7 @@ void vortex_init(int obj, int initData)
         {
             state->radiusScale[i] = lbl_803DC3F8[i];
             state->alphaScale[i] = lbl_803DC400[i];
-            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
     else if (((GameObject*)obj)->anim.seqId == 0x838)
@@ -213,7 +213,7 @@ void vortex_init(int obj, int initData)
         {
             state->radiusScale[i] = lbl_803DC3F8[i];
             state->alphaScale[i] = lbl_803DC408[i];
-            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
     else if (((GameObject*)obj)->anim.seqId == 0x83d)
@@ -222,7 +222,7 @@ void vortex_init(int obj, int initData)
         {
             state->radiusScale[i] = base[i];
             state->alphaScale[i] = base[i + 3];
-            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
     else
@@ -231,7 +231,7 @@ void vortex_init(int obj, int initData)
         {
             state->radiusScale[i] = base[i + 6];
             state->alphaScale[i] = base[i + 9];
-            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
         if (state->flags.active != 0)
         {
@@ -247,7 +247,7 @@ void vortex_init(int obj, int initData)
         state->alpha = lbl_803E73E0;
     else
         state->alpha = lbl_803E73D0;
-    state->particleTimer = (f32)randomGetRange(0, 0x14);
+    state->particleTimer = randomGetRange(0, 0x14);
     *(f32*)(obj + 0x40) = *(f32*)(obj + 0x40) * lbl_803E7404;
 }
 
@@ -259,7 +259,7 @@ void vortex_update(int obj)
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
     {
-        state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
+        state->flags.active = GameBit_Get(setup->activeGameBit);
     }
 
     if (((GameObject*)obj)->anim.seqId == 0x29a || ((GameObject*)obj)->anim.seqId == 0x829)

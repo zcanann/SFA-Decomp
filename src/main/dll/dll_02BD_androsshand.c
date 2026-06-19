@@ -118,7 +118,7 @@ void androsshand_update(int obj)
         }
         prevVel = state->zSpringVelocity;
         state->zSpringVelocity =
-            prevVel + ((-state->zSpringOffset / (f32)lbl_803DC4FC - prevVel) / (f32)lbl_803DC500);
+            prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
         state->zSpringOffset = state->zSpringOffset + state->zSpringVelocity;
 
         angle = lbl_803E75B8 *
@@ -335,7 +335,7 @@ void androsshand_setState(int obj, int newState, u8 force)
     state = ((GameObject*)obj)->extra;
     if (state->handState != ANDROSSHAND_STATE_DEAD || force != 0)
     {
-        state->handState = (s8)newState;
+        state->handState = newState;
         if (force != 0)
         {
             if (force == 2)
@@ -373,7 +373,7 @@ void androsshand_handleDamage(int obj, int hand)
     {
         cooldown = 0;
     }
-    state->hitCooldown = (u8)cooldown;
+    state->hitCooldown = cooldown;
     if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 &&
         state->hitCooldown == 0)
     {
@@ -382,7 +382,7 @@ void androsshand_handleDamage(int obj, int hand)
         case 0:
             state->health -= 1;
             state->hitCooldown = 6;
-            state->zSpringVelocity = (f32)lbl_803DC508;
+            state->zSpringVelocity = lbl_803DC508;
             Sfx_PlayFromObject(obj, 0x484);
             if (state->health == 0)
             {
@@ -463,7 +463,7 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         if ((void*)obj != NULL)
         {
             arwprojectile_setLifetime(obj, lbl_803DC510);
-            arwprojectile_placeForward(obj, (f32)lbl_803DC50C);
+            arwprojectile_placeForward(obj, lbl_803DC50C);
         }
     }
 }

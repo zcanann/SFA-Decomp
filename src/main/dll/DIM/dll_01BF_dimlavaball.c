@@ -175,7 +175,7 @@ void lavaball1bf_init(s16* obj, u8* p)
     inner->firePeriod = (f32) * (s16*)(p + 0x18);
     inner->fireTimer = lbl_803E4814;
     inner->gateA = p[0x1d];
-    inner->gateB = (u8)GameBit_Get((int)*(s16*)(p + 0x22));
+    inner->gateB = GameBit_Get((int)*(s16*)(p + 0x22));
     if (*(s16*)(p + 0x24) == -1 && inner->gateB == 0)
     {
         inner->soloLatch = 1;
@@ -229,7 +229,7 @@ void lavaball1bf_update(int* obj)
         *(f32*)(s + 8) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(s + 0xc) = ((GameObject*)obj)->anim.localPosY;
         *(f32*)(s + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-        *(s8*)(s + 0x18) = (s8)setup[0x1c];
+        *(s8*)(s + 0x18) = setup[0x1c];
         *(s16*)(s + 0x1a) = setup[0x1a];
         *(s16*)(s + 0x1c) = setup[0x1b];
         *(int*)(s + 0x14) = ((ObjPlacement*)setup)->mapId;

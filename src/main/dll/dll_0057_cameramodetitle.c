@@ -234,11 +234,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > lbl_803E1C00)
             {
                 int d2 = (s16)ty - (s16)sy;
-                camera->anim.rotX = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotX = (s16)(s32)(v * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotX = v * (f32)d + (f32)sy;
+                *(u16*)&camera->anim.rotX = v * d + sy;
             }
         }
         {
@@ -248,11 +248,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > lbl_803E1C00)
             {
                 int d2 = (s16)ty - (s16)sy;
-                camera->anim.rotY = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotY = (s16)(s32)(v * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotY = v * (f32)d + (f32)sy;
+                *(u16*)&camera->anim.rotY = v * d + sy;
             }
         }
         {
@@ -262,11 +262,11 @@ void CameraModeTitle_update(CameraObject* camera)
             if (__fabs((f32)d) > lbl_803E1C00)
             {
                 int d2 = (s16)ty - (s16)sy;
-                camera->anim.rotZ = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotZ = (s16)(s32)(v * d2 + (f32)(s16)sy);
             }
             else
             {
-                *(u16*)&camera->anim.rotZ = v * (f32)d + (f32)sy;
+                *(u16*)&camera->anim.rotZ = v * d + sy;
             }
         }
     }

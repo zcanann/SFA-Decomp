@@ -61,7 +61,7 @@ void Door_init(int* obj, u8* def)
     u8* state = ((GameObject*)obj)->extra;
     state[5] = 1;
     ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)Door_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Door_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->unk21 * lbl_803E3784;
     if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3788)
@@ -72,7 +72,7 @@ void Door_init(int* obj, u8* def)
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     if (((DoorObjectDef*)def)->unk1A != -1)
     {
-        state[4] = (u8)GameBit_Get(((DoorObjectDef*)def)->unk1A);
+        state[4] = GameBit_Get(((DoorObjectDef*)def)->unk1A);
     }
     else
     {

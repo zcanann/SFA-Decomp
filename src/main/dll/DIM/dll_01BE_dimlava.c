@@ -211,8 +211,8 @@ void lavaball1be_init(s16* obj, u8* p)
         } s;
         s.vec = *(LavaVec*)lbl_802C2318;
         s.rot[2] = 0;
-        s.rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
-        s.rot[0] = (s16)randomGetRange(0, 0xfffe);
+        s.rot[1] = randomGetRange(-0x2ee0, 0x2ee0);
+        s.rot[0] = randomGetRange(0, 0xfffe);
         vecRotateZXY((u8*)&s + 12, &s.vec);
         ((GameObject*)obj)->unkF4 = 0x4b;
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
@@ -380,7 +380,7 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    vxz = lbl_803E47D8 * (f32)p3;
+    vxz = lbl_803E47D8 * p3;
     x = *(f32*)(*(char**)&state->targetObj + 0xc);
     ((GameObject*)obj)->anim.worldPosX = x;
     ((GameObject*)obj)->anim.localPosX = x;
@@ -402,7 +402,7 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->unk18 << 8);
     ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
         lbl_803E47DC * (f32)((GameObject*)obj)->anim.rotX / lbl_803E47E0);
-    ((GameObject*)obj)->anim.velocityY = lbl_803E47D8 * (f32)p2;
+    ((GameObject*)obj)->anim.velocityY = lbl_803E47D8 * p2;
     ((GameObject*)obj)->anim.velocityZ = vxz * -mathCosf(
         lbl_803E47DC * (f32)((GameObject*)obj)->anim.rotX / lbl_803E47E0);
     ((GameObject*)obj)->anim.flags &= ~0x4000;

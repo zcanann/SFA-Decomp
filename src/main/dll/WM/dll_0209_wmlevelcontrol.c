@@ -162,31 +162,31 @@ void fn_801F3F18(int obj)
        with before the volatile reads. */
     fromColor = &lbl_803DC118;
     toColor = &lbl_803DC11C;
-    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
     skyFn_800895e0(1, *(volatile u8*)&lbl_803DDC9C, ((volatile u8*)&lbl_803DDC9C)[1], ((volatile u8*)&lbl_803DDC9C)[2], 0x40, 0x40);
 
     fromColor = &lbl_803DC110;
     toColor = &lbl_803DC114;
-    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
     fn_80089510(1, *(volatile u8*)&lbl_803DDC98, ((volatile u8*)&lbl_803DDC98)[1], ((volatile u8*)&lbl_803DDC98)[2]);
 
     fromColor = &lbl_803DC120;
     toColor = &lbl_803DC124;
-    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
     fn_80089578(1, *(volatile u8*)&lbl_803DDC94, ((volatile u8*)&lbl_803DDC94)[1], ((volatile u8*)&lbl_803DDC94)[2]);
 

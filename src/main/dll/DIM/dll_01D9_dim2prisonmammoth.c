@@ -129,11 +129,11 @@ void fn_802BC788(int a, int b)
 
 void dim2prisonmammoth_initialise(void)
 {
-    ((void**)gDim2PrisonMammothStateHandlers)[0] = (void*)dim2prisonmammoth_stateHandler00;
-    ((void**)gDim2PrisonMammothStateHandlers)[1] = (void*)dim2prisonmammoth_stateHandler01;
-    ((void**)gDim2PrisonMammothStateHandlers)[2] = (void*)dim2prisonmammoth_stateHandler02;
-    ((void**)gDim2PrisonMammothStateHandlers)[3] = (void*)dim2prisonmammoth_stateHandler03;
-    gDim2PrisonMammothDefaultStateHandler = (void*)dim2prisonmammoth_defaultStateHandler;
+    ((void**)gDim2PrisonMammothStateHandlers)[0] = dim2prisonmammoth_stateHandler00;
+    ((void**)gDim2PrisonMammothStateHandlers)[1] = dim2prisonmammoth_stateHandler01;
+    ((void**)gDim2PrisonMammothStateHandlers)[2] = dim2prisonmammoth_stateHandler02;
+    ((void**)gDim2PrisonMammothStateHandlers)[3] = dim2prisonmammoth_stateHandler03;
+    gDim2PrisonMammothDefaultStateHandler = dim2prisonmammoth_defaultStateHandler;
 }
 
 #pragma peephole off
@@ -222,7 +222,7 @@ void dim2prisonmammoth_init(int obj, int p2)
 {
     int inner;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)fn_802BC3F0;
+    ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {

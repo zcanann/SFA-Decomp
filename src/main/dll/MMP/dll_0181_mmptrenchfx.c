@@ -80,12 +80,12 @@ void mmp_trenchfx_update(int obj)
         {
             state->fxScale = lbl_803E45B4;
             state->fxX = (f32)(int)
-            randomGetRange(-(int)state->extentX, state->extentX);
+            randomGetRange(-state->extentX, state->extentX);
             state->fxY = (f32)(int)
-            randomGetRange(-(int)state->extentY, state->extentY);
+            randomGetRange(-state->extentY, state->extentY);
             state->fxZ = (f32)(int)
-            randomGetRange(-(int)state->extentZ, state->extentZ);
-            vecRotateZXY((void*)state->emitAngles, (void*)&state->fxX);
+            randomGetRange(-state->extentZ, state->extentZ);
+            vecRotateZXY((void*)state->emitAngles, &state->fxX);
             state->fxX += ((GameObject*)obj)->anim.localPosX;
             state->fxY += ((GameObject*)obj)->anim.localPosY;
             state->fxZ += ((GameObject*)obj)->anim.localPosZ;
@@ -102,11 +102,11 @@ void mmp_trenchfx_update(int obj)
         }
         *(f32*)(lbl_803AC930 + 8) = lbl_803E45B4;
         *(f32*)(lbl_803AC930 + 0xC) = (f32)(int)
-        randomGetRange(-(int)state->extentX, state->extentX);
+        randomGetRange(-state->extentX, state->extentX);
         *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)
-        randomGetRange(-(int)state->extentY, state->extentY);
+        randomGetRange(-state->extentY, state->extentY);
         *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)
-        randomGetRange(-(int)state->extentZ, state->extentZ);
+        randomGetRange(-state->extentZ, state->extentZ);
         vecRotateZXY((void*)state->emitAngles, (void*)(lbl_803AC930 + 0xC));
         *(f32*)(lbl_803AC930 + 0xC) += ((GameObject*)obj)->anim.localPosX;
         *(f32*)(lbl_803AC930 + 0x10) += ((GameObject*)obj)->anim.localPosY;

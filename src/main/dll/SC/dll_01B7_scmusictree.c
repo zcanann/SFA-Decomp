@@ -280,7 +280,7 @@ void sc_musictree_update(int obj)
         {
             if (*(void**)p == NULL)
             {
-                sc_musictree_spawnAmbientEffect(obj, inner, framesThisStep, (s8)i);
+                sc_musictree_spawnAmbientEffect(obj, inner, framesThisStep, i);
             }
             else
             {

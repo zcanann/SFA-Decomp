@@ -236,11 +236,11 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
 
     ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E2698 *
         (lbl_803E269C *
-            mathSinf((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
+            mathSinf((lbl_803E26A0 * state->yawWavePhase) / lbl_803E26A4)));
 
     ((GameObject*)obj)->anim.rotZ += (s16)(lbl_803E2698 *
         (lbl_803E269C *
-            mathSinf((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
+            mathSinf((lbl_803E26A0 * state->rollWavePhase) / lbl_803E26A4)));
 }
 
 void swarmbaddie_update(int obj)

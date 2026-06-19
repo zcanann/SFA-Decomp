@@ -143,7 +143,7 @@ void alphaanimator_update(int* obj)
         }
         else
         {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         }
         s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
         if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
@@ -165,7 +165,7 @@ void alphaanimator_update(int* obj)
     }
     if (mode == 2)
     {
-        s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+        s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
         if ((s8)s->doneCount > 2 &&
             (s8)s->gateVal != (s8)s->prevGate)
         {
@@ -189,7 +189,7 @@ void alphaanimator_update(int* obj)
         }
         if ((s8)s->gateVal == 0)
         {
-            s->gateVal = (s8)GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
             if ((s8)s->gateVal == 0)
             {
                 return;
@@ -331,7 +331,7 @@ void alphaanimator_update(int* obj)
         {
             rate = -rate;
         }
-        absRate = (f32)rate;
+        absRate = rate;
         s->fadeA =
             absRate / lbl_803E3F80 * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)

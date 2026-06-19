@@ -182,8 +182,8 @@ void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData)
     vecRotateZXY(&mtx, in);
     ang = getAngle(in[0], in[1]);
     ang2 = getAngle(in[2], in[1]);
-    ((GameObject*)obj)->anim.rotY = (s16)ang2;
-    ((GameObject*)obj)->anim.rotZ = (s16)ang;
+    ((GameObject*)obj)->anim.rotY = ang2;
+    ((GameObject*)obj)->anim.rotZ = ang;
 }
 #pragma dont_inline reset
 
@@ -200,7 +200,7 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     ObjAnimComponent* objAnim = &((GameObject*)p1)->anim;
     int* inner = ((GameObject*)p1)->extra;
-    if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0 && (u8)objAnim->alpha < 0xff)
+    if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0 && objAnim->alpha < 0xff)
     {
         if (objAnim->alpha > 0xff - framesThisStep)
         {
@@ -293,7 +293,7 @@ void wmwallcrawler_update(int obj)
         : ObjGroup_FindNearestObject(10, obj, &best);
     if (player != 0)
     {
-        sq = (f32)GameBit_Get(0x789);
+        sq = GameBit_Get(0x789);
         lbl_803DC130 = lbl_803E5FC0 * sq + lbl_803E5FC0;
         if (((WmwallcrawlerState*)st)->mode == WMWALLCRAWLER_MODE_DIE)
         {
@@ -308,7 +308,7 @@ void wmwallcrawler_update(int obj)
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5FC8;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                obj, lbl_803E5FCC, (f32)framesThisStep, NULL) != 0)
+                obj, lbl_803E5FCC, framesThisStep, NULL) != 0)
             {
                 if (((WmwallcrawlerState*)st)->counterGameBit != 0 && ((WmwallcrawlerState*)st)->counterGameBit != -1)
                 {
@@ -456,7 +456,7 @@ void wmwallcrawler_update(int obj)
                         }
                         ((WmwallcrawlerState*)st)->animSpeed = lbl_803E5FDC * speed;
                         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-                            obj, ((WmwallcrawlerState*)st)->animSpeed, (f32)framesThisStep,
+                            obj, ((WmwallcrawlerState*)st)->animSpeed, framesThisStep,
                             NULL);
                         ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
                         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
@@ -676,7 +676,7 @@ void wmwallcrawler_update(int obj)
                                     break;
                                 }
                                 if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-                                    obj, ((WmwallcrawlerState*)st)->animSpeed, (f32)framesThisStep,
+                                    obj, ((WmwallcrawlerState*)st)->animSpeed, framesThisStep,
                                     NULL) != 0 && ((GameObject*)obj)->anim.currentMove != 0)
                                 {
                                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E5FB0, 0);
@@ -770,10 +770,10 @@ void wmwallcrawler_init(int obj, int spawn)
         (*gPathControlInterface)->init((void*)state, 0, 0, 1);
         (*gPathControlInterface)->setLocalPointCollision((void*)state, 1, lbl_80328DE0,
                                                          &lbl_803DC134, 4);
-        (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
+        (*gPathControlInterface)->attachObject((void*)obj, state);
         *(u32*)state |= 0x40008;
     }
-    ((GameObject*)obj)->animEventCallback = (void*)wmwallcrawler_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }

@@ -160,8 +160,8 @@ void drshackle_init(int obj, char* arg)
     char* p = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
     ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(*(s16*)(arg + 0x1e)) == 0);
-    ((DrshackleState*)p)->pathPointA = (s8)arg[0x18] % 2;
-    ((GameObject*)obj)->animEventCallback = (void*)drshackle_toggleEventCallback;
+    ((DrshackleState*)p)->pathPointA = arg[0x18] % 2;
+    ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
     if (*(s16*)(arg + 0x1c) == 1)
     {
         ((DrshackleState*)p)->slotCount = 2;

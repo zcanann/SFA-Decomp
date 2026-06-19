@@ -90,7 +90,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
-    ((GameObject*)obj)->animEventCallback = (void*)dimmagicbridge_flameSeqFn;
+    ((GameObject*)obj)->animEventCallback = dimmagicbridge_flameSeqFn;
     sub = ((GameObject*)obj)->extra;
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
@@ -131,7 +131,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     }
 
     sub->segmentCount = 0xa;
-    sub->minVertexY = (f32)minY;
+    sub->minVertexY = minY;
 
     if (GameBit_Get(DIMMAGICBRIDGE_GAMEBIT_IGNITED) != 0)
     {
@@ -206,12 +206,12 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     {
         tex->offsetT -= 10000;
     }
-    v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
+    v = (s32) * (u16*)(obj + 0x60) + framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x60) = (u16)v;
-    v = (s32) * (u16*)(obj + 0x62) + (s32)framesThisStep * 0x80;
+    *(u16*)(obj + 0x60) = v;
+    v = (s32) * (u16*)(obj + 0x62) + framesThisStep * 0x80;
     if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x62) = (u16)v;
+    *(u16*)(obj + 0x62) = v;
 }
 #pragma dont_inline reset
 
@@ -223,7 +223,7 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
     u8* sub = ((GameObject*)obj)->extra;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
-    dimmagicbridge_scrollTextureChannels(obj, (u8*)sub);
+    dimmagicbridge_scrollTextureChannels(obj, sub);
     if (animUpdate->triggerCommand == 1)
     {
         animUpdate->triggerCommand = 0;
@@ -247,11 +247,11 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
                 int sv = sub[0x50 + i];
                 int v = sv + framesThisStep;
                 if (v > 0xff) v = 0xff;
-                sub[0x50 + i] = (u8)v;
+                sub[0x50 + i] = v;
             }
         }
     }
-    dimmagicbridge_updateVertexWave(obj, (u8*)sub);
+    dimmagicbridge_updateVertexWave(obj, sub);
     return 0;
 }
 
@@ -264,7 +264,7 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     int mdl;
     int model;
     f32 amp;
-    model = (int)Obj_GetActiveModel(obj);
+    model = Obj_GetActiveModel(obj);
     mdl = *(int*)model;
     i = 0;
     amp = lbl_803E4A00;
