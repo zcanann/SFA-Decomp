@@ -181,8 +181,7 @@ void FUN_801ee668(u16 *param_1, int param_2)
     fVar1 = lbl_803E6908;
     if (*(int *)(param_2 + 0x10) != 0)
     {
-        fVar1 = (f32)((f64)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(s16 *)(param_2 + 0x2e) ^ 0x80000000))) -
-            DOUBLE_803e6938) / lbl_803E6924;
+        fVar1 = (f32)((f64)(int)*(s16 *)(param_2 + 0x2e)) / lbl_803E6924;
     }
     *(f32 *)(param_2 + 0x60) =
         lbl_803DC074 * (fVar1 - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
