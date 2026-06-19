@@ -89,7 +89,7 @@ extern void* mmAlloc(int size, int type, int flag);
 
 void texFlagFn_80023cbc(int v)
 {
-    lbl_803DCB10 = (u8)v;
+    lbl_803DCB10 = v;
 }
 
 extern int gMmFreeDelay;
@@ -581,7 +581,7 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
         int* store = (int*)*p;
         if (store != NULL && handle == store[3])
         {
-            found = (int*)gMmStoreArray[i];
+            found = gMmStoreArray[i];
             break;
         }
         p++;

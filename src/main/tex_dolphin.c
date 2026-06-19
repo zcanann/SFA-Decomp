@@ -299,7 +299,7 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 bounds, undefined4 blockXfor
     resetLotsOfRenderVars();
     fn_8004CE0C(i);
     i = 0;
-    lightPtr = (int*)&lbl_803DCE20;
+    lightPtr = &lbl_803DCE20;
     {
         byte* pColorA = &colorA;
         byte* pColorB = &colorB;
@@ -656,7 +656,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             pE = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && ((uint)pE->id == (uint)texVal)) &&
+                if (((0 < pE->count) && ((uint)pE->id == texVal)) &&
                     ((int)layerByte == pE->layerByte))
                 {
                     texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
@@ -685,7 +685,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             texMtx = (float*)0x0;
         }
-        fn_80051B00(texId, texMtx, 0, (char*)&colorWord);
+        fn_80051B00(texId, texMtx, 0, &colorWord);
         if ((*(uint*)(shader + 0x3c) & 0x100) != 0)
         {
             fn_8004D928();
@@ -701,7 +701,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             pE = base;
             for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && ((uint)pE->id == (uint)texVal)) &&
+                if (((0 < pE->count) && ((uint)pE->id == texVal)) &&
                     ((int)layerByte == pE->layerByte))
                 {
                     texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
@@ -749,7 +749,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     ovr = (int*)lbl_803DCE6C;
                     for (remain = 0x50; remain != 0; remain--)
                     {
-                        if (((0 < *(short*)(ovr + 3)) && ((uint)*ovr == (uint)texVal)) &&
+                        if (((0 < *(short*)(ovr + 3)) && ((uint)*ovr == texVal)) &&
                             ((int)layerByte == (int)*(byte*)((int)ovr + 0xe)))
                         {
                             texId = textureCrazyPointerFollowFn_80054c30(texVal, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
@@ -854,14 +854,14 @@ LAB_8005F608:
         fn_8004DA54(shader);
         goto LAB_8005F690;
     }
-    mapBlockRender_setupShaderTextures(shader, (int)0x80);
+    mapBlockRender_setupShaderTextures(shader, 0x80);
 LAB_8005F690:
     if ((*(uint*)(shader + 0x3c) & 0x20) != 0)
     {
         int* lPtr = lbl_803DCE34;
         if (lPtr != 0)
         {
-            fn_8004FDA0(lPtr, (int*)&lbl_80382008, &lbl_803DB638);
+            fn_8004FDA0(lPtr, &lbl_80382008, &lbl_803DB638);
             goto LAB_8005F6F4;
         }
     }

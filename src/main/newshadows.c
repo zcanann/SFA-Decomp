@@ -2082,10 +2082,10 @@ void allocLotsOfTextures(void)
     lbl_803DCF9C = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     for (i = 0; i < 0x100; i++)
     {
-        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x60) = (u8)i;
-        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x68) = (u8)i;
-        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x70) = (u8)i;
-        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x78) = (u8)i;
+        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x60) = i;
+        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x68) = i;
+        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x70) = i;
+        *((u8*)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20) + 0x78) = i;
     }
     DCFlushRange((void*)(lbl_803DCF9C + 0x60), *(int*)(lbl_803DCF9C + 0x44));
 
@@ -2571,7 +2571,7 @@ void renderShadows(void)
             memcpy((char*)obj + 0x18, of64 + 0x20, 0xc);
         }
         castSlot = B + (u8)r24 * 0x68 + 0x1170;
-        *(u8*)(castSlot + 0x64) = (u8)lod;
+        *(u8*)(castSlot + 0x64) = lod;
         if ((u8)r23 < 8 && *(u8*)(casterPtr + 8) != 0)
         {
             if ((u8)r23 < 3)
