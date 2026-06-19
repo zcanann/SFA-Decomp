@@ -233,8 +233,8 @@ void crrockfall_update(int* obj)
                     ((f32)n * dist));
         }
 
-        if (((CrrockfallPlacement*)placement)->unk1C == -1 ||
-            GameBit_Get(((CrrockfallPlacement*)placement)->unk1C) != 0)
+        if (((CrrockfallPlacement*)placement)->gameBitId == -1 ||
+            GameBit_Get(((CrrockfallPlacement*)placement)->gameBitId) != 0)
         {
             switch (state->mode)
             {
@@ -256,7 +256,7 @@ void crrockfall_update(int* obj)
                         {
                             dy = lbl_803E46E8;
                         }
-                        if (xz < lbl_803E46EC * (f32)(u32)((CrrockfallPlacement*)def)->unk1A &&
+                        if (xz < lbl_803E46EC * (f32)(u32)((CrrockfallPlacement*)def)->triggerRange &&
                             dy < lbl_803E46F0)
                         {
                             cond = 1;
@@ -332,7 +332,7 @@ void crrockfall_update(int* obj)
                 else
                 {
                     Sfx_PlayFromObject(obj, 955);
-                    spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->unk1B,
+                    spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale,
                                    1, 1, 0, 1, 1, 1, 1);
                 }
             }
