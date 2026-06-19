@@ -27,8 +27,8 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
-extern f32 lbl_803E3590;
-extern f32 lbl_803E3594;
+extern f32 gPushablePi;
+extern f32 gPushableYawHalfCircle;
 extern u32 FUN_80017748();
 extern int FUN_80017a90();
 extern u64 FUN_80017ac8();
@@ -42,8 +42,8 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-extern int lbl_803DDAB8;
-extern int lbl_803AC6E0[];
+extern int gPushableSavedMapIdCount;
+extern int gPushableSavedMapIds[];
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern int playerIsDisguised(void* player);
 extern int fn_80295A04(void* player, int a);
@@ -61,10 +61,10 @@ extern void debugPrintf(char* fmt, ...);
 extern char sPushPullObjectHitpointOverflow[];
 extern int arrayIndexOf(int* array, int count, int value);
 extern void fn_8007FE04(int* array, int* count, int value);
-extern f32 lbl_803E35CC;
+extern f32 gPushableU16ScaleDenom;
 extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
-extern int lbl_802C2270[];
+extern int gPushableDefaultBox[];
 extern int fn_802969F0(void);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void Obj_BuildTransformMatrices(int* obj);
@@ -274,8 +274,8 @@ void fn_80174BFC(int obj, int ext)
                             }
                         }
                     }
-                    mathSinf(lbl_803E3590 * (f32)((PushableState*)ext)->yaw / lbl_803E3594);
-                    mathCosf(lbl_803E3590 * (f32)((PushableState*)ext)->yaw / lbl_803E3594);
+                    mathSinf(gPushablePi * (f32)((PushableState*)ext)->yaw / gPushableYawHalfCircle);
+                    mathCosf(gPushablePi * (f32)((PushableState*)ext)->yaw / gPushableYawHalfCircle);
                     angle = getAngle(hit.angleX, hit.angleZ);
                     delta = ((PushableState*)ext)->yaw - (angle & 0xffff);
                     if (delta > 0x8000)
@@ -630,9 +630,9 @@ void pushable_free(int* obj)
     if ((sub->flags & 1) != 0)
     {
         int val = ((ObjPlacement*)def)->mapId;
-        v = lbl_803DDAB8;
-        lbl_803DDAB8 = v + 1;
-        lbl_803AC6E0[v] = val;
+        v = gPushableSavedMapIdCount;
+        gPushableSavedMapIdCount = v + 1;
+        gPushableSavedMapIds[v] = val;
     }
     ObjGroup_RemoveObject(obj, 5);
 }
@@ -766,7 +766,7 @@ void pushable_init(s16* obj, char* def)
     entry = Transporter_GetActiveModel(obj);
     model = (int*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
-    state->scale = (f32) * &((PushableObjectDef*)def)->unk20 / lbl_803E35CC;
+    state->scale = (f32) * &((PushableObjectDef*)def)->unk20 / gPushableU16ScaleDenom;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
@@ -938,10 +938,10 @@ void pushable_init(s16* obj, char* def)
         }
     }
     state->flags = state->flags | 0x40;
-    if (arrayIndexOf(lbl_803AC6E0, lbl_803DDAB8, ((ObjPlacement*)def)->mapId) != -1)
+    if (arrayIndexOf(gPushableSavedMapIds, gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId) != -1)
     {
         state->flags = state->flags | 1;
-        fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, ((ObjPlacement*)def)->mapId);
+        fn_8007FE04(gPushableSavedMapIds, &gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId);
     }
 }
 
@@ -986,7 +986,7 @@ void pushable_hitDetect(int* obj)
     int list;
     f32 tmpY;
 
-    box = *(PushableBox16*)lbl_802C2270;
+    box = *(PushableBox16*)gPushableDefaultBox;
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     state->timer_0x110 = state->timer_0x110 - timeDelta;
@@ -1243,9 +1243,9 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     hit = 0;
     if (dx > lbl_803E3528)
     {
-        end[0] = lbl_803E35A0 * mathSinf(lbl_803E3590 * state->yaw / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A0 * mathSinf(gPushablePi * state->yaw / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A0 * mathCosf(lbl_803E3590 * state->yaw / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A0 * mathCosf(gPushablePi * state->yaw / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -1264,9 +1264,9 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     else if (dz > lbl_803E3528)
     {
-        end[0] = lbl_803E35A4 * mathSinf(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * mathSinf(gPushablePi * (f32)(state->yaw + 0x4000) / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * mathCosf(lbl_803E3590 * (f32)(state->yaw + 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw + 0x4000) / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
@@ -1285,9 +1285,9 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     else if (dz < lbl_803E3528)
     {
-        end[0] = lbl_803E35A4 * mathSinf(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A4 * mathSinf(gPushablePi * (f32)(state->yaw - 0x4000) / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A4 * mathCosf(lbl_803E3590 * (f32)(state->yaw - 0x4000) / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw - 0x4000) / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);

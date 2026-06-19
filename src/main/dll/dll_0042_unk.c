@@ -72,7 +72,7 @@ extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
 extern f32 lbl_803E1708;
 extern f32 lbl_803E170C;
-extern f32 lbl_803E1710;
+extern f32 gCamcontrolByteRateNormalizer;
 extern f32 lbl_803E1714;
 extern f32 lbl_803E1718;
 extern f32 lbl_803E171C;
@@ -648,7 +648,7 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     gCamcontrolModeSettings->targetSlideLeftAmount = fval;
     if (settings->distanceAdjustRate != 0)
     {
-        fval = (f32)(u32)settings->distanceAdjustRate / lbl_803E1710;
+        fval = (f32)(u32)settings->distanceAdjustRate / gCamcontrolByteRateNormalizer;
         gCamcontrolModeSettings->distanceAdjustRate = fval;
         gCamcontrolModeSettings->targetDistanceAdjustRate = fval;
     }
@@ -658,7 +658,7 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     }
     if (settings->heightAdjustRate != 0)
     {
-        fval = (f32)(u32)settings->heightAdjustRate / lbl_803E1710;
+        fval = (f32)(u32)settings->heightAdjustRate / gCamcontrolByteRateNormalizer;
         gCamcontrolModeSettings->heightAdjustRate = fval;
         gCamcontrolModeSettings->targetHeightAdjustRate = fval;
     }
@@ -998,7 +998,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             uVal = data[0xb];
             if (uVal != 0)
             {
-                gCamcontrolModeSettings->targetDistanceAdjustRate = uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetDistanceAdjustRate = uVal / gCamcontrolByteRateNormalizer;
             }
             else
             {
@@ -1007,7 +1007,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             uVal = data[0xc];
             if (uVal != 0)
             {
-                gCamcontrolModeSettings->targetHeightAdjustRate = uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetHeightAdjustRate = uVal / gCamcontrolByteRateNormalizer;
             }
             else
             {

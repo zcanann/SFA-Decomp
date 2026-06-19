@@ -6,7 +6,7 @@
  * the global particle interface (gPartfxInterface->spawnObject) or the
  * bone-attached effect interface (gBoneParticleEffectInterface), keyed by
  * a small caller-supplied selector that indexes the effect-id tables at
- * lbl_802C1FD8 / lbl_802C20EC / etc. Coverage: crystal sparkle
+ * gObjFxCrystalSparkleTbl / lbl_802C20EC / etc. Coverage: crystal sparkle
  * (WM_newcrystalFn_800969b0), generic hit/impact bursts, directional /
  * arced / box scatter bursts, the A-button glow, projectile trails, item
  * pickup sparkles, and dynamic lights (objParticleFn / objLightFn driving
@@ -18,9 +18,9 @@
  */
 #include "main/dll/fx_800944A0_shared.h"
 
-extern f32 lbl_8030F9D8[];
-extern s16 lbl_803DB788[4];
-extern u8 lbl_8030FA30[];
+extern f32 gObjFxCrystalAmpTbl[];
+extern s16 gObjFxCrystalSpinSpeed[4];
+extern u8 gObjFxLightColorTbl[];
 extern f32 lbl_803DF388;
 extern f32 lbl_803DF38C;
 extern f32 lbl_803DF39C;
@@ -40,9 +40,9 @@ void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 x
         phase = state[0x12 + i];
         state[0xe + i] = (phase * timeDelta + state[0xe + i]);
         phase = fcos16(state[0xe + i]);
-        *(f32*)((char*)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((1.0f + phase) * 0.5f);
+        *(f32*)((char*)state + 0xc + i * 4) = gObjFxCrystalAmpTbl[i] * ((1.0f + phase) * 0.5f);
 
-        state[0x16 + i] = (timeDelta * lbl_803DB788[i] + state[0x16 + i]);
+        state[0x16 + i] = (timeDelta * gObjFxCrystalSpinSpeed[i] + state[0x16 + i]);
         *(u16*)state = state[0x16 + i];
         *(f32*)((char*)state + 8) = *(f32*)((char*)state + 0xc + i * 4);
 
@@ -70,7 +70,7 @@ void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 x
 void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagByte, f32 mult)
 {
     PartfxParams params;
-    ParticlePairTbl partbl = *(ParticlePairTbl*)lbl_802C212C;
+    ParticlePairTbl partbl = *(ParticlePairTbl*)gObjFxRandomBurstTbl;
     u16 rvec[3];
     int i;
     int total;
@@ -204,10 +204,10 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
                                  int flags, f32 f8val, f32 mult)
 {
     PartfxParams params;
-    ParticleTblA tA = *(ParticleTblA*)((char*)lbl_802C1FD8 + 0xd0);
-    ParticleTbl8 tB = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0xe4);
-    ParticleTbl8 tC = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0xf4);
-    ParticleTbl8 tD = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0x104);
+    ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0xd0);
+    ParticleTbl8 tB = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0xe4);
+    ParticleTbl8 tC = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0xf4);
+    ParticleTbl8 tD = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0x104);
     u16 rvec[3];
     int i;
     f32 f30;
@@ -287,10 +287,10 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
                            f32 lo, f32 hi)
 {
     PartfxParams params;
-    ParticleTblA tA = *(ParticleTblA*)((char*)lbl_802C1FD8 + 0x8c);
-    ParticleTbl8 tB = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0xa0);
-    ParticleTbl8 tC = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0xb0);
-    ParticleTbl8 tD = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0xc0);
+    ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x8c);
+    ParticleTbl8 tB = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0xa0);
+    ParticleTbl8 tC = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0xb0);
+    ParticleTbl8 tD = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0xc0);
     u16 rvec[3];
     int i;
     f32 fdelta;
@@ -331,14 +331,14 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
             break;
         case 4:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = lbl_803DF36C * (f32)(u32)
+            a = gObjFxPi * (f32)(u32)
             val / lbl_803DF370;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathCosf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 5:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = lbl_803DF36C * (f32)(u32)
+            a = gObjFxPi * (f32)(u32)
             val / lbl_803DF370;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathSinf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
@@ -369,10 +369,10 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* o
                          int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ)
 {
     PartfxParams params;
-    ParticleTblA tA = *(ParticleTblA*)((char*)lbl_802C1FD8 + 0x48);
-    ParticleTbl8 tB = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0x5c);
-    ParticleTbl8 tC = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0x6c);
-    ParticleTbl8 tD = *(ParticleTbl8*)((char*)lbl_802C1FD8 + 0x7c);
+    ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x48);
+    ParticleTbl8 tB = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0x5c);
+    ParticleTbl8 tC = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0x6c);
+    ParticleTbl8 tD = *(ParticleTbl8*)((char*)gObjFxCrystalSparkleTbl + 0x7c);
     int i;
 
     params.f8 = f8val;
@@ -410,7 +410,7 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* o
         case 4:
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
-            a = lbl_803DF36C * (f32)(u32)
+            a = gObjFxPi * (f32)(u32)
             val / lbl_803DF370;
             params.vec[1] = lbl_803DF358 * mathCosf(a);
             params.vec[2] -= lbl_803DF358;
@@ -418,7 +418,7 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* o
         case 5:
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
-            a = lbl_803DF36C * (f32)(u32)
+            a = gObjFxPi * (f32)(u32)
             val / lbl_803DF370;
             params.vec[1] = lbl_803DF358 * mathSinf(a);
             params.vec[2] -= lbl_803DF358;
@@ -938,7 +938,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
 {
     f32 fxParam = extraScale;
     PartfxParams params;
-    ColorTbl colors = *(ColorTbl*)lbl_802C1FD8;
+    ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
     f32 zoff = lbl_803DF394;
     u8* cbuf;
 
@@ -1121,10 +1121,10 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
         modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
                                      lbl_803DF384 + ((GameObject*)origin)->anim.localPosY,
                                      ((GameObject*)origin)->anim.localPosZ);
-        modelLightStruct_setDiffuseColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1],
-                                         lbl_8030FA30[type * 3 + 2], 0xff);
-        modelLightStruct_setSpecularColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1],
-                                          lbl_8030FA30[type * 3 + 2], 0xff);
+        modelLightStruct_setDiffuseColor(light, gObjFxLightColorTbl[type * 3], gObjFxLightColorTbl[type * 3 + 1],
+                                         gObjFxLightColorTbl[type * 3 + 2], 0xff);
+        modelLightStruct_setSpecularColor(light, gObjFxLightColorTbl[type * 3], gObjFxLightColorTbl[type * 3 + 1],
+                                          gObjFxLightColorTbl[type * 3 + 2], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF394, lbl_803DF39C);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);

@@ -57,9 +57,9 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);
 extern f32 lbl_803E4554;
-extern f32 lbl_803E455C;
-extern f32 lbl_803E4560;
-extern f32 lbl_803E4564;
+extern f32 gMoonRockGravity;
+extern f32 gMoonRockVelClampMin;
+extern f32 gMoonRockVelClampMax;
 extern f32 lbl_803E4568;
 
 #pragma scheduling off
@@ -78,17 +78,17 @@ void fn_801A7B10(int obj)
     if (idx == -1) return;
     ObjHits_SetHitVolumeSlot(obj, 14, 1, 0);
     ObjHits_EnableObject(obj);
-    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E455C * timeDelta;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gMoonRockGravity * timeDelta;
     {
         f32 v1 = ((GameObject*)obj)->anim.velocityX;
         f32 v2;
-        if (v1 < lbl_803E4560)
+        if (v1 < gMoonRockVelClampMin)
         {
-            v2 = lbl_803E4560;
+            v2 = gMoonRockVelClampMin;
         }
-        else if (v1 > lbl_803E4564)
+        else if (v1 > gMoonRockVelClampMax)
         {
-            v2 = lbl_803E4564;
+            v2 = gMoonRockVelClampMax;
         }
         else
         {
@@ -99,13 +99,13 @@ void fn_801A7B10(int obj)
     {
         f32 v1 = ((GameObject*)obj)->anim.velocityY;
         f32 v2;
-        if (v1 < lbl_803E4560)
+        if (v1 < gMoonRockVelClampMin)
         {
-            v2 = lbl_803E4560;
+            v2 = gMoonRockVelClampMin;
         }
-        else if (v1 > lbl_803E4564)
+        else if (v1 > gMoonRockVelClampMax)
         {
-            v2 = lbl_803E4564;
+            v2 = gMoonRockVelClampMax;
         }
         else
         {
@@ -116,13 +116,13 @@ void fn_801A7B10(int obj)
     {
         f32 v1 = ((GameObject*)obj)->anim.velocityX;
         f32 v2;
-        if (v1 < lbl_803E4560)
+        if (v1 < gMoonRockVelClampMin)
         {
-            v2 = lbl_803E4560;
+            v2 = gMoonRockVelClampMin;
         }
-        else if (v1 > lbl_803E4564)
+        else if (v1 > gMoonRockVelClampMax)
         {
-            v2 = lbl_803E4564;
+            v2 = gMoonRockVelClampMax;
         }
         else
         {
@@ -163,7 +163,7 @@ extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hi
                               int p10);
 extern f32 lbl_803E454C;
 extern f32 lbl_803E4550;
-extern const f32 lbl_803E4558;
+extern const f32 gMoonRockRespawnTime;
 
 #pragma dont_inline on
 void fn_801A79E0(int obj)
@@ -188,7 +188,7 @@ void fn_801A79E0(int obj)
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E4550;
         spawnExplosion(obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
         state->flags |= 0x200;
-        state->respawnTimer = lbl_803E4558;
+        state->respawnTimer = gMoonRockRespawnTime;
         ((GameObject*)obj)->anim.alpha = 0;
         ((GameObject*)obj)->anim.localPosX = state->homeX;
         ((GameObject*)obj)->anim.localPosY = state->homeY;
@@ -346,7 +346,7 @@ void mmp_moonrock_init(int obj, int param2)
 
 extern int* ObjList_GetObjects(int* idx, int* count);
 extern void setAButtonIcon(int x);
-extern f32 lbl_803E4580;
+extern f32 gMoonRockPickupRange;
 
 void fn_801A7D74(int obj, u8 a, u8 b)
 {
@@ -368,7 +368,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     {
         u32 o = list[i];
         if (o != obj && ((GameObject*)o)->anim.seqId == 0x518 &&
-            Vec_distance((void*)(obj + 0x18), (void*)(o + 0x18)) < lbl_803E4580)
+            Vec_distance((void*)(obj + 0x18), (void*)(o + 0x18)) < gMoonRockPickupRange)
         {
             u32 c;
             odef = *(int*)(list[i] + 0x4C);
@@ -492,15 +492,15 @@ extern float mathSinf(float x);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);
-extern char lbl_803AC918[];
-extern f32 lbl_803E4584;
+extern char gMoonRockSpawnParams[];
+extern f32 gMoonRockAlphaMax;
 extern f32 lbl_803E4588;
 extern f32 lbl_803E458C;
 extern f32 lbl_803E4590;
 extern f32 lbl_803E4594;
-extern f32 lbl_803E4598;
-extern f32 lbl_803E459C;
-extern f32 lbl_803E45A0;
+extern f32 gMoonRockPi;
+extern f32 gMoonRockAngleScale;
+extern f32 gMoonRockWobbleAmplitude;
 
 void mmp_moonrock_update(int obj)
 {
@@ -537,9 +537,9 @@ void mmp_moonrock_update(int obj)
             else
             {
                 ((GameObject*)obj)->anim.alpha =
-                    (u8)(int)(lbl_803E4584 * (lbl_803E457C - state->respawnTimer / lbl_803E4558));
-                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
-                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / lbl_803E4558, 0);
+                    (u8)(int)(gMoonRockAlphaMax * (lbl_803E457C - state->respawnTimer / gMoonRockRespawnTime));
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / gMoonRockRespawnTime, 0);
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - state->respawnTimer / gMoonRockRespawnTime, 0);
             }
         }
         return;
@@ -596,7 +596,7 @@ void mmp_moonrock_update(int obj)
         (*gCarryableInterface)->setVisible(stateCopy, 0);
         list = (int*)ObjGroup_GetObjects(0x10, &count);
         {
-            f32 k = lbl_803E4580;
+            f32 k = gMoonRockPickupRange;
             for (i = 0; i < count; i++)
             {
                 u32 o = (u32) * list;
@@ -671,21 +671,21 @@ void mmp_moonrock_update(int obj)
     ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4554, ((GameObject*)obj)->anim.velocityY * timeDelta,
                                             *(f32*)&lbl_803E4554);
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + mathSinf(
-        (lbl_803E4598 * state->bobPhase) / lbl_803E459C);
+        (gMoonRockPi * state->bobPhase) / gMoonRockAngleScale);
     if (((GameObject*)obj)->anim.localPosY < state->baseY)
     {
         ((GameObject*)obj)->anim.localPosY = state->baseY;
     }
     ((GameObject*)obj)->anim.rotZ = (s16)(
-        ((GameObject*)obj)->anim.rotZ + (int)(lbl_803E45A0 * mathSinf(
-            (lbl_803E4598 * state->rollPhase) / lbl_803E459C)));
+        ((GameObject*)obj)->anim.rotZ + (int)(gMoonRockWobbleAmplitude * mathSinf(
+            (gMoonRockPi * state->rollPhase) / gMoonRockAngleScale)));
     ((GameObject*)obj)->anim.rotY = (s16)(
-        ((GameObject*)obj)->anim.rotY + (int)(lbl_803E45A0 * mathSinf(
-            (lbl_803E4598 * state->pitchPhase) / lbl_803E459C)));
-    *(f32*)(lbl_803AC918 + 8) = lbl_803E457C;
-    *(f32*)(lbl_803AC918 + 0xC) = ((GameObject*)obj)->anim.localPosX;
-    *(f32*)(lbl_803AC918 + 0x10) = state->baseY;
-    *(f32*)(lbl_803AC918 + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+        ((GameObject*)obj)->anim.rotY + (int)(gMoonRockWobbleAmplitude * mathSinf(
+            (gMoonRockPi * state->pitchPhase) / gMoonRockAngleScale)));
+    *(f32*)(gMoonRockSpawnParams + 8) = lbl_803E457C;
+    *(f32*)(gMoonRockSpawnParams + 0xC) = ((GameObject*)obj)->anim.localPosX;
+    *(f32*)(gMoonRockSpawnParams + 0x10) = state->baseY;
+    *(f32*)(gMoonRockSpawnParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
     d = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
-    (*gPartfxInterface)->spawnObject((void*)obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
+    (*gPartfxInterface)->spawnObject((void*)obj, 0x723, gMoonRockSpawnParams, 0x200001, -1, &d);
 }

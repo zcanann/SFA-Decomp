@@ -62,7 +62,7 @@ extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* in, void* out);
-extern f32 lbl_803AC790[];
+extern f32 gSmallBasketHitVelocity[];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
 extern const f32 lbl_803E393C;
@@ -89,7 +89,7 @@ void smallbasket_update(int obj);
 void smallbasket_render(int obj, int param_2, int param_3, int param_4,
                         int param_5, char param_6);
 extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDAC0;
+extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, int p2, int p3, int p4,
@@ -170,7 +170,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     {
         return 0;
     }
-    vel = lbl_803AC790;
+    vel = gSmallBasketHitVelocity;
     if (vel[1] < lbl_803E393C)
     {
         slowMo = 1;
@@ -228,7 +228,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if (slowMo)
         {
             sc = lbl_803E3948;
-            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
             ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
@@ -292,7 +292,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if (slowMo)
         {
             sc = lbl_803E3948;
-            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
             ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
@@ -356,7 +356,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if (slowMo)
         {
             sc = lbl_803E3948;
-            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
             ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
@@ -443,7 +443,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if (slowMo)
         {
             sc = lbl_803E3948;
-            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
             ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
@@ -575,10 +575,10 @@ int fn_801821FC(u8* obj)
         ((ObjHitsPriorityState*)st)->contactPosX = endPoints[idx * 3];
         ((ObjHitsPriorityState*)st)->contactPosY = endY[idx * 3];
         ((ObjHitsPriorityState*)st)->contactPosZ = endZ[idx * 3];
-        lbl_803AC790[0] = hitResults.hitInfo[idx][0];
-        lbl_803AC790[1] = hitResults.hitInfo[idx][1];
-        lbl_803AC790[2] = hitResults.hitInfo[idx][2];
-        lbl_803AC790[3] = hitResults.hitInfo[idx][3];
+        gSmallBasketHitVelocity[0] = hitResults.hitInfo[idx][0];
+        gSmallBasketHitVelocity[1] = hitResults.hitInfo[idx][1];
+        gSmallBasketHitVelocity[2] = hitResults.hitInfo[idx][2];
+        gSmallBasketHitVelocity[3] = hitResults.hitInfo[idx][3];
         if (hitResults.solidFlags[idx] != 0)
         {
             ((ObjHitsPriorityState*)st)->contactFlags |= 2;
@@ -621,7 +621,7 @@ int smallbasket_getExtraSize(void)
 void smallbasket_free(int param_1)
 {
     (*gModgfxInterface)->detachSource((void*)param_1);
-    Resource_Release(lbl_803DDAC0);
+    Resource_Release(gSmallBasketResource);
     ObjGroup_RemoveObject(param_1, 0x10);
 }
 
@@ -735,7 +735,7 @@ void smallbasket_init(int obj, int def)
         ((CfperchState*)state)->unk18 = v1c * 0x3c;
     }
 
-    lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
+    gSmallBasketResource = Resource_Acquire(0x5b, 1);
     ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     ((CfperchState*)state)->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
     ((GameObject*)obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->unk18 << 8);
@@ -1047,7 +1047,7 @@ void smallbasket_update(int obj)
                 blk.fz = ((GameObject*)obj)->anim.localPosY;
                 blk.fw = ((GameObject*)obj)->anim.localPosZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E3934, &blk, 1, 0);
-                (**(void (**)(int, int, int, int, int, int))(*(int*)lbl_803DDAC0 + 0x4))(
+                (**(void (**)(int, int, int, int, int, int))(*(int*)gSmallBasketResource + 0x4))(
                     obj, 1, 0, 2, -1, 0);
                 Sfx_PlayFromObject(obj, (u16)((CfperchState*)state)->sfxId);
                 ((CfperchState*)state)->disableTimer = 0x32;
