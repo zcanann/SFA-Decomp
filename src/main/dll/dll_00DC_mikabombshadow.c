@@ -281,6 +281,7 @@ extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
 extern void shield_free();
 extern void shield_update();
+extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void dll_F7_free();
 extern void dll_F7_update();
 extern void dll_F7_init();

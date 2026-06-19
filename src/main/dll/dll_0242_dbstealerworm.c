@@ -37,7 +37,7 @@
 
 extern u32 GameBit_Get(int eventId);
 
- *   EN v1.0 0x802064D0  48b  if (p6) objRenderFn_8003b8f4(lbl_803E6408).
+extern void objRenderFn_8003b8f4(f32);
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);

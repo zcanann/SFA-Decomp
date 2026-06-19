@@ -49,6 +49,7 @@ extern char lbl_8031D2E8[];
 extern f32 getXZDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, void* outVec);
 extern f32 sqrtf(f32 x);
+extern int getPatchGroup(f32* pos, int patchGroup);
 extern int isInWalkGroupOrPatch(f32 * pos);
 extern void ObjHits_SyncObjectPosition(u8 * obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
