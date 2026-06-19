@@ -717,9 +717,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                *(u8*)&hitState->sphereIndices[hitSlot] = sphereIndex;
-                hitState->priorities[hitSlot] = priority;
                 hitState->hitVolumes[hitSlot] = hitVolume;
+                hitState->priorities[hitSlot] = priority;
+                hitState->sphereIndices[hitSlot] = sphereIndex;
                 hitState->hitPosX[hitSlot] = sourceObj->localPosX;
                 hitState->hitPosY[hitSlot] = sourceObj->localPosY;
                 hitState->hitPosZ[hitSlot] = sourceObj->localPosZ;
@@ -731,9 +731,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     if ((hitSlot == hitState->priorityHitCount) &&
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
-        *(u8*)&hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
-        hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
+        hitState->priorities[hitState->priorityHitCount] = priority;
+        hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
