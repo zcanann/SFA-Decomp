@@ -121,15 +121,15 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
         ref = Obj_AllocObjectSetup(0x24, 0x51b);
         if (useUpperMouthPoint != 0)
         {
-            *(f32*)(ref + 8) = control->upperMouthPosX;
-            *(f32*)(ref + 0xc) = control->upperMouthPosY;
-            *(f32*)(ref + 0x10) = control->upperMouthPosZ;
+            ((ObjPlacement*)ref)->posX = control->upperMouthPosX;
+            ((ObjPlacement*)ref)->posY = control->upperMouthPosY;
+            ((ObjPlacement*)ref)->posZ = control->upperMouthPosZ;
         }
         else
         {
-            *(f32*)(ref + 8) = control->lowerMouthPosX;
-            *(f32*)(ref + 0xc) = control->lowerMouthPosY;
-            *(f32*)(ref + 0x10) = control->lowerMouthPosZ;
+            ((ObjPlacement*)ref)->posX = control->lowerMouthPosX;
+            ((ObjPlacement*)ref)->posY = control->lowerMouthPosY;
+            ((ObjPlacement*)ref)->posZ = control->lowerMouthPosZ;
         }
         *(u8*)(ref + 4) = 1;
         *(u8*)(ref + 5) = 4;
@@ -141,7 +141,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance / (f32)(u32)(
                 (GroundBaddieState*)state)->aggroRange);
             *(f32*)(setup + 0x24) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX - *(f32*)(ref + 8)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX - ((ObjPlacement*)ref)->posX) /
                 spd;
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
@@ -149,7 +149,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r - *
                 (f32*)(ref + 0xc)) / spd;
             *(f32*)(setup + 0x2c) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - *(f32*)(ref + 0x10)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - ((ObjPlacement*)ref)->posZ) /
                 spd;
         }
     }
