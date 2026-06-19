@@ -920,12 +920,16 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
             source->anim.worldPosZ = savedZ;
             if (lbl_803DD5E4 != NULL)
             {
-                lbl_803DD5E4->anim.worldPosX = source->anim.localPosX;
-                lbl_803DD5E4->anim.localPosX = source->anim.localPosX;
-                lbl_803DD5E4->anim.worldPosY = source->anim.localPosY + lbl_803E1C5C;
-                lbl_803DD5E4->anim.localPosY = source->anim.localPosY + lbl_803E1C5C;
-                lbl_803DD5E4->anim.worldPosZ = source->anim.localPosZ;
-                lbl_803DD5E4->anim.localPosZ = source->anim.localPosZ;
+                f32 xx, yy, zz;
+                xx = source->anim.localPosX;
+                lbl_803DD5E4->anim.worldPosX = xx;
+                lbl_803DD5E4->anim.localPosX = xx;
+                yy = source->anim.localPosY + lbl_803E1C5C;
+                lbl_803DD5E4->anim.worldPosY = yy;
+                lbl_803DD5E4->anim.localPosY = yy;
+                zz = source->anim.localPosZ;
+                lbl_803DD5E4->anim.worldPosZ = zz;
+                lbl_803DD5E4->anim.localPosZ = zz;
             }
             return (int)lbl_803DD5E4;
         case 6:
