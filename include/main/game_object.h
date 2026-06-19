@@ -96,7 +96,7 @@ void mapBlockFn_80059c2c(u8 * outFlags);
 void fn_8003A230(int obj, void* p, f32 f);
 int isInBounds(f32 x, f32 z);
 void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
-void objSetHintTextIdx(int obj, int idx);
+void objSetHintTextIdx(int obj, u16 idx);
 void DBstealerwo_setFuncPtrs_80203c78(void);
 int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
