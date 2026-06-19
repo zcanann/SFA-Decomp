@@ -134,17 +134,15 @@ void wctempledia_update(int obj)
     int i;
     int j;
     int k;
-    f32 td;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
         wctempledia_syncPartVisibility(obj, state->stageMask);
         return;
     }
-    td = timeDelta;
-    state->currentSpeed = td * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed)) +
+    state->currentSpeed = timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed)) +
         state->currentSpeed;
-    ((GameObject*)obj)->anim.rotZ = (s16)(td * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
+    ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
