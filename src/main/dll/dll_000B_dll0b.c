@@ -2583,7 +2583,7 @@ animate:
         int ofs = k * 4 + 0xb0;
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = (int)*(f32*)((char*)state + ofs);
+            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + ofs);
             bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
                 bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
         }
