@@ -766,14 +766,15 @@ void fn_80133934(void)
 #pragma peephole off
 u8 fn_801334E0(void)
 {
-    u32 act = 0;
+    u8 act = 0;
     if (lbl_803DD944 == 2 && lbl_803DBBB0 != 0)
     {
         act = 1;
     }
-    act = act;
-    if (act == 0) return act;
-    lbl_803DD928 = 5;
+    if (act != 0)
+    {
+        lbl_803DD928 = 5;
+    }
     return act;
 }
 
