@@ -859,21 +859,22 @@ void titlescreen_update(u8* obj)
 
 void fn_80134870(int obj, u8* arr)
 {
+    s8* sarr = (s8*)arr;
     int i;
-    for (i = 0; i < arr[0x1b]; i++)
+    for (i = 0; i < sarr[0x1b]; i++)
     {
         s8 t;
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 0x77d:
-            t = arr[i + 0x13];
+            t = sarr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x368);
             }
             break;
         case 0x77e:
-            t = arr[i + 0x13];
+            t = sarr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x370);
@@ -884,7 +885,7 @@ void fn_80134870(int obj, u8* arr)
             }
             break;
         case 0x77f:
-            t = arr[i + 0x13];
+            t = sarr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x36b);
@@ -895,7 +896,7 @@ void fn_80134870(int obj, u8* arr)
             }
             break;
         case 0x780:
-            t = arr[i + 0x13];
+            t = sarr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x36a);
