@@ -731,7 +731,7 @@ void model_multMtxs(u8* model, f32* out)
         {
             j = 0;
         }
-        base = *(f32**)(model + 0xc + (*(u16*)(model + 0x18) & 1) * 4);
+        base = *(f32**)(model + 0xc + (((ObjModel*)model)->bufferFlags & 1) * 4);
         PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
     }
 }
@@ -2414,7 +2414,7 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     {
         idx = 0;
     }
-    base = ((AnimBufSel*)(model + ((*(u16*)(model + 0x18) & 1) << 2)))->buf + idx * 0x40;
+    base = ((AnimBufSel*)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2)))->buf + idx * 0x40;
     vec[0] = *(f32*)(base + 0x20);
     vec[1] = *(f32*)(base + 0x24);
     vec[2] = *(f32*)(base + 0x28);
@@ -2825,7 +2825,7 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     s16 rot[3];
 
     ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x2c), blend);
-    *(u16*)(model + 0x18) ^= 1;
+    ((ObjModel*)model)->bufferFlags ^= 1;
     ch = *(u8**)(model + 0x2c);
     if ((s8)ch[0x63] & 4)
     {
@@ -3246,14 +3246,14 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
         idx = 0;
     }
     bankSel = model + 0xc;
-    PSMTXCopy(*(f32**)(bankSel + ((*(u16*)(model + 0x18) & 1) << 2)) + idx * 0x10, tmp);
+    PSMTXCopy(*(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
     idx = (*(int***)(chain + 4))[0][0];
     if (idx >= boneBlendSlotLimit(model))
     {
         idx = 0;
     }
     bankSel = model + 0xc;
-    m = *(f32**)(bankSel + ((*(u16*)(model + 0x18) & 1) << 2)) + idx * 0x10;
+    m = *(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
     cap = lbl_803DE838;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
@@ -3314,7 +3314,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
             {
                 idx = 0;
             }
-            m = *(f32**)((u8*)model + ((*(u16*)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
         }
     }
 }
@@ -3343,13 +3343,13 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
     {
         idx = 0;
     }
-    PSMTXCopy(*(f32**)(model + ((*(u16*)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10, tmp);
+    PSMTXCopy(*(f32**)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10, tmp);
     idx = (*(int***)(chain + 4))[0][0];
     if (idx >= boneBlendSlotLimit(model))
     {
         idx = 0;
     }
-    m = *(f32**)(model + ((*(u16*)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+    m = *(f32**)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
     cap = lbl_803DE838;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
@@ -3411,7 +3411,7 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
             {
                 idx = 0;
             }
-            m = *(f32**)((u8*)model + ((*(u16*)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
         }
         *(f32*)(*(u8**)chain + i * 0x54 + 0xc) = work[0] - (lbl_803DCED0 + *(f32*)(*(u8**)chain + i * 0x54) -
             playerMapOffsetX);
