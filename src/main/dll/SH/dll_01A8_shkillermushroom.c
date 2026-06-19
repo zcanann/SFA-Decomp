@@ -7,7 +7,7 @@
  * records a contact hit against the player within its growing hit radius,
  * pops (state 9) when struck, then resets to its spawn point and regrows.
  * The per-state animation move and advance rate come from the
- * lbl_80326C78 / lbl_80326C90 tables.
+ * gKillerMushroomStateAnimMoves / gKillerMushroomStateAnimRates tables.
  */
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
@@ -18,7 +18,7 @@
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E52F8;
+extern f32 gKillerMushroomRiseStepEpsilon;
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5300;
 extern f32 lbl_803E5304;
@@ -44,18 +44,18 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern s16 lbl_80326C78[];
-extern f32 lbl_80326C90[];
+extern s16 gKillerMushroomStateAnimMoves[];
+extern f32 gKillerMushroomStateAnimRates[];
 extern f32 lbl_803E5314;
-extern f32 lbl_803E5318;
-extern f32 lbl_803E531C;
-extern f32 lbl_803E5320;
+extern f32 gKillerMushroomInflateRadiusRate;
+extern f32 gKillerMushroomMaxHitRadius;
+extern f32 gKillerMushroomChaseRadiusRate;
 extern f32 lbl_803E5324;
-extern f32 lbl_803E5328;
+extern f32 gKillerMushroomRiseStepDecay;
 extern f32 lbl_803E532C;
 extern f32 lbl_803E5330;
 extern f32 lbl_803E5334;
-extern f32 lbl_803E5338;
+extern f32 gKillerMushroomDetectRangeScale;
 extern f32 lbl_803E533C;
 extern f32 lbl_803E5340;
 
@@ -76,7 +76,7 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
     obj->posZ = mapData->posZ;
     if (enableTimer != 0)
     {
-        obj->scale = lbl_803E52F8;
+        obj->scale = gKillerMushroomRiseStepEpsilon;
         state->timer = lbl_803E52FC;
         randomValue = randomGetRange(0, 100);
         fr = (f32)(s32)
@@ -228,10 +228,10 @@ void enemymushroom_update(int* obj)
     case 6:
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x4);
-        ((EnemyMushroomState*)state)->hitRadius = lbl_803E5318 * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
-        if (((EnemyMushroomState*)state)->hitRadius > *(f32*)&lbl_803E531C)
+        ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomInflateRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
+        if (((EnemyMushroomState*)state)->hitRadius > *(f32*)&gKillerMushroomMaxHitRadius)
         {
-            ((EnemyMushroomState*)state)->hitRadius = lbl_803E531C;
+            ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomMaxHitRadius;
         }
         if (!(((EnemyMushroomState*)state)->stateFlags & 0x1))
         {
@@ -291,7 +291,7 @@ void enemymushroom_update(int* obj)
         break;
     case 4:
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
-        ((EnemyMushroomState*)state)->hitRadius = lbl_803E5320 * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
+        ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomChaseRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(((EnemyMushroomState*)state)->stateFlags & 0x1))
         {
@@ -304,9 +304,9 @@ void enemymushroom_update(int* obj)
                 ((EnemyMushroomState*)state)->stateFlags |= 0x1;
             }
         }
-        if (((EnemyMushroomState*)state)->hitRadius > *(f32*)&lbl_803E531C)
+        if (((EnemyMushroomState*)state)->hitRadius > *(f32*)&gKillerMushroomMaxHitRadius)
         {
-            ((EnemyMushroomState*)state)->hitRadius = lbl_803E531C;
+            ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomMaxHitRadius;
         }
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
         if (((EnemyMushroomState*)state)->timer > lbl_803E5324)
@@ -345,9 +345,9 @@ void enemymushroom_update(int* obj)
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x4);
         if (((GameObject*)obj)->anim.rootMotionScale > ((EnemyMushroomState*)state)->heightTarget)
         {
-            ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->riseStep / lbl_803E5328;
+            ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->riseStep / gKillerMushroomRiseStepDecay;
         }
-        if (((EnemyMushroomState*)state)->riseStep < lbl_803E52F8)
+        if (((EnemyMushroomState*)state)->riseStep < gKillerMushroomRiseStepEpsilon)
         {
             ((EnemyMushroomState*)state)->riseStep = lbl_803E52FC;
         }
@@ -414,7 +414,7 @@ void enemymushroom_update(int* obj)
             f32 dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             if ((u16)(int)
                 sqrtf(dx * dx + dy * dy + dz * dz) <
-                    (u16)(int)(lbl_803E5338 * (f32)((EnemymushroomPlacement*)src)->detectRange)
+                    (u16)(int)(gKillerMushroomDetectRangeScale * (f32)((EnemymushroomPlacement*)src)->detectRange)
             )
             {
                 if (fn_8029610C(player) >= lbl_803E533C)
@@ -461,12 +461,12 @@ void enemymushroom_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.currentMove != lbl_80326C78[((EnemyMushroomState*)state)->stateId])
+    if (((GameObject*)obj)->anim.currentMove != gKillerMushroomStateAnimMoves[((EnemyMushroomState*)state)->stateId])
     {
-        ObjAnim_SetCurrentMove((int)obj, lbl_80326C78[((EnemyMushroomState*)state)->stateId], lbl_803E52FC, 0);
+        ObjAnim_SetCurrentMove((int)obj, gKillerMushroomStateAnimMoves[((EnemyMushroomState*)state)->stateId], lbl_803E52FC, 0);
     }
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-        (int)obj, lbl_80326C90[((EnemyMushroomState*)state)->stateId], timeDelta,
+        (int)obj, gKillerMushroomStateAnimRates[((EnemyMushroomState*)state)->stateId], timeDelta,
         NULL) != 0)
     {
         ((EnemyMushroomState*)state)->stateFlags |= 0x2;

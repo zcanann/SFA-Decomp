@@ -230,22 +230,22 @@ extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, 
 extern void ObjHits_DisableObject(u32 obj);
 extern void ObjHits_EnableObject(u32 obj);
 extern int gameBitIncrement(int id);
-extern f32 lbl_803E6D58;
+extern f32 gWcPushBlockControllerSearchRange;
 extern f32 lbl_803E6D5C;
 extern f32 lbl_803E6D60;
 extern f32 lbl_803E6D64;
 extern f32 lbl_803E6D68;
 extern f32 lbl_803E6D6C;
 extern f32 lbl_803E6D70;
-extern f32 lbl_803E6D74;
+extern f32 gWcPushBlockSlideSfxMaxVolume;
 extern f32 lbl_803E6D78;
-extern f32 lbl_803E6D7C;
-extern f32 lbl_803E6D80;
-extern f32 lbl_803E6D84;
-extern f32 lbl_803E6D88;
-extern f32 lbl_803E6D8C;
-extern f32 lbl_803E6D90;
-extern f32 lbl_803E6D94;
+extern f32 gWcPushBlockMaxSlideSpeed;
+extern f32 gWcPushBlockSlideAccel;
+extern f32 gWcPushBlockMinSlideSpeed;
+extern f32 gWcPushBlockBobAngleSpeed;
+extern f32 gWcPushBlockBobAmplitude;
+extern f32 gWcPushBlockPi;
+extern f32 gWcPushBlockAngleScale;
 
 extern u8 lbl_8032B0C8[][8];
 extern u8 lbl_8032B088[][8];
@@ -317,7 +317,7 @@ STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
 
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
-extern f32 lbl_803E6DAC;
+extern f32 gWcPushBlockTileResetTime;
 
 
 

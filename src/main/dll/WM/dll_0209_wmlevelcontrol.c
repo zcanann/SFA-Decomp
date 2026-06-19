@@ -9,7 +9,7 @@
  * drives the music game-bit latches, and calls the sky/light override
  * helper every frame. fn_801F3F18 cross-fades the palace's sky, light
  * and fog colors toward their spirit-restored values while the
- * lbl_803DDC8C blend factor (held at 1.0 during restore progress,
+ * gWmLevelControlBlendFactor blend factor (held at 1.0 during restore progress,
  * decaying 0.02/tick after) is up.
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
@@ -48,7 +48,7 @@ extern f32 timeDelta;
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
-extern f32 lbl_803E5E90; /* 300.0: intro-message duration */
+extern f32 gWmLevelControlIntroMessageDuration; /* 300.0: intro-message duration */
 extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
@@ -62,24 +62,24 @@ extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void Music_Trigger(int id, int arg);
-extern f32 lbl_802C24B8[]; /* sky light/color/fog vector table */
-extern u8 lbl_803DC110;    /* sky-color blend source triplet */
-extern u8 lbl_803DC114;    /* sky-color blend target triplet */
-extern u8 lbl_803DC118;    /* light-color blend source triplet */
-extern u8 lbl_803DC11C;    /* light-color blend target triplet */
-extern u8 lbl_803DC120;    /* fog-color blend source triplet */
-extern u8 lbl_803DC124;    /* fog-color blend target triplet */
-extern f32 lbl_803DDC88;   /* restore-blend hold flag */
-extern f32 lbl_803DDC8C;   /* current blend factor */
-extern u8 lbl_803DDC90;    /* blended light-intensity byte */
-extern u8 lbl_803DDC94;    /* blended fog-color out-triplet */
-extern u8 lbl_803DDC98;    /* blended sky-color out-triplet */
-extern u8 lbl_803DDC9C;    /* blended light-color out-triplet */
+extern f32 gWmLevelControlSkyVecTable[]; /* sky light/color/fog vector table */
+extern u8 gWmLevelControlSkyColorFrom;    /* sky-color blend source triplet */
+extern u8 gWmLevelControlSkyColorTo;    /* sky-color blend target triplet */
+extern u8 gWmLevelControlLightColorFrom;    /* light-color blend source triplet */
+extern u8 gWmLevelControlLightColorTo;    /* light-color blend target triplet */
+extern u8 gWmLevelControlFogColorFrom;    /* fog-color blend source triplet */
+extern u8 gWmLevelControlFogColorTo;    /* fog-color blend target triplet */
+extern f32 gWmLevelControlBlendHold;   /* restore-blend hold flag */
+extern f32 gWmLevelControlBlendFactor;   /* current blend factor */
+extern u8 gWmLevelControlBlendedLightIntensity;    /* blended light-intensity byte */
+extern u8 gWmLevelControlBlendedFogColor;    /* blended fog-color out-triplet */
+extern u8 gWmLevelControlBlendedSkyColor;    /* blended sky-color out-triplet */
+extern u8 gWmLevelControlBlendedLightColor;    /* blended light-color out-triplet */
 extern f32 lbl_803E5E74;   /* 1.0 */
-extern f32 lbl_803E5E78;   /* 0.02: blend decay per tick */
-extern f32 lbl_803E5E7C;   /* 32.0: light-intensity base */
-extern f32 lbl_803E5E80;   /* 128.0: light-intensity blend range */
-extern f32 lbl_803E5E84;   /* 100.0: override light intensity */
+extern f32 gWmLevelControlBlendDecayPerTick;   /* 0.02: blend decay per tick */
+extern f32 gWmLevelControlLightIntensityBase;   /* 32.0: light-intensity base */
+extern f32 gWmLevelControlLightIntensityRange;   /* 128.0: light-intensity blend range */
+extern f32 gWmLevelControlOverrideLightIntensity;   /* 100.0: override light intensity */
 extern void objRenderFn_8003b8f4(f32);
 
 typedef struct
@@ -105,7 +105,7 @@ void fn_801F3F18(int obj)
     u8* fromColor;
     u8* toColor;
 
-    vecs = (LightVec3*)lbl_802C24B8;
+    vecs = (LightVec3*)gWmLevelControlSkyVecTable;
     L.fog = vecs[1];
     L.color = vecs[2];
     L.light = vecs[3];
@@ -142,14 +142,14 @@ void fn_801F3F18(int obj)
        pool locally and block the unit's sdata2 claim). */
     if (fn_8008ED88() > *(volatile f32*)&lbl_803E5E70)
     {
-        lbl_803DDC88 = lbl_803E5E74;
-        lbl_803DDC8C = lbl_803E5E74;
+        gWmLevelControlBlendHold = lbl_803E5E74;
+        gWmLevelControlBlendFactor = lbl_803E5E74;
     }
-    decay = -(lbl_803E5E78 * timeDelta - lbl_803DDC8C);
-    lbl_803DDC8C = decay;
+    decay = -(gWmLevelControlBlendDecayPerTick * timeDelta - gWmLevelControlBlendFactor);
+    gWmLevelControlBlendFactor = decay;
     if (decay < (lightX = *(volatile f32*)&lbl_803E5E70))
     {
-        lbl_803DDC8C = lightX;
+        gWmLevelControlBlendFactor = lightX;
     }
 
     /* blend each color channel source->target by the blend factor.
@@ -157,44 +157,44 @@ void fn_801F3F18(int obj)
        MWCC's word-granular store forwarding otherwise passes the last
        byte stored for all three args - the misforward this fn shipped
        with before the volatile reads. */
-    fromColor = &lbl_803DC118;
-    toColor = &lbl_803DC11C;
-    (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
+    fromColor = &gWmLevelControlLightColorFrom;
+    toColor = &gWmLevelControlLightColorTo;
+    (&gWmLevelControlBlendedLightColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC9C)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
+    (&gWmLevelControlBlendedLightColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC9C)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
+    (&gWmLevelControlBlendedLightColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
-    skyFn_800895e0(1, *(volatile u8*)&lbl_803DDC9C, ((volatile u8*)&lbl_803DDC9C)[1], ((volatile u8*)&lbl_803DDC9C)[2], 0x40, 0x40);
+    skyFn_800895e0(1, *(volatile u8*)&gWmLevelControlBlendedLightColor, ((volatile u8*)&gWmLevelControlBlendedLightColor)[1], ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
 
-    fromColor = &lbl_803DC110;
-    toColor = &lbl_803DC114;
-    (&lbl_803DDC98)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
+    fromColor = &gWmLevelControlSkyColorFrom;
+    toColor = &gWmLevelControlSkyColorTo;
+    (&gWmLevelControlBlendedSkyColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC98)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
+    (&gWmLevelControlBlendedSkyColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC98)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
+    (&gWmLevelControlBlendedSkyColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
-    fn_80089510(1, *(volatile u8*)&lbl_803DDC98, ((volatile u8*)&lbl_803DDC98)[1], ((volatile u8*)&lbl_803DDC98)[2]);
+    fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1], ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
 
-    fromColor = &lbl_803DC120;
-    toColor = &lbl_803DC124;
-    (&lbl_803DDC94)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - fromColor[0]) +
+    fromColor = &gWmLevelControlFogColorFrom;
+    toColor = &gWmLevelControlFogColorTo;
+    (&gWmLevelControlBlendedFogColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
                   (f32)(s32)fromColor[0];
-    (&lbl_803DDC94)[1] = lbl_803DDC8C * (f32)((s32)toColor[1] - fromColor[1]) +
+    (&gWmLevelControlBlendedFogColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
                   (f32)(s32)fromColor[1];
-    (&lbl_803DDC94)[2] = lbl_803DDC8C * (f32)((s32)toColor[2] - fromColor[2]) +
+    (&gWmLevelControlBlendedFogColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
                   (f32)(s32)fromColor[2];
-    fn_80089578(1, *(volatile u8*)&lbl_803DDC94, ((volatile u8*)&lbl_803DDC94)[1], ((volatile u8*)&lbl_803DDC94)[2]);
+    fn_80089578(1, *(volatile u8*)&gWmLevelControlBlendedFogColor, ((volatile u8*)&gWmLevelControlBlendedFogColor)[1], ((volatile u8*)&gWmLevelControlBlendedFogColor)[2]);
 
-    lbl_803DDC90 = lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C;
+    gWmLevelControlBlendedLightIntensity = gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange + gWmLevelControlLightIntensityBase;
     skySetOverrideLightDirectionEnabled(1);
     /* the embedded def pins light.x-then-color.x load order in the
        x arg (the bare spelling pre-hoists the two-use color.x) */
-    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - (lightX = L.color.x)) + lightX,
-                                 lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
-                                 lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
-                                 lbl_803E5E84);
+    skySetOverrideLightDirection(gWmLevelControlBlendFactor * (L.light.x - (lightX = L.color.x)) + lightX,
+                                 gWmLevelControlBlendFactor * (L.light.y - L.color.y) + L.color.y,
+                                 gWmLevelControlBlendFactor * (L.light.z - L.color.z) + L.color.z,
+                                 gWmLevelControlOverrideLightIntensity);
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
 
@@ -273,7 +273,7 @@ void wmlevelcontrol_init(int obj)
     state = ((GameObject*)obj)->extra;
     state->unk0B = 0;
     state->unk06 = 0x1e;
-    state->messageTimer = lbl_803E5E90;
+    state->messageTimer = gWmLevelControlIntroMessageDuration;
     state->latch.activeMask = 0;
     lockLevel(0xf, 0);
     /* the 0xD1B..0xD1F chain marks how many Krazoa spirits the palace

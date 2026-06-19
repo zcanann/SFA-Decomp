@@ -12,7 +12,7 @@
 #include "main/dll/foodbag.h"
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80314E08[];
+extern u8 gFoodbagEffectResourceTable[];
 extern f32 lbl_803E0D88;
 extern f32 lbl_803E0D8C;
 extern f32 lbl_803E0D90;
@@ -36,7 +36,7 @@ extern f32 lbl_803E0DD0;
 void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
-    u8* base = lbl_80314E08;
+    u8* base = gFoodbagEffectResourceTable;
     FbCmd* e = buf.entries;
     FbCmd* p = &e[1];
 

@@ -66,19 +66,19 @@ extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern int* Obj_GetActiveModel(int obj);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern f32 lbl_802C23F8[12];
+extern f32 gSbGalleonSkyLightVecs[12];
 extern u8 lbl_803DC078[4];
-extern u8 lbl_803DC07C[4];
-extern u8 lbl_803DC080[4];
-extern u8 lbl_803DC084[4];
-extern u8 lbl_803DC088[4];
-extern u8 lbl_803DC08C[4];
+extern u8 gSbGalleonSkyColorBEnd[4];
+extern u8 gSbGalleonSkyColorAStart[4];
+extern u8 gSbGalleonSkyColorAEnd[4];
+extern u8 gSbGalleonSkyColorCStart[4];
+extern u8 gSbGalleonSkyColorCEnd[4];
 extern f32 lbl_803DDC24;
 extern f32 lbl_803DDC28;
 extern u8 lbl_803DDC2D;
-extern u8 lbl_803DDC30[3];
-extern u8 lbl_803DDC34[3];
-extern u8 lbl_803DDC38[3];
+extern u8 gSbGalleonSkyColorC[3];
+extern u8 gSbGalleonSkyColorB[3];
+extern u8 gSbGalleonSkyColorA[3];
 extern f32 lbl_803E57A4;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57E0;
@@ -101,8 +101,8 @@ extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void objSetSlot(void* obj, int slot);
-extern int lbl_803DDC18;
-extern int lbl_803DDC1C;
+extern int gSbGalleonSkyTexA;
+extern int gSbGalleonSkyTexB;
 extern f32 lbl_803E580C;
 
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
@@ -288,10 +288,10 @@ void fn_801E1588(int obj, int state)
     SkyVec3 b;
     SkyVec3 c;
     SkyVec3 d;
-    a = ((SkyVec3*)lbl_802C23F8)[0];
-    b = ((SkyVec3*)lbl_802C23F8)[1];
-    c = ((SkyVec3*)lbl_802C23F8)[2];
-    d = ((SkyVec3*)lbl_802C23F8)[3];
+    a = ((SkyVec3*)gSbGalleonSkyLightVecs)[0];
+    b = ((SkyVec3*)gSbGalleonSkyLightVecs)[1];
+    c = ((SkyVec3*)gSbGalleonSkyLightVecs)[2];
+    d = ((SkyVec3*)gSbGalleonSkyLightVecs)[3];
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
@@ -310,44 +310,44 @@ void fn_801E1588(int obj, int state)
         }
     }
     {
-        int v0 = lbl_803DC080[0];
-        lbl_803DDC38[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC084[0] - v0);
+        int v0 = gSbGalleonSkyColorAStart[0];
+        gSbGalleonSkyColorA[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[0] - v0);
     }
     {
-        int v1 = lbl_803DC080[1];
-        lbl_803DDC38[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC084[1] - v1);
+        int v1 = gSbGalleonSkyColorAStart[1];
+        gSbGalleonSkyColorA[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[1] - v1);
     }
     {
-        int v2 = lbl_803DC080[2];
-        lbl_803DDC38[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
+        int v2 = gSbGalleonSkyColorAStart[2];
+        gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC38[0], *(volatile u8*)&lbl_803DDC38[1], *(volatile u8*)&lbl_803DDC38[2], 0x40, 0x40);
+    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0], *(volatile u8*)&gSbGalleonSkyColorA[1], *(volatile u8*)&gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
-        lbl_803DDC34[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
+        gSbGalleonSkyColorB[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[0] - v0);
     }
     {
         int v1 = lbl_803DC078[1];
-        lbl_803DDC34[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC07C[1] - v1);
+        gSbGalleonSkyColorB[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[1] - v1);
     }
     {
         int v2 = lbl_803DC078[2];
-        lbl_803DDC34[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
+        gSbGalleonSkyColorB[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[2] - v2);
     }
-    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC34[0], *(volatile u8*)&lbl_803DDC34[1], *(volatile u8*)&lbl_803DDC34[2]);
+    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorB[0], *(volatile u8*)&gSbGalleonSkyColorB[1], *(volatile u8*)&gSbGalleonSkyColorB[2]);
     {
-        int v0 = lbl_803DC088[0];
-        lbl_803DDC30[0] = v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
-    }
-    {
-        int v1 = lbl_803DC088[1];
-        lbl_803DDC30[1] = v1 + lbl_803DDC28 * (f32)(lbl_803DC08C[1] - v1);
+        int v0 = gSbGalleonSkyColorCStart[0];
+        gSbGalleonSkyColorC[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[0] - v0);
     }
     {
-        int v2 = lbl_803DC088[2];
-        lbl_803DDC30[2] = v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
+        int v1 = gSbGalleonSkyColorCStart[1];
+        gSbGalleonSkyColorC[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[1] - v1);
     }
-    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&lbl_803DDC30[0], *(volatile u8*)&lbl_803DDC30[1], *(volatile u8*)&lbl_803DDC30[2]);
+    {
+        int v2 = gSbGalleonSkyColorCStart[2];
+        gSbGalleonSkyColorC[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[2] - v2);
+    }
+    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorC[0], *(volatile u8*)&gSbGalleonSkyColorC[1], *(volatile u8*)&gSbGalleonSkyColorC[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
@@ -554,8 +554,8 @@ void SB_Galleon_init(GameObject* obj)
     obj->anim.rotX = 0x4000;
     obj->anim.rotY = 0;
     obj->anim.rotZ = 0;
-    lbl_803DDC18 = (int)textureLoadAsset(0x16d);
-    lbl_803DDC1C = (int)textureLoadAsset(0x89);
+    gSbGalleonSkyTexA = (int)textureLoadAsset(0x16d);
+    gSbGalleonSkyTexB = (int)textureLoadAsset(0x89);
     state->unk84 = 100;
     (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
@@ -572,15 +572,15 @@ void SB_Galleon_init(GameObject* obj)
 void SB_Galleon_free(GameObject* obj, int p2)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
-    if ((void*)lbl_803DDC18 != NULL)
+    if ((void*)gSbGalleonSkyTexA != NULL)
     {
-        textureFree((void*)lbl_803DDC18);
-        lbl_803DDC18 = 0;
+        textureFree((void*)gSbGalleonSkyTexA);
+        gSbGalleonSkyTexA = 0;
     }
-    if ((void*)lbl_803DDC1C != NULL)
+    if ((void*)gSbGalleonSkyTexB != NULL)
     {
-        textureFree((void*)lbl_803DDC1C);
-        lbl_803DDC1C = 0;
+        textureFree((void*)gSbGalleonSkyTexB);
+        gSbGalleonSkyTexB = 0;
     }
     ObjGroup_RemoveObject((u32)obj, 3);
     if (state->unk80 != 0 && p2 == 0)

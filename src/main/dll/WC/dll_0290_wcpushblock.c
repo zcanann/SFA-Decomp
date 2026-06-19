@@ -200,7 +200,7 @@ void wcpushblock_update(int obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
-    f32 range = lbl_803E6D58;
+    f32 range = gWcPushBlockControllerSearchRange;
     f32 dist;
     ObjTextureRuntimeSlot *tex;
     int moved;
@@ -393,9 +393,9 @@ void wcpushblock_update(int obj)
                 speed = lbl_803E6D64;
             }
             dist = lbl_803E6D54 + lbl_803E6D6C * speed / lbl_803E6D70;
-            if (dist > lbl_803E6D74)
+            if (dist > gWcPushBlockSlideSfxMaxVolume)
             {
-                dist = lbl_803E6D74;
+                dist = gWcPushBlockSlideSfxMaxVolume;
             }
             Sfx_KeepAliveLoopedObjectSound(obj, SFXsc_lockon2_off);
             Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, dist, lbl_803E6D78);
@@ -408,9 +408,9 @@ void wcpushblock_update(int obj)
             u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
             if (dir == WCPUSHBLOCK_DIR_POS_X)
             {
-                if (((GameObject*)obj)->anim.velocityX < lbl_803E6D7C)
+                if (((GameObject*)obj)->anim.velocityX < gWcPushBlockMaxSlideSpeed)
                 {
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E6D80 * timeDelta + ((GameObject*)obj)->anim.velocityX;
+                    ((GameObject*)obj)->anim.velocityX = gWcPushBlockSlideAccel * timeDelta + ((GameObject*)obj)->anim.velocityX;
                 }
                 if (((GameObject*)obj)->anim.localPosX >= WCPUSHBLOCK_TARGET_X(state))
                 {
@@ -420,9 +420,9 @@ void wcpushblock_update(int obj)
             }
             else if (dir == WCPUSHBLOCK_DIR_NEG_X)
             {
-                if (((GameObject*)obj)->anim.velocityX > lbl_803E6D84)
+                if (((GameObject*)obj)->anim.velocityX > gWcPushBlockMinSlideSpeed)
                 {
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - lbl_803E6D80 * timeDelta;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - gWcPushBlockSlideAccel * timeDelta;
                 }
                 if (((GameObject*)obj)->anim.localPosX <= WCPUSHBLOCK_TARGET_X(state))
                 {
@@ -432,9 +432,9 @@ void wcpushblock_update(int obj)
             }
             else if (dir == WCPUSHBLOCK_DIR_POS_Z)
             {
-                if (((GameObject*)obj)->anim.velocityZ < lbl_803E6D7C)
+                if (((GameObject*)obj)->anim.velocityZ < gWcPushBlockMaxSlideSpeed)
                 {
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E6D80 * timeDelta + ((GameObject*)obj)->anim.velocityZ;
+                    ((GameObject*)obj)->anim.velocityZ = gWcPushBlockSlideAccel * timeDelta + ((GameObject*)obj)->anim.velocityZ;
                 }
                 if (((GameObject*)obj)->anim.localPosZ >= WCPUSHBLOCK_TARGET_Z(state))
                 {
@@ -444,9 +444,9 @@ void wcpushblock_update(int obj)
             }
             else if (dir == WCPUSHBLOCK_DIR_NEG_Z)
             {
-                if (((GameObject*)obj)->anim.velocityZ > lbl_803E6D84)
+                if (((GameObject*)obj)->anim.velocityZ > gWcPushBlockMinSlideSpeed)
                 {
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - lbl_803E6D80 * timeDelta;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - gWcPushBlockSlideAccel * timeDelta;
                 }
                 if (((GameObject*)obj)->anim.localPosZ <= WCPUSHBLOCK_TARGET_Z(state))
                 {
@@ -455,21 +455,21 @@ void wcpushblock_update(int obj)
                 }
             }
         }
-        if (((GameObject*)obj)->anim.velocityX > lbl_803E6D7C)
+        if (((GameObject*)obj)->anim.velocityX > gWcPushBlockMaxSlideSpeed)
         {
-            ((GameObject*)obj)->anim.velocityX = lbl_803E6D7C;
+            ((GameObject*)obj)->anim.velocityX = gWcPushBlockMaxSlideSpeed;
         }
-        if (((GameObject*)obj)->anim.velocityX < lbl_803E6D84)
+        if (((GameObject*)obj)->anim.velocityX < gWcPushBlockMinSlideSpeed)
         {
-            ((GameObject*)obj)->anim.velocityX = lbl_803E6D84;
+            ((GameObject*)obj)->anim.velocityX = gWcPushBlockMinSlideSpeed;
         }
-        if (((GameObject*)obj)->anim.velocityZ > lbl_803E6D7C)
+        if (((GameObject*)obj)->anim.velocityZ > gWcPushBlockMaxSlideSpeed)
         {
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E6D7C;
+            ((GameObject*)obj)->anim.velocityZ = gWcPushBlockMaxSlideSpeed;
         }
-        if (((GameObject*)obj)->anim.velocityZ < lbl_803E6D84)
+        if (((GameObject*)obj)->anim.velocityZ < gWcPushBlockMinSlideSpeed)
         {
-            ((GameObject*)obj)->anim.velocityZ = lbl_803E6D84;
+            ((GameObject*)obj)->anim.velocityZ = gWcPushBlockMinSlideSpeed;
         }
         if (moved == 0)
         {
@@ -613,9 +613,9 @@ void wcpushblock_update(int obj)
         break;
     }
 
-    WCPUSHBLOCK_BOB_ANGLE(state) = lbl_803E6D88 * timeDelta + (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state);
+    WCPUSHBLOCK_BOB_ANGLE(state) = gWcPushBlockBobAngleSpeed * timeDelta + (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state);
     WCPUSHBLOCK_BOB_Y(state) =
-        lbl_803E6D8C * mathSinf(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
+        gWcPushBlockBobAmplitude * mathSinf(gWcPushBlockPi * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / gWcPushBlockAngleScale);
     ((GameObject*)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
 #pragma opt_common_subs reset
@@ -692,7 +692,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             {
                 GameBit_Set(0x810, 0);
                 memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
-                state->tileAResetTimer = lbl_803E6DAC;
+                state->tileAResetTimer = gWcPushBlockTileResetTime;
             }
         }
         if (state->tileAResetTimer > lbl_803E6DA8)
@@ -717,7 +717,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
             {
                 GameBit_Set(0x811, 0);
                 memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-                state->tileBResetTimer = lbl_803E6DAC;
+                state->tileBResetTimer = gWcPushBlockTileResetTime;
             }
         }
         if (state->tileBResetTimer > lbl_803E6DA8)

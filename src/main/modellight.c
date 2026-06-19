@@ -433,7 +433,7 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, void* a, void* 
     p->projectionTevAlphaMode = (int)b;
 }
 
-extern u8 lbl_803DB408;
+extern u8 gModelLightColorTable;
 
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha)
 {
@@ -481,7 +481,7 @@ void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* a, f32* b, f32*
 
 void lightSetColor(int i, u8 a, u8 b, u8 c)
 {
-    u8* base = &lbl_803DB408;
+    u8* base = &gModelLightColorTable;
     base[i * 4] = a;
     base[i * 4 + 1] = b;
     base[i * 4 + 2] = c;
@@ -547,7 +547,7 @@ void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 a, u8 b, u8 c, u8 
 
 void lightGetColor(int i, u8* a, u8* b, u8* c)
 {
-    u8* base = &lbl_803DB408;
+    u8* base = &gModelLightColorTable;
     *a = base[i * 4];
     *b = base[i * 4 + 1];
     *c = base[i * 4 + 2];
@@ -1193,7 +1193,7 @@ extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32 * v);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern f32 lbl_803DE768;
-extern f32 lbl_802C1A88[];
+extern f32 gModelLightCornerBlock[];
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)
 {
@@ -1236,7 +1236,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     int i;
 
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
-    cornerBlock = *(ModelLightCornerBlock*)lbl_802C1A88;
+    cornerBlock = *(ModelLightCornerBlock*)gModelLightCornerBlock;
 
     worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
     worldPos[1] = ((GameObject*)obj)->anim.localPosY;
