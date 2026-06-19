@@ -523,11 +523,11 @@ int Tricky_updateSideCommandPrompts(int obj)
     bitVal = GameBit_Get(0x4e4);
     if (bitVal != 0)
     {
-        commandMask = *(byte*)(state + 0xb) | 9;
         if ((*(uint*)(state + 0x54) & 0x10) != 0)
         {
             *(u8*)(state + 0xb) = 0;
         }
+        commandMask = *(byte*)(state + 0xb) | 9;
         if (((*(byte*)(state + 8) == 8) || (*(byte*)(state + 8) == 0xd)) ||
             ((*(byte*)(state + 8) == 0xe && (*(byte*)(state + 10) == 1))))
         {
@@ -537,15 +537,15 @@ int Tricky_updateSideCommandPrompts(int obj)
         else
         {
             ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), 1, lbl_803E2524);
-            if (ref != 0)
+            if ((void*)ref != NULL)
             {
                 promptA = true;
                 promptC = true;
             }
         }
-        if (*(char*)(state + 0xb) != '\0')
+        if (*(u8*)(state + 0xb) != 0)
         {
-            for (i = 0; i < *(byte*)(state + 0x798); i = i + 1)
+            for (i = 0; i < *(byte*)(state + 0x798); i++)
             {
                 ref = state + (uint)i * 8;
                 cmdByte = *(char*)(ref + 0x74c);
@@ -581,7 +581,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         if (GameBit_Get(0x9e) == 0)
         {
-            commandMask &= ~2;
+            commandMask &= ~4;
         }
         if (GameBit_Get(0x245) == 0)
         {
