@@ -737,7 +737,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     }
     if (*(f32*)(state + 0x32c) != lbl_803E2740)
     {
-        int pos = *(int*)(state + 0x29c);
+        int pos = *(int*)&((BaddieState*)state)->trackedObj;
         fn_8014CF7C(obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
         if (*(f32*)(state + 0x308) > lbl_803E2750)
         {
