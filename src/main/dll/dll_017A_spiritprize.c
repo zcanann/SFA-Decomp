@@ -255,7 +255,7 @@ void SpiritPrize_update(int obj)
         state->sfxTimer = (f32)(s32)
         randomGetRange(0xb4, 0xf0);
         if (((GameObject*)obj)->anim.mapEventSlot == -1 &&
-            ((void*)player == NULL || coordsToMapCell(((GameObject*)player)->anim.localPosX, *(f32*)(player + 0x14)) == 0xb))
+            ((void*)player == NULL || coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
         {
             Sfx_PlayFromObject(obj, 0x4a0);
         }
