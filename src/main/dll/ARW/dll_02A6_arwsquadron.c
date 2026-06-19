@@ -192,6 +192,7 @@ void arwsquadron_init(int obj, int setup)
     ArwSquadronState* state;
     ArwSquadronSetup* setupData;
     int tmp;
+    f32 fxScale;
 
     tmp = lbl_803E7160;
     state = *(ArwSquadronState**)&((GameObject*)obj)->extra;
@@ -255,7 +256,8 @@ void arwsquadron_init(int obj, int setup)
         state->deathScore = 0x14;
         state->hitScore = 0;
         state->damageSmokeScale = lbl_803E71C8;
-        state->fireFxScale = lbl_803E7170;
+        fxScale = lbl_803E7170;
+        state->fireFxScale = fxScale;
         flags->b80 = 1;
         switch (((GameObject*)obj)->anim.seqId)
         {
@@ -272,7 +274,7 @@ void arwsquadron_init(int obj, int setup)
         case 0x6d7:
             state->muzzleCount = 1;
             state->projectilePathCount = 1;
-            state->muzzleLightRadius = lbl_803E71CC;
+            state->muzzleLightRadius = fxScale;
             state->muzzleLightIntensity = lbl_803E71D0;
             break;
         default:
