@@ -11146,7 +11146,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
             velMag = -((PlayerState*)state)->unk7C8;
             if (1 < iv &&
-                (velMag = velMag + (**nearList - *nearList[iv - 1]), lbl_803E7FA0 < velMag))
+                (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
             {
                 int inner = *(int*)&((GameObject*)obj)->extra;
                 s8* p = *(s8**)&((PlayerState *)inner)->flags360;
