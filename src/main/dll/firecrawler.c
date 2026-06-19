@@ -949,7 +949,6 @@ void crawler_update(int* obj, u8* state)
     u8* t8 = d[*(u8*)(state + 0x33b)].t18;
     u8* t7 = d[*(u8*)(state + 0x33b)].tC;
     CrawlerSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
-    ObjHitsPriorityState* hitState;
     f32 cap;
     int i;
     u8* p;
