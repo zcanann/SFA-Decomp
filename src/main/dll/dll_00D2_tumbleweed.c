@@ -30,8 +30,8 @@ extern const f32 lbl_803E2FC8;
 extern const f32 lbl_803E2FCC;
 extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
-extern u8 lbl_803DBD40[8];
-extern u8 lbl_80320288[0xc];
+extern u8 gTumbleweedCollisionPointData[8];
+extern u8 gTumbleweedCollisionPoint[0xc];
 extern void Obj_FreeObject(int obj);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -516,7 +516,7 @@ void tumbleweed_init(int obj, int defData)
     *(u32*)&((BackpackState*)aux)->unk284 = 0;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E2FD0;
     (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
-    (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, lbl_80320288, lbl_803DBD40, 8);
+    (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)aux);
     ((BackpackState*)aux)->phase = 0;
     ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)

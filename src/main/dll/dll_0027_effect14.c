@@ -6,7 +6,7 @@
  * lifetime (count), alpha, behaviour/render flags and a randomised
  * position/velocity/scale (via randomGetRange and the lbl_803E.. float
  * constants); id 0x4c5 rotates a velocity by the model's rotation
- * (vecRotateZXY) and seeds the shared source params lbl_8039C3F8.
+ * (vecRotateZXY) and seeds the shared source params gEffect14SharedSrcParams.
  *
  * flags bit 0x200000 means the caller supplied an explicit EffectSrcParams
  * source (copied into the request); behaviour-flag bit 1 then adds either
@@ -21,7 +21,7 @@
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-extern EffectSrcParams lbl_8039C3F8;
+extern EffectSrcParams gEffect14SharedSrcParams;
 extern void vecRotateZXY(void* params, f32* vec);
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;
@@ -406,13 +406,13 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     case 0x4c5:
         if (src == NULL)
         {
-            lbl_8039C3F8.x = lbl_803E0000;
-            lbl_8039C3F8.y = lbl_803E0000;
-            lbl_8039C3F8.z = lbl_803E0000;
-            lbl_8039C3F8.w = lbl_803E006C;
-            lbl_8039C3F8.rot0 = 0;
-            lbl_8039C3F8.rot1 = 0;
-            lbl_8039C3F8.rot2 = 0;
+            gEffect14SharedSrcParams.x = lbl_803E0000;
+            gEffect14SharedSrcParams.y = lbl_803E0000;
+            gEffect14SharedSrcParams.z = lbl_803E0000;
+            gEffect14SharedSrcParams.w = lbl_803E006C;
+            gEffect14SharedSrcParams.rot0 = 0;
+            gEffect14SharedSrcParams.rot1 = 0;
+            gEffect14SharedSrcParams.rot2 = 0;
         }
         p.velX = lbl_803E000C * (f32)(int)randomGetRange(-0x14, 0x14);
         p.velY = lbl_803E000C * (f32)(int)randomGetRange(-0x14, 0x14);

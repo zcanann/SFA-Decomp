@@ -40,7 +40,7 @@ extern f32 lbl_803E0168;
 extern f32 lbl_803E016C;
 extern f32 lbl_803E0170;
 extern f32 lbl_803E0174;
-extern WaterfxCfg lbl_8039C428;
+extern WaterfxCfg gEffect15DefaultSpawnParams;
 
 /*
  * cfg field names follow ExpgfxSpawnConfig (the consumer-side definition of
@@ -128,14 +128,14 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x3e9:
         if (spawnParams == 0)
         {
-            lbl_8039C428.posX = lbl_803E0110;
-            lbl_8039C428.posY = lbl_803E0110;
-            lbl_8039C428.posZ = lbl_803E0110;
-            lbl_8039C428.scale = lbl_803E011C;
-            lbl_8039C428.rotX = 0;
-            lbl_8039C428.rotY = 0;
-            lbl_8039C428.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C428;
+            gEffect15DefaultSpawnParams.posX = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posY = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posZ = lbl_803E0110;
+            gEffect15DefaultSpawnParams.scale = lbl_803E011C;
+            gEffect15DefaultSpawnParams.rotX = 0;
+            gEffect15DefaultSpawnParams.rotY = 0;
+            gEffect15DefaultSpawnParams.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect15DefaultSpawnParams;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -156,14 +156,14 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x3ea:
         if (spawnParams == 0)
         {
-            lbl_8039C428.posX = lbl_803E0110;
-            lbl_8039C428.posY = lbl_803E0110;
-            lbl_8039C428.posZ = lbl_803E0110;
-            lbl_8039C428.scale = lbl_803E011C;
-            lbl_8039C428.rotX = 0;
-            lbl_8039C428.rotY = 0;
-            lbl_8039C428.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C428;
+            gEffect15DefaultSpawnParams.posX = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posY = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posZ = lbl_803E0110;
+            gEffect15DefaultSpawnParams.scale = lbl_803E011C;
+            gEffect15DefaultSpawnParams.rotX = 0;
+            gEffect15DefaultSpawnParams.rotY = 0;
+            gEffect15DefaultSpawnParams.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect15DefaultSpawnParams;
         }
         cfg.startPosX = (f32)(s32)
         randomGetRange(-0x64, 0x64) / lbl_803E0124;
@@ -290,14 +290,14 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         if (extraArgs == 0) return 0;
         if (spawnParams == 0)
         {
-            lbl_8039C428.posX = lbl_803E0110;
-            lbl_8039C428.posY = lbl_803E0110;
-            lbl_8039C428.posZ = lbl_803E0110;
-            lbl_8039C428.scale = lbl_803E011C;
-            lbl_8039C428.rotX = 0;
-            lbl_8039C428.rotY = 0;
-            lbl_8039C428.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C428;
+            gEffect15DefaultSpawnParams.posX = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posY = lbl_803E0110;
+            gEffect15DefaultSpawnParams.posZ = lbl_803E0110;
+            gEffect15DefaultSpawnParams.scale = lbl_803E011C;
+            gEffect15DefaultSpawnParams.rotX = 0;
+            gEffect15DefaultSpawnParams.rotY = 0;
+            gEffect15DefaultSpawnParams.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect15DefaultSpawnParams;
         }
         if (spawnParams != 0)
         {

@@ -18,7 +18,7 @@ extern void ObjPath_GetPointLocalPosition(int obj, int point, f32 *out_x, f32 *o
 extern void mtx44_mult(void *lhs, void *rhs, void *out);
 extern void fn_8003B950(void *matrix);
 
-extern u8 lbl_803DB0F0[];
+extern u8 gDIMSnowHorn1ModelMtx[];
 
 /*
  * Build a transform from a packed rotation/translation record and sample
@@ -297,7 +297,7 @@ typedef struct {
     u8 flag;
 } SnowHornFlags;
 
-extern u8 lbl_80335030[];
+extern u8 gDIMSnowHorn1ConfigTable[];
 extern void fn_8003A168(int obj, int q);
 extern void fn_8003B500(int obj, int q, f32 f);
 extern void fn_802BB4B4(int obj, int a, int slot);
@@ -382,8 +382,8 @@ extern int textureLoad(int id, int p2);
 
 extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern int lbl_803E8230;
-extern int lbl_803DC734;
-extern f32 lbl_803E82B8;
+extern int gDIMSnowHorn1PathCollisionData;
+extern f32 gDIMSnowHorn1Gravity;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);

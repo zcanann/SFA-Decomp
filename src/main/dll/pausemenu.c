@@ -123,7 +123,7 @@ extern f32 lbl_803E20A0;
 extern f32 lbl_803E20A4;
 extern f32 lbl_803E20A8;
 extern f32 lbl_803E20AC;
-extern f32 lbl_803E20B0;
+extern f32 gPauseMenuSecsPerHour;
 extern f32 lbl_803E20B4;
 extern f32 lbl_803E20B8;
 extern f32 lbl_803E1E6C;
@@ -630,7 +630,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         }
         sprintf(buf, &lbl_803DBB80, hintCount);
         gameTextShowStr(buf, 0x93, 0x130, 0x12c);
-        h24 = (s32)(playRatio / lbl_803E20B0);
+        h24 = (s32)(playRatio / gPauseMenuSecsPerHour);
         if (h24 > 0x63)
         {
             sprintf(buf, &lbl_803DBB88, h24);

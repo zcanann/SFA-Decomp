@@ -1018,9 +1018,9 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     transform.rotY = 0;
     transform.rotZ = 0;
     transform.scale = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    setMatrixFromObjectPos((f32*)lbl_803DB0F0, (s16*)&transform);
-    mtx44_mult(lbl_803DB0F0, pathMtx, lbl_803DB0F0);
-    fn_8003B950(lbl_803DB0F0);
+    setMatrixFromObjectPos((f32*)gDIMSnowHorn1ModelMtx, (s16*)&transform);
+    mtx44_mult(gDIMSnowHorn1ModelMtx, pathMtx, gDIMSnowHorn1ModelMtx);
+    fn_8003B950(gDIMSnowHorn1ModelMtx);
 }
 
 int DIMSnowHorn1_setScale(int obj)
@@ -1232,7 +1232,7 @@ void DIMSnowHorn1_update(int obj)
         f32 mat[4];
     } v;
     f32 matrix[16];
-    u8* base = (u8*)(int)lbl_80335030;
+    u8* base = (u8*)(int)gDIMSnowHorn1ConfigTable;
     int player = (int)Obj_GetPlayerObject();
     int data;
     s8 c = -1;
@@ -1489,7 +1489,7 @@ void DIMSnowHorn1_initialise(void)
 
 void DIMSnowHorn1_init(int obj, int p2, int p3)
 {
-    u8* base = lbl_80335030;
+    u8* base = gDIMSnowHorn1ConfigTable;
     int stk = lbl_803E8230;
     DIMSnowHorn1State* inner;
     u8* pathState;
@@ -1511,7 +1511,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         hitState->trackContactMask = 9;
     }
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
-    inner->baddie.gravity = lbl_803E82B8;
+    inner->baddie.gravity = gDIMSnowHorn1Gravity;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;
     switch (inner->mode)
@@ -1521,7 +1521,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     case 4:
         (*gPathControlInterface)->init(pathState, 3, 0x200020, 1);
         (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0xe0,
-                                                         &lbl_803DC734, 8);
+                                                         &gDIMSnowHorn1PathCollisionData, 8);
         (*gPathControlInterface)->setup(pathState, 4, base + 0xa0, base + 0xd0, &stk);
         (*gPathControlInterface)->attachObject((void*)obj, pathState);
         break;
