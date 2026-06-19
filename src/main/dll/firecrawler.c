@@ -1600,10 +1600,10 @@ typedef struct
 void crawler_updateC(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)lbl_8031FAE8;
-    u8* t8 = d[*(u8*)(state + 0x33b)].tbl8;
-    u8* t0 = d[*(u8*)(state + 0x33b)].tbl0;
-    CrawlerSeq16* seq = d[*(u8*)(state + 0x33b)].seq;
-    u8* tC = d[*(u8*)(state + 0x33b)].tblC;
+    u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
+    u8* t0 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl0;
+    CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
+    u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 scale = lbl_803E2BA4;
     f32 cap;
@@ -1624,11 +1624,11 @@ void crawler_updateC(s16* obj, u8* state)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
         }
-        if (*(u8*)(state + 0x33b) == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             crawler_checkNearbyActive((int)obj, state);
         }
-        *(u8*)(state + 0x33a) = 0;
+        ((BaddieState*)state)->seqEntryIndex = 0;
     }
 
     if (*(f32*)(state + 0x328) != (cap = lbl_803E2BA8) && *(u8*)(state + 0x33f) != 0)
@@ -1767,7 +1767,7 @@ void crawler_updateC(s16* obj, u8* state)
                         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x18;
                         {
                             f32 v = *(f32*)(state + 0x310);
-                            int j = *(u8*)(state + 0x33b) * 0xc;
+                            int j = ((BaddieState*)state)->inWhirlpoolGroup * 0xc;
                             if (v > *(f32*)((int)lbl_8031FB48 + j))
                             {
                                 *(u8*)(state + 0x323) = 1;
