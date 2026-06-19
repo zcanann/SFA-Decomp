@@ -276,9 +276,7 @@ void imicemountain_updateEventState(int* obj)
         }
         if (extra->warpCountdown > 0)
         {
-            s8 cnt = extra->warpCountdown - 1;
-            extra->warpCountdown = cnt;
-            if (cnt == 0)
+            if (--extra->warpCountdown == 0)
             {
                 GameBit_Set(0x4e5, 0);
                 warpToMap(0x1a, 0);
