@@ -259,7 +259,7 @@ void SB_ShipGun_update(int obj)
                     *(s8*)((int)state + 0xb) += 1;
                     if (*(char*)((int)state + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
                     {
-                        *(s8*)(state + 3) -= 1;
+                        *(s8*)&((SBShipGunState*)state)->health -= 1;
                         *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
@@ -269,7 +269,7 @@ void SB_ShipGun_update(int obj)
                     else if (*(char*)((int)state + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
                     {
                         Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
-                        *(s8*)(state + 3) -= 1;
+                        *(s8*)&((SBShipGunState*)state)->health -= 1;
                         *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
@@ -377,7 +377,7 @@ void SB_ShipGun_update(int obj)
             break;
         case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-            if (*(char*)(state + 3) == '\0')
+            if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
                 spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
                 *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
@@ -436,7 +436,7 @@ void SB_ShipGun_update(int obj)
             }
             break;
         }
-        if (*(char*)(state + 3) == '\0')
+        if (*(char*)&((SBShipGunState*)state)->health == '\0')
         {
             dist = Vec_distance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
             if (dist < lbl_803E58AC)
