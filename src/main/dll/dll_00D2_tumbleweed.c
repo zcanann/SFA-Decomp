@@ -123,7 +123,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     *(short*)obj = (short)hitCount;
     if (hitList[0] != (undefined4*)0x0)
     {
-        if (lbl_803E2F60 + *(float*)hitList[0][bestHit] < ((GameObject*)obj)->anim.localPosY)
+        if (((GameObject*)obj)->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2F64;
         }
