@@ -486,7 +486,8 @@ void SaveSelectScreen_render(int param)
         (*gScreenTransitionInterface)->getProgress());
     if ((u8)v < 0x80)
     {
-        titleScreenPositionElements(lbl_803E1D68, lbl_803E1D6C - (f32)(int)((u8)v * 0x86) * lbl_803E1D70);
+        f32 conv = (f32)(int)((u8)v * 0x86);
+        titleScreenPositionElements(lbl_803E1D68, lbl_803E1D6C - conv * lbl_803E1D70);
         alpha = 0;
     }
     else
