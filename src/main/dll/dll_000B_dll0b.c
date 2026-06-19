@@ -1751,17 +1751,17 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 {
     if (mode == 1)
     {
-        int tx = params[1];
-        int ty = params[2];
-        int tz = params[3];
+        s16 tx = params[1];
+        s16 ty = params[2];
+        s16 tz = params[3];
         if (((ModgfxState*)obj)->blendFrameCount != 0)
         {
             ((ModgfxState*)obj)->rotStepZ = (s16)(
-                ((s16)tx - ((ModgfxState*)obj)->rotOffsetZ) / ((ModgfxState*)obj)->blendFrameCount);
+                (tx - ((ModgfxState*)obj)->rotOffsetZ) / ((ModgfxState*)obj)->blendFrameCount);
             ((ModgfxState*)obj)->rotStepY = (s16)(
-                ((s16)ty - ((ModgfxState*)obj)->rotOffsetY) / ((ModgfxState*)obj)->blendFrameCount);
+                (ty - ((ModgfxState*)obj)->rotOffsetY) / ((ModgfxState*)obj)->blendFrameCount);
             ((ModgfxState*)obj)->rotStepX = (s16)(
-                ((s16)tz - ((ModgfxState*)obj)->rotOffsetX) / ((ModgfxState*)obj)->blendFrameCount);
+                (tz - ((ModgfxState*)obj)->rotOffsetX) / ((ModgfxState*)obj)->blendFrameCount);
         }
         else
         {
