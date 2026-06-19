@@ -147,7 +147,7 @@ static inline float exp2_kernel(float x, float* table)
     float scale;
     float poly;
 
-    exponent = (int)x;
+    exponent = x;
     fraction = x - int_float(exponent);
 
     if (exponent > 128) {
@@ -191,7 +191,7 @@ float powf(float x, float y)
     }
 
     if (x < lbl_803E7E50) {
-        int_y = (int)y;
+        int_y = y;
         if (y - int_float(int_y) != lbl_803E7E50) {
             return lbl_803DC648;
         }

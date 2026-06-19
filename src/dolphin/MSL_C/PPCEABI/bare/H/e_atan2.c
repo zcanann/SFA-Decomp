@@ -37,7 +37,7 @@ float powfBitEstimate(float x, float y) {
         *(u32 *)&result = (u32)(int)frac + 0x3F800000;
 
         if (x_bits & 0x80000000) {
-            y_int = (int)y;
+            y_int = y;
             if (y_int & 1) {
                 *(u32 *)&result ^= 0x80000000;
             }

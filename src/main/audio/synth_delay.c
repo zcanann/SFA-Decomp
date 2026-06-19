@@ -24,7 +24,7 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu)
     {
-        idx = (u8)handle;
+        idx = handle;
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
         {
             slot = (McmdVoiceState*)(synthVoice + idx * 0x404);
@@ -62,7 +62,7 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu)
     {
-        idx = (u8)handle;
+        idx = handle;
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
         {
             slot = (McmdVoiceState*)(synthVoice + idx * 0x404);

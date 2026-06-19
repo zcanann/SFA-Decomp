@@ -134,7 +134,7 @@ int sndFXCheck(u32 id)
     slot = vidGetInternalId(id);
     if (slot != 0xffffffff)
     {
-        return (int)id;
+        return id;
     }
     return -1;
 }

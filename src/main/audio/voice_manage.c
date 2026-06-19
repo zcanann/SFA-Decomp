@@ -168,7 +168,7 @@ int voiceIsRegistered(int state)
     a = voiceState->midiSlot;
     if (a == SYNTH_INVALID_VOICE_U8) goto fail;
     b = voiceState->midiChannel;
-    v = (u8)voice;
+    v = voice;
     if (b == SYNTH_INVALID_VOICE_U8)
     {
         if (voiceDirectSlots[v] == v) return 1;
@@ -195,7 +195,7 @@ void voiceRegister(int state)
     a = voiceState->midiSlot;
     if (a == SYNTH_INVALID_VOICE_U8) return;
     b = voiceState->midiChannel;
-    v = (u8)voice;
+    v = voice;
     if (b == SYNTH_INVALID_VOICE_U8)
     {
         voiceDirectSlots[v] = v;

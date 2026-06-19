@@ -66,19 +66,19 @@ float powfCoreHighPrecision(float x, float y) {
         mantissa = m - lbl_803E7AC0;
         mantissa2 = mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (lbl_803E7B60 * mantissa + lbl_803E7B58) + lbl_803E7B50) + lbl_803E7B48) + lbl_803E7B40) + lbl_803E7B38) + lbl_803E7B30) + lbl_803E7B28) + lbl_803E7B20) + lbl_803E7B18) + lbl_803E7B10) + lbl_803E7B08) + lbl_803E7B00) + lbl_803E7AF8) + lbl_803E7AF0) + lbl_803E7AE8) + lbl_803E7AE0) + lbl_803E7AD8) + lbl_803E7AD0) + lbl_803E7AC8);
         mantissa = y * (mantissa2 + (double)exponent);
-        scale = (int)mantissa;
+        scale = mantissa;
         scaleconv = (double)scale;
         frac = mantissa - scaleconv;
 
         value = (frac != lbl_803E7B68) ? (float)(frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (lbl_803E7BC0 * frac + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70) : lbl_803E7BC8;
 
         if ((int)(ix & 0x80000000)) {
-            ysign = (int)y;
+            ysign = y;
             if (ysign & 1) {
                 value = -value;
             }
         }
-        *(u32 *)&value += (u32)scale << 23;
+        *(u32 *)&value += scale << 23;
         return value;
     }
     if (y != lbl_803E7AB8) {
@@ -110,12 +110,12 @@ float powfCoreFast(float x, register float y) {
         value = value - scalef;
         result = (value != lbl_803E7AB8) ? (value * (lbl_803E7BF0 * value + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;
         if ((int)(ix & 0x80000000)) {
-            ysign = (int)y;
+            ysign = y;
             if (ysign & 1) {
                 result = -result;
             }
         }
-        *(u32 *)&result += (u32)scale << 23;
+        *(u32 *)&result += scale << 23;
         return result;
     }
     if (y != lbl_803E7AB8) {

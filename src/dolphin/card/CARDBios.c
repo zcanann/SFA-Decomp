@@ -382,7 +382,7 @@ s32 __CARDReadSegment(s32 chan, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(848, card->addr % CARD_SEG_SIZE == 0);
-    ASSERTLINE(849, card->addr < (u32) card->size * 1024 * 1024 / 8);
+    ASSERTLINE(849, card->addr <  card->size * 1024 * 1024 / 8);
 
     card->cmd[0] = 0x52;
     card->cmd[1] = AD1(card->addr);
@@ -422,7 +422,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(905, card->addr % card->pageSize == 0);
-    ASSERTLINE(906, card->addr < (u32) card->size * 1024 * 1024 / 8);
+    ASSERTLINE(906, card->addr <  card->size * 1024 * 1024 / 8);
     card->cmd[0] = 0xF2;
 
     card->cmd[1] = AD1(card->addr);
@@ -460,7 +460,7 @@ s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(1012, addr % card->sectorSize == 0);
-    ASSERTLINE(1013, addr < (u32) card->size * 1024 * 1024 / 8);
+    ASSERTLINE(1013, addr <  card->size * 1024 * 1024 / 8);
 
     card->cmd[0] = 0xF1;
     card->cmd[1] = AD1(addr);

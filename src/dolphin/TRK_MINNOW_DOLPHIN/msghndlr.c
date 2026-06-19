@@ -205,13 +205,13 @@ DSError TRKDoReadMemory(TRKBuffer* buffer)
 	TRKMessageIntoReply(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
 
 	if (error == DS_NoError) {
-		length = (u32)msg_length;
+		length = msg_length;
 		error = TRKTargetAccessMemory(tmpBuffer, msg_start, &length,
 		                              (msg_options & DSMSGMEMORY_Userview)
 		                                  ? MEMACCESS_UserMemory
 		                                  : MEMACCESS_DebuggerMemory,
 		                              TRUE);
-		msg_length = (u16)length;
+		msg_length = length;
 		if (error == DS_NoError)
 			error = TRKAppendBuffer1_ui16(buffer, *(volatile u16*)&msg_length);
 		if (error == DS_NoError)
@@ -284,7 +284,7 @@ DSError TRKDoWriteMemory(TRKBuffer* buffer)
 		error = TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_ParameterError);
 	} else {
 		if (error == DS_NoError) {
-			length = (u32)msg_length;
+			length = msg_length;
 			error  = TRKReadBuffer(buffer, tmpBuffer, length);
 			if (error == DS_NoError) {
 				error = TRKTargetAccessMemory(tmpBuffer, msg_start, &length,
@@ -293,7 +293,7 @@ DSError TRKDoWriteMemory(TRKBuffer* buffer)
 				                                  : MEMACCESS_DebuggerMemory,
 				                              FALSE);
 			}
-			msg_length = (u16)length;
+			msg_length = length;
 		}
 
 		if (error == DS_NoError)

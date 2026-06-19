@@ -80,7 +80,7 @@ void GXSetDispCopyDst(u16 wd, u16 ht) {
     ASSERTMSGLINE(1293, (wd & 0xF) == 0, "GXSetDispCopyDst: Width must be a multiple of 16");
     CHECK_GXBEGIN(1294, "GXSetDispCopyDst");
 
-    stride = (int)wd * 2;
+    stride = wd * 2;
     gx->cpDispStride = 0;
     SET_REG_FIELD(1299, gx->cpDispStride, 10, 0, stride >> 5);
     SET_REG_FIELD(1300, gx->cpDispStride, 8, 24, 0x4D);

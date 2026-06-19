@@ -131,7 +131,7 @@ __OSInterruptHandler __OSGetInterruptHandler(__OSInterrupt interrupt) {
 }
 
 void __OSInterruptInit(void) {
-    InterruptHandlerTable = (void*)OSPhysicalToCached(0x3040);
+    InterruptHandlerTable = OSPhysicalToCached(0x3040);
 
     memset(InterruptHandlerTable, 0, __OS_INTERRUPT_MAX * sizeof(__OSInterruptHandler));
 
@@ -170,7 +170,7 @@ static u32 SetInterruptMask(OSInterruptMask mask, OSInterruptMask current) {
             reg |= 0x8;
         if (!(current & OS_INTERRUPTMASK_MEM_ADDRESS))
             reg |= 0x10;
-        __MEMRegs[0x0000000e] = (u16)reg;
+        __MEMRegs[0x0000000e] = reg;
         mask &= ~OS_INTERRUPTMASK_MEM;
         break;
     case __OS_INTERRUPT_DSP_AI:
@@ -184,7 +184,7 @@ static u32 SetInterruptMask(OSInterruptMask mask, OSInterruptMask current) {
             reg |= 0x40;
         if (!(current & OS_INTERRUPTMASK_DSP_DSP))
             reg |= 0x100;
-        __DSPRegs[0x00000005] = (u16)reg;
+        __DSPRegs[0x00000005] = reg;
         mask &= ~OS_INTERRUPTMASK_DSP;
         break;
     case __OS_INTERRUPT_AI_AI:

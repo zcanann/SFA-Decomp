@@ -284,7 +284,7 @@ static int __EXIProbe(s32 chan) {
                 __EXIProbeStartTime[chan] = t;
             }
 
-            if (t - (s32)__EXIProbeStartTime[chan] < 3) {
+            if (t - __EXIProbeStartTime[chan] < 3) {
                 rc = 0;
             }
         } else {
@@ -632,7 +632,7 @@ int EXIUnlock(s32 chan) {
 
 u32 EXIGetState(s32 chan) {
     EXIControl* exi = &Ecb[chan];
-    return (u32)exi->state;
+    return exi->state;
 }
 
 static void UnlockedHandler(s32 chan, OSContext* context) {

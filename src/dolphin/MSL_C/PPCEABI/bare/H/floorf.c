@@ -1,7 +1,7 @@
 #include "dolphin/types.h"
 
 float floorf(float x) {
-    int n = (int)x;
+    int n = x;
     float diff = (float)n - x;
     u32 bits;
 

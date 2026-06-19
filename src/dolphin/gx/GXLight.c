@@ -247,7 +247,7 @@ void GXInitLightColor(GXLightObj* lt_obj, GXColor color) {
     obj = (__GXLightObjInt_struct*)lt_obj;
     CHECK_GXBEGIN(463, "GXInitLightColor");
 
-    obj->Color = ((u32)color.r << 24) | ((u32)color.g << 16) | ((u32)color.b << 8) | (u32)color.a;
+    obj->Color = ((u32)color.r << 24) | ((u32)color.g << 16) | ((u32)color.b << 8) | color.a;
 }
 
 #if DEBUG

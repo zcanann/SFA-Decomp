@@ -285,8 +285,8 @@ void __DSP_boot_task(DSPTaskInfo* task) {
     while (DSPCheckMailToDSP() != 0)
         ;
 
-    __DSP_debug_printf(DSP_BOOTING_TASK_MSG, (u32)task);
-    __DSP_debug_printf(IRAM_MMEM_ADDR_MSG, (u32)task->iram_mmem_addr);
+    __DSP_debug_printf(DSP_BOOTING_TASK_MSG, task);
+    __DSP_debug_printf(IRAM_MMEM_ADDR_MSG, task->iram_mmem_addr);
     __DSP_debug_printf(IRAM_DSP_ADDR_MSG, task->iram_addr);
     __DSP_debug_printf(IRAM_LENGTH_MSG, task->iram_length);
     __DSP_debug_printf(DRAM_MMEM_ADDR_MSG, task->dram_length);

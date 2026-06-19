@@ -146,7 +146,7 @@ float fastFloorf(float x)
     }
 
     if (abs_x < lbl_803E79AC) {
-        int_value = (int)input;
+        int_value = input;
         rounded = (float)int_value;
 
         if (input >= lbl_803E79A4) {

@@ -102,7 +102,7 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 
     offset = 0;
     numBytes = 32;
-    ReadApploader(&dvdCmd, (void*)&Header, offset, numBytes);
+    ReadApploader(&dvdCmd, &Header, offset, numBytes);
 
     offset = Header.size + 0x20;
     numBytes = OSRoundUp32B(Header.rebootSize);

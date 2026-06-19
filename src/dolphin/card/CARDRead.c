@@ -90,7 +90,7 @@ static void ReadCallback(s32 chan, s32 result) {
     ASSERTLINE(199, OFFSET(fileInfo->length, CARD_SEG_SIZE) == 0);
     ASSERTLINE(200, OFFSET(fileInfo->offset, card->sectorSize) == 0);
 
-    result = __CARDRead(chan, card->sectorSize * (u32)fileInfo->iBlock,
+    result = __CARDRead(chan, card->sectorSize * fileInfo->iBlock,
                         (fileInfo->length < card->sectorSize) ? fileInfo->length : card->sectorSize, card->buffer,
                         ReadCallback);
     if (result < 0)
@@ -132,12 +132,12 @@ s32 CARDReadAsync(CARDFileInfo* fileInfo, void* buf, s32 length, s32 offset, CAR
     if (result < 0)
         return __CARDPutControlBlock(card, result);
 
-    DCInvalidateRange(buf, (u32)length);
+    DCInvalidateRange(buf, length);
     card->apiCallback = callback ? callback : __CARDDefaultApiCallback;
 
-    offset = (s32)OFFSET(fileInfo->offset, card->sectorSize);
+    offset = OFFSET(fileInfo->offset, card->sectorSize);
     length = (length < card->sectorSize - offset) ? length : card->sectorSize - offset;
-    result = __CARDRead(fileInfo->chan, card->sectorSize * (u32)fileInfo->iBlock + offset, length, buf, ReadCallback);
+    result = __CARDRead(fileInfo->chan, card->sectorSize * fileInfo->iBlock + offset, length, buf, ReadCallback);
     if (result < 0)
         __CARDPutControlBlock(card, result);
     return result;

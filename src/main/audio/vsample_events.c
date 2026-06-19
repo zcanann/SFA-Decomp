@@ -28,7 +28,7 @@ void synthHandleVirtualSampleDone(u32 packed)
     {
         return;
     }
-    vid = slots[(u8)packed];
+    vid = slots[packed];
     if (vid == SYNTH_VIRTUAL_SAMPLE_FREE_SLOT)
     {
         return;

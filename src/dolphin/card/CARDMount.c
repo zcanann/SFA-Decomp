@@ -182,7 +182,7 @@ static s32 DoMount(s32 chan) {
                 sram->flashID[chan][i] = card->id[i];
                 checkSum += card->id[i];
             }
-            sram->flashIDCheckSum[chan] = (u8)~checkSum;
+            sram->flashIDCheckSum[chan] = ~checkSum;
             __OSUnlockSramEx(TRUE);
 
             return result;
@@ -228,7 +228,7 @@ static s32 DoMount(s32 chan) {
     }
 
     step = card->mountStep - 2;
-    result = __CARDRead(chan, (u32)card->sectorSize * step, CARD_SYSTEM_BLOCK_SIZE,
+    result = __CARDRead(chan, card->sectorSize * step, CARD_SYSTEM_BLOCK_SIZE,
                         (u8*)card->workArea + (CARD_SYSTEM_BLOCK_SIZE * step), __CARDMountCallback);
     if (result < 0)
         __CARDPutControlBlock(card, result);

@@ -767,7 +767,7 @@ static void cbForStateBusy(u32 intType)
 			if ((CurrCommand == 11) || (CurrCommand == 10)) {
 				result = (s32)(__DIRegs[8] << 2);
 			} else {
-				result = (s32)__DIRegs[8];
+				result = __DIRegs[8];
 			}
 			finished  = executing;
 			executing = &DummyCommandBlock;
@@ -964,7 +964,7 @@ BOOL DVDInquiryAsync(DVDCommandBlock* block, DVDDriveInfo* info,
 	BOOL idle;
 
 	block->command         = 14;
-	block->addr            = (void*)info;
+	block->addr            = info;
 	block->length          = sizeof(DVDDriveInfo);
 	block->transferredSize = 0;
 	block->callback        = callback;

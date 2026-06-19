@@ -43,7 +43,7 @@ void __fstLoad(void) {
     static DVDCommandBlock block;
 
     arenaHi = OSGetArenaHi();
-    bootInfo = (void*)OSPhysicalToCached(0);
+    bootInfo = OSPhysicalToCached(0);
     idTmp = (void*)OSRoundUp32B(idTmpBuf);
     bb2 = (void*)OSRoundUp32B(bb2Buf);
 
@@ -68,7 +68,7 @@ void __fstLoad(void) {
         }
     }
 
-    bootInfo->FSTLocation = (void*)bb2->FSTAddress;
+    bootInfo->FSTLocation = bb2->FSTAddress;
     bootInfo->FSTMaxLength = bb2->FSTMaxLength;
     id = &bootInfo->DVDDiskID;
     memcpy(id, idTmp, 0x20);
