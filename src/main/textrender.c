@@ -180,7 +180,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 switch (ch)
                 {
                 case 0xf8f4:
-                    lbl_803DC9A0 = (f32)params[0] * lbl_803DE708;
+                    lbl_803DC9A0 = params[0] * lbl_803DE708;
                     break;
                 case 0xf8f7:
                     glyphLang = params[0];
@@ -281,7 +281,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                             acc += getControlCharLen(innerCh) * 2;
                         }
                     }
-                    spaceExtra = ((f32)(u32) * (u16*)(win + 8) - measW) / (f32)spaceCount;
+                    spaceExtra = ((f32)(u32) * (u16*)(win + 8) - measW) / spaceCount;
                     break;
                 }
             }
@@ -347,21 +347,21 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
         if (lbl_803DC9BC != 0)
         {
-            if (fx0 < (f32)lbl_803DC9B0)
+            if (fx0 < lbl_803DC9B0)
             {
-                lbl_803DC9B0 = (int)fx0;
+                lbl_803DC9B0 = fx0;
             }
-            if (fx1 > (f32)lbl_803DC9AC)
+            if (fx1 > lbl_803DC9AC)
             {
-                lbl_803DC9AC = (int)fx1;
+                lbl_803DC9AC = fx1;
             }
-            if (fy0 < (f32)lbl_803DC9B8)
+            if (fy0 < lbl_803DC9B8)
             {
-                lbl_803DC9B8 = (int)fy0;
+                lbl_803DC9B8 = fy0;
             }
-            if (fy1 > (f32)lbl_803DC9B4)
+            if (fy1 > lbl_803DC9B4)
             {
-                lbl_803DC9B4 = (int)fy1;
+                lbl_803DC9B4 = fy1;
             }
         }
         else
@@ -369,8 +369,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             if (g[0xe] == 3)
             {
                 int shift = lbl_803DB3CC << 2;
-                fy0 = fy0 - (f32)shift;
-                fy1 = fy1 - (f32)shift;
+                fy0 = fy0 - shift;
+                fy1 = fy1 - shift;
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 GXSetScissor(scisX, (scisY >= lbl_803DB3CC) ? scisY - lbl_803DB3CC : 0, scisW, scisH);
             }
@@ -383,9 +383,9 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                                  *(s16*)(winBase + 0xfd4) + *(u16*)(winBase + 0xfc8),
                                  *(s16*)(winBase + 0xfd6) + *(u16*)(winBase + 0xfca));
                 fx0 = (f32)(*(s16*)(winBase + 0xfd4) + ((*(u16*)(winBase + 0xfc8) - iw) >> 1));
-                fx1 = fx0 + (f32)iw;
+                fx1 = fx0 + iw;
                 fy0 = (f32)(*(s16*)(winBase + 0xfd6) + ((*(u16*)(winBase + 0xfca) - ih) >> 1));
-                fy1 = fy0 + (f32)ih;
+                fy1 = fy0 + ih;
                 fx0 = fx0 * lbl_803DE710;
                 fx1 = fx1 * lbl_803DE710;
                 fy0 = fy0 * lbl_803DE710;
@@ -396,10 +396,10 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             {
                 int ox = lbl_803DC98C;
                 int oy = lbl_803DC988;
-                fx0 = fx0 + (f32)ox;
-                fx1 = fx1 + (f32)ox;
-                fy0 = fy0 + (f32)oy;
-                fy1 = fy1 + (f32)oy;
+                fx0 = fx0 + ox;
+                fx1 = fx1 + ox;
+                fy0 = fy0 + oy;
+                fy1 = fy1 + oy;
             }
 
             if (lbl_803DC9BC == 0)
@@ -435,7 +435,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
 
             if (lbl_803DC99C != 0 && mode == 0 && g[0xe] != 5 &&
-                (f32)lbl_803DC998 >= lbl_803DC994)
+                lbl_803DC998 >= lbl_803DC994)
             {
                 setTextColor(0, 0, 0, 0, 0);
             }
@@ -445,7 +445,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
                 ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
-                    (int)fx0, (int)fy0, (int)fx1, (int)fy1,
+                    fx0, fy0, fx1, fy1,
                     u0 / sW, v0 / sH,
                     (u0 + (f32)(g[0xc] << 5)) / sW,
                     (v0 + (f32)(g[0xd] << 5)) / sH);
@@ -454,7 +454,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             {
                 f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
-                textRenderChar((int)fx0, (int)fy0, (int)fx1, (int)fy1,
+                textRenderChar((int)fx0, fy0, fx1, fy1,
                                u0 / sW, v0 / sH,
                                (u0 + (f32)(g[0xc] << 5)) / sW,
                                (v0 + (f32)(g[0xd] << 5)) / sH);
@@ -551,7 +551,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
                 }
                 break;
             case 0xf8f4:
-                scale = (f32)params[0] * lbl_803DE708;
+                scale = params[0] * lbl_803DE708;
                 break;
             }
             continue;
@@ -797,16 +797,16 @@ void* gameTextGet(int textId)
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, (char*)strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -866,7 +866,7 @@ void* gameTextGet(int textId)
     lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
     sprintf((char*)*(volatile int*)&gCurTextBuffer, &lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
-    *(u16*)lbl_803DC974 = (u16)textId;
+    *(u16*)lbl_803DC974 = textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
     return lbl_803DC974;
 }
@@ -1726,10 +1726,10 @@ void gameTextRun(void)
             {
                 languageId = pending[0x25];
                 freeSlot->state = 1;
-                freeSlot->dirId = (u8)dirId;
-                freeSlot->languageId = (u8)languageId;
+                freeSlot->dirId = dirId;
+                freeSlot->languageId = languageId;
                 freeSlot->active = 1;
-                freeSlot->sourceId = (u8)sourceId;
+                freeSlot->sourceId = sourceId;
                 sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
                 setFileInfo(freeSlot);
@@ -1774,8 +1774,8 @@ void gameTextRun(void)
             *alpha += timeDelta;
             if ((double)*alpha > fadeLimit)
             {
-                *timer = (f32)zero;
-                *alpha = (f32)zero;
+                *timer = zero;
+                *alpha = zero;
                 sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
             }
         }
@@ -1822,10 +1822,10 @@ void gameTextRun(void)
         case 4:
             {
                 int t1 = cmd->fc;
-                int t2 = (s16)cmd->f8;
+                int t2 = cmd->f8;
                 textWindow = gTextBoxes + cmd->f4 * 0x20;
                 *(s16*)(textWindow + 0x18) = t2;
-                *(s16*)(textWindow + 0x1a) = (s16)t1;
+                *(s16*)(textWindow + 0x1a) = t1;
                 break;
             }
         case 1:
@@ -1849,8 +1849,8 @@ void gameTextRun(void)
                 int t2 = cmd->f8;
                 int t1 = cmd->f4;
                 textWindow = gTextBoxes + t2 * 0x20;
-                *(s16*)(textWindow + 0x18) = (s16)cmd->fc;
-                *(s16*)(textWindow + 0x1a) = (s16)t3;
+                *(s16*)(textWindow + 0x18) = cmd->fc;
+                *(s16*)(textWindow + 0x1a) = t3;
                 gameTextRenderStrs(t1, t2);
                 break;
             }
@@ -1868,7 +1868,7 @@ void gameTextRun(void)
             ((void (*)(void))cmd->f4)();
             break;
         case 10:
-            lbl_803DC9AA = (u16)cmd->f4;
+            lbl_803DC9AA = cmd->f4;
             lbl_803DC9A8 = (u16)cmd->f8;
             break;
         case 11:
@@ -1879,9 +1879,9 @@ void gameTextRun(void)
             lbl_803DC984 = cmd->f4;
             break;
         case 14:
-            lbl_803DC992 = (u8)cmd->f4;
-            lbl_803DC991 = (u8)cmd->f8;
-            lbl_803DC990 = (u8)cmd->fc;
+            lbl_803DC992 = cmd->f4;
+            lbl_803DC991 = cmd->f8;
+            lbl_803DC990 = cmd->fc;
             break;
         case 13:
             lbl_803DC98C = cmd->f4;
@@ -1993,8 +1993,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
                    : NULL;
 
     freeSlot->state = 1;
-    freeSlot->dirId = (u8)sequenceSlotDir;
-    freeSlot->languageId = (u8)curLanguage;
+    freeSlot->dirId = sequenceSlotDir;
+    freeSlot->languageId = curLanguage;
     freeSlot->active = 1;
     freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
     sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextSequencePathFormat,
@@ -2068,7 +2068,7 @@ void gameTextLoadForCurMap(int sourceId)
         sourceId * sizeof(GameTextLoadRequest));
     request->state = 1;
     request->dirId = (u8)curGameTextDir;
-    request->languageId = (u8)curLanguage;
+    request->languageId = curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)
@@ -2094,10 +2094,10 @@ void gameTextLoadForCurMap(int sourceId)
         dirId = request->dirId;
         languageId = request->languageId;
         freeSlot->state = 1;
-        freeSlot->dirId = (u8)dirId;
-        freeSlot->languageId = (u8)languageId;
+        freeSlot->dirId = dirId;
+        freeSlot->languageId = languageId;
         freeSlot->active = 1;
-        freeSlot->sourceId = (u8)sourceId;
+        freeSlot->sourceId = sourceId;
         sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
                 sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
         setFileInfo(freeSlot);
@@ -2237,9 +2237,9 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
                           hw + lbl_803DB3EC, hh + lbl_803DB3EC, 0);
         drawScaledTexture((f32)cx, (f32)(c6y0 - lbl_803DB3EC), lbl_803DCA24, 0xff, 0x100,
                           hw + lbl_803DB3EC, hh + lbl_803DB3EC, 1);
-        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), (f32)cy, lbl_803DCA24, 0xff, 0x100,
+        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), cy, lbl_803DCA24, 0xff, 0x100,
                           hw + lbl_803DB3EC, hh + lbl_803DB3EC, 2);
-        drawScaledTexture((f32)cx, (f32)cy, lbl_803DCA24, 0xff, 0x100,
+        drawScaledTexture((f32)cx, cy, lbl_803DCA24, 0xff, 0x100,
                           hw + lbl_803DB3EC, hh + lbl_803DB3EC, 3);
         break;
     case 0:
@@ -2319,7 +2319,7 @@ typedef struct GameTextCharset
 #pragma peephole on
 void setLanguageFn_8001ad64(void* reqp)
 {
-    u8* req = (u8*)reqp;
+    u8* req = reqp;
     GameTextCharset* cs;
     int* data;
     u8* hdr;
@@ -2448,7 +2448,7 @@ void setLanguageFn_8001ad64(void* reqp)
         slot = slot + 1;
     }
     size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
-    newBuf = (u16*)mmAlloc(size, 0x1a, 0);
+    newBuf = mmAlloc(size, 0x1a, 0);
     old = *(u16**)(req + 0x3c);
     delta = (int)newBuf - (int)old;
     n = size >> 1;
@@ -2511,7 +2511,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     int width;
 
     fontData = (u8*)lbl_802C8F40;
-    base30 = (u8*)lbl_802C8680;
+    base30 = lbl_802C8680;
     base31 = (u8*)lbl_8033AF40;
     savedHeap = testAndSet_onlyUseHeap3(0);
     buf = mmAlloc(0x120, 0x1a, 0);
@@ -2739,7 +2739,7 @@ void subtitleUpdateAndDraw(int a)
         {
             lbl_803DCA10 += framesThisStep;
         }
-        lbl_803DCA0C = (f32)lbl_803DCA10 / lbl_803DE720;
+        lbl_803DCA0C = lbl_803DCA10 / lbl_803DE720;
         if (lbl_803DCA08 + 1 < lbl_803DCA18 && lbl_803DCA0C >= lbl_8033BA40[lbl_803DCA08 + 1])
         {
             cmds = subtitleParseControlCmds(lbl_8033B640[lbl_803DCA08], &n);
@@ -2815,11 +2815,11 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
         lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0,
         halfH + lbl_803DB3F0, 0);
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        lbl_803DCA20, (f32)midX, (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 1);
+        lbl_803DCA20, midX, (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 1);
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 2);
+        lbl_803DCA20, (f32)(x - lbl_803DB3F0), midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 2);
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        lbl_803DCA20, (f32)midX, (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
+        lbl_803DCA20, midX, midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
 }
 
 extern s16 lbl_803DB3E8;
@@ -2849,7 +2849,7 @@ void gameTextInitFn_8001c794(void)
 
     i = 1;
     p = &lbl_803DB3E8 + 1;
-    q = (void**)&lbl_803DCA28 + 1;
+    q = &lbl_803DCA28 + 1;
     while (p--, q--, i-- != 0)
     {
         *q = textureLoadAsset(*p);
@@ -3076,7 +3076,7 @@ void subtitleBuildLineTable(void)
             m = k;
             for (i = 0; i < 256; i++)
             {
-                ftotal = (f32)total;
+                ftotal = total;
                 if (m < 255)
                 {
                     if (lbl_803DE734 != s->times[m + 1])
@@ -3085,13 +3085,13 @@ void subtitleBuildLineTable(void)
                         found = 1;
                     }
                     n = GameText_CountPrintableChars((u8*)s->lines[m]);
-                    s->times[m] = (f32)n;
+                    s->times[m] = n;
                     total += n;
                     if (found != 0)
                     {
                         for (q = m; q >= k; q--)
                         {
-                            s->times[q] = s->times[q + 1] - delta * (s->times[q] / (f32)total);
+                            s->times[q] = s->times[q + 1] - delta * (s->times[q] / total);
                         }
                         break;
                     }
