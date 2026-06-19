@@ -381,19 +381,19 @@ typedef struct {
 typedef struct RouteState {
     RouteNode *nodes;
     CurveHeapNode *queue;
-    f32 *unk08;
+    f32 *pathPoints;
     s16 tgtX;
-    s16 unk0E;
+    s16 tgtZ;
     s16 tgtY;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
+    s16 startX;
+    s16 startZ;
+    s16 startY;
     int cur;
-    s16 unk1C;
+    s16 nodeCount;
     s16 queueCount;
-    s16 unk20;
+    s16 pathCount;
     s16 pad22;
-    s16 unk24;
+    s16 minHCost;
     u8 mode26;
     u8 pad27;
 } RouteState;
