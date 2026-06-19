@@ -15086,7 +15086,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     *(f32*)((char*)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x48);
     if ((s8) * (s8*)((char*)c + 0x50) != 0x10)
     {
-        *(f32*)((char*)d + 0x8) = *(f32*)((char*)a + 0x84);
+        *(f32*)((char*)d + 0x8) = ((GameObject*)a)->anim.previousLocalPosY;
         *(f32*)((char*)d + 0x0) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x8);
         if ((((PlayerState*)b)->unk3F1 & 1) != 0)
         {
@@ -15136,7 +15136,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     }
     else
     {
-        *(f32*)((char*)d + 0x8) = *(f32*)((char*)a + 0x10);
+        *(f32*)((char*)d + 0x8) = ((GameObject*)a)->anim.localPosY;
         *(f32*)((char*)d + 0x0) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x8);
         if (*(f32*)((char*)d + 0x0) >= lbl_803E8044)
         {
@@ -16303,8 +16303,8 @@ void fn_802AB38C(int a, int b, int c)
                 if (id == 0x414 || id == 0x4a9)
                 {
                     c = 0x5bd;
-                    getAngle(((GameObject*)cam)->anim.hitVolumeTransforms->jointX - *(f32*)((char*)a + 0xc),
-                             ((GameObject*)cam)->anim.hitVolumeTransforms->jointZ - *(f32*)((char*)a + 0x14));
+                    getAngle(((GameObject*)cam)->anim.hitVolumeTransforms->jointX - ((GameObject*)a)->anim.localPosX,
+                             ((GameObject*)cam)->anim.hitVolumeTransforms->jointZ - ((GameObject*)a)->anim.localPosZ);
                 }
             }
         }
