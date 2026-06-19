@@ -184,10 +184,10 @@ void Link_copy(u8* srcArg)
     int i;
 
     i = 0;
-    dst = lbl_803A9458;
-    src = (LinkMenuItemDB*)srcArg;
     for (; i < (s8)lbl_803DD911; i++)
     {
+        dst = &lbl_803A9458[i];
+        src = &((LinkMenuItemDB*)srcArg)[i];
         dst->field16 = src->field16;
         dst->field1A = src->field1A;
         dst->field04 = src->field04;
@@ -206,8 +206,6 @@ void Link_copy(u8* srcArg)
             }
             dst->texture = NULL;
         }
-        dst++;
-        src++;
     }
 }
 #pragma scheduling reset
