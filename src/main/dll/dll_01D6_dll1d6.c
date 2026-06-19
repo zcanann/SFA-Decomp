@@ -111,7 +111,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern u32 FUN_800067c0();
-extern f32 lbl_803E4A78;
+extern const f32 lbl_803E4A78;
 extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
 extern void* mmAlloc(int size, int a, int b);
@@ -121,11 +121,11 @@ extern s16 lbl_803DBF18;
 extern f32 lbl_803E4A88;
 extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E4A7C;
+extern const f32 lbl_803E4A7C;
 extern f32 lbl_803E4A80;
 extern f32 lbl_803E4A84;
-extern f32 lbl_803E4A8C;
-extern f32 lbl_803E4A90;
+extern const f32 lbl_803E4A8C;
+extern const f32 lbl_803E4A90;
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {

@@ -1213,15 +1213,15 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPlayerShadowMode;
 extern u32 lbl_802C2160[];
-extern f32 lbl_803DF46C; /* 0.0f */
-extern f32 lbl_803DF488;
-extern f32 lbl_803DF48C;
-extern f32 lbl_803DF490;
-extern f32 lbl_803DF494;
-extern f32 lbl_803DF498;
-extern f32 lbl_803DF49C;
-extern f32 lbl_803DF4A0;
-extern f32 lbl_803DF4A4;
+extern const f32 lbl_803DF46C; /* 0.0f */
+extern const f32 lbl_803DF488;
+extern const f32 lbl_803DF48C;
+extern const f32 lbl_803DF490;
+extern const f32 lbl_803DF494;
+extern const f32 lbl_803DF498;
+extern const f32 lbl_803DF49C;
+extern const f32 lbl_803DF4A0;
+extern const f32 lbl_803DF4A4;
 extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
 extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
@@ -1359,10 +1359,10 @@ extern f32 sqrtf(f32 x);
 extern f32 lbl_8030FDE8[];
 extern s16 lbl_803DD29A;
 extern s16 lbl_803DD29C;
-extern f32 lbl_803DF468;
-extern f32 lbl_803DF470;
-extern f32 lbl_803DF474;
-extern f32 lbl_803DF478;
+extern const f32 lbl_803DF468;
+extern const f32 lbl_803DF470;
+extern const f32 lbl_803DF474;
+extern const f32 lbl_803DF478;
 
 void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {

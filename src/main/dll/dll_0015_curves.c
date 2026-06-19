@@ -62,23 +62,23 @@ extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
 
 extern f32 lbl_803E0668;
-extern f32 lbl_803E066C;
-extern f32 lbl_803E068C;
-extern f32 lbl_803E0678;
-extern f32 lbl_803E067C;
-extern f32 lbl_803E0680;
-extern f32 lbl_803E0684;
-extern f32 lbl_803E0688;
-extern f32 lbl_803E0690;
-extern f32 lbl_803E06A0;
-extern f32 lbl_803E06A4;
-extern f32 lbl_803E06A8;
-extern f32 lbl_803E06AC;
-extern f32 lbl_803E06B0;
-extern f32 lbl_803E06B4;
-extern f32 lbl_803E06B8;
-extern f32 lbl_803E06BC;
-extern f32 lbl_803E06C0;
+extern const f32 lbl_803E066C;
+extern const f32 lbl_803E068C;
+extern const f32 lbl_803E0678;
+extern const f32 lbl_803E067C;
+extern const f32 lbl_803E0680;
+extern const f32 lbl_803E0684;
+extern const f32 lbl_803E0688;
+extern const f32 lbl_803E0690;
+extern const f32 lbl_803E06A0;
+extern const f32 lbl_803E06A4;
+extern const f32 lbl_803E06A8;
+extern const f32 lbl_803E06AC;
+extern const f32 lbl_803E06B0;
+extern const f32 lbl_803E06B4;
+extern const f32 lbl_803E06B8;
+extern const f32 lbl_803E06BC;
+extern const f32 lbl_803E06C0;
 
 typedef struct CurvesHitScratch
 {

@@ -22,12 +22,12 @@ extern void* mmAlloc(int size, int heap, int flags);
 
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
-extern f32 lbl_803E4E00;
+extern const f32 lbl_803E4E00;
 extern f32 lbl_803E4E04;
-extern f32 lbl_803E4E08;
-extern f32 lbl_803E4E0C;
-extern f32 lbl_803E4E10;
-extern f32 lbl_803E4E14;
+extern const f32 lbl_803E4E08;
+extern const f32 lbl_803E4E0C;
+extern const f32 lbl_803E4E10;
+extern const f32 lbl_803E4E14;
 extern f32 lbl_803E4E18;
 
 DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,

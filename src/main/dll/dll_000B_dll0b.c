@@ -1587,7 +1587,7 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 extern void* textureLoadAsset(int id);
 extern void* mmAlloc(int size, int align, int flag);
 
-extern f32 lbl_803DF438;
+extern const f32 lbl_803DF438;
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
@@ -1905,7 +1905,7 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
     gModgfxLastSpawnHandle = dll_0B_func04(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
 }
 
-extern f32 lbl_803DF460;
+extern const f32 lbl_803DF460;
 extern s16 lbl_803DD280;
 
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
@@ -2220,10 +2220,10 @@ extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void fn_800542F4(void);
-extern f32 lbl_803DF450;
-extern f32 lbl_803DF454;
-extern f32 lbl_803DF458;
-extern f32 lbl_803DF45C;
+extern const f32 lbl_803DF450;
+extern const f32 lbl_803DF454;
+extern const f32 lbl_803DF458;
+extern const f32 lbl_803DF45C;
 
 typedef struct
 {
@@ -2554,7 +2554,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
     extern f32 lbl_803DF430;
-    extern f32 lbl_803DF43C;
+    extern const f32 lbl_803DF43C;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + *(u8*)((char*)state + 0x130) * 4);
@@ -2612,7 +2612,7 @@ animate:
 void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
-    extern f32 lbl_803DF43C;
+    extern const f32 lbl_803DF43C;
     u8* buf = ((u8**)((char*)state + 0x78))[*(u8*)((char*)state + 0x130)];
     int j;
 
@@ -2773,7 +2773,7 @@ extern int* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern void ObjList_GetObjects(int* idx, int* count);
 extern void Sfx_StopObjectChannel(void* obj, int ch);
-extern f32 lbl_803DF43C;
+extern const f32 lbl_803DF43C;
 
 typedef void (*ExpFn2)(void*, int);
 typedef void (*ExpFn3)(void*, void*, int);

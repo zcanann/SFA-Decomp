@@ -33,22 +33,22 @@ extern s16 lbl_803DDB20;
 
 extern int lbl_803E4460;
 typedef struct { int a, b; } RollingBarrelInitPair;
-extern f32 lbl_803E4468;
-extern f32 lbl_803E446C;
-extern f32 lbl_803E4470;
-extern f32 lbl_803E4474;
-extern f32 lbl_803E4478;
+extern const f32 lbl_803E4468;
+extern const f32 lbl_803E446C;
+extern const f32 lbl_803E4470;
+extern const f32 lbl_803E4474;
+extern const f32 lbl_803E4478;
 extern const f32 lbl_803E447C;
-extern f32 lbl_803E4480;
-extern f32 lbl_803E4484;
-extern f32 lbl_803E4498;
-extern f32 lbl_803E449C;
-extern f32 lbl_803E44A0;
-extern f32 lbl_803E44A4;
-extern f32 lbl_803E44A8;
-extern f32 lbl_803E44AC;
-extern f32 lbl_803E44B0;
-extern f32 lbl_803E44B4;
+extern const f32 lbl_803E4480;
+extern const f32 lbl_803E4484;
+extern const f32 lbl_803E4498;
+extern const f32 lbl_803E449C;
+extern const f32 lbl_803E44A0;
+extern const f32 lbl_803E44A4;
+extern const f32 lbl_803E44A8;
+extern const f32 lbl_803E44AC;
+extern const f32 lbl_803E44B0;
+extern const f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
 
 void RollingBarrel_hitDetect(void)

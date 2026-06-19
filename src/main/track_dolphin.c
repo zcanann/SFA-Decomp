@@ -77,11 +77,11 @@ extern f64 DOUBLE_803df958;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 lbl_803DDBD0;
-extern f32 lbl_803DDBD4;
+extern const f32 lbl_803DDBD4;
 extern f32 lbl_803DDBD8;
 extern f32 lbl_803DF84C;
 extern f32 lbl_803DF8A0;
-extern f32 lbl_803DEC50;
+extern const f32 lbl_803DEC50;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
@@ -92,9 +92,9 @@ extern s16 lbl_803DCEF2;
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
-extern f32 lbl_803DEC6C;
-extern f32 lbl_803DEC70;
-extern f32 lbl_803DEC74;
+extern const f32 lbl_803DEC6C;
+extern const f32 lbl_803DEC70;
+extern const f32 lbl_803DEC74;
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803879B0[];
@@ -103,8 +103,8 @@ extern f32 lbl_803DCF00;
 extern int lbl_803DB65C;
 extern f32 __AR_init_flag;
 extern f32 __AR_BlockLength;
-extern f32 lbl_803DEC58;
-extern f32 lbl_803DEC68;
+extern const f32 lbl_803DEC58;
+extern const f32 lbl_803DEC68;
 extern f32 lbl_803DCED8;
 extern f32 lbl_803DCEDC;
 extern f32 lbl_803DB650;
@@ -2758,10 +2758,10 @@ int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8
     return grp;
 }
 
-extern f32 lbl_803DECB8;
-extern f32 lbl_803DECBC;
-extern f32 lbl_803DECC0;
-extern f32 lbl_803DECC8;
+extern const f32 lbl_803DECB8;
+extern const f32 lbl_803DECBC;
+extern const f32 lbl_803DECC0;
+extern const f32 lbl_803DECC8;
 extern f32 lbl_803DCF54;
 extern f32 lbl_803DCF50;
 extern f32 lbl_803DCF58;
@@ -3028,7 +3028,7 @@ extern u8 lbl_8038D840[];
 extern int lbl_803DCF64;
 extern int lbl_803DCF68;
 extern s8 lbl_803DCF60;
-extern f32 lbl_803DECE8;
+extern const f32 lbl_803DECE8;
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e);
 
@@ -3217,7 +3217,7 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
 extern f32 fn_802925C4(f32 x, f32 y);
 extern f32 fn_802943F4(f32 x);
 extern f32 floor(f32 x);
-extern f32 lbl_803DECEC;
+extern const f32 lbl_803DECEC;
 
 int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 {
@@ -3689,8 +3689,8 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* 
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(int hdr, void* col, void* mtx, f32 f);
-extern f32 lbl_803DEC78;
-extern f32 lbl_803DEC80;
+extern const f32 lbl_803DEC78;
+extern const f32 lbl_803DEC80;
 
 #pragma ppc_unroll_speculative off
 #pragma opt_strength_reduction off
@@ -4102,10 +4102,10 @@ void gxErrorFn_80060b40(void)
 }
 
 extern f32 lbl_8038D77C[];
-extern f32 lbl_803DECA0;
-extern f32 lbl_803DECA4;
-extern f32 lbl_803DECA8;
-extern f32 lbl_803DECAC;
+extern const f32 lbl_803DECA0;
+extern const f32 lbl_803DECA4;
+extern const f32 lbl_803DECA8;
+extern const f32 lbl_803DECAC;
 extern void fn_8006D5E8(void);
 
 void initTextures(void)
@@ -4364,9 +4364,9 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
 extern u8* fn_80028364(int hdr, int i);
 extern u16* fn_80028354(int hdr, int tri);
 extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
-extern f32 lbl_803DECF0;
-extern f32 lbl_803DECF4;
-extern f32 lbl_803DECF8;
+extern const f32 lbl_803DECF0;
+extern const f32 lbl_803DECF4;
+extern const f32 lbl_803DECF8;
 
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 scale,
                 f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
@@ -5217,10 +5217,10 @@ void trackIntersect(void)
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */
-extern f32 lbl_803DECCC;
-extern f32 lbl_803DECD0;
-extern f32 lbl_803DECD4;
-extern f32 lbl_803DB660;
+extern const f32 lbl_803DECCC;
+extern const f32 lbl_803DECD0;
+extern const f32 lbl_803DECD4;
+extern const f32 lbl_803DB660;
 
 int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                  int pmask, int seg, int ytol, int self, f32 radius)
