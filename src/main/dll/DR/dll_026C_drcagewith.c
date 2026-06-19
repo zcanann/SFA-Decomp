@@ -188,7 +188,7 @@ void drcagewith_free(int obj, int arg)
         char* child = *(char**)&((DrcagewithState*)state)->linkedObject;
         if (child != 0)
         {
-            *(int*)(child + 0xf4) = 0;
+            ((GameObject*)child)->unkF4 = 0;
         }
         *(int*)(*(char**)state + 0xf4) = 0;
         Obj_FreeObject(*(int*)state);
