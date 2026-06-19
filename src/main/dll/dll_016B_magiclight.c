@@ -121,9 +121,9 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
                   u32 param_5, u32 param_6, char param_7, int param_8, int param_9)
 {
     u8 savedAlpha;
-    u32 local_28;
-    u32 local_24;
-    u32 local_20[5];
+    u32 posZ;
+    u32 posY;
+    u32 posX[5];
 
     if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
     {
@@ -139,10 +139,10 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
     *(u32*)(param_1 + 0x40) = *(u32*)(param_1 + 6);
     *(u32*)(param_1 + 0x42) = *(u32*)(param_1 + 8);
     *(u32*)(param_1 + 0x44) = *(u32*)(param_1 + 10);
-    (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
-    *(u32*)(param_1 + 6) = local_20[0];
-    *(u32*)(param_1 + 8) = local_24;
-    *(u32*)(param_1 + 10) = local_28;
+    (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, posX, &posY, &posZ);
+    *(u32*)(param_1 + 6) = posX[0];
+    *(u32*)(param_1 + 8) = posY;
+    *(u32*)(param_1 + 10) = posZ;
     *param_1 = *param_2;
     param_1[1] = param_2[1];
     param_1[2] = param_2[2];
