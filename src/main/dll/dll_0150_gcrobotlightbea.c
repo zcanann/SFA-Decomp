@@ -117,7 +117,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)
         switch (*(u8*)((int)uVar4 + iVar3 + 0x13))
         {
         case 0:
-            if (param_3 != (u16*)0x0)
+            if (param_3 != 0x0)
             {
                 FUN_80006824(uVar1, *param_3);
             }
@@ -135,7 +135,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)
             iVar2 = 4;
             break;
         case 7:
-            if (param_3 != (u16*)0x0)
+            if (param_3 != 0x0)
             {
                 FUN_80006824(uVar1, param_3[1]);
             }
@@ -144,7 +144,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)
             FUN_80006824(uVar1, SFXsk_trwhin3);
         }
     }
-    if ((iVar2 != 0) && (param_3 != (u16*)0x0))
+    if ((iVar2 != 0) && (param_3 != 0x0))
     {
         FUN_80006824(uVar1, param_3[2]);
     }
@@ -175,7 +175,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u32 uStack_3c;
     s64 local_38;
 
-    if (param_3 == (short*)0x0)
+    if (param_3 == 0x0)
     {
         uVar3 = 0;
     }
@@ -204,7 +204,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)sVar2 ^ 0x80000000;
+            uStack_3c = sVar2 ^ 0x80000000;
             local_40 = 0x43300000;
             iVar1 = (int)
             ((f32)(s32)
@@ -215,16 +215,16 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             )
             ;
             local_38 = (s64)iVar1;
-            *param_2 = (short)iVar1;
+            *param_2 = iVar1;
             dVar4 = (double)*(float*)(param_2 + 0x14);
             dVar5 = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, (int)param_2);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, param_2);
             if (param_2[0x50] != 0x1a)
             {
                 FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
-            FUN_8002f6ac(param_1, (int)param_2, param_4);
+            FUN_8002f6ac(param_1, param_2, param_4);
             uVar3 = 0;
         }
         else
@@ -282,7 +282,7 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         iVar2 = FUN_8007f924((int)animUpdate);
         if ((iVar2 == 0x283) ||
             (iVar2 = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                  , (int)animUpdate, pfVar3, (short)*puVar4, (short)puVar4[1], param_14, param_15,
+                                  , animUpdate, pfVar3, (short)*puVar4, puVar4[1], param_14, param_15,
                                   param_16), iVar2 == 0))
         {
             if (animUpdate->triggerCommand == 2)
@@ -676,7 +676,7 @@ void gcrobotlightbea_update(int* obj)
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
     Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
-    voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
+    voxmaps_traceScaledVectorEnd(vec2, obj + 0xc, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2, 0);
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);

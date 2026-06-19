@@ -159,7 +159,7 @@ void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d)
     e = (WaterEntry7*)lbl_803DD238 + i;
     e->f10 = lbl_803DD20C;
     e = (WaterEntry7*)lbl_803DD238 + i;
-    e->f18 = lbl_803DF2E8 * (f32)p2;
+    e->f18 = lbl_803DF2E8 * p2;
     lbl_803DD23C = (void*)((int)lbl_803DD23C + 1);
 }
 
@@ -257,7 +257,7 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     lbl_803DD234 = (void*)((int)lbl_803DD234 + 1);
     slot->f0c = d;
     rnd = randomGetRange((int)slot->f0c, (int)(lbl_803DF2FC * slot->f0c));
-    slot->active = (u8)waterfx_spawnSplashDrops(&((WaterParticle*)lbl_803DD230)[i], i, rnd, slot->f0c);
+    slot->active = waterfx_spawnSplashDrops(&((WaterParticle*)lbl_803DD230)[i], i, rnd, slot->f0c);
     slot->f10 = lbl_803DF300;
     slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
 }
@@ -294,13 +294,13 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
             if (j < WATERFX_POOL_SIZE)
             {
                 slot = &base[j];
-                slot->f0c = (f32)randomGetRange(-250, 250);
+                slot->f0c = randomGetRange(-250, 250);
                 slot->f0c = slot->f0c * scale;
-                slot->f14 = (f32)randomGetRange(-250, 250);
+                slot->f14 = randomGetRange(-250, 250);
                 slot->f14 = slot->f14 * scale;
-                slot->f10 = (f32)randomGetRange(200, 300);
+                slot->f10 = randomGetRange(200, 300);
                 slot->f10 = slot->f10 * scale;
-                slot->idx = (s8)idx;
+                slot->idx = idx;
                 slot->x = src->x;
                 slot->y = src->y;
                 slot->z = src->z;
@@ -773,8 +773,8 @@ void waterfx_drawFn_800953fc(void)
             {
                 int idx = i * 16 + j;
                 f32* tex = (f32*)((u8*)lbl_803DD1FC + idx * 8);
-                tex[0] = (f32)j / jdiv;
-                tex[1] = (f32)i / idiv;
+                tex[0] = j / jdiv;
+                tex[1] = i / idiv;
             }
         }
     }

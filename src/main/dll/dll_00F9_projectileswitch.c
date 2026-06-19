@@ -124,7 +124,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
     state2 = *(int*)&((GameObject*)obj)->anim.placementData;
     state = *(int*)&((GameObject*)obj)->extra;
-    hitId = ObjHits_GetPriorityHit(obj, &hitObj, (int*)0x0, (u32*)0x0);
+    hitId = ObjHits_GetPriorityHit(obj, &hitObj, 0x0, 0x0);
     if (hitId != 0xe && hitId != 0xf) return;
 
     isSpecial = 0;
@@ -253,7 +253,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
         obj,
         (short)(((int)initData[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     objAnim->bankIndex = initData[0x1e] >> 2;
-    if ((int)objAnim->bankIndex >= (int)objAnim->modelInstance->modelCount)
+    if ((int)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
@@ -265,7 +265,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
         if (linkSub != 0)
         {
             *(short*)(state + 2) =
-                (short)seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int*)(linkSub + 0x14));
+                seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int*)(linkSub + 0x14));
         }
         else
         {
@@ -276,7 +276,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
     {
         *(short*)(state + 2) = *(short*)(initData + 0x18);
     }
-    *(u8*)state = (u8)GameBit_Get((int)*(short*)(state + 2));
+    *(u8*)state = GameBit_Get((int)*(short*)(state + 2));
     if (*(u8*)state != 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;

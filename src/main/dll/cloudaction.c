@@ -242,7 +242,7 @@ void renderClouds(int a, int b, int c, int d)
         }
         if (getHudHiddenFrameCount() == 0)
         {
-            *(f32*)&lbl_803DB780 = (f32)randomGetRange(0x1f40, 0x2ee0);
+            *(f32*)&lbl_803DB780 = randomGetRange(0x1f40, 0x2ee0);
         }
         GXBegin(0x80, 2, 4);
         v = -lbl_803DB780;

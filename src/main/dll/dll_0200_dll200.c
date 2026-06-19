@@ -195,7 +195,7 @@ void dll_200_init(int* obj, int* arg)
     Dll200State* b;
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dll_200_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_200_SeqFn;
     b = ((GameObject*)obj)->extra;
     b->defNoLow = (u8)*(s16*)arg;
     b->unk1C = 0;
@@ -203,7 +203,7 @@ void dll_200_init(int* obj, int* arg)
     b->homeX = *(f32*)((char*)arg + 0x8);
     b->homeY = *(f32*)((char*)arg + 0xc);
     b->homeZ = *(f32*)((char*)arg + 0x10);
-    b->latch24 = (u8)GameBit_Get(0xd0);
+    b->latch24 = GameBit_Get(0xd0);
     b->counter27 = 0;
     b->mode = 1;
     b->prevMode = 0xc;
@@ -233,7 +233,7 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     case 6:
         state = *(int*)&((GameObject*)obj)->extra;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        for (i = 0; i < (int)animUpdate->eventCount; i++)
+        for (i = 0; i < animUpdate->eventCount; i++)
         {
             switch (animUpdate->eventIds[i])
             {
@@ -264,7 +264,7 @@ int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     state = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
 
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         u8 mode = ((Dll200State*)state)->mode25;
         if (mode == 1)
@@ -407,27 +407,27 @@ void fn_801F2290(int obj)
             switch (randomGetRange(1, 4))
             {
             case 1:
-                b->prevMode = (u8)b->mode;
+                b->prevMode = b->mode;
                 b->mode = 1;
                 b->modeTimer = 400;
                 break;
             case 2:
-                b->prevMode = (u8)b->mode;
+                b->prevMode = b->mode;
                 b->mode = 2;
                 b->modeTimer = 400;
                 break;
             case 3:
-                b->prevMode = (u8)b->mode;
+                b->prevMode = b->mode;
                 b->mode = 3;
                 b->modeTimer = 400;
                 break;
             case 4:
-                b->prevMode = (u8)b->mode;
+                b->prevMode = b->mode;
                 b->mode = 4;
                 b->modeTimer = 400;
                 break;
             case 5:
-                b->prevMode = (u8)b->mode;
+                b->prevMode = b->mode;
                 b->mode = 5;
                 b->modeTimer = 400;
                 break;
@@ -455,7 +455,7 @@ void fn_801F2290(int obj)
                 }
                 else
                 {
-                    ObjAnim_SetCurrentMove(obj, (int)lbl_80328974[b->prevMode].moveId,
+                    ObjAnim_SetCurrentMove(obj, lbl_80328974[b->prevMode].moveId,
                                            lbl_803E5D98, 0);
                     b->animSpeed = lbl_80328974[b->prevMode].speed;
                     b->mode = 13;
@@ -470,7 +470,7 @@ void fn_801F2290(int obj)
                         lbl_80328974[b->prevMode].moveId)
                     {
                         ObjAnim_SetCurrentMove(obj,
-                                               (int)lbl_80328974[b->prevMode].altMoveId,
+                                               lbl_80328974[b->prevMode].altMoveId,
                                                lbl_803E5D98, 0);
                         b->animSpeed = lbl_80328974[b->prevMode].speed;
                     }
@@ -519,7 +519,7 @@ void fn_801F2290(int obj)
                 }
                 if (dist < lbl_803E5DB4)
                 {
-                    b->prevMode = (u8)b->mode;
+                    b->prevMode = b->mode;
                     b->mode = 12;
                     spd = lbl_803E5D98;
                     ((GameObject*)obj)->anim.velocityX = spd;

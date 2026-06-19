@@ -72,7 +72,7 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     focus = (GameObject*)camera->anim.targetObj;
     hitVolumes = target->anim.hitVolumeTransforms;
     curIdx = target->unkE4;
-    if ((u32)curIdx != (u32)lbl_803DD568->pathBlendTargetIndex)
+    if ((u32)curIdx != lbl_803DD568->pathBlendTargetIndex)
     {
         lbl_803DD568->pathBlendStartIndex = lbl_803DD568->pathBlendTargetIndex;
         lbl_803DD568->pathBlendWeight = lbl_803E18C0;
@@ -151,7 +151,7 @@ void CameraModeCombat_update(short* cam)
     f32 dz;
     f32 vec[3];
     u8 trace[116];
-    int view = (int)Camera_GetCurrentViewSlot();
+    int view = Camera_GetCurrentViewSlot();
     GameObject* tgt;
     GameObject* focus;
     ObjHitVolumeRuntimeTransform* hitVolumes;

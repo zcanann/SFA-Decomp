@@ -295,9 +295,9 @@ void scarab_update(int obj)
                 rot.scale = lbl_803E3A00;
                 rot.c = 0;
                 rot.b = 0;
-                rot.ang = (s16)randomGetRange(-10000, 10000);
+                rot.ang = randomGetRange(-10000, 10000);
                 vecRotateZXY(&rot, (f32*)(obj + 0x24));
-                ang = (u16)getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
+                ang = getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
                 diff = ((GameObject*)obj)->anim.rotX - ang;
                 if (diff > 0x8000)
                 {
@@ -307,7 +307,7 @@ void scarab_update(int obj)
                 {
                     diff += 0xffff;
                 }
-                ((GameObject*)obj)->anim.rotX = (s16)diff;
+                ((GameObject*)obj)->anim.rotX = diff;
                 ((ScarabState*)state)->phase = 0;
                 ((ScarabState*)state)->riseAmount = lbl_803E39F8;
                 {
@@ -357,7 +357,7 @@ void scarab_update(int obj)
                     }
                     else
                     {
-                        fn_801845FC((u8*)obj, (f32*)list[best], 1, (f32*)bufs.hitBuf);
+                        fn_801845FC((u8*)obj, list[best], 1, (f32*)bufs.hitBuf);
                     }
                 }
                 else
@@ -366,7 +366,7 @@ void scarab_update(int obj)
                 }
                 if (((GameObject*)obj)->anim.seqId != 0x3d6)
                 {
-                    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)randomGetRange(-1460, 1460));
+                    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + randomGetRange(-1460, 1460));
                 }
                 ((GameObject*)obj)->anim.velocityX = ((ScarabState*)state)->velX;
                 {
@@ -400,7 +400,7 @@ void scarab_update(int obj)
                 {
                     f32 k;
                     ang = (u16)getAngle(list[best][1], list[best][3]);
-                    fang = (f32)ang;
+                    fang = ang;
                     fang = lbl_803DBDCC * fang + lbl_803E3A2C;
                     ((GameObject*)obj)->anim.rotX = fang;
                     ((GameObject*)obj)->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best][1]) + ((GameObject*)obj)
@@ -439,7 +439,7 @@ void scarab_update(int obj)
                     PSVECSubtract((void*)(*(int*)&((GameObject*)obj)->anim.placementData + 8), (void*)(obj + 0xc),
                                   vsub);
                     ang = (u16)getAngle(vsub[0], vsub[2]);
-                    fang = (f32)ang;
+                    fang = ang;
                     fang = lbl_803DBDD0 * fang + lbl_803E3A2C;
                     ((GameObject*)obj)->anim.rotX = fang;
                 }
@@ -466,7 +466,7 @@ void scarab_update(int obj)
                 if (list != NULL)
                 {
                     ((GameObject*)obj)->anim.localPosY = *list[best];
-                    fn_801845FC((u8*)obj, (f32*)list[best], 1, (f32*)bufs.hitBuf);
+                    fn_801845FC((u8*)obj, list[best], 1, (f32*)bufs.hitBuf);
                 }
                 else
                 {
@@ -560,8 +560,8 @@ void scarab_init(int* obj, u8* def)
     int* model;
     state->phase = 0;
     state->mode = *(s16*)((char*)def + 0x1a);
-    state->yawSpeed = (s16)randomGetRange(0x3e8, 0xfa0);
-    state->riseLimit = (s16)randomGetRange(0x32, 0x64);
+    state->yawSpeed = randomGetRange(0x3e8, 0xfa0);
+    state->riseLimit = randomGetRange(0x32, 0x64);
     state->baseY = ((ObjPlacement*)def)->posY;
     model = (int*)Obj_GetActiveModel(obj);
     switch (((GameObject*)obj)->anim.seqId)
@@ -676,12 +676,12 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     else
     {
         ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rotY = (s16)getAngle(p3[0] + p3[2], p3[1]);
+        ((GameObject*)obj)->anim.rotY = getAngle(p3[0] + p3[2], p3[1]);
         if (((GameObject*)obj)->anim.rotY < 0)
         {
             ((GameObject*)obj)->anim.rotY *= -1;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)getAngle(p3[0], p3[2]);
+        ((GameObject*)obj)->anim.rotX = getAngle(p3[0], p3[2]);
     }
 }
 

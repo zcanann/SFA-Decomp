@@ -46,9 +46,9 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     lbl_803DD560->posXEnd = camera->anim.localPosX;
     lbl_803DD560->posYEnd = camera->anim.localPosY;
     lbl_803DD560->posZEnd = camera->anim.localPosZ;
-    lbl_803DD560->rotXEnd = (f32)camera->anim.rotX;
-    lbl_803DD560->rotYEnd = (f32)camera->anim.rotY;
-    lbl_803DD560->rotZEnd = (f32)camera->anim.rotZ;
+    lbl_803DD560->rotXEnd = camera->anim.rotX;
+    lbl_803DD560->rotYEnd = camera->anim.rotY;
+    lbl_803DD560->rotZEnd = camera->anim.rotZ;
     lbl_803DD560->fovEnd = camera->fov;
 
     if (lbl_803E1888 != lbl_803DD560->duration)
@@ -63,7 +63,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         t = lbl_803E188C;
     }
-    t = Curve_EvalHermite(t, lbl_803DD560->speedCurve, (f32*)0x0);
+    t = Curve_EvalHermite(t, lbl_803DD560->speedCurve, 0x0);
     if (t < lbl_803E18AC)
     {
         t = lbl_803E18AC;
@@ -79,10 +79,10 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         q = lbl_803E188C;
     }
-    camera->anim.localPosX = Curve_EvalLinear(q, &lbl_803DD560->posXStart, (f32*)0x0);
-    camera->anim.localPosY = Curve_EvalLinear(q, &lbl_803DD560->posYStart, (f32*)0x0);
-    camera->anim.localPosZ = Curve_EvalLinear(q, &lbl_803DD560->posZStart, (f32*)0x0);
-    camera->fov = Curve_EvalLinear(q, &lbl_803DD560->fovStart, (f32*)0x0);
+    camera->anim.localPosX = Curve_EvalLinear(q, &lbl_803DD560->posXStart, 0x0);
+    camera->anim.localPosY = Curve_EvalLinear(q, &lbl_803DD560->posYStart, 0x0);
+    camera->anim.localPosZ = Curve_EvalLinear(q, &lbl_803DD560->posZStart, 0x0);
+    camera->fov = Curve_EvalLinear(q, &lbl_803DD560->fovStart, 0x0);
 
     d = lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd;
     if ((d > lbl_803E1890) || (d < lbl_803E1894))
@@ -125,17 +125,17 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     if ((flags & 1) == 0)
     {
         *(s16*)&camera->anim.rotX =
-        Curve_EvalLinear(q, &lbl_803DD560->rotXStart, (f32*)0x0);
+        Curve_EvalLinear(q, &lbl_803DD560->rotXStart, 0x0);
     }
     if ((flags & 2) == 0)
     {
         *(s16*)&camera->anim.rotY =
-        Curve_EvalLinear(q, &lbl_803DD560->rotYStart, (f32*)0x0);
+        Curve_EvalLinear(q, &lbl_803DD560->rotYStart, 0x0);
     }
     if ((flags & 4) == 0)
     {
         *(s16*)&camera->anim.rotZ =
-        Curve_EvalLinear(q, &lbl_803DD560->rotZStart, (f32*)0x0);
+        Curve_EvalLinear(q, &lbl_803DD560->rotZStart, 0x0);
     }
     return q >= lbl_803E188C;
 }
@@ -161,18 +161,18 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
     lbl_803DD560->posXEnd = posEnd[0];
     lbl_803DD560->posYEnd = posEnd[1];
     lbl_803DD560->posZEnd = posEnd[2];
-    lbl_803DD560->rotXEnd = (f32)rotXEnd;
-    lbl_803DD560->rotYEnd = (f32)rotYEnd;
-    lbl_803DD560->rotZEnd = (f32)rotZEnd;
+    lbl_803DD560->rotXEnd = rotXEnd;
+    lbl_803DD560->rotYEnd = rotYEnd;
+    lbl_803DD560->rotZEnd = rotZEnd;
     lbl_803DD560->fovEnd = fovEnd;
     lbl_803DD560->elapsed = lbl_803E1888;
     fVar1 = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
     fVar2 = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
     fVar3 = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
     lbl_803DD560->duration = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
-    (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, (f64)lbl_803DD560->duration,
-                                    (f64)lbl_803E18B0, (f64)lbl_803E18B4,
-                                    (f64)*(f32*)&lbl_803E18B4, (f64)lbl_803E18B8);
+    (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, lbl_803DD560->duration,
+                                    lbl_803E18B0, (f64)lbl_803E18B4,
+                                    (f64)*(f32*)&lbl_803E18B4, lbl_803E18B8);
 }
 
 void CameraModeTestStrength_copyToCurrent_nop(void)
@@ -284,27 +284,27 @@ void CameraModeTestStrength_update(short* cam)
         t = lbl_803E18BC * (t2 - lbl_803DD560->pathProgress) +
             lbl_803DD560->pathProgress;
         lbl_803DD560->pathProgress = t;
-        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, (f32*)0);
-        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, (f32*)0);
-        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, (f32*)0);
+        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, 0);
+        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, 0);
+        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, 0);
         node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
         flags = *(u8*)(node2 + 0x3b);
         m1 = flags & 1;
         if (m1 == 0)
         {
-            *cam = (int)Curve_EvalCatmullRom(pitchS, t, (f32*)0) + 0x8000;
+            *cam = (int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000;
         }
         m2 = flags & 2;
         if (m2 == 0)
         {
-            cam[1] = Curve_EvalCatmullRom(yawS, t, (f32*)0);
+            cam[1] = Curve_EvalCatmullRom(yawS, t, 0);
         }
         m4 = flags & 4;
         if (m4 == 0)
         {
-            cam[2] = Curve_EvalCatmullRom(rollS, t, (f32*)0);
+            cam[2] = Curve_EvalCatmullRom(rollS, t, 0);
         }
-        ((CameraObject*)cam)->fov = Curve_EvalBSpline(fov, t, (f32*)0);
+        ((CameraObject*)cam)->fov = Curve_EvalBSpline(fov, t, 0);
         if (lbl_803DD560->transitionComplete == 0 && fn_8010AEA8(cam, flags) != 0)
         {
             lbl_803DD560->transitionComplete = 1;
@@ -320,7 +320,7 @@ void CameraModeTestStrength_update(short* cam)
         {
             int d;
             yaw = (u16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-            d = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, (f32*)0)) -
+            d = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) -
                 (f32)(cam[1] & 0xffff));
             if (d > 0x8000)
             {
@@ -330,7 +330,7 @@ void CameraModeTestStrength_update(short* cam)
             {
                 d += 0xffff;
             }
-            cam[1] += ((int)(d * (u32)framesThisStep) >> 3);
+            cam[1] += ((int)(d * framesThisStep) >> 3);
         }
         if (m4 != 0)
         {
@@ -343,7 +343,7 @@ void CameraModeTestStrength_update(short* cam)
             {
                 d += 0xffff;
             }
-            cam[2] += ((int)(d * (u32)framesThisStep) >> 3);
+            cam[2] += ((int)(d * framesThisStep) >> 3);
         }
         if (lbl_803DD560->linkedObject != NULL)
         {
@@ -430,9 +430,9 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     {
         t = lbl_803E188C;
     }
-    px = Curve_EvalBSpline(xS, t, (f32*)0);
-    py = Curve_EvalBSpline(yS, t, (f32*)0);
-    pz = Curve_EvalBSpline(zS, t, (f32*)0);
+    px = Curve_EvalBSpline(xS, t, 0);
+    py = Curve_EvalBSpline(yS, t, 0);
+    pz = Curve_EvalBSpline(zS, t, 0);
     dx = px - ((GameObject*)obj)->anim.worldPosX;
     dy = py - ((GameObject*)obj)->anim.worldPosY;
     dz = pz - ((GameObject*)obj)->anim.worldPosZ;
@@ -442,7 +442,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, (f32*)0) + 0x8000);
+        pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000);
     }
     if ((*(u8*)(romNode + 0x3b) & 4) != 0)
     {
@@ -450,18 +450,18 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        roll = (int)Curve_EvalCatmullRom(rollS, t, (f32*)0);
+        roll = Curve_EvalCatmullRom(rollS, t, 0);
     }
     if ((*(u8*)(romNode + 0x3b) & 2) != 0)
     {
         yaw = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-        yaw = (int)((f32)yaw - Curve_EvalCatmullRom(yawS, t, (f32*)0));
+        yaw = (int)((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0));
     }
     else
     {
-        yaw = (int)Curve_EvalCatmullRom(yawS, t, (f32*)0);
+        yaw = Curve_EvalCatmullRom(yawS, t, 0);
     }
-    fov = Curve_EvalBSpline(fovS, t, (f32*)0);
+    fov = Curve_EvalBSpline(fovS, t, 0);
     pos[0] = px;
     pos[1] = py;
     pos[2] = pz;

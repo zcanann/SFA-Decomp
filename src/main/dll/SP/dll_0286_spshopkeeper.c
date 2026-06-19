@@ -193,15 +193,15 @@ int shopitem_getExtraSize(void);
 
 void shopkeeper_initialise(void)
 {
-    lbl_803AD068[0] = (void*)DRlaserturret_startLinkedTarget;
-    lbl_803AD068[1] = (void*)DRlaserturret_updateTracking;
-    lbl_803AD068[2] = (void*)DRlaserturret_updateIdle;
-    lbl_803AD068[3] = (void*)TREX_Lazerwall_updateTimedChallenge;
-    lbl_803AD068[4] = (void*)TREX_Lazerwall_waitForStartBit;
-    lbl_803AD068[5] = (void*)TREX_Lazerwall_popQueuedState;
-    lbl_803AD068[6] = (void*)fn_801E66EC;
-    lbl_803AD068[7] = (void*)fn_801E66E4;
-    lbl_803DDC58 = (void*)fn_801E66DC;
+    lbl_803AD068[0] = DRlaserturret_startLinkedTarget;
+    lbl_803AD068[1] = DRlaserturret_updateTracking;
+    lbl_803AD068[2] = DRlaserturret_updateIdle;
+    lbl_803AD068[3] = TREX_Lazerwall_updateTimedChallenge;
+    lbl_803AD068[4] = TREX_Lazerwall_waitForStartBit;
+    lbl_803AD068[5] = TREX_Lazerwall_popQueuedState;
+    lbl_803AD068[6] = fn_801E66EC;
+    lbl_803AD068[7] = fn_801E66E4;
+    lbl_803DDC58 = fn_801E66DC;
 }
 
 void shopkeeper_update(int obj)
@@ -231,7 +231,7 @@ void shopkeeper_update(int obj)
     {
         ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &dist);
     }
-    ((ShopkeeperState*)state)->playerMoney = (s16)playerGetMoney(player);
+    ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
     (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068,
                                 &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
@@ -243,7 +243,7 @@ void shopkeeper_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801E76A0;
+    ((GameObject*)obj)->animEventCallback = fn_801E76A0;
     ((GameObject*)obj)->anim.modelState->flags |= 0x810;
     ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
@@ -432,7 +432,7 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
         diff = (u16)getAngle(dx, dz);
         if (mode != 0)
         {
-            *obj = (s16)diff;
+            *obj = diff;
         }
         else
         {

@@ -405,7 +405,7 @@ void gpsh_shrine_update(int obj)
                 else if (isGameTimerDisabled())
                 {
                     ((GpshShrineState*)data)->unk14 = 7;
-                    objs = (int*)ObjGroup_GetObjects(0x10, &count);
+                    objs = ObjGroup_GetObjects(0x10, &count);
                     for (; count != 0; count--)
                     {
                         Obj_FreeObject(objs[count - 1]);
@@ -483,7 +483,7 @@ void gpsh_shrine_init(int* obj, int* def)
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)gpsh_shrine_SeqFn;
+    ((GameObject*)obj)->animEventCallback = gpsh_shrine_SeqFn;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;

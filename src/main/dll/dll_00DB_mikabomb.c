@@ -785,11 +785,11 @@ void mikabomb_update(int* obj)
 
     if (timer < 0xff)
     {
-        f32 t = (f32)timer;
+        f32 t = timer;
         f32 dec;
         if (t - (dec = lbl_803E31C4 * timeDelta) > lbl_803E31C8)
         {
-            ((GameObject*)obj)->anim.alpha = (f32)timer - dec;
+            ((GameObject*)obj)->anim.alpha = timer - dec;
         }
         else
         {

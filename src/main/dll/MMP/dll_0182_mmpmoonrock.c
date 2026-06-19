@@ -175,7 +175,7 @@ void fn_801A79E0(int obj)
     MmpMoonrockState * state;
     int ret;
     state = ((GameObject*)obj)->extra;
-    ret = ObjHits_GetPriorityHit(obj, &hitObjOut, (int*)0, (u32*)0);
+    ret = ObjHits_GetPriorityHit(obj, &hitObjOut, 0, 0);
     if (ret == 0)
     {
         ret = objBboxFn_800640cc((int*)&((GameObject*)obj)->anim.previousLocalPosX,
@@ -221,7 +221,7 @@ void mmp_moonrock_free(int obj)
 extern const f32 lbl_803E457C;
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((*gCarryableInterface)->isVisible(obj, (s32)visible) != 0)
+    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
             (obj, p2, p3, p4, p5, lbl_803E457C);
@@ -251,7 +251,7 @@ void fn_801A7CC4(int obj)
         f32 f;
         f32 g;
     } stk;
-    int* player = (int*)Obj_GetPlayerObject();
+    int* player = Obj_GetPlayerObject();
     int* playerState = ((GameObject*)player)->extra;
     f32 c1 = lbl_803E4554;
     ((GameObject*)obj)->anim.velocityX = c1;
@@ -318,7 +318,7 @@ void mmp_moonrock_init(int obj, int param2)
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
     *(s16*)&state->flags = 0;
-    state->kind = (u8)GameBit_Get(*(s16*)(param2 + 0x1a));
+    state->kind = GameBit_Get(*(s16*)(param2 + 0x1a));
     kind = state->kind;
     if (kind != 0)
     {
@@ -369,8 +369,8 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     list = ObjList_GetObjects(&i, &count);
     for (; i < count; i++)
     {
-        u32 o = (u32)list[i];
-        if (o != (u32)obj && ((GameObject*)o)->anim.seqId == 0x518 &&
+        u32 o = list[i];
+        if (o != obj && ((GameObject*)o)->anim.seqId == 0x518 &&
             Vec_distance((void*)(obj + 0x18), (void*)(o + 0x18)) < lbl_803E4580)
         {
             u32 c;
@@ -605,7 +605,7 @@ void mmp_moonrock_update(int obj)
             for (i = 0; i < count; i++)
             {
                 u32 o = (u32) * list;
-                if (o != (u32)obj && ((GameObject*)o)->anim.seqId == 0x519 &&
+                if (o != obj && ((GameObject*)o)->anim.seqId == 0x519 &&
                     Vec_xzDistance((f32*)(obj + 0x18), (f32*)(o + 0x18)) < k)
                 {
                     (*gCarryableInterface)->setVisible(stateCopy, 1);
@@ -660,7 +660,7 @@ void mmp_moonrock_update(int obj)
     Sfx_SetObjectChannelVolume(obj, 0x40, state->raised * 0x20 + 0x20, lbl_803E4588);
     {
         f32 speed = ((GameObject*)obj)->anim.velocityY;
-        if (speed < lbl_803E458C * ((lbl_803E4568 * (f32)state->raised + state->baseY) - ((GameObject*)obj)->anim.
+        if (speed < lbl_803E458C * ((lbl_803E4568 * state->raised + state->baseY) - ((GameObject*)obj)->anim.
             localPosY))
         {
             ((GameObject*)obj)->anim.velocityY = speed + lbl_803E4590;
@@ -676,17 +676,17 @@ void mmp_moonrock_update(int obj)
     ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4554, ((GameObject*)obj)->anim.velocityY * timeDelta,
                                             *(f32*)&lbl_803E4554);
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + mathSinf(
-        (lbl_803E4598 * (f32)state->bobPhase) / lbl_803E459C);
+        (lbl_803E4598 * state->bobPhase) / lbl_803E459C);
     if (((GameObject*)obj)->anim.localPosY < state->baseY)
     {
         ((GameObject*)obj)->anim.localPosY = state->baseY;
     }
     ((GameObject*)obj)->anim.rotZ = (s16)(
         ((GameObject*)obj)->anim.rotZ + (int)(lbl_803E45A0 * mathSinf(
-            (lbl_803E4598 * (f32)state->rollPhase) / lbl_803E459C)));
+            (lbl_803E4598 * state->rollPhase) / lbl_803E459C)));
     ((GameObject*)obj)->anim.rotY = (s16)(
         ((GameObject*)obj)->anim.rotY + (int)(lbl_803E45A0 * mathSinf(
-            (lbl_803E4598 * (f32)state->pitchPhase) / lbl_803E459C)));
+            (lbl_803E4598 * state->pitchPhase) / lbl_803E459C)));
     *(f32*)(lbl_803AC918 + 8) = lbl_803E457C;
     *(f32*)(lbl_803AC918 + 0xC) = ((GameObject*)obj)->anim.localPosX;
     *(f32*)(lbl_803AC918 + 0x10) = state->baseY;

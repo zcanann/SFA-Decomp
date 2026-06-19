@@ -263,25 +263,25 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
   }
   if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_0004) {
     runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_0004;
-    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[0]);
+    Sfx_PlayFromObject((u32)obj, lbl_80325AB8[0]);
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_7;
     doRumble(lbl_803E4BF8);
   }
   if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_0002) {
     runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_0002;
-    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[1]);
+    Sfx_PlayFromObject((u32)obj, lbl_80325AB8[1]);
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_8;
     doRumble(lbl_803E4BF8);
   }
   if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_BREATH_BURST) {
     runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_BREATH_BURST;
-    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[2]);
+    Sfx_PlayFromObject((u32)obj, lbl_80325AB8[2]);
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_9;
     doRumble(lbl_803E4BF8);
   }
   if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) {
     runtime->sequenceTriggerFlags &= ~DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
-    Sfx_PlayFromObject((u32)obj, (u16)lbl_80325AB8[3]);
+    Sfx_PlayFromObject((u32)obj, lbl_80325AB8[3]);
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_0004 | DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_10;
     doRumble(lbl_803E4BF8);
   }
@@ -606,7 +606,7 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
   }
   runtime->savedPendingParentObj = *(int *)&gameObj->pendingParentObj;
   *(int *)&gameObj->pendingParentObj = 0;
-  (*gPlayerInterface)->update((void*)obj, (void*)updateRuntime, timeDelta, timeDelta,
+  (*gPlayerInterface)->update((void*)obj, updateRuntime, timeDelta, timeDelta,
                               gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
   *(int *)&gameObj->pendingParentObj = runtime->savedPendingParentObj;
 }

@@ -123,7 +123,7 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
             ((GameObject*)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
             ((ShopItemState*)sub)->splineT = ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->
                 splineT;
-            ((GameObject*)obj)->anim.rotX = (s16)getAngle(
+            ((GameObject*)obj)->anim.rotX = getAngle(
                 ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                 ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
             (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1,
@@ -199,11 +199,11 @@ void shopitem_init(int obj, int data)
 
     objAnim = (ObjAnimComponent*)obj;
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801E86F4;
+    ((GameObject*)obj)->animEventCallback = fn_801E86F4;
     objAnim->bankIndex = (s8) * (s8*)(data + 0x18);
     ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)(data + 0x1A)) << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((*(u8*)(data + 0x1B)) << 8);
-    if ((s32)objAnim->bankIndex >= (s32)objAnim->modelInstance->modelCount)
+    if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
@@ -217,7 +217,7 @@ void shopitem_init(int obj, int data)
                                          -1, NULL);
         break;
     case 0x468:
-        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void*)fn_801E832C);
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
         ObjGroup_AddObject(obj, 0x4F);
         break;
     }
@@ -352,7 +352,7 @@ void shopitem_update(int obj)
                         state + 0x24, ((ShopItemState*)state)->splineT, 0);
                     ((ShopItemState*)state)->splineT = ((ShopItemState*)state)->splineSpeed * timeDelta + ((
                         ShopItemState*)state)->splineT;
-                    ((GameObject*)obj)->anim.rotX = (s16)getAngle(
+                    ((GameObject*)obj)->anim.rotX = getAngle(
                         ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x19F,
@@ -422,7 +422,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                 v.x = ((GameObject*)obj)->anim.localPosX;
                 v.y = ((GameObject*)obj)->anim.localPosY;
                 v.z = ((GameObject*)obj)->anim.localPosZ;
-                if ((u32)v.owner == (u32)obj)
+                if ((u32)v.owner == obj)
                 {
                     if (b->flag_40)
                     {

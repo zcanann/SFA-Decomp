@@ -71,10 +71,10 @@ void Effect16_func05(void)
     sum = lbl_803DB84C + step;
     lbl_803DB84C = sum;
     if (sum > 1.0f) lbl_803DB84C = lbl_803E00B8;
-    lbl_803DD3C0 = lbl_803DD3C0 + (s32)framesThisStep * 0x64;
+    lbl_803DD3C0 = lbl_803DD3C0 + framesThisStep * 0x64;
     if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
     lbl_803DD3CC = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
-    lbl_803DD3C4 = lbl_803DD3C4 + (s32)framesThisStep * 0x32;
+    lbl_803DD3C4 = lbl_803DD3C4 + framesThisStep * 0x32;
     if (lbl_803DD3C4 > 0x7fff) lbl_803DD3C4 = 0;
     lbl_803DD3C8 = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
 }
@@ -104,7 +104,7 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
     cfg.startPosX = lbl_803E00BC;
     cfg.startPosY = lbl_803E00BC;

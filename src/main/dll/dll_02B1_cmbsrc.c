@@ -144,7 +144,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     {
         return 0;
     }
-    if (mapData->gameBit != -1 && (u32)GameBit_Get(mapData->gameBit) == 0)
+    if (mapData->gameBit != -1 && GameBit_Get(mapData->gameBit) == 0)
     {
         result = 1;
     }
@@ -171,7 +171,7 @@ void cmbsrc_hitDetect(int obj)
     state->priorityHitType = 0;
     if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
     {
-        state->priorityHitType = (u8)ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        state->priorityHitType = ObjHits_GetPriorityHit(obj, 0, 0, 0);
         if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
         {
             state->hitCharge -= 1;
@@ -199,7 +199,7 @@ void cmbsrc_hitDetect(int obj)
         {
             v = CMBSRC_MAX_HIT_CHARGE;
         }
-        state->hitCharge = (s8)v;
+        state->hitCharge = v;
     }
 }
 
@@ -279,7 +279,7 @@ void cmbsrc_updateVisuals(int obj, int state)
     {
         f32 fullRadius = lbl_803E7374 * setup->radius;
         sourceState->radius += interpolate(
-            (f32)sourceState->hitCharge / lbl_803E7378 *
+            sourceState->hitCharge / lbl_803E7378 *
             (fullRadius - setup->radius * lbl_803E737C) +
             setup->radius * lbl_803E737C - sourceState->radius,
             lbl_803E7380, timeDelta);
@@ -291,7 +291,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         {
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
-                colorIdx = (u8)cmbsrc_cycleColor(obj, state);
+                colorIdx = cmbsrc_cycleColor(obj, state);
             }
             else
             {
@@ -463,7 +463,7 @@ int cmbsrc_update(int obj)
                         *(u8*)((int)state->light + 0x2fa) = 0;
                     }
                 }
-                *(u8*)((int)state->light + 0x2f9) = (u8)v;
+                *(u8*)((int)state->light + 0x2f9) = v;
             }
         }
         break;
@@ -566,7 +566,7 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 int n = (int)((mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0)
                     * cmbsrc->objAnim.rootMotionScale);
-                modelLightStruct_setDistanceAttenuation(state->light, (f32)n, lbl_803E73B4 + (f32)n);
+                modelLightStruct_setDistanceAttenuation(state->light, n, lbl_803E73B4 + n);
             }
             if (state->flags & CMBSRC_STATE_THORNTAIL_GATE)
             {
@@ -668,7 +668,7 @@ void cmbsrc_init(int obj, u8* setup)
             ObjHits_DisableObject(obj);
         }
     }
-    state->colorCycleTimer = (f32)randomGetRange(0, 0x64);
+    state->colorCycleTimer = randomGetRange(0, 0x64);
     state->radius = lbl_803E7374 * mapData->radius;
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }

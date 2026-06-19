@@ -187,7 +187,7 @@ void fn_801E9C00(int obj, int state)
             fade = lbl_803E5AF0;
             for (; pairIndex >= 0; pair--, pairIndex -= 2)
             {
-                pair->startAlpha = -(fade * timeDelta - (f32)pair->startAlpha);
+                pair->startAlpha = -(fade * timeDelta - pair->startAlpha);
                 pair->endAlpha = pair->startAlpha;
                 a = pair->startAlpha;
                 if (a < 0)
@@ -198,7 +198,7 @@ void fn_801E9C00(int obj, int state)
                 {
                     a = 0xff;
                 }
-                pair->startAlpha = (s16)a;
+                pair->startAlpha = a;
                 a = pair->endAlpha;
                 if (a < 0)
                 {
@@ -208,7 +208,7 @@ void fn_801E9C00(int obj, int state)
                 {
                     a = 0xff;
                 }
-                pair->endAlpha = (s16)a;
+                pair->endAlpha = a;
             }
 
             pairIndex = trail->count - 2;
@@ -476,7 +476,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
         Sfx_SetObjectChannelVolume(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
-            *(f32*)(state + 0x3f4) = lbl_803E5B3C + (f32)intensity;
+            *(f32*)(state + 0x3f4) = lbl_803E5B3C + intensity;
         }
         else
         {

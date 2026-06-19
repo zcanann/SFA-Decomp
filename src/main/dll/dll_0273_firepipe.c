@@ -254,7 +254,7 @@ void firepipe_updateState(FirePipeObject* obj)
                         if (md2->startOffset < 0)
                         {
                             s16toFloat(&ex2->cycleTimer,
-                                       (s16)randomGetRange(1, cycleTime * 0x3c));
+                                       randomGetRange(1, cycleTime * 0x3c));
                         }
                         else
                         {
@@ -276,14 +276,14 @@ void firepipe_updateState(FirePipeObject* obj)
                 storeZeroToFloatParam(&extra->cycleTimer);
             }
         }
-        flags->lastGameBitState = (u8)GameBit_Get(mapData->gameBit);
+        flags->lastGameBitState = GameBit_Get(mapData->gameBit);
     }
 
     if (flags->emitting != 0)
     {
         if (((((GameObject*)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL))
         {
-            fn_80098B18(obj, lbl_803E6B70 * (f32)mapData->scale, (u8)extra->effectType, 0, 0, 0);
+            fn_80098B18(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, 0);
         }
     }
 
@@ -298,12 +298,12 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         flags->emitting = 1;
         flags->restartPending = 0;
-        GameBit_Set(mapData->gameBit, (u8)flags->lastGameBitState);
+        GameBit_Set(mapData->gameBit, flags->lastGameBitState);
     }
 
     if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->emitting == 0))
     {
-        if (extra->cycleTimer < (f32)lbl_803DC348)
+        if (extra->cycleTimer < lbl_803DC348)
         {
             if ((extra->glowLight == 0) && (flags->glowEnabled != 0))
             {
@@ -368,7 +368,7 @@ sound_update:
         ex3 = obj->extra;
         spawnDef = (u8*)Obj_AllocObjectSetup(0x24, 0x1b5);
         spawnDef[4] = 2;
-        *(s8*)(spawnDef + 0x19) = (s8)ex3->effectMode;
+        *(s8*)(spawnDef + 0x19) = ex3->effectMode;
         *(s16*)(spawnDef + 0x1a) = md3->scale;
         *(f32*)(spawnDef + 8) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(spawnDef + 0xc) = ((GameObject*)obj)->anim.localPosY;
@@ -379,7 +379,7 @@ sound_update:
         }
         else
         {
-            effectObj = (u8*)firepipe_spawnEffectObject(extra, obj, (void*)spawnDef);
+            effectObj = (u8*)firepipe_spawnEffectObject(extra, obj, spawnDef);
         }
         if (effectObj != 0)
         {
@@ -391,7 +391,7 @@ sound_update:
             *(f32*)(effectObj + 0x28) = lbl_803DC344;
         }
         storeZeroToFloatParam(&extra->emitTimer);
-        s16toFloat(&extra->emitTimer, (s16)lbl_803DC350);
+        s16toFloat(&extra->emitTimer, lbl_803DC350);
     }
 
     if (flags->emitting != 0)
@@ -491,7 +491,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     if (mapData->gameBit != -1)
     {
         bitVal = GameBit_Get((int)mapData->gameBit);
-        ((FirePipeBitFlags*)&extra->flags)->emitting = (u8)bitVal;
+        ((FirePipeBitFlags*)&extra->flags)->emitting = bitVal;
     }
     else
     {
@@ -511,7 +511,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
                 if (startTime < 0)
                 {
                     cycleTime = randomGetRange(1, cycleTime * 0x3c);
-                    s16toFloat(&extra2->cycleTimer, (int)cycleTime);
+                    s16toFloat(&extra2->cycleTimer, cycleTime);
                 }
                 else
                 {
@@ -572,7 +572,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         extra->effectCount = 0;
         obj->resetTimer = 0;
         obj->rotX = (short)((int)mapData->rotX << 8);
-        obj->rotY = (u16)mapData->rotY << 8;
+        obj->rotY = mapData->rotY << 8;
         ObjHits_EnableObject(obj);
         ((FirePipeBitFlags*)&extra->flags)->restartPending = 0;
         extra->activeSpawn = 0;

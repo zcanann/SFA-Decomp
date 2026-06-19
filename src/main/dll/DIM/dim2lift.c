@@ -156,7 +156,7 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
         setup->base.unk04[3] = 255;
         setup->field1E = -1;
         setup->field20 = -1;
-        spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, (void*)0);
+        spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (spawnedObj != NULL)
         {
             spawnedObj->anim.velocityX = velocity[0];

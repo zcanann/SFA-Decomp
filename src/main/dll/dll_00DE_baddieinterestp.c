@@ -809,14 +809,14 @@ void baddieinterestp_update(int* obj)
             GameBit_Get((int)((BaddieinterestpPlacement*)params)->unk1E) == 0))
     {
         int count;
-        int* objs = (int*)ObjGroup_GetObjects(3, &count);
+        int* objs = ObjGroup_GetObjects(3, &count);
         if (count > 0)
         {
             u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->unk1C << 16;
             u16 i;
             u8 found;
             id |= (u16)((BaddieinterestpPlacement*)params)->unk1A;
-            for (i = 0; (int)i < count; i++)
+            for (i = 0; i < count; i++)
             {
                 int* other = (int*)objs[i];
                 int* otherParams = *(int**)&((GameObject*)other)->anim.placementData;

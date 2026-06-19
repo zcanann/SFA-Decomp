@@ -98,16 +98,16 @@ typedef struct LinkMenuItemDB
 void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
-u8 Link_func0C(void) { return (u8)linkCount_803dd90e; }
+u8 Link_func0C(void) { return linkCount_803dd90e; }
 #pragma scheduling off
 #pragma peephole off
-void Link_func0A(int idx, int v) { extern LinkMenuItemDB lbl_803A9458[40];  lbl_803A9458[idx].state = (s8)v; }
+void Link_func0A(int idx, int v) { extern LinkMenuItemDB lbl_803A9458[40];  lbl_803A9458[idx].state = v; }
 #pragma peephole reset
 s32 Link_func09(int idx) { extern LinkMenuItemDB lbl_803A9458[40];  return lbl_803A9458[idx].state; }
 #pragma scheduling reset
 void Link_setOpacity(u8 v) { linkItemOpacity = v; }
 #pragma peephole off
-void Link_setSelected(int v) { linkSelected = (s8)v; }
+void Link_setSelected(int v) { linkSelected = v; }
 #pragma peephole reset
 s32 Link_getSelected(void) { return linkSelected; }
 
@@ -137,11 +137,11 @@ void linkInitTextures(LinkMenuItemDB* item)
     {
         if (budget >= 80)
         {
-            item->slots[i] = (s8)randomGetRange(2, 5);
+            item->slots[i] = randomGetRange(2, 5);
         }
         else if (budget >= 40)
         {
-            item->slots[i] = (s8)randomGetRange(4, 5);
+            item->slots[i] = randomGetRange(4, 5);
         }
         else
         {
@@ -318,7 +318,7 @@ void Link_render(void)
                     while (drawItem->slots[slotIndex] != -1 && slotIndex < 25)
                     {
                         textureIndex = drawItem->slots[slotIndex];
-                        drawTexture(((LinkTextureSlot*)linkTextures)[textureIndex].texture, (f32)x, (f32)y, 0xff, 0x100);
+                        drawTexture(((LinkTextureSlot*)linkTextures)[textureIndex].texture, x, y, 0xff, 0x100);
                         x += ((LinkTextureSlot*)linkTextures)[drawItem->slots[slotIndex]].width;
                         slotIndex++;
                     }
@@ -342,7 +342,7 @@ void Link_render(void)
                 {
                     alpha = (((int)((u32)opacity >> 31)) + opacity) >> 1;
                 }
-                *(u8*)((char*)gameTextGetBox(drawItem->boxId) + 0x1e) = (u8)alpha;
+                *(u8*)((char*)gameTextGetBox(drawItem->boxId) + 0x1e) = alpha;
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_BLACK_SHADOW) != 0)
                 {
@@ -400,7 +400,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), (f32)drawItem->y, (u8)alpha, 0x100);
+                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), drawItem->y, alpha, 0x100);
                     }
                     else
                     {
@@ -412,7 +412,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (f32)drawItem->x, (f32)drawItem->y, (u8)alpha, 0x100);
+                        drawTexture(drawItem->texture, drawItem->x, drawItem->y, alpha, 0x100);
                     }
                 }
 
@@ -480,7 +480,7 @@ u32 Link_update(void)
     s8 horizontalInput;
     s8 verticalInput;
 
-    item = &lbl_803A9458[(s8)linkSelected];
+    item = &lbl_803A9458[linkSelected];
     if ((s8)lbl_803DD911 == 0)
     {
         return -1;
@@ -527,13 +527,13 @@ u32 Link_update(void)
             if ((horizontalInput < 0) && (item->leftLink != -1))
             {
                 padClearAnalogInputX(0);
-                lbl_803A9458[(s8)linkSelected].state = item->leftLink;
+                lbl_803A9458[linkSelected].state = item->leftLink;
                 linkCount_803dd90e = 0xff;
             }
             else if ((horizontalInput > 0) && (item->rightLink != -1))
             {
                 padClearAnalogInputX(0);
-                lbl_803A9458[(s8)linkSelected].state = item->rightLink;
+                lbl_803A9458[linkSelected].state = item->rightLink;
                 linkCount_803dd90e = 0xff;
             }
         }
@@ -559,7 +559,7 @@ u32 Link_update(void)
         {
             linkSelected = (s8)((s8)lbl_803DD911 - 1);
         }
-        if ((s8)linkSelected >= (s8)lbl_803DD911)
+        if ((s8)linkSelected >= lbl_803DD911)
         {
             linkSelected = 0;
         }
@@ -570,7 +570,7 @@ u32 Link_update(void)
         buttons = getButtonsJustPressed(0);
         if ((buttons & 0x1100) != 0)
         {
-            if (((lbl_803A9458[(s8)linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
+            if (((lbl_803A9458[linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
                 (GameBit_Get(0x44f) == 0))
             {
                 buttonDisable(0, 0x1100);
@@ -700,9 +700,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
     defaultText = lbl_8031C1A8;
     if (count <= 40)
     {
-        lbl_803DD911 = (s8)count;
+        lbl_803DD911 = count;
         linkCount_803dd90e = 0xff;
-        linkSelected = (s8)selected;
+        linkSelected = selected;
         lbl_803DD910 = 0;
         lbl_803DD913 = 0;
 
@@ -795,7 +795,7 @@ void Link_free(void)
     extern s8 lbl_803DD911; /* #57 */
     int i;
 
-    for (i = 0; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < lbl_803DD911; i++)
     {
         if (lbl_803A9458[i].texture != NULL)
         {
@@ -823,11 +823,11 @@ void linkDrawFn_801302c0(void)
     int i;
 
     base = lbl_803A9458;
-    sel = &base[(s8)linkSelected];
+    sel = &base[linkSelected];
     sel->field38 = four;
     if (((sel->field16 & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
-        tex = *(void**)(linkTextures + (s8)sel->slots[0] * 8);
+        tex = *(void**)(linkTextures + sel->slots[0] * 8);
     }
     else
     {
@@ -852,13 +852,13 @@ void linkDrawFn_801302c0(void)
     }
     selRight = selLeft + w;
     p = base;
-    for (i = 0; i < (s8)lbl_803DD911; i++)
+    for (i = 0; i < lbl_803DD911; i++)
     {
-        if (i != (s8)linkSelected)
+        if (i != linkSelected)
         {
             if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
             {
-                tex = *(void**)(linkTextures + (s8)p->slots[0] * 8);
+                tex = *(void**)(linkTextures + p->slots[0] * 8);
             }
             else
             {
@@ -907,12 +907,12 @@ void linkDrawFn_80130484(void)
     minX = 480;
     maxX = 0;
     i = 0;
-    for (; i < (s8)lbl_803DD911; i++)
+    for (; i < lbl_803DD911; i++)
     {
         p = &lbl_803A9458[i];
         if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
         {
-            tex = *(void**)(linkTextures + (s8)p->slots[0] * 8);
+            tex = *(void**)(linkTextures + p->slots[0] * 8);
         }
         else
         {

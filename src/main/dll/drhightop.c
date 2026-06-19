@@ -165,7 +165,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
             {
                 angDelta = angDelta + 0xffff;
             }
-            absDelta = (u32)angDelta;
+            absDelta = angDelta;
             if ((int)absDelta < 0)
             {
                 absDelta = -absDelta;
@@ -536,7 +536,7 @@ void fn_801EB940(short* obj, int stateRaw)
                 {
                     extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume,
                                                        f32 volumeScale); /* #11 */
-                    Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, (int)fb, lbl_803E5B20);
+                    Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
                 }
             }
         }
@@ -567,7 +567,7 @@ void fn_801EB940(short* obj, int stateRaw)
         yawDelta = yawDelta + 0xffff;
     }
     st->yaw = st->yaw + (short)yawDelta;
-    st->unk40C = st->unk40C + (short)yawDelta;
+    st->unk40C = st->unk40C + yawDelta;
     obj[1] = obj[1] + (short)((int)st->unk310 >> ival);
     obj[2] = obj[2] + (short)((int)st->unk312 >> ival);
     rotClamped = obj[1];

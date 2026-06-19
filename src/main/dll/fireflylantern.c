@@ -91,7 +91,7 @@ void fn_80154870(int obj, int* state)
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - ((GameObject*)obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
     dvec[2] = *(f32*)(state[0xa7] + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-    if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject()))
+    if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
         *(f32*)(state + 0xc9) = lbl_803E2990;
@@ -375,7 +375,7 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
     *obj = (s16)(rot + angleStep);
     ((GameObject*)obj)->anim.rotZ = 0x4000;
     ((GameObject*)obj)->anim.rotY = *obj;
-    *obj = (s16)getAngle(*(f32*)(state + 0x34c), -*(f32*)(state + 0x344));
+    *obj = getAngle(*(f32*)(state + 0x34c), -*(f32*)(state + 0x344));
     turnStep = sqrtf(dxDiff * dxDiff + dy * dy);
     if (turnStep > maxDistance)
     {

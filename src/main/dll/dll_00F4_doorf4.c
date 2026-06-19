@@ -165,7 +165,7 @@ void doorf4_init(int* obj, int* params)
 
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)doorf4_SeqFn;
+    ((GameObject*)obj)->animEventCallback = doorf4_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     ((GameObject*)obj)->objectFlags |= 0x6000;
     state->gameBitA = *(s16*)((char*)params + 0x1e);

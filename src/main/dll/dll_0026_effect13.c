@@ -68,7 +68,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
     {
         if ((spawnFlags & 0x200000) != 0)
         {
-            if (spawnParams == (u16*)0x0)
+            if (spawnParams == 0x0)
             {
                 return 0xffffffff;
             }
@@ -83,7 +83,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
         }
         behaviorFlags = 0;
         renderFlags = 0;
-        effectIdByte = (u8)effectId;
+        effectIdByte = effectId;
         startPosX = lbl_803E0E4C;
         startPosY = lbl_803E0E4C;
         startPosZ = lbl_803E0E4C;
@@ -296,7 +296,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
             textureId = 0xdf;
             break;
         case 0x741:
-            if (spawnParams != (u16*)0x0)
+            if (spawnParams != 0x0)
             {
                 startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
             }
@@ -484,7 +484,7 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
     cfg.startPosX = lbl_803E0180;
     cfg.startPosY = lbl_803E0180;

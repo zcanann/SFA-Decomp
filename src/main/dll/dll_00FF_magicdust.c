@@ -91,7 +91,7 @@ void magicdust_update(int obj)
 
     player = (int)Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)obj)->extra;
-    while (ref = ObjMsg_Pop(obj, (u32*)msg, (u32*)0x0, (u32*)0x0), ref != 0)
+    while (ref = ObjMsg_Pop(obj, msg, 0x0, 0x0), ref != 0)
     {
         switch (msg[0])
         {
@@ -141,13 +141,13 @@ void magicdust_update(int obj)
     {
         if ((((MagicDustState*)state)->flags27A & 2) != 0)
         {
-            *(short*)obj = *(short*)obj + (u16)framesThisStep * 0x100;
+            *(short*)obj = *(short*)obj + framesThisStep * 0x100;
             ((MagicDustState*)state)->ambientTimer -= framesThisStep;
             if (((MagicDustState*)state)->ambientTimer < 0)
             {
                 Sfx_PlayFromObject(obj, SFXen_statue_wave);
                 val = randomGetRange(0xf0, 300);
-                ((MagicDustState*)state)->ambientTimer = (short)val;
+                ((MagicDustState*)state)->ambientTimer = val;
             }
         }
         if (*(u32*)&((GameObject*)obj)->ownerObj != 0)

@@ -357,7 +357,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             *p = lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
-                                 (int)lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
+                                 lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
     }
@@ -425,7 +425,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             tmp = 0x2000;
         }
-        *(s16*)(a + 4) = (s16)tmp;
+        *(s16*)(a + 4) = tmp;
     }
 
     if (lbl_803E6C38 != e)
@@ -455,9 +455,9 @@ int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
     int gridA[2];
     int i;
 
-    if ((u32)obj != (u32)Obj_GetPlayerObject())
+    if ((u32)obj != Obj_GetPlayerObject())
     {
-        PSVECSubtract((void*)&((GameObject*)obj)->anim.localPosX, (void*)&((GameObject*)obj)->anim.previousLocalPosX,
+        PSVECSubtract((void*)&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.previousLocalPosX,
                       vel);
     }
     else

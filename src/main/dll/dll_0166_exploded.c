@@ -157,7 +157,7 @@ void exploded_update(int* obj)
             s32 remainingFrames = durationFrames - state->elapsedFrames;
             if (remainingFrames < 0xff)
             {
-                o->alpha = (u8)remainingFrames;
+                o->alpha = remainingFrames;
             }
         }
     }
@@ -176,7 +176,7 @@ check:
 
 /* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
  * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
- * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
+ * bits 5..7 are set, preempt the event. Then if data->_1e is not -1,
  * run that sequence with obj, -1.
  * Finally latch obj->_f4 = 1. */
 
@@ -208,7 +208,7 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
     }
 }
 
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
+/* attractor_func0B: dispatch on obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
  * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
 
@@ -245,7 +245,7 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
         v[4] = z;
         v[5] = z;
 
-        mesh = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + (u32)data->objectTypeTag * 4));
+        mesh = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + data->objectTypeTag * 4));
         for (i = 0; i < *(u16*)((char*)mesh + 0xe4); i++)
         {
             Model_GetVertexPosition(mesh, i, v);
@@ -423,5 +423,5 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
     obj->x = obj->velocityX * timeDelta + obj->x;
     obj->y = obj->velocityY * timeDelta + obj->y;
     obj->z = obj->velocityZ * timeDelta + obj->z;
-    return (s32)stopped;
+    return stopped;
 }

@@ -209,7 +209,7 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
         return 0;
     }
     s = (ExplodableFragmentSetup*)Obj_AllocObjectSetup(0x44, objType);
-    s->seqId = (s16)objType;
+    s->seqId = objType;
     s->unk04 = 2;
     s->unk06 = 0xff;
     s->unk05 = 1;
@@ -402,7 +402,7 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
             int height = ((ExplodablePlacement*)def)->fragmentHeight;
             if (height != 0)
             {
-                c->height = (f32)height;
+                c->height = height;
             }
         }
         *(u32*)&c->unk5C = ((ExplodablePlacement*)def)->launchDelayBase;

@@ -129,7 +129,7 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
     if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
     {
         savedAlpha = *(u8*)((int)param_2 + 0x37);
-        *(char*)((int)param_2 + 0x37) = (char)param_8;
+        *(char*)((int)param_2 + 0x37) = param_8;
         (**(code**)(**(int**)(param_2 + 0x34) + 0x10))
             (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
         *(u8*)((int)param_2 + 0x37) = savedAlpha;
@@ -224,7 +224,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     else
     {
-        extra[1] = (int)lbl_803E53F0;
+        extra[1] = lbl_803E53F0;
         extra[2] = extra[5];
         extra[3] = extra[6];
         extra[4] = extra[7];
@@ -265,13 +265,13 @@ void magiclight_init(int* obj, u8* params)
     MagicLightState* state;
     ((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)magiclight_SeqFn;
+    ((GameObject*)obj)->animEventCallback = magiclight_SeqFn;
     if (((GameObject*)obj)->anim.seqId == 0x172)
     {
         return;
     }
     state = ((GameObject*)obj)->extra;
-    state->lifetime = (s16)randomGetRange(0xc8, 0x258);
+    state->lifetime = randomGetRange(0xc8, 0x258);
     state->subtype = (s8) * (s16*)(params + 0x1a);
     state->inRange = 0;
     if (((GameObject*)obj)->anim.seqId == 0x16b)

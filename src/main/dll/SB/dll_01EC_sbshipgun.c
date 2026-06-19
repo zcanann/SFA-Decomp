@@ -295,7 +295,7 @@ void SB_ShipGun_update(int obj)
                 dist = sqrtf(fdx * fdx + fdz * fdz);
                 {
                     extern int getAngle(f32 dx, f32 dz);
-                    *(short*)((int)state + 6) = (s16)getAngle(-fdy, dist);
+                    *(short*)((int)state + 6) = getAngle(-fdy, dist);
                 }
                 if (*(short*)((int)state + 6) > SB_SHIPGUN_MAX_PITCH)
                 {

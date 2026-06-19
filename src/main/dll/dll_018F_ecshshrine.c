@@ -134,15 +134,15 @@ void fn_801C5990(MmShrineAnimObj* obj)
 
     obj->posY = lbl_803E4F9C +
     (*(f32*)(config + 0xC) +
-        mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4));
+        mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4));
 
-    trigA = mathSinf((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
-    trigB = mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((lbl_803E4FA0 * state->orbitB) / lbl_803E4FA4);
+    trigB = mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4);
     trigB = trigB + trigA;
     obj->roll = lbl_803E4FA8 * trigB;
 
-    trigA = mathSinf((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
-    trigB = mathSinf((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((lbl_803E4FA0 * state->orbitC) / lbl_803E4FA4);
+    trigB = mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4);
     trigB = trigB + trigA;
     obj->pitch = lbl_803E4FA8 * trigB;
 
@@ -277,7 +277,7 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
     extern int lbl_803DDBC4; /* #57 */
     int v;
     if ((int*)lbl_803DDBC4 == NULL) return;
-    v = lbl_80326238[(u32)idx];
+    v = lbl_80326238[idx];
     lbl_80326208[v].a = a;
     lbl_80326208[v].b = b;
 }
@@ -297,7 +297,7 @@ void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 void ecsh_shrine_setScale(s16* out)
 {
     extern void* lbl_803DDBC4; /* #57 */
-    int* obj = (int*)lbl_803DDBC4;
+    int* obj = lbl_803DDBC4;
     int* state;
     if (obj == NULL) return;
     state = ((GameObject*)obj)->extra;
@@ -804,7 +804,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->unk26 = -1;
     ((EcshShrineState*)sub)->unk2E = 0;
     ((EcshShrineState*)sub)->unk34 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801C5CE4;
+    ((GameObject*)obj)->animEventCallback = fn_801C5CE4;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0xba5, 1);
     GameBit_Set(0x129, 1);
