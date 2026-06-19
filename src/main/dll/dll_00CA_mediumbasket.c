@@ -1092,11 +1092,12 @@ void fn_8015D3C0(int obj, int sub, int state)
     target = ((GroundBaddieState*)state)->baddie.targetObj;
     if (target != NULL)
     {
-        targetDelta[0] = ((GameObject*)target)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        targetDelta[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        targetDelta[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        f32* d = targetDelta;
+        d[0] = ((GameObject*)target)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)state)->baddie.targetDistance =
-            sqrtf(targetDelta[2] * targetDelta[2] + targetDelta[0] * targetDelta[0] + targetDelta[1] * targetDelta[1]);
+            sqrtf(d[2] * d[2] + d[0] * d[0] + d[1] * d[1]);
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
