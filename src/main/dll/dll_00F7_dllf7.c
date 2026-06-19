@@ -320,16 +320,16 @@ int shield_getObjectTypeId(void);
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
 
-extern void* lbl_803DDAB0;
-extern void* lbl_803DDAB4;
+extern void* gDllF7Resource5B;
+extern void* gDllF7Resource5A;
 
 void dll_F7_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
-    Resource_Release(lbl_803DDAB0);
-    Resource_Release(lbl_803DDAB4);
-    lbl_803DDAB0 = NULL;
-    lbl_803DDAB4 = NULL;
+    Resource_Release(gDllF7Resource5B);
+    Resource_Release(gDllF7Resource5A);
+    gDllF7Resource5B = NULL;
+    gDllF7Resource5A = NULL;
     ObjGroup_RemoveObject(obj, 0x3E);
 }
 
@@ -769,8 +769,8 @@ void dll_F7_init(int* obj, int* params)
     ObjGroup_AddObject((int)obj, 0x3e);
     *(s16*)obj = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    lbl_803DDAB0 = Resource_Acquire(0x5b, 1);
-    lbl_803DDAB4 = Resource_Acquire(0x5a, 1);
+    gDllF7Resource5B = Resource_Acquire(0x5b, 1);
+    gDllF7Resource5A = Resource_Acquire(0x5a, 1);
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
         if (modelState != NULL)
@@ -840,7 +840,7 @@ void dll_F7_update(int* obj)
             trio[2] = 0;
             trio[1] = 0;
             trio[0] = 0;
-            ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)lbl_803DDAB4)[
+            ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[
                 1])(0, 1, trio, 1025, -1, &vec);
         }
     }
@@ -890,7 +890,7 @@ void dll_F7_update(int* obj)
                 *(s16*)near = *(s16*)obj;
             }
         }
-        ((void (*)(int*, int, int, int, int, int))((int*)*(int**)lbl_803DDAB0)[1])(obj, 1, 0, 2, -1, 0);
+        ((void (*)(int*, int, int, int, int, int))((int*)*(int**)gDllF7Resource5B)[1])(obj, 1, 0, 2, -1, 0);
     }
     if (state->bounceOffset > lbl_803E3400)
     {

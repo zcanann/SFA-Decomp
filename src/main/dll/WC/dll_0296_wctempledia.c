@@ -95,7 +95,7 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 
     {
-        f32 scaled = lbl_803E6E48;
+        f32 scaled = gWcTempleDiaSpeedLerpRate;
         f32 cs = state->currentSpeed;
         scaled = scaled * -cs;
         state->currentSpeed = scaled * timeDelta + cs;
@@ -142,7 +142,7 @@ void wctempledia_update(int obj)
         return;
     }
     td = timeDelta;
-    state->currentSpeed = td * (lbl_803E6E48 * (state->targetSpeed - state->currentSpeed)) +
+    state->currentSpeed = td * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed)) +
         state->currentSpeed;
     ((GameObject*)obj)->anim.rotZ = (s16)(td * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
@@ -215,13 +215,13 @@ void wctempledia_init(int obj, int setup)
     }
     if (objAnim->bankIndex == 0)
     {
-        state->gamebits = &lbl_803DC3B8;
-        state->targetTable = lbl_8032B348;
+        state->gamebits = &gWcTempleDiaGameBitsA;
+        state->targetTable = gWcTempleDiaTargetSpeedTableA;
     }
     else
     {
-        state->gamebits = &lbl_803DC3C0;
-        state->targetTable = lbl_8032B354;
+        state->gamebits = &gWcTempleDiaGameBitsB;
+        state->targetTable = gWcTempleDiaTargetSpeedTableB;
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {

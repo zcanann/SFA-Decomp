@@ -354,11 +354,11 @@ extern void mapTextureOverrideSetValue(int a, int b, int c);
 extern f32 lbl_803E6E58;
 #pragma dont_inline on
 #pragma dont_inline reset
-extern s16 lbl_803DC3B8;
-extern s16 lbl_803DC3C0;
-extern f32 lbl_8032B348[];
-extern f32 lbl_8032B354[];
-extern f32 lbl_803E6E48;
+extern s16 gWcTempleDiaGameBitsA;
+extern s16 gWcTempleDiaGameBitsB;
+extern f32 gWcTempleDiaTargetSpeedTableA[];
+extern f32 gWcTempleDiaTargetSpeedTableB[];
+extern f32 gWcTempleDiaSpeedLerpRate;
 int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E6E5C;
 extern f32 lbl_803E6E60;

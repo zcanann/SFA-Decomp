@@ -54,7 +54,7 @@ extern f32 lbl_803E2F08;
 extern f32 lbl_803E2F0C;
 extern f32 lbl_803E2F18;
 extern f32 lbl_803E2F1C;
-extern f32 lbl_803E2F20;
+extern f32 gGrimblePathSearchMaxDist;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
 
@@ -280,7 +280,7 @@ void fn_801627F4(int obj)
     {
         sub = *(char**)(state + 0x40c);
         ((GrimbleControl*)sub)->candidatePathObj = 0;
-        ((GrimbleControl*)sub)->nearestDist = lbl_803E2F20;
+        ((GrimbleControl*)sub)->nearestDist = gGrimblePathSearchMaxDist;
         for (i = 0; i < count; i++)
         {
             if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(*ptr + 0x68)) + 0x30))(

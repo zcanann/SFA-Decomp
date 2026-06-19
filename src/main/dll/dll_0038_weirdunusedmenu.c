@@ -10,11 +10,11 @@
  *   - selection 1, action != 0: open the save flow - it sets a 0x1000
  *     flag on two menu widgets, plays the save/confirm sfx
  *     (SFXqu_shortsob1) and starts the save countdown (phase
- *     lbl_803DD713 == 1, the saving phase).
+ *     gWeirdMenuPhase == 1, the saving phase).
  * During the save phase it calls saveGame_save once, advances a frame
- * timer (lbl_803DD712) by timeDelta, and once the timer passes the
- * phase-timer limit (lbl_803E1DF0) clears the widget flags and returns
- * to the idle phase. A scroll/offset value (lbl_803DD710) is advanced
+ * timer (gWeirdMenuSaveTimer) by timeDelta, and once the timer passes the
+ * phase-timer limit (gWeirdMenuSaveTimerLimit) clears the widget flags and returns
+ * to the idle phase. A scroll/offset value (gWeirdMenuScrollOffset) is advanced
  * each tick and clamped to 0x8C.
  * initialise loads the three menu textures and registers the widget
  * list with the interface; release frees the textures and warps home.
@@ -54,18 +54,18 @@ extern void loadUiDll(int index);
 extern u8 framesThisStep;
 
 extern void textureFree(u32);
-extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
+extern u32 gWeirdMenuTextureC, gWeirdMenuTextureB, gWeirdMenuTextureA;
 extern void warpToMap(int idx, s8 transType);
 
 extern void buttonDisable(int port, u32 mask);
 extern f32 timeDelta;
-extern f32 lbl_803E1DF0;       /* save-phase timer limit */
-extern s8 lbl_803DD712;        /* save-phase frame timer */
-extern s16 lbl_803DD710;       /* scroll offset, clamped to 0x8C */
-extern u8 lbl_803DD713;        /* phase: 0 idle, 1 saving */
-extern WeirdMenuWork lbl_8031AD20;   /* widget work area */
-extern u32 lbl_803DD720;       /* cached menu text handle; written at init, not read in this TU */
-extern u32 lbl_8031AD98[];     /* widget layout descriptor */
+extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
+extern s8 gWeirdMenuSaveTimer;        /* save-phase frame timer */
+extern s16 gWeirdMenuScrollOffset;       /* scroll offset, clamped to 0x8C */
+extern u8 gWeirdMenuPhase;        /* phase: 0 idle, 1 saving */
+extern WeirdMenuWork gWeirdMenuWidgetWork;   /* widget work area */
+extern u32 gWeirdMenuTextHandle;       /* cached menu text handle; written at init, not read in this TU */
+extern u32 gWeirdMenuWidgetLayout[];     /* widget layout descriptor */
 extern u32 textureLoadAsset(int);
 
 void WeirdUnusedMenu_render(void)
@@ -83,7 +83,7 @@ int WeirdUnusedMenu_run(void)
     int selection;
     int action;
 
-    if (lbl_803DD713 == 0)
+    if (gWeirdMenuPhase == 0)
     {
         selection = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_GET_SELECTION)))();
         action = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_GET_ACTION)))();
@@ -99,12 +99,12 @@ int WeirdUnusedMenu_run(void)
             else
             {
                 Sfx_PlayFromObject(0, SFXqu_shortsob1);
-                lbl_803DD712 = 0;
-                lbl_803DD713 = 1;
-                lbl_8031AD20.widgetFlagsA =
-                    (u16)(lbl_8031AD20.widgetFlagsA | WIDGET_FLAG_SAVING);
-                lbl_8031AD20.widgetFlagsB =
-                    (u16)(lbl_8031AD20.widgetFlagsB | WIDGET_FLAG_SAVING);
+                gWeirdMenuSaveTimer = 0;
+                gWeirdMenuPhase = 1;
+                gWeirdMenuWidgetWork.widgetFlagsA =
+                    (u16)(gWeirdMenuWidgetWork.widgetFlagsA | WIDGET_FLAG_SAVING);
+                gWeirdMenuWidgetWork.widgetFlagsB =
+                    (u16)(gWeirdMenuWidgetWork.widgetFlagsB | WIDGET_FLAG_SAVING);
                 (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))();
             }
         }
@@ -116,38 +116,38 @@ int WeirdUnusedMenu_run(void)
             buttonDisable(0, 0x300);
         }
     }
-    else if (lbl_803DD713 == 1)
+    else if (gWeirdMenuPhase == 1)
     {
-        if ((s8)lbl_803DD712 == 0)
+        if ((s8)gWeirdMenuSaveTimer == 0)
         {
             saveGame_save();
         }
-        *(char*)&lbl_803DD712 = (int)((f32)(s8)lbl_803DD712 + timeDelta);
-        if ((f32)(s8)lbl_803DD712 >= lbl_803E1DF0)
+        *(char*)&gWeirdMenuSaveTimer = (int)((f32)(s8)gWeirdMenuSaveTimer + timeDelta);
+        if ((f32)(s8)gWeirdMenuSaveTimer >= gWeirdMenuSaveTimerLimit)
         {
-            lbl_803DD713 = 0;
-            lbl_8031AD20.widgetFlagsA =
-                (u16)(lbl_8031AD20.widgetFlagsA & ~WIDGET_FLAG_SAVING);
-            lbl_8031AD20.widgetFlagsB =
-                (u16)(lbl_8031AD20.widgetFlagsB & ~WIDGET_FLAG_SAVING);
+            gWeirdMenuPhase = 0;
+            gWeirdMenuWidgetWork.widgetFlagsA =
+                (u16)(gWeirdMenuWidgetWork.widgetFlagsA & ~WIDGET_FLAG_SAVING);
+            gWeirdMenuWidgetWork.widgetFlagsB =
+                (u16)(gWeirdMenuWidgetWork.widgetFlagsB & ~WIDGET_FLAG_SAVING);
             (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))();
             (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SET_STATE)))(0);
         }
     }
 
-    lbl_803DD710 = (s16)(lbl_803DD710 + (framesThisStep << 3));
-    if (lbl_803DD710 > 0x8c)
+    gWeirdMenuScrollOffset = (s16)(gWeirdMenuScrollOffset + (framesThisStep << 3));
+    if (gWeirdMenuScrollOffset > 0x8c)
     {
-        lbl_803DD710 = 0x8c;
+        gWeirdMenuScrollOffset = 0x8c;
     }
     return 0;
 }
 
 void WeirdUnusedMenu_release(void)
 {
-    textureFree(lbl_803DD71C);
-    textureFree(lbl_803DD718);
-    textureFree(lbl_803DD714);
+    textureFree(gWeirdMenuTextureA);
+    textureFree(gWeirdMenuTextureB);
+    textureFree(gWeirdMenuTextureC);
     warpToMap(0, 1);
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }
@@ -155,13 +155,13 @@ void WeirdUnusedMenu_release(void)
 #pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {
-    lbl_803DD71C = textureLoadAsset(0x31e);
-    lbl_803DD718 = textureLoadAsset(0x310);
-    lbl_803DD714 = textureLoadAsset(0x31f);
-    lbl_803DD720 = gameTextGet(0);
+    gWeirdMenuTextureA = textureLoadAsset(0x31e);
+    gWeirdMenuTextureB = textureLoadAsset(0x310);
+    gWeirdMenuTextureC = textureLoadAsset(0x31f);
+    gWeirdMenuTextHandle = gameTextGet(0);
     (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(*(int*)(*gTitleMenuLinkInterface +
         TITLEMENULINK_SETUP_WIDGETS)))(
-        (u32*)&lbl_8031AD20, 2, 0, lbl_8031AD98, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
-    lbl_803DD710 = 0;
-    lbl_803DD713 = 0;
+        (u32*)&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
+    gWeirdMenuScrollOffset = 0;
+    gWeirdMenuPhase = 0;
 }
