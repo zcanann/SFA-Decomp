@@ -357,7 +357,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             {
                 animUpdate->rotOffsetX = animUpdate->rotOffsetX + 0xffff;
             }
-            animUpdate->rotOffsetY = obj[1] - refObj[1];
+            animUpdate->rotOffsetY = obj[1] - (u16)refObj[1];
             if (0x8000 < animUpdate->rotOffsetY)
             {
                 animUpdate->rotOffsetY = animUpdate->rotOffsetY - 0xffff;
@@ -366,7 +366,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             {
                 animUpdate->rotOffsetY = animUpdate->rotOffsetY + 0xffff;
             }
-            animUpdate->rotOffsetZ = refObj[2] - obj[2];
+            animUpdate->rotOffsetZ = (u16)refObj[2] - (u16)obj[2];
             if (0x8000 < animUpdate->rotOffsetZ)
             {
                 animUpdate->rotOffsetZ = animUpdate->rotOffsetZ - 0xffff;
