@@ -103,7 +103,7 @@ void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimbossfire_update(int obj)
 {
     extern u32 randomGetRange(int min, int max);
-    uint bitVal;
+    u32 bitVal;
     ModelLightStruct* light;
     int ref;
     DimbossfireState* state;
@@ -208,7 +208,7 @@ void dimbossfire_update(int obj)
         if (state->activeTimer <= lbl_803E4DA0)
         {
             state->activeTimer = *(f32*)&lbl_803E4DA0;
-            if (*(uint*)&state->light != 0)
+            if (*(u32*)&state->light != 0)
             {
                 ModelLightStruct_free(state->light);
                 state->light = 0;
@@ -236,7 +236,7 @@ void dimbossfire_update(int obj)
 void dimbossfire_init(int obj, u32 arg2, int placement)
 {
     extern u32 randomGetRange(int min, int max);
-    uint ua;
+    u32 ua;
     u8 randVal;
     int state;
 

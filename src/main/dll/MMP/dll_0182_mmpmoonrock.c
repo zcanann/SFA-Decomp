@@ -213,8 +213,8 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
-    extern undefined8 ObjGroup_RemoveObject();
-    ObjGroup_RemoveObject((uint)obj, 4);
+    extern u64 ObjGroup_RemoveObject();
+    ObjGroup_RemoveObject((u32)obj, 4);
     (*gCarryableInterface)->free(obj);
 }
 
@@ -313,7 +313,7 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
 
 void mmp_moonrock_init(int obj, int param2)
 {
-    extern undefined4 ObjGroup_AddObject();
+    extern u32 ObjGroup_AddObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
@@ -355,7 +355,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     extern f32 Vec_distance(void* a, void* b);
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     int i;
     int count;
     int* list;

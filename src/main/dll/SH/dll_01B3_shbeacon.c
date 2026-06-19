@@ -26,7 +26,7 @@ typedef struct ShBeaconPlacement
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern void gameBitDecrement(int eventId);
 extern f32 timeDelta;

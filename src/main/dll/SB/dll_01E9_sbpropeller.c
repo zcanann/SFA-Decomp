@@ -177,7 +177,7 @@ void SB_Propeller_update(int obj)
 void SB_Propeller_init(GameObject* obj, int placement)
 {
     ObjAnimComponent* objAnim;
-    uint randVal;
+    u32 randVal;
     SBPropellerState* state;
 
     objAnim = (ObjAnimComponent*)obj;

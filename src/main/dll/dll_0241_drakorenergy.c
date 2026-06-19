@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern u32 randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);

@@ -168,7 +168,7 @@ void SB_KyteCage_update(int obj)
 {
     extern int* ObjList_GetObjects(int* out_head, int* out_count);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     SBKyteCageState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.resetHitboxFlags =
         (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);

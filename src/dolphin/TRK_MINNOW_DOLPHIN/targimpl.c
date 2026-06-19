@@ -188,7 +188,7 @@ DSError TRKValidMemory32(const void* addr, size_t length, ValidMemoryOptions rea
 #ifdef __MWERKS__ // clang-format off
 static asm void TRK_ppc_memcpy(register void* dest, register const void* src, register int n, register u32 param_4, register u32 param_5){
 	#define msr		r8
-	#define byte	r9
+	#define u8	r9
 	#define count	r10
 		nofralloc
 
@@ -202,12 +202,12 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 		mtmsr param_5
 		sync
 
-		lbzx byte, count, src
+		lbzx u8, count, src
 
 		mtmsr param_4
 		sync
 
-		stbx byte, count, dest
+		stbx u8, count, dest
 
 		addi count, count, 1
 
@@ -218,7 +218,7 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 
 		blr
 	#undef count
-	#undef byte
+	#undef u8
 	#undef msr
 }
 #endif // clang-format on
@@ -1157,7 +1157,7 @@ BOOL TRKTargetStopped(void)
  * @note Size: TODO
  */
 
-void TRKTargetSetStopped(uint stopped)
+void TRKTargetSetStopped(u32 stopped)
 {
 	gTRKState.isStopped = stopped;
 }

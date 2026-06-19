@@ -5,7 +5,7 @@
  * fully opaque. */
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
 
@@ -104,7 +104,7 @@ void dimbossicesmash_update(u8* obj)
     u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
-    uint triggerBit;
+    u32 triggerBit;
     int alphaVal;
     s16 cnt;
     int fadeDuration;

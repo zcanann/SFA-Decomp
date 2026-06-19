@@ -19,7 +19,7 @@ typedef struct DimicewallPlacement
     s16 shatterGameBit;
 } DimicewallPlacement;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 

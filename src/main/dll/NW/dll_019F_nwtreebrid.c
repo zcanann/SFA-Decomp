@@ -14,7 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
 extern int ObjGroup_FindNearestObject(int group, int obj, float* outDist);
 extern void ObjPath_GetPointWorldPosition(int obj, int param2, float* outX, float* outY, float* outZ, int param6);

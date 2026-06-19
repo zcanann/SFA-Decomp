@@ -9,7 +9,7 @@
 #include "main/objseq.h"
 
 extern int ObjMsg_SendToObjects();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */

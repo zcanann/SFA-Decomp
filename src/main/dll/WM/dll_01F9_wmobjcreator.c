@@ -13,7 +13,7 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern u8 framesThisStep;
 extern u32 randomGetRange(int min, int max);
@@ -141,7 +141,7 @@ STATIC_ASSERT(offsetof(WmWallcrawlerSpawnSetup, heightOffset) == 0x1C);
 
 void WM_ObjCreator_update(int obj)
 {
-    extern undefined8 GameBit_Set(int eventId, int value); /* #57 */
+    extern u64 GameBit_Set(int eventId, int value); /* #57 */
     extern void* ObjGroup_GetObjects(); /* #57 */
     /* setup/spawned/n are FN-SCOPE on purpose: live-range splitting
        re-creates per-arm webs in the retail saved-reg spread, where

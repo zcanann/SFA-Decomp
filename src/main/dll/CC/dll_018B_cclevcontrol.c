@@ -16,8 +16,8 @@
 #include "main/objanim_update.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);

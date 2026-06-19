@@ -69,7 +69,7 @@ void dll_98_func00_nop(void)
 {
 }
 
-void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int arg5, int extraArgs)
+void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
     GfxBuf buf;
     u8* table = (u8*)(int)lbl_803178B0;
@@ -103,7 +103,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     entry[3].tex = table + 0x1dc;
     entry[3].mode = 0x400000;
     entry[3].x = lbl_803E1318;
-    if ((uint)extraArgs != 0)
+    if ((u32)extraArgs != 0)
     {
         entry[3].y = lbl_803E1328;
     }
@@ -117,7 +117,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     entry[4].tex = table + 0x1dc;
     entry[4].mode = 0x4000;
     entry[4].x = lbl_803E1318;
-    if ((uint)extraArgs != 0)
+    if ((u32)extraArgs != 0)
     {
         entry[4].y = lbl_803E1330;
     }
@@ -138,7 +138,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     entry[6].tex = table + 0x1dc;
     entry[6].mode = 0x400000;
     entry[6].x = lbl_803E1318;
-    if ((uint)extraArgs != 0)
+    if ((u32)extraArgs != 0)
     {
         entry[6].y = lbl_803E1328;
     }
@@ -152,7 +152,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     entry[7].tex = table + 0x1dc;
     entry[7].mode = 0x4000;
     entry[7].x = lbl_803E1318;
-    if ((uint)extraArgs != 0)
+    if ((u32)extraArgs != 0)
     {
         entry[7].y = lbl_803E1330;
     }
@@ -172,7 +172,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.ctx = sourceObj;
     buf.unk_44 = (s16)variant;
     buf.pos[0] = lbl_803E1318;
-    if ((uint)extraArgs != 0)
+    if ((u32)extraArgs != 0)
     {
         buf.pos[1] = lbl_803E1338;
     }
@@ -203,7 +203,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)buf.ctx != 0)
+        if ((u32)buf.ctx != 0)
         {
             buf.pos[0] += *(f32*)(buf.ctx + 0x18);
             buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
@@ -229,6 +229,6 @@ void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int ar
         anim = 0x3f3;
     }
     (*gModgfxInterface)
-        ->spawnEffect(&buf, 0, 0x12, (uint)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10,
+        ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10,
                       table + 0x168, anim, 0);
 }

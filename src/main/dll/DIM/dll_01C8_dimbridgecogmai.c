@@ -37,7 +37,7 @@ typedef struct DimbridgecogmaiPlacement
     s16 unk1E;
 } DimbridgecogmaiPlacement;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
 extern f32 lbl_803E4900;

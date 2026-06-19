@@ -39,7 +39,7 @@ extern f32 lbl_803E15C0;
 extern f32 lbl_803E15C4;
 extern f32 lbl_803E15C8;
 
-void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
+void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5,
                    u8* extraArgs)
 {
     struct

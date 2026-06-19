@@ -9,8 +9,8 @@
  */
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);

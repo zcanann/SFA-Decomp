@@ -92,9 +92,9 @@ fail:
     return 0;
 }
 
-void AttractMovie_GetBufferSizes(uint* movieOrReadBufferSize, int* yTextureBufferSize,
+void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize,
                                  int* uTextureBufferSize, int* vTextureBufferSize,
-                                 uint* audioBufferSize, int* thpWorkBufferSize)
+                                 u32* audioBufferSize, int* thpWorkBufferSize)
 {
     AttractMoviePlayer* player;
     u32 movieOrReadSize;

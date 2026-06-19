@@ -21,7 +21,7 @@ extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
 extern int objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);

@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern u32 ObjHits_DisableObject();
@@ -204,7 +204,7 @@ void dimlogfire_update(int obj)
     int b;
     int rand;
     s16 alpha;
-    uint light;
+    u32 light;
     int tricky;
     DimLogFireState* state;
     struct
@@ -262,7 +262,7 @@ void dimlogfire_update(int obj)
             GameBit_Set(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
         }
         tricky = getTrickyObject();
-        if ((uint)tricky != 0)
+        if ((u32)tricky != 0)
         {
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
             {

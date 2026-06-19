@@ -39,7 +39,7 @@ typedef struct IMIceMountainState
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 extern void getLActions();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);

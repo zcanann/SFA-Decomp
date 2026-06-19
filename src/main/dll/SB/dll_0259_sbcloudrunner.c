@@ -113,15 +113,15 @@ enum
 
 extern u32 GameBit_Get(int eventId);
 extern void *ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjPath_GetPointModelMtx();
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u32 ObjPath_GetPointModelMtx();
+extern u32 ObjPath_GetPointWorldPosition();
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern u32 FUN_80293f90();
+extern u32 FUN_80294964();
 
-extern undefined4 *DAT_803dd6e4;
+extern u32 *DAT_803dd6e4;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6908;

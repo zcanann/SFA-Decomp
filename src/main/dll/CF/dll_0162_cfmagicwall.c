@@ -25,7 +25,7 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 /* a quarter turn: the wall is invisible when viewed from behind */
 #define CFMAGICWALL_SIDE_ANGLE 0x4000
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int Obj_GetYawDeltaToObject();
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);

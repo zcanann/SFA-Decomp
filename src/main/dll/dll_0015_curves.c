@@ -31,7 +31,7 @@
 #include <string.h>
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -197,14 +197,14 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     f32 heights[5];
 
     object = (GameObject*)obj;
-    if ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
+    if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
     {
         sum0 = lbl_803E0668;
         count = 0;
         sum1 = sum0;
         sum2 = sum0;
         sum3 = sum0;
-        for (i = 0; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
+        for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
             hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY,
@@ -493,22 +493,22 @@ void fn_800E5CBC(short* obj, int state)
         collision->tiltPitchTarget = pitch;
         collision->tiltPitch =
             collision->tiltPitch +
-            ((int)((uint)framesThisStep * ((int)pitch - (int)collision->tiltPitch)) >> 3);
+            ((int)((u32)framesThisStep * ((int)pitch - (int)collision->tiltPitch)) >> 3);
         angle = getAngle(dx, dy);
         pitch = -(0x4000 - angle);
         collision->tiltRollTarget = pitch;
         collision->tiltRoll =
             collision->tiltRoll +
-            ((int)((uint)framesThisStep * ((int)pitch - (int)collision->tiltRoll)) >> 3);
+            ((int)((u32)framesThisStep * ((int)pitch - (int)collision->tiltRoll)) >> 3);
     }
     else
     {
         collision->tiltPitch =
             collision->tiltPitch -
-            ((int)((int)collision->tiltPitch * (uint)framesThisStep) >> 3);
+            ((int)((int)collision->tiltPitch * (u32)framesThisStep) >> 3);
         collision->tiltRoll =
             collision->tiltRoll -
-            ((int)((int)collision->tiltRoll * (uint)framesThisStep) >> 3);
+            ((int)((int)collision->tiltRoll * (u32)framesThisStep) >> 3);
         normalZ = lbl_803E0668;
         collision->surfaceNormalX = lbl_803E0668;
         collision->surfaceNormalY = lbl_803E068C;
@@ -1015,8 +1015,8 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
     int queryMode;
     RomCurvePoint* outPoint;
-    uint remaining;
-    uint pairCount;
+    u32 remaining;
+    u32 pairCount;
     RomCurvePoint** hitPoints;
     RomCurvePoint** hitPointCursor;
 
@@ -1055,7 +1055,7 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
     return sCurvesHitPoints;
 }
 
-void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValue, f32 step)
+void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step)
 {
     extern int ObjHits_IsObjectEnabled(int obj);
     int flags;
@@ -1172,7 +1172,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
             setMatrixFromObjectPos(m1b, &s1b);
             i = 0;
             byteOff = 0;
-            for (; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
+            for (; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
             {
                 pf = (f32*)((u8*)collision->segmentLocalPoints + byteOff);
                 Matrix_TransformPoint(m1b, pf[0], pf[1], pf[2],
@@ -1187,7 +1187,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 *(char*)&collision->surfaceFlags = hitDetectFn_80067958((int)curveObj,
                                                                         collision->traceStart,
                                                                         collision->points,
-                                                                        (int)(uint)collision->pointCounts >>
+                                                                        (int)(u32)collision->pointCounts >>
                                                                         CURVES_POINT_COUNT_SEGMENT_SHIFT,
                                                                         collision->segmentHitPlanes, 0);
                 collision->surfaceCounter = collision->traceHitCount;
@@ -1229,7 +1229,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 fn_800E5F1C((int)curveObj, collision);
             }
             memcpy(collision->traceStart, collision->points,
-                   ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
+                   ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
         }
         if ((s32)(state->flags & 0x800) != 0)
         {
@@ -1334,7 +1334,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
             setMatrixFromObjectPos(m2b, &s2b);
             i = 0;
             byteOff = 0;
-            for (; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
+            for (; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
             {
                 pf = (f32*)((u8*)collision->segmentLocalPoints + byteOff);
                 Matrix_TransformPoint(m2b, pf[0], pf[1], pf[2],
@@ -1345,7 +1345,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
                 byteOff = byteOff + 0xc;
             }
             memcpy(collision->traceStart, collision->points,
-                   ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
+                   ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
             if ((s32)(state->flags & 1) != 0)
             {
                 fn_800E5F1C((int)curveObj, collision);
@@ -1400,7 +1400,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, uint updateValu
         if ((*(void**)(*(int*)(curveObj + 0x18) + 0x58) != NULL) &&
             (ObjHits_IsObjectEnabled(*(int*)(curveObj + 0x18)) != 0))
         {
-            outOff = (uint) * (u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
+            outOff = (u32) * (u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
             Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) + outOff,
                                   ((GameObject*)curveObj)->anim.worldPosX, ((GameObject*)curveObj)->anim.worldPosY, ((GameObject*)curveObj)->anim.worldPosZ,
                                   (f32*)(curveObj + 6), (f32*)(curveObj + 8), (f32*)(curveObj + 10));
@@ -1501,7 +1501,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         ptsRead = ptsWalk;
         radWrite = radii;
         c = lbl_803E06C0;
-        for (i = 0; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
+        for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             pin = (f32*)((u8*)collision->segmentLocalPoints + byteOff);
             Matrix_TransformPoint(m, pin[0], pin[1], pin[2], ptsWalk,
@@ -1518,7 +1518,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         minX = lbl_803E06A8;
         minZ = lbl_803E06A8;
         minY = lbl_803E06A8;
-        for (n = 0; n < ((int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
+        for (n = 0; n < ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
             r = *radWrite;
             v = *ptsRead + r;
@@ -1658,7 +1658,7 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32* localPointP
     state->activeTimer = 0xa;
 }
 
-void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int subtype)
+void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int subtype)
 {
     memset(state, 0, CURVES_COLLISION_STATE_SIZE);
     state->subtype = (s8)subtype;
@@ -1667,7 +1667,7 @@ void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int s
     state->heightPadding = 5;
 }
 
-uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
+u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
 {
     if (checkStoryBits == 0)
     {
@@ -1682,7 +1682,7 @@ uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
     return 0;
 }
 
-void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
+void saveFileStruct_setCheatActive(u32 optionIndex, u8 active)
 {
     volatile SaveData* save;
 

@@ -78,7 +78,7 @@ typedef struct DfshObjCreatorState
 
 void dfsh_objcreator_update(int obj)
 {
-    extern uint GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
     void* resource;

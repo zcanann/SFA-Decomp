@@ -119,7 +119,7 @@ extern void* memcpy(void* dst, const void* src, unsigned long n);
 
 #pragma scheduling off
 #pragma peephole off
-void explosion_release(uint obj)
+void explosion_release(u32 obj)
 {
     int i;
 

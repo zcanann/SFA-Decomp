@@ -31,7 +31,7 @@ extern void getAmbientColor(int param_1, u8* blue, u8* green, u8* red);
 extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
 extern void selectTexture(void* texture, int param_2);
-extern void setTextColor(undefined4* objAndParam, u8 blue, u8 green, u8 red, int alpha);
+extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern int randomGetRange(int min, int max);
 extern u8 framesThisStep;
@@ -385,7 +385,7 @@ typedef struct DfropenodePlacement
 
 typedef struct DfropenodeRenderState
 {
-    undefined4 objAndParam;
+    u32 objAndParam;
     u8 red;
     u8 green;
     u8 blue;
@@ -405,7 +405,7 @@ void dfropenode_render(int obj, int p2, int p3)
     s16 matrix[0x30];
     f32 originalScale;
 
-    renderState.objAndParam = (undefined4)p2;
+    renderState.objAndParam = (u32)p2;
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
     objDef = *(int*)&objAnim->placementData;

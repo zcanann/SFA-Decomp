@@ -83,7 +83,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
@@ -170,7 +170,7 @@ void mmp_asteroid_re_update(int obj)
 {
     extern void CameraShake_Start(f32 a, f32 b, f32 c);
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & 0x80) == 0)
     {

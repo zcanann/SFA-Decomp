@@ -30,13 +30,13 @@ typedef struct WmColumnPlacement
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
 extern void GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_FindNearestObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_FindNearestObject();
+extern u32 ObjGroup_AddObject();
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 Vec_distance(float* posA, float* posB);
 extern int Obj_GetPlayerObject(void);
-extern uint playerGetStateFlag310(int obj);
+extern u32 playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
 
 extern f32 lbl_803E37B8; /* 1.0: render scale */
