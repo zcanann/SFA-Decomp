@@ -458,8 +458,8 @@ void fn_801C4664(void* objArg)
     int animEvents;
 
     obj = (DFSHLaserBeamObject*)objArg;
-    runtime = obj->runtime;
     config = obj->config;
+    runtime = obj->runtime;
     playerObj = Obj_GetPlayerObject();
 
     if ((obj->flags06 & 0x4000) != 0)
