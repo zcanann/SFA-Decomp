@@ -12,6 +12,7 @@
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
+#include "main/track_dolphin.h"
 
 typedef struct TrackP6Entry
 {
@@ -2475,9 +2476,9 @@ void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endP
 
 extern int shouldDrawShadows(void);
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
-extern int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8, int p9);
+
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
-extern void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
+
 extern u8 gShadowDrawScratch[];
 extern int gShadowVolumeBuffer;
 extern int lbl_803DCEE0;
@@ -3038,7 +3039,7 @@ extern int lbl_803DCF68;
 extern s8 lbl_803DCF60;
 extern const f32 lbl_803DECE8;
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e);
+
 
 int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 {

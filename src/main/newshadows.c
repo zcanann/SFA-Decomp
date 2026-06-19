@@ -2,6 +2,7 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/camera.h"
+#include "main/sfa_extern_decls.h"
 extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
@@ -2487,7 +2488,7 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e);
 extern void GXSetCopyFilter(int a, void* b, int c, void* d);
-extern int isWidescreen(void);
+
 extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);

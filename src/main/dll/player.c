@@ -5,6 +5,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_state.h"
+#include "main/dll/player.h"
 
 void fn_802960E4(void)
 {
@@ -1508,7 +1509,7 @@ extern f32 lbl_803E8030;
 extern f32 lbl_803E8078;
 extern f32 lbl_803E807C;
 extern f32 lbl_803E8080;
-extern int fn_802AD2F4(int obj, int inner, int state);
+
 
 int fn_802A5384(int obj, int state)
 {
@@ -7133,8 +7134,8 @@ int fn_802AD2F4(int obj, int inner, int state)
 extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();
 extern int getCurUiDll(void);
-extern void fn_802B249C(int obj, int inner, int state);
-extern void fn_802AFB0C(int obj, int inner, int state);
+
+
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];
 extern int lbl_802C2C50[];

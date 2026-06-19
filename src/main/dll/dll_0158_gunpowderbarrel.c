@@ -28,6 +28,7 @@
 #include "main/dll/player_motion.h"
 #include "main/objlib.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_0158_gunpowderbarrel.h"
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). The three
  * descriptor fns each read only unk1A; unk1C/unk1E are documented for the
@@ -52,8 +53,8 @@ extern void timer_clearManualFlags();
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
-extern void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer);
-extern void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b);
+
+
 extern f32 timeDelta;
 extern f32 lbl_803E42C0;
 extern f32 lbl_803E42C4;
@@ -98,7 +99,7 @@ extern f32 lbl_803E4338;
 extern f32 gGunpowderBarrelPi;
 extern f32 gGunpowderBarrelHalfAngleUnit;
 extern f32 lbl_803DBE80;
-extern void gunpowderbarrel_launchAtTarget(int obj, u8 flag);
+
 extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
 extern f32 lbl_803E42C8;
 extern f32 lbl_803E42CC;

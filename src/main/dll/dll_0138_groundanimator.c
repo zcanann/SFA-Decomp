@@ -11,6 +11,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/gamebits.h"
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
+#include "main/track_dolphin.h"
 
 typedef struct GroundanimatorPlacement
 {
@@ -59,7 +60,7 @@ extern void fn_801923F8(int* cfg);
 extern const f32 lbl_803E3FB8;
 extern void* mapBlockFn_800606ec(int* obj, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern void* fn_800606DC(int* obj, int idx);
+
 extern void fn_800605F0(void* cell, void* out);
 extern void fn_8006058C(void* cell, void* in);
 extern f32 lbl_803E3FA8;

@@ -12,4 +12,10 @@ void cacheQueueWait(int sync);
 void copyToCache(void *dst, void *src, int count);
 void memcpyToCache(void *dst, void *src, int count);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void mmFree(void* p);
+void mmFreeDeferred(void* p);
+void mmInit(void);
+
 #endif /* MAIN_MM_H_ */

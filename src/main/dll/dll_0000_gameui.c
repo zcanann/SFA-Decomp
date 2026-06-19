@@ -44,6 +44,7 @@
 #include "main/dll/maybeTemplate.h"
 #include "main/pad.h"
 #include "main/gamebits.h"
+#include "main/dll/tricky.h"
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;
 extern u16 lbl_803DE3F4;
@@ -265,7 +266,7 @@ extern s16 gYButtonUsedBit;
 extern s16 gYButtonActiveBit;
 extern f32 gYButtonIconAnim;
 extern f32 lbl_803DBA84;
-extern void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+
 extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern float mathSinf(float x);
 extern GridEntry lbl_8031B818[];
@@ -384,8 +385,8 @@ extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
 extern void Camera_ApplyCurrentViewport(int a);
-extern void hudDrawAirMeter(void);
-extern void fearTestMeterDraw(void);
+
+
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
 extern f32 lbl_803E1E70;

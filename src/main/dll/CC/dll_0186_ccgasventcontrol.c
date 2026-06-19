@@ -19,6 +19,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/dll/CC/dll_0186_ccgasventcontrol.h"
 
 #define CCGASVENT_GROUP 0x3f
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -47,7 +48,7 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 #pragma peephole on
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4620;
-extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;

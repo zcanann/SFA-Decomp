@@ -1,4 +1,5 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/k_tan.h"
 
 typedef struct Vec3f {
     float x;
@@ -6,7 +7,7 @@ typedef struct Vec3f {
     float z;
 } Vec3f;
 
-extern float invSqrt(float x);
+
 extern float fastCastS16ToFloat(s16* p);
 extern float lbl_803E7AB8;
 extern float lbl_803E7BC8;

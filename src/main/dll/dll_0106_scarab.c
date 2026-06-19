@@ -14,6 +14,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/dll/dll_0106_scarab.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -60,7 +61,7 @@ extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void playerAddMoney(int obj, int amount);
-extern int scarab_sweptCollide(int obj);
+
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void* p5, int obj, int p7, int p8, int p9, int p10);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);

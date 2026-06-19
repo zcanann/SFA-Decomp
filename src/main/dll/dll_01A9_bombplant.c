@@ -8,6 +8,7 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/dll/dll_01A9_bombplant.h"
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -16,7 +17,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void fn_801D29E4(int* obj, int* p2);
+
 extern f32 lbl_803E5378;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

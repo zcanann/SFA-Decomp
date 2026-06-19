@@ -25,6 +25,7 @@
 #include "main/dll/CF/CFBaby.h"
 #include "main/objprint_dolphin.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/dll_011B_landedarwing.h"
 
 typedef struct LandedArwingPlacement
 {
@@ -85,7 +86,7 @@ extern void fn_8022F27C(int obj);
 extern int fn_802972A8(int obj);
 
 
-extern void landed_arwing_renderPathEffects(int obj);
+
 
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 

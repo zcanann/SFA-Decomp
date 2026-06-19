@@ -12,6 +12,7 @@
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
+#include "main/track_dolphin.h"
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -6177,7 +6178,7 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     return result;
 }
 
-extern f32 fn_8006C670(void);
+
 extern struct piIndMtx lbl_802C1E10;
 extern f32 lbl_80396820[3][4];
 extern void selectReflectionTexture(int id);
@@ -7262,7 +7263,7 @@ extern int GXReadDrawSync(void);
 extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8 * a, u8 * b, u8 * c, u8 * d, u8 * e);
-extern void gxErrorFn_80060b40(void);
+
 extern void modelFn_800292e0(void);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
 extern void GXSetCPUFifo(void* fifo);

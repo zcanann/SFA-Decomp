@@ -37,6 +37,7 @@
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/firecrawler.h"
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -76,7 +77,7 @@ extern u8 gCrawlerModelChainIds[];
 extern char gCrawlerDescriptorTable[];
 extern f32 lbl_803E2CBC;
 extern u8 gCrawlerReactionTables[];
-extern void crawler_playReactionEffects(int* obj, int* st);
+
 extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;

@@ -6,6 +6,7 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/voice_id.h"
+#include "main/audio/synth_queue.h"
 
 typedef struct SynthDelayedNode
 {
@@ -47,8 +48,8 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
-extern void synthQueueHandle(u32 handle);
-extern void synthFreeHandle(u32 handle);
+
+
 extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
 extern u8 lbl_803BCD90[];

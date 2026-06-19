@@ -39,6 +39,7 @@
 #include "main/objseq.h"
 #include "string.h"
 #include "main/gamebits.h"
+#include "main/dll/dll_00CA_icebaddie.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -122,7 +123,7 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 extern void Camera_DisableViewYOffset(void);
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
-extern void iceBaddie_updateEffectAnchors(int obj, int state);
+
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];
 extern int Obj_GetPlayerObject(void);

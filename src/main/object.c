@@ -17,6 +17,8 @@
 #include "main/texture.h"
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
+#include "main/object.h"
+#include "main/track_dolphin.h"
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
@@ -61,8 +63,8 @@ extern s16* gObjSeqToObjIdTable;
 extern char sObjUnknownTypeUsingDummyObjectWarning[];
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
-extern u8* loadObjectFile(int id);
-extern int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags);
+
+
 extern void modelInitBones(f32 scale, void* model);
 extern int shadowInit(void* obj, int cursor, int arg);
 extern void debugPrintf(char* fmt, ...);
@@ -83,8 +85,8 @@ extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
 extern u32 gObjUpdateFlags;
-extern void objFn_80065604(void);
-extern void Obj_UpdateModelBlendStates(void);
+
+
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 

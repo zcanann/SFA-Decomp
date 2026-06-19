@@ -7,6 +7,7 @@
 #include "main/sky_80080E58_shared.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
+#include "main/maketex.h"
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
@@ -14,7 +15,7 @@ extern void fn_80137948(char* fmt, ...);
 extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
-extern void endObjSequence(int seq);
+
 extern u8 lbl_80399E50[];
 extern int lbl_803DD064;
 extern int lbl_803DD084;
@@ -98,7 +99,7 @@ extern void fn_80297254(void* obj);
 extern void fn_8029726C(void* obj);
 extern void fn_80297284(void* obj);
 extern void gameTextLoadTaskText(int textId);
-extern void cameraFocusNpc(int param1, u8* obj);
+
 extern int lbl_803DB724;
 extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;

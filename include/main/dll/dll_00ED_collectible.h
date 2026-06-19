@@ -16,4 +16,8 @@ int collectible_getObjectTypeId(void);
 void collectible_hitDetect(void);
 int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void collectible_updateIdleMotion(int obj);
+
 #endif /* MAIN_DLL_GFXEMIT_H_ */

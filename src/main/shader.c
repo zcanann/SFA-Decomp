@@ -15,6 +15,7 @@
 #include "main/voxmaps.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/dll/savegame.h"
+#include "main/track_dolphin.h"
 extern float ABS();
 extern u32 FUN_8000693c();
 extern u32 FUN_80006958();
@@ -881,7 +882,7 @@ extern u8 lbl_803DCE98;
 extern u8* lbl_803DCE8C;
 extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
 extern int mapCheckCurBlocks(int v);
-extern void* MapBlock_loadFromFile(int blockId);
+
 extern void MapBlock_init(void* blk);
 extern int textureLoad(int id, int param);
 extern void MapBlock_initHits(void* blk, int blockId);
@@ -1040,7 +1041,7 @@ void playerVecFn_8005a9b0(void)
 }
 
 extern int* lbl_803DCE9C;
-extern void setMapBlockFlag(void);
+
 extern char sTrackLoadBlockOverrunError[];
 
 void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)

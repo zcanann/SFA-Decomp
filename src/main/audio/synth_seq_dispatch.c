@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 extern int synthGetNextChannelEvent(u8 i);
 extern void synthInsertChannelEvent(int slot, int item);
 extern int gSynthCurrentVoice;
@@ -115,7 +116,7 @@ typedef struct
  * event for the channel.
  */
 extern int fn_8026CF78(u8 voice);
-extern float floorf(float x);
+
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;

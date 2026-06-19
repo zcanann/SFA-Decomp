@@ -19,6 +19,7 @@
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/dll_0284_shopitem.h"
 
 typedef struct ShopSparkleSpawn
 {
@@ -74,7 +75,7 @@ extern void lightningRender(void);
 extern int getHudHiddenFrameCount(void);
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
-extern void fn_801E8660(int obj);
+
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 extern int getAngle(float y, float x);

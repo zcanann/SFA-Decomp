@@ -31,6 +31,7 @@
 #include "main/texture.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_000B_dll0b.h"
 
 typedef struct ModgfxEffectSlot
 {
@@ -1851,7 +1852,7 @@ void dll_0B_func08(void* param)
     }
 }
 
-extern s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+
 
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {

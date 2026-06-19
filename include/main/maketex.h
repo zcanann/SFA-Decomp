@@ -52,4 +52,10 @@ void FUN_8007fb48(int param_1);
 void FUN_8007fb80(u32 param_1,u32 param_2,short param_3,u32 param_4,
                  u32 param_5,u32 param_6,u32 param_7,u32 param_8);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void seqClearTaskTexts(void);
+void endObjSequence(int seq);
+void cameraFocusNpc(int param1, u8* obj);
+
 #endif /* MAIN_MAKETEX_H_ */

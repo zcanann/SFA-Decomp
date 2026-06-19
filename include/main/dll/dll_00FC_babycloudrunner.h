@@ -14,4 +14,8 @@ int dll_14D_func08_ret_0(void);
 int dll_14D_getExtraSize_ret_8(void);
 void FUN_8017f0d4(int param_1);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void dll_FC_hitDetect(int* obj);
+
 #endif /* MAIN_DLL_DLL_14C_H_ */

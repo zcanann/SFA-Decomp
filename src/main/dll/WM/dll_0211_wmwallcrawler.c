@@ -21,6 +21,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
+#include "main/dll/WM/dll_0211_wmwallcrawler.h"
 
 typedef struct WmwallcrawlerState
 {
@@ -132,7 +133,7 @@ extern f32 lbl_803E600C;
 extern f32 lbl_803E6010;
 extern f32 lbl_803E6014;
 extern f32 lbl_803E6018;
-extern void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData);
+
 extern void vecRotateZXY(void* mtx, f32* vec);
 extern f32 lbl_803E5FB8;
 extern u16 gWallCrawlerVariantFlags[];

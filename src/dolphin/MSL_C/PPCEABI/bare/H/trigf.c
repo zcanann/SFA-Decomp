@@ -1,9 +1,10 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.h"
 
 #define __epsilon 3.45266983e-4f
 #define __HI(x) (((s32*)&x)[0])
 
-extern float fabsf__Ff(float x);
+
 extern const float __sincos_on_quadrant[];
 extern const float __sincos_poly[];
 

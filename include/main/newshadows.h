@@ -48,4 +48,11 @@ u16 FUN_8006dc08(u32 param_1,u8 param_2);
 void FUN_8006dca8(u64 param_1,double param_2,u32 param_3,u32 param_4,
                  u32 param_5,int param_6,int param_7);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void initFn_8006d020(void);
+f32 fn_8006C670(void);
+void drawReflectionTexture(void);
+void maybeHudFn_8006c91c(void);
+
 #endif /* MAIN_NEWSHADOWS_H_ */

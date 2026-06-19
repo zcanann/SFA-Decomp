@@ -18,6 +18,10 @@
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
+#include "main/gameloop.h"
+#include "main/sfa_extern_decls.h"
+#include "main/newshadows.h"
+#include "main/track_dolphin.h"
 extern u64 camcontrol_playTargetTypeSfx();
 extern u64 runLoadingScreens();
 
@@ -97,7 +101,7 @@ int getGameState(void)
 extern u8 gGameLoopInitComplete;
 extern void init(void);
 extern void checkReset(void);
-extern void gameLoop(void);
+
 
 void main(void)
 {
@@ -486,7 +490,7 @@ u32 GameBit_Get(int eventId)
     return result;
 }
 
-extern int isSaveGameLoading(void);
+
 extern void gameBitFn_800ea2e0(int a);
 extern char sGameBitSetDuringSaveLoadWarning[];
 #define GameBit_RequestSync gameBitFn_800ea2e0
@@ -635,39 +639,39 @@ extern void initLoadingScreenTextures(void);
 extern void mmInit(void);
 extern void gxTransformFn_8004a83c(void);
 extern void Camera_InitState(void);
-extern void doQueuedLoads(void);
+
 extern void initControllers(void);
 extern int mmSetFreeDelay(int v);
 extern void padUpdate(void);
 extern u8 audioInit(void);
 extern void allocSomething32bytes(void);
 extern u8 initLoadFiles(void);
-extern void initFn_8006d020(void);
+
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
 extern u32 getButtonsHeld(int port);
 extern void viFn_8004a56c(int arg);
-extern void fn_80137D28(void);
+
 extern void loadTextureFiles(void);
 extern void initMapBlocks(void);
-extern void ObjModel_InitResourceCaches(void);
-extern void gameTextInit(void);
-extern void fn_80137998(void);
-extern void initTextures(void);
+
+
+
+
 extern void mapInitFn_8006fccc(void);
 extern void initGameTimer(void);
-extern void ObjModel_InitRenderBuffers(void);
+
 extern void _initCardAndDsp(void);
 extern void fn_802B6F48(void);
 extern void loadTaskTexts(void);
-extern void gameTextInitFn_8001bd14(void);
+
 extern void initMaps(void);
 extern void initFn_800534f8(void);
 extern void titleScreenDrawFn_80093db4(void);
 extern int getDataFileSize(int id);
 extern void doNothing_beforeTitleScreen(void);
 extern void setDrawCloudsAndLights(int v);
-extern void askProgressiveScanMode(void);
+
 extern void initViewport(void);
 extern void tvInit(void);
 extern u8 GXNtsc480IntDf[];
@@ -1068,7 +1072,7 @@ extern u8 lbl_803DCAC4;
 extern int gGameLoopPendingUiDllId;
 extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
-extern void fn_801375A0(void);
+
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)

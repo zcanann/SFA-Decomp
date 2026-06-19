@@ -19,6 +19,7 @@
 #include "main/objhits.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
+#include "main/dll/MMP/dll_0182_mmpmoonrock.h"
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
@@ -281,7 +282,7 @@ void fn_801A80F0(int obj, u8 flag)
     }
 }
 
-extern void fn_801A7D74(int obj, u8 a, u8 b);
+
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4548;
 

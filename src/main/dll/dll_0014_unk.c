@@ -36,9 +36,10 @@ extern void OSReport(const char* fmt, ...);
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "string.h"
+#include "main/dll/dll_0014_unk.h"
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7,
                               int p8, int p9, int p10);
-extern int mathFn_800dbff0(float* point);
+
 extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
 extern void voxmaps_worldToGrid(f32* in, s16* out);

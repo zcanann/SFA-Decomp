@@ -5,6 +5,7 @@
 #include "main/mm.h"
 #include "main/camera.h"
 #include "main/texture.h"
+#include "main/modellight.h"
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -121,7 +122,7 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
 
 extern u8 gModelLightCount;
 extern void* gModelLightList[];
-extern void* objAllocLight(void* owner);
+
 extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8 * lt_obj, f32 * k0, f32 * k1, f32 * k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);

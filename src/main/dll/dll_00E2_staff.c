@@ -33,6 +33,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDraw.h"
 #include "string.h"
+#include "main/dll/dll_00E2_staff.h"
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -779,7 +780,7 @@ void staff_setHitReactValue(int* obj, s32 v)
     *p = v;
 }
 
-extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
+
 extern int getHudHiddenFrameCount(void);
 
 void staff_modelMtxFn(int* obj, int p4, int p5)

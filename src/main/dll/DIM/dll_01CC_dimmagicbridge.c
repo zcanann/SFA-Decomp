@@ -19,6 +19,7 @@
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DIM/dll_01CC_dimmagicbridge.h"
 
 typedef struct DimmagicbridgeFlameSeqFnState
 {
@@ -41,7 +42,7 @@ extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int matchVal, int obj, int flag);
 extern f32 lbl_803E4A18;
-extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
+
 extern int EmissionController_IsLingering(void* player);
 extern u8 framesThisStep;
 extern f32 lbl_803E4A00;

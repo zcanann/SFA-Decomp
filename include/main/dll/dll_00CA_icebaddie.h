@@ -13,4 +13,8 @@
 void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState *state);
 void iceBaddie_leaveWhirlpoolGroup(int obj, GroundBaddieState *state);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void iceBaddie_updateEffectAnchors(int obj, int state);
+
 #endif /* MAIN_DLL_ICEBADDIE_H_ */

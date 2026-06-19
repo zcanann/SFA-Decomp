@@ -12,6 +12,8 @@
 #include "main/sky_state.h"
 #include "main/mm.h"
 #include "string.h"
+#include "main/newshadows.h"
+#include "main/sfa_extern_decls.h"
 extern u32 FUN_80006934();
 extern u32 FUN_8000694c();
 extern u32 FUN_80006974();
@@ -1655,7 +1657,7 @@ extern void fn_80062894(void);
 extern void fn_80062808(void);
 extern u16 lbl_803DCEAC;
 extern u8 lbl_803DCE06;
-extern void drawReflectionTexture(void);
+
 void getVisibleObjects(s8 * opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
@@ -1672,7 +1674,7 @@ extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
 extern int getHudHiddenFrameCount(void);
-extern void updateReflectionTextures(void);
+
 extern u8 bEnableBlurFilter;
 extern f32 lbl_803DCE50;
 extern f32 lbl_803DCE4C;
@@ -2189,7 +2191,7 @@ void lightmap_sortTransparentDrawQueue(void)
     }
 }
 
-extern void maybeHudFn_8006c91c(void);
+
 extern int ObjList_PartitionForRender(int* count);
 extern int objUpdateOpacity(u8 * obj);
 extern void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, int* a, int* b, f32* depth, f32* out);

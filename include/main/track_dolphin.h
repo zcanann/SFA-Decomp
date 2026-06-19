@@ -110,4 +110,22 @@ void trackDolphin_initIntersectionBuffers(void);
 void FUN_80064030(u32 param_1,u32 param_2,int param_3);
 void FUN_80064384(int param_1);
 
+
+/* extern-cleanup: defining-file public prototypes */
+int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8, int p9);
+void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
+void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e);
+void initTextures(void);
+void fn_80060BB0(void);
+void* fn_800606DC(int* obj, int idx);
+void* fn_800606FC(int* obj, int idx);
+void gxErrorFn_80060b40(void);
+void* MapBlock_loadFromFile(int blockId);
+void setMapBlockFlag(void);
+void objFn_80065604(void);
+void setupToRenderMapBlock(int* block, void* posMtx);
+void fn_80062894(void);
+void fn_80062808(void);
+void renderGlows(void);
+
 #endif /* MAIN_TRACK_DOLPHIN_H_ */

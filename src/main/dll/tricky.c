@@ -26,6 +26,7 @@
 #include "main/texture.h"
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
+#include "main/dll/tricky.h"
 
 typedef struct GameUIWork10
 {
@@ -576,7 +577,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E1E80;
-extern void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c);
+
 
 void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, int p7)
 {

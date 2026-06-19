@@ -15,6 +15,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/pad.h"
+#include "main/dll/DIM/dll_01C6_dimcannon.h"
+#include "main/dll/dll_801b1d84.h"
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
@@ -25,9 +27,9 @@ extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
+
 extern f32 lbl_803E48B8;
-extern void DIMwooddoor_updateFallingDebris(int* obj);
+
 extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32* a, f32* b);

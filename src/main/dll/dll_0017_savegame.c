@@ -28,6 +28,7 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/dll_0016_screentransition.h"
 
 typedef struct SaveGameData
 {
@@ -90,7 +91,7 @@ extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
 extern void loadUiDll(int index);
-extern void screenTransitionFn_800d7b04(int duration, int type);
+
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddHealth(u8* player, int v);
 extern void* mmAlloc(int size, int type, int flag);

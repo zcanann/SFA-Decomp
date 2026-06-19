@@ -9,6 +9,7 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/vi.h"
 #include "main/pad.h"
+#include "main/sfa_extern_decls.h"
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
@@ -64,7 +65,7 @@ extern int saveFn_800e8508(void);
 extern void titleDoLoadSave(void);
 extern float titleScreenGetCamProgress(void);
 extern void titleScreenFn_80130464(u8 v);
-extern void setLinkNotRotated(void);
+
 extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
 extern void saveFn_8007d960(int);
@@ -90,7 +91,7 @@ extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
-extern void setLinkIsRotated(void);
+
 extern u8* lbl_803DD498;
 
 void n_attractmode_releaseMovieBuffers(void)

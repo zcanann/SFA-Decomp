@@ -32,6 +32,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/seqobj11e.h"
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -65,7 +66,7 @@ void fn_80152440(GameObject* obj, int p, int p3, int msg)
 /* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
  * follow, heading steps, landing sfx, light-pulse fx, child spark spawn. */
 
-extern int fn_80152370(int obj, int p2);
+
 extern void Obj_FreeObject(int* obj);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern u8 lbl_803DBCA8;

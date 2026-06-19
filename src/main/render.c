@@ -1,5 +1,6 @@
 #include "main/engine_shared.h"
-extern float floorf(float x);
+#include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+
 extern f32 lbl_803DE544;
 
 int getLActions(int a, int b, u16 idx)

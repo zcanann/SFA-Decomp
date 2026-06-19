@@ -24,6 +24,7 @@
 #include "main/dll/player_status.h"
 #include "main/objseq.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/CF/dll_0148_cfguardian.h"
 
 /* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
 typedef struct
@@ -147,8 +148,8 @@ extern f32 lbl_803E4150;
 extern f32 lbl_803E4154;
 extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
-extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
-extern int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
+
+
 extern int Curve_AdvanceAlongPath(int p1);
 extern int getAngle(float y, float x);
 extern int ObjHits_EnableObject();

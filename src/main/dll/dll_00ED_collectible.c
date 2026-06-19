@@ -29,6 +29,9 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/dll_00ED_collectible.h"
+#include "main/dll/DIM/dll_00C7_dim2roofrub.h"
+#include "main/dll/dll_00E4_flamethrowerspe.h"
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -63,7 +66,7 @@ extern f32 lbl_803E3490;
 extern f32 lbl_803E3478;
 extern f32 lbl_803E347C;
 extern f32 lbl_803E3480;
-extern void collectible_updateIdleMotion(int obj);
+
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
 extern void ObjMsg_AllocQueue();
 extern u8 lbl_80320C58[];
@@ -75,7 +78,7 @@ extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
 extern void gcbaddieshield_update(int* obj);
 
-extern void dim2roofrub_free(int* obj);
+
 
 extern void depthoffieldpoint_init();
 extern void depthoffieldpoint_update();
@@ -109,7 +112,7 @@ extern void flamethrowerspe_update();
 
 
 
-extern void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
+
 
 
 
