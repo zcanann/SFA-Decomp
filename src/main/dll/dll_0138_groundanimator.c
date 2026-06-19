@@ -78,7 +78,7 @@ extern float fastFloorf(float x);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E3FC0;
-extern int* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int fn_80060688(void* block, int v);
 extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);

@@ -22,7 +22,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);

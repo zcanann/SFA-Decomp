@@ -68,7 +68,7 @@ extern void ObjGroup_AddObject(int obj, int group);
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern int getTrickyObject(void);

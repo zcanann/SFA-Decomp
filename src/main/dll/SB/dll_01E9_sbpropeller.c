@@ -41,7 +41,7 @@ extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);

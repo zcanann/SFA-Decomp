@@ -21,7 +21,7 @@ extern u32 Sfx_PlayFromObject();
 extern u32 Sfx_KeepAliveLoopedObjectSound();
 extern u32 randomGetRange();
 extern u32 setAButtonIcon();
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int isGameTimerDisabled(void);
 extern f32 fn_8001461C(void);

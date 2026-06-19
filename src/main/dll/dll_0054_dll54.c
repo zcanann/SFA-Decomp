@@ -46,7 +46,7 @@ extern f32 timeDelta;
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int ObjList_GetObjects(int* idx, int* count);
 extern f32 lbl_803E1B40;
 extern f32 lbl_803E1B44;

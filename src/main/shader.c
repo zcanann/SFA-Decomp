@@ -59,7 +59,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
-extern int* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void OSReport(const char* fmt, ...);
 
 int objShouldLoad(int obj, int viewSlot, int mapEventGroup)

@@ -1356,7 +1356,7 @@ void Effect7_func05(void)
 
 extern void randFn_80080100();
 
-extern void* Obj_GetPlayerObject();
+extern void* Obj_GetPlayerObject(void);
 extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DB800;
 extern f32 lbl_803DB804;

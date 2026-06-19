@@ -204,7 +204,7 @@ int DIMbossAnim_selectTargetControlMode(int* obj)
 #pragma peephole off
 int DIMbossAnim_finishDefeat(int obj, int p2)
 {
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     int state;
 
     Obj_GetPlayerObject();

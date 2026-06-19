@@ -110,7 +110,7 @@ typedef struct EcshShrineByte15
 int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void GameBit_Set(int bit, int value); /* #57 */
-    extern int* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* sub;
     int* player;
     int i;
@@ -162,7 +162,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_801C70F0(s16* obj)
 {
-    extern int* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     u8 buf[32];
     u8* def;
     u8* sub;

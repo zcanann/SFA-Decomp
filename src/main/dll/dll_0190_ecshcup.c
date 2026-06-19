@@ -3,7 +3,7 @@
 #include "main/objseq.h"
 #include "main/game_object.h"
 
-extern GameObject* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);

@@ -64,7 +64,7 @@ typedef struct NwObjPos
 void nw_tricky_update(int* obj)
 {
     extern int* getTrickyObject(void);
-    extern int Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Set(int eventId, int value);
     int count;
     NwTrickyIds ids;

@@ -36,7 +36,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern void Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

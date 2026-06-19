@@ -72,7 +72,7 @@ void deathgas_free(int* obj)
 
 void deathgas_update(int* obj)
 {
-    extern int* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
     DeathGasState* state = ((GameObject*)obj)->extra;
     int* player;

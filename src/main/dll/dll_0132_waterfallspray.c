@@ -18,7 +18,7 @@ typedef struct WaterFallSprayState
     u32 unk4;
 } WaterFallSprayState;
 
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call

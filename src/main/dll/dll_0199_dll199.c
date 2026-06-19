@@ -172,7 +172,7 @@ typedef struct Dll199ObjectDef
 void dll_199_update(int obj)
 {
     extern int* gTitleMenuControlInterface;
-    extern char* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     short* state;
     char* player;
     int queue;

@@ -91,7 +91,7 @@ extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern GameObject* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void* a, void* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);

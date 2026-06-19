@@ -53,7 +53,7 @@ extern const f32 lbl_803E34DC;
 extern const f32 lbl_803E34E0;
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);

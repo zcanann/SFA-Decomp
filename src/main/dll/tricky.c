@@ -991,7 +991,7 @@ void fearTestMeterDraw(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-extern int* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int getHudHiddenFrameCount(void);
 extern s8 lbl_803DBAEC;
 extern u8 lbl_803DBAED;

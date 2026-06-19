@@ -18,7 +18,7 @@
 #include "main/effect_interfaces.h"
 
 extern int randomGetRange(int min, int max);
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 
 extern f32 timeDelta;
 

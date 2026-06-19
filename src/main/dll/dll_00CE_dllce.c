@@ -95,7 +95,7 @@ int fn_8015E3A0(int obj, int p2)
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
     extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD4;
     int* objs;
@@ -383,7 +383,7 @@ int fn_8015DF20(int obj, GroundBaddieState* p)
 
 int fn_8015E0C8(int obj, GroundBaddieState* p)
 {
-    extern int Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int* gBaddieControlInterface;
     extern f32 lbl_803E2DC8;
@@ -570,7 +570,7 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
 void fn_8015EB6C(int obj, int p2, int p3)
 {
     extern int* gBaddieControlInterface;
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern f32 sqrtf(f32);
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
@@ -628,7 +628,7 @@ void fn_8015EB6C(int obj, int p2, int p3)
 void fn_8015ED1C(int p1, int p2, int p3)
 {
     extern int* gBaddieControlInterface;
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern f32 sqrtf(f32);
     extern u8 lbl_8031FEA8[];
     extern u8 lbl_8031FF20[];

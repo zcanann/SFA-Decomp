@@ -144,7 +144,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 
 void dfpseqpoint_update(int obj)
 {
-    extern int Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern f32 Vec_distance(f32* a, f32* b);
     GameObject* self;
     GameObject* player;

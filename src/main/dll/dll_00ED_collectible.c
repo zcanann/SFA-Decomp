@@ -862,7 +862,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void collectible_checkProximityPickup(int obj, u8* state)
 {
     extern void collectible_applyPickup(int obj); /* #57 */
-    extern u8* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* player;
     s16* attach;
     u8* focus;
@@ -961,7 +961,7 @@ void collectible_update(int obj)
     extern void Obj_FreeObject(int obj); /* #57 */
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
     extern void collectible_applyPickup(int obj); /* #57 */
-    extern u8* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;

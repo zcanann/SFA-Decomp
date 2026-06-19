@@ -18,7 +18,7 @@ extern f32 lbl_803E6408;
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 timeDelta;
 extern f32 lbl_803E640C;

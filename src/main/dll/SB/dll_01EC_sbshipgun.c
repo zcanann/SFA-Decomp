@@ -152,7 +152,7 @@ void SB_ShipGun_update(int obj)
     extern void* Obj_AllocObjectSetup(int size, int objType);
     extern int Sfx_PlayFromObject();
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-    extern GameObject* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 ObjPath_GetPointWorldPosition();
     char phase;
     float boost;

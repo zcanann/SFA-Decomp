@@ -111,7 +111,7 @@ typedef struct
 
 void deathseq_update(int* obj)
 {
-    extern int* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     s16* cam = Camera_GetCurrentViewSlot();
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;

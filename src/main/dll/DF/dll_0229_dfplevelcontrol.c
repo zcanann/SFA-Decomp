@@ -24,7 +24,7 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 void fn_80204320(int obj)
 {
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int);
     extern u8 lbl_803DC182;
     extern s16 lbl_80329848[];
@@ -174,7 +174,7 @@ void dfplevelcontrol_init(int obj, int param2)
 
 void dfplevelcontrol_update(int obj)
 {
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern void Sfx_PlayFromObject(int, u16);
@@ -237,7 +237,7 @@ void dfplevelcontrol_update(int obj)
 
 void fn_80204098(int obj)
 {
-    extern void*Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern void Sfx_PlayFromObject(int, u16);

@@ -32,7 +32,7 @@ extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;

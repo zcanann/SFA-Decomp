@@ -94,7 +94,7 @@ void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void SB_CageKyte_update(GameObject* obj)
 {
     extern f32 Vec_distance(void* a, void* b);
-    extern GameObject* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
     GameObject* player;

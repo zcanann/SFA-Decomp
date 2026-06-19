@@ -47,7 +47,7 @@ void campfire_update(int obj)
 {
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-    extern int Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     int* state;
     int type;
     int mode;

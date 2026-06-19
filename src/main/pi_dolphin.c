@@ -6727,7 +6727,7 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
 extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
 extern int fn_8006C754(void);
 extern int fn_8006C74C(void);
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;

@@ -11,7 +11,7 @@ extern u32 randomGetRange(int min, int max);
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
 extern void* mmAlloc(int size, int heap, int flags);
 extern u64 FUN_8028683c();

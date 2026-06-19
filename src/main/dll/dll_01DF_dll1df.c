@@ -23,7 +23,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E4B98;
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4, lbl_803E4BA8, lbl_803E4BAC;
 extern void objRenderFn_8003b8f4(f32);
-extern GameObject* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 typedef struct Dll1DFPlaceData

@@ -7,7 +7,7 @@
 #include "main/game_object.h"
 
 extern u32 GameBit_Get(int eventId);
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u64 ObjGroup_RemoveObject();
 extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);

@@ -24,7 +24,7 @@ extern void gameTimerInit(s8 flags, int minutes);
 extern u32 GameBit_Get(int id);
 extern u32 GameBit_Set();
 extern u32 SCGameBitLatch_Update();
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;

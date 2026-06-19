@@ -34,7 +34,7 @@ extern void modelLightStruct_freeSlot(int param_1);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int param_1, int param_2);
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_FreeObject(int param_1);
 extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);

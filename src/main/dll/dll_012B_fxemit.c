@@ -31,7 +31,7 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int Sfx_PlayFromObject(int obj, int sfx);
-extern ObjAnimComponent* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void fn_80137948(char* fmt, ...);
 extern ModgfxInterface** gModgfxInterface;
 extern char sCFTreasSharpyDebugFormat[];

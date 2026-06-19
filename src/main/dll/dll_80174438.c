@@ -23,7 +23,7 @@ extern f32 timeDelta;
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern u32 fn_80174BFC();
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 

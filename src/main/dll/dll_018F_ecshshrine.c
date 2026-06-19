@@ -369,7 +369,7 @@ typedef struct EcshPuzzleState
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
-    extern int* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     extern void fn_801C5990(s16 * obj); /* #57 */
     extern u8 lbl_80326208[]; /* #57 */
     extern void GameBit_Set(int bit, int value); /* #57 */

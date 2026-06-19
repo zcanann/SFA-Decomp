@@ -31,7 +31,7 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E490C;
-extern int Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 
 void dimdismountpoint_hitDetect(void)
 {

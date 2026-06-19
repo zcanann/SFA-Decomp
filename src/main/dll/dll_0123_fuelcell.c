@@ -128,7 +128,7 @@ void fuelcell_init(int* obj)
 
 void fuelcell_update(int* obj)
 {
-    extern int* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u32 ObjGroup_AddObject();
     extern u32 GameBit_Set(int eventId, int value);
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;

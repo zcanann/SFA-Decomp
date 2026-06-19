@@ -578,7 +578,7 @@ void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
     extern void GameBit_Set(int bit, int value); /* #57 */
-    extern u8* Obj_GetPlayerObject(void); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* state;
     u8* other;
     u8* player;

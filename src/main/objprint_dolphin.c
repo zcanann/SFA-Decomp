@@ -4301,7 +4301,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-extern int* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
 extern u16 lbl_803DEA4A[3];

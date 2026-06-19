@@ -61,7 +61,7 @@ extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern int* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

@@ -2093,7 +2093,7 @@ void enemy_update(int obj)
     extern void fn_8014BC98(int obj, u8* state);
     extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
     extern void baddieInstantiateWeapon(int obj, u8* state);
-    extern u8* Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
     extern u8* getTrickyObject(void);
     u8* player;
     u8* state;

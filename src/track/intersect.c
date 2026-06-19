@@ -114,7 +114,7 @@ extern f32 Vachuff_803DEE20;
 extern f32 __THPHuffmanBits_803DEE24;
 extern f32 __THPHuffmanSizeTab_803DEE28;
 extern u8 lbl_8030E8B0[];
-extern u8 *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int randomGetRange(int min, int max);
 
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
@@ -278,7 +278,7 @@ void drawFn_8006f500(void)
     extern void fn_8000F9B4(void);
     extern f32 *Camera_GetViewMatrix(void);
     extern void Camera_ApplyFullViewport(void);
-    extern u8 *Obj_GetPlayerObject(void);
+    extern void* Obj_GetPlayerObject(void);
 
     GXColor color;
     Mtx camTrans;

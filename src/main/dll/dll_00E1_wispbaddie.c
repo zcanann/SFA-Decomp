@@ -45,7 +45,7 @@ extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern int lbl_803DDA68;
 extern f32 timeDelta;
-extern GameObject* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);

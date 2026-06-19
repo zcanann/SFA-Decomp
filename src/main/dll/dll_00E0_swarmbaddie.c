@@ -37,7 +37,7 @@ extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, in
 extern void mm_free(void* p);
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
-extern GameObject* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);

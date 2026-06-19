@@ -34,7 +34,7 @@ extern int GameBit_Get(int bit);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern u8* Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int a, int b);
 extern f32 lbl_803E5550;
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
