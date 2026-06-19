@@ -81,7 +81,7 @@ extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
-extern u16 lbl_803DBDF0[];
+extern u16 lbl_803DBDF0;
 
 void FUN_80192488(void)
 {
@@ -541,7 +541,7 @@ void groundanimator_update(int* obj)
                 }
                 GameBit_Set(((GroundanimatorPlacement*)r20)->unk18, 1);
                 g->flags = g->flags | 2;
-                Sfx_PlayFromObject(obj, lbl_803DBDF0[((GroundanimatorPlacement*)r20)->unk21]);
+                Sfx_PlayFromObject(obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->unk21]);
             }
             foff = 0;
             hoff = 0;
@@ -556,9 +556,9 @@ void groundanimator_update(int* obj)
                         if (*(f32*)((char*)g->falloffBuf + foff) > lbl_803E3FB0)
                         {
                             void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
-                            f32 fv = (f32) * (s16*)((char*)g->heightBuf + hoff);
                             fn_800605F0(cell, &vbuf[1]);
-                            vbuf[0] = fv - (g->lastDepth / lbl_803E3F98) *
+                            vbuf[0] = (f32) * (s16*)((char*)g->heightBuf + hoff) -
+                                (g->lastDepth / lbl_803E3F98) *
                                 *(f32*)((char*)g->falloffBuf + foff);
                             fn_8006058C(cell, &vbuf[1]);
                         }
