@@ -121,32 +121,32 @@ void TrickyCurve_updateBoundsTrigger(int obj)
     dy = ((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dz = ((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     if ((dx <= lbl_803E6438) &&
-        (-(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*state ^ 0x80000000))) - DOUBLE_803e70d8) < dx))
+        (-(float)((double)(int)*state) < dx))
     {
         insideCount = 1;
     }
     if ((lbl_803E6438 < dx) &&
-        (dx < (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*state ^ 0x80000000))) - DOUBLE_803e70d8)))
+        (dx < (float)((double)(int)*state)))
     {
         insideCount = insideCount + 1;
     }
     if ((dz <= lbl_803E6438) &&
-        (-(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state[1] ^ 0x80000000))) - DOUBLE_803e70d8) < dz))
+        (-(float)((double)(int)state[1]) < dz))
     {
         insideCount = insideCount + 1;
     }
     if ((lbl_803E6438 < dz) &&
-        (dz < (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state[1] ^ 0x80000000))) - DOUBLE_803e70d8)))
+        (dz < (float)((double)(int)state[1])))
     {
         insideCount = insideCount + 1;
     }
     if ((dy <= lbl_803E6438) &&
-        (-(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state[2] ^ 0x80000000))) - DOUBLE_803e70d8) < dy))
+        (-(float)((double)(int)state[2]) < dy))
     {
         insideCount = insideCount + 1;
     }
     if ((lbl_803E6438 < dy) &&
-        (dy < (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state[2] ^ 0x80000000))) - DOUBLE_803e70d8)))
+        (dy < (float)((double)(int)state[2])))
     {
         insideCount = insideCount + 1;
     }
@@ -408,7 +408,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
             convLo0 = (u32) * (u8*)(state + 7);
             convHi0 = 0x43300000;
             angleDelta = (int)((lbl_803E70F0 +
-                    (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo0))) - DOUBLE_803e7108)) *
+                    (float)((double)(u32)convLo0)) *
                 lbl_803E70F4 * lbl_803DC074);
             convResult = (s64)angleDelta;
             *obj = *obj + angleDelta;

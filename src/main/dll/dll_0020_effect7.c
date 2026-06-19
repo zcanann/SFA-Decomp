@@ -448,26 +448,25 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
         else
         {
             ((ModgfxState*)state)->blendColorR =
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
-                                             0xc)))) - DOUBLE_803e00c0);
+                (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                             0xc));
             ((ModgfxState*)state)->blendColorG =
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
-                                             0xd)))) - biasU);
+                (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                             0xd));
             ((ModgfxState*)state)->blendColorB =
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
-                                             0xe)))) - biasU);
+                (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10 +
+                                             0xe));
             biasS = DOUBLE_803e00c8;
             ((ModgfxState*)state)->blendColorStepR =
-                (targetR - (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
+                (targetR - (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
-                                                        0x10 + 0xc)))) - biasU)) /
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000))) -
-                    DOUBLE_803e00c8);
+                                                        0x10 + 0xc))) /
+                (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
             convFrames = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000)));
             ((ModgfxState*)state)->blendColorStepG =
-                (targetG - (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
+                (targetG - (float)((double)(u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
-                                                        0x10 + 0xd)))) - biasU)) /
+                                                        0x10 + 0xd))) /
                 (float)(convFrames - biasS);
             convBlueBase = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(vtxData + *((ModgfxVertexGroupCmd*)command)->indices * 0x10
                                                 + 0xe))));
@@ -563,15 +562,14 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             state->posStepX =
                 *(float*)(command + 4) /
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state->blendFrameCount ^ 0x80000000))) -
-                    DOUBLE_803e00c8);
+                (float)((double)(int)state->blendFrameCount);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state->blendFrameCount ^ 0x80000000))) - biasS
+                (float)((double)(int)state->blendFrameCount
                 );
             state->posStepZ =
                 ((ModgfxVertexGroupCmd*)command)->valueZ /
-                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(state->blendFrameCount ^ 0x80000000))) - biasS
+                (float)((double)(int)state->blendFrameCount
                 );
         }
         state->posCurX = state->posCurX + state->posStepX;
@@ -664,11 +662,10 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
         }
         work1 = state + (channel & 0xff) * 8;
         *(float*)(work1 + 0xac) =
-            (targetAlpha - (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->
+            (targetAlpha - (float)((double)(u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
-                                                        0x10 + 0xf)))) - DOUBLE_803e00c0))
-            / (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000))) -
-                DOUBLE_803e00c8);
+                                                        0x10 + 0xf)))
+            / (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
         convAlphaBase = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
                                              0x10 + 0xf))));
         *(float*)(work1 + 0xb0) = (float)(convAlphaBase - biasU);
@@ -730,12 +727,10 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
             {
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10;
                 *(short*)(work2 + off) =
-                    (short)(int)((float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(work2 + off) ^ 0x80000000))) -
-                        biasS) * targetX);
+                    (short)(int)((float)((double)(int)*(short*)(work2 + off)) * targetX);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 2;
                 *(short*)(work2 + off) =
-                    (short)(int)((float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(work2 + off) ^ 0x80000000))) -
-                        biasS) * targetY);
+                    (short)(int)((float)((double)(int)*(short*)(work2 + off)) * targetY);
                 off = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 4;
                 convA = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(work2 + off) ^ 0x80000000)));
                 *(short*)(work2 + off) = (short)(int)((float)(convA - biasS) * targetZ);
@@ -752,13 +747,12 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
         work1 = state + (channel & 0xff) * 0x18;
         *(float*)(work1 + 0x3c) =
             (targetX - *(float*)(work1 + 0x30)) /
-            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000))) -
-                DOUBLE_803e00c8);
+            (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
         convFrames = (double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000)));
         *(float*)(work1 + 0x40) = (targetY - *(float*)(work1 + 0x34)) / (float)(convFrames - biasS);
         *(float*)(work1 + 0x44) =
             (targetZ - *(float*)(work1 + 0x38)) /
-            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)((ModgfxState*)state)->blendFrameCount ^ 0x80000000))) - biasS);
+            (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
     }
     work0 = state + (channel & 0xff) * 0x18;
     *(float*)(work0 + 0x30) = *(float*)(work0 + 0x3c) * lbl_803DDF04 + *(float*)(work0 + 0x30);

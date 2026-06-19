@@ -440,8 +440,7 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
             if (tabB[rec] == 0)
             {
                 level = (int)(FLOAT_803e2c90 *
-                    (f32)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(shader + 0x37)))) -
-                        DOUBLE_803e2b08));
+                    (f32)((double)(u32) * (u8*)(shader + 0x37)));
                 colorWord = ((u32)(((u32)(colorWord >> 8) << 8) | (u8)(level)));
             }
             else

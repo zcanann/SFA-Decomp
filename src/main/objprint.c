@@ -278,8 +278,7 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
             dVar3 = -dVar3;
         }
         *outAngle = (short)(int)(dVar3 * (double)lbl_803DC074 +
-            (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*outAngle ^ 0x80000000))) -
-                DOUBLE_803df650));
+            (double)(float)((double)(int)*outAngle));
         if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *outAngle)) || (*outAngle < -0x1ffe))
         {
             *outAngle = *(short*)(curve + 0x14);
@@ -351,8 +350,7 @@ u32 FUN_80039a28(int curve, int state)
         }
         *(short*)(state + 2) =
             (short)(int)(dVar3 * (double)lbl_803DC074 +
-                (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(state + 2) ^ 0x80000000))) -
-                    DOUBLE_803df650));
+                (double)(float)((double)(int)*(short*)(state + 2)));
         if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(state + 2))) ||
             (*(short*)(state + 2) < -0x1ffe))
         {
@@ -477,9 +475,8 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                 {
                     *(short*)(state + 2) =
                         (short)(int)(*(float*)(curve + 0x10) *
-                            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*(short*)(curve + 0x16) - uVar4 ^
-                                                     0x80000000))) - DOUBLE_803df650) +
-                            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(uVar4 ^ 0x80000000))) - DOUBLE_803df650
+                            (float)((double)(int)*(short*)(curve + 0x16) - uVar4) +
+                            (float)((double)(int)uVar4
                             ));
                     fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float*)(curve + 0x10));
                     *(float*)(curve + 0x10) = fVar1;

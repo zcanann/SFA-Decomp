@@ -2985,8 +2985,7 @@ void FUN_8004600c(void)
     pairWord = FUN_80246298(-0x7fc9fd20);
     elapsed = FUN_80286cd0((u32)((u64)pairWord >> 0x20), pairWord);
     lbl_803DD940 =
-        (float)(elapsed / (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(DAT_800000f8 / 4000))) -
-            DOUBLE_803df700));
+        (float)(elapsed / (double)(float)((double)(u32)(DAT_800000f8 / 4000)));
     FUN_80246308(-0x7fc9fd20);
     FUN_80246190(-0x7fc9fd20);
     lbl_803DC074 = lbl_803DF71C * lbl_803DF720 * lbl_803DD940;
@@ -3008,7 +3007,7 @@ void FUN_8004600c(void)
     DAT_803dc071 = (u8)whole;
     lbl_803DD934 =
         (lbl_803DC074 + lbl_803DD934) -
-        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(frac))) - DOUBLE_803df700);
+        (float)((double)(u32)frac);
     DAT_803dc070 = DAT_803dc071;
     if (frac == 0)
     {
@@ -3152,8 +3151,7 @@ void fn_8004B11C(u32 ctxArg, u32 entryArg, u8 key)
                 ((*(char*)(found + 0x1a) != '\b' || (*(char*)(ent + 0x1a) != '\t'))))
             {
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
-                uval = FUN_80286718((double)(float)((double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(ctx[2]))) -
-                    DOUBLE_803df728) + fval));
+                uval = FUN_80286718((double)(float)((double)(float)((double)(u32)ctx[2]) + fval));
                 FUN_800462f8((u32)ctxHi, (u32)(u32)ctx, key, uval, found);
                 sel = DAT_803dd988;
             }

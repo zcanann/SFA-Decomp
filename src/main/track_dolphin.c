@@ -402,10 +402,10 @@ void FUN_8005ff90(short* in, float* out)
 
     scale = lbl_803DF8A0;
     bias = DOUBLE_803df840;
-    *out = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)*in ^ 0x80000000))) - DOUBLE_803df840) *
+    *out = (float)((double)(int)*in) *
         lbl_803DF8A0;
-    out[1] = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(in[1] ^ 0x80000000))) - bias) * scale;
-    out[2] = (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(in[2] ^ 0x80000000))) - bias) * scale;
+    out[1] = (float)((double)(int)in[1]) * scale;
+    out[2] = (float)((double)(int)in[2]) * scale;
     return;
 }
 

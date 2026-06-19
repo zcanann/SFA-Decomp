@@ -380,10 +380,8 @@ void FUN_800530b8(int param_1, u32* param_2)
                  (u32) * (u8*)(param_1 + 0x18), hasMip);
     if (hasMip)
     {
-        FUN_8025ace8((double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(param_1 + 0x1c)))) -
-                         DOUBLE_803df820),
-                     (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(*(u8*)(param_1 + 0x1d) ^ 0x80000000)))
-                         - DOUBLE_803df828), (double)lbl_803DF818, param_2,
+        FUN_8025ace8((double)(float)((double)(u32) * (u8*)(param_1 + 0x1c)),
+                     (double)(float)((double)(int)(*(u8*)(param_1 + 0x1d))), (double)lbl_803DF818, param_2,
                      (u32) * (u8*)(param_1 + 0x19), (u32) * (u8*)(param_1 + 0x1a), 0, '\0', 0);
     }
     else

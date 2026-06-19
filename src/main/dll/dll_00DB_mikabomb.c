@@ -305,7 +305,7 @@ void staticCamera_init(short* obj, int params, int deferAdd)
     camData = *(u8**)(obj + 0x5c);
     *camData = *(u8*)(params + 0x19);
     *(float*)(camData + 4) =
-        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(params + 0x1a)))) - DOUBLE_803e3e88);
+        (float)((double)(u32) * (u8*)(params + 0x1a));
     camData[1] = 0;
     if (deferAdd == 0)
     {

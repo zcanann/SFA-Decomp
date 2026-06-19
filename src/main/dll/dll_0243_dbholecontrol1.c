@@ -421,7 +421,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         *(u8*)(state + 0x34d) = 1;
         *(float*)(state + 0x2a0) =
             lbl_803E6FDC +
-            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(extra + 0x406)))) - DOUBLE_803e6f78) /
+            (float)((double)(u32) * (u8*)(extra + 0x406)) /
             lbl_803E6FE0;
     }
     *(float*)(state + 0x280) = lbl_803E6F40;
@@ -468,8 +468,7 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
                 lbl_803DC074 * lbl_803E6FE4 *
                 ((float)(param_2 *
                     (double)(lbl_803E6F60 -
-                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)(short)yawDelta ^ 0x80000000))) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(control + 0x280)) +
+                        (float)((double)(int)(short)yawDelta) / lbl_803E700C)) - *(float*)(control + 0x280)) +
                 *(float*)(control + 0x280);
             *(float*)(control + 0x284) = lbl_803E6F40;
             result = 0;
@@ -515,8 +514,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
                 lbl_803DC074 * lbl_803E6FE4 *
                 ((float)(param_2 *
                     (double)(lbl_803E6F60 -
-                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)(short)yawDelta ^ 0x80000000))) -
-                            DOUBLE_803e7000) / lbl_803E700C)) - *(float*)(control + 0x280)) +
+                        (float)((double)(int)(short)yawDelta) / lbl_803E700C)) - *(float*)(control + 0x280)) +
                 *(float*)(control + 0x280);
             *(float*)(control + 0x284) = lbl_803E6F40;
         }

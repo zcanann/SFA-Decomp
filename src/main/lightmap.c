@@ -579,8 +579,7 @@ void FUN_8005bdbc(void)
             iVar8 = 0;
             uStack_7c = uVar10 ^ 0x80000000;
             local_80 = 0x43300000;
-            dVar14 = (double)(float)(dVar15 * (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(uVar10 ^ 0x80000000))) -
-                dVar16));
+            dVar14 = (double)(float)(dVar15 * (double)(float)((double)(int)uVar10));
             pcVar4 = extraout_r4;
             do
             {

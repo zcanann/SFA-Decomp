@@ -832,10 +832,8 @@ double FUN_8014cbcc(int param_1)
     }
     else
     {
-        dVar2 = (double)((float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u16*)(iVar1 + 0x2b0)))) -
-                DOUBLE_803e3278) /
-            (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u16*)(iVar1 + 0x2b2)))) -
-                DOUBLE_803e3278));
+        dVar2 = (double)((float)((double)(u32) * (u16*)(iVar1 + 0x2b0)) /
+            (float)((double)(u32) * (u16*)(iVar1 + 0x2b2)));
     }
     return dVar2;
 }
@@ -905,7 +903,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
         dVar4 = (double)FUN_80292754();
         uStack_6c = ((u32)(u8)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
-        if (ABS((double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(uStack_6c))) - DOUBLE_803e3218)) !=
+        if (ABS((double)(float)((double)(u32)uStack_6c)) !=
             (double)lbl_803E31FC)
         {
             fVar1 = lbl_803E3258;
@@ -1829,7 +1827,7 @@ void FUN_8014d164(double param_1, double param_2, u16* param_3, int param_4, u32
     u64 local_48;
 
     dVar4 = (double)(lbl_803DC074 /
-        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(param_5 & 0xffff))) - DOUBLE_803e3278));
+        (float)((double)(u32)(param_5 & 0xffff)));
     if ((double)lbl_803E3200 < dVar4)
     {
         dVar4 = (double)lbl_803E3200;
@@ -1905,14 +1903,13 @@ void FUN_8014d3d0(short* param_1, u32 param_2, u32 param_3, short param_4)
     {
         sVar2 = sVar2 + -1;
     }
-    fVar1 = lbl_803DC074 / (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(param_3 & 0xffff))) - DOUBLE_803e3278);
+    fVar1 = lbl_803DC074 / (float)((double)(u32)(param_3 & 0xffff));
     if (lbl_803E3200 < fVar1)
     {
         fVar1 = lbl_803E3200;
     }
     *param_1 = *param_1 +
-        (short)(int)((float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((int)(short)(sVar2 + param_4) ^ 0x80000000))) -
-            DOUBLE_803e3218) * fVar1);
+        (short)(int)((float)((double)(int)(short)(sVar2 + param_4)) * fVar1);
     return;
 }
 

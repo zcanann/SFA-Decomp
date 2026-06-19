@@ -824,8 +824,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     uStack_10c = texSize;
                     uStack_104 = texSize;
                     FUN_8025da64(dVar28, dVar28,
-                                 (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(texSize))) - DOUBLE_803dfa08),
-                                 (double)(float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(texSize))) - DOUBLE_803dfa08), dVar28
+                                 (double)(float)((double)(u32)texSize),
+                                 (double)(float)((double)(u32)texSize), dVar28
                                  , (double)lbl_803DF9AC);
                     FUN_80247dfc(dVar27, dVar22, dVar27, dVar22, (double)lbl_803DF9AC, (double)lbl_803DF9EC,
                                  projMtx);

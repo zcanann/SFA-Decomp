@@ -315,7 +315,7 @@ void staticCamera_init(short* param_1, int param_2, int param_3)
     colorState = *(u8**)(param_1 + 0x5c);
     *colorState = *(u8*)(param_2 + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32) * (u8*)(param_2 + 0x1a)))) - DOUBLE_803e3e88);
+        (float)((double)(u32) * (u8*)(param_2 + 0x1a));
     colorState[1] = 0;
     if (param_3 == 0)
     {

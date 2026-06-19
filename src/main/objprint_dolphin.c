@@ -512,11 +512,11 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                             convLo0 = slot->offsetS ^ 0x80000000;
                             convHi0 = 0x43300000;
                             u = (double)(lbl_803DF6C8 *
-                                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo0))) - DOUBLE_803df6c0));
+                                (float)((double)(u32)convLo0));
                             convLo1 = slot->offsetT ^ 0x80000000;
                             convHi1 = 0x43300000;
                             v = (double)(lbl_803DF6C8 *
-                                (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo1))) - DOUBLE_803df6c0));
+                                (float)((double)(u32)convLo1));
                             goto LAB_8003eca4;
                         }
                         boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
@@ -771,11 +771,11 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
                     convLo0 = (int)*(short*)(light + 8) ^ 0x80000000;
                     convHi0 = 0x43300000;
                     u = (double)(lbl_803DF6C8 *
-                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo0))) - DOUBLE_803df6c0));
+                        (float)((double)(u32)convLo0));
                     convLo1 = (int)*(short*)(light + 10) ^ 0x80000000;
                     convHi1 = 0x43300000;
                     v = (double)(lbl_803DF6C8 *
-                        (float)((double)((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(convLo1))) - DOUBLE_803df6c0));
+                        (float)((double)(u32)convLo1));
                     goto LAB_8003f328;
                 }
                 light = light + 2;
