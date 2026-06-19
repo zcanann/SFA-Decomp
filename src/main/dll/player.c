@@ -18893,9 +18893,7 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 3;
-                ((PlayerState*)state)->unk8A2 = 0xff;
-                changed = 1;
+                goto set806_3;
             }
             else
             {
@@ -18914,6 +18912,7 @@ void fn_802AEF34(int obj, int state)
                 }
                 if (!ok)
                 {
+                set806_3:
                     *(s16*)&((PlayerState*)state)->unk806 = 3;
                     ((PlayerState*)state)->unk8A2 = 0xff;
                     changed = 1;
