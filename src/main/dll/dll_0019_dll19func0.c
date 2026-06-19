@@ -763,68 +763,68 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
     }
 
-    if ((s8)p2[852] == 0)
+    if (*(s8*)(p2 + 852) == 0)
     {
         return 0;
     }
     hit = ObjHits_GetPriorityHitWithPosition(p1, &hitId, &v28, &v24, &posX, &posY, &posZ);
-    state[1034] = v28;
-    if (hit == 0)
+    *(s8*)(state + 1034) = v28;
+    if (hit != 0)
     {
-        return hit;
-    }
-    if (p8 != NULL)
-    {
-        *(f32*)(p8 + 12) = posX + playerMapOffsetX;
-        *(f32*)(p8 + 16) = posY;
-        *(f32*)(p8 + 20) = posZ + playerMapOffsetZ;
-    }
-    if (p6 != NULL)
-    {
-        if ((s8) * (s8*)(p6 + hit - 2) != -1)
+        if (p8 != NULL)
         {
-            v24 = (s8) * (s8*)(p6 + hit - 2);
+            *(f32*)(p8 + 12) = posX + playerMapOffsetX;
+            *(f32*)(p8 + 16) = posY;
+            *(f32*)(p8 + 20) = posZ + playerMapOffsetZ;
         }
-    }
-    else
-    {
-        v24 = 0;
-    }
-    p2[852] = (s8)(p2[852] - v24);
-    if ((s8)p2[852] < 1)
-    {
-        ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
-        ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
-        ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
-        *(s16*)(p2 + 624) = p7;
-        p2[852] = 0;
-    }
-    else
-    {
-        if (v24 != 0)
+        if (p6 != NULL)
         {
-            if (*(void**)(p2 + 720) == NULL)
+            int hitVal = ((s8*)p6)[hit - 2];
+            if (hitVal != -1)
             {
-                if (fn_80295A04(player, 1) != 0)
-                {
-                    *(int*)(p2 + 720) = player;
-                    p2[841] = 0;
-                }
+                v24 = hitVal;
             }
+        }
+        else
+        {
+            v24 = 0;
+        }
+        p2[852] = (s8)(p2[852] - v24);
+        if (*(s8*)(p2 + 852) < 1)
+        {
+            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
             ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
-            ((Dll19Placement*)state)->unk3EC = lbl_803E1C50;
-            if (p5 != NULL)
-            {
-                if (p5[hit - 2] != -1)
-                {
-                    (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(p1, p2);
-                    *(s16*)(p2 + 624) = p7;
-                }
-            }
-            p2[847] = hit;
+            ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
+            *(s16*)(p2 + 624) = p7;
+            p2[852] = 0;
         }
-        Sfx_StopObjectChannel((int*)p1, 16);
-        ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
+        else
+        {
+            if (v24 != 0)
+            {
+                if (*(void**)(p2 + 720) == NULL)
+                {
+                    if (fn_80295A04(player, 1) != 0)
+                    {
+                        *(int*)(p2 + 720) = player;
+                        p2[841] = 0;
+                    }
+                }
+                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
+                ((Dll19Placement*)state)->unk3EC = lbl_803E1C50;
+                if (p5 != NULL)
+                {
+                    if (p5[hit - 2] != -1)
+                    {
+                        (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(p1, p2);
+                        *(s16*)(p2 + 624) = p7;
+                    }
+                }
+                *(s8*)(p2 + 847) = hit;
+            }
+            Sfx_StopObjectChannel((int*)p1, 16);
+            ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
+        }
     }
     return hit;
 }
