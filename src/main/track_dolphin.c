@@ -1628,7 +1628,6 @@ extern int lbl_803DCF24;
 
 void fn_80062808(void)
 {
-    int v;
     if ((s8)gShadowFlag == 0)
     {
         return;
@@ -1639,12 +1638,11 @@ void fn_80062808(void)
     lbl_803DCEEC = 1 - lbl_803DCEEC;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
-    v = (&lbl_803DCF24)[lbl_803DCEEC];
-    lbl_803DCF08 = v;
+    lbl_803DCF08 = (&lbl_803DCF24)[lbl_803DCEEC];
     lbl_803DCEF4 = 0;
     lbl_803DCF10 = lbl_803DCF20;
     lbl_803DCF18 = lbl_803DCF1C;
-    lbl_803DCF04 = v;
+    lbl_803DCF04 = (&lbl_803DCF24)[lbl_803DCEEC];
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
