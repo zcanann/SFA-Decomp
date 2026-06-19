@@ -10,6 +10,7 @@
 #include "dolphin/vi.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
+#include "main/audio/sfx.h"
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
@@ -52,7 +53,7 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
 #pragma dont_inline on
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);

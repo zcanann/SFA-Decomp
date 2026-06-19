@@ -13,6 +13,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/objprint.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
@@ -21,7 +22,7 @@ extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
 extern void objRenderFn_8003b8f4(int* obj);
 extern u32 GameBit_Get(int eventId);
-extern void* Obj_GetPlayerObject(void);
+
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern int objModelGetVecFn_800395d8(int obj, int idx);

@@ -43,6 +43,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/objlib.h"
 
 typedef struct Dim2snowballObjectDef
 {
@@ -71,7 +72,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4AA0;
 extern int ObjList_FindObjectById(int id);
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
 extern int getAngle(float y, float x);

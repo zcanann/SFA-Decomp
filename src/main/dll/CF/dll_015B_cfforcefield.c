@@ -11,6 +11,8 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 typedef struct CfForceFieldFlags
 {
@@ -64,15 +66,15 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 /* frames the collapse spin-down runs for */
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
-extern int randomGetRange(int lo, int hi);
+
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
 extern int fn_80080150(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern int timerCountDown(f32* p);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void storeZeroToFloatParam(f32* p);
 extern f32 timeDelta;
 extern f32 lbl_803DBE90; /* ring radius scale */

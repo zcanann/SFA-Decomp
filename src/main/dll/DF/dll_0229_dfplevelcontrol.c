@@ -11,7 +11,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/lightmap.h"
+
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
@@ -24,7 +26,7 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 void fn_80204320(int obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     extern u8 lbl_803DC182;
     extern s16 lbl_80329848[];
     DfpLevelControlState* sub;
@@ -104,7 +106,7 @@ void dfplevelcontrol_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_
 
 int dfplevelcontrol_SeqFn(int p1)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     DfpLevelControlState* p_b8 = ((GameObject*)p1)->extra;
     void* player = Obj_GetPlayerObject();
     s16 v = p_b8->timer;
@@ -175,7 +177,7 @@ void dfplevelcontrol_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern int coordsToMapCell(f32 x, f32 z);
+
     extern void fn_80204098(int);
     extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
     extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);

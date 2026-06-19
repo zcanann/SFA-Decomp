@@ -3,6 +3,7 @@
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct CameraModeStaticPlacement
 {
@@ -13,7 +14,7 @@ typedef struct CameraModeStaticPlacement
     u8 pad22[0x28 - 0x22];
 } CameraModeStaticPlacement;
 
-extern int getAngle(float y, float x);
+
 extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;

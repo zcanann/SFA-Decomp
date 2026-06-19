@@ -22,15 +22,16 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern int randomGetRange(int lo, int hi);
+
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
+
 extern int ObjList_FindObjectById(int id);
 extern u8 framesThisStep;
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objhits.h"
+#include "main/engine_shared.h"
 
 #pragma scheduling on
 #pragma peephole on

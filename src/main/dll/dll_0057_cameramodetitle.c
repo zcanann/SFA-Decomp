@@ -18,6 +18,7 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/FRONT/n_options.h"
+#include "main/dll/dll_80220608_shared.h"
 
 #pragma scheduling on
 #pragma peephole on
@@ -38,7 +39,7 @@ extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
-extern void Music_Trigger(int id, int arg);
+
 extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;
 extern f32 lbl_803E1BEC;

@@ -10,9 +10,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/dll/fx_800944A0_shared.h"
+
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
-extern f32 sqrtf(f32 x);
+
 extern f32 lbl_803E3528;
 extern f32 lbl_803E3588;
 extern f32 lbl_803E3598;
@@ -23,8 +24,8 @@ extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int getAngle(float y, float x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 gPushablePi;
@@ -57,7 +58,7 @@ extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void debugPrintf(char* fmt, ...);
+
 extern char sPushPullObjectHitpointOverflow[];
 extern int arrayIndexOf(int* arr, int count, int target);
 extern void fn_8007FE04(int* array, int* count, int value);
@@ -165,7 +166,7 @@ void fn_80174BFC(int obj, int ext)
 {
     extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10); /* #57 */
     extern int Sfx_PlayFromObject(int a, int b); /* #57 */
-    extern int Obj_GetPlayerObject(); /* #57 */
+ /* #57 */
     extern void saveGame_saveObjectPos(int obj); /* #57 */
     int def;
     int i;
@@ -416,7 +417,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 
 void fn_80175428(int obj)
 {
-    extern void Obj_FreeObject(int obj); /* #57 */
+ /* #57 */
     PushableState* state;
     int msgSender;
     int msg;

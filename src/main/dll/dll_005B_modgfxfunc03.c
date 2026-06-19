@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 typedef struct
 {
@@ -30,7 +31,7 @@ STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
 extern ModgfxInterface** gModgfxInterface;
-extern void vecRotateZXY(void* p, f32* v);
+
 extern void debugPrintf(char* fmt, ...);
 extern u8 lbl_80311E30[];
 extern u8 lbl_803DB8B0, lbl_803DB8B4;

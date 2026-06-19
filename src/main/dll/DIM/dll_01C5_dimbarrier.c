@@ -7,6 +7,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470
 
@@ -24,7 +25,7 @@ typedef struct DimbarrierState
 } DimbarrierState;
 
 extern f32 lbl_803E4898;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern u8 framesThisStep;
 
 void dimbarrier_free(void)

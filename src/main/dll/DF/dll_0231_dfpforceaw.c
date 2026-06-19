@@ -11,6 +11,7 @@
 #include "main/dll/sfxplayer.h"
 #include "main/dll/infopoint.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 
 typedef struct TrickyCurveObjectDef
 {
@@ -46,7 +47,7 @@ extern f32 lbl_803E70F4;
 extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void vecRotateZXY(u8* p, f32* v);
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;

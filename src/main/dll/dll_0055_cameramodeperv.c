@@ -16,6 +16,7 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camperv_state.h"
 #include "main/game_object.h"
+#include "main/dll/dll_80220608_shared.h"
 extern f32 timeDelta;
 extern CameraModePervState* lbl_803DD5C8;
 extern f32 lbl_803E1B98;
@@ -25,8 +26,8 @@ extern f32 lbl_803E1B7C;
 extern f32 lbl_803E1B80;
 extern f32 lbl_803E1B84;
 extern f32 lbl_803E1B88;
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+
+
 
 #pragma scheduling off
 #pragma peephole off

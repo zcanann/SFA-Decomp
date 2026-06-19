@@ -169,6 +169,7 @@ extern f32 timeDelta;
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00F7_dllf7.h"
+#include "main/objlib.h"
 
 typedef struct Dim2roofrubPlacement
 {
@@ -239,7 +240,7 @@ extern void shield_update(int* obj);
 extern int* Obj_GetActiveModel(int obj);
 extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);

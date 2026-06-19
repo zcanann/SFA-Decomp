@@ -30,7 +30,8 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00F7_dllf7.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/dll/fx_800944A0_shared.h"
+
 extern f32 lbl_803E3420;
 extern f32 lbl_803E3424;
 extern f32 lbl_803E3428;

@@ -29,6 +29,7 @@
 #include "main/gamebits.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0016_screentransition.h"
+#include "main/dll/DR/dll_80209FE0_shared.h"
 
 typedef struct SaveGameData
 {
@@ -92,7 +93,7 @@ extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
 extern void loadUiDll(int index);
 
-extern void* Obj_GetPlayerObject(void);
+
 extern void playerAddHealth(u8* player, int v);
 extern void* mmAlloc(int size, int type, int flag);
 

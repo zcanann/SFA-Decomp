@@ -24,7 +24,8 @@
 #include "main/pad.h"
 #include "main/object_transform.h"
 #include "main/sfa_extern_decls.h"
-extern int getAngle(float y, float x);
+#include "main/dll/VF/vf_shared.h"
+
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -35,7 +36,7 @@ extern CameraModeWorldMapState* gCamWorldMapState;
 extern f32 gCamWorldMapDistanceMax;
 extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
-extern int ObjList_FindObjectById(int id);
+
 extern u32 getButtonsHeld(int port);
 
 extern u8 padGetCX(int port);

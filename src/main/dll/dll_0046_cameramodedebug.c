@@ -10,14 +10,15 @@
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 /* pad.h declares getButtonsJustPressed as u32; the u16 override in
    CameraModeDebug_update is load-bearing for the mask comparison. */
 extern u32 getButtonsHeld(int port);
 extern u8 padGetCX(int port);
 extern u8 padGetCY(int port);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42

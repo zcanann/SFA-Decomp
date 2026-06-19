@@ -12,6 +12,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014B_cfmaincrystal.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 #define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
 #define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
@@ -55,15 +57,15 @@ extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 mess
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
+
 extern u8 framesThisStep;
 extern f32 lbl_803E4210;
 
 extern int* lbl_803DDB10;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
-extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
+
+
 extern void PSVECNormalize(f32 * out, f32 * in);
 extern f32 lbl_803E41D8;
 extern f32 lbl_803E41DC;

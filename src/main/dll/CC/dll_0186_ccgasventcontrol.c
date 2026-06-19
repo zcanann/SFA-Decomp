@@ -20,6 +20,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/CC/dll_0186_ccgasventcontrol.h"
+#include "main/audio/sfx.h"
 
 #define CCGASVENT_GROUP 0x3f
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -53,7 +54,7 @@ extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 extern f32 lbl_803E4624;
 extern f32 lbl_803E4628;
@@ -64,9 +65,9 @@ extern f32 lbl_803E4638;
 extern f32 lbl_803E463C;
 extern f32 lbl_803E4640;
 extern f32 getXZDistance(f32* a, f32* b);
-extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+
+
+
 extern f32 lbl_803E461C;
 
 int ccgasventcontrol_getExtraSize(void) { return sizeof(CcgasventcontrolState); }

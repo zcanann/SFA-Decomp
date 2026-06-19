@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
@@ -41,8 +42,8 @@ extern f32 lbl_803E312C;
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int obj);
+
+
 extern void* getTrickyObject(void);
 
 void pinponspike_render(void)

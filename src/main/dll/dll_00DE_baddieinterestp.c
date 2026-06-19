@@ -24,7 +24,8 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/dll/fx_800944A0_shared.h"
+
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);

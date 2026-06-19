@@ -43,7 +43,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHits_DisableObject();
-extern int randomGetRange(int lo, int hi);
+
 
 void imicepillar_free(void);
 
@@ -52,12 +52,13 @@ int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(int* obj);
 extern void warpToMap(int idx, s8 transType);
-extern void Music_Trigger(int id, int arg);
+
 extern f32 timeDelta;
 extern u8 framesThisStep;
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
+#include "main/engine_shared.h"
 
 typedef struct Lavaball1bePlacement
 {
@@ -88,8 +89,8 @@ extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
 extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
 extern u8 lbl_802C2318[];
 extern void vecRotateZXY(void* in, void* out);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern int ObjList_FindObjectById(int id);
 extern u8* objCreateLight(s16* obj, int b);
 extern void modelLightStruct_setLightKind(u8* light, int value);

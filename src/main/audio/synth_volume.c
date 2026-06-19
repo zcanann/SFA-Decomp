@@ -1,6 +1,7 @@
 #include "main/dll/synthfade_struct.h"
 #include "main/audio/inp_ctrl.h"
-extern void voiceKill(u32 voice);
+#include "main/audio/voice_manage.h"
+
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u8 lbl_803BCD90[];

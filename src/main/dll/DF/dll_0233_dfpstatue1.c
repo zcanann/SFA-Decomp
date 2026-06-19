@@ -8,7 +8,8 @@
  */
 #include "main/dll/crate2.h"
 #include "main/gamebits.h"
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+#include "main/audio/sfx.h"
+
 extern u32 sfxplayer_updateState(int obj, u32 param_2, int hitState);
 extern f32 timeDelta;
 

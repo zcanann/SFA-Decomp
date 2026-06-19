@@ -25,6 +25,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "string.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -40,7 +41,7 @@ extern int gExplosionTextures[4];
 extern int Obj_GetActiveModel(int obj);
 extern void ModelLightStruct_free(void*);
 extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;
 extern f32 lbl_803E4934;
@@ -87,7 +88,7 @@ extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
-extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
+
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);

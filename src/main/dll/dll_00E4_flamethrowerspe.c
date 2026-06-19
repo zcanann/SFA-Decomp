@@ -1,7 +1,7 @@
 /* DLL 0x00E4 (flamethrowerspe) — Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-extern int randomGetRange(int lo, int hi);
+
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 FUN_8003b818();
@@ -161,6 +161,7 @@ extern f32 timeDelta;
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/engine_shared.h"
 
 typedef struct FlamethrowerspeState
 {

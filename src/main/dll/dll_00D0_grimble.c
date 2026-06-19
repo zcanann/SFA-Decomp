@@ -25,6 +25,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
 
 typedef struct GrimblePlacement
 {
@@ -140,7 +141,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 {
     extern double sqrtf(double x); /* #57 */
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
+ /* #57 */
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
     s16 angle;
@@ -198,7 +199,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
     extern double sqrtf(double x); /* #57 */
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
+ /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;

@@ -30,8 +30,9 @@
 #include "main/dll/player_motion.h"
 #include "main/vecmath.h"
 #include "main/object_transform.h"
-extern float mathCosf(float x);
-extern float mathSinf(float x);
+#include "main/dll/fx_800944A0_shared.h"
+
+
 extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int obj);

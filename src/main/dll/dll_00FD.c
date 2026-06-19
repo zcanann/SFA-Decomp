@@ -5,15 +5,16 @@
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern void objRenderFn_80041018(void);
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
 extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
+
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern s16 getAngle(f32 dx, f32 dz);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E3854;
 extern f32 lbl_803E3858;

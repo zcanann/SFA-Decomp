@@ -15,11 +15,12 @@
 #include "main/mm.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camera_mode_cannon_state.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct CameraModeCloudRunnerState CameraModeCloudRunnerState;
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern CameraModeCannonState* lbl_803DD5A0;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;

@@ -39,6 +39,8 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/audio/sfx.h"
 
 typedef struct DimtruthhorniceObjectDef
 {
@@ -58,7 +60,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern u32 ObjHits_DisableObject();
+
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 
@@ -105,7 +107,7 @@ void dim2snowball_init(int* obj, int* def);
 
 void dimtruthhornice_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     TruthHornIceState* extra = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     switch (extra->phase)

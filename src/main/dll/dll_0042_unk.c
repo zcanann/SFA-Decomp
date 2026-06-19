@@ -28,6 +28,7 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/vecmath.h"
+#include "main/dll/DR/dll_80209FE0_shared.h"
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -39,7 +40,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern float mathSinf(float x);
-extern f32 PSVECMag(f32* vec);
+
 extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance scalar */
 extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(int obj);
@@ -235,9 +236,9 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
 void camslide_update(CameraObject* camera, GameObject* target)
 {
-    extern u32 getAngle();
+
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    extern f32 sqrtf(f32 x);
+
     f32 fVar1;
     CamSlideObjectState* state;
     u32 angle;
@@ -488,7 +489,7 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    extern f32 sqrtf(f32 x);
+
     f32 dx;
     f32 dz;
     f32 dy;

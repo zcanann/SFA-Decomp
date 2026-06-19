@@ -20,10 +20,11 @@
 #include "main/gameplay_runtime.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_02C0_front.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern int ObjGroup_FindNearestObject();
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern int sprintf(char* s, const char* format, ...);
+
 extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];

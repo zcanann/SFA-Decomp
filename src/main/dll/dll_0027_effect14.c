@@ -18,11 +18,12 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
 extern EffectSrcParams gEffect14SharedSrcParams;
-extern void vecRotateZXY(void* params, f32* vec);
+
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;
 extern f32 lbl_803E0008;

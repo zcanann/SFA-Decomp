@@ -19,6 +19,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx.h"
 
 typedef struct FlammablevineObjectDef
 {
@@ -60,9 +61,9 @@ extern void ObjHits_DisableObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void Obj_RemoveFromUpdateList(int obj);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
 extern void* getTrickyObject(void);

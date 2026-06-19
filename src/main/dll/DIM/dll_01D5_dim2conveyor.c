@@ -34,11 +34,13 @@ extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-extern float mathSinf(float x);
+
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -59,7 +61,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define MUSIC_TRACK_CONVEYOR       0xdf
 
 extern f32 lbl_803E4A58;
-extern float mathCosf(float x);
+
 extern f32 lbl_803E4A5C;
 extern f32 lbl_803E4A60;
 extern f32 lbl_803E4A64;
@@ -170,7 +172,7 @@ void dim2conveyor_init(int* obj, u8* params)
 void dim2conveyor_update(int* obj)
 {
     extern void Music_Trigger(int id, int arg);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
     if (extra->musicHold != 0)

@@ -20,13 +20,14 @@
  */
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/engine_shared.h"
 extern f32 lbl_803E1890; /* angle delta upper bound */
 extern f32 lbl_803E1894; /* angle delta lower bound */
 extern f32 lbl_803E1898; /* angle unwrap step */
 extern f32 lbl_803E1888; /* angle near/zero threshold */
 extern char sPathCamNeedTwoControlPointsError[];
-extern void debugPrintf(char* fmt, ...);
-extern float sqrtf(float x);
+
+
 extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 
 /* curve-node field offsets used below */

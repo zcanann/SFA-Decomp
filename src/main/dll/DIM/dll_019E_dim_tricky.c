@@ -8,11 +8,12 @@
 #include "main/resource.h"
 #include "main/camera.h"
 #include "main/gamebits.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
-extern float sqrtf(float x);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
+
+
+
 extern f32 lbl_803E51C8;
 extern f32 lbl_803E51CC;
 extern f32 lbl_803E51D0;

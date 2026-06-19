@@ -22,7 +22,8 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/objhits.h"
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+#include "main/audio/sfx.h"
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();

@@ -4,6 +4,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/dll/gameplay.h"
+#include "main/audio/sfx.h"
 extern f32 timeDelta;
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
@@ -28,7 +29,7 @@ extern f32 lbl_803E1D90;
 extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void set_uiDllIdx_803dc8f0(int idx);
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputX(int port);

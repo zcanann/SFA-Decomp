@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
 
 #pragma scheduling on
 #pragma peephole on
@@ -19,7 +20,7 @@
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);

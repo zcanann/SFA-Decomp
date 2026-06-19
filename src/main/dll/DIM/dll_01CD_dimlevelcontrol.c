@@ -20,6 +20,8 @@
 #include "main/mapEvent.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -34,7 +36,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern int randomGetRange(int lo, int hi);
+
 extern f32 lbl_803E4A20;
 extern void timeOfDayFn_80055000(void);
 extern u8 framesThisStep;
@@ -107,7 +109,7 @@ typedef struct DimLevelControlState
 void dim_levelcontrol_update(int obj)
 {
     extern void Music_Trigger(int id, int arg);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     u8 a;
     u8 b;
     u8 c;

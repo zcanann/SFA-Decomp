@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/gamebits.h"
+#include "main/dll/player_80295318_shared.h"
 
 /* Tricky vtable slots reached through (tricky + 0x68). */
 #define TRICKY_VTBL_IS_BUSY 0x11
@@ -38,7 +39,7 @@ typedef struct TrickyguardPlacement
     u8 pad1C[0x20 - 0x1C];
 } TrickyguardPlacement;
 
-extern void* getTrickyObject(void);
+
 extern void objRenderFn_80041018(int* obj);
 
 void trickyguard_init(s16* obj, u8* placement)

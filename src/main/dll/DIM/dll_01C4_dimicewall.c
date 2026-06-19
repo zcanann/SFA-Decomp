@@ -7,6 +7,8 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 #define DIMICEWALL_MAPID_NO_SFX 7433
 
@@ -20,8 +22,8 @@ typedef struct DimicewallPlacement
     s16 shatterGameBit;
 } DimicewallPlacement;
 
-extern int randomGetRange(int lo, int hi);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
+
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;

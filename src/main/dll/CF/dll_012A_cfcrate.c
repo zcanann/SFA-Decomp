@@ -15,6 +15,7 @@
 #include "main/camera.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
 
 typedef struct CfccratePlacement
 {
@@ -149,7 +150,7 @@ void cfccrate_hitDetect(void)
 
 void cfccrate_update(int obj)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 
     CfCcrateState* state;
     int viewslot;

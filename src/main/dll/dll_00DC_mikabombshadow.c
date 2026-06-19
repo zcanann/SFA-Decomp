@@ -1,7 +1,7 @@
 /* DLL 0x00DC — Mika bomb-shadow objects [8016B230-8016B2E0) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-extern int randomGetRange(int lo, int hi);
+
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 FUN_8003b818();
 
@@ -163,6 +163,7 @@ extern u8 framesThisStep;
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/engine_shared.h"
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();

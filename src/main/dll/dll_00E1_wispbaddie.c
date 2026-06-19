@@ -11,6 +11,7 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
+#include "main/dll/objfsa.h"
 extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803DC074;
 
@@ -41,7 +42,7 @@ extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
+
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);

@@ -45,6 +45,10 @@
 #include "main/pad.h"
 #include "main/gamebits.h"
 #include "main/dll/tricky.h"
+#include "main/lightmap.h"
+#include "dolphin/gx/GXTransform.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "main/audio/sfx.h"
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;
 extern u16 lbl_803DE3F4;
@@ -105,7 +109,7 @@ extern u8 gHighScoreHighlightRow;
 extern int saveScoreFn_800e88b4(u8, u8, int, s32);
 extern int getSaveFileName(void);
 extern void* Obj_GetPlayerObject(void);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern u8 lbl_803A9440[0x18];
 extern u8 hudTextures[0x198];
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u);
@@ -133,7 +137,7 @@ extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 extern int Camera_IsViewYOffsetEnabled(void);
 extern void Camera_DisableViewYOffset(void);
 extern f32 Camera_GetFovY(void);
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+
 extern f32 lbl_803E1E3C; /*  0.0f */
 extern f32 lbl_803E1E68; /*  1.0f */
 extern f32 lbl_803E1F34; /*  320.0f */
@@ -198,7 +202,7 @@ extern f32 lbl_803E2100;
 extern HintCell lbl_8031BB90[13];
 extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
-extern int sprintf(char* s, const char* format, ...);
+
 extern float fsin16Precise(int angle);
 extern void gameTextShow(int a);
 extern void gameTextShowTimeStr(char* str);
@@ -426,7 +430,7 @@ extern int airMeter;
 
 /* Hoisted from per-function bodies (formerly #57 block-scope externs) so each
  * symbol is declared exactly once with a single consistent type. */
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void cutsceneFadeInOut(int a);
 extern void Music_Trigger(int id, int arg);
 extern void buttonDisable(int port, u32 mask);

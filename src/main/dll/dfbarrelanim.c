@@ -17,7 +17,8 @@
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 #include "main/mm.h"
-extern f32 sqrtf(f32 x);
+#include "main/dll/fx_800944A0_shared.h"
+
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
 extern const f32 lbl_803E4E00;

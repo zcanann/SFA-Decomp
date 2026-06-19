@@ -14,9 +14,10 @@
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
 #include "main/object_transform.h"
-extern f32 sqrtf(f32 x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+#include "main/engine_shared.h"
+
+
+
 extern void camcontrol_traceFromTarget();
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern f32 timeDelta;

@@ -1,6 +1,6 @@
 /* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
-extern int randomGetRange(int lo, int hi);
+
 extern u32 ObjHitbox_SetSphereRadius();
 
 void mikabomb_hitDetect(void);
@@ -161,6 +161,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/engine_shared.h"
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();

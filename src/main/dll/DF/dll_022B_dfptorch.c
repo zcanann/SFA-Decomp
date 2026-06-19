@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/camera.h"
+#include "main/audio/sfx.h"
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
@@ -182,7 +183,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void DFP_Torch_update(int obj)
 {
     extern void Sfx_PlayFromObject(int, int);
-    extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
     extern void objUpdateOpacity(int);
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;

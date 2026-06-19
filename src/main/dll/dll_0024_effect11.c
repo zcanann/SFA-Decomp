@@ -16,10 +16,11 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 
 
-extern void vecRotateZXY(void* rot, f32* vec);
+
 
 extern EffectSrcParams gEffect11DefaultSrcParams;
 extern f32 lbl_803DFF3C;

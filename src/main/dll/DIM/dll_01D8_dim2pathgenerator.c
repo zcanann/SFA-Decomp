@@ -41,6 +41,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 typedef struct Dim2pathgeneratorObjectDef
 {
@@ -86,7 +87,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define CURVE_GROUP_SNOWBALL_PATH   21
 #define OBJ_GROUP_SNOWBALL_POOL     47
 
-extern u64 ObjGroup_RemoveObject();
+
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)

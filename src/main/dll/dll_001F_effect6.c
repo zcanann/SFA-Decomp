@@ -21,6 +21,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
+#include "main/dll/DR/dr_shared.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -1304,7 +1305,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern float mathSinf(float x);
+
 extern f32 gEffect6ScrollPhase2;
 extern f32 gEffect6ScrollPhase3;
 extern int gEffect6Osc0Angle;

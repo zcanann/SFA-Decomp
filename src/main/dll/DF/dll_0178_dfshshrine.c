@@ -12,6 +12,7 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/audio/sfx.h"
 extern void objRenderFn_8003b8f4(int* obj);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
@@ -58,7 +59,7 @@ extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);

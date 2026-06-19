@@ -15,7 +15,7 @@
 
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/effect_interfaces.h"
@@ -26,6 +26,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 

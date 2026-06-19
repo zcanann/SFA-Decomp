@@ -14,6 +14,7 @@
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 
 typedef struct CfPrisonGuardMapData
 {
@@ -45,7 +46,7 @@ extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern int objGetAnimState80A(void* obj);
@@ -55,7 +56,7 @@ extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
 
 /* cfprisonguard_SeqFn: drive the guard state machine - ramp/reset the
  * alarm on cues, bail when captured or freed, watch player distance and

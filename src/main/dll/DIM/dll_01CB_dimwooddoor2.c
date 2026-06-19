@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -23,7 +24,7 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 #define DIMWOODDOOR2_KEY_MOVE_A    0x18f
 #define DIMWOODDOOR2_KEY_MOVE_B    0x1d6
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E49D0;

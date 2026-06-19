@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/dll/anim.h"
 #include "main/objseq.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern void objRenderFn_8003b8f4(f32);
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
@@ -143,7 +144,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 
 void dfpseqpoint_update(int obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     extern f32 Vec_distance(f32* a, f32* b);
     GameObject* self;
     GameObject* player;

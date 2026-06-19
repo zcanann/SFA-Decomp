@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 #include "main/dll/player_target.h"
+#include "main/engine_shared.h"
 
 typedef struct InvHitState
 {
@@ -39,9 +40,9 @@ extern int ObjList_ContainsObject(int obj);
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 timeDelta;
-extern void* Obj_GetPlayerObject(void);
+
 extern void* getTrickyObject(void);
-extern f32 sqrtf(f32 x); /* single-precision override for codegen */
+ /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);

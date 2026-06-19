@@ -29,6 +29,7 @@
 #include "main/sky_interface.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/objlib.h"
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
@@ -41,7 +42,7 @@ int fn_8015E3A0(int obj, int p2)
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
     extern void ObjHits_RegisterActiveHitVolumeObject(int);
-    extern void* ObjList_GetObjects(int* outA, int* outB);
+
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -94,7 +95,7 @@ int fn_8015E3A0(int obj, int p2)
 #pragma peephole off
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
-    extern void* ObjList_GetObjects(int* outA, int* outB);
+
     extern void* Obj_GetPlayerObject(void);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD4;
@@ -159,7 +160,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 #pragma peephole off
 int fn_8015DC04(int obj, GroundBaddieState* p)
 {
-    extern void* ObjList_GetObjects(int* outA, int* outB);
+
     extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
@@ -291,7 +292,7 @@ void fn_8015DAE8(void)
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
-    extern void* ObjList_GetObjects(int* outA, int* outB);
+
     extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DDC;

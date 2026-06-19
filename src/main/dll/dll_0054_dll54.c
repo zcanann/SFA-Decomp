@@ -22,6 +22,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "string.h"
 #include "main/object_transform.h"
+#include "main/objlib.h"
 extern f32 sqrtf(f32 x);
 extern u32 FUN_80294964();
 extern u32 DAT_802c2910;
@@ -34,7 +35,7 @@ extern f32 timeDelta;
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern f32 lbl_803E1B40;
 extern f32 lbl_803E1B44;
 extern f32 lbl_803E1B48;

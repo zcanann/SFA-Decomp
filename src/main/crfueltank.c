@@ -1,13 +1,14 @@
 #include "main/audio/sfx_ids.h"
 #include "main/crfueltank.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_DisableObject(void* obj);
 extern void ObjHits_EnableObject(void* obj);
 extern void ObjHits_SetHitVolumeSlot(void* obj, int hitVolume, int hitType, int sourceSlot);
 
-extern void* Obj_GetPlayerObject(void);
+
 extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);

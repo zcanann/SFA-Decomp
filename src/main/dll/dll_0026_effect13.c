@@ -3,6 +3,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
 
 #if 0
 u32
@@ -432,7 +433,7 @@ extern f32 lbl_803E01A0;
 extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8;
 extern f32 lbl_803E01AC;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern WaterfxCfg lbl_8039C440;
 
 #pragma dont_inline on

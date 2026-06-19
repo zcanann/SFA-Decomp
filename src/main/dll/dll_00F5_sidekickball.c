@@ -25,6 +25,7 @@
 #include "main/pad.h"
 #include "main/dll/dll_00F5_sidekickball.h"
 #include "string.h"
+#include "main/audio/sfx.h"
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
@@ -134,7 +135,7 @@ void fn_801796BC(int obj, f32 a, f32 b, f32 c)
 
 void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     SidekickBallState* params = (SidekickBallState*)paramsRaw;
     int* player;
     int* playerState;
@@ -351,7 +352,7 @@ typedef struct TrickyBallState
 
 u8 trickyBallMove(u8* obj)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     TrickyBallState* state;
     f32 collisionNormal[3];
     f32 dx;

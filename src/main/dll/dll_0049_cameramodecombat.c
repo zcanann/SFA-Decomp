@@ -5,15 +5,16 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern u32 Camera_GetCurrentViewSlot();
-extern f32 sqrtf(f32 x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
+
 extern u32 fn_8029630C(int obj);
 extern int objAnimFn_80296328(int obj);
 extern u32 cameraGetPrevPos2();

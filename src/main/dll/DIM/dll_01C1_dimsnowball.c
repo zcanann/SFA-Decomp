@@ -55,6 +55,7 @@ extern u8 framesThisStep;
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx.h"
 
 typedef struct DimsnowballState
 {
@@ -102,7 +103,7 @@ void dimsnowball_hitDetect(int* obj)
 void dimsnowball_update(int obj)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
+ /* #57 */
     s16 idx[4];
     f32 x[4];
     f32 y[4];

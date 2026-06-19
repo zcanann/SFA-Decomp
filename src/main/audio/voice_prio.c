@@ -1,7 +1,8 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/hw_init.h"
 
-extern void hwSetPriority(int slot, u32 value);
+
 
 extern u8 vidListNodes[];
 extern u16 voicePrioSortRootListRoot;

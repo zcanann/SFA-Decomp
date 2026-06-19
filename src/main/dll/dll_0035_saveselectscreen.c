@@ -23,6 +23,8 @@
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/dll_43.h"
 #include "main/pad.h"
+#include "main/audio/sfx.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
 typedef struct SaveSelectPanel
 {
@@ -34,7 +36,7 @@ typedef struct SaveSelectPanel
     u8 padA[2];
 } SaveSelectPanel;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 extern int getUiDllFn_80014930(void);
@@ -75,7 +77,7 @@ extern int gSaveSelectInfoStartSlot;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
-extern int sprintf(char* s, const char* format, ...);
+
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);

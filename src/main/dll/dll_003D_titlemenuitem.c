@@ -19,6 +19,7 @@
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/pad.h"
 #include "main/texture.h"
+#include "main/audio/sfx.h"
 
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
@@ -42,9 +43,9 @@ extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
 extern void* lbl_803A9DB8[6];   /* cached menu textures */
 extern s16 lbl_8031C2A8[6];     /* texture asset ids for the cache */
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+
+
+
 extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void* gameTextGetPhrase(int textId, int phraseIndex);

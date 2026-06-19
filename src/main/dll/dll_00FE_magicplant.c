@@ -19,8 +19,9 @@
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/dll/dll_00FD.h"
+#include "main/mm.h"
 extern int randomGetRange(int lo, int hi);
-extern void mm_free(void* p);
+
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern int Obj_IsLoadingLocked(void);

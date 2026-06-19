@@ -17,13 +17,14 @@
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 /* sub->flags bits (see chukchukstate_struct.h) */
 #define CHUKCHUK_FLAG_PRIMED 0x1
 #define CHUKCHUK_FLAG_DEAD 0x2
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
 
-extern int randomGetRange(int lo, int hi);
+
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
 extern u32 ObjHits_DisableObject();
@@ -95,7 +96,7 @@ void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void fn_8015F5B0(short* obj)
 {
-    extern u8 Obj_IsLoadingLocked(void);
+
     extern int Obj_AllocObjectSetup(int size, int id);
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     extern int Obj_GetPlayerObject(void);
@@ -134,7 +135,7 @@ void chukchuk_update(short* obj)
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
     extern int Obj_GetPlayerObject(void);
     extern int getAngle(float y, float x);
-    extern f32 sqrtf(f32);
+
     extern void fn_8015F5B0(short* obj);
     extern u8 lbl_8031FF80[];
     extern f32 timeDelta;

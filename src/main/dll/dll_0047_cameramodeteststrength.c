@@ -8,9 +8,10 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 #include "main/dll/CAM/dll_5B.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-extern f32 sqrtf(f32 x);
+
 extern CamCannonState* lbl_803DD560;
 extern f32 timeDelta;
 extern f32 lbl_803E1888;
@@ -28,8 +29,8 @@ extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32*
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32);
-extern void* memset(void* p, int c, int n);
+
+
 extern u8 framesThisStep;
 extern f32 lbl_803E18BC;
 

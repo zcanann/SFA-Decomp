@@ -28,6 +28,7 @@
 #include "main/camera.h"
 #include "main/objlib.h"
 #include "main/sfa_extern_decls.h"
+#include "main/lightmap.h"
 
 typedef struct MinimapRow
 {
@@ -52,7 +53,7 @@ extern MinimapMapEntry gMinimapCellTable[];
 void fn_80133718(void);
 void fn_8013351C(void);
 
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern void* Obj_GetPlayerObject(void);
 extern int Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);

@@ -23,6 +23,8 @@
 #include "dolphin/gx/GXCull.h"
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/VF/vf_shared.h"
+#include "dolphin/gx/GXTransform.h"
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
@@ -57,7 +59,7 @@ extern int ObjModel_GetRenderOp(int model, int p);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
-extern void* Obj_GetPlayerObject(void);
+
 extern void hudDrawTimedElement(int obj, void* p);
 
 extern int getHudHiddenFrameCount(void);
@@ -89,7 +91,7 @@ extern f32 Camera_GetFovY(void);
 extern void Camera_SetFovY(f32 fovY);
 extern int Obj_GetActiveModel(int obj);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+
 extern float mathCosf(float x);
 extern s8 cMenuState;
 extern u8 framesThisStep;

@@ -13,6 +13,8 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct CflevelcontrolState
 {
@@ -39,11 +41,11 @@ typedef struct CfLevelControlFlags
 } CfLevelControlFlags;
 
 extern void s16toFloat(void* p, int duration);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void storeZeroToFloatParam(void* p);
 extern s16 lbl_80323008[];
 extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 lbl_803E43E8;
 extern int ObjList_FindObjectById(int objectId);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);

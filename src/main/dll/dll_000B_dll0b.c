@@ -32,6 +32,7 @@
 #include "main/mm.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_000B_dll0b.h"
+#include "main/objlib.h"
 
 typedef struct ModgfxEffectSlot
 {
@@ -2749,7 +2750,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern void Sfx_StopObjectChannel(void* obj, int ch);
 extern const f32 lbl_803DF43C;
 
