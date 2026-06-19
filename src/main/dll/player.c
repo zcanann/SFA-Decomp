@@ -9396,9 +9396,10 @@ int fn_802A1114(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = lbl_803E7EA4;
+        fz = lbl_803E7EA4;
+        inner->unk564 = fz;
         inner->unk560 = buf1[1];
-        inner->unk568 = lbl_803E7EA4;
+        inner->unk568 = fz;
         pos[0] = inner->unk54C;
         pos[1] = inner->unk550;
         ic = inner->curAnimId;
