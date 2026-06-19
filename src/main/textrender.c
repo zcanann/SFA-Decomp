@@ -859,12 +859,12 @@ void* gameTextGet(int textId)
     {
         lbl_803DC97C = 0;
     }
-    entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+    entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&lbl_803DC97C * 0xc);
     lbl_803DC974 = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
-    lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-    sprintf((char*)gCurTextBuffer, &lbl_803DB3D4, textId,
+    lbl_803DC970 = (int)(gameTextBase + 0x20 + *(volatile int*)&lbl_803DC97C * 4);
+    sprintf((char*)*(volatile int*)&gCurTextBuffer, &lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)lbl_803DC974 = (u16)textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
