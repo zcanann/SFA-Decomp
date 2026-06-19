@@ -140,7 +140,7 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     if ((*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
         obj, (u8*)p, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
     {
-        *(int*)&p->baddie.targetObj = *(int*)(sub + 0x3e0);
+        *(int*)&p->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
         *(s8*)&p->baddie.hasTarget = 0;
         if (*(char*)(setup + 0x2e) != -1)
         {
@@ -157,10 +157,10 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     }
     (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)p,
                                                                               lbl_803E2E9C, 1);
-    *(int*)(sub + 0x3e0) = *(int*)&((GameObject*)obj)->pendingParentObj;
+    ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
     (*gPlayerInterface)->update((void*)obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
-    *(int*)&((GameObject*)obj)->pendingParentObj = *(int*)(sub + 0x3e0);
+    *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 #pragma dont_inline reset
 
