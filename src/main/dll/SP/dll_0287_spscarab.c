@@ -29,17 +29,17 @@ extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
 extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
-extern u16 lbl_803E5A70;
-extern u8 lbl_803E5A72;
-extern f32 lbl_803E5A74; /* gravity */
-extern f32 lbl_803E5A78; /* ground-bounce velocityY */
-extern f32 lbl_803E5A7C; /* bbox collision radius */
-extern f32 lbl_803E5A80; /* pickup radius */
-extern f32 lbl_803E5A84; /* pickup particle scale */
-extern f32 lbl_803E5A88; /* dust-burst scale */
-extern f32 lbl_803E5A8C;
-extern f32 lbl_803E5A90;
-extern f32 lbl_803E5A94; /* base horizontal speed scale */
+extern u16 gSpScarabPaletteBytesA;
+extern u8 gSpScarabPaletteByteB;
+extern f32 gSpScarabGravity; /* gravity */
+extern f32 gSpScarabBounceVelocityY; /* ground-bounce velocityY */
+extern f32 gSpScarabCollisionRadius; /* bbox collision radius */
+extern f32 gSpScarabPickupRadius; /* pickup radius */
+extern f32 gSpScarabPickupParticleScale; /* pickup particle scale */
+extern f32 gSpScarabDustBurstScale; /* dust-burst scale */
+extern f32 gSpScarabPi;
+extern f32 gSpScarabAngleToRadiansDivisor;
+extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 
 /* init() reads the placement raw off def: rotX byte (0x18), kind (0x19),
    vendorObj (int, 0x14) and groundY (s16, 0x1a). */
@@ -94,7 +94,7 @@ void spscarab_update(int obj)
 
     if (((GameObject*)obj)->anim.localPosY > ((SpscarabState*)state)->groundY)
     {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E5A74 * timeDelta;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gSpScarabGravity * timeDelta;
     }
 
     objMove(obj,
@@ -111,11 +111,11 @@ void spscarab_update(int obj)
     if (((GameObject*)obj)->anim.localPosY < ((SpscarabState*)state)->groundY)
     {
         ((GameObject*)obj)->anim.localPosY = ((SpscarabState*)state)->groundY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E5A78;
+        ((GameObject*)obj)->anim.velocityY = gSpScarabBounceVelocityY;
     }
 
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc,
-                           lbl_803E5A7C, 0, (int)&hit_buf[0], obj,
+                           gSpScarabCollisionRadius, 0, (int)&hit_buf[0], obj,
                            8, -1, 0xff, 0xa) != 0)
     {
         Vec3_ReflectAgainstNormal((int)&hit_buf[7], obj + 0x24, (int)outV);
@@ -126,10 +126,10 @@ void spscarab_update(int obj)
     }
 
     if (getXZDistance((int*)(Obj_GetPlayerObject() + 0x18), (int*)&((GameObject*)obj)->anim.worldPosX)
-        < lbl_803E5A80)
+        < gSpScarabPickupRadius)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
-        itemPickupDoParticleFx(obj, lbl_803E5A84, ((SpscarabState*)state)->mode, 0x28);
+        itemPickupDoParticleFx(obj, gSpScarabPickupParticleScale, ((SpscarabState*)state)->mode, 0x28);
         ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x8000;
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
 
@@ -146,8 +146,8 @@ void spscarab_update(int obj)
     {
         if (((SpscarabState*)state)->burstCount != 0)
         {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A84, (u8)((SpscarabState*)state)->burstCount, 1, 0x14,
-                                        lbl_803E5A88, 0, 0);
+            objfx_spawnDirectionalBurst(obj, 5, gSpScarabPickupParticleScale, (u8)((SpscarabState*)state)->burstCount, 1, 0x14,
+                                        gSpScarabDustBurstScale, 0, 0);
         }
     }
 }
@@ -167,23 +167,23 @@ void spscarab_init(int obj, int def)
 
     objAnim = (ObjAnimComponent*)obj;
     p_b8 = *(int*)&((GameObject*)obj)->extra;
-    paletteBytes.a = lbl_803E5A70;
-    paletteBytes.b = lbl_803E5A72;
+    paletteBytes.a = gSpScarabPaletteBytesA;
+    paletteBytes.b = gSpScarabPaletteByteB;
 
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
     ((GameObject*)obj)->anim.velocityX =
-        -mathSinf(lbl_803E5A8C * (f32)(s32)((GameObject*)obj)->anim.rotX /
-            lbl_803E5A90);
+        -mathSinf(gSpScarabPi * (f32)(s32)((GameObject*)obj)->anim.rotX /
+            gSpScarabAngleToRadiansDivisor);
     ((GameObject*)obj)->anim.velocityZ =
-        -mathCosf(lbl_803E5A8C * (f32)(s32)((GameObject*)obj)->anim.rotX /
-            lbl_803E5A90);
+        -mathCosf(gSpScarabPi * (f32)(s32)((GameObject*)obj)->anim.rotX /
+            gSpScarabAngleToRadiansDivisor);
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
     ((SpscarabState*)p_b8)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
-    ((SpscarabState*)p_b8)->speedScale = lbl_803E5A94 + randomGetRange(0, 0x64) / lbl_803E5A80;
+    ((SpscarabState*)p_b8)->speedScale = gSpScarabBaseSpeedScale + randomGetRange(0, 0x64) / gSpScarabPickupRadius;
     ((SpscarabState*)p_b8)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 

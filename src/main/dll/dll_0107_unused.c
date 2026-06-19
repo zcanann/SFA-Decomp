@@ -154,7 +154,7 @@ void fn_80185B74(int obj)
     extern f32 lbl_803E3A68;
     extern f32 lbl_803E3A6C;
     extern f32 lbl_803E3A70;
-    extern f32 lbl_803E3A74;
+    extern f32 gWindLift107LaunchGravity;
     extern f64 lbl_803E3A78;
 
 
@@ -365,7 +365,7 @@ void fn_80185B74(int obj)
             ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
             if (((GameObject*)obj)->anim.velocityY > lbl_803E3A70)
             {
-                ((GameObject*)obj)->anim.velocityY = lbl_803E3A74 * timeDelta + ((GameObject*)obj)->anim.velocityY;
+                ((GameObject*)obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
             }
             ObjHits_EnableObject(obj);
         }
@@ -426,8 +426,8 @@ void fn_801862CC(int obj, int p)
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;
     extern f32 lbl_803E3A78;
-    extern f32 lbl_803E3A80;
-    extern f32 lbl_803E3A84;
+    extern f32 gWindLift107RadiusScale;
+    extern f32 gWindLift107DefaultRadius;
     WindLift107State* sub;
     int p54;
     int p64;
@@ -472,11 +472,11 @@ void fn_801862CC(int obj, int p)
     sub->unk27 = 0;
     if (*(char*)(p + 0x19) != '\0')
     {
-        sub->radius = lbl_803E3A80 * (f32)(s32) * (char*)(p + 0x19);
+        sub->radius = gWindLift107RadiusScale * (f32)(s32) * (char*)(p + 0x19);
     }
     else
     {
-        sub->radius = lbl_803E3A84;
+        sub->radius = gWindLift107DefaultRadius;
     }
     ((GameObject*)obj)->unkF4 = 0;
     if (((GameObject*)obj)->anim.modelState != NULL)

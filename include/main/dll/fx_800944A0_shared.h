@@ -294,7 +294,7 @@ extern f32 lbl_803DF370;
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void vecRotateZXY(void *in, f32 *out);
-extern int lbl_8030F7B0[];
+extern int gCloudActionEnvTbl[];
 extern f32 lbl_803DF2DC;
 extern int saveGameGetEnvState(void);
 extern int gObjFxRandomBurstTbl[];

@@ -4,7 +4,7 @@
  * fx_800944A0_shared.h). It owns up to three cloud-layer objects in
  * CloudActionRuntime (lbl_8039AB28): a main layer, an upper layer and a
  * lower layer, each spawned from an asset id picked out of the per-env
- * CloudEnvTbl (lbl_8030F7B0) by the current environment's layer-state
+ * CloudEnvTbl (gCloudActionEnvTbl) by the current environment's layer-state
  * bytes.
  *
  * renderClouds() positions each live layer to the current camera view
@@ -45,7 +45,7 @@ extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int getHudHiddenFrameCount(void);
-extern volatile f32 lbl_803DB780;
+extern volatile f32 gCloudActionGlareQuadSize;
 extern const f32 lbl_803DF2B4;
 extern const f32 lbl_803DF2C0;
 extern const f32 lbl_803DF2C4;
@@ -242,17 +242,17 @@ void renderClouds(int a, int b, int c, int d)
         }
         if (getHudHiddenFrameCount() == 0)
         {
-            *(f32*)&lbl_803DB780 = randomGetRange(0x1f40, 0x2ee0);
+            *(f32*)&gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
         }
         GXBegin(0x80, 2, 4);
-        v = -lbl_803DB780;
+        v = -gCloudActionGlareQuadSize;
         GXPos3f32(v, v, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2B4, lbl_803DF2B4);
-        GXPos3f32(lbl_803DB780, -lbl_803DB780, lbl_803DF2B4);
+        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2D4, lbl_803DF2B4);
-        GXPos3f32(lbl_803DB780, lbl_803DB780, lbl_803DF2B4);
+        GXPos3f32(gCloudActionGlareQuadSize, gCloudActionGlareQuadSize, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2D4, lbl_803DF2D4);
-        v = lbl_803DB780;
+        v = gCloudActionGlareQuadSize;
         GXPos3f32(-v, v, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2B4, lbl_803DF2D4);
     }
@@ -303,7 +303,7 @@ void cloudaction_onMapSetup(void)
 
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
 {
-    CloudEnvTbl* tbl = (CloudEnvTbl*)lbl_8030F7B0;
+    CloudEnvTbl* tbl = (CloudEnvTbl*)gCloudActionEnvTbl;
     int envState;
 
     envState = saveGameGetEnvState();

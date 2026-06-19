@@ -47,7 +47,7 @@ extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
 extern f32 lbl_803E3020;
-extern f32 lbl_803E3024;
+extern f32 gStaffActionVelocityDamping;
 extern f32 lbl_803E3028;
 extern f32 lbl_803E302C;
 extern f32 lbl_803E3030;
@@ -527,7 +527,7 @@ void fn_80165B3C(int obj, int state)
 
     radius = lbl_803E3020;
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E2FF4;
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (damping = lbl_803E3024);
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (damping = gStaffActionVelocityDamping);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * damping;
     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
     start[0] = ((GameObject*)obj)->anim.localPosX;
@@ -854,10 +854,10 @@ extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj,
 extern int* gPlayerInterface;
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
-extern int lbl_803AC638[];
+extern int gStaffActionHitLightParams[];
 extern void* gLandedArwingStateHandlers[];
 extern void* gLandedArwingDefaultStateHandler;
-extern f32 lbl_803E3034;
+extern f32 gStaffActionBoundsSearchRadius;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
 extern void LandedArwing_UpdateRetreatChase(void);
@@ -885,7 +885,7 @@ void dll_D3_update(int* obj)
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
     player = Obj_GetPlayerObject();
-    searchRadius = lbl_803E3034;
+    searchRadius = gStaffActionBoundsSearchRadius;
 
     if (extra->boundsObj == NULL)
     {
@@ -984,14 +984,14 @@ void dll_D3_update(int* obj)
             obj, state,
             (int)((char*)state + 0x35c),
             (int)((TreasureChestState*)state)->gameBitB,
-            lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
+            lbl_803202E8, lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
             (*(void (**)(void))(*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))();
-            *(f32*)((char*)lbl_803AC638 + 0xc) = ((GameObject*)obj)->anim.localPosX;
-            *(f32*)((char*)lbl_803AC638 + 0x10) = ((GameObject*)obj)->anim.localPosY;
-            *(f32*)((char*)lbl_803AC638 + 0x14) = ((GameObject*)obj)->anim.localPosZ;
-            objLightFn_8009a1dc(obj, lbl_803E3038, lbl_803AC638, 1, 0);
+            *(f32*)((char*)gStaffActionHitLightParams + 0xc) = ((GameObject*)obj)->anim.localPosX;
+            *(f32*)((char*)gStaffActionHitLightParams + 0x10) = ((GameObject*)obj)->anim.localPosY;
+            *(f32*)((char*)gStaffActionHitLightParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+            objLightFn_8009a1dc(obj, lbl_803E3038, gStaffActionHitLightParams, 1, 0);
         }
     }
 

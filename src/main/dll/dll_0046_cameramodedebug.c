@@ -23,17 +23,17 @@ extern u8 padGetCY(int port);
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 
-extern CameraModeDebugState* lbl_803DD550;
+extern CameraModeDebugState* gCamDebugState;
 extern f32 lbl_803E1840;
-extern f32 lbl_803E1844;
-extern f32 lbl_803E1848;
-extern f32 lbl_803E184C;
-extern f32 lbl_803E1850;
-extern f32 lbl_803E1854;
-extern f32 lbl_803E1858;
-extern f32 lbl_803E185C;
-extern f32 lbl_803E1860;
-extern f32 lbl_803E1870;
+extern f32 gCamDebugZoomInRate;
+extern f32 gCamDebugZoomOutRate;
+extern f32 gCamDebugRadiusDampFast;
+extern f32 gCamDebugRadiusDampSlow;
+extern f32 gCamDebugOrbitRadiusMin;
+extern f32 gCamDebugOrbitRadiusMax;
+extern f32 gCamDebugPi;
+extern f32 gCamDebugAngleUnitScale;
+extern f32 gCamDebugOrbitRadiusInit;
 
 void CameraModeDebug_update(short* camObj)
 {
@@ -57,30 +57,30 @@ void CameraModeDebug_update(short* camObj)
     }
     if ((held & 8) != 0)
     {
-        move = lbl_803E1844 * lbl_803DD550->orbitRadius;
+        move = gCamDebugZoomInRate * gCamDebugState->orbitRadius;
     }
     if ((held & 4) != 0)
     {
-        move = lbl_803E1848 * lbl_803DD550->orbitRadius;
+        move = gCamDebugZoomOutRate * gCamDebugState->orbitRadius;
     }
     absMove = (move < lbl_803E1840) ? -move : move;
-    absVel = (lbl_803DD550->radiusVelocity < lbl_803E1840)
-                 ? -lbl_803DD550->radiusVelocity
-                 : lbl_803DD550->radiusVelocity;
-    factor = lbl_803E1850;
+    absVel = (gCamDebugState->radiusVelocity < lbl_803E1840)
+                 ? -gCamDebugState->radiusVelocity
+                 : gCamDebugState->radiusVelocity;
+    factor = gCamDebugRadiusDampSlow;
     if (absMove < absVel)
     {
-        factor = lbl_803E184C;
+        factor = gCamDebugRadiusDampFast;
     }
-    lbl_803DD550->radiusVelocity = factor * (move - lbl_803DD550->radiusVelocity) + lbl_803DD550->radiusVelocity;
-    lbl_803DD550->orbitRadius = lbl_803DD550->orbitRadius + lbl_803DD550->radiusVelocity;
-    if (lbl_803DD550->orbitRadius < lbl_803E1854)
+    gCamDebugState->radiusVelocity = factor * (move - gCamDebugState->radiusVelocity) + gCamDebugState->radiusVelocity;
+    gCamDebugState->orbitRadius = gCamDebugState->orbitRadius + gCamDebugState->radiusVelocity;
+    if (gCamDebugState->orbitRadius < gCamDebugOrbitRadiusMin)
     {
-        lbl_803DD550->orbitRadius = lbl_803E1854;
+        gCamDebugState->orbitRadius = gCamDebugOrbitRadiusMin;
     }
-    if (lbl_803DD550->orbitRadius > lbl_803E1858)
+    if (gCamDebugState->orbitRadius > gCamDebugOrbitRadiusMax)
     {
-        lbl_803DD550->orbitRadius = lbl_803E1858;
+        gCamDebugState->orbitRadius = gCamDebugOrbitRadiusMax;
     }
     {
         u16 dx = (u16)((s8)padGetCX(0) * 3);
@@ -89,13 +89,13 @@ void CameraModeDebug_update(short* camObj)
         *(s16*)(cam + 2) = (s16)(*(s16*)(cam + 2) + dy);
     }
     {
-        f32 cosYaw = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
-        f32 sinYaw = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
-        f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
-        f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
-        radius = lbl_803DD550->orbitRadius;
+        f32 cosYaw = mathSinf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
+        f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
+        f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / gCamDebugAngleUnitScale);
+        f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / gCamDebugAngleUnitScale);
+        radius = gCamDebugState->orbitRadius;
         *(f32*)(cam + 24) = *(f32*)(state + 24) + radius * sinPitch * sinYaw;
-        *(f32*)(cam + 28) = lbl_803E1854 + *(f32*)(state + 28) + radius * cosPitch;
+        *(f32*)(cam + 28) = gCamDebugOrbitRadiusMin + *(f32*)(state + 28) + radius * cosPitch;
         *(f32*)(cam + 32) = *(f32*)(state + 32) + radius * sinPitch * cosYaw;
     }
     Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
@@ -105,12 +105,12 @@ void CameraModeDebug_update(short* camObj)
 
 void CameraModeDebug_init(void)
 {
-    if (lbl_803DD550 == NULL)
+    if (gCamDebugState == NULL)
     {
-        lbl_803DD550 = (CameraModeDebugState*)mmAlloc(sizeof(CameraModeDebugState), 0xf, 0);
+        gCamDebugState = (CameraModeDebugState*)mmAlloc(sizeof(CameraModeDebugState), 0xf, 0);
     }
-    lbl_803DD550->orbitRadius = lbl_803E1870;
-    lbl_803DD550->radiusVelocity = lbl_803E1840;
+    gCamDebugState->orbitRadius = gCamDebugOrbitRadiusInit;
+    gCamDebugState->radiusVelocity = lbl_803E1840;
     return;
 }
 
@@ -130,8 +130,8 @@ void CameraModeStatic_copyToCurrent_nop(void);
 
 void CameraModeDebug_free(void)
 {
-    mm_free(lbl_803DD550);
-    lbl_803DD550 = 0;
+    mm_free(gCamDebugState);
+    gCamDebugState = 0;
 }
 
 void CameraModeStatic_free(void);

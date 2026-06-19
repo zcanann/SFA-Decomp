@@ -30,7 +30,7 @@ extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);
 extern void objRenderFn_8003b8f4(f32);
-extern int lbl_803DDC10;
+extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -98,7 +98,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
     player = (int)playerObj;
     st->flags = (u8)(st->flags | PLATFORM1_FLAG_ACTIVE);
     setAButtonIcon(0xf);
-    lbl_803DDC10 = 0;
+    gTotemStrengthDeactivateTimer = 0;
     st->linkedObject = 0;
     list = ObjList_GetObjects(&idx1, &cnt1);
     while (idx1 < cnt1)
@@ -244,7 +244,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
                 (*gScreenTransitionInterface)->step(0x14, 1);
-                lbl_803DDC10 = 2;
+                gTotemStrengthDeactivateTimer = 2;
                 ret = 4;
                 goto done;
             }
@@ -270,7 +270,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
                 (*gScreenTransitionInterface)->step(0x14, 1);
-                lbl_803DDC10 = 2;
+                gTotemStrengthDeactivateTimer = 2;
                 ret = 4;
                 goto done;
             }
@@ -409,7 +409,7 @@ void sc_totemstrength_update(u8* obj)
                 (*gObjectTriggerInterface)->endSequence(st->loopSfxHandle);
                 ObjSeq_takeXrotChanged(st->loopSfxHandle);
             }
-            if (lbl_803DDC10-- == 0)
+            if (gTotemStrengthDeactivateTimer-- == 0)
             {
                 st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);
                 ((GameObject*)obj)->anim.localPosX = st->savedPosX;
