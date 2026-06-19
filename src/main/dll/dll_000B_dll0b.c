@@ -1593,11 +1593,11 @@ void fn_800A02DC(ModgfxState* state, f32* in)
         cur->texCoordS = prev->texCoordS;
         cur->texCoordT = prev->texCoordT;
         cur->texCoordS = (s16)(cur->texCoordS + dx);
-        if ((s32)cur->texCoordS > 0x100) ovx = (u8)(ovx + 1);
-        if ((s32)cur->texCoordS < -0x100) ovx = (u8)(ovx + 1);
+        if ((s32)cur->texCoordS > 0x100) ovx++;
+        if ((s32)cur->texCoordS < -0x100) ovx++;
         cur->texCoordT = (s16)(cur->texCoordT + dy);
-        if ((s32)cur->texCoordT > 0x100) ovy = (u8)(ovy + 1);
-        if ((s32)cur->texCoordT < -0x100) ovy = (u8)(ovy + 1);
+        if ((s32)cur->texCoordT > 0x100) ovy++;
+        if ((s32)cur->texCoordT < -0x100) ovy++;
         cur++;
         prev++;
     }
