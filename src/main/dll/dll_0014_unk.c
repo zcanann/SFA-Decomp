@@ -2748,12 +2748,15 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
     segmentDx = curves[2]->x - curves[1]->x;
     segmentDz = curves[2]->z - curves[1]->z;
-    tangentDx = segmentDx;
-    tangentDz = segmentDz;
     if (curves[0] != NULL)
     {
         tangentDx = curves[1]->x - curves[0]->x;
         tangentDz = curves[1]->z - curves[0]->z;
+    }
+    else
+    {
+        tangentDx = segmentDx;
+        tangentDz = segmentDz;
     }
     tangentDx = gFloatHalf * (tangentDx + segmentDx);
     tangentDz = gFloatHalf * (tangentDz + segmentDz);
@@ -2774,12 +2777,15 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
             startDenom;
     }
 
-    nextTangentDx = segmentDx;
-    nextTangentDz = segmentDz;
     if (curves[3] != NULL)
     {
         nextTangentDx = curves[3]->x - curves[2]->x;
         nextTangentDz = curves[3]->z - curves[2]->z;
+    }
+    else
+    {
+        nextTangentDx = segmentDx;
+        nextTangentDz = segmentDz;
     }
     nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
     nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
