@@ -726,26 +726,26 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posZ;
     f32 zeroV;
 
-    if (*(f32*)(state + 1000) > (zeroV = lbl_803E1C2C))
+    if (((Dll19Placement*)state)->unk3E8 > (zeroV = lbl_803E1C2C))
     {
-        *(f32*)(state + 1000) = timeDelta * *(f32*)(state + 1004) + *(f32*)(state + 1000);
-        if ((*(u16*)(state + 1024) & 0x20) != 0)
+        ((Dll19Placement*)state)->unk3E8 = timeDelta * ((Dll19Placement*)state)->unk3EC + ((Dll19Placement*)state)->unk3E8;
+        if ((((Dll19Placement*)state)->unk400 & 0x20) != 0)
         {
-            *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x20;
-            *(u16*)(state + 1024) = *(u16*)(state + 1024) | 0x40;
-            if (*(f32*)(state + 1000) > lbl_803E1C40)
+            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x20;
+            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x40;
+            if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
             {
-                *(f32*)(state + 1000) = zeroV;
-                *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
+                ((Dll19Placement*)state)->unk3E8 = zeroV;
+                ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
             }
         }
-        else if ((*(u16*)(state + 1024) & 0x40) != 0)
+        else if ((((Dll19Placement*)state)->unk400 & 0x40) != 0)
         {
-            if (*(f32*)(state + 1000) > lbl_803E1C40)
+            if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
             {
                 int other = *(int*)(p1 + 76);
-                *(f32*)(state + 1000) = zeroV;
-                *(u16*)(state + 1024) = *(u16*)(state + 1024) & ~0x40;
+                ((Dll19Placement*)state)->unk3E8 = zeroV;
+                ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
                 p2[852] = 0;
                 p1[54] = 0;
                 *(int*)(p1 + 244) = 1;
@@ -757,14 +757,14 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
         else
         {
-            if (*(f32*)(state + 1000) < zeroV)
+            if (((Dll19Placement*)state)->unk3E8 < zeroV)
             {
-                *(f32*)(state + 1000) = zeroV;
+                ((Dll19Placement*)state)->unk3E8 = zeroV;
             }
-            else if (*(f32*)(state + 1000) > lbl_803E1C44)
+            else if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C44)
             {
-                *(f32*)(state + 1000) = lbl_803E1C44 - (*(f32*)(state + 1000) - lbl_803E1C44);
-                *(f32*)(state + 1004) = -*(f32*)(state + 1004);
+                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C44 - (((Dll19Placement*)state)->unk3E8 - lbl_803E1C44);
+                ((Dll19Placement*)state)->unk3EC = -((Dll19Placement*)state)->unk3EC;
             }
         }
     }
@@ -799,9 +799,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     p2[852] = (s8)(p2[852] - v24);
     if ((s8)p2[852] < 1)
     {
-        *(u16*)(state + 1024) = *(u16*)(state + 1024) | 0x20;
-        *(f32*)(state + 1000) = lbl_803E1C48;
-        *(f32*)(state + 1004) = lbl_803E1C4C;
+        ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
+        ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
+        ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
         *(s16*)(p2 + 624) = p7;
         p2[852] = 0;
     }
@@ -817,8 +817,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                     p2[841] = 0;
                 }
             }
-            *(f32*)(state + 1000) = lbl_803E1C48;
-            *(f32*)(state + 1004) = lbl_803E1C50;
+            ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
+            ((Dll19Placement*)state)->unk3EC = lbl_803E1C50;
             if (p5 != NULL)
             {
                 if (p5[hit - 2] != -1)
