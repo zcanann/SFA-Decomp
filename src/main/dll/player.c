@@ -4165,7 +4165,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
     sc0[0] = lbl_803E808C * vec[0];
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
-    *(u32*)((char*)p2 + 0x360) &= ~0x100LL;
+    *(u32*)&((PlayerState*)p2)->flags360 &= ~0x100LL;
     for (i = 0; i < 13; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -4883,9 +4883,9 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     *(f32*)((char*)out + 0x44) = *(f32*)((char*)vec + 0x0);
     *(f32*)((char*)out + 0x48) = *(f32*)((char*)src + 0xc);
     *(f32*)((char*)out + 0x4c) = *(f32*)((char*)vec + 0x8);
-    *(f32*)((char*)out + 0x50) = *(f32*)((char*)p2 + 0x768);
+    *(f32*)((char*)out + 0x50) = ((PlayerState*)p2)->savedPosX;
     *(f32*)((char*)out + 0x54) = lbl_803E7EA4;
-    *(f32*)((char*)out + 0x58) = *(f32*)((char*)p2 + 0x770);
+    *(f32*)((char*)out + 0x58) = ((PlayerState*)p2)->savedPosZ;
     if (flag != 0)
     {
         *(u8*)((char*)out + 0x1) = 1;
@@ -9758,7 +9758,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         flag = 1;
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
             p3, 2, &d);
-        angle = (s16)(*(s16*)((char*)p2 + 0x478) - (u16)d);
+        angle = (s16)(((PlayerState*)p2)->targetYaw - (u16)d);
         if (angle > 0x8000)
         {
             angle = angle - 0xFFFF;
@@ -9781,7 +9781,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         {
             clamped = angle;
         }
-        *(s16*)((char*)p2 + 0x478) = (s16)d + clamped;
+        ((PlayerState*)p2)->targetYaw = (s16)d + clamped;
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
             p3, 4, &flag);
         if (flag != 0)
@@ -9794,10 +9794,10 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     {
         ((GameObject*)p1)->anim.rotY = *(s16*)((char*)p3 + 0x2);
         ((GameObject*)p1)->anim.rotZ = *(s16*)((char*)p3 + 0x4);
-        *(s16*)((char*)p2 + 0x478) = *(s16*)((char*)p3 + 0x0);
+        ((PlayerState*)p2)->targetYaw = *(s16*)((char*)p3 + 0x0);
     }
-    *(s16*)((char*)p2 + 0x484) = *(s16*)((char*)p2 + 0x478);
-    ((GameObject*)p1)->anim.rotX = *(s16*)((char*)p2 + 0x478);
+    ((PlayerState*)p2)->yaw = ((PlayerState*)p2)->targetYaw;
+    ((GameObject*)p1)->anim.rotX = ((PlayerState*)p2)->targetYaw;
     ((GameObject*)p1)->anim.worldPosX = ((GameObject*)p1)->anim.localPosX;
     ((GameObject*)p1)->anim.worldPosY = ((GameObject*)p1)->anim.localPosY;
     ((GameObject*)p1)->anim.worldPosZ = ((GameObject*)p1)->anim.localPosZ;
@@ -10045,7 +10045,7 @@ int fn_80299BB0(int obj, int p2)
             state29 = 0x1a;
         }
     }
-    if (*(u8*)((char*)p2 + 0x34b) == 2 && *(f32*)((char*)p2 + 0x298) > lbl_803E7EAC)
+    if (*(u8*)((char*)p2 + 0x34b) == 2 && ((PlayerState*)p2)->baddie.inputMagnitude > lbl_803E7EAC)
     {
         ObjAnim_SetCurrentMove(
             obj, lbl_803336BC[((s16*)((char*)inner->moveSlots + 2))[(u8)state30 * 88]],
@@ -10505,13 +10505,13 @@ int fn_802A9C0C(int obj, int p2, int p3)
 void fn_8029C8C8(int obj, int p2)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    if (*(f32*)((char*)p2 + 0x298) < lbl_803E7F6C)
+    if (((PlayerState*)p2)->baddie.inputMagnitude < lbl_803E7F6C)
     {
         s16 h = ((GameObject*)obj)->anim.rotX;
         inner->yaw = h;
         inner->targetYaw = h;
         inner->lastInputHeading = h;
-        *(f32*)((char*)p2 + 0x298) = lbl_803E7EA4;
+        ((PlayerState*)p2)->baddie.inputMagnitude = lbl_803E7EA4;
     }
     else
     {
@@ -10984,10 +10984,10 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
         f30v = ((PlayerState*)state)->baddie.animSpeedB;
         if (((ByteFlags*)((char*)b + 0x3f0))->b20)
         {
-            f31v = f31v + *(f32*)((char*)b + 0x43c);
-            f30v = f30v + *(f32*)((char*)b + 0x440);
+            f31v = f31v + ((PlayerState*)b)->unk43C;
+            f30v = f30v + ((PlayerState*)b)->unk440;
         }
-        v.angles[0] = *(s16*)((char*)b + 0x484);
+        v.angles[0] = ((PlayerState*)b)->yaw;
         v.angles[1] = 0;
         v.angles[2] = 0;
         v.mat[0] = lbl_803E7EE0;
@@ -10996,8 +10996,8 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
         v.mat[3] = lbl_803E7EA4;
         setMatrixFromObjectPos(mtx, v.angles);
         Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->x, &oy, &a->z);
-        a->x = a->x + *(f32*)((char*)b + 0x890);
-        a->z = a->z + *(f32*)((char*)b + 0x894);
+        a->x = a->x + ((PlayerState*)b)->unk890;
+        a->z = a->z + ((PlayerState*)b)->unk894;
     }
     else
     {
@@ -12394,18 +12394,18 @@ void fn_802AC32C(int p1, int p2, int p3)
     if (near != NULL && ((ByteFlags*)((char*)p3 + 0x3f0))->b80 == 0 &&
         ((ByteFlags*)((char*)p3 + 0x3f0))->b40 == 0)
     {
-        s16 cd = *(s16*)((char*)p3 + 0x4a0) - 1;
+        s16 cd = *(s16*)&((PlayerState*)p3)->unk4A0 - 1;
         f32 ratio;
         f32 clamped;
         f32 f5;
         f32 result;
         int delta;
 
-        *(s16*)((char*)p3 + 0x4a0) = cd;
+        *(s16*)&((PlayerState*)p3)->unk4A0 = cd;
         if (cd <= 0)
         {
-            *(s16*)((char*)p3 + 0x4a0) = (s16)randomGetRange(0x78, 0xf0);
-            *(s16*)((char*)p3 + 0x4a2) = (s16)randomGetRange(0, 0x28);
+            *(s16*)&((PlayerState*)p3)->unk4A0 = (s16)randomGetRange(0x78, 0xf0);
+            *(s16*)&((PlayerState*)p3)->unk4A2 = (s16)randomGetRange(0, 0x28);
         }
         delta = (u16)getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
                               -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) -
@@ -12419,7 +12419,7 @@ void fn_802AC32C(int p1, int p2, int p3)
             delta += 0xFFFF;
         }
         ratio = lbl_803E7EE0 - (((PlayerState*)p2)->baddie.animSpeedC - lbl_803E7E9C) /
-            (*(f32*)((char*)p3 + 0x404) - lbl_803E7E9C);
+            (((PlayerState*)p3)->maxSpeed - lbl_803E7E9C);
         clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
         f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
         if ((f32)delta < lbl_803E80F8 * -f5)
@@ -12439,7 +12439,7 @@ void fn_802AC32C(int p1, int p2, int p3)
     else
     {
         angle1 = 0;
-        *(s16*)((char*)p3 + 0x4a0) = 0;
+        *(s16*)&((PlayerState*)p3)->unk4A0 = 0;
     }
 
     {
@@ -12450,7 +12450,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         }
         else
         {
-            v480 = *(int*)((char*)p3 + 0x480);
+            v480 = ((PlayerState*)p3)->targetYawRate;
         }
         if (v480 < -0x28)
         {
@@ -12488,11 +12488,11 @@ void fn_802AC32C(int p1, int p2, int p3)
     {
         angle1 = 0x16c;
     }
-    *(s16*)((char*)p3 + 0x4d4) =
+    ((PlayerState*)p3)->bodyLeanAngle =
         (f32)angle1 * timeDelta + (f32) * (s16*)((char*)p3 + 0x4d4);
-    *(s16*)((char*)p3 + 0x4d2) = (s16)(*(s16*)((char*)p3 + 0x4d4) / 2);
+    ((PlayerState*)p3)->bodyLeanHalf = (s16)(((PlayerState*)p3)->bodyLeanAngle / 2);
 
-    angle2 = *(s16*)((char*)p3 + 0x478) - (u16) * (s16*)((char*)p3 + 0x492);
+    angle2 = ((PlayerState*)p3)->targetYaw - (u16) * (s16*)((char*)p3 + 0x492);
     if (angle2 > 0x8000)
     {
         angle2 -= 0xFFFF;
@@ -12530,10 +12530,10 @@ void fn_802AC32C(int p1, int p2, int p3)
     {
         angle2 += 0xFFFF;
     }
-    *(s16*)((char*)p3 + 0x4d0) =
+    ((PlayerState*)p3)->headPitch =
         (f32) * (s16*)((char*)p3 + 0x4d0) +
             interpolate((f32)angle2, lbl_803E7EB4, timeDelta);
-    *(s16*)((char*)p3 + 0x4d6) =
+    ((PlayerState*)p3)->headYaw =
         (f32) * (s16*)((char*)p3 + 0x4d6) *
             powfBitEstimate(lbl_803E7F1C, timeDelta);
 }
@@ -14981,7 +14981,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     int tbl1, tbl2;
     int i;
 
-    *(int*)((char*)b + 0x4c4) = 0;
+    ((PlayerState*)b)->unk4C4 = 0;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
     *(f32*)((char*)d + 0x20) = *(f32*)((char*)c + 0x20);
     *(f32*)((char*)d + 0x24) = *(f32*)((char*)c + 0x24);
@@ -15070,9 +15070,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         lbl_803E7F10 * *(f32*)((char*)d + 0x1c) + *(f32*)((char*)d + 0x2c);
     *(f32*)((char*)d + 0x58) =
         lbl_803E7F10 * *(f32*)((char*)d + 0x24) + *(f32*)((char*)d + 0x34);
-    *(f32*)((char*)d + 0x38) = *(f32*)((char*)b + 0x768);
+    *(f32*)((char*)d + 0x38) = ((PlayerState*)b)->savedPosX;
     *(f32*)((char*)d + 0x3c) = lbl_803E7EA4;
-    *(f32*)((char*)d + 0x40) = *(f32*)((char*)b + 0x770);
+    *(f32*)((char*)d + 0x40) = ((PlayerState*)b)->savedPosZ;
     *(f32*)((char*)d + 0x4) =
         *(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x40) - *(f32*)((char*)c + 0x3c)) +
         *(f32*)((char*)c + 0x3c);
@@ -15088,11 +15088,11 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     {
         *(f32*)((char*)d + 0x8) = *(f32*)((char*)a + 0x84);
         *(f32*)((char*)d + 0x0) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x8);
-        if ((*(u8*)((char*)b + 0x3f1) & 1) != 0)
+        if ((((PlayerState*)b)->unk3F1 & 1) != 0)
         {
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
-                *(int*)((char*)b + 0x4c4) = (int)hit;
+                ((PlayerState*)b)->unk4C4 = (int)hit;
             }
             if (*(f32*)((char*)d + 0x0) <= lbl_803E80C8)
             {
@@ -15129,7 +15129,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             }
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
-                *(int*)((char*)b + 0x4c4) = (int)hit;
+                ((PlayerState*)b)->unk4C4 = (int)hit;
             }
             return 6;
         }
@@ -15144,7 +15144,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         }
         if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
         {
-            *(int*)((char*)b + 0x4c4) = (int)hit;
+            ((PlayerState*)b)->unk4C4 = (int)hit;
         }
         return 3;
     }
@@ -16253,14 +16253,14 @@ void fn_802AB38C(int a, int b, int c)
         lbl_803DE4B2 = 0x5ce;
         break;
     case 0x957:
-        lbl_803DE434 = *(int*)((char*)b + 0x4b8);
+        lbl_803DE434 = *(int*)&((PlayerState*)b)->unk4B8;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(a, b, 0x32);
-        *(int*)((char*)b + 0x304) = (int)fn_802994A4;
+        *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802994A4;
         break;
     case 0x107:
     case 0xc55:
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(a, b, 0x36);
-        *(int*)((char*)b + 0x304) = (int)fn_802985AC;
+        *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802985AC;
         break;
     case 0x40:
         ((PlayerState*)b)->unk854 = lbl_803E7EDC;
