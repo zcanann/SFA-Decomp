@@ -277,7 +277,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
 
 void CameraModeNpcSpeak_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     CameraModeNpcSpeakState* speakState;
     GameObject* target = (GameObject*)camera->anim.targetObj;

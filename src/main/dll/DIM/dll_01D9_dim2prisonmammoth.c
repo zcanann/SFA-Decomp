@@ -40,7 +40,7 @@ typedef struct Dim2prisonmammothState
     u8 pad5FD[0x604 - 0x5FD];
 } Dim2prisonmammothState;
 
-extern void fn_8003A168(int obj, int q);
+extern void fn_8003A168(int p1, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);

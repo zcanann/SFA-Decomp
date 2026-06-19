@@ -368,7 +368,7 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 
 extern void* memset(void* dst, int c, int n);
 
-extern u8* saveGameGetEnvState(void);
+extern void* saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
 
 extern char sSnowFreeSnowCloudInvalidCloudId[];
@@ -710,7 +710,7 @@ extern void gxBlendFn_800789ac(void);
 extern void textRenderSetupFn_800795e8(void);
 extern f32* Camera_GetViewRotationMatrix(void);
 extern void GXSetPointSize(int size, int fmt);
-extern void GXCallDisplayList(void* list, int size);
+extern void GXCallDisplayList(void* list, u32 nbytes);
 extern int lbl_803DB778;
 extern u8 lbl_803DB770[8];
 extern u8 lbl_8030F770[];
@@ -1201,7 +1201,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 
 extern void GXSetMisc(int token, u32 val);
 extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
-extern int GXBeginDisplayList(void* list, u32 size);
+extern void GXBeginDisplayList(void* list, u32 size);
 extern u32 GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);

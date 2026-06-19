@@ -52,7 +52,7 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern int Sfx_IsPlayingFromObject(int obj, u32 sfxId);
+extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern u32 GameBit_Get(int eventId);

@@ -25,7 +25,7 @@ extern int Obj_GetPlayerObject(void);
 extern void objMove(int, f32, f32, f32);
 extern f32 Vec_distance(int, int);
 extern f32 Vec_xzDistance(int, int);
-extern void playerAddHealth(int, int);
+extern void playerAddHealth(int obj, int amount);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern float mathSinf(float x);
 extern void Obj_PredictInterceptPoint(int, int, f32*, f32);

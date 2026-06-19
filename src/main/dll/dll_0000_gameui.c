@@ -123,12 +123,12 @@ extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern void padFn_80014b18(s32);
 extern void* gRenderModeObj;
-extern void Camera_SetCurrentViewRotation(s32, s32, s32);
-extern void Camera_SetCurrentViewPosition(f32, f32, f32);
+extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 extern int Camera_IsViewYOffsetEnabled(void);
 extern void Camera_DisableViewYOffset(void);
 extern f32 Camera_GetFovY(void);
-extern void GXSetViewport(f32, f32, f32, f32, f32, f32);
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern f32 lbl_803E1E3C; /*  0.0f */
 extern f32 lbl_803E1E68; /*  1.0f */
 extern f32 lbl_803E1F34; /*  320.0f */
@@ -196,7 +196,7 @@ extern HintCell lbl_8031BB90[13];
 extern u8 lbl_803DBA94[8];
 extern void MWTRACE(int boxId);
 extern int sprintf(char* s, const char* format, ...);
-extern f32 fsin16Precise(u16 angle);
+extern float fsin16Precise(int angle);
 extern void gameTextShow(int a);
 extern void gameTextShowTimeStr(char* str);
 extern char sBabySnowwormTimerFormat[];

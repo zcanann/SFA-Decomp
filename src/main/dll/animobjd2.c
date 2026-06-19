@@ -31,7 +31,7 @@
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
-extern f32 fsin16Precise(int angle);
+extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 

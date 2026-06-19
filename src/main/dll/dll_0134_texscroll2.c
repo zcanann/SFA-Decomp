@@ -21,7 +21,7 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int idx);
 extern int* getTablesBinEntry(int id);
 extern void* getLoadedTexture(int id);
-extern void* fn_8006070C(void* block, int layerIdx);
+extern void* fn_8006070C(int* obj, int idx);
 extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
                                     int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,

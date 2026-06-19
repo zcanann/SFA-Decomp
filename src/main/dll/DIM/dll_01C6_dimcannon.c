@@ -49,7 +49,7 @@ extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
 extern u32 getButtonsJustPressed(int port);
 extern u32 getButtonsHeld(int port);
-extern u32 getButtonsJustPressedIfNotBusy(int chan);
+extern u32 getButtonsJustPressedIfNotBusy(int port);
 extern u8 lbl_803DBF00;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

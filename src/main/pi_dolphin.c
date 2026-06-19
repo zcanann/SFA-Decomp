@@ -158,7 +158,7 @@ extern int sprintf(char* s, const char* format, ...);
 extern int AtomicSList_Pop(int list);
 extern void AtomicSList_Push(int list, int e);
 extern int DVDOpen(char* fileName, void* fileInfo);
-extern int DVDRead(void* fileInfo, void* addr, int length, int offset);
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern int DVDClose(void* fileInfo);
 extern void* mmAlloc(int size, int type, int flag);
 extern void mm_free(void* p);
@@ -1514,7 +1514,7 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void dvdCheckError(void);
-extern void mmFreeTick(int a);
+extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
 extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
@@ -1523,7 +1523,7 @@ extern u8 framesThisStep;
 extern char sZlbBlockTag;
 extern int return0_8002A5B8(int p);
 extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int s);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern char sDirBlockTag;
 extern int strncmp(const char* a, const char* b, u32 n);
 extern void* memcpy(void* dst, const void* src, u32 n);
@@ -4238,7 +4238,7 @@ extern int lbl_803DCD90;
 extern u8 lbl_803DCD6A;
 extern void GXSetTevDirect(int);
 extern void GXSetTevOrder(int, int, int, int);
-extern void GXSetTevSwapMode(int, int, int);
+extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
 extern void GXSetTevColorIn(int, int, int, int, int);
 extern void GXSetTevAlphaIn(int, int, int, int, int);
 extern void GXSetTevColorOp(int, int, int, int, int, int);
@@ -4946,7 +4946,7 @@ extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
 extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
-extern void GXSetTexCoordGen2(int dst, int func, int src, int mtx, int normalize, int pttexmtx);
+extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
@@ -5020,7 +5020,7 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
 }
 
 extern void gxTextureFn_8004bf88(void* buf, u8 a, u8 b, int* out1, int* out2);
-extern void GXSetTevKColorSel(int stage, int sel);
+extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 
 void textureFn_80051348(void* p1, u8 p2)
 {
@@ -5276,7 +5276,7 @@ extern int lbl_803DEAC0;
 extern int lbl_803DCD74;
 extern int lbl_803DCD70;
 extern int lbl_803DCD6C;
-extern void GXSetTevKAlphaSel(int tev, int sel);
+extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevColorS10(int id, void* color);
 extern void GXSetTevKColor(int id, void* color);
 extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, int wrap_s, int wrap_t, int mipmap);
@@ -6957,7 +6957,7 @@ void fn_8004CE0C(void* viewMtx)
 
 extern u32 getButtonsJustPressed(int port);
 extern void printHeapStats(int a);
-extern void defragMemory(int a);
+extern void defragMemory(int mode);
 extern void debugPrintSetColor(int r, int g, int b, int a);
 extern void fn_80137948(char* fmt, ...);
 extern char sAssetHaltFormat[];
@@ -7802,7 +7802,7 @@ extern void GXSetChanCtrl(int chan, int enable, int amb_src, int mat_src, int li
 extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void GXSetCurrentMtx(u32 id);
-extern void GXSetMisc(int token, u32 val);
+extern void GXSetMisc(GXMiscToken token, u32 val);
 extern char lbl_8035F6B8[];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;

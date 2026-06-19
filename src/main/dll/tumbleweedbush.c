@@ -39,8 +39,8 @@ extern int randomGetRange(int lo, int hi);
 extern int getAngle(float y, float x);
 extern void objAudioFn_800393f8(void* obj, void* p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
-extern void trickyTurnTowardYaw(void* obj, s16 angle);
-extern void objSetAnimSpeedTo1(void* obj);
+extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
+extern void objSetAnimSpeedTo1(int* obj);
 
 extern char lbl_8031D2E8[];  /* tricky debug-string blob */
 

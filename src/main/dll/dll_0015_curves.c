@@ -53,7 +53,7 @@ extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 value);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 
 extern u8 framesThisStep;
 extern SaveData saveData;

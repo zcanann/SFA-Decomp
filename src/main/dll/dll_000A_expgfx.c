@@ -89,7 +89,7 @@ extern const f32 lbl_803DF410;
 extern int getHudHiddenFrameCount(void);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
-extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
+extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);

@@ -85,7 +85,7 @@ extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
 extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
-extern int fn_80295A04(int obj, int a);
+extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
 extern f32 lbl_803E1AC0;

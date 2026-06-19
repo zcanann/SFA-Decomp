@@ -697,7 +697,7 @@ void dll_CE_func0B(int obj, int v)
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
-    extern void fn_8003B5E0(int, int, int, int);
+    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E10;
     GroundBaddieState* sub = ((GameObject*)p1)->extra;

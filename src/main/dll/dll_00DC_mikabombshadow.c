@@ -285,7 +285,7 @@ extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
-extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
+extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 void staticCamera_free(int param_1)
 {

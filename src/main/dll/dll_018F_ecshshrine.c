@@ -67,7 +67,7 @@ extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
 extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(s16* obj, int* target, int id, int p);
-extern int objIsCurModelNotZero(int* player);
+extern int objIsCurModelNotZero(void* obj);
 extern void fn_80295CF4(int* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);

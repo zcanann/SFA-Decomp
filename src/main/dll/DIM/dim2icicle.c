@@ -209,8 +209,8 @@ extern void setShowWorldMapHud(int show);
 extern void warpToMap(int idx, s8 transType);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void skyFn_80089710(int id, int enabled, int arg);
-extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
-extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void doRumble(f32 duration);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
@@ -378,7 +378,7 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRunt
 }
 
 extern int Obj_GetPlayerObject(void);
-extern int fn_80295A04(int player, int p2);
+extern int fn_80295A04(int obj, int sel);
 extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int *gTitleMenuControlInterfaceCopy;
 extern int *gDIMbossHitEffectResource;

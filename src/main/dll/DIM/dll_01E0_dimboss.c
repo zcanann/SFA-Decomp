@@ -12,14 +12,14 @@
 #include "main/resource.h"
 
 extern void Music_Trigger(int id, int arg);
-extern u64 padUpdate();
-extern u32 dvdCheckError();
-extern u32 gameTextRun();
+extern void padUpdate(void);
+extern void dvdCheckError(void);
+extern void gameTextRun(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void gameTextShow(int a);
-extern u32 checkReset();
-extern u64 mmFreeTick();
+extern void checkReset(void);
+extern void mmFreeTick(int arg);
 extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
@@ -33,15 +33,15 @@ extern u32 getLoadedFileFlags();
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
-extern u32 defragMemory();
-extern u64 mapLoadDataFile();
+extern void defragMemory(int mode);
+extern u32 mapLoadDataFile(int mapId, int fileId);
 extern int mapGetDirIdx(int idx);
-extern u64 loadDataFiles();
-extern u32 GXFlush_();
+extern void loadDataFiles(void);
+extern int GXFlush_(u8 visible, int unused);
 extern u64 waitNextFrame();
-extern void setDrawCloudsAndLights(int param_1);
-extern void skyFn_800894a8(int layer, f32 x, f32 y, f32 z);
-extern void skyFn_800895e0(int layer, int red, int green, int blue, int alpha, int duration);
+extern void setDrawCloudsAndLights(int v);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void skyFn_80089710(int layer, int enabled, int param_3);
 extern u64 dll_2E_func07();
 extern u32 dll_2E_func09();

@@ -767,9 +767,9 @@ void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area)
 extern u8 lbl_803DCD68;
 extern u8 lbl_803DCD69;
 extern u8 lbl_803DCD6A;
-extern void GXSetNumTexGens(u8 n);
-extern void GXSetNumTevStages(u8 n);
-extern void GXSetNumIndStages(u8 n);
+extern void GXSetNumTexGens(u8 nTexGens);
+extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetNumIndStages(u8 nIndStages);
 #pragma dont_inline on
 void textureFn_800528bc(void)
 {
@@ -779,7 +779,7 @@ void textureFn_800528bc(void)
 }
 #pragma dont_inline reset
 
-extern u8* saveGameGetEnvState(void);
+extern void* saveGameGetEnvState(void);
 extern s32 lbl_803DCE00;
 #pragma peephole off
 void timeOfDayFn_80055000(void)
@@ -2742,7 +2742,7 @@ extern char sDebugIntLineFormat;
 extern u8 lbl_803DCDAC;
 extern u32 lbl_803DB608;
 extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int level);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void tex0GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);

@@ -963,7 +963,7 @@ int dbstealerworm_stateHandlerA02(int obj, int p2)
 
 void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void fn_8003B5E0(int, int, int, int);
+    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objParticleFn_80099d84(int, f32, int, f32, int);
     extern void ObjPath_GetPointWorldPosition(int, int, char*, char*, char*, int);
     extern f32 lbl_803E62D0;

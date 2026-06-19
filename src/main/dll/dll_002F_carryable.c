@@ -34,7 +34,7 @@ typedef struct CarryableUpdateHeldState
 
 extern void* Obj_GetPlayerObject(void);
 extern void playerSetHeldObject(void* player, int held);
-extern u32 buttonGetDisabled(int idx);
+extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
 extern u32 getButtonsJustPressed(int port);
 extern int fn_80295BF0(void* player);

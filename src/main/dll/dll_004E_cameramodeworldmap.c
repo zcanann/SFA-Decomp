@@ -37,8 +37,8 @@ extern int ObjList_FindObjectById(int id);
 extern u32 getButtonsHeld(int port);
 extern int isWidescreen(void);
 extern u32 getButtonsJustPressed(int port);
-extern int padGetCX(int pad);
-extern int padGetCY(int pad);
+extern u8 padGetCX(int port);
+extern u8 padGetCY(int port);
 extern void fn_8012DDB8(int mode);
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;
@@ -127,7 +127,7 @@ void CameraModeWorldMap_free(void)
 
 void CameraModeWorldMap_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
     GameObject* camera = (GameObject*)obj;
     GameObject* focus;
     GameObject *objA, *objB;

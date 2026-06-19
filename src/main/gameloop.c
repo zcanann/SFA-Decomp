@@ -242,7 +242,7 @@ typedef struct
 extern AssetReq lbl_8033BF88;
 extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
-extern int textureLoad(int id, int flag);
+extern void* textureLoad(int texId, u8 flag);
 
 #pragma scheduling on
 #pragma peephole on
@@ -351,7 +351,7 @@ int gameBitDecrement(int bit)
 }
 
 extern void waitNextFrame(void);
-extern void GXFlush_(int a, int b);
+extern int GXFlush_(u8 visible, int unused);
 
 void mmFreeTick(int arg);
 
@@ -668,7 +668,7 @@ extern void titleScreenDrawFn_80093db4(void);
 extern int getDataFileSize(int id);
 extern void loadUiDll(int index);
 extern void doNothing_beforeTitleScreen(void);
-extern void setDrawCloudsAndLights(int arg);
+extern void setDrawCloudsAndLights(int v);
 extern void askProgressiveScanMode(void);
 extern void initViewport(void);
 extern void tvInit(void);
@@ -1141,7 +1141,7 @@ extern void gameTextShowStr(int str, int a, int b, int c);
 
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int a);
-extern void gameTextFn_80016810(int id, int a, int b);
+extern void gameTextFn_80016810(int a, int b, int c);
 extern void buttonDisable(int port, u32 mask);
 extern void cardSetStatusNeedInit(void);
 extern void cardDeleteFn_8007d99c(void);
@@ -1292,7 +1292,7 @@ void removeButtonObject(u32 h)
 
 extern void* gameTextGetBox(int box);
 extern u8 padGetStickX(int port);
-extern int padGetCX(int pad);
+extern u8 padGetCX(int port);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;

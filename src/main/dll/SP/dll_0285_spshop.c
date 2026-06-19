@@ -62,8 +62,8 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-extern void playerAddMoney(int player, int amount);
-extern void playerAddHealth(int player, int amount);
+extern void playerAddMoney(int obj, int amount);
+extern void playerAddHealth(int obj, int amount);
 extern int gameBitIncrement(int bit);
 extern u8 lbl_80327FD0[];
 
@@ -72,7 +72,7 @@ typedef struct ShopItemRow
     u8 pad0[0xa];
     s16 textId;
 } ShopItemRow;
-extern void fn_80295CF4(int player, int mode);
+extern void fn_80295CF4(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);

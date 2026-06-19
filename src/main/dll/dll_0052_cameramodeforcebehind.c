@@ -18,8 +18,8 @@ extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void camcontrol_traceFromTarget();
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx);
+extern f32 interpolate(f32 a, f32 t, f32 exp);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 
 extern f32 timeDelta;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;

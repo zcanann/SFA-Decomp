@@ -155,13 +155,13 @@ extern f32 lbl_803E4698;
 extern u8 lbl_80323408[];
 extern u8 lbl_803DDB38[8];
 extern int getAngle(float y, float x);
-extern f32 fn_8014C5D0(int obj);
+extern f32 fn_8014C5D0(register int obj);
 extern void fn_8014C66C(int obj, int target);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_FreeObject(int o);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);
-extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
+extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 typedef struct LightfootAnimTable
 {

@@ -10,7 +10,7 @@ typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float sqrtf(float x);
-extern u32 buttonGetDisabled(int index);
+extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
 extern int randomGetRange(int lo, int hi);
 extern void setMatrixFromObjectTransposed(void* transform, float* mtx);

@@ -32,14 +32,14 @@ extern f32 lbl_803E1DE0;
 extern f32 lbl_803E1DE4;
 extern u8 shouldShowCredits(void);
 extern void titleScreenTextDrawFunc(void);
-extern void titleScreenPositionElements(f32 x, f32 y);
+extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextSetDrawFunc(void* fn);
-extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
+extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void* gameTextGet(int textId);
 extern void* gameTextGetBox(int box);
 extern void gameTextShow(int a);
-extern void titleScreenShowCopyright(int arg);
+extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;        /* render-stale countdown */
 extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */

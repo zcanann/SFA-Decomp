@@ -48,7 +48,7 @@ extern char lbl_8031C1A8[]; /* base of the nav-link out-of-range error format st
 extern int getCurLanguage(void);
 extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-extern void gameTextFn_80016810(int textId, int arg1, int arg2);
+extern void gameTextFn_80016810(int a, int b, int c);
 extern void* gameTextGetBox(int box);
 extern void gameTextShow(int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
@@ -58,7 +58,7 @@ extern u32 GameBit_Get(int eventId);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int pad);
-extern void padClearAnalogInputX(int pad);
+extern void padClearAnalogInputX(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void buttonDisable(int port, u32 mask);
 extern void linkDrawFn_801302c0(void);

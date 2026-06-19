@@ -179,7 +179,7 @@ extern char padGetStickX(int pad);
 extern char padGetStickY(int pad);
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
-extern u32 getButtonsJustPressedIfNotBusy(int pad);
+extern u32 getButtonsJustPressedIfNotBusy(int port);
 extern int getAngle(float y, float x);
 extern f32 timeDelta;
 extern f32 lbl_803E5B6C;

@@ -8,7 +8,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
-extern int ObjMsg_SendToObjects();
+extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
 extern u32 GameBit_Get(int eventId);
 
 /* perch anim-event callback: stop the sequence once the old

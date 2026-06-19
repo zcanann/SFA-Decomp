@@ -130,7 +130,7 @@ extern int lockLevel(s32 val, int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void gameTextFn_80125ba4(int id);
 extern int getArwing(void);
-extern void defragMemory(int v);
+extern void defragMemory(int mode);
 extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
 extern void goToNextMapLayer(void);

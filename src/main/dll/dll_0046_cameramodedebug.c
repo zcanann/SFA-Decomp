@@ -14,8 +14,8 @@
 /* pad.h declares getButtonsJustPressed as u32; the u16 override in
    CameraModeDebug_update is load-bearing for the mask comparison. */
 extern u32 getButtonsHeld(int port);
-extern char padGetCX(int port);
-extern char padGetCY(int port);
+extern u8 padGetCX(int port);
+extern u8 padGetCY(int port);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 

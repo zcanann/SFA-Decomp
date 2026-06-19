@@ -1648,7 +1648,7 @@ extern void setupToRenderMapBlock(int* block, void* posMtx);
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
 extern f32 shdwChangeMode_803DEC10;
-extern int Camera_GetInverseViewMatrix(void);
+extern f32* Camera_GetInverseViewMatrix(void);
 extern void mapDebugRender(void* p);
 extern void fn_80062894(void);
 extern void fn_80062808(void);

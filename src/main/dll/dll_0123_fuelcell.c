@@ -21,7 +21,7 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 extern void objRenderFn_8003b8f4(f32);
-extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
+extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int gameBitIncrement(int bit);
@@ -34,7 +34,7 @@ extern f32 lbl_803E3D0C;
 extern f32 lbl_803E3D10;
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void* particle);
+extern void lightningRender(void* state);
 extern int getHudHiddenFrameCount(void);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 extern f32 lbl_803E3CC8;

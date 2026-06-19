@@ -49,7 +49,7 @@ STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop();
-extern int ObjMsg_SendToObjects();
+extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);

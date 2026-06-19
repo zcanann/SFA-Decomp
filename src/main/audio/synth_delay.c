@@ -1,6 +1,6 @@
 #include "src/main/audio/synth_internal.h"
 
-extern s32 vidGetInternalId(u32 handle);
+extern int vidGetInternalId(u32 id);
 extern void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
 extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);

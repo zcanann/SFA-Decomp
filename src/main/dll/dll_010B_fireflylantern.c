@@ -15,7 +15,7 @@ extern void GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void* getTrickyObject(void);
-extern void trickyImpress(void* trickyObj);
+extern void trickyImpress(u8* obj);
 extern f32 lbl_803E3AF0;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

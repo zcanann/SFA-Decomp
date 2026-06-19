@@ -44,7 +44,7 @@ extern f32 PSVECMag(f32* vec);
 extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance scalar */
 extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(int obj);
-extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
+extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 
 extern u8 framesThisStep;
@@ -239,7 +239,7 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 void camslide_update(CameraObject* camera, GameObject* target)
 {
     extern u32 getAngle();
-    extern f64 interpolate(f64 value, f64 rate, f64 t);
+    extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern f32 sqrtf(f32 x);
     f32 fVar1;
     CamSlideObjectState* state;
@@ -467,7 +467,7 @@ void camslide_update(CameraObject* camera, GameObject* target)
 void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 {
     extern u32 getAngle();
-    extern f64 interpolate(f64 value, f64 rate, f64 t);
+    extern f32 interpolate(f32 a, f32 t, f32 exp);
     int v;
     f64 d;
 
@@ -490,7 +490,7 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 
 void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
 {
-    extern f32 interpolate(f32 delta, f32 rate, f32 dt);
+    extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern f32 sqrtf(f32 x);
     f32 dx;
     f32 dz;
@@ -687,7 +687,7 @@ void CameraModeNormal_free(CameraObject* camera)
 void camstatic_update(CameraObject* camera)
 {
     extern s16 getAngle(f32 dx, f32 dz);
-    extern f32 interpolate(f32 cur, f32 target, f32 t);
+    extern f32 interpolate(f32 a, f32 t, f32 exp);
     GameObject* target;
     float fa;
     int val;

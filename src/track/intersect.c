@@ -1809,7 +1809,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
         pcb(obj_a, obj_b, slot);
     } else {
         extern int fn_8003BB74(void);
-        extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, GXColor color);
+        extern void GXSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color);
         extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
         u8 zCompLoc = 1;
         int ref0;
@@ -4426,7 +4426,7 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     extern u16 fn_8000FA70(void);
     extern int getHudHiddenFrameCount(void);
     extern f32 fn_80292194(f32 v);
-    extern f32 interpolate(f32 a, f32 b, f32 c);
+    extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
     extern void selectTexture(int handle, int slot);
@@ -5915,8 +5915,8 @@ void showMemCardError(u8 err)
     extern u8 lbl_803DD058;
     extern int lbl_803DB708;
     extern void checkReset(void);
-    extern int padUpdate(void);
-    extern void mmFreeTick(int);
+    extern void padUpdate(void);
+    extern void mmFreeTick(int arg);
     extern void waitNextFrame(void);
     extern int getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
@@ -5924,7 +5924,7 @@ void showMemCardError(u8 err)
     extern void* gameTextGet(int textId);
     extern void gameTextShowStr(int str, int x, int y, int yPos);
     extern void gameTextRun(void);
-    extern void GXFlush_(int, int);
+    extern int GXFlush_(u8 visible, int unused);
     extern char padGetStickY(int port);
     extern char padGetCY(int port);
     extern u32 getButtonsJustPressed(int port);
@@ -6261,8 +6261,8 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
 void cardShowLoadingMsg(u8 kind)
 {
     extern void gameTextSetWindow(int);
-    extern int padUpdate(void);
-    extern void mmFreeTick(int);
+    extern void padUpdate(void);
+    extern void mmFreeTick(int arg);
     extern void waitNextFrame(void);
     extern int getButtonObjects(int**);
     extern void** gScreenTransitionInterface;
@@ -6275,9 +6275,9 @@ void cardShowLoadingMsg(u8 kind)
     extern int getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
-    extern void gameTextFn_80016810(int, int, int);
+    extern void gameTextFn_80016810(int a, int b, int c);
     extern void gameTextRun(void);
-    extern void GXFlush_(int, int);
+    extern int GXFlush_(u8 visible, int unused);
 
     int* buttons;
     int saved;

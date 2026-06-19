@@ -17,7 +17,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
 
-extern void getYButtonItem(s16* out);
+extern u16 getYButtonItem(s16* out);
 extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);

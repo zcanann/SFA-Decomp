@@ -1030,7 +1030,7 @@ void dll_F7_update(int* obj);
 
 extern s16 lbl_803DBD50[4];
 extern s16* lbl_803DDAA4;
-extern void* textureLoad(int id, int flag);
+extern void* textureLoad(int texId, u8 flag);
 
 void staff_initialise(void)
 {

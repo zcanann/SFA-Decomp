@@ -27,7 +27,7 @@ void InitAllMessageQueue(void);
 
 extern int ProperTimingForGettingNextFrame(void);
 extern OSMessage PopDecodedTextureSet(s32 flags);
-extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern BOOL CreateVideoDecodeThread(int priority, void* param);
 extern BOOL CreateAudioDecodeThread(int priority, void* param);
 extern BOOL CreateReadThread(int priority);

@@ -23,7 +23,7 @@ extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
+extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 timeDelta;
 extern f32 lbl_803E1780;

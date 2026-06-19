@@ -25,7 +25,7 @@ extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern s16 Camera_GetViewportYOffset(void);
 extern void Camera_SetFovY(f32 fovY);
-extern f32 interpolate(f32 cur,f32 target,f32 t);
+extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void loadMapForCameraPos(f32 x,f32 y,f32 z);
 extern void OSReport(const char* msg, ...);
 extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);

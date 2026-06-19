@@ -496,7 +496,7 @@ extern float mathSinf(float x);
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
-extern u32 playerGetStateFlag310(int player);
+extern u32 playerGetStateFlag310(int obj);
 extern char lbl_803AC918[];
 extern f32 lbl_803E4584;
 extern f32 lbl_803E4588;

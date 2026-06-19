@@ -2415,7 +2415,7 @@ int lockLevel(s32 val, int idx)
 
 extern volatile int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
 
 void setLoadedFileFlags_blocks1(void)
 {
@@ -3871,7 +3871,7 @@ extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
 extern void ObjModel_ToggleMatrixBuffer(int* am);
 extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int len2);
-extern void objGetColor(int idx, u8* r, u8* g, u8* b);
+extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern ObjModelRenderCb ObjModel_GetRenderCallback(int* am);
 extern void Camera_RebuildProjectionMatrix(void);
@@ -3887,7 +3887,7 @@ extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
-extern void GXCallDisplayList(void* list, int size);
+extern void GXCallDisplayList(void* list, u32 nbytes);
 
 void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 {
@@ -4042,9 +4042,9 @@ extern void ObjModel_ApplyBlendChannels(int* am);
 extern void ObjModel_BlendPrimaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void ObjModel_BlendSecondaryVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void objUpdateHitSpheres(int* am, u8* m, int* obj, int p4, int* p5);
-extern void GXSetNumTexGens(int n);
-extern void GXSetNumTevStages(int n);
-extern void GXSetNumIndStages(int n);
+extern void GXSetNumTexGens(u8 nTexGens);
+extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
 extern void GXSetTevDirect(int stage);
 extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
@@ -5955,7 +5955,7 @@ int loadMapAndParent(int mapId)
     return idx;
 }
 
-extern void mapLoadDataFile(int mapIdx, int fileType);
+extern u32 mapLoadDataFile(int mapId, int fileId);
 
 void mapLoadDataFiles(int mapIdx)
 {
@@ -5985,9 +5985,9 @@ extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(int);
 extern void dvdCheckError(void);
-extern void mmFreeTick(int);
+extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
-extern void GXFlush_(int, int);
+extern int GXFlush_(u8 visible, int unused);
 extern u8 gDvdErrorPauseActive;
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 

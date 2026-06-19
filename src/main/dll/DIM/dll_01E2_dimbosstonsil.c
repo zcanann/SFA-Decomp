@@ -18,8 +18,8 @@ extern void modelLightStruct_getSpecularColor(void* light, void* red, void* gree
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 extern int randomGetRange(int lo, int hi);
 extern void skyFn_80089710(int id, int enabled, int arg);
-extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
-extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 duration);

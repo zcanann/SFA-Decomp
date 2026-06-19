@@ -134,7 +134,7 @@ extern f32 lbl_803E6930;
 #pragma peephole on
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5C70;
-extern void objSetMtxFn_800412d4();
+extern void objSetMtxFn_800412d4(u32 x);
 extern u32 getButtonsHeld(int port);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;
@@ -161,7 +161,7 @@ extern void textureFree(u8* tex);
 extern void* textureLoadAsset(int asset);
 extern void setAButtonIcon(int x);
 extern u8 padGetStickX(int port);
-extern int padGetStickY(int controller);
+extern u8 padGetStickY(int port);
 extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);

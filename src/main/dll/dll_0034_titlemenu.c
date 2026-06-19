@@ -8,10 +8,10 @@
 
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
-extern void gameTextSetDrawFunc(void* callback);
-extern void titleScreenShowCopyright(u8 param_1);
-extern void gameTextBoxFn_80134d40(int param_1, int param_2, int param_3);
-extern void titleScreenPositionElements(f32 param_1, f32 param_2);
+extern void gameTextSetDrawFunc(void* fn);
+extern void titleScreenShowCopyright(u8 arg);
+extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
+extern void titleScreenPositionElements(f32 a, f32 b);
 extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
@@ -20,7 +20,7 @@ extern void* mmAlloc(int size, int type, int flag);
 extern int mmSetFreeDelay(int v);
 extern void mm_free(void* p);
 extern void printHeapStats(int param_1);
-extern void defragMemory(int param_1);
+extern void defragMemory(int mode);
 extern void OSReport(const char* msg, ...);
 extern void VIWaitForRetrace(void);
 
@@ -57,13 +57,13 @@ extern f32 lbl_803E1D18;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputY(int controller);
-extern void padClearAnalogInputX(int controller);
+extern void padClearAnalogInputX(int port);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern u32 getButtonsJustPressed(int port);
 extern void loadUiDll(int index);
 extern int mapUnload(int mapId, int flags);
 extern void titleScreenFn_8005cdd4(int arg);
-extern void setDrawLights(int arg);
+extern void setDrawLights(int v);
 extern void setIsOvercast(int arg);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
@@ -91,7 +91,7 @@ extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 extern f32 lbl_803E1D28;
-extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
+extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
@@ -99,7 +99,7 @@ extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
 extern void envFxActFn_800887f8(u8 value);
 extern void setLinkIsRotated(void);
-extern void titleScreenPositionElements(f32 x, f32 y);
+extern void titleScreenPositionElements(f32 a, f32 b);
 extern u8* lbl_803DD498;
 
 void n_attractmode_releaseMovieBuffers(void)

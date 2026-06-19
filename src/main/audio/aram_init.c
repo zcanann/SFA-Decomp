@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void* salMalloc(u32 size);
-extern void salFree(void* p);
+extern void salFree(void* ptr);
 extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);

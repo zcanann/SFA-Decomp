@@ -29,14 +29,14 @@
 #include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
 
-extern s8 padGetCY(int port);
+extern u8 padGetCY(int port);
 extern s8 padGetStickX(int port);
 extern s8 padGetStickY(int port);
 extern u32 getAngle();
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern f32 interpolate(f32 v, f32 a, f32 b);
+extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 extern void Rcp_SetViewFinderHudEnabled(int on);

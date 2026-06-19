@@ -120,9 +120,9 @@ extern f32 gMinimapF74;
 
 #pragma scheduling off
 #pragma peephole off
-extern void titlescreen_free(u8 * obj);
-extern void titlescreen_update(u8 * obj);
-extern void titlescreen_init(u8 * obj, u8 * p);
+extern void titlescreen_free(u8* obj);
+extern void titlescreen_update(u8* obj);
+extern void titlescreen_init(u8* obj, u8* p);
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(u8* obj);
 extern int Obj_AllocObjectSetup(int a, int b);

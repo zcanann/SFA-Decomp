@@ -36,7 +36,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
-extern void modelLightStruct_freeSlot(void* p);
+extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
 extern void ObjHits_DisableObject(u32 objPtr);

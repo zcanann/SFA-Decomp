@@ -23,7 +23,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u32 getButtonsJustPressed(int port);
 extern int playerGetMoney(int player);
-extern void playerAddMoney(int player, int amount);
+extern void playerAddMoney(int obj, int amount);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern void objRenderFn_80041018(int obj);

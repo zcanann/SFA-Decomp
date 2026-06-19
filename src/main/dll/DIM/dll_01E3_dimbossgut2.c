@@ -47,7 +47,7 @@ STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-extern u32 ObjHits_RegisterActiveHitVolumeObject();
+extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void objRenderFn_8003b8f4(f32 scale);

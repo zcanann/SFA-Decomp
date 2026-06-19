@@ -52,7 +52,7 @@ extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
 extern f32 lbl_803E5E90; /* 300.0: intro-message duration */
-extern void setDrawLights(int mode);
+extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);

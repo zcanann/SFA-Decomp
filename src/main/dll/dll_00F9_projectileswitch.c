@@ -30,7 +30,7 @@ extern void GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
-extern void fn_8003B608(u32 a, u32 b, u32 c);
+extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;
 extern f32 lbl_803E3704;

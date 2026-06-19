@@ -9,7 +9,7 @@ extern void DCFlushRangeNoSync(void* p, u32 n);
 extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void DCStoreRangeNoSync(void* p, u32 n);
 extern void* salMalloc(u32 size);
-extern void salFree(void* p);
+extern void salFree(void* ptr);
 extern u32 aramGetBaseAddress(void);
 
 extern void* dspCmdBuffer; /* dspHrtfHistoryBuffer */

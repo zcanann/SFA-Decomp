@@ -51,7 +51,7 @@ extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flag
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
-extern void fn_80295CF4(int player, int mode);
+extern void fn_80295CF4(int obj, int a);
 extern int getCurMapLayer(void);
 extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;

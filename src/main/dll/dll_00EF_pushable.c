@@ -89,7 +89,7 @@ extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, i
 extern f32 lbl_803E359C;
 extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;
-extern void fn_8003B5E0(int a, int b, int c, int d);
+extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
 void fn_80174A80(int obj, PushableState* ext)
 {

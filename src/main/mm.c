@@ -174,7 +174,7 @@ void mm_free(void* p)
 }
 
 extern int OSDisableInterrupts(void);
-extern int OSRestoreInterrupts(int level);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
 
 void AtomicSList_Push(void** list, void* node)
 {
@@ -257,7 +257,7 @@ extern char sMmAllocFreeMessageBlock[];
 extern int lbl_803DCB34;
 extern void OSReport(const char* msg, ...);
 extern void waitNextFrame(void);
-extern void GXFlush_(int a, int b);
+extern int GXFlush_(u8 visible, int unused);
 extern char sMmStbfStackTooDeepError[];
 extern s16 gMmDeferredFreeCount;
 

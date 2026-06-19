@@ -30,12 +30,12 @@ extern void fn_80051B00();
 extern void gxColorFn_800523d0();
 extern void textureFn_800524ec();
 extern int textureCrazyPointerFollowFn_80054c30();
-extern void textureFn_800528bc();
-extern void resetLotsOfRenderVars();
+extern void textureFn_800528bc(void);
+extern void resetLotsOfRenderVars(void);
 extern void fn_8005D3B4();
 extern void textureFn_8006c4e0();
 extern void fn_80088730();
-extern void objGetColor();
+extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern u32 AttractMovie_DrawTextureCallback();
 extern u8 isHeavyFogEnabled();
 

@@ -3167,9 +3167,9 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void GXSetIndTexCoordScale(int a, int b, int c);
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
-    extern void GXSetNumTevStages(int n);
-    extern void GXSetNumIndStages(int n);
-    extern void GXSetNumTexGens(int n);
+    extern void GXSetNumTevStages(u8 nStages);
+    extern void GXSetNumIndStages(u8 nIndStages);
+    extern void GXSetNumTexGens(u8 nTexGens);
     extern int*objCreateLight(int obj, int p2);
     extern void modelLightStruct_setLightKind(int* lt, int v);
     extern void modelLightStruct_setDirection(int* lt, f32 x, f32 y, f32 z);
@@ -3406,9 +3406,9 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void GXSetIndTexCoordScale(int a, int b, int c);
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
-    extern void GXSetNumTevStages(int n);
-    extern void GXSetNumIndStages(int n);
-    extern void GXSetNumTexGens(int n);
+    extern void GXSetNumTevStages(u8 nStages);
+    extern void GXSetNumIndStages(u8 nIndStages);
+    extern void GXSetNumTexGens(u8 nTexGens);
     extern void GXSetCullMode(int mode);
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(int a, int b, int c, int d);

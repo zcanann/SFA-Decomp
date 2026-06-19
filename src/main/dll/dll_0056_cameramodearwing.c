@@ -184,7 +184,7 @@ void fn_801101E8(void)
 
 void CameraModeArwing_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int yaw0, pitch0;
     int d;

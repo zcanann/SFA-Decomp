@@ -17,7 +17,7 @@
 #include "main/sky_interface.h"
 
 extern u32 Music_Trigger();
-extern u8 gameTimerIsRunning();
+extern u32 gameTimerIsRunning(void);
 extern f32 fn_80014668(void);
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);

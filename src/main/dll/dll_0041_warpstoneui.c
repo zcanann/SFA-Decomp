@@ -19,7 +19,7 @@
 extern u32 GameBit_Get(int eventId);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
-extern void gameTextFn_80016810(int textId, int a, int b);
+extern void gameTextFn_80016810(int a, int b, int c);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern void CMenu_SetFadeCounter(int v);
 

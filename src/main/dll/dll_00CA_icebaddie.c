@@ -120,7 +120,7 @@ extern int* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 extern void Camera_DisableViewYOffset(void);
-extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
+extern void fn_8003B5E0(int a, int b, int c, u8 d);
 extern void iceBaddie_updateEffectAnchors(int obj, int state);
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];

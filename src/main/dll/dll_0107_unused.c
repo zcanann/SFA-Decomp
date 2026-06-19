@@ -81,7 +81,7 @@ void fn_80185868(int obj, f32 arg)
 
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
-    extern void fn_8003B5E0(int a, int b, int c, int d);
+    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
     extern f32 lbl_803E3A5C;
     WindLift107State* state;

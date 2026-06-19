@@ -27,7 +27,7 @@
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
 
-extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 
 extern void AttractMovieAudio_DmaCallback(void);

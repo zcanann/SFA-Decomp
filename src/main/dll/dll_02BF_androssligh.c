@@ -118,7 +118,7 @@ void androssligh_update(int obj)
 void androssligh_updateBeam(int obj, int beam)
 {
     extern void PSVECAdd(f32* a, f32* b, f32* ab);
-    extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, int angle, int c, int d);
+    extern void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g);
     f32 start[3];
     f32 end[3];
     f32 tmp[3];

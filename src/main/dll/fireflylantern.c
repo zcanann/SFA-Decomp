@@ -26,7 +26,7 @@
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
-extern char fn_80296448(int playerObj);
+extern int fn_80296448(int obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);

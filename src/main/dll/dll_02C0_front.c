@@ -88,9 +88,9 @@ int titlescreen_getObjectTypeId(u8* obj)
     return 0;
 }
 
-extern void titlescreen_free(u8 * obj);
-extern void titlescreen_update(u8 * obj);
-extern void titlescreen_init(u8 * obj, u8 * p);
+extern void titlescreen_free(u8* obj);
+extern void titlescreen_update(u8* obj);
+extern void titlescreen_init(u8* obj, u8* p);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
@@ -550,7 +550,7 @@ void titlescreen_update(u8* obj)
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
     extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void skyFn_80089710(int flags, int enabled, int startComplete);
-    extern void skyFn_800895e0(int id, int red, int green, int blue, int m1, int m2);
+    extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
     extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
     extern void fn_80131F0C(void);
 
@@ -912,7 +912,7 @@ extern u8 lbl_803DB411;
 extern void loadUiDll(int index);
 extern void TitleMenu_setSelection(int sel);
 extern void streamFn_8000a380(int a, int b, int c);
-extern void gameTextFn_80016810(int textId, int a, int b);
+extern void gameTextFn_80016810(int a, int b, int c);
 
 typedef struct
 {

@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 
 extern void skyFn_80089710(int skyId, int enabled, int flags);
-extern void skyFn_800895e0(int skyId, int red, int green, int blue, int arg4, int arg5);
+extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void fn_80089510(int skyId, int red, int green, int blue);
 extern void fn_80089578(int skyId, int red, int green, int blue);
-extern void skyFn_800894a8(int skyId, f32 arg1, f32 arg2, f32 arg3);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 
 extern u8 lbl_803DC1F4;
 extern u8 lbl_803DC1F8;

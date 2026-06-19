@@ -100,7 +100,7 @@ extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern int Obj_IsLoadingLocked(void);
-extern void objSetAnimSpeedTo1(void* obj);
+extern void objSetAnimSpeedTo1(int* obj);
 extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
 
 extern char lbl_8031D2E8[];

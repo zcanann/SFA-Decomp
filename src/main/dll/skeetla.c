@@ -39,7 +39,7 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern u8* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void objfx_spawnHitEmitterAtPos(void* hitPos, int a, int b, int c, int d);
+extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);

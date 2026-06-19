@@ -2368,7 +2368,7 @@ extern const f32 lbl_803DED14, Chan_803DED18;
 extern f32 Enabled_803DED20, BarnacleEnabled_803DED24, lbl_803DED2C;
 extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 r,
                                       f32* a, f32* b, f32* c, f32* d, f32* e, f32* f);
-extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
 extern int* Obj_GetActiveModel(int* obj);

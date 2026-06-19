@@ -55,7 +55,7 @@ extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern f32 timeDelta;
 
-extern void setDrawLights(int mode);
+extern void setDrawLights(int v);
 extern void skySetOverrideLightColorEnabled(int on);
 extern void skySetOverrideLightColor(int r, int g, int b);
 extern void skyFn_80089710(int a, int b, int c);
@@ -65,7 +65,7 @@ extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
 extern void skySetOverrideLightDirectionEnabled(int on);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 w);
-extern void skyFn_800894a8(int idx, f32 x, f32 y, f32 z);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern int* Obj_GetActiveModel(int obj);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern f32 lbl_802C23F8[12];

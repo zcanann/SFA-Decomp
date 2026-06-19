@@ -85,7 +85,7 @@ extern f32 lbl_803E45D8;
 extern f32 lbl_803E45E0;
 extern f32 lbl_803E45E4;
 extern float mathSinf(float x);
-extern void fn_8003B608(int r, int g, int b);
+extern void fn_8003B608(s16 a, s16 b, s16 c);
 
 void MoonSeedPlantingSpot_hitDetect(void)
 {

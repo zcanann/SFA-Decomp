@@ -54,7 +54,7 @@ extern int lockLevel(s32 val, int idx);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern void fn_80296518(int obj, int param_2, int param_3);
+extern void fn_80296518(int obj, int flag, int set);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* objCreateLight(int arg, u8 addToList);
 extern f32 timeDelta;

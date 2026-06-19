@@ -46,7 +46,7 @@ extern int barrelgener_getLinkId();
 extern void saveGame_saveObjectPos(int* obj);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void* getTrickyObject(void);
-extern void trickyImpress(u8 * tricky);
+extern void trickyImpress(u8* obj);
 extern void timer_clearManualFlags();
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);

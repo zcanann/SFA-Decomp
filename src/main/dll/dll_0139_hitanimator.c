@@ -21,10 +21,10 @@
 extern u32 GameBit_Get(int eventId);
 extern u8* mapGetBlock(int idx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern char* fn_8006070C(void* block, int idx);
+extern void* fn_8006070C(int* obj, int idx);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
-extern void* mapBlockFn_800606ec(void* block, int idx);
+extern void* mapBlockFn_800606ec(int* obj, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern void* Shader_getLayer(char* base, int idx);
 

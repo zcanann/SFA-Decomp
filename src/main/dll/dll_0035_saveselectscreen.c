@@ -87,7 +87,7 @@ extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextAppendStr(char* str, int textId);
 extern void gameTextShow(int a);
-extern void titleScreenShowCopyright(int arg);
+extern void titleScreenShowCopyright(u8 arg);
 extern u8 lbl_803DB9F8;
 extern u16 lbl_803DB9F0[4];
 extern char sFrontendPercentFormat;

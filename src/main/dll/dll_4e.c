@@ -64,7 +64,7 @@ extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
 
 extern void audioSetSoundMode(u8 mode, u8 enabled);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 extern void setWidescreen(u8 enabled);
 extern void stopRumble2(void);
 extern void setRumbleEnabled(u8 value);

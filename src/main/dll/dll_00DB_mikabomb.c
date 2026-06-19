@@ -65,7 +65,7 @@ extern void shield_update();
 extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
-extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
+extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern u32 lbl_803E31A0;
 extern f32 lbl_803E31A4;
 extern f32 lbl_803E31A8;

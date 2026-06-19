@@ -749,7 +749,7 @@ typedef struct
 
 extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
 extern int DVDClose(DVDFileInfoStub* fi);
-extern s32 DVDRead(DVDFileInfoStub* fi, void* addr, s32 length, s32 offset);
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern int sprintf(char* s, const char* format, ...);
 extern u8 lbl_803DC968;
 extern int lbl_803DD05C;
