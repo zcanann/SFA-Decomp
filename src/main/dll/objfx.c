@@ -1359,7 +1359,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 8:
             if (params.f8 < lbl_803DF358)
             {
-                params.f8 = lbl_803DF358;
+                params.f8 = *(f32*)&lbl_803DF358;
             }
             params.pad[2] = 90;
             for (i = 0; i < (u8)n * 2; i++)
@@ -1453,7 +1453,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 9:
             if (params.f8 < lbl_803DF358)
             {
-                params.f8 = lbl_803DF358;
+                params.f8 = *(f32*)&lbl_803DF358;
             }
             for (j = 0; j < (u8)n * 2; j++)
             {
@@ -1466,7 +1466,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 10:
             if (params.f8 < lbl_803DF358)
             {
-                params.f8 = lbl_803DF358;
+                params.f8 = *(f32*)&lbl_803DF358;
             }
             for (j = 0; j < (u8)n * 2; j++)
             {
@@ -1500,7 +1500,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 13:
             if (params.f8 < lbl_803DF358)
             {
-                params.f8 = lbl_803DF358;
+                params.f8 = *(f32*)&lbl_803DF358;
             }
             params.pad[2] = 90;
             for (j = 0; j < (u8)n * 2; j++)
@@ -1514,7 +1514,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 14:
             if (params.f8 < lbl_803DF358)
             {
-                params.f8 = lbl_803DF358;
+                params.f8 = *(f32*)&lbl_803DF358;
             }
             params.pad[2] = 240;
             for (j = 0; j < (u8)n * 2; j++)
