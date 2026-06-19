@@ -224,7 +224,7 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     {
         if (object->objectId == ((SaveGameObjectPosition*)(walker + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
         {
-            SaveGameObjectPosition* slot = (SaveGameObjectPosition*)gSaveGameData + i;
+            SaveGameObjectPosition* slot = (SaveGameObjectPosition*)walker;
             object->x = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
             object->y = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
             object->z = *(f32*)((u8*)slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
@@ -296,7 +296,7 @@ int trySaveGame(int slot)
     {
         if (lbl_803DD498[0x21] == 0)
         {
-            loaded = gplayNewGame(&sGameplayFoxName, lbl_803DB890);
+            loaded = gplayNewGame(&sGameplayFoxName, (u8)lbl_803DB890);
         }
         else
         {
