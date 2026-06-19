@@ -4,14 +4,14 @@
  * Object that animates the alpha/fade of the map block it sits in. On the
  * first tick where its block is loaded (MapBlockData.unk4 & 8) it latches the
  * placement's params into AlphaAnimatorState, reads the arming game-bit
- * (placement unk18), seeds the fade level, and for mode 3 allocates a
+ * (placement gateBit), seeds the fade level, and for mode 3 allocates a
  * per-vertex alpha buffer. Each subsequent tick it ramps alphaLevel toward the
- * target by (unk1F * framesThisStep), gated by the game-bit, in one of four
- * modes (unk20 & 3):
- *   0 - one-shot ramp to target, then sets completion bit (unk1A) and stops
- *   1 - ping-pong between unk1C and unk1D bounds
+ * target by (rate * framesThisStep), gated by the game-bit, in one of four
+ * modes (modeFlags & 3):
+ *   0 - one-shot ramp to target, then sets completion bit (completeBit) and stops
+ *   1 - ping-pong between startAlpha and targetAlpha bounds
  *   2 - bidirectional ramp driven by the live gate bit; plays sfxId on a gate
- *       transition (when unk20>>2 set) and sets/clears the completion bit
+ *       transition (when modeFlags>>2 set) and sets/clears the completion bit
  *   3 - timeDelta-based float fade (fadeA/fadeB), sets completion bit at fadeMax
  * doneCount counts finished ramps and freezes the object once it exceeds 2.
  * alphaanimator_render draws via objRenderFn_8003b8f4; alphaanimator_free
@@ -39,13 +39,13 @@ extern f32 lbl_803E3F84;
 typedef struct AlphaanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    u8 unk1C;
-    u8 unk1D;
+    s16 gateBit;
+    s16 completeBit;
+    u8 startAlpha;
+    u8 targetAlpha;
     u8 active;
-    u8 unk1F;
-    u8 unk20;
+    u8 rate;
+    u8 modeFlags;
     u8 pad21[0x22 - 0x21];
     u16 fadeMax;
     u16 sfxId;
@@ -110,7 +110,7 @@ void alphaanimator_update(int* obj)
     f32 absRate;
     d = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     s = (AlphaAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    mode = ((AlphaanimatorPlacement*)d)->unk20 & 3;
+    mode = ((AlphaanimatorPlacement*)d)->modeFlags & 3;
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
                                             (double)((GameObject*)obj)->anim.localPosZ));
@@ -136,18 +136,18 @@ void alphaanimator_update(int* obj)
         }
         s->fadeA = s->fadeB = lbl_803E3F7C;
         s->fadeMax = (f32)(u32)((AlphaanimatorPlacement*)d)->fadeMax;
-        if (((AlphaanimatorPlacement*)d)->unk18 == -1)
+        if (((AlphaanimatorPlacement*)d)->gateBit == -1)
         {
             s->gateVal = 1;
         }
         else
         {
-            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->gateBit);
         }
-        s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-        if (((AlphaanimatorPlacement*)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->unk1A) != 0)
+        s->alphaLevel = ((AlphaanimatorPlacement*)d)->startAlpha;
+        if (((AlphaanimatorPlacement*)d)->completeBit != -1 && GameBit_Get(((AlphaanimatorPlacement*)d)->completeBit) != 0)
         {
-            s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
+            s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
             s->fadeA = lbl_803E3F78 + s->fadeMax;
             s->gateVal = 1;
         }
@@ -164,11 +164,11 @@ void alphaanimator_update(int* obj)
     }
     if (mode == 2)
     {
-        s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+        s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->gateBit);
         if ((s8)s->doneCount > 2 &&
             (s8)s->gateVal != (s8)s->prevGate)
         {
-            if ((((AlphaanimatorPlacement*)d)->unk20 >> 2) != 0)
+            if ((((AlphaanimatorPlacement*)d)->modeFlags >> 2) != 0)
             {
                 Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement*)d)->sfxId);
             }
@@ -188,12 +188,12 @@ void alphaanimator_update(int* obj)
         }
         if ((s8)s->gateVal == 0)
         {
-            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->unk18);
+            s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->gateBit);
             if ((s8)s->gateVal == 0)
             {
                 return;
             }
-            if ((((AlphaanimatorPlacement*)d)->unk20 >> 2) != 0)
+            if ((((AlphaanimatorPlacement*)d)->modeFlags >> 2) != 0)
             {
                 Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement*)d)->sfxId);
             }
@@ -202,16 +202,16 @@ void alphaanimator_update(int* obj)
     switch (mode)
     {
     case 0:
-        if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
+        if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel <= ((AlphaanimatorPlacement*)d)->unk1D)
+                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+            if (s->alphaLevel <= ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
@@ -219,105 +219,105 @@ void alphaanimator_update(int* obj)
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel >= ((AlphaanimatorPlacement*)d)->unk1D)
+                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+            if (s->alphaLevel >= ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
         }
         break;
     case 1:
-        if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
+        if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
+                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+            if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
-                    (s16)(((AlphaanimatorPlacement*)d)->unk1C -
-                        (int)(((AlphaanimatorPlacement*)d)->unk1D - s->alphaLevel));
+                    (s16)(((AlphaanimatorPlacement*)d)->startAlpha -
+                        (int)(((AlphaanimatorPlacement*)d)->targetAlpha - s->alphaLevel));
             }
         }
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-            if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
+                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+            if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->startAlpha)
             {
                 s->alphaLevel =
-                    (s16)(((AlphaanimatorPlacement*)d)->unk1D +
-                        (int)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->unk1D));
+                    (s16)(((AlphaanimatorPlacement*)d)->targetAlpha +
+                        (int)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->targetAlpha));
             }
         }
         break;
     case 2:
         if ((s8)s->gateVal != 0)
         {
-            if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
+            if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1D)
+                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->targetAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1D)
+                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->targetAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1D;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 1);
                 }
                 s->doneCount += 1;
             }
         }
         else
         {
-            if (((AlphaanimatorPlacement*)d)->unk1C > ((AlphaanimatorPlacement*)d)->unk1D)
+            if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->unk1C)
+                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->startAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->startAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 0);
                 }
                 s->doneCount += 1;
             }
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->unk1C)
+                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->startAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = ((AlphaanimatorPlacement*)d)->unk1C;
-                if (((AlphaanimatorPlacement*)d)->unk1A != -1)
+                s->alphaLevel = ((AlphaanimatorPlacement*)d)->startAlpha;
+                if (((AlphaanimatorPlacement*)d)->completeBit != -1)
                 {
-                    GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
+                    GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 0);
                 }
                 s->doneCount += 1;
             }
@@ -325,7 +325,7 @@ void alphaanimator_update(int* obj)
         break;
     case 3:
     {
-        int rate = (s8)((AlphaanimatorPlacement*)d)->unk1F;
+        int rate = (s8)((AlphaanimatorPlacement*)d)->rate;
         if (rate < 0)
         {
             rate = -rate;
@@ -336,7 +336,7 @@ void alphaanimator_update(int* obj)
         if (s->fadeA > s->fadeMax)
         {
             s->fadeA = s->fadeMax;
-            GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
+            GameBit_Set(((AlphaanimatorPlacement*)d)->completeBit, 1);
             s->doneCount += 1;
         }
         s->fadeB = s->fadeA - lbl_803E3F84;
