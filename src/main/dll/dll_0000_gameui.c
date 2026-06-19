@@ -49,6 +49,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx.h"
+#include "main/gameplay_runtime.h"
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;
 extern u16 lbl_803DE3F4;
@@ -108,7 +109,7 @@ extern s8 gHighScoreActiveTableId;
 extern u8 gHighScoreHighlightRow;
 extern int saveScoreFn_800e88b4(u8, u8, int, s32);
 extern int getSaveFileName(void);
-extern void* Obj_GetPlayerObject(void);
+
 
 extern u8 lbl_803A9440[0x18];
 extern u8 hudTextures[0x198];
@@ -171,7 +172,7 @@ extern f32 lbl_803E2168;
 extern int lbl_803DD81C;
 extern u8 lbl_803DD781;
 extern GridEntry lbl_8031BD30[];
-extern int randomGetRange(int lo, int hi);
+
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void AudioStream_StartPrepared(void);
 extern s16 lbl_803DD770;
@@ -393,7 +394,7 @@ extern void Camera_ApplyCurrentViewport(int a);
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
 extern f32 lbl_803E1E70;
-extern void* getTrickyObject(void);
+
 extern int cameraGetTargetType(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int trickyBitFn_801241cc(int bit, int x);
@@ -401,9 +402,9 @@ extern int getHudHiddenFrameCount(void);
 extern void pauseMenuDrawStatus(void);
 extern void cMenuUpdateAnims(void);
 extern void minimapFn_8012310c(void);
-extern void unlockLevel(int val, int idx, int flag);
-extern void loadUiDll(int index);
-extern void warpToMap(int idx, int transType);
+
+
+
 extern u8 shouldOpenCMenu;
 extern int lbl_803A9320[];
 extern s16 gMinimapInfoTextXCommitted;
