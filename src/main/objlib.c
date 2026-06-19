@@ -861,7 +861,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
         for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
         {
             hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < bestPriority)
+            if ((s8)hitPriority < (s8)bestPriority)
             {
                 bestPriority = hitPriority;
                 bestHitSlot = hitSlot;
@@ -917,7 +917,7 @@ int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32*
         for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
         {
             hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < bestPriority)
+            if ((s8)hitPriority < (s8)bestPriority)
             {
                 bestPriority = hitPriority;
                 bestHitSlot = hitSlot;
