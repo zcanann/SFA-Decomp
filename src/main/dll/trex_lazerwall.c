@@ -23,6 +23,7 @@
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
+#include "sfa_light_decls.h"
 
 #define GAMEBIT_LAZERWALL_START 0x617
 #define GAMEBIT_LAZERWALL_WIN 0x624
@@ -60,8 +61,8 @@ extern int Stack_IsEmpty(int stack);
 extern int Stack_IsFull(int stack);
 extern int Stack_Pop(int stack, int* out);
 extern int Stack_Push(int stack, int* in);
-extern int isGameTimerDisabled(void);
-extern void gameTimerStop(void);
+
+
 extern void hudFn_8011f38c(u8 x);
 
 /* this TU sees the title-menu interface under a differently-named extern; alias

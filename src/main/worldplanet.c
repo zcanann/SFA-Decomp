@@ -9,6 +9,7 @@
 #include "main/worldobj.h"
 #include "main/worldplanet.h"
 #include "main/pad.h"
+#include "sfa_light_decls.h"
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
@@ -27,7 +28,7 @@ extern void setDrawLights(int v);
 extern void audioStopByMask(int mask);
 extern void Music_Trigger(int id, int arg);
 extern int mapUnload(int mapId, int flags);
-extern int getCurMapLayer(void);
+
 extern void envFxActFn_800887f8(u8 value);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
@@ -38,7 +39,7 @@ extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 extern int ObjList_FindObjectById(int id);
-extern void AudioStream_StopCurrent(void);
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void setIsOvercast(int v);
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
@@ -54,7 +55,7 @@ extern u8 gWorldPlanetWarpMapIndices[6];
 extern int getAngle(float y, float x);
 extern int loadMapAndParent(int mapId);
 extern int lockLevel(s32 val, int idx);
-extern void loadModelAndAnimTabs(void);
+
 extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int idx, s8 transType);
 extern float fsin16Approx(int angle);

@@ -6,6 +6,7 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
+#include "sfa_light_decls.h"
 
 #define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
@@ -2265,8 +2266,8 @@ int fn_8003BB84(f32 * m, f32 * out);
 
 int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 {
-    extern f32 __kernel_sin(f32);
-    extern f32 __kernel_cos(f32, f32);
+
+
     extern f32 lbl_803DEA04;
     extern f32 gObjPrintHalfPi;
     extern f32 gObjPrintNegHalfPi;
@@ -3401,7 +3402,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
     extern f32*modelLightStruct_getProjectionTexMtx(int p);
     extern void*modelLightStruct_getProjectionTexture(int p);
-    extern void _gxSetFogParams(void);
+
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;
     extern ObjPrintS10Color lbl_803DE9F4;

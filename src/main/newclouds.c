@@ -12,6 +12,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sky_state.h"
+#include "sfa_light_decls.h"
 
 typedef struct LightningEffect
 {
@@ -365,8 +366,8 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 }
 
 extern void* memset(void* dst, int c, int n);
-extern void* saveGameGetEnvState(void);
-extern int getSaveGameLoadStatus(void);
+
+
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 
 #pragma dont_inline on
@@ -505,19 +506,19 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
 }
 
 extern void GXSetCullMode(int mode);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void GXClearVtxDesc(void);
+
+
 extern void GXSetVtxDesc(int attr, int type);
-extern void textureSetupFn_800799c0(void);
-extern void gxTextureFn_800794e0(void);
-extern void textRenderSetupFn_80079804(void);
+
+
+
 extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
 extern void selectTexture(char* tex, int slot);
-extern void Camera_UpdateViewMatrices(void);
+
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(u32 id);
-extern int rand(void);
+
 extern void srand(int seed);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * ab);
 extern f32 PSVECMag(f32 * v);
@@ -699,10 +700,10 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
     *(int*)((u8*)gNewClouds[i] + 0x1408) = *(int*)((u8*)gNewClouds[i] + 0x1408) + 0xfa0;
 }
 
-extern u8 isOvercast(void);
+
 extern void fn_800790AC(void);
-extern void gxBlendFn_800789ac(void);
-extern void textRenderSetupFn_800795e8(void);
+
+
 extern void GXSetPointSize(int size, int fmt);
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
@@ -834,7 +835,7 @@ typedef union PPCWGPipe2
 
 volatile PPCWGPipe2 GXWGFifo : (0xCC008000);
 
-extern int getHudHiddenFrameCount(void);
+
 extern void PSVECScale(f32* in, f32* out, f32 scale);
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * axb);
 extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 rad);
@@ -1193,7 +1194,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 }
 
 extern void GXSetMisc(int token, u32 val);
-extern void GXResetWriteGatherPipe(void);
+
 extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 extern u8 gNewCloudStarsInitialized;
 extern const f32 gNewCloudStarRadius;
@@ -2370,7 +2371,7 @@ extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void mtx44Transpose(f32* src, f32* dst);
-extern void gxBlendFn_80078b4c(void);
+
 extern int gNewCloudFlashRotAngle;
 extern const f32 lbl_803DF204;
 

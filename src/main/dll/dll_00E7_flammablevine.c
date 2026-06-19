@@ -20,6 +20,7 @@
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
+#include "sfa_light_decls.h"
 
 typedef struct FlammablevineObjectDef
 {
@@ -65,7 +66,7 @@ extern f32 timeDelta;
 extern void Obj_RemoveFromUpdateList(int obj);
 
 extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
-extern int cMenuGetSelectedItem(void);
+
 extern void* getTrickyObject(void);
 extern f32 lbl_803E3AF8;
 extern f32 gFlammableVineBurnDuration;

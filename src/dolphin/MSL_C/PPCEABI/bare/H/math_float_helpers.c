@@ -1,7 +1,8 @@
 #include "dolphin/os/OSFastCast.h"
+#include "sfa_light_decls.h"
 
-extern double __fabs(double);
-extern float __fabsf(float);
+
+
 
 // exp2f constants
 extern float lbl_803E7978;  // -127.0f

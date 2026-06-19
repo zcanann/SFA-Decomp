@@ -5,6 +5,7 @@
 #include "main/pad.h"
 #include "main/dll/gameplay.h"
 #include "main/audio/sfx.h"
+#include "sfa_light_decls.h"
 extern f32 timeDelta;
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
@@ -14,7 +15,7 @@ extern void gameTextShow(int a);
 extern void gameTextShowStr(void* str, int id, int x, int y);
 extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
-extern void titleScreenTextDrawFunc(void);
+
 extern void titleScreenShowCopyright(u8 arg);
 extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;

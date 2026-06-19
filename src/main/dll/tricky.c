@@ -31,6 +31,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/lightmap.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "sfa_light_decls.h"
 
 typedef struct GameUIWork10
 {
@@ -54,7 +55,7 @@ typedef struct TrickyAirMeter
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern int playerHasKrazoaSpirit();
+
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 extern f32 gViewFinderFadeLevel;
 extern u8 gameUiResourcesLoaded;
@@ -247,7 +248,7 @@ void GameUI_airMeterSetField24(float v)
 extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
 
-extern int getCurGameText(void);
+
 extern void gameTextLoadDir(int dirId);
 extern f32 lbl_803E1E60;
 extern f32 lbl_803DD764;
@@ -643,7 +644,7 @@ extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetCullMode(int m);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXClearVtxDesc(void);
+
 extern void GXSetVtxDesc(int a, int b);
 extern int lbl_803E1E34;
 extern int lbl_803E1E38;
@@ -850,13 +851,13 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
-extern f32 Camera_GetFovY(void);
+
 extern void Camera_SetFovY(f32 fovY);
-extern void Camera_RebuildProjectionMatrix(void);
+
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-extern void Camera_UpdateViewMatrices(void);
+
 extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
 extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, lbl_803DD7FC;
 extern const f32 lbl_803E1E94;
@@ -995,7 +996,7 @@ void fearTestMeterDraw(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-extern int getHudHiddenFrameCount(void);
+
 extern s8 lbl_803DBAEC;
 extern u8 gTrickyAirMeterFillSpeed;
 extern s8 lbl_803DD7F8;
@@ -1469,8 +1470,8 @@ extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_
 extern int lbl_803DBAE8;
 extern char sViewFinderDirN, sViewFinderDirE, sViewFinderDirS, sViewFinderDirW, sViewFinderDirNE, sViewFinderDirSE, sViewFinderDirSW,
             sViewFinderDirNW, lbl_803DBB38;
-extern f32 Camera_GetFarPlane(void);
-extern f32 Camera_GetNearPlane(void);
+
+
 extern int depthReadRequestPoll(int x, int y, void* fn);
 extern u16 gViewFinderCamAngle;
 extern int lbl_803E1E2C;

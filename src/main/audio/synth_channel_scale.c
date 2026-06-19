@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
+#include "sfa_light_decls.h"
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
 extern u8* synthVoice;
@@ -66,7 +67,7 @@ extern void synthRecycleVoiceCallbacks(void* song);
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
-extern double __fabs(double);
+
 #define fabs __fabs
 void synthSetStudioChannelScale(int value, u8 bank, u32 key);
 

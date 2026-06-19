@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/lightmap.h"
+#include "sfa_light_decls.h"
 
 /* Area cells handled by this controller (GameObject::anim.mapEventSlot). */
 enum
@@ -41,7 +42,7 @@ enum
 
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-extern int getSaveGameLoadStatus(void);
+
 
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);

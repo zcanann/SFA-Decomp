@@ -25,6 +25,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
+#include "sfa_light_decls.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -90,7 +91,7 @@ extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
-extern int cMenuGetSelectedItem(void);
+
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f64 lbl_803E2528;

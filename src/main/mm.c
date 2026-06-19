@@ -3,6 +3,7 @@
 #include "main/dll/gameplay.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"
+#include "sfa_light_decls.h"
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -174,7 +175,7 @@ void mm_free(void* p)
     }
 }
 
-extern int OSDisableInterrupts(void);
+
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 
 void AtomicSList_Push(void** list, void* node)
@@ -251,13 +252,13 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     return gMmRegionTable[regIdx].start;
 }
 
-extern u32 OSGetTick(void);
+
 extern void heapFree(int region, int slotIdx);
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
 extern int gMmLastFreeTick;
 extern void OSReport(const char* msg, ...);
-extern void waitNextFrame(void);
+
 extern int GXFlush_(u8 visible, int unused);
 extern char sMmStbfStackTooDeepError[];
 extern s16 gMmDeferredFreeCount;

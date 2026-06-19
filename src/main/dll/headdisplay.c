@@ -25,6 +25,7 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "sfa_light_decls.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX 0x152
@@ -39,21 +40,21 @@
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX 8          /* u16  */
 
-extern void AudioStream_StopCurrent(void);
+
 extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
-extern f32 Camera_GetFovY(void);
+
 extern void Camera_SetFovY(f32 fovY);
 extern void Camera_SetCurrentViewIndex(int index);
-extern int Camera_IsViewYOffsetEnabled(void);
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
+
+
+
 extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_ApplyFullViewport(void);
+
+
+
 
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int Obj_GetActiveModel(int obj);
@@ -96,8 +97,8 @@ extern f32 lbl_803DD8CC;
 extern u16 lbl_803DD8D0;
 extern u16 curGameText;
 extern u8 lbl_803A9440[];
-extern u8 AudioStream_IsPreparing(void);
-extern void AudioStream_StartPrepared(void);
+
+
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void* gameTextGetBox(int box);
 extern void gameTextFreePhrase(u8 * phrase);

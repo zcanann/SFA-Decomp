@@ -25,6 +25,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "sfa_light_decls.h"
 
 typedef struct SaveSelectPanel
 {
@@ -39,7 +40,7 @@ typedef struct SaveSelectPanel
 
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
-extern int getUiDllFn_80014930(void);
+
 extern s8 gSaveSelectPanelIndex;
 extern u8 lbl_803DB424;
 extern s8 saveFileSelect_currentSlotIndex;
@@ -78,7 +79,7 @@ extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 
-extern void titleScreenTextDrawFunc(void);
+
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

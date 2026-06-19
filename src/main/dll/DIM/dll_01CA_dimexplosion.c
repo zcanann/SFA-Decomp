@@ -26,6 +26,7 @@
 #include "main/camera.h"
 #include "string.h"
 #include "main/audio/sfx.h"
+#include "sfa_light_decls.h"
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -89,7 +90,7 @@ extern FbTexTbl gExplosionTexTable;
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
 
-extern void GXClearVtxDesc(void);
+
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(f32* m, int id);
@@ -99,7 +100,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
-extern f32* Camera_GetInverseViewRotationMatrix(void);
+
 extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);

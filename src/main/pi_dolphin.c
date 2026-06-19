@@ -16,6 +16,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"
+#include "sfa_light_decls.h"
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -78,7 +79,7 @@ extern u32 FUN_80286880();
 extern u32 FUN_80286888();
 extern u32 FUN_8028688c();
 extern double FUN_80286cd0();
-extern u32 countLeadingZeros();
+
 extern u32 DAT_800000f8;
 extern u32 DAT_802c24e8;
 extern u32 DAT_802c24ec;
@@ -1512,19 +1513,19 @@ u32 mapLoadDataFile(int mapId, int fileId)
     return result;
 }
 
-extern void padUpdate(void);
-extern void checkReset(void);
-extern void waitNextFrame(void);
-extern void dvdCheckError(void);
+
+
+
+
 extern void mmFreeTick(int arg);
-extern void gameTextRun(void);
+
 extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
 extern char sZlbBlockTag;
 extern int return0_8002A5B8(int p);
-extern int OSDisableInterrupts(void);
+
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern char sDirBlockTag;
 extern int zlbDecompress(void* dst, int size, int out, void* src);
@@ -4198,7 +4199,7 @@ u32 getDataFileSize(int idx)
 }
 
 extern void VISetBlack(int);
-extern void VIFlush(void);
+
 extern u8 lbl_803DB5CC;
 
 void viFn_8004a56c(int val)
@@ -7256,9 +7257,9 @@ extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void* q);
 extern void OSSleepThread(void* q);
-extern void Camera_ApplyFullViewport(void);
+
 extern void GXInvalidateVtxCache(void);
-extern void GXInvalidateTexAll(void);
+
 extern void OSReport(const char* msg, ...);
 extern int GXReadDrawSync(void);
 extern void VISetNextFrameBuffer(void* fb);
@@ -7778,7 +7779,7 @@ extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
 extern void GXSetDispCopyGamma(int gamma);
 extern int VIWaitForRetrace();
-extern void GXClearVtxDesc(void);
+
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);

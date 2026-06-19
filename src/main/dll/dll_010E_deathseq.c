@@ -7,6 +7,7 @@ extern f32 timeDelta;
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
 #include "main/rcp_dolphin.h"
+#include "sfa_light_decls.h"
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
@@ -16,8 +17,8 @@ extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern int fn_80296C5C(void);
 extern void fn_80296C6C(int* player, int v);
-extern void AudioStream_StopCurrent(void);
-extern void AudioStream_StartPrepared(void);
+
+
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
 extern void Obj_FreeObject(int* obj);

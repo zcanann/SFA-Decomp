@@ -24,9 +24,10 @@
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/gameplay_runtime.h"
+#include "sfa_light_decls.h"
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);
-extern void timerSetToCountUp(void);
+
 extern void gameTimerInit(s8 flags, int minutes);
 extern void buttonDisable(int port, u32 mask);
 extern int padGetAnalogInput(int, char*, char*);

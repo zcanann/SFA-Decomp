@@ -23,9 +23,10 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "sfa_light_decls.h"
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
-extern int getHudHiddenFrameCount(void);
+
 extern s8 lbl_803DD7A0;
 extern short lbl_803DD7A2;
 extern u8 framesThisStep;
@@ -54,7 +55,7 @@ extern int lbl_803DBAD4;
 extern int lbl_803DBAD8;
 extern int lbl_803DBADC;
 extern u8 lbl_803DD7B3;
-extern int gameTextGetCharset(void);
+
 extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
