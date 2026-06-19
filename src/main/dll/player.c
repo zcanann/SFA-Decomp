@@ -17528,7 +17528,7 @@ int fn_8029E568(int obj, int state, f32 fv)
             }
             else
             {
-                spd = lbl_803E7EA4;
+                spd = 0.0f;
                 active = 0;
             }
             if (active != 0)
