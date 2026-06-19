@@ -419,9 +419,9 @@ int fn_80152370(int obj, int p2)
     *(u8*)(setup + 6) = *(u8*)(sub + 6);
     *(u8*)(setup + 5) = 1;
     *(u8*)(setup + 7) = *(u8*)(sub + 7);
-    *(f32*)(setup + 8) = ((GameObject*)obj)->anim.localPosX;
-    *(f32*)(setup + 0xc) = ((GameObject*)obj)->anim.localPosY;
-    *(f32*)(setup + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+    ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+    ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
+    ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
     *(u8*)(setup + 0x19) = 0;
     *(s16*)(setup + 0x20) = 149;
     return (int)Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
