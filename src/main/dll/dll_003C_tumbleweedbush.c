@@ -211,13 +211,13 @@ void Link_copy(u8* srcArg)
 #pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    extern u8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* src;
     int i;
 
     src = (LinkMenuItemDB*)srcArg;
-    for (i = 0; i < (s8)gTumbleweedBushItemCount; i++)
+    for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
         gTumbleweedBushItems[i].field00 = src[i].field00;
         gTumbleweedBushItems[i].itemId = src[i].itemId;
