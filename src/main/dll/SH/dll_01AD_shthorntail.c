@@ -527,13 +527,13 @@ void SHthorntail_update(SHthorntailObject* obj)
         objAudioFn_8006ef38((int)obj, (int)&animEvents, 8, (int)runtime->renderPathPoints,
                             (int)runtime->moveScratch, lbl_803E5448, lbl_803E5448);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) == 0)
+            SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0)
         {
-            runtime->movementControlFlags = runtime->movementControlFlags | 1;
+            runtime->movementControlFlags = runtime->movementControlFlags & ~1;
         }
         else
         {
-            runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
+            runtime->movementControlFlags = runtime->movementControlFlags | 1;
         }
         dll_2E_func03(obj, runtime);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
