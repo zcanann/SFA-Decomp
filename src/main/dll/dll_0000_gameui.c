@@ -3933,8 +3933,7 @@ void GameUI_release(void)
     int i;
     u8 j;
 
-    p = g->hudTextures;
-    for (i = 0; i < 102; i++)
+    for (i = 0, p = g->hudTextures; i < 102; i++)
     {
         if (*p != 0) textureFree(*p);
         p++;
