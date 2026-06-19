@@ -81,6 +81,7 @@ extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 extern int sprintf(char* dst, const char* fmt, ...);
 extern void gameTextSetDrawFunc(void* fn);
+extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

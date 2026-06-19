@@ -70,6 +70,7 @@ STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
 extern void Obj_FreeObject(int obj);
 extern f32 timeDelta;
+extern int dbstealerworm_stateHandlerA02();
 
 void dfpobjcreator_hitDetect(void)
 {

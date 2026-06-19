@@ -243,6 +243,7 @@ void GameUI_airMeterSetField24(float v)
 extern void cutsceneFadeInOut(int x);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
+extern int getCurGameText(void);
 extern void gameTextLoadDir(int x);
 extern f32 lbl_803E1E60;
 extern f32 lbl_803DD764;

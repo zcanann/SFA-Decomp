@@ -124,6 +124,7 @@ extern void GameBit_Set(int eventId, int value);
 extern int getCurMapLayer(void);
 extern int getTrickyObject(void);
 extern void mapLoadDataFiles(int map);
+extern void loadModelAndAnimTabs(void);
 extern void mapUnload(int map, int flags);
 extern void lockLevel(int a, int b);
 extern int unlockLevel(s32 val, int idx, int flag);

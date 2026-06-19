@@ -111,6 +111,13 @@ extern void Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E6390;
 extern int gDBStealerWormStateHandlersA[];
 extern int gDBStealerWormStateHandlersB[];
+extern int dbstealerworm_stateHandlerB06();
+extern int dbstealerworm_stateHandlerB05();
+extern int dbstealerworm_stateHandlerA0E();
+extern int dbstealerworm_stateHandlerA0D();
+extern int dbstealerworm_stateHandlerA0A();
+extern int dbstealerworm_stateHandlerA04();
+extern int dbstealerworm_stateHandlerA02();
 
 u32
 FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,

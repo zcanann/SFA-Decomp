@@ -2772,6 +2772,7 @@ void beginLoadingMap(void)
 extern int mapGetDirIdx(int mapId);
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);
+extern void loadModelAndAnimTabs(void);
 extern int getCurrentDataFile(int id);
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;

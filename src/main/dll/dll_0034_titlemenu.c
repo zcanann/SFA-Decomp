@@ -12,6 +12,7 @@ extern void gameTextSetDrawFunc(void* callback);
 extern void titleScreenShowCopyright(u8 param_1);
 extern void gameTextBoxFn_80134d40(int param_1, int param_2, int param_3);
 extern void titleScreenPositionElements(f32 param_1, f32 param_2);
+extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
 

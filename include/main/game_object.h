@@ -85,11 +85,8 @@ void Obj_SetActiveHitVolumeBounds(GameObject *obj, int xBound, int zBound, int y
 void disableHeavyFog(void);
 void subtitleFn_8001b700(void);
 void trickyReportError(const char* fmt, ...);
-int getCurGameText(void);
 u8 fn_801334E0(void);
-int dbstealerworm_stateHandlerA02();
 int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-int dbstealerworm_stateHandlerB06();
 void renderResetFn_8003fc60(void);
 void modelLightChannels_applyGXControls(void);
 void __GXAbortWaitPECopyDone(void);
@@ -101,14 +98,9 @@ int isInBounds(f32 x, f32 z);
 void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 void objSetHintTextIdx(int obj, int idx);
 void DBstealerwo_setFuncPtrs_80203c78(void);
-int dbstealerworm_stateHandlerA04();
 int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
-int dbstealerworm_stateHandlerA0A();
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-int dbstealerworm_stateHandlerA0D();
-int dbstealerworm_stateHandlerA0E();
-int dbstealerworm_stateHandlerB05();
 
 #endif

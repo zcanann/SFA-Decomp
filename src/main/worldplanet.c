@@ -59,6 +59,7 @@ extern int getAngle(float y, float x);
 extern u8 fn_8012DDAC(void);
 extern int loadMapAndParent(int mapId);
 extern void lockLevel(int idx, int p2);
+extern void loadModelAndAnimTabs(void);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int idx, s8 transType);
 extern f32 fsin16Approx(int angle);

@@ -76,6 +76,5 @@ extern CameraInterface **gCameraInterface;
 void Pause_ResetMenuFrameCounter(void);
 void setShadowFlag_803db658(int v);
 void Obj_ResetObjectSystem(void);
-void loadModelAndAnimTabs(void);
 
 #endif /* MAIN_CAMERA_INTERFACE_H_ */

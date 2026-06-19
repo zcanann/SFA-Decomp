@@ -350,7 +350,6 @@
 
 
 /* extern-cleanup: consolidated prototypes */
-void titleScreenTextDrawFunc(void);
 void creditsStart_(void);
 
 #endif /* MAIN_AUDIO_SFX_IDS_H_ */

@@ -309,6 +309,7 @@ extern f32 lbl_803E21C8;
 extern f32 lbl_803E21CC;
 extern int getCurSeqNo(void);
 extern u8 AudioStream_IsPreparing(void);
+extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dir);
 extern u8 getCurTaskHintTextMap(void);
