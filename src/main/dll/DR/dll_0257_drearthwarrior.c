@@ -1351,9 +1351,9 @@ void DR_EarthWarrior_update(int obj)
         c8338 = lbl_803E8338;
         for (i = 0, p = (int)inner; i < 4; i++)
         {
-            w.mat[1] = c835c * ((GameObject*)obj)->anim.velocityX + *(f32*)((char*)p + 0xb18);
-            w.mat[2] = *(f32*)((char*)p + 0xb1c);
-            w.mat[3] = c835c * ((GameObject*)obj)->anim.velocityZ + *(f32*)((char*)p + 0xb20);
+            w.mat[1] = c835c * ((GameObject*)obj)->anim.velocityX + ((DREarthWarriorPlacement*)p)->unkB18;
+            w.mat[2] = ((DREarthWarriorPlacement*)p)->unkB1C;
+            w.mat[3] = c835c * ((GameObject*)obj)->anim.velocityZ + ((DREarthWarriorPlacement*)p)->unkB20;
             w.mat[0] = c8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--)
