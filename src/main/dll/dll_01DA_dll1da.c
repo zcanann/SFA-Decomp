@@ -94,8 +94,6 @@ void dll_1DA_update(int obj)
     f32 vz;
     f32 len;
     f32 k;
-    f32 lo;
-    f32 hi;
     f32 e;
     f32 d;
     int n;
@@ -115,9 +113,8 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AE4);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
     }
-    if (((GameObject*)obj)->anim.velocityX < (hi = lbl_803E4AE8) && ((GameObject*)obj)->anim.velocityX > (lo =
-            lbl_803E4AEC) &&
-        ((GameObject*)obj)->anim.velocityZ < hi && ((GameObject*)obj)->anim.velocityZ > lo)
+    if (((GameObject*)obj)->anim.velocityX < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityX > lbl_803E4AEC &&
+        ((GameObject*)obj)->anim.velocityZ < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityZ > lbl_803E4AEC)
     {
         ((GameObject*)obj)->anim.velocityX = (k = lbl_803E4AF0);
         ((GameObject*)obj)->anim.velocityZ = k;
