@@ -382,9 +382,9 @@ void FUN_8005fe14(int obj)
         planeIdx = (uint)plane;
         if (lbl_803DF84C +
             (float)(&DAT_803885a8)[planeIdx * 5] +
-            (float)(&DAT_803885a4)[planeIdx * 5] * (*(float*)(obj + 0x18) - lbl_803DDA5C) +
-            *(float*)(obj + 0x14) * (float)(&DAT_803885a0)[planeIdx * 5] +
-            (float)(&DAT_8038859c)[planeIdx * 5] * (*(float*)(obj + 0x10) - lbl_803DDA58) <
+            (float)(&DAT_803885a4)[planeIdx * 5] * (((GameObject*)obj)->anim.worldPosX - lbl_803DDA5C) +
+            ((GameObject*)obj)->anim.localPosZ * (float)(&DAT_803885a0)[planeIdx * 5] +
+            (float)(&DAT_8038859c)[planeIdx * 5] * (((GameObject*)obj)->anim.localPosY - lbl_803DDA58) <
             lbl_803DF84C)
         {
             insideFrustum = false;
@@ -411,27 +411,27 @@ void FUN_8005ff90(short* in, float* out)
 
 uint FUN_80060058(int obj)
 {
-    return *(uint*)(obj + 0x10) >> 0x18;
+    return *(uint*)&((GameObject*)obj)->anim.localPosY >> 0x18;
 }
 
 int FUN_800600b4(int obj, int idx)
 {
-    return *(int*)(obj + 0x4c) + idx * 8;
+    return *(int*)&((GameObject*)obj)->anim.placementData + idx * 8;
 }
 
 int FUN_800600c4(int obj, int idx)
 {
-    return *(int*)(obj + 0x50) + idx * 0x14;
+    return *(int*)&((GameObject*)obj)->anim.modelInstance + idx * 0x14;
 }
 
 int FUN_800600d4(int obj, int idx)
 {
-    return *(int*)(obj + 0x68) + idx * 0x1c;
+    return *(int*)&((GameObject*)obj)->anim.dll + idx * 0x1c;
 }
 
 int FUN_800600e4(int obj, int idx)
 {
-    return *(int*)(obj + 100) + idx * 0x44;
+    return *(int*)&((GameObject*)obj)->anim.modelState + idx * 0x44;
 }
 
 undefined4 FUN_8006069c(void)
@@ -693,8 +693,8 @@ void FUN_800631d4(int tag, int obj, int clear)
     }
     else
     {
-        hitCount = (uint) * (byte*)(*(int*)(obj + 0x50) + 0x5c);
-        hitEntry = *(int*)(*(int*)(obj + 0x50) + 0x34);
+        hitCount = (uint) * (byte*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x5c);
+        hitEntry = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x34);
     }
     if (clear != 0)
     {
@@ -1695,7 +1695,7 @@ void MapBlock_init(int obj)
     *(int*)(obj + 0x58) = obj + *(int*)(obj + 0x58);
     *(int*)&((GameObject*)obj)->anim.weaponDaTable = obj + *(int*)&((GameObject*)obj)->anim.weaponDaTable;
     *(int*)&((GameObject*)obj)->anim.eventTable = obj + *(int*)&((GameObject*)obj)->anim.eventTable;
-    if (*(u32*)(obj + 0x78) != 0) *(int*)(obj + 0x78) = obj + *(int*)(obj + 0x78);
+    if (*(u32*)&((GameObject*)obj)->anim.hitVolumeBounds != 0) *(int*)&((GameObject*)obj)->anim.hitVolumeBounds = obj + *(int*)&((GameObject*)obj)->anim.hitVolumeBounds;
     if (*(u32*)&((GameObject*)obj)->anim.banks != 0) *(int*)&((GameObject*)obj)->anim.banks = obj + *(int*)&((GameObject
         *)obj)->anim.banks;
     if (*(u32*)&((GameObject*)obj)->anim.previousLocalPosX != 0) *(int*)&((GameObject*)obj)->anim.previousLocalPosX =
@@ -1728,13 +1728,13 @@ void MapBlock_initHits(int obj, int index)
     *(u16*)(obj + 0x9c) = (u32)size / 20;
     for (i = 0, off = 0; i < *(u16*)(obj + 0x9c); i++)
     {
-        entry = *(int*)(obj + 0x70) + off;
+        entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
         if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 ||
             *(s16*)(entry + 0) > 0x280 || *(s16*)(entry + 2) > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
-        entry = *(int*)(obj + 0x70) + off;
+        entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
         if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 ||
             *(s16*)(entry + 8) > 0x280 || *(s16*)(entry + 0xa) > 0x280)
         {
