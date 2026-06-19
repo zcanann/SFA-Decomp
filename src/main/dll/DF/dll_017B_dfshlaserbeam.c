@@ -337,8 +337,9 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 {
                     lateralAbs = lbl_803E4EE8;
                 }
+                lateralAbs = *(f32*)&lbl_803E4EE8 - lateralAbs;
                 DFSH_LASER_HIT_STRENGTH(runtime) =
-                    (s16)(int)(lbl_803E4EEC * (lbl_803E4EE8 - lateralAbs));
+                    (s16)(int)(lbl_803E4EEC * lateralAbs);
                 if (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1)
                 {
                     MODGFX_DETACH(obj);
