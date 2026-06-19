@@ -68,10 +68,10 @@ extern f32 lbl_803E1CE0;
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {
     f32 prev_x, prev_y, prev_z;
-    f32 cur_x, cur_y, cur_z;
-    f32 dx, dy, dz;
     f32 total;
     f32 t;
+    f32 cur_x, cur_y, cur_z;
+    f32 dx, dy, dz;
     f32 buf[4];
     int i;
 
