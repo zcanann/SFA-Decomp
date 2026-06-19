@@ -385,7 +385,7 @@ sound_update:
         {
             ((GameObject*)effectObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)effectObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY;
-            *(f32*)(effectObj + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+            ((GameObject*)effectObj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(s16*)(effectObj + 0) = ((GameObject*)obj)->anim.rotX;
             *(s16*)(effectObj + 2) = ((GameObject*)obj)->anim.rotY;
             *(f32*)(effectObj + 0x28) = lbl_803DC344;
