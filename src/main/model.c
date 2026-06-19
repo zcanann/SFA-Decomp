@@ -2139,7 +2139,8 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || a4 != 0)
     {
         sizes[4] = sizes[4] + 0x30;
-        total = ((sizes[6] + sizes[1]) + 8) + (sizes[4] + 100);
+        total = sizes[4] + 100;
+        total = ((sizes[6] + sizes[1]) + 8) + total;
         total = sizes[3] + total;
     }
     else
