@@ -15677,6 +15677,8 @@ void fn_802AA014(int obj)
         if (o != NULL)
         {
             f32 fov, cot, aspect, ycomp, xcomp, len;
+            f32 scale;
+            f32 mix;
             int res, h2, hw;
 
             *(s16*)((char*)o + 6) |= 0x2000;
@@ -15695,15 +15697,17 @@ void fn_802AA014(int obj)
             v[1] = xcomp / len;
             v[2] = lbl_803E7F5C / len;
             Matrix_TransformVector(fn_8000E814(), v, v);
-            *(f32*)((char*)o + 0x24) = v[0] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x28) = v[1] * lbl_803E80D8;
-            *(f32*)((char*)o + 0x2c) = v[2] * lbl_803E80D8;
+            scale = lbl_803E80D8;
+            *(f32*)((char*)o + 0x24) = v[0] * scale;
+            *(f32*)((char*)o + 0x28) = v[1] * scale;
+            *(f32*)((char*)o + 0x2c) = v[2] * scale;
+            mix = lbl_803E7ED4;
             *(f32*)((char*)o + 0xc) = *(f32*)((char*)o + 0x18) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
+                mix * *(f32*)((char*)o + 0x24) + *(f32*)((char*)slot + 0xc);
             *(f32*)((char*)o + 0x10) = *(f32*)((char*)o + 0x1c) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
+                mix * *(f32*)((char*)o + 0x28) + *(f32*)((char*)slot + 0x10);
             *(f32*)((char*)o + 0x14) = *(f32*)((char*)o + 0x20) =
-                lbl_803E7ED4 * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
+                mix * *(f32*)((char*)o + 0x2c) + *(f32*)((char*)slot + 0x14);
             *(s16*)((char*)o + 2) = *(s16*)((char*)slot + 2) / 2;
             *(s16*)((char*)o + 0) = -*(s16*)((char*)slot + 0);
             *(int*)((char*)o + 0xf4) = 0x64;
