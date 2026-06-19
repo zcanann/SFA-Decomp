@@ -12,8 +12,8 @@ void FUN_800d7780(u8 param_1)
 
 void Checkpoint_release(void);
 
-extern u8 lbl_803DD42D;
-u8 screenTransition_func07(void) { return lbl_803DD42D; }
+extern u8 gScreenTransitionDone;
+u8 screenTransition_func07(void) { return gScreenTransitionDone; }
 
 extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
@@ -25,63 +25,63 @@ extern u8 screenTransitionPause;
 void setScreenTransitionPause(u32 pause) { screenTransitionPause = pause; }
 #pragma peephole reset
 
-extern f32 lbl_803E0558;
-u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
+extern f32 gScreenTransitionAlphaMax;
+u32 isScreenTransitionActive(void) { return gScreenTransitionAlphaMax == screenTransitionAlpha; }
 
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
 extern f32 lbl_803E055C;
-extern f32 lbl_803DD424;
-extern f32 lbl_803DD428;
-extern u8 lbl_803DD42C;
-extern u8 lbl_803DD42E;
+extern f32 gScreenTransitionAlphaStep;
+extern f32 gScreenTransitionHoldTimer;
+extern u8 gScreenTransitionType;
+extern u8 gScreenTransitionDelay;
 
 #pragma scheduling off
 #pragma peephole off
 
 void screenTransitionFn_800d7b04(int duration, int type)
 {
-    screenTransitionAlpha = lbl_803E0558;
-    lbl_803DD424 = lbl_803E0564 / duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = type;
-    lbl_803DD42E = 5;
+    screenTransitionAlpha = gScreenTransitionAlphaMax;
+    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 5;
 }
 
 void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
-    screenTransitionAlpha = lbl_803E0558 * from;
-    lbl_803DD424 = -(lbl_803E055C * from) / duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = type;
-    lbl_803DD42E = 1;
+    screenTransitionAlpha = gScreenTransitionAlphaMax * from;
+    gScreenTransitionAlphaStep = -(lbl_803E055C * from) / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 1;
 }
 
 #pragma opt_common_subs off
 void screenTransition_screenFade(int duration, int type)
 {
-    if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
+    if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
     {
-        screenTransitionAlpha = lbl_803E0558;
+        screenTransitionAlpha = gScreenTransitionAlphaMax;
     }
-    lbl_803DD424 = lbl_803E0564 / duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = type;
-    lbl_803DD42E = 1;
+    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 1;
 }
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 void screenTransition_Do(int duration, int type)
 {
-    if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == screenTransitionAlpha)
+    if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
     {
         screenTransitionAlpha = lbl_803E0560;
     }
-    lbl_803DD424 = lbl_803E055C / duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = type;
-    lbl_803DD42E = 0;
+    gScreenTransitionAlphaStep = lbl_803E055C / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 0;
 }
 #pragma opt_common_subs reset
 
@@ -104,7 +104,7 @@ typedef struct
 } HudColor;
 
 extern u8 gDvdErrorPauseActive;
-extern f32 lbl_803E0568;
+extern f32 gScreenTransitionHoldDuration;
 extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
@@ -112,49 +112,49 @@ extern void setHudOpacity(int op);
 #pragma opt_common_subs off
 void screenTransition_do2(int p1, int p2, int p3)
 {
-    if (lbl_803DD42E != 0)
+    if (gScreenTransitionDelay != 0)
     {
-        lbl_803DD42E--;
+        gScreenTransitionDelay--;
         return;
     }
-    if (screenTransitionPause == 0 && lbl_803DD428 >= lbl_803E0568)
+    if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
     {
-        (*gScreenTransitionInterface)->step(0x1e, lbl_803DD42C);
-        lbl_803DD428 = lbl_803E0560;
+        (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
+        gScreenTransitionHoldTimer = lbl_803E0560;
     }
-    screenTransitionAlpha = lbl_803DD424 * timeDelta + screenTransitionAlpha;
+    screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
     if (screenTransitionAlpha < lbl_803E0560)
     {
         screenTransitionAlpha = lbl_803E0560;
-        lbl_803DD42D = 1;
-        if (lbl_803DD42C == 5)
+        gScreenTransitionDone = 1;
+        if (gScreenTransitionType == 5)
         {
             setHudOpacity(0xff);
         }
         return;
     }
-    if (screenTransitionAlpha > lbl_803E0558)
+    if (screenTransitionAlpha > gScreenTransitionAlphaMax)
     {
-        screenTransitionAlpha = lbl_803E0558;
-        lbl_803DD42D = 1;
+        screenTransitionAlpha = gScreenTransitionAlphaMax;
+        gScreenTransitionDone = 1;
         if (screenTransitionPause == 0)
         {
-            lbl_803DD428 = lbl_803DD428 + timeDelta;
+            gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
         }
-        if (lbl_803DD42C != 5)
+        if (gScreenTransitionType != 5)
         {
             setHudOpacity(0xff);
         }
     }
     else
     {
-        lbl_803DD42D = 0;
+        gScreenTransitionDone = 0;
     }
     if (gDvdErrorPauseActive != 0)
     {
         return;
     }
-    switch (lbl_803DD42C)
+    switch (gScreenTransitionType)
     {
     case 1:
     {
@@ -216,9 +216,9 @@ void screenTransition_do2(int p1, int p2, int p3)
 }
 #pragma opt_common_subs reset
 
-extern f32 lbl_803E0540;
+extern f32 gScreenTransitionAlphaMidpoint;
 extern f32 lbl_803E0544;
-extern f32 lbl_803E0548;
+extern f32 gScreenTransitionEdgeScale;
 extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 
 void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
@@ -251,10 +251,10 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
     span = (vr - vx) & 0xffff;
     H = (vb - vy) & 0xffff;
-    if (screenTransitionAlpha > lbl_803E0540)
+    if (screenTransitionAlpha > gScreenTransitionAlphaMidpoint)
     {
         maxAlpha = 0xff;
-        inset = (int)(screenTransitionAlpha - lbl_803E0540);
+        inset = (int)(screenTransitionAlpha - gScreenTransitionAlphaMidpoint);
     }
     else
     {
@@ -264,7 +264,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     halfSpan = (span >> 1) & 0xffff;
     inset = inset & 0xffff;
     conv = (f32)(int)(inset * halfSpan);
-    edge = (u32)(int)(conv * lbl_803E0548) & 0xffff;
+    edge = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
     if (edge == halfSpan)
     {
         int sh2;
@@ -319,7 +319,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
         edge = (H >> 1) & 0xffff;
         conv = (f32)(int)(inset * edge);
-        inset = (u32)(int)(conv * lbl_803E0548) & 0xffff;
+        inset = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
         halfSpan = (edge - inset) & 0xffff;
         loEdge = (edge + inset) & 0xffff;
         inset = ((edge - 1) - inset) & 0xffff;

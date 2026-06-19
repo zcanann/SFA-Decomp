@@ -434,7 +434,7 @@ extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8;
 extern f32 lbl_803E01AC;
 
-extern WaterfxCfg lbl_8039C440;
+extern WaterfxCfg gEffect13DefaultSplashParams;
 
 #pragma dont_inline on
 
@@ -552,14 +552,14 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x44f:
         if (spawnParams == 0)
         {
-            lbl_8039C440.posX = lbl_803E0180;
-            lbl_8039C440.posY = lbl_803E0180;
-            lbl_8039C440.posZ = lbl_803E0180;
-            lbl_8039C440.scale = lbl_803E019C;
-            lbl_8039C440.rotX = 0;
-            lbl_8039C440.rotY = 0;
-            lbl_8039C440.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C440;
+            gEffect13DefaultSplashParams.posX = lbl_803E0180;
+            gEffect13DefaultSplashParams.posY = lbl_803E0180;
+            gEffect13DefaultSplashParams.posZ = lbl_803E0180;
+            gEffect13DefaultSplashParams.scale = lbl_803E019C;
+            gEffect13DefaultSplashParams.rotX = 0;
+            gEffect13DefaultSplashParams.rotY = 0;
+            gEffect13DefaultSplashParams.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect13DefaultSplashParams;
         }
         (*gWaterfxInterface)->spawnSplashBurst(NULL, spawnParams->posX,
                                                spawnParams->posY,

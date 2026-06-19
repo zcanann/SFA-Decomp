@@ -30,7 +30,7 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);
-extern u32 lbl_803E38E8;
+extern u32 gCurveFishCurveQueryKey;
 extern f32 lbl_803E38EC;
 extern f32 lbl_803E38F0;
 extern f32 lbl_803E38F4;
@@ -112,7 +112,7 @@ void curvefish_update(int obj)
     setup = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     setup2 = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
-    curveQuery = lbl_803E38E8;
+    curveQuery = gCurveFishCurveQueryKey;
 
     state->phaseTimer += timeDelta;
 

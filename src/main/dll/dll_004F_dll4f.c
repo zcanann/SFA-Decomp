@@ -18,12 +18,12 @@ extern f32 lbl_803E265C;
 #pragma scheduling on
 #pragma peephole on
 extern f32 lbl_803E1A88;
-extern CameraMode4FState* lbl_803DD590;
+extern CameraMode4FState* gCameraMode4FState;
 extern f32 Curve_EvalHermite(f32* pts, f32 t, int mode);
 extern f32 timeDelta;
 extern f32 lbl_803E1A8C;
 extern f32 lbl_803E1A90;
-extern f32 lbl_803E1A94;
+extern f32 gCameraMode4FPi;
 extern f32 lbl_803E1A98;
 extern const f32 lbl_803E1A9C;
 extern const f32 lbl_803E1AA0;
@@ -168,11 +168,11 @@ void CameraModeArwing_release(void);
 
 void dll_4F_init(void)
 {
-    if (lbl_803DD590 == NULL)
+    if (gCameraMode4FState == NULL)
     {
-        lbl_803DD590 = (CameraMode4FState*)mmAlloc(sizeof(CameraMode4FState), 15, 0);
+        gCameraMode4FState = (CameraMode4FState*)mmAlloc(sizeof(CameraMode4FState), 15, 0);
     }
-    lbl_803DD590->blendProgress = lbl_803E1A88;
+    gCameraMode4FState->blendProgress = lbl_803E1A88;
 }
 
 void dll_4F_update(int* obj)
@@ -190,12 +190,12 @@ void dll_4F_update(int* obj)
     pts[1] = lbl_803E1A8C;
     pts[2] = lbl_803E1A88;
     pts[3] = lbl_803E1A88;
-    fz = Curve_EvalHermite(pts, lbl_803DD590->blendProgress, 0);
+    fz = Curve_EvalHermite(pts, gCameraMode4FState->blendProgress, 0);
     target = (GameObject*)camera->anim.targetObj;
     a = (s16)(0x8000 - target->anim.rotX);
     a = (s16)(a + (s32)(lbl_803E1A90 * fz));
     {
-        f32 t = (lbl_803E1A94 * (f32)(s32)
+        f32 t = (gCameraMode4FPi * (f32)(s32)
         a
         )
         /
@@ -211,10 +211,10 @@ void dll_4F_update(int* obj)
     camera->anim.rotZ = 0;
     camera->letterboxTargetOffset = 0;
     camera->fov = lbl_803E1AB0;
-    lbl_803DD590->blendProgress = lbl_803E1AB4 * timeDelta + lbl_803DD590->blendProgress;
-    if (lbl_803DD590->blendProgress > *(f32*)&lbl_803E1A8C)
+    gCameraMode4FState->blendProgress = lbl_803E1AB4 * timeDelta + gCameraMode4FState->blendProgress;
+    if (gCameraMode4FState->blendProgress > *(f32*)&lbl_803E1A8C)
     {
-        lbl_803DD590->blendProgress = lbl_803E1A8C;
+        gCameraMode4FState->blendProgress = lbl_803E1A8C;
     }
 }
 
@@ -226,8 +226,8 @@ void CameraModeCrawl_init(void);
 void dll_4F_func05(void)
 {
     extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD590);
-    lbl_803DD590 = NULL;
+    mm_free((u32)gCameraMode4FState);
+    gCameraMode4FState = NULL;
 }
 
 void CameraModeCrawl_free(void);

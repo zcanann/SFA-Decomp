@@ -33,7 +33,7 @@ extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern u8 lbl_803DBF68;
+extern u8 gDbShSymbolScuffPlayed;
 extern u8 framesThisStep;
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
@@ -267,13 +267,13 @@ void dbsh_symbol_update(int obj)
         }
         else if (phase == 1)
         {
-            if (lbl_803DBF68 != 0)
+            if (gDbShSymbolScuffPlayed != 0)
             {
-                lbl_803DBF68 = 0;
+                gDbShSymbolScuffPlayed = 0;
                 Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
             }
             state->phase = 2;
-            lbl_803DBF68 = 1;
+            gDbShSymbolScuffPlayed = 1;
         }
         else if (phase == 3)
         {
