@@ -212,7 +212,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
         }
         slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
     }
-    hitState->stateIndex = stateIndex;
+    hitState->stateIndex = (s8)stateIndex;
     return;
 }
 #pragma optimization_level reset
