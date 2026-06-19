@@ -11,7 +11,8 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
 
     if ((f >> 3) != 0)
     {
-        count = ((u32)header[e3 + 1] >> 4) | (header[e3 + 2] << 4);
+        count = (u32)header[e3 + 1] >> 4;
+        count |= header[e3 + 2] << 4;
         cur = bitmap + (e * 32 | 0x10);
     }
     else
