@@ -497,7 +497,7 @@ compare + md5. A local @NNN conversion-bias .sdata2 with no retail TU pool = fli
   diffs/fn — grep all lines). `categorize_near_misses.py` — bucket <100% fns by first-diff symptom.
 - `callset_audit.py` / `unrolled_loop_audit.py` / `fcmpo_swap_audit.py` / `width_audit.py` /
   `pragma_audit.py` / `pragma_minimize.py` — class-specific sweeps. Run AFTER a full `ninja` (stale-
-  .o caveat). `offset_deref_scan.py` / `include_audit.py` / `extern_audit.py` /
+  .o caveat). `include_audit.py` / `extern_audit.py` /
   `forward_decl_static_audit.py` — cleanup tools (byte-gated; re-audit before applying saved reports).
 - **MP4 oracle:** `mp4_asm_search.py "<pattern>" [--with-c]` — MP4 is 100% matched; find the C that
   produces any asm shape. **In-repo oracle:** grep `build/GSAE01/obj/**/*.o` disasms for a shape,

@@ -25,8 +25,8 @@
  * Do NOT retype ObjAnimComponent.placementData to ObjPlacement* - its
  * s16* deref width is load-bearing at placementData[i] sites; carry the
  * typed view in per-TU locals/params instead. With int-typed bases use
- * the typed-local form, not per-site casts (see deref_convert_gameobject
- * docs - per-site int->ptr casts materialize member address temps).
+ * the typed-local form, not per-site casts (per-site int->ptr casts
+ * materialize member address temps).
  */
 typedef struct ObjPlacement {
     u8 unk00[2];

@@ -5447,15 +5447,12 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   (sda21 address-of form), u32 RGBA overlays accessed via `(u8*)` casts,
   u8/char blob arrays on 4byte/float data (access width comes from the
   cast-derefs, not the element type).
-- `python3 tools/offset_deref_scan.py [path-filter]` — find Ghidra-style
-  `*(T*)((u8*)var + 0xNN)` derefs replaceable with typed `var->field` access.
-  Parses every typedef struct to compute field offsets, drops structs whose
-  layout contradicts a STATIC_ASSERT, then scope-aware-scans each function for
-  derefs landing on a named field of a struct-typed variable. TYPEOK hits are
-  byte-safe to replace; TYPEDIFF hits (deref width/signedness != field type)
-  need manual review — a u16-deref of an s16 field flips lhz/lha, an int-deref
-  of a pointer field flips cmpwi/cmplwi. Re-run after new structs land to find
-  newly-mappable derefs. (Task #164 swept the inventory to zero.)
+- **Removing Ghidra-style `*(T*)((u8*)var + 0xNN)` derefs**: replace with typed
+  `var->field` access BY HAND. Read the real struct definition (its explicit
+  pads name the exact offsets), map offset->field, and write clean member
+  access. Keep the deref width/signedness matching the field: a u16-deref of an
+  s16 field flips lhz/lha, an int-deref of a pointer field flips cmpwi/cmplwi —
+  launder with `*(T*)&var->field` only when the field type genuinely differs.
 - **Byte-exact cleanup verification (task #164 pattern)**: baseline = objdump
   `-d -j .text` of every `.o` under `build/GSAE01/src` (NOT `build/GSAE01/obj`
   — that is the dtk-extracted TARGET tree and never changes); edit; rebuild;
