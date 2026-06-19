@@ -2,7 +2,7 @@
  * dll84func0 (DLL 0x84) - a foodbag-family modgfx effect builder.
  *
  * dll_84_func03 fills a stack FbBuf with a fixed 20-entry list of FbCmd
- * draw commands (textures taken from the `lbl_80315CA8` texture data
+ * draw commands (textures taken from the `gFoodbagFxTextureData` texture data
  * array) and hands it to ModgfxInterface::spawnEffect. The low bit of the
  * merged flag word selects whether the effect position is read from the
  * source object (+0x18..) or the posSource transform (+0xc..); the
@@ -14,7 +14,7 @@
 #include "main/dll/foodbag.h"
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80315CA8[];
+extern u8 gFoodbagFxTextureData[];
 extern f32 lbl_803E0F20;
 extern f32 lbl_803E0F24;
 extern f32 lbl_803E0F28;
@@ -39,7 +39,7 @@ extern f32 lbl_803E0F6C;
 void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
-    u8* base = (u8*)(int)lbl_80315CA8;
+    u8* base = (u8*)(int)gFoodbagFxTextureData;
     FbCmd* e = buf.entries;
 
     e[0].layer = 0;
@@ -223,7 +223,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0F2C + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)lbl_80315CA8, 0x10, base + 0x168, 0x3f, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)gFoodbagFxTextureData, 0x10, base + 0x168, 0x3f, 0);
 }
 
 void dll_84_func01_nop(void)

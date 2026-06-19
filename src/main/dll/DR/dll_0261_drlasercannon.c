@@ -206,7 +206,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     }
     if (maxRate < 0x168)
     {
-        clamp = (s16)(lbl_803E68E0 * maxRate);
+        clamp = (s16)(gLaserCannonAngleRateScale * maxRate);
         negClamp = -clamp;
         negClampS = negClamp;
         out->yaw = yaw;
@@ -242,9 +242,9 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     {
         wrapDelta = wrapDelta + 0xFFFF;
     }
-    wrapDelta = (wrapDelta < -lbl_803DC2AE)
-                    ? -lbl_803DC2AE
-                    : (s16)((wrapDelta > lbl_803DC2AE) ? lbl_803DC2AE : wrapDelta);
+    wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
+                    ? -gLaserCannonMaxAimStep
+                    : (s16)((wrapDelta > gLaserCannonMaxAimStep) ? gLaserCannonMaxAimStep : wrapDelta);
     self->anim.rotX = (s16)((f32)self->anim.rotX + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     if (vec != NULL)
     {
@@ -257,9 +257,9 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
         {
             wrapDelta = wrapDelta + 0xFFFF;
         }
-        wrapDelta = (wrapDelta < -lbl_803DC2AE)
-                        ? -lbl_803DC2AE
-                        : (s16)((wrapDelta > lbl_803DC2AE) ? lbl_803DC2AE : wrapDelta);
+        wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
+                        ? -gLaserCannonMaxAimStep
+                        : (s16)((wrapDelta > gLaserCannonMaxAimStep) ? gLaserCannonMaxAimStep : wrapDelta);
         *vec = (s16)((f32) * vec + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     }
     delta = self->anim.rotX - out->yaw;

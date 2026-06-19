@@ -11,7 +11,7 @@
  * source object's position (ctx+0x18..0x20, or posSource) is added in.
  *
  * The geometry/colour constants live in the shared lbl_803E10E0.. pool and
- * the per-effect parameter block at lbl_80316B60 (texture base +0x8c, the
+ * the per-effect parameter block at gDll8DEffectParamBlock (texture base +0x8c, the
  * s16 size words at +0xb0..+0xbc).
  *
  * dll_8D_func00_nop / dll_8D_func01_nop are empty export-table slots.
@@ -21,7 +21,7 @@
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80316B60[];
+extern u8 gDll8DEffectParamBlock[];
 extern f32 lbl_803E10E0;
 extern f32 lbl_803E10E4;
 extern f32 lbl_803E10E8;
@@ -46,7 +46,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     FbCmd* p;
-    u8* base = lbl_80316B60;
+    u8* base = gDll8DEffectParamBlock;
     int ret = 0;
     f32 jitter;
 

@@ -12,19 +12,19 @@ extern ModgfxInterface** gModgfxInterface;
 extern u32 DAT_803de944;
 extern u32 DAT_803de946;
 extern f32 lbl_803DC074;
-extern void* lbl_803DDCD8;
+extern void* gVfpLavaPoolEffectResource;
 extern void objRenderFn_80041018(int* obj);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern f32 lbl_803E6168;
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
-extern f32 lbl_803DDCD0;
+extern f32 gVfpLavaPoolWaveSin;
 extern f32 lbl_803E6158;
 extern f32 lbl_803E6160;
 extern f32 lbl_803E6164;
 extern f32 lbl_803E616C;
 extern f32 lbl_803E6170;
-extern f32 lbl_803E6174;
+extern f32 gVfpLavaPoolPi;
 extern f32 lbl_803E6178;
 extern f32 lbl_803E617C;
 extern f32 lbl_803E6180;
@@ -218,8 +218,8 @@ void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 #pragma scheduling off
 void vfplavastar_release(void)
 {
-    Resource_Release(lbl_803DDCD8);
-    lbl_803DDCD8 = NULL;
+    Resource_Release(gVfpLavaPoolEffectResource);
+    gVfpLavaPoolEffectResource = NULL;
 }
 
 int fn_801FD4A8(void* obj, int x)
@@ -238,8 +238,8 @@ int dbegg_setScale(int obj);
 
 void vfplavastar_initialise(void)
 {
-    lbl_803DDCD8 = NULL;
-    lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
+    gVfpLavaPoolEffectResource = NULL;
+    gVfpLavaPoolEffectResource = Resource_Acquire(0xa6, 1);
 }
 
 void vfplavastar_free(int obj)
@@ -346,9 +346,9 @@ void fn_801FD6B4(int obj)
         Sfx_PlayFromObject((u32)obj, 0x111);
         speed = lbl_803E6170;
     }
-    lbl_803DDCD0 = mathSinf((lbl_803E6174 * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
+    gVfpLavaPoolWaveSin = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E617C * *(f32*)(extra + 8) + lbl_803E6180 * *(f32*)(extra + 8) *
-        lbl_803DDCD0;
+        gVfpLavaPoolWaveSin;
     c = *(f32*)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188)
     {
@@ -361,7 +361,7 @@ void fn_801FD6B4(int obj)
     c = *(f32*)(extra + 0xc);
     if (c > lbl_803E618C)
     {
-        speed = (f32)(s16)(int)(lbl_803E6170 * lbl_803DDCD0);
+        speed = (f32)(s16)(int)(lbl_803E6170 * gVfpLavaPoolWaveSin);
     }
     if (c < lbl_803E6190)
     {
@@ -429,9 +429,9 @@ void vfplavastar_update(int obj)
         ((GameObject*)obj)->anim.localPosY = mapData->base.posY;
     }
     state->effectTimer += (s16)timeDelta;
-    if (lbl_803DDCD8 != 0 && state->effectTimer >= 0x28)
+    if (gVfpLavaPoolEffectResource != 0 && state->effectTimer >= 0x28)
     {
-        (*(void (*)(int, int, int, int, int, int))*(int*)(*(int*)lbl_803DDCD8 + 4))(obj, 0, 0, 4, -1, 0);
+        (*(void (*)(int, int, int, int, int, int))*(int*)(*(int*)gVfpLavaPoolEffectResource + 4))(obj, 0, 0, 4, -1, 0);
         state->effectTimer = 0;
     }
     if (state->particleToggle == 0)

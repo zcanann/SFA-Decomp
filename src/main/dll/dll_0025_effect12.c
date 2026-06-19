@@ -22,7 +22,7 @@
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
 extern void vecRotateZXY(void* params, f32* vec);
-extern EffectSrcParams lbl_8039C3E0;
+extern EffectSrcParams gEffect12DefaultSrc;
 extern f32 lbl_803DFFA8;
 extern f32 lbl_803DFFAC;
 extern f32 lbl_803DFFB0;
@@ -104,14 +104,14 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x483:
     if (src == NULL)
     {
-      lbl_8039C3E0.x = lbl_803DFFA8;
-      lbl_8039C3E0.y = lbl_803DFFA8;
-      lbl_8039C3E0.z = lbl_803DFFA8;
-      lbl_8039C3E0.w = lbl_803DFFB0;
-      lbl_8039C3E0.rot0 = 0;
-      lbl_8039C3E0.rot1 = 0;
-      lbl_8039C3E0.rot2 = 0;
-      src = &lbl_8039C3E0;
+      gEffect12DefaultSrc.x = lbl_803DFFA8;
+      gEffect12DefaultSrc.y = lbl_803DFFA8;
+      gEffect12DefaultSrc.z = lbl_803DFFA8;
+      gEffect12DefaultSrc.w = lbl_803DFFB0;
+      gEffect12DefaultSrc.rot0 = 0;
+      gEffect12DefaultSrc.rot1 = 0;
+      gEffect12DefaultSrc.rot2 = 0;
+      src = &gEffect12DefaultSrc;
     }
     p.posX = (f32)(int)randomGetRange(-10, 10);
     p.posZ = (f32)(int)randomGetRange(-10, 10);
@@ -128,14 +128,14 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x484:
     if (src == NULL)
     {
-      lbl_8039C3E0.x = lbl_803DFFA8;
-      lbl_8039C3E0.y = lbl_803DFFA8;
-      lbl_8039C3E0.z = lbl_803DFFA8;
-      lbl_8039C3E0.w = lbl_803DFFB0;
-      lbl_8039C3E0.rot0 = 0;
-      lbl_8039C3E0.rot1 = 0;
-      lbl_8039C3E0.rot2 = 0;
-      src = &lbl_8039C3E0;
+      gEffect12DefaultSrc.x = lbl_803DFFA8;
+      gEffect12DefaultSrc.y = lbl_803DFFA8;
+      gEffect12DefaultSrc.z = lbl_803DFFA8;
+      gEffect12DefaultSrc.w = lbl_803DFFB0;
+      gEffect12DefaultSrc.rot0 = 0;
+      gEffect12DefaultSrc.rot1 = 0;
+      gEffect12DefaultSrc.rot2 = 0;
+      src = &gEffect12DefaultSrc;
     }
     p.velX = lbl_803DFFB8 * src->w * (f32)(int)randomGetRange(-100, 100);
     p.velY = lbl_803DFFB8 * src->w * (f32)(int)randomGetRange(0x14, 0x50);
@@ -150,14 +150,14 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x485:
     if (src == NULL)
     {
-      lbl_8039C3E0.x = lbl_803DFFA8;
-      lbl_8039C3E0.y = lbl_803DFFA8;
-      lbl_8039C3E0.z = lbl_803DFFA8;
-      lbl_8039C3E0.w = lbl_803DFFB0;
-      lbl_8039C3E0.rot0 = 0;
-      lbl_8039C3E0.rot1 = 0;
-      lbl_8039C3E0.rot2 = 0;
-      src = &lbl_8039C3E0;
+      gEffect12DefaultSrc.x = lbl_803DFFA8;
+      gEffect12DefaultSrc.y = lbl_803DFFA8;
+      gEffect12DefaultSrc.z = lbl_803DFFA8;
+      gEffect12DefaultSrc.w = lbl_803DFFB0;
+      gEffect12DefaultSrc.rot0 = 0;
+      gEffect12DefaultSrc.rot1 = 0;
+      gEffect12DefaultSrc.rot2 = 0;
+      src = &gEffect12DefaultSrc;
     }
     p.posX = (f32)(int)randomGetRange(-10, 10);
     p.posZ = (f32)(int)randomGetRange(-10, 10);
@@ -256,13 +256,13 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   case 0x48c:
     if (src == NULL)
     {
-      lbl_8039C3E0.x = lbl_803DFFA8;
-      lbl_8039C3E0.y = lbl_803DFFA8;
-      lbl_8039C3E0.z = lbl_803DFFA8;
-      lbl_8039C3E0.w = lbl_803DFFB0;
-      lbl_8039C3E0.rot0 = 0;
-      lbl_8039C3E0.rot1 = 0;
-      lbl_8039C3E0.rot2 = 0;
+      gEffect12DefaultSrc.x = lbl_803DFFA8;
+      gEffect12DefaultSrc.y = lbl_803DFFA8;
+      gEffect12DefaultSrc.z = lbl_803DFFA8;
+      gEffect12DefaultSrc.w = lbl_803DFFB0;
+      gEffect12DefaultSrc.rot0 = 0;
+      gEffect12DefaultSrc.rot1 = 0;
+      gEffect12DefaultSrc.rot2 = 0;
     }
     if (auxParam == NULL)
     {
