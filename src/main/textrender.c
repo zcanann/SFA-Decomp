@@ -663,24 +663,24 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(volatile int*)&lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -694,12 +694,12 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(volatile int*)&lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
+        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
         return lbl_803DC974;
     }
@@ -711,12 +711,12 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             lbl_803DC97C = 0;
         }
-        entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(volatile int*)&lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
+        lbl_803DC970 = (int)(lbl_803399A0 + *(volatile int*)&lbl_803DC97C * 4);
+        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return lbl_803DC974;
     }
 
