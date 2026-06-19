@@ -347,7 +347,7 @@ extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
-extern s16 lbl_803DC79A;
+extern s16 gDRCloudRunnerDefaultRotX;
 extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
@@ -398,7 +398,7 @@ extern u8 lbl_803DC750;
 extern ObjHitReactEntry lbl_803351A8[];
 extern void saveGame_saveObjectPos(int obj);
 
-extern u8 lbl_803356F0[];
+extern u8 gDRCloudRunnerMoveParamTable[];
 extern int lbl_803E83A0;
 extern int lbl_803DC770;
 extern int lbl_803DC774;
@@ -408,7 +408,7 @@ extern int lbl_803DC780;
 extern int lbl_803DC784;
 
 extern int Obj_UpdateRomCurveFollowVelocity(int obj, int q, f32 a, f32 b, f32 c, int d);
-extern int lbl_803DE4D8;
+extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(int obj);
 

@@ -9,7 +9,7 @@
  *
  * Free-flight (stateHandler05) integrates velocity from stick input,
  * gravity and a banking model, clamps speed/pitch/roll against the
- * per-move parameter table at lbl_803356F0, and follows the wind-curve
+ * per-move parameter table at gDRCloudRunnerMoveParamTable, and follows the wind-curve
  * collision path set up in fn_802BF0C8. The air meter and several map
  * game bits are managed across init/free/hitDetect.
  *
@@ -240,7 +240,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
         ((ByteFlags*)&inner->flagsBC0)->b10 = inner->airTimeRemaining > 0;
-        ((GameObject*)obj)->anim.rotX = lbl_803DC79A;
+        ((GameObject*)obj)->anim.rotX = gDRCloudRunnerDefaultRotX;
         return 3;
     }
     return 0;
@@ -446,7 +446,7 @@ void DR_CloudRunner_init(int obj, int p2)
 
 int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {
-    u8* base = lbl_803356F0;
+    u8* base = gDRCloudRunnerMoveParamTable;
     u32 idx;
     int needMove = 0;
     CloudRunnerState * inner;
@@ -473,9 +473,9 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     f32 dist;
     f32 t;
     f32* lim;
-    vecB = ((Vec3x*)lbl_802C2D00)[2];
-    vecC = ((Vec3x*)lbl_802C2D00)[3];
-    vecD = ((Vec3x*)lbl_802C2D00)[4];
+    vecB = ((Vec3x*)gDRCloudRunnerVecTable)[2];
+    vecC = ((Vec3x*)gDRCloudRunnerVecTable)[3];
+    vecD = ((Vec3x*)gDRCloudRunnerVecTable)[4];
     moveId = -1;
     inner = ((GameObject*)obj)->extra;
     *(int*)((char*)p2 + 0) |= 0x200000;
@@ -677,7 +677,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     }
     {
         s16 lim2;
-        if (inner->rollAngle > (lim2 = *(s16*)((char*)&lbl_803DC794 + (idx & 0xfffffffe))))
+        if (inner->rollAngle > (lim2 = *(s16*)((char*)&gDRCloudRunnerRollAngleLimits + (idx & 0xfffffffe))))
         {
             inner->rollAngle = lim2;
         }
@@ -790,7 +790,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 
 void fn_802BF0C8(int obj, int p2, int mode)
 {
-    u8* base = lbl_803356F0;
+    u8* base = gDRCloudRunnerMoveParamTable;
     int stk = lbl_803E83A0;
     u8* pathState = (u8*)&((CloudRunnerState*)p2)->baddie + 4;
     u32 m;
@@ -834,8 +834,8 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
     } stk;
     CloudRunnerState * inner;
     Obj_GetPlayerObject();
-    curve = *(struct curveids*)lbl_802C2D3C;
-    bits = *(struct gbids*)&lbl_803E8398;
+    curve = *(struct curveids*)gDRCloudRunnerCurveIds;
+    bits = *(struct gbids*)&gDRCloudRunnerGameBitIds;
     inner = ((GameObject*)obj)->extra;
     switch (mode)
     {
@@ -843,7 +843,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
         if ((((GameObject*)obj)->objectFlags & 0x1000) || ((ByteFlags*)&inner->flagsBC1)->b80)
         {
             *out = ((GameObject*)obj)->anim.rotX;
-            lbl_803DE4DC = ((GameObject*)obj)->anim.rotX;
+            gDRCloudRunnerSmoothedRotX = ((GameObject*)obj)->anim.rotX;
             ((ByteFlags*)&inner->flagsBC1)->b80 = 0;
         }
         else
@@ -870,9 +870,9 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
             {
                 s16 tmp = getAngle(stk.mat[1] - ((GameObject*)obj)->anim.localPosX,
                                         stk.mat[3] - ((GameObject*)obj)->anim.localPosZ);
-                ang = tmp + lbl_803DC79C;
+                ang = tmp + gDRCloudRunnerHeadingAngleOffset;
             }
-            diff = ang - lbl_803DE4DC;
+            diff = ang - gDRCloudRunnerSmoothedRotX;
             if (diff > 0x8000)
             {
                 diff = diff - 0xffff;
@@ -890,8 +890,8 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
             {
                 step = 0x50;
             }
-            lbl_803DE4DC = lbl_803DE4DC + step;
-            *out = lbl_803DE4DC;
+            gDRCloudRunnerSmoothedRotX = gDRCloudRunnerSmoothedRotX + step;
+            *out = gDRCloudRunnerSmoothedRotX;
         }
         break;
     case 3:
@@ -1064,7 +1064,7 @@ void fn_802C11BC(int obj, f32 f, int p2)
     }
     if (((ByteFlags*)&inner->flagsBC0)->b02 != 0)
     {
-        (*gGameUIInterface)->runAirMeter(inner->airTimeRemaining - lbl_803DE4D8);
+        (*gGameUIInterface)->runAirMeter(inner->airTimeRemaining - gDRCloudRunnerAirMeterBaseline);
     }
 }
 

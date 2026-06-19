@@ -873,8 +873,8 @@ void staff_free(int* obj)
 void fireball_free(int* obj);
 
 extern int textureFree(int tex);
-extern void* lbl_803DDAA0;
-extern void* lbl_803DDAA8[2];
+extern void* gStaffSwipeResource;
+extern void* gStaffSwipeTextures[2];
 
 void depthoffieldpoint_init(int* obj);
 
@@ -884,19 +884,19 @@ void staff_release(void)
 {
     void** p;
     int i;
-    if (lbl_803DDAA8[0] != NULL)
+    if (gStaffSwipeTextures[0] != NULL)
     {
-        for (i = 0, p = lbl_803DDAA8; i < 2; i++)
+        for (i = 0, p = gStaffSwipeTextures; i < 2; i++)
         {
             textureFree((int)*p);
             *p = NULL;
             p++;
         }
     }
-    if (lbl_803DDAA0 != NULL)
+    if (gStaffSwipeResource != NULL)
     {
-        Resource_Release(lbl_803DDAA0);
-        lbl_803DDAA0 = NULL;
+        Resource_Release(gStaffSwipeResource);
+        gStaffSwipeResource = NULL;
     }
 }
 
@@ -909,7 +909,7 @@ void flamethrowerspe_init(int* obj, int* params);
 
 extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
-extern u8 lbl_803AC6B8[];
+extern u8 gStaffQuakeSpellState[];
 
 void staff_init(int* obj)
 {
@@ -933,8 +933,8 @@ void staff_init(int* obj)
         *(s16*)((char*)p + 0x10) = -1;
         p = (int*)((char*)p + 0x18);
     }
-    lbl_803AC6B8[0x20] = 0;
-    *(int*)(lbl_803AC6B8 + 0x1c) = 0;
+    gStaffQuakeSpellState[0x20] = 0;
+    *(int*)(gStaffQuakeSpellState + 0x1c) = 0;
 }
 
 
@@ -1013,8 +1013,8 @@ extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx)
 
 void dll_F7_update(int* obj);
 
-extern s16 lbl_803DBD50[4];
-extern s16* lbl_803DDAA4;
+extern s16 sStaffSwipeTextureIdTable[4];
+extern s16* gStaffSwipeTextureIds;
 extern void* textureLoad(int texId, u8 flag);
 
 void staff_initialise(void)
@@ -1034,17 +1034,17 @@ void staff_initialise(void)
             p++;
         }
     }
-    lbl_803DDAA4 = lbl_803DBD50;
-    if (lbl_803DDAA8[0] == NULL)
+    gStaffSwipeTextureIds = sStaffSwipeTextureIdTable;
+    if (gStaffSwipeTextures[0] == NULL)
     {
         for (i = 0; i < 2; i++)
         {
-            lbl_803DDAA8[i] = textureLoad(lbl_803DDAA4[i], 0);
+            gStaffSwipeTextures[i] = textureLoad(gStaffSwipeTextureIds[i], 0);
         }
     }
-    if (lbl_803DDAA0 == NULL)
+    if (gStaffSwipeResource == NULL)
     {
-        lbl_803DDAA0 = Resource_Acquire(90, 1);
+        gStaffSwipeResource = Resource_Acquire(90, 1);
     }
 }
 
@@ -1056,7 +1056,7 @@ extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXDrawTorus(f32 rc, u8 numc, u8 numt);
 extern void* memcpy(void* dst, const void* src, unsigned int n);
-extern f32 lbl_803E3300;
+extern f32 gStaffHalfPi;
 
 void quakeSpellTextureFn_8016dbf4(void)
 {
@@ -1066,19 +1066,19 @@ void quakeSpellTextureFn_8016dbf4(void)
     f32 mTrans[12];
     f32 mView[12];
 
-    if (lbl_803AC6B8[0x20] != 0)
+    if (gStaffQuakeSpellState[0x20] != 0)
     {
         f32 s;
         f32 z;
-        quakeSpellTextureFn_8007366c((int)*(f32*)(lbl_803AC6B8 + 0x18));
+        quakeSpellTextureFn_8007366c((int)*(f32*)(gStaffQuakeSpellState + 0x18));
         memcpy(mView, Camera_GetViewMatrix(), 0x30);
-        PSMTXRotRad(mRot, 'x', lbl_803E3300);
-        s = *(f32*)(lbl_803AC6B8 + 0xc);
-        PSMTXScale(mScale, s, s * *(f32*)(lbl_803AC6B8 + 0x14), s);
+        PSMTXRotRad(mRot, 'x', gStaffHalfPi);
+        s = *(f32*)(gStaffQuakeSpellState + 0xc);
+        PSMTXScale(mScale, s, s * *(f32*)(gStaffQuakeSpellState + 0x14), s);
         PSMTXConcat(mScale, mRot, mScale);
-        PSMTXTrans(mTrans, *(f32*)(lbl_803AC6B8 + 0) - playerMapOffsetX,
-                   *(f32*)(lbl_803AC6B8 + 4),
-                   *(f32*)(lbl_803AC6B8 + 8) - playerMapOffsetZ);
+        PSMTXTrans(mTrans, *(f32*)(gStaffQuakeSpellState + 0) - playerMapOffsetX,
+                   *(f32*)(gStaffQuakeSpellState + 4),
+                   *(f32*)(gStaffQuakeSpellState + 8) - playerMapOffsetZ);
         PSMTXConcat(mView, mTrans, mView);
         PSMTXConcat(mView, mScale, mResult);
         GXLoadPosMtxImm(mResult, 0);
@@ -1088,13 +1088,13 @@ void quakeSpellTextureFn_8016dbf4(void)
         mResult[7] = z;
         mResult[11] = z;
         GXLoadTexMtxImm(mResult, 30, 0);
-        GXDrawTorus(*(f32*)(lbl_803AC6B8 + 0x10), 10, 20);
+        GXDrawTorus(*(f32*)(gStaffQuakeSpellState + 0x10), 10, 20);
     }
 }
 
 extern f32 lbl_803E32A8;
 extern f32 lbl_803E3290;
-extern f32 lbl_803E32F4;
+extern f32 gStaffF255;
 extern f32 lbl_803E32F8;
 extern f32 lbl_803E32FC;
 extern f32 lbl_803E32D0;
@@ -1111,28 +1111,28 @@ void superQuakeFn_8016d9fc(f32* pos)
     extern void Obj_FreeObject(int* obj); /* #57 */
     int* player;
 
-    if (lbl_803AC6B8[0x20] != 0)
+    if (gStaffQuakeSpellState[0x20] != 0)
     {
-        Obj_FreeObject(*(int**)(lbl_803AC6B8 + 0x1c));
-        *(int**)(lbl_803AC6B8 + 0x1c) = NULL;
+        Obj_FreeObject(*(int**)(gStaffQuakeSpellState + 0x1c));
+        *(int**)(gStaffQuakeSpellState + 0x1c) = NULL;
     }
-    *(f32*)(lbl_803AC6B8 + 0) = pos[0];
-    *(f32*)(lbl_803AC6B8 + 4) = lbl_803E32A8 + pos[1];
-    *(f32*)(lbl_803AC6B8 + 8) = pos[2];
-    *(f32*)(lbl_803AC6B8 + 0x18) = lbl_803E32F4;
-    *(f32*)(lbl_803AC6B8 + 0xc) = lbl_803E3288;
-    *(f32*)(lbl_803AC6B8 + 0x10) = lbl_803E3290;
-    *(f32*)(lbl_803AC6B8 + 0x14) = lbl_803E3288;
+    *(f32*)(gStaffQuakeSpellState + 0) = pos[0];
+    *(f32*)(gStaffQuakeSpellState + 4) = lbl_803E32A8 + pos[1];
+    *(f32*)(gStaffQuakeSpellState + 8) = pos[2];
+    *(f32*)(gStaffQuakeSpellState + 0x18) = gStaffF255;
+    *(f32*)(gStaffQuakeSpellState + 0xc) = lbl_803E3288;
+    *(f32*)(gStaffQuakeSpellState + 0x10) = lbl_803E3290;
+    *(f32*)(gStaffQuakeSpellState + 0x14) = lbl_803E3288;
     CameraShake_Start(lbl_803E32F8, lbl_803E32A8, lbl_803E32FC);
     player = Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
         QuakePartVec v;
         void* setup;
-        lbl_803AC6B8[0x20] = 1;
-        v.x = *(f32*)(lbl_803AC6B8 + 0);
-        v.y = *(f32*)(lbl_803AC6B8 + 4);
-        v.z = *(f32*)(lbl_803AC6B8 + 8);
+        gStaffQuakeSpellState[0x20] = 1;
+        v.x = *(f32*)(gStaffQuakeSpellState + 0);
+        v.y = *(f32*)(gStaffQuakeSpellState + 4);
+        v.z = *(f32*)(gStaffQuakeSpellState + 8);
         v.scale = lbl_803E3288;
         v.h0 = 0;
         v.h2 = 0;
@@ -1143,19 +1143,19 @@ void superQuakeFn_8016d9fc(f32* pos)
         *((u8*)setup + 6) = 0xff;
         *((u8*)setup + 5) = 2;
         *((u8*)setup + 7) = 0xff;
-        ((ObjPlacement*)setup)->posX = *(f32*)(lbl_803AC6B8 + 0);
-        ((ObjPlacement*)setup)->posY = *(f32*)(lbl_803AC6B8 + 4);
-        ((ObjPlacement*)setup)->posZ = *(f32*)(lbl_803AC6B8 + 8);
-        *(int**)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
+        ((ObjPlacement*)setup)->posX = *(f32*)(gStaffQuakeSpellState + 0);
+        ((ObjPlacement*)setup)->posY = *(f32*)(gStaffQuakeSpellState + 4);
+        ((ObjPlacement*)setup)->posZ = *(f32*)(gStaffQuakeSpellState + 8);
+        *(int**)(gStaffQuakeSpellState + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
                                                         ((GameObject*)player)->anim.parent);
         if (GameBit_Get(0xc55) != 0)
         {
-            ((ObjAnimComponent*)*(int*)(lbl_803AC6B8 + 0x1c))->bankIndex = 1;
+            ((ObjAnimComponent*)*(int*)(gStaffQuakeSpellState + 0x1c))->bankIndex = 1;
         }
-        ObjHitbox_SetSphereRadius(*(int*)(lbl_803AC6B8 + 0x1c), 1);
-        ObjHits_SetHitVolumeSlot(*(int*)(lbl_803AC6B8 + 0x1c), 17, 5, 0);
-        *(f32*)(*(int*)(lbl_803AC6B8 + 0x1c) + 8) = lbl_803E32D0;
-        ((GameObject*)*(int*)(lbl_803AC6B8 + 0x1c))->anim.alpha = 0xff;
+        ObjHitbox_SetSphereRadius(*(int*)(gStaffQuakeSpellState + 0x1c), 1);
+        ObjHits_SetHitVolumeSlot(*(int*)(gStaffQuakeSpellState + 0x1c), 17, 5, 0);
+        *(f32*)(*(int*)(gStaffQuakeSpellState + 0x1c) + 8) = lbl_803E32D0;
+        ((GameObject*)*(int*)(gStaffQuakeSpellState + 0x1c))->anim.alpha = 0xff;
     }
 }
 
@@ -1177,14 +1177,14 @@ typedef struct SwipeRecord
     u8 pad15[0x18 - 0x15];
 } SwipeRecord;
 
-extern SwipeColorTable lbl_802C2220;
+extern SwipeColorTable gStaffSwipeColorTable;
 void staffDrawSwipe(int* obj, int* swipe);
 
 void staff_hitDetectGeometry(int* obj)
 {
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* swipe = ((GameObject*)obj)->extra;
-    SwipeColorTable tbl = lbl_802C2220;
+    SwipeColorTable tbl = gStaffSwipeColorTable;
 
     staffDrawSwipe(obj, swipe);
     if (hitState->contactFlags != 0 && getHudHiddenFrameCount() == 0)
@@ -1222,7 +1222,7 @@ void staff_hitDetectGeometry(int* obj)
             v.x = hitState->contactPosX;
             v.y = hitState->contactPosY;
             v.z = hitState->contactPosZ;
-            ((void (*)(int, int, void*, int, int, u8*))(*(int**)lbl_803DDAA0)[1])(0, 1, &v, 0x401, -1,
+            ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(0, 1, &v, 0x401, -1,
                 (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
             Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
                                          hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
@@ -1273,7 +1273,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     SwipeRecord* swp;
     int i;
 
-    selectTexture(lbl_803DDAA8[*(s8*)((char*)swipe + 0xb9)], 0);
+    selectTexture(gStaffSwipeTextures[*(s8*)((char*)swipe + 0xb9)], 0);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();
@@ -1362,7 +1362,7 @@ void staff_update(int* obj)
             {
                 if ((u8*)swp == *(u8**)(state + 0x48))
                 {
-                    f32 k = lbl_803E32F4;
+                    f32 k = gStaffF255;
                     f32 t = lbl_803E330C * *(f32*)(state + 0x98) - *(f32*)(vp + 0xc);
                     f32 v;
                     t = k * (t * lbl_803E3310);
@@ -1427,7 +1427,7 @@ void staff_update(int* obj)
     objGetAnimState80A(*(int*)&((GameObject*)obj)->ownerObj);
     state[0xb9] = 0;
     {
-        u8* q = lbl_803AC6B8;
+        u8* q = gStaffQuakeSpellState;
         if (q[0x20] != 0)
         {
             f32 sc = *(f32*)(q + 0xc) + lbl_803E32E0;
@@ -1435,13 +1435,13 @@ void staff_update(int* obj)
             *(f32*)(q + 0xc) = sc;
             ObjHitbox_SetSphereRadius(*(int*)(q + 0x1c), sc);
             ObjHits_SetHitVolumeSlot(*(int*)(q + 0x1c), 17, 5, 0);
-            w = *(f32*)(lbl_803AC6B8 + 0x18) + lbl_803E32E4;
-            *(f32*)(lbl_803AC6B8 + 0x18) = w;
-            *(f32*)(lbl_803AC6B8 + 0x10) = *(f32*)(lbl_803AC6B8 + 0x10) * lbl_803E32E8;
-            *(f32*)(lbl_803AC6B8 + 0x14) = *(f32*)(lbl_803AC6B8 + 0x14) * lbl_803E32EC;
+            w = *(f32*)(gStaffQuakeSpellState + 0x18) + lbl_803E32E4;
+            *(f32*)(gStaffQuakeSpellState + 0x18) = w;
+            *(f32*)(gStaffQuakeSpellState + 0x10) = *(f32*)(gStaffQuakeSpellState + 0x10) * lbl_803E32E8;
+            *(f32*)(gStaffQuakeSpellState + 0x14) = *(f32*)(gStaffQuakeSpellState + 0x14) * lbl_803E32EC;
             ((GameObject*)*(int*)(q + 0x1c))->anim.alpha = w;
             *(f32*)(*(int*)(q + 0x1c) + 8) += lbl_803E32F0;
-            if (*(f32*)(lbl_803AC6B8 + 0x18) < lbl_803E3288)
+            if (*(f32*)(gStaffQuakeSpellState + 0x18) < lbl_803E3288)
             {
                 q[0x20] = 0;
                 Obj_FreeObject(*(int**)(q + 0x1c));
@@ -1453,8 +1453,8 @@ void staff_update(int* obj)
 
 extern f32 fastFloorf(f32 v);
 extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);
-extern f32 lbl_803E3304;
-extern f32 lbl_803E3308;
+extern f32 gStaffPi;
+extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;
 extern f32 lbl_803E32AC;
 
@@ -1492,7 +1492,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
         {
             ang += **(s16**)&((GameObject*)obj)->anim.parent;
         }
-        angle = (lbl_803E3304 * (f32)(int) - ang) / lbl_803E3308;
+        angle = (gStaffPi * (f32)(int) - ang) / gStaffAngleUnitScale;
         cosv = mathSinf(angle);
         sinv = mathCosf(angle);
         model2 = *(u8**)((char*)Obj_GetActiveModel((int)obj) + 0x2c);
@@ -1596,12 +1596,12 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             {
                                 f32 a, b, t1, t2;
                                 int ip = *pidx * 12;
-                                *pE = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
-                                *pF = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
-                                *pG = (f32) * (s16*)((char*)tbl + ip + 4) / lbl_803E32F4;
-                                *pH = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
-                                *pI = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
-                                *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
+                                *pE = (f32) * (s16*)((char*)tbl + ip) / gStaffF255;
+                                *pF = (f32) * (s16*)((char*)tbl + ip + 2) / gStaffF255;
+                                *pG = (f32) * (s16*)((char*)tbl + ip + 4) / gStaffF255;
+                                *pH = (f32) * (s16*)((char*)tbl + ip + 6) / gStaffF255;
+                                *pI = (f32) * (s16*)((char*)tbl + ip + 8) / gStaffF255;
+                                *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / gStaffF255;
                                 a = *pE;
                                 b = *pG;
                                 t1 = sinv * a - cosv * b;
@@ -1637,7 +1637,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                         vidx = ibase + frac;
                         *(f32*)(vp + 0xc) = vidx;
                         {
-                            f32 k = lbl_803E32F4;
+                            f32 k = gStaffF255;
                             f32 t = flb - *(f32*)(vp + 0xc);
                             f32 v;
                             t = k * (t * lbl_803E3310);
@@ -1666,7 +1666,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             swipe + 0x94)) + *(f32*)(swipe + 0x94));
                         *(f32*)(vp + 0x20) = vidx;
                         {
-                            f32 k = lbl_803E32F4;
+                            f32 k = gStaffF255;
                             f32 t = flb - *(f32*)(vp + 0x20);
                             f32 v;
                             t = k * (t * lbl_803E3310);

@@ -12,21 +12,21 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
 
-extern f32 lbl_803DB868;
-extern f32 lbl_803DB86C;
+extern f32 gEffect18Progress2;
+extern f32 gEffect18Progress3;
 extern f32 lbl_803E0220;
 extern f32 lbl_803E0224;
 extern f32 lbl_803E0228;
 extern f32 lbl_803E0230;
-extern s32 lbl_803DD3E0;
-extern s32 lbl_803DD3E4;
-extern f32 lbl_803DD3E8;
-extern f32 lbl_803DD3EC;
-extern f32 lbl_803E02D0;
-extern f32 lbl_803E02D4;
+extern s32 gEffect18SinePhaseA;
+extern s32 gEffect18SinePhaseB;
+extern f32 gEffect18SineValueB;
+extern f32 gEffect18SineValueA;
+extern f32 gEffect18Pi;
+extern f32 gEffect18S16Range;
 
-extern f32 lbl_803DB860;
-extern f32 lbl_803DB864;
+extern f32 gEffect18Progress0;
+extern f32 gEffect18Progress1;
 extern f32 lbl_803E022C;
 extern f32 lbl_803E0234;
 extern f32 lbl_803E0238;
@@ -45,7 +45,7 @@ extern f32 lbl_803E0268;
 extern f32 lbl_803E026C;
 extern f32 lbl_803E0270;
 extern f32 lbl_803E0274;
-extern f32 lbl_803E0278;
+extern f32 gEffect18AlphaMax;
 extern f32 lbl_803E027C;
 extern f32 lbl_803E0280;
 extern f32 lbl_803E0284;
@@ -79,18 +79,18 @@ void Effect18_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB868 + (step = lbl_803E0220 * timeDelta);
-    lbl_803DB868 = sum;
-    if (sum > 1.0f) lbl_803DB868 = lbl_803E0224;
-    sum = lbl_803DB86C + step;
-    lbl_803DB86C = sum;
-    if (sum > 1.0f) lbl_803DB86C = lbl_803E0230;
-    lbl_803DD3E0 = lbl_803DD3E0 + framesThisStep * 0x64;
-    if (lbl_803DD3E0 > 0x7fff) lbl_803DD3E0 = 0;
-    lbl_803DD3EC = mathSinf(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
-    lbl_803DD3E4 = lbl_803DD3E4 + framesThisStep * 0x32;
-    if (lbl_803DD3E4 > 0x7fff) lbl_803DD3E4 = 0;
-    lbl_803DD3E8 = mathSinf(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
+    sum = gEffect18Progress2 + (step = lbl_803E0220 * timeDelta);
+    gEffect18Progress2 = sum;
+    if (sum > 1.0f) gEffect18Progress2 = lbl_803E0224;
+    sum = gEffect18Progress3 + step;
+    gEffect18Progress3 = sum;
+    if (sum > 1.0f) gEffect18Progress3 = lbl_803E0230;
+    gEffect18SinePhaseA = gEffect18SinePhaseA + framesThisStep * 0x64;
+    if (gEffect18SinePhaseA > 0x7fff) gEffect18SinePhaseA = 0;
+    gEffect18SineValueA = mathSinf(gEffect18Pi * (f32)(s16)gEffect18SinePhaseA / gEffect18S16Range);
+    gEffect18SinePhaseB = gEffect18SinePhaseB + framesThisStep * 0x32;
+    if (gEffect18SinePhaseB > 0x7fff) gEffect18SinePhaseB = 0;
+    gEffect18SineValueB = mathSinf(gEffect18Pi * (f32)(s16)gEffect18SinePhaseB / gEffect18S16Range);
 }
 
 int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
@@ -100,10 +100,10 @@ int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     f32 thr;
     PartFxSpawn cfg;
 
-    lbl_803DB860 = lbl_803DB860 + lbl_803E0220;
-    if (lbl_803DB860 > 1.0f) lbl_803DB860 = lbl_803E0224;
-    lbl_803DB864 = lbl_803DB864 + lbl_803E022C;
-    if (lbl_803DB864 > 1.0f) lbl_803DB864 = lbl_803E0230;
+    gEffect18Progress0 = gEffect18Progress0 + lbl_803E0220;
+    if (gEffect18Progress0 > 1.0f) gEffect18Progress0 = lbl_803E0224;
+    gEffect18Progress1 = gEffect18Progress1 + lbl_803E022C;
+    if (gEffect18Progress1 > 1.0f) gEffect18Progress1 = lbl_803E0230;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -273,7 +273,7 @@ int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         {
             cfg.initialAlpha = (f32)(u32)
             cfg.initialAlpha *
-                ((f32)(s32) * (int*)extraArgs / lbl_803E0278);
+                ((f32)(s32) * (int*)extraArgs / gEffect18AlphaMax);
         }
         cfg.velocityZ = lbl_803E027C * (f32)(s32)
         randomGetRange(0x12, 0x14);

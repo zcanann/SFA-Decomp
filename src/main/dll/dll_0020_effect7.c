@@ -1301,18 +1301,18 @@ extern u8 framesThisStep;
 
 extern float mathSinf(float x);
 
-extern f32 lbl_803DB808;
-extern f32 lbl_803DB80C;
-extern int lbl_803DD380;
-extern int lbl_803DD384;
-extern f32 lbl_803DD388;
-extern f32 lbl_803DD38C;
+extern f32 gEffect7TexScrollPhaseA;
+extern f32 gEffect7TexScrollPhaseB;
+extern int gEffect7SinAngleA;
+extern int gEffect7SinAngleB;
+extern f32 gEffect7SinValueB;
+extern f32 gEffect7SinValueA;
 extern f32 lbl_803DFCD8;
 extern f32 lbl_803DFCDC;
 extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFCE8;
-extern f32 lbl_803DFD90;
-extern f32 lbl_803DFD94;
+extern f32 gEffect7Pi;
+extern f32 gEffect7SinAngleScale;
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -1328,38 +1328,38 @@ void Effect7_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB808 + (step = lbl_803DFCD8 * timeDelta);
-    lbl_803DB808 = sum;
+    sum = gEffect7TexScrollPhaseA + (step = lbl_803DFCD8 * timeDelta);
+    gEffect7TexScrollPhaseA = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB808 = lbl_803DFCDC;
+        gEffect7TexScrollPhaseA = lbl_803DFCDC;
     }
-    sum = lbl_803DB80C + step;
-    lbl_803DB80C = sum;
+    sum = gEffect7TexScrollPhaseB + step;
+    gEffect7TexScrollPhaseB = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB80C = lbl_803DFCE8;
+        gEffect7TexScrollPhaseB = lbl_803DFCE8;
     }
-    lbl_803DD380 = lbl_803DD380 + framesThisStep * 0x64;
-    if (lbl_803DD380 > 0x7fff)
+    gEffect7SinAngleA = gEffect7SinAngleA + framesThisStep * 0x64;
+    if (gEffect7SinAngleA > 0x7fff)
     {
-        lbl_803DD380 = 0;
+        gEffect7SinAngleA = 0;
     }
-    lbl_803DD38C = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD380 / lbl_803DFD94);
-    lbl_803DD384 = lbl_803DD384 + framesThisStep * 0x32;
-    if (lbl_803DD384 > 0x7fff)
+    gEffect7SinValueA = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleA / gEffect7SinAngleScale);
+    gEffect7SinAngleB = gEffect7SinAngleB + framesThisStep * 0x32;
+    if (gEffect7SinAngleB > 0x7fff)
     {
-        lbl_803DD384 = 0;
+        gEffect7SinAngleB = 0;
     }
-    lbl_803DD388 = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD384 / lbl_803DFD94);
+    gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
 }
 
 extern int randFn_80080100(int n);
 
 extern void* Obj_GetPlayerObject(void);
 extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DB800;
-extern f32 lbl_803DB804;
+extern f32 gEffect7ScrollPhaseA;
+extern f32 gEffect7ScrollPhaseB;
 extern f32 lbl_803DFCEC;
 extern f32 lbl_803DFCF0;
 extern f32 lbl_803DFCF4;
@@ -1389,7 +1389,7 @@ extern f32 lbl_803DFD50;
 extern f32 lbl_803DFD54;
 extern f32 lbl_803DFD58;
 extern f32 lbl_803DFD5C;
-extern f32 lbl_803DFD60;
+extern f32 gEffect7AlphaMax;
 extern f32 lbl_803DFD64;
 extern f32 lbl_803DFD68;
 extern f32 lbl_803DFD6C;
@@ -1419,10 +1419,10 @@ int Effect7_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     PartFxSpawn cfg;
 
     player = Obj_GetPlayerObject();
-    lbl_803DB800 += 0.001f;
-    if (lbl_803DB800 > 1.0f) lbl_803DB800 = 0.1f;
-    lbl_803DB804 += 0.0003f;
-    if (lbl_803DB804 > 1.0f) lbl_803DB804 = 0.3f;
+    gEffect7ScrollPhaseA += 0.001f;
+    if (gEffect7ScrollPhaseA > 1.0f) gEffect7ScrollPhaseA = 0.1f;
+    gEffect7ScrollPhaseB += 0.0003f;
+    if (gEffect7ScrollPhaseB > 1.0f) gEffect7ScrollPhaseB = 0.3f;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -1722,7 +1722,7 @@ int Effect7_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
             }
             else
             {
-                cfg.initialAlpha = (u8)(s32)(lbl_803DFD60 * spawnParams->scale);
+                cfg.initialAlpha = (u8)(s32)(gEffect7AlphaMax * spawnParams->scale);
             }
         }
         cfg.scale = lbl_803DFD64 * (f32)(s32)
