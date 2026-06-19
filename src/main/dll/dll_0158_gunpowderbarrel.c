@@ -1137,12 +1137,12 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         Sfx_PlayFromObject((u32)obj, 0xd2);
         rate = lbl_803E42DC;
         ((GameObject*)obj)->anim.velocityY = dy2;
-        *(f32*)(near + 0xc) += lbl_803E42E8;
-        *(f32*)(near + 0x2c) += lbl_803E42E8;
-        if (*(f32*)(near + 0x2c) > lbl_803E42EC)
+        ((GameObject*)near)->anim.localPosX += lbl_803E42E8;
+        ((GameObject*)near)->anim.velocityZ += lbl_803E42E8;
+        if (((GameObject*)near)->anim.velocityZ > lbl_803E42EC)
         {
-            *(f32*)(near + 0xc) -= *(f32*)(near + 0x2c);
-            *(f32*)(near + 0x2c) = 0.0f;
+            ((GameObject*)near)->anim.localPosX -= ((GameObject*)near)->anim.velocityZ;
+            ((GameObject*)near)->anim.velocityZ = 0.0f;
         }
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = 0;
