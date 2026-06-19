@@ -78,7 +78,7 @@ void CameraModeStatic_update(short* camObj)
     else
     {
         viewObj = *(int*)(camObj + 0x52);
-        placement = lbl_803DD558->staticObject->anim.placementData;
+        placement = (int)lbl_803DD558->staticObject->anim.placementData;
         if ((*(byte*)(placement + 0x1b) & 1) == 0)
         {
             *camObj = ((CameraModeStaticPlacement*)placement)->unk1C + 0x8000;

@@ -355,7 +355,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
                                     pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
                                 }
-                                base = dsp_vptr->smp_info.addr * 2;
+                                base = (u32)dsp_vptr->smp_info.addr * 2;
                                 addr = base + 2;
                                 dsp_vptr->playInfo.posHi = dsp_vptr->playInfo.posLo = 0;
                                 if ((dsp_vptr->smp_info.compType == 4) ||
@@ -390,7 +390,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
                                     pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
                                 }
-                                base = dsp_vptr->smp_info.addr * 2;
+                                base = (u32)dsp_vptr->smp_info.addr * 2;
                                 addr = base + offset * 16 + 2;
                                 dsp_vptr->playInfo.posHi = offset * 0xE;
                                 dsp_vptr->playInfo.posLo = 0;
@@ -406,7 +406,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     pb->adpcm.a[i][1] = 0;
                                 }
                                 addr = (u32)dsp_vptr->smp_info.offset +
-                                    (base = dsp_vptr->smp_info.addr);
+                                    (base = (u32)dsp_vptr->smp_info.addr);
                                 dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
                                 dsp_vptr->playInfo.posLo = 0;
                             }
@@ -421,7 +421,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     pb->adpcm.a[i][1] = 0;
                                 }
                                 addr = dsp_vptr->smp_info.offset +
-                                    (base = dsp_vptr->smp_info.addr >> 1);
+                                    (base = (u32)dsp_vptr->smp_info.addr >> 1);
                                 dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
                                 dsp_vptr->playInfo.posLo = 0;
                             }

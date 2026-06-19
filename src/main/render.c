@@ -183,7 +183,7 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
     {
         int sbit = src->bit;
         int sByte = sbit >> 3;
-        u8* sp = src->instrs + sByte;
+        u8* sp = (u8*)src->instrs + sByte;
         u32 val;
         int curBit;
         int bo;
@@ -197,14 +197,14 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
         curBit = dst->bit;
         bo = curBit >> 3;
         packed = bits << ((8 - (curBit & 7)) + sh16);
-        (dst->instrs)[bo] |= (packed >> 16) & 0xff;
-        (dst->instrs)[bo + 1] |= (packed >> 8) & 0xff;
-        (dst->instrs)[bo + 2] |= packed & 0xff;
+        ((u8*)dst->instrs)[bo] |= (packed >> 16) & 0xff;
+        ((u8*)dst->instrs)[bo + 1] |= (packed >> 8) & 0xff;
+        ((u8*)dst->instrs)[bo + 2] |= packed & 0xff;
         dst->bit += bitWidth;
         dst->bit += gap;
     }
     modelRenderInstrsState_setBit(dst, startBit + bitWidth);
-    return (src->instrs)[(src->bit >> 3) + 1];
+    return ((u8*)src->instrs)[(src->bit >> 3) + 1];
 }
 #pragma scheduling reset
 
