@@ -52,7 +52,7 @@ extern void* FUN_80017624();
 extern u32 FUN_80017700();
 extern int FUN_80017730();
 extern u32 FUN_80017754();
-extern int randomGetRange(int lo, int hi);
+
 extern u32 FUN_80017778();
 extern u32 FUN_80017794();
 extern int FUN_8001779c();
@@ -2573,8 +2573,8 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
-extern f32 sqrtf(f32);
-extern int getAngle(float y, float x);
+
+
 extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);

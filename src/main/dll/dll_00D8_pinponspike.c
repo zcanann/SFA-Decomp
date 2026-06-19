@@ -39,7 +39,7 @@ extern f32 lbl_803E3120;
 extern f32 lbl_803E3124;
 extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
-extern f32 sqrtf(f32 x);
+
 extern int getAngle(float y, float x);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 

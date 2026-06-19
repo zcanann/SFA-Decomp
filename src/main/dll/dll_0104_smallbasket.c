@@ -35,6 +35,7 @@
 #include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
+#include "main/audio/sfx.h"
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -98,7 +99,7 @@ extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32* a, f32* b);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);

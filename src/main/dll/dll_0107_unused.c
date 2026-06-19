@@ -13,6 +13,7 @@
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/pad.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -41,7 +42,7 @@ void fn_80185868(int obj, f32 arg)
     extern void* lbl_803DDAD0;
     extern void* lbl_803DDAD4;
     extern f32 lbl_803E3A58;
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     struct
     {
         u8 pad[8];
@@ -154,8 +155,8 @@ void fn_80185B74(int obj)
     extern f32 lbl_803E3A70;
     extern f32 lbl_803E3A74;
     extern f64 lbl_803E3A78;
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
+
     extern void buttonDisable(int port, u32 mask);
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct

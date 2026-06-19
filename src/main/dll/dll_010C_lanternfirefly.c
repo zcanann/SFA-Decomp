@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
+#include "main/audio/sfx.h"
 
 typedef struct LanternFireFlyPlacement
 {
@@ -63,7 +64,7 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+
 extern f32 sqrtf(f32 value);
 extern float mathSinf(float x);
 extern void objRenderFn_8003b8f4(f32);

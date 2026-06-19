@@ -21,7 +21,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern int randomGetRange(int lo, int hi);
+
 
 extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);

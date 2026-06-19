@@ -32,7 +32,7 @@
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 sqrtf(f32);
+
 
 
 extern ModgfxInterface** gModgfxInterface;

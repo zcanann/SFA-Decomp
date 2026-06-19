@@ -54,11 +54,11 @@ STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
-extern int randomGetRange(int lo, int hi);
+
 extern u8 framesThisStep;
-extern u8 Obj_IsLoadingLocked(void);
+
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern f32 sqrtf(f32);
+
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);

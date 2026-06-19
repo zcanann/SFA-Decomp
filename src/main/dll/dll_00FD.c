@@ -9,7 +9,7 @@
 extern void objRenderFn_80041018(void);
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
-extern int randomGetRange(int lo, int hi);
+
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern s16 getAngle(f32 dx, f32 dz);

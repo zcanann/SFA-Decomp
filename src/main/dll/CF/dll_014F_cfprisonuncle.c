@@ -14,7 +14,7 @@
 #include "main/objseq.h"
 #include "main/objprint.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern int randomGetRange(int lo, int hi);
+
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);

@@ -30,6 +30,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 
 #define LARGECRATE_LINKED_ID_BASE 0x40000
 #define LARGECRATE_ROB_WAVE_DIRECT_ID 0x66
@@ -52,9 +53,9 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
+
+
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
 extern u8 framesThisStep;

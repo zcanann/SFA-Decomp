@@ -19,6 +19,7 @@
 #include "main/objlib.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx.h"
 
 /* per-object extra block; 0xA is the object phase enum
    (0=carrying/active, 1=just broke, 2=respawning) */
@@ -43,7 +44,7 @@ extern void ObjHits_ClearHitVolumes();
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 timeDelta;
 extern f32 lbl_803E3B44; /* respawn timer reset value */
 extern f32 lbl_803E3B48; /* respawn timer threshold */

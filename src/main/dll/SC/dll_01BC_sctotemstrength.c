@@ -21,7 +21,7 @@
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 Sfx_KeepAliveLoopedObjectSound();
-extern int randomGetRange(int lo, int hi);
+
 extern void setAButtonIcon(int x);
 
 extern int isGameTimerDisabled(void);

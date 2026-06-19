@@ -51,7 +51,7 @@ typedef struct
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
-extern int randomGetRange(int lo, int hi);
+
 extern int ObjMsg_Pop();
 extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);

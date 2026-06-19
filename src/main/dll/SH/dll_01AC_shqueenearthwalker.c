@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern int randomGetRange(int lo, int hi);
+
 extern int ObjTrigger_IsSetById();
 
 extern f32 getXZDistance(f32* a, f32* b);

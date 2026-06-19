@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern int randomGetRange(int lo, int hi);
+
 
 extern f32 gKillerMushroomRiseStepEpsilon;
 extern f32 lbl_803E52FC;
