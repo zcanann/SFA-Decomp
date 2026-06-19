@@ -109,7 +109,7 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
                 (*gPartfxInterface)->spawnObject((void*)param_9, 0x391, NULL, 4, -1, NULL);
             }
         }
-        iVar3 = ObjHits_GetPriorityHit(param_9, (int*)0x0, (int*)0x0, (uint*)0x0);
+        iVar3 = ObjHits_GetPriorityHit(param_9, 0x0, 0x0, 0x0);
         if ((short)iVar3 != 0)
         {
             uVar2 = GameBit_Get((int)*psVar4);
@@ -310,7 +310,7 @@ void vfpflamepoint_update(int obj)
     }
     else
     {
-        u8 v = (u8)GameBit_Get(d->showGameBit);
+        u8 v = GameBit_Get(d->showGameBit);
         if (!(d->done = v))
         {
             d->counter = (s8) * (s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a);
@@ -402,7 +402,7 @@ void VFP_lavapool_init(int obj, int def)
     int extra;
 
     extra = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)return1_801FDA08;
+    ((GameObject*)obj)->animEventCallback = return1_801FDA08;
     *(s16*)(extra + 4) = 7000;
     *(s16*)(extra + 6) = 2000;
     if (*(s16*)(def + 0x1a) == 0)

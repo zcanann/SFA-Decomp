@@ -54,7 +54,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     {
         if (state->lastBlendMoveIndex != moveIndex)
         {
-            state->blendCacheSlot = (u16)state->blendToggle;
+            state->blendCacheSlot = state->blendToggle;
             state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
             if (animDef->cachedAnimIds[moveIndex] == OBJANIM_MISSING_MOVE_ID)
             {
@@ -63,14 +63,14 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
             }
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveIndex], (int)(s16)moveIndex,
                                    state->blendMoveCache[state->blendCacheSlot], animDef);
-            state->lastBlendMoveIndex = (s16)moveIndex;
+            state->lastBlendMoveIndex = moveIndex;
         }
         moveData = (ObjAnimMoveData*)
             (state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
     }
     else
     {
-        state->blendCacheSlot = (u16)moveIndex;
+        state->blendCacheSlot = moveIndex;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
     }
     state->blendFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
@@ -92,7 +92,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
         }
         else
         {
-            state->eventState = (u16)requestedEventState;
+            state->eventState = requestedEventState;
         }
     }
     return;
@@ -107,7 +107,7 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, in
     bank = ObjAnim_GetActiveBank(objAnim);
     if (bank->animDef->moveCount != 0)
     {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->activeState, moveId, (s16)eventState);
+        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->activeState, moveId, eventState);
     }
     return;
 }
@@ -119,7 +119,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
     bank = ObjAnim_GetActiveBank(objAnim);
     if (bank->animDef->moveCount != 0)
     {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->currentState, moveId, (s16)eventState);
+        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->currentState, moveId, eventState);
     }
     return;
 }
@@ -203,7 +203,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
             }
             else
             {
-                value = (f32)countdown;
+                value = countdown;
             }
             state->eventCountdown = (u16)(int)
             value;
@@ -289,28 +289,28 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
         {
             if ((previousFrame <= eventFrame) && (eventFrame < currentFrame))
             {
-                events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                events->triggeredIds[events->triggerCount++] = eventId;
             }
         }
         if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED)
         {
             if ((eventFrame >= previousFrame) || (eventFrame < currentFrame))
             {
-                events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                events->triggeredIds[events->triggerCount++] = eventId;
             }
         }
         if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED)
         {
             if ((eventFrame > currentFrame) && (eventFrame <= previousFrame))
             {
-                events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                events->triggeredIds[events->triggerCount++] = eventId;
             }
         }
         if (scanMode == OBJANIM_EVENT_SCAN_REVERSE)
         {
             if ((eventFrame > currentFrame) || (eventFrame <= previousFrame))
             {
-                events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                events->triggeredIds[events->triggerCount++] = eventId;
             }
         }
     }
@@ -367,7 +367,7 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
         return 0;
     }
     state = bank->activeState;
-    state->moveControlFlags = (s8)moveControlFlags;
+    state->moveControlFlags = moveControlFlags;
     state->prevMoveCacheSlot = state->moveCacheSlot;
     state->prevFramePhase = state->framePhase;
     state->prevFrameLength = state->frameLength;
@@ -381,14 +381,14 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
     state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
     previousMove = objAnim->activeMove;
     moveChanged = previousMove != moveId;
-    objAnim->activeMove = (s16)moveId;
+    objAnim->activeMove = moveId;
     moveId = ObjAnim_ResolveMoveIndex(animDef, moveId);
     if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
     {
         if (moveChanged != 0)
         {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
-            state->moveCacheSlot = (u16)state->blendToggle;
+            state->moveCacheSlot = state->blendToggle;
             if (animDef->cachedAnimIds[moveId] == OBJANIM_MISSING_MOVE_ID)
             {
                 OSReport(gObjAnimMissingCachedMoveWarning, animDef->modNo);
@@ -403,7 +403,7 @@ Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveC
     }
     else
     {
-        state->moveCacheSlot = (u16)moveId;
+        state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
@@ -514,7 +514,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     if (state->eventState != 0)
     {
-        blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
+        blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
         if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
         {
@@ -601,11 +601,11 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         return 0;
     }
 
-    sampleCount = (f32)segmentCount;
+    sampleCount = segmentCount;
     phaseStep = gObjAnimProgressOne / sampleCount;
     sampleProgress = sampleCount * objAnim->currentMoveProgress;
-    sampleIndex = (int)sampleProgress;
-    sampleFraction = sampleProgress - (f32)sampleIndex;
+    sampleIndex = sampleProgress;
+    sampleFraction = sampleProgress - sampleIndex;
 
     if (blendSamples != NULL && blendSamples[segmentCount] < 0)
     {
@@ -617,17 +617,17 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         s16* axisAt = &axis[sampleIndex];
         s16* blendAt = &blendSamples[sampleIndex];
         previousDistance =
-            (rootScale * moveWeight * (f32)axisAt[1]) +
-            (blendScale * blendWeight * (f32)blendAt[0]);
+            (rootScale * moveWeight * axisAt[1]) +
+            (blendScale * blendWeight * blendAt[0]);
         nextDistance =
-            (rootScale * moveWeight * (f32)axisAt[2]) +
-            (blendScale * blendWeight * (f32)blendAt[1]);
+            (rootScale * moveWeight * axisAt[2]) +
+            (blendScale * blendWeight * blendAt[1]);
     }
     else
     {
         s16* axisAt = &axis[sampleIndex];
-        previousDistance = rootScale * (f32)axisAt[1];
-        nextDistance = rootScale * (f32)axisAt[2];
+        previousDistance = rootScale * axisAt[1];
+        nextDistance = rootScale * axisAt[2];
     }
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
@@ -646,15 +646,15 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
             s16* blendAt = &blendSamples[sampleIndex];
             nextDistance +=
                 (rootScale * moveWeight *
-                    ((f32)axisAt[2] - (f32)axisAt[1])) +
+                    ((f32)axisAt[2] - axisAt[1])) +
                 (blendScale * blendWeight *
-                    ((f32)blendAt[1] - (f32)blendAt[0]));
+                    ((f32)blendAt[1] - blendAt[0]));
         }
         else
         {
             s16* axisAt = &axis[sampleIndex];
             nextDistance +=
-                rootScale * ((f32)axisAt[2] - (f32)axisAt[1]);
+                rootScale * ((f32)axisAt[2] - axisAt[1]);
         }
         phase += phaseStep;
     }
@@ -779,7 +779,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             }
             else
             {
-                value = (f32)countdown;
+                value = countdown;
             }
             state->eventCountdown = (u16)(int)
             value;
@@ -868,28 +868,28 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                 {
                     if ((previousFrame <= eventFrame) && (eventFrame < currentFrame))
                     {
-                        events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                        events->triggeredIds[events->triggerCount++] = eventId;
                     }
                 }
                 if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED)
                 {
                     if ((eventFrame >= previousFrame) || (eventFrame < currentFrame))
                     {
-                        events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                        events->triggeredIds[events->triggerCount++] = eventId;
                     }
                 }
                 if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED)
                 {
                     if ((eventFrame > currentFrame) && (eventFrame <= previousFrame))
                     {
-                        events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                        events->triggeredIds[events->triggerCount++] = eventId;
                     }
                 }
                 if (scanMode == OBJANIM_EVENT_SCAN_REVERSE)
                 {
                     if ((eventFrame > currentFrame) || (eventFrame <= previousFrame))
                     {
-                        events->triggeredIds[events->triggerCount++] = (s8)eventId;
+                        events->triggeredIds[events->triggerCount++] = eventId;
                     }
                 }
             }
@@ -908,17 +908,17 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     sampleCount = curve->sampleCount;
     segmentCount = sampleCount - 1;
     axis = ObjAnim_GetRootCurveAxisData(curve);
-    previousScaledSample = (f32)segmentCount * previousProgress;
-    previousSampleIndex = (int)previousScaledSample;
-    previousFraction = previousScaledSample - (f32)previousSampleIndex;
-    currentScaledSample = (f32)segmentCount * objAnim->currentMoveProgress;
-    currentSampleIndex = (int)currentScaledSample;
-    currentFraction = currentScaledSample - (f32)currentSampleIndex;
+    previousScaledSample = segmentCount * previousProgress;
+    previousSampleIndex = previousScaledSample;
+    previousFraction = previousScaledSample - previousSampleIndex;
+    currentScaledSample = segmentCount * objAnim->currentMoveProgress;
+    currentSampleIndex = currentScaledSample;
+    currentFraction = currentScaledSample - currentSampleIndex;
 
     blendAxis = NULL;
     if (state->eventState != 0)
     {
-        blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
+        blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
         blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef, state);
         if (blendCurve != NULL)
@@ -957,28 +957,28 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             {
                 blendAxis++;
             }
-            previousAxisValue = moveWeight * (f32)axis[previousSampleIndex];
+            previousAxisValue = moveWeight * axis[previousSampleIndex];
             if (blendAxis != NULL)
             {
-                previousAxisValue += blendWeight * (f32)blendAxis[previousSampleIndex];
+                previousAxisValue += blendWeight * blendAxis[previousSampleIndex];
             }
-            previousAxisNextValue = moveWeight * (f32)axis[previousSampleIndex + 1];
+            previousAxisNextValue = moveWeight * axis[previousSampleIndex + 1];
             if (blendAxis != NULL)
             {
-                previousAxisNextValue += blendWeight * (f32)blendAxis[previousSampleIndex + 1];
+                previousAxisNextValue += blendWeight * blendAxis[previousSampleIndex + 1];
             }
             previousInterp = previousAxisValue +
                 previousFraction * (previousAxisNextValue - previousAxisValue);
 
-            currentAxisValue = moveWeight * (f32)axis[currentSampleIndex];
+            currentAxisValue = moveWeight * axis[currentSampleIndex];
             if (blendAxis != NULL)
             {
-                currentAxisValue += blendWeight * (f32)blendAxis[currentSampleIndex];
+                currentAxisValue += blendWeight * blendAxis[currentSampleIndex];
             }
-            currentAxisNextValue = moveWeight * (f32)axis[currentSampleIndex + 1];
+            currentAxisNextValue = moveWeight * axis[currentSampleIndex + 1];
             if (blendAxis != NULL)
             {
-                currentAxisNextValue += blendWeight * (f32)blendAxis[currentSampleIndex + 1];
+                currentAxisNextValue += blendWeight * blendAxis[currentSampleIndex + 1];
             }
             currentInterp = currentAxisValue +
                 currentFraction * (currentAxisNextValue - currentAxisValue);
@@ -987,19 +987,19 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             {
                 if (objAnim->currentMoveProgress < previousProgress)
                 {
-                    currentInterp += moveWeight * (f32)axis[segmentCount];
+                    currentInterp += moveWeight * axis[segmentCount];
                     if (blendAxis != NULL)
                     {
-                        currentInterp += blendWeight * (f32)blendAxis[segmentCount];
+                        currentInterp += blendWeight * blendAxis[segmentCount];
                     }
                 }
             }
             else if (objAnim->currentMoveProgress > previousProgress)
             {
-                currentInterp -= moveWeight * (f32)axis[segmentCount];
+                currentInterp -= moveWeight * axis[segmentCount];
                 if (blendAxis != NULL)
                 {
-                    currentInterp += blendWeight * (f32)blendAxis[segmentCount];
+                    currentInterp += blendWeight * blendAxis[segmentCount];
                 }
             }
 
@@ -1080,7 +1080,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
         return 0;
     }
     state = bank->currentState;
-    state->moveControlFlags = (s8)moveControlFlags;
+    state->moveControlFlags = moveControlFlags;
     state->prevMoveCacheSlot = state->moveCacheSlot;
     state->prevFramePhase = state->framePhase;
     state->prevFrameLength = state->frameLength;
@@ -1095,18 +1095,18 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
     hitState = objAnim->hitReactState;
     if ((hitState != NULL) && (hitState->entries != NULL))
     {
-        ObjHitReact_LoadMoveEntries((ObjAnimComponent*)objAnimHandle, bank, (int)objAnim->seqId,
+        ObjHitReact_LoadMoveEntries((ObjAnimComponent*)objAnimHandle, bank, objAnim->seqId,
                                     hitState, requestedMoveId, 0);
     }
     if (objAnim->eventTable != NULL)
     {
-        ObjAnim_LoadMoveEvents((u8*)objAnimHandle, (int)objAnim->seqId, objAnim->eventTable,
+        ObjAnim_LoadMoveEvents((u8*)objAnimHandle, objAnim->seqId, objAnim->eventTable,
                                requestedMoveId, 0);
     }
     previousMove = objAnim->currentMove;
     moveChanged = previousMove != requestedMoveId;
-    objAnim->currentMove = (s16)requestedMoveId;
-    moveId = animDef->moveGroupBaseIndices[(s32)requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+    objAnim->currentMove = requestedMoveId;
+    moveId = animDef->moveGroupBaseIndices[requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
         (requestedMoveId & OBJANIM_MOVE_INDEX_MASK);
     if (moveId >= animDef->moveCount)
     {
@@ -1121,7 +1121,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
         if (moveChanged != 0)
         {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
-            state->moveCacheSlot = (u16)state->blendToggle;
+            state->moveCacheSlot = state->blendToggle;
             if (animDef->cachedAnimIds[moveId] == OBJANIM_MISSING_MOVE_ID)
             {
                 OSReport(gObjAnimMissingCachedMoveWarning, animDef->modNo);
@@ -1136,7 +1136,7 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
     }
     else
     {
-        state->moveCacheSlot = (u16)moveId;
+        state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
     state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;

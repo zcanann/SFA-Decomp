@@ -117,17 +117,17 @@ void main(void)
 #pragma peephole off
 void setGameState(int state)
 {
-    gameState = (u8)state;
+    gameState = state;
 }
 
 void setTimeStop(int v)
 {
-    timeStop = (u8)v;
+    timeStop = v;
 }
 
 void setShouldResetNextFrame(int v)
 {
-    shouldResetNextFrame = (u8)v;
+    shouldResetNextFrame = v;
 }
 
 #pragma peephole on
@@ -284,7 +284,7 @@ void* loadAsset(void* reqVoid)
         break;
     case 7:
         *(void**)req->f8 =
-            loadAnimation(*(int*)((u8*)req + 0x24), (s16)req->f4, (s16)req->fc,
+            loadAnimation(*(int*)((u8*)req + 0x24), req->f4, (s16)req->fc,
                           *(u8**)((u8*)req + 0x20));
         break;
     }
@@ -924,7 +924,7 @@ void gameUpdate(void)
         (*gMapEventInterface)->updateTimes();
         player = Obj_GetPlayerObject();
         idx = lbl_803DCAD4;
-        rec = (u8*)lbl_8033BFB8 + idx * 16;
+        rec = lbl_8033BFB8 + idx * 16;
         t = lbl_803DCAD0 + framesThisStep;
         lbl_803DCAD0 = t;
         if (player != 0)

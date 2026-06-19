@@ -766,7 +766,7 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
     state->updateFlag = 0;
     state->entries = mmAlloc(count * 0xc, 0x1a, 0);
     i = 0;
-    p = (int**)models;
+    p = models;
     off = 0;
     for (; i < count; i++)
     {
@@ -792,15 +792,15 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     vertex = (s16*)(((ModelFileHeader*)model)->vertices + vertexIndex * 6);
     if ((((ModelFileHeader*)model)->flags & 0x800) != 0)
     {
-        out[0] = (f32)vertex[0];
-        out[1] = (f32)vertex[1];
-        out[2] = (f32)vertex[2];
+        out[0] = vertex[0];
+        out[1] = vertex[1];
+        out[2] = vertex[2];
     }
     else
     {
-        out[0] = (f32)vertex[0] * (scale = lbl_803DE864);
-        out[1] = (f32)vertex[1] * scale;
-        out[2] = (f32)vertex[2] * scale;
+        out[0] = vertex[0] * (scale = lbl_803DE864);
+        out[1] = vertex[1] * scale;
+        out[2] = vertex[2] * scale;
     }
 }
 
@@ -1166,7 +1166,7 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
             off += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations(header, realId, (u8*)header + *(int*)((u8*)header + 0xc));
+        modelLoadAnimations(header, realId, header + *(int*)((u8*)header + 0xc));
         modelInitModelList(lbl_803DCB54, realId, &header);
     }
     else
@@ -1409,10 +1409,10 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
             q++;
         }
         n2 = (int)*(f32*)(p4 + 4);
-        g = (f32)n2;
+        g = n2;
         if (g != *(f32*)(p4 + 4))
         {
-            *(s16*)(p2 + 0x4c) = (s16)bv;
+            *(s16*)(p2 + 0x4c) = bv;
         }
         else
         {
@@ -1541,7 +1541,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                     *(u16*)(stk + 0x44) = *(u16*)(p2 + 0x44);
                     *(u16*)(stk + 0x46) = *(u16*)(p2 + 0x48);
                 }
-                *(u16*)(stk + 0x58) = (u16)v;
+                *(u16*)(stk + 0x58) = v;
                 modelAnimUpdateChannels(hdr, stk, 2);
                 lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, lbl_80340740, d, m);
                 if (m != 0)
@@ -1608,8 +1608,8 @@ extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
                 if (ModelList_getHeader(lbl_803DCB50, idx, &hp) == 0) {               \
                     sz4 = *(int *)((u8 *)lbl_803DCB4C + idx * 4);                     \
                     loadAndDecompressDataFile(0x30, 0, sz4, 0, (int)&sz, idx, 1);     \
-                    hp = (u8 *)mmAlloc(sz, 10, 0);                                    \
-                    loadAndDecompressDataFile(0x30, (void *)hp, sz4, sz, (int)buf, idx, 0); \
+                    hp = mmAlloc(sz, 10, 0);                                    \
+                    loadAndDecompressDataFile(0x30, hp, sz4, sz, (int)buf, idx, 0); \
                     *hp = 1;                                                          \
                     modelInitModelList(lbl_803DCB50, idx, &hp);                       \
                 } else {                                                              \
@@ -1623,7 +1623,7 @@ extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 
 void modelAnimResetState(void* m, void* data)
 {
-    u8* p2 = (u8*)data;
+    u8* p2 = data;
     u8* hdr;
     u8* mdl;
     f32 f;
@@ -1713,7 +1713,7 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* p2, u8* hdr)
     w = 0;
     i = 0;
     poff = 0;
-    for (; i < (int)modelDef->jointCount; i++)
+    for (; i < modelDef->jointCount; i++)
     {
         u = *(u8*)(modelDef->jointData + boff + objAnim->bankIndex + 1);
         if (u != 0xff)
@@ -1932,8 +1932,8 @@ extern char sModelAnimationBufferOverflowWarning[];
 #pragma opt_loop_invariants off
 int modelLoadAnimations(void* model, int id, void* animBase)
 {
-    u8* hdr = (u8*)model;
-    u8* buf = (u8*)animBase;
+    u8* hdr = model;
+    u8* buf = animBase;
     int* tbl;
     int base;
     int aln;
@@ -2032,8 +2032,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                     {
                         sz4 = *(int*)((u8*)lbl_803DCB4C + anim * 4);
                         loadAndDecompressDataFile(0x30, 0, sz4, 0, (int)&sz2, anim, 1);
-                        hp2 = (u8*)mmAlloc(sz2, 10, 0);
-                        loadAndDecompressDataFile(0x30, (void*)hp2, sz4, sz2, (int)buf2, anim, 0);
+                        hp2 = mmAlloc(sz2, 10, 0);
+                        loadAndDecompressDataFile(0x30, hp2, sz4, sz2, (int)buf2, anim, 0);
                         *hp2 = 1;
                         modelInitModelList(lbl_803DCB50, anim, &hp2);
                     }
@@ -2093,7 +2093,7 @@ void* mmAlloc(int size, int type, int flag);
 #pragma opt_loop_invariants on
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
 {
-    u8* hdr = (u8*)model;
+    u8* hdr = model;
     int total;
 
     if (((ModelFileHeader*)hdr)->animationCount != 0)
@@ -2425,7 +2425,7 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     }
     scaled = lbl_803DCB48 * (lbl_803DE844 - dot);
     r = randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
-    amp = (f32)r * lbl_803DE848;
+    amp = r * lbl_803DE848;
     i = 0;
     off = 0;
     while (i < *(int*)(anim + 8) + 1)
@@ -2482,7 +2482,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             if (count > 0)
             {
                 arr = *(u8**)(state + 8);
-                idx = (int)(((GameObject*)e)->anim.currentMoveProgress * (f32)count);
+                idx = (int)(((GameObject*)e)->anim.currentMoveProgress * count);
                 if (idx >= count)
                 {
                     idx = count - 1;
@@ -3165,11 +3165,11 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     {
         int bv = (*(u8**)(ch + 0x34))[2];
         f32 fr = *(f32*)(ch + 4);
-        int n = (int)fr;
-        f32 fcv = (f32)n;
+        int n = fr;
+        f32 fcv = n;
         if (fcv != fr)
         {
-            *(s16*)(ch + 0x4c) = (s16)bv;
+            *(s16*)(ch + 0x4c) = bv;
         }
         else
         {
@@ -3185,9 +3185,9 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     *(int*)(ch + 0x34) = saved;
     {
         f32 k = lbl_803DE880;
-        outPos[0] = k * (f32)srot[0];
-        outPos[1] = k * (f32)srot[1];
-        outPos[2] = k * (f32)srot[2];
+        outPos[0] = k * srot[0];
+        outPos[1] = k * srot[1];
+        outPos[2] = k * srot[2];
     }
     outPos[0] = outPos[0] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 4);
     outPos[1] = outPos[1] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 8);
