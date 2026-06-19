@@ -671,7 +671,7 @@ void gcrobotlightbea_update(int* obj)
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
     Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
-    voxmaps_traceScaledVectorEnd(vec2, obj + 0xc, vec, lbl_803DBE5C);
+    voxmaps_traceScaledVectorEnd(vec2, obj + 3, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2, 0);
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
