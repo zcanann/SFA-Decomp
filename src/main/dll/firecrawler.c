@@ -2036,8 +2036,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     f32 dv[3];
     int i;
 
-    cap = lbl_803E2C30;
-    if (*(f32*)(state + 0x330) != cap)
+    if (*(f32*)(state + 0x330) != (cap = lbl_803E2C30))
     {
         *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
         if (*(f32*)(state + 0x330) <= cap)
