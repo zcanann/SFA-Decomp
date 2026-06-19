@@ -32,7 +32,7 @@ extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 extern f32 timeDelta;
-extern CameraMode54State* lbl_803DD5C0;
+extern CameraMode54State* gCameraModeNpcSpeakState;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
@@ -174,13 +174,13 @@ void dll_54_init(int* p1, int unused, int* p3)
     CameraObject* camera = (CameraObject*)p1;
     CameraObject* source = (CameraObject*)p3;
 
-    if (lbl_803DD5C0 == NULL)
+    if (gCameraModeNpcSpeakState == NULL)
     {
-        lbl_803DD5C0 = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
+        gCameraModeNpcSpeakState = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
     }
-    memset(lbl_803DD5C0, 0, sizeof(CameraMode54State));
-    lbl_803DD5C0->transitionTimer = lbl_803E1B5C;
-    lbl_803DD5C0->transitionDone = 0;
+    memset(gCameraModeNpcSpeakState, 0, sizeof(CameraMode54State));
+    gCameraModeNpcSpeakState->transitionTimer = lbl_803E1B5C;
+    gCameraModeNpcSpeakState->transitionDone = 0;
     if (p3 != NULL)
     {
         camera->anim.localPosX = source->anim.worldPosX;
@@ -191,12 +191,12 @@ void dll_54_init(int* p1, int unused, int* p3)
         camera->anim.rotZ = source->anim.rotZ;
         camera->fov = source->fov;
     }
-    lbl_803DD5C0->startX = camera->anim.worldPosX;
-    lbl_803DD5C0->startY = camera->anim.worldPosY;
-    lbl_803DD5C0->startZ = camera->anim.worldPosZ;
-    lbl_803DD5C0->startYaw = camera->anim.rotX;
-    lbl_803DD5C0->startPitch = camera->anim.rotY;
-    lbl_803DD5C0->startRoll = camera->anim.rotZ;
+    gCameraModeNpcSpeakState->startX = camera->anim.worldPosX;
+    gCameraModeNpcSpeakState->startY = camera->anim.worldPosY;
+    gCameraModeNpcSpeakState->startZ = camera->anim.worldPosZ;
+    gCameraModeNpcSpeakState->startYaw = camera->anim.rotX;
+    gCameraModeNpcSpeakState->startPitch = camera->anim.rotY;
+    gCameraModeNpcSpeakState->startRoll = camera->anim.rotZ;
 }
 
 void fn_801101E8(void)
@@ -209,8 +209,8 @@ void fn_801101E8(void)
 void dll_54_func05(void)
 {
     extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5C0);
-    lbl_803DD5C0 = NULL;
+    mm_free((u32)gCameraModeNpcSpeakState);
+    gCameraModeNpcSpeakState = NULL;
 }
 
 #pragma dont_inline on
@@ -232,13 +232,13 @@ void dll_54_update(u8* obj)
     s16 cur;
     s16 d;
 
-    if (lbl_803DD5C0->exitRequested != 0)
+    if (gCameraModeNpcSpeakState->exitRequested != 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
-        if (lbl_803DD5C0->lookAtObj == NULL)
+        if (gCameraModeNpcSpeakState->lookAtObj == NULL)
         {
             int* arr = (int*)ObjList_GetObjects(&i, &count);
             for (; i < count; i++)
@@ -246,57 +246,57 @@ void dll_54_update(u8* obj)
                 GameObject* o = (GameObject*)arr[i];
                 if (o->anim.seqId == 0x2ab)
                 {
-                    lbl_803DD5C0->lookAtObj = o;
+                    gCameraModeNpcSpeakState->lookAtObj = o;
                 }
                 else if (o->anim.seqId == 0x4dc)
                 {
-                    lbl_803DD5C0->originObj = o;
+                    gCameraModeNpcSpeakState->originObj = o;
                 }
             }
         }
-        if (lbl_803DD5C0->playerObj == NULL)
+        if (gCameraModeNpcSpeakState->playerObj == NULL)
         {
-            lbl_803DD5C0->playerObj = (GameObject*)Obj_GetPlayerObject();
+            gCameraModeNpcSpeakState->playerObj = (GameObject*)Obj_GetPlayerObject();
         }
         {
-            GameObject* a = lbl_803DD5C0->lookAtObj;
-            dx = a->anim.worldPosX - lbl_803DD5C0->originObj->anim.worldPosX;
-            dy = a->anim.worldPosY - lbl_803DD5C0->originObj->anim.worldPosY;
-            dz = a->anim.worldPosZ - lbl_803DD5C0->originObj->anim.worldPosZ;
+            GameObject* a = gCameraModeNpcSpeakState->lookAtObj;
+            dx = a->anim.worldPosX - gCameraModeNpcSpeakState->originObj->anim.worldPosX;
+            dy = a->anim.worldPosY - gCameraModeNpcSpeakState->originObj->anim.worldPosY;
+            dz = a->anim.worldPosZ - gCameraModeNpcSpeakState->originObj->anim.worldPosZ;
         }
         zz = dz * dz;
         xx = dx * dx;
         dist = sqrtf(zz + (dy * dy + xx));
         nx = dx / dist;
         nz = dz / dist;
-        fx = -(lbl_803E1B40 * nx - lbl_803DD5C0->originObj->anim.worldPosX) -
-            lbl_803DD5C0->playerObj->anim.worldPosX;
-        fz = -(lbl_803E1B40 * nz - lbl_803DD5C0->originObj->anim.worldPosZ) -
-            lbl_803DD5C0->playerObj->anim.worldPosZ;
+        fx = -(lbl_803E1B40 * nx - gCameraModeNpcSpeakState->originObj->anim.worldPosX) -
+            gCameraModeNpcSpeakState->playerObj->anim.worldPosX;
+        fz = -(lbl_803E1B40 * nz - gCameraModeNpcSpeakState->originObj->anim.worldPosZ) -
+            gCameraModeNpcSpeakState->playerObj->anim.worldPosZ;
         d2 = sqrtf(fx * fx + fz * fz);
         t = (lbl_803E1B44 - d2) / lbl_803E1B44;
         camera->fov = lbl_803E1B4C * t + lbl_803E1B48;
         h = lbl_803E1B54 * t + lbl_803E1B50;
-        camera->anim.worldPosX = -(nx * h - lbl_803DD5C0->originObj->anim.worldPosX);
+        camera->anim.worldPosX = -(nx * h - gCameraModeNpcSpeakState->originObj->anim.worldPosX);
         camera->anim.worldPosY =
-            lbl_803E1B5C * t + (lbl_803E1B58 + lbl_803DD5C0->originObj->anim.worldPosY);
-        camera->anim.worldPosZ = -(nz * h - lbl_803DD5C0->originObj->anim.worldPosZ);
+            lbl_803E1B5C * t + (lbl_803E1B58 + gCameraModeNpcSpeakState->originObj->anim.worldPosY);
+        camera->anim.worldPosZ = -(nz * h - gCameraModeNpcSpeakState->originObj->anim.worldPosZ);
         camera->anim.rotX = -getAngle(dx, dz);
         camera->anim.rotY =
             -getAngle(-(lbl_803E1B60 * (dist / lbl_803E1B64) - dy), sqrtf(xx + zz));
 
-        if (lbl_803DD5C0->transitionDone == 0)
+        if (gCameraModeNpcSpeakState->transitionDone == 0)
         {
-            t2 = lbl_803DD5C0->transitionTimer / lbl_803E1B5C;
+            t2 = gCameraModeNpcSpeakState->transitionTimer / lbl_803E1B5C;
             camera->anim.worldPosX =
-                t2 * (lbl_803DD5C0->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
+                t2 * (gCameraModeNpcSpeakState->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
             camera->anim.worldPosY =
-                t2 * (lbl_803DD5C0->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
+                t2 * (gCameraModeNpcSpeakState->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
             camera->anim.worldPosZ =
-                t2 * (lbl_803DD5C0->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
+                t2 * (gCameraModeNpcSpeakState->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
 
             cur = camera->anim.rotX;
-            d = (s16)(lbl_803DD5C0->startYaw - (u16)cur);
+            d = (s16)(gCameraModeNpcSpeakState->startYaw - (u16)cur);
             if (d > 0x8000)
             {
                 d = (s16)(d - 0xffff);
@@ -308,16 +308,16 @@ void dll_54_update(u8* obj)
             camera->anim.rotX = d * t2 + cur;
 
             cur = camera->anim.rotY;
-            d = (s16)(lbl_803DD5C0->startPitch - (u16)cur);
+            d = (s16)(gCameraModeNpcSpeakState->startPitch - (u16)cur);
             d = (d > 0x8000) ? (s16)(d - 0xffff) : d;
             d = (d < -0x8000) ? (s16)(d + 0xffff) : d;
             camera->anim.rotY = d * t2 + cur;
 
-            lbl_803DD5C0->transitionTimer -= timeDelta;
-            if (lbl_803DD5C0->transitionTimer < lbl_803E1B68)
+            gCameraModeNpcSpeakState->transitionTimer -= timeDelta;
+            if (gCameraModeNpcSpeakState->transitionTimer < lbl_803E1B68)
             {
-                lbl_803DD5C0->transitionDone = 1;
-                lbl_803DD5C0->transitionTimer = lbl_803E1B68;
+                gCameraModeNpcSpeakState->transitionDone = 1;
+                gCameraModeNpcSpeakState->transitionTimer = lbl_803E1B68;
             }
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,

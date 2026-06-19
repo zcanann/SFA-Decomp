@@ -425,11 +425,11 @@ int dll_28B_substateHandler2(int obj, int ai)
     }
     ((Dll28BAiState*)state)->randomTimer -= timeDelta;
     dist = ((Dll28BAiState*)state)->playerDistance;
-    if (dist > lbl_803E6CF0)
+    if (dist > gWcEarthWalkerFarPlayerDistance)
     {
         return 2;
     }
-    if (dist < lbl_803E6CF4)
+    if (dist < gWcEarthWalkerNearPlayerDistance)
     {
         if (((Dll28BAiState*)state)->randomTimer <= lbl_803E6CF8)
         {
@@ -454,7 +454,7 @@ int dll_28B_substateHandler1(int obj, int ai)
     {
         (*gRomCurveInterface)->goNextPoint(route);
     }
-    if (state->playerDistance < lbl_803E6D0C)
+    if (state->playerDistance < gWcEarthWalkerApproachPlayerDistance)
     {
         return 3;
     }
@@ -467,7 +467,7 @@ int dll_28B_stateHandler3(int obj, int ai)
 
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedA != 0)
     {
-        ((BaddieState*)ai)->moveSpeed = lbl_803E6D10;
+        ((BaddieState*)ai)->moveSpeed = gWcEarthWalkerChaseMoveSpeed;
         getAngle(((GameObject*)obj)->anim.localPosX - player->anim.localPosX,
                  ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ);
     }
@@ -495,7 +495,7 @@ int dll_28B_stateHandler1(int obj, int ai)
 {
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedA != 0)
     {
-        ((BaddieState*)ai)->moveSpeed = lbl_803E6D14;
+        ((BaddieState*)ai)->moveSpeed = gWcEarthWalkerWalkMoveSpeed;
     }
     return 0;
 }

@@ -1182,13 +1182,13 @@ extern int lbl_802C25B8[];
 extern int lbl_802C25C8[];
 extern void *gDll28BSubstateHandlers[];
 extern void *gDll28BStateHandlers[];
-extern f32 lbl_803E6CF0;
-extern f32 lbl_803E6CF4;
+extern f32 gWcEarthWalkerFarPlayerDistance;
+extern f32 gWcEarthWalkerNearPlayerDistance;
 extern f32 lbl_803E6CF8;
 extern f32 lbl_803E6D08;
-extern f32 lbl_803E6D0C;
-extern f32 lbl_803E6D10;
-extern f32 lbl_803E6D14;
+extern f32 gWcEarthWalkerApproachPlayerDistance;
+extern f32 gWcEarthWalkerChaseMoveSpeed;
+extern f32 gWcEarthWalkerWalkMoveSpeed;
 extern f32 lbl_803E6D18;
 extern f32 lbl_803E6D1C;
 
@@ -1742,13 +1742,13 @@ extern void PSVECSubtract(void *a, void *b, void *ab);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
-extern f32 lbl_803E6CB0;
+extern f32 gDrBarrelGenGrabRange;
 extern f32 lbl_803E6CB4;
-extern f32 lbl_803E6CB8;
+extern f32 gDrBarrelGenCarrySpeedScale;
 extern f32 lbl_803E6CBC;
 extern f32 lbl_803E6CC0;
 extern f32 lbl_803DC3B0;
-extern f32 lbl_803DC3B4;
+extern f32 gDrBarrelGenGrabYOffset;
 
 
 extern void PSVECSubtract(void *a, void *b, void *ab);

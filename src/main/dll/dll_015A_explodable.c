@@ -4,7 +4,7 @@
  *
  * explodable_init seeds the fragment chunk array (DrExplodableChunk[15]) and
  * looks up the prop's break recipe (object type / sfx / mode flags) from the
- * gas-vent table lbl_80322DA0, keyed on the object's seqId. If the activate
+ * gas-vent table gExplodableBreakRecipeTable, keyed on the object's seqId. If the activate
  * bit is already set at load time the prop starts pre-exploded (phase 2).
  *
  * explodable_update drives the phase machine:
@@ -129,7 +129,7 @@ void explodable_update(int obj)
     }
 }
 
-extern GasVentTableEntry lbl_80322DA0[];
+extern GasVentTableEntry gExplodableBreakRecipeTable[];
 extern f32 lbl_803E435C;
 
 void explodable_init(int obj, int setup)
@@ -172,7 +172,7 @@ void explodable_init(int obj, int setup)
     }
     for (base = 0; base < 16; base++)
     {
-        if (((GameObject*)obj)->anim.seqId == lbl_80322DA0[base].key)
+        if (((GameObject*)obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
         {
             ((DrExplodableState*)state)->unk6E5 = base;
             break;
@@ -184,7 +184,7 @@ void explodable_init(int obj, int setup)
     }
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
-    e = lbl_80322DA0;
+    e = gExplodableBreakRecipeTable;
     if ((e[((DrExplodableState*)state)->unk6E5].flags & 1) != 0)
     {
         ((GameObject*)obj)->objectFlags |= 0x4000;
@@ -269,7 +269,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
         f32 acc[3];
     } s;
 
-    e = (GasVentTableEntry*)lbl_80322DA0;
+    e = (GasVentTableEntry*)gExplodableBreakRecipeTable;
     objType = e[((DrExplodableState*)state)->unk6E5].objType;
     ((DrExplodableState*)state)->unk6D0 = e[((DrExplodableState*)state)->unk6E5].sfx;
     entMode = e[((DrExplodableState*)state)->unk6E5].mode;

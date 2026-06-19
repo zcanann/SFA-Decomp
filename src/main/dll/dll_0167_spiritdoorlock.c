@@ -44,18 +44,18 @@ extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern int lbl_802C22F8[4];
-extern s16 lbl_803DBED0;
-extern s32 lbl_803DBED4;
-extern s32 lbl_803DBED8;
+extern int gSpiritDoorLockOrbitOffsetBase[4];
+extern s16 gSpiritDoorLockSpinSpeed;
+extern s32 gSpiritDoorLockTexScrollSpeed;
+extern s32 gSpiritDoorLockTexScrollWrap;
 extern f32 lbl_803E4430;
 extern f32 lbl_803E4440;
-extern f32 lbl_803E4444;
-extern f32 lbl_803E4448;
-extern f32 lbl_803E444C;
+extern f32 gSpiritDoorLockApproachRange;
+extern f32 gSpiritDoorLockScaleFactor;
+extern f32 gSpiritDoorLockScaleDecay;
 extern f32 lbl_803E4450;
-extern f32 lbl_803E4454;
-extern f32 lbl_803E4458;
+extern f32 gSpiritDoorLockOrbitOffsetY;
+extern f32 gSpiritDoorLockOrbitMaxDist;
 
 typedef struct { int a, b, c; } Vec3i;
 
@@ -99,7 +99,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     state->orbitCount = params->orbitCount;
     state->active = 0;
 
-    scale = params->scale * lbl_803E4448;
+    scale = params->scale * gSpiritDoorLockScaleFactor;
     atDefault = (scale != lbl_803E4430);
     atDefault = !atDefault;
     if (atDefault)
@@ -129,7 +129,7 @@ void SpiritDoorLock_update(int obj)
     f32 orbitOffset[3];
     f32 worldOffset[3];
 
-    *(Vec3i*)orbitOffset = *(Vec3i*)lbl_802C22F8;
+    *(Vec3i*)orbitOffset = *(Vec3i*)gSpiritDoorLockOrbitOffsetBase;
 
     state = ((GameObject*)obj)->extra;
     placement = *(SpiritDoorLockMapData**)&((GameObject*)obj)->anim.placementData;
@@ -138,7 +138,7 @@ void SpiritDoorLock_update(int obj)
 
     if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0)
     {
-        if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E4444)
+        if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gSpiritDoorLockApproachRange)
         {
             if (state->active != 0)
             {
@@ -159,7 +159,7 @@ void SpiritDoorLock_update(int obj)
                     (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
                     (f32)(int)
                 placement->scale *
-                    lbl_803E4448;
+                    gSpiritDoorLockScaleFactor;
                 if ((void*)state->light == NULL)
                 {
                     state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
@@ -181,7 +181,7 @@ void SpiritDoorLock_update(int obj)
                     modelLightStruct_setDistanceAttenuation((void*)state->light, (f32)(int)atten,
                                                             (f32)(int)(atten + 10));
                 }
-                ((GameObject*)obj)->anim.rootMotionScale *= lbl_803E444C;
+                ((GameObject*)obj)->anim.rootMotionScale *= gSpiritDoorLockScaleDecay;
                 ((GameObject*)obj)->anim.rotZ =
                     (s16)(s32)((f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
             }
@@ -211,8 +211,8 @@ void SpiritDoorLock_update(int obj)
         orbitObjs = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
         angleStep = (s16)(0x10000 / state->orbitCount);
         angle = state->spinAngle;
-        orbitOffset[1] = lbl_803E4454;
-        maxDist = lbl_803E4458;
+        orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;
+        maxDist = gSpiritDoorLockOrbitMaxDist;
         for (i = 0; i < orbitCount; i++)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)orbitObjs[i] + 0x18)) > maxDist)
@@ -227,7 +227,7 @@ void SpiritDoorLock_update(int obj)
             *(f32*)((char*)orbitObjs[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
             angle += angleStep;
         }
-        state->spinAngle += lbl_803DBED0;
+        state->spinAngle += gSpiritDoorLockSpinSpeed;
         ((GameObject*)obj)->anim.rotZ = 0;
         if (orbitCount == 0)
         {
@@ -238,15 +238,15 @@ void SpiritDoorLock_update(int obj)
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != NULL)
         {
-            tex->offsetT = (s16)(tex->offsetT + lbl_803DBED4 * framesThisStep);
-            tex->offsetS = (s16)(tex->offsetS + lbl_803DBED4 * framesThisStep);
-            if ((s32)tex->offsetT > (s32)(lbl_803DBED8 << 8))
+            tex->offsetT = (s16)(tex->offsetT + gSpiritDoorLockTexScrollSpeed * framesThisStep);
+            tex->offsetS = (s16)(tex->offsetS + gSpiritDoorLockTexScrollSpeed * framesThisStep);
+            if ((s32)tex->offsetT > (s32)(gSpiritDoorLockTexScrollWrap << 8))
             {
-                tex->offsetT = (s16)(tex->offsetT - (lbl_803DBED8 << 8));
+                tex->offsetT = (s16)(tex->offsetT - (gSpiritDoorLockTexScrollWrap << 8));
             }
-            if ((s32)tex->offsetS > (s32)(lbl_803DBED8 << 8))
+            if ((s32)tex->offsetS > (s32)(gSpiritDoorLockTexScrollWrap << 8))
             {
-                tex->offsetS = (s16)(tex->offsetS - (lbl_803DBED8 << 8));
+                tex->offsetS = (s16)(tex->offsetS - (gSpiritDoorLockTexScrollWrap << 8));
             }
         }
         if (((GameObject*)obj)->anim.alpha < 0xff)

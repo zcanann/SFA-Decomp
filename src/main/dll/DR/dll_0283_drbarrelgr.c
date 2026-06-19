@@ -160,7 +160,7 @@ void drbarrelgr_update(int obj)
         {
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
             if ((u32)nearest != 0 &&
-                Vec_xzDistance(obj + 24, nearest + 24) < lbl_803E6CB0 &&
+                Vec_xzDistance(obj + 24, nearest + 24) < gDrBarrelGenGrabRange &&
                 *(f32*)(nearest + 16) < ((GameObject*)obj)->anim.localPosY)
             {
                 vec[0] = *(f32*)(nearest + 12);
@@ -190,7 +190,7 @@ void drbarrelgr_update(int obj)
             flags->bit80 = 0;
             break;
         }
-        if (Vec_xzDistance(obj + 24, ((DrbarrelgrState*)state)->heldBarrel + 24) > lbl_803E6CB0)
+        if (Vec_xzDistance(obj + 24, ((DrbarrelgrState*)state)->heldBarrel + 24) > gDrBarrelGenGrabRange)
         {
             newMode = ((DrbarrelgrState*)state)->prevMode;
             flags->bit80 = 0;
@@ -216,7 +216,7 @@ void drbarrelgr_update(int obj)
         break;
     case 5:
         {
-            f32 spd = lbl_803E6CB8 * (f32)((DrbarrelgrState*)state)->carrySpeed;
+            f32 spd = gDrBarrelGenCarrySpeedScale * (f32)((DrbarrelgrState*)state)->carrySpeed;
             int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
                                                      spd * timeDelta,
                                                      lbl_803E6CBC, lbl_803E6CB4, 1);
@@ -280,7 +280,7 @@ void drbarrelgr_update(int obj)
     if ((((GameObject*)obj)->objectFlags & 0x800) == 0 && *(void**)&((DrbarrelgrState*)state)->heldBarrel != 0)
     {
         ((DrbarrelgrState*)state)->grabX = ((GameObject*)obj)->anim.localPosX;
-        ((DrbarrelgrState*)state)->grabY = ((GameObject*)obj)->anim.localPosY + lbl_803DC3B4;
+        ((DrbarrelgrState*)state)->grabY = ((GameObject*)obj)->anim.localPosY + gDrBarrelGenGrabYOffset;
         ((DrbarrelgrState*)state)->grabZ = ((GameObject*)obj)->anim.localPosZ;
         *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 12) = ((DrbarrelgrState*)state)->grabX;
         *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 16) = ((DrbarrelgrState*)state)->grabY;

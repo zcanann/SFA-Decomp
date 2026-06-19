@@ -45,7 +45,7 @@ STATIC_ASSERT(offsetof(ExplodablePlacement, activateGameBit) == 0x40);
 STATIC_ASSERT(sizeof(ExplodablePlacement) == 0x48);
 
 /*
- * One row of the break-recipe table (lbl_80322DA0), keyed on the prop's seqId.
+ * One row of the break-recipe table (gExplodableBreakRecipeTable), keyed on the prop's seqId.
  * Selects the spawned fragment object type, break sfx, and mode/behaviour flags.
  */
 typedef struct GasVentTableEntry
