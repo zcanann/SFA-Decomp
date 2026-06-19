@@ -516,7 +516,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                         if (((TrickyState*)other)->unk28 != target + 0x18)
                         {
                             ((TrickyState*)other)->unk28 = target + 0x18;
-                            ((TrickyState*)other)->stateFlags &= ~0x400LL;
+                            ((TrickyState*)other)->stateFlags &= ~0x400;
                             ((TrickyState*)other)->unkD2 = 0;
                         }
                         other[0xa] = 0;
@@ -1090,7 +1090,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
         }
         for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
         {
-            bval = *(char*)((int)trickyState + (val + 0x81f));
+            bval = *(char*)((int)trickyState + (b = val + 0x81f));
             if (bval == '\0')
             {
                 objAudioFn_800393f8(obj, (void*)(trickyState + 0xea), 0x390, 0x500, -1, 0);
@@ -1313,7 +1313,7 @@ int trickyFn_80143c04(int obj, int state)
     if (*(u32*)&((TrickyState*)state)->unk28 != followBase)
     {
         *(int*)&((TrickyState*)state)->unk28 = followBase;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x400LL;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x400;
         *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
@@ -1699,7 +1699,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         ((TrickyState*)state)->unk82D = a + (cnt << 2);
                         GameBit_Set(0xc1, n - cnt);
                     }
-                    if (*(*(u8**)state + 1) < ((TrickyState*)state)->unk82D)
+                    if (((TrickyState*)state)->unk82D > *(*(u8**)state + 1))
                     {
                         ((TrickyState*)state)->unk82D = *(*(u8**)state + 1);
                     }

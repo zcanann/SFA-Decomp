@@ -47,7 +47,7 @@ extern void* FUN_80017624();
 extern undefined4 FUN_80017700();
 extern int FUN_80017730();
 extern undefined4 FUN_80017754();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017794();
 extern int FUN_8001779c();
@@ -3496,9 +3496,10 @@ void objRenderFn_8003d980(void* objArg, int* p2)
     {
         int r = randomGetRange(0, *(s16*)(data + 0xe) - 1);
         f32 fs = ((GameObject*)obj)->anim.rootMotionScale;
-        int j = (r * 3) << 1;
+        int m = r * 3;
+        int j = m << 1;
         s16* pv;
-        blk.pos[0] = fs * (f32)(*(s16*)((char*)verts + j) >> 8) + ((GameObject*)obj)->anim.localPosX;
+        blk.pos[0] = fs * (f32)(verts[m] >> 8) + ((GameObject*)obj)->anim.localPosX;
         pv = (s16*)((char*)verts + j);
         blk.pos[1] = fs * (f32)(pv[1] >> 8) + ((GameObject*)obj)->anim.localPosY;
         blk.pos[2] = fs * (f32)(pv[2] >> 8) + ((GameObject*)obj)->anim.localPosZ;

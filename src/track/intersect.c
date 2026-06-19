@@ -2358,9 +2358,10 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     lbl_803DD01A = 1;
                 }
                 {
-                    int a = fn_8003BB74();
-                    int b = fn_8003BB74();
-                    GXSetAlphaCompare(4, b, 0, 4, a);
+                    int b;
+                    alpha_byte = fn_8003BB74();
+                    b = fn_8003BB74();
+                    GXSetAlphaCompare(4, b, 0, 4, alpha_byte);
                 }
             } else {
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||

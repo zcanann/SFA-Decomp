@@ -4459,6 +4459,7 @@ void objSeq_onMapSetup(void)
         }
     }
 
+    base = lbl_80396918;
     for (; i < 0x55; i++)
     {
         base[i + 0x3b9c] = 0;

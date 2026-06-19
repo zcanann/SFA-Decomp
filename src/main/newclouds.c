@@ -1442,7 +1442,7 @@ void snowReposSnowCloud(int cloudId)
     dx = cam[0x44 / 4] - *(f32*)((u8*)lbl_8039A828[i] + 0x140c);
     dy = cam[0x48 / 4] - *(f32*)((u8*)lbl_8039A828[i] + 0x1410);
     dz = cam[0x4c / 4] - *(f32*)((u8*)lbl_8039A828[i] + 0x1414);
-    distSq = dx * dx + (dy * dy + dz * dz);
+    distSq = dx * dx + dy * dy + dz * dz;
     sqrtf__inline((f32)distSq);
     *(s16*)((u8*)lbl_8039A828[i] + 0x1448) =
         (f32) * (s16*)((u8*)lbl_8039A828[i] + 0x1448) - timeDelta;

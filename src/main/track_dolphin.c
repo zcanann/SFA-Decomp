@@ -2390,9 +2390,9 @@ void fn_8006135C(s16* out, void* obj)
     f32 a[3];
     f64 d;
     f32 scale;
-    f32 nd;
     f32 z;
     f32 s;
+    f32 nd;
 
     if (fn_80065768((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, &dist, a, 0) != 0)

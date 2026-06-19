@@ -214,6 +214,7 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
     return patchGroupId & 0xff;
 }
 
+#pragma opt_loop_invariants off
 #pragma scheduling off
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
 {
@@ -304,6 +305,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     return -1;
 }
 
+#pragma opt_loop_invariants reset
 #pragma scheduling on
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
@@ -896,8 +898,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         g = &lbl_8039FAE8[idx];                                                    \
         y = point[1];                                                              \
         if (y < (f32)g->maxY && y > (f32)g->minY) {                                \
-            z = point[2];                                                          \
             x = point[0];                                                          \
+            z = point[2];                                                          \
             i = 0;                                                                 \
             j = i;                                                                 \
             for (; i < 4; i++, j += 2) {                                           \
@@ -932,7 +934,7 @@ int mathFn_800dbff0(float* point)
     }
     else
     {
-        up = down + 1;
+        up = lbl_803DD464 + 1;
     }
 
     while (down != up)

@@ -12937,7 +12937,7 @@ void fn_802AF7F8(int obj, int state)
     }
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((PlayerState*)state)->baddie.targetObj != NULL ||
-        *(s16*)(((PlayerState *)inner)->flags360 + 4) < 0xa ||
+        *(s16*)(((PlayerState *)inner)->playerStatus + 4) < 0xa ||
         ((ByteFlags*)((char*)inner + 0x3f3))->b08 != 0)
     {
         result = 0;
@@ -13883,7 +13883,7 @@ int fn_802A418C(int obj, int state, f32 fv)
     }
     else if ((s8)c == inner->unk8C2)
     {
-        int n = ((PlayerState *)inner)->staffUnlockedFlags + 1;
+        int n = ((PlayerState *)inner)->unk8C3 + 1;
         inner->unk8C3 = n;
         if ((u8)n > 200)
         {
@@ -14410,7 +14410,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     {
         ok = 0;
     }
-    if (ok != 0 && (((PlayerState *)inner)->buttonsJustPressedIfNotBusy & 0x40) != 0 && getCurSeqNo() == 0)
+    if (ok != 0 && (((PlayerState *)inner)->buttonsHeld & 0x40) != 0 && getCurSeqNo() == 0)
     {
         if (!((ByteFlags*)((char*)inner + 0x3f1))->b20 &&
             !((ByteFlags*)((char*)inner + 0x3f0))->b10)
@@ -14465,7 +14465,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             s16 v = ((GameObject*)obj)->anim.rotX;
             ((PlayerState*)inner)->yaw = v;
             ((PlayerState*)inner)->targetYaw = v;
-            ((PlayerState *)inner)->bodyLeanRateSigned = v;
+            ((PlayerState*)inner)->lastInputHeading = v;
             ((PlayerState*)inner)->baddie.animSpeedB = lbl_803E7EA4;
         }
         ((ByteFlags*)((char*)inner + 0x3f1))->b20 = 0;
@@ -14672,7 +14672,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             if (r == 9)
             {
                 f32 hi = ((PlayerState*)inner)->unk54C - lbl_803E7F10;
-                f32 mid = lbl_803E8100 + ((GameObject*)obj)->anim.rootMotionScale;
+                f32 mid = lbl_803E8100 + ((GameObject*)obj)->anim.localPosY;
                 f32 lo = lbl_803E7F30 + ((PlayerState*)inner)->unk550;
                 if (mid >= lo && mid <= hi)
                 {
