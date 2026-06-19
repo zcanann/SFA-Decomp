@@ -500,20 +500,20 @@ int Tricky_updateSideCommandPrompts(int obj)
 {
     int objVal;
     int state;
+    u32 commandMask;
     char cmdByte;
     u16 promptId;
+    u8 cond;
     u8 promptA;
     u8 promptB;
     u8 promptC;
     u32 bitVal;
-    u32 commandMask;
     int ref;
-    bool cond;
     u16* setup;
     u32 spawnedObj;
     u8 i;
-    char flagsA[4];
     char flagsB[4];
+    char flagsA[4];
     u32 promptTable[4];
 
     objVal = obj;
@@ -601,7 +601,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ref = *(int*)(objVal + 0xb8);
                 if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
                     (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
+                        !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
@@ -660,15 +660,14 @@ int Tricky_updateSideCommandPrompts(int obj)
             *(float*)(state + 0x7ac) = lbl_803E24F8;
             if ((*(void**)(state + 0x7a8) == NULL) && (Obj_IsLoadingLocked() != 0))
             {
-                bitVal = randomGetRange(0, 3);
-                if (bitVal == 0)
+                if (randomGetRange(0, 3) == 0)
                 {
                     if (promptB)
                     {
                         ref = *(int*)(objVal + 0xb8);
                         if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
-                                (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
+                                !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
@@ -676,7 +675,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     else if ((((promptC) &&
                                 (ref = *(int*)(objVal + 0xb8), (*(u8*)(ref + 0x58) >> 6 & 1) == 0u)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
-                        (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))
+                        !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
                     {
                         objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
