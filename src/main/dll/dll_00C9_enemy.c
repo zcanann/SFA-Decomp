@@ -428,7 +428,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, 0x10);
             if (*(void**)(obj + 0x2a) != 0)
             {
-                *(u8*)(*(int*)(obj + 0x2a) + 0x70) = 0;
+                *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x70) = 0;
             }
         }
         if ((((TrickyState*)state)->flags2DC & 0x40000000) != 0)
@@ -438,14 +438,14 @@ void objAnimFn_8014a9f0(short* obj, int state)
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2574, 0);
             if (*(void**)(obj + 0x2a) != 0)
             {
-                *(u8*)(*(int*)(obj + 0x2a) + 0x70) = 0;
+                *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x70) = 0;
             }
             ((TrickyState*)state)->flags2DC &= ~0x100LL;
-            *(u8*)(obj + 0x1b) = 0xff;
+            ((GameObject*)obj)->anim.alpha = 0xff;
         }
         else
         {
-            *(u8*)(obj + 0x1b) = (u8)(int)(lbl_803E257C * *(f32*)(obj + 0x4c));
+            ((GameObject*)obj)->anim.alpha = (u8)(int)(lbl_803E257C * ((GameObject*)obj)->anim.currentMoveProgress);
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x4000;
         }
     }
@@ -1225,7 +1225,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     TrickyVec3 d;
     void* dp = &d;
 
-    state = *(int*)(obj + 0x5c);
+    state = *(int*)&((GameObject*)obj)->extra;
     count = 0;
     n = 0;
     if ((flags & 1) != 0)
