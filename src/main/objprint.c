@@ -2118,7 +2118,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         {
             bank = *(u8**)((int)table + 0x10);
             if ((int)bank[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff &&
-                bank[i] == 0)
+                (int)bank[i] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
@@ -2130,7 +2130,7 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     {
         angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
                               ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
-        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
+        *(s16*)((char*)p3 + 0x14) = (s16)((s16)angle - ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit)
         {
