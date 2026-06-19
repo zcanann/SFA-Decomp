@@ -192,13 +192,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* 
                 angleDelta = angleDelta + 0xFFFF;
             }
             value = (int)angleDelta;
-            if (value >= 0)
-            {
-            }
-            else
-            {
-                value = -value;
-            }
+            value = (value >= 0) ? value : -value;
             if (0x20 < value)
             {
                 OSReport(sSHthorntailAngleYawDebug,
