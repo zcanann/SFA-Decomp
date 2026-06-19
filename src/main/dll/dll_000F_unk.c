@@ -989,17 +989,17 @@ void player_updateVel(char* p, char* obj, int unused)
         fsin = mathCosf(lbl_803E05A4 * (float)(s32) * (s16*)p / lbl_803E05A8);
         if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
         {
-            *(f32*)(obj + 0x280) = -*(f32*)(p + 0x2c) * fsin - *(f32*)(p + 0x24) * fcos;
+            *(f32*)(obj + 0x280) = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             *(f32*)(obj + 0x294) = *(f32*)(obj + 0x280);
         }
         else
         {
-            *(f32*)(obj + 0x284) = *(f32*)(p + 0x24) * fsin - *(f32*)(p + 0x2c) * fcos;
-            *(f32*)(obj + 0x280) = -*(f32*)(p + 0x2c) * fsin - *(f32*)(p + 0x24) * fcos;
+            *(f32*)(obj + 0x284) = ((GameObject*)p)->anim.velocityX * fsin - ((GameObject*)p)->anim.velocityZ * fcos;
+            *(f32*)(obj + 0x280) = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             if (((s32)(s8) * (obj + 0x34c) & 4) != 0)
             {
-                *(f32*)(obj + 0x294) = sqrtf(*(f32*)(p + 0x24) * *(f32*)(p + 0x24) +
-                    *(f32*)(p + 0x2c) * *(f32*)(p + 0x2c));
+                *(f32*)(obj + 0x294) = sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
+                    ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ);
             }
         }
         *(s8*)(obj + 0x34c) = 0;
