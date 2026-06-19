@@ -539,7 +539,7 @@ void drakorhoverpad_updateMain(int obj)
     if (lbl_803E6A3C != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
-        if ((curve->reverse != 0) != (curve->atSegmentEnd != 0))
+        if ((curve->reverse != 0) ? (curve->atSegmentEnd == 0) : (curve->atSegmentEnd != 0))
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),
@@ -560,7 +560,7 @@ void drakorhoverpad_updateMain(int obj)
     if (g->f10 != 0)
     {
         nearest = ObjGroup_FindNearestObject(0x45, obj, 0);
-        if (nearest != 0)
+        if ((u32)nearest != 0)
         {
             yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
             if (yawDelta < -0x200)
