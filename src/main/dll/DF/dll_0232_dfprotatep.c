@@ -594,7 +594,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
                             *(int*)&((GameObject*)obj)->anim.parent);
     }
 
-    pair = (int*)((int)gSfxplayerEffectHandles + handleOffset + 4);
+    pair = (int*)((int)gSfxplayerEffectHandles + ((ringIndex & 0xff) * 8) + 4);
     if (*(void**)pair == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_HIT_SETUP_SIZE, SFXPLAYER_RING_HIT_OBJECT_ID);
