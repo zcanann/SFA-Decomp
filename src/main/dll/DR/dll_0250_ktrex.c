@@ -127,7 +127,7 @@ typedef struct KTRexRuntime
     u8 pad34A[2];
     s8 unk34C;
     u8 pad34D[2];
-    u8 unk34F;
+    s8 unk34F;
     u8 pad350[4];
     u8 unk354;
     u8 pad355[0x93];
