@@ -22,15 +22,15 @@ extern void camcontrol_traceFromTarget();
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern f32 timeDelta;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern f32 lbl_803E1B00; /* binary-angle -> radians scale (numerator) */
-extern f32 lbl_803E1B04; /* binary-angle -> radians divisor (half-circle = 0x8000) */
-extern f32 lbl_803E1B08; /* camera height offset above the target */
-extern f32 lbl_803E1B1C; /* default orbit radius (when no override is supplied) */
-extern f32 lbl_803DB9C8; /* orbit radius */
-extern f32 lbl_803DD5AC; /* active height offset */
-extern f32 lbl_803DD5B0; /* derived horizontal trace distance */
-extern f32 lbl_803DD5A8; /* derived orbit radius used to place the camera */
-extern f32 lbl_803E1B18; /* yaw/pitch ease rate fed to interpolate() */
+extern f32 gCamForceBehindPi; /* binary-angle -> radians scale (numerator) */
+extern f32 gCamForceBehindBamsToRadDivisor; /* binary-angle -> radians divisor (half-circle = 0x8000) */
+extern f32 gCamForceBehindHeightOffset; /* camera height offset above the target */
+extern f32 gCamForceBehindDefaultOrbitRadius; /* default orbit radius (when no override is supplied) */
+extern f32 gCamForceBehindOrbitRadius; /* orbit radius */
+extern f32 gCamForceBehindActiveHeightOffset; /* active height offset */
+extern f32 gCamForceBehindTraceDistance; /* derived horizontal trace distance */
+extern f32 gCamForceBehindPlacementRadius; /* derived orbit radius used to place the camera */
+extern f32 gCamForceBehindEaseRate; /* yaw/pitch ease rate fed to interpolate() */
 
 void CameraModeForceBehind_func06_nop(void);
 void CameraModeForceBehind_func05_nop(void);
@@ -86,27 +86,27 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 
     {
         int a = target->anim.rotX;
-        angle = lbl_803E1B00 * a / lbl_803E1B04;
+        angle = gCamForceBehindPi * a / gCamForceBehindBamsToRadDivisor;
     }
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);
-    pos[0] = cosv * lbl_803DB9C8 + (baseX = target->anim.worldPosX);
-    pos[1] = lbl_803E1B08 + target->anim.worldPosY;
+    pos[0] = cosv * gCamForceBehindOrbitRadius + (baseX = target->anim.worldPosX);
+    pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
     baseZ = target->anim.worldPosZ;
-    pos[2] = sinv * lbl_803DB9C8 + baseZ;
+    pos[2] = sinv * gCamForceBehindOrbitRadius + baseZ;
     camcontrol_traceFromTarget(pos, target, pos, &extra);
     dx = pos[0] - baseX;
     dz = pos[2] - baseZ;
-    lbl_803DD5B0 = sqrtf(dx * dx + dz * dz);
+    gCamForceBehindTraceDistance = sqrtf(dx * dx + dz * dz);
     if (p3 != NULL)
     {
-        lbl_803DB9C8 = p3[0];
-        lbl_803DD5AC = p3[1];
+        gCamForceBehindOrbitRadius = p3[0];
+        gCamForceBehindActiveHeightOffset = p3[1];
     }
     else
     {
-        lbl_803DB9C8 = lbl_803E1B1C;
-        lbl_803DD5AC = lbl_803E1B08;
+        gCamForceBehindOrbitRadius = gCamForceBehindDefaultOrbitRadius;
+        gCamForceBehindActiveHeightOffset = gCamForceBehindHeightOffset;
     }
 }
 
@@ -125,22 +125,22 @@ void CameraModeForceBehind_update(u8* obj)
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
 
-    angle = lbl_803E1B00 * (f32)(0x8000 - camera->anim.rotX) / lbl_803E1B04;
+    angle = gCamForceBehindPi * (f32)(0x8000 - camera->anim.rotX) / gCamForceBehindBamsToRadDivisor;
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);
     sx = target->anim.worldPosX;
-    pos[0] = cosv * lbl_803DB9C8 + sx;
-    pos[1] = lbl_803E1B08 + target->anim.worldPosY;
+    pos[0] = cosv * gCamForceBehindOrbitRadius + sx;
+    pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
     sz = target->anim.worldPosZ;
-    pos[2] = sinv * lbl_803DB9C8 + sz;
+    pos[2] = sinv * gCamForceBehindOrbitRadius + sz;
     camcontrol_traceFromTarget(pos, target, pos, &extra);
-    lbl_803DD5A8 = lbl_803DD5B0 = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+    gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
 
     Player_GetAimAngles((int)target, &yaw, &pitch);
     yaw = (s16)((0x8000 - target->anim.rotX) + (yaw >> 1));
     pitch = (s16)(pitch >> 1);
     baseX = target->anim.worldPosX;
-    baseY = target->anim.worldPosY + lbl_803DD5AC;
+    baseY = target->anim.worldPosY + gCamForceBehindActiveHeightOffset;
     baseZ = target->anim.worldPosZ;
 
     yaw = (s16)(yaw - (u16)camera->anim.rotX);
@@ -152,7 +152,7 @@ void CameraModeForceBehind_update(u8* obj)
     {
         yaw += 0xffff;
     }
-    camera->anim.rotX = (s16)(s32)((f32)(s32)camera->anim.rotX + interpolate((f32)yaw, lbl_803E1B18, timeDelta));
+    camera->anim.rotX = (s16)(s32)((f32)(s32)camera->anim.rotX + interpolate((f32)yaw, gCamForceBehindEaseRate, timeDelta));
 
     pitch = (s16)(pitch - (u16)camera->anim.rotY);
     if (pitch > 0x8000)
@@ -164,13 +164,13 @@ void CameraModeForceBehind_update(u8* obj)
         pitch += 0xffff;
     }
     camera->anim.rotY = (s16)(s32)((f32)(s32)camera->anim.rotY +
-                                   interpolate((f32)pitch, lbl_803E1B18, timeDelta));
+                                   interpolate((f32)pitch, gCamForceBehindEaseRate, timeDelta));
 
-    cosYaw = mathSinf(lbl_803E1B00 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B04);
-    sinYaw = mathCosf(lbl_803E1B00 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B04);
-    sinPitch = mathCosf(lbl_803E1B00 * (f32)(s32)camera->anim.rotY / lbl_803E1B04);
-    cosPitch = mathSinf(lbl_803E1B00 * (f32)(s32)camera->anim.rotY / lbl_803E1B04);
-    radius = lbl_803DD5A8;
+    cosYaw = mathSinf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);
+    sinYaw = mathCosf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);
+    sinPitch = mathCosf(gCamForceBehindPi * (f32)(s32)camera->anim.rotY / gCamForceBehindBamsToRadDivisor);
+    cosPitch = mathSinf(gCamForceBehindPi * (f32)(s32)camera->anim.rotY / gCamForceBehindBamsToRadDivisor);
+    radius = gCamForceBehindPlacementRadius;
     camera->anim.worldPosX = baseX + radius * sinPitch * sinYaw;
     camera->anim.worldPosY = baseY + radius * cosPitch;
     camera->anim.worldPosZ = baseZ + radius * sinPitch * cosYaw;

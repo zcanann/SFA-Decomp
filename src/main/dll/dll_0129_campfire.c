@@ -30,7 +30,7 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
-extern f32 lbl_803E3D88;
+extern f32 gCampfireSizeToScale;
 extern f32 lbl_803E3D8C;
 extern f32 lbl_803E3D90;
 extern f32 lbl_803E3D94;
@@ -140,7 +140,7 @@ void campfire_init(int obj, int p2)
     size = *(u8*)(p2 + 0x1a);
     if (size != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3D88 * size;
+        ((GameObject*)obj)->anim.rootMotionScale = gCampfireSizeToScale * size;
     }
     if (GameBit_Get(0x8c) != 0)
     {

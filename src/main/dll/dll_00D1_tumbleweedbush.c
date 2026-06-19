@@ -4,7 +4,7 @@
  *
  * init seeds rotation from placement bytes, scales the capsule hitbox by
  * the placement rootMotionScale, and - keyed on anim.seqId - selects a
- * piece count (3) and a piece-offset template row in lbl_803201E8,
+ * piece count (3) and a piece-offset template row in gTumbleweedBushPieceOffsetTable,
  * rotating each offset into world space.
  *
  * update polls a priority hit; on a hit (other than seqId 0x4ba) it spawns
@@ -48,10 +48,10 @@ extern f32 lbl_803E2F48;
 extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;
 extern f32 lbl_803E2F54;
-extern u8 lbl_803201E8[];
+extern u8 gTumbleweedBushPieceOffsetTable[];
 extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
-extern u8 lbl_803DDA80;
+extern u8 gTumbleweedBushHitCooldownState;
 extern void* Obj_GetPlayerObject(void);
 
 extern int Sfx_PlayFromObject(int* obj, int sfx);
@@ -60,7 +60,7 @@ extern f32 lbl_803E2F44;
 extern void objRenderFn_8003b8f4(f32);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern f32 lbl_803E2F58;
+extern f32 gTumbleweedBushNearestInitDist;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);
@@ -130,7 +130,7 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     {
         i = 0;
         pieceSlot = sub;
-        pe = lbl_803201E8 + idx * 0x30;
+        pe = gTumbleweedBushPieceOffsetTable + idx * 0x30;
         pieceOffset = sub;
         for (; i < sub[0x50]; i++)
         {
@@ -166,7 +166,7 @@ void tumbleweedbush_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, hitExtra) != 0)
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &gTumbleweedBushHitCooldownState, &hit0, hitExtra) != 0)
     {
         if (((GameObject*)hit0)->anim.seqId != 0x4ba)
         {
@@ -228,7 +228,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     f32 bestDist;
     int i;
     void* bestObj;
-    bestDist = lbl_803E2F58;
+    bestDist = gTumbleweedBushNearestInitDist;
     bestObj = NULL;
     {
         void** tmp = ObjGroup_GetObjects(0x31, &count);

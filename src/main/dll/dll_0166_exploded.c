@@ -32,9 +32,9 @@ extern f32 lbl_803E43F0;
 extern f32 lbl_803E4400;
 extern f32 lbl_803E4404;
 extern f32 lbl_803E4408;
-extern f32 lbl_803E4418;
-extern f32 lbl_803E4420;
-extern f32 lbl_803E4424;
+extern f32 gExplodedGroundFriction;
+extern f32 gExplodedBounceRestitution;
+extern f32 gExplodedGravity;
 
 void FUN_801a4520(int param_1)
 {
@@ -370,7 +370,7 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
             state->spinVelocityX = t;
             state->spinX = t;
             obj->velocityY = t;
-            k = lbl_803E4418;
+            k = gExplodedGroundFriction;
             state->accelerationX = state->accelerationX * k;
             obj->velocityX = obj->velocityX * k;
             state->accelerationZ = state->accelerationZ * k;
@@ -390,11 +390,11 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
         if (obj->velocityY < lbl_803E43F0)
         {
             f32 k2;
-            obj->velocityY = lbl_803E4420 * -obj->velocityY;
-            k2 = lbl_803E4418;
+            obj->velocityY = gExplodedBounceRestitution * -obj->velocityY;
+            k2 = gExplodedGroundFriction;
             obj->velocityX = obj->velocityX * k2;
             obj->velocityZ = obj->velocityZ * k2;
-            state->accelerationY = lbl_803E4424;
+            state->accelerationY = gExplodedGravity;
             state->spinVelocityZ = -state->spinVelocityZ;
         }
         state->physicsFlags |= 4;

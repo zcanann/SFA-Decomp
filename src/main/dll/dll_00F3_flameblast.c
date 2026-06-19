@@ -38,12 +38,12 @@ extern f32 timeDelta;
 extern f32 lbl_803E3618;
 extern f32 lbl_803E361C;
 extern f32 lbl_803E3620;
-extern f32 lbl_803E3624;
+extern f32 gFlameBlastReachScale;
 extern f32 lbl_803E3628;
-extern f32 lbl_803E362C;
-extern f32 lbl_803E3630;
-extern f32 lbl_803E3634;
-extern f32 lbl_803E3638;
+extern f32 gFlameBlastRenderScaleRate;
+extern f32 gFlameBlastFireInterval;
+extern f32 gFlameBlastHitArmTime;
+extern f32 gFlameBlastInitTimerScale;
 
 int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
 
@@ -51,7 +51,7 @@ int flameblast_getExtraSize(void) { return sizeof(FlameblastState); }
 void flameblast_render(int* obj)
 {
     f32 color[3];
-    f32 scale = lbl_803E362C * ((FlameblastState*)((GameObject*)obj)->extra)->timer + lbl_803E3628;
+    f32 scale = gFlameBlastRenderScaleRate * ((FlameblastState*)((GameObject*)obj)->extra)->timer + lbl_803E3628;
     color[0] = lbl_803E3618;
     color[1] = lbl_803E3620;
     color[2] = lbl_803E3618;
@@ -68,9 +68,9 @@ void flameblast_update(int* obj)
 {
     FlameblastState* state = ((GameObject*)obj)->extra;
     state->timer = state->timer + timeDelta;
-    if (state->timer > lbl_803E3630)
+    if (state->timer > gFlameBlastFireInterval)
     {
-        state->timer = state->timer - lbl_803E3630;
+        state->timer = state->timer - gFlameBlastFireInterval;
         if (fn_8017805C(obj, state) == 0)
         {
             return;
@@ -78,7 +78,7 @@ void flameblast_update(int* obj)
     }
     else
     {
-        if (state->timer > lbl_803E3634)
+        if (state->timer > gFlameBlastHitArmTime)
         {
             if (state->hitVolumeDelay == 0)
             {
@@ -95,7 +95,7 @@ void flameblast_init(int* obj, u8* def)
 {
     FlameblastState* state = ((GameObject*)obj)->extra;
     fn_8017805C(obj, state);
-    state->timer = lbl_803E3638 * (f32)(s32) * (s16*)(def + 0x1a);
+    state->timer = gFlameBlastInitTimerScale * (f32)(s32) * (s16*)(def + 0x1a);
     state->hitVolumeDelay = 2;
 }
 
@@ -140,7 +140,7 @@ int fn_8017805C(int* obj, FlameblastState* state)
     {
         origin = &((GameObject*)tricky)->anim.localPosX;
     }
-    reach = lbl_803E3624;
+    reach = gFlameBlastReachScale;
     state->launchPosX = -(reach * ((GameObject*)obj)->anim.velocityX - origin[0]);
     state->launchPosY = -(reach * ((GameObject*)obj)->anim.velocityY - origin[1]);
     state->launchPosZ = -(reach * ((GameObject*)obj)->anim.velocityZ - origin[2]);
