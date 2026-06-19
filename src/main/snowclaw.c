@@ -11,15 +11,15 @@ typedef struct SnowclawState
     u8 pad0[0x4 - 0x0];
     s32 moveTablePtr;
     f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
+    f32 prevPosX;
+    f32 prevPosY;
+    f32 prevPosZ;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
     f32 unk30;
     u8 pad34[0x94 - 0x34];
     s32 unk94;
@@ -409,8 +409,8 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
             }
         }
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E670C);
-        ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->unk18, &((SnowclawState*)inner)->unk1C,
-                                      &((SnowclawState*)inner)->unk20, 0);
+        ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
+                                      &((SnowclawState*)inner)->posZ, 0);
         *(u8*)((char*)obj + 0x37) = oldFlag;
         if (((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 != 0)
         {
@@ -486,11 +486,11 @@ void snowclaw_hitDetect(int obj)
                 }
                 ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 = 1;
                 ((SnowclawState*)inner)->unkAC = lbl_803E670C;
-                ((SnowclawState*)inner)->unk24 = lbl_803E6728 * mathSinf(
+                ((SnowclawState*)inner)->velX = lbl_803E6728 * mathSinf(
                     lbl_803E672C * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
-                ((SnowclawState*)inner)->unk28 = lbl_803E6734 * (f32)(int)
+                ((SnowclawState*)inner)->velY = lbl_803E6734 * (f32)(int)
                 randomGetRange(0x28, 0x64);
-                ((SnowclawState*)inner)->unk2C = lbl_803E6728 * mathCosf(
+                ((SnowclawState*)inner)->velZ = lbl_803E6728 * mathCosf(
                     lbl_803E672C * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
                 player = (int*)fn_802972A8(Obj_GetPlayerObject());
                 if (player != 0)
@@ -734,9 +734,9 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
             if (sub != 0)
             {
                 ((SnowclawState*)inner)->unk8 = lbl_803E670C;
-                ((SnowclawState*)inner)->unkC = ((SnowclawState*)inner)->unk18;
-                ((SnowclawState*)inner)->unk10 = ((SnowclawState*)inner)->unk1C;
-                ((SnowclawState*)inner)->unk14 = ((SnowclawState*)inner)->unk20;
+                ((SnowclawState*)inner)->prevPosX = ((SnowclawState*)inner)->posX;
+                ((SnowclawState*)inner)->prevPosY = ((SnowclawState*)inner)->posY;
+                ((SnowclawState*)inner)->prevPosZ = ((SnowclawState*)inner)->posZ;
                 (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x3c)))(sub, 2);
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, lbl_803E66F0, 1);
