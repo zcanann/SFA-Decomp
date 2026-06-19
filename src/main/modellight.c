@@ -404,7 +404,7 @@ void* objAllocLight(void* owner)
     atten = ((ModelLightStruct*)light)->specularAttenuationScale * lbl_803DE790;
     zero = lbl_803DE75C;
     GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero,
-                    lbl_803DE760 - atten);
+                    *(f32*)&lbl_803DE760 - atten);
     modelLightStruct_startColorFade((ModelLightStruct*)light, 0, 0);
     light[0xb0] = 0xff;
     light[0xb1] = 0xff;
