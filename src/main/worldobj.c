@@ -147,7 +147,7 @@ void worldobj_init(int obj, int arg)
     int objA, objB;
     int sub;
     int idx;
-    int i;
+    u8 i;
     f32 base;
     f32 d;
 
