@@ -74,8 +74,8 @@ extern f32 lbl_803E2018;
 extern f32 lbl_803E2038;
 extern f32 lbl_803E203C;
 extern u32 lbl_803E1E10;
-extern void* lbl_803A93C4[7];
-extern int lbl_803A93A8[7];
+extern void* gCMenuRingIconTextures[7];
+extern int gCMenuRingIconActiveFlags[7];
 extern f32 lbl_803E2010;
 extern void gxColorFn_80052764(void* p);
 extern void Camera_SetCurrentViewIndex(int index);
@@ -109,8 +109,8 @@ extern u8 lbl_803DD8D4;
 extern f32 lbl_803DBAA4;
 extern f32 lbl_803DBAC4;
 extern f32 lbl_803DBAC8;
-extern int lbl_803A93E0[3];
-extern int lbl_803A93EC[3];
+extern int gCMenuRingFrontObjs[3];
+extern int gCMenuRingObjs[3];
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40;
 extern f32 lbl_803E1E68;
@@ -544,9 +544,9 @@ int cMenuRingIconRenderFn(int obj, int param2, int param3)
     *(u32*)cfg = lbl_803E1E10;
     idx = *(u8*)(ObjModel_GetRenderOp(*(int*)param2, param3) + 0x29) - 1;
     resetLotsOfRenderVars();
-    if (idx >= 0 && idx <= 6 && (tex = lbl_803A93C4[idx]) != 0)
+    if (idx >= 0 && idx <= 6 && (tex = gCMenuRingIconTextures[idx]) != 0)
     {
-        if (lbl_803A93A8[idx] != 0)
+        if (gCMenuRingIconActiveFlags[idx] != 0)
         {
             cfg[3] = *(u8*)(obj + 0x37);
         }
@@ -603,7 +603,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         slot = 2;
         break;
     }
-    *(f32*)(lbl_803A93E0[slot] + 0x10) =
+    *(f32*)(gCMenuRingFrontObjs[slot] + 0x10) =
         lbl_803E1E40 + (f32)(-gCMenuScrollTimer * lbl_803DBA30) / lbl_803E201C;
     sy = lbl_803DBAC8;
     sx = lbl_803DBAC4;
@@ -623,7 +623,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
                   (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
     i = 0;
     u = used;
-    objs = lbl_803A93EC;
+    objs = gCMenuRingObjs;
     v = vals;
     mul = lbl_803E1EC8;
     div = lbl_803E1E94;
@@ -662,22 +662,22 @@ void hudDrawCMenu(int p1, int p2, int p3)
         {
             break;
         }
-        model = Obj_GetActiveModel(lbl_803A93EC[sel]);
+        model = Obj_GetActiveModel(gCMenuRingObjs[sel]);
         *(u16*)(model + 0x18) &= ~8;
-        *(u8*)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
-        model = Obj_GetActiveModel(lbl_803A93E0[sel]);
+        *(u8*)(gCMenuRingObjs[sel] + 0x37) = cMenuFadeCounter;
+        model = Obj_GetActiveModel(gCMenuRingFrontObjs[sel]);
         *(u16*)(model + 0x18) &= ~8;
-        *(u8*)(lbl_803A93E0[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
+        *(u8*)(gCMenuRingFrontObjs[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
         if (best > thresh)
         {
-            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
+            objRender(p1, p2, p3, 0, gCMenuRingObjs[sel], 1);
             GXSetScissor(0, 0x79, 0x280, 0x95);
-            objRender(p1, p2, p3, 0, lbl_803A93E0[sel], 1);
+            objRender(p1, p2, p3, 0, gCMenuRingFrontObjs[sel], 1);
             GXSetScissor(0, 0, 0x280, 0x1e0);
         }
         else
         {
-            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
+            objRender(p1, p2, p3, 0, gCMenuRingObjs[sel], 1);
         }
         used[sel] = 1;
         j++;
@@ -760,14 +760,14 @@ void cMenuRotateFn_80124d80(void)
         {
             gCMenuCurSection = lbl_803DD8B7;
         }
-        *(s16*)lbl_803A93EC[0] = cur;
-        *(s16*)lbl_803A93E0[0] = cur;
+        *(s16*)gCMenuRingObjs[0] = cur;
+        *(s16*)gCMenuRingFrontObjs[0] = cur;
         t1 = cur + 0x5555;
-        *(s16*)lbl_803A93EC[1] = t1;
-        *(s16*)lbl_803A93E0[1] = t1;
+        *(s16*)gCMenuRingObjs[1] = t1;
+        *(s16*)gCMenuRingFrontObjs[1] = t1;
         t1 = cur + 0xAAAA;
-        *(s16*)lbl_803A93EC[2] = t1;
-        *(s16*)lbl_803A93E0[2] = t1;
+        *(s16*)gCMenuRingObjs[2] = t1;
+        *(s16*)gCMenuRingFrontObjs[2] = t1;
         curd = lbl_803DD79C;
         d1 = curd;
         if (curd > 0x8000)
@@ -836,14 +836,14 @@ void cMenuRotateFn_80124d80(void)
         lbl_803DD8D4 = (r > 0) ? r : 0;
     }
     cur = lbl_803DD79C;
-    *(s16*)lbl_803A93EC[0] = cur;
-    *(s16*)lbl_803A93E0[0] = cur;
+    *(s16*)gCMenuRingObjs[0] = cur;
+    *(s16*)gCMenuRingFrontObjs[0] = cur;
     t1 = cur + 0x5555;
-    *(s16*)lbl_803A93EC[1] = t1;
-    *(s16*)lbl_803A93E0[1] = t1;
+    *(s16*)gCMenuRingObjs[1] = t1;
+    *(s16*)gCMenuRingFrontObjs[1] = t1;
     t1 = cur + 0xAAAA;
-    *(s16*)lbl_803A93EC[2] = t1;
-    *(s16*)lbl_803A93E0[2] = t1;
+    *(s16*)gCMenuRingObjs[2] = t1;
+    *(s16*)gCMenuRingFrontObjs[2] = t1;
     curd = lbl_803DD79C;
     d1 = curd;
     if (curd > 0x8000)

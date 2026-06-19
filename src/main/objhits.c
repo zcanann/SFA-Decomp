@@ -20,16 +20,16 @@ extern u8* gObjHitsPriorityHitStates;
 extern f64 lbl_803DE928;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-extern f32 lbl_803DE960;
+extern f32 gObjHitsSweepSortSentinel;
 extern f32 lbl_803DE91C;
-extern f32 lbl_803DE958;
-extern f32 lbl_803DE95C;
+extern f32 gObjHitsResponseClampMin;
+extern f32 gObjHitsResponseClampMax;
 extern f32 lbl_803DE920;
 extern f32 lbl_803DE930;
 extern f32 lbl_803DE934;
 extern f32 lbl_803DE938;
-extern f32 lbl_803DE948;
-extern f32 lbl_803DE94C;
+extern f32 gObjHitsPi;
+extern f32 gObjHitsAngleHalfPeriod;
 extern f32 lbl_803DB450;
 
 typedef struct ObjHitsVec3
@@ -1856,11 +1856,11 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         {
             angleB += 0xffff;
         }
-        sinVal = mathCosf((lbl_803DE948 * angleA) / lbl_803DE94C);
+        sinVal = mathCosf((gObjHitsPi * angleA) / gObjHitsAngleHalfPeriod);
         sinSq = sinVal * sinVal;
         weightA = stateA->lateralResponseWeight * sinSq +
             stateA->axialResponseWeight * (gObjHitsScalarOne - sinSq);
-        sinVal = mathCosf((lbl_803DE948 * angleB) / lbl_803DE94C);
+        sinVal = mathCosf((gObjHitsPi * angleB) / gObjHitsAngleHalfPeriod);
         sinSq = sinVal * sinVal;
         weightB = stateB->lateralResponseWeight * sinSq +
             stateB->axialResponseWeight * (gObjHitsScalarOne - sinSq);
@@ -2129,17 +2129,17 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    responseX = (response[0] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
+                    responseX = (response[0] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[0] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[0]);
                     response[0] = responseX;
-                    responseY = (response[1] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
+                    responseY = (response[1] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[1] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[1]);
                     response[1] = responseY;
-                    responseZ = (response[2] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
+                    responseZ = (response[2] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[2] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[2]);
                     response[2] = responseZ;
                     ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)responseZ, 0);
                 }
@@ -2172,17 +2172,17 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    responseX = (response[0] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
+                    responseX = (response[0] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[0] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[0]);
                     response[0] = responseX;
-                    responseY = (response[1] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
+                    responseY = (response[1] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[1] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[1]);
                     response[1] = responseY;
-                    responseZ = (response[2] < lbl_803DE958)
-                                ? lbl_803DE958
-                                : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
+                    responseZ = (response[2] < gObjHitsResponseClampMin)
+                                ? gObjHitsResponseClampMin
+                                : ((response[2] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[2]);
                     response[2] = responseZ;
                     ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)responseZ, 0);
                 }
@@ -2405,8 +2405,8 @@ void ObjHits_Update(int objectCount)
 
     objectList = ObjList_GetObjects(&startIndex, &listCount);
     sweepEntries = gObjHitsSweepEntries;
-    sweepEntries->minX = lbl_803DE960;
-    sweepEntries->maxX = lbl_803DE960;
+    sweepEntries->minX = gObjHitsSweepSortSentinel;
+    sweepEntries->maxX = gObjHitsSweepSortSentinel;
     gObjHitsSweepEntryPtrs[0] = sweepEntries;
     slotCount = 1;
     nextEntry = &sweepEntries[1];

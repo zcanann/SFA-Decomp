@@ -115,7 +115,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803DEBCC;
 extern f32 lbl_803DEBDC;
 extern f32 changeMode_803DEC00;
-extern f32 lbl_803DEC04;
+extern f32 gLightmapDegToBamScale;
 extern F32Pair changed_803DEC08;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 gViewFrustumPlanes[];
@@ -169,7 +169,7 @@ void updateVisibleGeometry(void)
     gViewFrustumPlanes[n * 5 + 2] = oz;
     gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
     n++;
-    fov = (int)(lbl_803DEC04 * scale) & 0xffff;
+    fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
     ratio2 = fn_80293D0C(fov) / tt;
     ratio2 = ratio2 * ratio2;
@@ -1119,7 +1119,7 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
 }
 
 extern u32 gVisibleObjectSortKeys[];
-extern int lbl_803DCDF0;
+extern int gLightmapDeferredObjectCount;
 extern s16 gVisibleObjectSortKeyCount;
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
 
@@ -1157,10 +1157,10 @@ void renderObjects(s8* arg0)
         flags = ((GameObject*)obj)->anim.modelInstance->flags;
         if ((flags & 0x800) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & 0x10) != 0))
         {
-            if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14)
+            if (arg0[idx] != 0 && gLightmapDeferredObjectCount < 0x14)
             {
-                slot = lbl_803DCDF0;
-                lbl_803DCDF0 = slot + 1;
+                slot = gLightmapDeferredObjectCount;
+                gLightmapDeferredObjectCount = slot + 1;
                 qbase->deferred[slot] = (u32)obj;
             }
         }
@@ -1663,7 +1663,7 @@ void getVisibleObjects(s8 * opacity);
 
 extern s32 heatEffectIntensity;
 
-extern u8 lbl_803DCE05;
+extern u8 gLightmapScreenImageEnabled;
 extern void screenImageDraw(void);
 extern void lightningRenderActive(void);
 extern s8 lbl_8030E65C[];
@@ -1773,13 +1773,13 @@ void sceneDraw(void)
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
-    if (lbl_803DCE05 != 0)
+    if (gLightmapScreenImageEnabled != 0)
     {
         screenImageDraw();
     }
     lightningRenderActive();
     (*gSky2Interface)->applyFogColor(0);
-    lbl_803DCDF0 = 0;
+    gLightmapDeferredObjectCount = 0;
     getAmbientColor(0, (u8*)&c, (u8*)&c + 1, (u8*)&c + 2);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
     GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
@@ -1809,7 +1809,7 @@ void sceneDraw(void)
     }
     i = 0;
     cursor = (u8*)(q + 0x4114);
-    for (; i < lbl_803DCDF0; i++)
+    for (; i < gLightmapDeferredObjectCount; i++)
     {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, (void*)*(u32*)cursor);
         objRender(0, 0, 0, 0, (void*)*(u32*)cursor, 1);
@@ -1988,7 +1988,7 @@ extern int lbl_8038228C[];
 extern s32 lbl_803DCE88;
 extern s32 lbl_803DCEC0;
 extern f32 lbl_803DCE58;
-extern double lbl_803DEBC0;
+extern double gLightmapU32ToDoubleBias;
 extern f32 lbl_803DCE54;
 
 typedef union
@@ -2034,7 +2034,7 @@ void renderSceneGeometry(int* p1, s8* order)
     lt = &gMapBlockLayerTables[4];
     lt2 = &lbl_8038228C[4];
     ws = gMapBlockWorldSize;
-    bias = lbl_803DEBC0;
+    bias = gLightmapU32ToDoubleBias;
     hi = 0x43300000;
     do
     {
@@ -2137,11 +2137,11 @@ void renderSceneGeometry(int* p1, s8* order)
                     lbl_803DCE58 = rowF;
                     cv.u.lo = col ^ 0x80000000;
                     cv.u.hi = 0x43300000;
-                    colF = gMapBlockWorldSize * (f32)(cv.d - lbl_803DEBC0);
+                    colF = gMapBlockWorldSize * (f32)(cv.d - gLightmapU32ToDoubleBias);
                     lbl_803DCE54 = colF;
                     cv2.u.lo = (int)*(s16*)(blk + 0x8e) ^ 0x80000000;
                     cv2.u.hi = 0x43300000;
-                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(cv2.d - lbl_803DEBC0), colF);
+                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(cv2.d - gLightmapU32ToDoubleBias), colF);
                     renderMapBlock(blk, p1);
                 }
             next:

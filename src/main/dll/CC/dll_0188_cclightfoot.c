@@ -61,7 +61,7 @@ void cclightfoot_free(int* obj, int p2)
     }
 }
 
-extern f32 lbl_803E4674;
+extern f32 gCcLightfootDistSentinel;
 extern f32 lbl_803E4678;
 extern f32 lbl_803E467C;
 
@@ -70,7 +70,7 @@ extern f32 lbl_803E467C;
 void fn_801AA878(u8* state, int* targetObj, f32 dist)
 {
     s16 move;
-    if (lbl_803E4674 == dist)
+    if (gCcLightfootDistSentinel == dist)
     {
         state[16] = 12;
         return;
@@ -137,12 +137,12 @@ extern int playerIsDisguised(int obj);
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
 extern f32 lbl_803E4688;
-extern f32 lbl_803E468C;
+extern f32 gCcLightfootTurnRate;
 extern f32 lbl_803E4690;
 extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
-extern u8 lbl_80323408[];
-extern u8 lbl_803DDB38[8];
+extern u8 gCcLightfootAnimTable[];
+extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
 extern f32 fn_8014C5D0(register int obj);
 extern void fn_8014C66C(int obj, int target);
@@ -165,7 +165,7 @@ void cclightfoot_update(int obj)
 {
     extern f32 getXZDistance(f32* a, f32* b);
     extern u32 ObjLink_DetachChild();
-    LightfootAnimTable* tbl = (LightfootAnimTable*)lbl_80323408;
+    LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
     u32 fallback;
     int* state = ((GameObject*)obj)->extra;
     u32 targetObj;
@@ -320,7 +320,7 @@ void cclightfoot_update(int obj)
             else
             {
                 targetObj = state[1];
-                dist = lbl_803E4674;
+                dist = gCcLightfootDistSentinel;
             }
         }
     cc_endif:;
@@ -387,11 +387,11 @@ void cclightfoot_update(int obj)
         {
             if (diff > 0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
             }
             else if (diff < -0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
             }
             else
             {
@@ -523,11 +523,11 @@ void cclightfoot_update(int obj)
         {
             if (diff > 0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
             }
             else if (diff < -0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E468C * timeDelta));
+                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
             }
             else
             {
@@ -557,7 +557,7 @@ void cclightfoot_update(int obj)
     m = *((u8*)state + 0x10);
     if (m >= 5 && m <= 0xa)
     {
-        if (ObjHits_PollPriorityHitWithCooldown(obj, lbl_803DDB38, 0, hitPos) != 0)
+        if (ObjHits_PollPriorityHitWithCooldown(obj, gCcLightfootHitCooldown, 0, hitPos) != 0)
         {
             if (getXZDistance((f32*)(obj + 0x18), (f32*)(state[1] + 0x18)) < lbl_803E4690)
             {

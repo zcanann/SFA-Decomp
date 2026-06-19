@@ -1308,13 +1308,13 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     return spawnResult;
 }
 
-extern u8 lbl_8039BE98[];
+extern u8 gModgfxSpawnContextStorage[];
 extern ModgfxPendingSpawn gModgfxPendingSpawnQueue[];
 extern s16 gModgfxLastSpawnHandle;
 extern s16 gModgfxSequenceParamIndex;
 extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
 extern ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
-#define gModgfxSpawnContext (*(ModgfxSpawnContext *)lbl_8039BE98)
+#define gModgfxSpawnContext (*(ModgfxSpawnContext *)gModgfxSpawnContextStorage)
 s16 dll_0B_func18(void) { return gModgfxLastSpawnHandle; }
 
 #pragma scheduling off
@@ -1328,7 +1328,7 @@ void dll_0B_func15(void* params) { memcpy(gModgfxSpawnContext.sequenceParams, pa
 
 void dll_0B_func14(s16 value)
 {
-    u8* state = lbl_8039BE98;
+    u8* state = gModgfxSpawnContextStorage;
     state = state + gModgfxSequenceParamIndex * 2;
     *(s16*)(state + 0x46) = value;
 }
@@ -1571,7 +1571,7 @@ extern const f32 lbl_803DF438;
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
-    extern f32 lbl_803DD284;
+    extern f32 gModgfxMotionStep;
     s32 dx, dy;
     ModgfxVertexData* cur;
     ModgfxVertexData* prev;
@@ -1580,8 +1580,8 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     int j;
     ModgfxVertexData* slot;
 
-    dx = (s32)(lbl_803DF438 * (in[1] * lbl_803DD284));
-    dy = (s32)(lbl_803DF438 * (in[2] * lbl_803DD284));
+    dx = (s32)(lbl_803DF438 * (in[1] * gModgfxMotionStep));
+    dy = (s32)(lbl_803DF438 * (in[2] * gModgfxMotionStep));
 
     cur = state->vertexBuffers[state->activeVertexBufferIndex];
     prev = state->vertexBuffers[1 - state->activeVertexBufferIndex];
@@ -1693,7 +1693,7 @@ void fn_800A0478(ModgfxState* state)
 void fn_800A081C(int p1, int p2, int mode)
 {
     extern void vecRotateZXY(void*, f32*);
-    extern f32 lbl_803DD284;
+    extern f32 gModgfxMotionStep;
     extern f32 lbl_803DF430;
     extern f32 lbl_803DF434;
 
@@ -1736,9 +1736,9 @@ void fn_800A081C(int p1, int p2, int mode)
     }
     else
     {
-        ((ModgfxState*)p1)->posCurX = ((ModgfxState*)p1)->posStepX * lbl_803DD284 + ((ModgfxState*)p1)->posCurX;
-        ((ModgfxState*)p1)->posCurY = ((ModgfxState*)p1)->posStepY * lbl_803DD284 + ((ModgfxState*)p1)->posCurY;
-        ((ModgfxState*)p1)->posCurZ = ((ModgfxState*)p1)->posStepZ * lbl_803DD284 + ((ModgfxState*)p1)->posCurZ;
+        ((ModgfxState*)p1)->posCurX = ((ModgfxState*)p1)->posStepX * gModgfxMotionStep + ((ModgfxState*)p1)->posCurX;
+        ((ModgfxState*)p1)->posCurY = ((ModgfxState*)p1)->posStepY * gModgfxMotionStep + ((ModgfxState*)p1)->posCurY;
+        ((ModgfxState*)p1)->posCurZ = ((ModgfxState*)p1)->posStepZ * gModgfxMotionStep + ((ModgfxState*)p1)->posCurZ;
     }
 }
 
@@ -1799,7 +1799,7 @@ void dll_0B_func0E(void)
     }
 }
 
-extern f32 lbl_803DD284;
+extern f32 gModgfxMotionStep;
 
 void dll_0B_onMapSetup(void)
 {
@@ -1886,7 +1886,7 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 }
 
 extern const f32 lbl_803DF460;
-extern s16 lbl_803DD280;
+extern s16 gPartfxSequenceIdCounter;
 
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
@@ -2145,12 +2145,12 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityX = *(f32*)(st + 0x20);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityY = *(f32*)(st + 0x24);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityZ = *(f32*)(st + 0x28);
-    lbl_803DD280 = lbl_803DD280 + 1;
-    if (lbl_803DD280 > 0x4e20)
+    gPartfxSequenceIdCounter = gPartfxSequenceIdCounter + 1;
+    if (gPartfxSequenceIdCounter > 0x4e20)
     {
-        lbl_803DD280 = 0;
+        gPartfxSequenceIdCounter = 0;
     }
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId = lbl_803DD280;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId = gPartfxSequenceIdCounter;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte126 = lbl_803DD282;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexCount = c;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = e;
@@ -2199,8 +2199,8 @@ extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void fn_800542F4(void);
-extern const f32 lbl_803DF450;
-extern const f32 lbl_803DF454;
+extern const f32 gModgfxOffsetRangeMax;
+extern const f32 gModgfxOffsetRangeMin;
 extern const f32 lbl_803DF458;
 extern const f32 lbl_803DF45C;
 
@@ -2321,15 +2321,15 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 Obj_RotateLocalOffsetByYaw((f32*)((char*)*p + 0x18), &rot[0], *(s8*)((char*)*p + 0x135));
             }
         }
-        if (rot[0] > lbl_803DF450 || rot[0] < lbl_803DF454)
+        if (rot[0] > gModgfxOffsetRangeMax || rot[0] < gModgfxOffsetRangeMin)
         {
             rot[0] = -playerMapOffsetX;
         }
-        if (rot[1] > lbl_803DF450 || rot[1] < lbl_803DF454)
+        if (rot[1] > gModgfxOffsetRangeMax || rot[1] < gModgfxOffsetRangeMin)
         {
             rot[1] = lbl_803DF430;
         }
-        if (rot[2] > lbl_803DF450 || rot[2] < lbl_803DF454)
+        if (rot[2] > gModgfxOffsetRangeMax || rot[2] < gModgfxOffsetRangeMin)
         {
             rot[2] = -playerMapOffsetZ;
         }
@@ -2531,9 +2531,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
-    extern f32 lbl_803DD284;
+    extern f32 gModgfxMotionStep;
     extern f32 lbl_803DF430;
-    extern const f32 lbl_803DF43C;
+    extern const f32 gModgfxColorClampMax;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
@@ -2568,14 +2568,14 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 animate:
     ((f32*)((char*)state + 0xac))[k + 1] =
         ((f32*)((char*)state + 0xac))[k + 1] +
-        ((f32*)((char*)state + 0xac))[k] * lbl_803DD284;
+        ((f32*)((char*)state + 0xac))[k] * gModgfxMotionStep;
     if (((f32*)((char*)state + 0xac))[k + 1] < lbl_803DF430)
     {
         ((f32*)((char*)state + 0xac))[k + 1] = lbl_803DF430;
     }
-    else if (((f32*)((char*)state + 0xac))[k + 1] > lbl_803DF43C)
+    else if (((f32*)((char*)state + 0xac))[k + 1] > gModgfxColorClampMax)
     {
-        ((f32*)((char*)state + 0xac))[k + 1] = lbl_803DF43C;
+        ((f32*)((char*)state + 0xac))[k + 1] = gModgfxColorClampMax;
     }
     {
         int ofs = k * 4 + 0xb0;
@@ -2591,7 +2591,7 @@ animate:
 void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
-    extern const f32 lbl_803DF43C;
+    extern const f32 gModgfxColorClampMax;
     u8* buf = ((u8**)((char*)state + 0x78))[((ModgfxState*)state)->activeVertexBufferIndex];
     int j;
 
@@ -2647,25 +2647,25 @@ void fn_800A0524(void* state, void* p, int mode)
     {
         ((ModgfxState*)state)->blendColorR = lbl_803DF430;
     }
-    else if (((ModgfxState*)state)->blendColorR > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorR > gModgfxColorClampMax)
     {
-        ((ModgfxState*)state)->blendColorR = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorR = gModgfxColorClampMax;
     }
     if (((ModgfxState*)state)->blendColorG < lbl_803DF430)
     {
         ((ModgfxState*)state)->blendColorG = lbl_803DF430;
     }
-    else if (((ModgfxState*)state)->blendColorG > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorG > gModgfxColorClampMax)
     {
-        ((ModgfxState*)state)->blendColorG = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorG = gModgfxColorClampMax;
     }
     if (((ModgfxState*)state)->blendColorB < lbl_803DF430)
     {
         ((ModgfxState*)state)->blendColorB = lbl_803DF430;
     }
-    else if (((ModgfxState*)state)->blendColorB > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorB > gModgfxColorClampMax)
     {
-        ((ModgfxState*)state)->blendColorB = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorB = gModgfxColorClampMax;
     }
     for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
     {
@@ -2677,7 +2677,7 @@ void fn_800A0524(void* state, void* p, int mode)
 
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
-    extern f32 lbl_803DD284;
+    extern f32 gModgfxMotionStep;
     extern f32 lbl_803DF434;
     int idx2 = idx * 2;
 #define base ((char*)state + idx2 * 0xc)
@@ -2716,9 +2716,9 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             return;
         }
     }
-    *(f32*)(base + 0x30) = *(f32*)(base + 0x30) + *(f32*)(base + 0x3c) * lbl_803DD284;
-    *(f32*)(base + 0x34) = *(f32*)(base + 0x34) + *(f32*)(base + 0x40) * lbl_803DD284;
-    *(f32*)(base + 0x38) = *(f32*)(base + 0x38) + *(f32*)(base + 0x44) * lbl_803DD284;
+    *(f32*)(base + 0x30) = *(f32*)(base + 0x30) + *(f32*)(base + 0x3c) * gModgfxMotionStep;
+    *(f32*)(base + 0x34) = *(f32*)(base + 0x34) + *(f32*)(base + 0x40) * gModgfxMotionStep;
+    *(f32*)(base + 0x38) = *(f32*)(base + 0x38) + *(f32*)(base + 0x44) * gModgfxMotionStep;
     {
         u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
         u8* buf2 = *(u8**)((char*)((u32*)state + ((ModgfxState*)state)->activeVertexBufferIndex) + 0x78);
@@ -2752,7 +2752,7 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 
 extern void Sfx_StopObjectChannel(void* obj, int ch);
-extern const f32 lbl_803DF43C;
+extern const f32 gModgfxColorClampMax;
 
 typedef void (*ExpFn2)(void*, int);
 typedef void (*ExpFn3)(void*, void*, int);
@@ -2787,7 +2787,7 @@ void dll_0B_func05(void)
     {
         return;
     }
-    lbl_803DD284 = timeDelta;
+    gModgfxMotionStep = timeDelta;
     pp = (int**)gPartfxActiveEffects;
     for (slot = 0; slot < 50; slot++, pp++)
     {
@@ -2973,11 +2973,11 @@ void dll_0B_func05(void)
                 if (*(int*)(E9 + emOff) & 0x100)
                 {
                     ((ModgfxEffectSlot*)eff)->unk106 = ((ModgfxEffectSlot*)eff)->unk106 + (int)(*(f32*)(E9 + emOff +
-                        0x4) * lbl_803DD284);
+                        0x4) * gModgfxMotionStep);
                     ((ModgfxEffectSlot*)eff)->unk108 = ((ModgfxEffectSlot*)eff)->unk108 + (int)(*(f32*)(E9 + emOff +
-                        0x8) * lbl_803DD284);
+                        0x8) * gModgfxMotionStep);
                     ((ModgfxEffectSlot*)eff)->unk10A = ((ModgfxEffectSlot*)eff)->unk10A + (int)(*(f32*)(E9 + emOff +
-                        0xc) * lbl_803DD284);
+                        0xc) * gModgfxMotionStep);
                 }
                 if (*(int*)(E9 + emOff) & 0x80)
                 {
@@ -3030,9 +3030,9 @@ void dll_0B_func05(void)
                     }
                     ((ModgfxEffectSlot*)eff)->alphaCurrent = ((ModgfxEffectSlot*)eff)->alphaCurrent + ((ModgfxEffectSlot
                         *)eff)->alphaDelta;
-                    if (((ModgfxEffectSlot*)eff)->alphaCurrent > lbl_803DF43C)
+                    if (((ModgfxEffectSlot*)eff)->alphaCurrent > gModgfxColorClampMax)
                     {
-                        ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF43C;
+                        ((ModgfxEffectSlot*)eff)->alphaCurrent = gModgfxColorClampMax;
                     }
                     else if (((ModgfxEffectSlot*)eff)->alphaCurrent < lbl_803DF430)
                     {
@@ -3046,11 +3046,11 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x80000000)
                 {
-                    ((ModgfxEffectSlot*)eff)->unk24 = *(f32*)(E9 + emOff + 0x4) * lbl_803DD284 + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->unk24 = *(f32*)(E9 + emOff + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->unk24;
-                    ((ModgfxEffectSlot*)eff)->unk28 = *(f32*)(E9 + emOff + 0x8) * lbl_803DD284 + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->unk28 = *(f32*)(E9 + emOff + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->unk28;
-                    ((ModgfxEffectSlot*)eff)->unk2C = *(f32*)(E9 + emOff + 0xc) * lbl_803DD284 + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->unk2C = *(f32*)(E9 + emOff + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->unk2C;
                 }
                 if (*(int*)(E9 + emOff) & 0x800000)
