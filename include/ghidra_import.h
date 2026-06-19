@@ -21,33 +21,7 @@ typedef u16 wchar_t;
 #define NAN 0.0f
 #endif
 
-typedef u8 undefined;
-typedef u8 undefined1;
-typedef u16 undefined2;
-typedef u32 undefined3;
-typedef u32 undefined4;
-typedef u64 undefined5;
-typedef u64 undefined6;
-typedef u64 undefined7;
-typedef u64 undefined8;
-
-typedef s8 sbyte;
-typedef u8 byte;
-typedef u16 ushort;
-typedef u32 uint;
-typedef unsigned long ulong;
-typedef s64 longlong;
-typedef u64 ulonglong;
-typedef s32 int3;
-typedef s64 int5;
-typedef s64 int6;
-typedef s64 int7;
-typedef u32 uint3;
-typedef u64 uint5;
-typedef u64 uint6;
-typedef u64 uint7;
-typedef double float10;
-typedef undefined4 (*code)();
+typedef u32 (*code)();
 
 #define CONCAT11(x, y) ((u16)(((u16)(u8)(x) << 8) | (u8)(y)))
 #define CONCAT12(x, y) ((u32)(((u32)(u8)(x) << 16) | (u16)(y)))
