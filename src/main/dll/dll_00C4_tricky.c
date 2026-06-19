@@ -509,6 +509,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     u8 promptC;
     u32 bitVal;
     int ref;
+    int refB;
     u16* setup;
     u32 spawnedObj;
     u8 i;
@@ -664,20 +665,20 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     if (promptB)
                     {
-                        ref = *(int*)(objVal + 0xb8);
-                        if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
+                        refB = *(int*)(objVal + 0xb8);
+                        if (((*(u8*)(refB + 0x58) >> 6 & 1) == 0u) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                                 !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                         {
-                            objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
+                            objAudioFn_800393f8(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
                     }
                     else if ((((promptC) &&
-                                (ref = *(int*)(objVal + 0xb8), (*(u8*)(ref + 0x58) >> 6 & 1) == 0u)) &&
+                                (refB = *(int*)(objVal + 0xb8), (*(u8*)(refB + 0x58) >> 6 & 1) == 0u)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
                         !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
                     {
-                        objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
+                        objAudioFn_800393f8(objVal, (void*)(refB + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, 0x175);
