@@ -763,7 +763,7 @@ void* gameTextGetStr(int textId)
         }
         return gGameTextLastEntry;
     }
-    t = gameTextGet();
+    t = gameTextGet(textId);
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
