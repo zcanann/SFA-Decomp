@@ -1498,20 +1498,20 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     double in_ps30_1;
     double in_ps31_1;
     u64 pairWord;
-    float local_e8;
-    u32 local_e4;
-    float local_e0;
-    u16 local_dc;
-    u16 local_da;
-    u16 local_d8;
+    float posTmpX;
+    u32 posTmpY;
+    float posTmpZ;
+    u16 rotX;
+    u16 rotY;
+    u16 rotZ;
     float local_d4;
     u32 local_d0;
     u32 local_cc;
     u32 local_c8;
     float afStack_c4[3];
-    float local_b8;
-    u32 local_a8;
-    float local_98;
+    float posX;
+    u32 posY;
+    float posZ;
     float afStack_84[27];
     float local_18;
     float fStack_14;
@@ -1552,10 +1552,10 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         {
             local_d4 = lbl_803DF69C;
             boneOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
-            local_dc = *(u16*)(boneOff + 0xc);
-            local_da = *(u16*)(boneOff + 0xe);
-            local_d8 = *(u16*)(boneOff + 0x10);
-            FUN_80017700(&local_dc, afStack_c4);
+            rotX = *(u16*)(boneOff + 0xc);
+            rotY = *(u16*)(boneOff + 0xe);
+            rotZ = *(u16*)(boneOff + 0x10);
+            FUN_80017700(&rotX, afStack_c4);
             FUN_80247618(jointMtx, afStack_c4, afStack_c4);
         }
         else
@@ -1565,25 +1565,25 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
             dx = (double)(*(float*)(child + 6) - *(float*)(cam + 6));
             dz = (double)(*(float*)(child + 10) - *(float*)(cam + 10));
             boneOff = FUN_80017730();
-            local_dc = boneOff + 0x8000;
+            rotX = boneOff + 0x8000;
             FUN_80293900((double)(float)(dx * dx + (double)(float)(dz * dz)));
             boneOff = FUN_80017730();
-            local_da = (u16)boneOff;
-            local_d8 = cam[2];
-            FUN_80017700(&local_dc, afStack_c4);
-            local_e8 = local_b8;
-            local_e4 = local_a8;
-            local_e0 = local_98;
-            FUN_80247bf8(jointMtx, &local_e8, &local_e8);
-            local_b8 = local_e8;
-            local_a8 = local_e4;
-            local_98 = local_e0;
+            rotY = (u16)boneOff;
+            rotZ = cam[2];
+            FUN_80017700(&rotX, afStack_c4);
+            posTmpX = posX;
+            posTmpY = posY;
+            posTmpZ = posZ;
+            FUN_80247bf8(jointMtx, &posTmpX, &posTmpX);
+            posX = posTmpX;
+            posY = posTmpY;
+            posZ = posTmpZ;
         }
         if ((shadowFlag & 0xff) == 0)
         {
-            *(float*)(child + 0xc) = local_b8 + lbl_803DDA58;
-            *(u32*)(child + 0xe) = local_a8;
-            *(float*)(child + 0x10) = local_98 + lbl_803DDA5C;
+            *(float*)(child + 0xc) = posX + lbl_803DDA58;
+            *(u32*)(child + 0xe) = posY;
+            *(float*)(child + 0x10) = posZ + lbl_803DDA5C;
             if (*(int*)(child + 0x18) == 0)
             {
                 *(u32*)(child + 6) = *(u32*)(child + 0xc);
