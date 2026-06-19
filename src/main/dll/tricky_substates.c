@@ -149,7 +149,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         state[0xa] = 1;
     case 1:
         trickyDebugPrint((char*)(base + 0x7b8));
-        trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
+        trickyFn_8013b368((int)obj, lbl_803E2488, state);
         gidx = Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0);
         if (*(u8*)(((TrickyState*)state)->unk708 + 3) == gidx)
         {
@@ -211,7 +211,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         spd = vx * vx;
         if (vz * vz + spd > lbl_803E23EC)
         {
-            trickyTurnTowardYaw(obj, (s16)getAngle(-vx, -vz));
+            trickyTurnTowardYaw(obj, getAngle(-vx, -vz));
         }
         if (((u8 (**)(u8*))(**(u8***)(((TrickyState*)state)->followObj + 0x68)))[9](((TrickyState*)state)->followObj) !=
             0)
@@ -221,7 +221,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             for (k = 4; k != 0; k--)
             {
                 v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
-                if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
+                if (v > -1 && v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
                 {
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
                     ((TrickyState*)state)->unk704 =
@@ -246,7 +246,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         }
         break;
     case 5:
-        trickyDebugPrint((char*)(base + 0x7f8), (f64)Vec_xzDistance(obj + 0x18, ((TrickyState*)state)->unk704 + 8));
+        trickyDebugPrint((char*)(base + 0x7f8), Vec_xzDistance(obj + 0x18, ((TrickyState*)state)->unk704 + 8));
         pos = ((TrickyState*)state)->unk704 + 8;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
         if (trickyMove(obj, pos) == 0)
@@ -256,7 +256,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             for (k = 4; k != 0; k--)
             {
                 v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
-                if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
+                if (v > -1 && v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
                 {
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
                     ((TrickyState*)state)->unk704 =
@@ -354,7 +354,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         state[0xa] = 1;
     case 1:
-        ret = trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
+        ret = trickyFn_8013b368((int)obj, lbl_803E2488, state);
         if (ret == 0)
         {
             if (((TrickyState*)state)->unk70C != NULL)
@@ -393,7 +393,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         break;
     case 2:
-        if (trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) == 0)
+        if (trickyFn_8013b368((int)obj, lbl_803E2418, state) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x10;
             state[0xa] = 3;
@@ -530,7 +530,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     }
                 }
                 if (trickyFoodFn_8014460c((int)obj, (int*)state) == 0
-                    && trickyFn_8013b368((int)obj, lbl_803E2488, (int)state) == 0)
+                    && trickyFn_8013b368((int)obj, lbl_803E2488, state) == 0)
                 {
                     ((TrickyState*)state)->unk740 -= timeDelta;
                     if (((TrickyState*)state)->unk740 <= lbl_803E23DC)
@@ -691,7 +691,7 @@ int trickyFn_80142a14(int obj, int state)
         }
         tricky_startRandomIdleMove(obj, state);
     }
-    else if ((u8)trickyFn_8013b368((int)obj, lbl_803E24C8, (int)state) != 1)
+    else if ((u8)trickyFn_8013b368((int)obj, lbl_803E24C8, state) != 1)
     {
         ((FlagByte728*)(state + 0x728))->bf5 = 1;
         sfxId = randomGetRange(862, 863);
@@ -917,7 +917,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     {
         return 1;
     }
-    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) != 1)
+    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, state) != 1)
     {
         if (((TrickyState*)state)->unk7B0 != NULL)
         {
@@ -1330,7 +1330,7 @@ int trickyFn_80143c04(int obj, int state)
         }
         threshold = lbl_803E2408;
     }
-    result = trickyFn_8013b368((int)obj, threshold, (int)state);
+    result = trickyFn_8013b368((int)obj, threshold, state);
     if (result != 1)
     {
         if (result == 2)
@@ -1478,7 +1478,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
             else
             {
                 bitVal = randomGetRange(0, 6);
-                if (((int)bitVal < 5) && (0 <= (int)bitVal))
+                if (((int)bitVal < 5) && (0 <= bitVal))
                 {
                     tricky_startRandomIdleMove(obj, (int)trickyState);
                 }
@@ -1624,7 +1624,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
 
     flag = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-    n = (u8)GameBit_Get(0xc1);
+    n = GameBit_Get(0xc1);
     if (n != 0)
     {
         getYButtonItem(item);
@@ -1684,7 +1684,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                 else
                 {
                     d = c - a;
-                    cnt = (u32)d >> 2;
+                    cnt = d >> 2;
                     if (d % 4)
                     {
                         cnt += 1;

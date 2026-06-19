@@ -11,7 +11,7 @@
  * scales used by fn_801B40B8's colour ramp.
  *
  * The flame/debris pools are walked with raw stride pointers and stay
- * untyped: retyping the state local (or adding (int) casts) flips saved-reg
+ * untyped: retyping the state local (or adding  casts) flips saved-reg
  * coloring across init/update/render/fn_801B3DE4 (recipe #36/#77), so the
  * layout is documented in the struct headers for a future pass.
  */
@@ -258,7 +258,7 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         t = lbl_803E4938 * ev;
         p = (char*)state;
         *(s8*)(p + idx * 0x30 + 0x2e) = lbl_803E4938 - lbl_803DDB6C * t;
-        *(int*)(p + idx * 0x30 + 0x20) = (int)lbl_803E4940;
+        *(int*)(p + idx * 0x30 + 0x20) = lbl_803E4940;
         *(int*)(p + idx * 0x30 + 0x24) = *(int*)(p + idx * 0x30 + 0x20);
         *(u8*)(p + idx * 0x30 + 0x2f) = 1;
     }
@@ -341,7 +341,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
                 PSMTXRotRad(
-                    m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int) * (s16*)&((ExplosionDebris*)p)->unk28) / lbl_803E4980));
+                    m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int) * &((ExplosionDebris*)p)->unk28) / lbl_803E4980));
                 PSMTXRotRad(
                     m3, 0x78, (f32)((lbl_803E4978 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / lbl_803E4980));
                 PSMTXConcat(m3, m1, m3);
@@ -410,7 +410,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
                 ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
-                objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (f32)visible);
+                objRenderFn_8003b8f4(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
                     *(u16*)((char*)model + 0x18) &= ~8;

@@ -188,11 +188,11 @@ void reportAllocFail(void)
 
 /* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
 
-/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
+/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 . */
 f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x14); }
-/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 (u32). */
+/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 . */
 u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)&((GameObject*)obj)->extra + 0x24); }
-/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
+/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 . */
 s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject*)obj)->extra + 0x414); }
 /* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
 void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)&((GameObject*)obj)->extra + 0x408); }
@@ -370,22 +370,22 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     n = lbl_803DD9E4 + 1;
     lbl_803DD9E4 = n;
     if (n > 0xfa) return;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = 0x81;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = r;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = g;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = b;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = a;
-    p = (u8*)debugLogEnd;
+    p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = 0;
 }
@@ -432,7 +432,7 @@ void fn_80133F70(void* obj)
     {
         gameTimerRun(obj);
     }
-    player = (void*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
     if (nearest != NULL)
     {
@@ -514,9 +514,9 @@ void fn_801375A0(void)
     u32 xp;
     debugLogEnd = debugLogBuffer;
     yp = lbl_803DDA08 & 0xffff;
-    debugPrintYpos = (u16)yp;
+    debugPrintYpos = yp;
     xp = lbl_803DDA00 & 0xffff;
-    debugPrintXpos = (u16)xp;
+    debugPrintXpos = xp;
 }
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
@@ -545,15 +545,15 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 
 void fn_80137D28(void)
 {
-    OSSetErrorHandler(0, (void*)fn_801388D0);
-    OSSetErrorHandler(1, (void*)fn_801388D0);
-    OSSetErrorHandler(2, (void*)fn_801388D0);
-    OSSetErrorHandler(11, (void*)fn_801388D0);
-    OSSetErrorHandler(13, (void*)fn_801388D0);
-    OSSetErrorHandler(15, (void*)fn_801388D0);
-    OSSetErrorHandler(3, (void*)fn_801388D0);
-    OSSetErrorHandler(5, (void*)fn_801388D0);
-    OSCreateThread(lbl_803AB118, (void*)fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
+    OSSetErrorHandler(0, fn_801388D0);
+    OSSetErrorHandler(1, fn_801388D0);
+    OSSetErrorHandler(2, fn_801388D0);
+    OSSetErrorHandler(11, fn_801388D0);
+    OSSetErrorHandler(13, fn_801388D0);
+    OSSetErrorHandler(15, fn_801388D0);
+    OSSetErrorHandler(3, fn_801388D0);
+    OSSetErrorHandler(5, fn_801388D0);
+    OSCreateThread(lbl_803AB118, fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
 }
 
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
@@ -697,7 +697,7 @@ typedef struct {
 /* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
- * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
+ * data[0] / data[1] with acceleration lbl_803E23E4 and damping
  * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
 void Tricky_updateBlendChannelWeight(int obj, u8* state)
@@ -822,19 +822,19 @@ void objAnimFreeChildren(int a, int b, void** c)
     {
         if (v0 != NULL)
         {
-            ObjLink_DetachChild(a, (int)v0);
+            ObjLink_DetachChild(a, v0);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7A8, 0);
             ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
         else if (v1 != NULL)
         {
-            ObjLink_DetachChild(a, (int)v1);
+            ObjLink_DetachChild(a, v1);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B0, 0);
             ((AnimSlots*)(b + 0x7bc))->s1 = 0;
         }
         else if (v2 != NULL)
         {
-            ObjLink_DetachChild(a, (int)v2);
+            ObjLink_DetachChild(a, v2);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B8, 0);
             ((AnimSlots*)(b + 0x7bc))->s2 = 0;
         }
@@ -1004,13 +1004,13 @@ int fn_80136A40(int p1, int c)
     c = tbl[c * 2 + 1] - first + 1;
     if (lbl_803DDA0C != 0)
     {
-        px = (int)((f32)debugPrintYpos * (lbl_803DD9D8 + (f32)lbl_803DD9E0));
-        py = (int)((f32)debugPrintXpos * (lbl_803DD9DC + (f32)lbl_803DD9E1));
+        px = (int)((f32)debugPrintYpos * (lbl_803DD9D8 + lbl_803DD9E0));
+        py = (int)((f32)debugPrintXpos * (lbl_803DD9DC + lbl_803DD9E1));
         gxDebugTextureFn_80078c1c();
         sc = lbl_803DD9EC;
         textRenderChar(px << 2, py << 2,
-                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
-                       (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + (f32)lbl_803DD9E1) + (f32)py)),
+                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + lbl_803DD9E0) + px)),
+                       (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + lbl_803DD9E1) + py)),
                        (f32)(first << 5) * sc,
                        lbl_803E23A0,
                        sc * (f32)((first + c) << 5),
@@ -1109,9 +1109,9 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0));
+                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + lbl_803DD9E0));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
                     colb4[0] = lbl_803DD9F3;
                     colb4[1] = lbl_803DD9F2;
                     colb4[2] = lbl_803DD9F1;
@@ -1150,9 +1150,9 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0));
+                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + lbl_803DD9E0));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
                     colb2[0] = lbl_803DD9F3;
                     colb2[1] = lbl_803DD9F2;
                     colb2[2] = lbl_803DD9F1;
@@ -1161,7 +1161,7 @@ int fn_80136E00(int p1, u8* p)
                     hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw2);
                 }
             }
-            debugPrintYpos = (u16)lbl_803DDA08;
+            debugPrintYpos = lbl_803DDA08;
             debugPrintXpos += 0xb;
             lbl_803DDA16 = debugPrintYpos;
             lbl_803DDA14 = debugPrintXpos;
@@ -1186,7 +1186,7 @@ int fn_80136E00(int p1, u8* p)
             w = 7;
         }
         debugPrintYpos += w;
-        if ((f32)debugPrintYpos * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0) >
+        if ((f32)debugPrintYpos * (sc = lbl_803DD9D8 + lbl_803DD9E0) >
             (f32)(int)(lbl_803DD9F6 - 0x10))
         {
             if (lbl_803DDA0C == 0)
@@ -1204,7 +1204,7 @@ int fn_80136E00(int p1, u8* p)
                     y1 = y + 2;
                     ca = (u32)((f32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + (f32)lbl_803DD9E1));
+                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
                     colb3[0] = lbl_803DD9F3;
                     colb3[1] = lbl_803DD9F2;
                     colb3[2] = lbl_803DD9F1;
@@ -1213,7 +1213,7 @@ int fn_80136E00(int p1, u8* p)
                     hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw3);
                 }
             }
-            debugPrintYpos = (u16)lbl_803DDA08;
+            debugPrintYpos = lbl_803DDA08;
             debugPrintXpos += 0xb;
             lbl_803DDA16 = debugPrintYpos;
             lbl_803DDA14 = debugPrintXpos;
@@ -1253,7 +1253,7 @@ void fn_80137DF8(void)
     {
         debugDrawFrameBuffer = externalFrameBuffer0;
         debugFrameBuffer = externalFrameBuffer1;
-        lvl = (u8)OSDisableInterrupts();
+        lvl = OSDisableInterrupts();
         VISetPreRetraceCallback(NULL);
         VISetPostRetraceCallback(NULL);
         GXSetBreakPtCallback(NULL);
@@ -1270,14 +1270,14 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
-                        *(u16*)(col + (char*)debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + row) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0x500)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0xA00)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0xF00)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0x1400)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0x1900)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0x1E00)) = 0x1080;
+                        *(u16*)(col + debugDrawFrameBuffer + (row + 0x2300)) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
@@ -1460,7 +1460,7 @@ void fn_80137DF8(void)
             {
                 for (row = 0; row < 0x96000; row += 0x500)
                 {
-                    *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
+                    *(u16*)(col + debugDrawFrameBuffer + row) = 0x1080;
                 }
                 col += 2;
             }
@@ -1497,7 +1497,7 @@ void debugPrintDraw(int ctx)
 
     res = getScreenResolution();
     lbl_803DD9F4 = (u16)(res >> 0x10);
-    lbl_803DD9F6 = (u16)res;
+    lbl_803DD9F6 = res;
     GXSetScissor(0, 0, lbl_803DD9F6, lbl_803DD9F4);
     if (lbl_803DD9F6 <= 0x140)
     {
@@ -1521,8 +1521,8 @@ void debugPrintDraw(int ctx)
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;
-    debugPrintYpos = (u16)lbl_803DDA08;
-    debugPrintXpos = (u16)lbl_803DDA00;
+    debugPrintYpos = lbl_803DDA08;
+    debugPrintXpos = lbl_803DDA00;
     lbl_803DD9F8 = 0xffffffff;
     pass = 0;
     lbl_803DDA10 = pass;
@@ -1544,9 +1544,9 @@ void debugPrintDraw(int ctx)
             ys -= 2;
         }
         y2 = yv + 2;
-        xa = (u32)((f32)ys * (scale = lbl_803DD9D8 + (f32)lbl_803DD9E0));
+        xa = (u32)((f32)ys * (scale = lbl_803DD9D8 + lbl_803DD9E0));
         xb = (u32)((f32)y2 * scale);
-        ya = (u32)((f32)xs * (scale = lbl_803DD9DC + (f32)lbl_803DD9E1));
+        ya = (u32)((f32)xs * (scale = lbl_803DD9DC + lbl_803DD9E1));
         yb = (u32)((f32)x1 * scale);
         ((u8*)&colb)[0] = lbl_803DD9F3;
         ((u8*)&colb)[1] = lbl_803DD9F2;
@@ -1556,8 +1556,8 @@ void debugPrintDraw(int ctx)
         hudDrawRect(xa, ya, xb, yb, &colw);
     }
     p = debugLogBuffer;
-    debugPrintYpos = (u16)lbl_803DDA08;
-    debugPrintXpos = (u16)lbl_803DDA00;
+    debugPrintYpos = lbl_803DDA08;
+    debugPrintXpos = lbl_803DDA00;
     lbl_803DD9F8 = 0xffffffff;
     lbl_803DDA10 = 0;
     pass = 1;

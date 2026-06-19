@@ -356,7 +356,7 @@ int mediumbasket_updateLandingState(int obj, int state)
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 2;
         ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])(
-            obj, (s32)sub->unk3F0, -1, 0);
+            obj, sub->unk3F0, -1, 0);
     }
     return 0;
 }
@@ -556,7 +556,7 @@ int mediumbasket_stateHandlerA06(int obj, int state)
             }
         }
         ((GroundBaddieState*)state)->baddie.unk34D = 1;
-        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
+        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + sub->aggression / lbl_803E2D50;
     }
     if (sub->aggression > 50 && (sub->configFlags & 2) == 0)
     {
@@ -613,7 +613,7 @@ int mediumbasket_stateHandlerA05(int obj, int state)
             }
         }
         ((GroundBaddieState*)state)->baddie.unk34D = 1;
-        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
+        ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + sub->aggression / lbl_803E2D50;
     }
     if (sub->aggression > 50 && (sub->configFlags & 2) == 0)
     {
@@ -769,7 +769,7 @@ int mediumbasket_stateHandlerB06(int obj, int state)
     neutralBlend = lbl_803E2D14;
     ((GroundBaddieState*)state)->baddie.moveInputX = neutralBlend;
     ((GroundBaddieState*)state)->baddie.moveInputZ = neutralBlend;
-    memcpy((void*)route, (void*)&((GameObject*)obj)->anim.localPosX, 0xc);
+    memcpy((void*)route, &((GameObject*)obj)->anim.localPosX, 0xc);
     memcpy((void*)(sub->route35C + 0xc), (void*)(*(int*)&((GroundBaddieState*)state)->baddie.targetObj + 0xc), 0xc);
     voxmaps_updateRoutePath((void*)route, (void*)(sub->route35C + 0x28));
     if (*(u8*)(route + 0x25) == 0)
@@ -786,7 +786,7 @@ int mediumbasket_stateHandlerB06(int obj, int state)
     }
     if (((GroundBaddieState*)state)->baddie.unk32E > 0x78 &&
         ((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(
-            obj, state, (f32)sub->aggroRange, 1) != 0)
+            obj, state, sub->aggroRange, 1) != 0)
     {
         return 5;
     }
@@ -815,14 +815,14 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                     int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
                     ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, (s32)lbl_8031FD90[attackIndex]);
+                        obj, state, lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
                     int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
                     ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, (s32)lbl_8031FD80[attackIndex]);
+                        obj, state, lbl_8031FD80[attackIndex]);
                 }
                 if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
                 {
@@ -850,7 +850,7 @@ int mediumbasket_stateHandlerB07(int obj, int state)
             return 5;
         }
         if (((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(
-            obj, state, (f32)sub->aggroRange, 1) != 0)
+            obj, state, sub->aggroRange, 1) != 0)
         {
             return 5;
         }
@@ -868,14 +868,14 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                     int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
                     ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, (s32)lbl_8031FD90[attackIndex]);
+                        obj, state, lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
                     int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
                     ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, (s32)lbl_8031FD80[attackIndex]);
+                        obj, state, lbl_8031FD80[attackIndex]);
                 }
                 if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
                 {
@@ -1175,7 +1175,7 @@ void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 render:
     if (state->unk3E8 != lbl_803E2D14)
     {
-        fn_8003B5E0(0xc8, 0, 0, (int)state->unk3E8);
+        fn_8003B5E0(0xc8, 0, 0, state->unk3E8);
     }
     objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
     fn_8015CE68(obj, (int)state);
@@ -1194,7 +1194,7 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState* state)
 {
     f32 fz;
     state->baddie.speedScale = lbl_803E2CE8;
-    *(char*)&state->baddie.inWhirlpoolGroup = (int)state->baddie.unk2A8;
+    *(char*)&state->baddie.inWhirlpoolGroup = state->baddie.unk2A8;
     state->baddie.unk2A8 = lbl_803E2CEC;
     state->baddie.unk2E4 = 0x42001;
     state->baddie.unk308 = lbl_803E2CF0;
@@ -1209,7 +1209,7 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.unk31C = fz;
     state->baddie.seqEntryIndex = 1;
     state->baddie.inWhirlpoolGroup = 0;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), renderWhirlpool);
 }
 
 #pragma peephole off

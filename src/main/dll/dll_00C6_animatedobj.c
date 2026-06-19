@@ -473,7 +473,7 @@ void FUN_8016d188(int param_1, int param_2)
         {
             extra = (int)(lbl_803E3F38 * (value / lbl_803E3F30));
             lTmp = (s64)extra;
-            lifetime = 0x15 - (short)extra;
+            lifetime = 0x15 - extra;
             fxFloat28 = lbl_803E3F3C * (value / lbl_803E3F40 - lbl_803E3F2C);
             fxColor = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxColor, 2, -1, NULL);
@@ -503,7 +503,7 @@ void FUN_8016d188(int param_1, int param_2)
                 {
                     extra = (int)(lbl_803E3F38 * (value / lbl_803E3F30));
                     lTmp = (s64)extra;
-                    lifetime = (short)extra + 6;
+                    lifetime = extra + 6;
                     fxFloat28 = lbl_803E3F3C * (value / lbl_803E3F40 - lbl_803E3F2C);
                     fxColor = 0xc94;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &fxColor, 2, -1, NULL);
@@ -524,14 +524,14 @@ void FUN_8016d188(int param_1, int param_2)
                     {
                         scale = value / lbl_803E3F40;
                         extra = (int)(lbl_803E3F38 * scale);
-                        lifetime = (short)extra;
+                        lifetime = extra;
                         fxColor = 0xc94;
                     }
                     else
                     {
                         scale = value / lbl_803E3F50;
                         extra = (int)(lbl_803E3F38 * scale);
-                        lifetime = (short)extra;
+                        lifetime = extra;
                         fxColor = 0xc75;
                     }
                     lTmp = (s64)extra;
@@ -597,7 +597,7 @@ void FUN_8016d188(int param_1, int param_2)
             {
                 extra = (int)(lbl_803E3F38 * (value / lbl_803E3F60));
                 lTmp = (s64)extra;
-                lifetime2 = 0x15 - (short)extra;
+                lifetime2 = 0x15 - extra;
                 fxParams[0] = 0xc95;
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &vecData);
                 fxFloat28 = *(float*)(vecData + 0xc);
@@ -639,7 +639,7 @@ void FUN_8016d188(int param_1, int param_2)
         {
             extra = (int)(lbl_803E3F38 * (value / lbl_803E3F60));
             lTmp = (s64)extra;
-            lifetime = 0x15 - (short)extra;
+            lifetime = 0x15 - extra;
             fxFloat28 = lbl_803E3F5C * (lbl_803E3F28 - value / lbl_803E3F60);
             fxColor = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxColor, 2, -1, NULL);
@@ -692,7 +692,7 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
         {
             partIdx = (u32) * (u16*)(group + 3);
             entry = *group + partIdx * 0x14;
-            for (; (int)partIdx < (int)(u32) * (u16*)((int)group + 0xe); partIdx = partIdx + 2)
+            for (; partIdx < (int)(u32) * (u16*)((int)group + 0xe); partIdx = partIdx + 2)
             {
                 if (group == (int*)state[0x12])
                 {
@@ -819,15 +819,15 @@ void FUN_80170048(void)
         scale = lbl_803E4048;
         if (lbl_803E4044 != (float)state[2])
         {
-            state[4] = (int)lbl_803E4048;
-            state[1] = (int)scale;
+            state[4] = lbl_803E4048;
+            state[1] = scale;
             if (handle != 0)
             {
                 FUN_8016d994(handle, 7, 0);
             }
         }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
         FUN_80006810(obj, 0x42c);
         FUN_80006810(obj, 0x42d);
         break;
@@ -860,12 +860,12 @@ void FUN_80170048(void)
             scale = lbl_803E4044;
             if (lbl_803E4044 == (float)state[2])
             {
-                state[4] = (int)lbl_803E4048;
-                state[1] = (int)scale;
+                state[4] = lbl_803E4048;
+                state[1] = scale;
             }
-            state[2] = (int)lbl_803E4048;
+            state[2] = lbl_803E4048;
             dC = (double)lbl_803E405C;
-            state[3] = (int)lbl_803E405C;
+            state[3] = lbl_803E405C;
             iTmp = 0;
             colorTbl = &DAT_80321688;
             dB = (double)lbl_803E4040;
@@ -899,10 +899,10 @@ void FUN_80170048(void)
         }
         if (lbl_803E4044 != (float)state[2])
         {
-            state[4] = (int)lbl_803E4064;
+            state[4] = lbl_803E4064;
         }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
         if (*state != 0)
         {
             FUN_800175cc((double)lbl_803E4040, *state, '\0');
@@ -936,11 +936,11 @@ void FUN_80170048(void)
         }
         if (lbl_803E4044 == (float)state[2])
         {
-            state[4] = (int)lbl_803E4064;
+            state[4] = lbl_803E4064;
         }
-        state[2] = (int)lbl_803E4064;
+        state[2] = lbl_803E4064;
         dE = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
+        state[3] = lbl_803E405C;
         iTmp = 0;
         colorTbl = &DAT_80321688;
         dD = (double)lbl_803E4040;
@@ -962,10 +962,10 @@ void FUN_80170048(void)
         FUN_80006824(obj, 0x42c);
         break;
     case 4:
-        state[2] = (int)lbl_803E4064;
+        state[2] = lbl_803E4064;
         dE = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        state[4] = (int)scale;
+        state[3] = lbl_803E405C;
+        state[4] = scale;
         iTmp = 0;
         scaleTbl = (float*)&DAT_80321698;
         colorTbl = &DAT_803216a8;
@@ -993,9 +993,9 @@ void FUN_80170048(void)
         FUN_80006824(obj, 0x42c);
         break;
     case 5:
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        state[4] = (int)lbl_803E4064;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
+        state[4] = lbl_803E4064;
         FUN_80006810(obj, 0x42c);
         FUN_80006810(obj, 0x42d);
         break;
@@ -1030,10 +1030,10 @@ void FUN_80170048(void)
             FUN_800175cc((double)lbl_803E4040, *state, '\0');
         }
         scale = lbl_803E4044;
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)scale;
-        state[4] = (int)scale;
-        state[1] = (int)scale;
+        state[2] = lbl_803E4044;
+        state[3] = scale;
+        state[4] = scale;
+        state[1] = scale;
         *(u8*)(state + 0x17) = *(u8*)(state + 0x17) | 1;
         *(u8*)((int)state + 0x5d) = *(u8*)((int)state + 0x5d) | 1;
         *(u8*)((int)state + 0x5e) = *(u8*)((int)state + 0x5e) | 1;
@@ -1088,7 +1088,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
         hitState = FUN_80017698(sndHandle, 1);
     }
     sndHandle = (u32) * (short*)(placement + 0x2c);
-    if (0 < (int)sndHandle)
+    if (0 < sndHandle)
     {
         FUN_80017688(sndHandle);
     }
@@ -1149,12 +1149,12 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
             else if (seqVal == 0x6a6)
             {
                 sndHandle = FUN_80017690(0x86a);
-                counter = (char)sndHandle;
+                counter = sndHandle;
                 if (counter < '\a')
                 {
                     counter = counter + '\x01';
                 }
-                FUN_80017698(0x86a, (int)counter);
+                FUN_80017698(0x86a, counter);
                 FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
                 FUN_80006824(param_9, SFXen_treadlpc);
                 goto LAB_801725bc;
@@ -1808,7 +1808,7 @@ void animatedobj_update(int* obj)
                 if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10)
                 {
                     ObjSeqState* otherSeq = *(ObjSeqState**)&((GameObject*)other)->extra;
-                    if (slot == (s8)otherSeq->slot)
+                    if (slot == otherSeq->slot)
                     {
                         cnt++;
                     }
@@ -1838,7 +1838,7 @@ void animatedobj_update(int* obj)
                         void* alloc;
                         int* child;
                         alloc = Obj_AllocObjectSetup(0x18, 0x69);
-                        child = Obj_SetupObject(alloc, 4, -1, -1, (void*)0);
+                        child = Obj_SetupObject(alloc, 4, -1, -1, 0);
                         ObjLink_AttachChild(obj, child, 0);
                         ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
                         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
