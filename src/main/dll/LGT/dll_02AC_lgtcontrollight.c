@@ -79,7 +79,7 @@ void controllight_update(int obj)
 {
 
     ControlLightState* state = ((GameObject*)obj)->extra;
-    int bit = (u8)GameBit_Get(state->gameBit);
+    u8 bit = (u8)GameBit_Get(state->gameBit);
 
     if (bit != state->lastBit)
     {
