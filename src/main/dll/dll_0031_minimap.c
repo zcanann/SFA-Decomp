@@ -67,56 +67,56 @@ extern void gameTextResetCursor(int n);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int a, int b);
 
-extern u8 lbl_803DBBB0;
+extern u8 gMinimapEnabled;
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;
 extern s16 lbl_803DBA6E;
-extern u8 lbl_803DD928;
+extern u8 gMinimapAreaNameDelay;
 extern int lbl_803DD934;
 extern u8 pauseMenuState;
 extern u8 lbl_803DD75B;
-extern s16 lbl_803DD930;
-extern s16 lbl_803DD932;
+extern s16 gMinimapFadeAlpha;
+extern s16 gMinimapContentAlpha;
 extern u32 lbl_803DD938;
 extern void* lbl_803DD92C;
 extern void* minimapTexture;
 extern void* lbl_803DD940;
-extern u8 lbl_803DD946;
-extern u8 lbl_803DD947;
-extern s16 lbl_803DD948;
-extern s16 lbl_803DD94A;
-extern s16 lbl_803DBBD0;
-extern s16 lbl_803DBBD2;
-extern s8 lbl_803DD95C;
-extern s8 lbl_803DD944;
-extern int lbl_803DBBC0;
-extern int lbl_803DBBC4;
-extern f32 lbl_803DBBB4;
-extern f32 lbl_803DBBB8;
-extern f32 lbl_803DBBBC;
-extern f32 lbl_803DBBEC;
-extern f32 lbl_803DD950;
-extern f32 lbl_803DD954;
-extern f32 lbl_803DD958;
+extern u8 gMinimapTexU;
+extern u8 gMinimapTexV;
+extern s16 gMinimapRegionMaxX;
+extern s16 gMinimapRegionMaxZ;
+extern s16 gMinimapRegionMinX;
+extern s16 gMinimapRegionMinZ;
+extern s8 gMinimapAxisSwap;
+extern s8 gMinimapViewMode;
+extern int gMinimapBoxWidth;
+extern int gMinimapBoxHeight;
+extern f32 gMinimapZoom;
+extern f32 gMinimapMinZoom;
+extern f32 gMinimapMaxZoom;
+extern f32 gMinimapWorldToTexScale;
+extern f32 gMinimapArrowScale2;
+extern f32 gMinimapArrowScale1;
+extern f32 gMinimapArrowScale0;
 extern u8 framesThisStep;
-extern u32 lbl_803E2204;
-extern f32 lbl_803E2208;
-extern f32 lbl_803E2210;
-extern f32 lbl_803E2214;
-extern f32 lbl_803E2218;
-extern f32 lbl_803E221C;
-extern f32 lbl_803E2220;
-extern f32 lbl_803E2224;
-extern f32 lbl_803E2228;
-extern f32 lbl_803E222C;
-extern f32 lbl_803E2230;
-extern f32 lbl_803E2234;
-extern f32 lbl_803E2238;
-extern f32 lbl_803E223C;
-extern f32 lbl_803E2240;
-extern f32 lbl_803E2244;
-extern f32 lbl_803E2248;
-extern f32 lbl_803E224C;
+extern u32 gMinimapBaseColor;
+extern f32 gMinimapZero;
+extern f32 gMinimapF50;
+extern f32 gMinimapF256;
+extern f32 gMinimapFNeg10;
+extern f32 gMinimapFNeg6_67;
+extern f32 gMinimapPi;
+extern f32 gMinimapF32768;
+extern f32 gMinimapFNeg6;
+extern f32 gMinimapFNeg4;
+extern f32 gMinimapF32;
+extern f32 gMinimapF44;
+extern f32 gMinimapF52;
+extern f32 gMinimapF48;
+extern f32 gMinimapF28;
+extern f32 gMinimapF22;
+extern f32 gMinimapF68;
+extern f32 gMinimapF74;
 
 #pragma scheduling off
 #pragma peephole off
@@ -127,46 +127,46 @@ extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(u8* obj);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-extern f32 lbl_803E2284;
-extern f32 lbl_803E2288;
-extern f32 lbl_803E228C;
-extern f32 lbl_803E2290;
+extern f32 gMinimapFNeg15;
+extern f32 gMinimapFNeg9_8;
+extern f32 gMinimapFNeg40;
+extern f32 gMinimapF0_05;
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void viewFn_80129c74(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
 extern void* Obj_GetActiveModel(u8* obj);
-extern u8 lbl_803DD92A;
-extern f32 lbl_803E2278;
-extern f32 lbl_803E227C;
-extern f32 lbl_803E2280;
+extern u8 gMinimapBlipPulse;
+extern f32 gMinimapF110;
+extern f32 gMinimapF43;
+extern f32 gMinimapF390;
 extern f32 timeDelta;
 extern void Sfx_StopFromObject(int obj, int id);
-extern u32 lbl_803E2200;
-extern f32 lbl_803DD94C;
-extern f32 lbl_803E2260;
-extern f32 lbl_803E2264;
-extern f32 lbl_803E2268;
-extern f32 lbl_803E226C;
-extern f32 lbl_803E2270;
-extern f32 lbl_803E2274;
+extern u32 gMinimapCompassColor;
+extern f32 gMinimapCompassPhase;
+extern f32 gMinimapBlipNearDist;
+extern f32 gMinimapF65536;
+extern f32 gMinimapF60;
+extern f32 gMinimapTwo;
+extern f32 gMinimapF24576;
+extern f32 gMinimapFNeg24576;
 extern int getButtonsHeld(int p);
 extern u32 getButtonsJustPressed(int port);
 extern f32 powfCoreFast(f32 base, f32 exp);
 extern void* Camera_GetCurrentViewSlot(void);
 extern int getAngle(float y, float x);
-extern u8 lbl_803DD945;
-extern u8 lbl_803DD929;
-extern s8 lbl_803DBBB1;
-extern int lbl_803DBBE8;
-extern f32 lbl_803DBBD4;
-extern f32 lbl_803DBBD8;
-extern f32 lbl_803DBBDC;
-extern f32 lbl_803DBBE0;
-extern f32 lbl_803DBBE4;
-extern f32 lbl_803E2294;
-extern f32 lbl_803E2298;
-extern f32 lbl_803E229C;
+extern u8 gMinimapZoomSfxActive;
+extern u8 gMinimapRadarInited;
+extern s8 gMinimapSavedViewMode;
+extern int gMinimapPrevAreaNameId;
+extern f32 gMinimapZoomInRate;
+extern f32 gMinimapZoomOutRate;
+extern f32 gMinimapZoomStepMin;
+extern f32 gMinimapZoomStepMax;
+extern f32 gMinimapZoomStep;
+extern f32 gMinimapFltMax;
+extern f32 gMinimapOne;
+extern f32 gMinimapBlipVeryNearDist;
 
 int Minimap_update(void)
 {
@@ -214,7 +214,7 @@ int Minimap_update(void)
     found = 0;
     ox = 0.0f;
     oy = 0.0f;
-    col = lbl_803E2204;
+    col = gMinimapBaseColor;
     player = Obj_GetPlayerObject();
     if (player != NULL)
     {
@@ -244,13 +244,13 @@ int Minimap_update(void)
             {
                 fx = ((GameObject*)player)->anim.worldPosZ;
                 fz = ((GameObject*)player)->anim.worldPosX;
-                lbl_803DD95C = 1;
+                gMinimapAxisSwap = 1;
             }
             else
             {
                 fx = ((GameObject*)player)->anim.worldPosX;
                 fz = ((GameObject*)player)->anim.worldPosZ;
-                lbl_803DD95C = 0;
+                gMinimapAxisSwap = 0;
             }
             yi = (int)((GameObject*)player)->anim.worldPosY;
             for (; k < gMinimapCellTable[i].count; k++)
@@ -269,93 +269,93 @@ int Minimap_update(void)
                     }
                     if ((int)lbl_803DD92C == v)
                     {
-                        lbl_803DD948 = -0x8000;
-                        lbl_803DD94A = -0x8000;
-                        lbl_803DBBD0 = 0x7fff;
-                        lbl_803DBBD2 = 0x7fff;
+                        gMinimapRegionMaxX = -0x8000;
+                        gMinimapRegionMaxZ = -0x8000;
+                        gMinimapRegionMinX = 0x7fff;
+                        gMinimapRegionMinZ = 0x7fff;
                         for (; j < gMinimapCellTable[i].count; j++)
                         {
                             r2 = &rows[j];
                             if (marker == r2->mapId)
                             {
                                 m = r2->x0;
-                                lbl_803DBBD0 = (m >= lbl_803DBBD0) ? lbl_803DBBD0 : m;
+                                gMinimapRegionMinX = (m >= gMinimapRegionMinX) ? gMinimapRegionMinX : m;
                                 m = r2->x1;
-                                lbl_803DD948 = (m <= lbl_803DD948) ? lbl_803DD948 : m;
+                                gMinimapRegionMaxX = (m <= gMinimapRegionMaxX) ? gMinimapRegionMaxX : m;
                                 m = r2->z0;
-                                lbl_803DBBD2 = (m >= lbl_803DBBD2) ? lbl_803DBBD2 : m;
+                                gMinimapRegionMinZ = (m >= gMinimapRegionMinZ) ? gMinimapRegionMinZ : m;
                                 m = r2->z1;
-                                lbl_803DD94A = (m <= lbl_803DD94A) ? lbl_803DD94A : m;
+                                gMinimapRegionMaxZ = (m <= gMinimapRegionMaxZ) ? gMinimapRegionMaxZ : m;
                             }
                         }
-                        lbl_803DD946 = rows[k].texU;
-                        lbl_803DD947 = rows[k].texV;
+                        gMinimapTexU = rows[k].texU;
+                        gMinimapTexV = rows[k].texV;
                     }
                     break;
                 }
             }
         }
-        if ((lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) || GameBit_Get(0x58d) != 0)
+        if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || GameBit_Get(0x58d) != 0)
         {
             marker = 0;
         }
         if ((*gCameraInterface)->getMode() == 0x44 ||
-            (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) ||
+            (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & 0x1000) != 0 ||
             objIsCurModelNotZero((int)player) == 0 ||
             pauseMenuState != 0 || lbl_803DD75B != 0)
         {
             marker = 0;
-            lbl_803DD930 -= 0x20;
-            n = lbl_803DD930;
+            gMinimapFadeAlpha -= 0x20;
+            n = gMinimapFadeAlpha;
             if (n < 0) n = 0;
             else if (n > 0xff) n = 0xff;
-            lbl_803DD930 = n;
-            lbl_803DBBC0 -= 10;
-            n = lbl_803DBBC0;
+            gMinimapFadeAlpha = n;
+            gMinimapBoxWidth -= 10;
+            n = gMinimapBoxWidth;
             if (n < 0) n = 0;
             else if (n > 500) n = 500;
-            lbl_803DBBC0 = n;
-            lbl_803DBBC4 -= 10;
-            n = lbl_803DBBC4;
+            gMinimapBoxWidth = n;
+            gMinimapBoxHeight -= 10;
+            n = gMinimapBoxHeight;
             if (n < 0) n = 0;
             else if (n > 500) n = 500;
-            lbl_803DBBC4 = n;
+            gMinimapBoxHeight = n;
         }
         else
         {
-            lbl_803DBBC4 += 10;
-            n = lbl_803DBBC4;
+            gMinimapBoxHeight += 10;
+            n = gMinimapBoxHeight;
             if (n < 0) n = 0;
             else if (n > 100) n = 100;
-            lbl_803DBBC4 = n;
-            lbl_803DD930 += 0x20;
-            n = lbl_803DD930;
+            gMinimapBoxHeight = n;
+            gMinimapFadeAlpha += 0x20;
+            n = gMinimapFadeAlpha;
             if (n < 0) n = 0;
             else if (n > 0xff) n = 0xff;
-            lbl_803DD930 = n;
+            gMinimapFadeAlpha = n;
         }
         if ((int)lbl_803DD92C == marker)
         {
-            lbl_803DD932 += 0x20;
-            n = lbl_803DD932;
+            gMinimapContentAlpha += 0x20;
+            n = gMinimapContentAlpha;
             if (n < 0)
             {
                 n = 0;
             }
             else
             {
-                n = (s16)((n > lbl_803DD930) ? lbl_803DD930 : n);
+                n = (s16)((n > gMinimapFadeAlpha) ? gMinimapFadeAlpha : n);
             }
-            lbl_803DD932 = n;
+            gMinimapContentAlpha = n;
         }
         else
         {
-            lbl_803DD932 -= 0x20;
-            if (lbl_803DD932 < 0)
+            gMinimapContentAlpha -= 0x20;
+            if (gMinimapContentAlpha < 0)
             {
-                lbl_803DD932 = 0;
+                gMinimapContentAlpha = 0;
                 if (minimapTexture != NULL)
                 {
                     textureFree(minimapTexture);
@@ -369,10 +369,10 @@ int Minimap_update(void)
                 }
             }
         }
-        if (lbl_803DD930 != 0)
+        if (gMinimapFadeAlpha != 0)
         {
             box = gameTextGetBox(0x83);
-            if (lbl_803DD944 == 2 && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
+            if (gMinimapViewMode == 2 && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
             {
                 w = 200;
             }
@@ -380,53 +380,53 @@ int Minimap_update(void)
             {
                 w = 0x78;
             }
-            if (lbl_803DBBC0 < w)
+            if (gMinimapBoxWidth < w)
             {
-                lbl_803DBBC0 += framesThisStep * 8;
-                lbl_803DBBC0 = (lbl_803DBBC0 < w) ? lbl_803DBBC0 : w;
+                gMinimapBoxWidth += framesThisStep * 8;
+                gMinimapBoxWidth = (gMinimapBoxWidth < w) ? gMinimapBoxWidth : w;
             }
             else
             {
-                lbl_803DBBC0 -= framesThisStep * 8;
-                lbl_803DBBC0 = (lbl_803DBBC0 > w) ? lbl_803DBBC0 : w;
+                gMinimapBoxWidth -= framesThisStep * 8;
+                gMinimapBoxWidth = (gMinimapBoxWidth > w) ? gMinimapBoxWidth : w;
             }
-            box[4] = (u16)(lbl_803DBBC0 - 8);
-            lbl_803DD938 = 0x1b8 - lbl_803DBBC4;
+            box[4] = (u16)(gMinimapBoxWidth - 8);
+            lbl_803DD938 = 0x1b8 - gMinimapBoxHeight;
             ((s16*)box)[0xb] = lbl_803DD938;
-            drawHudBox(0x32, lbl_803DD938, lbl_803DBBC0, lbl_803DBBC4,
-                       lbl_803DD930 & 0xff, 1);
-            GXSetScissor(0x32, lbl_803DD938, lbl_803DBBC0, lbl_803DBBC4);
-            switch (lbl_803DD944)
+            drawHudBox(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight,
+                       gMinimapFadeAlpha & 0xff, 1);
+            GXSetScissor(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight);
+            switch (gMinimapViewMode)
             {
             case 0:
                 if (minimapTexture != NULL)
                 {
                     texW = ((Texture*)minimapTexture)->width;
                     texH = ((Texture*)minimapTexture)->height;
-                    lbl_803DBBEC = texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
-                    boxW = lbl_803DBBC0;
+                    gMinimapWorldToTexScale = texW / (f32)(gMinimapRegionMaxX - gMinimapRegionMinX);
+                    boxW = gMinimapBoxWidth;
                     a = boxW / texW;
-                    boxH = lbl_803DBBC4;
+                    boxH = gMinimapBoxHeight;
                     b = boxH / texH;
                     a = (a < b) ? a : b;
-                    a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
-                    lbl_803DBBB8 = a;
-                    if (lbl_803DD95C != 0)
+                    a = (a < gMinimapMaxZoom) ? a : gMinimapMaxZoom;
+                    gMinimapMinZoom = a;
+                    if (gMinimapAxisSwap != 0)
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosZ + lbl_803DD948;
-                        yrel = ((GameObject*)player)->anim.worldPosX - lbl_803DBBD2;
+                        xrel = -((GameObject*)player)->anim.worldPosZ + gMinimapRegionMaxX;
+                        yrel = ((GameObject*)player)->anim.worldPosX - gMinimapRegionMinZ;
                     }
                     else
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosX + lbl_803DD948;
-                        yrel = -((GameObject*)player)->anim.worldPosZ + lbl_803DD94A;
+                        xrel = -((GameObject*)player)->anim.worldPosX + gMinimapRegionMaxX;
+                        yrel = -((GameObject*)player)->anim.worldPosZ + gMinimapRegionMaxZ;
                     }
-                    e = boxW - texW * lbl_803DBBB4;
+                    e = boxW - texW * gMinimapZoom;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
                     panx = -t;
-                    e = boxH - texH * lbl_803DBBB4;
+                    e = boxH - texH * gMinimapZoom;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
@@ -434,77 +434,77 @@ int Minimap_update(void)
                     t = 0.0f;
                     if (t == panx)
                     {
-                        a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(boxW / 2);
+                        a = gMinimapZoom * (xrel * gMinimapWorldToTexScale) - (f32)(boxW / 2);
                         t = (t > a) ? t : a;
-                        b = texW * lbl_803DBBB4 - boxW;
+                        b = texW * gMinimapZoom - boxW;
                         t = (t < b) ? t : b;
                         ox = t;
                     }
-                    t = *(f32*)&lbl_803E2208;
+                    t = *(f32*)&gMinimapZero;
                     if (t == pany)
                     {
-                        a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(boxH / 2);
+                        a = gMinimapZoom * (yrel * gMinimapWorldToTexScale) - (f32)(boxH / 2);
                         t = (t > a) ? t : a;
-                        b = texH * lbl_803DBBB4 - boxH;
+                        b = texH * gMinimapZoom - boxH;
                         t = (t < b) ? t : b;
                         oy = t;
                     }
-                    uq = ox / lbl_803DBBB4;
+                    uq = ox / gMinimapZoom;
                     u = uq;
-                    frac = lbl_803DBBB4 * (uq - u);
-                    vq = oy / lbl_803DBBB4;
+                    frac = gMinimapZoom * (uq - u);
+                    vq = oy / gMinimapZoom;
                     vv = vq;
-                    ((u8*)&col)[3] = lbl_803DD932;
+                    ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
-                    fv = lbl_803DBBB4 * (vq - vv);
+                    fv = gMinimapZoom * (vq - vv);
                     drawPartialTexture(minimapTexture,
-                                       (lbl_803E2210 - panx) - frac,
+                                       (gMinimapF50 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
-                                       lbl_803DD932,
-                                       (int)(lbl_803E2214 * *(f32*)&lbl_803DBBB4),
+                                       gMinimapContentAlpha,
+                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom),
                                        texW - u, texH - vv, u, vv);
                     cx = 0.5f +
-                        ((lbl_803DBBB4 * (xrel * lbl_803DBBEC) + lbl_803E2210) - ox - panx);
+                        ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
                     cy = 0.5f +
-                        ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)lbl_803DD938) - oy - pany);
-                    ((u8*)&col)[3] = lbl_803DD932;
+                        ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)lbl_803DD938) - oy - pany);
+                    ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0;
                     ((u8*)&col)[1] = 0;
                     ((u8*)&col)[2] = 0;
-                    lbl_803DD958 = lbl_803E2218;
-                    fv = lbl_803E221C;
-                    lbl_803DD954 = fv;
-                    lbl_803DD950 = fv;
-                    c1 = lbl_803DD958 * mathSinf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
-                    s1 = lbl_803DD958 * mathCosf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
-                    c2 = lbl_803DD954 *
-                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
-                    s2 = lbl_803DD954 *
-                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
-                    c3 = lbl_803DD950 *
-                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
-                    s3 = lbl_803DD950 *
-                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
+                    gMinimapArrowScale0 = gMinimapFNeg10;
+                    fv = gMinimapFNeg6_67;
+                    gMinimapArrowScale1 = fv;
+                    gMinimapArrowScale2 = fv;
+                    c1 = gMinimapArrowScale0 * mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    s1 = gMinimapArrowScale0 * mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    c2 = gMinimapArrowScale1 *
+                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                    s2 = gMinimapArrowScale1 *
+                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                    c3 = gMinimapArrowScale2 *
+                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                    s3 = gMinimapArrowScale2 *
+                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     cwTri1 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
-                    ((u8*)&col)[3] = lbl_803DD932;
+                    ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0xff;
                     ((u8*)&col)[1] = 0xff;
                     ((u8*)&col)[2] = 0;
-                    c1 = lbl_803E2228 * mathSinf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
-                    s1 = lbl_803E2228 * mathCosf(lbl_803E2220 * (f32)((GameObject*)player)->anim.rotX / lbl_803E2224);
-                    c2 = lbl_803E222C *
-                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
-                    s2 = lbl_803E222C *
-                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / lbl_803E2224);
-                    c3 = lbl_803E222C *
-                        mathSinf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
-                    s3 = lbl_803E222C *
-                        mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
+                    c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    c2 = gMinimapFNeg4 *
+                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                    s2 = gMinimapFNeg4 *
+                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                    c3 = gMinimapFNeg4 *
+                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                    s3 = gMinimapFNeg4 *
+                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     cwTri2 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
                 }
@@ -512,14 +512,14 @@ int Minimap_update(void)
                 {
                     gameTextSetCursor(box[1], box[5], 1);
                     gameTextResetCursor(1);
-                    n = lbl_803DBBC0;
+                    n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw >= box[0]) ? box[0] : hw;
-                    n = lbl_803DBBC4;
+                    n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
-                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x458);
@@ -534,14 +534,14 @@ int Minimap_update(void)
                     fn_8013351C();
                     gameTextSetCursor(box[1], box[5], 1);
                     gameTextResetCursor(1);
-                    n = lbl_803DBBC0;
+                    n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw >= box[0]) ? box[0] : hw;
-                    n = lbl_803DBBC4;
+                    n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
-                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x459);
@@ -552,31 +552,31 @@ int Minimap_update(void)
             case 2:
                 if (lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
                 {
-                    if (lbl_803DD928 == 0)
+                    if (gMinimapAreaNameDelay == 0)
                     {
                         gameTextSetCursor(box[1], box[5], 1);
                         gameTextResetCursor(1);
-                        box[4] = lbl_803DBBC0;
-                        box[5] = lbl_803DBBC4;
+                        box[4] = gMinimapBoxWidth;
+                        box[5] = gMinimapBoxHeight;
                         gameTextSetCursor(box[1], box[5], 2);
                         gameTextSetColor(0, 0xff, 0, lbl_803DD7A2 & 0xff);
                         gameTextShow(lbl_803DBA6E + 10000);
                         gameTextResetCursor(2);
                     }
                 }
-                else if (lbl_803DBBB0 != 0)
+                else if (gMinimapEnabled != 0)
                 {
                     fn_8013351C();
                     gameTextSetCursor(box[1], box[5], 1);
                     gameTextResetCursor(1);
-                    n = lbl_803DBBC0;
+                    n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
                     box[4] = (hw >= box[0]) ? box[0] : hw;
-                    n = lbl_803DBBC4;
+                    n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
-                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     cs = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x45a);
@@ -586,40 +586,40 @@ int Minimap_update(void)
                 break;
             }
             GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawTexture(lbl_803DD940, lbl_803E2230, (f32)(int)(lbl_803DD938 - 0x14),
-                        lbl_803DD930 & 0xff, 0x100);
-            if (lbl_803DD930 != 0)
+            drawTexture(lbl_803DD940, gMinimapF32, (f32)(int)(lbl_803DD938 - 0x14),
+                        gMinimapFadeAlpha & 0xff, 0x100);
+            if (gMinimapFadeAlpha != 0)
             {
-                ((u8*)&col2)[3] = lbl_803DD932;
+                ((u8*)&col2)[3] = gMinimapContentAlpha;
                 ((u8*)&col2)[0] = 0xff;
                 ((u8*)&col2)[1] = 0xff;
                 ((u8*)&col2)[2] = 0;
                 xc = (s16)(lbl_803DD938 - 4);
-                if (lbl_803DD944 == 0 && minimapTexture != NULL)
+                if (gMinimapViewMode == 0 && minimapTexture != NULL)
                 {
-                    if (lbl_803DBBB4 < lbl_803DBBBC)
+                    if (gMinimapZoom < gMinimapMaxZoom)
                     {
                         cwL = col2;
-                        hudDrawTriangle(lbl_803E2234, (f32)(xc - 0x14),
-                                        lbl_803E2238, (f32)(xc - 0x14),
-                                        lbl_803E223C, (f32)(xc - 0x1a), &cwL);
+                        hudDrawTriangle(gMinimapF44, (f32)(xc - 0x14),
+                                        gMinimapF52, (f32)(xc - 0x14),
+                                        gMinimapF48, (f32)(xc - 0x1a), &cwL);
                     }
-                    if (lbl_803DBBB4 > lbl_803DBBB8)
+                    if (gMinimapZoom > gMinimapMinZoom)
                     {
                         cwR = col2;
-                        hudDrawTriangle(lbl_803E2234, (f32)(xc + 0x14),
-                                        lbl_803E2238, (f32)(xc + 0x14),
-                                        lbl_803E223C, (f32)(xc + 0x1a), &cwR);
+                        hudDrawTriangle(gMinimapF44, (f32)(xc + 0x14),
+                                        gMinimapF52, (f32)(xc + 0x14),
+                                        gMinimapF48, (f32)(xc + 0x1a), &cwR);
                     }
                 }
                 xl = xc - 4;
                 xr = xc + 4;
                 cwM = col2;
-                hudDrawTriangle(lbl_803E2240, xl, lbl_803E2240, xr,
-                                lbl_803E2244, xc, &cwM);
+                hudDrawTriangle(gMinimapF28, xl, gMinimapF28, xr,
+                                gMinimapF22, xc, &cwM);
                 cwB = col2;
-                hudDrawTriangle(lbl_803E2248, xl, lbl_803E2248, xr,
-                                lbl_803E224C, xc, &cwB);
+                hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr,
+                                gMinimapF74, xc, &cwB);
             }
         }
     }
@@ -663,11 +663,11 @@ void fn_80133818(void)
     u8 i;
 
     i = 0;
-    a = lbl_803E2284;
-    b = lbl_803E2288;
-    c = lbl_803E2208;
-    d = lbl_803E228C;
-    e = lbl_803E2290;
+    a = gMinimapFNeg15;
+    b = gMinimapFNeg9_8;
+    c = gMinimapZero;
+    d = gMinimapFNeg40;
+    e = gMinimapF0_05;
     for (; i < 2; i++)
     {
         lbl_803DBBC8[i] = (void*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
@@ -691,8 +691,8 @@ void fn_80133718(void)
     int* model;
 
     count = 2;
-    viewFn_80129cbc(lbl_803E227C, lbl_803E2278, lbl_803E2280);
-    b = (lbl_803DD92A >> 3) & 1;
+    viewFn_80129cbc(gMinimapF43, gMinimapF110, gMinimapF390);
+    b = (gMinimapBlipPulse >> 3) & 1;
     if (b != 0)
     {
         if ((s8) * (u8*)((char*)lbl_803DBBC8[1] + 173) == 0)
@@ -764,7 +764,7 @@ void fn_80133934(void)
 u8 fn_801334E0(void)
 {
     u32 act = 0;
-    if (lbl_803DD944 == 2 && lbl_803DBBB0 != 0)
+    if (gMinimapViewMode == 2 && gMinimapEnabled != 0)
     {
         act = 1;
     }
@@ -772,7 +772,7 @@ u8 fn_801334E0(void)
     {
         return act;
     }
-    lbl_803DD928 = 5;
+    gMinimapAreaNameDelay = 5;
     return act;
 }
 
@@ -790,24 +790,24 @@ void fn_8013351C(void)
     f32 s2;
     int y;
 
-    col = lbl_803E2200;
-    ((u8*)&col)[3] = lbl_803DD930;
-    lbl_803DD94C = -(lbl_803E2260 * timeDelta - lbl_803DD94C);
-    if (lbl_803DD94C > *(f32*)&lbl_803E2224)
+    col = gMinimapCompassColor;
+    ((u8*)&col)[3] = gMinimapFadeAlpha;
+    gMinimapCompassPhase = -(gMinimapBlipNearDist * timeDelta - gMinimapCompassPhase);
+    if (gMinimapCompassPhase > *(f32*)&gMinimapF32768)
     {
-        lbl_803DD94C = lbl_803DD94C - lbl_803E2264;
+        gMinimapCompassPhase = gMinimapCompassPhase - gMinimapF65536;
     }
-    c0 = lbl_803E2268 * mathSinf((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
-    s0 = lbl_803E2268 * mathCosf((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
-    c1 = lbl_803E226C * mathSinf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
-    s1 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
-    cc2 = lbl_803E226C * mathSinf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
-    s2 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
+    c0 = gMinimapF60 * mathSinf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
+    s0 = gMinimapF60 * mathCosf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
+    c1 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
+    s1 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
+    cc2 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
+    s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
     y = lbl_803DD938 + 0x32;
     c2 = col;
-    hudDrawTriangle(lbl_803E2278 - c0, y - s0,
-                    lbl_803E2278 - c1, y - s1,
-                    lbl_803E2278 - cc2, y - s2, &c2);
+    hudDrawTriangle(gMinimapF110 - c0, y - s0,
+                    gMinimapF110 - c1, y - s1,
+                    gMinimapF110 - cc2, y - s2, &c2);
 }
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
@@ -825,7 +825,7 @@ void fn_8013396C(void)
     f32 t;
     f32 old;
     f32 pw;
-    f32 dist = lbl_803E2294;
+    f32 dist = gMinimapFltMax;
 
     sfx = 0;
     player = (int)Obj_GetPlayerObject();
@@ -836,22 +836,22 @@ void fn_8013396C(void)
         objIsCurModelNotZero(player) == 0 ||
         pauseMenuState != 0)
     {
-        if (lbl_803DD945 != 0)
+        if (gMinimapZoomSfxActive != 0)
         {
             Sfx_StopFromObject(0, 0x3f0);
-            lbl_803DD945 = 0;
+            gMinimapZoomSfxActive = 0;
         }
     }
     else
     {
-        if (lbl_803DD928 != 0)
+        if (gMinimapAreaNameDelay != 0)
         {
-            lbl_803DD928 = lbl_803DD928 - 1;
+            gMinimapAreaNameDelay = gMinimapAreaNameDelay - 1;
         }
         if ((*gGameUIInterface)->isEventReady(0xc8d) != 0)
         {
-            lbl_803DBBB0 = 1 - lbl_803DBBB0;
-            switch (lbl_803DBBB0)
+            gMinimapEnabled = 1 - gMinimapEnabled;
+            switch (gMinimapEnabled)
             {
             case 0:
                 sfx = 0x3ec;
@@ -863,19 +863,19 @@ void fn_8013396C(void)
             Sfx_PlayFromObject(0, sfx);
             sfx = 0;
         }
-        if (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0)
+        if (gMinimapEnabled == 0 && lbl_803DD7BA == 0)
         {
-            if (lbl_803DD945 != 0)
+            if (gMinimapZoomSfxActive != 0)
             {
                 Sfx_StopFromObject(0, 0x3f0);
-                lbl_803DD945 = 0;
+                gMinimapZoomSfxActive = 0;
             }
         }
         else
         {
-            if (lbl_803DD929 == 0)
+            if (gMinimapRadarInited == 0)
             {
-                lbl_803DD929 = 1;
+                gMinimapRadarInited = 1;
                 fn_80133818();
             }
             held = getButtonsHeld(0);
@@ -884,101 +884,101 @@ void fn_8013396C(void)
             {
                 if ((pressed & 1) != 0)
                 {
-                    lbl_803DD944 -= 1;
+                    gMinimapViewMode -= 1;
                     sfx = 0x3ed;
-                    if (lbl_803DD944 < 0)
+                    if (gMinimapViewMode < 0)
                     {
-                        lbl_803DD944 = 2;
+                        gMinimapViewMode = 2;
                     }
                 }
                 else if ((pressed & 2) != 0)
                 {
-                    lbl_803DD944 += 1;
+                    gMinimapViewMode += 1;
                     sfx = 0x3ed;
-                    if (lbl_803DD944 > 2)
+                    if (gMinimapViewMode > 2)
                     {
-                        lbl_803DD944 = 0;
+                        gMinimapViewMode = 0;
                     }
                 }
             }
             if (lbl_803DD7BA != 0)
             {
-                if (lbl_803DBBB1 == -1)
+                if (gMinimapSavedViewMode == -1)
                 {
-                    lbl_803DBBB1 = lbl_803DD944;
+                    gMinimapSavedViewMode = gMinimapViewMode;
                 }
-                lbl_803DD944 = 2;
+                gMinimapViewMode = 2;
             }
             else
             {
-                if (lbl_803DBBB1 != -1)
+                if (gMinimapSavedViewMode != -1)
                 {
-                    lbl_803DD944 = lbl_803DBBB1;
-                    lbl_803DBBB1 = -1;
+                    gMinimapViewMode = gMinimapSavedViewMode;
+                    gMinimapSavedViewMode = -1;
                 }
             }
-            switch (lbl_803DD944)
+            switch (gMinimapViewMode)
             {
             case 0:
                 if ((held & 4) != 0)
                 {
-                    pw = powfCoreFast(lbl_803DBBD4, timeDelta);
-                    lbl_803DBBE4 = lbl_803DBBE4 * pw;
+                    pw = powfCoreFast(gMinimapZoomInRate, timeDelta);
+                    gMinimapZoomStep = gMinimapZoomStep * pw;
                 }
                 else if ((held & 8) != 0)
                 {
-                    pw = powfCoreFast(lbl_803DBBD8, timeDelta);
-                    lbl_803DBBE4 = lbl_803DBBE4 * pw;
+                    pw = powfCoreFast(gMinimapZoomOutRate, timeDelta);
+                    gMinimapZoomStep = gMinimapZoomStep * pw;
                 }
                 else
                 {
-                    lbl_803DBBE4 = lbl_803E2298;
+                    gMinimapZoomStep = gMinimapOne;
                 }
-                t = (lbl_803DBBE4 < lbl_803DBBDC) ? lbl_803DBBDC
-                    : ((lbl_803DBBE4 > lbl_803DBBE0) ? lbl_803DBBE0 : lbl_803DBBE4);
-                lbl_803DBBE4 = t;
-                old = lbl_803DBBB4;
-                lbl_803DBBB4 = old * t;
-                t = (lbl_803DBBB4 < lbl_803DBBB8) ? lbl_803DBBB8
-                    : ((lbl_803DBBB4 > lbl_803DBBBC) ? lbl_803DBBBC : lbl_803DBBB4);
-                lbl_803DBBB4 = t;
+                t = (gMinimapZoomStep < gMinimapZoomStepMin) ? gMinimapZoomStepMin
+                    : ((gMinimapZoomStep > gMinimapZoomStepMax) ? gMinimapZoomStepMax : gMinimapZoomStep);
+                gMinimapZoomStep = t;
+                old = gMinimapZoom;
+                gMinimapZoom = old * t;
+                t = (gMinimapZoom < gMinimapMinZoom) ? gMinimapMinZoom
+                    : ((gMinimapZoom > gMinimapMaxZoom) ? gMinimapMaxZoom : gMinimapZoom);
+                gMinimapZoom = t;
                 if (t != old)
                 {
-                    if (lbl_803DD945 == 0)
+                    if (gMinimapZoomSfxActive == 0)
                     {
                         Sfx_PlayFromObject(0, 0x3f0);
-                        lbl_803DD945 = 1;
+                        gMinimapZoomSfxActive = 1;
                     }
                 }
                 else
                 {
-                    if (lbl_803DD945 != 0)
+                    if (gMinimapZoomSfxActive != 0)
                     {
                         Sfx_StopFromObject(0, 0x3f0);
-                        lbl_803DD945 = 0;
+                        gMinimapZoomSfxActive = 0;
                     }
                 }
                 break;
             case 1:
-                if (lbl_803DD945 != 0)
+                if (gMinimapZoomSfxActive != 0)
                 {
                     Sfx_StopFromObject(0, 0x3f0);
-                    lbl_803DD945 = 0;
+                    gMinimapZoomSfxActive = 0;
                 }
                 lbl_803DD934 = ObjGroup_FindNearestObject(0x4f, player, &dist);
                 if ((void*)lbl_803DD934 != NULL)
                 {
-                    if (dist < lbl_803E2260)
+                    if (dist < gMinimapBlipNearDist)
                     {
-                        lbl_803DD92A += 1;
-                        if (dist < lbl_803E229C)
+                        gMinimapBlipPulse += 1;
+                        if (dist < gMinimapBlipVeryNearDist)
                         {
-                            lbl_803DD92A += 1;
+                            gMinimapBlipPulse += 1;
                         }
                     }
                     else
                     {
-                        lbl_803DD92A = 0;
+                        gMinimapBlipPulse = 0;
                     }
                     slot = Camera_GetCurrentViewSlot();
                     a = getAngle(*(f32*)(lbl_803DD934 + 0xc) - ((GameObject*)player)->anim.localPosX,
@@ -996,13 +996,13 @@ void fn_8013396C(void)
                 }
                 break;
             case 2:
-                if (lbl_803DD945 != 0)
+                if (gMinimapZoomSfxActive != 0)
                 {
                     Sfx_StopFromObject(0, 0x3f0);
-                    lbl_803DD945 = 0;
+                    gMinimapZoomSfxActive = 0;
                 }
                 v2 = lbl_803DBA6E;
-                if (v2 != lbl_803DBBE8)
+                if (v2 != gMinimapPrevAreaNameId)
                 {
                     if (v2 == -1)
                     {
@@ -1013,7 +1013,7 @@ void fn_8013396C(void)
                         sfx = 0x3ee;
                     }
                 }
-                lbl_803DBBE8 = v2;
+                gMinimapPrevAreaNameId = v2;
                 break;
             }
             if ((u16)sfx != 0)

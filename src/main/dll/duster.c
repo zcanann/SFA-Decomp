@@ -18,7 +18,7 @@
  *     with buoyancy clamping and periodic decoy sfx.
  *   - mutated EBA (mutatedEbaInit / fn_80156B0C / fn_80156C34 / fn_80156950
  *     / mutatedEbaUpdateWhileFrozen): move-table sequenced attacker
- *     (lbl_8031F318 entries, 0xC bytes each).
+ *     (gDusterEbaMoveTable entries, 0xC bytes each).
  *   - hooded Zyck flyer (fn_80156DA0 / hoodedZyckUpdateWhileFrozen):
  *     line-probes the ground each frame and toggles its move/visibility.
  *
@@ -61,8 +61,8 @@ extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern void fn_80293018(int angle, float* outSin, float* outCos);
 extern u32 fn_80295CBC();
 
-extern u32 lbl_8031F2F8;
-extern u8 lbl_8031F318[];
+extern u32 gDusterWallProbeOffsets;
+extern u8 gDusterEbaMoveTable[];
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
@@ -71,51 +71,51 @@ extern const f32 lbl_803E2A24;
 extern const f32 lbl_803E2A28;
 extern const f32 lbl_803E2A2C;
 extern const f32 lbl_803E2A30;
-extern const f32 lbl_803E2A34;
+extern const f32 gDusterF25;
 extern const f32 lbl_803E2A38;
 extern const f32 lbl_803E2A3C;
 extern const f32 lbl_803E2A40;
 extern const f32 lbl_803E2A48;
 extern const f32 lbl_803E2A4C;
-extern const f32 lbl_803E2A50;
+extern const f32 gDusterF3_25;
 extern const f32 lbl_803E2A54;
 extern const f32 lbl_803E2A58;
 extern const f32 lbl_803E2A60;
-extern const f32 lbl_803E2A70;
-extern const f32 lbl_803E2A74;
+extern const f32 gDusterDayStartSeconds;
+extern const f32 gDusterDayEndSeconds;
 extern const f32 lbl_803E2A78;
-extern const f32 lbl_803E2A7C;
-extern const f32 lbl_803E2A80;
+extern const f32 gDusterF3;
+extern const f32 gDusterF180;
 extern f32 lbl_803E2B18;
-extern const f32 lbl_803E2A5C;
-extern const f32 lbl_803E2A84;
+extern const f32 gDusterF0_045;
+extern const f32 gDusterF40;
 extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 extern const f32 lbl_803E2A98;
-extern const f32 lbl_803E2AA8;
-extern const f32 lbl_803E2AAC;
-extern const f32 lbl_803E2AB0;
-extern const f32 lbl_803E2AB4;
+extern const f32 gDusterF250;
+extern const f32 gDusterF150;
+extern const f32 gDusterF600;
+extern const f32 gDusterF20;
 extern const f32 lbl_803E2AB8;
 extern const f32 lbl_803E2ABC;
-extern const f32 lbl_803E2AC0;
-extern const f32 lbl_803E2AC4;
-extern const f32 lbl_803E2AC8;
-extern const f32 lbl_803E2ACC;
+extern const f32 gDusterF0_2;
+extern const f32 gDusterF5;
+extern const f32 gDusterFNeg0_5;
+extern const f32 gDusterF0_05;
 extern const f32 lbl_803E2AD0;
-extern const f32 lbl_803E2AD4;
+extern const f32 gDusterFNeg0_7;
 extern const f32 lbl_803E2AD8;
-extern const f32 lbl_803E2ADC;
-extern f32 lbl_803E2AE0;
-extern const f32 lbl_803E2AE4;
-extern const f32 lbl_803E2AE8;
-extern const f32 lbl_803E2AEC;
-extern const f32 lbl_803E2AF0;
+extern const f32 gDusterF0_025;
+extern f32 gDusterF0_005;
+extern const f32 gDusterF700;
+extern const f32 gDusterF60;
+extern const f32 gDusterF0_006;
+extern const f32 gDusterF0_95;
 extern const f32 lbl_803E2AF4;
-extern const f32 lbl_803E2AF8;
-extern const f32 lbl_803E2AFC;
-extern const f32 lbl_803E2B00;
+extern const f32 gDusterF0_15;
+extern const f32 gDusterF0_25;
+extern const f32 gDusterF0_75;
 extern const f32 lbl_803E2B04;
 extern const f32 lbl_803E2B38;
 extern const f32 lbl_803E2B3C;
@@ -201,7 +201,7 @@ void fn_801554B4(int* obj, int state)
     float hit[18];
 
     didHit = 0;
-    probeOffsets = (float*)&lbl_8031F2F8;
+    probeOffsets = (float*)&gDusterWallProbeOffsets;
     for (i = 0; didHit == 0 && i < 4; i++)
     {
         maxv[0] = ((GameObject*)obj)->anim.localPosX + *probeOffsets;
@@ -372,7 +372,7 @@ void rachnopInit(u32 unused, int state)
     float fa;
     float fb;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2A34;
+    ((BaddieState*)state)->speedScale = gDusterF25;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     fa = lbl_803E2A38;
     ((BaddieState*)state)->unk308 = lbl_803E2A38;
@@ -419,12 +419,12 @@ void pollenFn_80155b10(u32 obj, int state)
         b[0] = *(float*)(ref + 0xc);
         b[1] = lbl_803E2A4C + *(float*)(ref + 0x10);
         b[2] = *(float*)(ref + 0x14);
-        spd = lbl_803E2A50 *
+        spd = gDusterF3_25 *
             (lbl_803E2A58 * (f32)(int)
         randomGetRange(-10, 10) + lbl_803E2A54
         )
         ;
-        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C);
+        ref = fn_80169EF4(a, b, spd, 1, gDusterF0_045);
         fn_80293018(ref, &cosVal, &velXZ);
         velXZ = velXZ * spd;
         cosVal = cosVal * spd;
@@ -469,7 +469,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
     float timeInfo[4];
 
     (*gSkyInterface)->getTimeOfDay(timeInfo);
-    if ((timeInfo[0] >= lbl_803E2A70) && (timeInfo[0] <= lbl_803E2A74))
+    if ((timeInfo[0] >= gDusterDayStartSeconds) && (timeInfo[0] <= gDusterDayEndSeconds))
     {
         isDaytime = 1;
     }
@@ -503,7 +503,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
     {
         if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
-            Baddie_SetMove(obj, state, 5, lbl_803E2A7C, 0, 0);
+            Baddie_SetMove(obj, state, 5, gDusterF3, 0, 0);
         }
     }
     else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
@@ -574,7 +574,7 @@ void fn_80156010(u32 obj, int state)
         if (((GameObject*)obj)->anim.currentMove == 4)
         {
             pollenFn_80155b10(obj, state);
-            *(float*)(state + 0x324) = lbl_803E2A80;
+            *(float*)(state + 0x324) = gDusterF180;
             Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
         else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
@@ -585,7 +585,7 @@ void fn_80156010(u32 obj, int state)
         else if (((GameObject*)obj)->anim.currentMove == 6)
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
-            *(float*)(state + 0x324) = lbl_803E2A80;
+            *(float*)(state + 0x324) = gDusterF180;
         }
         else if ((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
@@ -602,7 +602,7 @@ void baddieInit_80156188(u32 unused, int state)
     float fa;
     float fb;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2A84;
+    ((BaddieState*)state)->speedScale = gDusterF40;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;
@@ -648,9 +648,9 @@ void fn_8015625C(u32 obj, int state)
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
-    if (*(float*)(state + 0x328) > lbl_803E2AA8)
+    if (*(float*)(state + 0x328) > gDusterF250)
     {
-        *(float*)(state + 0x328) = lbl_803E2AAC;
+        *(float*)(state + 0x328) = gDusterF150;
     }
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
@@ -683,17 +683,17 @@ void fn_8015625C(u32 obj, int state)
         *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
         if (*(float*)(state + 0x324) <= zero)
         {
-            *(float*)(state + 0x324) = lbl_803E2AB0;
+            *(float*)(state + 0x324) = gDusterF600;
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
     {
-        *(float*)(state + 0x324) = lbl_803E2AB0;
+        *(float*)(state + 0x324) = gDusterF600;
     }
     if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
     {
-        moveSpeed = lbl_803E2AB4;
+        moveSpeed = gDusterF20;
     }
     else
     {
@@ -701,24 +701,24 @@ void fn_8015625C(u32 obj, int state)
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(tracked + 0x18),
                                                          lbl_803E2AB8 + *(float*)(tracked + 0x1c),
                                                          *(float*)(tracked + 0x20),
-                                                         lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
+                                                         lbl_803E2ABC, gDusterF0_2, gDusterF5,
                                                          ((BaddieState*)state)->unk304);
     }
-    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
+    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_5)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
     }
     if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
     {
-        ((BaddieState*)state)->unk308 = lbl_803E2ACC;
+        ((BaddieState*)state)->unk308 = gDusterF0_05;
         if (((BaddieState*)state)->hitCounter != 0)
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2AD0;
         }
-        if (((GameObject*)obj)->anim.velocityY < lbl_803E2AD4)
+        if (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_7)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E2AD4;
+            ((GameObject*)obj)->anim.velocityY = gDusterFNeg0_7;
         }
         else if (((GameObject*)obj)->anim.velocityY > lbl_803E2AD8)
         {
@@ -728,9 +728,9 @@ void fn_8015625C(u32 obj, int state)
     else
     {
         ((BaddieState*)state)->seqEntryIndex = 0;
-        if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
+        if (((BaddieState*)state)->unk308 > gDusterF0_025)
         {
-            ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
+            ((BaddieState*)state)->unk308 = -(gDusterF0_005 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
@@ -790,7 +790,7 @@ void fn_8015652C(u32 obj, int state)
         if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
                     route->atSegmentEnd != 0) &&
                 (*gRomCurveInterface)->goNextPoint(route) != 0) &&
-            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4,
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, gDusterF700,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
@@ -802,7 +802,7 @@ void fn_8015652C(u32 obj, int state)
         else
         {
             moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, route->posX, route->posY, route->posZ,
-                                                             lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
+                                                             lbl_803E2ABC, gDusterF0_2, gDusterF5,
                                                              ((BaddieState*)state)->unk304);
         }
     }
@@ -813,25 +813,25 @@ void fn_8015652C(u32 obj, int state)
     else
     {
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(placement + 8), *(float*)(placement + 0xc),
-                                                         *(float*)(placement + 0x10), lbl_803E2ABC, lbl_803E2AC0,
-                                                         lbl_803E2AC4,
+                                                         *(float*)(placement + 0x10), lbl_803E2ABC, gDusterF0_2,
+                                                         gDusterF5,
                                                          ((BaddieState*)state)->unk304);
     }
-    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
+    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_5)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
     }
     if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
     {
-        ((BaddieState*)state)->unk308 = lbl_803E2ACC;
+        ((BaddieState*)state)->unk308 = gDusterF0_05;
         if (((BaddieState*)state)->hitCounter != 0)
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2AD0;
         }
-        if (((GameObject*)obj)->anim.velocityY < lbl_803E2AD4)
+        if (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_7)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E2AD4;
+            ((GameObject*)obj)->anim.velocityY = gDusterFNeg0_7;
         }
         else if (((GameObject*)obj)->anim.velocityY > lbl_803E2AD8)
         {
@@ -841,9 +841,9 @@ void fn_8015652C(u32 obj, int state)
     else
     {
         ((BaddieState*)state)->seqEntryIndex = 0;
-        if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
+        if (((BaddieState*)state)->unk308 > gDusterF0_025)
         {
-            ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
+            ((BaddieState*)state)->unk308 = -(gDusterF0_005 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
@@ -854,11 +854,11 @@ void wbInit(u32 unused, int state)
     float fa;
     u32 ua;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2AE8;
+    ((BaddieState*)state)->speedScale = gDusterF60;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
-    ((BaddieState*)state)->unk308 = lbl_803E2ACC;
-    ((BaddieState*)state)->unk300 = lbl_803E2AEC;
-    ((BaddieState*)state)->unk304 = lbl_803E2AF0;
+    ((BaddieState*)state)->unk308 = gDusterF0_05;
+    ((BaddieState*)state)->unk300 = gDusterF0_006;
+    ((BaddieState*)state)->unk304 = gDusterF0_95;
     ((BaddieState*)state)->unk320 = 0;
     fa = lbl_803E2AF4;
     *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2AF4;
@@ -891,7 +891,7 @@ void fn_80156950(u32 obj, int state)
     case 7:
         if (*(u16*)(state + 0x2f8) != 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AF8)
+            if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_15)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
             }
@@ -904,11 +904,11 @@ void fn_80156950(u32 obj, int state)
     case 8:
         if (*(u16*)(state + 0x2f8) != 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AFC)
+            if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_25)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
             }
-            else if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2B00)
+            else if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_75)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath4);
             }
@@ -972,14 +972,14 @@ void fn_80156B0C(u32 obj, int state)
         if (*(u16*)(state + 0x2a0) < 4)
         {
             tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 8],
-                        *(float*)(lbl_8031F318 + tblOff), 0, 0);
+            Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8],
+                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
         else
         {
             tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 9],
-                        *(float*)(lbl_8031F318 + tblOff), 0, 0);
+            Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 9],
+                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
     }
     fn_80156950(obj, state);
@@ -1003,8 +1003,8 @@ void fn_80156C34(u32 obj, int state)
             ((BaddieState*)state)->seqEntryIndex = 0;
         }
         tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-        Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 8],
-                    *(float*)(lbl_8031F318 + tblOff), 0, 0);
+        Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8],
+                    *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
     }
     fn_80156950(obj, state);
     return;
@@ -1014,7 +1014,7 @@ void mutatedEbaInit(u32 unused, int state)
 {
     float fa;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2A84;
+    ((BaddieState*)state)->speedScale = gDusterF40;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;
