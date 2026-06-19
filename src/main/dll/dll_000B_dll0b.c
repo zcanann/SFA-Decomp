@@ -222,7 +222,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 }
 
 extern void* memcpy(void* dst, const void* src, u32 n);
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -1411,8 +1410,6 @@ void dll_0B_release(void)
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
-
-
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
@@ -1556,7 +1553,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
@@ -1568,9 +1564,6 @@ extern void gxBlendFn_80078b4c(void);
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
-
-
-
 
 extern const f32 lbl_803DF438;
 
@@ -2198,7 +2191,6 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void selectTexture(u8* tex, int mapId);
 extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
-
 extern void mtx44Transpose(f32 * src, f32 * dst);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);

@@ -18,8 +18,6 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
-
-
 /* FogcontrolPlacement::flags (low byte, offset 0x1A) */
 #define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */
 #define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses lbl_803E4068 (else ...406C) */
@@ -57,7 +55,6 @@ typedef struct FogcontrolPlacement
 } FogcontrolPlacement;
 
 extern f32 timeDelta;
-
 extern f32 lbl_803E4070; /* blend floor (fog off at/below this) */
 extern f32 lbl_803E4074; /* blend ceiling (fully on) */
 extern f32 lbl_803E4078; /* density divisor */

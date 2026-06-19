@@ -15,10 +15,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern u8 framesThisStep;
-
-
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;

@@ -13,9 +13,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
-
 extern f32 timeDelta;
-
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 fn_8014C5D0(int* obj);
@@ -64,8 +62,6 @@ typedef struct NwObjPos
 #pragma opt_loop_invariants off
 void nw_tricky_update(int* obj)
 {
-
-
 
     int count;
     NwTrickyIds ids;

@@ -1,10 +1,7 @@
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
-
 extern float powfBitEstimate(float x, float y);
-
 extern f32 timeDelta;
-
 extern float fn_802924B4(float y, float x);
 extern double lbl_803DE7D8;
 extern f32 fcos16(int angle);

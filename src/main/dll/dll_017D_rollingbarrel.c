@@ -3,15 +3,12 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/IM/IMspacecraft.h"
-
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-
 extern int getAngle(float y, float x);
-
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -21,16 +18,12 @@ extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
-
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 duration);
-
 extern void objRenderFn_8003b8f4(f32 v);
-
 extern f32 timeDelta;
 extern s16 lbl_803DDB20;
-
 extern int lbl_803E4460;
 typedef struct { int a, b; } RollingBarrelInitPair;
 extern const f32 lbl_803E4468;
@@ -64,7 +57,6 @@ int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
-
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
@@ -75,7 +67,6 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
     ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
 }
-
 
 void RollingBarrel_free(int obj)
 {
@@ -124,7 +115,6 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 
     (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, lbl_803E44B8, tmp, -1);
 }
-
 
 #pragma peephole off
 void RollingBarrel_update(int obj)

@@ -18,7 +18,6 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
-
 extern u64 FUN_80006824();
 extern u32 FUN_80017690();
 extern u32 FUN_80017698();
@@ -52,7 +51,6 @@ extern u32 FUN_80286888();
 extern u32 FUN_8028688c();
 extern double FUN_80293900();
 extern u32 FUN_80294d40();
-
 extern u32 DAT_802c2a58;
 extern u32 DAT_802c2a5c;
 extern u32 DAT_802c2a60;
@@ -76,7 +74,6 @@ extern f32 lbl_803E4F68;
 extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
-
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;

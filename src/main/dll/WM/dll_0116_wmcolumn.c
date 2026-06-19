@@ -30,7 +30,6 @@ typedef struct WmColumnPlacement
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -39,7 +38,6 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);
 extern u32 playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int x);
-
 extern f32 lbl_803E37B8; /* 1.0: render scale */
 extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
 extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */

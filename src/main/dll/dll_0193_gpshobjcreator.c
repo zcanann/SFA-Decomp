@@ -1,12 +1,7 @@
 /* DLL 0x0193 (gpshobjcreator) — GPSH shrine object creator and ecsh_shrine update [0x801C8084-0x801C82C8). */
 #include "main/dll/gpshshrineflags_struct.h"
-
 extern f32 timeDelta;
-
-
-
 extern int Obj_IsLoadingLocked(void);
-
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -59,7 +54,6 @@ void gpsh_objcreator_initialise(void)
 void gpsh_objcreator_update(int* obj)
 {
     extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
- /* #57 */
     u8* sub;
     void* setup;
 

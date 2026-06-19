@@ -12,7 +12,6 @@
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
-
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -22,9 +21,6 @@ extern u32 FUN_80006c30();
 extern double FUN_80017714();
 extern u64 FUN_80017814();
 extern int FUN_80017830();
-
-
-
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_800723a0();
@@ -79,7 +75,6 @@ extern u32 FUN_80286888();
 extern u32 FUN_8028688c();
 extern double FUN_80286cd0();
 extern u32 countLeadingZeros();
-
 extern u32 DAT_800000f8;
 extern u32 DAT_802c24e8;
 extern u32 DAT_802c24ec;
@@ -153,7 +148,6 @@ extern f32 lbl_803DF7AC;
 extern char* sResourceFileNameTable[];
 extern char sRomlistZlbPathFormat[];
 extern u8 uRam803dc24f;
-
 extern char sResourceFileNameAudioTab[];
 extern u8 lbl_80345E10[];
 extern char sArchivePathFormat;
@@ -168,9 +162,6 @@ extern void AtomicSList_Push(int list, int e);
 extern int DVDOpen(char* fileName, void* fileInfo);
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern int DVDClose(void* fileInfo);
-
-
-
 extern int DVDReadAsyncPrio(void* fi, void* addr, int len, int off, void (*cb)(), int prio);
 extern void mergeTableFiles(void* buf, int a, int b, int n);
 extern void animCurvReadCb();
@@ -1532,10 +1523,7 @@ extern int return0_8002A5B8(int p);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern char sDirBlockTag;
-
-
 extern int zlbDecompress(void* dst, int size, int out, void* src);
-
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
 void loadDataFiles(void);
@@ -5156,7 +5144,6 @@ extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
 extern u8* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern u32 randomGetRange(int min, int max);
-
 extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 extern float mathSinf(float x);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
@@ -6958,7 +6945,6 @@ void fn_8004CE0C(void* viewMtx)
 #pragma opt_common_subs reset
 #pragma scheduling reset
 
-
 extern void printHeapStats(int a);
 extern void defragMemory(int mode);
 extern void debugPrintSetColor(int r, int g, int b, int a);
@@ -7286,7 +7272,6 @@ extern void OSWakeupThread(void* q);
 extern int Queue_Peek(void* q, void* out);
 extern void Queue_Pop(void* q, void* out);
 extern void GXDisableBreakPt(void);
-
 extern void GXPeekZ(int x, int y, void* out);
 extern f32 lbl_803DCCC0;
 extern f32 lbl_803DEA9C;
@@ -7308,7 +7293,6 @@ extern s16 gDepthReadResults[];
 extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
-
 extern int stackCreate(int n, int stride);
 extern int testAndSet_onlyUseHeap3(int v);
 extern void dvdReadCb_80041d30();
@@ -7671,7 +7655,6 @@ void logGpuHang(void)
     }
 }
 
-
 extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
@@ -7786,7 +7769,6 @@ extern void VISetPostRetraceCallback(void (*cb)());
 extern void GXSetBreakPtCallback(void (*cb)());
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
-
 extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
 extern u32 GXSetDispCopyYScale(f32 vscale);
 extern void GXSetDispCopyDst(int wd, int ht);
@@ -7797,7 +7779,6 @@ extern int VIWaitForRetrace();
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
-
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern void GXSetNumChans(int nChans);
 extern void GXSetChanCtrl(int chan, int enable, int amb_src, int mat_src, int light_mask, int diff_fn, int attn_fn);

@@ -56,20 +56,13 @@ extern int* gTitleMenuControlInterface;
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
 extern int* lbl_803A87D0[8]; /* the 8 menu-row widgets */
-
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704; /* transition fade counter */
 extern s8 lbl_803DD705; /* transition pending flag */
 extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
-
-
-
 extern void setWidescreen(u8 enabled);
-
-
-
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 

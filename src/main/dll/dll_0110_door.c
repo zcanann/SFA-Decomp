@@ -36,9 +36,6 @@ typedef struct DoorPlacement
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
 
-
-
-
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
@@ -142,7 +139,6 @@ void mmp_bridge_update(int* obj);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
- /* #57 */
     int i;
     int state;
     int def;

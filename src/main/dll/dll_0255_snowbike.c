@@ -83,7 +83,6 @@ typedef struct SnowBikeSetTypeState
 } SnowBikeSetTypeState;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;
@@ -111,10 +110,8 @@ extern f32 lbl_803E5B70;
 extern f32 lbl_803E5B90;
 extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
-
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
-
 extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
@@ -138,17 +135,14 @@ extern f32 lbl_803E5BA4;
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5C4C;
-
 extern u32 fn_801EAE4C();
 extern u32 fn_801EB0D4();
 extern u32 fn_801EB634();
-
 extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
 extern char lbl_803284E0[];
 extern u32 lbl_803E5AE0;
-
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern void SnowBike_animEventCallback();
@@ -183,8 +177,6 @@ extern void setBButtonIcon(int icon);
 extern char padGetStickX(int pad);
 extern char padGetStickY(int pad);
 extern u32 getButtonsHeld(int port);
-
-
 extern int getAngle(float y, float x);
 extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
@@ -275,7 +267,6 @@ typedef struct DRcradleSnowBikeFlags
 
 void fn_801EC7A0(int p1, int p2)
 {
- /* #57 */
     struct
     {
         s16 angles[4];
@@ -904,7 +895,6 @@ typedef struct
 
 void SnowBike_update(int obj)
 {
- /* #57 */
     extern void fn_801EC7A0(int obj, u8* state); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
     f32 mtx1[16];

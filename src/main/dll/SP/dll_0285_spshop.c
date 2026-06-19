@@ -4,11 +4,8 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
-
 extern int randomGetRange(int lo, int hi);
-
 extern void objRenderFn_8003b8f4(f32);
-
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -77,11 +74,8 @@ extern void fn_80295CF4(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
-
-
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);

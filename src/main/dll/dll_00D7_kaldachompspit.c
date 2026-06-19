@@ -16,13 +16,11 @@
 #include "main/game_object.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
-
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
-
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -36,12 +34,10 @@ extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
-
 extern f32 timeDelta;
 extern f32 lbl_803E30E0;
 extern f32 lbl_803E30F0;

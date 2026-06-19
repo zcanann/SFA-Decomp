@@ -6,21 +6,13 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/mm.h"
-
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
-
 extern u32 FUN_80017748();
-
-
-
 extern void Obj_FreeObject(int obj);
-
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
-
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e4af8;
@@ -34,7 +26,6 @@ extern f32 lbl_803E3E88;
 #pragma scheduling on
 #pragma peephole on
 extern u8 lbl_803AC7B0[];
-
 
 void FUN_8018f650(void)
 {
@@ -263,7 +254,6 @@ void FUN_8018f650(void)
     return;
 }
 
-
 #pragma scheduling off
 #pragma peephole off
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
@@ -305,7 +295,6 @@ void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 }
 
 int lfxemitter_setScale(void) { return -1; }
-
 
 void lfxemitter_initialise(void)
 {
@@ -422,7 +411,6 @@ void lfxemitter_update(LfxEmitterObject* obj)
         }
     }
 }
-
 
 void lfxemitter_free(LfxEmitterObject* obj)
 {

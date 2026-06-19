@@ -4,10 +4,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/dll/gameplay.h"
-
 extern f32 timeDelta;
-
-
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
@@ -18,13 +15,11 @@ extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenShowCopyright(u8 arg);
-
 extern u16 lbl_803DD6D8;
 extern u32 lbl_803DD6DC;
 extern f32 lbl_803DD6E0;
 extern u8 lbl_803DD6F4;
 extern u16 lbl_8031A880[];
-
 extern f32 lbl_803E1D80;
 extern f32 lbl_803E1D84;
 extern f32 lbl_803E1D88;
@@ -33,14 +28,11 @@ extern f32 lbl_803E1D90;
 extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void set_uiDllIdx_803dc8f0(int idx);
-
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputX(int port);
 extern s8 padGetStickX(int port);
-
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 

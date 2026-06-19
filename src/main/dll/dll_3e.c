@@ -27,22 +27,17 @@
 
 void InitAllMessageQueue(void);
 
-
 extern OSMessage PopDecodedTextureSet(s32 flags);
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern BOOL CreateVideoDecodeThread(int priority, void* param);
 extern BOOL CreateAudioDecodeThread(int priority, void* param);
 extern BOOL CreateReadThread(int priority);
 extern void VideoDecodeThreadStart(void);
-
 extern void ReadThreadStart(void);
 extern void VideoDecodeThreadCancel(void);
-
 extern void ReadThreadCancel(void);
 extern void PushFreeReadBuffer(OSMessage msg);
 extern void PushFreeTextureSet(OSMessage msg);
-
-
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];
 extern void (*lbl_803DD664)(void);

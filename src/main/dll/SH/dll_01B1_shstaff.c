@@ -62,7 +62,6 @@ void sh_staff_free(int* obj, int p2)
 #include "main/game_ui_interface.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
-
 #include "main/dll/DR/shstaff_state.h"
 
 typedef struct ShStaffPlacement
@@ -78,7 +77,6 @@ typedef struct ShStaffPlacement
     u8 pad1A[0x20 - 0x1A];
 } ShStaffPlacement;
 
-
 extern u32 GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
@@ -86,7 +84,6 @@ extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
 extern u32 ObjPath_GetPointModelMtx();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
 extern void PSMTXInverse(int src, f32* dst);
@@ -584,6 +581,5 @@ end:
         }
     }
 }
-
 
 extern int GameBit_Set(int eventId, int value);

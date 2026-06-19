@@ -40,7 +40,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 extern void objRenderFn_8003b8f4(f32);
-
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

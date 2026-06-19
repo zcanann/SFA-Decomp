@@ -40,8 +40,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SEQINDEX_PENDING -2
 #define CLASSID_SEQUENCE_OBJECT 0x10
 
-
-
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -52,7 +50,6 @@ extern f32 lbl_803E5970;
 extern f32 lbl_803E5974;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50[2];
-
 extern void ModelLightStruct_free(int* p);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
@@ -60,7 +57,6 @@ extern void modelLightStruct_setLightKind(int light, int v);
 extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 extern int* ObjList_GetObjects(void* unused, int* objectCount);
-
 
 void ShipBattle_hitDetect(void)
 {

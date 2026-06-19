@@ -28,7 +28,6 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/vecmath.h"
-
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -38,7 +37,6 @@ extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern float mathSinf(float x);
 extern f32 PSVECMag(f32* vec);
@@ -46,8 +44,6 @@ extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance 
 extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(int obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 

@@ -32,8 +32,6 @@
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
 #include "main/gameplay_runtime.h"
-
-
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -72,7 +70,6 @@ extern void Obj_FreeObject(int* obj);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
-
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(void* p1, void* p2, int p3, f32 f1, int p5, int p6);
 extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);

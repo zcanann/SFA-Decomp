@@ -13,10 +13,7 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
-
-
 extern u8 framesThisStep;
-
 extern f32 lbl_803E3D60; /* render scale */
 extern f32 lbl_803E3D64; /* minimum sway magnitude */
 extern f32 lbl_803E3D68; /* sway -> scale multiplier */

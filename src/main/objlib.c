@@ -14,7 +14,6 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float sqrtf(float x);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
-
 extern void setMatrixFromObjectTransposed(void* transform, float* mtx);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -23,7 +22,6 @@ extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void mtx44Transpose(float* src, float* dst);
 extern int* Obj_GetActiveModel(int obj);
-
 extern void Obj_UpdateObject(ObjAnimComponent * obj, ObjModelInstance * modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 extern ObjLibRegionList** RomList_GetLoadedPages(void);
@@ -1304,8 +1302,6 @@ void ObjGroup_AddObject(u32 obj, int group)
         group++;
     }
 }
-
-
 
 void ObjGroup_ClearAll(void)
 {

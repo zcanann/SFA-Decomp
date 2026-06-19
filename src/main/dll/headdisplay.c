@@ -37,8 +37,6 @@
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX 8          /* u16  */
 
-
-
 extern void AudioStream_StopCurrent(void);
 extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
@@ -88,7 +86,6 @@ extern f32 lbl_803E204C;
 extern f32 lbl_803E2050;
 extern f32 lbl_803E2054;
 extern f32 lbl_803E2058;
-
 extern void Obj_FreeObject(int* obj);
 extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;

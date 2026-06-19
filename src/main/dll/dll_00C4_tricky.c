@@ -113,8 +113,6 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int gameBitIncrement(int bit);
-
-
 extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
@@ -136,7 +134,6 @@ extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hi
                               int param_8, int param_9, int param_10);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 extern u32 lbl_802C21F0[4];
 extern char lbl_8031D2E8[];
 extern char lbl_8031D300[];

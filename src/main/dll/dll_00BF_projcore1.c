@@ -8,8 +8,6 @@
 #include "main/dll/dll_80.h"
 #include "main/engine_shared.h"
 
-
-
 int projcore1_doUnsupported(void)
 {
     OSReport(sProjcore1DoNoLongerSupported);

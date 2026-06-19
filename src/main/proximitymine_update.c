@@ -4,7 +4,6 @@
 #include "main/objlib.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
-
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
                                  u32 param_5, double scale);
@@ -13,10 +12,8 @@ extern void queueGlowRender(void* effect);
 extern int fn_80080150(f32* p);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
-
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
-
 extern void modelLightStruct_updateGlowAlpha(void* light);
 extern int timerCountDown(f32* p);
 extern int objUpdateOpacity(char* obj);

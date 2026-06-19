@@ -18,9 +18,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
-
 extern int ObjGroup_FindNearestObject();
-
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* s, const char* format, ...);

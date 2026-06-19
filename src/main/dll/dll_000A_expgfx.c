@@ -11,11 +11,9 @@
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "track/intersect.h"
-
 extern int renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
-
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
@@ -2788,7 +2786,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         return EXPGFX_INVALID_POOL_INDEX;
     }
     {
-
 
         if ((int)poolIndex < EXPGFX_POOL_COUNT)
         {

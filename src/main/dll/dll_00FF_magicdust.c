@@ -9,12 +9,10 @@
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 
-
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
 extern void ObjLink_DetachChild(int obj, int child);
-
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -52,7 +50,6 @@ extern const f32 lbl_803E34D4;
 extern const f32 lbl_803E34D8;
 extern const f32 lbl_803E34DC;
 extern const f32 lbl_803E34E0;
-
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);

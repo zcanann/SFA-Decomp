@@ -6,10 +6,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
-
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
@@ -235,7 +233,6 @@ extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
     chain->originX = x;
@@ -246,7 +243,6 @@ void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 int alignUp2(int x);
 
 extern int getLoadedFileFlags(int);
-
 
 void* getCache(void);
 
@@ -269,7 +265,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 void mm_free(void* p);
 
 extern void setGQR7(u32 v);
-
 extern int textureLoad(int id, int flag);
 
 asm
@@ -342,10 +337,8 @@ void ObjModel_SetBlendChannelWeight(u8* model, int channel, f32 weight)
 typedef f32 Mtx[3][4];
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
-
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-
 extern int* lbl_803DCB60;
 
 int modelGetAmapSize(int a, int b, int c)
@@ -649,12 +642,8 @@ int loadModelAndAnimTabs(void)
     return 1;
 }
 
-
-
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
-
-
 extern void ObjModel_InitScratchBuffers(void);
 extern void setGQR6_2(int a, int b, int c, int d);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
@@ -1109,7 +1098,6 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
 extern void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 extern void modelAnimResetState(void* m, void* data);
 
-
 #pragma scheduling off
 void* ObjModel_LoadAnimData(u8* p, int b, int c)
 {
@@ -1361,7 +1349,6 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
 #pragma peephole off
 
 extern void debugPrintf(char* fmt, ...);
-
 extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
 extern u8 lbl_80340740[];
 
@@ -2377,7 +2364,6 @@ typedef struct
 } AnimBufSel;
 
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
-
 extern f32 lbl_802CABB8[];
 
 #pragma dont_inline on

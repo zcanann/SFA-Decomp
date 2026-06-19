@@ -15,13 +15,9 @@
  */
 #include "main/dll/debug/prof.h"
 #include "main/engine_shared.h"
-
 extern int saveFileStruct_isCheatActive();
 extern int isCheatUnlocked(u8);
-
 extern int Rcp_GetColorFilterEnabled(void);
-
-
 extern int* gTitleMenuLinkInterface;
 extern int* gTitleMenuItemInterface;
 extern s8 lbl_803DBA28;

@@ -9,7 +9,6 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -18,17 +17,12 @@ extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* 
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
-
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
-
-
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-
 extern const f32 lbl_803E5288;
 extern f32 lbl_803E528C;
 extern f32 lbl_803E5290;
@@ -46,12 +40,10 @@ extern f32 lbl_803E52D0;
 extern f32 lbl_803E52D4;
 extern f32 lbl_803E52D8;
 extern f32 lbl_803E52DC;
-
 extern s16 lbl_80326BD0[];
 extern f32 lbl_80326BE8[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
-
 
 extern int objIsFrozen(u8 * self);
 extern int gameBitIncrement(int bit);
@@ -74,8 +66,6 @@ extern f32 lbl_803E52F4;
 #pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
- /* #57 */
- /* #57 */
     RomCurveWalker* curve;
     int sval;
     int curMove;
@@ -578,8 +568,6 @@ void ediblemushroom_hitDetect(u8* obj)
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
- /* #57 */
- /* #57 */
     u8* state;
     u8* other;
     u8* player;
@@ -681,7 +669,6 @@ end:
 
 void ediblemushroom_init(int obj, int aux)
 {
- /* #57 */
     int state;
     int player;
     int curveInitParam;

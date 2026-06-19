@@ -17,12 +17,7 @@
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
-
-
-
-
 extern f32 timeDelta;
-
 extern f32 lbl_803E5460; /* 0.0   timer reset / origin base */
 extern f32 lbl_803E5464; /* 55.0  emit position y */
 extern f32 lbl_803E5468; /* 120.0 phase 1 threshold */

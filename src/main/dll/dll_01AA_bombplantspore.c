@@ -28,8 +28,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern const f32 lbl_803E5390;
@@ -40,7 +38,6 @@ extern const f32 lbl_803E53A8;
 extern const f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern const f32 lbl_803E53B4;
-
 extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
@@ -447,4 +444,3 @@ void bombplantspore_init(void* obj, void* param2)
     ObjMsg_AllocQueue(obj, 2);
     state->yawStep = randomGetRange(-0x200, 0x200);
 }
-

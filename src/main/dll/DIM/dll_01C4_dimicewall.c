@@ -20,10 +20,7 @@ typedef struct DimicewallPlacement
     s16 shatterGameBit;
 } DimicewallPlacement;
 
-
-
 extern int randomGetRange(int lo, int hi);
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);

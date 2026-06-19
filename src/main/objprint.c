@@ -18,7 +18,6 @@ extern bool FUN_800067f0();
 extern u32 FUN_8000681c();
 extern double FUN_80006a30();
 extern int FUN_80017730();
-
 extern u32 FUN_80017798();
 extern int FUN_8001779c();
 extern int FUN_80017970();
@@ -29,15 +28,11 @@ extern u32 FUN_800400b0();
 extern u32 FUN_80040a88();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-
 extern u32 GXSetBlendMode();
 extern u64 FUN_8028683c();
-
 extern u32 FUN_80286888();
-
 extern u32 FUN_80293900();
 extern u32 FUN_802950c8();
-
 extern u32 DAT_802cba60;
 extern u32 DAT_803dc070;
 extern u32 DAT_803dd888;
@@ -1696,11 +1691,8 @@ void fn_8003B228(int obj, int p2)
     *(u8*)(p2 + 0x1e) = 1;
 }
 
-
-
 extern void modelCalcVtxGroupMtxs(int p1, int p2);
 extern void* ObjModel_GetJointMatrix(int* model, int joint);
-
 extern int lbl_803DCC48;
 
 void modelInitMtxs(int p1, int p2)
@@ -1873,7 +1865,6 @@ void objPosFn_80039510(int obj, int key, int out)
     *(f32*)((char*)out + 0) = *(f32*)((char*)out + 0) + playerMapOffsetX;
     *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
 }
-
 
 extern void PSMTXConcat(void* a, void* b, void* c);
 extern f32 lbl_803DEA04;
@@ -3148,7 +3139,6 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32*Shader_getLayer(u8* shader, int idx);
-
     extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
@@ -3172,18 +3162,14 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
     extern void GXSetNumTevStages(u8 nStages);
-
     extern void GXSetNumTexGens(u8 nTexGens);
     extern int*objCreateLight(int obj, int p2);
     extern void modelLightStruct_setLightKind(int* lt, int v);
     extern void modelLightStruct_setDirection(int* lt, f32 x, f32 y, f32 z);
     extern void modelLightStruct_setDiffuseColor(int* lt, int r, int g, int b, int a);
-
-
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
     extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
     extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);
-
     extern void ModelLightStruct_free(int* lt);
     extern void fn_8006C4C0(int* a, int* b, int* c);
     extern void GXSetCullMode(int mode);
@@ -3386,7 +3372,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32*Shader_getLayer(u8* shader, int idx);
-
     extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
@@ -3411,7 +3396,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
     extern void GXSetNumTevStages(u8 nStages);
-
     extern void GXSetNumTexGens(u8 nTexGens);
     extern void GXSetCullMode(int mode);
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);

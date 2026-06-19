@@ -18,12 +18,9 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern int ObjMsg_Pop();
 extern void ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue();
-
-
 extern s8 lbl_803DBE08;       /* curve-system one-shot init flag */
 extern f32 lbl_803E4108;      /* render scale */
 extern s8 lbl_803DDB08;       /* deferred-message queue count */

@@ -33,7 +33,6 @@ typedef struct LightsourceState
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 extern void ModelLightStruct_free(void* light);
-
 extern void* objCreateLight(void* obj, int);
 extern void modelLightStruct_setLightKind(void*, int);
 extern void modelLightStruct_setPosition(f32, f32, f32);

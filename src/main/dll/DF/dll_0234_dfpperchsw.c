@@ -7,8 +7,6 @@
 #include "main/dll/crate2.h"
 #include "main/engine_shared.h"
 
-
-
 int dfperchwitch_getExtraSize(void) { return 0x0; }
 int dfperchwitch_getObjectTypeId(void) { return 0x0; }
 

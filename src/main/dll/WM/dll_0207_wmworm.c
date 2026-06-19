@@ -18,8 +18,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/gameplay_runtime.h"
-
-
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern u8 framesThisStep;
 extern f32 lbl_803E5E58; /* 440.0: chase range */

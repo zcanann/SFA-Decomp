@@ -1,6 +1,5 @@
 /* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
 #include "main/objlib.h"
-
 #include "main/game_object.h"
 
 typedef struct NwIcePlacement
@@ -11,7 +10,6 @@ typedef struct NwIcePlacement
 } NwIcePlacement;
 
 extern void fn_80296D20(int obj, void* arg);
-
 extern f32 lbl_803E5270;
 extern f32 lbl_803E5274;
 

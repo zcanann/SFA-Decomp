@@ -23,20 +23,14 @@
  * an object onto the route and select the active checkpoint segment.
  */
 #include "main/checkpoint_route.h"
-
 extern int randomGetRange(int lo, int hi);
-
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
-
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 extern f32 sqrtf(f32);
-
 extern f32 lbl_803E04D8;
 extern f32 lbl_803E04DC;
 extern f32 lbl_803E04E0;
@@ -530,7 +524,6 @@ void Checkpoint_onGameLoop(void)
 #pragma dont_inline reset
 
 #include "main/game_object.h"
-
 extern f32 lbl_803E050C; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0510; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0514; /* used by Checkpoint_func07 */

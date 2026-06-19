@@ -26,16 +26,12 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
-
 extern f32 timeDelta;
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern u16 lbl_80327A60[];

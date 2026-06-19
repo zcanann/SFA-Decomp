@@ -24,12 +24,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
-
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);
 extern u32 ObjHits_EnableObject();
-
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
 extern int Obj_GetPlayerObject(void);

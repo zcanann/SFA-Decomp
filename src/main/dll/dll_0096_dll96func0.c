@@ -25,10 +25,6 @@ typedef struct GfxCmd
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-
-
-
-
 extern f32 lbl_803E12C0;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12C8;

@@ -1,7 +1,6 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
-
 extern int randomGetRange(int lo, int hi);
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
@@ -16,14 +15,12 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
 extern u64 FUN_80017698();
 extern u32 FUN_80041ff8();
 extern u32 FUN_80042b9c();
 extern u32 FUN_80042bec();
 extern u32 FUN_80044404();
 extern f32 timeDelta;
-
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
 extern u8 framesThisStep;
@@ -63,7 +60,6 @@ void FUN_801a45cc(short* param_1, int param_2)
 {
 }
 
-
 u32
 FUN_801a4810(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8,
@@ -87,7 +83,6 @@ FUN_801a4810(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     }
     return 0;
 }
-
 
 void exploded_free(void)
 {
@@ -115,9 +110,7 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43F4);
 }
 
-
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
-
 
 void exploded_update(int* obj)
 {

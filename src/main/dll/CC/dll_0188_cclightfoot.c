@@ -13,18 +13,11 @@
 #define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
 #define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
 
-
-
-
-
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
-
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
@@ -33,8 +26,6 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-
-
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -50,7 +41,6 @@ void cclightfoot_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
     ((GameObject*)obj)->animEventCallback = ccqueen_SeqFn;
 }
-
 
 void cclightfoot_free(int* obj, int p2)
 {
@@ -69,7 +59,6 @@ void cclightfoot_free(int* obj, int p2)
         }
     }
 }
-
 
 extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
@@ -110,7 +99,6 @@ void fn_801AA878(u8* state, int* targetObj, f32 dist)
 }
 #pragma dont_inline reset
 
-
 extern f32 lbl_803E4670;
 
 #pragma scheduling off
@@ -144,10 +132,7 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-
 extern int playerIsDisguised(int obj);
-
-
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
 extern f32 lbl_803E4688;
@@ -178,7 +163,6 @@ STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 void cclightfoot_update(int obj)
 {
     extern f32 getXZDistance(f32* a, f32* b);
-
     extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)lbl_80323408;
     u32 fallback;

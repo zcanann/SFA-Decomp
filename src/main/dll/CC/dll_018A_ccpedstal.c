@@ -10,10 +10,6 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-
-
-
-
 extern int ObjTrigger_IsSet(int obj);
 void ccpedstal_updateGameBitGate(int obj, u8* state2);
 void ccpedstal_updateAltVariant(int obj, u8* state2);

@@ -15,7 +15,6 @@
 #include "main/voxmaps.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/dll/savegame.h"
-
 extern float ABS();
 extern u32 FUN_8000693c();
 extern u32 FUN_80006958();
@@ -26,7 +25,6 @@ extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();
 extern u64 FUN_80286834();
 extern u32 FUN_80286880();
-
 extern int DAT_80382eac;
 extern u32 DAT_8038859c;
 extern u32 DAT_803885a0;
@@ -50,7 +48,6 @@ extern f32 lbl_803DF85C;
 extern f32 lbl_803DF860;
 extern f32 lbl_803DF864;
 extern f32 lbl_803DF868;
-
 extern char lbl_8030E4B0[];
 extern int gMapBlockLayerTables[5];
 typedef struct WarpVec
@@ -65,7 +62,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
-
 extern void OSReport(const char* msg, ...);
 
 int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
@@ -735,7 +731,6 @@ extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 
-
 void fn_80059A50(int pageIndex)
 {
     int idx = pageIndex;
@@ -984,7 +979,6 @@ extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-
 extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void PSMTXMultVec(f32 * mtx, _Vec3 * in, f32 * out);
@@ -1287,7 +1281,6 @@ int mapProcessRomList(int slot)
     return i;
 }
 
-
 extern void mapsBinGetRomlistSize(int offset, int* a, int* b, int* c);
 extern int lbl_803DCE7C;
 
@@ -1473,8 +1466,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void textureFree(int id);
-
-
 extern void fn_80133934(void);
 
 void unloadMap(void)
@@ -2561,9 +2552,7 @@ extern void mapInitFn_8006fccc(void);
 extern void setSaveGameLoadingFlag(void);
 extern void clearSaveGameLoadingFlag(void);
 extern void mapSetupPlayer(void);
-
 extern void* saveGameGetEnvState(void);
-
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void skyFn_80088c94(int flags, int mode);
 extern void skyFn_80088e54(f32 a, int on);
@@ -2774,7 +2763,6 @@ void beginLoadingMap(void)
     Pause_SetDisabled(0);
     Pause_ResetMenuFrameCounter();
 }
-
 
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);

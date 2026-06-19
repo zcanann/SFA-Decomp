@@ -5,9 +5,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern f32 lbl_803E3EE8;
-
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 

@@ -23,9 +23,7 @@
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
 #include "main/dll/dll_80220608_shared.h"
-
 extern void memset(void* dst, int val, int size);
-
 extern f32 lbl_803E19A0;
 extern f32 lbl_803E19A4;
 extern f32 lbl_803E19A8;
@@ -37,12 +35,7 @@ extern f32 lbl_803E19BC;
 extern f32 lbl_803E19C0;
 extern f32 lbl_803E19C4;
 extern f32 lbl_803E19C8;
-
 extern CameraModeClimbState* lbl_803DD578;
-
-
-
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 

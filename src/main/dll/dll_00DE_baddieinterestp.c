@@ -21,7 +21,6 @@
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/gamebits.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_8003b818();
 
@@ -33,7 +32,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -190,11 +188,8 @@ typedef struct BaddieinterestpPlacement
 extern void* ObjGroup_GetObjects();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-
 extern f64 DOUBLE_803e3e88;
-
 extern f32 lbl_803E3420;
-
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
@@ -209,7 +204,6 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E3220;
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 
@@ -269,7 +263,6 @@ void baddieinterestp_initialise(void)
 {
 }
 
-
 void staff_func0F(void);
 
 void staff_func0B(void);
@@ -300,7 +293,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int baddieinterestp_getExtraSize(void) { return 0x0; }
 int baddieinterestp_getObjectTypeId(void) { return 0x0; }
 int animatedobj_getExtraSize(void);
@@ -314,7 +306,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -717,8 +708,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
-
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -727,10 +716,7 @@ void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-
-
 void gcbaddieshield_update(int* obj);
-
 
 void fireball_free(int* obj);
 
@@ -738,21 +724,15 @@ void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
 
-
-
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
-
-
 
 void flamethrowerspe_update(int* obj);
 
@@ -891,19 +871,13 @@ void baddieinterestp_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-
-
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
-
 void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
-
-
 
 #pragma opt_common_subs reset
 
@@ -931,4 +905,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

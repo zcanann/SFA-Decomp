@@ -3,15 +3,12 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
-
 extern McmdVoiceState* synthVoice;
-
 extern void synthFXCloneMidiSetup(McmdVoiceState * voice, McmdVoiceState * state);
 void DoSetPitch(McmdVoiceState * svoice);
 extern void sndConvertMs(u32 * p);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState * state);
-
 extern int adsrSetup(McmdEnvelopeState * state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
@@ -57,8 +54,6 @@ typedef union McmdAdsrData
         s32 dscale;
     } dls;
 } McmdAdsrData;
-
-
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)

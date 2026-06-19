@@ -113,7 +113,6 @@ enum
 
 #define COLORFADE_RUMBLE_PRESET 4000     /* anim.rotY written on a fade hit */
 
-
 extern void *ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
@@ -122,7 +121,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
 extern u32 FUN_80293f90();
 extern u32 FUN_80294964();
-
 extern u32 *DAT_803dd6e4;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
@@ -159,8 +157,6 @@ extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
-
-
 extern void setAButtonIcon(int x);
 extern u8 padGetStickX(int port);
 extern u8 padGetStickY(int port);

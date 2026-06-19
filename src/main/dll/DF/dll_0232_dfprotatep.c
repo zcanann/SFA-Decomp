@@ -7,7 +7,6 @@
 #include "main/dll/sfxplayer.h"
 #include "main/dll/infopoint.h"
 #include "main/gamebits.h"
-
 extern u32 FUN_80006824();
 extern u32 FUN_800068c4();
 extern u32 FUN_80017690();
@@ -16,11 +15,9 @@ extern u32 FUN_80017748();
 extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u32 ObjMsg_SendToObject();
-
 extern u32 FUN_80286838();
 extern u32 FUN_80286884();
 extern u32 FUN_80294c40();
-
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
 extern f32 lbl_803DC074;
@@ -31,7 +28,6 @@ extern f32 lbl_803E70F4;
 extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
-
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
@@ -39,10 +35,7 @@ extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
 extern void gameTimerStop(void);
-
-
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
-
 extern u32 lbl_803E6450;
 extern u32 lbl_803E6454;
 extern f32 timeDelta;
@@ -98,7 +91,6 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk20) == 0x20);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk24) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
-
 
 #pragma scheduling on
 #pragma peephole on

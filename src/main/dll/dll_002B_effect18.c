@@ -3,16 +3,11 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-
 extern f32 gEffect18Progress2;
 extern f32 gEffect18Progress3;
 extern f32 lbl_803E0220;
@@ -25,7 +20,6 @@ extern f32 gEffect18SineValueB;
 extern f32 gEffect18SineValueA;
 extern f32 gEffect18Pi;
 extern f32 gEffect18S16Range;
-
 extern f32 gEffect18Progress0;
 extern f32 gEffect18Progress1;
 extern f32 lbl_803E022C;

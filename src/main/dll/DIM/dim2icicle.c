@@ -23,7 +23,6 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjPath_GetPointModelMtx();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
 extern void* getTrickyObject(void);

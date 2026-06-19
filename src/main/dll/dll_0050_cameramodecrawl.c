@@ -29,12 +29,7 @@
 #pragma scheduling on
 #pragma peephole on
 
-
-
-
 extern f32 timeDelta;
-
-
 extern CameraModeCrawlState* lbl_803DD598;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
@@ -108,7 +103,6 @@ void fn_801101E8(void)
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
- /* #57 */
     int obj;
     GameObject* target;
     int yaw;
@@ -134,7 +128,6 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
         s = -mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
     }
     {
- /* #57 */
         target->anim.rotX = getAngle(c, s);
     }
     camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);
@@ -161,7 +154,6 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 
 void CameraModeCrawl_update(u8* obj)
 {
- /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     int delta;

@@ -42,12 +42,10 @@
 #pragma dont_inline on
 
 extern int getAngle(float y, float x);
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
 extern int Obj_IsLoadingLocked(void);
 extern u8 objBboxFn_800640cc();
-
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 dt);
 extern char lbl_803DBCD8;
@@ -59,7 +57,6 @@ extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern u32 fn_80295CBC();
-
 extern u32 gDusterWallProbeOffsets;
 extern u8 gDusterEbaMoveTable[];
 extern f32 timeDelta;

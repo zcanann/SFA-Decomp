@@ -22,27 +22,15 @@
 #include "main/objlib.h"
 #include "main/engine_shared.h"
 #include "main/dll/genprops.h"
-
-
-
 extern void Obj_FreeObject(int obj);
-
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern f32 timeDelta;
-
-
 extern void objRenderFn_8003b8f4(f32);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-
 extern void* getTrickyObject(void);
-
-
-
-
-
 
 #pragma dont_inline on
 void fn_8016A660(int obj)

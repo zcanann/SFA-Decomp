@@ -34,9 +34,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-
-
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 

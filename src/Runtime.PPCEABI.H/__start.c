@@ -7,15 +7,9 @@
 
 typedef unsigned int size_t;
 
-
-
-
 extern asm void InitMetroTRK();
-
-
 extern void __init_user(void);
 extern int main(int argc, char** argv);
-
 extern void* memcpy(void* dst, const void* src, size_t n);
 extern void* memset(void* dst, int val, size_t n);
 

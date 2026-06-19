@@ -5,9 +5,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
-
 extern int saveFileStruct_isCheatActive();
-
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -94,7 +92,6 @@ extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
-
 extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
@@ -928,9 +925,6 @@ void gameTextSetDrawFunc(void* fn)
     gameTextDrawFunc = fn;
 }
 
-
-
-
 f32 gameTextFn_80019c00(void)
 {
     return *(f32*)(gameTextFonts + 0x20);
@@ -981,8 +975,6 @@ void mainLoopDoGameText(void)
 int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
-
-
 
 extern void gameTextInitFn_8001c794(void);
 extern void gameTextLoadDir(int dirId);
@@ -1282,8 +1274,6 @@ int subtitleIsActive(void)
 
 int mmCreateMemoryStore(int size);
 
-
-
 extern void* memcpy(void* dst, const void* src, int n);
 
 #pragma dont_inline on
@@ -1513,8 +1503,6 @@ void gameTextOpenCallback_8001b3d0(int status, u8* match)
         }
     }
 }
-
-
 
 typedef struct
 {
@@ -2307,7 +2295,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 }
 
 extern int mmSetFreeDelay(int v);
-
 extern u8* textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
 
 typedef struct GameTextCharset
@@ -2706,7 +2693,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
 }
 
 void* mmAlloc(int size, int type, int flag);
-
 
 extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;

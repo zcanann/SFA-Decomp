@@ -4,8 +4,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 
-
-
 #if 0
 u32
 FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 modelId,
@@ -422,7 +420,6 @@ u32 FUN_800c9030(u32 key, int* outIndex)
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
-
 extern f32 lbl_803E0180;
 extern f32 lbl_803E0184;
 extern f32 lbl_803E0188;
@@ -436,7 +433,6 @@ extern f32 lbl_803E01A4;
 extern f32 lbl_803E01A8;
 extern f32 lbl_803E01AC;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern WaterfxCfg lbl_8039C440;
 
 #pragma dont_inline on
@@ -638,4 +634,3 @@ void Effect17_func03_nop(void);
 
 #pragma dont_inline reset
 #pragma dont_inline reset
-

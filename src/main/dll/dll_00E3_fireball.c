@@ -24,10 +24,8 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
-
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
@@ -43,7 +41,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -251,7 +248,6 @@ typedef struct FireballState
 extern u32 ObjHits_ClearHitVolumes();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-
 extern void ModelLightStruct_free(void* p);
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
@@ -276,7 +272,6 @@ extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
-
 extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -295,7 +290,6 @@ extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 
 void mikabombshadow_update(int* obj);
-
 
 void staff_func0F(void);
 
@@ -1252,4 +1246,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-

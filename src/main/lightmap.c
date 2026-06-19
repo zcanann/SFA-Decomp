@@ -12,7 +12,6 @@
 #include "main/sky_state.h"
 #include "main/mm.h"
 #include "string.h"
-
 extern u32 FUN_80006934();
 extern u32 FUN_8000694c();
 extern u32 FUN_80006974();
@@ -59,7 +58,6 @@ extern u32 FUN_802924c4();
 extern u8 FUN_80294c20();
 extern u32 FUN_802950c4();
 extern u32 builtin_strncpy();
-
 extern u32 DAT_8037ed10;
 extern int DAT_8037ed20;
 extern u32 DAT_8037ed28;
@@ -1637,7 +1635,6 @@ extern int* Obj_GetActiveModel(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
-
 extern int playerIsDisguised(int* obj);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern void objRenderFuzz(int* obj);
@@ -1649,7 +1646,6 @@ extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
 extern void GXSetChanAmbColor(int chan, GXColor8* c);
 extern void GXSetNumChans(int n);
 extern void setupToRenderMapBlock(int* block, void* posMtx);
-
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
 extern f32 shdwChangeMode_803DEC10;
@@ -1663,13 +1659,11 @@ extern void drawReflectionTexture(void);
 void getVisibleObjects(s8 * opacity);
 extern void gxTextureFn_80052efc(void);
 extern void perspectiveFn_80129db4(void);
-
 extern s32 heatEffectIntensity;
 extern void drawSkyStars(void);
 extern u8 lbl_803DCE05;
 extern void screenImageDraw(void);
 extern void lightningRenderActive(void);
-
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
@@ -2417,9 +2411,7 @@ void objDrawFn_8005da48(int* obj)
     }
 }
 
-
 extern void loadAssetFileById(void** out, int id);
-
 extern void* lbl_803DCE94;
 extern void* lbl_803DCE8C;
 extern void* lbl_803DCE78;

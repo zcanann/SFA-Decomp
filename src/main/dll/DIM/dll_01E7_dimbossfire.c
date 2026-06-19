@@ -13,7 +13,6 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
-
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
@@ -261,4 +260,3 @@ void dimbossfire_release(void)
 void dimbossfire_initialise(void)
 {
 }
-

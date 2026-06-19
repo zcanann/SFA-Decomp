@@ -42,7 +42,6 @@ typedef struct TitlescreenState
 } TitlescreenState;
 
 extern int ObjGroup_FindNearestObject();
-
 extern void* Obj_GetPlayerObject(void);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -88,7 +87,6 @@ int titlescreen_getObjectTypeId(u8* obj)
     if (v >= 1917 && v < 1921) return 74;
     return 0;
 }
-
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
@@ -263,7 +261,6 @@ extern f32 lbl_803E234C;
 extern f32 lbl_803E2350;
 extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
-
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
 extern int sprintf(char* s, const char* format, ...);
@@ -343,7 +340,6 @@ extern u16 gTitleScreenCreditTimer;
 extern u16 gTitleScreenCreditIndex;
 extern s16 gTitleScreenCreditDelay;
 extern int getCurUiDll(void);
-
 extern f32 timeDelta;
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
@@ -908,7 +904,6 @@ void fn_80134870(int obj, u8* arr)
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
 extern void loadUiDll(int index);
-
 extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int a, int b, int c);
 

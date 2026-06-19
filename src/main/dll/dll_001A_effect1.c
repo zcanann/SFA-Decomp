@@ -1270,11 +1270,6 @@ FUN_800a3924(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 p
     return 0;
 }
 
-
-
-
-
-
 void Effect1_func03_nop(void)
 {
 }
@@ -1288,7 +1283,6 @@ void Effect1_initialise(void)
 }
 
 void Effect2_func03_nop(void);
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1317,9 +1311,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern float mathSinf(float x);
-
 extern f32 lbl_803DF720;
 extern f32 lbl_803DF724;
 extern f32 lbl_803DF730;

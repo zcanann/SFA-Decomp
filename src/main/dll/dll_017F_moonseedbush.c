@@ -21,8 +21,6 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
-
-
 extern f32 lbl_803E44D0;
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;

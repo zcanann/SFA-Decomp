@@ -11,15 +11,10 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-
 extern int randomGetRange(int lo, int hi);
-
 extern u8 framesThisStep;
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern f32 timeDelta;
-
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
@@ -56,7 +51,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern ModgfxInterface** gModgfxInterface;
-
 extern int lbl_803DC098;
 extern f32 lbl_803E592C;
 extern const f32 lbl_803E5948;

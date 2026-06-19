@@ -1,9 +1,7 @@
 #include "main/audio/hw_dspctrl.h"
-
 extern u8 lbl_803CC1E0[];
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
-
 
 typedef struct SalVoice
 {
@@ -87,8 +85,6 @@ extern int adsrSetup(ADSR_VARS * adsr); /* adsrSetup */
 extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime); /* adsrStartRelease */
 extern int adsrRelease(ADSR_VARS * adsr); /* adsrRelease */
 extern u32 adsrHandle(ADSR_VARS * adsr, u16 * adsr_start, u16 * adsr_delta); /* adsrHandle */
-
-
 
 int salSynthSendMessage(int synth, int msg);
 void salDeactivateVoice(SalVoice* voice);

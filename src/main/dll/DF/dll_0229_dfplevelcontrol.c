@@ -11,9 +11,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
-
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
@@ -28,7 +25,6 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 void fn_80204320(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-
     extern u8 lbl_803DC182;
     extern s16 lbl_80329848[];
     DfpLevelControlState* sub;
@@ -178,8 +174,6 @@ void dfplevelcontrol_init(int obj, int param2)
 void dfplevelcontrol_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-
-
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int coordsToMapCell(f32 x, f32 z);
     extern void fn_80204098(int);
@@ -241,8 +235,6 @@ void dfplevelcontrol_update(int obj)
 void fn_80204098(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-
-
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void ObjMsg_SendToObject(void*, int, int, int);
     extern u8 lbl_803DC183;
@@ -313,4 +305,3 @@ void fn_80204098(int obj)
 }
 
 int dbstealerworm_stateHandlerB06(int obj, int p2);
-

@@ -21,9 +21,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;

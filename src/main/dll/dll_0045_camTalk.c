@@ -7,12 +7,10 @@
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/object_transform.h"
 #include "string.h"
-
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 extern CameraModeBikeState* lbl_803DD540;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);

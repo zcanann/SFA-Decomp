@@ -32,14 +32,9 @@
 /* hit-volume priority when a cMenu item is / isn't selected. */
 #define STAYPOINT_PRIORITY_MENU 0x10
 
-
-
-
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int cMenuGetSelectedItem(void);
 extern int fn_80138F84(int tricky); /* current stay-point object for Tricky */
-
-
 extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
 
 typedef struct StayPointSetup

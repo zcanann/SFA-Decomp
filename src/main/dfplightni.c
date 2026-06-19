@@ -1,10 +1,8 @@
 #include "main/dfplightni.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-
 extern void lightningRender(void* state);
 extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
-
 extern f32 timeDelta;
 extern f32 lbl_803E64E0;
 extern f32 lbl_803E64E4;
@@ -79,7 +77,6 @@ void dfplightni_render(DfpLightniObject* obj)
     }
     return;
 }
-
 
 void dfplightni_update(DfpLightniObject* obj)
 {
@@ -191,7 +188,6 @@ void dfplightni_update(DfpLightniObject* obj)
     }
     return;
 }
-
 
 void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
 {

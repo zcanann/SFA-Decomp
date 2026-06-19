@@ -1,21 +1,16 @@
 /* DLL 0x10E - DeathSeq [8018BC48-8018BC50) */
 #include "main/objseq.h"
-
 extern f32 timeDelta;
-
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
-
-
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
 extern f32 lbl_803E3D58;
 extern f32 lbl_803E3D2C;
-
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern int fn_80296C5C(void);

@@ -22,13 +22,8 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-
 extern void vecRotateZXY(s16 * in, f32 * out);
-
-
 extern f32 sqrtf(f32 value);
-
 extern u8 framesThisStep;
 
 enum {
@@ -377,7 +372,6 @@ void areafxemit_free(AreaFxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
 
 void areafxemit_hitDetect(void)
 {

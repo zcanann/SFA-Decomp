@@ -17,7 +17,6 @@
  */
 #include "main/game_object.h"
 #include "main/engine_shared.h"
-
 extern void* ObjGroup_GetObjects();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B78;
@@ -26,8 +25,6 @@ extern f32 lbl_803E3B88;
 extern f32 Vec_distance(f32* a, f32* b);
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-
-
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum

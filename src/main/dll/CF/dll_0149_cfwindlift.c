@@ -79,7 +79,6 @@ extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void objRenderFn_8003b8f4(f32);
-
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern u8 framesThisStep;

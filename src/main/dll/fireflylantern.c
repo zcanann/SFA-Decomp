@@ -22,7 +22,6 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
-
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
@@ -39,7 +38,6 @@ extern void PSVECNormalize(float*, float*);
 extern int getAngle(float y, float x);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
-
 extern u32 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;

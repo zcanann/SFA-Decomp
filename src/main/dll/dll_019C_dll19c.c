@@ -1,8 +1,5 @@
 /* DLL 0x19C — torch / flame controller objects [801CBA98-801CBD88) */
 #include "main/dll/dll19cstate_struct.h"
-
-
-
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -21,9 +18,7 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-
 extern u8 framesThisStep;
-
 extern f32 lbl_803E51B0;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

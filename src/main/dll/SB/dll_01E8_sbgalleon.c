@@ -40,10 +40,6 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern u32 getLActions();
-
-
-
-
 extern void DBprotection_storeHomePosition(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
@@ -56,7 +52,6 @@ extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern f32 timeDelta;
-
 extern void setDrawLights(int v);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
@@ -105,11 +100,9 @@ extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void objSetSlot(void* obj, int slot);
-
 extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
-
 
 /* Sequence-event opcodes consumed by SB_Galleon_animEventCallback. */
 enum SbGalleonSeqEvent
@@ -382,7 +375,6 @@ void fn_801E1588(int obj, int state)
     }
 }
 
-
 void SB_Galleon_release(void)
 {
 }
@@ -390,7 +382,6 @@ void SB_Galleon_release(void)
 void SB_Galleon_initialise(void)
 {
 }
-
 
 int SB_Galleon_getExtraSize(void) { return sizeof(SBGalleonState); }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
@@ -600,7 +591,6 @@ void SB_Galleon_free(GameObject* obj, int p2)
     Music_Trigger(state->musicIdA, 0);
     GameBit_Set(SBGALLEON_GAMEBIT_DEFEATED, 1);
 }
-
 
 int SB_Galleon_getPhase(int* obj)
 {

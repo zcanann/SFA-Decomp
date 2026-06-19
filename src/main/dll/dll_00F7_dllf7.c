@@ -27,8 +27,6 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 
-
-
 void mikabomb_hitDetect(void);
 
 extern ModgfxInterface** gModgfxInterface;
@@ -39,7 +37,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -213,8 +210,6 @@ typedef struct DllF7State
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 
-
-
 void staticCamera_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 7);
@@ -250,7 +245,6 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
 
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
-
 extern const f32 lbl_803E3400;
 extern f32 lbl_803E3404;
 extern f32 lbl_803E3408;
@@ -259,16 +253,13 @@ extern f32 lbl_803E3410;
 extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
 extern f32 lbl_803E3420;
-
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
-
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
 void mikabombshadow_update(int* obj);
-
 
 void staff_func0F(void);
 
@@ -299,7 +290,6 @@ void shield_hitDetect(void);
 void shield_release(void);
 
 void shield_initialise(void);
-
 
 void dll_F7_hitDetect(void)
 {
@@ -940,4 +930,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

@@ -26,12 +26,9 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
-
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
-
 extern void AttractMovieAudio_DmaCallback(void);
-
 extern char lbl_803A57C0[0x50C];
 extern char lbl_803A5F08[0x1000];
 extern OSThread lbl_803A6F08;
@@ -43,11 +40,8 @@ extern OSMessageQueue lbl_803A7308;
 extern OSMessageQueue lbl_803A7328;
 extern OSThread lbl_803A8348;
 extern char lbl_803A5D20[0x40];
-
 extern char lbl_803DB9E8;
-
 extern f32 lbl_803E1D54;
-
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
 extern s32 lbl_803DD66C;

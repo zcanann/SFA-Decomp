@@ -10,7 +10,6 @@
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
-
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 FUN_8003a1c4();
@@ -19,7 +18,6 @@ extern u32 FUN_8003b1a4();
 extern u32 FUN_8003b280();
 extern u32 objAudioFn_8006ef38();
 extern u32 countLeadingZeros();
-
 extern u32 DAT_803274f4;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
@@ -133,7 +131,6 @@ int nw_mammoth_getExtraSize(void)
 #pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
- /* #57 */
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
     extern int gameBitDecrement(int);
@@ -195,7 +192,6 @@ void fn_801CEE0C(int p1, int p2)
 
 void fn_801CED2C(int p1, int p2)
 {
- /* #57 */
     extern int ObjTrigger_IsSetById(int, int);
     extern int lbl_803DBFB4;
     extern int lbl_803DBFB8;
@@ -237,7 +233,6 @@ typedef struct
 
 int fn_801CE078(int* obj, u8* st)
 {
- /* #57 */
     u8 cv;
     int snd;
     f32 sunTime;
@@ -438,8 +433,6 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
- /* #57 */
- /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408])
@@ -747,7 +740,6 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     extern void fn_801CED2C(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEE0C(int obj, void* state, void* objDef); /* #57 */
     extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
- /* #57 */
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     NwMammothTables* table = (NwMammothTables*)gNwMammothTables;

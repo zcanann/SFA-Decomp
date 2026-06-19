@@ -153,10 +153,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
-
-
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -1277,11 +1273,6 @@ FUN_800a3924(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 p
     return 0;
 }
 
-
-
-
-
-
 void boneParticleEffect_func08_nop(void)
 {
 }
@@ -1299,8 +1290,6 @@ void boneParticleEffect_func03_nop(void)
 }
 
 void partfx_onMapSetup(void);
-
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1333,8 +1322,6 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0}; /* alignment pad */
 extern void*gBoneParticleEffectBuffers[];
 extern void* lbl_803DD2A4;
 extern void* lbl_803DD2A8;
-
-
 
 /* scheduling-off intentionally stays in effect through end-of-file (release/update/initialise/
    spawnAtBones); peephole is re-enabled at boneParticleEffect_spawnAtBones below. Do not close. */
@@ -1618,7 +1605,6 @@ typedef struct
 
 extern ParticleSlot gBoneParticleInitData[];
 
-
 void boneParticleEffect_initialise(void)
 {
     int i;
@@ -1649,7 +1635,6 @@ void boneParticleEffect_initialise(void)
         }
     }
 }
-
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
@@ -1764,7 +1749,6 @@ extern FxNode9 lbl_8039C320;
 #undef FILL320
 
 extern void* Obj_GetActiveModel(void);
-
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 #pragma peephole on
@@ -1814,4 +1798,3 @@ void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8
         }
     }
 }
-

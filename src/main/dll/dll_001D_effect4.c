@@ -150,7 +150,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -1250,8 +1249,6 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     return spawnResult;
 }
 
-
-
 void Effect4_func03_nop(void)
 {
 }
@@ -1265,10 +1262,6 @@ void Effect4_initialise(void)
 }
 
 void Effect5_func03_nop(void);
-
-
-
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1297,11 +1290,8 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern float mathSinf(float x);
-
 extern f32 lbl_803DF720;
-
 extern f32 gEffect4TickCyclePhaseFast;
 extern f32 gEffect4TickCyclePhaseSlow;
 extern int gEffect4SinPhaseCounterA;

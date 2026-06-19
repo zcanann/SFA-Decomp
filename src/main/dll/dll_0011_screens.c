@@ -20,8 +20,6 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
-
-
 extern u64 FUN_80003494();
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
@@ -44,10 +42,8 @@ extern u32 FUN_800d783c();
 extern u32 FUN_8011e80c();
 extern s64 FUN_80286830();
 extern u32 FUN_80286834();
-
 extern u32 FUN_8028687c();
 extern u32 FUN_80286880();
-
 extern u32 DAT_802c28f0;
 extern u32 DAT_802c28f4;
 extern u32 DAT_802c28f8;
@@ -124,8 +120,6 @@ extern u32 DAT_803de10c;
 extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
 extern u32 uRam803de108;
-
-
 extern void mm_free(u32);
 extern void* getLastSavedGameTexts(void);
 extern u32 lbl_803DD4A0;
@@ -253,7 +247,6 @@ u32* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
 
 u8 FUN_800e8b98(void)
 {
@@ -751,7 +744,6 @@ void loadTaskTexts(void)
         }
     }
 }
-
 
 u8 getCurTaskHintTextMap(void)
 {

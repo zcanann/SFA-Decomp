@@ -1,11 +1,9 @@
 #include <string.h>
-
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objlib.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
-
 extern int getAngle(float y, float x);
 extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
                                  void* outHits, int flags);
@@ -15,7 +13,6 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 extern void debugPrintf(char* fmt, ...);
 extern f32 sqrtf(f32 v);
 extern float mathCosf(float x);
-
 extern ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern u8* gObjHitsPriorityHitStates;

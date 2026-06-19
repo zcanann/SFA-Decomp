@@ -30,13 +30,9 @@ typedef struct GrimbleState
 } GrimbleState;
 
 extern int randomGetRange(int lo, int hi);
-
-
-
 extern void Obj_FreeObject(int* obj);
 extern f32 timeDelta;
 extern int getAngle(float y, float x);
-
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;
 extern f32 lbl_803E2EB8;

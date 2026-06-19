@@ -1,10 +1,8 @@
 /* DLL 0x00DC — Mika bomb-shadow objects [8016B230-8016B2E0) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -15,7 +13,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -163,7 +160,6 @@ extern u8 framesThisStep;
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
-
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();
@@ -198,7 +194,6 @@ extern int FUN_80294cf8();
 extern int FUN_80294d10();
 extern u32 FUN_80294d60();
 extern u32 FUN_80294d6c();
-
 extern u32 DAT_80321678;
 extern int DAT_80321688;
 extern u32 DAT_80321698;
@@ -255,7 +250,6 @@ extern f32 lbl_803E4060;
 extern f32 lbl_803E4064;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
-
 extern f32 lbl_803E3420;
 extern f32 lbl_803E31D8;
 extern f32 lbl_803E31DC;
@@ -1132,7 +1126,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int mikabombshadow_getExtraSize(void) { return 0x4; }
 int mikabombshadow_getObjectTypeId(void) { return 0x0; }
 int animatedobj_getExtraSize(void);
@@ -1146,7 +1139,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -1569,7 +1561,6 @@ void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
-
 void mikabombshadow_init(int* obj)
 {
     extern u64 ObjHits_DisableObject(); /* #57 */
@@ -1593,13 +1584,9 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
 
-
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
-
-
 
 void flamethrowerspe_update(int* obj);
 
@@ -1612,7 +1599,6 @@ void fireball_update(int* obj);
 void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
-
 
 #pragma opt_common_subs reset
 
@@ -1640,4 +1626,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

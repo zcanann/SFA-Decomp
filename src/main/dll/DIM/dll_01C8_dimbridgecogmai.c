@@ -39,11 +39,7 @@ typedef struct DimbridgecogmaiPlacement
     s16 unk1E;
 } DimbridgecogmaiPlacement;
 
-
-
-
 extern f32 lbl_803E4900;
-
 
 void dimbridgecogmai_hitDetect(void)
 {

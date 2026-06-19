@@ -25,9 +25,6 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
@@ -58,7 +55,6 @@ extern f32 lbl_803DFF18;
 extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
-
 extern f32 lbl_803DB838;
 extern f32 lbl_803DB83C;
 extern s32 lbl_803DD3B0;

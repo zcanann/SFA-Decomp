@@ -28,10 +28,6 @@ typedef struct IntVec3
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-
-
-
-
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
 extern ObjHitReactEntry lbl_80328898[];
@@ -48,7 +44,6 @@ void fn_801F20D4(int obj)
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
-
 
     int sub;
     IntVec3 stk;
@@ -106,7 +101,6 @@ void fn_801F27E4(int obj)
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
-
 
     int sub;
 
@@ -358,12 +352,7 @@ typedef struct ArwAttachTarget
 void fn_801F2290(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
-
-
     extern void buttonDisable(int port, u32 mask);
-
-
-
     extern int lbl_802C2470[];
     extern ArwAttachTarget lbl_80328974[];
     extern char sArwingAttachmentDiffFormat[];

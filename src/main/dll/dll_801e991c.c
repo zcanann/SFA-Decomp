@@ -3,7 +3,6 @@
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
-
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
 extern void spscarab_free(int x);
@@ -26,7 +25,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     (ObjectDescriptorCallback)spscarab_getObjectTypeId,
     spscarab_getExtraSize,
 };
-
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
@@ -68,10 +66,8 @@ extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
-
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXSetCurrentMtx(u32 id);
-
 extern void GXBegin(int prim, int fmt, int n);
 extern int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;

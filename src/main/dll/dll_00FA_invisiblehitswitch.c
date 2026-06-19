@@ -2,8 +2,6 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/objlib.h"
 
-
-
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -64,13 +62,11 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
-
 extern f32 timeDelta;
 extern const f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
-
 extern f32 lbl_803E3750;
 
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
@@ -165,7 +161,6 @@ void InvisibleHitSwitch_update(int obj)
 
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {
-
 
     u8* info;
 

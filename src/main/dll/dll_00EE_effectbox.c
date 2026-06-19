@@ -15,11 +15,8 @@
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
-
-
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-
 extern void* getTrickyObject(void);
 extern void fn_8002B758(void);
 extern void fn_8002B860(int obj);
@@ -192,4 +189,3 @@ void effectbox_release(void)
 void effectbox_initialise(void)
 {
 }
-

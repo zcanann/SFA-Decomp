@@ -1,7 +1,4 @@
 #include "main/dll/dll199state_struct.h"
-
-
-
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/resource.h"
@@ -22,15 +19,11 @@ typedef struct Dll19APlacement
 #define GAMEBIT_DLL19A_RESET 0x5b9
 #define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
-
-
 extern u8 framesThisStep;
-
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern f32 lbl_803E5180;
 
 void dll_19A_update(int obj)

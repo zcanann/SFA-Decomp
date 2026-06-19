@@ -12,18 +12,13 @@
 #include "main/gamebits.h"
 #include "main/sky_state.h"
 #include "main/texture.h"
-
 extern f32 sqrtf(f32 x);
-
 extern f64 lbl_803E4DF0;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
 extern f32 lbl_803E4E1C;
-
 extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
-
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
@@ -31,21 +26,17 @@ extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 sc
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);
-
 extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
-
 extern u8 framesThisStep;
 extern void* lbl_803DBF48;
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
 extern u8 lbl_802C2358[];
 extern f32 lbl_803E4DF8;
-
-
 extern int lbl_803DBF40;
 extern f32 lbl_803DBF50;
 extern u8 lbl_803DBF58;

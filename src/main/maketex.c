@@ -6,14 +6,12 @@
 #include "string.h"
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_802420b0();
 extern u32 FUN_802420e0();
 extern int FUN_802640ac();
 extern int FUN_80264428();
 extern u32 FUN_80264624();
-
 extern u32 DAT_80397560;
 extern u32 DAT_803dc360;
 extern u32 DAT_803dc364;
@@ -24,9 +22,7 @@ extern u32 DAT_803ddd0c;
 extern f64 DOUBLE_803dfc28;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DFC20;
-
 extern int lbl_803DD044;
-
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
@@ -678,8 +674,6 @@ extern int lbl_803DD064;
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
-
-
 extern int lbl_80396900[];
 extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
@@ -888,9 +882,6 @@ typedef struct
 } CARDStatStub;
 
 extern int cardProbe(int chan);
-
-
-
 extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);
 extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);

@@ -8,8 +8,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
-
-
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -28,9 +26,7 @@ void area_release(void);
 void area_initialise(void);
 
 extern u8 framesThisStep;
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8 lbl_80321008[];
@@ -230,7 +226,6 @@ void ProjectileSwitch_update(int obj)
 
 void ProjectileSwitch_init(int obj, u8* initData)
 {
-
 
     ObjAnimComponent* objAnim;
     int state;

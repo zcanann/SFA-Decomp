@@ -17,7 +17,6 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int param_1, int param_2);
@@ -34,7 +33,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
-
 extern void fn_801C4664(int obj);
 extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);

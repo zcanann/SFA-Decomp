@@ -30,15 +30,11 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-
-
-
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 extern float mathSinf(float x);
-
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objlib.h"

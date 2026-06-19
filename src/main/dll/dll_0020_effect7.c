@@ -1299,9 +1299,6 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
-
-
 extern f32 gEffect7TexScrollPhaseA;
 extern f32 gEffect7TexScrollPhaseB;
 extern int gEffect7SinAngleA;
@@ -1354,9 +1351,6 @@ void Effect7_func05(void)
     }
     gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
 }
-
-
-
 
 extern FxNode9 lbl_8039C368;
 extern f32 gEffect7ScrollPhaseA;

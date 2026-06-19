@@ -21,11 +21,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-
-
-
 extern u8 framesThisStep;
-
 extern int Obj_GetPlayerObject(void);
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;

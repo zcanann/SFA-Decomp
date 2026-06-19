@@ -1287,9 +1287,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern float mathSinf(float x);
-
 extern f32 gEffect9PhaseC;
 extern f32 gEffect9PhaseD;
 extern int gEffect9SineAngleFast;
@@ -1301,7 +1299,6 @@ extern f32 lbl_803DFE2C;
 extern f32 lbl_803DFE38;
 extern f32 gEffect9Pi;
 extern f32 gEffect9SineAngleScale;
-
 extern FxNode9 lbl_8039C398;
 extern f32 gEffect9PhaseA;
 extern f32 gEffect9PhaseB;

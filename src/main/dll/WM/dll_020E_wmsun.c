@@ -89,14 +89,12 @@ STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
-
 extern f32 lbl_803E5F8C;  /* 1000.0f */
 extern s16 lbl_803DDCA8;  /* finale countdowns, see file-top comment */
 extern s16 lbl_803DDCAA;
 extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 lbl_803DDCB0;
-
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern f32 lbl_803E5F20; /* 0.0f */
 extern f32 lbl_803E5F78; /* 0.00375f */

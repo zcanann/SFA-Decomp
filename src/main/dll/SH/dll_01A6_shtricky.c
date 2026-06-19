@@ -11,8 +11,6 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 
-
-
 int sh_tricky_getExtraSize(void)
 {
     return 1;

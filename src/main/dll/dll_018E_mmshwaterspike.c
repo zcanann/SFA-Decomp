@@ -31,10 +31,7 @@ typedef struct MmshWaterspikeObjectDef
     u8 pad25[0x28 - 0x25];
 } MmshWaterspikeObjectDef;
 
-
-
 extern void* ObjList_FindObjectById(int id);
-
 extern void fn_80137948(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);

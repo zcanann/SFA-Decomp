@@ -22,16 +22,10 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-
-
 extern int randomGetRange(int lo, int hi);
-
 extern f32 timeDelta;
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern u8 framesThisStep;
-
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -52,7 +46,6 @@ typedef struct Dim2iciclePlacement
     s16 unk1E;
 } Dim2iciclePlacement;
 
-
 #pragma scheduling on
 #pragma peephole on
 extern f32 lbl_803E4B80;
@@ -62,7 +55,6 @@ extern f32 lbl_803E4B74;
 extern f32 lbl_803E4B78;
 extern f32 lbl_803E4B7C;
 extern f32 lbl_803E4B68;
-
 
 #pragma scheduling off
 #pragma peephole off

@@ -68,8 +68,6 @@ extern f32 lbl_803E1BD0;
 extern f32 lbl_803E1BD4;
 extern f32 lbl_803E1BD8;
 extern f32 lbl_803E1BDC;
-
-
 extern int arwarwing_isDead(int state);
 extern int arwarwing_isExplodingOrWarping(int state);
 extern int getAngle(float y, float x);
@@ -185,7 +183,6 @@ void fn_801101E8(void)
 
 void CameraModeArwing_update(u8* obj)
 {
- /* #57 */
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int yaw0, pitch0;
     int d;

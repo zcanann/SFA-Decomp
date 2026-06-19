@@ -8,10 +8,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-
-
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-
 extern f32 lbl_803E4610; /* search radius seed for FindNearestObject */
 extern f32 lbl_803E4614; /* distance at which the vent activates */
 

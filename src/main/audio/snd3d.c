@@ -4,14 +4,8 @@
 #include "main/audio/vsample_alloc.h"
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/synth_delay.h"
-
 extern void dataInit(int p1, void* p2);
-
 extern void synthInit(u32 sampleRate, u32 voiceCount);
-
-
-
-
 extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u8 studio, u32 studioAux);
 extern int sndFXCheck(u32 id);
 #define S3D_UNLINK_EMITTER(emitter)                         \

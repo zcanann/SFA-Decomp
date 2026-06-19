@@ -14,7 +14,6 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
-
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
@@ -28,7 +27,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int setBit, int textId);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
-
 extern f32 timeDelta;
 extern f32 lbl_803E44C0;
 extern f32 lbl_803E44C4;

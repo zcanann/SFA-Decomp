@@ -41,9 +41,6 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-
-
-
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 
@@ -58,9 +55,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
 extern void buttonDisable(int port, u32 mask);
-
 extern f32 timeDelta;
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D04;
@@ -174,7 +169,6 @@ void dll_1FB_hitDetect_nop(void)
 
 void dll_1FB_update(int* obj)
 {
- /* #57 */
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&

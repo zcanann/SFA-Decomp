@@ -42,7 +42,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 /* objectFlags bits set in dll_1CF_init. */
 #define DLL1CF_OBJECT_FLAGS 0xe000
 
-
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4A30;
 

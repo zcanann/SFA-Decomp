@@ -28,7 +28,6 @@
 #include "main/pad.h"
 #include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
-
 extern u8 padGetCY(int port);
 extern s8 padGetStickX(int port);
 extern s8 padGetStickY(int port);
@@ -45,9 +44,7 @@ extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
-
 extern ViewfinderState* lbl_803DD548;
-
 extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;

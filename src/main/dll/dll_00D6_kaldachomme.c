@@ -18,15 +18,10 @@
 #include "main/dll/xyzanimator.h"
 #include "main/obj_placement.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
 extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
 extern f32 lbl_803E30D8;
-
-
 
 typedef struct KaldaChompMeState
 {

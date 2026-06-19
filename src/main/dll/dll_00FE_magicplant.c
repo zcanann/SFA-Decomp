@@ -19,7 +19,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/dll/dll_00FD.h"
-
 extern int randomGetRange(int lo, int hi);
 extern void mm_free(void* p);
 extern void* Obj_GetPlayerObject(void);
@@ -42,8 +41,6 @@ extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
 extern void objRenderFn_8003b8f4(int obj, float arg);
-
-
 extern void* gCameraInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;

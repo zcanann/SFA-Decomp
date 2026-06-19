@@ -52,16 +52,10 @@ typedef struct HagabonPlacement
 
 extern int FUN_80006b0c(int handle);
 extern int FUN_80006b14(int id);
-
-
-
-
 extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58;          /* last-seen curve point cache, shared with swarmbaddie */
@@ -89,8 +83,6 @@ extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
-
-
 extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;

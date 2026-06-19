@@ -24,18 +24,12 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-
-
-
-
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void Music_Trigger(int id, int arg);
-
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern int getSaveGameLoadStatus(void);
-
 #include "main/game_object.h"
 #include "main/gamebits.h"
 

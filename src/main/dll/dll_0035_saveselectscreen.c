@@ -35,14 +35,9 @@ typedef struct SaveSelectPanel
 } SaveSelectPanel;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
-
-
-
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 extern int getUiDllFn_80014930(void);
-
 extern s8 lbl_803DB9FB;
 extern u8 lbl_803DB424;
 extern s8 saveFileSelect_currentSlotIndex;
@@ -70,13 +65,9 @@ extern void* lbl_803A8680[4];
 extern SaveSelectPanel lbl_8031A7BC[8];
 extern u8 lbl_8031A7F8[];
 extern s16 lbl_803DBA04;
-
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 void saveSelectGoToChooseSlot(int arg);
-
-
-
 
 extern void* lbl_803A8658[10];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
@@ -102,9 +93,7 @@ extern f32 lbl_803E1D6C;
 extern f32 lbl_803E1D70;
 extern f32 lbl_803E1D74;
 extern u8 framesThisStep;
-
 extern int mmSetFreeDelay(int v);
-
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);

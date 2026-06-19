@@ -33,11 +33,9 @@ extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern int Obj_GetPlayerObject(void);
 extern u32 ObjMsg_SendToObject();
-
 extern u32 FUN_80286838();
 extern u32 FUN_80286884();
 extern u32 FUN_80294c40();
-
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
 extern f32 lbl_803DC074;
@@ -48,12 +46,8 @@ extern f32 lbl_803E70F4;
 extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
-
 extern void vecRotateZXY(u8* p, f32* v);
-
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;
 extern f32 lbl_803E6468;

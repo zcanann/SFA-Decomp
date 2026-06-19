@@ -14,12 +14,9 @@
  * gPartfxInterface / objfx_spawnFlaggedTrailBurst.
  */
 #include "main/dll/drakorenergystate_struct.h"
-
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
-
-
 extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);

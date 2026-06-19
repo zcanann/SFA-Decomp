@@ -27,13 +27,9 @@
 #include "main/objlib.h"
 #include "main/objprint.h"
 
-
-
-
 void mikabomb_free(int obj, int mode);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -171,9 +167,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
-
-
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
@@ -260,7 +253,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -272,7 +264,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -705,4 +696,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

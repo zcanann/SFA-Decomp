@@ -17,9 +17,6 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316C60[];
 extern u8 lbl_80316C40[];

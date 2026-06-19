@@ -12,11 +12,7 @@
 #include "main/effect_interfaces.h"
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
-
 extern ModgfxInterface** gModgfxInterface;
-
-
-
 extern u8 lbl_80317260[];
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;

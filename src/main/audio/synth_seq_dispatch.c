@@ -1,12 +1,9 @@
 #include "ghidra_import.h"
-
 extern int synthGetNextChannelEvent(u8 i);
 extern void synthInsertChannelEvent(int slot, int item);
-
 extern int gSynthCurrentVoice;
 extern int gSynthCurrentVoiceSlotIndex;
 extern u32* gSynthFreeCallbacks;
-
 extern u8* synthReadVariablePair(u8 * p, u16 * tagOut, s16 * valueOut);
 extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
 extern void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data);

@@ -19,7 +19,6 @@
  */
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
-
 extern int randomGetRange(int lo, int hi);
 
 /* object group this prop registers its fragments under */

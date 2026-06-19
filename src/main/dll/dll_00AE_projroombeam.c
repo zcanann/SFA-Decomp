@@ -11,8 +11,6 @@
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-
-
 int projroombeam_doUnsupported(void)
 {
     OSReport(sProjroombeamDoNoLongerSupported);

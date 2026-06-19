@@ -9,9 +9,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
-
-
-
 extern void objRenderFn_8003b8f4(f32);
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
@@ -81,10 +78,8 @@ extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
-
 extern u32 FUN_8003b818();
 extern double FUN_80293900();
-
 extern u32 DAT_8032a290;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
@@ -313,8 +308,6 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
- /* #57 */
- /* #57 */
     u32 animId;
     int control;
 
@@ -355,8 +348,6 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
- /* #57 */
- /* #57 */
     u32 animId;
 
     if (*(char*)(state + 0x27a) != '\0')
@@ -382,8 +373,6 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
- /* #57 */
- /* #57 */
     u32 pick;
     u32 animId;
     int extra;
@@ -575,7 +564,6 @@ void dbholecontrol1_init(int* obj, u8* params)
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
 
-
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 
@@ -584,7 +572,6 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
 }
-
 
 void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
 
@@ -604,7 +591,6 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern void memcpy(int, void*, int);
     extern void loadObjectAtObject(int, int);
     extern int*ObjGroup_GetObjects(int, int*);
-
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
     extern int lbl_803DDCE0;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -681,7 +667,6 @@ int dbstealerworm_stateHandlerA04(int obj, int param2);
 
 int dbstealerworm_stateHandlerA0E(int obj, int param2);
 
-
 int dbstealerworm_stateHandlerA02(int obj, int p2);
 
 int dbstealerworm_stateHandlerA0D(int obj, int p2);
@@ -691,11 +676,6 @@ int dbstealerworm_stateHandlerB05(int obj, int p2);
 int dbstealerworm_stateHandlerB06(int obj, int p2);
 
 int dbstealerworm_stateHandlerA0A(int obj, int p2);
-
-
-
-
-
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

@@ -1,12 +1,8 @@
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
-
 extern int adsrStartRelease(int state, u32 divisor);
-
-
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
-
 extern u16 lbl_8032F618[];
 
 int adsrStartRelease(int state, u32 divisor)

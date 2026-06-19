@@ -3,9 +3,6 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern u32 ObjHits_RecordObjectHit();

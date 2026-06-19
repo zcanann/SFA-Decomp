@@ -130,7 +130,6 @@ extern u16 dataKeymapNum;
 extern u16 dataLayerNum;
 extern u16 dataMacTotal;
 extern u16 dataFXGroupNum;
-
 extern s32 dataGetMacro_main;
 extern s32 dataGetMacro_bucket;
 extern MAC_SUBTAB dataGetMacro_key;
@@ -142,9 +141,6 @@ extern DATA_TAB* dataGetCurve_result;
 extern DATA_TAB dataGetKeymap_key;
 extern DATA_TAB* dataGetKeymap_result;
 extern LAYER_TAB* dataGetLayer_result;
-
-
-
 extern void hwSaveSample(SAMPLE_HEADER** header, void** addr);
 extern void hwRemoveSample(SAMPLE_HEADER* header, void* addr);
 extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);

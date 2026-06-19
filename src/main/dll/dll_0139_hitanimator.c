@@ -18,8 +18,6 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
-
-
 extern u8* mapGetBlock(int idx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* fn_8006070C(int* obj, int idx);

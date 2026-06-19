@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/data_tables.h"
-
-
 extern void sndConvertMs(u32 * p);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern s32 sndConvert2Ms(u32 v);

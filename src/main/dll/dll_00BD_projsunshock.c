@@ -9,8 +9,6 @@
 #include "main/dll/dll_7A.h"
 #include "main/engine_shared.h"
 
-
-
 int projsunshock_doUnsupported(void)
 {
     OSReport(sProjsunshockDoNoLongerSupported);

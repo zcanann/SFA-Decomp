@@ -6,8 +6,6 @@
 #include "main/camera.h"
 #include "main/texture.h"
 
-
-
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
@@ -128,9 +126,7 @@ extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_f
 extern void GXGetLightAttnK(u8 * lt_obj, f32 * k0, f32 * k1, f32 * k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
 extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-
 extern void* memset(void* dst, int val, int n);
-
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern void Vec_normalize(f32 * dst, f32 * src);
@@ -148,7 +144,6 @@ extern f32 lbl_803DE76C;
 extern f32 lbl_803DE790;
 extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
-
 
 void* objCreateLight(int arg, u8 addToList)
 {
@@ -503,8 +498,6 @@ extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
-
-
 
 void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* a, u8* b, u8* c, u8* d)
 {

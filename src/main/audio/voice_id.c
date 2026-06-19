@@ -1,7 +1,6 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
-
 extern u8 vidListNodes[];
 
 #define voicePriorityLinks (vidListNodes + 0x8c0)
@@ -11,9 +10,6 @@ extern void* vidRoot;
 extern void* vidFree;
 extern u16 voicePrioSortRootListRoot;
 extern McmdVoiceState* synthVoice;
-
-
-
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.

@@ -16,7 +16,6 @@ typedef struct CameraModeStaticPlacement
 extern int getAngle(float y, float x);
 extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
-
 extern u8 framesThisStep;
 extern CameraModeStaticState* lbl_803DD558;
 extern f32 lbl_803E1878;

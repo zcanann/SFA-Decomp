@@ -32,8 +32,6 @@ typedef struct KaldachomPlacement
     u8 aggroChance; /* 0x2F: 0..99 chance to lunge instead of return */
 } KaldachomPlacement;
 
-
-
 extern f32 timeDelta;
 extern f32 lbl_803E3060; /* 0.0f */
 extern f32 lbl_803E3078;

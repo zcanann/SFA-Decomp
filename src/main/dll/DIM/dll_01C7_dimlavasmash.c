@@ -13,10 +13,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/objhits.h"
 
-
-
-
-
 #pragma scheduling on
 #pragma peephole on
 
@@ -29,7 +25,6 @@ extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
-
 
 #pragma scheduling off
 #pragma peephole off

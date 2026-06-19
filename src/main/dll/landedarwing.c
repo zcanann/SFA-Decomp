@@ -17,19 +17,14 @@
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
 #define BADDIESTATE_JUST_LAUNCHED 0x27a
 
-
-
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
-
 extern void fn_80165B3C(int obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
 extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
-
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E3004;

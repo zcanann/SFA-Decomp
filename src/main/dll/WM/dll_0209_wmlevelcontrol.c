@@ -39,16 +39,12 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
-
 extern void* Obj_GetPlayerObject(void);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
-
 extern int getCurSeqNo(void);
-
 extern f32 lbl_803E5E70; /* 0.0 */
 extern f32 timeDelta;
-
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);

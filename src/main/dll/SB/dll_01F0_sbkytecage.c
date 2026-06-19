@@ -16,7 +16,6 @@
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
-
 extern f32 timeDelta;
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
@@ -24,9 +23,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
-
-
-
 extern f32 lbl_803E5918; /* ObjAnim_AdvanceCurrentMove speed */
 extern void buttonDisable(int port, u32 mask);
 extern int* objModelGetVecFn_800395d8(int obj, int idx);

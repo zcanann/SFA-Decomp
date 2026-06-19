@@ -34,20 +34,15 @@ STATIC_ASSERT(sizeof(WaveanimatorModelMtxCtx) == 0x3C);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-
-
-
 extern float mathSinf(float x);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int* obj, int group);
-
 extern u8 lbl_803DDAE8;     /* live-instance refcount */
 extern void* lbl_803DDAEC;  /* per-cell RGB color field */
 extern void* lbl_803DDAF0;  /* per-grid phase table */
 extern void* lbl_803DDAF4;  /* per-cell height field */
 extern u8 lbl_803DDAF8;     /* phases-advanced-this-frame latch */
 extern u8 framesThisStep;
-
 extern f32 lbl_803E3F40; /* grid step scale */
 extern f32 lbl_803E3F44; /* 0.0f sentinel / color-split zero */
 extern f32 lbl_803E3F48; /* wave scale */

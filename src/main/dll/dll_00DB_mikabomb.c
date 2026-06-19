@@ -24,12 +24,9 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/objprint.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
-
-
 extern ModgfxInterface** gModgfxInterface;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E31C0;

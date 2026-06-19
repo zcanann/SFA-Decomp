@@ -8,7 +8,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
 #include "main/sky_interface.h"
-
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
 
@@ -52,7 +51,6 @@ extern f32 sqrtf(f32 x);
 
 void tumbleweed_updateRollingMotion(int obj, int state)
 {
- /* #57 */
     int hitCount;
     u32 uval;
     u32* hitEntry;
@@ -218,7 +216,6 @@ int tumbleweed_getExtraSize(void)
 
 void tumbleweed_free(int* obj)
 {
- /* #57 */
     extern void ObjGroup_RemoveObject(int* obj, int group); /* #57 */
     int* items;
     int counter;
@@ -507,7 +504,6 @@ void tumbleweed_updateStateMachine(int obj)
 
 void tumbleweed_init(int obj, int defData)
 {
- /* #57 */
     int aux = *(int*)&((GameObject*)obj)->extra;
 
     ((BackpackState*)aux)->unk288 = ((GameObject*)obj)->anim.localPosX;

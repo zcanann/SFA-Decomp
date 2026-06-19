@@ -1,10 +1,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
-
-
 extern u32 get_vidlist(u32 id);
-
 
 typedef struct VoiceListNode
 {
@@ -35,7 +32,6 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
-
 extern VoiceListNode voicePriorityLinks[0x40];
 extern u8 voicePriorityGroupHeads[0x100];
 extern VoiceListNode voiceFreeListSlots[0x40];

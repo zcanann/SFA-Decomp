@@ -41,13 +41,8 @@ typedef struct DIMbossspitState
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-
-
-
 extern void objRenderFn_8003b8f4(f32 scale);
-
 extern f32 lbl_803E4D44;
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
@@ -64,10 +59,8 @@ extern f32 lbl_803E4D60;
 extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
-
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 a, f32 b);
-
 extern void lightSetField4D(ModelLightStruct* p, u8 v);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* cb);

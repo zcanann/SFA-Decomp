@@ -2,10 +2,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
-
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
-
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E5060;
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);

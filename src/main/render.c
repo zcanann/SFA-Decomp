@@ -1,5 +1,4 @@
 #include "main/engine_shared.h"
-
 extern float floorf(float x);
 extern f32 lbl_803DE544;
 

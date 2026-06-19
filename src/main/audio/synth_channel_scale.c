@@ -1,15 +1,12 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
-
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
 extern u8* synthVoice;
-
 extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
 extern void vidRemoveVoice(McmdVoiceState * svoice);
 extern void voiceRegister(McmdVoiceState * svoice);
-
 
 typedef struct
 {
@@ -60,18 +57,15 @@ extern u8 lbl_803DE224;
 extern u32 gSynthAllocatedVoices;
 extern u32 gSynthNextHandle;
 extern u32* gSynthFreeCallbacks;
-
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u32 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern int sndFXCheck(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
-
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
-
 extern double __fabs(double);
 #define fabs __fabs
 void synthSetStudioChannelScale(int value, u8 bank, u32 key);

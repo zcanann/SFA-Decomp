@@ -1,10 +1,7 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
 #include "string.h"
-
-
 extern int inpTranslateExCtrl(int input);
-
 extern u8 sInpMidiCtrlFullResetPreset[];
 extern u8 sInpMidiCtrlMaskedResetPreset[];
 extern u8 lbl_803CD760[][INP_MIDI_SLOT_COUNT];

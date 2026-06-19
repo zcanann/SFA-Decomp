@@ -16,11 +16,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
 extern void objRenderFn_8003b8f4(int obj, float arg);
-
-
-
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 

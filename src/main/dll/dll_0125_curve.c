@@ -20,9 +20,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 #include "main/objlib.h"
-
 extern u32 FUN_8003b818();
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -160,9 +158,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
-
-
 extern f32 lbl_803E3420;
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
@@ -265,7 +260,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 void curve_setScale(void)
 {
 }
@@ -288,7 +282,6 @@ int shield_getObjectTypeId(void);
 int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
 int curve_getObjectTypeId(void) { return 0x0; }
-
 
 void dim2roofrub_free(int* obj);
 

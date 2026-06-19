@@ -15,15 +15,11 @@
 #include "main/objtexture.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-
-
-
 extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 extern char lbl_803AC948[];
-
 extern f32 lbl_803E4780; /* render scale */
 extern f32 lbl_803E4784; /* init position component */
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */

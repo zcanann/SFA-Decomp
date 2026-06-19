@@ -25,11 +25,8 @@
 #include "main/audio/sfx.h"
 #include "main/mm.h"
 #include "main/dll/modgfx.h"
-
-
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
-
 extern f32 timeDelta;
 extern void memset(void* ptr, int value, int size);
 extern f32 sqrtf(f32 value);

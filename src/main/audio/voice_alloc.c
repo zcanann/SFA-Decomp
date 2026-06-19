@@ -2,9 +2,6 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/mcmd_exec.h"
-
-
-
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8* synthVoice;
 extern u8 lbl_803BD150[];

@@ -15,13 +15,9 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-
 extern f32 lbl_803DB878;
 extern f32 lbl_803DB87C;
 extern f32 lbl_803E02D8;
@@ -33,7 +29,6 @@ extern f32 lbl_803DD3F8;
 extern f32 lbl_803DD3FC;
 extern f32 lbl_803E0308;
 extern f32 lbl_803E030C;
-
 extern f32 lbl_803DB870;
 extern f32 lbl_803DB874;
 extern f32 lbl_803E02E4;

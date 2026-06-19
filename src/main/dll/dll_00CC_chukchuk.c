@@ -24,7 +24,6 @@
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
 
 extern int randomGetRange(int lo, int hi);
-
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
 extern u32 ObjHits_DisableObject();
@@ -136,7 +135,6 @@ void chukchuk_update(short* obj)
     extern int Obj_GetPlayerObject(void);
     extern int getAngle(float y, float x);
     extern f32 sqrtf(f32);
-
     extern void fn_8015F5B0(short* obj);
     extern u8 lbl_8031FF80[];
     extern f32 timeDelta;

@@ -21,11 +21,8 @@
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-
-
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void* params, f32* vec);
-
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;
 extern f32 lbl_803E0008;

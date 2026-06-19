@@ -9,11 +9,6 @@ extern const f32 lbl_803E7620;
 extern const f32 lbl_803E7624;
 extern const f32 lbl_803E7628;
 extern const f32 lbl_803E762C;
-
-
-
-
-
 extern void fn_80246E54(void);
 extern void fn_80246E80(void);
 extern void fn_80246EB4(void);

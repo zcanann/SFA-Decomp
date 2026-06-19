@@ -36,14 +36,10 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
-
-
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
-
-
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
 extern f32 lbl_803E2CC8;

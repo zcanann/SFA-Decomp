@@ -31,7 +31,6 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-
 extern void objRenderFn_8003b8f4(f32 v);
 extern f32 timeDelta;
 
@@ -49,7 +48,6 @@ void mmp_moonrock_release(void)
 void mmp_moonrock_initialise(void)
 {
 }
-
 
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
@@ -160,7 +158,6 @@ void fn_801A7B10(int obj)
 }
 
 extern void saveGame_saveObjectPos(int obj);
-
 extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern f32 lbl_803E454C;
@@ -209,7 +206,6 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
     ((GameObject*)obj)->anim.localPosZ = z;
     saveGame_saveObjectPos(obj);
 }
-
 
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
@@ -286,7 +282,6 @@ void fn_801A80F0(int obj, u8 flag)
 }
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
-
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4548;
 
@@ -491,10 +486,8 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     }
 }
 
-
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern float mathSinf(float x);
-
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);

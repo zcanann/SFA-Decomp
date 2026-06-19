@@ -8,7 +8,6 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
@@ -18,7 +17,6 @@ typedef struct BarrelPadParticleArgs
     u8 pad00[0xc];
     f32 offset[3];
 } BarrelPadParticleArgs;
-
 
 extern f32 lbl_803E3F00;
 extern f32 lbl_803E3F04;

@@ -36,8 +36,6 @@ typedef struct VS
 
 extern u8 synthVirtualSampleState[];
 
-
-
 /*
  * vsInit - reset the virtual sample stream buffer table.
  *

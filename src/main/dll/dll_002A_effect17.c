@@ -1,9 +1,6 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern u32 DAT_8039d0b8;
 extern u32 DAT_8039d0bc;
 extern u32 DAT_803de090;
@@ -446,11 +443,9 @@ u32 FUN_800c9030(u32 key, int* outIndex)
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-
 extern f32 lbl_803DB858;
 extern f32 lbl_803DB85C;
 extern f32 lbl_803E01B8;
@@ -462,7 +457,6 @@ extern f32 lbl_803DD3D8;
 extern f32 lbl_803DD3DC;
 extern f32 lbl_803E0218;
 extern f32 lbl_803E021C;
-
 extern f32 lbl_803DB850;
 extern f32 lbl_803DB854;
 extern f32 lbl_803E01C4;

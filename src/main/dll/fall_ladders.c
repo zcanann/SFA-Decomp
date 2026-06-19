@@ -32,11 +32,8 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
-
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
-
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);

@@ -49,10 +49,8 @@ extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
 extern void synthQueueHandle(u32 handle);
 extern void synthFreeHandle(u32 handle);
-
 extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
-
 extern u8 lbl_803BCD90[];
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
@@ -68,7 +66,6 @@ extern f32 lbl_803E77D0;
 typedef void (*SynthAuxCallback)(int active, u16* samples, u32 user);
 
 extern u8* dataGetKeymap(u32 sampleId);
-
 extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                                  u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                  u8 vidFlag, u8 vGroup, u8 studio, u32 itd);

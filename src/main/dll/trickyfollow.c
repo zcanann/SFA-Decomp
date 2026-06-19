@@ -12,10 +12,8 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
-
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;
@@ -45,9 +43,7 @@ extern f32 lbl_803E24B4;
 extern f32 lbl_803E24B8;
 extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
-
 extern char lbl_8031D2E8[];
-
 extern f32 getXZDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, void* outVec);
 extern f32 sqrtf(f32 x);
@@ -66,9 +62,7 @@ extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
 extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
 extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern s16 getAngle(f32 x, f32 z);
-
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
-
 extern void objAnimFn_8013a3f0(u8* obj, int animId, f32 speed, int flags);
 extern void curveFn_800da23c(RomCurveWalker* route);
 extern void fn_800D9F38(RomCurveWalker* route);
@@ -76,7 +70,6 @@ extern void fn_800D9EE8(RomCurveWalker* route);
 extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
-
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)

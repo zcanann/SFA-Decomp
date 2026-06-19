@@ -1304,9 +1304,7 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern float mathSinf(float x);
-
 extern f32 lbl_803DB7F8;
 extern f32 lbl_803DB7FC;
 extern int lbl_803DD370;
@@ -1318,7 +1316,6 @@ extern f32 lbl_803DFC84;
 extern f32 lbl_803DFC90;
 extern f32 lbl_803DFCD0;
 extern f32 lbl_803DFCD4;
-
 extern f32 lbl_803DB7F0;
 extern f32 lbl_803DB7F4;
 extern f32 lbl_803DFC8C;

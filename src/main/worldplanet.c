@@ -9,9 +9,7 @@
 #include "main/worldobj.h"
 #include "main/worldplanet.h"
 #include "main/pad.h"
-
 extern void objRenderFn_8003b8f4(double scale);
-
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lbl_8032A1B4[5];
@@ -34,7 +32,6 @@ extern void envFxActFn_800887f8(u8 value);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
-
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
@@ -44,7 +41,6 @@ extern int ObjList_FindObjectById(int id);
 extern void AudioStream_StopCurrent(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void setIsOvercast(int v);
-
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 lbl_803DDD0C;

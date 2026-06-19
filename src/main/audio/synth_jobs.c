@@ -3,17 +3,11 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/voice_manage.h"
 #include "dolphin/os/OSCache.h"
-
-
-
-
-
 extern u8 lbl_803BD150[];
 extern u8 dataSmpSDirTable[];
 extern SynthJob synthJobTable[];
 extern u32 synthFlags;
 extern u16 dataKeymapNum;
-
 extern f32 lbl_803E77D8;
 
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
@@ -33,7 +27,6 @@ typedef struct SynthSampleInfo
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u8* synthVoice;
-
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern u32 hwChangeStudio(u32 voice); /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */

@@ -1,13 +1,7 @@
 /* DLL 0x132 — waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
 #include "main/dll/MMP/MMP_asteroid.h"
-
-
-
-
-
 extern u8 framesThisStep;
 extern f32 sqrtf(f32);
-
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -19,7 +13,6 @@ typedef struct WaterFallSprayState
     u32 unk0;
     u32 unk4;
 } WaterFallSprayState;
-
 
 extern f32 sqrtf(f32 value);
 
@@ -163,7 +156,6 @@ void WaterFallSpray_init(u8* obj, u8* data)
  * on data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
-
 
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on

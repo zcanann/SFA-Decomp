@@ -10,8 +10,6 @@
 #include "main/dll/dll_72.h"
 #include "main/engine_shared.h"
 
-
-
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projship1_doUnsupported(void)

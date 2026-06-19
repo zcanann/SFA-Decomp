@@ -13,7 +13,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-
 extern f32 lbl_803E608C;
 extern f32 lbl_803E6094;
 extern f32 lbl_803E6098;

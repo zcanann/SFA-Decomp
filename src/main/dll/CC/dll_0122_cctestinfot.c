@@ -8,8 +8,6 @@
  */
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
-
-
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);

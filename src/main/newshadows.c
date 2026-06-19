@@ -2,7 +2,6 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/camera.h"
-
 extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
@@ -75,7 +74,6 @@ extern u32 FUN_80286858();
 extern u32 FUN_8028688c();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
-
 extern u32 DAT_8038ee3c;
 extern u32 DAT_8038ee48;
 extern int DAT_8038eec8;
@@ -164,8 +162,6 @@ extern f32 lbl_803DFA34;
 extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
-
-
 
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
@@ -1590,7 +1586,6 @@ void drawReflectionTexture(void)
 
 extern void GXInvalidateTexAll(void);
 
-
 void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
@@ -1688,7 +1683,6 @@ extern u8 gNewShadowCasterCount;
 extern int* gNewShadowCurrentViewSlot;
 extern char gNewShadowCasterTable[];
 extern f32 Ydchuff_803DED80;
-
 extern const double TokenCB_803DED58;
 extern const double DrawDone_803DED60;
 extern inline float sqrtf(float x)
@@ -1896,9 +1890,7 @@ void initFn_8006d020(void)
 }
 
 extern int textureLoadAsset(int);
-
 extern void fn_80069EB8();
-
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
@@ -2324,7 +2316,6 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
 
 extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
-
 extern u8 framesThisStep;
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
@@ -2475,7 +2466,6 @@ extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_UpdateProjection(int a, int b);
-
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern int fn_800626C8(int* obj, int frames);

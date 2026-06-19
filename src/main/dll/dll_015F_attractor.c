@@ -34,9 +34,7 @@ STATIC_ASSERT(offsetof(AttractorMapData, setupByte) == 0x18);
 STATIC_ASSERT(offsetof(AttractorMapData, mode) == 0x19);
 STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 
-
 extern f32 lbl_803E43D0;
-
 
 void attractor_hitDetect(void)
 {

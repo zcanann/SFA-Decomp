@@ -1,10 +1,7 @@
 /* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-
-
 
 void mikabomb_hitDetect(void);
 
@@ -14,7 +11,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -162,7 +158,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
 #include "main/objprint.h"
-
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();
@@ -197,7 +192,6 @@ extern int FUN_80294cf8();
 extern int FUN_80294d10();
 extern u32 FUN_80294d60();
 extern u32 FUN_80294d6c();
-
 extern u32 DAT_80321678;
 extern int DAT_80321688;
 extern u32 DAT_80321698;
@@ -254,7 +248,6 @@ extern f32 lbl_803E4060;
 extern f32 lbl_803E4064;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
-
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
@@ -1092,7 +1085,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -1104,7 +1096,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -1511,14 +1502,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
-
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-
-
 void gcbaddieshield_update(int* obj);
-
 
 void fireball_free(int* obj);
 
@@ -1526,38 +1512,24 @@ void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
 
-
-
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
-
-
 
 void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
-
-
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
-
 void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
-
-
-
-

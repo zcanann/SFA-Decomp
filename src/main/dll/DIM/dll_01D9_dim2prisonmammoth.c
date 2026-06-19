@@ -45,29 +45,21 @@ extern void fn_8003A168(int p1, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-
 extern f32 lbl_803E82D0;
-
-
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
-
 extern int gDim2PrisonMammothStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
-
 extern f32 lbl_803E82C0;
 extern f32 lbl_803E82C4;
 extern f32 lbl_803E82C8;
 extern f32 lbl_803E82CC;
 extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
-
-
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
-
 
 extern u8 lbl_803DC750;
 extern ObjHitReactEntry lbl_803351A8[];

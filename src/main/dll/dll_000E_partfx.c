@@ -1297,7 +1297,6 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern u8 gPartfxCachedResourceCount;
 extern s16 gPartfxResourceTimeouts[];
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
@@ -1339,7 +1338,6 @@ extern void*gPartfxResourceModule15;
 extern void*gPartfxResourceModule17;
 extern void*gPartfxResourceModule18;
 extern void*gPartfxResourceModule19;
-
 extern f32 gPartfxFrameAnimPhase0;
 extern f32 gPartfxFrameAnimPhase1;
 extern f32 lbl_803DF4C8;

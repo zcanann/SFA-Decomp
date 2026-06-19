@@ -150,9 +150,7 @@ ObjectDescriptor11 projgfx_funcs = {
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern float mathSinf(float x);
-
 extern f32 gEffect5AnimProgressC;
 extern f32 gEffect5AnimProgressD;
 extern int gEffect5SinPhaseA;
@@ -207,7 +205,6 @@ void Effect5_func05(void)
  */
 
 extern void vecRotateZXY(void* obj, f32* vec);
-
 extern f32 gEffect5AnimProgressA;
 extern f32 gEffect5AnimProgressB;
 extern f32 lbl_803DFBEC;

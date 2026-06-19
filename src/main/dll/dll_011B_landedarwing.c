@@ -77,7 +77,6 @@ extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
-
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void fn_8022F270(int obj, int arg);
@@ -93,9 +92,7 @@ extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern void Obj_FreeObject(int obj);
 
 #pragma scheduling off

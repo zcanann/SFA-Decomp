@@ -12,11 +12,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
 extern f32 timeDelta;
-
 extern f32 lbl_803E3DB0;
 extern f32 lbl_803E3DB4;
 extern f32 lbl_803E3DC0;

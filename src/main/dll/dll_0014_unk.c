@@ -26,7 +26,6 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-
 extern void OSReport(const char* fmt, ...);
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
@@ -37,9 +36,6 @@ extern void OSReport(const char* fmt, ...);
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "string.h"
-
-
-
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7,
                               int p8, int p9, int p10);
 extern int mathFn_800dbff0(float* point);
@@ -47,11 +43,9 @@ extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
 extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
-
 extern const f32 lbl_803E063C;
 extern f32 lbl_803E0640;
 extern f32 gFloatOne;
-
 extern f32 lbl_803E05F0;
 extern f32 lbl_803E0644;
 extern int lbl_803DD460;
@@ -123,7 +117,6 @@ extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
-
 extern f32 lbl_803E0648;
 extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;

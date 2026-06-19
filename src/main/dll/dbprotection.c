@@ -44,10 +44,7 @@
 #define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
-
-
 extern int randomGetRange(int lo, int hi);
-
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -60,11 +57,9 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern int fn_801E2570(void);
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;

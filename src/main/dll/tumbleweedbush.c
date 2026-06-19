@@ -32,19 +32,14 @@ typedef struct TrickyGrowlState
     u8 pad59[0x60 - 0x59];
 } TrickyGrowlState;
 
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
-
-
 extern int getAngle(float y, float x);
 extern void objAudioFn_800393f8(void* obj, void* p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 extern void objSetAnimSpeedTo1(int* obj);
-
 extern char lbl_8031D2E8[];  /* tricky debug-string blob */
-
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E24C8;

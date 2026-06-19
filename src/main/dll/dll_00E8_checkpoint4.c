@@ -26,11 +26,7 @@
 #include "main/dll/genprops.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
-
 extern int randomGetRange(int lo, int hi);
-
-
-
 extern f32 lbl_803E3420;
 extern f32 lbl_803E3424;
 extern f32 lbl_803E3428;
@@ -40,7 +36,6 @@ extern f32 lbl_803E3430;
 void mikabomb_free(int obj, int mode);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

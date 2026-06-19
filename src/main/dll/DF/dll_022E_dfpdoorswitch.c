@@ -7,8 +7,6 @@
 #include "main/dll/anim.h"
 #include "main/engine_shared.h"
 
-
-
 void doorswitch_render(void)
 {
 }

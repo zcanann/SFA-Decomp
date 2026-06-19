@@ -8090,7 +8090,6 @@ int fn_802A6694(int obj, int state, f32 fv)
     return 0;
 }
 
-
 typedef struct
 {
     u8 pad[0x88];

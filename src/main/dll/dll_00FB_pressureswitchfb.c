@@ -49,13 +49,10 @@
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
-
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
 extern f32 timeDelta;
-
 extern int fn_80295C5C(void* player);
-
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;

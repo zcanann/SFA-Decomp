@@ -41,13 +41,10 @@
 extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
 extern void fn_801C8B68(DbshShrineObject* obj);
-
-
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
 extern void audioStopByMask(int mask);
-
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
 extern int unlockLevel(s32 val, int idx, int flag);
@@ -57,7 +54,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void fn_80296518(int obj, int flag, int set);
-
 extern void* objCreateLight(int arg, u8 addToList);
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;

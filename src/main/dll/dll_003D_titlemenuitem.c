@@ -33,19 +33,15 @@
 #define TITLE_MENU_KIND_TOGGLE 1
 #define TITLE_MENU_KIND_WINDOW 2
 
-
 extern u8 padGetStickX(int port);
-
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
 extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
-
 extern void* lbl_803A9DB8[6];   /* cached menu textures */
 extern s16 lbl_8031C2A8[6];     /* texture asset ids for the cache */
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
@@ -56,8 +52,6 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 extern void gameTextAppendStr(char* str, int arg2);
 extern void mm_free(void); /* no-arg: r3 forwarded from caller to match target */
-
-
 extern void* mmAlloc(int size, int type, int flag);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)

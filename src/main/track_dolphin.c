@@ -50,7 +50,6 @@ extern double FUN_80293900();
 extern u32 FUN_802947f8();
 extern u32 FUN_802949e8();
 extern u32 FUN_80294da4();
-
 extern int DAT_80382c98;
 extern u32 DAT_8038859c;
 extern u32 DAT_803885a0;
@@ -259,7 +258,6 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXSetArray(14, *(void**)((char*)block + 0x60), 4);
 }
 #pragma dont_inline reset
-
 
 extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
@@ -3487,7 +3485,6 @@ typedef union
 } GolfWGPipe;
 
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
-
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -3693,7 +3690,6 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
 }
 
-
 extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
@@ -3894,14 +3890,12 @@ extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
-
 extern void skyBuildSunModelMatrix(f32 * out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
 extern int pauseMenuGetState(void);
 extern void* fn_8008912C(void);
-
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int sSynthFadeUnit;
 extern int renderFlags;

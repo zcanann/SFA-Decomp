@@ -169,4 +169,3 @@ void WM_colrise_release(void)
 void WM_colrise_initialise(void)
 {
 }
-

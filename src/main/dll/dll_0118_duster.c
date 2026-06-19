@@ -24,13 +24,8 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-
 extern int randomGetRange(int lo, int hi);
-
-
 extern void* Obj_GetPlayerObject(void);
-
-
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
@@ -39,7 +34,6 @@ extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4
                                 f32 x, f32 y, f32 z);
 extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-
 extern f32 lbl_803E38B0;
 extern f32 lbl_803E38B4;
 extern f32 lbl_803E38B8;
@@ -56,7 +50,6 @@ extern void vecRotateZXY(void* angles, void* outVec);
 extern void objRenderFn_8003b8f4(f32);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               void* obj, int flags, int mask, int arg9, int arg10);
-
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -90,13 +83,6 @@ int duster_SeqFn(u8* obj)
     state->flags.floorCached = 0;
     return 0;
 }
-
-
-
-
-
-
-
 
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -396,12 +382,7 @@ void duster_update(int obj)
     ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
 }
 
-
-
-
-
 void trickyguard_update(int* obj);
-
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

@@ -22,18 +22,13 @@ typedef struct DimdismountpointState
     f32 planeD;  /* plane distance (dot(N, pos)) */
 } DimdismountpointState;
 
-
-
-
 extern f32 lbl_803E4910;
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 extern f32 lbl_803E490C;
-
 
 void dimdismountpoint_hitDetect(void)
 {

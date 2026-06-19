@@ -13,11 +13,9 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
-
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int id, int arg);
-
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void skyFn_80088c94(int flags, int mode);

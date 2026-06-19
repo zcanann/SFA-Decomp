@@ -58,15 +58,12 @@ extern int ObjMsg_Pop();
 extern void ObjMsg_SendToNearbyObjects();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
@@ -75,7 +72,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 sqrtf(f32 x);
-
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern f32 lbl_803E3648;
 extern f32 lbl_803E3658;

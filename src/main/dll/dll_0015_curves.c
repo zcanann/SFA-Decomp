@@ -33,14 +33,8 @@
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
-
-
-
-
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               s8 p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);
@@ -51,19 +45,16 @@ extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
 extern f32 sqrtf(f32 x);
-
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);
 extern void audioSetSoundMode(int mode, u8 forceFlag);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
-
 extern u8 framesThisStep;
 extern SaveData saveData;
 extern u8 gSaveGameData[];
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
-
 extern f32 lbl_803E0668;
 extern const f32 lbl_803E066C;
 extern const f32 lbl_803E068C;

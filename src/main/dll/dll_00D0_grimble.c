@@ -32,20 +32,16 @@ typedef struct GrimblePlacement
     s32 unk14;
 } GrimblePlacement;
 
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern int getAngle(float y, float x);
-
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
-
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EBC;
 extern f32 lbl_803E2EF0;

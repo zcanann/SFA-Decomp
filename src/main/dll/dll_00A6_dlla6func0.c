@@ -14,7 +14,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
-
 extern ModgfxInterface** gModgfxInterface;
 
 typedef struct
@@ -25,7 +24,6 @@ typedef struct
     u16 flags; /* +0x14 */
     u8 layer; /* +0x16 */
 } GfxCmd;
-
 
 extern u8 lbl_80318DF0[];
 extern u8 lbl_80318E10[];

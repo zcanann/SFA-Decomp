@@ -6,8 +6,6 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
-
-
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
@@ -92,9 +90,7 @@ void treasurechest_hitDetect(int obj)
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
 extern void* Obj_GetPlayerObject(void);
-
 extern void fn_802967E0(void* obj, int enabled);
 
 typedef struct ChestHitParams

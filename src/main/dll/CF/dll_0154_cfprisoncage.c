@@ -60,7 +60,6 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E42B0;
-
 extern f32 lbl_803E42B4;
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 

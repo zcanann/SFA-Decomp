@@ -54,10 +54,8 @@ typedef struct WarpPointState
     u8 padE[0x10 - 0xE];
 } WarpPointState;
 
-
 extern void warpToMap(int idx, s8 transType);
 extern void* Obj_GetPlayerObject(void);
-
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 extern int getCurMapLayer(void);

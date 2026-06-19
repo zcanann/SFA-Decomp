@@ -9,10 +9,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
-
-
 extern f32 lbl_803E3058;
-
 
 typedef struct SkeetlaWallState
 {

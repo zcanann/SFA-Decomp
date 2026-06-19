@@ -15,8 +15,6 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
-
-
 extern f32 lbl_803E56C0;
 
 int FElevControl_getExtraSize(void);

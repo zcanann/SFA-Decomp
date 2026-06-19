@@ -24,10 +24,8 @@ extern void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, 
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
@@ -159,7 +157,6 @@ void fn_80185B74(int obj)
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
     extern void buttonDisable(int port, u32 mask);
-
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
     {

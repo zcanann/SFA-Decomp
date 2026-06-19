@@ -40,8 +40,6 @@ typedef struct DoorlockPlacement
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-
-
 extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E3798;

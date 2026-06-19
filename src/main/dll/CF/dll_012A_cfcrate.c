@@ -44,12 +44,7 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-
-
 extern f32 lbl_803E3DD8;
-
-
-
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
@@ -155,8 +150,6 @@ void cfccrate_hitDetect(void)
 void cfccrate_update(int obj)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
-
 
     CfCcrateState* state;
     int viewslot;

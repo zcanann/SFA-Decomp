@@ -54,7 +54,6 @@ extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 mess
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
-
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;

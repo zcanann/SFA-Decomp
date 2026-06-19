@@ -12,7 +12,6 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
-
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -21,7 +20,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -162,7 +160,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 extern f32 timeDelta;
-
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
@@ -221,9 +218,7 @@ typedef struct Dim2roofrubState
     u8 pad118[0x140 - 0x118];
 } Dim2roofrubState;
 
-
 extern void** gTitleMenuControlInterfaceCopy;
-
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
@@ -300,7 +295,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void) { return 0x140; }
 int depthoffieldpoint_getExtraSize(void);
@@ -312,7 +306,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj)
 {
@@ -721,10 +714,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
-
 void gcbaddieshield_update(int* obj);
-
 
 void fireball_free(int* obj);
 
@@ -732,15 +722,11 @@ void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
-
-
-
 
 void dll_F7_init(int* obj, int* params);
 
@@ -791,11 +777,9 @@ void dim2roofrub_init(int* obj, int* params)
     }
 }
 
-
 void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
-
 
 typedef struct Dim2FxRow
 {
@@ -1027,12 +1011,9 @@ void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
-
 void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
-
-
 
 #pragma opt_common_subs reset
 
@@ -1060,5 +1041,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-
-

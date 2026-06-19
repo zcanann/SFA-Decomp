@@ -17,12 +17,7 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
 extern void ObjGroup_AddObject();
-
-
 extern f32 lbl_803E37A8;
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);

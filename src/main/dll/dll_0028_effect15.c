@@ -14,9 +14,6 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 lbl_803E0110;
 extern f32 lbl_803E0114;
 extern f32 lbl_803E0118;

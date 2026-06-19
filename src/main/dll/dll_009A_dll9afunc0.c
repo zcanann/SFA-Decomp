@@ -14,11 +14,7 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern ModgfxInterface** gModgfxInterface;
-
 extern u8 lbl_802C2180[];
 extern u8 lbl_80317B98[];
 extern u8 lbl_803DB958;

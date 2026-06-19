@@ -14,15 +14,11 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-
-
-
 extern f32 lbl_803E5920;
 
 /* The sequence-door seqId and the GameBit that arms it. */

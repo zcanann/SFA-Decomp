@@ -8,8 +8,6 @@
 #include "main/dll/dll_83.h"
 #include "main/engine_shared.h"
 
-
-
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 int projcore2_doUnsupported(void)

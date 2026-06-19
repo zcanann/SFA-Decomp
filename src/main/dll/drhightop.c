@@ -25,10 +25,8 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
-
 extern void gameTextShow(int a);
 extern void doRumble(f32 duration);
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
@@ -44,13 +42,11 @@ extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
 extern int arrayIndexOf();
 extern void SnowBike_func15();
-
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
 extern f32 timeDelta;
 extern char lbl_803AD088[];
 extern int lbl_8032852C[];
-
 extern int lbl_803DC0BC;
 extern f32 lbl_803DC0C8;
 extern int lbl_803DC0CC;
@@ -534,7 +530,6 @@ void fn_801EB940(short* obj, int stateRaw)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->unk424;
                 {
- /* #11 */
                     Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
                 }
             }

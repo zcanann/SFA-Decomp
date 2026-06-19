@@ -10,11 +10,8 @@
 #include "main/resource.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern f32 lbl_803E4EB8;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

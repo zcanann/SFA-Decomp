@@ -34,27 +34,19 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-
-
-
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-
-
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-
 extern void objRenderFn_8003b8f4(f32 v);
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int lbl_802C22F8[4];
 extern s16 lbl_803DBED0;
 extern s32 lbl_803DBED4;
 extern s32 lbl_803DBED8;
-
 extern f32 lbl_803E4430;
 extern f32 lbl_803E4440;
 extern f32 lbl_803E4444;
@@ -263,4 +255,3 @@ void SpiritDoorLock_update(int obj)
     }
 }
 #pragma opt_loop_invariants reset
-

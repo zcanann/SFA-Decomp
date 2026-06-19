@@ -10,9 +10,6 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 
-
-
-
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
 int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)

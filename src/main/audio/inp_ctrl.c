@@ -1,7 +1,5 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/synth_scale.h"
-
-
 extern u32 sndRandSeed;
 extern s16 sndSintab[];
 

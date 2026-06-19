@@ -6,14 +6,12 @@
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
-
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
-
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -30,8 +28,6 @@ extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);
-
-
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);

@@ -4,20 +4,14 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-
 extern f32 timeDelta;
-
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
 extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
-
 extern void lightningRender(u32 handle);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
                            int param_6, u8 param_7);
@@ -219,7 +213,6 @@ void lightning_init(u8* obj, u8* data)
 
     ((MmpMoonrockState*)state)->homeX = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
-
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then

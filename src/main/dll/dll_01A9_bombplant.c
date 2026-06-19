@@ -2,19 +2,15 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/ediblemushroom.h"
-
 #include "main/dll/bombplant_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-
-
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-
 extern f32 lbl_803E5370;
 extern void objRenderFn_8003b8f4(f32);
 extern void* getTrickyObject(void);
@@ -39,7 +35,6 @@ extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_MarkObjectPositionDirty();
 extern u32 ObjHits_EnableObject();
-
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);

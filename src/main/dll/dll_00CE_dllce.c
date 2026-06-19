@@ -29,11 +29,9 @@
 #include "main/sky_interface.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
-
 extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
@@ -915,12 +913,8 @@ int fn_8015E00C(int p1, u8* obj)
     return 0;
 }
 
-
-
 extern int* gBaddieControlInterface;
-
 extern int* gPlayerInterface;
-
 extern f32 lbl_803E2DC8;
 
 #pragma scheduling off

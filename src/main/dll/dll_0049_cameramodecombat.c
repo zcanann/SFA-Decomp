@@ -5,7 +5,6 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
-
 extern CameraModeCombatState* lbl_803DD568;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;

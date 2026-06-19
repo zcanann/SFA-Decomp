@@ -59,7 +59,6 @@ extern u32 FUN_80247fb0();
 extern u64 FUN_8028682c();
 extern u32 FUN_80286878();
 extern u32 FUN_80292754();
-
 extern u32 DAT_8031e840;
 extern u32 DAT_8031e860;
 extern f64 DOUBLE_803e3218;
@@ -93,7 +92,6 @@ extern void fn_8003B0D0(short* obj, int b, void* c, int d);
 extern void trickyFn_80148d8c(short* obj, int state);
 extern void Tricky_resumeAfterCommand(short* obj, int state);
 extern void Tricky_applyFloorResponse(short* obj, int state);
-
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
 extern float powfBitEstimate(float x, float y);
@@ -142,7 +140,6 @@ extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-
 extern f32 lbl_803E2598;
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
 extern void fn_8015983C(void);
@@ -173,9 +170,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 fn_80154C24();
-
-
-
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803E3204;
@@ -196,7 +190,6 @@ extern void ModelLightStruct_free(int light);
 extern void mm_free(int p);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
-
 extern int getCurUiDll(void);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int objIsFrozen(int obj);

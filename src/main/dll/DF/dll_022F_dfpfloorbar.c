@@ -15,12 +15,7 @@
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-
 extern f32 lbl_803E6408;
-
-
-
-
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern f32 timeDelta;
 extern f32 lbl_803E640C;

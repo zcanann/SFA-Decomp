@@ -21,13 +21,11 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
 extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
 
 #pragma scheduling on
 #pragma peephole on
-
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
 enum
@@ -187,11 +185,6 @@ void FEseqobject_initialise(void)
 {
 }
 
-
-
-
-
-
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
 
@@ -200,8 +193,6 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4);
 }
-
-
 
 /*
  * Function: FEseqobject_init

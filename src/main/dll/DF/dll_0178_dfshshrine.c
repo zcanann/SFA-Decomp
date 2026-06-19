@@ -12,20 +12,17 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
-
 extern void fn_80296518(void* obj, int arg, int enable);
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-
 extern f32 timeDelta;
 extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
@@ -52,7 +49,6 @@ typedef struct DFlanternShrineState
 } DFlanternShrineState;
 
 extern int randomGetRange(int lo, int hi);
-
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
@@ -231,7 +227,6 @@ void dfsh_shrine_free(int obj)
     GameBit_Set(0xcbb, 1);
 }
 
-
 typedef struct DfshShrineState
 {
     void* light;
@@ -292,7 +287,6 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
 #define DFSH_REQUIRED_BIT(idx) (base[20 + (idx)])
 #define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
-
 
 typedef struct DfshShrineFlagsBits
 {
@@ -498,7 +492,6 @@ void dfsh_shrine_release(void)
 void dfsh_shrine_initialise(void)
 {
 }
-
 
 typedef struct DfshShrineFlags
 {

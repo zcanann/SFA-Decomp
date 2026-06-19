@@ -11,14 +11,8 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
-
-
 extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
-
 extern u16 getYButtonItem(s16* out);
 extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);

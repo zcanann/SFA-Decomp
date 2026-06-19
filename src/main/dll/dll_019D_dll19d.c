@@ -1,8 +1,5 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CBA98–0x801CBD88. */
 #include "main/dll/torch1CD.h"
-
-
-
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -34,12 +31,9 @@ typedef struct Dll19DState
 } Dll19DState;
 
 extern u32 getLActions();
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern f32 lbl_803E51B0;
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E51B8;
 

@@ -3,8 +3,6 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "main/model_light.h"
-
-
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -34,7 +32,6 @@ extern void fn_80088730();
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 extern u8 isHeavyFogEnabled();
-
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
 extern f32 displayOffsetH_803DEBFC;

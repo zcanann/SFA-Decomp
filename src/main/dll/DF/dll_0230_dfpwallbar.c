@@ -57,8 +57,6 @@ void chuka_hitDetect(int obj)
 void chuka_update(int obj)
 {
 
-
-
     extern u8 gChukaModeTable[];
     extern f32 lbl_803E63F8;
     extern f32 lbl_803E63FC;
@@ -246,4 +244,3 @@ void chuka_release(void)
 void chuka_initialise(void)
 {
 }
-

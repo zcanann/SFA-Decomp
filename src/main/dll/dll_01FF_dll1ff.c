@@ -43,10 +43,7 @@ typedef struct Dll1FFSlots
 #define DLL1FF_BUTTON_ACTION 0x100  /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB 0x100008    /* ObjMsg kind sent on release */
 
-
-
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, int param);
-
 extern const f32 lbl_803E5D80;
 
 void dll_1FF_free_nop(void)
@@ -115,7 +112,6 @@ void dll_1FF_update(int obj)
 {
 
     extern void buttonDisable(int port, u32 mask);
-
     extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
     extern f32 timeDelta;
     extern const f32 lbl_803E5D84;

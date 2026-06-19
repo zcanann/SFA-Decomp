@@ -36,8 +36,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-
-
 extern int randomGetRange(int lo, int hi);
 
 void imicepillar_free(void);
@@ -46,15 +44,11 @@ int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 extern void warpToMap(int idx, s8 transType);
-
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
-
 extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;
-
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
@@ -160,13 +154,11 @@ int lavaball1bf_setScale(int* obj)
     return 0;
 }
 
-
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4810);
 }
-
 
 void lavaball1bf_init(s16* obj, u8* p)
 {
@@ -193,7 +185,6 @@ void lavaball1bf_free(int obj, int mode)
         Obj_FreeObject(inner->spawnedObj);
     }
 }
-
 
 void lavaball1bf_update(int* obj)
 {
@@ -260,4 +251,3 @@ void lavaball1bf_update(int* obj)
         randomGetRange(0, 0x3c);
     }
 }
-

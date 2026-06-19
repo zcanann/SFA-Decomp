@@ -34,7 +34,6 @@ extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
-
 extern int lbl_803DC050;
 extern int lbl_803DDBF4;
 

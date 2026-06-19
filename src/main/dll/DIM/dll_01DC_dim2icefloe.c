@@ -23,15 +23,11 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern int randomGetRange(int lo, int hi);
-
-
 extern f32 timeDelta;
-
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern u8 framesThisStep;
-
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objhits.h"
@@ -48,7 +44,6 @@ extern f32 lbl_803E4B50;
 extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
 extern f32 lbl_803E4B30;
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -67,7 +62,6 @@ void dim2icefloe_release(void)
 void dim2icefloe_initialise(void)
 {
 }
-
 
 typedef struct
 {
@@ -178,7 +172,6 @@ void dim2icefloe_init(int obj, int p)
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
 
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
 int dim2icefloe_getObjectTypeId(void) { return 0x0; }

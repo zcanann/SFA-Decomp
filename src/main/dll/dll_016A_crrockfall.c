@@ -22,11 +22,9 @@
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);
-
 extern void* lbl_803DDB40;
 extern f32 lbl_803E4708;
 extern void objRenderFn_8003b8f4(f32);
@@ -75,7 +73,6 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4708);
     }
 }
-
 
 #pragma dont_inline on
 #pragma scheduling off

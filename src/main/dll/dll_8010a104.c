@@ -20,7 +20,6 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/rom_curve_interface.h"
-
 extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
 extern f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz);
@@ -164,4 +163,3 @@ int fn_8010A47C(int curve, int* count, int tag)
     }
     return curve;
 }
-

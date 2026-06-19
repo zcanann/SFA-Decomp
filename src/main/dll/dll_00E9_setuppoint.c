@@ -23,8 +23,6 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 
-
-
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
@@ -33,7 +31,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -171,11 +168,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
-
-
 extern f64 DOUBLE_803e3e88;
-
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();

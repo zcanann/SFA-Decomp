@@ -4,13 +4,8 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-
-
-
 extern void* mapGetBlock(int idx);
-
 extern void objRenderFn_8003b8f4(f32);
-
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/gamebits.h"
@@ -43,7 +38,6 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-
 extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
@@ -56,8 +50,6 @@ extern int FUN_8005b398();
 extern int FUN_800600e4();
 extern u64 FUN_8028682c();
 extern u32 FUN_80286878();
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -87,8 +79,6 @@ extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
-
-
 extern u16 lbl_803DBDF0[];
 
 void FUN_80192488(void)

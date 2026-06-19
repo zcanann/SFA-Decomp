@@ -56,14 +56,12 @@ typedef struct SmallbasketState
    header in the import skeleton; declared locally. */
 
 extern int randomGetRange(int lo, int hi);
-
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* in, void* out);
-
 extern f32 lbl_803AC790[];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
@@ -78,7 +76,6 @@ extern const f32 lbl_803E3958;
 extern const f32 lbl_803E395C;
 extern const f32 lbl_803E3960;
 extern const f32 lbl_803E3964;
-
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
                               int p7, int p8, int p9, int p10);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
@@ -101,14 +98,12 @@ extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32* a, f32* b);
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
 extern u32 buttonGetDisabled(int port);
-
 extern void buttonDisable(int port, u32 mask);
 extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);

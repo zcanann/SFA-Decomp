@@ -9,8 +9,6 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
 
-
-
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 typedef struct DfpobjcreatorObjectDef
@@ -70,7 +68,6 @@ STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1E) == 0x1E);
 STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
-
 extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerA02();
 
@@ -122,7 +119,6 @@ void dfpobjcreator_init(int obj, s8* def)
 void dfpobjcreator_update(int obj)
 {
 
-
     extern void* Obj_AllocObjectSetup(int size, int b);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
     extern f32 timeDelta;
@@ -162,4 +158,3 @@ void dfpobjcreator_update(int obj)
 #pragma dont_inline reset
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
-

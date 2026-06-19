@@ -11,13 +11,7 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
-
-
-
-
 extern int ObjHits_GetPriorityHitWithPosition();
-
-
 extern f32 lbl_803DC074;
 
 void hagabon_release(void);
@@ -31,7 +25,6 @@ void swarmbaddie_release(void);
 void swarmbaddie_initialise(void);
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;
@@ -45,8 +38,6 @@ extern f32 lbl_803E26F4;
 extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
-
-
 extern int gWispBaddieLastSegmentEnd;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
@@ -269,7 +260,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 };
 
 /* segment pragma-stack balance (re-split): */
-
 
 void wispbaddie_update(int obj)
 {

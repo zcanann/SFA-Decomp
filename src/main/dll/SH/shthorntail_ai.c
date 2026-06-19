@@ -26,7 +26,6 @@ extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject * obj, SHthorntailObject * other);
 extern void OSReport(const char* msg, ...);
-
 extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
 extern f32 timeDelta;

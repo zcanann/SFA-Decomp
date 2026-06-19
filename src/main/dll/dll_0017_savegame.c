@@ -46,8 +46,6 @@ extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
 extern u32 FUN_80017500();
 extern u32 FUN_8005d018();
-
-
 extern u8 gGameplayPreviewSettings;
 extern u32 DAT_803a3e26;
 extern u32 DAT_803a3e27;
@@ -79,13 +77,8 @@ extern u32 pRestartPoint;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 extern f32 timeDelta;
-
-
-
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
-
-
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern int unlockLevel(s32 val, int idx, int flag);

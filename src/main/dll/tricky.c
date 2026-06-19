@@ -51,9 +51,7 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int playerHasKrazoaSpirit();
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
-
 extern f32 gViewFinderFadeLevel;
-
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
@@ -354,7 +352,6 @@ void GameUI_airMeterShutdown(void)
     airMeter = NULL;
 }
 #pragma dont_inline reset
-
 
 extern void* memset(void* p, int v, int n);
 extern const f32 lbl_803E1E68;
@@ -993,7 +990,6 @@ void fearTestMeterDraw(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-
 extern int getHudHiddenFrameCount(void);
 extern s8 lbl_803DBAEC;
 extern u8 gTrickyAirMeterFillSpeed;
@@ -1226,7 +1222,6 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetVtxDesc(0xa, 1);
     return 1;
 }
-
 
 extern int objIsCurModelNotZero(void* obj);
 extern int coordsToMapCell(f32 x, f32 z);

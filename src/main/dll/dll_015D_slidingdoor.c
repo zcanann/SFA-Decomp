@@ -50,12 +50,9 @@ typedef struct SlidingdoorState
 } SlidingdoorState;
 
 extern f32 lbl_803E43BC;
-
-
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
-
 
 void slidingdoor_free(void)
 {

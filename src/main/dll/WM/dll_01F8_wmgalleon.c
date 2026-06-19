@@ -46,10 +46,8 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-
 extern int randomGetRange(int lo, int hi);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
-
 extern u32 lbl_803DC0F0;
 extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
@@ -89,7 +87,6 @@ extern f32 lbl_803E5CF4;
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
- /* #57 */
     int i;
 
     lbl_803DC0F0 = framesThisStep;
@@ -349,7 +346,6 @@ void WM_Galleon_update(int* obj)
 
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
 {
- /* #57 */
     WMGalleonState* state;
     int i;
 

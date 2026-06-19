@@ -12,11 +12,8 @@
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-
-
 extern f32 lbl_803E42B8;
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);

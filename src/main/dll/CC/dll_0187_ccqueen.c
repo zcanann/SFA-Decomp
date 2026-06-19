@@ -10,10 +10,6 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
-
 extern f32 timeDelta;
 extern u32 ObjHits_DisableObject();
 extern u32 dll_2E_func03();
@@ -21,10 +17,8 @@ extern void dll_2E_func06(int* obj, void* state, int flags);
 extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
-
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(int obj, void* p);
-
 extern f32 lbl_803E4660; /* render scale */
 extern f32 lbl_803E4664; /* squared trigger distance */
 extern f32 lbl_803E4668; /* move advance rate */

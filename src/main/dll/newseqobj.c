@@ -22,11 +22,8 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
-
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
 extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
-
-
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8015039C(void* p1, void* p2);
 extern u32 fn_8014FFB4(void* p1, void* p2, int p3);
@@ -36,7 +33,6 @@ extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern int randomGetRange(int lo, int hi);
-
 extern f32 timeDelta;
 extern f32 lbl_803E2740;  /* 0.0f */
 extern f32 lbl_803E274C;
@@ -76,7 +72,6 @@ typedef struct
     u8 next;   /* 0x9 */
     u16 padA;  /* 0xa */
 } IdleRow;
-
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {

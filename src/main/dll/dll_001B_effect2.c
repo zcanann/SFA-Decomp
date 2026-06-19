@@ -167,7 +167,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -1267,8 +1266,6 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
     return spawnResult;
 }
 
-
-
 void Effect2_func03_nop(void)
 {
 }
@@ -1280,7 +1277,6 @@ void Effect2_release(void)
 void Effect2_initialise(void)
 {
 }
-
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -1309,9 +1305,6 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
-
-
 extern f32 gEffect2ScrollPhaseA;
 extern f32 gEffect2ScrollPhaseB;
 extern int gEffect2SinAngleA;
@@ -1364,8 +1357,6 @@ void Effect2_func05(void)
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
-
 
 typedef struct EmitterCfg
 {

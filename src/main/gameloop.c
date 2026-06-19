@@ -18,7 +18,6 @@
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
-
 extern u64 camcontrol_playTargetTypeSfx();
 extern u64 runLoadingScreens();
 
@@ -83,7 +82,6 @@ int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
 extern u8 framesThisStep;
-
 extern u8 gameState;
 extern u8 timeStop;
 extern u8 shouldResetNextFrame;
@@ -631,7 +629,6 @@ void gameTextInitFn_8001a234(void);
 
 void gameTextRun(void);
 
-
 extern void videoInit(void* rmode, int arg);
 extern void setDisplayCopyFilter(void);
 extern void initLoadingScreenTextures(void);
@@ -668,7 +665,6 @@ extern void initMaps(void);
 extern void initFn_800534f8(void);
 extern void titleScreenDrawFn_80093db4(void);
 extern int getDataFileSize(int id);
-
 extern void doNothing_beforeTitleScreen(void);
 extern void setDrawCloudsAndLights(int v);
 extern void askProgressiveScanMode(void);
@@ -876,10 +872,7 @@ void init(void)
 
 void Obj_UpdateAllObjects(u8 flags);
 
-
-
 extern void uiDll_runFrameStartAndLoadNext(void);
-
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void uiDll_runFrameEndAndLoadNext(void);
@@ -1014,7 +1007,6 @@ extern void loadDataFiles(void);
 extern void audioUpdate(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 a, f32 b, int w, int h);
-
 extern void objRenderFuzz(void);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
@@ -1076,9 +1068,7 @@ extern u8 lbl_803DCAC4;
 extern int lbl_803DB41C;
 extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
-
 extern void fn_801375A0(void);
-
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)
@@ -1136,10 +1126,7 @@ void doQueuedLoads(void)
     }
 }
 
-
 extern void gameTextShowStr(int str, int a, int b, int c);
-
-
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int a, int b, int c);

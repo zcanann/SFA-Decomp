@@ -26,14 +26,9 @@ typedef struct LightningEffect
     u8 flags;
 } LightningEffect;
 
-
-
 extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
-
-
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803DF1A0;
@@ -128,9 +123,6 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
     gCloudOverridePositionY = b;
     gCloudOverridePositionZ = c;
 }
-
-
-
 
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int id, int arg);
@@ -373,10 +365,8 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 }
 
 extern void* memset(void* dst, int c, int n);
-
 extern void* saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
-
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 
 #pragma dont_inline on
@@ -525,7 +515,6 @@ extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
 extern void selectTexture(char* tex, int slot);
 extern void Camera_UpdateViewMatrices(void);
-
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(u32 id);
 extern int rand(void);
@@ -714,9 +703,7 @@ extern u8 isOvercast(void);
 extern void fn_800790AC(void);
 extern void gxBlendFn_800789ac(void);
 extern void textRenderSetupFn_800795e8(void);
-
 extern void GXSetPointSize(int size, int fmt);
-
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
 extern u8 gNewCloudStarColorRanges[];
@@ -1206,9 +1193,6 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 }
 
 extern void GXSetMisc(int token, u32 val);
-
-
-
 extern void GXResetWriteGatherPipe(void);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 extern u8 gNewCloudStarsInitialized;
@@ -2386,7 +2370,6 @@ extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * a, f32 * b, f32 * out);
 extern void mtx44Transpose(f32 * in, f32 * out);
-
 extern void gxBlendFn_80078b4c(void);
 extern int gNewCloudFlashRotAngle;
 extern const f32 lbl_803DF204;

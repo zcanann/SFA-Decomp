@@ -16,9 +16,6 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
-
-
-
 extern int randomGetRange(int lo, int hi);
 extern int ObjTrigger_IsSetById();
 extern void* Obj_GetPlayerObject(void);
@@ -32,7 +29,6 @@ extern void* getTrickyObject(void);
 extern int playerHasSpell(void* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
-
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;

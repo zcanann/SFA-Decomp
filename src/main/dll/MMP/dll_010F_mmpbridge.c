@@ -23,11 +23,7 @@ typedef struct MmpBridgePlacement
     s16 enableBit;     /* 0x1E: gamebit that deploys the bridge */
 } MmpBridgePlacement;
 
-
 extern f32 timeDelta;
-
-
-
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 

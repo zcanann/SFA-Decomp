@@ -1,26 +1,13 @@
 /* DLL 0x004F — Camera mode misc handler [0x8010F2F8-0x8010F540). */
 #include "main/mm.h"
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 #include "main/camera_object.h"
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
-
-
-
-
-
-
-
-
-
-
 extern u32 FUN_80294964();
-
 extern u32 DAT_802c2910;
 extern u32 DAT_802c2914;
 extern u32 DAT_802c2918;

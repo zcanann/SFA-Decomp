@@ -94,7 +94,6 @@ STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
 extern int getLActions();
 extern int objFn_80198fa4();
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
-
 extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
 extern int GameBit_Get(int eventId);
@@ -112,7 +111,6 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void gameFlagFn_8005cd24(int v);
 extern void timeOfDayFn_80055000(void);
 extern void timeOfDayFn_80055038(void);
-
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);

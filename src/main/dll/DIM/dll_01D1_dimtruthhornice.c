@@ -30,10 +30,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-
-
-
-
 extern f32 timeDelta;
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
@@ -63,7 +59,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern u32 ObjHits_DisableObject();
-
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 

@@ -27,8 +27,6 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-
-
 extern u8 lbl_80314AF0[];
 extern u8 lbl_803DB8D8;
 extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;

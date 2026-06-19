@@ -52,9 +52,6 @@ STATIC_ASSERT(offsetof(CfDoorLightMapData, resetFrame) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, doneEvent) == 0x1E);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
 
-
-
-
 int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
 
 int cf_doorlight_getObjectTypeId(void) { return 0x0; }

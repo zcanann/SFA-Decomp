@@ -19,11 +19,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-
 extern int Obj_GetPlayerObject(void);
-
-
-
 extern int playerGetMoney(int player);
 extern void playerAddMoney(int obj, int amount);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

@@ -13,13 +13,10 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
-
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
 extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
-
-
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
 extern int Obj_IsLoadingLocked(void);

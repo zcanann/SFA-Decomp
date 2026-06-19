@@ -20,7 +20,6 @@
 #include "main/screen_transition.h"
 #include "main/dll/SP/SPshopkeeper.h"
 #include "main/gamebits.h"
-
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
 extern u64 FUN_80286838();
@@ -54,7 +53,6 @@ int sh_levelcontrol_getExtraSize(void)
 
 void sh_levelcontrol_free(void)
 {
-
 
     envFxActFn_800887f8(0);
     if (GameBit_Get(0x13F) == 0)
@@ -96,7 +94,6 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
 #pragma dont_inline on
 void mapUnloadFn_801d7c94(void* obj, void* p2)
 {
-
 
     SCTotemLogPuzzleObject* puzzleObj;
     SCTotemLogPuzzleRuntime* runtime;
@@ -200,7 +197,6 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
 
-
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
     SCGameBitLatch_Update(state, mask, clearIfSetBit, clearIfClearBit, latchBit, musicId);
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
@@ -295,7 +291,6 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 {
     extern s16 lbl_80327618[];
     extern void* Obj_GetPlayerObject(void);
-
 
     int player;
     u8 i;
@@ -457,7 +452,6 @@ void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short 
     return;
 }
 
-
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
 #define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
@@ -500,7 +494,6 @@ typedef struct ShopkeeperObject
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void);
-
 
     ShopkeeperObject* thornTailObj;
     ShopkeeperObject* playerObj;
@@ -590,7 +583,6 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void);
 
-
     ShopkeeperObject* playerObj;
 
     SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x1ab);
@@ -653,7 +645,6 @@ void sh_levelcontrol_update(int obj)
     extern void SH_LevelControl_doThornTailEvents(int param_1, u32* param_2);
     extern void SH_LevelControl_runBloopEvent(int param_1, u32* param_2);
     extern int Obj_GetPlayerObject(void);
-
     extern void SH_LevelControl_setMusic(u32 * param_1);
 
     u32* state;
@@ -963,7 +954,6 @@ void sh_levelcontrol_update(int obj)
     return;
 }
 
-
 void sh_levelcontrol_init(int obj)
 {
 
@@ -1017,4 +1007,3 @@ void sh_levelcontrol_init(int obj)
     }
     timeOfDayFn_80055000();
 }
-

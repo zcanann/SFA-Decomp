@@ -26,7 +26,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern void ObjGroup_AddObject(u32 obj, int group);
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E3AA0;
@@ -36,7 +35,6 @@ extern f32 lbl_803E3AB8;
 extern f32 lbl_803E3ABC;
 extern f32 lbl_803E3AC0;
 extern f32 lbl_803E3AC4;
-
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
@@ -45,7 +43,6 @@ extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern int gameBitIncrement(int bit);
 extern f32 Vec_distance(f32* a, f32* b);
-
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
 extern void gameBitDecrement(int eventId);

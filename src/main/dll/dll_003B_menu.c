@@ -18,9 +18,6 @@
 #include "types.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-
-
-
 extern s8 lbl_803DD8F0;   /* item count */
 extern s16 lbl_803DD8F2;  /* accumulated item width */
 extern s8 lbl_803DD8F4;   /* cancel result id */
@@ -29,11 +26,9 @@ extern s8 lbl_803DD8E8;   /* armed flag (ignore input for one frame after build)
 extern f32 lbl_803DD8EC;  /* scroll timer */
 extern f32 lbl_803E21D8;  /* scroll timer wrap period */
 extern f32 timeDelta;
-
 extern int getScreenResolution(void);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
-
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 

@@ -83,7 +83,6 @@ STATIC_ASSERT(offsetof(Dll22CMapData, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit2) == 0x1E);
 STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 
-
 extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 extern f32 timeDelta;
 extern f32 lbl_803E6398; /* render scale */
@@ -140,7 +139,6 @@ void fn_80204BF8(int obj)
 {
     /* block-scope to override the engine_shared.h prototypes' return/param
        types (GameObject* return, signed args) the codegen here depends on. */
-
 
     extern f32 Vec_xzDistance(f32* a, f32* b);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);

@@ -24,7 +24,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern u32 lbl_803E39F0;
@@ -53,7 +52,6 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
-
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);

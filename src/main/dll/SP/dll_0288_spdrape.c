@@ -24,7 +24,6 @@ enum
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DC0B0; /* swing-left move-id table */

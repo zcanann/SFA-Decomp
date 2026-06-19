@@ -433,8 +433,6 @@ int fn_8016050C(int p1, u8* obj)
     return 6;
 }
 
-
-
 extern int* gBaddieControlInterface;
 
 #pragma scheduling off
@@ -501,7 +499,6 @@ int fn_80160690(short* out, u8* obj)
 }
 
 extern u8 framesThisStep;
-
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;

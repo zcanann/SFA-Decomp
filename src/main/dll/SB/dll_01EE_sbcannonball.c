@@ -17,11 +17,8 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-
 extern f32 timeDelta;
-
 extern u8 framesThisStep;
-
 extern void objRenderFn_8003b8f4(f32);
 
 typedef struct SBCannonBallState
@@ -41,7 +38,6 @@ typedef struct SBCannonBallState
 } SBCannonBallState;
 
 extern void ModelLightStruct_free(void* effect);
-
 extern f32 lbl_803E58B0;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;

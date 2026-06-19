@@ -32,10 +32,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
-
 extern int randomGetRange(int lo, int hi);
-
-
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -52,7 +49,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -233,11 +229,7 @@ typedef struct ShieldState
 } ShieldState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-
-
-
 extern f64 DOUBLE_803e3e88;
-
 extern f32 lbl_803E3420;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -373,7 +365,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void) { return 0x60; }
 int shield_getObjectTypeId(void) { return 0x0; }
-
 
 void dim2roofrub_free(int* obj);
 
@@ -814,13 +805,11 @@ int* fn_801702D4(int* obj, f32 fv)
 
 void gcbaddieshield_update(int* obj);
 
-
 void fireball_free(int* obj);
 
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
-
 
 void mikabombshadow_init(int* obj);
 
@@ -828,14 +817,9 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
 
-
-
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
-
-
 
 void flamethrowerspe_update(int* obj);
 
@@ -843,14 +827,9 @@ void mikabomb_init(int* obj);
 
 void baddieinterestp_update(int* obj);
 
-
-
-
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
-
 
 void shield_update(int* obj)
 {
@@ -931,7 +910,6 @@ void shield_update(int* obj)
 }
 
 void dll_F7_update(int* obj);
-
 
 typedef struct ShieldFxVec
 {
@@ -1072,7 +1050,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-
 
 void staffFn_80170380(int* obj, int cmd)
 {

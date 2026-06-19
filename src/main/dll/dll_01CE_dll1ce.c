@@ -67,9 +67,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 FUN_800067e8();
 extern u32 FUN_80006824();
-
-
-
 extern u32 FUN_80017924();
 extern u32 FUN_80017944();
 extern int FUN_80017a54();
@@ -83,7 +80,6 @@ extern u32 FUN_80286888();
 extern u32 FUN_802924b4();
 extern double FUN_80293900();
 extern u32 FUN_80293f90();
-
 extern u32 DAT_803dc070;
 extern f64 DOUBLE_803e56a8;
 extern f32 lbl_803DC074;
@@ -99,8 +95,6 @@ extern f32 lbl_803E5674;
 extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
-
-
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
 extern f32 lbl_803E49F0;

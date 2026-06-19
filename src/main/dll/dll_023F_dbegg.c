@@ -44,10 +44,6 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/objhits.h"
-
-
-
-
 extern const f32 lbl_803E61C8;
 extern const f32 lbl_803E61D0;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -123,7 +119,6 @@ void dbegg_processMessages(int obj)
     extern int gameBitIncrement(int bit);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
-
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
@@ -593,12 +588,10 @@ void dbegg_update(int obj)
     extern int randomGetRange(int lo, int hi);
     extern f32 Vec_xzDistance(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
-
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
-
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;

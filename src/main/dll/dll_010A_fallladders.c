@@ -56,7 +56,6 @@ typedef struct FallLaddersState
     s16 delay;
 } FallLaddersState;
 
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);

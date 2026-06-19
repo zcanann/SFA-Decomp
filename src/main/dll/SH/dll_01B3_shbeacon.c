@@ -28,8 +28,6 @@ typedef struct ShBeaconPlacement
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-
-
 extern void gameBitDecrement(int eventId);
 extern f32 timeDelta;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
@@ -39,7 +37,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
-
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 extern f32 lbl_803E5530;

@@ -15,13 +15,9 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
-
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int randomGetRange(int lo, int hi);
-
 extern void* Obj_GetPlayerObject(void);
-
 extern f32 lbl_803E52F8;
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5300;

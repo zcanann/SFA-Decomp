@@ -19,16 +19,9 @@
 #include "main/checkpoint_interface.h"
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/DR/DRcloudcage.h"
-
-
-
-
-
 extern int fn_801EC870(int p1, int p2);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
-
 extern f32 timeDelta;
-
 extern f32 lbl_803E5AE8; /* 0.0f  */
 extern f32 lbl_803E5AEC; /* 1.0f  */
 extern f32 lbl_803E5B08; /* 70.0f */

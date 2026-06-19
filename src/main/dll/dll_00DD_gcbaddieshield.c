@@ -19,7 +19,6 @@
 #include "main/dll/xyzanimator.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
-
 extern f32 timeDelta;
 
 void mikabomb_init(int* obj);
@@ -32,7 +31,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32 alpha);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -697,4 +695,3 @@ void gcbaddieshield_update(int* obj)
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
 }
-

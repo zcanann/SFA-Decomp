@@ -34,10 +34,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-
-
 extern int randomGetRange(int lo, int hi);
-
 extern f32 lbl_803E4A20;
 extern void timeOfDayFn_80055000(void);
 extern u8 framesThisStep;

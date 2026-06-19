@@ -41,8 +41,6 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
-
-
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 #pragma scheduling on

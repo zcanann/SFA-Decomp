@@ -27,7 +27,6 @@ typedef struct InfopointObjectDef
     u8 unk1F;
 } InfopointObjectDef;
 
-
 extern f32 lbl_803E3B70;
 extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);

@@ -16,11 +16,8 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
-
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-
 extern f32 lbl_803E4FF8;
-
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;

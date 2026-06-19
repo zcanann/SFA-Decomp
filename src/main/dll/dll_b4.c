@@ -10,7 +10,6 @@
 #include "main/dll/dll_B3.h"
 #include "main/dll/dll_B2.h"
 #include "main/model_light.h"
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(u8* obj);
@@ -18,7 +17,6 @@ extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void objSetEventName(ModelLightStruct* p, int a);
-
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 

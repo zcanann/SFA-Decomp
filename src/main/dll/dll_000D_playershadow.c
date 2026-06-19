@@ -1337,7 +1337,6 @@ void playerShadow_renderObject(void* obj)
                 ((GameObject*)obj)->anim.localPosZ - tileInfo[2]);
 }
 
-
 extern f32 sqrtf(f32 x);
 extern f32 lbl_8030FDE8[];
 extern s16 lbl_803DD29A;

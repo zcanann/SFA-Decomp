@@ -89,12 +89,8 @@ extern void dataAddSampleReference(u16 id);
 extern void dataRemoveSampleReference(u16 id);
 extern u32 hwInitStream(void* samples);
 extern u32 dataInsertSDir(void* sdir, u32 addr);
-
 extern void dataInsertFX(u16 gid, void* fx, u16 num);
 extern u32 seqStartPlay(void* norm, void* drum, void* midiSetup, void* arrfile, void* para, u8 studio, u16 sgid);
-
-
-
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 extern GSTACK synthLoadedGroupTable[];

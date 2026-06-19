@@ -23,10 +23,6 @@ typedef struct DimbarrierState
     s8 countdown;
 } DimbarrierState;
 
-
-
-
-
 extern f32 lbl_803E4898;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;

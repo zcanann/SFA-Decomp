@@ -48,15 +48,12 @@ STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void queueGlowRender(void* light);
-
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -78,7 +75,6 @@ extern f32 lbl_803E4D10;
 extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
 extern f32 lbl_803E4D1C;
-
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void* objCreateLight(int arg, u8 addToList);
@@ -357,7 +353,6 @@ void dimbossgut2_init(int obj, int def, int p3)
         modelLightStruct_setGlowProjectionRadius(((Dimbossgut2Curve*)p)->light, lbl_803E4D04);
     }
 }
-
 
 void dimbossgut2_func11(void)
 {

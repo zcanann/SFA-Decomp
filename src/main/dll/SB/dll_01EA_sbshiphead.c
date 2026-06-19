@@ -30,15 +30,12 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROJECTILE_OBJID 0x138
 
 extern int randomGetRange(int lo, int hi);
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
-
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
-
 extern u32 getSbGalleon(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);

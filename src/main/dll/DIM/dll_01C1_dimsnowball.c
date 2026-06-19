@@ -51,10 +51,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-
-
 extern u8 framesThisStep;
-
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
@@ -72,7 +69,6 @@ extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E484C;
 extern const f32 lbl_803E4850;
 extern f32 lbl_803E4854;
-
 extern f32 lbl_803E4848;
 
 int dimsnowball_getExtraSize(void)
@@ -105,7 +101,6 @@ void dimsnowball_hitDetect(int* obj)
 
 void dimsnowball_update(int obj)
 {
- /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
     s16 idx[4];

@@ -10,15 +10,11 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);

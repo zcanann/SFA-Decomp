@@ -2,9 +2,6 @@
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-
-
-
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(u8 value);

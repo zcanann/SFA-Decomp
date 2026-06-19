@@ -61,7 +61,6 @@ extern f32 sqrtf(f32 value);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern int randomGetRange(int lo, int hi);
-
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBEF0;

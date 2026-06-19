@@ -169,7 +169,6 @@ extern u32 FUN_80286880();
 extern u32 FUN_80286884();
 extern u32 FUN_8028688c();
 extern double FUN_80293900();
-
 extern u8 DAT_802cbaa8;
 extern u32 DAT_802cbab1;
 extern u32 DAT_802cbac0;
@@ -2575,7 +2574,6 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
-
 extern f32 sqrtf(f32);
 extern int getAngle(float y, float x);
 extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
@@ -3414,7 +3412,6 @@ typedef union
 } ObjWGPipe;
 
 extern volatile ObjWGPipe GXWGFifo : (0xCC008000);
-
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
@@ -3884,7 +3881,6 @@ extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
-
 
 void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 {
@@ -4936,7 +4932,6 @@ extern void fn_80050F2C(void);
 extern void textureFn_8004c330(void* tex, f32* m);
 extern void gxTextureFn_8004d5b4(int* op);
 extern void gxTextureFn_80052638(u8 * color);
-
 extern f32 lbl_803967F0[];
 extern u8 lbl_803DCC3C;
 

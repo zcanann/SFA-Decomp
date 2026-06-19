@@ -2,11 +2,7 @@
 
 #include "main/game_object.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-
-
-
 extern void objRenderFn_80041018(int obj);
-
 extern f32 timeDelta;
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;

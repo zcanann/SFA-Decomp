@@ -26,28 +26,18 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
-
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
 extern u32 DAT_803de6d0;
-
-
-
 extern int ObjHits_GetPriorityHitWithPosition();
-
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-
-
-
 extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern f32 timeDelta;
-
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;
@@ -68,7 +58,6 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
-
 extern int lbl_803DBC78;
 extern int lbl_803DDA60;
 

@@ -1,15 +1,9 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
-
-
-
 extern f32 timeDelta;
-
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-
 #include "main/game_object.h"
 #include "main/gamebits.h"
-
 extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
@@ -20,7 +14,6 @@ extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-
 extern void objRenderFn_8003b8f4(f32);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);

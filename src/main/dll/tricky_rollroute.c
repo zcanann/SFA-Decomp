@@ -43,12 +43,10 @@
    trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57).
    lbl_803E2*: this DLL's f32 route/speed constants. */
 extern f32 getXZDistance(f32* a, f32* b);
-
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
-
 extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;

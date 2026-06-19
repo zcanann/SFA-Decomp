@@ -19,12 +19,10 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_GALLEON_SEQID 0x139
 
 extern u8 framesThisStep;
-
 extern const f32 lbl_803E586C; /* 0.0f: pins localPos to the origin */
 extern f32 lbl_803E5870;       /* fast play speed (phase >= 0xc) */
 extern f32 lbl_803E5874;       /* medium play speed (0xa <= phase < 0xc) */
 extern f32 lbl_803E5878;       /* idle play speed */
-
 extern f32 lbl_803E5868;
 
 void SB_ShipMast_free(void)
@@ -108,4 +106,3 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E5868);
     }
 }
-

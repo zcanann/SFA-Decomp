@@ -16,9 +16,6 @@
 #include "main/objanim_update.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gamebits.h"
-
-
-
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -31,7 +28,6 @@ extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flag
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int lbl_80323548[];
 extern void gameTextShow(int a);
-
 extern f32 lbl_803E46C8; /* SeqFn explosion scale */
 extern f32 lbl_803E46CC; /* render scale */
 extern f32 lbl_803E46D0; /* help-text hold floor */

@@ -56,13 +56,10 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
     u8 pad9D7[0x9D8 - 0x9D7];
 } TREXLazerwallUpdateTimedChallengeState;
 
-
-
 extern int Stack_IsEmpty(int stack);
 extern int Stack_IsFull(int stack);
 extern int Stack_Pop(int stack, int* out);
 extern int Stack_Push(int stack, int* in);
-
 extern int isGameTimerDisabled(void);
 extern void gameTimerStop(void);
 extern void hudFn_8011f38c(u8 x);

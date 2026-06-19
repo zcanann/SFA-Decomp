@@ -27,13 +27,10 @@
 #include "string.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-
 extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
-
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
-
 extern u8 lbl_8031A0E0[];
 extern f32 lbl_803E1C88;
 extern f32 lbl_803E1C8C;
@@ -57,7 +54,6 @@ extern f32 lbl_803E1CB8;
 extern f32 lbl_803E1CBC;
 extern f32 lbl_803E1CC0;
 extern f32 Vec_distance(f32* a, f32* b);
-
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
 extern f32 lbl_803E1CA4;
@@ -329,7 +325,6 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 void dll_2E_func06(int obj, char* st, int point)
 {
     extern void* seqFn_800394a0(void); /* #57 */
- /* #57 */
     extern void fn_8003AC14(int obj, void* types, int count); /* #57 */
     struct
     {

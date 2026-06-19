@@ -43,7 +43,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHits_DisableObject();
-
 extern int randomGetRange(int lo, int hi);
 
 void imicepillar_free(void);
@@ -52,13 +51,10 @@ int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 extern void warpToMap(int idx, s8 transType);
-
 extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
@@ -151,8 +147,6 @@ void lavaball1be_initialise(void)
 {
 }
 
-
-
 int lavaball1be_getExtraSize(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
@@ -178,7 +172,6 @@ void lavaball1be_free(int obj)
         inner->light = 0;
     }
 }
-
 
 void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {

@@ -10,10 +10,7 @@
 #include "main/dll/dll_BC.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_80220608_shared.h"
-
 extern int lbl_803DD518; /* active camera action id (.sbss) */
-
-
 
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {

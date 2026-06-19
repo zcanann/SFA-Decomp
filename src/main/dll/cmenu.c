@@ -22,8 +22,6 @@
 #include "main/texture.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/camera.h"
-
-
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
@@ -34,7 +32,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_8025c754();
 extern u32 FUN_8025cce8();
-
 extern u32 DAT_8031c130;
 extern u32 DAT_803aa008;
 extern u32 DAT_803aa024;
@@ -43,7 +40,6 @@ extern u32 DAT_803e2a90;
 extern u32 DAT_803e2a94;
 extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2c90;
-
 extern u8 lbl_803A87F0[];
 extern CMenuItemDef gCMenuStaffAbilities[];
 extern s16 gCMenuForcedSelIndex;
@@ -55,16 +51,12 @@ extern int gTrickyHudItemMask;
 extern int gTrickyHudActionMask;
 extern int getTrickyObject(void);
 extern int getLoadedFileFlags(int flags);
-
-
-
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
-
 extern void hudDrawTimedElement(int obj, void* p);
 extern void drawViewFinderHud(void);
 extern int getHudHiddenFrameCount(void);
@@ -83,7 +75,6 @@ extern void* lbl_803A93C4[7];
 extern int lbl_803A93A8[7];
 extern f32 lbl_803E2010;
 extern void gxColorFn_80052764(void* p);
-
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);

@@ -1,11 +1,9 @@
 #include "main/worldasteroids.h"
-
 extern int randomGetRange(int lo, int hi);
 extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 fsin16Approx(u16 angle);
 extern f32 fcos16Approx(u16 angle);
-
 extern f32 lbl_803E65D0;
 extern f32 lbl_803E65E0;
 extern f32 lbl_803E65E4;
@@ -84,7 +82,6 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     obj->posZ = radius * orbitCos + anchor->posZ;
     return;
 }
-
 
 void worldasteroids_init(WorldAsteroidsObject* obj)
 {

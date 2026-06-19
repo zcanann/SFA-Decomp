@@ -30,10 +30,7 @@
 #include "main/dll/dll_0273_firepipe.h"
 #include "string.h"
 #include "main/gamebits.h"
-
 extern void modelLightStruct_freeSlot(int param_1);
-
-
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
@@ -67,7 +64,6 @@ extern int modelLightStruct_getActiveState(int light);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
-
 extern f32 lbl_803DC340;
 extern f32 lbl_803DC344;
 extern s16 lbl_803DC348;

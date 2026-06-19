@@ -20,13 +20,9 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
 extern float mathSinf(float x);
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
-
 extern f32 lbl_803DB840;
 extern f32 lbl_803DB844;
 extern f32 lbl_803DB848;
@@ -35,7 +31,6 @@ extern s32 lbl_803DD3C0;
 extern s32 lbl_803DD3C4;
 extern f32 lbl_803DD3C8;
 extern f32 lbl_803DD3CC;
-
 extern f32 lbl_803E00A8;
 extern f32 lbl_803E00AC;
 extern f32 lbl_803E00B0;
@@ -59,7 +54,6 @@ extern f32 lbl_803E00F4;
 extern f32 lbl_803E00F8;
 extern f32 lbl_803E0108;
 extern f32 lbl_803E010C;
-
 extern WaterfxCfg lbl_8039C410;
 
 void Effect16_func05(void)

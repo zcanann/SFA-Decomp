@@ -17,7 +17,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
-
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
@@ -55,10 +54,7 @@ typedef struct PollenFragmentExtra
 
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
-
 extern void objRenderFn_8003b8f4(f32);
-
-
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 extern f32 timeDelta;

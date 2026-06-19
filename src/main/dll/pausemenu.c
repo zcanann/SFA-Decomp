@@ -15,14 +15,9 @@
 #include "dolphin/gx/GXCull.h"
 #include "main/texture.h"
 #include "main/audio/sfx_ids.h"
-
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
-
 extern u8 hudTextures[0x198];
-
-
-
 extern void drawRect(int w, int h, f32 a, f32 b);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -34,7 +29,6 @@ extern f32 fn_802943F4(f32 x);
 extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
-
 extern void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void drawFn_8011eb3c(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Camera_SetCurrentViewIndex(int index);
@@ -42,11 +36,9 @@ extern void Camera_UpdateViewMatrices(void);
 extern void Camera_SetFovY(f32 fovY);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
-
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
 extern int getCurLanguage(void);
-
 extern void* gameTextGetBox(int box);
 extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
 extern int sprintf(char* s, const char* format, ...);
@@ -57,7 +49,6 @@ extern void fn_80128470(int v);
 extern f32 hudElementOpacity;
 extern f32 timeDelta;
 extern u8 pauseMenuState;
-
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];
 extern u8 lbl_8031BB90[];
@@ -65,7 +56,6 @@ extern u8 lbl_8031BD90[];
 extern u8 sLanguageNameTable[];
 extern u8 lbl_802C8680[];
 extern int lbl_803A9364[];
-
 extern f32 lbl_803DD748;
 extern f32 lbl_803DD74C;
 extern s16 lbl_803DD750;
@@ -87,7 +77,6 @@ extern void* lbl_803DD7A4;
 extern int lbl_803DD8E0;
 extern f32 lbl_803DD850;
 extern void* lbl_803DD860[2];
-
 extern f32 lbl_803DBA34;
 extern f32 lbl_803DBA38;
 extern f32 lbl_803DBA3C;
@@ -109,7 +98,6 @@ extern char lbl_803DBB80;
 extern char lbl_803DBB88;
 extern char lbl_803DBB90;
 extern char lbl_803DBB98;
-
 extern int lbl_803E1E04;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E64;
@@ -138,7 +126,6 @@ extern f32 lbl_803E20AC;
 extern f32 lbl_803E20B0;
 extern f32 lbl_803E20B4;
 extern f32 lbl_803E20B8;
-
 extern f32 lbl_803E1E6C;
 extern f32 lbl_803E1EE4;
 extern f32 lbl_803E1F18;

@@ -25,7 +25,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
-
 extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
@@ -140,13 +139,8 @@ STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-
-
-
 void LaserBeam_update(int obj2)
 {
- /* #57 */
- /* #57 */
 
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
@@ -488,7 +482,6 @@ extern int textureLoadAsset(int id);
 
 void LaserBeam_free(s16* obj, char* arg)
 {
- /* #57 */
     extern f32 lbl_803E5D10;
     LaserBeamState* b;
 

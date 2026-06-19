@@ -1,8 +1,5 @@
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
-
-
-
 extern u16 lbl_8032F618[];
 
 /*

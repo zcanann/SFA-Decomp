@@ -19,13 +19,9 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-
 extern f32 gEffect20StepScrollA;
 extern f32 gEffect20StepScrollB;
 extern f32 lbl_803E0310;
@@ -3170,4 +3166,3 @@ void Effect20_initialise(void)
 
 #pragma dont_inline reset
 #pragma dont_inline reset
-

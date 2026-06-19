@@ -65,7 +65,6 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
 extern int randomGetRange(int lo, int hi);
-
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern float mathCosf(float x);

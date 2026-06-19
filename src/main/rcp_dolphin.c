@@ -10,7 +10,6 @@
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
-
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -46,7 +45,6 @@ extern u64 FUN_80286834();
 extern u64 FUN_8028683c();
 extern u32 FUN_80286880();
 extern u32 FUN_80286888();
-
 extern u32 DAT_8030dac4;
 extern u32 DAT_8030dac8;
 extern u32 DAT_8030dacc;
@@ -1042,7 +1040,6 @@ void gxColorFn_800523d0(void)
 
 extern void GXSetTevColor(int id, int* color);
 extern void GXSetTevKColorSel(int tev, int sel);
-
 extern f32 LastCommandWasRead_803DEB60;
 extern f32 sDvdfsCurrentDirEntry;
 
@@ -1167,7 +1164,6 @@ void gxColorFn_80052764(int* param)
 }
 
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
-
 extern void* memset(void*, int, u32);
 extern void textureFn_80053d58(void* obj);
 #pragma dont_inline on
@@ -1239,7 +1235,6 @@ void textureFn_80053d58(void* vobj)
 #pragma dont_inline reset
 
 extern void findSomething(int);
-
 
 #pragma peephole on
 void textureFree(u8* tex)
@@ -1964,10 +1959,6 @@ void fn_80053C40(u8* tex, u8* obj)
 }
 
 extern void GXSetMisc(int token, u32 val);
-
-
-
-
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern f32 sqrtf(f32 x);
 extern u8 gRcpWarpDistortListBuilt;
@@ -2582,7 +2573,6 @@ void gxTextureFn_80052efc(void)
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
 extern int mmSetFreeDelay(int v);
-
 extern void defragMemory(int mode);
 extern char sRcpTexRestructStrings[];
 

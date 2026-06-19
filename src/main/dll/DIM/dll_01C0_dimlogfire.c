@@ -28,15 +28,7 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-
-
 extern int randomGetRange(int lo, int hi);
-
-
-
-
-
-
 
 void imicepillar_hitDetect(void);
 
@@ -71,7 +63,6 @@ extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -360,4 +351,3 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
-

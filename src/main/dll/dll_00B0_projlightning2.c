@@ -13,8 +13,6 @@
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-
-
 int projlightning2_doUnsupported(void)
 {
     OSReport(sProjlightning2DoNoLongerSupported);

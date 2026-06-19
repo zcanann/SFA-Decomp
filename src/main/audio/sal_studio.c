@@ -7,15 +7,6 @@
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
  * recovered against the public MusyX runtime source. */
 
-
-
-
-
-
-
-
-
-
 extern void* dspCmdBuffer; /* dspHrtfHistoryBuffer */
 extern DSPvoice* dspVoice;
 extern void* dspITDBuffer;

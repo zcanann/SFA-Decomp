@@ -9,18 +9,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/synth_callback.h"
-
-
-
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-
-
-
 extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
-
-
-
-
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
@@ -28,10 +18,7 @@ extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* au
                                         void* auxBCallback, void* auxBUser);
 
 extern void hwOff(u32 slot);
-
-
 extern void voiceKillById(u32 value);
-
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
 extern void* lbl_803BD9A4[8];

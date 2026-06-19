@@ -19,7 +19,6 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
-
 extern f32 lbl_803E37B0;
 
 enum
@@ -42,7 +41,6 @@ int dll_115_getObjectTypeId(void) { return 0x0; }
 
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
- /* #57 */
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0);
 }

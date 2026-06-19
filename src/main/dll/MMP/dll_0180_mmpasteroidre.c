@@ -23,7 +23,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-
 extern void setDrawLights(int v);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);

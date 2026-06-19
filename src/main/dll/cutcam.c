@@ -27,8 +27,6 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 #include "main/curve.h"
-
-
 extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
@@ -45,11 +43,9 @@ extern float mathCosf(float x);
 extern f64 sqrtf(f64 x);
 extern int getAngle(float y, float x);
 extern u32 OSGetTick(void);
-
 extern u8 lbl_803DD528;       /* last bbox-hit result */
 extern u8 framesThisStep;
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
-
 extern f32 lbl_803E1688;      /* collision probe / trace radius */
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;

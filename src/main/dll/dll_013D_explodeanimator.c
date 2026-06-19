@@ -13,10 +13,6 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-
-
-
-
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 

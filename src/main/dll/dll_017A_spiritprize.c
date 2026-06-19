@@ -13,12 +13,9 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/engine_shared.h"
-
 extern void ModelLightStruct_free(void* light);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-
-
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);
@@ -26,7 +23,6 @@ extern void* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-
 extern f32 timeDelta;
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E98;

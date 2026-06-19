@@ -3,8 +3,6 @@
 #include "main/dll/gameplay.h"
 #include "dolphin/os/OSCache.h"
 
-
-
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
@@ -87,7 +85,6 @@ int roundUpTo32(int x)
 }
 
 extern u8 lbl_803DCB10;
-
 extern void* mmAlloc(int size, int type, int flag);
 
 void texFlagFn_80023cbc(int v)
@@ -272,7 +269,6 @@ typedef struct
 } DeferredFree;
 
 extern DeferredFree gMmDeferredFreeStack[];
-
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMmStoreAllocationTag;
 extern int gMmNextStoreHandle;
@@ -409,7 +405,6 @@ typedef struct
     DeferredFree deferred[2000];
     MmRegion regions[8];
 } MmGlobal;
-
 
 extern int lbl_803DCB30;
 extern int lbl_803DCB1C;
@@ -611,7 +606,6 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
 extern void* OSAllocFromHeap(int heap, int size);
-
 extern int __OSCurrHeap;
 extern int lbl_803DCB18;
 extern void* lbl_803DD498;
@@ -990,7 +984,6 @@ void* AtomicSList_Pop(void** list)
 
 extern void* memcpy(void* dst, const void* src, int n);
 
-
 void copyToCache(void* dst, void* src, u32 count)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
@@ -1011,8 +1004,6 @@ void copyToCache(void* dst, void* src, u32 count)
         LCLoadBlocks(dst, src, count);
     }
 }
-
-
 
 void memcpyToCache(void* dst, void* src, u32 count)
 {

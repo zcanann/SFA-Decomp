@@ -13,7 +13,6 @@ typedef struct DREarthWarriorPlacement
     u8 padB24[0xB28 - 0xB24];
 } DREarthWarriorPlacement;
 
-
 typedef struct DREarthWarriorState
 {
     s32 unk0;
@@ -68,7 +67,6 @@ typedef struct DREarthWarriorState
     u8 pad14F6[0x14F8 - 0x14F6];
     s32 tailSimHandle;
 } DREarthWarriorState;
-
 
 /* Combat sub-block of the EarthWarrior state (state+0xb58). */
 typedef struct EarthWarriorSub
@@ -236,7 +234,6 @@ extern EWPathRange lbl_802C2CA8;
 extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern char lbl_803DC768;
-
 extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void fn_80113F94(int p, f32 f);

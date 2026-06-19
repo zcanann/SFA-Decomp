@@ -2,7 +2,6 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
-
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
@@ -12,16 +11,11 @@ extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
-
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
-
-
 extern u8** ObjGroup_GetObjects(int kind, int* count);
-
 extern int trickyFn_8013b368(u8* arg1, u8* arg2, f32 dist);
 extern void objAnimFn_8013a3f0(u8* self, int a, int b, f32 f1);
-
 
 void trickyFn_8013d8f0(u8* self, u8* state)
 {

@@ -14,14 +14,10 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
-
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 duration);
-
-
 extern void* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;

@@ -26,8 +26,6 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
-
-
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
@@ -41,9 +39,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
-
 extern int* gBaddieControlInterface;
-
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -852,28 +848,22 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
-
 extern int* gPlayerInterface;
-
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
 extern int lbl_803AC638[];
 extern void* gLandedArwingStateHandlers[];
 extern void* gLandedArwingDefaultStateHandler;
-
 extern f32 lbl_803E3034;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
-
 extern void LandedArwing_UpdateRetreatChase(void);
 extern void LandedArwing_UpdateBounceFade(void);
 extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
-
 extern void fn_80167550(int* obj);
 
 void dll_D3_update(int* obj)

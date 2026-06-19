@@ -1,13 +1,9 @@
 /* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
 #include "main/objseq.h"
-
-
-
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebits.h"
-
 extern int gameBitDecrement(int bit);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(void* obj);
@@ -19,7 +15,6 @@ extern void objRenderFn_80041018(void* obj);
 
 void bombplantingspot_update(void* obj)
 {
- /* #57 */
     BombPlantingSpotMapData* mapData = *(BombPlantingSpotMapData**)&((GameObject*)obj)->anim.placementData;
     s32 trigBit;
 
@@ -70,4 +65,3 @@ void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData)
     ((GameObject*)obj)->objectFlags |= 0x4000;
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
 }
-

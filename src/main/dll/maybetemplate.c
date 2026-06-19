@@ -22,20 +22,15 @@
 #include "main/dll/player_status.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
-
-
-
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
-
 extern s8 lbl_803DD7A0;
 extern short lbl_803DD7A2;
 extern u8 framesThisStep;
 extern short lbl_803DD8D2;
 extern short lbl_803DBA68;
 extern short lbl_803DBA6E;
-
 extern u8 lbl_803DBA65;
 extern short gCMenuScrollTimer;
 extern short lbl_803DD78E;
@@ -43,10 +38,8 @@ extern u8 cMenuOpen;
 extern short cMenuFadeCounter;
 extern short gCMenuOpenAnim;
 extern short gCMenuOpenAnimMax;
-
 extern int gTrickyHudItemMask;
 extern short gCMenuStaffAbilities[];
-
 extern void pauseMenuDrawElement(int tex, f32 x, f32 y, int a, int b, int c, int d);
 extern void drawPartialTexture(int tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
 extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
@@ -60,7 +53,6 @@ extern int lbl_803DBAD4;
 extern int lbl_803DBAD8;
 extern int lbl_803DBADC;
 extern u8 lbl_803DD7B3;
-
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -94,7 +86,6 @@ extern f32 lbl_803E1FBC;
 extern f32 lbl_803E1FC0;
 extern f32 lbl_803E1FC4;
 extern f32 lbl_803E1FC8;
-
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);

@@ -19,8 +19,6 @@
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
-
-
 extern void vecRotateZXY(u8* p, f32* v);
 extern f32 timeDelta;
 extern char lbl_803AC930[];

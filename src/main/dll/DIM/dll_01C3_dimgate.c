@@ -22,11 +22,7 @@ typedef struct DimgatePlacement
     s16 gateGameBit;
 } DimgatePlacement;
 
-
-
 extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
-
-
 extern f32 lbl_803E4878;
 
 void dimgate_free(void)

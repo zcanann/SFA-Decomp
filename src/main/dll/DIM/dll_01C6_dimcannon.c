@@ -15,10 +15,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/pad.h"
-
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -48,9 +46,7 @@ extern void hudFn_8011f38c(u8 x);
 extern void* objModelGetVecFn_800395d8(void* obj, int target);
 extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
-
 extern u32 getButtonsHeld(int port);
-
 extern u8 lbl_803DBF00;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

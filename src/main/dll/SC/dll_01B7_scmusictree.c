@@ -70,8 +70,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 extern void objRenderFn_8003b8f4(f32);
 extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);

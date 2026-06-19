@@ -8,11 +8,8 @@
 #include "main/resource.h"
 #include "main/camera.h"
 #include "main/gamebits.h"
-
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
-
-
 extern float sqrtf(float x);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);

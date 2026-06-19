@@ -33,9 +33,6 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDraw.h"
 #include "string.h"
-
-
-
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -46,7 +43,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -214,8 +210,6 @@ typedef struct StaffDoGrowShrinkAnimState
 } StaffDoGrowShrinkAnimState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-
-
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
@@ -253,7 +247,6 @@ void staticCamera_init(s16* obj, int params, int flag)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 
 void mikabombshadow_update(int* obj);
@@ -302,7 +295,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -314,7 +306,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-
 
 void dim2roofrub_free(int* obj);
 
@@ -765,7 +756,6 @@ void objSetAnimField48to0(int* obj)
     *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x48) = v;
 }
 
-
 void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
 
 #pragma dont_inline on
@@ -912,7 +902,6 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params);
 
-
 extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
 extern u8 gStaffQuakeSpellState[];
@@ -942,7 +931,6 @@ void staff_init(int* obj)
     gStaffQuakeSpellState[0x20] = 0;
     *(int*)(gStaffQuakeSpellState + 0x1c) = 0;
 }
-
 
 extern f32 lbl_803E32B4;
 extern f32 lbl_803E3320;
@@ -989,8 +977,6 @@ void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
 
-
-
 void flamethrowerspe_update(int* obj);
 
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
@@ -1003,15 +989,11 @@ extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-
-
-
 void fireball_init(int* obj);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
 void fireball_update(int* obj);
-
 
 void shield_update(int* obj);
 
@@ -1054,9 +1036,7 @@ void staff_initialise(void)
     }
 }
 
-
 extern void quakeSpellTextureFn_8007366c(int param);
-
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);

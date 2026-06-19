@@ -14,7 +14,6 @@
  * curve/movement helpers that live in the wider camera-mode address range.
  */
 #include "main/dll/cameramodetitlepose_struct.h"
-
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/gameplay.h"
@@ -22,7 +21,6 @@
 
 #pragma scheduling on
 #pragma peephole on
-
 
 /* title-screen music tracks crossfaded as pose 4 is entered/left */
 #define MUSIC_TITLE_TRACK_A 0xbe
@@ -40,7 +38,6 @@ extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
-
 extern void Music_Trigger(int id, int arg);
 extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;
@@ -50,7 +47,6 @@ extern f32 lbl_803E1BF4;
 extern f32 lbl_803E1BF8;
 extern f32 lbl_803E1BFC;
 extern f32 lbl_803E1C00;
-
 
 #pragma scheduling off
 #pragma peephole off

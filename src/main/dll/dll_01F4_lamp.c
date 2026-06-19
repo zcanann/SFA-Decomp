@@ -15,9 +15,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
-
 extern int randomGetRange(int lo, int hi);
-
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void* Obj_GetPlayerObject(void);

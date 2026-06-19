@@ -6,7 +6,6 @@
 #include "main/objseq.h"
 #include "main/sky_80080E58_shared.h"
 #include "main/pad.h"
-
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
@@ -53,7 +52,6 @@ extern f32 gObjSeqTexScrollScale;
 extern f32 gObjSeqShakeMaxDist;
 extern f32 gObjSeqShakeFalloffStart;
 extern f32 gObjSeqShakeFalloffRange;
-
 extern f32 lbl_803DD0F4;
 extern f32 lbl_803DD0F0;
 extern f32 lbl_803DD0EC;
@@ -72,7 +70,6 @@ extern f32 lbl_803DEFFC;
 extern u8 gObjSeqFovOverrideActive;
 extern u8 curSeqNo;
 extern void Obj_TransformWorldPointToLocal(f32* x, f32* y, f32* z, void* m, f32 wx, f32 wy, f32 wz);
-
 extern u8 lbl_8039944C[];
 extern int lbl_803DD0C0;
 extern s16 lbl_803DD08A;
@@ -101,13 +98,10 @@ extern void fn_8029726C(void* obj);
 extern void fn_80297284(void* obj);
 extern void gameTextLoadTaskText(int textId);
 extern void cameraFocusNpc(int param1, u8* obj);
-
-
 extern int lbl_803DB724;
 extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;
 extern f32 SendMailData;
-
 extern void setJoypadDisabled(void);
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;

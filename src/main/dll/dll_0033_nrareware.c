@@ -2,17 +2,13 @@
 #include "main/screen_transition.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
-
 extern int lbl_803DD5F8;
 extern f32 lbl_803DD600;
 extern f32 lbl_803DD604;
 extern u8 lbl_803DD608;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
-
 extern void fn_8001404C(int param_1);
-
-
 extern void OSReport(const char* msg, ...);
 extern u8 framesThisStep;
 extern f32 timeDelta;

@@ -22,21 +22,13 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-
-
-
-
 extern int getPatchGroup(f32* pos, int patchGroup);
-
-
 extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
-
 extern f32 lbl_803E38A0;
 
 #define GAMEBIT_TRICKY_AVAILABLE 0x4e5
 #define TRICKYWARP_OBJ_GROUP 0x4b
 #define ROMCURVE_TYPE_TRICKYWARP '$'
-
 
 void trickywarp_free(int obj)
 {

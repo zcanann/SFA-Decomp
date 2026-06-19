@@ -38,7 +38,6 @@ typedef struct TrickyguardPlacement
     u8 pad1C[0x20 - 0x1C];
 } TrickyguardPlacement;
 
-
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 

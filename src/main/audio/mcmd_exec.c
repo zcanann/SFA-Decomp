@@ -10,9 +10,7 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/mcmd_wait.h"
-
 extern int mcmdLoop();
-
 extern u8* synthVoice;
 extern u8 lbl_803BD150[];
 extern int macActiveRoot;
@@ -20,19 +18,9 @@ extern int macTimeQueueRoot;
 extern int macRealTimeHi;
 extern int macRealTimeLo;
 extern void synthQueueVoicePrimaryUpdates(void* state);
-
-
-
-
-
-
-
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
-
 extern u32 voiceIsRegistered(int state);
-
-
 extern void (*synthMessageCallback)(u32 id);
 
 #define SYNTH_VOICE_STRIDE 0x404
@@ -63,7 +51,6 @@ extern f32 lbl_803E7810; /* 1023.0f */
 extern f32 lbl_803E7814; /* 1.0f */
 extern f32 voiceAdsrSustainTable[];
 extern u8 voiceAdsrDecayTable[];
-
 extern void synthQueueVoiceInputUpdate(McmdVoiceState * state);
 extern void fn_802712C8(McmdVoiceState * state); /* synthStartSynthJobHandling */
 
@@ -161,7 +148,6 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
         svoice->inputDirtyFlags |= dirtyFlag;
     }
 }
-
 
 /*
  * Configure the portamento controller ramp trigger for the current voice.
@@ -1302,7 +1288,6 @@ void macSetPedalState(McmdVoiceState* sv, u32 state)
         MAC_CFLAGS(sv) &= ~MAC_FLAG64(0x500, 0);
     }
 }
-
 
 /*
  * Insert a voice into the 64-bit wake-time queue sorted by 0x98:0x9c.

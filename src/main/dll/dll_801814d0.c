@@ -16,7 +16,6 @@
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/objfx.h"
-
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void ObjHits_ClearHitVolumes();
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -29,7 +28,6 @@ extern void fn_801816F8(int obj, int param_2, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-
 extern int lbl_803DBDA0;
 extern f32 lbl_803DBDA4;
 extern f32 lbl_803DBDA8;

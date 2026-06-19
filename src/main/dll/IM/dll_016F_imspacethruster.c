@@ -13,17 +13,11 @@
 #include "main/objtexture.h"
 #include "main/mm.h"
 #include "main/dll/VF/vf_shared.h"
-
-
 extern void getTabEntry(void* dst, int kind, int offset, int size);
-
-
 extern u8 framesThisStep;
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
-
 extern s16 lbl_80323818[], lbl_80323824[];
-
 extern f32 lbl_803E4788;
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4;
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;

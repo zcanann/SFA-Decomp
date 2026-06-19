@@ -13,10 +13,7 @@
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
-
-
 extern void vecRotateZXY(void* params, void* outVec);
-
 extern f32 lbl_803E5EAC;
 extern f32 lbl_803E5EB0;
 extern f32 lbl_803E5EB4;
@@ -25,7 +22,6 @@ extern f32 lbl_803E5EBC;
 extern f32 lbl_803E5EC0;
 extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EC8;
-
 extern void FireFlyFn_801f4f88(int* obj);
 
 /* per-frame angular step bounds (1/65536-turn units) */

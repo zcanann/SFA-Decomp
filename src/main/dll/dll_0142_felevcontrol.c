@@ -14,7 +14,6 @@
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 
-
 #pragma scheduling on
 #pragma peephole on
 
@@ -45,7 +44,6 @@ static int FEseqobject_findControlObject(void)
     }
     return found;
 }
-
 
 #pragma scheduling off
 #pragma peephole off

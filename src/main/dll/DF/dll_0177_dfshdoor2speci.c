@@ -26,7 +26,6 @@ typedef struct DFDoorSpeciExtra
     u8 pad04[2];
 } DFDoorSpeciExtra;
 
-
 extern float mathCosf(float x);
 extern u8 framesThisStep;
 extern f32 lbl_803E4E30;
@@ -34,8 +33,6 @@ extern f32 lbl_803E4E34;
 extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
-
-
 
 int DFSH_Door2Speci_SeqFn(int obj)
 {

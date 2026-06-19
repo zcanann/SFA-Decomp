@@ -33,10 +33,8 @@ extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-
 extern u8 lbl_803DBF68;
 extern u8 framesThisStep;
-
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void gameTimerInit(s8 flags, int minutes);

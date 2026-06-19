@@ -4,13 +4,7 @@
  * per-setup lifetime window, and emits two trail particles per frame while
  * fully opaque. */
 #include "main/game_object.h"
-
-
-
-
-
 extern void objRenderFn_8003b8f4(f32);
-
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -47,7 +41,6 @@ typedef struct DimbossicesmashPlacement
 } DimbossicesmashPlacement;
 
 extern f32 timeDelta;
-
 extern u8 framesThisStep;
 extern f32 lbl_803E4048;
 extern f32 sqrtf(f32);

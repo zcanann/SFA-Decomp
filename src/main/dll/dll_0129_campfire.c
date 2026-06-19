@@ -1,31 +1,22 @@
 /* DLL 0x0129 — campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
-
-
 extern int randomGetRange(int lo, int hi);
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern f32 timeDelta;
-
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
-
 extern void ModelLightStruct_free(void* effect);
 extern u32 ObjHits_ClearHitVolumes();
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void queueGlowRender(void* effect);
-
 extern f32 lbl_803E3D78;
-
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern f32 lbl_803E3D7C;
 extern f32 lbl_803E3D80;
 extern f32 lbl_803E3D84;
-
 extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);

@@ -34,11 +34,9 @@ typedef struct CarryableUpdateHeldState
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
 
-
 extern void playerSetHeldObject(void* player, int held);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
-
 extern int fn_80295BF0(void* player);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
@@ -294,4 +292,3 @@ void Carryable_release(void)
 void Carryable_initialise(void)
 {
 }
-

@@ -64,8 +64,6 @@ extern f32 lbl_803E3848; /* render distance constant */
 extern f32 lbl_803E384C; /* initial max-distance for the nearest-object search */
 extern void objRenderFn_8003b8f4(f32);
 extern void objRenderFn_80041018(int* obj);
-
-
 extern int randomGetRange(int lo, int hi);
 
 void dll_FC_initialise_nop(void);

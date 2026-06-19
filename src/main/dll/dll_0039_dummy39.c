@@ -8,10 +8,8 @@
  * frees the cached texture handle (lbl_803DD72C).
  */
 #include "types.h"
-
 extern u8 lbl_803DD728;
 extern u32 lbl_803DD72C;
-
 extern void loadUiDll(int index);
 extern u8 framesThisStep;
 extern void textureFree(u32 handle);

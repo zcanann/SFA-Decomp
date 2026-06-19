@@ -1,8 +1,5 @@
 #include "global.h"
 #include "main/gameplay_runtime.h"
-
-
-
 extern f32 lbl_803E5ED8;
 
 typedef struct BoulderShakeRec

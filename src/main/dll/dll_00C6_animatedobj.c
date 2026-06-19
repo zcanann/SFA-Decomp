@@ -1,12 +1,9 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-
 extern u32 FUN_8003b818();
-
 
 void mikabomb_hitDetect(void);
 
@@ -16,8 +13,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
-
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -158,7 +153,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 extern f32 timeDelta;
-
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
@@ -258,7 +252,6 @@ extern int FUN_80294cf8();
 extern int FUN_80294d10();
 extern u32 FUN_80294d60();
 extern u32 FUN_80294d6c();
-
 extern u32 DAT_80321678;
 extern int DAT_80321688;
 extern u32 DAT_80321698;
@@ -316,7 +309,6 @@ extern f32 lbl_803E4060;
 extern f32 lbl_803E4064;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
-
 extern f32 lbl_803E3420;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -1019,10 +1011,7 @@ void FUN_80170048(void)
     return;
 }
 
-
-
 void mikabombshadow_update(int* obj);
-
 
 void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
@@ -1151,27 +1140,7 @@ LAB_801725bc:
     return;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -1201,18 +1170,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
 int animatedobj_getExtraSize(void) { return 0x140; }
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -1225,9 +1182,7 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -1628,34 +1583,15 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
-
-
-
-
-
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-
-
-
-
-
-
-
-
-
-
-
 void gcbaddieshield_update(int* obj);
-
 
 void fireball_free(int* obj);
 
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
-
 
 void mikabombshadow_init(int* obj);
 
@@ -1682,12 +1618,9 @@ void animatedobj_free(int* obj, int seqFlag)
     }
 }
 
-
-
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
-
 
 void animatedobj_init(int* obj, int* params)
 {
@@ -1736,7 +1669,6 @@ void animatedobj_init(int* obj, int* params)
 }
 
 void flamethrowerspe_update(int* obj);
-
 
 void mikabomb_init(int* obj);
 
@@ -1874,18 +1806,13 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
-
 void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
-
-
 
 #pragma opt_common_subs reset
 
@@ -1913,5 +1840,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-
-

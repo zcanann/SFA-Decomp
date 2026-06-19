@@ -26,15 +26,10 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-
-
-
-
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);
-
 extern u32 lbl_803E38E8;
 extern f32 lbl_803E38EC;
 extern f32 lbl_803E38F0;

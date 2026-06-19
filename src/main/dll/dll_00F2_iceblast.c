@@ -24,10 +24,7 @@ typedef struct IceblastPlacement
     u8 pad1C[4];
 } IceblastPlacement;
 
-
-
 extern void vecRotateZXY(void* in, void* out);
-
 extern f32 timeDelta;
 extern f32 lbl_803E3600;
 extern f32 lbl_803E3604;

@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/objseq.h"
-
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
@@ -18,7 +17,6 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
-
 #include "main/dll/dll19_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/gamebits.h"
@@ -40,10 +38,8 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
-
 extern u32 FUN_80017ae4();
 extern u32 FUN_80017ae8();
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -59,7 +55,6 @@ extern u32 FUN_80286888();
 extern double FUN_80293900();
 extern u32 FUN_80293f90();
 extern u32 FUN_80294964();
-
 extern u32 DAT_802c2910;
 extern u32 DAT_802c2914;
 extern u32 DAT_802c2918;
@@ -111,7 +106,6 @@ extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
 extern GameObject* lbl_803DD5E4;
-
 extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
 extern f32 lbl_803E1C38;
@@ -1433,7 +1427,6 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
  * object's facing plane and returns the lateral offset of the result. */
 f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 {
- /* #57 */
     f32 dist;
     f32 fz;
     f32 fx;
@@ -1486,4 +1479,3 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-

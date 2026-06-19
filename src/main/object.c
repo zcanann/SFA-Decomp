@@ -16,16 +16,12 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/camera.h"
-
-
-
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
-
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
@@ -34,7 +30,6 @@ extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-
 extern int getLoadedFileFlags(int);
 extern s8 gObjPtrTableCount;
 extern int gObjPtrTable[];
@@ -101,7 +96,6 @@ extern f32 lbl_803DE8C8;
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern int getCurUiDll(void);
-
 extern int lbl_803DCB70;
 extern void fn_80013B6C(int* p, int n);
 extern void AudioStream_StopAll(void);
@@ -1107,7 +1101,6 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
         PSMTXConcat((f32*)parentMtx, mtx, mtx);
     }
 }
-
 
 typedef struct LoadedObj
 {

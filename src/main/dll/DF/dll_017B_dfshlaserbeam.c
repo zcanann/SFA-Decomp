@@ -10,19 +10,11 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/objlib.h"
-
-
 extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
-
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
-
-
-
-
 extern void* Obj_GetPlayerObject(void);
-
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern int getAngle(float y, float x);
@@ -30,7 +22,6 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int objGetAnimState80A(void* obj);

@@ -14,9 +14,7 @@ typedef struct TrickyguardspotPlacement
     s16 unk1E;
 } TrickyguardspotPlacement;
 
-
 extern f32 Vec_xzDistance(f32* a, f32* b);
-
 extern u8 framesThisStep;
 extern void ObjGroup_AddObject(u32 obj, int group);
 

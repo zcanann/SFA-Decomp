@@ -128,7 +128,6 @@ extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, 
                                           f32* outZ, int useInputPosition);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;

@@ -30,8 +30,6 @@ STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
 extern ModgfxInterface** gModgfxInterface;
-
-
 extern void vecRotateZXY(void* p, f32* v);
 extern void debugPrintf(char* fmt, ...);
 extern u8 lbl_80311E30[];

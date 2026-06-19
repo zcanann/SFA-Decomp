@@ -43,7 +43,6 @@ typedef struct TumbleweedBushState
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern f32 timeDelta;
-
 extern f32 lbl_803E2F48;
 extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;

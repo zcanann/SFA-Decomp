@@ -1,9 +1,6 @@
 #include "dolphin/axfx/reverb_std_create.h"
 #include "string.h"
 #include "main/audio/sal_dsp.h"
-
-
-
 extern f32 powf(f32 x, f32 y);
 extern const s32 sReverbStdDelayLengths[4];
 extern const f32 axfx_reverb_std_f32_0;

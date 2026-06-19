@@ -15,16 +15,11 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-
 extern int randomGetRange(int lo, int hi);
-
 extern int getAngle(float y, float x);
 extern u8 framesThisStep;
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern f32 timeDelta;
-
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"

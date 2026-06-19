@@ -11,8 +11,6 @@
 #include "main/dll/FRONT/dll_44.h"
 #include "dolphin/os/OSCache.h"
 
-
-
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
 int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,

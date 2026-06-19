@@ -41,7 +41,6 @@
 #define GAMEBIT_SFX_MUTE 0xa71
 
 extern u8 Obj_IsLoadingLocked(void);
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern int randomGetRange(int lo, int hi);
@@ -56,17 +55,13 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
-
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 extern f32 lbl_803E39A8;
 extern const f32 lbl_803E39AC;
 extern f32 lbl_803E39B8;

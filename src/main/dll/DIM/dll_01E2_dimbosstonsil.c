@@ -13,7 +13,6 @@
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
-
 extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
@@ -34,7 +33,6 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
-
 extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* p);
@@ -68,7 +66,6 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
-
     extern u8 lbl_803DDBB0;
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;

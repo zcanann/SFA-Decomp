@@ -36,8 +36,6 @@ STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-
-
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void* Obj_GetPlayerObject(void);

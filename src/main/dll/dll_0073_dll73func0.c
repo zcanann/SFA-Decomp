@@ -32,7 +32,6 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-
 extern u32 FUN_800033a8();
 extern u64 FUN_80003494();
 extern u32 FUN_80006768();
@@ -49,7 +48,6 @@ extern u32 FUN_80017690();
 extern u64 FUN_80017698();
 extern u32 FUN_800176cc();
 extern u32 FUN_800176dc();
-
 extern u32 FUN_80042b9c();
 extern u32 FUN_8005d018();
 extern u32 FUN_80072564();
@@ -911,4 +909,3 @@ void dll_73_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 }
 
 void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags);
-

@@ -38,8 +38,6 @@ typedef struct CfLevelControlFlags
     u8 rest : 3;
 } CfLevelControlFlags;
 
-
-
 extern void s16toFloat(void* p, int duration);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void storeZeroToFloatParam(void* p);

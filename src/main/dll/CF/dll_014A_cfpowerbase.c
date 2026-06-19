@@ -58,8 +58,6 @@ extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
-
-
 extern f32 lbl_803E41D0;
 
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);

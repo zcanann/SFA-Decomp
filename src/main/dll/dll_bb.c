@@ -21,7 +21,6 @@
 #include "main/dll/dll_BB.h"
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
-
 extern void Obj_UpdateWorldTransform(s16* obj);
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
@@ -33,11 +32,8 @@ extern void OSReport(const char* msg, ...);
 extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);
 extern void PSVECNormalize(f32 *src,f32 *dst);
 extern f32 PSVECMag(f32 *v);
-
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s16 yOffset);
-
-
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat;
 extern f32 timeDelta;

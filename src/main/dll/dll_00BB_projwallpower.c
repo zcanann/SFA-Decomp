@@ -14,8 +14,6 @@
 #include "main/dll/dll_64.h"
 #include "main/engine_shared.h"
 
-
-
 int projwallpower_doUnsupported(void)
 {
     OSReport(sProjwallpowerDoNoLongerSupported);

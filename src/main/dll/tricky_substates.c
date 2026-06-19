@@ -25,8 +25,6 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
-
-
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -52,7 +50,6 @@ extern f32 lbl_803E2478;
 extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
-
 extern u16 getYButtonItem(s16* out);
 extern void buttonDisable(int port, u32 mask);
 extern char sInWaterMessage[];
@@ -72,7 +69,6 @@ extern int getAngle(float y, float x);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 lbl_803E23D0;
-
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern f32 getXZDistance(f32* a, f32* b);
 extern float sqrtf(float x);
@@ -1376,7 +1372,6 @@ int trickyFn_80143c04(int obj, int state)
     ((FlagByte728*)(state + 0x728))->bf7 = 1;
     return 1;
 }
-
 
 u32 fn_80143DD4(int obj, int* trickyState)
 {

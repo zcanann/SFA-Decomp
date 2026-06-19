@@ -166,7 +166,6 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
     return gModgfxActiveEffectRegistry;
 }
 
-
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
@@ -1282,7 +1281,6 @@ void Effect3_initialise(void)
 {
 }
 
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -1309,7 +1307,6 @@ char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer suppo
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 extern void Sfx_PlayFromObject(void* obj, int id);
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 

@@ -20,12 +20,9 @@
 #include "main/dll/genprops.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
-
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
-
 extern u32 FUN_8003b818();
-
 
 void mikabomb_hitDetect(void);
 
@@ -35,8 +32,6 @@ int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -207,14 +202,9 @@ typedef struct SideloadPlacement
     u8 pad2B2[0x2B8 - 0x2B2];
 } SideloadPlacement;
 
-
-
-
 extern f64 DOUBLE_803e3e88;
-
 extern f32 lbl_803E3420;
 extern u8 Obj_IsLoadingLocked(void);
-
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void depthoffieldpoint_update();
@@ -286,7 +276,6 @@ void mikabombshadow_update(int* obj);
 
 void staff_func0F(void);
 
-
 void staff_func0B(void);
 
 void staff_setScale(void);
@@ -315,7 +304,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -328,9 +316,7 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-
 void dim2roofrub_free(int* obj);
-
 
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
@@ -759,4 +745,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 
 #pragma opt_common_subs off
-

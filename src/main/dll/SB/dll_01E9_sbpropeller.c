@@ -31,20 +31,16 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
 extern int randomGetRange(int lo, int hi);
-
 extern u32 DAT_803de8c0;
 extern f32 lbl_803E64A8;
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 fn_801E2570(void);
 extern f32 timeDelta;
-
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
-
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;
@@ -52,7 +48,6 @@ extern f32 lbl_803E5818;
 extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
-
 extern u32 lbl_803DDC40;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -196,18 +191,15 @@ void SB_Propeller_init(GameObject* obj, int placement)
     return;
 }
 
-
 int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
 
 u32 fn_801E2570(void) { return lbl_803DDC40; }
-
 
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5810);
 }
-
 
 void SB_Propeller_hitDetect(GameObject* obj)
 {

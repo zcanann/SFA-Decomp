@@ -15,7 +15,6 @@
  * functions and gDepthOfFieldPointObjDescriptor belong to this object.
  */
 #include "main/dll/xyzanimator.h"
-
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -172,7 +171,6 @@ extern void flamethrowerspe_init();
 extern void shield_update();
 extern void dll_F7_update();
 extern void dll_F7_init();
-
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 
 void staff_func0F(void);

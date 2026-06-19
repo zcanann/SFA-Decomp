@@ -9,7 +9,6 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/vi.h"
 #include "main/pad.h"
-
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
@@ -19,14 +18,9 @@ extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
 
-
 extern int mmSetFreeDelay(int v);
-
 extern void printHeapStats(int param_1);
-
 extern void OSReport(const char* msg, ...);
-
-
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern u8 gTitleMenuSelectionFade;
 extern s32 gAttractMovieState;
@@ -62,9 +56,6 @@ extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
-
-
-
 extern void setDrawLights(int v);
 extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
@@ -99,7 +90,6 @@ extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
-
 extern void setLinkIsRotated(void);
 extern u8* lbl_803DD498;
 

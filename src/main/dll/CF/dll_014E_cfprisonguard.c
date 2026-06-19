@@ -42,14 +42,9 @@ STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 extern int getLActions();
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
-
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-
-
 extern int Obj_RemoveFromUpdateList(int* obj);
-
-
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
