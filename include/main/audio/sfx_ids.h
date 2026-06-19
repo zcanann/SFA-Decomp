@@ -360,4 +360,7 @@ void titleScreenFn_8005cdd4(int v);
 void fn_80292E20(int q, float* sin_out, float* cos_out);
 void baddieAfterUpdateBonesCb(int obj, int* p2);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+
 #endif /* MAIN_AUDIO_SFX_IDS_H_ */

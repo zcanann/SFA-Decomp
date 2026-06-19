@@ -81,4 +81,9 @@ void Obj_ResetObjectSystem(void);
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void mapLoadDataFiles(int mapIdx);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+void gameTextLoadTaskText(int taskId);
+void gxColorFn_80052764(int* param);
+
 #endif /* MAIN_CAMERA_INTERFACE_H_ */

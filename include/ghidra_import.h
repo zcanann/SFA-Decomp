@@ -21,4 +21,7 @@ typedef u16 wchar_t;
 #define NAN 0.0f
 #endif
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+
 #endif

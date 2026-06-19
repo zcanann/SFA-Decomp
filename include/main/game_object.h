@@ -128,4 +128,8 @@ u8 fn_8012DDAC(void);
 void gameTextResetCursor(int flags);
 int atan2i(int y, int x);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+void shadowRenderFn_8006b558(int* obj);
+
 #endif
