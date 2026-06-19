@@ -601,9 +601,9 @@ void fn_8015EB6C(int obj, int p2, int p3)
         f32* dp = &d.x;
         if (player != NULL)
         {
-            d.x = *(f32*)((int)player + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-            d.y = *(f32*)((int)player + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-            d.z = *(f32*)((int)player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+            d.x = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+            d.y = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+            d.z = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
             dist = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
         }
         else
