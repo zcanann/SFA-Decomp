@@ -87,38 +87,38 @@ void levelname_update(int* obj)
         if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             (f32)(u32)state[LEVELNAME_TRIGGER_DIST])
         {
-            if (((LevelnameState*)state)->unkE != -1)
+            if (((LevelnameState*)state)->gameBit != -1)
             {
-                GameBit_Set(((LevelnameState*)state)->unkE, 1);
+                GameBit_Set(((LevelnameState*)state)->gameBit, 1);
             }
             state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_IN;
         }
         break;
     case LEVELNAME_PHASE_SLIDE_IN:
-        ((LevelnameState*)state)->unk12 = (s16)(((LevelnameState*)state)->unk12 + framesThisStep * LEVELNAME_BANNER_Y_STEP);
-        if (((LevelnameState*)state)->unk12 > LEVELNAME_BANNER_Y_MAX)
+        ((LevelnameState*)state)->bannerY = (s16)(((LevelnameState*)state)->bannerY + framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        if (((LevelnameState*)state)->bannerY > LEVELNAME_BANNER_Y_MAX)
         {
-            ((LevelnameState*)state)->unk12 = LEVELNAME_BANNER_Y_MAX;
+            ((LevelnameState*)state)->bannerY = LEVELNAME_BANNER_Y_MAX;
             state[LEVELNAME_PHASE] = LEVELNAME_PHASE_HOLD;
         }
         break;
     case LEVELNAME_PHASE_HOLD:
         {
-            ((LevelnameState*)state)->unk10 += framesThisStep;
-            if ((u32)((LevelnameState*)state)->unk10 > (u32)((LevelnameState*)state)->unk8)
+            ((LevelnameState*)state)->holdTimer += framesThisStep;
+            if ((u32)((LevelnameState*)state)->holdTimer > (u32)((LevelnameState*)state)->holdDuration)
             {
                 state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_OUT;
             }
-            ((LevelnameState*)state)->unk12 = (s16)(
+            ((LevelnameState*)state)->bannerY = (s16)(
                 (s32)(lbl_803E36E0 * mathSinf(
-                    (lbl_803E36E4 * (f32)((s32)((LevelnameState*)state)->unk10 * 0x500)) / lbl_803E36E8)) + LEVELNAME_BANNER_Y_MAX);
+                    (lbl_803E36E4 * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) / lbl_803E36E8)) + LEVELNAME_BANNER_Y_MAX);
             break;
         }
     case LEVELNAME_PHASE_SLIDE_OUT:
-        ((LevelnameState*)state)->unk12 = (s16)(((LevelnameState*)state)->unk12 - framesThisStep * LEVELNAME_BANNER_Y_STEP);
-        if (((LevelnameState*)state)->unk12 < 0)
+        ((LevelnameState*)state)->bannerY = (s16)(((LevelnameState*)state)->bannerY - framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        if (((LevelnameState*)state)->bannerY < 0)
         {
-            ((LevelnameState*)state)->unk12 = 0;
+            ((LevelnameState*)state)->bannerY = 0;
             state[LEVELNAME_PHASE] = LEVELNAME_PHASE_IDLE;
         }
         break;
