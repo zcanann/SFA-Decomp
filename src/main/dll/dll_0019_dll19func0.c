@@ -519,8 +519,8 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
         *(f32*)(p2 + 656) = zero;
         *(f32*)(p2 + 652) = zero;
         *p8 = 1;
-        dx = *p6 - *(f32*)(p1 + 12);
-        dz = *p7 - *(f32*)(p1 + 20);
+        dx = *p6 - ((GameObject*)p1)->anim.localPosX;
+        dz = *p7 - ((GameObject*)p1)->anim.localPosZ;
         dist = sqrtf(dx * dx + dz * dz);
         if (dist < lbl_803E1C68)
         {
@@ -532,8 +532,8 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
             dz /= dist;
             *(f32*)(p2 + 656) = lbl_803E1C6C * -dx;
             *(f32*)(p2 + 652) = lbl_803E1C6C * dz;
-            *(f32*)(p1 + 12) += dist * dx;
-            *(f32*)(p1 + 20) += dist * dz;
+            ((GameObject*)p1)->anim.localPosX += dist * dx;
+            ((GameObject*)p1)->anim.localPosZ += dist * dz;
             (*(void (**)(int, u8*, f32, f32, int, int))(*(int*)gPlayerInterface + 8))(
                 p1, p2, timeDelta, timeDelta, p3, p4);
         }
@@ -629,9 +629,9 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 
     while ((obj = *list) != 0)
     {
-        dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(p1 + 0x18);
-        dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(p1 + 0x1c);
-        dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(p1 + 0x20);
+        dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)p1)->anim.worldPosX;
+        dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)p1)->anim.worldPosY;
+        dp[2] = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)p1)->anim.worldPosZ;
         if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange)
         {
             if ((s8)p2[852] != 0)
@@ -643,7 +643,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                 newangle = (u16)getAngle(-dp[0], -dp[2]);
                 if (*(void**)(p1 + 0x30) != NULL)
                 {
-                    delta = newangle - (u16)(*(s16*)p1 + *(s16*)(*(int*)(p1 + 0x30)));
+                    delta = newangle - (u16)(*(s16*)p1 + *(s16*)(*(int*)&((GameObject*)p1)->anim.parent));
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -679,9 +679,9 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                 }
                 else
                 {
-                    gridIn[0] = *(f32*)(p1 + 12);
-                    gridIn[1] = lbl_803E1C68 + *(f32*)(p1 + 16);
-                    gridIn[2] = *(f32*)(p1 + 20);
+                    gridIn[0] = ((GameObject*)p1)->anim.localPosX;
+                    gridIn[1] = lbl_803E1C68 + ((GameObject*)p1)->anim.localPosY;
+                    gridIn[2] = ((GameObject*)p1)->anim.localPosZ;
                     voxmaps_worldToGrid(gridIn, gridA);
                     gridIn[0] = ((GameObject*)obj)->anim.localPosX;
                     gridIn[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
@@ -743,13 +743,13 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
             {
-                int other = *(int*)(p1 + 76);
+                int other = *(int*)&((GameObject*)p1)->anim.placementData;
                 ((Dll19Placement*)state)->unk3E8 = zeroV;
                 ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
                 p2[852] = 0;
                 p1[54] = 0;
-                *(int*)(p1 + 244) = 1;
-                *(s16*)(p1 + 6) = *(s16*)(p1 + 6) | 0x4000;
+                ((GameObject*)p1)->unkF4 = 1;
+                ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
                 (*gMapEventInterface)->addTime(
                     *(int*)(other + 20),
                     (f32)(s32)(*(s16*)(other + 44) * 60));
@@ -962,7 +962,7 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     *(u8*)((u8*)setup + 6) = state[6];
     *(u8*)((u8*)setup + 5) = state[5];
     *(u8*)((u8*)setup + 7) = state[7];
-    lbl_803DD5E4 = Obj_SetupObject(setup, 5, *(s8*)(p1 + 172), -1, *(int*)&source->anim.parent);
+    lbl_803DD5E4 = Obj_SetupObject(setup, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&source->anim.parent);
     return (int)lbl_803DD5E4;
 }
 
@@ -1026,7 +1026,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     p3[1030] = p2[47];
     p3[1031] = p2[39];
     p3[1032] = p2[40];
-    *(u16*)(p1 + 176) = *(u16*)(p1 + 176) | ((s8)p3[1032] & 7);
+    ((GameObject*)p1)->objectFlags = ((GameObject*)p1)->objectFlags | ((s8)p3[1032] & 7);
     if ((flags & 8) != 0)
     {
         *(s16*)(p3 + 1018) = *(s16*)(p2 + 32);
@@ -1041,46 +1041,46 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     *(u16*)(p3 + 1022) = (u16)(p2[41] << 3);
     p3[1029] = 0;
     *(f32*)(p3 + 996) = fparam;
-    *(s16*)(p1 + 0) = (s16)((s8)p2[42] << 8);
-    *(u8*)(p1 + 54) = 255;
-    *(u8*)(p1 + 175) = *(u8*)(p1 + 175) & ~0x8;
+    ((GameObject*)p1)->anim.rotX = (s16)((s8)p2[42] << 8);
+    ((GameObject*)p1)->anim.alpha = 255;
+    *(u8*)&((GameObject*)p1)->anim.resetHitboxMode = *(u8*)&((GameObject*)p1)->anim.resetHitboxMode & ~0x8;
     *(s16*)(p3 + 1010) = *(s16*)(p2 + 24);
     if (*(s16*)(p3 + 1010) != -1)
     {
-        if (*(s16*)(p1 + 70) == 636)
+        if (((GameObject*)p1)->anim.seqId == 636)
         {
-            *(int*)(p1 + 244) = (GameBit_Get(*(s16*)(p3 + 1010)) == 0);
+            ((GameObject*)p1)->unkF4 = (GameBit_Get(*(s16*)(p3 + 1010)) == 0);
         }
         else
         {
-            *(int*)(p1 + 244) = GameBit_Get(*(s16*)(p3 + 1010));
+            ((GameObject*)p1)->unkF4 = GameBit_Get(*(s16*)(p3 + 1010));
         }
     }
     else
     {
-        *(int*)(p1 + 244) = 0;
+        ((GameObject*)p1)->unkF4 = 0;
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)(p2 + 20)) == 0)
     {
-        *(int*)(p1 + 244) = 1;
+        ((GameObject*)p1)->unkF4 = 1;
     }
-    if (*(int*)(p1 + 244) != 0)
+    if (((GameObject*)p1)->unkF4 != 0)
     {
         ObjHits_DisableObject(p1);
-        *(s16*)(p1 + 6) = *(s16*)(p1 + 6) | 0x4000;
+        ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
     }
     else
     {
-        *(s16*)(p1 + 6) = *(s16*)(p1 + 6) & ~0x4000;
+        ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags & ~0x4000;
         ObjHits_EnableObject(p1);
     }
     if ((s8)p2[46] == -1)
     {
-        *(int*)(p1 + 248) = 1;
+        ((GameObject*)p1)->unkF8 = 1;
     }
     else
     {
-        *(int*)(p1 + 248) = 0;
+        ((GameObject*)p1)->unkF8 = 0;
     }
     if (b1 == 0 && (flags & 0x20) == 0)
     {
