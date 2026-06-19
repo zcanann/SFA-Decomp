@@ -48,13 +48,13 @@ typedef struct CfCurveWalker
     f32 posZ;    /* 0x70 */
 } CfCurveWalker;
 
-/* hitbox/heading template (lbl_802C22C0/CC), copied to the stack at init */
+/* hitbox/heading template (gCfGuardianHitboxTemplateA/CC), copied to the stack at init */
 typedef struct
 {
     s16 v[5];
 } GuardianVec;
 
-/* active/idle heading-pair template (lbl_802C22D8) used by cfguardian_SeqFn */
+/* active/idle heading-pair template (gCfGuardianHeadingTemplate) used by cfguardian_SeqFn */
 typedef struct
 {
     int a, b, c, d;
@@ -164,15 +164,15 @@ extern void objRenderFn_8003b8f4(f32);
 extern int dll_2E_func03();
 extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern GuardianVec lbl_802C22C0; /* hitbox template copied at init */
-extern GuardianVec lbl_802C22CC; /* hitbox template copied at init */
-extern u8 lbl_8032284C[];        /* chatter sequence-stream table, 0xf states */
+extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
+extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
+extern u8 gCfGuardianSeqStreamTable[];        /* chatter sequence-stream table, 0xf states */
 extern void dll_2E_func0A(int a, int* obj);
 extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
 extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(u8* p, int n);
-extern GuardianMsg lbl_802C22D8; /* active/idle heading-pair template (cfguardian_SeqFn) */
+extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
@@ -192,7 +192,7 @@ extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int port, u32 mask);
 extern void characterDoEyeAnims(int* obj, void* p);
-extern int lbl_80322954[]; /* per-quest-state idle move id (-1 = none) */
+extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;     /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 extern f32 oneOverTimeDelta;
 
@@ -675,11 +675,11 @@ int cfguardian_updateMain(int obj)
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX), (char*)obj + offsetof(GameObject, anim.worldPosX)) < lbl_803E413C)
         {
             ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
                 dll_2E_func0C(0xf, &sub->homeYaw);
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
-                lbl_80322954[sub->questState] = 0;
+                gCfGuardianIdleMoveTable[sub->questState] = 0;
             }
             if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
             {
@@ -689,12 +689,12 @@ int cfguardian_updateMain(int obj)
         }
         else
         {
-            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0xe)
             {
                 sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
-                lbl_80322954[sub->questState] = 0xe;
+                gCfGuardianIdleMoveTable[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
@@ -719,11 +719,11 @@ int cfguardian_updateMain(int obj)
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX), (char*)obj + offsetof(GameObject, anim.worldPosX)) < lbl_803E413C)
         {
-            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
                 dll_2E_func0C(0xf, &sub->homeYaw);
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
-                lbl_80322954[sub->questState] = 0;
+                gCfGuardianIdleMoveTable[sub->questState] = 0;
             }
             if (sub->chatterState == GUARDIAN_CHATTER_PLAYING)
             {
@@ -733,12 +733,12 @@ int cfguardian_updateMain(int obj)
         }
         else
         {
-            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && lbl_80322954[sub->questState] != 0xe)
+            if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0xe)
             {
                 sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 dll_2E_func0A(0xe, (int*)&sub->homeYaw);
-                lbl_80322954[sub->questState] = 0xe;
+                gCfGuardianIdleMoveTable[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0
@@ -830,7 +830,7 @@ int cfguardian_updateMain(int obj)
         }
         else if (sub->chatterState == 1)
         {
-            int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
+            int* tbl = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
             int pick;
             if (Player_GetCurrentMagic((int)player) > 3)
             {
@@ -854,7 +854,7 @@ int cfguardian_updateMain(int obj)
     }
     if (GameBit_Get(0x902) != 0)
     {
-        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
+        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
         if (tbl2[0] != -1)
         {
             sub->chatterState = GUARDIAN_CHATTER_PLAYING;
@@ -863,7 +863,7 @@ int cfguardian_updateMain(int obj)
         }
     }
     {
-        int mv = lbl_80322954[sub->questState];
+        int mv = gCfGuardianIdleMoveTable[sub->questState];
         if (mv != -1 && (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
         {
             ObjAnim_SetCurrentMove(obj, mv, lbl_803E4110, 0);
@@ -902,7 +902,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     int* sel;
     GuardianMsg stk;
     CfGuardianState* sub = ((GameObject*)obj)->extra;
-    stk = lbl_802C22D8;
+    stk = gCfGuardianHeadingTemplate;
     if (((GameObject*)obj)->seqIndex < 0)
     {
         saveGame_saveObjectPos((int)obj);
@@ -979,8 +979,8 @@ void cfguardian_init(int* obj, u8* params)
     GuardianVec stk2;
 
     sub = ((GameObject*)obj)->extra;
-    stk1 = lbl_802C22C0;
-    stk2 = lbl_802C22CC;
+    stk1 = gCfGuardianHitboxTemplateA;
+    stk2 = gCfGuardianHitboxTemplateB;
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
     sub->questState = GameBit_Get(GAMEBIT_GUARDIAN_QUEST_STATE);
@@ -1013,7 +1013,7 @@ void cfguardian_init(int* obj, u8* params)
     dll_2E_func05(obj, (u8*)sub, -0x2000, 0x2800, 4);
     dll_2E_func08((u8*)sub, 0x12c, 0x64);
     dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
-    objSeqInitFn_80080078(lbl_8032284C, 0xf);
+    objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }
 

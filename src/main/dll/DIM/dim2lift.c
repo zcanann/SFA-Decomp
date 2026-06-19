@@ -27,7 +27,7 @@ extern f32 lbl_803E4C00;
 extern int lbl_80325AA0[6];
 extern int* gBaddieControlInterface;
 extern int lbl_80325960[16];
-extern f32 lbl_803259A0[16];
+extern f32 gDim2LiftMoveSpeedByDir[16];
 extern f32 lbl_803E4C04;
 extern u32 gDIMbossSequenceFlags;
 extern int lbl_803DBF30;
@@ -47,8 +47,8 @@ extern f32 lbl_803E4C18;
 extern f32 lbl_803E4C1C;
 extern f32 lbl_803E4C20;
 extern f32 lbl_803E4BBC;
-extern s16 lbl_80325AC8[30];
-extern s16 lbl_803DBF38[4];
+extern s16 gDim2LiftFarMoveChoices[30];
+extern s16 gDim2LiftFarFlankMoveChoices[4];
 extern u8 gDIMbossAnimController[];
 
 #pragma scheduling off
@@ -318,7 +318,7 @@ int DIMbossHitDetect_trackTargetMove(int obj, int runtime, f32 hitAmount)
         (*(int (**)(int, int, int, u16*, s16*, s16*))(*(int*)gBaddieControlInterface + 0x14))(
             obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &dirSector, &unused, &distance);
         ObjAnim_SetCurrentMove(obj, lbl_80325960[dirSector], lbl_803E4BD8, 0);
-        ((BaddieState*)runtime)->moveSpeed = lbl_803259A0[dirSector];
+        ((BaddieState*)runtime)->moveSpeed = gDim2LiftMoveSpeedByDir[dirSector];
         ((BaddieState*)runtime)->moveDone = 0;
     }
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, runtime, hitAmount, 8);
@@ -581,12 +581,12 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int runtime)
                     obj, runtime, lbl_803E4BBC)) & 1))
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, runtime, lbl_80325AC8[randomGetRange(0, 5)]);
+                        obj, runtime, gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);
                 }
                 else if (((GroundBaddieState*)state)->flags400 & 4)
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, runtime, lbl_803DBF38[randomGetRange(0, 1)]);
+                        obj, runtime, gDim2LiftFarFlankMoveChoices[randomGetRange(0, 1)]);
                 }
                 else
                 {

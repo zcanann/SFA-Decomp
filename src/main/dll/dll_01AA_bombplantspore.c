@@ -32,8 +32,8 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern const f32 lbl_803E5390;
 extern f32 lbl_803E5394;
-extern const f32 lbl_803E5398;
-extern const f32 lbl_803E539C;
+extern const f32 gBombPlantSporePi;
+extern const f32 gBombPlantSporeAngleHalfPeriod;
 extern const f32 lbl_803E53A8;
 extern const f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
@@ -64,8 +64,8 @@ extern const f32 lbl_803E53C8;
 extern f64 lbl_803E53D0;
 extern f64 lbl_803E53D8;
 extern f32 lbl_803E53E0;
-extern f32 lbl_803E53E4;
-extern const f32 lbl_803E53E8;
+extern f32 gBombPlantSporeMinVelocityY;
+extern const f32 gBombPlantSporeVelocityDamping;
 extern const f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
@@ -138,9 +138,9 @@ void bombplantspore_startDriftBurst(void* obj, void* state)
     ((BombPlantSporeState*)state)->driftSpeed = lbl_803E5394;
 
     ((BombPlantSporeState*)state)->driftSin =
-        mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2aa) / lbl_803E539C);
+        mathSinf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->unk2aa) / gBombPlantSporeAngleHalfPeriod);
     ((BombPlantSporeState*)state)->driftCos =
-        mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2aa) / lbl_803E539C);
+        mathCosf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->unk2aa) / gBombPlantSporeAngleHalfPeriod);
 }
 
 void bombplantspore_updateDrift(void* obj, void* state)
@@ -215,10 +215,10 @@ void bombplantspore_updateDrift(void* obj, void* state)
 
     ((BombPlantSporeState*)state)->driftBaseX =
         ((BombPlantSporeState*)state)->unk278 *
-        mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2a8) / lbl_803E539C);
+        mathSinf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->unk2a8) / gBombPlantSporeAngleHalfPeriod);
     ((BombPlantSporeState*)state)->driftBaseZ =
         ((BombPlantSporeState*)state)->unk278 *
-        mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState*)state)->unk2a8) / lbl_803E539C);
+        mathCosf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->unk2a8) / gBombPlantSporeAngleHalfPeriod);
 }
 #pragma dont_inline reset
 
@@ -316,13 +316,13 @@ void bombplantspore_update(void* obj)
         }
         *(s16*)obj += state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
-        if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E53E4)
+        if (((GameObject*)obj)->anim.velocityY < *(f32*)&gBombPlantSporeMinVelocityY)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E53E4;
+            ((GameObject*)obj)->anim.velocityY = gBombPlantSporeMinVelocityY;
         }
         if (((GameObject*)obj)->anim.velocityY > lbl_803E5394)
         {
-            ((GameObject*)obj)->anim.velocityY *= lbl_803E53E8;
+            ((GameObject*)obj)->anim.velocityY *= gBombPlantSporeVelocityDamping;
         }
         if (((GameObject*)obj)->anim.velocityY < lbl_803E5394)
         {
@@ -337,8 +337,8 @@ void bombplantspore_update(void* obj)
         state->spinTimer -= timeDelta;
         if (state->spinTimer <= lbl_803E5394)
         {
-            state->driftSin *= lbl_803E53E8;
-            state->driftCos *= lbl_803E53E8;
+            state->driftSin *= gBombPlantSporeVelocityDamping;
+            state->driftCos *= gBombPlantSporeVelocityDamping;
             state->spinTimer = lbl_803E5394;
         }
         else

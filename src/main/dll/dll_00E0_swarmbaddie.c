@@ -47,9 +47,9 @@ extern f32 lbl_803E268C;
 extern f32 lbl_803E2690;
 extern f32 lbl_803E2694;
 extern f32 lbl_803E2698;
-extern f32 lbl_803E269C;
-extern f32 lbl_803E26A0;
-extern f32 lbl_803E26A4;
+extern f32 gSwarmBaddieDegToAngle;
+extern f32 gSwarmBaddiePi;
+extern f32 gSwarmBaddieS16AngleScale;
 extern f32 lbl_803E26B0;
 extern f32 lbl_803E26B4;
 extern f32 lbl_803E26B8;
@@ -59,7 +59,7 @@ extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
-extern int lbl_803DDA60;
+extern int gSwarmBaddieLastCurvePoint;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -160,14 +160,14 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
 
     curve = state->curve;
     done = Curve_AdvanceAlongPath(curve, state->curveStep);
-    if (((done != 0) || (*(int*)(curve + 0x10) != lbl_803DDA60)) &&
+    if (((done != 0) || (*(int*)(curve + 0x10) != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678,
                                           &lbl_803DBC78, -1) != 0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
-    lbl_803DDA60 = *(int*)(curve + 0x10);
+    gSwarmBaddieLastCurvePoint = *(int*)(curve + 0x10);
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         step = lbl_803E267C;
@@ -228,12 +228,12 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
     state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
 
     ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E2698 *
-        (lbl_803E269C *
-            mathSinf((lbl_803E26A0 * state->yawWavePhase) / lbl_803E26A4)));
+        (gSwarmBaddieDegToAngle *
+            mathSinf((gSwarmBaddiePi * state->yawWavePhase) / gSwarmBaddieS16AngleScale)));
 
     ((GameObject*)obj)->anim.rotZ += (s16)(lbl_803E2698 *
-        (lbl_803E269C *
-            mathSinf((lbl_803E26A0 * state->rollWavePhase) / lbl_803E26A4)));
+        (gSwarmBaddieDegToAngle *
+            mathSinf((gSwarmBaddiePi * state->rollWavePhase) / gSwarmBaddieS16AngleScale)));
 }
 
 void swarmbaddie_update(int obj)
@@ -267,9 +267,9 @@ void swarmbaddie_update(int obj)
     }
     volume = state->hitVolumeEnvelope;
     Sfx_SetObjectChannelVolume(
-        lbl_803E26C0 * mathSinf((lbl_803E26A0 *
+        lbl_803E26C0 * mathSinf((gSwarmBaddiePi *
                 (f32)(state->yawWavePhase + state->rollWavePhase)) /
-            lbl_803E26A4) +
+            gSwarmBaddieS16AngleScale) +
         volume,
         obj, 0x40, (int)(lbl_803E26BC * volume));
     (*gPartfxInterface)->spawnObject((void*)obj, 0x336, NULL, 2, -1,

@@ -18,7 +18,7 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern s16 lbl_80314920[8];
+extern s16 gModgfxFxHwTuning[8];
 extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
 extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
@@ -91,32 +91,32 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         fa = lbl_803E0C10;
         fb = lbl_803E0C14;
         fl = 0x280;
-        lbl_80314920[2] = 800;
+        gModgfxFxHwTuning[2] = 800;
     }
     else if (variant == 6)
     {
         fa = lbl_803E0C18;
         fb = lbl_803E0C1C;
         fl = 100;
-        lbl_80314920[2] = 0x14;
+        gModgfxFxHwTuning[2] = 0x14;
     }
     else if (variant == 7)
     {
         fa = lbl_803E0C20;
         fb = lbl_803E0C24;
         fl = 200;
-        lbl_80314920[1] = 0x14;
-        lbl_80314920[2] = 0x14;
-        lbl_80314920[3] = 0x14;
+        gModgfxFxHwTuning[1] = 0x14;
+        gModgfxFxHwTuning[2] = 0x14;
+        gModgfxFxHwTuning[3] = 0x14;
     }
     else if (variant == 8)
     {
         fa = lbl_803E0C28;
         fb = lbl_803E0C2C;
         fl = 0x41;
-        lbl_80314920[1] = 0x14;
-        lbl_80314920[2] = 0x14;
-        lbl_80314920[3] = 0x14;
+        gModgfxFxHwTuning[1] = 0x14;
+        gModgfxFxHwTuning[2] = 0x14;
+        gModgfxFxHwTuning[3] = 0x14;
     }
     entries = buf.entries;
     entries[0].layer = 0;
@@ -197,13 +197,13 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0;
     buf.count = (e + 1) - entries;
-    buf.hw[0] = lbl_80314920[0];
-    buf.hw[1] = lbl_80314920[1];
-    buf.hw[2] = lbl_80314920[2];
-    buf.hw[3] = lbl_80314920[3];
-    buf.hw[4] = lbl_80314920[4];
-    buf.hw[5] = lbl_80314920[5];
-    buf.hw[6] = lbl_80314920[6];
+    buf.hw[0] = gModgfxFxHwTuning[0];
+    buf.hw[1] = gModgfxFxHwTuning[1];
+    buf.hw[2] = gModgfxFxHwTuning[2];
+    buf.hw[3] = gModgfxFxHwTuning[3];
+    buf.hw[4] = gModgfxFxHwTuning[4];
+    buf.hw[5] = gModgfxFxHwTuning[5];
+    buf.hw[6] = gModgfxFxHwTuning[6];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x10800;
     buf.flags |= flags;
