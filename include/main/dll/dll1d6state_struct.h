@@ -16,7 +16,7 @@ typedef struct Dll1D6State
     s8 dizzyTimer; /* 0x1c */
     u8 flags1D; /* 0x1d: 1 = raised, 2 = armed, 4 = bobbing */
     u8 hitRow; /* 0x1e */
-    u8 slot; /* 0x1f: index into the lbl_803DBF20 slot table */
+    u8 slot; /* 0x1f: index into the gDll1D6SlotInUse slot table */
 } Dll1D6State;
 
 #endif

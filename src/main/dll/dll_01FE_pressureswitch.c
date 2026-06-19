@@ -81,7 +81,7 @@ typedef struct PressureSwitchFlags
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-extern f32 lbl_803E5D78;
+extern f32 gPressureSwitchInitPressOffset;
 extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -136,7 +136,7 @@ void pressureswitch_init(int* obj, u8* init)
     }
     if (GameBit_Get(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - lbl_803E5D78;
+        ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - gPressureSwitchInitPressOffset;
         sub->holdTimer = 0x1e;
     }
 }
@@ -164,13 +164,13 @@ void pressureswitch_update(int obj)
 {
     extern u8 framesThisStep;
     extern f32 timeDelta;
-    extern f32 lbl_803E5D5C;
+    extern f32 gPressureSwitchFarCullDist;
     extern f32 lbl_803E5D60;
-    extern f32 lbl_803E5D64;
+    extern f32 gPressureSwitchTrickyTriggerDist;
     extern f32 lbl_803E5D68;
     extern f32 lbl_803E5D6C;
-    extern f32 lbl_803E5D74;
-    extern f32 lbl_803E5D70;
+    extern f32 gPressureSwitchRiseSpeed;
+    extern f32 gPressureSwitchPressSpeed;
     PressureswitchPlacement* t;
     GameObject* self;
     PressureSwitchState* sub;
@@ -191,7 +191,7 @@ void pressureswitch_update(int obj)
     t = (PressureswitchPlacement*)self->anim.placementData;
     sub = self->extra;
     far = 0;
-    if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) > lbl_803E5D5C)
+    if (Vec_distance(&self->anim.worldPosX, &player->anim.worldPosX) > gPressureSwitchFarCullDist)
     {
         far = 1;
     }
@@ -234,7 +234,7 @@ void pressureswitch_update(int obj)
         ac = self->anim.mapEventSlot;
         if (ac == 11 && (*gMapEventInterface)->getMapAct(ac) == 3 &&
             (tricky = (GameObject*)getTrickyObject()) != NULL &&
-            Vec_distance(&self->anim.worldPosX, &tricky->anim.worldPosX) < lbl_803E5D64)
+            Vec_distance(&self->anim.worldPosX, &tricky->anim.worldPosX) < gPressureSwitchTrickyTriggerDist)
         {
             sub->holdTimer = 5;
         }
@@ -266,7 +266,7 @@ void pressureswitch_update(int obj)
         cur = self->anim.localPosY;
         if (cur < lim)
         {
-            self->anim.localPosY = lbl_803E5D70 * timeDelta + cur;
+            self->anim.localPosY = gPressureSwitchPressSpeed * timeDelta + cur;
             if (self->anim.localPosY > lim)
             {
                 self->anim.localPosY = lim;
@@ -279,7 +279,7 @@ void pressureswitch_update(int obj)
         }
         else
         {
-            self->anim.localPosY = -(lbl_803E5D74 * timeDelta - cur);
+            self->anim.localPosY = -(gPressureSwitchRiseSpeed * timeDelta - cur);
             if (self->anim.localPosY < lim)
             {
                 self->anim.localPosY = lim;
@@ -304,7 +304,7 @@ void pressureswitch_update(int obj)
     {
         if (sub->retriggerTimer == 0)
         {
-            self->anim.localPosY = lbl_803E5D74 * timeDelta + self->anim.localPosY;
+            self->anim.localPosY = gPressureSwitchRiseSpeed * timeDelta + self->anim.localPosY;
             if (self->anim.localPosY > t->restPosY)
             {
                 self->anim.localPosY = t->restPosY;

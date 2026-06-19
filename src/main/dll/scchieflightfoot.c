@@ -24,10 +24,10 @@ extern f32 lbl_803E5468; /* 120.0 phase 1 threshold */
 extern f32 lbl_803E546C; /* 0.5   puff spawn-chance scale */
 extern f32 lbl_803E5470; /* 360.0 phase 2 threshold */
 extern f32 lbl_803E5474; /* 3.0   puff spawn-chance divisor */
-extern f32 lbl_803E5478; /* 0.0009 ground-cloud ramp scale */
+extern f32 gChiefLightfootDustCloudScale; /* 0.0009 ground-cloud ramp scale */
 extern f32 lbl_803E547C; /* 240.0  ground-cloud ramp duration */
 extern f32 lbl_803E5480; /* 420.0 phase 3 threshold */
-extern f32 lbl_803E5484; /* 0.00036 burst-cloud scale */
+extern f32 gChiefLightfootDustBurstScale; /* 0.00036 burst-cloud scale */
 extern f32 lbl_803E5488; /* 480.0 end threshold */
 
 typedef struct SHthorntailDustEffectParams
@@ -83,7 +83,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
             }
             effectParams.radius = 0x28;
             effectParams.flags = 0;
-            effectParams.scale = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
+            effectParams.scale = gChiefLightfootDustCloudScale * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
             (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
             runtime->dustEffectFlags = runtime->dustEffectFlags | SHTHORNTAIL_DUST_FLAG_BURST_READY;
         }
@@ -100,7 +100,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
             {
                 runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_BURST_READY;
                 effectParams.radius = 0x46;
-                effectParams.scale = lbl_803E5484;
+                effectParams.scale = gChiefLightfootDustBurstScale;
                 for (burstCount = DUST_BURST_PUFF_COUNT; (u8)burstCount != 0; burstCount--)
                 {
                     (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);

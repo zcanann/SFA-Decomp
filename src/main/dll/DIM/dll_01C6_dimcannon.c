@@ -41,8 +41,8 @@ extern f32 timeDelta;
 extern int lbl_803DBF10;
 extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;
-extern f32 lbl_803E48F0;
-extern f32 lbl_803DBEF4;
+extern f32 gDimCannonAnimAdvanceSpeed;
+extern f32 gDimCannonAnimAdvanceSpeedCur;
 
 
 
@@ -50,10 +50,10 @@ extern void* objModelGetVecFn_800395d8(void* obj, int target);
 extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
 
-extern u8 lbl_803DBF00;
+extern u8 gDimCannonMaxCharge;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
-extern f32 lbl_803DBF08;
+extern f32 gDimCannonAimStickScale;
 extern f32 lbl_803DBEF8;
 extern f32 lbl_803DBEFC;
 
@@ -381,8 +381,8 @@ void dimcannon_update(int* obj)
         break;
     }
 
-    lbl_803DBEF4 = lbl_803E48F0;
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E48F0, timeDelta, NULL);
+    gDimCannonAnimAdvanceSpeedCur = gDimCannonAnimAdvanceSpeed;
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
 }
 
 int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
@@ -425,7 +425,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             ((DimCannonState*)state)->unkB0 = (s8)(timer - framesThisStep);
             if (((DimCannonState*)state)->unkB0 <= 0)
             {
-                (*gGameUIInterface)->initAirMeter(lbl_803DBF00, 0x5d5);
+                (*gGameUIInterface)->initAirMeter(gDimCannonMaxCharge, 0x5d5);
             }
         }
         else
@@ -435,7 +435,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gGameUIInterface)->showNpcDialogue(0x4b9, 0x14, 0x8c, 1);
                 GameBit_Set(0xdb, 1);
             }
-            delta = (int)(-lbl_803DBF08 * padGetStickX(0));
+            delta = (int)(-gDimCannonAimStickScale * padGetStickX(0));
             if (delta != 0)
             {
                 s16 mag = *(s16*)((char*)vec + 0x2) < 0 ? -*(s16*)((char*)vec + 0x2) : *(s16*)((char*)vec + 0x2);
@@ -490,14 +490,14 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             {
                 Sfx_StopObjectChannel((u32)obj, 2);
             }
-            if (((DimCannonState*)state)->unkAE > lbl_803DBF00)
+            if (((DimCannonState*)state)->unkAE > gDimCannonMaxCharge)
             {
-                ((DimCannonState*)state)->unkAE = lbl_803DBF00;
+                ((DimCannonState*)state)->unkAE = gDimCannonMaxCharge;
             }
             (*gGameUIInterface)->runAirMeter(((DimCannonState*)state)->unkAE);
             ((DimCannonState*)state)->unk98 = (f32)((DimCannonState*)state)->unkAE * lbl_803DBEFC + lbl_803DBEF8;
             if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
-                ((DimCannonState*)state)->unkAE == lbl_803DBF00)
+                ((DimCannonState*)state)->unkAE == gDimCannonMaxCharge)
             {
                 if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
                 {
@@ -542,7 +542,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 }
                 Sfx_StopObjectChannel((u32)obj, 2);
             }
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBEF4, timeDelta, NULL);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, gDimCannonAnimAdvanceSpeedCur, timeDelta, NULL);
         }
     }
     else

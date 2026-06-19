@@ -73,10 +73,10 @@ extern f32 lbl_803E5890;
 extern f32 lbl_803E5894;
 extern f32 lbl_803E5898;
 extern f32 lbl_803E589C;
-extern f32 lbl_803E58A0;
-extern f32 lbl_803E58A4;
+extern f32 gSbShipGunCannonballSpeedBoost;
+extern f32 gSbShipGunFireCameraShakeMagnitude;
 extern f32 lbl_803E58A8;
-extern f32 lbl_803E58AC;
+extern f32 gSbShipGunNearSfxRangeThreshold;
 
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
@@ -341,7 +341,7 @@ void SB_ShipGun_update(int obj)
                     *(float*)(spawned + 0x12) = fdx * posX;
                     *(float*)(spawned + 0x14) = fdy * posX;
                     *(float*)(spawned + 0x16) = fdz * posX;
-                    boost = lbl_803E58A0;
+                    boost = gSbShipGunCannonballSpeedBoost;
                     *(float*)(spawned + 6) = boost * *(float*)(spawned + 0x12) + *(float*)(spawned + 6);
                     *(float*)(spawned + 8) = boost * *(float*)(spawned + 0x14) + *(float*)(spawned + 8);
                     *(float*)(spawned + 10) = boost * *(float*)(spawned + 0x16) + *(float*)(spawned + 10);
@@ -349,7 +349,7 @@ void SB_ShipGun_update(int obj)
                     *(u32*)(spawned + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
                     *(int*)(spawned + 0x7c) = *state;
                     Camera_EnableViewYOffset();
-                    CameraShake_SetAllMagnitudes(lbl_803E58A4);
+                    CameraShake_SetAllMagnitudes(gSbShipGunFireCameraShakeMagnitude);
                     Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
                     ((SBShipGunState*)state)->volleyCount += 1;
                     if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
@@ -441,7 +441,7 @@ void SB_ShipGun_update(int obj)
         if (*(char*)&((SBShipGunState*)state)->health == '\0')
         {
             dist = Vec_distance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-            if (dist < lbl_803E58AC)
+            if (dist < gSbShipGunNearSfxRangeThreshold)
             {
                 Sfx_PlayFromObject(obj, SB_SHIPGUN_RANGE_NEAR_ANIM);
             }

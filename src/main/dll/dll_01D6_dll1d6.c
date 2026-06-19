@@ -111,10 +111,10 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern u32 FUN_800067c0();
 extern const f32 lbl_803E4A78;
-extern u8 lbl_803DBF20;
+extern u8 gDll1D6SlotInUse;
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
 extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-extern s16 lbl_803DBF18;
+extern s16 gDll1D6SlotTabIndex;
 extern f32 lbl_803E4A88;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern const f32 lbl_803E4A7C;
@@ -225,7 +225,7 @@ void dll_1D6_free(int* obj)
     }
     mm_free(state->bufA);
     mm_free(state->bufB);
-    (&lbl_803DBF20)[state->slot] = 0;
+    (&gDll1D6SlotInUse)[state->slot] = 0;
 }
 
 void dim2pathgenerator_init(int* obj, int* def);
@@ -261,18 +261,18 @@ void dll_1D6_init(int* obj, u8* params)
     extra->flags1D = GameBit_Get(496) ? 2 : 0;
     for (i = 0; i < 4; i++)
     {
-        if ((&lbl_803DBF20)[i] == 0)
+        if ((&gDll1D6SlotInUse)[i] == 0)
         {
-            (&lbl_803DBF20)[i] = 1;
+            (&gDll1D6SlotInUse)[i] = 1;
             extra->slot = i;
             i = 4;
         }
     }
     extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, 12, (&lbl_803DBF18)[extra->slot] * 40, 40);
+    getTabEntry(extra->bufA, 12, (&gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
     extra->bufB = mmAlloc(40, 18, 0);
     getTabEntry(extra->bufB, 12,
-                ((&lbl_803DBF18)[extra->slot] + 1) * 40, 40);
+                ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 

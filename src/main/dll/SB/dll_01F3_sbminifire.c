@@ -1,7 +1,7 @@
 /*
  * sbminifire (DLL 0x1F3) - the small fire/spark projectile spawned during
  * the ShipBattle (SB) set. At init it picks a randomised launch velocity,
- * a cycling resource variant (lbl_803DC098, 1..3) and plays its spawn
+ * a cycling resource variant (gSbMiniFireResourceVariant, 1..3) and plays its spawn
  * sfx. Each tick it integrates its position, spins, spawns three partfx
  * bursts (a base puff, a velocity-aligned trail and a scaled trail),
  * fades out over its final frames and frees itself when its lifetime
@@ -52,7 +52,7 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern ModgfxInterface** gModgfxInterface;
-extern int lbl_803DC098;
+extern int gSbMiniFireResourceVariant;
 extern f32 lbl_803E592C;
 extern const f32 lbl_803E5948;
 extern f32 lbl_803E594C;
@@ -121,11 +121,11 @@ void SB_MiniFire_init(GameObject* obj)
 
     resource = Resource_Acquire(117, 1);
     (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
-        (int)obj, lbl_803DC098, 0, 0x10002, -1, 0);
-    lbl_803DC098++;
-    if (lbl_803DC098 > 3)
+        (int)obj, gSbMiniFireResourceVariant, 0, 0x10002, -1, 0);
+    gSbMiniFireResourceVariant++;
+    if (gSbMiniFireResourceVariant > 3)
     {
-        lbl_803DC098 = 1;
+        gSbMiniFireResourceVariant = 1;
     }
     Resource_Release(resource);
     Sfx_PlayFromObject((int*)obj, SFXen_ripefruit11);
