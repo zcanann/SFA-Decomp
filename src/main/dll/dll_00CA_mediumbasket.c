@@ -386,7 +386,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
     ((GroundBaddieState*)state)->baddie.unk34D = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D28;
     control = *(int*)&sub->control;
-    *(u8*)(control + 0x44) |= 0xc;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
     noBlend = lbl_803E2D14;
     ((GroundBaddieState*)state)->baddie.animSpeedA = noBlend;
     ((GroundBaddieState*)state)->baddie.animSpeedB = noBlend;
@@ -422,13 +422,13 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
         }
     }
     control = *(int*)&sub->control;
-    *(u8*)(control + 0x44) |= 4;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 4;
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
     {
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
-        *(u8*)(control + 0x44) |= 0x10;
+        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0x10;
     }
-    *(u8*)(control + 0x44) |= 0xc;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
     ((GroundBaddieState*)state)->baddie.animSpeedA = ((GameObject*)obj)->anim.currentMoveProgress;
     return 0;
 }
@@ -468,7 +468,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control = *(int*)&sub->control;
 
-    *(u8*)(control + 0x44) |= 4;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 4;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -480,7 +480,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     {
         control = *(int*)&sub->control;
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~1;
-        *(u8*)(control + 0x44) |= 2;
+        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 2;
         Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
     }
     ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
@@ -649,7 +649,7 @@ int mediumbasket_updateSpinState(int obj, int state)
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     control = *(int*)&sub->control;
-    *(u8*)(control + 0x44) |= 0xc;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
@@ -685,9 +685,9 @@ int mediumbasket_updateImpactHitState(int obj, int state)
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & 0x200) != 0)
     {
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~0x200;
-        *(u8*)(control + 0x44) |= 0x10;
+        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0x10;
     }
-    *(u8*)(control + 0x44) |= 0xc;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 |= 0xc;
     return 0;
 }
 
@@ -812,21 +812,21 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = *(s16*)(control + 4);
-                    *(s16*)(control + 4) += 1;
+                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = *(s16*)(control + 4);
-                    *(s16*)(control + 4) += 1;
+                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
-                if (*(s16*)(control + 4) >= 7)
+                if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
                 {
-                    *(s16*)(control + 4) = 0;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 = 0;
                 }
             }
         }
@@ -865,21 +865,21 @@ int mediumbasket_stateHandlerB07(int obj, int state)
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = *(s16*)(control + 4);
-                    *(s16*)(control + 4) += 1;
+                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = *(s16*)(control + 4);
-                    *(s16*)(control + 4) += 1;
+                    int attackIndex = ((MediumbasketUpdateDropStateState*)control)->unk4;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
-                if (*(s16*)(control + 4) >= 7)
+                if (((MediumbasketUpdateDropStateState*)control)->unk4 >= 7)
                 {
-                    *(s16*)(control + 4) = 0;
+                    ((MediumbasketUpdateDropStateState*)control)->unk4 = 0;
                 }
             }
         }
@@ -961,7 +961,7 @@ void fn_8015CE68(int obj, int state)
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
     ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
-    if ((*(u8*)(control + 0x44) & 2) != 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 2) != 0)
     {
         transformedX = lbl_803E2DA8;
         transformedY = lbl_803E2DAC;
@@ -969,7 +969,7 @@ void fn_8015CE68(int obj, int state)
         Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
         memcpy((void*)(control + 0x38), &transformedX, 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
-        *(u8*)(control + 0x44) |= 1;
+        ((MediumbasketUpdateDropStateState*)control)->unk44 |= 1;
     }
 }
 
@@ -984,13 +984,13 @@ void mediumbasket_updateControlEffects(int obj, int state)
 
     if (((GameObject*)obj)->anim.seqId == 99)
     {
-        *(f32*)(control + 0x28) = lbl_803E2D84;
+        ((MediumbasketUpdateDropStateState*)control)->unk28 = lbl_803E2D84;
         shakeScale = lbl_803E2D88;
     }
     else
     {
         contactScale = lbl_803E2D48;
-        *(f32*)(control + 0x28) = contactScale;
+        ((MediumbasketUpdateDropStateState*)control)->unk28 = contactScale;
         shakeScale = contactScale;
     }
     paletteIndex = 0;
@@ -1003,23 +1003,23 @@ void mediumbasket_updateControlEffects(int obj, int state)
         }
     }
     particleArgs = &lbl_8031FE38[paletteIndex * 3];
-    if ((*(u8*)(control + 0x44) & 1) != 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 1) != 0)
     {
         mediumbasket_spawnContactObject((int*)obj, (int*)control);
-        *(u8*)(control + 0x44) &= ~1;
+        ((MediumbasketUpdateDropStateState*)control)->unk44 &= ~1;
     }
-    if ((*(u8*)(control + 0x44) & 4) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 4) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
     {
         for (i = 0; i < 4; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x56, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    if ((*(u8*)(control + 0x44) & 8) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 8) != 0 && (((GroundBaddieState*)state)->configFlags & 0x40) == 0)
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
     }
-    if ((*(u8*)(control + 0x44) & 0x10) != 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 0x10) != 0)
     {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D88 * shakeScale);
@@ -1028,7 +1028,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x57, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    if ((*(u8*)(control + 0x44) & 0x20) != 0)
+    if ((((MediumbasketUpdateDropStateState*)control)->unk44 & 0x20) != 0)
     {
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E2D8C * shakeScale);
@@ -1041,7 +1041,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
             (*gPartfxInterface)->spawnObject((void*)obj, 0x58, (void*)(control + 0x20), 0x200001, -1, particleArgs);
         }
     }
-    *(u8*)(control + 0x44) = 0;
+    ((MediumbasketUpdateDropStateState*)control)->unk44 = 0;
 }
 
 void mediumbasket_updateTargetMotion(int obj, int sub, int state)
@@ -1050,10 +1050,10 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
     extern int* gBaddieControlInterface; /* #57 */
     int control = *(int*)(sub + 0x40c);
 
-    *(u16*)(control + 0x46) += framesThisStep;
-    if (*(u16*)(control + 0x46) >= 300)
+    ((MediumbasketUpdateDropStateState*)control)->unk46 += framesThisStep;
+    if (((MediumbasketUpdateDropStateState*)control)->unk46 >= 300)
     {
-        *(u16*)(control + 0x46) = randomGetRange(0, 200);
+        ((MediumbasketUpdateDropStateState*)control)->unk46 = randomGetRange(0, 200);
         if (((GroundBaddieState*)state)->baddie.controlMode == 7 || ((GroundBaddieState*)state)->baddie.controlMode ==
             8)
         {
@@ -1115,17 +1115,17 @@ void fn_8015D3C0(int obj, int sub, int state)
     {
         if (*(f32*)control < lbl_803E2DB4)
         {
-            *(s16*)(control + 6) += 1;
+            ((MediumbasketUpdateDropStateState*)control)->unk6 += 1;
         }
         else
         {
-            *(s16*)(control + 6) = 0;
+            ((MediumbasketUpdateDropStateState*)control)->unk6 = 0;
         }
         *(f32*)control = lbl_803E2D14;
-        if ((s8)((GroundBaddieState*)state)->baddie.hitPoints > 0 && *(s16*)(control + 6) >= 2)
+        if ((s8)((GroundBaddieState*)state)->baddie.hitPoints > 0 && ((MediumbasketUpdateDropStateState*)control)->unk6 >= 2)
         {
             ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
-            *(s16*)(control + 6) = 0;
+            ((MediumbasketUpdateDropStateState*)control)->unk6 = 0;
             ((GroundBaddieState*)state)->baddie.substate = 5;
         }
     }
