@@ -44,12 +44,12 @@ extern f32 lbl_803E27A0;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2778;
-extern f32 lbl_803E277C;
+extern f32 gSidekickToyDistToSpeedScale;
 extern f32 lbl_803E2780;
-extern f32 lbl_803E2784;
-extern f32 lbl_803E2788;
-extern f32 lbl_803E278C;
-extern f32 lbl_803E2790;
+extern f32 gSidekickToyAngleWrapNegFull;
+extern f32 gSidekickToyAngleWrapHalf;
+extern f32 gSidekickToyAngleWrapFull;
+extern f32 gSidekickToyAngleWrapNegHalf;
 extern f32 lbl_803E2794;
 extern f32 lbl_803E2798;
 extern f32 lbl_803E279C;
@@ -439,7 +439,7 @@ void fn_80150910(int* obj, u8* state)
             d = lbl_803E2778;
         }
         {
-            f32 spd = (lbl_803E2778 - d) * lbl_803E277C;
+            f32 spd = (lbl_803E2778 - d) * gSidekickToyDistToSpeedScale;
             *(f32*)(state + 0x310) = spd * ((BaddieState*)state)->pathStep;
         }
         if (*(f32*)(state + 0x310) < lbl_803E2780)
@@ -455,17 +455,17 @@ void fn_80150910(int* obj, u8* state)
         }
         delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 -
             (u16)((GameObject*)obj)->anim.rotX);
-        if (delta > lbl_803E2788)
+        if (delta > gSidekickToyAngleWrapHalf)
         {
-            delta = lbl_803E2784 + delta;
+            delta = gSidekickToyAngleWrapNegFull + delta;
         }
-        if (delta < lbl_803E2790)
+        if (delta < gSidekickToyAngleWrapNegHalf)
         {
-            delta = lbl_803E278C + delta;
+            delta = gSidekickToyAngleWrapFull + delta;
         }
         *(f32*)(state + 0x308) =
             (((BaddieState*)state)->pathStep - *(f32*)(state + 0x310)) / lbl_803E274C *
-            (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / lbl_803E278C);
+            (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / gSidekickToyAngleWrapFull);
         if (*(f32*)(state + 0x308) < lbl_803E2754)
         {
             *(f32*)(state + 0x308) = lbl_803E2754;

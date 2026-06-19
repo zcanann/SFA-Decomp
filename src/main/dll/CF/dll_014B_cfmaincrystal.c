@@ -62,12 +62,12 @@ extern void objRenderFn_8003b8f4(f32);
 extern u8 framesThisStep;
 extern f32 lbl_803E4210;
 
-extern int* lbl_803DDB10;
+extern int* gCfMainCrystalObj;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 
 extern void PSVECNormalize(f32 * out, f32 * in);
-extern f32 lbl_803E41D8;
+extern f32 gCfMainCrystalPylonBeamY;
 extern f32 lbl_803E41DC;
 extern f32 lbl_803E41E0;
 extern f32 lbl_803E41E4;
@@ -75,10 +75,10 @@ extern f32 lbl_803E41E8;
 extern f32 lbl_803E41EC;
 extern f32 lbl_803E41F0;
 extern f32 lbl_803E41F4;
-extern f32 lbl_803E41F8;
-extern f32 lbl_803E41FC;
+extern f32 gCfMainCrystalHumVolumeFull;
+extern f32 gCfMainCrystalHumVolumeBase;
 extern f32 lbl_803E4200;
-extern f32 lbl_803E4204;
+extern f32 gCfMainCrystalHumVolumeApproachRate;
 extern void Camera_EnableViewYOffset(void);
 
 /* fn_8019D9F0: main crystal beam update -
@@ -106,19 +106,19 @@ void fn_8019D9F0(int* obj)
         {
         case CFMAINCRYSTAL_MSG_PYLON_1:
             sub->pylonX[0] = ((GameObject*)msgSrc)->anim.localPosX;
-            sub->pylonY[0] = lbl_803E41D8;
+            sub->pylonY[0] = gCfMainCrystalPylonBeamY;
             sub->pylonZ[0] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[0] = 1;
             break;
         case CFMAINCRYSTAL_MSG_PYLON_2:
             sub->pylonX[1] = ((GameObject*)msgSrc)->anim.localPosX;
-            sub->pylonY[1] = lbl_803E41D8;
+            sub->pylonY[1] = gCfMainCrystalPylonBeamY;
             sub->pylonZ[1] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[1] = 1;
             break;
         case CFMAINCRYSTAL_MSG_PYLON_3:
             sub->pylonX[2] = ((GameObject*)msgSrc)->anim.localPosX;
-            sub->pylonY[2] = lbl_803E41D8;
+            sub->pylonY[2] = gCfMainCrystalPylonBeamY;
             sub->pylonZ[2] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[2] = 1;
             break;
@@ -203,15 +203,15 @@ void fn_8019D9F0(int* obj)
                 dir[2] = -dir[2];
                 pay.d = i;
                 (*gPartfxInterface)->spawnObject(obj, 0x7f4, &pay, 2, -1, dir);
-                dir[0] = *(f32*)p32 - ((GameObject*)lbl_803DDB10)->anim.localPosX;
+                dir[0] = *(f32*)p32 - ((GameObject*)gCfMainCrystalObj)->anim.localPosX;
                 dir[1] = lbl_803E41E4;
-                dir[2] = *(f32*)(p32 + 0x20) - ((GameObject*)lbl_803DDB10)->anim.localPosZ;
+                dir[2] = *(f32*)(p32 + 0x20) - ((GameObject*)gCfMainCrystalObj)->anim.localPosZ;
                 PSVECNormalize(dir, dir);
                 pay.x = lbl_803E41E8;
                 pay.y = lbl_803E41DC;
                 pay.z = lbl_803E41E8;
                 pay.d = i + 3;
-                (*gPartfxInterface)->spawnObject(lbl_803DDB10, 0x7f4, &pay, 2, -1, dir);
+                (*gPartfxInterface)->spawnObject(gCfMainCrystalObj, 0x7f4, &pay, 2, -1, dir);
                 pay.x = *(f32*)p32;
                 pay.y = *(f32*)(p32 + 0x10);
                 pay.z = *(f32*)(p32 + 0x20);
@@ -296,14 +296,14 @@ void fn_8019D9F0(int* obj)
         if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x40) == 0)
         {
             Sfx_PlayFromObject((int)obj, SFXsk_planteater11);
-            sub->humVolume = lbl_803E41F8;
+            sub->humVolume = gCfMainCrystalHumVolumeFull;
         }
         else
         {
-            f32 vol = lbl_803E41FC + count / lbl_803E4200;
+            f32 vol = gCfMainCrystalHumVolumeBase + count / lbl_803E4200;
             {
                 f32 d = vol - sub->humVolume;
-                sub->humVolume = d * lbl_803E4204 + sub->humVolume;
+                sub->humVolume = d * gCfMainCrystalHumVolumeApproachRate + sub->humVolume;
             }
             if (sub->charge >= 0x3c)
             {
@@ -376,7 +376,7 @@ void cfmaincrystal_update(int* obj)
                 break;
             }
         }
-        lbl_803DDB10 = obj;
+        gCfMainCrystalObj = obj;
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 0xb6);
         break;
     }

@@ -37,14 +37,14 @@ extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
 extern f32 displayOffsetH_803DEBFC;
 extern f32 CurrTiming_803DEC20;
-extern f32 lbl_803DEC24;
+extern f32 gTexIndMtxScale;
 extern f32 FBSet_803DEC28;
 extern f32 lbl_803DEC2C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DEBB0;
-extern int lbl_803DCE20;
-extern int lbl_803DCE28;
+extern int gTexDimmedLightList;
+extern int gTexBlockLightList;
 extern int lbl_803DCE30;
 extern int* lbl_803DCE34;
 extern int lbl_803DCE68;
@@ -60,16 +60,16 @@ typedef struct TexOverride
     u8 padF;
 } TexOverride;
 
-extern int lbl_802C1E40;
+extern int gTexIndMtxTable;
 extern u8 lbl_8037E0C0[];
 extern u8 lbl_803DB638;
-extern int lbl_803DB63C;
-extern int lbl_803DB640;
-extern s8 lbl_803DB644;
+extern int gTexShaderAmbColor;
+extern int gTexLightmapAmbColor;
+extern s8 gTexIndMtxScaleExp;
 extern int lbl_80382008[5];
 extern FrustumPlane gViewFrustumPlanes[5];
-extern int lbl_803E8444;
-extern int lbl_803E8448;
+extern int gTexShaderFogColor;
+extern int gTexLightmapFogColor;
 
 u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
 {
@@ -194,8 +194,8 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     }
     i = 0;
     k = lbl_803DEC2C;
-    tbl = (u8*)&lbl_802C1E40;
-    k24 = lbl_803DEC24;
+    tbl = (u8*)&gTexIndMtxTable;
+    k24 = gTexIndMtxScale;
     kH = displayOffsetH_803DEBFC;
     for (; i < count; i = i + 1)
     {
@@ -207,7 +207,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
         selectTexture(*(int*)(la + (u8)i * 4), 1);
         m[0][0] = (f32)((u8)i + 1) * k24 * kH;
         m[1][1] = m[0][0];
-        GXSetIndTexMtx(1, (const float (*)[3])m, lbl_803DB644);
+        GXSetIndTexMtx(1, (const float (*)[3])m, gTexIndMtxScaleExp);
         GXCallDisplayList(*(void**)ptr, (u32) * (u16*)(ptr + 4));
     }
 }
@@ -222,7 +222,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     u8 colG;
     u8 colB;
 
-    colorWord = lbl_803E8448;
+    colorWord = gTexLightmapFogColor;
     bitPos = bitReader[4];
     {
         int _off = (int)bitPos >> 3;
@@ -254,7 +254,7 @@ LAB_8005E630:
             }
         }
     }
-    GXSetChanAmbColor(0, *(GXColor*)&lbl_803DB640);
+    GXSetChanAmbColor(0, *(GXColor*)&gTexLightmapAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
@@ -289,11 +289,11 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         (f32)(*(short*)((int)bounds + 0xc) >> 3) + *(float*)((int)blockXform + 0x18) + playerMapOffsetX,
         (f32)(*(short*)((int)bounds + 0xe) >> 3) + *(float*)((int)blockXform + 0x28),
         (f32)(*(short*)((int)bounds + 0x10) >> 3) + *(float*)((int)blockXform + 0x38) + playerMapOffsetZ,
-        (u8*)&lbl_803DCE20, 2, &lightCount);
+        (u8*)&gTexDimmedLightList, 2, &lightCount);
     resetLotsOfRenderVars();
     fn_8004CE0C(i);
     i = 0;
-    lightPtr = &lbl_803DCE20;
+    lightPtr = &gTexDimmedLightList;
     {
         u8* pColorA = &colorA;
         u8* pColorB = &colorB;
@@ -514,7 +514,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     modelLightStruct_selectBrightestAabbLights(x1 + playerMapOffsetX, y1,
                                                                z1 + playerMapOffsetZ, x2 + playerMapOffsetX, y2,
                                                                z2 + playerMapOffsetZ,
-                                                               (u8*)&lbl_803DCE28, 2, &count);
+                                                               (u8*)&gTexBlockLightList, 2, &count);
                 }
                 if ((obj != NULL) &&
                     (((*(u32*)(obj + 0x3c) & 0x800) != 0 || ((*(u32*)(obj + 0x3c) & 0x1000) != 0))))
@@ -537,11 +537,11 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     }
                     else
                     {
-                        modelLightStruct_getDiffuseColor((void*)lbl_803DCE28, &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)lbl_803DCE28, &dOut0, &dOut1, dBig);
-                        modelLightStruct_getRadius((void*)lbl_803DCE28);
+                        modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &c[0], &c[1], &c[2], &c[3]);
+                        modelLightStruct_getPosition((void*)gTexBlockLightList, &dOut0, &dOut1, dBig);
+                        modelLightStruct_getRadius((void*)gTexBlockLightList);
                         fn_8004F6D8(c, &dOut0, g);
-                        p = &lbl_803DCE28 + 1;
+                        p = &gTexBlockLightList + 1;
                         for (i = 1; i < count; i = i + 1)
                         {
                             modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
@@ -562,7 +562,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                 }
                 else
                 {
-                    p = &lbl_803DCE28;
+                    p = &gTexBlockLightList;
                     for (i = 0; i < count; i = i + 1)
                     {
                         modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
@@ -802,7 +802,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
     u8 ambB;
     int fogColorWord;
 
-    fogColorWord = lbl_803E8444;
+    fogColorWord = gTexShaderFogColor;
     uPos = bitReader[4];
     {
         int _off = (int)uPos >> 3;
@@ -904,7 +904,7 @@ LAB_8005F7FC:
             }
         }
     }
-    colorWord = lbl_803DB63C;
+    colorWord = gTexShaderAmbColor;
     GXSetChanAmbColor(0, *(GXColor*)&colorWord);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {

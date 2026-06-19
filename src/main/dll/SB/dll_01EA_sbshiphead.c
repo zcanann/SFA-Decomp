@@ -43,17 +43,17 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
-extern u8 lbl_803DC090;
-extern int lbl_803DDC48;
+extern u8 gSbShipHeadHasFiredFireball;
+extern int gSbShipHeadPrevGalleonPhase;
 extern f32 lbl_803E5834;
-extern f32 lbl_803E5840;
+extern f32 gSbShipHeadHissSfxDistance;
 extern f32 lbl_803E5844;
 extern f32 lbl_803E5848;
 extern f32 lbl_803E584C;
-extern f32 lbl_803E5850;
+extern f32 gSbShipHeadFireballSpeed;
 extern f32 lbl_803E5854;
 extern f32 lbl_803E5858;
-extern f32 lbl_803E585C;
+extern f32 gSbShipHeadAnimAdvanceRate;
 extern f32 sqrtf(f32);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
@@ -149,7 +149,7 @@ void SB_ShipHead_update(int obj)
         camState = DBprotection_getCameraState(getSbGalleon());
         if (camState == 2)
         {
-            if (Vec_distance((void*)(player + 0x18), &o->anim.worldPosX) < lbl_803E5840)
+            if (Vec_distance((void*)(player + 0x18), &o->anim.worldPosX) < gSbShipHeadHissSfxDistance)
             {
                 Sfx_PlayFromObject(obj, SFXfend_rob_armin);
             }
@@ -213,16 +213,16 @@ void SB_ShipHead_update(int obj)
                 o->unkF4 = 0;
             }
         }
-        if ((galleonPhase == 5) && (lbl_803DDC48 != 5))
+        if ((galleonPhase == 5) && (gSbShipHeadPrevGalleonPhase != 5))
         {
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E5834, 0);
-            lbl_803DC090 = 0;
+            gSbShipHeadHasFiredFireball = 0;
         }
         if ((((o->anim.currentMove == 1) && (o->anim.
                 currentMoveProgress >= lbl_803E5844))
-            && (lbl_803DC090 == 0)) && (Obj_IsLoadingLocked() != 0))
+            && (gSbShipHeadHasFiredFireball == 0)) && (Obj_IsLoadingLocked() != 0))
         {
-            lbl_803DC090 = 1;
+            gSbShipHeadHasFiredFireball = 1;
             o->unkF4 = o->unkF4 + framesThisStep;
             Sfx_PlayFromObject(obj, SFXen_scrap1_c);
             o->anim.localPosY = o->anim.localPosY + lbl_803E5848;
@@ -240,9 +240,9 @@ void SB_ShipHead_update(int obj)
             ((ObjPlacement*)setup)->posZ = pz;
             proj = Obj_SetupObject(setup, 5, -1, -1, 0);
             ddx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)proj)->anim.localPosX;
-            ddy = (((GameObject*)player)->anim.worldPosY - lbl_803E5850) - ((GameObject*)proj)->anim.localPosY;
+            ddy = (((GameObject*)player)->anim.worldPosY - gSbShipHeadFireballSpeed) - ((GameObject*)proj)->anim.localPosY;
             ddz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)proj)->anim.localPosZ;
-            s = lbl_803E5850 / sqrtf(ddz * ddz + (ddx * ddx + ddy * ddy));
+            s = gSbShipHeadFireballSpeed / sqrtf(ddz * ddz + (ddx * ddx + ddy * ddy));
             ((GameObject*)proj)->anim.velocityX = ddx * s;
             ((GameObject*)proj)->anim.velocityY = ddy * s;
             ((GameObject*)proj)->anim.velocityZ = ddz * s;
@@ -269,12 +269,12 @@ void SB_ShipHead_update(int obj)
             setup[7] = 0xff;
             Obj_SetupObject(setup, 5, -1, -1, 0);
         }
-        proj = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E585C, timeDelta, NULL);
+        proj = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, gSbShipHeadAnimAdvanceRate, timeDelta, NULL);
         if ((o->anim.currentMove == 1) && (proj != 0))
         {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E5834, 0);
         }
-        lbl_803DDC48 = galleonPhase;
+        gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
 
 int SB_ShipHead_getExtraSize(void) { return sizeof(SBShipHeadState); }

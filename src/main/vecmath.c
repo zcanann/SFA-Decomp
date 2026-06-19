@@ -7,7 +7,7 @@ extern f32 timeDelta;
 extern double lbl_803DE7D8;
 extern float fcos16(int angle);
 extern f32 sqrtf(f32 x);
-extern f32 lbl_803DE7D0;
+extern f32 gVecMathAngleScale;
 extern f32 lbl_803DE808;
 extern f32 lbl_803DE80C;
 extern f32 lbl_803DE7C0;
@@ -22,7 +22,7 @@ extern f32 fsin16(int angle);
 extern f32 lbl_803DE7F0;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern f32 lbl_803DE7E8;
+extern f32 gVecMathPi;
 extern f32 lbl_803DE7EC;
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
@@ -111,7 +111,7 @@ void mtx44ScaleRow1(u8* p, f32 s)
 
 int cos16(u16 angle)
 {
-    return (int)(lbl_803DE7D0 * fcos16(angle));
+    return (int)(gVecMathAngleScale * fcos16(angle));
 }
 
 f32 Vec3_Length(f32* v)
@@ -352,17 +352,17 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     f32 z;
     f32 zero;
 
-    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)transform));
+    c = (f32)(int)(gVecMathAngleScale * fcos16((u16) * (s16*)transform));
     cx = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)transform));
+    c = (f32)(int)(gVecMathAngleScale * fsin16((u16) * (s16*)transform));
     sx = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)((u8*)transform + 2)));
+    c = (f32)(int)(gVecMathAngleScale * fcos16((u16) * (s16*)((u8*)transform + 2)));
     cy = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)((u8*)transform + 2)));
+    c = (f32)(int)(gVecMathAngleScale * fsin16((u16) * (s16*)((u8*)transform + 2)));
     sy = c * lbl_803DE7F0;
-    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)((u8*)transform + 4)));
+    cz = (f32)(int)(gVecMathAngleScale * fcos16((u16) * (s16*)((u8*)transform + 4)));
     cz = cz * lbl_803DE7F0;
-    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)((u8*)transform + 4)));
+    sz = (f32)(int)(gVecMathAngleScale * fsin16((u16) * (s16*)((u8*)transform + 4)));
     sz = sz * lbl_803DE7F0;
 
     t1 = cy * cz;
@@ -546,28 +546,28 @@ void vecRotateYXZ(s16* a, f32* v)
     y = v[1];
     z = v[2];
 
-    c = mathSinf((lbl_803DE7E8 * a[0]) / lbl_803DE7EC);
+    c = mathSinf((gVecMathPi * a[0]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = z * c;
-    c = mathCosf((lbl_803DE7E8 * a[0]) / lbl_803DE7EC);
+    c = mathCosf((gVecMathPi * a[0]) / lbl_803DE7EC);
     x *= c;
     z *= c;
     x += s2;
     z -= s1;
 
-    c = mathSinf((lbl_803DE7E8 * a[1]) / lbl_803DE7EC);
+    c = mathSinf((gVecMathPi * a[1]) / lbl_803DE7EC);
     s1 = y * c;
     s2 = z * c;
-    c = mathCosf((lbl_803DE7E8 * a[1]) / lbl_803DE7EC);
+    c = mathCosf((gVecMathPi * a[1]) / lbl_803DE7EC);
     y *= c;
     z *= c;
     y -= s2;
     z += s1;
 
-    c = mathSinf((lbl_803DE7E8 * a[2]) / lbl_803DE7EC);
+    c = mathSinf((gVecMathPi * a[2]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = y * c;
-    c = mathCosf((lbl_803DE7E8 * a[2]) / lbl_803DE7EC);
+    c = mathCosf((gVecMathPi * a[2]) / lbl_803DE7EC);
     x *= c;
     y *= c;
     x -= s2;
@@ -619,9 +619,9 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
     extern f32 __kernel_sin(f32);
     extern f32 __kernel_cos(f32, f32);
-    extern f32 lbl_803DE7C8;
-    extern f32 lbl_803DE7CC;
-    extern f32 lbl_803DE7D4;
+    extern f32 gVecMathHalfPi;
+    extern f32 gVecMathNegHalfPi;
+    extern f32 gVecMathTwoPi;
     f32 cross[3];
     f32 sinp;
     f32 c0;
@@ -641,9 +641,9 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     b1 = b[1];
     a2 = a[2];
     sinp = __kernel_sin(-b[2]);
-    if (sinp < lbl_803DE7C8)
+    if (sinp < gVecMathHalfPi)
     {
-        if (sinp > lbl_803DE7CC)
+        if (sinp > gVecMathNegHalfPi)
         {
             roll = __kernel_cos(c2, a2);
             yaw = __kernel_cos(b0, b1);
@@ -660,7 +660,7 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     {
         f32 d;
         f32 s;
-        *out0 = (s = lbl_803DE7D0) * yaw / (d = lbl_803DE7D4);
+        *out0 = (s = gVecMathAngleScale) * yaw / (d = gVecMathTwoPi);
         *out1 = s * sinp / d;
         *out2 = s * roll / d;
     }
