@@ -1147,14 +1147,16 @@ void mapLoadForObject(int p1, char* p2)
 
 int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {
-    char* base = (char*)lbl_803DCE68;
+    char* base;
     char* e;
     int idx;
     int slot;
     f32 init;
 
+    idx = 0;
+    base = (char*)lbl_803DCE68;
     e = base;
-    for (idx = 0; idx < 0x3a; idx++)
+    for (; idx < 0x3a; idx++)
     {
         if (*(s16*)(e + 8) == xStep && *(s16*)(e + 0xa) == yStep)
         {
