@@ -228,7 +228,7 @@ void CameraModeArwing_update(u8* obj)
             (f32)((GameObject*)obj)->anim.rotZ;
         d = 0x8000 - (u16)getAngle(va, vc);
         pitch0 = (u16)getAngle(vb, vd);
-        d -= (u16) * (s16*)obj;
+        d -= (u16)((GameObject*)obj)->anim.rotX;
         if (d > 0x8000)
         {
             d -= 0xffff;
@@ -271,7 +271,7 @@ void CameraModeArwing_update(u8* obj)
             d += 0xffff;
         }
         ((GameObject*)obj)->anim.rotZ = (f32)d * timeDelta * lbl_803E1BAC + (f32)((GameObject*)obj)->anim.rotZ;
-        d = yaw0 - (u16) * (s16*)obj;
+        d = yaw0 - (u16)((GameObject*)obj)->anim.rotX;
         if (d > 0x8000)
         {
             d -= 0xffff;
