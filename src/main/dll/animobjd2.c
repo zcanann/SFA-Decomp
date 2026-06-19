@@ -158,12 +158,12 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
 
     *(f32*)&((TrickyState*)p2)->unk708 =
         (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosX -
-        lbl_803E24D4 * fsin16Precise((u16) * (s32*)&((TrickyState*)p2)->unk704);
+        lbl_803E24D4 * fsin16Precise((u16) * &((TrickyState*)p2)->unk704);
     *(f32*)&((TrickyState*)p2)->unk70C =
         (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosY;
     ((TrickyState*)p2)->unk710 =
         (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosZ -
-        lbl_803E24D4 * fcos16Precise((u16) * (s32*)&((TrickyState*)p2)->unk704);
+        lbl_803E24D4 * fcos16Precise((u16) * &((TrickyState*)p2)->unk704);
 
     if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0)
     {
@@ -524,7 +524,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             void* found = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
             if (found != NULL && ((GameObject*)found)->anim.seqId == 0x6a3)
             {
-                t = (int*)found;
+                t = found;
             }
             else
             {
@@ -556,7 +556,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                         if (d2 - d4 > bestd)
                         {
                             bestd = d2 - d4;
-                            best = (int*)list[0];
+                            best = list[0];
                         }
                     }
                     list++;

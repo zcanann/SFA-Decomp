@@ -558,7 +558,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     t = ObjGroup_FindNearestObject(0x4c, obj, 0);
                     if ((void*)t != NULL)
                     {
-                        timer_addDuration(t, (u32)p[3] * 0x3c);
+                        timer_addDuration(t, p[3] * 0x3c);
                     }
                     break;
                 case 0x14:
@@ -919,7 +919,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->unk82 != -1 && (u32)GameBit_Get(((TriggerState*)state)->unk82) == 0u)
+                    if (((TriggerState*)state)->unk82 != -1 && GameBit_Get(((TriggerState*)state)->unk82) == 0u)
                     {
                         ok2 = 0;
                     }

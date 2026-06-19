@@ -269,7 +269,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
-        spread.f8 = (s16)randomGetRange(-10000, 10000);
+        spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
@@ -286,7 +286,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         break;
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
-        *(s8*)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
+        *(s8*)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -333,7 +333,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
-        spread.f8 = (s16)randomGetRange(-10000, 10000);
+        spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
@@ -350,7 +350,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         break;
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
-        *(s8*)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
+        *(s8*)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -397,7 +397,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
-        spread.f8 = (s16)randomGetRange(-10000, 10000);
+        spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
@@ -481,7 +481,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
-        spread.f8 = (s16)randomGetRange(-10000, 10000);
+        spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)
         getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
@@ -644,7 +644,7 @@ void objThrowFn_80182504(int obj)
     int extra;
     short* player;
     extra = *(int*)&((GameObject*)obj)->extra;
-    player = (short*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     ((SmallbasketState*)extra)->unk6 = 0;
     ((SmallbasketState*)extra)->unk5 = 0;
     ((SmallbasketState*)extra)->unk9 = 1;
@@ -657,7 +657,7 @@ void objThrowFn_80182504(int obj)
     local.fc = 0;
     local.fa = 0;
     local.f8 = *player;
-    vecRotateZXY(&local.f8, (void*)&((GameObject*)obj)->anim.velocityX);
+    vecRotateZXY(&local.f8, &((GameObject*)obj)->anim.velocityX);
 }
 
 void smallbasket_render(int obj, int param_2, int param_3, int param_4,
@@ -981,7 +981,7 @@ void smallbasket_update(int obj)
                         {
                             blk.h0 = blk.h0 + **(s16**)(player + 0x30);
                         }
-                        vecRotateZXY(&blk, (void*)&((GameObject*)obj)->anim.velocityX);
+                        vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                     }
                     else if (fn_802966B4(player) != 0)
@@ -1009,7 +1009,7 @@ void smallbasket_update(int obj)
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = ((GameObject*)player)->anim.rotX;
-                        vecRotateZXY(&blk, (void*)&((GameObject*)obj)->anim.velocityX);
+                        vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                         ((CfperchState*)state)->unk6 = 0;
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;

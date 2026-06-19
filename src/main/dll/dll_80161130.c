@@ -278,7 +278,7 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     d = r;
     a.x = r;
     {
-        int ang = (s16)getAngle(a.y, (f32)d);
+        int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
@@ -368,7 +368,7 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
     d = r;
     a.x = r;
     {
-        int ang = (s16)getAngle(a.y, (f32)d);
+        int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
     }
     return 0;
@@ -410,7 +410,7 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
     d = r;
     a.x = r;
     {
-        int ang = (s16)getAngle(a.y, (f32)d);
+        int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
@@ -456,7 +456,7 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     d = r;
     a.x = r;
     {
-        int ang = (s16)getAngle(a.y, (f32)d);
+        int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')

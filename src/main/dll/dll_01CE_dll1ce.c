@@ -56,7 +56,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
  * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
  * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
  * every consumer keeps raw derefs - retyping the state local (or adding
- * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
+ *  casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
  * (recipe #36/#77); the layout is documented here for a future pass.
  */
 
@@ -137,7 +137,7 @@ void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
     state = *(int *)&((GameObject *)obj)->extra;
     slotIdx = *(u8*)(state + 0xa58);
     *(u8*)(state + 0xa58) = slotIdx + 1;
-    slotOff = (u32)slotIdx * 0x30;
+    slotOff = slotIdx * 0x30;
     *(float*)(state + slotOff) = (float)param_2;
     slot = state + slotOff;
     *(float*)(slot + 4) = (float)param_3;
@@ -185,17 +185,17 @@ void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
     FUN_80006824(obj, SFXthorntail_annoyed2);
 LAB_801b44d4:
     obj = randomGetRange(0, 0xffff);
-    *(short*)(state + slotOff + 0x28) = (short)obj;
+    *(short*)(state + slotOff + 0x28) = obj;
     obj = randomGetRange(200, 300);
     lifetime = state + slotOff;
-    *(short*)(lifetime + 0x2a) = (short)obj;
+    *(short*)(lifetime + 0x2a) = obj;
     obj = randomGetRange(0, 1);
     if (obj != 0)
     {
         *(short*)(lifetime + 0x2a) = -*(short*)(lifetime + 0x2a);
     }
     obj = randomGetRange(0, 3);
-    *(char*)(state + slotOff + 0x2c) = (char)obj;
+    *(char*)(state + slotOff + 0x2c) = obj;
     prevVal = (double)*(float*)(slot + 0x1c);
     scale = (double)FUN_802924b4();
     *(float*)(slot + 0xc) =
@@ -207,7 +207,7 @@ LAB_801b44d4:
     *(char*)(state + 0x2e) =
         (char)(int)-(float)((double)lbl_803DE7EC * (double)(float)((double)lbl_803E55D0 * scale)
             - (double)lbl_803E55D0);
-    *(int*)(state + 0x20) = (int)lbl_803E55D8;
+    *(int*)(state + 0x20) = lbl_803E55D8;
     *(u32*)(state + 0x24) = *(u32*)(state + 0x20);
     *(u8*)(state + 0x2f) = 1;
     FUN_80286888();
@@ -274,7 +274,7 @@ void fn_explosion_release_v11_unused(u32 param_1)
     }
     else
     {
-        count = (u32)((GameObject*)param_1)->anim.alpha + (u32)DAT_803dc070 * -0x10;
+        count = (u32)((GameObject*)param_1)->anim.alpha + DAT_803dc070 * -0x10;
         if (count < 0)
         {
             count = 0;
@@ -305,7 +305,7 @@ void FUN_801b5b8c(void)
     obj = (int)((u64)objHandle >> 0x20);
     model = (int*)FUN_80017a54(obj);
     modelData = *model;
-    for (i = 0; vtxCount = (u32) * (u16*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
+    for (i = 0; vtxCount = (u32) * (u16*)(modelData + 0xe4), i < vtxCount; i = i + 1)
     {
         outVtx = (u16*)FUN_80017944((int)model, i);
         srcVtx = (short*)FUN_80017924(modelData, i);
@@ -353,18 +353,18 @@ void FUN_801b5d00(int param_1, int param_2)
     {
         *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
     }
-    phase = (u32) * (u16*)(param_2 + 0x60) + (u32)DAT_803dc070 * 0x100;
+    phase = (u32) * (u16*)(param_2 + 0x60) + DAT_803dc070 * 0x100;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x60) = (short)phase;
-    phase = (u32) * (u16*)(param_2 + 0x62) + (u32)DAT_803dc070 * 0x80;
+    *(short*)(param_2 + 0x60) = phase;
+    phase = (u32) * (u16*)(param_2 + 0x62) + DAT_803dc070 * 0x80;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x62) = (short)phase;
+    *(short*)(param_2 + 0x62) = phase;
     return;
 }
 

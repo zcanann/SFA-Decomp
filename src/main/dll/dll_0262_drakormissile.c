@@ -433,10 +433,10 @@ void drakormissile_init(int obj, char* arg)
     *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) = lbl_803E695C;
     for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
     {
-        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW) = (u16)randomGetRange(-0x7fff, 0x7fff);
-        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP) = (u16)randomGetRange(-0x400, 0x400);
-        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH) = (u16)randomGetRange(-0x7fff, 0x7fff);
-        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP) = (u16)randomGetRange(-0x400, 0x400);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW) = randomGetRange(-0x7fff, 0x7fff);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP) = randomGetRange(-0x400, 0x400);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH) = randomGetRange(-0x7fff, 0x7fff);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP) = randomGetRange(-0x400, 0x400);
         p += 2;
     }
 }

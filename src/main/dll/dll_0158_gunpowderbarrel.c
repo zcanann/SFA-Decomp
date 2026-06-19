@@ -739,7 +739,7 @@ void gunpowderbarrel_update(int obj)
         state->fuseFrames += framesThisStep;
         state->hitRadius = state->radiusGrowthPerFrame * (f32)(u32)
         state->fuseFrames + lbl_803E42DC;
-        ObjHitbox_SetCapsuleBounds(obj, (s32)state->hitRadius,
+        ObjHitbox_SetCapsuleBounds(obj, state->hitRadius,
                                    (s32)(-state->hitRadius * lbl_803E4328),
                                    (s32)(state->hitRadius * lbl_803E4328));
         if (*(void* *)&state->linkedTimerObject != NULL)
@@ -1069,7 +1069,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(0x3a, obj, (f32*)0);
+            target = ObjGroup_FindNearestObject(0x3a, obj, 0);
         }
         if ((void*)target != NULL)
         {
@@ -1104,7 +1104,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     char* player;
     char* near;
     f32 radius = lbl_803E42E0;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     near = (char*)ObjGroup_FindNearestObject(0x1e, (u32)obj, &radius);
     if (near == NULL)
     {
@@ -1161,7 +1161,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         }
         else
         {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotY * (rate * (f32)v);
+            t = (f32)(u16)((GameObject*)obj)->anim.rotY * (rate * v);
         }
         ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY + t;
     }
@@ -1175,7 +1175,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         }
         else
         {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotZ * (rate * (f32)w);
+            t = (f32)(u16)((GameObject*)obj)->anim.rotZ * (rate * w);
         }
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
     }

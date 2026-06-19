@@ -414,7 +414,7 @@ int fn_80152370(int obj, int p2)
     Obj_GetPlayerObject(); /* result discarded but the call is in target asm */
     if (Obj_IsLoadingLocked() == 0) return 0;
     setup = Obj_AllocObjectSetup(36, p2);
-    *(s16*)(setup + 0) = (s16)p2;
+    *(s16*)(setup + 0) = p2;
     *(u8*)(setup + 4) = *(u8*)(sub + 4);
     *(u8*)(setup + 6) = *(u8*)(sub + 6);
     *(u8*)(setup + 5) = 1;

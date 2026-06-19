@@ -115,7 +115,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_
     {
         *(float*)(cameraAddr + 0x74) = lbl_803E1688;
         *(s8*)(cameraAddr + 0x84) = -1;
-        *(s8*)(cameraAddr + 0x88) = (s8)param_3;
+        *(s8*)(cameraAddr + 0x88) = param_3;
         res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
         camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;
@@ -279,7 +279,7 @@ void camslide_update(CameraObject* camera, GameObject* target)
     if (target->anim.classId == 1)
     {
         state = (CamSlideObjectState*)target->extra;
-        angle = getAngle((f64)velX, (f64)velZ);
+        angle = getAngle((f64)velX, velZ);
         rot.angles[0] = (s16)(0x8000 - angle);
         rot.angles[1] = 0;
         rot.angles[2] = 0;
@@ -288,9 +288,9 @@ void camslide_update(CameraObject* camera, GameObject* target)
         rot.unk10 = lbl_803E16AC;
         rot.unk14 = lbl_803E16AC;
         mtxRotateByVec3s(mtx, rot.angles);
-        Matrix_TransformPoint(mtx, (f64)state->vectorX, (f64)state->vectorY,
-                              (f64)state->vectorZ, &outX, &outY, &outZ);
-        angle = getAngle((f64)outY, (f64)outZ);
+        Matrix_TransformPoint(mtx, state->vectorX, state->vectorY,
+                              state->vectorZ, &outX, &outY, &outZ);
+        angle = getAngle((f64)outY, outZ);
         gCamcontrolModeSettings->slideAngle +=
             (int)(framesThisStep * ((0x4000 - (angle & 0xffff)) -
                 gCamcontrolModeSettings->slideAngle)) >> 5;
@@ -304,12 +304,12 @@ void camslide_update(CameraObject* camera, GameObject* target)
     if (cur < 0)
     {
         slide = gCamcontrolModeSettings->slideLeftAmount *
-            mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
+            mathSinf((lbl_803E168C * cur) / lbl_803E1690);
     }
     else if (cur > 0)
     {
         slide = gCamcontrolModeSettings->slideRightAmount *
-            mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
+            mathSinf((lbl_803E168C * cur) / lbl_803E1690);
     }
     else
     {
@@ -435,8 +435,8 @@ void camslide_update(CameraObject* camera, GameObject* target)
     {
         step = lbl_803E16AC;
     }
-    approach = interpolate((f64)step, (f64)gCamcontrolModeSettings->heightAdjustRate,
-                           (f64)timeDelta);
+    approach = interpolate((f64)step, gCamcontrolModeSettings->heightAdjustRate,
+                           timeDelta);
     step = approach;
     if ((f32)approach > lbl_803E16E8 && (f32)approach < lbl_803E16F4)
     {
@@ -474,7 +474,7 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 
     v = getAngle((f64)(camera->anim.worldPosY -
         (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff;
-    v -= (u32)camera->anim.rotY & 0xffff;
+    v -= camera->anim.rotY & 0xffff;
     if (v > 0x8000)
     {
         v -= 0xffff;
@@ -484,8 +484,8 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
         v += 0xffff;
     }
     d = interpolate((f64)(f32)v,
-                    (f64)(lbl_803E16A4 / (f32)gCamcontrolModeSettings->yawResponseFrames),
-                    (f64)timeDelta);
+                    (f64)(lbl_803E16A4 / gCamcontrolModeSettings->yawResponseFrames),
+                    timeDelta);
     camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
 }
 
@@ -624,7 +624,7 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
     gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
     gCamcontrolModeSettings->savedDistanceAdjustRate = gCamcontrolModeSettings->distanceAdjustRate;
-    fval = (f32)settings->targetHeight;
+    fval = settings->targetHeight;
     gCamcontrolModeSettings->targetHeight = fval;
     gCamcontrolModeSettings->targetTargetHeight = fval;
     fval = (f32)(u32)settings->lowerHeightOffset;
@@ -641,7 +641,7 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     fval = (f32)(u32)settings->maxDistance;
     gCamcontrolModeSettings->maxDistance = fval;
     gCamcontrolModeSettings->targetMaxDistance = fval;
-    fval = (f32)settings->fov;
+    fval = settings->fov;
     camera->fov = fval;
     gCamcontrolModeSettings->fov = fval;
     fval = (f32)(u32)settings->slideRightAmount;
@@ -861,7 +861,7 @@ void camstatic_update(CameraObject* camera)
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
-    angleDelta = (u16)getAngle(camera->anim.worldPosY -
+    angleDelta = getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
     angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
@@ -873,13 +873,13 @@ void camstatic_update(CameraObject* camera)
     {
         angleDelta = angleDelta + 0xffff;
     }
-    val = (int)interpolate((f32)(int)angleDelta,
+    val = interpolate((f32)(int)angleDelta,
                              lbl_803E16A4 /
                              (f32)(u32)gCamcontrolModeSettings->yawResponseFrames, timeDelta);
-    camera->anim.rotY = camera->anim.rotY + (short)val;
+    camera->anim.rotY = camera->anim.rotY + val;
     camcontrol_updateTargetAction(camera, target);
-    val = (int)interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
-    camera->anim.rotZ = camera->anim.rotZ - (short)val;
+    val = interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
+    camera->anim.rotZ = camera->anim.rotZ - val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
                                    camera->anim.worldPosZ, &camera->anim.localPosX,
                                    &camera->anim.localPosY, &camera->anim.localPosZ,
@@ -1002,7 +1002,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             uVal = data[0xb];
             if (uVal != 0)
             {
-                gCamcontrolModeSettings->targetDistanceAdjustRate = (f32)uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetDistanceAdjustRate = uVal / lbl_803E1710;
             }
             else
             {
@@ -1011,7 +1011,7 @@ void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
             uVal = data[0xc];
             if (uVal != 0)
             {
-                gCamcontrolModeSettings->targetHeightAdjustRate = (f32)uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetHeightAdjustRate = uVal / lbl_803E1710;
             }
             else
             {

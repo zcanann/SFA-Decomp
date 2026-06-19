@@ -104,7 +104,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
+            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21d, 0);
             break;
@@ -150,7 +150,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
+            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21d, 0);
             break;
@@ -207,7 +207,7 @@ void gf_levelcon_free(void)
 
 void gf_levelcon_update(int obj)
 {
-    ((GameObject*)obj)->animEventCallback = (void*)gf_levelcon_handleScriptEvents;
+    ((GameObject*)obj)->animEventCallback = gf_levelcon_handleScriptEvents;
 }
 
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -239,7 +239,7 @@ void gf_levelcon_findLinkedObjects(int obj)
     for (; objectIndex < objectCount; objectIndex++)
     {
         o = objects[objectIndex];
-        if ((u32)o != (u32)obj && *(void**)(o + 0x4c) != NULL)
+        if ((u32)o != obj && *(void**)(o + 0x4c) != NULL)
         {
             switch (*(int*)(*(int*)(o + 0x4c) + 0x14))
             {
@@ -305,7 +305,7 @@ void fn_80239EAC(int p1, int p2)
             dy = *(f32*)(p2 + 0xc4) - ((GameObject*)obj)->anim.localPosY;
             dz = *(f32*)(p2 + 0xc8) - ((GameObject*)obj)->anim.localPosZ;
             dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.rotX = (s16)getAngle(dx, dz);
+            ((GameObject*)obj)->anim.rotX = getAngle(dx, dz);
             ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
             arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
         }

@@ -62,7 +62,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     f32 bestDy;
     u32* hitList[2];
 
-    hitList[0] = (u32*)0x0;
+    hitList[0] = 0x0;
     bestDy = lbl_803E2F78;
     hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
@@ -113,15 +113,15 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     ((short*)obj)[2]
     )
     ;
-    ((short*)obj)[2] = (short)hitCount;
+    ((short*)obj)[2] = hitCount;
     hitCount = (int)((f32)(int) * (s16*)(state + 0x27e) * timeDelta + (f32)(int)
     ((short*)obj)[1]
     )
     ;
-    ((short*)obj)[1] = (short)hitCount;
+    ((short*)obj)[1] = hitCount;
     hitCount = (int)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (short*)obj);
-    *(short*)obj = (short)hitCount;
-    if (hitList[0] != (u32*)0x0)
+    *(short*)obj = hitCount;
+    if (hitList[0] != 0x0)
     {
         if (((GameObject*)obj)->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
         {
@@ -365,7 +365,7 @@ void tumbleweed_updateStateMachine(int obj)
                     u32 dpdi = (u16)dpdist;
                     if ((f32)dpdi > lbl_803E2F5C && dpdi != 0)
                     {
-                        f32 denom = lbl_803E2F5C * (f32)dpdi;
+                        f32 denom = lbl_803E2F5C * dpdi;
                         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dpx / denom;
                         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dpz / denom;
                     }
@@ -438,7 +438,7 @@ void tumbleweed_updateStateMachine(int obj)
         }
         else if (state == 4)
         {
-            while (ObjMsg_Pop((void*)obj, &popMsg, (u32*)0, (u32*)0) != 0)
+            while (ObjMsg_Pop((void*)obj, &popMsg, 0, 0) != 0)
             {
                 if (popMsg == 0x7000b)
                 {
@@ -686,7 +686,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         if ((f32)dist > lbl_803E2FC4)
         {
             f32 k;
-            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (lbl_803E2FC4 * (f32)dist);
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (lbl_803E2FC4 * dist);
             ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (lbl_803E2FC4 * (f32)(u32)(
                 (BackpackState*)aux)->unk268);
             k = lbl_803E2FAC;

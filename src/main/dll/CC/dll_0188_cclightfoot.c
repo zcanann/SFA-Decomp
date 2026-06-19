@@ -45,7 +45,7 @@ void cclightfoot_init(int* obj, int* def)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-    ((GameObject*)obj)->animEventCallback = (void*)ccqueen_SeqFn;
+    ((GameObject*)obj)->animEventCallback = ccqueen_SeqFn;
 }
 
 
@@ -336,7 +336,7 @@ void cclightfoot_update(int obj)
             }
         }
     cc_endif:;
-        angle = (s16)getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
+        angle = getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
                               -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
         diff = (s16)(((GameObject*)obj)->anim.rotX - (u16)angle);
         if (diff > 0x8000)

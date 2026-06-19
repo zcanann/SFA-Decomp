@@ -133,8 +133,8 @@ void wcfloortile_update(int obj)
             ((GameObject*)obj)->anim.velocityY = lbl_803E6EA4 * timeDelta + ((GameObject*)obj)->anim.velocityY;
         }
         state->shakeMag = lbl_803E6EA8 * (state->shakeTime / lbl_803E6EA0);
-        ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-state->shakeMag, state->shakeMag);
-        ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-state->shakeMag, state->shakeMag);
+        ((GameObject*)obj)->anim.rotY = randomGetRange(-state->shakeMag, state->shakeMag);
+        ((GameObject*)obj)->anim.rotZ = randomGetRange(-state->shakeMag, state->shakeMag);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
             localPosY;
         {
@@ -162,7 +162,7 @@ void wcfloortile_update(int obj)
                 }
                 t = t * lbl_803E6EB0;
             }
-            objAnim->alpha = (int)t;
+            objAnim->alpha = t;
         }
         if (objAnim->alpha == 0)
         {
@@ -182,7 +182,7 @@ void wcfloortile_update(int obj)
             {
                 a = lbl_803E6EB0;
             }
-            objAnim->alpha = (int)a;
+            objAnim->alpha = a;
         }
         ObjHits_EnableObject(obj);
         break;
@@ -248,7 +248,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     {
         arwing->velTargetZ = lbl_803E6ECC;
     }
-    PSVECSubtract((void*)&arwing->velTargetX, (void*)&arwing->velX, v);
+    PSVECSubtract((void*)&arwing->velTargetX, &arwing->velX, v);
     v[0] = v[0] * arwing->accelX;
     v[1] = v[1] * arwing->accelY;
     v[2] = v[2] * arwing->accelZ;
@@ -267,7 +267,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
     arwing->rotXRate = (int)((f32)iv * timeDelta + (f32)((ArwingState*)arwing)->rotXRate);
     arwing->rotXCur =
-        (int)((f32)arwing->rotXRate * timeDelta + (f32)arwing->rotXCur);
+        (int)((f32)arwing->rotXRate * timeDelta + arwing->rotXCur);
 
     diff = arwing->rotYTarget - (u16)arwing->rotYCur;
     if (diff > 0x8000) diff -= 0xffff;
@@ -276,16 +276,16 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
     arwing->rotYRate = (int)((f32)iv * timeDelta + (f32)((ArwingState*)arwing)->rotYRate);
     arwing->rotYCur =
-        (int)((f32)arwing->rotYRate * timeDelta + (f32)arwing->rotYCur);
+        (int)((f32)arwing->rotYRate * timeDelta + arwing->rotYCur);
 
     diff = arwing->rotZTarget - (u16)arwing->rotZCur;
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
     iv = (int)((f32)(int)((f32)diff * arwing->rotZGain) - arwing->rotZRate);
     iv = (iv < -0x64) ? -0x64 : ((iv > 0x64) ? 0x64 : iv);
-    arwing->rotZRate = (f32)iv * timeDelta + ((ArwingState*)arwing)->rotZRate;
+    arwing->rotZRate = iv * timeDelta + ((ArwingState*)arwing)->rotZRate;
     arwing->rotZCur =
-        (int)(arwing->rotZRate * timeDelta + (f32)arwing->rotZCur);
+        (int)(arwing->rotZRate * timeDelta + arwing->rotZCur);
 
     if (arwing->mode == 0)
     {
@@ -295,7 +295,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
         arwing->rotZTrimCur =
             (int)(timeDelta * ((f32)diff * arwing->rotZTrimGain) + (f32)((ArwingState*)arwing)->rotZTrimCur);
         if ((f32)arwing->rotZTrimCur > arwing->rotZBlendThreshold ||
-            (f32)arwing->rotZTrimCur < -arwing->rotZBlendThreshold)
+            arwing->rotZTrimCur < -arwing->rotZBlendThreshold)
         {
             arwing->rotZBlend = arwing->rotZBlend - arwing->rotZBlendRate * timeDelta;
         }
@@ -317,8 +317,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
         arwing->rotZBlend = lbl_803E6ED0;
     }
 
-    ((GameObject*)obj)->anim.rotX = (s16)arwing->rotXCur;
-    ((GameObject*)obj)->anim.rotY = (s16)arwing->rotYCur;
+    ((GameObject*)obj)->anim.rotX = arwing->rotXCur;
+    ((GameObject*)obj)->anim.rotY = arwing->rotYCur;
     if (arwing->mode == 1)
     {
         arwarwing_updateBarrelRoll(obj, state);
@@ -326,7 +326,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     else
     {
         ((GameObject*)obj)->anim.rotZ = ((f32)arwing->rotZCur * arwing->rotZBlend +
-            (f32)arwing->rotZTrimCur);
+            arwing->rotZTrimCur);
         if (((GameObject*)obj)->anim.rotZ < -0x4000)
         {
             ((GameObject*)obj)->anim.rotZ = -0x4000;
@@ -541,9 +541,9 @@ void arwarwing_readControls(int obj, int state)
         ((ArwingState*)state)->lTriggerTrim =
             (lt < lbl_803E6ED8) ? lbl_803E6ED8 : ((lt > lbl_803E6ECC) ? lbl_803E6ECC : lt);
     }
-    ((ArwingState*)state)->inputFlags = (u16)getButtonsJustPressed(0);
-    ((ArwingState*)state)->inputFlagsPrev = (u16)getButtonsJustPressedIfNotBusy(0);
-    ((ArwingState*)state)->inputFlags2 = (u16)getButtonsHeld(0);
+    ((ArwingState*)state)->inputFlags = getButtonsJustPressed(0);
+    ((ArwingState*)state)->inputFlagsPrev = getButtonsJustPressedIfNotBusy(0);
+    ((ArwingState*)state)->inputFlags2 = getButtonsHeld(0);
     if (((ArwingState*)state)->mode == 0)
     {
         btn = ((ArwingState*)state)->inputFlags;
@@ -612,7 +612,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
                 if (d > 0x8000) d -= 0xffff;
                 if (d < -0x8000) d += 0xffff;
                 if (d < 0) d = -d;
-                ((ArwingState*)state)->barrelRollSpeedScale = (f32)d / ((ArwingState*)state)->barrelRollDecelRange;
+                ((ArwingState*)state)->barrelRollSpeedScale = d / ((ArwingState*)state)->barrelRollDecelRange;
                 if (((ArwingState*)state)->barrelRollSpeedScale < lbl_803E6EF8)
                     ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6EF8;
                 else if (((ArwingState*)state)->barrelRollSpeedScale > lbl_803E6ED0)
@@ -643,7 +643,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
                 if (d > 0x8000) d -= 0xffff;
                 if (d < -0x8000) d += 0xffff;
                 if (d < 0) d = -d;
-                ((ArwingState*)state)->barrelRollSpeedScale = (f32)d / ((ArwingState*)state)->barrelRollDecelRange;
+                ((ArwingState*)state)->barrelRollSpeedScale = d / ((ArwingState*)state)->barrelRollDecelRange;
                 if (((ArwingState*)state)->barrelRollSpeedScale < lbl_803E6EF8)
                     ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6EF8;
                 else if (((ArwingState*)state)->barrelRollSpeedScale > lbl_803E6ED0)

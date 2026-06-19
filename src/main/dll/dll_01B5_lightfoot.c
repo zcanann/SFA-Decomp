@@ -289,7 +289,7 @@ void lightfoot_init(int obj, int p2, int p3)
     }
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
-    ((GameObject*)obj)->animEventCallback = (void*)Lightfoot_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
@@ -303,7 +303,7 @@ void lightfoot_init(int obj, int p2, int p3)
         ((GroundBaddieState*)inner)->baddie.controlMode = 2;
         ((GroundBaddieState*)inner)->baddie.substate = 1;
         ObjHits_DisableObject(obj);
-        ((LightfootSub*)sub)->unk24 = (u16)randomGetRange(0, 3);
+        ((LightfootSub*)sub)->unk24 = randomGetRange(0, 3);
         ((LightfootSub*)sub)->unk28 = 0x6f1;
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;

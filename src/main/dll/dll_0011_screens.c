@@ -174,7 +174,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                       u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -333,17 +333,17 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = colorR;
-    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = colorG;
-    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = colorB;
+    (&DAT_803a458c)[DAT_803a3f28 * 4] = colorR;
+    (&DAT_803a4590)[DAT_803a3f28 * 4] = colorG;
+    (&DAT_803a4594)[DAT_803a3f28 * 4] = colorB;
     DAT_803a4465 = 1;
-    if (nameSrc == (char*)0x0)
+    if (nameSrc == 0x0)
     {
         DAT_803a3f24 = 0x46;
         DAT_803a3f25 = 0x4f;
         DAT_803a3f26 = 0x58;
         DAT_803a3f27 = 0;
-        nameSrc = (char*)0x0;
+        nameSrc = 0x0;
     }
     else
     {
@@ -358,10 +358,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         while (ch != '\0');
     }
     cfgHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    ch = (char)taskInfo;
-    if ((ch != -1) && (DAT_803dc4f0 = ch, nameSrc != (char*)0x0))
+    ch = taskInfo;
+    if ((ch != -1) && (DAT_803dc4f0 = ch, nameSrc != 0x0))
     {
-        FUN_80072564(cfgHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)taskInfo & 0xff,
+        FUN_80072564(cfgHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, taskInfo & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -387,7 +387,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 
     packed = FUN_80286830();
     mapId = (u32)((u64)packed >> 0x20);
-    shift = (u32)packed;
+    shift = packed;
     history = &DAT_803a3be0;
     if (0x4fffffffff < packed)
     {
@@ -462,13 +462,13 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                     entry = history;
                     do
                     {
-                        if ((((((mapId == (int)*entry) && (foundIndex = scanIndex, shift == (u8)entry[1])) ||
-                                    ((foundIndex = scanIndex + '\x01', mapId == (int)entry[3] && (shift == (u8)entry[4])))
-                                ) || ((foundIndex = scanIndex + '\x02', mapId == (int)entry[6] &&
-                                    (shift == (u8)entry[7])))) ||
-                                ((foundIndex = scanIndex + '\x03', mapId == (int)entry[9] && (shift == (u8)entry[10]))))
-                            || ((mapId == (int)entry[0xc] &&
-                                (foundIndex = scanIndex + '\x04', shift == (u8)entry[0xd]))))
+                        if ((((((mapId == (int)*entry) && (foundIndex = scanIndex, shift == entry[1])) ||
+                                    ((foundIndex = scanIndex + '\x01', mapId == entry[3] && (shift == entry[4])))
+                                ) || ((foundIndex = scanIndex + '\x02', mapId == entry[6] &&
+                                    (shift == entry[7])))) ||
+                                ((foundIndex = scanIndex + '\x03', mapId == entry[9] && (shift == entry[10]))))
+                            || ((mapId == entry[0xc] &&
+                                (foundIndex = scanIndex + '\x04', shift == entry[0xd]))))
                             goto LAB_800e9628;
                         entry = entry + 0xf;
                         scanIndex = scanIndex + '\x05';
@@ -486,8 +486,8 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                             if (*history == -1)
                             {
                                 i = i * 3;
-                                (&DAT_803a3be0)[i] = (char)mapId;
-                                (&DAT_803a3be1)[i] = (char)packed;
+                                (&DAT_803a3be0)[i] = mapId;
+                                (&DAT_803a3be1)[i] = packed;
                                 (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
@@ -572,7 +572,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    colorIdx = (u32)DAT_803a3f28;
+    colorIdx = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[colorIdx * 4], (double)(float)(&DAT_803a4590)[colorIdx * 4],
                  (double)(float)(&DAT_803a4594)[colorIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[colorIdx * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
@@ -631,7 +631,7 @@ void FUN_800ea9b8(void)
     if (state[6] == '\0')
     {
         entry = &DAT_80312632;
-        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
+        for (scanId = 1; scanId < 0xce; scanId = scanId + 1)
         {
             if ((*entry == 0xffff) || (*entry == -1))
             {
@@ -660,7 +660,7 @@ void FUN_800ea9b8(void)
         {
             state[i] = state[i + -1];
         }
-        *state = (char)id;
+        *state = id;
         if ((u32)(u8)state[5] == (id & 0xff)
         )
         {
@@ -697,7 +697,7 @@ enum
 
 u8 getNextTaskHintText(void)
 {
-    u8* p = (u8*)getLastSavedGameTexts();
+    u8* p = getLastSavedGameTexts();
     return p[5];
 }
 
@@ -744,7 +744,7 @@ void loadTaskTexts(void)
             idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + (s[11] - '0');
             if (idx < 0xd)
             {
-                lbl_803A4218[idx] = (u8)i;
+                lbl_803A4218[idx] = i;
             }
         }
     }
@@ -759,11 +759,11 @@ u8 getCurTaskHintTextMap(void)
 
 void hintTextFn_800ea174(u8* out)
 {
-    u8* texts = (u8*)getLastSavedGameTexts();
+    u8* texts = getLastSavedGameTexts();
     s16 i;
     for (i = 0; i < 0xd; i++)
     {
-        out[i] = (u8)GameBit_Get(i + 0xf10);
+        out[i] = GameBit_Get(i + 0xf10);
     }
     out[lbl_803119E0[texts[5]]] = 1;
 }
@@ -771,7 +771,7 @@ void hintTextFn_800ea174(u8* out)
 int hintTextMapFn_800ea264(void)
 {
     int r = getCurGameText();
-    u8* t = (u8*)getLastSavedGameTexts();
+    u8* t = getLastSavedGameTexts();
     gameTextLoadDir(lbl_803A4218[lbl_803119E0[t[5]]]);
     return r;
 }
@@ -789,7 +789,7 @@ void gameBitFn_800ea2e0(u8 id)
     u32 i;
     s16* taskMap;
 
-    texts = (u8*)getLastSavedGameTexts();
+    texts = getLastSavedGameTexts();
     cachedBank = -1;
 
     if (texts[6] == 0)

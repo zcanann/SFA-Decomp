@@ -172,10 +172,10 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     }
     if (((s32)eventState->baddie.eventFlags & 0x80) != 0)
     {
-        control->climbFxIndex = (u8)randomGetRange(0, 2);
+        control->climbFxIndex = randomGetRange(0, 2);
         eventState->baddie.eventFlags &= ~0x80;
         Sfx_PlayFromObject(obj, SFXkr_climb2);
-        for (n = (2 - (s32)control->climbFxIndex) * 10; n != 0; n--)
+        for (n = (2 - control->climbFxIndex) * 10; n != 0; n--)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 1809, 0, 4, -1, &lbl_803DDA98);
         }

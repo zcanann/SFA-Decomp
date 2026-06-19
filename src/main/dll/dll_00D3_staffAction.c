@@ -895,7 +895,7 @@ void dll_D3_update(int* obj)
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     searchRadius = lbl_803E3034;
 
     if (extra->boundsObj == NULL)

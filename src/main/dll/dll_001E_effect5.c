@@ -268,7 +268,7 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
     cfg.startPosX = lbl_803DFBF4;
     cfg.startPosY = lbl_803DFBF4;
