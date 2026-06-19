@@ -12657,7 +12657,7 @@ void objLoadPlayerFromSave(int obj)
                                                      base + 0x130,
                                                      &lbl_803DC6C0, 1);
     (*gPathControlInterface)->setup(pathState, 2, base + 0x118,
-                                    lbl_803DC6B8, &lbl_803DC6A4);
+                                    &lbl_803DC6B8, &lbl_803DC6A4);
     pathState[0x258] = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
     Player_GetObjHitsState(obj)->trackContactMask = 0x29;
@@ -14701,7 +14701,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
 }
 
 extern f32 lbl_803E80C0;
-extern f32 lbl_803DC6B8[2];
+extern f32 lbl_803DC6B8;
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
@@ -14788,7 +14788,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         pl = planes;
         dp = dists;
         cp = cam;
-        b6b8 = lbl_803DC6B8;
+        b6b8 = &lbl_803DC6B8;
         px2 = &x2;
         py2 = &y2;
         pz2 = &z2;
@@ -15013,7 +15013,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     {
         f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(&planes[i], (void*)e) + planes[i].d;
         void* face;
-        if (dot < threshold + lbl_803DC6B8[1])
+        if (dot < threshold + (&lbl_803DC6B8)[1])
         {
             s16 fi = *(s16*)((char*)c + i * 2 + 0x4c);
             if (fi > -1)
@@ -18736,7 +18736,7 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
         *(f32*)((char*)dst + 0x18) < lbl_803E80A8)
     {
     *(f32*)((char*)dst + 0x8) = *(f32*)((char*)src + 0xc);
-    PSVECScale((f32*)((char*)src + 0x1c), pos, -lbl_803DC6B8[1]);
+    PSVECScale((f32*)((char*)src + 0x1c), pos, -(&lbl_803DC6B8)[1]);
     PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
     y = *(f32*)((char*)src + 0x3c);
     pos[1] = y;
