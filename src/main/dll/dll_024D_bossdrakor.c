@@ -161,16 +161,40 @@ void bossdrakor_update(int obj)
         if ((void*)player != NULL)
         {
             d = Obj_GetYawDeltaToObject(obj, player, 0);
-            ((GameObject*)obj)->anim.rotX += (d < -0x200) ? -0x200 : ((d > 0x200) ? 0x200 : d);
+            if (d < -0x200)
+            {
+                d = -0x200;
+            }
+            else if (d > 0x200)
+            {
+                d = 0x200;
+            }
+            ((GameObject*)obj)->anim.rotX += d;
             d = ((GameObject*)obj)->anim.rotY;
             if (d != 0)
             {
-                ((GameObject*)obj)->anim.rotY -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
+                if (d < -0x100)
+                {
+                    d = -0x100;
+                }
+                else if (d > 0x100)
+                {
+                    d = 0x100;
+                }
+                ((GameObject*)obj)->anim.rotY -= d;
             }
             d = ((GameObject*)obj)->anim.rotZ;
             if (d != 0)
             {
-                ((GameObject*)obj)->anim.rotZ -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
+                if (d < -0x100)
+                {
+                    d = -0x100;
+                }
+                else if (d > 0x100)
+                {
+                    d = 0x100;
+                }
+                ((GameObject*)obj)->anim.rotZ -= d;
             }
         }
     }
