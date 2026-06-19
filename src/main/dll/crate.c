@@ -38,7 +38,7 @@ u32 sfxplayer_updateState(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
     state = ((GameObject*)obj)->extra;
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         event = animUpdate->eventIds[i];
         switch (event)

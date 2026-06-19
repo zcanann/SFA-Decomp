@@ -98,7 +98,7 @@ void drchimmey_update(DRChimmeyObject* obj)
         if (state->offeringsRemaining <= 0)
         {
             state->eventActive = 1;
-            s16toFloat(&state->timer, (int)state->timerDuration);
+            s16toFloat(&state->timer, state->timerDuration);
             GameBit_Set(state->completionGameBit, 1);
         }
         else

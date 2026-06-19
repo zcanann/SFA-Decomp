@@ -98,7 +98,7 @@ void fn_801814D0(int obj, int param_2, u8* state)
                     }
                     return;
                 }
-                groupObjects = (int*)ObjGroup_GetObjects(0x10, &hitWork[0]);
+                groupObjects = ObjGroup_GetObjects(0x10, &hitWork[0]);
                 i = 0;
                 objects = groupObjects;
                 for (; i < hitWork[0]; i++)

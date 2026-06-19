@@ -29,7 +29,7 @@ void DFPulley_integrateLinks(DFRope* self)
     part = self->nodes;
     i = 0;
     zero = lbl_803E4DFC;
-    for (; i < (int)self->count; i++, part++)
+    for (; i < self->count; i++, part++)
     {
         accel.z = zero;
         accel.y = zero;
@@ -37,7 +37,7 @@ void DFPulley_integrateLinks(DFRope* self)
 
         if (part->locked == 0)
         {
-            for (j = 0; j < (int)part->linkCount; j++)
+            for (j = 0; j < part->linkCount; j++)
             {
                 DFRopeLink* link = part->links[j];
                 if (part == link->a)

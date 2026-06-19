@@ -74,7 +74,7 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
 
         gCamcontrolPathState->pointsX[pointCount] = baseX + vec[0];
         gCamcontrolPathState->pointsY[pointCount] =
-            baseY + (deltaY * ((f32)pathAngles[i] / (f32)absAngleRange));
+            baseY + (deltaY * ((f32)pathAngles[i] / absAngleRange));
         gCamcontrolPathState->pointsZ[pointCount] = baseZ + vec[2];
 
         i++;

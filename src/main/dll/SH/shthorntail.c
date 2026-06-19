@@ -63,7 +63,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
             else
             {
                 nextState = SHthorntail_chooseNextState(obj, runtime, obj->config);
-                runtime->behaviorState = (s8)nextState;
+                runtime->behaviorState = nextState;
             }
         }
         break;
@@ -82,7 +82,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
             else
             {
                 nextState = SHthorntail_chooseNextState(obj, runtime, obj->config);
-                runtime->behaviorState = (s8)nextState;
+                runtime->behaviorState = nextState;
             }
         }
         break;
@@ -93,7 +93,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
             randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN, SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
             runtime->comboTimer = (float)randomValue;
             randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MIN, SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MAX);
-            runtime->comboRepeatCount = (s8)randomValue;
+            runtime->comboRepeatCount = randomValue;
         }
         break;
     case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:

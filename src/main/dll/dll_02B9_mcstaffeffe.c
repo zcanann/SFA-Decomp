@@ -28,7 +28,7 @@ void mcstaffeffe_init(int obj, int setup)
     McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
     McStaffEffectSetup* placement = (McStaffEffectSetup*)setup;
 
-    ((GameObject*)staffEffect)->animEventCallback = (void*)mcstaffeffe_SeqFn;
+    ((GameObject*)staffEffect)->animEventCallback = mcstaffeffe_SeqFn;
     switch (placement->effectProfile)
     {
     case 0:

@@ -70,7 +70,7 @@ void nwsh_levcon_update(int* obj)
 
 void nwsh_levcon_init(int* obj)
 {
-    ((GameObject*)obj)->animEventCallback = (void*)NWSH_levcon_SeqFn;
+    ((GameObject*)obj)->animEventCallback = NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(6, 1);
     ((GameObject*)obj)->unkF4 = 1;

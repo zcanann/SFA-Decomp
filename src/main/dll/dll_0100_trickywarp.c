@@ -112,7 +112,7 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     }
     if (state->patchGroup == 0)
     {
-        state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint(&((GameObject*)obj)->anim.localPosX, 0);
+        state->patchGroup = Objfsa_GetWalkGroupIndexAtPoint(&((GameObject*)obj)->anim.localPosX, 0);
         if (state->patchGroup != 0)
         {
             curveEntries = (TrickyWarpCurveEntry**)(*gRomCurveInterface)->getCurves(&curveCount);
@@ -193,7 +193,7 @@ void trickywarp_init(s16* obj, u8* placement)
     u32 flags;
     flags = ((GameObject*)obj)->objectFlags;
     flags |= 0x4000;
-    ((GameObject*)obj)->objectFlags = (u16)flags;
+    ((GameObject*)obj)->objectFlags = flags;
     *obj = (s16)((u32)placement[0x1a] << 8);
 }
 

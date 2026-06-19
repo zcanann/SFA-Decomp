@@ -34,6 +34,6 @@ void cMenuPlaySelectedItemSfx(int obj)
     }
     if (sfx != 0)
     {
-        Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
+        Sfx_PlayFromObjectLimited(obj, sfx, 1);
     }
 }

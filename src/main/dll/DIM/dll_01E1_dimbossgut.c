@@ -56,7 +56,7 @@ void DIMbossgut_init(void* obj)
     int objArg;
 
     objSetSlot(obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = (void*)DIMbossgut_updateState;
+    ((GameObject*)obj)->animEventCallback = DIMbossgut_updateState;
     objArg = (int)obj;
     ObjAnim_SetCurrentMove(objArg, 0, lbl_803E4C88, 0);
     ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)

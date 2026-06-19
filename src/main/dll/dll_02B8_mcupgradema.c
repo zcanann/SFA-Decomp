@@ -77,5 +77,5 @@ void mcupgradema_update(int obj)
 
 void mcupgradema_init(int obj)
 {
-    ((GameObject*)obj)->animEventCallback = (void*)mcupgradema_SeqFn;
+    ((GameObject*)obj)->animEventCallback = mcupgradema_SeqFn;
 }

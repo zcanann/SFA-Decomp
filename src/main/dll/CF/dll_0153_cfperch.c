@@ -54,7 +54,7 @@ void cfperch_update(int* obj)
 void cfperch_init(int* obj)
 {
     ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801A04F4;
+    ((GameObject*)obj)->animEventCallback = fn_801A04F4;
 }
 
 void cfperch_release(void)

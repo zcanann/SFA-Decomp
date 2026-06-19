@@ -75,7 +75,7 @@ void ccqueen_update(int* obj)
     charState = ((GameObject*)obj)->extra;
     if (GameBit_Get(GAMEBIT_QUEEN_LATCHED) == 0 && GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
-        player = (int*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             lbl_803E4664)
         {
