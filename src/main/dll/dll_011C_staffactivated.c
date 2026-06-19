@@ -20,14 +20,14 @@
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3BF0;
-extern f32 lbl_803E3BF4;
-extern f32 lbl_803E3BF8;
+extern f32 gStaffActivatedPi;
+extern f32 gStaffActivatedBinAngleScale;
 extern f32 lbl_803E3BFC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
 extern f32 lbl_803E3C08;
 extern f32 lbl_803E3C0C;
-extern f32 lbl_803E3C10;
+extern f32 gStaffActivatedMinRootMotionScale;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
 extern float mathSinf(float x);
@@ -93,26 +93,26 @@ lbl_gt2:
     goto lbl_case3;
 
 lbl_case2:
-    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) - state->targetX);
-    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) - state->targetZ);
+    *outX = -(lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) - state->targetX);
+    *outZ = -(lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) - state->targetZ);
     goto lbl_done;
 
 lbl_case3:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + state->targetX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + state->targetZ;
+    *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + state->targetX;
+    *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + state->targetZ;
     goto lbl_done;
 
 lbl_case0:
-    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outX = lbl_803E3BFC * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
         localPosX;
-    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outZ = lbl_803E3BFC * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
         localPosZ;
     goto lbl_done;
 
 lbl_default:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
         localPosX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(((GameObject*)obj)->anim.rotX) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+    *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale) + ((GameObject*)obj)->anim.
         localPosZ;
 
 lbl_done:;
@@ -303,9 +303,9 @@ void staffactivated_init(int obj, int setup)
     }
 
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * scale;
-    if (((GameObject*)obj)->anim.rootMotionScale < *(f32*)&lbl_803E3C10)
+    if (((GameObject*)obj)->anim.rootMotionScale < *(f32*)&gStaffActivatedMinRootMotionScale)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3C10;
+        ((GameObject*)obj)->anim.rootMotionScale = gStaffActivatedMinRootMotionScale;
     }
 
     switch (setupData->mode)
@@ -315,24 +315,24 @@ void staffactivated_init(int obj, int setup)
         state->targetX = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathSinf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) -
+                    mathSinf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) -
             ((GameObject*)obj)->anim.localPosX);
         state->targetZ = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathCosf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) -
+                    mathCosf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) -
             ((GameObject*)obj)->anim.localPosZ);
         break;
     case 3:
         state->targetX = lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathSinf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) +
+                    mathSinf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) +
             ((GameObject*)obj)->anim.localPosX;
         state->targetZ = lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
-                    mathCosf((lbl_803E3BF4 * (f32)((GameObject*)obj)->anim.rotX) / lbl_803E3BF8))) +
+                    mathCosf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) +
             ((GameObject*)obj)->anim.localPosZ;
         break;
     default:

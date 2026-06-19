@@ -34,7 +34,7 @@ extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
-extern int lbl_802C23C8[];
+extern int gDll197ResourceParamTemplate[];
 extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 extern f32 lbl_803E5120;
 extern f32 lbl_803E5124;
@@ -83,7 +83,7 @@ void dll_197_update(int obj)
     int effect;
     int stageEffectBase;
 
-    *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)lbl_802C23C8;
+    *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)gDll197ResourceParamTemplate;
 
     player = Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);

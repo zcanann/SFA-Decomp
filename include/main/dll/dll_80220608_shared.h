@@ -1155,7 +1155,7 @@ extern const f32 lbl_803E7318;
 extern const f32 lbl_803E731C;
 extern const f32 lbl_803E7320;
 extern const f32 lbl_803E7324;
-extern const f32 lbl_803E7328;
+extern const f32 gTreeScaleByteNormalizer;
 extern const f32 lbl_803E732C;
 
 #pragma dont_inline on

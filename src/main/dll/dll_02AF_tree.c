@@ -216,7 +216,7 @@ void tree_init(int obj, u8* setup)
     object->unkF8 = 0;
     if (setupData->scale != 0)
     {
-        state->scale = (f32)(u32)setupData->scale / lbl_803E7328;
+        state->scale = (f32)(u32)setupData->scale / gTreeScaleByteNormalizer;
         object->anim.rootMotionScale = state->scale;
         if (object->anim.rootMotionScale == lbl_803E72F8)
         {

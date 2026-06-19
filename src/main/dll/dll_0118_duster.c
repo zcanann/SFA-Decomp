@@ -35,16 +35,16 @@ extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4
 extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern f32 lbl_803E38B0;
-extern f32 lbl_803E38B4;
-extern f32 lbl_803E38B8;
-extern f32 lbl_803E38BC;
-extern f32 lbl_803E38C0;
+extern f32 gDusterObjHitDetectRadius;
+extern f32 gDusterObjGravityVelYThreshold;
+extern f32 gDusterObjGravityAccel;
+extern f32 gDusterObjFloorSearchMaxDelta;
 extern f32 lbl_803E38C4;
-extern f32 lbl_803E38C8;
-extern f32 lbl_803E38CC;
-extern f32 lbl_803E38D0;
-extern f32 lbl_803E38D4;
-extern f32 lbl_803E38E0;
+extern f32 gDusterObjLaunchVelocityX;
+extern f32 gDusterObjDriftSpinRate;
+extern f32 gDusterObjPickupRangeY;
+extern f32 gDusterObjPickupRangeXZ;
+extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
 extern void objRenderFn_8003b8f4(int* obj);
@@ -101,7 +101,7 @@ void duster_hitDetect(int obj)
     int hitResult;
     state = ((GameObject*)obj)->extra;
     hitResult = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12),
-                           lbl_803E38B4, 2, hit, (void*)obj, 8, -1, 255, 0);
+                           gDusterObjHitDetectRadius, 2, hit, (void*)obj, 8, -1, 255, 0);
     if (hitResult != 0)
     {
         state->priorityHit = 1;
@@ -144,7 +144,7 @@ void duster_init(int obj, u8* params)
     setup = (DusterSetup*)params;
     state = ((GameObject*)obj)->extra;
     state->settleTimer = randomGetRange(0, 0x32);
-    state->moveStepScale = lbl_803E38E0;
+    state->moveStepScale = gDusterObjMoveStepScale;
     state->activeGameBit = setup->activeGameBit;
     if (state->activeGameBit >= 0x6fe)
     {
@@ -222,9 +222,9 @@ void duster_update(int obj)
         return;
     }
 
-    if (((GameObject*)obj)->anim.velocityY > lbl_803E38B8)
+    if (((GameObject*)obj)->anim.velocityY > gDusterObjGravityVelYThreshold)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E38BC * timeDelta + ((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityY = gDusterObjGravityAccel * timeDelta + ((GameObject*)obj)->anim.velocityY;
     }
 
     state->priorityHit = 0;
@@ -232,7 +232,7 @@ void duster_update(int obj)
     {
         floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-        bestFloorDelta = lbl_803E38C0;
+        bestFloorDelta = gDusterObjFloorSearchMaxDelta;
         bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
         {
@@ -278,7 +278,7 @@ void duster_update(int obj)
             state->driftDir = randomGetRange(0, 4);
             if (state->useLaunchVelocity != 0)
             {
-                ((GameObject*)obj)->anim.velocityX = lbl_803E38C8;
+                ((GameObject*)obj)->anim.velocityX = gDusterObjLaunchVelocityX;
                 launch.z = launch.y = launch.x = ((GameObject*)obj)->anim.velocityZ = lbl_803E38C4;
                 launch.scale = lbl_803E38B0;
                 launch.roll = 0;
@@ -335,7 +335,7 @@ void duster_update(int obj)
             ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - 0x7fff);
             state->driftDir = 0;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)((f32) * (s16*)obj + lbl_803E38CC * timeDelta);
+        ((GameObject*)obj)->anim.rotX = (s16)((f32) * (s16*)obj + gDusterObjDriftSpinRate * timeDelta);
     }
 
     floorDelta = playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
@@ -343,8 +343,8 @@ void duster_update(int obj)
     {
         floorDelta = -floorDelta;
     }
-    if (floorDelta < lbl_803E38D0 &&
-        Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < lbl_803E38D4 &&
+    if (floorDelta < gDusterObjPickupRangeY &&
+        Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gDusterObjPickupRangeXZ &&
         fn_8029622C(player) != 0)
     {
         if (GameBit_Get(GAMEBIT_DUSTER_CARRIED) == 0)

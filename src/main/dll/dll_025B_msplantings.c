@@ -80,7 +80,7 @@ extern f32 lbl_803E4600;
 extern f32 lbl_803E4604;
 extern f32 lbl_803E4608;
 extern f32 lbl_803E45D8;
-extern f32 lbl_803E45E0;
+extern f32 gMsPlantingsPi;
 extern f32 lbl_803E45E4;
 extern float mathSinf(float x);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
@@ -382,7 +382,7 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
                 f32 s;
                 int iv;
                 ((MoonSeedPlantingSpotState*)inner)->colorPhase += 0x1000;
-                s = mathSinf(lbl_803E45E0 * (f32)((MoonSeedPlantingSpotState*)inner)->colorPhase / lbl_803E45E4);
+                s = mathSinf(gMsPlantingsPi * (f32)((MoonSeedPlantingSpotState*)inner)->colorPhase / lbl_803E45E4);
                 s = lbl_803E45DC + s;
                 iv = (int)(lbl_803E45D8 * s);
                 fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
