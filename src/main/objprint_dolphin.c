@@ -1355,20 +1355,20 @@ void FUN_800400b0(void)
 void FUN_800401a0(float* mtx, float* out, short* in, int flag, u16* obj,
                   int e)
 {
-    float local_98;
-    float local_94;
-    float local_90;
-    float local_8c;
-    float local_88;
-    float local_84;
-    u16 local_80;
-    u16 local_7e;
-    u16 local_7c;
-    float local_78;
-    u32 local_74;
-    u32 local_70;
-    u32 local_6c;
-    float afStack_68[16];
+    float outX;
+    float outY;
+    float outZ;
+    float inX;
+    float inY;
+    float inZ;
+    u16 rotX;
+    u16 rotY;
+    u16 rotZ;
+    float scale;
+    u32 posX;
+    u32 posY;
+    u32 posZ;
+    float worldMtx[16];
     u32 local_28;
     u32 uStack_24;
     u32 local_20;
@@ -1378,58 +1378,58 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, u16* obj,
 
     uStack_24 = (int)*in ^ 0x80000000;
     local_28 = 0x43300000;
-    local_8c = (f32)(s32)
+    inX = (f32)(s32)
     uStack_24;
     uStack_1c = in[1] ^ 0x80000000;
     local_20 = 0x43300000;
-    local_88 = (f32)(s32)
+    inY = (f32)(s32)
     uStack_1c;
     uStack_14 = in[2] ^ 0x80000000;
     local_18 = 0x43300000;
-    local_84 = (f32)(s32)
+    inZ = (f32)(s32)
     uStack_14;
     if (e != 0)
     {
-        local_8c = local_8c * lbl_803DF6D8;
-        local_88 = local_88 * lbl_803DF6D8;
-        local_84 = local_84 * lbl_803DF6D8;
+        inX = inX * lbl_803DF6D8;
+        inY = inY * lbl_803DF6D8;
+        inZ = inZ * lbl_803DF6D8;
     }
     if (mtx == (float*)0x0)
     {
-        local_74 = *(u32*)&((GameObject*)obj)->anim.worldPosX;
-        local_70 = *(u32*)&((GameObject*)obj)->anim.worldPosY;
-        local_6c = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
+        posX = *(u32*)&((GameObject*)obj)->anim.worldPosX;
+        posY = *(u32*)&((GameObject*)obj)->anim.worldPosY;
+        posZ = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
         if (flag == 0)
         {
-            local_80 = *obj;
-            local_7e = obj[1];
-            local_7c = obj[2];
+            rotX = *obj;
+            rotY = obj[1];
+            rotZ = obj[2];
         }
         else
         {
-            local_80 = 0;
-            local_7e = 0;
-            local_7c = 0;
+            rotX = 0;
+            rotY = 0;
+            rotZ = 0;
         }
-        local_78 = lbl_803DF69C;
-        FUN_80017754(afStack_68, &local_80);
-        FUN_80017778((double)local_8c, (double)local_88, (double)local_84, afStack_68, out, out + 1,
+        scale = lbl_803DF69C;
+        FUN_80017754(worldMtx, &rotX);
+        FUN_80017778((double)inX, (double)inY, (double)inZ, worldMtx, out, out + 1,
                      out + 2);
     }
     else
     {
         if (flag == 0)
         {
-            FUN_80247bf8(mtx, &local_8c, &local_98);
-            *out = local_98;
-            out[1] = local_94;
-            out[2] = local_90;
+            FUN_80247bf8(mtx, &inX, &outX);
+            *out = outX;
+            out[1] = outY;
+            out[2] = outZ;
         }
         else
         {
-            *out = mtx[3] + local_8c;
-            out[1] = mtx[7] + local_88;
-            out[2] = mtx[0xb] + local_84;
+            *out = mtx[3] + inX;
+            out[1] = mtx[7] + inY;
+            out[2] = mtx[0xb] + inZ;
         }
         *out = *out + lbl_803DDA58;
         out[2] = out[2] + lbl_803DDA5C;
