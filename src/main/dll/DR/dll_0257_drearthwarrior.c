@@ -1134,7 +1134,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[3] = hitState->contactPosZ;
             (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)lbl_803DE4D0 + 0x4)))(
                 0, 1, &v, 0x401, -1, rows.m[gDREarthWarriorRowIndices[i]]);
-            hitState->suppressOutgoingHits = 1;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);
         }
         if (hitState->lastHitObject != 0)
