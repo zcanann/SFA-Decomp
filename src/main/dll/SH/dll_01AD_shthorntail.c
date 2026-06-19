@@ -421,8 +421,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
         runtime->locomotionMode = mode;
-        byteVal = config->controlMode;
-        switch (byteVal)
+        switch (config->controlMode)
         {
         case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
             SHthorntail_updateLevelControlMode0(obj, runtime, config);
