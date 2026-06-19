@@ -194,7 +194,6 @@ void drakormissile_update(int obj)
     int hitObj;
     int hit;
     int* lastHit;
-    ObjHitsPriorityState* hitState;
     int result;
     int player;
     f32 mag;
@@ -270,8 +269,7 @@ void drakormissile_update(int obj)
     }
     if (moving)
     {
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        lastHit = (int*)hitState->lastHitObject;
+        lastHit = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
         hitObj = 0;
         hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
         expired = 0;
@@ -287,7 +285,7 @@ void drakormissile_update(int obj)
             nearHit = 1;
         }
         result = expired | nearHit;
-        result |= hitState->contactFlags;
+        result |= ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags;
         if (*(u8*)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING)
         {
             player = (int)Obj_GetPlayerObject();
@@ -305,7 +303,7 @@ void drakormissile_update(int obj)
         {
             *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_EXPLODING;
             *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
-            if ((hitState->flags & 8) != 0)
+            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
             }
@@ -323,8 +321,8 @@ void drakormissile_update(int obj)
                 *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
             }
         }
-        hitState->skeletonHitMask = 0x10;
-        hitState->objectHitMask = 0x10;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
     }
     if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState())
     {
