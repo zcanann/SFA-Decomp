@@ -501,10 +501,10 @@ u32 FUN_80057690(int param_1)
     double nearDist;
     double dist;
     double range;
-    float fStack_48;
-    float fStack_44;
-    float local_40;
-    float fStack_3c;
+    float screenW;
+    float screenH;
+    float projRadius;
+    float screenY;
     u8 auStack_38[4];
     u8 auStack_34[4];
     u64 local_30;
@@ -553,8 +553,8 @@ u32 FUN_80057690(int param_1)
                      (double)(((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C),
                      (double)(((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale),
                      auStack_34,
-                     auStack_38, &fStack_3c, &local_40, &fStack_44, &fStack_48);
-        projSize = ABS(local_40) * lbl_803DF834;
+                     auStack_38, &screenY, &projRadius, &screenH, &screenW);
+        projSize = ABS(projRadius) * lbl_803DF834;
         if (projSize < lbl_803DF860)
         {
             *(u8*)(param_1 + 0x37) = 0;
