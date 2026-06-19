@@ -2603,14 +2603,14 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
     m = (void*)((GameObject*)obj)->anim.modelInstance;
     if (m != NULL)
     {
-        int entryIdx = 0, vecOffset = 0;
+        int entryIdx = (int)found, vecOffset = (int)found;
         int n = ((ObjDef*)m)->jointCount;
         int j;
         for (j = 0; j < n; j++)
         {
             u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0)
+            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 0)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
