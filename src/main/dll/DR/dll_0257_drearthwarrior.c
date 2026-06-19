@@ -1197,7 +1197,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                 inner->sub.unk410 = lbl_803E8370;
                 Sfx_PlayFromObject(obj, 0x404);
             }
-            if (*(u8*)((char*)(char*)inner + 0x262) != 0 || (hitState->flags & 8))
+            if (*(u8*)((char*)(char*)inner + 0x262) != 0 ||
+                (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8))
             {
                 f32 spd;
                 f32 vcos;
