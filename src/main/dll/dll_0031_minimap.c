@@ -227,7 +227,7 @@ int Minimap_update(void)
         }
         else
         {
-            cell = (u8)coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+            cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         }
         while (!found && i < 0x19)
         {
@@ -259,9 +259,9 @@ int Minimap_update(void)
             for (; k < gMinimapCellTable[i].count; k++)
             {
                 row = &rows[k];
-                if (fx >= (f32)row->x0 && fx < (f32)row->x1 &&
-                    fz >= (f32)row->z0 && fz < (f32)row->z1 &&
-                    (s16)yi >= row->y0 && (s16)yi < row->y1 &&
+                if (fx >= row->x0 && fx < row->x1 &&
+                    fz >= row->z0 && fz < row->z1 &&
+                    yi >= row->y0 && yi < row->y1 &&
                     GameBit_Get(row->gameBit) != 0)
                 {
                     j = 0;
@@ -304,7 +304,7 @@ int Minimap_update(void)
         }
         if ((*gCameraInterface)->getMode() == 0x44 ||
             (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) ||
-            (s16)Camera_GetViewportYOffset() != 0 ||
+            Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & 0x1000) != 0 ||
             objIsCurModelNotZero((int)player) == 0 ||
             pauseMenuState != 0 || lbl_803DD75B != 0)
@@ -374,7 +374,7 @@ int Minimap_update(void)
         }
         if (lbl_803DD930 != 0)
         {
-            box = (u16*)gameTextGetBox(0x83);
+            box = gameTextGetBox(0x83);
             if (lbl_803DD944 == 2 && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
             {
                 w = 200;
@@ -396,7 +396,7 @@ int Minimap_update(void)
             box[4] = (u16)(lbl_803DBBC0 - 8);
             lbl_803DD938 = 0x1b8 - lbl_803DBBC4;
             ((s16*)box)[0xb] = lbl_803DD938;
-            drawHudBox(0x32, (s16)lbl_803DD938, (s16)lbl_803DBBC0, (s16)lbl_803DBBC4,
+            drawHudBox(0x32, lbl_803DD938, lbl_803DBBC0, lbl_803DBBC4,
                        lbl_803DD930 & 0xff, 1);
             GXSetScissor(0x32, lbl_803DD938, lbl_803DBBC0, lbl_803DBBC4);
             switch (lbl_803DD944)
@@ -406,30 +406,30 @@ int Minimap_update(void)
                 {
                     texW = ((Texture*)minimapTexture)->width;
                     texH = ((Texture*)minimapTexture)->height;
-                    lbl_803DBBEC = (f32)texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
+                    lbl_803DBBEC = texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
                     boxW = lbl_803DBBC0;
-                    a = (f32)boxW / (f32)texW;
+                    a = boxW / texW;
                     boxH = lbl_803DBBC4;
-                    b = (f32)boxH / (f32)texH;
+                    b = boxH / texH;
                     a = (a < b) ? a : b;
                     a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
                     lbl_803DBBB8 = a;
                     if (lbl_803DD95C != 0)
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosZ + (f32)lbl_803DD948;
-                        yrel = ((GameObject*)player)->anim.worldPosX - (f32)lbl_803DBBD2;
+                        xrel = -((GameObject*)player)->anim.worldPosZ + lbl_803DD948;
+                        yrel = ((GameObject*)player)->anim.worldPosX - lbl_803DBBD2;
                     }
                     else
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosX + (f32)lbl_803DD948;
-                        yrel = -((GameObject*)player)->anim.worldPosZ + (f32)lbl_803DD94A;
+                        xrel = -((GameObject*)player)->anim.worldPosX + lbl_803DD948;
+                        yrel = -((GameObject*)player)->anim.worldPosZ + lbl_803DD94A;
                     }
-                    e = (f32)boxW - (f32)texW * lbl_803DBBB4;
+                    e = boxW - texW * lbl_803DBBB4;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
                     panx = -t;
-                    e = (f32)boxH - (f32)texH * lbl_803DBBB4;
+                    e = boxH - texH * lbl_803DBBB4;
                     e = e * 0.5f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
@@ -439,7 +439,7 @@ int Minimap_update(void)
                     {
                         a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(boxW / 2);
                         t = (t > a) ? t : a;
-                        b = (f32)texW * lbl_803DBBB4 - (f32)boxW;
+                        b = texW * lbl_803DBBB4 - boxW;
                         t = (t < b) ? t : b;
                         ox = t;
                     }
@@ -448,33 +448,33 @@ int Minimap_update(void)
                     {
                         a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(boxH / 2);
                         t = (t > a) ? t : a;
-                        b = (f32)texH * lbl_803DBBB4 - (f32)boxH;
+                        b = texH * lbl_803DBBB4 - boxH;
                         t = (t < b) ? t : b;
                         oy = t;
                     }
                     uq = ox / lbl_803DBBB4;
-                    u = (u32)uq;
-                    frac = lbl_803DBBB4 * (uq - (f32)u);
+                    u = uq;
+                    frac = lbl_803DBBB4 * (uq - u);
                     vq = oy / lbl_803DBBB4;
-                    vv = (u32)vq;
-                    ((u8*)&col)[3] = (u8)lbl_803DD932;
+                    vv = vq;
+                    ((u8*)&col)[3] = lbl_803DD932;
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
-                    fv = lbl_803DBBB4 * (vq - (f32)vv);
+                    fv = lbl_803DBBB4 * (vq - vv);
                     drawPartialTexture(minimapTexture,
                                        (lbl_803E2210 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
-                                       (u8)lbl_803DD932,
+                                       lbl_803DD932,
                                        (int)(lbl_803E2214 * *(f32*)&lbl_803DBBB4),
                                        texW - u, texH - vv, u, vv);
                     cx = 0.5f +
                         ((lbl_803DBBB4 * (xrel * lbl_803DBBEC) + lbl_803E2210) - ox - panx);
                     cy = 0.5f +
                         ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)lbl_803DD938) - oy - pany);
-                    ((u8*)&col)[3] = (u8)lbl_803DD932;
+                    ((u8*)&col)[3] = lbl_803DD932;
                     ((u8*)&col)[0] = 0;
                     ((u8*)&col)[1] = 0;
                     ((u8*)&col)[2] = 0;
@@ -494,7 +494,7 @@ int Minimap_update(void)
                         mathCosf(lbl_803E2220 * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / lbl_803E2224);
                     cwTri1 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
-                    ((u8*)&col)[3] = (u8)lbl_803DD932;
+                    ((u8*)&col)[3] = lbl_803DD932;
                     ((u8*)&col)[0] = 0xff;
                     ((u8*)&col)[1] = 0xff;
                     ((u8*)&col)[2] = 0;
@@ -559,8 +559,8 @@ int Minimap_update(void)
                     {
                         gameTextSetCursor(box[1], box[5], 1);
                         gameTextResetCursor(1);
-                        box[4] = (u16)lbl_803DBBC0;
-                        box[5] = (u16)lbl_803DBBC4;
+                        box[4] = lbl_803DBBC0;
+                        box[5] = lbl_803DBBC4;
                         gameTextSetCursor(box[1], box[5], 2);
                         gameTextSetColor(0, 0xff, 0, lbl_803DD7A2 & 0xff);
                         gameTextShow(lbl_803DBA6E + 10000);
@@ -593,7 +593,7 @@ int Minimap_update(void)
                         lbl_803DD930 & 0xff, 0x100);
             if (lbl_803DD930 != 0)
             {
-                ((u8*)&col2)[3] = (u8)lbl_803DD932;
+                ((u8*)&col2)[3] = lbl_803DD932;
                 ((u8*)&col2)[0] = 0xff;
                 ((u8*)&col2)[1] = 0xff;
                 ((u8*)&col2)[2] = 0;
@@ -618,18 +618,18 @@ int Minimap_update(void)
                 xl = xc - 4;
                 xr = xc + 4;
                 cwM = col2;
-                hudDrawTriangle(lbl_803E2240, (f32)xl, lbl_803E2240, (f32)xr,
-                                lbl_803E2244, (f32)xc, &cwM);
+                hudDrawTriangle(lbl_803E2240, xl, lbl_803E2240, xr,
+                                lbl_803E2244, xc, &cwM);
                 cwB = col2;
-                hudDrawTriangle(lbl_803E2248, (f32)xl, lbl_803E2248, (f32)xr,
-                                lbl_803E224C, (f32)xc, &cwB);
+                hudDrawTriangle(lbl_803E2248, xl, lbl_803E2248, xr,
+                                lbl_803E224C, xc, &cwB);
             }
         }
     }
     return 0;
 }
 
-u16 getMinimapY(void) { return (u16)lbl_803DD938; }
+u16 getMinimapY(void) { return lbl_803DD938; }
 
 int titlescreen_getExtraSize(void);
 void titlescreen_hitDetect(void);
@@ -703,7 +703,7 @@ void fn_80133718(void)
             Sfx_PlayFromObject(0, 1009);
         }
     }
-    *(s8*)((char*)lbl_803DBBC8[1] + 173) = (s8)b;
+    *(s8*)((char*)lbl_803DBBC8[1] + 173) = b;
     if ((u32)lbl_803DD934 == 0)
     {
         count = 1;
@@ -771,10 +771,10 @@ u8 fn_801334E0(void)
     {
         act = 1;
     }
-    act = (u8)act;
-    if (act == 0) return (u8)act;
+    act = act;
+    if (act == 0) return act;
     lbl_803DD928 = 5;
-    return (u8)act;
+    return act;
 }
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
@@ -792,7 +792,7 @@ void fn_8013351C(void)
     int y;
 
     col = lbl_803E2200;
-    ((u8*)&col)[3] = (u8)lbl_803DD930;
+    ((u8*)&col)[3] = lbl_803DD930;
     lbl_803DD94C = -(lbl_803E2260 * timeDelta - lbl_803DD94C);
     if (lbl_803DD94C > *(f32*)&lbl_803E2224)
     {
@@ -804,11 +804,11 @@ void fn_8013351C(void)
     s1 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
     cc2 = lbl_803E226C * mathSinf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
     s2 = lbl_803E226C * mathCosf((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
-    y = (int)lbl_803DD938 + 0x32;
+    y = lbl_803DD938 + 0x32;
     c2 = col;
-    hudDrawTriangle(lbl_803E2278 - c0, (f32)y - s0,
-                    lbl_803E2278 - c1, (f32)y - s1,
-                    lbl_803E2278 - cc2, (f32)y - s2, &c2);
+    hudDrawTriangle(lbl_803E2278 - c0, y - s0,
+                    lbl_803E2278 - c1, y - s1,
+                    lbl_803E2278 - cc2, y - s2, &c2);
 }
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
@@ -832,7 +832,7 @@ void fn_8013396C(void)
     player = (int)Obj_GetPlayerObject();
     if ((void*)player == NULL ||
         (*gCameraInterface)->getMode() == 0x44 ||
-        (s16)Camera_GetViewportYOffset() != 0 ||
+        Camera_GetViewportYOffset() != 0 ||
         (((GameObject*)player)->objectFlags & 0x1000) != 0 ||
         objIsCurModelNotZero(player) == 0 ||
         pauseMenuState != 0)
@@ -879,8 +879,8 @@ void fn_8013396C(void)
                 lbl_803DD929 = 1;
                 fn_80133818();
             }
-            held = (u16)getButtonsHeld(0);
-            pressed = (u16)getButtonsJustPressed(0);
+            held = getButtonsHeld(0);
+            pressed = getButtonsJustPressed(0);
             if ((held & 0xc) == 0)
             {
                 if ((pressed & 1) != 0)

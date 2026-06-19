@@ -611,13 +611,13 @@ void Effect10_func05(void)
     {
         lbl_803DB83C = lbl_803DFEC8;
     }
-    lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;
+    lbl_803DD3B0 = lbl_803DD3B0 + framesThisStep * 0x64;
     if (lbl_803DD3B0 > 0x7fff)
     {
         lbl_803DD3B0 = 0;
     }
     lbl_803DD3BC = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
-    lbl_803DD3B4 = lbl_803DD3B4 + (s32)framesThisStep * 0x32;
+    lbl_803DD3B4 = lbl_803DD3B4 + framesThisStep * 0x32;
     if (lbl_803DD3B4 > 0x7fff)
     {
         lbl_803DD3B4 = 0;

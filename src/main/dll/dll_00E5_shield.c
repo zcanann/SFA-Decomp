@@ -829,7 +829,7 @@ int* fn_801702D4(int* obj, f32 fv)
     *(u8*)((char*)alloc + 4) = 1;
     *(u8*)((char*)alloc + 5) = 1;
     *(u8*)((char*)alloc + 7) = 255;
-    new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
+    new_obj = Obj_SetupObject(alloc, 5, -1, -1, 0);
     if (new_obj != NULL)
     {
         ((GameObject*)new_obj)->anim.rootMotionScale = fv;
@@ -946,7 +946,7 @@ void shield_update(int* obj)
         f32* t4 = tbl + 4;
         for (i = 0; i < 4; i++)
         {
-            ps[26] = (s32)((f32)ps[30] * timeDelta + (f32)ps[26]);
+            ps[26] = (s32)((f32)ps[30] * timeDelta + ps[26]);
             if (((GameObject*)obj)->anim.seqId == 2102)
             {
                 pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
@@ -1019,14 +1019,14 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     ((GameObject*)obj)->anim.rotX = *(s16*)(q + 0x44);
                     ((GameObject*)obj)->anim.rotY = *(s16*)(q + 0x4c);
                     ((GameObject*)obj)->anim.rotZ = *(s16*)(q + 0x54);
-                    *(s16*)(q + 0x44) = dt * (f32)lbl_803DBD78[i] + (f32) * (s16*)(q + 0x44);
-                    *(s16*)(q + 0x4c) = dt * (f32)lbl_803DBD80[i] + (f32) * (s16*)(q + 0x4c);
-                    *(s16*)(q + 0x54) = dt * (f32)lbl_803DBD88[i] + (f32) * (s16*)(q + 0x54);
+                    *(s16*)(q + 0x44) = dt * lbl_803DBD78[i] + (f32) * (s16*)(q + 0x44);
+                    *(s16*)(q + 0x4c) = dt * lbl_803DBD80[i] + (f32) * (s16*)(q + 0x4c);
+                    *(s16*)(q + 0x54) = dt * lbl_803DBD88[i] + (f32) * (s16*)(q + 0x54);
                     {
                         u8* r = state + i * 4;
                         ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8 *
                             (((ShieldState*)state)->unk4 / *(f32*)&((ShieldState*)state)->unk10);
-                        *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * (f32)savedB36;
+                        *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
                     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E33C4);
@@ -1042,11 +1042,11 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     u32 off = i * 2 + 0x44;
                     ((GameObject*)obj)->anim.rotX = *(s16*)(state + off);
-                    *(s16*)(state + off) = dt * (f32)lbl_803DBD70[i] + (f32) * (s16*)(state + off);
+                    *(s16*)(state + off) = dt * lbl_803DBD70[i] + (f32) * (s16*)(state + off);
                     {
                         u8* r = state + i * 4;
                         ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8;
-                        *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * (f32)savedB36;
+                        *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
                     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E33C4);
@@ -1121,7 +1121,7 @@ void staffFn_80170380(int* obj, int cmd)
     f32* tbl = lbl_80320A28;
     u8* state = ((GameObject*)obj)->extra;
     int* glow;
-    int* player = (int*)Obj_GetPlayerObject();
+    int* player = Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
     {

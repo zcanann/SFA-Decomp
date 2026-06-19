@@ -336,7 +336,7 @@ void hightop_playMovementSfx(int obj, int p2, int p3)
     if (*(int*)((char*)p3 + 0x314) & 0x100)
     {
         fn_8009A8C8(obj, lbl_803E6B30);
-        Sfx_PlayFromObject((u32)obj, (u16)lbl_803DC310);
+        Sfx_PlayFromObject((u32)obj, lbl_803DC310);
     }
 }
 #pragma dont_inline reset
@@ -377,7 +377,7 @@ void hightop_renderGroundMarker(int obj, f32 scale)
     f32* mtx;
     f32 lx, ly, lz;
     ObjPosParams pos;
-    mtx = (f32*)ObjPath_GetPointModelMtx(obj, 2);
+    mtx = ObjPath_GetPointModelMtx(obj, 2);
     ObjPath_GetPointLocalPosition(obj, 2, &lx, &ly, &lz);
     pos.x = lx;
     pos.y = ly;
@@ -439,7 +439,7 @@ void hightop_init(void* obj, u8* arg)
     local1 = lbl_802C2590;
     local2 = lbl_802C25A4;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)hightop_interactionCallback;
+    ((GameObject*)obj)->animEventCallback = hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
     *(s8*)&runtime->unkC4B = -1;
@@ -458,7 +458,7 @@ void hightop_init(void* obj, u8* arg)
     (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], &lbl_803DC318, 8);
     (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &local8);
     (*gPathControlInterface)->attachObject(obj, pathState);
-    dll_2E_func05((int)obj, (char*)runtime->lookController, -4551, 23665, 6);
+    dll_2E_func05((int)obj, runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((char*)runtime->lookController, 300, 120);
     dll_2E_func09((char*)runtime->lookController, &local2, &local1, 6);
     runtime->unk9FD |= 2;
@@ -543,18 +543,18 @@ int hightop_stateHandler08(int obj, u8* p2)
 void hightop_initialise(void)
 {
     void** t = gHighTopStateHandlers;
-    t[0] = (void*)hightop_stateHandler00;
-    t[1] = (void*)hightop_stateHandler01;
-    t[2] = (void*)hightop_stateHandler02;
-    t[3] = (void*)hightop_stateHandler03;
-    t[4] = (void*)hightop_stateHandler04;
-    t[5] = (void*)hightop_stateHandler05;
-    t[6] = (void*)hightop_stateHandler06;
-    t[7] = (void*)hightop_stateHandler07;
-    t[8] = (void*)hightop_stateHandler08;
-    t[9] = (void*)hightop_stateHandler09;
-    t[10] = (void*)hightop_stateHandler10;
-    gHighTopDefaultStateHandler = (void*)hightop_defaultStateHandler;
+    t[0] = hightop_stateHandler00;
+    t[1] = hightop_stateHandler01;
+    t[2] = hightop_stateHandler02;
+    t[3] = hightop_stateHandler03;
+    t[4] = hightop_stateHandler04;
+    t[5] = hightop_stateHandler05;
+    t[6] = hightop_stateHandler06;
+    t[7] = hightop_stateHandler07;
+    t[8] = hightop_stateHandler08;
+    t[9] = hightop_stateHandler09;
+    t[10] = hightop_stateHandler10;
+    gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
 
 #pragma dont_inline on
@@ -684,7 +684,7 @@ void hightop_update(int obj)
             }
             else
             {
-                hightop_handleMotionEvent(obj, (u8)ev);
+                hightop_handleMotionEvent(obj, ev);
             }
         }
     }
@@ -699,7 +699,7 @@ void hightop_update(int obj)
     ((BaddieState*)p)->cameraYaw = 0;
     *(int*)p &= ~0x400000;
     (*(void (**)(int, char*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
-        obj, (char*)p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
+        obj, p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
     hightop_playMovementSfx(obj, (int)p, (int)p);
     characterDoEyeAnims(obj, (void*)(p + 0x38c));
     objAnimFn_80038f38(obj, (void*)(p + 0x3bc));
@@ -841,7 +841,7 @@ int hightop_stateHandler04(int obj, int p)
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
-            (char*)state + 0xa10, obj, 0x3463a, curve);
+            state + 0xa10, obj, 0x3463a, curve);
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(lbl_803DC320, 0x5ce);
@@ -854,7 +854,7 @@ int hightop_stateHandler04(int obj, int p)
         GameBit_Set(0x62a, 1);
         return 0;
     }
-    objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
+    objModelAndSoundFn_80039118(obj, state + 0xb48);
     state->unkC30 -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {
@@ -863,7 +863,7 @@ int hightop_stateHandler04(int obj, int p)
         {
             if (state->unkC30 < lbl_803E6AA8)
             {
-                ((BaddieState*)p)->moveSpeed = lbl_803E6AE0 * (f32)count + lbl_803E6AB0;
+                ((BaddieState*)p)->moveSpeed = lbl_803E6AE0 * count + lbl_803E6AB0;
                 move = 9;
                 state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
@@ -872,7 +872,7 @@ int hightop_stateHandler04(int obj, int p)
         {
             if (randFn_80080100((4 - count) * 0xa) != 0)
             {
-                ((BaddieState*)p)->moveSpeed = lbl_803E6AE8 * (f32)count + lbl_803E6AE4;
+                ((BaddieState*)p)->moveSpeed = lbl_803E6AE8 * count + lbl_803E6AE4;
                 move = 9;
                 state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
@@ -891,7 +891,7 @@ int hightop_stateHandler04(int obj, int p)
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
         ObjAnim_SetCurrentMove(obj, move, lbl_803E6AA8, 0);
     }
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (player == 0)
     {
         state->unk9FD &= ~1;
@@ -1177,7 +1177,7 @@ int hightop_stateHandler09(int obj, int p)
                     roll -= lbl_8032AB3C[idx];
                     idx++;
                 }
-                state->unkC42 = (u8)idx;
+                state->unkC42 = idx;
                 state->unk9FD |= 1;
                 s16toFloat((char*)state + 0xc2c, 0x14);
             }

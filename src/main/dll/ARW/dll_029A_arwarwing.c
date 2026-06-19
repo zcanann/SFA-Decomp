@@ -128,9 +128,9 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
     if (state->hitShake != 0)
     {
         dx = (int)(lbl_803E6FF4 *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakePitch / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)(u32) * &state->shakePitch / lbl_803E6F00));
         dy = (int)(lbl_803E6F5C *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakeYaw / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)(u32) * &state->shakeYaw / lbl_803E6F00));
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + dx);
         ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + dy);
     }
@@ -178,7 +178,7 @@ void arwarwing_setFlightHalfWidth(int arwing, f32 width)
 int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur; }
 
 #pragma scheduling off
-void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = (s16)rotY; }
+void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = rotY; }
 #pragma scheduling reset
 
 void arwarwing_getVelocity(int out, int arwing)
@@ -709,7 +709,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
-    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0)
+    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && GameBit_Get(0x9d6) == 0 && GameBit_Get(0x9d8) == 0)
     {
         vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ)) *
             lbl_803E6F50);
@@ -1079,7 +1079,7 @@ void arwarwing_handlePathDamage(int obj, int state)
 
     if (((ArwingState*)state)->hitShake == 0 || ((ArwingState*)state)->mode == ARWING_MODE_DEAD)
     {
-        dmg = (s8)pathBlock[0x260];
+        dmg = pathBlock[0x260];
         if (dmg == 0)
             return;
         if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
@@ -1090,7 +1090,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
-        if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
+        if ((dmg & 1) && pathBlock[0xb8] == 8)
             ((ArwingState*)state)->shield = 0;
         else
             ((ArwingState*)state)->shield--;
@@ -1124,8 +1124,8 @@ void arwarwing_handlePathDamage(int obj, int state)
     }
     else
     {
-        ((ArwingState*)state)->shakeYaw = lbl_803E6F3C * timeDelta + (f32) * (u16*)&((ArwingState*)state)->shakeYaw;
-        ((ArwingState*)state)->shakePitch = lbl_803E6F40 * timeDelta + (f32) * (u16*)&((ArwingState*)state)->shakePitch;
+        ((ArwingState*)state)->shakeYaw = lbl_803E6F3C * timeDelta + (f32) * &((ArwingState*)state)->shakeYaw;
+        ((ArwingState*)state)->shakePitch = lbl_803E6F40 * timeDelta + (f32) * &((ArwingState*)state)->shakePitch;
     }
 }
 #pragma scheduling reset
@@ -1367,7 +1367,7 @@ void arwarwing_init(int obj)
     cfg.c = lbl_802C25E8.c;
     state = *(int*)&((GameObject*)obj)->extra;
     pathBlock = ((ArwingState*)state)->pathBlock;
-    ((GameObject*)obj)->animEventCallback = (void*)arwarwing_SeqFn;
+    ((GameObject*)obj)->animEventCallback = arwarwing_SeqFn;
     (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
     (*gPathControlInterface)->setup(pathBlock, 3, lbl_8032B408, lbl_8032B480, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);

@@ -151,7 +151,7 @@ static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 
 static ModgfxVertexData* modgfx_getInactiveVertexBuffer(ModgfxState* state)
 {
-    return state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    return state->vertexBuffers[1 - state->activeVertexBufferIndex];
 }
 
 static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
@@ -277,7 +277,7 @@ void modgfx_initExpgfxSpawnConfig(u32 unused1, u32 unused2, u8 colorLowByte,
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
+    gExpgfxSpawnConfig.colorByte0.value = setupValue;
     gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
@@ -288,7 +288,7 @@ void modgfx_initExpgfxSpawnConfig(u32 unused1, u32 unused2, u8 colorLowByte,
     gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
     gExpgfxSpawnConfig.colorByte1.value = 0;
     gExpgfxSpawnConfig.colorByte1.lowByte = 0;
-    gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)setupWord;
+    gExpgfxSpawnConfig.quadVertex3Pad06 = setupWord;
     *(u32*)&gExpgfxSpawnConfig.scale = scaleBits;
     gExpgfxSpawnConfig.texture.word = textureWord;
     gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
@@ -342,7 +342,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     for (i = 0; i < state->vertexCount; i = i + 1)
     {
-        if (wrapCountS == (int)state->vertexCount)
+        if (wrapCountS == state->vertexCount)
         {
             coord = activeVertexData->texCoordS;
             if (coord < 0x101)
@@ -354,7 +354,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
                 activeVertexData->texCoordS = coord + -0x100;
             }
         }
-        if (wrapCountT == (int)state->vertexCount)
+        if (wrapCountT == state->vertexCount)
         {
             coord = activeVertexData->texCoordT;
             if (coord < 0x101)
@@ -564,15 +564,15 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             state->posStepX =
                 *(float*)(command + 4) /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) -
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) -
                     DOUBLE_803e00c8);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
             state->posStepZ =
                 ((ModgfxVertexGroupCmd*)command)->valueZ /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
         }
         state->posCurX = state->posCurX + state->posStepX;
@@ -615,13 +615,13 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
         else
         {
             state->rotStepZ =
-                (short)(((int)targetRotZ - (int)state->rotOffsetZ) / (int)state->blendFrameCount
+                (short)(((int)targetRotZ - state->rotOffsetZ) / state->blendFrameCount
                 );
             state->rotStepY =
-                (short)(((int)targetRotY - (int)state->rotOffsetY) / (int)state->blendFrameCount
+                (short)(((int)targetRotY - state->rotOffsetY) / state->blendFrameCount
                 );
             state->rotStepX =
-                (short)(((int)targetRotX - (int)state->rotOffsetX) / (int)state->blendFrameCount
+                (short)(((int)targetRotX - state->rotOffsetX) / state->blendFrameCount
                 );
         }
     }
@@ -1014,7 +1014,7 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
         }
         cfgBehaviorFlags = 0;
         cfgRenderFlags = 0;
-        cfgEffectIdByte = (u8)effectId;
+        cfgEffectIdByte = effectId;
         cfgStartPosX = lbl_803E0914;
         cfgStartPosY = lbl_803E0914;
         cfgStartPosZ = lbl_803E0914;

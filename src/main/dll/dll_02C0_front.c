@@ -80,7 +80,7 @@ void titlescreen_hitDetect(void)
 }
 
 /* EN v1.0 0x80135BCC  size: 36b  titlescreen_getObjectTypeId: returns 74 if
- * obj->_46 (s16) is in [1917, 1920], else returns 0. */
+ * obj->_46  is in [1917, 1920], else returns 0. */
 int titlescreen_getObjectTypeId(u8* obj)
 {
     s16 v = ((GameObject*)obj)->anim.seqId;
@@ -257,7 +257,7 @@ void titlescreen_init(u8* obj, u8* p)
         {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
             ObjModel_SetRenderCallback(*(int**)(*(int**)&((GameObject*)obj)->anim.banks),
-                                       (void*)AttractMovie_DrawTextureCallback);
+                                       AttractMovie_DrawTextureCallback);
         }
     }
 }
@@ -295,7 +295,7 @@ void fn_80133F70(void* obj)
     {
         gameTimerRun(obj);
     }
-    player = (void*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
     if (nearest != NULL)
     {
@@ -432,7 +432,7 @@ void titleScreenShowCopyright(u8 arg)
             lbl_803DD9AC = *(s16*)((char*)box + 0x16);
         }
         *(s16*)((char*)box + 0x16) =
-            (s16)(lbl_803E2320 * (lbl_803E2318 - lbl_803DD99C) + (f32)lbl_803DD9AC);
+            (s16)(lbl_803E2320 * (lbl_803E2318 - lbl_803DD99C) + lbl_803DD9AC);
         gameTextSetColor(0xff, 0xff, 0xff, (s32)(lbl_803E2324 * lbl_803DD9B0));
         gameTextShow(0x3d9);
     }
@@ -460,23 +460,23 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
     GXSetVtxDesc(0xd, 1);
     GXSetCullMode(0);
     GXBegin(0x80, 1, 4);
-    GXWGFifo.s16 = (s16)x0;
-    GXWGFifo.s16 = (s16)y0;
+    GXWGFifo.s16 = x0;
+    GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v0;
-    GXWGFifo.s16 = (s16)x1;
-    GXWGFifo.s16 = (s16)y0;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v0;
-    GXWGFifo.s16 = (s16)x1;
-    GXWGFifo.s16 = (s16)y1;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
-    GXWGFifo.s16 = (s16)x0;
-    GXWGFifo.s16 = (s16)y1;
+    GXWGFifo.s16 = x0;
+    GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
@@ -496,22 +496,22 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
                  (int)((u32) * (f32*)(lbl_803A9FE4 + 0x1c) + 0x4e), 0x104, 0x16);
     GXBegin(0x80, 1, 4);
     GXWGFifo.s16 = (s16)(x0 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
-    GXWGFifo.s16 = (s16)y0;
+    GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v0;
     GXWGFifo.s16 = (s16)(x1 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
-    GXWGFifo.s16 = (s16)y0;
+    GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v0;
     GXWGFifo.s16 = (s16)(x1 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
-    GXWGFifo.s16 = (s16)y1;
+    GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
     GXWGFifo.s16 = (s16)(x0 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
-    GXWGFifo.s16 = (s16)y1;
+    GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
@@ -573,7 +573,7 @@ void titlescreen_update(u8* obj)
 
     if (lbl_803DD9AB != 0)
     {
-        if ((s8)state[0x31] != (s8)lbl_803DD990 && (s8)lbl_803DD991 == 0 &&
+        if ((s8)state[0x31] != lbl_803DD990 && lbl_803DD991 == 0 &&
             (c = state[0x30]) != 0 && c != 4 && c != 3)
         {
             if (((GameObject*)obj)->anim.seqId == 0x77d || ((GameObject*)obj)->anim.seqId == 0x780)
@@ -589,7 +589,7 @@ void titlescreen_update(u8* obj)
                 ((TrickyState*)state)->moveProgress = lbl_8031CE10[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
-        if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
+        if ((s8)state[0x31] == lbl_803DD990 && lbl_803DD991 != 0 &&
             (c = state[0x30]) != 1 && c != 2 && c != 5)
         {
             state[0x30] = 1;
@@ -605,7 +605,7 @@ void titlescreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x7a7)
         {
-            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * (s16*)obj;
+            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * obj;
         }
         else if (t != 0x78a)
         {
@@ -629,7 +629,7 @@ void titlescreen_update(u8* obj)
             evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, (int)obj, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
-                if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1)
+                if ((s8)state[0x31] == lbl_803DD990 && state[0x30] == 1)
                 {
                     state[0x30] = 2;
                     ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
@@ -860,20 +860,20 @@ void titlescreen_update(u8* obj)
 void fn_80134870(int obj, u8* arr)
 {
     int i;
-    for (i = 0; i < (s8)arr[0x1b]; i++)
+    for (i = 0; i < arr[0x1b]; i++)
     {
         s8 t;
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 0x77d:
-            t = (s8)arr[i + 0x13];
+            t = arr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x368);
             }
             break;
         case 0x77e:
-            t = (s8)arr[i + 0x13];
+            t = arr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x370);
@@ -884,7 +884,7 @@ void fn_80134870(int obj, u8* arr)
             }
             break;
         case 0x77f:
-            t = (s8)arr[i + 0x13];
+            t = arr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x36b);
@@ -895,7 +895,7 @@ void fn_80134870(int obj, u8* arr)
             }
             break;
         case 0x780:
-            t = (s8)arr[i + 0x13];
+            t = arr[i + 0x13];
             if (t == 0)
             {
                 Sfx_PlayFromObject(obj, 0x36a);
@@ -1055,7 +1055,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1),
                 lbl_803E2304 + lbl_803E2300 * lbl_803DD9C8 + (f32)(int)yb, a, 0xff);
     gameTextSetColor(0xff, 0xff, 0xff,
-                     (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - (f64)lbl_803DD9C8)));
+                     (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - lbl_803DD9C8)));
     gameTextShow(0x3da);
     drawTexture(lbl_803A9F98[3], (f32)(int)((int)*(f32*)(lbl_803A9FE4 + 0xc) - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)lbl_803A9F98[3])->width >> 1)), 0xff, 0xff);

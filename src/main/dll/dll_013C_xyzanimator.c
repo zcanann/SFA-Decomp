@@ -112,7 +112,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     edgeOffset = 0;
     for (blockIndex = 0; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
     {
-        mapBlock = (u16*)mapBlockFn_800606ec((int*)block, blockIndex);
+        mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
         if ((int)setup->unk28 == blockLayer)
         {
@@ -122,18 +122,18 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
             blockEnd = mapBlock[10];
             triangle = (u32) * mapBlock;
             edgeOffset = triangleOffset;
-            for (; (int)triangle < (int)(u32)blockEnd; triangle++)
+            for (; triangle < (int)(u32)blockEnd; triangle++)
             {
-                mapBlock = (u16*)fn_800606DC((int*)block, triangle);
+                mapBlock = fn_800606DC((int*)block, triangle);
                 vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32) * mapBlock * 6);
                 *(s16*)(state->dataBuffer + edgeOffset) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset + 4) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32)mapBlock[1] * 6);
+                vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[1] * 6);
                 *(s16*)(state->dataBuffer + edgeOffset + 6) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset + 8) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset + 10) = vtx->z;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32)mapBlock[2] * 6);
+                vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[2] * 6);
                 *(s16*)(state->dataBuffer + edgeOffset + 0xc) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset + 0xe) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset + 0x10) = vtx->z;
@@ -181,7 +181,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     vertexOffset = coordOffset;
     for (blockIndex = 0; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
     {
-        mapBlock = (u16*)mapBlockFn_800606ec((int*)block, blockIndex);
+        mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
         if ((int)def->unk28 == blockLayer)
         {
@@ -194,9 +194,9 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
             scale = lbl_803E4008;
             triangle = (u32) * mapBlock;
             edgeOffset = vertexOffset;
-            for (; (int)triangle < (int)(u32)blockEnd; triangle++)
+            for (; triangle < (int)(u32)blockEnd; triangle++)
             {
-                mapBlock = (u16*)fn_800606DC((int*)block, triangle);
+                mapBlock = fn_800606DC((int*)block, triangle);
                 vertexIndex = edgeOffset;
                 for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
                 {
@@ -224,7 +224,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         shader = fn_8006070C((int*)block, *(u8*)(vertexOffset + 0x13));
         shader = Shader_getLayer(shader, 0);
         scale = lbl_803E4008;
-        if ((int) * (u8*)((int)shader + 5) == (int)def->unk28)
+        if ((int) * (u8*)((int)shader + 5) == def->unk28)
         {
             ((EdgeVerts*)vertexOffset)->a = (s16)(scale * state->unk40 +
                 (f32) * (s16*)(state->unk28 + edgeData));
@@ -339,7 +339,7 @@ void xyzanimator_update(int obj)
         }
         else
         {
-            ((XyzAnimatorState*)state)->gameBitValue = (s8)GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
+            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
         }
         ((XyzAnimatorState*)state)->unk8 = *(u8*)(block + 0xa1);
         ((XyzAnimatorState*)state)->unk40 = (f32)((XyzAnimatorPlacement*)setup)->unk1C;
@@ -396,7 +396,7 @@ void xyzanimator_update(int obj)
         t = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
         if (((XyzAnimatorState*)state)->gameBitValue != t)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = (s8)t;
+            ((XyzAnimatorState*)state)->gameBitValue = t;
             if (t == 0)
             {
                 if (((XyzAnimatorPlacement*)setup)->unk1A > -1)
@@ -426,7 +426,7 @@ void xyzanimator_update(int obj)
         }
         if (((XyzAnimatorState*)state)->gameBitValue == 0)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = (s8)GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
+            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
             if (((XyzAnimatorState*)state)->gameBitValue == 0)
             {
                 goto no_update;

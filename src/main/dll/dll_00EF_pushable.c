@@ -365,7 +365,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             {
                 animUpdate->rotOffsetX = animUpdate->rotOffsetX + 0xffff;
             }
-            animUpdate->rotOffsetY = obj[1] - (u16)refObj[1];
+            animUpdate->rotOffsetY = obj[1] - refObj[1];
             if (0x8000 < animUpdate->rotOffsetY)
             {
                 animUpdate->rotOffsetY = animUpdate->rotOffsetY - 0xffff;
@@ -374,7 +374,7 @@ u32 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             {
                 animUpdate->rotOffsetY = animUpdate->rotOffsetY + 0xffff;
             }
-            animUpdate->rotOffsetZ = (u16)refObj[2] - (u16)obj[2];
+            animUpdate->rotOffsetZ = refObj[2] - obj[2];
             if (0x8000 < animUpdate->rotOffsetZ)
             {
                 animUpdate->rotOffsetZ = animUpdate->rotOffsetZ - 0xffff;
@@ -535,7 +535,7 @@ FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         (iVar1 = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < iVar1))
     {
         FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
-                     (int)animUpdate, param_12, param_13, param_14, param_15, param_16);
+                     animUpdate, param_12, param_13, param_14, param_15, param_16);
         animUpdate->triggerCommand = 0;
     }
     return 0;
@@ -567,7 +567,7 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
     psVar2 = (short*)FUN_80017a90();
     local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != (short*)0x0))
+    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != 0x0))
     {
         *(float*)(param_9 + 0x24) = lbl_803E42B0;
         *(float*)(param_9 + 0x28) = local_1c;
@@ -578,7 +578,7 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         local_24 = psVar2[2];
         local_26 = psVar2[1];
         iVar4 = FUN_801365ac((int)psVar2);
-        local_28 = *psVar2 + (short)iVar4;
+        local_28 = *psVar2 + iVar4;
         FUN_80017748(&local_28, (float*)(param_9 + 0x24));
         if ((psVar2[0x58] & 0x800U) == 0)
         {
@@ -771,13 +771,13 @@ void pushable_init(s16* obj, char* def)
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
-    ((GameObject*)obj)->animEventCallback = (void*)fn_8017510C;
+    ((GameObject*)obj)->animEventCallback = fn_8017510C;
     state = ((GameObject*)obj)->extra;
     state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);
     model = (int*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
-    state->scale = (f32) * (u16*)&((PushableObjectDef*)def)->unk20 / lbl_803E35CC;
+    state->scale = (f32) * &((PushableObjectDef*)def)->unk20 / lbl_803E35CC;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
@@ -807,18 +807,18 @@ void pushable_init(s16* obj, char* def)
                 f32 vx = vtx[0];
                 f32 vz = vtx[2];
 
-                for (; j < (s8)cnt; j++)
+                for (; j < cnt; j++)
                 {
                     char* p = (char*)state + j * 0xc;
                     if (vx == *(f32*)(p + 0x48) && vz == *(f32*)(p + 0x50))
                     {
                         found = 1;
-                        j = (s8)cnt;
+                        j = cnt;
                     }
                 }
                 if (found == 0)
                 {
-                    *(f32*)((u8*)state + (s8)cnt * 0xc + 0x48) = vtx[0];
+                    *(f32*)((u8*)state + cnt * 0xc + 0x48) = vtx[0];
                     *(f32*)((u8*)state + state->pointCount * 0xc + 0x4c) = vtx[1];
                     *(f32*)((u8*)state + state->pointCount * 0xc + 0x50) = vtx[2];
                     state->pointCount += 1;
@@ -1156,7 +1156,7 @@ void pushable_hitDetect(int* obj)
         state->prevWaterDepth = state->waterDepth;
         if (cntE != 0)
         {
-            state->waterDepth = acc / (f32)cntE;
+            state->waterDepth = acc / cntE;
         }
         else
         {
@@ -1165,7 +1165,7 @@ void pushable_hitDetect(int* obj)
         if (cnt2 != 0 && state->timer_0x110 <= lbl_803E3528)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E3528;
-            ((GameObject*)obj)->anim.localPosY = lbl_803E358C + tmpY / (f32)cnt2;
+            ((GameObject*)obj)->anim.localPosY = lbl_803E358C + tmpY / cnt2;
             state->flags = state->flags & ~0xc;
         }
         else
@@ -1257,9 +1257,9 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     hit = 0;
     if (dx > lbl_803E3528)
     {
-        end[0] = lbl_803E35A0 * mathSinf(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[0];
+        end[0] = lbl_803E35A0 * mathSinf(lbl_803E3590 * state->yaw / lbl_803E3594) + start[0];
         end[1] = start[1];
-        end[2] = lbl_803E35A0 * mathCosf(lbl_803E3590 * (f32)state->yaw / lbl_803E3594) + start[2];
+        end[2] = lbl_803E35A0 * mathCosf(lbl_803E3590 * state->yaw / lbl_803E3594) + start[2];
         hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
         hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);

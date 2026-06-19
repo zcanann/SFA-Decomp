@@ -136,7 +136,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
         switch (*(u8*)((int)retPair + eventIdx + 0x13))
         {
         case 0:
-            if (sfxTable != (u16*)0x0)
+            if (sfxTable != 0x0)
             {
                 FUN_80006824(obj, *sfxTable);
             }
@@ -154,7 +154,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
             tailSfxSlot = 4;
             break;
         case 7:
-            if (sfxTable != (u16*)0x0)
+            if (sfxTable != 0x0)
             {
                 FUN_80006824(obj, sfxTable[1]);
             }
@@ -163,7 +163,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
             FUN_80006824(obj, SFXsk_trwhin3);
         }
     }
-    if ((tailSfxSlot != 0) && (sfxTable != (u16*)0x0))
+    if ((tailSfxSlot != 0) && (sfxTable != 0x0))
     {
         FUN_80006824(obj, sfxTable[2]);
     }
@@ -194,7 +194,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u32 uStack_3c;
     s64 local_38;
 
-    if (param_3 == (short*)0x0)
+    if (param_3 == 0x0)
     {
         result = 0;
     }
@@ -223,7 +223,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             }
             uStack_44 = (int)*param_2 ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = (int)angDelta ^ 0x80000000;
+            uStack_3c = angDelta ^ 0x80000000;
             local_40 = 0x43300000;
             newAng = (int)
             ((f32)(s32)
@@ -234,16 +234,16 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             )
             ;
             local_38 = (s64)newAng;
-            *param_2 = (short)newAng;
+            *param_2 = newAng;
             dist = (double)*(float*)(param_2 + 0x14);
             velZ = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, (int)param_2);
+            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, param_2);
             if (param_2[0x50] != 0x1a)
             {
                 FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
-            FUN_8002f6ac(param_1, (int)param_2, param_4);
+            FUN_8002f6ac(param_1, param_2, param_4);
             result = 0;
         }
         else
@@ -301,7 +301,7 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         hitResult = FUN_8007f924((int)animUpdate);
         if ((hitResult == 0x283) ||
             (hitResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                  , (int)animUpdate, state, (short)*coordPair, (short)coordPair[1], param_14, param_15,
+                                  , animUpdate, state, (short)*coordPair, coordPair[1], param_14, param_15,
                                   param_16), hitResult == 0))
         {
             if (animUpdate->triggerCommand == 2)
@@ -486,7 +486,7 @@ void babycloudrunner_init(int* obj, u8* def)
 
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->animEventCallback = (void*)babycloudrunner_SeqFn;
+    ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
     sub = ((GameObject*)obj)->extra;
@@ -669,11 +669,11 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
-    fn_8003ADC4((int*)a, (int*)b, (char*)c + 0x3c, 0x28, 0, 3);
+    fn_8003ADC4((int*)a, (int*)b, c + 0x3c, 0x28, 0, 3);
     shifted = Obj_GetYawDeltaToObject(a, b, 0) >> 3;
-    *(s16*)a += (s16)shifted;
+    *(s16*)a += shifted;
     if (d == 0) return;
-    if ((s16)shifted > -200 && (s16)shifted < 200)
+    if ((s16)shifted > -200 && shifted < 200)
     {
         if (((BabyCloudRunnerState*)c)->turnLatch != 0)
         {
@@ -697,11 +697,11 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
             int t;
             if ((int)(s16)shifted > 0)
             {
-                t = (s16)shifted >> 2;
+                t = shifted >> 2;
             }
             else
             {
-                t = -(s16)shifted >> 2;
+                t = -shifted >> 2;
             }
             ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(a, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
         }
@@ -723,13 +723,13 @@ int babycloudrunner_func0B(void* p)
     BabyCloudRunnerState* sub;
     u8* q;
     void* player;
-    obj = (int*)p;
+    obj = p;
     sub = ((GameObject*)obj)->extra;
     q = *(u8**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     r = *(u8**)&((GameObject*)obj)->anim.placementData;
     flag = 0;
-    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
+    if (Vec_distance((char*)player + 0x18, obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
     {
         if (sub->runnerState == 3)
         {
@@ -752,7 +752,7 @@ int babycloudrunner_func0B(void* p)
         ((GameObject*)obj)->unkF4 = 0;
         return 1;
     }
-    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
+    objAudioFn_800393f8((int)obj, sub + 0x6c, 0x296, 0x1000, -1, 1);
     Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
@@ -897,7 +897,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     animUpdate->sequenceEventActive = 0;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     dx = ((GameObject*)player)->anim.localPosX - *(f32*)(def + 8);
     dz = ((GameObject*)player)->anim.localPosZ - *(f32*)(def + 0x10);
     distSq = dx * dx + dz * dz;
@@ -912,7 +912,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
     {
         BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
-        char* pp = (char*)Obj_GetPlayerObject();
+        char* pp = Obj_GetPlayerObject();
         u8* def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
         if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32) * (s16*)(def2 + 0x1a)
@@ -966,9 +966,9 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 0:
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, (int)player, 0);
-        fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
-        ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
+        yaw = Obj_GetYawDeltaToObject((int)obj, player, 0);
+        fn_8003ADC4(obj, (int*)player, sub + 0x3c, 0x28, 0, 3);
+        ((GameObject*)obj)->anim.rotX += yaw / 8;
         if (inRange != 0)
         {
             animUpdateBytes[0x90] |= 4;
@@ -980,9 +980,9 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         break;
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, (int)getTrickyObject(), 0);
-        fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
-        ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
+        yaw = Obj_GetYawDeltaToObject((int)obj, getTrickyObject(), 0);
+        fn_8003ADC4(obj, getTrickyObject(), sub + 0x3c, 0x28, 0, 3);
+        ((GameObject*)obj)->anim.rotX += yaw / 8;
         break;
     }
     return 0;
@@ -1013,7 +1013,7 @@ void babycloudrunner_update(int* obj)
     int mode;
     f32 radius;
     sub = ((GameObject*)obj)->extra;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     getTrickyObject();
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
     {
@@ -1068,13 +1068,13 @@ void babycloudrunner_update(int* obj)
             if (randFn_80080100(500) != 0)
             {
                 int r = randomGetRange(0, 3);
-                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
+                objAudioFn_80039270((int)obj, sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
             }
-            objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
+            objAnimFn_80038f38((int)obj, sub + 0x6c);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
+                Obj_UpdateRomCurveFollowVelocity(obj, sub + 0x124, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
@@ -1085,7 +1085,7 @@ void babycloudrunner_update(int* obj)
                         sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
                         (*gGameUIInterface)->initAirMeter(lbl_80322B28[sub->runnerIndex], 0x5d1);
-                        s16toFloat((int)((char*)sub + 0x238), (s16)lbl_80322B28[sub->runnerIndex]);
+                        s16toFloat((int)((char*)sub + 0x238), lbl_80322B28[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;
@@ -1093,10 +1093,10 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < lbl_803DBE38)
+                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), sub + 0x18) < lbl_803DBE38)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) > lbl_803DBE3C)
+                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, near + 0x18) > lbl_803DBE3C)
                         {
                             fn_8014C66C(near, obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)
@@ -1128,7 +1128,7 @@ void babycloudrunner_update(int* obj)
                 if (fn_80080150((char*)sub + 0x238) != 0)
                 {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
-                        (char*)sub + 0x238) != 0)
+                        sub + 0x238) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
                         (*gGameUIInterface)->airMeterSetShutdown();
@@ -1153,10 +1153,10 @@ void babycloudrunner_update(int* obj)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
                 sub2 = ((GameObject*)obj)->extra;
                 {
-                    char* pp = (char*)Obj_GetPlayerObject();
+                    char* pp = Obj_GetPlayerObject();
                     def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
-                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
+                    if (Vec_distance(pp + 0x18, obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
                         && sub2->runnerState == 3
                         && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
                     {
