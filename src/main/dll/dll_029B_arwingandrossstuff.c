@@ -170,7 +170,6 @@ void arwingandrossstuff_hitDetect(int obj)
     } d, v, w;
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ArwProjectileState* state = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
     int arwing = getArwing();
     ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
 
@@ -187,7 +186,7 @@ void arwingandrossstuff_hitDetect(int obj)
             state->despawnTimer = lbl_803E7028;
         }
     }
-    if (hitState->lastHitObject != 0 && state->param0.deflected == 0)
+    if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 && state->param0.deflected == 0)
     {
         if (objAnim->seqId != ARW_SEQID_INVINCIBLE)
         {
@@ -206,7 +205,7 @@ void arwingandrossstuff_hitDetect(int obj)
             arwarwing_setVelocity(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
-        if (hitState->lastHitObject == arwing)
+        if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == arwing)
         {
             if (arwarwing_isBarrelRolling(arwing) != 0)
             {
