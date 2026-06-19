@@ -568,11 +568,11 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         {
             *(int*)(op + 0x18) = 0;
         }
-        if (!(*(u16*)(m + 0xe2) & 0xc))
+        if (!(((ModelFileHeader*)m)->shaderFlags & 0xc))
         {
             *(int*)(op + 0x8) = 0;
         }
-        if (!(*(u16*)(m + 0xe2) & 0xe00))
+        if (!(((ModelFileHeader*)m)->shaderFlags & 0xe00))
         {
             *(int*)(op + 0x14) = 0;
         }
@@ -2431,9 +2431,9 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     while (i < *(int*)(anim + 8) + 1)
     {
         u8* p = *(u8**)anim + off;
-        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * *(f32*)(m + 0xc) + lbl_802CABB8[0] * amp;
-        *(f32*)(p + 0x10) = lbl_802CABB8[1] * amp + (*(f32*)(p + 0x10) * *(f32*)(m + 0xc) + *(f32*)(m + 0x10));
-        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * *(f32*)(m + 0xc) + lbl_802CABB8[2] * amp;
+        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * *(f32*)&((ModelFileHeader*)m)->dataSize + lbl_802CABB8[0] * amp;
+        *(f32*)(p + 0x10) = lbl_802CABB8[1] * amp + (*(f32*)(p + 0x10) * *(f32*)&((ModelFileHeader*)m)->dataSize + *(f32*)(m + 0x10));
+        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * *(f32*)&((ModelFileHeader*)m)->dataSize + lbl_802CABB8[2] * amp;
         off += 0x54;
         i++;
     }
