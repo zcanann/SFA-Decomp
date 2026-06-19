@@ -1944,7 +1944,7 @@ void cMenuRun(void)
     }
 
     if ((*gCameraInterface)->getMode() == 0x44 ||
-        (*(u16*)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0)
+        (((GameObject*)player)->objectFlags & 0x1000) != 0 || pauseMenuState != 0)
     {
         buttonDisable(0, 0xe0800);
     }
@@ -1961,7 +1961,7 @@ void cMenuRun(void)
     btn16 = (u16)btn;
 
     if ((*gCameraInterface)->getMode() == 0x44 ||
-        (*(u16*)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0 ||
+        (((GameObject*)player)->objectFlags & 0x1000) != 0 || pauseMenuState != 0 ||
         (s8)shouldCloseCMenu != 0 || lbl_803DD75B != 0)
     {
         gCMenuButtons |= 0x200;
@@ -2833,7 +2833,7 @@ void pauseMenuFn_80129ee0(void)
                 int audioFree = 0;
                 int canOpen = 1;
                 camMode = (*gCameraInterface)->getMode();
-                if ((player == 0 || !(*(u16*)(player + 0xb0) & 0x1000)) &&
+                if ((player == 0 || !(((GameObject*)player)->objectFlags & 0x1000)) &&
                     getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
                 {
                     audioFree = 1;
@@ -2884,7 +2884,7 @@ void pauseMenuFn_80129ee0(void)
                 }
                 {
                     s16 tm = lbl_803DD772;
-                    if (tm != 0 && player != 0 && !(*(u16*)(player + 0xb0) & 0x1000) &&
+                    if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & 0x1000) &&
                         (u8)pauseMenuIsFox() != 0)
                     {
                         s16 nv = (s16)(lbl_803DD772 + framesThisStep);
