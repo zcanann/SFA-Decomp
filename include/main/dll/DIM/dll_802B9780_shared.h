@@ -336,11 +336,11 @@ extern void DR_EarthWarrior_stateHandler02();
 extern int DR_EarthWarrior_stateHandler03(int obj, int p2);
 
 extern f32 lbl_803E82C0;
-extern f32 lbl_803E82C4;
+extern f32 gPrisonMammothMoveSpeed;
 extern f32 lbl_803E82C8;
 extern f32 lbl_803E82CC;
-extern f32 lbl_803DC758;
-extern s16 lbl_803DC754;
+extern f32 gPrisonMammothMoveSpeedTable;
+extern s16 gPrisonMammothMoveIdTable;
 
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
@@ -394,8 +394,8 @@ extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
 void fn_802BF0C8(int obj, int inner, int bit);
 
-extern u8 lbl_803DC750;
-extern ObjHitReactEntry lbl_803351A8[];
+extern u8 gPrisonMammothStateFlagsTable;
+extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 extern void saveGame_saveObjectPos(int obj);
 
 extern u8 gDRCloudRunnerMoveParamTable[];

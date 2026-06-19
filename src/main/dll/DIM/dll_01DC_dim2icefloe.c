@@ -37,8 +37,8 @@ extern u8 framesThisStep;
 #pragma peephole on
 extern void fn_80296D20(void* player, int obj);
 extern f32 lbl_803E4B34;
-extern f32 lbl_803E4B38;
-extern f32 lbl_803E4B3C;
+extern f32 gDim2IceFloeSinkSpeed;
+extern f32 gDim2IceFloeSinkFreeThreshold;
 extern f32 lbl_803E4B48;
 extern f32 lbl_803E4B4C;
 extern f32 lbl_803E4B50;
@@ -120,14 +120,14 @@ void dim2icefloe_update(int obj)
             Dim2IceFloeState*)sub)->bobPhase;
         if (((IceFloeFlags*)(sub + 0xb9))->finished)
         {
-            ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject*)obj)->anim.localPosY);
+            ((GameObject*)obj)->anim.localPosY = -(gDim2IceFloeSinkSpeed * timeDelta - ((GameObject*)obj)->anim.localPosY);
             if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
             {
                 ObjHits_DisableObject(obj);
                 ((GameObject*)obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
-            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - lbl_803E4B3C)
+            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - gDim2IceFloeSinkFreeThreshold)
             {
                 Obj_FreeObject(obj);
             }

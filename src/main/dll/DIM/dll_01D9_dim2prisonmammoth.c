@@ -53,16 +53,16 @@ extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
 extern f32 lbl_803E82C0;
-extern f32 lbl_803E82C4;
+extern f32 gPrisonMammothMoveSpeed;
 extern f32 lbl_803E82C8;
 extern f32 lbl_803E82CC;
-extern f32 lbl_803DC758;
-extern s16 lbl_803DC754;
+extern f32 gPrisonMammothMoveSpeedTable;
+extern s16 gPrisonMammothMoveIdTable;
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
-extern u8 lbl_803DC750;
-extern ObjHitReactEntry lbl_803351A8[];
+extern u8 gPrisonMammothStateFlagsTable;
+extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 extern f32 timeDelta;
 extern void saveGame_saveObjectPos(int obj);
 
@@ -143,8 +143,8 @@ int dim2prisonmammoth_stateHandler03(int obj, int p2)
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
         int k = randomGetRange(0, 1);
-        ((BaddieState*)p2)->moveSpeed = (&lbl_803DC758)[k];
-        ObjAnim_SetCurrentMove(obj, (&lbl_803DC754)[k], lbl_803E82C0, 0);
+        ((BaddieState*)p2)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
+        ObjAnim_SetCurrentMove(obj, (&gPrisonMammothMoveIdTable)[k], lbl_803E82C0, 0);
     }
     if (*(s8*)&((BaddieState*)p2)->moveDone != 0)
     {
@@ -164,7 +164,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
     ((GameObject*)obj)->anim.velocityY = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
     *(int*)((char*)p2 + 0) |= 0x200000;
-    ((BaddieState*)p2)->moveSpeed = lbl_803E82C4;
+    ((BaddieState*)p2)->moveSpeed = gPrisonMammothMoveSpeed;
     if (((GameObject*)obj)->anim.currentMove != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
@@ -192,7 +192,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
     *(int*)((char*)p2 + 0) |= 0x200000;
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
-        ((BaddieState*)p2)->moveSpeed = lbl_803E82C4;
+        ((BaddieState*)p2)->moveSpeed = gPrisonMammothMoveSpeed;
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
@@ -268,10 +268,10 @@ void dim2prisonmammoth_update(int obj)
     f32 matrix[16];
     int inner = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    if (((&lbl_803DC750)[((Dim2prisonmammothState*)inner)->unk274] & 8) == 0)
+    if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->unk274] & 8) == 0)
     {
         ((Dim2prisonmammothState*)inner)->unk5FC = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-            obj, lbl_803351A8, 1, ((Dim2prisonmammothState*)inner)->unk5FC, (f32*)(inner + 0x390));
+            obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->unk5FC, (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->unk5FC != 0)
         {
             fn_8003A168(obj, inner + 0x35c);

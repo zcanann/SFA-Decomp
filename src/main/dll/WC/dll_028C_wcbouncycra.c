@@ -77,24 +77,24 @@ void wcbouncycra_update(int obj)
         state->cooldown = n;
         if ((s16)n <= 0)
         {
-            f32 v = lbl_803E6D20;
+            f32 v = gBouncyCrateTriggerSearchRadius;
             f32 dist;
 
             if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, obj, &v) == NULL)
             {
                 dist = lbl_803E6D24;
             }
-            else if (v < lbl_803E6D28)
+            else if (v < gBouncyCrateNearDistance)
             {
                 dist = lbl_803E6D2C;
             }
-            else if (v > lbl_803E6D30)
+            else if (v > gBouncyCrateFarDistance)
             {
                 dist = lbl_803E6D24;
             }
             else
             {
-                dist = (v - lbl_803E6D28) / lbl_803E6D34;
+                dist = (v - gBouncyCrateNearDistance) / lbl_803E6D34;
                 dist = lbl_803E6D38 - dist;
                 dist = dist * lbl_803E6D2C;
             }
@@ -105,14 +105,14 @@ void wcbouncycra_update(int obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E6D3C * timeDelta + ((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityY = gBouncyCrateGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
             localPosY;
         if (((GameObject*)obj)->anim.localPosY <= state->homeY)
         {
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.localPosY + (state->homeY - ((GameObject*)obj)->anim.localPosY);
-            ((GameObject*)obj)->anim.velocityY = lbl_803E6D40 * -((GameObject*)obj)->anim.velocityY;
+            ((GameObject*)obj)->anim.velocityY = gBouncyCrateRestitution * -((GameObject*)obj)->anim.velocityY;
             state->bounceCount += 1;
             if (state->bounceCount > WBOUNCY_MAX_BOUNCES)
             {

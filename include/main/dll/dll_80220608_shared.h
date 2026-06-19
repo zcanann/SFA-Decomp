@@ -157,14 +157,14 @@ STATIC_ASSERT(offsetof(EarthWalkerObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(EarthWalkerObject, animEventCallback) == 0xBC);
 
 
-extern f32 lbl_803E6D20;
+extern f32 gBouncyCrateTriggerSearchRadius;
 extern f32 lbl_803E6D24;
-extern f32 lbl_803E6D28;
+extern f32 gBouncyCrateNearDistance;
 extern f32 lbl_803E6D2C;
-extern f32 lbl_803E6D30;
+extern f32 gBouncyCrateFarDistance;
 extern f32 lbl_803E6D34;
-extern f32 lbl_803E6D3C;
-extern f32 lbl_803E6D40;
+extern f32 gBouncyCrateGravity;
+extern f32 gBouncyCrateRestitution;
 
 
 typedef struct {
@@ -1714,14 +1714,14 @@ extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
-extern f32 lbl_803E6BCC;
-extern f32 lbl_803E6BD0;
-extern f32 lbl_803E6BD4;
+extern f32 gDrMusicControlCloudOverridePosX;
+extern f32 gDrMusicControlCloudOverridePosY;
+extern f32 gDrMusicControlCloudOverridePosZ;
 extern f32 lbl_803E6BD8;
-extern f32 lbl_803E6BDC;
-extern f32 lbl_803E6BE0;
-extern f32 lbl_803E6BE4;
-extern f32 lbl_803E6BE8;
+extern f32 gDrMusicControlStingerTimerDuration;
+extern f32 gDrMusicControlRestartPointX;
+extern f32 gDrMusicControlRestartPointY;
+extern f32 gDrMusicControlRestartPointZ;
 
 
 extern f32 lbl_803E6CA4;

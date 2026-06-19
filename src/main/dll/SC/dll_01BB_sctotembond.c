@@ -8,7 +8,7 @@
  * breathe fire on whichever one attacks, via a quick-time event (a slider
  * sweeps left-right, tap A as it crosses the middle). The hit window shrinks
  * with each villager burned; a miss takes damage and a new random villager
- * attacks. The code's "orbs"/ring (lbl_80327A60/70, ORB_COUNT 8) are the eight
+ * attacks. The code's "orbs"/ring (gTotemBondRingGameBits/70, ORB_COUNT 8) are the eight
  * villagers, and the ring rotation is the QTE targeting. Burning all 8 sets
  * GameBit 0x2bc, which a seqobject (placement 0x2829: trigger 0x2bc -> open
  * 0x2d0) turns into 0x2d0; sclevelcontrol then advances the village to
@@ -35,14 +35,14 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern u16 lbl_80327A60[];
-extern u16 lbl_80327A70[];
-extern f32 lbl_803E5638;
+extern u16 gTotemBondRingGameBits[];
+extern u16 gTotemBondOrbGameBits[];
+extern f32 gTotemBondOrbSpawnRadius;
 extern f32 lbl_803E563C;
 extern const f32 lbl_803E5654;
 extern f32 lbl_803E5658;
-extern f32 lbl_803E565C;
-extern f32 lbl_803E5660;
+extern f32 gTotemBondRingRotateSpeed;
+extern f32 gTotemBondCameraDistance;
 extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
 extern f32 lbl_803E5650;
@@ -87,8 +87,8 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
             setup[0x07] = 0x1e;
             *(s16*)(setup + 0x18) = -1;
             *(s16*)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-            *(s16*)(setup + 0x1c) = lbl_80327A70[orbIndex];
-            *(s16*)(setup + 0x30) = lbl_80327A60[orbIndex];
+            *(s16*)(setup + 0x1c) = gTotemBondOrbGameBits[orbIndex];
+            *(s16*)(setup + 0x30) = gTotemBondRingGameBits[orbIndex];
             *(s8*)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
             setup[0x32] = 1;
             Obj_SetupObject(setup, 5, -1, -1, 0);
@@ -205,8 +205,8 @@ void sc_totembond_update(ScTotemBondObject* obj)
         obj->yaw = 0x3fff;
         state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
         ObjHits_DisableObject((u32)obj);
-        sc_totembond_spawnGameBitOrbs(obj, state, lbl_803E5638);
-        GameBit_Set(lbl_80327A60[state->ringIndex], 1);
+        sc_totembond_spawnGameBitOrbs(obj, state, gTotemBondOrbSpawnRadius);
+        GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
         obj->mapAlpha = 0;
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
         state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
@@ -254,7 +254,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 availableCount = orbIndex = 0;
                 for (; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
                 {
-                    if (GameBit_Get(lbl_80327A70[orbIndex]) == 0)
+                    if (GameBit_Get(gTotemBondOrbGameBits[orbIndex]) == 0)
                     {
                         availableOrbs[availableCount++] = orbIndex;
                     }
@@ -268,7 +268,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                     nextRing = availableOrbs[randomGetRange(0, availableCount - 1)];
                     if (state->ringIndex == nextRing)
                     {
-                        GameBit_Set(lbl_80327A60[state->ringIndex], 1);
+                        GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
                     }
                     if (state->ringIndex != nextRing)
                     {
@@ -290,7 +290,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             state->ringIndex
             )
             {
-                obj->yaw = (s16) - ((lbl_803E565C * timeDelta) - (f32)(s32)
+                obj->yaw = (s16) - ((gTotemBondRingRotateSpeed * timeDelta) - (f32)(s32)
                 obj->yaw
                 )
                 ;
@@ -300,7 +300,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 state->ringIndex
                 )
                 {
-                    GameBit_Set(lbl_80327A60[state->ringIndex], 1);
+                    GameBit_Set(gTotemBondRingGameBits[state->ringIndex], 1);
                 }
             }
         }
@@ -312,7 +312,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
         state->yaw = (s16)(0x8000 - obj->yaw);
         state->pitch = obj->pitch;
         state->roll = obj->roll;
-        state->cameraDistance = lbl_803E5660;
+        state->cameraDistance = gTotemBondCameraDistance;
         (*gCameraInterface)->releaseAction(state, 0x18);
     }
 

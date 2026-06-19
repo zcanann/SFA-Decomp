@@ -79,7 +79,7 @@ void drmusiccont_update(int obj)
     u32 bit2;
     u32 bit3;
 
-    cloudSetOverridePosition(obj, lbl_803E6BCC, lbl_803E6BD0, lbl_803E6BD4);
+    cloudSetOverridePosition(obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY, gDrMusicControlCloudOverridePosZ);
     if (((GameObject*)obj)->unkF4 == 0)
     {
         if ((u32)GameBit_Get(0xe7b) == 0)
@@ -143,7 +143,7 @@ void drmusiccont_update(int obj)
     {
         if (bit0 != flags->b_9e0 || bit1 != flags->b_9e1 || bit2 != flags->b_9e2 || bit3 != flags->b_9e7)
         {
-            ((DrmusiccontState*)state)->stingerTimer = lbl_803E6BDC;
+            ((DrmusiccontState*)state)->stingerTimer = gDrMusicControlStingerTimerDuration;
         }
     }
     {
@@ -175,9 +175,9 @@ void drmusiccont_update(int obj)
         if ((u32)GameBit_Get(0x9f0) != 0 && GameBit_Get(0x632) == 0)
         {
             f32 vec[3];
-            vec[0] = lbl_803E6BE0;
-            vec[1] = lbl_803E6BE4;
-            vec[2] = lbl_803E6BE8;
+            vec[0] = gDrMusicControlRestartPointX;
+            vec[1] = gDrMusicControlRestartPointY;
+            vec[2] = gDrMusicControlRestartPointZ;
             (*gMapEventInterface)->restartPoint(vec, 0x7fff, 0, 0);
             flags->b_state = 1;
         }
