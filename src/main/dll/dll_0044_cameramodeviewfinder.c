@@ -14,7 +14,7 @@
  * button (0x210) is pressed or ObjHits_GetPriorityHit reports a blocking
  * hit. GameBit 0xC64 selects the zoom-HUD ("binocular") variant.
  *
- * All tunables live in the lbl_803E17C0..lbl_803E1834 .sdata2 float pool
+ * All tunables live in the lbl_803E17C0..gCamViewfinderPi .sdata2 float pool
  * (interpolation rates, clamp limits, FOV span); lbl_803E17C4 is 0.0f.
  */
 #include "main/audio/sfx.h"
@@ -65,7 +65,7 @@ extern f32 lbl_803E1804;
 extern f32 lbl_803E1808;
 extern f32 lbl_803E180C;
 extern f32 lbl_803E1810;
-extern f32 lbl_803E1814;
+extern f32 gCamViewfinderBrightnessScale;
 extern f32 lbl_803E1818;
 extern f32 lbl_803E181C;
 extern f32 lbl_803E1820;
@@ -73,7 +73,7 @@ extern f32 lbl_803E1824;
 extern f32 lbl_803E1828;
 extern f32 lbl_803E182C;
 extern f32 lbl_803E1830;
-extern f32 lbl_803E1834;
+extern f32 gCamViewfinderPi;
 
 void firstPersonDoControls(s16* obj)
 {
@@ -181,7 +181,7 @@ int firstPersonEnter(u8* cam, s16* p2)
     {
         flag = 1;
     }
-    conv = (int)(lbl_803E1814 * ((CameraObject*)cam)->blendProgress);
+    conv = (int)(gCamViewfinderBrightnessScale * ((CameraObject*)cam)->blendProgress);
     state = ((CameraObject*)cam)->anim.targetObj;
     if (conv < 1)
     {
@@ -381,7 +381,7 @@ void CameraModeViewfinder_update(s16* obj)
             {
                 fade = *(f32*)&lbl_803E17E8;
             }
-            brightness = (int)(lbl_803E1814 * fade);
+            brightness = (int)(gCamViewfinderBrightnessScale * fade);
         }
         targetObj = *(u8**)(obj + 0x52);
         if (brightness < 1)
@@ -521,8 +521,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
         dz = dz / dist;
     }
     firstPersonPlaceCamera((GameObject*)camObj, 1);
-    cosv = -mathSinf((lbl_803E1834 * camObj[0]) / lbl_803E17C8);
-    sinv = -mathCosf((lbl_803E1834 * camObj[0]) / lbl_803E17C8);
+    cosv = -mathSinf((gCamViewfinderPi * camObj[0]) / lbl_803E17C8);
+    sinv = -mathCosf((gCamViewfinderPi * camObj[0]) / lbl_803E17C8);
     lbl_803DD548->posXCurve.start = ((GameObject*)obj)->anim.worldPosX;
     lbl_803DD548->posXCurve.end = lbl_803DD548->camPosX;
     lbl_803DD548->posXCurve.startTangent = -dz * spinRate;

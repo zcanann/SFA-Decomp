@@ -29,8 +29,8 @@ extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObjec
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 extern f32 timeDelta;
-extern f32 lbl_803DDCF8;
-extern f32 lbl_803DDCFC;
+extern f32 gTargetBlockHomeX;
+extern f32 gTargetBlockHomeZ;
 extern const f32 lbl_803E6494;
 extern const f32 lbl_803E6498;
 extern const f32 lbl_803E649C;
@@ -47,10 +47,10 @@ extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPo
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern s32 lbl_80329B78[];
+extern s32 gTargetBlockHomePos[];
 extern const f32 lbl_803E64C4;
 extern const f32 lbl_803E64C8;
-extern const f32 lbl_803E64CC;
+extern const f32 gTargetBlockMinVertexYSeed;
 extern const f32 lbl_803E64D0;
 extern const f32 lbl_803E64D4;
 
@@ -111,8 +111,8 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
     f32 dx;
     f32 dz;
 
-    dx = obj->x - lbl_803DDCF8;
-    dz = obj->z - lbl_803DDCFC;
+    dx = obj->x - gTargetBlockHomeX;
+    dz = obj->z - gTargetBlockHomeZ;
     if (!((lbl_803E648C == dx) && (lbl_803E648C == dz)))
     {
         if (sqrtf(dx * dx + dz * dz) < *threshold)
@@ -147,8 +147,8 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
-        lbl_803DDCF8 = obj->x;
-        lbl_803DDCFC = obj->z;
+        gTargetBlockHomeX = obj->x;
+        gTargetBlockHomeZ = obj->z;
         return;
     }
 
@@ -362,13 +362,13 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
-        lbl_80329B78[0] = obj->x;
-        lbl_80329B78[1] = obj->y;
-        lbl_80329B78[2] = obj->z;
+        gTargetBlockHomePos[0] = obj->x;
+        gTargetBlockHomePos[1] = obj->y;
+        gTargetBlockHomePos[2] = obj->z;
     }
     else
     {
-        fconv = (double)lbl_803E64CC;
+        fconv = (double)gTargetBlockMinVertexYSeed;
         for (i = 0; i < (int)(u32) * (u16*)(model + 0xe4); i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
@@ -428,7 +428,7 @@ void dfptargetblock_initialise(void)
 {
 }
 
-s32 lbl_80329B78[] = {0, 0, 0};
+s32 gTargetBlockHomePos[] = {0, 0, 0};
 
 ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     {

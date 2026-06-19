@@ -15,11 +15,11 @@ extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenShowCopyright(u8 arg);
-extern u16 lbl_803DD6D8;
+extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;
-extern f32 lbl_803DD6E0;
-extern u8 lbl_803DD6F4;
-extern u16 lbl_8031A880[];
+extern f32 gEnterSaveNameScrollPos;
+extern u8 gEnterSaveNameLength;
+extern u16 gEnterSaveNameCharTextIds[];
 extern f32 lbl_803E1D80;
 extern f32 lbl_803E1D84;
 extern f32 lbl_803E1D88;
@@ -36,21 +36,21 @@ extern s8 padGetStickX(int port);
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 
-extern s32 lbl_803A8730[];
+extern s32 gEnterSaveNameCharWidths[];
 extern u8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;
-extern f32 lbl_803DD6D4;
-extern u8 lbl_803DD6DA;
-extern u32 lbl_803DD6E8;
+extern f32 gEnterSaveNameTargetScrollVel;
+extern u8 gEnterSaveNameAutoScrolling;
+extern u32 gEnterSaveNameTotalWidth;
 extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
 extern int* gTitleMenuLinkInterface;
 
 void EnterSaveNameScreen_render(void)
 {
-    extern u8 lbl_803DD6F0;
-    extern int lbl_803DD6E4;
-    extern int lbl_803A8690[];
+    extern u8 gEnterSaveNameBuffer;
+    extern int gEnterSaveNameSelectedIndex;
+    extern int gEnterSaveNameCharOffsets[];
     extern void* gameTextGetStr(int id);
     u8 buf[2];
     int i;
@@ -58,7 +58,7 @@ void EnterSaveNameScreen_render(void)
     buf[1] = 0;
     gameTextSetDrawFunc(nameEntryTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
-    fn_80135814((int)(lbl_803DD6E0 + lbl_803DD6DC - lbl_803E1D88), 0);
+    fn_80135814((int)(gEnterSaveNameScrollPos + lbl_803DD6DC - lbl_803E1D88), 0);
     gameTextBoxFn_80134d40(0xff, 1, 1);
     gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
     gameTextShow(0x3ae);
@@ -66,23 +66,23 @@ void EnterSaveNameScreen_render(void)
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
     gameTextShow(0xed);
 
-    for (i = 0; i < lbl_803DD6F4; i++)
+    for (i = 0; i < gEnterSaveNameLength; i++)
     {
-        buf[0] = (&lbl_803DD6F0)[i];
+        buf[0] = (&gEnterSaveNameBuffer)[i];
         gameTextShowStr(buf, i + 0x2a, 0, 0);
     }
 
-    lbl_803DD6D8 = lbl_803DD6D8 + timeDelta;
+    gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;
 
     gameTextSetColor(
-        (int)(mathSinf(lbl_803E1D94 * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D98 * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D9C * lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D98 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D9C * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
         0xff);
 
-    i = lbl_803DD6E4;
-    gameTextShowStr(gameTextGetStr(lbl_8031A880[i]), 0x56,
-                    (int)((f32)(lbl_803A8690[i] + 0x8a) - lbl_803DD6E0), 0);
+    i = gEnterSaveNameSelectedIndex;
+    gameTextShowStr(gameTextGetStr(gEnterSaveNameCharTextIds[i]), 0x56,
+                    (int)((f32)(gEnterSaveNameCharOffsets[i] + 0x8a) - gEnterSaveNameScrollPos), 0);
 
     gameTextSetDrawFunc(NULL);
     titleScreenShowCopyright(0);
@@ -105,9 +105,9 @@ u32
 EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 param_5
                         , u32 param_6, u32 param_7, u32 param_8)
 {
-    extern char lbl_803DD6F0;
-    extern s32 lbl_803DD6E4;
-    extern s32 lbl_803A8690[];
+    extern char gEnterSaveNameBuffer;
+    extern s32 gEnterSaveNameSelectedIndex;
+    extern s32 gEnterSaveNameCharOffsets[];
     extern char* gameTextGetStr(u16 textId);
     s8 stickX;
     int buttons;
@@ -117,100 +117,100 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
     padClearAnalogInputX(0);
     if (stickX != 0)
     {
-        lbl_803DD6DA = 0;
-        lbl_803DD6D4 = 0.08f * stickX;
-        if (lbl_803DD6D4 * lbl_803DD6D0 < 0.0f)
+        gEnterSaveNameAutoScrolling = 0;
+        gEnterSaveNameTargetScrollVel = 0.08f * stickX;
+        if (gEnterSaveNameTargetScrollVel * lbl_803DD6D0 < 0.0f)
         {
-            lbl_803DD6D4 = 0.0f;
+            gEnterSaveNameTargetScrollVel = 0.0f;
         }
     }
     else
     {
-        if (lbl_803DD6DA != 0)
+        if (gEnterSaveNameAutoScrolling != 0)
         {
-            if (lbl_803DD6E4 < 0x14)
+            if (gEnterSaveNameSelectedIndex < 0x14)
             {
-                lbl_803DD6D4 = -10.0f;
+                gEnterSaveNameTargetScrollVel = -10.0f;
             }
             else
             {
-                lbl_803DD6D4 = 10.0f;
+                gEnterSaveNameTargetScrollVel = 10.0f;
             }
         }
         else
         {
-            lbl_803DD6D4 = 0.0f;
+            gEnterSaveNameTargetScrollVel = 0.0f;
         }
     }
     moved = 0;
     if (lbl_803DD6D0 < 0.0f)
     {
-        lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6D0;
-        if (lbl_803DD6E0 <= (f32)(-lbl_803A8730[ENTER_SAVE_NAME_DONE_INDEX] / 2))
+        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + lbl_803DD6D0;
+        if (gEnterSaveNameScrollPos <= (f32)(-gEnterSaveNameCharWidths[ENTER_SAVE_NAME_DONE_INDEX] / 2))
         {
-            lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6E8;
+            gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameTotalWidth;
             moved = 1;
         }
-        if ((0 < lbl_803DD6E4) &&
-            (lbl_803DD6E0 <= (f32)(lbl_803A8690[lbl_803DD6E4] - lbl_803A8730[lbl_803DD6E4 - 1] / 2)))
+        if ((0 < gEnterSaveNameSelectedIndex) &&
+            (gEnterSaveNameScrollPos <= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex] - gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex - 1] / 2)))
         {
             moved = 1;
         }
         if (moved != 0)
         {
-            if (0.0f == lbl_803DD6D4)
+            if (0.0f == gEnterSaveNameTargetScrollVel)
             {
                 lbl_803DD6D0 = 0.0f;
             }
-            lbl_803DD6E4 = lbl_803DD6E4 - 1;
-            if (lbl_803DD6E4 < 0)
+            gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex - 1;
+            if (gEnterSaveNameSelectedIndex < 0)
             {
-                lbl_803DD6E4 = lbl_803DD6E4 + ENTER_SAVE_NAME_CHAR_COUNT;
+                gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex + ENTER_SAVE_NAME_CHAR_COUNT;
             }
-            if ((lbl_803DD6E4 == ENTER_SAVE_NAME_DONE_INDEX) && (lbl_803DD6DA != 0))
+            if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX) && (gEnterSaveNameAutoScrolling != 0))
             {
-                lbl_803DD6D4 = 0.0f;
+                gEnterSaveNameTargetScrollVel = 0.0f;
                 lbl_803DD6D0 = 0.0f;
-                lbl_803DD6DA = 0;
+                gEnterSaveNameAutoScrolling = 0;
             }
         }
     }
     else if (lbl_803DD6D0 > 0.0f)
     {
-        lbl_803DD6E0 = lbl_803DD6E0 + lbl_803DD6D0;
-        if (lbl_803DD6E0 >= (f32)(lbl_803DD6E8 + lbl_803A8730[0] / 2))
+        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + lbl_803DD6D0;
+        if (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameTotalWidth + gEnterSaveNameCharWidths[0] / 2))
         {
-            lbl_803DD6E0 = lbl_803DD6E0 - lbl_803DD6E8;
+            gEnterSaveNameScrollPos = gEnterSaveNameScrollPos - gEnterSaveNameTotalWidth;
             moved = 1;
         }
-        if ((lbl_803DD6E4 < ENTER_SAVE_NAME_DONE_INDEX) &&
-            (lbl_803DD6E0 >= (f32)(lbl_803A8690[lbl_803DD6E4 + 1] + lbl_803A8730[lbl_803DD6E4 + 1] / 2)))
+        if ((gEnterSaveNameSelectedIndex < ENTER_SAVE_NAME_DONE_INDEX) &&
+            (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex + 1] + gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex + 1] / 2)))
         {
             moved = 1;
         }
         if (moved != 0)
         {
-            if (0.0f == lbl_803DD6D4)
+            if (0.0f == gEnterSaveNameTargetScrollVel)
             {
                 lbl_803DD6D0 = 0.0f;
             }
-            lbl_803DD6E4 = lbl_803DD6E4 + 1;
-            if (lbl_803DD6E4 >= ENTER_SAVE_NAME_CHAR_COUNT)
+            gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex + 1;
+            if (gEnterSaveNameSelectedIndex >= ENTER_SAVE_NAME_CHAR_COUNT)
             {
-                lbl_803DD6E4 = lbl_803DD6E4 - ENTER_SAVE_NAME_CHAR_COUNT;
+                gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex - ENTER_SAVE_NAME_CHAR_COUNT;
             }
-            if ((lbl_803DD6E4 == ENTER_SAVE_NAME_DONE_INDEX) && (lbl_803DD6DA != 0))
+            if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX) && (gEnterSaveNameAutoScrolling != 0))
             {
-                lbl_803DD6DA = 0;
-                lbl_803DD6D4 = 0.0f;
+                gEnterSaveNameAutoScrolling = 0;
+                gEnterSaveNameTargetScrollVel = 0.0f;
                 lbl_803DD6D0 = 0.0f;
             }
         }
     }
-    lbl_803DD6DC = (lbl_803DD6E0 < (f32)(lbl_803DD6E8 >> 2)) ? lbl_803DD6E8 : 0;
-    if ((0.0f != lbl_803DD6D0) || (0.0f != lbl_803DD6D4))
+    lbl_803DD6DC = (gEnterSaveNameScrollPos < (f32)(gEnterSaveNameTotalWidth >> 2)) ? gEnterSaveNameTotalWidth : 0;
+    if ((0.0f != lbl_803DD6D0) || (0.0f != gEnterSaveNameTargetScrollVel))
     {
-        if ((lbl_803DD6D0 < 0.0f) || (lbl_803DD6D4 < 0.0f))
+        if ((lbl_803DD6D0 < 0.0f) || (gEnterSaveNameTargetScrollVel < 0.0f))
         {
             if (lbl_803DD6D0 > -1.2f)
             {
@@ -218,7 +218,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
             }
             else
             {
-                lbl_803DD6D0 = 0.025f * (lbl_803DD6D4 - lbl_803DD6D0) + lbl_803DD6D0;
+                lbl_803DD6D0 = 0.025f * (gEnterSaveNameTargetScrollVel - lbl_803DD6D0) + lbl_803DD6D0;
             }
         }
         else if (lbl_803DD6D0 < 1.2f)
@@ -227,7 +227,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
         }
         else
         {
-            lbl_803DD6D0 = 0.025f * (lbl_803DD6D4 - lbl_803DD6D0) + lbl_803DD6D0;
+            lbl_803DD6D0 = 0.025f * (gEnterSaveNameTargetScrollVel - lbl_803DD6D0) + lbl_803DD6D0;
         }
     }
     if ((stickX == 0) && (0.0f == lbl_803DD6D0))
@@ -236,48 +236,48 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
         buttonDisable(0, buttons);
         if (buttons & 0x100)
         {
-            if ((lbl_803DD6E4 <= 0x25) && (lbl_803DD6F4 < ENTER_SAVE_NAME_MAX_LENGTH))
+            if ((gEnterSaveNameSelectedIndex <= 0x25) && (gEnterSaveNameLength < ENTER_SAVE_NAME_MAX_LENGTH))
             {
-                (&lbl_803DD6F0)[lbl_803DD6F4++] = *gameTextGetStr(lbl_8031A880[lbl_803DD6E4]);
-                (&lbl_803DD6F0)[*(volatile u8*)&lbl_803DD6F4] = 0;
+                (&gEnterSaveNameBuffer)[gEnterSaveNameLength++] = *gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
+                (&gEnterSaveNameBuffer)[*(volatile u8*)&gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
                 Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_TYPE);
-                if (lbl_803DD6F4 == ENTER_SAVE_NAME_MAX_LENGTH)
+                if (gEnterSaveNameLength == ENTER_SAVE_NAME_MAX_LENGTH)
                 {
-                    lbl_803DD6DA = 1;
+                    gEnterSaveNameAutoScrolling = 1;
                 }
             }
-            else if ((lbl_803DD6E4 == ENTER_SAVE_NAME_DELETE_INDEX) && (lbl_803DD6F4 != 0))
+            else if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DELETE_INDEX) && (gEnterSaveNameLength != 0))
             {
                 Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_DELETE);
-                lbl_803DD6F4 -= 1;
-                (&lbl_803DD6F0)[lbl_803DD6F4] = 0;
+                gEnterSaveNameLength -= 1;
+                (&gEnterSaveNameBuffer)[gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
-                lbl_803DD6DA = 0;
+                gEnterSaveNameAutoScrolling = 0;
             }
-            else if (lbl_803DD6E4 == ENTER_SAVE_NAME_DONE_INDEX)
+            else if (gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX)
             {
-                if (lbl_803DD6F4 == 0)
+                if (gEnterSaveNameLength == 0)
                 {
-                    lbl_803DD6F0 = 'F';
-                    (&lbl_803DD6F0)[1] = 'O';
-                    (&lbl_803DD6F0)[2] = 'X';
-                    (&lbl_803DD6F0)[3] = 0;
+                    gEnterSaveNameBuffer = 'F';
+                    (&gEnterSaveNameBuffer)[1] = 'O';
+                    (&gEnterSaveNameBuffer)[2] = 'X';
+                    (&gEnterSaveNameBuffer)[3] = 0;
                 }
                 Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_CONFIRM);
-                gplayNewGame(&lbl_803DD6F0, saveFileSelect_currentSlotIndex);
+                gplayNewGame(&gEnterSaveNameBuffer, saveFileSelect_currentSlotIndex);
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
                 lbl_803DD6EC = 2;
             }
         }
         else if (buttons & 0x200)
         {
-            lbl_803DD6DA = 0;
+            gEnterSaveNameAutoScrolling = 0;
             Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_DELETE);
-            if (lbl_803DD6F4 != 0)
+            if (gEnterSaveNameLength != 0)
             {
-                lbl_803DD6F4 -= 1;
-                (&lbl_803DD6F0)[lbl_803DD6F4] = 0;
+                gEnterSaveNameLength -= 1;
+                (&gEnterSaveNameBuffer)[gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
             }
             else
@@ -297,31 +297,31 @@ void EnterSaveNameScreen_release(void)
 
 void EnterSaveNameScreen_initialise(void)
 {
-    extern char lbl_803DD6F0;
-    extern s32 lbl_803DD6E4;
-    extern s32 lbl_803A8690[];
+    extern char gEnterSaveNameBuffer;
+    extern s32 gEnterSaveNameSelectedIndex;
+    extern s32 gEnterSaveNameCharOffsets[];
     extern char* gameTextGetStr(u16 textId);
     int i;
     f32 width;
 
     lbl_803DD6EC = 2;
     lbl_803DD6ED = 2;
-    lbl_803DD6F4 = 0;
-    lbl_803DD6F0 = 0;
-    lbl_803DD6E8 = 0;
+    gEnterSaveNameLength = 0;
+    gEnterSaveNameBuffer = 0;
+    gEnterSaveNameTotalWidth = 0;
 
     for (i = 0; i < ENTER_SAVE_NAME_CHAR_COUNT; i++)
     {
-        gameTextMeasureString((u8*)gameTextGetStr(lbl_8031A880[i]), 1.0f, &width, NULL,
+        gameTextMeasureString((u8*)gameTextGetStr(gEnterSaveNameCharTextIds[i]), 1.0f, &width, NULL,
                               NULL, NULL, -1);
-        lbl_803A8730[i] = width;
-        lbl_803A8690[i] = lbl_803DD6E8;
-        lbl_803DD6E8 += lbl_803A8730[i];
+        gEnterSaveNameCharWidths[i] = width;
+        gEnterSaveNameCharOffsets[i] = gEnterSaveNameTotalWidth;
+        gEnterSaveNameTotalWidth += gEnterSaveNameCharWidths[i];
     }
 
-    lbl_803DD6E4 = 0;
-    lbl_803DD6E0 = (f32)(lbl_803A8730[0] / 2);
-    lbl_803DD6DC = lbl_803DD6E8;
-    lbl_803DD6DA = 0;
+    gEnterSaveNameSelectedIndex = 0;
+    gEnterSaveNameScrollPos = (f32)(gEnterSaveNameCharWidths[0] / 2);
+    lbl_803DD6DC = gEnterSaveNameTotalWidth;
+    gEnterSaveNameAutoScrolling = 0;
     Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_CONFIRM);
 }

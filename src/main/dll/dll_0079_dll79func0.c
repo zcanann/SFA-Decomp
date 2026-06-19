@@ -7,7 +7,7 @@
  * down a different sequence of GfxCmd entries (each with a draw mode, blend
  * flags, texture and x/y/z parameters pulled from the lbl_803E0Cxx constant
  * pool), copies seven s16 tuning half-words out of the shared model-effect
- * block (lbl_80314AF0), optionally offsets the effect position by the source
+ * block (gDll79EffectModelBlock), optionally offsets the effect position by the source
  * object's world position (or the PartFxSpawnParams packet) when flag bit 0
  * is set, and finally spawns effect id 0x156/0x89/0x23b for variant 0/1/2.
  *
@@ -27,7 +27,7 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80314AF0[];
+extern u8 gDll79EffectModelBlock[];
 extern u8 lbl_803DB8D8;
 extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
 extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
@@ -62,7 +62,7 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* base = (u8*)(int)lbl_80314AF0;
+    u8* base = (u8*)(int)gDll79EffectModelBlock;
     int ret = 0;
     GfxCmd* entries = buf.entries;
     GfxCmd* e = entries;
@@ -360,19 +360,19 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314AF0, 8, &base[0x5c], 0x156, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x156, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314AF0, 8, &base[0x5c], 0x89, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x89, 0);
     }
     else if (variant == 2)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314AF0, 8, &base[0x5c], 0x23b, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll79EffectModelBlock, 8, &base[0x5c], 0x23b, 0);
     }
     return ret;
 }
