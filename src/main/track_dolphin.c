@@ -2782,8 +2782,9 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 
     px = p4[0];
     dx = px - cx;
+    sum = dx * dx;
     dy = p5[0] - cy;
-    sum = dx * dx + dy * dy;
+    sum = sum + dy * dy;
     cc = sum - r * r;
     if (cc < __AR_Callback)
     {
@@ -2806,8 +2807,9 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
         {
             root = sqrtf(disc);
             nB = -B;
+            t1 = nB + root;
             denom = lbl_803DECB8 * len2;
-            t1 = (nB + root) / denom;
+            t1 = t1 / denom;
             t2 = (nB - root) / denom;
             if (t1 < __AR_Callback) t1 = lbl_803DECC0;
             if (t2 < __AR_Callback) t2 = lbl_803DECC0;
