@@ -50,7 +50,7 @@ static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 
 static ModgfxVertexData* modgfx_getInactiveVertexBuffer(ModgfxState* state)
 {
-    return state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    return state->vertexBuffers[1 - state->activeVertexBufferIndex];
 }
 
 static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
@@ -176,7 +176,7 @@ void modgfx_initExpgfxSpawnConfig(u32 param_1, u32 param_2, u8 colorLowByte,
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    gExpgfxSpawnConfig.colorByte0.value = (u8)setupWord;
+    gExpgfxSpawnConfig.colorByte0.value = setupWord;
     gExpgfxSpawnConfig.behaviorFlags = setupWord & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
@@ -187,7 +187,7 @@ void modgfx_initExpgfxSpawnConfig(u32 param_1, u32 param_2, u8 colorLowByte,
     gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
     gExpgfxSpawnConfig.colorByte1.value = 0;
     gExpgfxSpawnConfig.colorByte1.lowByte = 0;
-    gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)setupWord;
+    gExpgfxSpawnConfig.quadVertex3Pad06 = setupWord;
     *(u32*)&gExpgfxSpawnConfig.scale = scaleBits;
     gExpgfxSpawnConfig.texture.word = textureWord;
     gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
@@ -242,7 +242,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     for (i = 0; i < state->vertexCount; i = i + 1)
     {
-        if (wrapCountS == (int)state->vertexCount)
+        if (wrapCountS == state->vertexCount)
         {
             coord = activeVertexData->texCoordS;
             if (coord < 0x101)
@@ -254,7 +254,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
                 activeVertexData->texCoordS = coord + -0x100;
             }
         }
-        if (wrapCountT == (int)state->vertexCount)
+        if (wrapCountT == state->vertexCount)
         {
             coord = activeVertexData->texCoordT;
             if (coord < 0x101)
@@ -467,15 +467,15 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             state->posStepX =
                 *(float*)(command + 4) /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) -
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) -
                     DOUBLE_803e00c8);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
             state->posStepZ =
                 ((ModgfxVertexGroupCmd*)command)->valueZ /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
         }
         state->posCurX = state->posCurX + state->posStepX;
@@ -519,13 +519,13 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
         else
         {
             state->rotStepZ =
-                (short)(((int)targetRotZ - (int)state->rotOffsetZ) / (int)state->blendFrameCount
+                (short)(((int)targetRotZ - state->rotOffsetZ) / state->blendFrameCount
                 );
             state->rotStepY =
-                (short)(((int)targetRotY - (int)state->rotOffsetY) / (int)state->blendFrameCount
+                (short)(((int)targetRotY - state->rotOffsetY) / state->blendFrameCount
                 );
             state->rotStepX =
-                (short)(((int)targetRotX - (int)state->rotOffsetX) / (int)state->blendFrameCount
+                (short)(((int)targetRotX - state->rotOffsetX) / state->blendFrameCount
                 );
         }
     }
@@ -933,7 +933,7 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
         }
         cfgBehaviorFlags = 0;
         cfgRenderFlags = 0;
-        cfgEffectIdByte = (u8)effectId;
+        cfgEffectIdByte = effectId;
         cfgStartPosX = lbl_803E0914;
         cfgStartPosY = lbl_803E0914;
         cfgStartPosZ = lbl_803E0914;
@@ -957,7 +957,7 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
         switch (effectId)
         {
         case 0x422:
-            if (extraArgs == (u16*)0x0)
+            if (extraArgs == 0x0)
             {
                 return 0;
             }
@@ -1093,7 +1093,7 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
         default:
             return 0xffffffff;
         case 0x42b:
-            if (extraArgs == (u16*)0x0)
+            if (extraArgs == 0x0)
             {
                 return 0;
             }
@@ -1350,8 +1350,8 @@ void playerShadow_renderObject(void* obj)
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);
     fn_800A3AF0((void*)hitTableValue, hitCount, obj,
-                ((GameObject*)obj)->anim.localPosX - (f32)tileInfo[0],
-                ((GameObject*)obj)->anim.localPosZ - (f32)tileInfo[2]);
+                ((GameObject*)obj)->anim.localPosX - tileInfo[0],
+                ((GameObject*)obj)->anim.localPosZ - tileInfo[2]);
 }
 
 extern void* Camera_GetCurrentViewSlot(void);
@@ -1434,7 +1434,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
     if (found)
     {
         int j;
-        char* e = (char*)table;
+        char* e = table;
         for (j = 0; j < count; j++)
         {
             int t = *(s8*)(e + 0x48);
@@ -1450,8 +1450,8 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
                 p2x = ((GameObject*)ctx)->anim.localPosX + ((f32) * (s16*)(e + 0x14) - a);
                 p2y = (f32) * (s16*)(e + 0x1a);
                 p2z = ((GameObject*)ctx)->anim.localPosZ + ((f32) * (s16*)(e + 0x20) - b);
-                r1 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
-                r2 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
+                r1 = randomGetRange(1, 1000) / lbl_803DF474;
+                r2 = randomGetRange(1, 1000) / lbl_803DF474;
                 s = sqrtf(r2);
                 w0 = lbl_803DF470 - s;
                 w1 = (lbl_803DF470 - r1) * s;

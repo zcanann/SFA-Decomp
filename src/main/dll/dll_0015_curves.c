@@ -283,7 +283,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], &hitCount, 0);
-    for (pointIndex = 0, point = points; pointIndex < (int)hitCount;)
+    for (pointIndex = 0, point = points; pointIndex < hitCount;)
     {
         if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > lbl_803E0678) &&
             (point->x <= collision->points[1][1]) && (point->x > collision->points[0][1]))
@@ -386,7 +386,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
         }
 
         scale = lbl_803E068C;
-        averageScale = scale / (f32)pointCount;
+        averageScale = scale / pointCount;
         ((GameObject*)obj)->anim.worldPosX *= averageScale;
         ((GameObject*)obj)->anim.worldPosY *= averageScale;
         ((GameObject*)obj)->anim.worldPosZ *= averageScale;
@@ -406,7 +406,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             outY = localY;
             outX = localX;
             point = (f32*)collision;
-            for (pointIndex = 0; pointIndex < (s32)pointCount; pointIndex++)
+            for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
             {
                 Matrix_TransformPoint(matrix, point[2], point[3], point[4], outX, outY, outZ);
                 point += 3;
@@ -493,22 +493,22 @@ void fn_800E5CBC(short* obj, int state)
         collision->tiltPitchTarget = pitch;
         collision->tiltPitch =
             collision->tiltPitch +
-            ((int)((u32)framesThisStep * ((int)pitch - (int)collision->tiltPitch)) >> 3);
+            ((int)((u32)framesThisStep * ((int)pitch - collision->tiltPitch)) >> 3);
         angle = getAngle(dx, dy);
         pitch = -(0x4000 - angle);
         collision->tiltRollTarget = pitch;
         collision->tiltRoll =
             collision->tiltRoll +
-            ((int)((u32)framesThisStep * ((int)pitch - (int)collision->tiltRoll)) >> 3);
+            ((int)((u32)framesThisStep * ((int)pitch - collision->tiltRoll)) >> 3);
     }
     else
     {
         collision->tiltPitch =
             collision->tiltPitch -
-            ((int)((int)collision->tiltPitch * (u32)framesThisStep) >> 3);
+            ((int)((int)collision->tiltPitch * framesThisStep) >> 3);
         collision->tiltRoll =
             collision->tiltRoll -
-            ((int)((int)collision->tiltRoll * (u32)framesThisStep) >> 3);
+            ((int)((int)collision->tiltRoll * framesThisStep) >> 3);
         normalZ = lbl_803E0668;
         collision->surfaceNormalX = lbl_803E0668;
         collision->surfaceNormalY = lbl_803E068C;
@@ -578,7 +578,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     collision->waterNormalY[0] = one;
     collision->waterNormalZ[0] = zero;
     point = points;
-    for (i = 0; i < (int)hitCount; i++)
+    for (i = 0; i < hitCount; i++)
     {
         if ((s8)point->type != ROMCURVE_POINT_TYPE_WATER)
         {
@@ -609,7 +609,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
         collision->floorGap[0] = zero;
     }
     point = points;
-    for (i = 0; i < (int)hitCount; i++)
+    for (i = 0; i < hitCount; i++)
     {
         if (((s8)point->type == ROMCURVE_POINT_TYPE_WATER) && (point->z > lbl_803E06B4) &&
             (point->x < collision->ceilingY[0]) &&
@@ -652,7 +652,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 
     pointCount = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
     radiusOffset = 0;
-    collision->localPointHitMask = (u8)radiusOffset;
+    collision->localPointHitMask = radiusOffset;
     pointIndex = 0;
     while (pointIndex < pointCount)
     {
@@ -667,8 +667,8 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
         collision->localPointHitMask |= objBboxFn_800640cc(
             collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
             *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
-            (f32*)collision->localHitPlanes, obj, collision->primaryHitType, -1, 0,
-            (s8)collision->activeTimer) << pointIndex;
+            collision->localHitPlanes, obj, collision->primaryHitType, -1, 0,
+            collision->activeTimer) << pointIndex;
         flags = collision->flags;
         if ((s32)(flags & 0x2000000) != 0)
         {
@@ -683,8 +683,8 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             objBboxFn_800640cc(collision->localPointTarget[pointIndex],
                                collision->localPointWorld[pointIndex],
                                *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
-                               (f32*)collision->localHitPlanes, obj, collision->secondaryHitType, -1, 0,
-                               (s8)collision->activeTimer);
+                               collision->localHitPlanes, obj, collision->secondaryHitType, -1, 0,
+                               collision->activeTimer);
         }
         radiusOffset += sizeof(f32);
         pointIndex++;
@@ -705,7 +705,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             ((GameObject*)obj)->anim.localPosZ += localPoint[59];
             localPoint += 3;
         }
-        averageScale = lbl_803E068C / (f32)pointCount;
+        averageScale = lbl_803E068C / pointCount;
         ((GameObject*)obj)->anim.localPosX *= averageScale;
         ((GameObject*)obj)->anim.localPosZ *= averageScale;
     }
@@ -999,7 +999,7 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
     i = 0;
     point = points;
     maxY = baseY + height;
-    for (; i < (int)hitCount; i++)
+    for (; i < hitCount; i++)
     {
         if ((point->x < maxY) && (point->z > *(f32*)&lbl_803E0668))
         {
@@ -1033,14 +1033,14 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
         }
         sCurvesCachedHitCount = hitDetectFn_80065e50(obj, x, ((GameObject*)obj)->anim.worldPosY, z,
                                                      &hitPoints, queryMode, 0);
-        if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount)
+        if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
         {
             sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
         }
         hitPointCursor = hitPoints;
         outPoint = sCurvesHitPoints;
         remaining = sCurvesCachedHitCount;
-        for (pairCount = 0; (int)pairCount < (int)remaining; pairCount++)
+        for (pairCount = 0; pairCount < remaining; pairCount++)
         {
             outPoint[pairCount].x = (*hitPointCursor)->x;
             outPoint[pairCount].y = (*hitPointCursor)->y;
@@ -1584,12 +1584,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             ptsRead = ptsRead + 3;
             radWrite = radWrite + 1;
         }
-        collision->hitBounds[0] = (int)minX;
-        collision->hitBounds[3] = (int)maxX;
-        collision->hitBounds[1] = (int)(minY - (f32)collision->heightPadding);
-        collision->hitBounds[4] = (int)(maxY + (f32)collision->heightPadding);
-        collision->hitBounds[2] = (int)minZ;
-        collision->hitBounds[5] = (int)maxZ;
+        collision->hitBounds[0] = minX;
+        collision->hitBounds[3] = maxX;
+        collision->hitBounds[1] = (int)(minY - collision->heightPadding);
+        collision->hitBounds[4] = (int)(maxY + collision->heightPadding);
+        collision->hitBounds[2] = minZ;
+        collision->hitBounds[5] = maxZ;
     }
 }
 
@@ -1604,7 +1604,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->segmentLocalPoints = segmentLocalPoints;
     for (i = 0; i < count; i++)
     {
-        state->segmentSourceTypes[i] = (int)types[i];
+        state->segmentSourceTypes[i] = types[i];
         state->segmentHitTypes[i] = -1;
         state->segmentRadii[i] = radii[i];
     }
@@ -1638,8 +1638,8 @@ void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount
 {
     state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
     state->pointCounts = (u8)(state->pointCounts | (pointCount & CURVES_POINT_COUNT_LOCAL_MASK));
-    state->primaryHitType = (s8)primaryHitType;
-    state->secondaryHitType = (s8)secondaryHitType;
+    state->primaryHitType = primaryHitType;
+    state->secondaryHitType = secondaryHitType;
     state->localPointPositions = localPointPositions;
     state->localPointRadii = localPointRadii;
     state->flags |= CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS | CURVES_COLLISION_STATE_LOCAL_POINTS;
@@ -1651,7 +1651,7 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32* localPointP
 {
     state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
     state->pointCounts = (u8)(state->pointCounts | (pointCount & CURVES_POINT_COUNT_LOCAL_MASK));
-    state->primaryHitType = (s8)primaryHitType;
+    state->primaryHitType = primaryHitType;
     state->localPointPositions = localPointPositions;
     state->localPointRadii = localPointRadii;
     state->flags |= CURVES_COLLISION_STATE_LOCAL_POINTS;
@@ -1661,9 +1661,9 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32* localPointP
 void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int subtype)
 {
     memset(state, 0, CURVES_COLLISION_STATE_SIZE);
-    state->subtype = (s8)subtype;
+    state->subtype = subtype;
     state->flags = flags | CURVES_COLLISION_STATE_ACTIVE;
-    state->updateMode = (u8)updateMode;
+    state->updateMode = updateMode;
     state->heightPadding = 5;
 }
 
@@ -1687,17 +1687,17 @@ void saveFileStruct_setCheatActive(u32 optionIndex, u8 active)
     volatile SaveData* save;
 
     save = &saveData;
-    if ((save->registeredDebugOptions & (1 << (u8)optionIndex)) == 0)
+    if ((save->registeredDebugOptions & (1 << optionIndex)) == 0)
     {
         return;
     }
     if (active != 0)
     {
-        save->enabledDebugOptions |= 1 << (u8)optionIndex;
+        save->enabledDebugOptions |= 1 << optionIndex;
     }
     else
     {
-        save->enabledDebugOptions = save->enabledDebugOptions & ~(1 << (u8)optionIndex);
+        save->enabledDebugOptions = save->enabledDebugOptions & ~(1 << optionIndex);
     }
 }
 

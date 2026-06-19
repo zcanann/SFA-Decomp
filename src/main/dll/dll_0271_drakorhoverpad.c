@@ -1002,7 +1002,7 @@ void drakorhoverpad_func16(int obj, f32 scale)
 {
     f32* mtx;
     ObjPosParams pos;
-    mtx = (f32*)ObjPath_GetPointModelMtx(obj, 0);
+    mtx = ObjPath_GetPointModelMtx(obj, 0);
     pos.x = lbl_803E6A3C;
     pos.y = lbl_803E6A40;
     pos.z = lbl_803E6A3C;

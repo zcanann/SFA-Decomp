@@ -294,7 +294,7 @@ void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
     if (setup->followCurve != 0)
     {
         state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
-        state->curveSpeed = (f32)setup->curveSpeed / lbl_803E3E84;
+        state->curveSpeed = setup->curveSpeed / lbl_803E3E84;
         (*gRomCurveInterface)->initCurve(&state->curve, obj, lbl_803E3E88, &curveFlags, -1);
     }
     ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
@@ -402,7 +402,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((u16*)lbl_803AC7B0, (u16*)state->config);
+                    fn_8018FF48((u16*)lbl_803AC7B0, state->config);
                 }
             }
             else
@@ -423,7 +423,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
 void lfxemitter_free(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
-    int* ptr = (int*)state->config;
+    int* ptr = state->config;
     if (ptr != NULL)
     {
         mm_free(ptr);

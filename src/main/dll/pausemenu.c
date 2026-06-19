@@ -166,7 +166,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     s32 val;
     s32 h;
 
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (pauseMenuState != 0)
     {
@@ -227,8 +227,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 }
                 if (lbl_803DD7C8 != 0)
                 {
-                    pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, (s16)(0x96 - lbl_803DD75C), (u8)x,
-                                         (s32)lbl_803E209C, 0);
+                    pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, (s16)(0x96 - lbl_803DD75C), x,
+                                         lbl_803E209C, 0);
                 }
             }
             fn_80127F24(x);
@@ -383,7 +383,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             case 8:
                 {
                     MapEventInterface* mapEvents = *gMapEventInterface;
-                    int* info = (int*)mapEvents->getCurCharacterState();
+                    int* info = mapEvents->getCurCharacterState();
                     char buf[0x10];
                     *(int*)buf = lbl_803E1E04;
                     gameTextFn_80016810(0x3e0, 0xc8, 0x118);
@@ -391,8 +391,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     lbl_803DBA8C = lbl_803E1E64;
                     gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
                     lbl_803DBA8C = lbl_803E20A0;
-                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, (s16)0x258,
-                                         (u8)alpha,
+                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, 0x258,
+                                         alpha,
                                          0x100, 0);
                     break;
                 }
@@ -409,17 +409,17 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 s32 b38, b34, b30, b2c;
                 int* box;
                 lbl_803DBA8C = lbl_803E1E64;
-                box = (int*)gameTextGetBox(0x7f);
+                box = gameTextGetBox(0x7f);
                 gameTextFn_8001628c(0x3cd, 0, 0, &b38, &b34, &b30, &b2c);
                 val = b38 - b34;
-                *(u8*)((u8*)lbl_803DD824 + 8) = (u8)val;
+                *(u8*)((u8*)lbl_803DD824 + 8) = val;
                 x = *(s16*)((u8*)box + 0x14) + *(u16*)((u8*)box + 8) - (val >> 1) - 0x140;
                 *(s16*)((u8*)lbl_803DD824 + 2) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
 
-                box = (int*)gameTextGetBox(0x80);
+                box = gameTextGetBox(0x80);
                 gameTextFn_8001628c(0x3cc, 0, 0, &b38, &b34, &b30, &b2c);
                 val = b38 - b34;
-                *(u8*)((u8*)lbl_803DD824 + 0x28) = (u8)val;
+                *(u8*)((u8*)lbl_803DD824 + 0x28) = val;
                 x = *(s16*)((u8*)box + 0x14) + ((val >> 1) - 0x140);
                 *(s16*)((u8*)lbl_803DD824 + 0x22) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
 
@@ -570,17 +570,17 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     fn_80127F24(ty);
     if (lbl_803DD7C4 != 0)
     {
-        for (i = 0x14; (s8)i >= 0; i -= 4)
+        for (i = 0x14; i >= 0; i -= 4)
         {
-            s16 px = (s16)((s16)(0xf0 - (s8)i) - lbl_803DD75C);
+            s16 px = (s16)((s16)(0xf0 - i) - lbl_803DD75C);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
-                            px, (u8)ty, 0x100, 0x190, 4, 0);
+                            px, ty, 0x100, 0x190, 4, 0);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
-                            px, (u8)ty, 0x100, 0xf0, 4, 0);
+                            px, ty, 0x100, 0xf0, 4, 0);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20AC,
-                            px, (u8)ty, 0x100, 0xf0, 4, 0);
+                            px, ty, 0x100, 0xf0, 4, 0);
         }
-        lbl_803DD824 = (void*)lbl_8031BD90;
+        lbl_803DD824 = lbl_8031BD90;
         fn_80128470(ty1);
     }
     else
@@ -592,12 +592,12 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 h24;
         s32 mins25;
         f32 playRatio;
-        info = (int*)mapEvents->getCurCharacterState();
+        info = mapEvents->getCurCharacterState();
         hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
         ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
-        fn_80128120(arg1, (u8)ty);
+        fn_80128120(arg1, ty);
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
@@ -605,9 +605,9 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         gbCount = (u8)(j + i);
         {
             u8* p = lbl_8031BB90;
-            for (i = 0; (s8)i < 4; i++)
+            for (i = 0; i < 4; i++)
             {
-                *(s16*)(p + 0xc0) = (s8)i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
+                *(s16*)(p + 0xc0) = i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
                 p += 0x20;
             }
         }
@@ -629,7 +629,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         }
         *(s16*)(lbl_8031BB90 + 0x160) = lbl_803DD734 != 0 ? 0x4e : 0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
-        gameTextSetColor(0xff, 0xff, 0xff, (u8)ty);
+        gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
         lbl_803DBA8C = lbl_803E20A0;
         sprintf(buf, &lbl_803DBB70, *(u8*)((u8*)info + 9), *(u8*)((u8*)info + 0xa));
@@ -659,15 +659,15 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            for (i = 0; (u16)i < 7; i++)
+            for (i = 0; i < 7; i++)
             {
                 f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i
                 +lbl_803E1F30;
-                pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, (u8)ty,
-                                     (s32)lbl_803E20B8, 0);
+                pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
+                                     lbl_803E20B8, 0);
             }
         }
-        for (j = 0; (u16)j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
+        for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
         {
             s32 v = *(int*)lbl_803A9364;
             s32 tex;
@@ -689,23 +689,23 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             }
             fyj = lbl_803E1FAC * (f32)(u32)(u16)
             j + lbl_803E1F30;
-            for (i = 0x14; (s8)i >= 0; i -= 4)
+            for (i = 0x14; i >= 0; i -= 4)
             {
-                s16 px = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int**)(lbl_8031BB90 + (u8)tex * 4), fyj, lbl_803E20B4, px, (u8)ty,
-                                     (s32)lbl_803E20B8, 0);
+                s16 px = (s16)((s16)(0xff - i) - lbl_803DD75C);
+                pauseMenuDrawElement(*(int**)(lbl_8031BB90 + tex * 4), fyj, lbl_803E20B4, px, ty,
+                                     lbl_803E20B8, 0);
             }
         }
-        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4,
-                             (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, lbl_803DBAD0, lbl_803DBAD4,
+                             (s16)(0x100 - lbl_803DD75C), ty,
                              0x100, 0);
-        drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
-                        (s16)(0x100 - lbl_803DD75C), (u8)ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4,
-                             (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
+                        (s16)(0x100 - lbl_803DD75C), ty, 0x100, 0x66, 0x12, 0);
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
+                             (s16)(0x100 - lbl_803DD75C), ty,
                              0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
-        lbl_803DD824 = (void*)lbl_8031BB90;
+        lbl_803DD824 = lbl_8031BB90;
         fn_80128470(ty1);
     }
 
@@ -732,24 +732,24 @@ void fn_80127F24(s32 alpha)
         mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
             lbl_803E1E94);
 
-    for (i = 10; (s8)i >= 0; i -= 2)
+    for (i = 10; i >= 0; i -= 2)
     {
         s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                              lbl_803E20BC, lbl_803E1EE4,
-                             x = (s16)((0xf5 - (s8)i) - lbl_803DD75C),
-                             (u8)alpha, 0x200, 0);
+                             x = (s16)((0xf5 - i) - lbl_803DD75C),
+                             alpha, 0x200, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                              lbl_803E20C0, lbl_803E1EE4,
                              x,
-                             (u8)alpha, 0x200, 0);
+                             alpha, 0x200, 0);
     }
 
     brightness = lbl_803E20C4 - phase * lbl_803E1E6C;
     denom = lbl_803E2090;
     baseAdd = lbl_803E20C8;
     baseSub = lbl_803E20D0;
-    for (i = 10; (s8)i >= 0; i -= 10)
+    for (i = 10; i >= 0; i -= 10)
     {
         f32 off = phase * (denom - (f32)(s32)(s8)
         i
@@ -759,11 +759,11 @@ void fn_80127F24(s32 alpha)
         s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseAdd + off, lbl_803E20CC,
-                             x = (s16)((0xff - (s8)i) - lbl_803DD75C),
-                             (u8)alpha, (s32)(f64)brightness, 0);
+                             x = (s16)((0xff - i) - lbl_803DD75C),
+                             alpha, (s32)(f64)brightness, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              baseSub - off, lbl_803E20CC,
                              x,
-                             (u8)alpha, (s32)(f64)brightness, 0);
+                             alpha, (s32)(f64)brightness, 0);
     }
 }

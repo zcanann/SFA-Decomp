@@ -116,14 +116,14 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
         for (; i < count; i++)
         {
             void* o = (void*)objs[i];
-            if (o != (void*)obj && ((GameObject*)o)->anim.seqId == 774)
+            if (o != obj && ((GameObject*)o)->anim.seqId == 774)
             {
                 (*(void (**)(void*, int, int))(**(int**)&((GameObject*)o)->anim.dll + 0x24))(
                     o, 129, 0);
             }
         }
         playerChild = *(int**)((char*)Obj_GetPlayerObject() + 0xc8);
-        player = (int*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         result = (**(int (**)(int*))(*(int*)(*(int*)&((GameObject*)playerChild)->anim.dll) + 0x44))(playerChild);
         if (result != 0)
         {
@@ -264,28 +264,28 @@ void fn_8015DAE8(void)
     extern int mediumbasket_stateHandlerB06();
     extern int mediumbasket_stateHandlerB07();
 
-    gMediumBasketStateHandlersA[0] = (void*)mediumbasket_updateOpenHitState;
-    gMediumBasketStateHandlersA[1] = (void*)mediumbasket_updateOpenState;
-    gMediumBasketStateHandlersA[2] = (void*)mediumbasket_updateHideResetState;
-    gMediumBasketStateHandlersA[3] = (void*)mediumbasket_updateImpactHitState;
-    gMediumBasketStateHandlersA[4] = (void*)mediumbasket_updateSpinState;
-    gMediumBasketStateHandlersA[5] = (void*)mediumbasket_stateHandlerA05;
-    gMediumBasketStateHandlersA[6] = (void*)mediumbasket_stateHandlerA06;
-    gMediumBasketStateHandlersA[7] = (void*)mediumbasket_updateHeightBlendState;
-    gMediumBasketStateHandlersA[8] = (void*)mediumbasket_updateControlMove5State;
-    gMediumBasketStateHandlersA[9] = (void*)mediumbasket_updateCommDownState;
-    gMediumBasketStateHandlersA[10] = (void*)mediumbasket_updateDropState;
-    gMediumBasketStateHandlersA[11] = (void*)mediumbasket_stateHandlerA0B;
-    gMediumBasketStateHandlersA[12] = (void*)mediumbasket_updateContactHitState;
-    gMediumBasketStateHandlersA[13] = (void*)mediumbasket_updateLandingState;
-    gMediumBasketStateHandlersB[0] = (void*)mediumbasket_checkTargetState;
-    gMediumBasketStateHandlersB[1] = (void*)mediumbasket_stateHandlerB01;
-    gMediumBasketStateHandlersB[2] = (void*)mediumbasket_stateHandlerB02;
-    gMediumBasketStateHandlersB[3] = (void*)mediumbasket_stateHandlerB03;
-    gMediumBasketStateHandlersB[4] = (void*)mediumbasket_stateHandlerB04;
-    gMediumBasketStateHandlersB[5] = (void*)mediumbasket_stateHandlerB05;
-    gMediumBasketStateHandlersB[6] = (void*)mediumbasket_stateHandlerB06;
-    gMediumBasketStateHandlersB[7] = (void*)mediumbasket_stateHandlerB07;
+    gMediumBasketStateHandlersA[0] = mediumbasket_updateOpenHitState;
+    gMediumBasketStateHandlersA[1] = mediumbasket_updateOpenState;
+    gMediumBasketStateHandlersA[2] = mediumbasket_updateHideResetState;
+    gMediumBasketStateHandlersA[3] = mediumbasket_updateImpactHitState;
+    gMediumBasketStateHandlersA[4] = mediumbasket_updateSpinState;
+    gMediumBasketStateHandlersA[5] = mediumbasket_stateHandlerA05;
+    gMediumBasketStateHandlersA[6] = mediumbasket_stateHandlerA06;
+    gMediumBasketStateHandlersA[7] = mediumbasket_updateHeightBlendState;
+    gMediumBasketStateHandlersA[8] = mediumbasket_updateControlMove5State;
+    gMediumBasketStateHandlersA[9] = mediumbasket_updateCommDownState;
+    gMediumBasketStateHandlersA[10] = mediumbasket_updateDropState;
+    gMediumBasketStateHandlersA[11] = mediumbasket_stateHandlerA0B;
+    gMediumBasketStateHandlersA[12] = mediumbasket_updateContactHitState;
+    gMediumBasketStateHandlersA[13] = mediumbasket_updateLandingState;
+    gMediumBasketStateHandlersB[0] = mediumbasket_checkTargetState;
+    gMediumBasketStateHandlersB[1] = mediumbasket_stateHandlerB01;
+    gMediumBasketStateHandlersB[2] = mediumbasket_stateHandlerB02;
+    gMediumBasketStateHandlersB[3] = mediumbasket_stateHandlerB03;
+    gMediumBasketStateHandlersB[4] = mediumbasket_stateHandlerB04;
+    gMediumBasketStateHandlersB[5] = mediumbasket_stateHandlerB05;
+    gMediumBasketStateHandlersB[6] = mediumbasket_stateHandlerB06;
+    gMediumBasketStateHandlersB[7] = mediumbasket_stateHandlerB07;
 }
 #pragma dont_inline reset
 
@@ -316,7 +316,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p)
         for (; i < count; i++)
         {
             void* o = (void*)objs[i];
-            if (o != (void*)obj && ((GameObject*)o)->anim.seqId == 774)
+            if (o != obj && ((GameObject*)o)->anim.seqId == 774)
             {
                 (*(void (**)(void*, int, int))(**(int**)&((GameObject*)o)->anim.dll + 0x24))(
                     o, 129, 0);
@@ -710,7 +710,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     t = sub->unk3E8;
     if (t != lbl_803E2DC8)
     {
-        fn_8003B5E0(200, 0, 0, (int)t);
+        fn_8003B5E0(200, 0, 0, t);
     }
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5,
                                                                    lbl_803E2E10);
@@ -1004,19 +1004,19 @@ extern void* lbl_803AC598[];
 
 void dll_CE_initialise(void)
 {
-    lbl_803AC5B0[0] = (void*)fn_8015E8BC;
-    lbl_803AC5B0[1] = (void*)fn_8015E798;
-    lbl_803AC5B0[2] = (void*)fn_8015E5DC;
-    lbl_803AC5B0[3] = (void*)fn_8015E520;
-    lbl_803AC5B0[4] = (void*)fn_8015E3A0;
-    lbl_803AC5B0[5] = (void*)fn_8015E210;
-    lbl_803AC5B0[6] = (void*)fn_8015E0C8;
-    lbl_803AC598[0] = (void*)fn_8015E044;
-    lbl_803AC598[1] = (void*)fn_8015E00C;
-    lbl_803AC598[2] = (void*)fn_8015DF20;
-    lbl_803AC598[3] = (void*)fn_8015DEB4;
-    lbl_803AC598[4] = (void*)fn_8015DE50;
-    lbl_803AC598[5] = (void*)fn_8015DC04;
+    lbl_803AC5B0[0] = fn_8015E8BC;
+    lbl_803AC5B0[1] = fn_8015E798;
+    lbl_803AC5B0[2] = fn_8015E5DC;
+    lbl_803AC5B0[3] = fn_8015E520;
+    lbl_803AC5B0[4] = fn_8015E3A0;
+    lbl_803AC5B0[5] = fn_8015E210;
+    lbl_803AC5B0[6] = fn_8015E0C8;
+    lbl_803AC598[0] = fn_8015E044;
+    lbl_803AC598[1] = fn_8015E00C;
+    lbl_803AC598[2] = fn_8015DF20;
+    lbl_803AC598[3] = fn_8015DEB4;
+    lbl_803AC598[4] = fn_8015DE50;
+    lbl_803AC598[5] = fn_8015DC04;
 }
 
 void dll_CE_free(int* obj)

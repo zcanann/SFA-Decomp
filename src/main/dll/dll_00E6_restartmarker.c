@@ -387,7 +387,7 @@ void FUN_8016d188(int param_1, int param_2)
         {
             amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F30));
             amountLL = (s64)amount;
-            frames = 0x15 - (short)amount;
+            frames = 0x15 - amount;
             yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
             spawnArgs = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnArgs, 2, -1, NULL);
@@ -417,7 +417,7 @@ void FUN_8016d188(int param_1, int param_2)
                 {
                     amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F30));
                     amountLL = (s64)amount;
-                    frames = (short)amount + 6;
+                    frames = amount + 6;
                     yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
                     spawnArgs = 0xc94;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &spawnArgs, 2, -1, NULL);
@@ -438,14 +438,14 @@ void FUN_8016d188(int param_1, int param_2)
                     {
                         intensity = progress / lbl_803E3F40;
                         amount = (int)(lbl_803E3F38 * intensity);
-                        frames = (short)amount;
+                        frames = amount;
                         spawnArgs = 0xc94;
                     }
                     else
                     {
                         intensity = progress / lbl_803E3F50;
                         amount = (int)(lbl_803E3F38 * intensity);
-                        frames = (short)amount;
+                        frames = amount;
                         spawnArgs = 0xc75;
                     }
                     amountLL = (s64)amount;
@@ -511,7 +511,7 @@ void FUN_8016d188(int param_1, int param_2)
             {
                 amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F60));
                 amountLL = (s64)amount;
-                frameCount = 0x15 - (short)amount;
+                frameCount = 0x15 - amount;
                 spawnParam[0] = 0xc95;
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerXform);
                 yOffset = *(float*)(ownerXform + 0xc);
@@ -553,7 +553,7 @@ void FUN_8016d188(int param_1, int param_2)
         {
             amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F60));
             amountLL = (s64)amount;
-            frames = 0x15 - (short)amount;
+            frames = 0x15 - amount;
             yOffset = lbl_803E3F5C * (lbl_803E3F28 - progress / lbl_803E3F60);
             spawnArgs = 0xc94;
             (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnArgs, 2, -1, NULL);
@@ -605,7 +605,7 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
         {
             partIdx = (u32) * (u16*)(emitter + 3);
             partPtr = *emitter + partIdx * 0x14;
-            for (; (int)partIdx < (int)(u32) * (u16*)((int)emitter + 0xe); partIdx = partIdx + 2)
+            for (; partIdx < (int)(u32) * (u16*)((int)emitter + 0xe); partIdx = partIdx + 2)
             {
                 if (emitter == (int*)extra[0x12])
                 {
@@ -732,15 +732,15 @@ void FUN_80170048(void)
         value = lbl_803E4048;
         if (lbl_803E4044 != (float)state[2])
         {
-            state[4] = (int)lbl_803E4048;
-            state[1] = (int)value;
+            state[4] = lbl_803E4048;
+            state[1] = value;
             if (effectObj != 0)
             {
                 FUN_8016d994(effectObj, 7, 0);
             }
         }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
         FUN_80006810(world, 0x42c);
         FUN_80006810(world, 0x42d);
         break;
@@ -773,12 +773,12 @@ void FUN_80170048(void)
             value = lbl_803E4044;
             if (lbl_803E4044 == (float)state[2])
             {
-                state[4] = (int)lbl_803E4048;
-                state[1] = (int)value;
+                state[4] = lbl_803E4048;
+                state[1] = value;
             }
-            state[2] = (int)lbl_803E4048;
+            state[2] = lbl_803E4048;
             phase = (double)lbl_803E405C;
-            state[3] = (int)lbl_803E405C;
+            state[3] = lbl_803E405C;
             scratch = 0;
             src = &DAT_80321688;
             base = (double)lbl_803E4040;
@@ -812,10 +812,10 @@ void FUN_80170048(void)
         }
         if (lbl_803E4044 != (float)state[2])
         {
-            state[4] = (int)lbl_803E4064;
+            state[4] = lbl_803E4064;
         }
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
         if (*state != 0)
         {
             FUN_800175cc((double)lbl_803E4040, *state, '\0');
@@ -849,11 +849,11 @@ void FUN_80170048(void)
         }
         if (lbl_803E4044 == (float)state[2])
         {
-            state[4] = (int)lbl_803E4064;
+            state[4] = lbl_803E4064;
         }
-        state[2] = (int)lbl_803E4064;
+        state[2] = lbl_803E4064;
         offset = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
+        state[3] = lbl_803E405C;
         scratch = 0;
         src = &DAT_80321688;
         bias = (double)lbl_803E4040;
@@ -875,10 +875,10 @@ void FUN_80170048(void)
         FUN_80006824(world, 0x42c);
         break;
     case 4:
-        state[2] = (int)lbl_803E4064;
+        state[2] = lbl_803E4064;
         offset = (double)lbl_803E405C;
-        state[3] = (int)lbl_803E405C;
-        state[4] = (int)value;
+        state[3] = lbl_803E405C;
+        state[4] = value;
         scratch = 0;
         scaleTbl = (float*)&DAT_80321698;
         src = &DAT_803216a8;
@@ -906,9 +906,9 @@ void FUN_80170048(void)
         FUN_80006824(world, 0x42c);
         break;
     case 5:
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)lbl_803E404C;
-        state[4] = (int)lbl_803E4064;
+        state[2] = lbl_803E4044;
+        state[3] = lbl_803E404C;
+        state[4] = lbl_803E4064;
         FUN_80006810(world, 0x42c);
         FUN_80006810(world, 0x42d);
         break;
@@ -943,10 +943,10 @@ void FUN_80170048(void)
             FUN_800175cc((double)lbl_803E4040, *state, '\0');
         }
         value = lbl_803E4044;
-        state[2] = (int)lbl_803E4044;
-        state[3] = (int)value;
-        state[4] = (int)value;
-        state[1] = (int)value;
+        state[2] = lbl_803E4044;
+        state[3] = value;
+        state[4] = value;
+        state[1] = value;
         *(u8*)(state + 0x17) = *(u8*)(state + 0x17) | 1;
         *(u8*)((int)state + 0x5d) = *(u8*)((int)state + 0x5d) | 1;
         *(u8*)((int)state + 0x5e) = *(u8*)((int)state + 0x5e) | 1;
@@ -998,7 +998,7 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
         result = FUN_80017698(scratchU, 1);
     }
     scratchU = (u32) * (short*)(placement + 0x2c);
-    if (0 < (int)scratchU)
+    if (0 < scratchU)
     {
         FUN_80017688(scratchU);
     }
@@ -1059,12 +1059,12 @@ void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
             else if (seqOrType == 0x6a6)
             {
                 scratchU = FUN_80017690(0x86a);
-                counter = (char)scratchU;
+                counter = scratchU;
                 if (counter < '\a')
                 {
                     counter = counter + '\x01';
                 }
-                FUN_80017698(0x86a, (int)counter);
+                FUN_80017698(0x86a, counter);
                 FUN_80081118((double)lbl_803E40EC, param_9, 6, 0x28);
                 FUN_80006824(param_9, SFXen_treadlpc);
                 goto LAB_801725bc;
