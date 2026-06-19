@@ -438,20 +438,20 @@ void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short 
     extern uint GameBit_Get(int eventId);
     extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId);
     extern u32 GameBit_Set(int eventId, int value);
-    uint uVar1;
-    uint uVar2;
-    u64 uVar3;
+    uint bitValue;
+    uint eventId;
+    u64 latchState;
 
-    uVar3 = FUN_80286838();
-    uVar2 = (uint)param_5;
-    uVar1 = GameBit_Get(uVar2);
-    uVar1 = countLeadingZeros(uVar1);
-    GameBit_Set(uVar2, uVar1 >> 5);
-    SCGameBitLatch_Update((int)((ulonglong)uVar3 >> 0x20), (int)uVar3, param_3, param_4,
+    latchState = FUN_80286838();
+    eventId = (uint)param_5;
+    bitValue = GameBit_Get(eventId);
+    bitValue = countLeadingZeros(bitValue);
+    GameBit_Set(eventId, bitValue >> 5);
+    SCGameBitLatch_Update((int)((ulonglong)latchState >> 0x20), (int)latchState, param_3, param_4,
                           param_5, (int)param_6);
-    uVar1 = GameBit_Get(uVar2);
-    uVar1 = countLeadingZeros(uVar1);
-    GameBit_Set(uVar2, uVar1 >> 5);
+    bitValue = GameBit_Get(eventId);
+    bitValue = countLeadingZeros(bitValue);
+    GameBit_Set(eventId, bitValue >> 5);
     FUN_80286884();
     return;
 }
