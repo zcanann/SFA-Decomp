@@ -9768,18 +9768,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         }
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
             p3, 3, &e);
-        if (angle < (s16) - e)
-        {
-            clamped = (s16) - e;
-        }
-        else if (angle > (s16)e)
-        {
-            clamped = (s16)e;
-        }
-        else
-        {
-            clamped = angle;
-        }
+        clamped = (angle < (s16) - e) ? (s16) - e : ((angle > (s16)e) ? (s16)e : angle);
         ((PlayerState*)p2)->targetYaw = (s16)d + clamped;
         (*(void (*)(int, int, int*))(*(int*)((char*)*(int*)*(int*)((char*)p3 + 0x68) + 0x54)))(
             p3, 4, &flag);
