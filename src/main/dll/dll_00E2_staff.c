@@ -947,9 +947,9 @@ void staff_init(int* obj)
     ObjHitsPriorityState* hitState;
     int* p;
     int i;
-    *(u8*)((char*)state + 0xaa) = 1;
-    *(s16*)((char*)state + 0xb0) = 2;
-    *(f32*)((char*)state + 0x50) = lbl_803E3328;
+    ((StaffDoGrowShrinkAnimState*)state)->unkAA = 1;
+    ((StaffDoGrowShrinkAnimState*)state)->unkB0 = 2;
+    ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3328;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
