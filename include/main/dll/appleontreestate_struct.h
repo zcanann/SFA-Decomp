@@ -11,7 +11,7 @@ typedef struct AppleOnTreeState
     u8 unk10[0x24 - 0x10];
     f32 unk24;
     f32 unk28;
-    f32 unk2C;
+    f32 posY;
     f32 unk30;
     f32 unk34;
     u16 healthRestore;
