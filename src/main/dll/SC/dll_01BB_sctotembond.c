@@ -89,8 +89,8 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
             setup[0x07] = 0x1e;
             *(s16*)(setup + 0x18) = -1;
             *(s16*)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-            *(s16*)(setup + 0x1c) = (s16)lbl_80327A70[orbIndex];
-            *(s16*)(setup + 0x30) = (s16)lbl_80327A60[orbIndex];
+            *(s16*)(setup + 0x1c) = lbl_80327A70[orbIndex];
+            *(s16*)(setup + 0x30) = lbl_80327A60[orbIndex];
             *(s8*)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
             setup[0x32] = 1;
             Obj_SetupObject(setup, 5, -1, -1, 0);
@@ -334,8 +334,8 @@ void sc_totembond_init(ScTotemBondObject* obj, int params)
     state = obj->state;
     state->ringIndex = hi;
     obj->animEventCallback = sc_totempuzzle_processAnimEvents;
-    v = (u32)obj->objectFlags | 0x6000;
-    obj->objectFlags = (u16)v;
+    v = obj->objectFlags | 0x6000;
+    obj->objectFlags = v;
 }
 
 int fn_801DE320(u16* gameBitIds, u16 newValue)
@@ -346,7 +346,7 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
 
     for (i = 0; i < 3; i++)
     {
-        u16 v = (u16)GameBit_Get(gameBitIds[i]);
+        u16 v = GameBit_Get(gameBitIds[i]);
         values[i] = v;
     }
     values[3] = newValue;
@@ -368,7 +368,7 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
     }
     for (i = 0; i < 3; i++)
     {
-        GameBit_Set(gameBitIds[i], (u32)values[i]);
+        GameBit_Set(gameBitIds[i], values[i]);
     }
     return changed;
 }

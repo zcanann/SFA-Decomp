@@ -402,7 +402,7 @@ void AttractMovieVideo_Decode(void* param)
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
-        readMsg = (void**)tmpBuf;
+        readMsg = tmpBuf;
         i = 0;
         player2 = &lbl_803A5D60;
         componentKind = (u8*)player2;
@@ -475,7 +475,7 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
                 {
                     u32 cols;
                     u32 bOff = player->initReadFrame;
-                    u32 sum = (u32)i + bOff;
+                    u32 sum = i + bOff;
                     u32 pos = sum % (cols = player->header.mNumFrames);
                     if (pos == cols - 1)
                     {
@@ -503,7 +503,7 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
         {
             u32 cols;
             u32 bOff = player->initReadFrame;
-            u32 sum = (u32)i + bOff;
+            u32 sum = i + bOff;
             u32 pos = sum % (cols = player->header.mNumFrames);
             if (pos == cols - 1)
             {
@@ -563,7 +563,7 @@ void AttractMovieVideo_Decoder(void)
         }
         else
         {
-            msg = (void*)PopReadedBuffer();
+            msg = PopReadedBuffer();
         }
         AttractMovieVideo_Decode(msg);
         PushFreeReadBuffer((OSMessage)msg);
@@ -611,7 +611,7 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
     }
 
     OSInitMessageQueue((OSMessageQueue*)(db + 0x38), (void*)(db + 0x0C), 3);
-    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), (void*)db, 3);
+    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), db, 3);
     lbl_803DD690 = 1;
     lbl_803DD694 = 1;
     return 1;

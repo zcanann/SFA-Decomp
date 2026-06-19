@@ -86,7 +86,7 @@ void runLoadingScreens(void)
     {
         if (lbl_803DD5EC < 0x1e)
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)lbl_803DD5EC) / lbl_803E1CF8);
+            alpha = (int)((lbl_803E1CF4 * lbl_803DD5EC) / lbl_803E1CF8);
         }
         else if (lbl_803DD5EC < 0xd2)
         {

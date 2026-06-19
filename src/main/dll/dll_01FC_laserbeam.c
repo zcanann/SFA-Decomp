@@ -85,7 +85,7 @@ void LaserBeam_init(int* obj)
 {
     void** state;
 
-    state = (void**)OBJ_PTR(obj, 0xb8);
+    state = OBJ_PTR(obj, 0xb8);
     (*gModgfxInterface)->detachSource(obj);
     if (state[0] != 0)
     {

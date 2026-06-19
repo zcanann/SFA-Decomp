@@ -108,7 +108,7 @@ void Lamp_init(int* obj, int* def)
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->unkF8 = 0;
     *state = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)Lamp_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
 }
 
 void Lamp_update(int obj)

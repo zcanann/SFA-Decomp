@@ -318,13 +318,13 @@ void dll_54_update(u8* obj)
             {
                 d += 0xffff;
             }
-            camera->anim.rotX = (f32)d * t2 + (f32)cur;
+            camera->anim.rotX = d * t2 + cur;
 
             cur = camera->anim.rotY;
             d = (s16)(lbl_803DD5C0->startPitch - (u16)cur);
             d = (d > 0x8000) ? (s16)(d - 0xffff) : d;
             d = (d < -0x8000) ? (s16)(d + 0xffff) : d;
-            camera->anim.rotY = (f32)d * t2 + (f32)cur;
+            camera->anim.rotY = d * t2 + cur;
 
             lbl_803DD5C0->transitionTimer -= timeDelta;
             if (lbl_803DD5C0->transitionTimer < lbl_803E1B68)

@@ -132,10 +132,10 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
     }
     {
         extern int getAngle(f32 dx, f32 dz); /* #57 */
-        target->anim.rotX = (s16)getAngle(c, s);
+        target->anim.rotX = getAngle(c, s);
     }
     camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);
-    target->anim.rotX = (s16)yaw;
+    target->anim.rotX = yaw;
     {
         f32 p;
         p = pos[0];

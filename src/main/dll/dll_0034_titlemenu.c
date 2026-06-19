@@ -616,7 +616,7 @@ void TitleMenu_release(void)
 
 void TitleMenu_setSelection(int selection)
 {
-    u8 v = (u8)selection;
+    u8 v = selection;
     gTitleMenuSelection = v;
     gTitleMenuPreviousSelection = TITLE_MENU_SELECTION_INVALID;
     (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);

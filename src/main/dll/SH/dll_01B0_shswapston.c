@@ -496,10 +496,10 @@ void warpstone_update(int obj)
         target = ObjGroup_FindNearestObject(8, obj, 0);
     }
 
-    ((GameObject*)obj)->anim.localPosY += (f32)lbl_803DC040;
+    ((GameObject*)obj)->anim.localPosY += lbl_803DC040;
     fn_8003ADC4(obj, target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
     modelVec = objModelGetVecFn_800395d8(obj, 0);
-    ((GameObject*)obj)->anim.localPosY -= (f32)lbl_803DC040;
+    ((GameObject*)obj)->anim.localPosY -= lbl_803DC040;
 
     if (modelVec != NULL)
     {

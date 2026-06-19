@@ -90,7 +90,7 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     blocked = 0;
     if (runBbox != 0)
     {
-        blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, (int*)0x0, (int*)0x0, 0x10, 0xffffffff, 0xff, 0);
+        blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, 0x0, 0x0, 0x10, 0xffffffff, 0xff, 0);
     }
     else
     {
@@ -147,8 +147,8 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     u32 ang;
     int d;
 
-    cosv = mathSinf((lbl_803E168C * (f32)targetAnim->rotX) / lbl_803E1690);
-    sinv = mathCosf((lbl_803E168C * (f32)targetAnim->rotX) / lbl_803E1690);
+    cosv = mathSinf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
+    sinv = mathCosf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
     d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
         cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
     if (d2 < lbl_803E1694)
@@ -226,7 +226,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         {
             action44Payload.distance = cameraMtxVar57->minDistance;
             action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
-            action44Payload.height = (s16)cameraMtxVar57->targetHeight;
+            action44Payload.height = cameraMtxVar57->targetHeight;
             cameraSetInterpMode(0);
             (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
         }
@@ -435,7 +435,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
         }
         g = f * lbl_803E16A8;
         g = lbl_803E16AC + g;
-        g = g + (f32)d / lbl_803E16B0;
+        g = g + d / lbl_803E16B0;
         if (g < lbl_803E16B4)
         {
             g = lbl_803E16B4;
@@ -570,7 +570,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         spin = (s16)(int)cameraMtxVar57->avoidanceYawOffset;
         if ((spin < -0x1e) || (0x1e < spin))
         {
-            rad = (lbl_803E168C * (f32)spin) / lbl_803E1690;
+            rad = (lbl_803E168C * spin) / lbl_803E1690;
             cosv = mathSinf(rad);
             sinv = mathCosf(rad);
             t = dx * sinv - dz * cosv;

@@ -663,7 +663,7 @@ void depthoffieldpoint_init(int* obj)
 {
     DofState* s = ((GameObject*)obj)->extra;
     s->enabled = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)depthoffieldpoint_SeqFn;
+    ((GameObject*)obj)->animEventCallback = depthoffieldpoint_SeqFn;
     s->mode0 = 0;
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }

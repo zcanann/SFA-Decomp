@@ -290,7 +290,7 @@ void dll_199_update(int obj)
                 GameBit_Set(0x5b5, 1);
             }
             GameBit_Set(0x5b9, 0);
-            if (Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < (f32)state[0])
+            if (Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < state[0])
             {
                 ((Dll199State*)state)->unkF = 1;
                 GameBit_Set(0x129, 0);
@@ -430,7 +430,7 @@ void dll_199_init(int obj, int def)
     *(u8*)(state + 8) = 0;
     state[1] = 0;
     *(u8*)(state + 7) = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_199_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1cf, 0);

@@ -185,7 +185,7 @@ void InvisibleHitSwitch_init(int obj, u8* param_2)
     ObjHitbox_SetSphereRadius(
         obj,
         (s16)((param_2[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
-    info[0] = (u8)GameBit_Get(*(s16*)(param_2 + 0x18));
+    info[0] = GameBit_Get(*(s16*)(param_2 + 0x18));
     switch ((param_2[0x23] & 0xe) >> 1)
     {
     case 0:

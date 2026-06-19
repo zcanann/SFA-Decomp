@@ -539,7 +539,7 @@ void landed_arwing_init(int obj, int param)
     {
         unlockLevel(0, 0, 1);
     }
-    ((GameObject*)obj)->animEventCallback = (void*)Landed_Arwing_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Landed_Arwing_SeqFn;
 }
 
 void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
@@ -616,8 +616,8 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     {
         if (*(u8*)(def + 0x1e) == 2)
         {
-            ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
-            ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
+            ((GameObject*)obj)->anim.rotY = randomGetRange(-200, 200);
+            ((GameObject*)obj)->anim.rotZ = randomGetRange(-200, 200);
         }
         ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                   &state->hitEffectCooldown);

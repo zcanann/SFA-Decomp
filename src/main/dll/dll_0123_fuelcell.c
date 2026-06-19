@@ -121,8 +121,8 @@ void fuelcell_free(int* obj)
 void fuelcell_init(int* obj)
 {
     extern void* Obj_GetActiveModel(int* obj);
-    ((GameObject*)obj)->animEventCallback = (void*)fuelcell_func0B;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void*)fuelcell_modelMtxFn);
+    ((GameObject*)obj)->animEventCallback = fuelcell_func0B;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }
 
@@ -266,8 +266,8 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                 int* target;
                 if ((int)randomGetRange(0, 9) == 0 && !state->unkBit5)
                 {
-                    list = (int**)ObjGroup_GetObjects(0x4f, &objCount);
-                    for (j = 0; (int)j < objCount; j++)
+                    list = ObjGroup_GetObjects(0x4f, &objCount);
+                    for (j = 0; j < objCount; j++)
                     {
                         int ofs = (int)(u16)j * 4;
                         int* other = *(int**)((char*)list + ofs);

@@ -297,7 +297,7 @@ void fn_8019D9F0(int* obj)
         }
         else
         {
-            f32 vol = lbl_803E41FC + (f32)count / lbl_803E4200;
+            f32 vol = lbl_803E41FC + count / lbl_803E4200;
             {
                 f32 d = vol - sub->humVolume;
                 sub->humVolume = d * lbl_803E4204 + sub->humVolume;
@@ -374,7 +374,7 @@ void cfmaincrystal_update(int* obj)
             }
         }
         lbl_803DDB10 = obj;
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)framesThisStep * 0xb6);
+        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 0xb6);
         break;
     }
 }

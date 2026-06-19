@@ -59,7 +59,7 @@ int kaldachom_stateHandlerA05(int obj, int p2)
         }
         control->climbFxIndex = 4;
     }
-    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_80320404[(u32)control->climbFxIndex];
+    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_80320404[control->climbFxIndex];
     ((GroundBaddieState*)p2)->baddie.unk34D = 1;
     return 0;
 }
@@ -114,13 +114,13 @@ int kaldachom_stateHandlerA02(int obj, int p2)
     {
         if ((s32)(s8)((GroundBaddieState*)p2)->baddie.moveJustStartedA != 0)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], lbl_803E3060, 0);
+            ObjAnim_SetCurrentMove(obj, lbl_803203F8[randomGetRange(0, 4)], lbl_803E3060, 0);
             ((GroundBaddieState*)p2)->baddie.moveDone = 0;
         }
         ObjHits_EnableObject((u32)obj);
         control->climbFxIndex = 4;
     }
-    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_80320404[(u32)control->climbFxIndex];
+    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_80320404[control->climbFxIndex];
     ((GroundBaddieState*)p2)->baddie.unk34D = 1;
     return 0;
 }

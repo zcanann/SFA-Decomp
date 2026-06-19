@@ -99,7 +99,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
                 (float)(u32)state->bobPhase /
                 lbl_803E59EC)) +
         state->bobBaseY;
-    sum = (u32)state->bobPhase + (u32)framesThisStep * 0x100;
+    sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
     {
         float rngf;
@@ -108,7 +108,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
         rngf = lbl_803E59F0 * rngf;
         state->bobAmplitude = rngf;
     }
-    state->bobPhase = (u16)sum;
+    state->bobPhase = sum;
     if ((obj->hitFlags & DR_LASERTURRET_HITFLAG_CAN_PROMPT) != 0)
     {
         if (playerGetMoney(playerObj) >= 1)
@@ -151,7 +151,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     if (animState->stateEntered != 0)
     {
         rng = randomGetRange(0x1f4, 0x3e8);
-        state->actionTimer = (f32)rng;
+        state->actionTimer = rng;
         state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
     if ((state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) != 0)
@@ -174,7 +174,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
             animState->animStepScale = lbl_803E59E4;
             state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
-            state->actionTimer = (f32)rng;
+            state->actionTimer = rng;
         }
     }
     else
@@ -198,7 +198,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         else
         {
             rng = randomGetRange(0, 1);
-            ObjAnim_SetCurrentMove((int)obj, (int)lbl_803DC0A0[rng], lbl_803E59DC, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC0A0[rng], lbl_803E59DC, 0);
             animState->animStepScale = lbl_803DC0A4[rng];
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
@@ -254,13 +254,13 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
                 (float)(u32)state->bobPhase /
                 lbl_803E59EC)) +
         state->bobBaseY;
-    sum = (u32)state->bobPhase + (u32)framesThisStep * 0x100;
+    sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
     {
         rng = randomGetRange(0xf, 0x23);
         state->bobAmplitude = (float)rng * lbl_803E59F0;
     }
-    state->bobPhase = (u16)sum;
+    state->bobPhase = sum;
     if (ObjTrigger_IsSet(obj) != 0)
     {
         rng = randomGetRange(0, 2);
@@ -352,7 +352,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         }
         if (state->digitCount > state->maxCount)
         {
-            state->digitCount = (u8)state->maxCount;
+            state->digitCount = state->maxCount;
         }
         if (state->digitCount > DR_LASERTURRET_MAX_DIGIT_COUNT)
         {
@@ -405,16 +405,16 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             state->nudgeCount = state->nudgeCount + 1;
         }
-        return (s8)nudge == 0;
+        return nudge == 0;
     case DR_LASERTURRET_PROMPT_NUDGE:
         if ((s8)nudge == 1)
         {
             int* target = state->linkedTarget;
             (**(VtableFn***)((char*)target + 0x68))[0x48 / 4](target);
         }
-        return (s8)nudge == 1;
+        return nudge == 1;
     case DR_LASERTURRET_PROMPT_MAX_NUDGE:
-        return (s8)nudge == 2;
+        return nudge == 2;
     }
     return 0;
 }

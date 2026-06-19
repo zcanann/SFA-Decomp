@@ -184,7 +184,7 @@ void LanternFireFly_hitDetect(void)
 }
 
 #define LANTERN_SPAWN_FX(obj, id, a, b, c, d) \
-    (*gPartfxInterface)->spawnObject((void *)obj, id, (void *)a, b, c, (void *)d)
+    (*gPartfxInterface)->spawnObject((void *)obj, id, a, b, c, d)
 
 #define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
@@ -314,7 +314,7 @@ void LanternFireFly_update(int obj)
         {
             f32 atten;
 
-            atten = (f32)state->timer *
+            atten = state->timer *
                 mathSinf((lbl_803E3ACC * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
@@ -369,9 +369,9 @@ void LanternFireFly_init(int obj, int def)
     state->splineT = lbl_803E3AA0;
     state->animFrame = 0;
     state->field6B = 0;
-    randValue = (s16)randomGetRange(0x1F4, 0x5DC);
+    randValue = randomGetRange(0x1F4, 0x5DC);
     state->randPeriod = randValue;
-    randValue = (s16)randomGetRange(0, 0xFDE8);
+    randValue = randomGetRange(0, 0xFDE8);
     state->randAngle = randValue;
     state->field68 = 4;
     state->stateId = 4;
@@ -427,7 +427,7 @@ void fn_801868D0(int obj)
             (f32)(int)
         randomGetRange(0x14, (s16)(int)state->field50);
     }
-    r = (s16)randomGetRange(3000, 5000);
+    r = randomGetRange(3000, 5000);
     state->randAngle += r;
     fz = lbl_803E3AB8;
     rot.x = fz;
@@ -463,7 +463,7 @@ void fn_801869DC(int obj)
         int player = Obj_GetPlayerObject();
         state->speed =
             lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
-                                        (void*)&((GameObject*)player)->anim.worldPosX) + lbl_803E3AC0;
+                                        &((GameObject*)player)->anim.worldPosX) + lbl_803E3AC0;
     }
     else
     {

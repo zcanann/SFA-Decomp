@@ -208,7 +208,7 @@ void crrockfall_update(int* obj)
                 frac = lbl_803E46E8;
             }
             height = (*(f32*)&lbl_803E4708) - frac;
-            player = (int*)Obj_GetPlayerObject();
+            player = Obj_GetPlayerObject();
             if (player != NULL)
             {
                 dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
@@ -241,7 +241,7 @@ void crrockfall_update(int* obj)
             case 0:
                 {
                     int cond;
-                    int* player = (int*)Obj_GetPlayerObject();
+                    int* player = Obj_GetPlayerObject();
                     if (player == NULL)
                     {
                         cond = 0;

@@ -188,7 +188,7 @@ void ring_update(int obj)
             r = 0;
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
         }
-        ((GameObject*)obj)->anim.alpha = (u8)r;
+        ((GameObject*)obj)->anim.alpha = r;
         bit = *(s16*)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1)
         {
@@ -210,7 +210,7 @@ void ring_update(int obj)
     case RING_PHASE_ACTIVE:
         r = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
         if (r > RING_ALPHA_OPAQUE) r = RING_ALPHA_OPAQUE;
-        ((GameObject*)obj)->anim.alpha = (u8)r;
+        ((GameObject*)obj)->anim.alpha = r;
         bit = *(s16*)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1)
         {

@@ -569,9 +569,9 @@ void wmsun_init(int obj, int params)
 
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
-    ((GameObject*)obj)->animEventCallback = (void*)wmsun_SeqFn;
+    ((GameObject*)obj)->animEventCallback = wmsun_SeqFn;
     c = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
-    if (c == 3 && (u32)GameBit_Get(0x21b) == 0)
+    if (c == 3 && GameBit_Get(0x21b) == 0)
     {
         GameBit_Set(0x21b, 1);
     }
@@ -584,7 +584,7 @@ void wmsun_init(int obj, int params)
         state->riseStep = 100;
         if (mapData->rootMotionScaleParam >= 1000)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
+            ((GameObject*)obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
         }
         else
         {
@@ -601,7 +601,7 @@ void wmsun_init(int obj, int params)
         ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         if (mapData->rootMotionScaleParam >= 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
+            ((GameObject*)obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
         }
         else
         {

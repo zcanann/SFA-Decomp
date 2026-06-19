@@ -91,7 +91,7 @@ void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
             lbl_803DD5B8->focusX = ((GameObject*)targetObj)->anim.worldPosX;
             lbl_803DD5B8->focusY = ((GameObject*)targetObj)->anim.worldPosY;
             lbl_803DD5B8->focusZ = ((GameObject*)targetObj)->anim.worldPosZ;
-            r = (f32)radius;
+            r = radius;
         }
         lbl_803DD5B8->radius = r;
     }

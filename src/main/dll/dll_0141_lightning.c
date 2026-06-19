@@ -130,7 +130,7 @@ void lightning_update(u8* obj)
         }
         if (spawnLightning != 0)
         {
-            objects = (u32*)ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP, &objectCount);
+            objects = ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP, &objectCount);
             objectIndex = 0;
             while (objectIndex < objectCount)
             {
@@ -224,7 +224,7 @@ void lightning_init(u8* obj, u8* data)
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
- * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
+ * on data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 

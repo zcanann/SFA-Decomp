@@ -282,7 +282,7 @@ void camcontrol_updateTargetFeedback(void)
     alphaScale = (alphaScale < gCamcontrolNormalizedMin)
                      ? gCamcontrolNormalizedMin
                      : ((alphaScale > gCamcontrolReticleAlphaScale) ? gCamcontrolReticleAlphaScale : alphaScale);
-    reticle->alpha = (int)alphaScale;
+    reticle->alpha = alphaScale;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
     *(s16*)&reticle->rotX = (gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
     return;
@@ -396,7 +396,7 @@ static inline CamcontrolHandlerEntry* camcontrol_findDefaultHandler(void)
 
     handlerIndex = 0;
     handlerEntry = gCamcontrolHandlerEntries;
-    for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--)
+    for (handlerCount = gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--)
     {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT)
         {
@@ -612,9 +612,9 @@ void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, vo
     }
     else
     {
-        gCamcontrolQueuedActionPriority = (s8)priority;
+        gCamcontrolQueuedActionPriority = priority;
     }
-    gCamcontrolQueuedActionStartFlags = (s8)startFlags;
+    gCamcontrolQueuedActionStartFlags = startFlags;
     gCamcontrolQueuedActionPending = 1;
     gCamcontrolQueuedActionMode = queueMode;
     return;

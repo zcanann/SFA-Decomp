@@ -297,7 +297,7 @@ void kaldachompspit_init(int obj)
         }
         {
             int a = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDistanceAttenuation(*extra, (f32)a, (f32)(a + 0x28));
+            modelLightStruct_setDistanceAttenuation(*extra, a, (f32)(a + 0x28));
         }
         lightSetField4D(*extra, 1);
         modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);

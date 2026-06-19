@@ -136,13 +136,13 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevKColorSel(3, 0xe);
     tevColorS10[0] = lbl_803E1D30;
     tevColorS10[1] = lbl_803E1D34;
-    GXSetTevColorS10(1, (short*)tevColorS10);
+    GXSetTevColorS10(1, tevColorS10);
     kColor0 = lbl_803E1D38;
-    GXSetTevKColor(0, (u8*)&kColor0);
+    GXSetTevKColor(0, &kColor0);
     kColor1 = lbl_803E1D3C;
-    GXSetTevKColor(1, (u8*)&kColor1);
+    GXSetTevKColor(1, &kColor1);
     kColor2 = lbl_803E1D40;
-    GXSetTevKColor(2, (u8*)&kColor2);
+    GXSetTevKColor(2, &kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
     GXInitTexObj(&yTexObj, yBuf, width & 0xffff, height & 0xffff, 1, 0, 0, 0);
     lod = (double)lbl_803E1D44;
@@ -186,13 +186,13 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
         }
 
         interrupts = OSDisableInterrupts();
-        targetVolume = (f32)volume;
+        targetVolume = volume;
         lbl_803A5D60.targetVolume = targetVolume;
         if (fadeFrames != 0)
         {
             rampCount = fadeFrames << 5;
             lbl_803A5D60.rampCount = rampCount;
-            lbl_803A5D60.deltaVolume = (targetVolume - lbl_803A5D60.curVolume) / (f32)rampCount;
+            lbl_803A5D60.deltaVolume = (targetVolume - lbl_803A5D60.curVolume) / rampCount;
         }
         else
         {
@@ -263,8 +263,8 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     {
                         mixed = S16_MAX;
                     }
-                    *destination = (s16)mixed;
-                    mixed = (int)source[1] + ((int)((u32)volumeScale * (int)audioPtr[1]) >> 0xf);
+                    *destination = mixed;
+                    mixed = source[1] + ((int)((u32)volumeScale * audioPtr[1]) >> 0xf);
                     if (mixed < S16_MIN)
                     {
                         mixed = S16_MIN;
@@ -273,7 +273,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     {
                         mixed = S16_MAX;
                     }
-                    destination[1] = (s16)mixed;
+                    destination[1] = mixed;
                     destination = destination + 2;
                     source = source + 2;
                     audioPtr = audioPtr + 2;
@@ -337,8 +337,8 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 {
                     mixed = S16_MAX;
                 }
-                *destination = (s16)mixed;
-                mixed = (int)((u32)volumeScale * (int)audioPtr[1]) >> 0xf;
+                *destination = mixed;
+                mixed = (int)((u32)volumeScale * audioPtr[1]) >> 0xf;
                 if (mixed < S16_MIN)
                 {
                     mixed = S16_MIN;
@@ -347,7 +347,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 {
                     mixed = S16_MAX;
                 }
-                destination[1] = (s16)mixed;
+                destination[1] = mixed;
                 destination = destination + 2;
                 audioPtr = audioPtr + 2;
             }

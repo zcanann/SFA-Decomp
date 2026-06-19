@@ -259,7 +259,7 @@ void cflevelcontrol_init(u8* obj, u8* params)
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
     ((CfLevelControlFlags*)(sub + 0xc))->b6 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)CFLevelControl_SeqFn;
+    ((GameObject*)obj)->animEventCallback = CFLevelControl_SeqFn;
     GameBit_Set(0x983, *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0)
     {
@@ -272,8 +272,8 @@ void cflevelcontrol_init(u8* obj, u8* params)
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x11, 0);
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x15, 0);
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
-    ((CfLevelControlFlags*)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
-    ((CfLevelControlFlags*)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
+    ((CfLevelControlFlags*)(sub + 0xc))->b5 = GameBit_Get(0x974);
+    ((CfLevelControlFlags*)(sub + 0xc))->b4 = GameBit_Get(0x975);
     objSetSlot(obj, 0x51);
     ((CfLevelControlFlags*)(sub + 0xc))->b3 = 1;
 }

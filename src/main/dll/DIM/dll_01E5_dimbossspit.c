@@ -111,7 +111,7 @@ void DIMbossspit_updateBurst(int obj)
             modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState*)state)->light, 0, lbl_803E4D44);
         }
     }
-    *(s16*)state += (u8)framesThisStep;
+    *(s16*)state += framesThisStep;
     burstTimer = *(s16*)state;
     if (burstTimer > 0x200)
     {
@@ -133,7 +133,7 @@ void DIMbossspit_updateBurst(int obj)
     {
         ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
         ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
-        ((GameObject*)obj)->anim.alpha = (u8)n;
+        ((GameObject*)obj)->anim.alpha = n;
     }
     else
     {
@@ -195,7 +195,7 @@ void DIMbossspit_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if (*(s16*)state == 0)
     {
-        ((GameObject*)obj)->unkF4 -= (u8)framesThisStep;
+        ((GameObject*)obj)->unkF4 -= framesThisStep;
         if (((GameObject*)obj)->unkF4 < 0)
         {
             Obj_FreeObject(obj);
@@ -251,7 +251,7 @@ void DIMbossspit_update(int obj)
                 ((DIMbossspitState*)state)->light->glowAlphaStep = 0;
             }
         }
-        ((DIMbossspitState*)state)->light->glowAlpha = (u8)glowAlpha;
+        ((DIMbossspitState*)state)->light->glowAlpha = glowAlpha;
     }
     return;
 }
