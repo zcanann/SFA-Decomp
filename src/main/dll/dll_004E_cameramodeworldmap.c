@@ -21,6 +21,8 @@
 #include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
 #include "main/screen_transition.h"
+#include "main/pad.h"
+#include "main/object_transform.h"
 
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
@@ -36,7 +38,7 @@ extern f32 lbl_803E1A80;
 extern int ObjList_FindObjectById(int id);
 extern u32 getButtonsHeld(int port);
 extern int isWidescreen(void);
-extern u32 getButtonsJustPressed(int port);
+
 extern u8 padGetCX(int port);
 extern u8 padGetCY(int port);
 extern void fn_8012DDB8(int mode);
@@ -127,7 +129,7 @@ void CameraModeWorldMap_free(void)
 
 void CameraModeWorldMap_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     GameObject* camera = (GameObject*)obj;
     GameObject* focus;
     GameObject *objA, *objB;

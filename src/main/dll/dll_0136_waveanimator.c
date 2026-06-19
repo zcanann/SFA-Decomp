@@ -12,6 +12,8 @@
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/mm.h"
 
 /*
  * Field overlay used by waveanimator_modelMtxFn: 0x34 is WaveAnimatorState.flags,
@@ -32,9 +34,9 @@ STATIC_ASSERT(sizeof(WaveanimatorModelMtxCtx) == 0x3C);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-extern void objRenderFn_8003b8f4(f32);
-extern void mm_free(void* p);
-extern void* mmAlloc(int size, int type, int flag);
+
+
+
 extern float mathSinf(float x);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int* obj, int group);

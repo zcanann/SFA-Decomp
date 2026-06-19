@@ -16,13 +16,15 @@
 #include "main/game_object.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
 
 extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
 
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
-extern void ObjHits_DisableObject(u32 objPtr);
+
+
 extern void* getTrickyObject(void);
 extern void* ObjList_FindObjectById(int id);
 extern f32 timeDelta;

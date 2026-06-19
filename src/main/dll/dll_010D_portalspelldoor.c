@@ -7,6 +7,7 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 typedef struct PortalspelldoorPlacement
 {
@@ -20,8 +21,8 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern u8 framesThisStep;
 

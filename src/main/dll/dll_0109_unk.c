@@ -16,6 +16,9 @@
 #include "main/frustum.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
+#include "main/dll/VF/vf_shared.h"
 
 /* per-object extra block; 0xA is the object phase enum
    (0=carrying/active, 1=just broke, 2=respawning) */
@@ -36,12 +39,12 @@ typedef struct Dll109MapData
 
 STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
+
 extern void ObjHits_ClearHitVolumes();
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
+
+
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
@@ -51,7 +54,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E3B44; /* respawn timer reset value */
 extern f32 lbl_803E3B48; /* respawn timer threshold */
 extern f32 lbl_803E3B40; /* render alpha/param */
-extern void objRenderFn_8003b8f4(f32);
+
 
 void dll_109_hitDetect_nop(void)
 {

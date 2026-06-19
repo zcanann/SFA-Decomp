@@ -22,6 +22,7 @@
 #include "main/mm.h"
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
+#include "main/dll/dll_80220608_shared.h"
 
 extern void memset(void* dst, int val, int size);
 
@@ -39,9 +40,9 @@ extern f32 lbl_803E19C8;
 
 extern CameraModeClimbState* lbl_803DD578;
 
-extern int getAngle(float y, float x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
+
 extern u8 framesThisStep;
 extern f32 timeDelta;
 

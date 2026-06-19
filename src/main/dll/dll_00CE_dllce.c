@@ -27,11 +27,13 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
+#include "main/objhits.h"
+#include "main/gamebits.h"
 
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
-extern void ObjHits_DisableObject(u32 objPtr);
+
 extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
@@ -429,7 +431,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* p)
 
 int fn_8015E798(int obj, GroundBaddieState* p)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
     extern f32 lbl_803E2DE4;
@@ -471,7 +473,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
 
 int fn_8015E8BC(int obj, GroundBaddieState* p)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DE8;
     extern f32 lbl_803E2DEC;
@@ -913,7 +915,7 @@ int fn_8015E00C(int p1, u8* obj)
     return 0;
 }
 
-extern void GameBit_Set(int eventId, int value);
+
 
 extern int* gBaddieControlInterface;
 

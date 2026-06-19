@@ -1,9 +1,13 @@
 /* DLL 0x36 — enter/save name screen controller [8011B5D4-8011B868) */
 #include "main/dll/dll_36.h"
+#include "main/audio/sfx_ids.h"
+#include "main/gameplay_runtime.h"
+#include "main/pad.h"
+#include "main/dll/gameplay.h"
 
 extern f32 timeDelta;
 
-extern void gameTextSetDrawFunc(void* fn);
+
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
@@ -32,14 +36,14 @@ extern f32 lbl_803E1D9C;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void set_uiDllIdx_803dc8f0(int idx);
-extern void loadUiDll(int index);
+
 extern void buttonDisable(int port, u32 mask);
 extern void padClearAnalogInputX(int port);
 extern s8 padGetStickX(int port);
-extern u32 getButtonsJustPressed(int port);
+
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
-extern int gplayNewGame(char* name, int slot);
+
 extern s32 lbl_803A8730[];
 extern u8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;

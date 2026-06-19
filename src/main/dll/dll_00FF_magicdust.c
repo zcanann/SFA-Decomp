@@ -4,11 +4,12 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 
-extern u32 GameBit_Get(int eventId);
+
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
@@ -51,7 +52,7 @@ extern const f32 lbl_803E34D4;
 extern const f32 lbl_803E34D8;
 extern const f32 lbl_803E34DC;
 extern const f32 lbl_803E34E0;
-extern void GameBit_Set(int eventId, int value);
+
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);

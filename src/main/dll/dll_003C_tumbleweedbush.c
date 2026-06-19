@@ -20,6 +20,10 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
+#include "main/gameplay_runtime.h"
+#include "main/texture.h"
+#include "main/gamebits.h"
+#include "main/pad.h"
 
 extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
 extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
@@ -39,9 +43,9 @@ extern const char* lbl_803DD908;    /* default message text */
 extern void* saveFileSelect_saveSlots;
 extern u8 framesThisStep;
 
-extern int randomGetRange(int lo, int hi);
-extern void textureFree(u8* tex);
-extern void* textureLoadAsset(int asset);
+
+
+
 extern void OSReport(const char* msg, ...);
 extern char lbl_8031C234[]; /* "too many slots" overflow error format string */
 extern char lbl_8031C1A8[]; /* base of the nav-link out-of-range error format strings */
@@ -54,12 +58,12 @@ extern void gameTextShow(int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
-extern u32 GameBit_Get(int eventId);
+
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
-extern u32 getButtonsJustPressed(int port);
+
 extern void buttonDisable(int port, u32 mask);
 extern void linkDrawFn_801302c0(void);
 extern void linkDrawFn_80130484(void);

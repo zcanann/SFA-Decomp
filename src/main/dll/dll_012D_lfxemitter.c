@@ -2,18 +2,22 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
+#include "main/mm.h"
 
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
-extern u32 GameBit_Get(int eventId);
+
 extern u32 FUN_80017748();
-extern int randomGetRange(int lo, int hi);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
+
 extern void Obj_FreeObject(int obj);
-extern void* Obj_GetPlayerObject(void);
+
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
-extern void* mmAlloc(int size, int type, int flag);
+
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 
@@ -30,7 +34,7 @@ extern f32 lbl_803E3E88;
 #pragma scheduling on
 #pragma peephole on
 extern u8 lbl_803AC7B0[];
-extern void mm_free(void* p);
+
 
 void FUN_8018f650(void)
 {

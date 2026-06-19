@@ -3,6 +3,8 @@
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 typedef struct TrickyguardspotPlacement
 {
@@ -12,9 +14,9 @@ typedef struct TrickyguardspotPlacement
     s16 unk1E;
 } TrickyguardspotPlacement;
 
-extern void* getTrickyObject(void);
+
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderFn_80041018(int obj);
+
 extern u8 framesThisStep;
 extern void ObjGroup_AddObject(u32 obj, int group);
 
@@ -27,7 +29,7 @@ void trickyguardspot_render(void)
 
 void trickyguardspot_update(TrickyGuardSpotObject* obj)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     u8* sub;
     u8* def;
     ObjAnimComponent* tricky;

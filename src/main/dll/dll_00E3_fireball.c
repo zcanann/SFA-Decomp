@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
@@ -275,7 +276,7 @@ extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
-extern f32 Vec3_Length(f32 * v);
+
 extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern float mathSinf(float x);
 extern float mathCosf(float x);

@@ -11,10 +11,11 @@
  * not defined in this TU (deferred to the parent multi-TU descriptor file).
  */
 #include "main/dll/mmp_moonrock.h"
+#include "main/dll/VF/vf_shared.h"
 
 /* single f32 arg (not the 6-arg render signature) is load-bearing here:
    only f1 is set up at the call site, matching retail; same as dll_0134. */
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E3F38;
 
 void texscroll_free(void)

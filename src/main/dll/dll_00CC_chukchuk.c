@@ -16,6 +16,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
 
 /* sub->flags bits (see chukchukstate_struct.h) */
 #define CHUKCHUK_FLAG_PRIMED 0x1
@@ -23,7 +24,7 @@
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
 
 extern int randomGetRange(int lo, int hi);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
 extern u32 ObjHits_DisableObject();
@@ -135,7 +136,7 @@ void chukchuk_update(short* obj)
     extern int Obj_GetPlayerObject(void);
     extern int getAngle(float y, float x);
     extern f32 sqrtf(f32);
-    extern void GameBit_Set(int eventId, int value);
+
     extern void fn_8015F5B0(short* obj);
     extern u8 lbl_8031FF80[];
     extern f32 timeDelta;

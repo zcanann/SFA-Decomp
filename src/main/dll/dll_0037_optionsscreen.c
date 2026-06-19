@@ -15,10 +15,13 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
+#include "main/dll/gameplay.h"
+#include "main/dll/dll_4D.h"
+#include "main/engine_shared.h"
 
-extern u8* getSaveFileStruct(void);
+
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
-extern void languageMenuInit(void);
+
 
 extern int* gTitleMenuItemInterface;
 extern int* gTitleMenuLinkInterface;
@@ -35,9 +38,9 @@ extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void* gameTextGet(int textId);
-extern void* gameTextGetBox(int box);
-extern void gameTextShow(int a);
+
+
+
 extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;        /* render-stale countdown */
@@ -50,13 +53,13 @@ extern void fn_8011CA74(void);
 extern void fn_8011C7B4(void);
 extern s8 lbl_803DD704;        /* exit fade countdown */
 extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
-extern void loadUiDll(int index);
+
 extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);
-extern void setRumbleEnabled(u8 enabled);
+
 extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 
 #pragma scheduling off
 #pragma peephole off

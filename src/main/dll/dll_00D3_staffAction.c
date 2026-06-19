@@ -27,7 +27,7 @@
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
@@ -838,6 +838,8 @@ void fn_80166444(int obj, int state)
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
+#include "main/gameplay_runtime.h"
+#include "string.h"
 
 typedef struct DllD3Placement
 {
@@ -850,11 +852,11 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-extern void* Obj_GetPlayerObject(void);
+
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
-extern void* memset(void* dst, int val, u32 size);
+
 extern int* gPlayerInterface;
 
 extern int lbl_803202E8[];

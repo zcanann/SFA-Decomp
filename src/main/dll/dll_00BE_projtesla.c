@@ -6,8 +6,9 @@
  * empty stubs.
  */
 #include "main/dll/dll_7D.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 int projtesla_doUnsupported(void)
 {

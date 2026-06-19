@@ -27,6 +27,7 @@
 #include "main/camera_interface.h"
 #include "main/mm.h"
 #include "string.h"
+#include "main/vecmath.h"
 
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
@@ -37,7 +38,7 @@ extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 
-extern void mtxRotateByVec3s(void* matrix, void* angles);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern float mathSinf(float x);
 extern f32 PSVECMag(f32* vec);

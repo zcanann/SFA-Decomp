@@ -10,11 +10,13 @@
  * fades alpha back to 0. It only renders while active.
  */
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
+
+
 extern f32 lbl_803E42B8;
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);

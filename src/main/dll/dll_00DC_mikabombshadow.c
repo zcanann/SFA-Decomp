@@ -4,7 +4,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -162,6 +162,7 @@ extern u8 framesThisStep;
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/objhits.h"
 
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();

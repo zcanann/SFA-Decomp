@@ -3,8 +3,10 @@
  * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 alpha);
+
 extern f32 lbl_803E4348;
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -12,8 +14,8 @@ extern u8* mapGetBlock(int idx);
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* fn_8006070C(void* block, int idx);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int lbl_803DDB18;
 extern void objSetSlot(int* obj, int slot);

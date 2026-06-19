@@ -22,15 +22,18 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/CAM/camcrawl_state.h"
+#include "string.h"
+#include "main/dll/dll_80220608_shared.h"
+#include "main/object_transform.h"
 
 #pragma scheduling on
 #pragma peephole on
-extern void* memset(void* dst, int val, u32 n);
-extern int getAngle(float y, float x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
+
+
 extern f32 timeDelta;
-extern f32 interpolate(f32 a, f32 t, f32 exp);
+
 
 extern CameraModeCrawlState* lbl_803DD598;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
@@ -105,7 +108,7 @@ void fn_801101E8(void)
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     int obj;
     GameObject* target;
     int yaw;
@@ -131,7 +134,7 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
         s = -mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
     }
     {
-        extern int getAngle(float y, float x); /* #57 */
+ /* #57 */
         target->anim.rotX = getAngle(c, s);
     }
     camcontrol_getTargetPosition((CameraObject*)obj, &target->anim, pos, NULL);
@@ -158,7 +161,7 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 
 void CameraModeCrawl_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     int delta;

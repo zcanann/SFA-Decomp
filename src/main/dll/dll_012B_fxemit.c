@@ -22,16 +22,18 @@
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 /* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
    (the per-file spelling is load-bearing for codegen). */
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void* Obj_GetPlayerObject(void);
+
 extern void fn_80137948(char* fmt, ...);
 extern ModgfxInterface** gModgfxInterface;
 extern char sCFTreasSharpyDebugFormat[];

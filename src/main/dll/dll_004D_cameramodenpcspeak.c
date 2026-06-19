@@ -16,13 +16,15 @@
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/mm.h"
 #include "main/dll/CAM/cutCam.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_transform.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int getFocusedNpc(void);
-extern int randomGetRange(int lo, int hi);
+
 extern u32 Obj_GetYawDeltaToObject(); /* #57 */
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 extern f32 timeDelta;
@@ -277,7 +279,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
 
 void CameraModeNpcSpeak_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     CameraModeNpcSpeakState* speakState;
     GameObject* target = (GameObject*)camera->anim.targetObj;

@@ -19,6 +19,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
+#include "main/objlib.h"
 
 extern u32 FUN_8003b818();
 
@@ -159,8 +160,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 
 extern f32 lbl_803E3420;
 extern f32 lbl_803E33F4;

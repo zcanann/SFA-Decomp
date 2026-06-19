@@ -30,9 +30,11 @@
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/objprint.h"
+#include "main/objlib.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void FUN_8003b818(int obj);
+
 
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -231,8 +233,8 @@ typedef struct ShieldState
 } ShieldState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 
 extern f64 DOUBLE_803e3e88;
 

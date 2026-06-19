@@ -21,6 +21,8 @@
  */
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 /* StayPoint_init: object flag set on spawn. */
 #define STAYPOINT_OBJECT_FLAG 0x4000
@@ -30,13 +32,13 @@
 /* hit-volume priority when a cMenu item is / isn't selected. */
 #define STAYPOINT_PRIORITY_MENU 0x10
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void* getTrickyObject(void);
+
+
+
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int cMenuGetSelectedItem(void);
 extern int fn_80138F84(int tricky); /* current stay-point object for Tricky */
-extern void objRenderFn_80041018(int obj);
+
 
 extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
 

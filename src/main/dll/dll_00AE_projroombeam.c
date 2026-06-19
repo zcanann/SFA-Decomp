@@ -7,10 +7,11 @@
  * The slot is kept so the DLL id stays valid.
  */
 #include "main/dll/dll_66.h"
+#include "main/engine_shared.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-extern void OSReport(const char* msg, ...);
+
 
 int projroombeam_doUnsupported(void)
 {

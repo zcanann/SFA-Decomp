@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct
 {
@@ -30,7 +31,7 @@ extern u32 FUN_80017690();
 extern u64 FUN_80017698();
 extern u32 FUN_800176cc();
 extern u32 FUN_800176dc();
-extern int randomGetRange(int lo, int hi);
+
 extern u32 FUN_80042b9c();
 extern u32 FUN_8005d018();
 extern u32 FUN_80072564();

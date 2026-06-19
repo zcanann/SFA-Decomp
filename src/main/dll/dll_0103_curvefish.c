@@ -24,10 +24,12 @@
 #include "main/dll/cfprisonuncle.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/objhits.h"
 
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
+
+
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);

@@ -1,7 +1,7 @@
 /* DLL 0x0129 — campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern int randomGetRange(int lo, int hi);
 
 extern void objRenderFn_8003b8f4(f32);
@@ -11,6 +11,7 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
 
 extern void ModelLightStruct_free(void* effect);
 extern u32 ObjHits_ClearHitVolumes();

@@ -5,15 +5,18 @@
  */
 #include "main/dll/CF/CFcrystal.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern void* Obj_GetPlayerObject(void);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
+
 extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
-extern void objRenderFn_8003b8f4(f32);
+
+
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern f32 lbl_803E3AF0;

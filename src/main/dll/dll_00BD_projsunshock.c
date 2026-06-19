@@ -7,8 +7,9 @@
  * empty stubs that keep the DLL loadable.
  */
 #include "main/dll/dll_7A.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 int projsunshock_doUnsupported(void)
 {

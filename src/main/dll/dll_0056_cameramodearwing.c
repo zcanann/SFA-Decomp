@@ -17,6 +17,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
+#include "main/engine_shared.h"
 
 typedef struct CameraArwingWork
 {
@@ -68,7 +69,7 @@ extern f32 lbl_803E1BD4;
 extern f32 lbl_803E1BD8;
 extern f32 lbl_803E1BDC;
 
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
+
 extern int arwarwing_isDead(int state);
 extern int arwarwing_isExplodingOrWarping(int state);
 extern int getAngle(float y, float x);
@@ -184,7 +185,7 @@ void fn_801101E8(void)
 
 void CameraModeArwing_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int yaw0, pitch0;
     int d;

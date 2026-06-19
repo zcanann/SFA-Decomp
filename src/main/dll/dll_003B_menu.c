@@ -16,8 +16,10 @@
  * HUD is hidden.
  */
 #include "types.h"
+#include "main/gamebits.h"
+#include "main/pad.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern s8 lbl_803DD8F0;   /* item count */
 extern s16 lbl_803DD8F2;  /* accumulated item width */
@@ -31,7 +33,7 @@ extern f32 timeDelta;
 extern int getScreenResolution(void);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* y, s8* x);
-extern u32 getButtonsJustPressed(int port);
+
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 

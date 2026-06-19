@@ -17,10 +17,12 @@
 
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/gameplay.h"
+#include "main/dll/FRONT/n_options.h"
 
 #pragma scheduling on
 #pragma peephole on
-extern u8* getSaveFileStruct(void);
+
 
 /* title-screen music tracks crossfaded as pose 4 is entered/left */
 #define MUSIC_TITLE_TRACK_A 0xbe
@@ -38,7 +40,7 @@ extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
-extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
+
 extern void Music_Trigger(int id, int arg);
 extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;

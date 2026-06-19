@@ -11,10 +11,12 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int randomGetRange(int lo, int hi);
+
+
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 

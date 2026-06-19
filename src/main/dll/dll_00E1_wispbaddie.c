@@ -7,12 +7,16 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/mm.h"
+#include "string.h"
 
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
+
+
+
 extern int ObjHits_GetPriorityHitWithPosition();
-extern void ObjGroup_RemoveObject(u32 obj, int group);
+
 
 extern f32 lbl_803DC074;
 
@@ -41,8 +45,8 @@ extern f32 lbl_803E26F4;
 extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
-extern void* mmAlloc(int size, int type, int flag);
-extern void* memset(void* dst, int val, u32 n);
+
+
 extern int lbl_803DDA68;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
@@ -53,7 +57,7 @@ extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
-extern void* memset(void* dst, int value, u32 size);
+
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_800305c4();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);

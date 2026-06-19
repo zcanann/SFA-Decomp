@@ -33,6 +33,8 @@
 #include "main/dll/cfperch_state.h"
 #include "main/dll/player_status.h"
 #include "main/objfx.h"
+#include "main/gamebits.h"
+#include "main/pad.h"
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -52,7 +54,7 @@ typedef struct SmallbasketState
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
-extern void GameBit_Set(int eventId, int value);
+
 extern int randomGetRange(int lo, int hi);
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -99,14 +101,14 @@ extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32* a, f32* b);
-extern u32 GameBit_Get(int eventId);
+
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
 extern u32 buttonGetDisabled(int port);
-extern u32 getButtonsJustPressed(int port);
+
 extern void buttonDisable(int port, u32 mask);
 extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);

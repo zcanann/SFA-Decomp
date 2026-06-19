@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 
@@ -33,9 +34,9 @@ STATIC_ASSERT(offsetof(AttractorMapData, setupByte) == 0x18);
 STATIC_ASSERT(offsetof(AttractorMapData, mode) == 0x19);
 STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 
-extern void objRenderFn_8003b8f4(f32 scale);
+
 extern f32 lbl_803E43D0;
-extern void* Obj_GetPlayerObject(void);
+
 
 void attractor_hitDetect(void)
 {

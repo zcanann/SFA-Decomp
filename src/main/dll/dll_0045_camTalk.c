@@ -6,6 +6,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/object_transform.h"
+#include "string.h"
 
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
@@ -178,7 +179,7 @@ void CameraModeBike_update(CameraObject* camera)
 #pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
 {
-    extern void* memset(void* dst, int val, u32 n);
+
     if (lbl_803DD540 == 0)
     {
         lbl_803DD540 = (CameraModeBikeState*)mmAlloc(sizeof(CameraModeBikeState), 0xf, 0);

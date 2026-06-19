@@ -159,6 +159,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
+#include "main/dll/CAM/cutCam.h"
 
 void depthoffieldpoint_init(int* obj);
 void depthoffieldpoint_update(int* obj);
@@ -171,7 +172,7 @@ extern void flamethrowerspe_init();
 extern void shield_update();
 extern void dll_F7_update();
 extern void dll_F7_init();
-extern void Rcp_DisableBlurFilter(void);
+
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 
 void staff_func0F(void);

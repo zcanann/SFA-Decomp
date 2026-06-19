@@ -11,6 +11,7 @@
  */
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct FlameblastState
 {
@@ -31,7 +32,7 @@ extern void Obj_FreeObject(int obj);
 extern void fn_80098B18(int obj, f32 f, int a, int b, int c, int d);
 int fn_8017805C(int* obj, FlameblastState* state);
 extern void vecRotateZXY(void* in, void* out);
-extern void* getTrickyObject(void);
+
 extern int fn_80138F90(void);
 extern f32* trickyGetQueuedPathParticlePos(s16* tricky);
 extern f32 timeDelta;

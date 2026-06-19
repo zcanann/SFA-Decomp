@@ -12,6 +12,8 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct GfxCmd
 {
@@ -24,8 +26,8 @@ typedef struct GfxCmd
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 
 extern f32 lbl_803E12C0;
 extern f32 lbl_803E12C4;

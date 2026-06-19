@@ -22,21 +22,25 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/mm.h"
+#include "string.h"
 
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
 extern u32 DAT_803de6d0;
 
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_EnableObject(u32 objPtr);
+
+
 extern int ObjHits_GetPriorityHitWithPosition();
-extern void ObjGroup_RemoveObject(u32 obj, int group);
+
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 extern void mm_free(void* p);
-extern void* mmAlloc(int size, int type, int flag);
-extern void* memset(void* dst, int val, u32 n);
+
+
 extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);

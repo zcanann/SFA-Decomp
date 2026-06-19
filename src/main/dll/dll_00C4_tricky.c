@@ -12,6 +12,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
@@ -112,8 +113,8 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int gameBitIncrement(int bit);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);

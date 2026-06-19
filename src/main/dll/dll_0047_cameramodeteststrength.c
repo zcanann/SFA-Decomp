@@ -7,6 +7,7 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
+#include "main/dll/CAM/dll_5B.h"
 
 extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
@@ -26,7 +27,7 @@ extern f32 lbl_803E18B8;
 
 extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
 extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
-extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, int tag);
+
 extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);

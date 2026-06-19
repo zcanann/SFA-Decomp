@@ -14,16 +14,19 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
+
+
 extern void mm_free(void* p);
 extern int mmAlloc(int size, int pool, int tag);
 extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern int return0_80060B90(void);
-extern void objRenderFn_8003b8f4(f32);
+
 
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);

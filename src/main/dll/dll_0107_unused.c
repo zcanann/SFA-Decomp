@@ -12,6 +12,7 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
+#include "main/pad.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -158,7 +159,7 @@ void fn_80185B74(int obj)
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
     extern void buttonDisable(int port, u32 mask);
-    extern u32 getButtonsJustPressed(int port);
+
     extern f32 getXZDistance(f32* a, f32* b);
     typedef struct
     {

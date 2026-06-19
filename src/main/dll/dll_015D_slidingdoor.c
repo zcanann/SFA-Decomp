@@ -28,6 +28,7 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct SlidingdoorPlacement
 {
@@ -49,12 +50,12 @@ typedef struct SlidingdoorState
 } SlidingdoorState;
 
 extern f32 lbl_803E43BC;
-extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
+
+
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern void* getTrickyObject(void);
-extern f32 Vec_xzDistance(f32* a, f32* b);
+
 
 void slidingdoor_free(void)
 {

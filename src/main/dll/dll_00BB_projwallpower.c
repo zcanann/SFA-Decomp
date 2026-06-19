@@ -12,8 +12,9 @@
  * returns 0 (confirmed from target asm: li r3, 0).
  */
 #include "main/dll/dll_64.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 int projwallpower_doUnsupported(void)
 {

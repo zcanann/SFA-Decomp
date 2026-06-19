@@ -12,8 +12,9 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern u8 framesThisStep;
 
 extern f32 lbl_803E3D60; /* render scale */

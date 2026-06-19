@@ -21,17 +21,19 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
+
+
+
 
 extern void objRenderFn_8003b8f4(f32);
 extern void vecRotateZXY(void* in, void* out);

@@ -5,7 +5,7 @@
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern void* mapGetBlock(int idx);
 
@@ -13,6 +13,9 @@ extern void objRenderFn_8003b8f4(f32);
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
+#include "main/gamebits.h"
+#include "dolphin/os/OSCache.h"
+#include "main/mm.h"
 
 typedef struct GroundanimatorPlacement
 {
@@ -40,7 +43,7 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern void GameBit_Set(int eventId, int value);
+
 extern int FUN_80017af0();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
@@ -84,8 +87,8 @@ extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
-extern asm void DCStoreRangeNoSync(register void* addr, register u32 nBytes);
-extern void* mmAlloc(int size, int type, int flag);
+
+
 extern u16 lbl_803DBDF0[];
 
 void FUN_80192488(void)

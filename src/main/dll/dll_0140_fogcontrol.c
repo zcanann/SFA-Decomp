@@ -16,8 +16,9 @@
  * enableHeavyFog mode taken from FOG_FLAG_MODE.
  */
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 /* FogcontrolPlacement::flags (low byte, offset 0x1A) */
 #define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */

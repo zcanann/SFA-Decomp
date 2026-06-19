@@ -24,13 +24,14 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objprint_dolphin.h"
 
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
 extern int mapGetDirIdx(int idx);
 extern int loadMapAndParent(int mapId);
 extern void setLoadedFileFlags_blocks1(void);
-extern void clearLoadedFileFlags_blocks1(void);
+
 extern void warpToMap(int idx, s8 transType);
 extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void setDrawCloudsAndLights(int v);

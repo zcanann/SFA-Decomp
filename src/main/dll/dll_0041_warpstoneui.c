@@ -15,8 +15,9 @@
  */
 #include "main/texture.h"
 #include "main/mapEventTypes.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int a, int b, int c);

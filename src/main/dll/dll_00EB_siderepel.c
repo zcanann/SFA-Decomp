@@ -24,9 +24,11 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
+#include "main/objprint.h"
 
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
-extern void FUN_8003b818(int obj);
+
+
 
 void mikabomb_free(int obj, int mode);
 
@@ -169,8 +171,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);

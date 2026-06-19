@@ -13,6 +13,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct
 {
@@ -30,7 +31,7 @@ STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern int randomGetRange(int lo, int hi);
+
 extern void vecRotateZXY(void* p, f32* v);
 extern void debugPrintf(char* fmt, ...);
 extern u8 lbl_80311E30[];

@@ -7,8 +7,9 @@
  * The slot is kept so the DLL id stays valid.
  */
 #include "main/dll/dll_66.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 int projmagicemmit1_doUnsupported(void)
 {

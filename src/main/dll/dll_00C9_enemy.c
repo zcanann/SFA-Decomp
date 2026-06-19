@@ -24,6 +24,9 @@
 #include "main/dll/projswitch.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
+#include "main/vecmath.h"
+#include "main/dll/duster.h"
+#include "main/gamebits.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
 {
@@ -90,7 +93,7 @@ extern void fn_8003B0D0(short* obj, int b, void* c, int d);
 extern void trickyFn_80148d8c(short* obj, int state);
 extern void Tricky_resumeAfterCommand(short* obj, int state);
 extern void Tricky_applyFloorResponse(short* obj, int state);
-extern void setMatrixFromObjectPos(f32* mtx, void* rec);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
 extern float powfBitEstimate(float x, float y);
@@ -170,9 +173,9 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 fn_80154C24();
-extern void rachnopInit(u32 param_1, int param_2);
-extern void baddieInit_80156188(u32 param_1, int param_2);
-extern void wbInit(u32 param_1, int param_2);
+
+
+
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803E3204;
@@ -193,7 +196,7 @@ extern void ModelLightStruct_free(int light);
 extern void mm_free(int p);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
-extern u32 GameBit_Get(int eventId);
+
 extern int getCurUiDll(void);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int objIsFrozen(int obj);

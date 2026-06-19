@@ -19,9 +19,12 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/engine_shared.h"
+#include "main/dll/genprops.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
+
 extern void Obj_FreeObject(int obj);
 
 extern f32 lbl_803E313C;
@@ -30,16 +33,16 @@ extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern f32 timeDelta;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void objRenderFn_8003b8f4(f32);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
+extern void* getTrickyObject(void);
+
+
+
+
+
 
 #pragma dont_inline on
 void fn_8016A660(int obj)

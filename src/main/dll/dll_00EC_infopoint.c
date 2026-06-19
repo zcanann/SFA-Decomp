@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct InfopointObjectDef
 {
@@ -26,7 +27,7 @@ typedef struct InfopointObjectDef
     u8 unk1F;
 } InfopointObjectDef;
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E3B70;
 extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);

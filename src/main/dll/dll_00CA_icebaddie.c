@@ -37,6 +37,8 @@
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "string.h"
+#include "main/gamebits.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -135,7 +137,7 @@ extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern void* memcpy(void* dst, const void* src, u32 size);
+
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
@@ -150,7 +152,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #pragma peephole off
 int iceBaddie_updateOpenState(int obj, int p)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 gIceBaddieF0_012;
     extern f32 gIceBaddieF10000;
@@ -201,7 +203,7 @@ int iceBaddie_updateOpenState(int obj, int p)
 
 int iceBaddie_updateOpenHitState(int obj, int p)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 gIceBaddieF0_4;
     extern f32 gIceBaddieF0_0025;
@@ -284,7 +286,7 @@ int iceBaddie_stateHandlerB04(int obj, int state)
 
 int iceBaddie_stateHandlerB03(int obj, int state)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     GroundBaddieState* sub;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -696,7 +698,7 @@ int iceBaddie_updateImpactHitState(int obj, int state)
 
 int iceBaddie_updateHideResetState(int obj, int state)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
 

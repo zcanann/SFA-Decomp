@@ -4,13 +4,14 @@
 #include "main/dll/dll_00FD.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 extern void objRenderFn_80041018(void);
 
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);

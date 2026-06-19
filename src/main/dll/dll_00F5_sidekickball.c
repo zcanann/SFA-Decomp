@@ -21,8 +21,12 @@
 #include "main/dll/sidekickball_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
+#include "main/objlib.h"
+#include "main/pad.h"
+#include "main/dll/dll_00F5_sidekickball.h"
+#include "string.h"
 
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
+
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
@@ -30,7 +34,7 @@ extern f32 lbl_803E36A4;
 extern const f32 lbl_803E36A8;
 extern const f32 lbl_803E36AC;
 extern u16 getYButtonItem(s16* out);
-extern u32 getButtonsJustPressed(int port);
+
 extern int fn_80295BF0(int* player);
 extern int fn_8029669C(int* player);
 extern void vecRotateZXY(void* inParams, f32* outVec);
@@ -44,7 +48,7 @@ extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
 extern void Obj_FreeObject(u8* obj);
-extern u8 trickyBallMove(u8 * obj);
+
 extern u32 buttonGetDisabled(int port);
 extern void OSReport(const char* msg, ...);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
@@ -65,7 +69,7 @@ extern const f32 lbl_803E36D0;
 extern const f32 lbl_803E36D4;
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
-extern void* memset(void* dest, int value, u32 size);
+
 extern u8 lbl_80320F30[];
 extern void* Obj_GetPlayerObject(void);
 
@@ -506,7 +510,7 @@ u8 trickyBallMove(u8* obj)
 
 void sidekickball_init(int obj)
 {
-    extern void ObjMsg_AllocQueue(void* obj, int capacity);
+
     extern void GameBit_Set(int eventId, int value);
     u8 pathFlag;
     u8* state;

@@ -15,6 +15,8 @@
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BDC;
@@ -32,14 +34,14 @@ extern f32 lbl_803E3C18;
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void objRenderFn_8003b8f4(f32);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern void* Obj_GetPlayerObject(void);
+
 extern int fn_80295CE4(void);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 

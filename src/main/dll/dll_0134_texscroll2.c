@@ -16,6 +16,7 @@
 #include "main/gamebits.h"
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int idx);
@@ -29,7 +30,7 @@ extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int 
 extern f32 lbl_803E3F30;
 /* single f32 arg (not the 6-arg render signature) is load-bearing here:
    only f1 is set up at the call site, matching retail; same as dll_0135. */
-extern void objRenderFn_8003b8f4(f32);
+
 
 void texscroll2_setScale(TexScroll2Object* obj, s8 stepY)
 {

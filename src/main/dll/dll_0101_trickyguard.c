@@ -21,6 +21,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/gamebits.h"
 
 /* Tricky vtable slots reached through (tricky + 0x68). */
 #define TRICKY_VTBL_IS_BUSY 0x11
@@ -37,7 +38,7 @@ typedef struct TrickyguardPlacement
     u8 pad1C[0x20 - 0x1C];
 } TrickyguardPlacement;
 
-extern u32 GameBit_Get(int eventId);
+
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 

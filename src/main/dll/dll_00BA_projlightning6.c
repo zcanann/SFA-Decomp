@@ -7,10 +7,11 @@
  * DLL exists purely to keep the object id slot wired up.
  */
 #include "main/dll/dll_66.h"
+#include "main/engine_shared.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-extern void OSReport(const char* msg, ...);
+
 
 int projlightning6_doUnsupported(void)
 {

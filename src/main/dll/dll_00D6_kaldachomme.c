@@ -17,15 +17,16 @@
 #include "main/game_object.h"
 #include "main/dll/xyzanimator.h"
 #include "main/obj_placement.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
 extern f32 lbl_803E30D8;
 
-extern int ObjList_FindObjectById(int id);
+
 
 typedef struct KaldaChompMeState
 {

@@ -16,6 +16,7 @@
  * The extra block is 0x1c bytes: f32 boundsMax[3], boundsMin[3], radius.
  */
 #include "main/game_object.h"
+#include "main/engine_shared.h"
 
 extern void* ObjGroup_GetObjects();
 extern void objRenderFn_8003b8f4(f32);
@@ -25,8 +26,8 @@ extern f32 lbl_803E3B88;
 extern f32 Vec_distance(f32* a, f32* b);
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern f32 PSVECMag(f32* v);
+
+
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum

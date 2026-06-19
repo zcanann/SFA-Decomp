@@ -16,10 +16,11 @@
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
+#include "main/dll/modgfx.h"
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u32 FUN_800033a8();
+
 extern u64 FUN_80003494();
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
@@ -42,10 +43,10 @@ extern u32 FUN_800d783c();
 extern u32 FUN_8011e80c();
 extern s64 FUN_80286830();
 extern u32 FUN_80286834();
-extern u64 FUN_80286840();
+
 extern u32 FUN_8028687c();
 extern u32 FUN_80286880();
-extern u32 FUN_8028688c();
+
 extern u32 DAT_802c28f0;
 extern u32 DAT_802c28f4;
 extern u32 DAT_802c28f8;

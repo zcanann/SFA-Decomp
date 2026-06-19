@@ -25,6 +25,7 @@
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 /* placement mapIds that arm the one-shot save-point recording at init */
 #define WARPPOINT_MAP_SAVE_A 0x4B675
@@ -53,10 +54,10 @@ typedef struct WarpPointState
     u8 padE[0x10 - 0xE];
 } WarpPointState;
 
-extern void GameBit_Set(int eventId, int value);
+
 extern void warpToMap(int idx, s8 transType);
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 sqrtf(f32 x);
 extern u8 framesThisStep;
 extern int getCurMapLayer(void);

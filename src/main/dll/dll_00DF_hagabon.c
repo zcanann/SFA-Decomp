@@ -25,6 +25,10 @@
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
+#include "main/mm.h"
+#include "string.h"
 
 typedef struct HagabonPlacement
 {
@@ -48,9 +52,9 @@ typedef struct HagabonPlacement
 
 extern int FUN_80006b0c(int handle);
 extern int FUN_80006b14(int id);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
+
+
+
 
 extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 
@@ -85,8 +89,8 @@ extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
-extern void* mmAlloc(int size, int type, int flag);
-extern void* memset(void* dst, int val, u32 n);
+
+
 extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;

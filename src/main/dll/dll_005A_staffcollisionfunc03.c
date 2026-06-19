@@ -14,6 +14,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct
 {
@@ -25,7 +26,7 @@ typedef struct
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
-extern int randomGetRange(int lo, int hi);
+
 extern void vecRotateZXY(void* p, f32* v);
 extern u8 lbl_80311DA8[];
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;

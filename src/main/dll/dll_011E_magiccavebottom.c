@@ -1,8 +1,9 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
@@ -19,7 +20,7 @@ int magiccavebottom_getExtraSize(void)
 void magiccavebottom_free(int obj)
 {
     extern void Music_Trigger(int id, int arg);
-    extern void GameBit_Set(int eventId, int value);
+
     (void)obj;
     GameBit_Set(0xefb, 0);
     Music_Trigger(0x2f, 0);
@@ -30,7 +31,7 @@ void treasurechest_init(int* obj);
 void magiccavebottom_update(int* obj)
 {
     extern void Music_Trigger(int id, int arg);
-    extern void GameBit_Set(int eventId, int value);
+
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;
 

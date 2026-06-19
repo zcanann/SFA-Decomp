@@ -8,16 +8,17 @@ extern float mathCosf(float x);
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern u32 FUN_80017ac8();
-extern u32 FUN_80017ae4();
-extern u32 FUN_80017ae8();
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
-extern double FUN_80293900();
-extern u32 FUN_80293f90();
+
+
+
+
+
+
+
+
+
 extern u32 FUN_80294964();
 
 extern u32 DAT_802c2910;

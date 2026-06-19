@@ -8,8 +8,9 @@
  */
 
 #include "main/dll/dll_72.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

@@ -19,13 +19,16 @@
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void* getTrickyObject(void);
-extern void* Obj_GetPlayerObject(void);
+
+
+
 extern int getPatchGroup(f32* pos, int patchGroup);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 
 extern f32 lbl_803E38A0;

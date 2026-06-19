@@ -9,11 +9,14 @@
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/dll/dll_00FC_babycloudrunner.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern f32 Vec_distance(f32* a, f32* b);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
@@ -86,7 +89,7 @@ extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
 extern u32 FUN_80017a78();
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -104,10 +107,10 @@ extern f32 lbl_803E380C;
 extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
-extern void dll_FC_initialise_nop(void);
-extern void dll_FC_release_nop(void);
-extern void dll_FC_init(int obj, int objDef);
-extern void dll_FC_update(int obj);
+
+
+
+
 extern void dll_FC_hitDetect(int* obj);
 
 void appleontree_func0B(int obj, float* pos)

@@ -20,8 +20,10 @@
 #include "main/dll/genprops.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/xyzanimator.h"
+#include "main/objprint.h"
+#include "main/objlib.h"
 
-extern void FUN_8003b818(int obj);
+
 
 void mikabomb_hitDetect(void);
 
@@ -169,8 +171,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 
 extern f64 DOUBLE_803e3e88;
 

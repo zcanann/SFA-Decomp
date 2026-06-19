@@ -21,6 +21,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
+#include "main/gamebits.h"
 
 typedef struct DllCBPlacement
 {
@@ -215,7 +216,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
 
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
-    extern u32 GameBit_Get(int eventId);
+
     extern int Curve_AdvanceAlongPath(int* p, f32 t);
     extern int getAngle(float y, float x);
     extern int* gBaddieControlInterface;
@@ -432,7 +433,7 @@ int fn_8016050C(int p1, u8* obj)
     return 6;
 }
 
-extern void GameBit_Set(int eventId, int value);
+
 
 extern int* gBaddieControlInterface;
 

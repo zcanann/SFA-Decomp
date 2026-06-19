@@ -6,8 +6,9 @@
  * release/initialise lifecycle hooks are empty stubs.
  */
 #include "main/dll/dll_80.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 int projcore1_doUnsupported(void)
 {

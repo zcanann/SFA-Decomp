@@ -4,8 +4,11 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -27,7 +30,7 @@ void area_initialise(void);
 extern u8 framesThisStep;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
+
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8 lbl_80321008[];
@@ -186,7 +189,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
 void ProjectileSwitch_update(int obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     int state;
     int state2;
     ObjTextureRuntimeSlot* tex;
@@ -227,8 +230,8 @@ void ProjectileSwitch_update(int obj)
 
 void ProjectileSwitch_init(int obj, u8* initData)
 {
-    extern u32 GameBit_Get(int eventId);
-    extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
+
+
     ObjAnimComponent* objAnim;
     int state;
     u8* linkObj;

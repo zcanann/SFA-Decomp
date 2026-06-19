@@ -24,11 +24,12 @@
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
+#include "main/mm.h"
 
 extern void* mapGetBlock(int idx);
 extern void objRenderFn_8003b8f4(f32);
 extern void mm_free(void* p);
-extern void* mmAlloc(int size, int type, int flag);
+
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern u8 framesThisStep;
 extern f32 timeDelta;

@@ -28,13 +28,15 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
+#include "main/vecmath.h"
+#include "main/object_transform.h"
 
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int fn_802972A8(int obj);
-extern void setMatrixFromObjectPos(f32* m, u8* p);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E1B20;
 extern f32 lbl_803E1B24;
@@ -115,7 +117,7 @@ void CameraModeCloudRunner_free(void)
 
 void CameraModeCloudRunner_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
+
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     u8* curve;

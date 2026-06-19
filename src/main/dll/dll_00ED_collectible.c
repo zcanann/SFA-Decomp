@@ -26,19 +26,21 @@
 #include "main/objhits.h"
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 
-extern void* getTrickyObject(void);
-extern u32 GameBit_Get(int eventId);
+
+
 
 extern void saveGame_saveObjectPos(int obj);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void GameBit_Set(int eventId, int value);
+
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
@@ -52,7 +54,7 @@ extern f32 lbl_803E3460;
 extern f32 lbl_803E3464;
 extern f32 lbl_803E3468;
 extern f32 lbl_803E346C;
-extern int randomGetRange(int lo, int hi);
+
 extern u32 ObjMsg_SendToObject();
 extern int ObjTrigger_IsSet();
 extern f32 lbl_803E3458;
@@ -599,7 +601,7 @@ void collectible_applyPickup(int* obj)
 {
     extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b); /* #57 */
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     u8* state = ((GameObject*)obj)->extra;
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* setup2 = ((GameObject*)obj)->anim.modelInstance->extraSetupData;
@@ -852,7 +854,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void collectible_checkProximityPickup(int obj, u8* state)
 {
     extern void collectible_applyPickup(int obj); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     u8* player;
     s16* attach;
     u8* focus;
@@ -951,7 +953,7 @@ void collectible_update(int obj)
     extern void Obj_FreeObject(int obj); /* #57 */
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
     extern void collectible_applyPickup(int obj); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
@@ -1077,7 +1079,7 @@ void collectible_update(int obj)
 
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int obj, int a, int b, int c, int d, f32 e); /* #57 */
+ /* #57 */
     extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && ((GameObject*)obj)->unkF4 == 0

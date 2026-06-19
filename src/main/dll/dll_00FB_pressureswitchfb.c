@@ -21,6 +21,8 @@
 #include "main/gamebits.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
+#include "main/objlib.h"
+#include "main/gameplay_runtime.h"
 
 #define PRESSURESWITCHFB_STATE_IDLE 0
 #define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
@@ -47,13 +49,13 @@
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
+
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
 extern f32 timeDelta;
-extern void* Obj_GetPlayerObject(void);
+
 extern int fn_80295C5C(void* player);
-extern void* getTrickyObject(void);
+
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;

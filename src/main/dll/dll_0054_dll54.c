@@ -19,19 +19,22 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camera_mode_54_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/VF/vf_shared.h"
+#include "string.h"
+#include "main/object_transform.h"
 
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern u32 FUN_80017ac8();
-extern u32 FUN_80017ae4();
-extern u32 FUN_80017ae8();
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
-extern double FUN_80293900();
-extern u32 FUN_80293f90();
+
+
+
+
+
+
+
+
+
 extern u32 FUN_80294964();
 
 extern u32 DAT_802c2910;
@@ -41,12 +44,12 @@ extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 
-extern void* memset(void* dst, int val, u32 n);
+
 extern f32 timeDelta;
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern void* Obj_GetPlayerObject(void);
+
 extern int ObjList_GetObjects(int* idx, int* count);
 extern f32 lbl_803E1B40;
 extern f32 lbl_803E1B44;
@@ -230,7 +233,7 @@ void dll_54_func05(void)
 
 void dll_54_update(u8* obj)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     int i;
     int count;

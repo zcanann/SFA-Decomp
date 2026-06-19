@@ -31,6 +31,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/sky_state.h"
 
 typedef struct TriggerPlacement
 {
@@ -111,7 +112,7 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void gameFlagFn_8005cd24(int v);
 extern void timeOfDayFn_80055000(void);
 extern void timeOfDayFn_80055038(void);
-extern int getSkyStructField24C(void);
+
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);

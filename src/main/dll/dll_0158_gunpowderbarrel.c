@@ -27,6 +27,7 @@
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/dll/player_motion.h"
 #include "main/objlib.h"
+#include "main/vecmath.h"
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). The three
  * descriptor fns each read only unk1A; unk1C/unk1E are documented for the
@@ -67,7 +68,7 @@ extern f32 lbl_803DBE88;
 extern int fn_80080150(f32* p);
 extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out);
+
 extern f32 PSVECMag(f32 * v);
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DBE84;

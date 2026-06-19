@@ -7,6 +7,7 @@
  * the cf_doorlight object (DLL 0x131).
  */
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
@@ -18,7 +19,7 @@ typedef struct BarrelPadParticleArgs
     f32 offset[3];
 } BarrelPadParticleArgs;
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E3F00;
 extern f32 lbl_803E3F04;
 extern f32 lbl_803E3F08;

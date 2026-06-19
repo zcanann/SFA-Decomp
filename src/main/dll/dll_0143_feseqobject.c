@@ -20,13 +20,14 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
 extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
 
 #pragma scheduling on
 #pragma peephole on
-extern void objRenderFn_8003b8f4(f32);
+
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
 enum

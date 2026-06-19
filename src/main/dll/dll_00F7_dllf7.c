@@ -23,8 +23,11 @@
 #include "main/mapEvent.h"
 #include "main/objhits.h"
 #include "main/resource.h"
+#include "main/objprint.h"
+#include "main/objlib.h"
+#include "main/gamebits.h"
 
-extern void FUN_8003b818(int obj);
+
 
 void mikabomb_hitDetect(void);
 
@@ -209,8 +212,8 @@ typedef struct DllF7State
 } DllF7State;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 
 void staticCamera_free(int obj)
 {
@@ -258,7 +261,7 @@ extern f32 lbl_803E3418;
 extern f32 lbl_803E3420;
 
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
-extern void GameBit_Set(int eventId, int value);
+
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 playerMapOffsetX;

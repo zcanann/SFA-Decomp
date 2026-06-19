@@ -24,11 +24,13 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
+#include "main/objprint.h"
+#include "main/objlib.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void FUN_8003b818(int);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
+
 extern f32 lbl_803E3420;
 extern f32 lbl_803E3424;
 extern f32 lbl_803E3428;

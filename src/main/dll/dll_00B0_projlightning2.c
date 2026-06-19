@@ -9,10 +9,11 @@
  * (projdummy, projmagicstream, projroombeam, projlightning1..7).
  */
 #include "main/dll/dll_66.h"
+#include "main/engine_shared.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-extern void OSReport(const char* msg, ...);
+
 
 int projlightning2_doUnsupported(void)
 {

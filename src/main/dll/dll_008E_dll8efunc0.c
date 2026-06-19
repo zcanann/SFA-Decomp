@@ -16,8 +16,9 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80316C60[];

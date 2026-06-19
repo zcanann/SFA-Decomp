@@ -28,11 +28,13 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/modgfx.h"
+#include "main/sky_state.h"
 
 extern u64 FUN_80006824();
 extern u32 FUN_80017690();
 extern u32 FUN_80017698();
-extern u32 FUN_80017748();
+
 extern u32 FUN_80017a88();
 extern int FUN_80017a98();
 extern u32 FUN_8002f6ac();
@@ -52,9 +54,9 @@ extern u32 FUN_800e8630();
 extern int FUN_801149b8();
 extern int FUN_8020a468();
 extern u64 FUN_8028683c();
-extern u64 FUN_80286840();
+
 extern u32 FUN_80286888();
-extern u32 FUN_8028688c();
+
 extern double FUN_80293900();
 extern u32 FUN_80294d40();
 
@@ -99,7 +101,7 @@ extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
-extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
+
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
 void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)

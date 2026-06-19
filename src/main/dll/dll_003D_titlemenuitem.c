@@ -17,6 +17,8 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/titlemenuitem_struct.h"
+#include "main/pad.h"
+#include "main/texture.h"
 
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
@@ -31,7 +33,7 @@
 #define TITLE_MENU_KIND_TOGGLE 1
 #define TITLE_MENU_KIND_WINDOW 2
 
-extern u32 getButtonsJustPressed(int port);
+
 extern u8 padGetStickX(int port);
 
 extern s16 lbl_803DD918;
@@ -54,8 +56,8 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 extern void gameTextAppendStr(char* str, int arg2);
 extern void mm_free(void); /* no-arg: r3 forwarded from caller to match target */
-extern void* textureLoadAsset(int asset);
-extern void textureFree(u8* tex);
+
+
 extern void* mmAlloc(int size, int type, int flag);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)

@@ -19,8 +19,9 @@
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);

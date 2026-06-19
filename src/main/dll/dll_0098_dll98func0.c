@@ -13,6 +13,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
+#include "main/gameplay_runtime.h"
 
 /* one modgfx command entry; mirrors ScreenFxPart's layout */
 typedef struct
@@ -46,7 +47,7 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern u8 lbl_803178B0[];
 

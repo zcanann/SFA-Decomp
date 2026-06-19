@@ -3,8 +3,8 @@
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void FUN_8003b818(int param_1);
+
+
 
 void mikabomb_hitDetect(void);
 
@@ -160,6 +160,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/objhits.h"
+#include "main/objprint.h"
 
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();

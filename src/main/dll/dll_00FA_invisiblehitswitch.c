@@ -2,7 +2,7 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/objlib.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -38,6 +38,7 @@ ObjectDescriptor gAreaObjDescriptor = {
 };
 
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct InvisibleHitSwitchPlacement
 {
@@ -76,7 +77,7 @@ int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
 void InvisibleHitSwitch_update(int obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     int state2;
     int state;
     int hitId;
@@ -164,8 +165,8 @@ void InvisibleHitSwitch_update(int obj)
 
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {
-    extern u32 GameBit_Get(int eventId);
-    extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
+
+
     u8* info;
 
     info = (u8*)*(int*)&((GameObject*)obj)->extra;

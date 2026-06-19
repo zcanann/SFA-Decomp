@@ -6,8 +6,9 @@
  * release/initialise lifecycle hooks are empty stubs.
  */
 #include "main/dll/dll_83.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

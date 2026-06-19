@@ -13,6 +13,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -25,7 +26,7 @@ typedef struct
     u8 layer; /* +0x16 */
 } GfxCmd;
 
-extern int randomGetRange(int lo, int hi);
+
 extern u8 lbl_80318DF0[];
 extern u8 lbl_80318E10[];
 extern u8 lbl_803DB980;

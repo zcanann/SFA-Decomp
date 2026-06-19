@@ -6,8 +6,10 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
+#include "main/camera.h"
+#include "main/gameplay_runtime.h"
 
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
@@ -111,7 +113,7 @@ typedef struct
 
 void deathseq_update(int* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     s16* cam = Camera_GetCurrentViewSlot();
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;

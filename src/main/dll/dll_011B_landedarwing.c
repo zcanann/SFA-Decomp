@@ -23,6 +23,7 @@
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
+#include "main/objprint_dolphin.h"
 
 typedef struct LandedArwingPlacement
 {
@@ -76,7 +77,7 @@ extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
-extern void clearLoadedFileFlags_blocks1(void);
+
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void fn_8022F270(int obj, int arg);

@@ -23,11 +23,12 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
+#include "main/objprint.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
-extern void FUN_8003b818(int obj);
+
 
 extern ModgfxInterface** gModgfxInterface;
 extern void objRenderFn_8003b8f4(f32);

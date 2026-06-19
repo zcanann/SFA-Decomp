@@ -20,11 +20,13 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern void vecRotateZXY(s16 * in, f32 * out);
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
+
+
 extern f32 sqrtf(f32 value);
 
 extern u8 framesThisStep;

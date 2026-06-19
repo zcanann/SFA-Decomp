@@ -16,10 +16,12 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void* Obj_GetPlayerObject(void);
+
+
+
 extern int fn_80295C40(int obj);
 
 extern f32 timeDelta;

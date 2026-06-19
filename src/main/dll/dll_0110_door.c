@@ -5,6 +5,8 @@
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
 #include "main/objtexture.h"
+#include "main/objhits.h"
+#include "main/gamebits.h"
 
 typedef struct DoorObjectDef
 {
@@ -34,9 +36,9 @@ typedef struct DoorPlacement
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
 
-extern void ObjHits_DisableObject(u32 objPtr);
 
-extern u32 GameBit_Get(int eventId);
+
+
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
@@ -140,7 +142,7 @@ void mmp_bridge_update(int* obj);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     int i;
     int state;
     int def;

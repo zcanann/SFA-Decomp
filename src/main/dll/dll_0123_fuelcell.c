@@ -1,13 +1,14 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern f32 timeDelta;
 
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
@@ -130,7 +131,7 @@ void fuelcell_update(int* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     extern u32 ObjGroup_AddObject();
-    extern void GameBit_Set(int eventId, int value);
+
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
     FuelcellState* state = ((GameObject*)obj)->extra;
     int* player;

@@ -11,6 +11,7 @@
  * texture. Credits_render / Credits_frameEnd are empty stubs.
  */
 #include "main/texture.h"
+#include "main/engine_shared.h"
 
 extern f32 lbl_803DD968;
 extern u8 lbl_803DD970;
@@ -22,7 +23,7 @@ extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
 extern f32 lbl_803E22B8;
 extern f32 timeDelta;
-extern void* gameTextGet(int textId);
+
 
 typedef struct
 {

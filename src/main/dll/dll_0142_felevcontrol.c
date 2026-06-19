@@ -12,11 +12,12 @@
 #include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
 
 #pragma scheduling on
 #pragma peephole on
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E56B8;
 
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)

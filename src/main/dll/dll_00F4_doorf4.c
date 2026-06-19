@@ -19,6 +19,8 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/camera.h"
 
 /* Per-object extra state for the doorf4 door (doorf4_getExtraSize == 0x24). */
 typedef struct DoorF4State
@@ -63,8 +65,8 @@ extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
@@ -73,7 +75,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 sqrtf(f32 x);
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern f32 lbl_803E3648;
 extern f32 lbl_803E3658;

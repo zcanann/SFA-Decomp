@@ -14,11 +14,12 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-extern void* Obj_GetPlayerObject(void);
+
 extern void* getTrickyObject(void);
 extern void fn_8002B758(void);
 extern void fn_8002B860(int obj);

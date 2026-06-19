@@ -29,6 +29,7 @@
 #include "main/sky_interface.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
 
 #define LARGECRATE_LINKED_ID_BASE 0x40000
 #define LARGECRATE_ROB_WAVE_DIRECT_ID 0x66
@@ -40,7 +41,7 @@
 #define GAMEBIT_SFX_MUTE 0xa71
 
 extern u8 Obj_IsLoadingLocked(void);
-extern void GameBit_Set(int eventId, int value);
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern int randomGetRange(int lo, int hi);
@@ -55,7 +56,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern u32 GameBit_Get(int eventId);
+
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
 

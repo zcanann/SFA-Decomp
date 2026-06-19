@@ -23,6 +23,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 /* sequence id during which the object reacts to the two game bits */
 #define FALLLADDERS_SEQ_ID 0x548
@@ -55,7 +56,7 @@ typedef struct FallLaddersState
     s16 delay;
 } FallLaddersState;
 
-extern u32 GameBit_Get(int eventId);
+
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);

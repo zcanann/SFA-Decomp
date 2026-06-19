@@ -24,6 +24,7 @@
 #include "main/dll/scarab.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct GrimblePlacement
 {
@@ -31,13 +32,13 @@ typedef struct GrimblePlacement
     s32 unk14;
 } GrimblePlacement;
 
-extern int randomGetRange(int lo, int hi);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern int getAngle(float y, float x);
-extern void* Obj_GetPlayerObject(void);
+
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-extern void objRenderFn_8003b8f4(int, int, int, int, int, f32);
+
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
 extern int lbl_803200E0[];

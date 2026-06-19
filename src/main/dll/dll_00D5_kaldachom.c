@@ -21,6 +21,7 @@
 #include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
+#include "main/objhits.h"
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int randomGetRange(int lo, int hi);
@@ -30,7 +31,7 @@ extern u32 Obj_SetModelColorFadeRecursive();
 extern u32 ObjHitbox_SetSphereRadius();
 extern u8 Obj_IsLoadingLocked();
 extern u32 Obj_GetPlayerObject();
-extern void ObjHits_DisableObject(u32 objPtr);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern u32 fn_8003B5E0();

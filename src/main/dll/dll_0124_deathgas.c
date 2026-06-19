@@ -1,8 +1,10 @@
 /* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
@@ -72,7 +74,7 @@ void deathgas_free(int* obj)
 
 void deathgas_update(int* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
     DeathGasState* state = ((GameObject*)obj)->extra;
     int* player;

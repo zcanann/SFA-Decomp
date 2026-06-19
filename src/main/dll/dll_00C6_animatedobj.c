@@ -4,7 +4,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+
 extern u32 FUN_8003b818();
 
 
@@ -165,6 +165,7 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"
+#include "main/objhits.h"
 
 typedef struct AnimatedobjPlacement
 {

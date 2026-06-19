@@ -22,13 +22,15 @@
 #include "main/dll/cfprisonuncle.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
 
 extern int randomGetRange(int lo, int hi);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
+
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);

@@ -6,7 +6,7 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -90,9 +90,11 @@ void treasurechest_hitDetect(int obj)
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+
 extern void fn_802967E0(void* obj, int enabled);
 
 typedef struct ChestHitParams
@@ -130,7 +132,7 @@ extern f32 lbl_803E3C2C;
 
 void treasurechest_update(int obj)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     ChestFlags* flags;
     TreasureChestSetup* setup;
     u32 nearestObject;

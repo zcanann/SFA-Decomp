@@ -2,9 +2,11 @@
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
-extern u32 GameBit_Get(int eventId);
-extern int randomGetRange(int lo, int hi);
+
+
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 
@@ -15,7 +17,7 @@ extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
-extern void mm_free(void* p);
+
 extern void lightningRender(u32 handle);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
                            int param_6, u8 param_7);

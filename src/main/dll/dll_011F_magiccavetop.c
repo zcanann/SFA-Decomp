@@ -1,7 +1,7 @@
 /* DLL 0x011F (magiccavetop) — Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
 #include "main/objseq.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern void* Obj_GetPlayerObject(void);
 
 #include "main/camera_interface.h"
@@ -9,6 +9,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/dll/player_objects.h"
+#include "main/gamebits.h"
 
 typedef struct MagiccavetopPlacement
 {
@@ -140,7 +141,7 @@ typedef struct MagicCaveTopFxArgs
 
 void magiccavetop_update(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     MagicCaveTopFxArgs fx;
     int* player;
     u8* sub;
