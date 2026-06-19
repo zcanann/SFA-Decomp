@@ -2970,12 +2970,12 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
 
     p = (char*)p4;
     sp2 = spd + 0xf;
-    dx = pos[0] - ((GameObject*)obj)->anim.localPosX;
-    dz = pos[2] - ((GameObject*)obj)->anim.localPosZ;
-    dy = (pos[1] + yOff) - ((GameObject*)obj)->anim.localPosY;
+    dx = pos[0] - *(f32*)(tgt + 0xc);
+    dz = pos[2] - *(f32*)(tgt + 0x14);
+    dy = (pos[1] + yOff) - *(f32*)(tgt + 0x10);
     dist = sqrtf(dx * dx + dz * dz);
 
-    ang[2] = getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
+    ang[2] = (s16)getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
     if (ang[2] > 0x8000)
     {
         ang[2] = (s16)(ang[2] - 0xffff);
