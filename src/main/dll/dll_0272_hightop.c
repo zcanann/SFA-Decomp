@@ -937,13 +937,13 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     f32 moveSpeed;
     s16* vec;
     *(u32*)p = *(u32*)p | 0x200000;
-    if (*(f32*)((char*)p + 0x298) < lbl_803E6B04)
+    if (((HighTopRuntime*)p)->baddie.inputMagnitude < lbl_803E6B04)
     {
         *(s16*)((char*)p + 0x334) = 0;
-        *(s16*)((char*)p + 0x336) = 0;
-        *(f32*)((char*)p + 0x298) = 0.0f;
+        ((HighTopRuntime*)p)->baddie.turnRate = 0;
+        ((HighTopRuntime*)p)->baddie.inputMagnitude = 0.0f;
     }
-    d336 = *(s16*)((char*)p + 0x336);
+    d336 = ((HighTopRuntime*)p)->baddie.turnRate;
     if (d336 >= 0)
     {
         absd = d336;
@@ -970,7 +970,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
         vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
         vec[1] = (vec[1] < -0x1555) ? -0x1555 : ((vec[1] > 0x1555) ? 0x1555 : vec[1]);
     }
-    v = *(f32*)((char*)p + 0x298);
+    v = ((HighTopRuntime*)p)->baddie.inputMagnitude;
     if (v < 0.0f)
     {
         v = 0.0f;
@@ -984,8 +984,8 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     {
         lateralSpeed = 0.0f;
     }
-    *(f32*)((char*)p + 0x294) =
-        t * ((lateralSpeed - *(f32*)((char*)p + 0x294)) / *(f32*)((char*)p + 0x2b8)) + *(f32*)((char*)p + 0x294);
+    ((HighTopRuntime*)p)->baddie.animSpeedC =
+        t * ((lateralSpeed - ((HighTopRuntime*)p)->baddie.animSpeedC) / ((HighTopRuntime*)p)->baddie.velSmoothTime) + ((HighTopRuntime*)p)->baddie.animSpeedC;
     if (((GameObject*)obj)->anim.rotY > 0)
     {
         ang = lateralSpeed - lbl_803E6B14 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
@@ -994,8 +994,8 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     {
         ang = lateralSpeed - lbl_803E6B20 * mathSinf(lbl_803E6B18 * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
     }
-    *(f32*)((char*)p + 0x280) =
-        t * ((ang - *(f32*)((char*)p + 0x280)) / *(f32*)((char*)p + 0x2b8)) + *(f32*)((char*)p + 0x280);
+    ((HighTopRuntime*)p)->baddie.animSpeedA =
+        t * ((ang - ((HighTopRuntime*)p)->baddie.animSpeedA) / ((HighTopRuntime*)p)->baddie.velSmoothTime) + ((HighTopRuntime*)p)->baddie.animSpeedA;
     changed = 0;
     moveSpeed = ((GameObject*)obj)->anim.currentMoveProgress;
     band = 0;
@@ -1010,7 +1010,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     idx = band * 2;
     while (cont != 0)
     {
-        f32 spd = *(f32*)((char*)p + 0x294);
+        f32 spd = ((HighTopRuntime*)p)->baddie.animSpeedC;
         if (spd < lbl_8032ABB0[idx])
         {
             if ((int)band == 1)
@@ -1041,7 +1041,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC32C)[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, *(f32*)((char*)p + 0x280),
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((HighTopRuntime*)p)->baddie.animSpeedA,
                                                                         (f32*)((char*)p + 0x2a0));
     return 0;
 }
