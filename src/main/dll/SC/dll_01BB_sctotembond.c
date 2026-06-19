@@ -45,7 +45,7 @@ extern const f32 lbl_803E5654;
 extern f32 lbl_803E5658;
 extern f32 lbl_803E565C;
 extern f32 lbl_803E5660;
-extern void hudFn_8011f38c(int visible);
+extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(int player, void* pos, void* obj, int arg);
 extern f32 lbl_803E5650;
 extern void objRenderFn_8003b8f4(f32);

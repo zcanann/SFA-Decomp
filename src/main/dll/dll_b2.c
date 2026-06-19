@@ -27,14 +27,14 @@ typedef struct CamcontrolIconColor {
     u8 a;
 } CamcontrolIconColor;
 
-extern CamcontrolIconRenderOp* ObjModel_GetRenderOp(void* model, u32 idx);
+extern void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 extern void* textureIdxToPtr(int idx);
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
 extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
-extern void gxSetZMode_(u32 a, int b, u32 c);
-extern void gxSetPeControl_ZCompLoc_(u32 a);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 extern void GXSetCullMode(int mode);
 

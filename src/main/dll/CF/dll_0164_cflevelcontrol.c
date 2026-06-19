@@ -50,7 +50,7 @@ extern int ObjList_FindObjectById(int objectId);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int playerIsDisguised(int player);
+extern int playerIsDisguised(int obj);
 extern void fn_80295CF4(int player, int mode);
 extern int getCurMapLayer(void);
 extern int lbl_802C22E8[];
@@ -59,10 +59,10 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int latchBit, int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit,
                                           int clearIfClearBit, int latchBit, int musicId);
-extern void loadMapAndParent(int mapId);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int b);
-extern void objSetSlot(void* obj, int resourceId);
+extern int loadMapAndParent(int mapId);
+extern int mapGetDirIdx(int idx);
+extern int lockLevel(s32 val, int idx);
+extern void objSetSlot(u8* obj, s8 slot);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

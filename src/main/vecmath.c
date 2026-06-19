@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern f32 powfBitEstimate(f32 x, f32 y);
+extern float powfBitEstimate(float x, float y);
 
 extern f32 timeDelta;
 extern int randomGetRange(int lo, int hi);
@@ -15,7 +15,7 @@ extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
 extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(f32* src, f32* dst);
-extern void setMatrixFromObjectPos(f32* mtx, u8* obj);
+extern void setMatrixFromObjectPos(f32* m, u8* p);
 extern f32 lbl_803DE810;
 extern int rand(void);
 extern f32 lbl_803DE7F8;

@@ -27,7 +27,7 @@ extern f32 lbl_803E1898; /* angle unwrap step */
 extern f32 lbl_803E1888; /* angle near/zero threshold */
 
 extern char sPathCamNeedTwoControlPointsError[];
-extern void debugPrintf(const char* fmt, ...);
+extern void debugPrintf(char* fmt, ...);
 extern float sqrtf(float x);
 extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 

@@ -1364,7 +1364,7 @@ void Effect2_func05(void)
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
-extern void randFn_80080100();
+extern int randFn_80080100(int n);
 
 typedef struct EmitterCfg
 {

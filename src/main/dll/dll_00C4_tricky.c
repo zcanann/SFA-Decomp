@@ -75,7 +75,7 @@ extern int randomGetRange(int lo, int hi);
 extern void Sfx_RemoveLoopedObjectSound(int param_1, int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1, int param_2);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
+extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 extern int voxmaps_traceLine(void* from, void* to, int param_3, u8* hit, int param_5);
 extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
@@ -112,7 +112,7 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
-extern void gameBitIncrement(int eventId);
+extern int gameBitIncrement(int bit);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);

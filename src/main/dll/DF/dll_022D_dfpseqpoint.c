@@ -81,8 +81,8 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern int unlockLevel(s32 val, int idx, int flag);
-    extern int mapGetDirIdx(int);
-    extern void lockLevel(int, int);
+    extern int mapGetDirIdx(int idx);
+    extern int lockLevel(s32 val, int idx);
     extern void warpToMap(int idx, s8 transType);
     extern MapEventInterface** gMapEventInterface;
     int blob = *(int*)&((GameObject*)obj)->extra;

@@ -4092,7 +4092,7 @@ extern f32 lbl_803E8098;
 extern f32 lbl_803E809C;
 extern f32 lbl_803E80A0;
 extern char sNotOnGroundFailureMessage[];
-extern void fn_80137948(const char* fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
 
 s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
@@ -6845,7 +6845,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
 }
 
 extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern f32 lbl_803E8104;
 extern f32 lbl_803E8108;
 extern f32 lbl_803E810C;

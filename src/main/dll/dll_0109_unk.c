@@ -36,7 +36,7 @@ typedef struct Dll109MapData
 
 STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
-extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_ClearHitVolumes();
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);

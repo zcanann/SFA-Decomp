@@ -36,7 +36,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
 extern void* getTrickyObject(void);
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;

@@ -55,7 +55,7 @@ extern f32 lbl_803E3ECC;
 extern f32 lbl_803E3ED0;
 extern f32 lbl_803E3EE0;
 
-extern void setAButtonIcon(int iconId);
+extern void setAButtonIcon(int x);
 
 /* state->flags bits (see WarpPadState in warp_pad.h) */
 #define WARPPAD_FLAG_LATCH 0x2

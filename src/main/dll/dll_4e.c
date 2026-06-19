@@ -68,7 +68,7 @@ extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void setWidescreen(u8 enabled);
 extern void stopRumble2(void);
 extern void setRumbleEnabled(u8 value);
-extern void doRumble(f32 val);
+extern void doRumble(f32 duration);
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 

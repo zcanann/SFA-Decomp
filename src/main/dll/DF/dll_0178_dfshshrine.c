@@ -14,7 +14,7 @@
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
-extern int mapGetDirIdx(int mapId);
+extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
 extern void GameBit_Set(int eventId, int value);
@@ -54,14 +54,14 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
-extern void skyFn_80088c94(int skyId, int enable);
+extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void playerAddRemoveMagic(int player, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void gameTimerInit(int timerId, int value);
+extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
 extern int ObjList_FindObjectById(int objId);

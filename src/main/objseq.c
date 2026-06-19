@@ -32,7 +32,7 @@ extern void Obj_SetActiveModelIndex(void* obj, int idx);
 extern void playerLock(void* player, int mode);
 extern void setMotionBlur(int enabled, f32 amount);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
-extern void gameTimerInit(int type, int value);
+extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern void Camera_EnableViewYOffset(void);

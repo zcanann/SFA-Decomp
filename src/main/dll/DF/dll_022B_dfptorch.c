@@ -87,7 +87,7 @@ void DFP_Torch_init(int obj, int def)
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void* Camera_GetCurrentViewSlot(void);
-    extern void voxmaps_worldToGrid(f32*, s16*);
+    extern void voxmaps_worldToGrid(f32* in, s16* out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     extern f32 sqrtf(f32 x);
     extern int randomGetRange(int lo, int hi);

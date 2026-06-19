@@ -166,7 +166,7 @@ void InvisibleHitSwitch_update(int obj)
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {
     extern u32 GameBit_Get(int eventId);
-    extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+    extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
     u8* info;
 
     info = (u8*)*(int*)&((GameObject*)obj)->extra;

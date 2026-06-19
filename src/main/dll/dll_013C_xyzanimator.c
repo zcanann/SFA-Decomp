@@ -21,14 +21,14 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void mm_free(void* p);
 extern int mmAlloc(int size, int pool, int tag);
-extern void DCStoreRange(void* addr, u32 nBytes);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern int return0_80060B90(void);
 extern void objRenderFn_8003b8f4(f32);
 
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
-extern void* Shader_getLayer(void* shader, int idx);
+extern void* Shader_getLayer(char* base, int idx);
 
 extern f32 timeDelta;
 
@@ -252,7 +252,7 @@ int xyzanimator_getExtraSize(void)
 void xyzanimator_free(int obj, int param_2)
 {
     extern int mapGetBlock(int blockIdx); /* #57 */
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     int block;
     XyzAnimatorState* state;
     XyzAnimatorPlacement* setup;

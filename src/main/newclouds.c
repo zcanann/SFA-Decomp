@@ -521,7 +521,7 @@ extern void selectTexture(char* tex, int slot);
 extern void Camera_UpdateViewMatrices(void);
 extern f32* Camera_GetViewMatrix(void);
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
-extern void GXSetCurrentMtx(int slot);
+extern void GXSetCurrentMtx(u32 id);
 extern int rand(void);
 extern void srand(int seed);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * ab);
@@ -1200,7 +1200,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 }
 
 extern void GXSetMisc(int token, u32 val);
-extern void DCInvalidateRange(void* addr, u32 nBytes);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern int GXBeginDisplayList(void* list, u32 size);
 extern u32 GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);

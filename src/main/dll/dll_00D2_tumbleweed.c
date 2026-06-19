@@ -37,7 +37,7 @@ extern void Obj_FreeObject(int obj);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void gameBitIncrement(int eventId);
+extern int gameBitIncrement(int bit);
 extern void fn_80163990(int obj, int aux);
 extern const f32 lbl_803E2FA0;
 extern const f32 lbl_803E2FA4;

@@ -22,7 +22,7 @@ extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
 extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
-extern void doRumble(f32 strength);
+extern void doRumble(f32 duration);
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
 extern f32 timeDelta;

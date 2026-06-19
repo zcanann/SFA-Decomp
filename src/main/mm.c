@@ -608,7 +608,7 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
 extern void* OSAllocFromHeap(int heap, int size);
-extern void DCFlushRange(void* addr, u32 nBytes);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern int __OSCurrHeap;
 extern int lbl_803DCB18;
 extern void* lbl_803DD498;

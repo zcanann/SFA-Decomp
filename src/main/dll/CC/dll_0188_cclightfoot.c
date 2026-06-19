@@ -17,7 +17,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int lo, int hi);
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
-extern u32 ObjLink_AttachChild();
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

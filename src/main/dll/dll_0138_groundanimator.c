@@ -214,7 +214,7 @@ void groundanimator_init(int* obj, int* desc)
 
 void groundanimator_free(int* obj, int flag)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     GroundAnimatorState * w;
     int* r21;
     void* block;
@@ -324,7 +324,7 @@ f32 groundanimator_setScale(int* obj, int* target)
 
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     void* block;
     void* entry;
     void* vtx;
@@ -395,7 +395,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 
 void groundanimator_update(int* obj)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     GroundAnimatorState * g;
     int* r20;
     s8 bi;

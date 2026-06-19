@@ -39,7 +39,7 @@ typedef struct DIMbossspitState
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-extern u32 ObjHitbox_SetSphereRadius();
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_EnableObject(u32 objPtr);
 extern void objRenderFn_8003b8f4(f32 scale);
@@ -50,8 +50,8 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void doRumble(f32 v);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+extern void doRumble(f32 duration);
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;
@@ -66,7 +66,7 @@ extern const f32 lbl_803E4D6C;
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 a, f32 b);
 
-extern void lightSetField4D(ModelLightStruct* light, u8 v);
+extern void lightSetField4D(ModelLightStruct* p, u8 v);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* cb);
 extern void postRenderSetAlphaBlendState(void);

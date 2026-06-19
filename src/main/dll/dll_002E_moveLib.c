@@ -43,7 +43,7 @@ extern f32 lbl_803E1CCC;
 extern int getAngle(float y, float x);
 extern float mathCosf(float x);
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve);
-extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern u8 framesThisStep;

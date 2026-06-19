@@ -32,7 +32,7 @@
 #define TITLE_MENU_KIND_WINDOW 2
 
 extern u32 getButtonsJustPressed(int port);
-extern s8 padGetStickX(int port);
+extern u8 padGetStickX(int port);
 
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;

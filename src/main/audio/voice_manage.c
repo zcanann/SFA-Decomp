@@ -1,6 +1,6 @@
 #include "main/audio/voice_manage.h"
 
-extern u32 hwIsActive(u32 voice);
+extern u32 hwIsActive(u32 slot);
 extern u32 get_vidlist(u32 id);
 extern void synthCancelJob(int voice);
 

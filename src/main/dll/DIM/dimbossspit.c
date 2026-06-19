@@ -32,7 +32,7 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 
-extern void doRumble(f32 val);
+extern void doRumble(f32 duration);
 extern void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state);
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG 0x1

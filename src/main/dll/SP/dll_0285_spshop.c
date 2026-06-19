@@ -73,8 +73,8 @@ typedef struct ShopItemRow
     s16 textId;
 } ShopItemRow;
 extern void fn_80295CF4(int player, int mode);
-extern void skyFn_80088c94(int skyId, int enable);
-extern void envFxActFn_800887f8(int id);
+extern void skyFn_80088c94(int flags, int mode);
+extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern f32 lbl_803E58E8;

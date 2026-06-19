@@ -17,7 +17,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2);
 void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
-extern void gameBitIncrement(int id);
+extern int gameBitIncrement(int bit);
 
 /* placement def-ids that pick the pedestal's think routine */
 enum

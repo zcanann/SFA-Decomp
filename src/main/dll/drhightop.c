@@ -26,7 +26,7 @@
 #include "main/objseq.h"
 
 extern void gameTextShow(int a);
-extern void doRumble(f32 strength);
+extern void doRumble(f32 duration);
 extern void mtxRotateByVec3s(void* matrix, void* transform);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 PSVECMag(void* vec);
@@ -36,8 +36,8 @@ extern f32 PSVECDotProduct(void* a, void* b);
 extern int randomGetRange(int lo, int hi);
 extern void setMotionBlur(double amount, int p2);
 extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 powfBitEstimate(f32 base, f32 exp);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+extern float powfBitEstimate(float x, float y);
 extern float mathSinf(float x);
 extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
@@ -533,8 +533,7 @@ void fn_801EB940(short* obj, int stateRaw)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->unk424;
                 {
-                    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume,
-                                                       f32 volumeScale); /* #11 */
+                    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale); /* #11 */
                     Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
                 }
             }

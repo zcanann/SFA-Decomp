@@ -41,7 +41,7 @@ typedef struct Dim2prisonmammothState
 } Dim2prisonmammothState;
 
 extern void fn_8003A168(int obj, int q);
-extern void characterDoEyeAnims(int obj, int q);
+extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 

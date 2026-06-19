@@ -48,7 +48,7 @@ typedef struct WeirdMenuWork
 extern void saveGame_save();
 extern int* gTitleMenuLinkInterface;
 extern u32 gameTextGet(int textId);
-extern void loadUiDll(int id);
+extern void loadUiDll(int index);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(u32);

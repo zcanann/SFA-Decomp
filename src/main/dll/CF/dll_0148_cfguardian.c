@@ -128,7 +128,7 @@ enum
 #define GUARDIAN_SFX_CHATTER 0xdf
 
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6);
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E4110;
 extern f32 lbl_803E4120;
 extern f32 lbl_803E4124;

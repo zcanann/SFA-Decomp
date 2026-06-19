@@ -39,7 +39,7 @@ extern u8 framesThisStep;
 
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void gameTimerInit(int a, int b);
+extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);

@@ -6,9 +6,9 @@ extern u32 GameBit_Get(int eventId);
 
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
-extern void envFxActFn_800887f8(int a);
+extern void envFxActFn_800887f8(u8 value);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void setAButtonIcon(int idx);
+extern void setAButtonIcon(int x);
 extern void warpToMap(int idx, s8 transType);
 
 int magiccavebottom_getExtraSize(void)

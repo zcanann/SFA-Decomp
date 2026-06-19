@@ -13,7 +13,7 @@
 #include "track/intersect.h"
 
 extern int renderModeSetOrGet(int mode);
-extern void debugPrintf(char* message, ...);
+extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
 
 extern ExpgfxBounds gExpgfxBoundsTemplates[];

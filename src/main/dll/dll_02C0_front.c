@@ -43,10 +43,10 @@ typedef struct TitlescreenState
 extern int ObjGroup_FindNearestObject();
 
 extern void* Obj_GetPlayerObject(void);
-extern void* gameTextGetBox(int boxId);
+extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int a);
-extern void GXSetScissor(int x, int y, int w, int h);
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern float mathCosf(float x);
 
@@ -268,7 +268,7 @@ extern void PSMTXTrans(void*, f32, f32, f32);
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
+extern int sprintf(char* s, const char* format, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
@@ -392,7 +392,7 @@ extern u8 gTitleScreenCopyrightLatch;
 extern f32 gTitleScreenF0_9999;
 extern f32 gTitleScreenF80;
 extern f32 gTitleScreenF255;
-extern void* gameTextGet(s32);
+extern void* gameTextGet(int textId);
 
 /* EN v1.0 0x80134C28  size: 280b  titleScreenShowCopyright: drive the
  * copyright/title text fade and push text box 0x3d9. */
@@ -436,7 +436,7 @@ void titleScreenShowCopyright(u8 arg)
 }
 
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
-extern void GXSetCurrentMtx(int id);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXSetProjection(f32* matrix, s32 mode);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -909,7 +909,7 @@ void fn_80134870(int obj, u8* arr)
 
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
-extern int loadUiDll(int dllId);
+extern void loadUiDll(int index);
 extern void TitleMenu_setSelection(int sel);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int textId, int a, int b);

@@ -20,8 +20,8 @@
 #include "main/dll/dim2conveyor.h"
 
 extern u32 GameBit_Get(int eventId);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,

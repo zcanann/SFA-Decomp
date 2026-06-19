@@ -218,7 +218,7 @@ extern const f32 lbl_803E5620;
 extern f32 lbl_803E5624;
 extern f32 lbl_803E5628;
 
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
+extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern s16 lbl_80327A18[];

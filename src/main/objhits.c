@@ -12,7 +12,7 @@ extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, in
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
-extern void debugPrintf(char* message, ...);
+extern void debugPrintf(char* fmt, ...);
 extern f32 sqrtf(f32 v);
 extern float mathCosf(float x);
 

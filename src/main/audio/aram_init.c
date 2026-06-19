@@ -2,7 +2,7 @@
 
 extern void* salMalloc(u32 size);
 extern void salFree(void* p);
-extern void DCFlushRange(void* src, u32 size);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);
 

@@ -43,8 +43,8 @@ extern int getSaveGameLoadStatus(void);
 extern void* Obj_GetPlayerObject(void);
 extern int coordsToMapCell(f32 x, f32 z);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern void skyFn_80088c94(int skyId, int enabled);
-extern void envFxActFn_800887f8(int id);
+extern void skyFn_80088c94(int flags, int mode);
+extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u8 lbl_803239F0[];
 

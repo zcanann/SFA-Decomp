@@ -638,7 +638,7 @@ extern void gxTransformFn_8004a83c(void);
 extern void Camera_InitState(void);
 extern void doQueuedLoads(void);
 extern void initControllers(void);
-extern int mmSetFreeDelay(int delay);
+extern int mmSetFreeDelay(int v);
 extern void padUpdate(void);
 extern u8 audioInit(void);
 extern void allocSomething32bytes(void);
@@ -646,7 +646,7 @@ extern u8 initLoadFiles(void);
 extern void initFn_8006d020(void);
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
-extern u32 getButtonsHeld(int pad);
+extern u32 getButtonsHeld(int port);
 extern void viFn_8004a56c(int arg);
 extern void fn_80137D28(void);
 extern void loadTextureFiles(void);
@@ -666,7 +666,7 @@ extern void initMaps(void);
 extern void initFn_800534f8(void);
 extern void titleScreenDrawFn_80093db4(void);
 extern int getDataFileSize(int id);
-extern void loadUiDll(int arg);
+extern void loadUiDll(int index);
 extern void doNothing_beforeTitleScreen(void);
 extern void setDrawCloudsAndLights(int arg);
 extern void askProgressiveScanMode(void);
@@ -1074,9 +1074,9 @@ extern u8 lbl_803DCAC4;
 extern int lbl_803DB41C;
 extern void setColor_803db5d0(int r, int g, int b);
 extern void unloadMap(void);
-extern void mapUnload(int a, int b);
+extern int mapUnload(int mapId, int flags);
 extern void fn_801375A0(void);
-extern void loadMapAndParent(int map);
+extern int loadMapAndParent(int mapId);
 extern void mapLoadDataFiles(int map);
 extern void beginLoadingMap(void);
 
@@ -1290,8 +1290,8 @@ void removeButtonObject(u32 h)
 }
 #pragma peephole reset
 
-extern u8* gameTextGetBox(int boxId);
-extern int padGetStickX(int pad);
+extern void* gameTextGetBox(int box);
+extern u8 padGetStickX(int port);
 extern int padGetCX(int pad);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;

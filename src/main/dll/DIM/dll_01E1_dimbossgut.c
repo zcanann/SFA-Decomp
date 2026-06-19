@@ -7,7 +7,7 @@
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
 
-extern void objSetSlot(void* obj, int resourceId);
+extern void objSetSlot(u8* obj, s8 slot);
 extern void objRenderFn_8003b8f4(int obj, u32 param_2, u32 param_3,
                                  u32 param_4, u32 param_5, double scale);
 

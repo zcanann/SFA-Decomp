@@ -30,7 +30,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B70;
 extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);
-extern int* gameTextGet(int id);
+extern void* gameTextGet(int textId);
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 

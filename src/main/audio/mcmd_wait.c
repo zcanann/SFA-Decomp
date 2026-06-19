@@ -6,7 +6,7 @@ extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern void sndConvertMs(u32 * p);
 extern void TimeQueueAdd(McmdVoiceState * state);
 extern void macMakeInactive(McmdVoiceState* state, int mode);
-extern u32 hwIsActive(int slot);
+extern u32 hwIsActive(u32 slot);
 extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */

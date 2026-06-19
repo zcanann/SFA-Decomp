@@ -20,9 +20,9 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern void Sfx_RemoveLoopedObjectSound(int x, int y);
+extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
 extern f32 timeDelta;
 extern f32 sqrtf(f32 x);
 extern float mathCosf(float x);

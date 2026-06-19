@@ -8,18 +8,18 @@
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
                                  u32 param_5, double scale);
-extern int objPosToMapBlockIdx(double x, double y, double z);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* effect);
-extern int fn_80080150(void* timer);
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
+extern int fn_80080150(f32* p);
+extern void storeZeroToFloatParam(f32* p);
+extern void s16toFloat(f32* p, s16 val);
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
 
 extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int timerCountDown(void* timer);
-extern int objUpdateOpacity(void* obj);
+extern int timerCountDown(f32* p);
+extern int objUpdateOpacity(char* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);

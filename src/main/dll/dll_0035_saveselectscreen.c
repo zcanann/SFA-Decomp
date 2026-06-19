@@ -30,11 +30,11 @@ typedef struct SaveSelectPanel
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(u8* tex);
-extern void loadUiDll(int id);
+extern void loadUiDll(int index);
 extern void* mmAlloc(int size, int type, int flag);
 extern void* textureLoadAsset(int asset);
 extern void gameTextLoadDir(int dirId);
-extern void* gameTextGet(int id);
+extern void* gameTextGet(int textId);
 extern int getUiDllFn_80014930(void);
 
 extern s8 lbl_803DB9FB;
@@ -79,7 +79,7 @@ extern int lbl_803DB9FC;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
-extern int sprintf(char* dst, const char* fmt, ...);
+extern int sprintf(char* s, const char* format, ...);
 extern void gameTextSetDrawFunc(void* fn);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
@@ -98,8 +98,8 @@ extern f32 lbl_803E1D70;
 extern f32 lbl_803E1D74;
 extern u8 framesThisStep;
 extern u32 getButtonsJustPressed(int port);
-extern int mmSetFreeDelay(int delay);
-extern void mapUnload(int mapId, u32 flags);
+extern int mmSetFreeDelay(int v);
+extern int mapUnload(int mapId, int flags);
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);
 extern void gplayNewGame(char* name, int slot);

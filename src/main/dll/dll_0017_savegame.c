@@ -93,7 +93,7 @@ extern void stopRumble2(void);
 extern void resetYbutton(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
-extern void loadUiDll(int dll);
+extern void loadUiDll(int index);
 extern void screenTransitionFn_800d7b04(int duration, int type);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddHealth(u8* player, int v);

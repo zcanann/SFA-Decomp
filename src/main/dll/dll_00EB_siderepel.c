@@ -25,7 +25,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/game_object.h"
 
-extern void ObjHitbox_SetSphereRadius(int obj, short radius);
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void FUN_8003b818(int obj);
 
 void mikabomb_free(int obj, int mode);

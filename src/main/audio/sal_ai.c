@@ -3,7 +3,7 @@
 extern void* salMalloc(u32 size);
 extern void salFree(void* ptr);
 extern void* memset(void*, int, u32);
-extern void DCFlushRange(void* src, u32 size);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 
 extern u8 lbl_803BD150[];
 extern void* salAiCallback;

@@ -118,7 +118,7 @@ typedef struct DbeggPlacement
 
 void dbegg_processMessages(int obj)
 {
-    extern int gameBitIncrement(int);
+    extern int gameBitIncrement(int bit);
     extern void Obj_RemoveFromUpdateList(int);
     extern void vecRotateZXY(void*, int);
     extern u32 ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
@@ -581,7 +581,7 @@ void dbegg_update(int obj)
 {
     extern void dbegg_setupFromDef(int obj, int* state); /* #57 */
     extern int Obj_GetPlayerObject(void);
-    extern int objPosToMapBlockIdx(f32, f32, f32);
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     extern void dbegg_processMessages(int);
     extern int fn_801FE560(int, f32*, f32, f32, int);
     extern void fn_801FE774(int, f32*);
@@ -594,7 +594,7 @@ void dbegg_update(int obj)
     extern u32 getButtonsJustPressed(int port);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
-    extern void fn_80137948(char*, ...);
+    extern void fn_80137948(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(u32 objPtr);
     extern f32 oneOverTimeDelta;

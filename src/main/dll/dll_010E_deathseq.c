@@ -27,7 +27,7 @@ extern void showDeathMenu(void);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void Camera_SetFovY(f32 fov);
+extern void Camera_SetFovY(f32 fovY);
 extern void Rcp_SetViewFinderHudEnabled(int v);
 extern f32 lbl_803E3D18;
 extern f32 lbl_803E3D20;

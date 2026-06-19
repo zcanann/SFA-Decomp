@@ -18,7 +18,7 @@ extern f32 lbl_803E608C;
 extern f32 lbl_803E6094;
 extern f32 lbl_803E6098;
 extern f32 lbl_803E60A0;
-extern void hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flags);
+extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 #define VFPMINIFIRE_PERSIST_EFFECT 0x38c
 #define VFPMINIFIRE_SMOKE_EFFECT 0x38a

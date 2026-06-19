@@ -264,7 +264,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
 {
     extern void ObjHits_DisableObject(int);
     extern void ObjGroup_RemoveObject(int, int);
-    extern int gameBitIncrement(int);
+    extern int gameBitIncrement(int bit);
     extern void Obj_FreeObject(int);
     extern void Stack_Pop(int, int*);
     extern int Stack_IsEmpty(int);
@@ -2369,7 +2369,7 @@ int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int* args);
-    extern void fn_80137948(char*, ...);
+    extern void fn_80137948(char* fmt, ...);
     extern int Obj_GetPlayerObject(void);
     extern int* ObjGroup_GetObjects(int, int*);
     extern f32 Vec_xzDistance(int, int);

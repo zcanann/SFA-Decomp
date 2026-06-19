@@ -78,7 +78,7 @@ extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
-extern int Obj_GetYawDeltaToObject();
+extern int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut);
 extern u32 FUN_8003b818();
 extern double FUN_80293900();
 

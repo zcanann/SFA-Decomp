@@ -52,11 +52,11 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
 extern void* getTrickyObject(void);
 extern int objIsFrozen(u8 * self);
-extern void gameBitIncrement(s16 bit);
+extern int gameBitIncrement(int bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
+extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern f32 sqrtf(f32 x);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int ObjMsg_Pop();

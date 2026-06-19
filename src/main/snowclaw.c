@@ -53,7 +53,7 @@ typedef struct
 
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
-extern u32 fn_802972A8(int obj);
+extern int fn_802972A8(int obj);
 extern int ObjGroup_FindNearestObject(int kind, int obj, f32* maxDistance);
 extern void s16toFloat(void* p, int duration);
 extern u8 lbl_8032A310[];
@@ -67,7 +67,7 @@ extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern int objUpdateOpacity(int sub);
-extern void ObjLink_AttachChild(int obj, int child, int c);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E66F0;
@@ -97,7 +97,7 @@ extern f32 lbl_803E66E4;
 extern f32 lbl_803E66E8;
 extern f32 lbl_803E66F8;
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
-extern int randFn_80080100(int range);
+extern int randFn_80080100(int n);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int timerCountDown(void* timer);

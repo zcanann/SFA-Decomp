@@ -52,7 +52,7 @@ extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void fn_80137948(const char* fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 extern const f32 lbl_803E36B0;
 extern const f32 lbl_803E36B4;
 extern const f32 lbl_803E36B8;

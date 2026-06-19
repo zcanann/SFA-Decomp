@@ -43,7 +43,7 @@ extern void objfx_spawnHitEmitterAtPos(void* hitPos, int a, int b, int c, int d)
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
-extern int trickyDebugPrint(const char* fmt, ...);
+extern void trickyDebugPrint(const char* fmt, ...);
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;

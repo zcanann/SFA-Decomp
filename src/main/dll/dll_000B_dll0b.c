@@ -2189,10 +2189,10 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 }
 
 extern s16 renderModeSetOrGet(int mode);
-extern void* Camera_GetViewMatrix(void);
+extern f32* Camera_GetViewMatrix(void);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void selectTexture(void* tex, int slot);
+extern void selectTexture(u8* tex, int mapId);
 extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void setMatrixFromObjectPos(f32 * mtx, s16 * src);

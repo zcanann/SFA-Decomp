@@ -887,7 +887,7 @@ extern void MapBlock_initHits(void* blk, int blockId);
 extern void MapBlock_initShaders(void* blk);
 extern void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
 extern int return0_80060B90(void* blk);
-extern void DCStoreRange(void* p, int size);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 
 int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 {
@@ -2559,7 +2559,7 @@ extern int SaveGame_getCamActionNo(void);
 extern u8* saveGameGetEnvState(void);
 extern void getEnvfxActImmediately(void* obj, void* target, int effectId, int flags);
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
-extern void skyFn_80088c94(int idx, u8 on);
+extern void skyFn_80088c94(int flags, int mode);
 extern void skyFn_80088e54(f32 a, int on);
 
 void beginLoadingMap(void)
@@ -2769,7 +2769,7 @@ void beginLoadingMap(void)
     Pause_ResetMenuFrameCounter();
 }
 
-extern int mapGetDirIdx(int mapId);
+extern int mapGetDirIdx(int idx);
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);

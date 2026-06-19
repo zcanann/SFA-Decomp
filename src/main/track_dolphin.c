@@ -35,7 +35,7 @@ extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
 extern int FUN_80017830();
 extern void* ObjGroup_GetObjects();
-extern void gxSetZMode_();
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_802475e4();
 extern u32 FUN_80247618();
 extern u32 FUN_802585d8();
@@ -257,7 +257,7 @@ void setupToRenderMapBlock(int* block, void* posMtx)
 }
 #pragma dont_inline reset
 
-extern void* Camera_GetViewMatrix(void);
+extern f32* Camera_GetViewMatrix(void);
 extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
@@ -2852,7 +2852,7 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 }
 
 extern f32 __PADFixBits;
-extern void DCStoreRange(void* addr, int nBytes);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 
 void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 {
@@ -3502,9 +3502,9 @@ extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
-extern void gxSetZMode_(int a, int b, int c);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetCullMode(int mode);
-extern void GXSetCurrentMtx(int id);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void selectTexture(int tex, int slot);
 extern void GXBegin(int type, int fmt, int count);

@@ -15,8 +15,8 @@ extern u32 FUN_80017830();
 extern int FUN_80042838();
 extern u32 FUN_80047d88();
 extern u32 FUN_8004812c();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void* FUN_800e87a8();
 extern u32 FUN_80258674();
 extern u32 FUN_80258944();
@@ -1962,7 +1962,7 @@ void fn_80053C40(u8* tex, u8* obj)
 }
 
 extern void GXSetMisc(int token, u32 val);
-extern void DCInvalidateRange(void* addr, u32 nBytes);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void GXBeginDisplayList(void* list, u32 size);
 extern u32 GXEndDisplayList(void);
 extern void GXCallDisplayList(void* list, u32 nbytes);
@@ -2586,8 +2586,8 @@ extern void printHeapStats(int mode);
 extern int testAndSet_onlyUseHeaps1and2(int val);
 extern int mmGetRegionForPtr(void* p);
 extern int getHeapItemSize(void* p);
-extern int mmSetFreeDelay(int delay);
-extern void DCStoreRange(void* p, u32 len);
+extern int mmSetFreeDelay(int v);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern void defragMemory(int mode);
 extern char lbl_8030D058[];
 

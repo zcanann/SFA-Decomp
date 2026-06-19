@@ -34,7 +34,7 @@ extern f32 lbl_803E1A40;
 extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 extern int ObjList_FindObjectById(int id);
-extern int getButtonsHeld(int pad);
+extern u32 getButtonsHeld(int port);
 extern int isWidescreen(void);
 extern u32 getButtonsJustPressed(int port);
 extern int padGetCX(int pad);

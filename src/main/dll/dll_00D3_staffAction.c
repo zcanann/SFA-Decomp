@@ -39,7 +39,7 @@ extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 extern f32 fsin16Precise(int angle);
-extern f32 fcos16Precise(int angle);
+extern float fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
 
 extern int* gBaddieControlInterface;

@@ -310,9 +310,9 @@ extern void fireball_update();
 extern void fireball_init();
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_free();
+extern void shield_free(int obj);
 extern void shield_update();
-extern void dll_F7_free();
+extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E3388;
@@ -1666,7 +1666,7 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 void flamethrowerspe_init(int* obj, int* params)
 {
-    extern void storeZeroToFloatParam(f32 * p); /* #57 */
+    extern void storeZeroToFloatParam(f32* p); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam((f32*)((char*)state + 4));
@@ -1696,8 +1696,8 @@ void animatedobj_init(int* obj, int* params);
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
-    extern int timerCountDown(f32 * p); /* #57 */
-    extern void s16toFloat(f32* out, s16 v); /* #57 */
+    extern int timerCountDown(f32* p); /* #57 */
+    extern void s16toFloat(f32* p, s16 val); /* #57 */
     extern void objMove(int* obj, f32 x, f32 y, f32 z); /* #57 */
     extern u32 ObjHits_EnableObject(); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */

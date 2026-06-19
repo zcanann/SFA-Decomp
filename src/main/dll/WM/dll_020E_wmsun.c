@@ -96,7 +96,7 @@ extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 lbl_803DDCB0;
 
-extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern f32 lbl_803E5F20; /* 0.0f */
 extern f32 lbl_803E5F78; /* 0.00375f */
 extern f32 lbl_803E5F7C; /* 50.0f */

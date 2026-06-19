@@ -53,7 +53,7 @@ void mmp_moonrock_initialise(void)
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 
-extern int objPosToMapBlockIdx(double x, double y, double z);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);
 extern f32 lbl_803E4554;
@@ -348,7 +348,7 @@ void mmp_moonrock_init(int obj, int param2)
 }
 
 extern int* ObjList_GetObjects(int* idx, int* count);
-extern void setAButtonIcon(int icon);
+extern void setAButtonIcon(int x);
 extern f32 lbl_803E4580;
 
 void fn_801A7D74(int obj, u8 a, u8 b)

@@ -29,8 +29,8 @@ extern int Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, vo
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern u64 ObjLink_DetachChild();
-extern u32 ObjLink_AttachChild();
+extern void ObjLink_DetachChild(int obj, int child);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);

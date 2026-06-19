@@ -4,8 +4,8 @@
 
 extern void* Obj_GetPlayerObject(void);
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
+extern void storeZeroToFloatParam(f32* p);
+extern void s16toFloat(f32* p, s16 val);
 extern void fn_8009A8C8(void* obj, f32 param2);
 extern void spawnExplosion(void* obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void modelLightStruct_freeSlot(void* handle);

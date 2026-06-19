@@ -17,14 +17,14 @@ extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 extern void objRenderFn_8003b8f4(f32);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);
-extern void gameBitIncrement(int eventId);
+extern int gameBitIncrement(int bit);
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);

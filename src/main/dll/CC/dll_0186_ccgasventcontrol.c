@@ -64,9 +64,9 @@ extern f32 lbl_803E4638;
 extern f32 lbl_803E463C;
 extern f32 lbl_803E4640;
 extern f32 getXZDistance(f32* a, f32* b);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
+extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern f32 lbl_803E461C;
 
 int ccgasventcontrol_getExtraSize(void) { return sizeof(CcgasventcontrolState); }

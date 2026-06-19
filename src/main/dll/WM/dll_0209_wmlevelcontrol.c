@@ -48,9 +48,9 @@ extern int getCurSeqNo(void);
 extern f32 lbl_803E5E70; /* 0.0 */
 extern f32 timeDelta;
 
-extern int mapGetDirIdx(int mapId);
+extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void lockLevel(int idx, int p2);
+extern int lockLevel(s32 val, int idx);
 extern f32 lbl_803E5E90; /* 300.0: intro-message duration */
 extern void setDrawLights(int mode);
 extern int getSkyColorFn_80088e08(int slot);

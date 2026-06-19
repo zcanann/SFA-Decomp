@@ -43,7 +43,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern void playerAddHealth(void* player, int amount);
-extern void gameBitIncrement(int eventId);
+extern int gameBitIncrement(int bit);
 extern void saveGame_unsaveObjectPos(int* obj);
 extern f32 lbl_803E3450;
 extern f32 lbl_803E3454;

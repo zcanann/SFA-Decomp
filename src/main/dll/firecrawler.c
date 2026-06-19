@@ -140,7 +140,7 @@ extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
 extern void modelLightStruct_setAffectsAabbLightSelection();
 extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
-extern f32 powfBitEstimate(f32 base, f32 exp);
+extern float powfBitEstimate(float x, float y);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
@@ -501,7 +501,7 @@ void fn_80157CDC(int obj, int p2)
 {
     extern void CameraShake_ApplyRadial(int, f32, f32, f32, f32, f32);
     extern f32 Vec_distance(int, int);
-    extern void doRumble(f32);
+    extern void doRumble(f32 duration);
     extern void firecrawler_spawnFirepipe(int, int);
     extern void fn_80157B58(int, int);
     extern void firepipe_setLinkedUpdateFlag(int);

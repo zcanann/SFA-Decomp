@@ -34,7 +34,7 @@ extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
@@ -224,7 +224,7 @@ void nw_levcontrol_update(int objArg)
 
 void nw_levcontrol_init(int* obj)
 {
-    extern void envFxActFn_800887f8(int id);
+    extern void envFxActFn_800887f8(u8 value);
     extern char lbl_803269F8[];
     char* base = lbl_803269F8;
     u8* state = ((GameObject*)obj)->extra;
@@ -312,7 +312,7 @@ int nw_levcontrol_getExtraSize(void)
  * group is no longer active) and always stop the challenge timer. */
 void nw_levcontrol_free(GameObject* obj)
 {
-    extern void envFxActFn_800887f8(s32);
+    extern void envFxActFn_800887f8(u8 value);
     s8 v = obj->anim.mapEventSlot;
     int ret = (*gMapEventInterface)->getObjGroupStatus((s32)v, 0);
     if ((u8)ret == 0)

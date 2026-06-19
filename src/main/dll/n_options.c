@@ -21,13 +21,13 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "string.h"
 
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void* PopDecodedAudioBuffer(s32 flags);
 extern void PushFreeAudioBuffer(void* buf);
 extern u32 GXSetTexCoordGen2();
 extern u32 GXSetNumTexGens();
-extern u32 GXSetCullMode();
+extern void GXSetCullMode(GXCullMode mode);
 extern u32 GXInitTexObj();
 extern u32 GXInitTexObjLOD();
 extern u32 GXLoadTexObj();
@@ -43,10 +43,10 @@ extern u32 GXSetTevKColorSel();
 extern u32 GXSetTevKAlphaSel();
 extern u32 GXSetTevSwapMode();
 extern u32 GXSetTevSwapModeTable();
-extern u32 GXSetAlphaCompare();
+extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern u32 GXSetTevOrder();
 extern u32 GXSetNumTevStages();
-extern u32 GXSetBlendMode();
+extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern u32 GXSetColorUpdate();
 extern u32 GXSetAlphaUpdate();
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);

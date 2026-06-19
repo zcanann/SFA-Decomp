@@ -26,7 +26,7 @@ extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_8011F6D4(int enable);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
-extern int padGetStickX(int controller);
+extern u8 padGetStickX(int port);
 extern void* textureLoadAsset(int asset);
 extern float mathSinf(float x);
 extern float mathCosf(float x);

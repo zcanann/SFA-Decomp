@@ -45,8 +45,8 @@ typedef struct TrickyAirMeter
 } TrickyAirMeter;
 
 extern int ObjGroup_FindNearestObject();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int playerHasKrazoaSpirit();
 extern void hudDrawMagicBar(int alpha, int p2, int p3);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
@@ -244,7 +244,7 @@ extern void cutsceneFadeInOut(int x);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
 extern int getCurGameText(void);
-extern void gameTextLoadDir(int x);
+extern void gameTextLoadDir(int dirId);
 extern f32 lbl_803E1E60;
 extern f32 lbl_803DD764;
 extern int lbl_803DD8DC;
@@ -623,7 +623,7 @@ extern void GXSetTevColor(int id, GXColor c);
 extern void GXSetTevKColor(int id, GXColor c);
 extern void GXLoadPosMtxImm(void* m, int id);
 extern void GXLoadNrmMtxImm(void* m, int id);
-extern void GXSetCurrentMtx(int id);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXSetNumTexGens(int n);
 extern void GXSetNumIndStages(int n);
 extern void GXSetNumChans(int n);
@@ -848,9 +848,9 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
 extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32);
+extern void Camera_SetFovY(f32 fovY);
 extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_SetCurrentViewIndex(s32);
+extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_SetCurrentViewPosition(f32, f32, f32);
 extern void Camera_SetCurrentViewRotation(s32, s32, s32);
 extern void Camera_UpdateViewMatrices(void);
@@ -931,7 +931,7 @@ extern u8 lbl_803DBAEE;
 extern u8 lbl_803DBAEF;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void GXGetScissor(int* a, int* b, int* c, int* d);
-extern void GXSetScissor(int a, int b, int c, int d);
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 
 void fearTestMeterDraw(void)
@@ -1102,9 +1102,9 @@ extern void GXSetChanCtrl(int chan, int a, int b, int c, int d, int e, int f);
 extern void GXSetChanMatColor(int chan, GXColor c);
 extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void* ObjModel_GetRenderOp(int op, int x);
-extern void* Shader_getLayer(void* op, int idx);
+extern void* Shader_getLayer(char* base, int idx);
 extern void* textureIdxToPtr(int idx);
-extern void selectTexture(void* tex, int x);
+extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int lbl_803E1E30;
 extern int lbl_802C21AC[];
@@ -1476,7 +1476,7 @@ extern u16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 extern void gameTextSetColor(int, int, int, int);
-extern int sprintf(char*, ...);
+extern int sprintf(char* s, const char* format, ...);
 
 #define VFTICK(gA1, gA2, A, B, C) do { \
     GXColor _c2; \

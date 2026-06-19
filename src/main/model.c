@@ -4,14 +4,14 @@
 #include "main/game_object.h"
 #include "main/object_transform.h"
 
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void mm_free(void* p);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
-extern void* textureIdxToPtr(int textureId);
+extern void* textureIdxToPtr(int idx);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
-extern void gxSetZMode_(u32 enable, int func, u32 update);
-extern void gxSetPeControl_ZCompLoc_(u32 beforeTex);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 
 u16*
@@ -649,11 +649,11 @@ int loadModelAndAnimTabs(void)
     return 1;
 }
 
-extern void DCFlushRange(void* addr, u32 nBytes);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
-extern void DCInvalidateRange(void* addr, u32 nBytes);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void LCEnable(void);
 extern void ObjModel_InitScratchBuffers(void);
 extern void setGQR6_2(int a, int b, int c, int d);
@@ -1108,7 +1108,7 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
 
 extern void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 extern void modelAnimResetState(void* m, void* data);
-extern void DCStoreRange(void* p, int size);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 
 #pragma scheduling off
 void* ObjModel_LoadAnimData(u8* p, int b, int c)

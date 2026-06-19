@@ -80,16 +80,16 @@ int getControlCharLen(u32 c)
 extern int utf8GetNextChar(u8* p, int* outLen);
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8 * str);
-extern void setTextColor(int a, int r, int g, int b, int al);
+extern void setTextColor(int unused, int a, int b, int c, int d);
 extern void _textSetColor(int a, int r, int g, int b, int al);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetup(void);
 extern void textRenderSetupFn_80079804(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
-extern void selectTexture(void* tex, int a);
+extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32 * a, u32 * b, u32 * c, u32 * d);
-extern void GXSetScissor(u32 a, u32 b, u32 c, u32 d);
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
@@ -647,7 +647,7 @@ extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern void* gameTextGet();
-extern int sprintf(char* dst, const char* fmt, ...);
+extern int sprintf(char* s, const char* format, ...);
 
 #pragma peephole on
 void* gameTextGetPhrase(int textId, int phraseIndex)
@@ -1277,7 +1277,7 @@ int subtitleIsActive(void)
 
 int mmCreateMemoryStore(int size);
 
-extern void DCFlushRange(void* addr, u32 nBytes);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 
 extern void* memcpy(void* dst, const void* src, int n);
 
@@ -1509,7 +1509,7 @@ void gameTextOpenCallback_8001b3d0(int status, u8* match)
     }
 }
 
-extern void DCStoreRange(void* p, int size);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 
 typedef struct
 {
@@ -2301,7 +2301,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     ((GameTextBox*)box)->unk1A = savedY;
 }
 
-extern int mmSetFreeDelay(int delay);
+extern int mmSetFreeDelay(int v);
 
 extern u8* textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
 

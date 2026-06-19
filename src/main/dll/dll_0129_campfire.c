@@ -45,7 +45,7 @@ extern f32 lbl_803E3D98;
 
 void campfire_update(int obj)
 {
-    extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+    extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
     extern void* Obj_GetPlayerObject(void);
     int* state;

@@ -229,7 +229,7 @@ void ProjectileSwitch_update(int obj)
 void ProjectileSwitch_init(int obj, u8* initData)
 {
     extern u32 GameBit_Get(int eventId);
-    extern void ObjHitbox_SetSphereRadius(int obj, short radius);
+    extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
     ObjAnimComponent* objAnim;
     int state;
     u8* linkObj;

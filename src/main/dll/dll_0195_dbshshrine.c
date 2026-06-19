@@ -36,7 +36,7 @@
 #define DBSH_SHRINE_ENVFX_C 0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-extern void skyFn_80088c94(int skyId, int enabled);
+extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
 extern void fn_801C8B68(DbshShrineObject* obj);
 extern u32 GameBit_Get(int eventId);
@@ -50,7 +50,7 @@ extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
-extern void lockLevel(int idx, int param_2);
+extern int lockLevel(s32 val, int idx);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);

@@ -4,9 +4,9 @@
  * recovered against the public MusyX runtime source. */
 
 extern void* memset(void* dst, int val, u32 n);
-extern void DCFlushRange(void* p, u32 n);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern void DCFlushRangeNoSync(void* p, u32 n);
-extern void DCInvalidateRange(void* p, u32 n);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void DCStoreRangeNoSync(void* p, u32 n);
 extern void* salMalloc(u32 size);
 extern void salFree(void* p);

@@ -130,7 +130,7 @@ extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
 extern u32 lbl_803DD4A8;
 extern u32 lbl_803DD4AC;
-extern void* gameTextGet(int idx);
+extern void* gameTextGet(int textId);
 extern void* mmAlloc(int size, int type, int flag);
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];

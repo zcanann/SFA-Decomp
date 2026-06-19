@@ -66,15 +66,15 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
 
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjLink_DetachChild(int parent, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 flags);
+extern void ObjLink_DetachChild(int obj, int child);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int ObjTrigger_IsSet(int obj);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
-extern void loadMapAndParent(int mapId);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int locked);
-extern void mapUnload(int dirIdx, int flags);
+extern int loadMapAndParent(int mapId);
+extern int mapGetDirIdx(int idx);
+extern int lockLevel(s32 val, int idx);
+extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);

@@ -261,7 +261,7 @@ extern void fireball_init();
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
 extern void shield_update(int* obj);
-extern void dll_F7_free();
+extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);

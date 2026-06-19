@@ -20,7 +20,7 @@ extern f32 lbl_803E51D0;
 extern f32 lbl_803E51D4;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
-extern void objUpdateOpacity(void* obj);
+extern int objUpdateOpacity(char* obj);
 extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
 extern s8 lbl_803DDBE8;
 extern u32 lbl_802C23D8[4];

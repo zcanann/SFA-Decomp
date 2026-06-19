@@ -62,7 +62,7 @@ extern void fn_8019D9F0(int* obj);
 extern int* lbl_803DDB10;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
+extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void PSVECNormalize(f32 * out, f32 * in);
 extern f32 lbl_803E41D8;
 extern f32 lbl_803E41DC;

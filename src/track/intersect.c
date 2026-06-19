@@ -276,7 +276,7 @@ void drawFn_8006f500(void)
     extern f32 __THPHuffmanBits_803DEE24;
     extern void selectTexture(void *tex, int slot);
     extern void fn_8000F9B4(void);
-    extern f32 *Camera_GetViewMatrix(void);
+    extern f32* Camera_GetViewMatrix(void);
     extern void Camera_ApplyFullViewport(void);
     extern void* Obj_GetPlayerObject(void);
 
@@ -1940,7 +1940,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void Camera_GetViewMatrix(void);
+    extern f32* Camera_GetViewMatrix(void);
     extern void selectReflectionTexture(int);
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
@@ -5921,7 +5921,7 @@ void showMemCardError(u8 err)
     extern int getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
-    extern int *gameTextGet(int id);
+    extern void* gameTextGet(int textId);
     extern void gameTextShowStr(int str, int x, int y, int yPos);
     extern void gameTextRun(void);
     extern void GXFlush_(int, int);

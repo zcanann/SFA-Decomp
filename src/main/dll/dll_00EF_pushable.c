@@ -73,7 +73,7 @@ extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void Obj_BuildTransformMatrices(int* obj);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
-extern void hitDetectFn_800691c0(int* obj, int* bounds, int a, int b);
+extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 extern f32 lbl_803E35A8;
 extern f32 lbl_803E35AC;
 extern f32 lbl_803E35B0;

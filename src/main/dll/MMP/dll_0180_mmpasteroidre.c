@@ -26,7 +26,7 @@ extern u32 GameBit_Get(int eventId);
 extern void setDrawLights(int v);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
-extern void doRumble(f32 v);
+extern void doRumble(f32 duration);
 extern float mathSinf(float x);
 extern f32 timeDelta;
 extern char lbl_803231D0[];

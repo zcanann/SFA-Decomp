@@ -26,15 +26,15 @@
 #include "main/mapEventTypes.h"
 
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void lockLevel(int dirIdx, int v);
-extern int mapGetDirIdx(int mapId);
-extern void loadMapAndParent(int mapId);
+extern int lockLevel(s32 val, int idx);
+extern int mapGetDirIdx(int idx);
+extern int loadMapAndParent(int mapId);
 extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void setDrawCloudsAndLights(int v);
-extern void skyFn_80088c94(int a, int b);
+extern void skyFn_80088c94(int flags, int mode);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E3E98;

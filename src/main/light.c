@@ -669,8 +669,8 @@ void vfpdraghead_update(int* obj)
 
 int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
-    extern u32 loadMapAndParent(int); /* #57 */
-    extern u32 lockLevel(u32, int); /* #57 */
+    extern int loadMapAndParent(int mapId); /* #57 */
+    extern int lockLevel(s32 val, int idx); /* #57 */
     SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
 

@@ -1153,7 +1153,7 @@ void DIMSnowHorn1_hitDetect(void)
 void fn_802BB4B4(int obj, int a, int slot)
 {
     extern u32 getButtonsJustPressed(int port);
-    extern u32 getButtonsHeld(int controller);
+    extern u32 getButtonsHeld(int port);
     int matchFrame = (slot != -1) ? ((framesThisStep - 1 - slot) == 0) : 1;
     int* viewSlot = (int*)Camera_GetCurrentViewSlot();
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;

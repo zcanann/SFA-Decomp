@@ -31,7 +31,7 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern void objUpdateOpacity(int obj);
 extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(void* world, void* grid);
+extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 

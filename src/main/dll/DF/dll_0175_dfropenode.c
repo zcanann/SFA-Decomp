@@ -30,7 +30,7 @@ extern void textRenderSetupFn_80079804(void);
 extern void getAmbientColor(int param_1, u8* blue, u8* green, u8* red);
 extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
-extern void selectTexture(void* texture, int param_2);
+extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern int randomGetRange(int lo, int hi);

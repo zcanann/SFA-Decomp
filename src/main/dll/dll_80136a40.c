@@ -55,11 +55,11 @@ extern u32 ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u64 ObjLink_DetachChild();
-extern u32 ObjLink_AttachChild();
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
-extern void GXSetScissor(int x, int y, int w, int h);
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
 
@@ -85,7 +85,7 @@ extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
+extern int sprintf(char* s, const char* format, ...);
 extern f32 lbl_803E22A0;
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
@@ -123,7 +123,7 @@ extern f32 fn_8014C5D0(int);
 extern f32 vec3f_distanceSquared(int, int);
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
-extern void DCStoreRange(void* p, u32 nBytes);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern u16* externalFrameBuffer1;
 extern u16* externalFrameBuffer0;
 extern u8 lbl_8031D060[];

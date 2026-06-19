@@ -49,7 +49,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_DAY   0xc5
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
-extern void getEnvfxActImmediately(int a, int b, int id, int d);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);

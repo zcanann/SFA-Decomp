@@ -40,7 +40,7 @@ extern u32 FUN_80064384();
 extern u32 objAudioFn_8006ef38();
 extern u32 FUN_8006f788();
 extern u32 FUN_8006f790();
-extern void gxSetZMode_();
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_800709e8();
 extern u32 FUN_80080f6c();
 extern u32 FUN_802420e0();
@@ -162,7 +162,7 @@ extern f32 lbl_803DFA38;
 extern f32 lbl_803DFA3C;
 extern f32 lbl_803DFA40;
 
-extern void DCFlushRange(void* addr, u32 nBytes);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
@@ -1893,7 +1893,7 @@ void initFn_8006d020(void)
 }
 
 extern int textureLoadAsset(int);
-extern void DCInvalidateRange(void*, int);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void fn_80069EB8();
 extern void GXTexModeSync(void);
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
@@ -2466,9 +2466,9 @@ void fn_8006CB50(void)
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
 extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 x);
+extern void Camera_SetFovY(f32 fovY);
 extern void Camera_SetAspectRatio(f32 x);
-extern void Camera_SetCurrentViewIndex(int i);
+extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_UpdateProjection(int a, int b);

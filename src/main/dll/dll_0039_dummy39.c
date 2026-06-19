@@ -12,7 +12,7 @@
 extern u8 lbl_803DD728;
 extern u32 lbl_803DD72C;
 
-extern void loadUiDll(int id);
+extern void loadUiDll(int index);
 extern u8 framesThisStep;
 extern void textureFree(u32 handle);
 extern void warpToMap(int idx, s8 transType);

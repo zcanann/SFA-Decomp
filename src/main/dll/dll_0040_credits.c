@@ -22,7 +22,7 @@ extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
 extern f32 lbl_803E22B8;
 extern f32 timeDelta;
-extern void* gameTextGet(s32 id);
+extern void* gameTextGet(int textId);
 
 typedef struct
 {

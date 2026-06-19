@@ -38,7 +38,7 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
+extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
 

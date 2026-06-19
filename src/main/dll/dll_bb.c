@@ -21,7 +21,7 @@
 #include "main/dll/dll_BB.h"
 
 extern void Obj_UpdateWorldTransform(s16 *obj);
-extern void Camera_SetCurrentViewIndex(s32 index);
+extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern s16 Camera_GetViewportYOffset(void);
 extern void Camera_SetFovY(f32 fovY);

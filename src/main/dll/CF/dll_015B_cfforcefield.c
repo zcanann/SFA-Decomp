@@ -65,15 +65,15 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 
 extern int randomGetRange(int lo, int hi);
 extern u32 GameBit_Get(int eventId);
-extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
+extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-extern int fn_80080150(void* timer);
-extern void s16toFloat(void* p, int duration);
-extern int timerCountDown(void* timer);
+extern int fn_80080150(f32* p);
+extern void s16toFloat(f32* p, s16 val);
+extern int timerCountDown(f32* p);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void storeZeroToFloatParam(void* p);
+extern void storeZeroToFloatParam(f32* p);
 extern f32 timeDelta;
 extern f32 lbl_803DBE90; /* ring radius scale */
 extern int lbl_803DBE94; /* burst position jitter, +/- units */

@@ -10,7 +10,7 @@
  */
 #include "main/dll/FRONT/dll_44.h"
 
-extern void DCInvalidateRange(void* start, u32 nBytes);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 

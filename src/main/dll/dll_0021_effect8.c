@@ -1369,7 +1369,7 @@ extern FxNode9 lbl_8039C398;
 #undef FILL9
 
 extern FxNode9 lbl_8039C380;
-extern void randFn_80080100();
+extern int randFn_80080100(int n);
 extern f32 lbl_803DB810;
 extern f32 lbl_803DB814;
 extern f32 lbl_803DFDA4;

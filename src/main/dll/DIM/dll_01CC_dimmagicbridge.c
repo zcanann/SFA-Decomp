@@ -52,7 +52,7 @@ extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
-extern void DCStoreRange(void* p, int n);
+extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 
 void dimmagicbridge_free(void)
 {

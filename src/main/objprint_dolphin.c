@@ -3107,7 +3107,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 #pragma optimization_level reset
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(int id);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetCullMode(int mode);
 
@@ -3883,7 +3883,7 @@ extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32 * c);
 extern void renderHeavyFog(f32 * c);
 extern void textureFn_800528bc(void);
-extern void selectTexture(void* tex, int p2);
+extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
@@ -5247,7 +5247,7 @@ extern void testAndSet_onlyUseHeaps1and2(int);
 extern int mmGetRegionForPtr(void*);
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
-extern int mmSetFreeDelay(int);
+extern int mmSetFreeDelay(int v);
 extern int getHeapItemSize(void*);
 
 #pragma optimization_level 2

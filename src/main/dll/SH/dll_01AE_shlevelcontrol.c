@@ -20,8 +20,8 @@
 #include "main/screen_transition.h"
 #include "main/dll/SP/SPshopkeeper.h"
 
-extern void envFxActFn_800887f8(int);
-extern int mapUnload(int id, int flags);
+extern void envFxActFn_800887f8(u8 value);
+extern int mapUnload(int mapId, int flags);
 extern u64 FUN_80286838();
 extern u32 FUN_80286884();
 extern u32 countLeadingZeros();
@@ -39,9 +39,9 @@ extern void buttonDisable(int port, u32 mask);
 extern int playerHasSpell(int obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern void skyFn_80088e54(int a, f32 b);
+extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E54C0;

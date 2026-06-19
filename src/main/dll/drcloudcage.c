@@ -27,7 +27,7 @@
 /* lbl_803DC0BC/lbl_803DC0E0/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and lbl_802C2428 point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);

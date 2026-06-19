@@ -28,7 +28,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern u32 FUN_8003b818();
 
@@ -212,8 +212,8 @@ typedef struct StaffDoGrowShrinkAnimState
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 void staticCamera_free(int obj)
 {
@@ -1269,7 +1269,7 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-extern void selectTexture(void* tex, int x);
+extern void selectTexture(u8* tex, int mapId);
 extern void textureSetupFn_800799c0(void);
 extern void geomDrawFn_800796f0(void);
 extern void textRenderSetupFn_80079804(void);
@@ -1278,7 +1278,7 @@ extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int a);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int a, int b);
-extern void GXSetCurrentMtx(int a);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E3294;
 

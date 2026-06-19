@@ -65,7 +65,7 @@ extern int Stack_Push(int stack, int* in);
 extern int isGameTimerDisabled(void);
 extern void gameTimerStop(void);
 extern void hudFn_8011f6f0(int x);
-extern void hudFn_8011f38c(int x);
+extern void hudFn_8011f38c(u8 x);
 
 /* this TU sees the title-menu interface under a differently-named extern; alias
  * to the canonical name (block-scope extern reconciliation, recipe #57) */

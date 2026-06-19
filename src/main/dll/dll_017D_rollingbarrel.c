@@ -8,7 +8,7 @@ extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
+extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 
 extern int getAngle(float y, float x);
 
@@ -24,7 +24,7 @@ extern void Obj_FreeObject(int obj);
 
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
-extern void doRumble(f32 v);
+extern void doRumble(f32 duration);
 
 extern void objRenderFn_8003b8f4(f32 v);
 

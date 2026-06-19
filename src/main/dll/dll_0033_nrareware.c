@@ -9,7 +9,7 @@ extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 
 extern void fn_8001404C(int param_1);
-extern void loadUiDll(int id);
+extern void loadUiDll(int index);
 extern void GameBit_Set(int eventId, int value);
 extern void OSReport(const char* msg, ...);
 extern u8 framesThisStep;

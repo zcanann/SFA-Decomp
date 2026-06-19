@@ -11,7 +11,7 @@
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
-extern void skyFn_80088c94(int a, int b);
+extern void skyFn_80088c94(int flags, int mode);
 extern void audioStopByMask(int mask);
 extern f32 timeDelta;
 
@@ -37,9 +37,9 @@ extern f32 lbl_803E5024;
 extern f32 lbl_803E5028;
 extern float mathSinf(float x);
 extern void* ObjGroup_GetObjects();
-extern int mapGetDirIdx(int a);
+extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void gameTimerInit(int a, int b);
+extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
 extern int Obj_FreeObject(int obj);

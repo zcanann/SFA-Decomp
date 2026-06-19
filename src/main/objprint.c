@@ -23,8 +23,8 @@ extern u32 FUN_80017a04();
 extern u32 objRenderFuzzFn_8003d6f8();
 extern u32 FUN_800400b0();
 extern u32 FUN_80040a88();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_802420e0();
 extern u32 GXSetBlendMode();
 extern u64 FUN_8028683c();
@@ -1696,7 +1696,7 @@ extern void* getCache(void);
 extern void copyToCache(void* dst, void* src, int blockCount);
 extern void modelCalcVtxGroupMtxs(int p1, int p2);
 extern void* ObjModel_GetJointMatrix(int* model, int joint);
-extern void DCFlushRange(void* addr, u32 nBytes);
+extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern int lbl_803DCC48;
 
 void modelInitMtxs(int p1, int p2)
@@ -3144,8 +3144,8 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32*Shader_getLayer(u8* shader, int idx);
-    extern void*textureIdxToPtr(int idx);
-    extern void selectTexture(void* tex, int p2);
+    extern void* textureIdxToPtr(int idx);
+    extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
     extern void GXSetTevOrder(int stage, int coord, int map, int color);
@@ -3382,8 +3382,8 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32*Shader_getLayer(u8* shader, int idx);
-    extern void*textureIdxToPtr(int idx);
-    extern void selectTexture(void* tex, int p2);
+    extern void* textureIdxToPtr(int idx);
+    extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
     extern void GXSetTevOrder(int stage, int coord, int map, int color);

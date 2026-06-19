@@ -23,7 +23,7 @@
 extern void GameBit_Set(int eventId, int value);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void doRumble(f32 strength);
+extern void doRumble(f32 duration);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern u8 Obj_IsLoadingLocked(void);

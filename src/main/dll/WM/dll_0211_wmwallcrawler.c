@@ -102,7 +102,7 @@ enum
 extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern int fn_80080150(void* timer);
-extern int randFn_80080100(int max);
+extern int randFn_80080100(int n);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803DC130;

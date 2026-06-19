@@ -12,7 +12,7 @@
 
 extern int lbl_803DD518; /* active camera action id (.sbss) */
 
-extern void setAButtonIcon(int kind);
+extern void setAButtonIcon(int x);
 
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {

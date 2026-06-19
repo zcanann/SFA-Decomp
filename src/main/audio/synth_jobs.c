@@ -30,7 +30,7 @@ typedef struct SynthSampleInfo
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u8* synthVoice;
-extern void DCInvalidateRange(void* addr, u32 size);
+extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern u32 hwChangeStudio(u32 voice); /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */

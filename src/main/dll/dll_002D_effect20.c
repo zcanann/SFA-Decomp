@@ -159,7 +159,7 @@ extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 extern void vecRotateZXY(void* params, f32* vec);
-extern void randFn_80080100();
+extern int randFn_80080100(int n);
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, f32* extraArgs)

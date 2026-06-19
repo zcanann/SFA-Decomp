@@ -1354,7 +1354,7 @@ void Effect7_func05(void)
     lbl_803DD388 = mathSinf(lbl_803DFD90 * (f32)(s16)lbl_803DD384 / lbl_803DFD94);
 }
 
-extern void randFn_80080100();
+extern int randFn_80080100(int n);
 
 extern void* Obj_GetPlayerObject(void);
 extern FxNode9 lbl_8039C368;

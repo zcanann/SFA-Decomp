@@ -65,7 +65,7 @@ extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* rot, void* vec);
 extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;
 extern f32 lbl_803E5890;
 extern f32 lbl_803E5894;

@@ -26,7 +26,7 @@ extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern u8* Shader_getLayer(char* s, int layer);
+extern void* Shader_getLayer(char* base, int idx);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);

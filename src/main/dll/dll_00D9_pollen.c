@@ -21,7 +21,7 @@
 #include "main/objhits.h"
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjHitbox_SetSphereRadius(int obj, s16 radius);
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void Obj_FreeObject(int obj);
 
 extern f32 lbl_803E313C;
@@ -36,7 +36,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
 extern void kaldachompspit_free(int* obj);
 extern void kaldachompspit_update(int obj);

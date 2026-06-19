@@ -41,7 +41,7 @@ extern u32 ObjHits_EnableObject();
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
+extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern f32 lbl_803E5368;
 extern f32 lbl_803E537C;
 extern f32 lbl_803E5380;
@@ -256,7 +256,7 @@ void bombplant_init(void* obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void Obj_StartModelFadeIn(void* obj, int duration); /* #57 */
+    extern void Obj_StartModelFadeIn(u8* obj, int frames); /* #57 */
     extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId); /* #57 */
     extern void Sfx_PlayFromObject(void* obj, int sndId); /* #57 */
     extern void fn_801D2B70(void* obj, void* stateEntry, void* state); /* #57 */

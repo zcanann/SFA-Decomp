@@ -58,7 +58,7 @@ extern int getAngle(float y, float x);
 extern void baddieAfterUpdateBonesCb();
 extern int playerGetMoney(u8 * player);
 extern void playerAddMoney(u8* player, int amount);
-extern void hudFn_8011f38c(int a);
+extern void hudFn_8011f38c(u8 x);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern f32 sqrtf(f32 x);

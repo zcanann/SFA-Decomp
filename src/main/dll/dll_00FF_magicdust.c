@@ -12,7 +12,7 @@ extern u32 GameBit_Get(int eventId);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
-extern u32 ObjLink_DetachChild();
+extern void ObjLink_DetachChild(int obj, int child);
 
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);

@@ -33,7 +33,7 @@ extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
-extern void ObjLink_AttachChild(int obj, int child, int p3);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern u8 framesThisStep;
 extern f32 lbl_803E5E98; /* 0.0 */
 extern f32 lbl_803E5E9C; /* 800.0 */

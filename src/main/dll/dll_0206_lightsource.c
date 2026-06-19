@@ -100,8 +100,8 @@ void lightsource_update(int obj)
 {
     extern u32 GameBit_Get(int eventId);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
-    extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
+    extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+    extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     extern f32 timeDelta;
     extern f32 lbl_803E5E14;

@@ -94,7 +94,7 @@ extern f32 timeDelta;
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern void gameBitIncrement(int bit);
+extern int gameBitIncrement(int bit);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objAudioFn_80039270(int obj, void* p, int id);
 extern f32 lbl_803E4230;

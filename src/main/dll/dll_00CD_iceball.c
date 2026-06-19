@@ -25,7 +25,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 
-extern u32 ObjHitbox_SetSphereRadius();
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_DisableObject(u32 objPtr);
 extern u32 ObjHits_EnableObject();
@@ -47,7 +47,7 @@ extern void Camera_DisableViewYOffset(void);
 void fn_8015FBEC(int obj)
 {
     extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_SetAllMagnitudes(f32);
+    extern void CameraShake_SetAllMagnitudes(f32 magnitude);
     s16 mode = ((GameObject*)obj)->anim.seqId;
     int i;
 
@@ -91,7 +91,7 @@ static inline u8 scarab_isObjectInList(void* o)
 void fn_8015FCCC(int obj)
 {
     extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_SetAllMagnitudes(f32);
+    extern void CameraShake_SetAllMagnitudes(f32 magnitude);
     s16 type;
     int n;
 

@@ -101,7 +101,7 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #pragma scheduling on
 #pragma peephole on
 extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
-extern void gameTimerInit(int timerId, int frames);
+extern void gameTimerInit(s8 flags, int minutes);
 extern int isGameTimerDisabled(void);
 extern void timerSetToCountUp(void);
 

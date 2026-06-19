@@ -37,7 +37,7 @@ extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);
 extern u32 playerGetStateFlag310(int obj);
-extern void setAButtonIcon(int param_1);
+extern void setAButtonIcon(int x);
 
 extern f32 lbl_803E37B8; /* 1.0: render scale */
 extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */

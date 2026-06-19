@@ -48,7 +48,7 @@ int warpstone_getObjectTypeId(void)
     return 0x48;
 }
 
-extern void loadUiDll(s32);
+extern void loadUiDll(int index);
 void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
 
 extern void ObjLink_DetachChild(int obj, int child);
@@ -64,7 +64,7 @@ void warpstone_free(int obj, int mode)
     }
 }
 
-extern int randFn_80080100(int max);
+extern int randFn_80080100(int n);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -126,11 +126,11 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern void loadMapAndParent(int mapId);
+extern int loadMapAndParent(int mapId);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int locked);
-extern void mapUnload(int dirIdx, int flags);
+extern int mapGetDirIdx(int idx);
+extern int lockLevel(s32 val, int idx);
+extern int mapUnload(int mapId, int flags);
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
     (*gMapEventInterface)->setMapAct((mapId), (value))
@@ -414,7 +414,7 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
 extern s16* objModelGetVecFn_800395d8(int obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
-extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern void objAnimFn_80038f38(int obj, int* animState);
 extern void characterDoEyeAnims(int obj, void* state);
 extern s16 lbl_803DC044;

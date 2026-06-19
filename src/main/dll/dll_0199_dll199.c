@@ -13,7 +13,7 @@ extern f32 lbl_803E5158;
 extern void GameBit_Set(int eventId, int value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
-extern int getButtonsHeld(int pad);
+extern u32 getButtonsHeld(int port);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;

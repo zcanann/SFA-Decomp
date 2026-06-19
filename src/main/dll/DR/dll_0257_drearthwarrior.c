@@ -237,13 +237,13 @@ extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern char lbl_803DC768;
 
-extern void setAButtonIcon(int icon);
+extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void fn_80113F94(int p, f32 f);
 extern void objAudioFn_8006edcc(int obj, int a, int b, int c, int d, f32 v, f32 lim);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
-extern void doRumble(f32 v);
+extern void doRumble(f32 duration);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void storeZeroToFloatParam(int p);

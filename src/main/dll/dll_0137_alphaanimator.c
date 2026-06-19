@@ -103,7 +103,7 @@ void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void alphaanimator_update(int* obj)
 {
-    extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
+    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     int* d;
     AlphaAnimatorState* s;
     int mode;

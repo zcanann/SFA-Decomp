@@ -54,8 +54,7 @@ extern void lightSetFieldBC_8001db14(void* light, int value);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                                        int flags, f32 f8val, f32 mult);
+extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val, f32 mult);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
 extern f32 lbl_803E5388;

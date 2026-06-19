@@ -37,10 +37,10 @@ extern void gameTextSetDrawFunc(void* fn);
 extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void* gameTextGet(int textId);
-extern void* gameTextGetBox(int boxId);
+extern void* gameTextGetBox(int box);
 extern void gameTextShow(int a);
 extern void titleScreenShowCopyright(int arg);
-extern void gameTextLoadDir(int);
+extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;        /* render-stale countdown */
 extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */
 extern u32 lbl_803DD708;       /* save-file struct base */
@@ -51,7 +51,7 @@ extern void fn_8011CA74(void);
 extern void fn_8011C7B4(void);
 extern s8 lbl_803DD704;        /* exit fade countdown */
 extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
-extern void loadUiDll(int id);
+extern void loadUiDll(int index);
 extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);

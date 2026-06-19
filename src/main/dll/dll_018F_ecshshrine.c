@@ -65,7 +65,7 @@ extern u32 GameBit_Get(int eventId);
 extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
-extern void skyFn_80088c94(int a, int b);
+extern void skyFn_80088c94(int flags, int mode);
 extern void getEnvfxAct(s16* obj, int* target, int id, int p);
 extern int objIsCurModelNotZero(int* player);
 extern void fn_80295CF4(int* player, int a);

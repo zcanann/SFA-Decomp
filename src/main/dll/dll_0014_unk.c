@@ -42,7 +42,7 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
 extern int mathFn_800dbff0(float* point);
 extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
-extern void voxmaps_worldToGrid(f32 * world, s16 * grid);
+extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
 
 extern const f32 lbl_803E063C;

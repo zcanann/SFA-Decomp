@@ -17,7 +17,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);

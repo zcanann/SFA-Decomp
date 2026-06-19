@@ -14,12 +14,12 @@
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 
-extern u32 ObjHitbox_SetSphereRadius();
+extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern void ObjHits_DisableObject(u32 objPtr);
 extern f32 timeDelta;
-extern void doRumble(f32 v);
+extern void doRumble(f32 duration);
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* light, u8 v);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);

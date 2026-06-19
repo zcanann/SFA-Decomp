@@ -42,7 +42,7 @@ typedef struct AnimsharpclawState
 } AnimsharpclawState;
 
 extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int obj, int child, int slot);
+extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

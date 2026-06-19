@@ -179,7 +179,7 @@ void dfplevelcontrol_update(int obj)
     extern u32 GameBit_Get(int eventId);
     extern void GameBit_Set(int eventId, int value);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void coordsToMapCell(f32, f32);
+    extern int coordsToMapCell(f32 x, f32 z);
     extern void fn_80204098(int);
     extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
     extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
