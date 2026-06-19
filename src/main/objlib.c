@@ -202,7 +202,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     slotIndex = 0;
     slotOffset = slotIndex;
     clearedState = slotIndex;
-    for (; slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
+    for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
     {
         workSlot = (ObjHitsPriorityWorkSlot*)(gObjHitsPriorityHitStates + slotOffset);
         if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj))
