@@ -13,7 +13,7 @@
  *   fn_80152A94 / fn_80152B90: a firefly hover. Init seeds state; update
  *     drives a circular drift, bobs between two heights, periodically
  *     spawns a dropped object, and runs ambient sfx timers.
- *   fn_80152040: a 12-byte-row state-table driver (lbl_8031F290) that
+ *   fn_80152040: a 12-byte-row state-table driver (gSeq11EStateTable) that
  *     advances on GameBit + sequence flags and kicks the matching anim.
  *   fn_80152370: spawns and sets up a child object at the parent's pos.
  *   fn_80152440 / fn_80152B2C: hit/reaction message callbacks.
@@ -505,7 +505,7 @@ void fn_801522E0(int* obj, u8* state)
 }
 
 /* EN v1.0 0x80152040  size: 672b  state-table driver: walks the 12-byte
- * lbl_8031F290 state rows, advancing on GameBit + sequence flags and kicking
+ * gSeq11EStateTable state rows, advancing on GameBit + sequence flags and kicking
  * the matching anim. */
 
 typedef struct
@@ -518,7 +518,7 @@ typedef struct
     u8 flagB; /* 0xb */
 } Seq11ERow;
 
-extern Seq11ERow lbl_8031F290[];
+extern Seq11ERow gSeq11EStateTable[];
 extern void fn_80151C68(int* obj, u8* state);
 extern void fn_80151DB8(int* obj, u8* state);
 
@@ -542,7 +542,7 @@ void fn_80152040(int* obj, u8* state)
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & 0x80000000)
     {
-        if (lbl_8031F290[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
+        if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
         {
             u32 triggered = 0x40000000;
             ((BaddieState*)state)->controlFlags = flags | triggered;
@@ -560,11 +560,11 @@ void fn_80152040(int* obj, u8* state)
             {
                 if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0)
                 {
-                    ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].alt;
+                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
                 }
                 else
                 {
-                    ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].next;
+                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
                 }
             }
         }
@@ -573,26 +573,26 @@ void fn_80152040(int* obj, u8* state)
             if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0 ||
                 !(((BaddieState*)state)->controlFlags & 0x20000000))
             {
-                ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].next;
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
             }
         }
         else if (((BaddieState*)state)->seqEntryIndex == 3)
         {
             if (GameBit_Get(*(s16*)((char*)def + 0x1c)) != 0)
             {
-                ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].alt;
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
             }
             else
             {
-                ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].next;
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
             }
         }
         else
         {
-            ((BaddieState*)state)->seqEntryIndex = lbl_8031F290[((BaddieState*)state)->seqEntryIndex].next;
+            ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
         }
         anim = ((GameObject*)obj)->anim.currentMove;
-        animTbl = (u8*)lbl_8031F290 + 8;
+        animTbl = (u8*)gSeq11EStateTable + 8;
         if (anim != animTbl[((BaddieState*)state)->seqEntryIndex * 12])
         {
             if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 && animTbl[((BaddieState*)state)->seqEntryIndex
@@ -601,10 +601,10 @@ void fn_80152040(int* obj, u8* state)
                 Sfx_PlayFromObject((u32)obj, 0x4a8);
             }
             fn_8014D08C(obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
-                        *(f32*)((u8*)lbl_8031F290 + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
+                        *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
         }
     }
-    if (lbl_8031F290[((BaddieState*)state)->seqEntryIndex].flagB != 0)
+    if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].flagB != 0)
     {
         fn_80151DB8(obj, state);
     }

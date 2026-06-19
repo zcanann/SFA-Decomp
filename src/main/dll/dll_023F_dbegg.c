@@ -45,7 +45,7 @@
 #include "main/pad.h"
 #include "main/objhits.h"
 extern const f32 lbl_803E61C8;
-extern const f32 lbl_803E61D0;
+extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 extern void objRenderFn_8003b8f4(f32);
@@ -54,14 +54,14 @@ extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* 
                               int p10);
 extern const f32 lbl_803E6218;
 extern const f32 lbl_803E621C;
-extern const f32 lbl_803E61E0;
+extern const f32 gDbEggSurfaceNotFound;
 extern const f32 lbl_803E61E4;
 extern const f32 lbl_803E61E8;
 extern const f32 lbl_803E61EC;
 extern const f32 lbl_803E61F0;
 extern const f32 lbl_803E61F4;
-extern const f32 lbl_803E61F8;
-extern const f32 lbl_803E61FC;
+extern const f32 gDbEggPi;
+extern const f32 gDbEggAngleHalfPeriod;
 extern const f32 lbl_803E6200;
 extern const f32 lbl_803E6204;
 extern const f32 lbl_803E6208;
@@ -214,7 +214,7 @@ void dbegg_setupFromDef(int obj, u8* state)
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-    config->speedScaleByte * lbl_803E61D0;
+    config->speedScaleByte * gDbEggSpeedByteScale;
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
@@ -345,7 +345,7 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
                              ((GameObject*)obj)->anim.localPosZ + b, obj, &list, 0, 0);
     if (n != 0)
     {
-        ground = lbl_803E61E0;
+        ground = gDbEggSurfaceNotFound;
         water = ground;
         cursor = list;
         for (i = 0; i < n; i++)
@@ -402,12 +402,12 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
         }
         if (flag == 0)
         {
-            if (lbl_803E61E0 != ground)
+            if (gDbEggSurfaceNotFound != ground)
             {
                 *out = ground;
                 return 0;
             }
-            if (lbl_803E61E0 != water)
+            if (gDbEggSurfaceNotFound != water)
             {
                 *out = water;
                 return 1;
@@ -416,7 +416,7 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
         }
         else
         {
-            if (lbl_803E61E0 != water)
+            if (gDbEggSurfaceNotFound != water)
             {
                 if (ground >= lbl_803E61C8)
                 {
@@ -442,7 +442,7 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
                 *out = ground;
                 return 1;
             }
-            if (lbl_803E61E0 != ground)
+            if (gDbEggSurfaceNotFound != ground)
             {
                 *out = ground;
                 return 1;
@@ -485,8 +485,8 @@ void fn_801FE774(int cam, f32* vel)
             {
                 force = (radius - dist) / radius;
                 force = force * (lbl_803E61F4 * *(f32*)(o + 8));
-                sumX += force * mathSinf((lbl_803E61F8 * (f32)(int) * (s16*)o) / lbl_803E61FC);
-                sumZ += force * mathCosf((lbl_803E61F8 * (f32)(int) * (s16*)o) / lbl_803E61FC);
+                sumX += force * mathSinf((gDbEggPi * (f32)(int) * (s16*)o) / gDbEggAngleHalfPeriod);
+                sumZ += force * mathCosf((gDbEggPi * (f32)(int) * (s16*)o) / gDbEggAngleHalfPeriod);
             }
         }
         objs++;

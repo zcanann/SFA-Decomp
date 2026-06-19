@@ -84,7 +84,7 @@ void* _audioAlloc(u32 size)
 
 void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
 {
-    MusicSeqStartParams params = lbl_802C1A68;
+    MusicSeqStartParams params = gMusicSeqStartParamsDefault;
 
     if (channel != NULL)
     {
@@ -207,7 +207,7 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
     trigger->field_6;
     *outF8 = (f32)(u32)
     trigger->field_8;
-    *outI9 = (&lbl_803DB248)[trigger->e_tableIdx];
+    *outI9 = (&gSfxTriggerExtraTable)[trigger->e_tableIdx];
     *outI10 = trigger->e_bit0;
     *outI11 = trigger->e_bit3;
     return 1;
@@ -219,7 +219,7 @@ SfxTrigger* Sfx_FindTrigger(u16 id)
     SfxTrigger* low = (SfxTrigger*)gSfxTriggersData;
     SfxTrigger* high = (SfxTrigger*)gSfxTriggersData + gSfxTriggersCount;
     int key = id;
-    SfxTriggerCacheEntry* c = &lbl_802C5D78[key & 0xf];
+    SfxTriggerCacheEntry* c = &gSfxTriggerLookupCache[key & 0xf];
 
     if (c->key == key)
     {
@@ -291,9 +291,9 @@ int d;
     {
         goto fail;
     }
-    if (lbl_803DC838 != 0 && d == 0)
+    if (gSfxGlobalCtrlLevel != 0 && d == 0)
     {
-        sndFXCtrl(handle, 0x5b, lbl_803DC838);
+        sndFXCtrl(handle, 0x5b, gSfxGlobalCtrlLevel);
     }
 
     ch->object = 0;
@@ -332,11 +332,11 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
     f32 x = v[0];
     f32 y = v[1];
     f32 z = v[2];
-    f32 ra = lbl_803DE5AC * angX / lbl_803DE5B0;
+    f32 ra = gAudioPi * angX / gAudioAngleToRadDivisor;
     f32 ca = mathSinf(ra);
-    f32 rb = lbl_803DE5AC * angY / lbl_803DE5B0;
+    f32 rb = gAudioPi * angY / gAudioAngleToRadDivisor;
     f32 cb = mathSinf(rb);
-    f32 rc = lbl_803DE5AC * angZ / lbl_803DE5B0;
+    f32 rc = gAudioPi * angZ / gAudioAngleToRadDivisor;
     f32 cc = mathSinf(rc);
     f32 sa = mathCosf(ra);
     f32 sb = mathCosf(rb);
@@ -426,9 +426,9 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(lbl_80336C70, fn_8000D0B4) == 0)
+        if (DVDCancelStreamAsync(gAudioStreamDvdBlockPrepared, fn_8000D0B4) == 0)
         {
-            OSReport(lbl_802C5DC4);
+            OSReport(sDvdCancelStreamWarning);
         }
         gAudioStreamPreparedId = 0;
         gAudioStreamPreparingId = 0;
@@ -443,9 +443,9 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(lbl_80336C40, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync(gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
-            OSReport(lbl_802C5DC4);
+            OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
         }
     }
@@ -521,9 +521,9 @@ void AudioStream_StopCurrent(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(lbl_80336C40, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync(gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
-            OSReport(lbl_802C5DC4);
+            OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
         }
         gAudioStreamPreparedId = 0;
@@ -549,9 +549,9 @@ void AudioStream_CancelPrepared(void)
 {
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
-    if (DVDCancelStreamAsync(lbl_80336C70, fn_8000D0B4) == 0)
+    if (DVDCancelStreamAsync(gAudioStreamDvdBlockPrepared, fn_8000D0B4) == 0)
     {
-        OSReport(lbl_802C5DC4);
+        OSReport(sDvdCancelStreamWarning);
     }
     gAudioStreamPreparedId = 0;
     gAudioStreamPreparingId = 0;
@@ -604,7 +604,7 @@ void AudioStream_UpdateFadeTimer(void)
     if (gAudioStreamCurrentId != 0)
     {
         f32 position = gAudioStreamPos;
-        gAudioStreamPos = position + (timeDelta / lbl_803DE5E8);
+        gAudioStreamPos = position + (timeDelta / gAudioStreamFramesPerSecond);
     }
     else
     {
@@ -1004,13 +1004,13 @@ void audioFn_8000b694(u32 value)
     SfxObjectChannel* objectChannel;
 
     objectChannel = gSfxObjectChannels;
-    lbl_803DC838 = (u8)(value * 5);
+    gSfxGlobalCtrlLevel = (u8)(value * 5);
     i = SFX_OBJECT_CHANNEL_COUNT - 1;
     do
     {
         if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
         {
-            sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
         }
         objectChannel++;
     }
@@ -1266,7 +1266,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
         delta[0] = delta[0] * scale;
         delta[1] = delta[1] * scale;
         delta[2] = delta[2] * scale;
-        pan = (int)(lbl_803DE5A8 * delta[0] + lbl_803DE5A4);
+        pan = (int)(gSfxPanScale * delta[0] + gSfxPanCenter);
         if (pan > 0x7f)
         {
             pan = 0x7f;
@@ -1275,7 +1275,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
         {
             pan = 0;
         }
-        fx = (int)(*(f32*)&lbl_803DE5A8 * delta[2] + *(f32*)&lbl_803DE5A4);
+        fx = (int)(*(f32*)&gSfxPanScale * delta[2] + *(f32*)&gSfxPanCenter);
         if (fx > 0x7f)
         {
             fx = 0x7f;
@@ -1499,16 +1499,16 @@ void Sfx_UpdateObjectSounds(void)
         globalCtrl = 0;
     }
 
-    if ((u8)globalCtrl != (s32)(lbl_803DC838 / 5))
+    if ((u8)globalCtrl != (s32)(gSfxGlobalCtrlLevel / 5))
     {
         objectChannel = gSfxObjectChannels;
-        lbl_803DC838 = (u8)(globalCtrl * 5);
+        gSfxGlobalCtrlLevel = (u8)(globalCtrl * 5);
         i = SFX_OBJECT_CHANNEL_COUNT - 1;
         do
         {
             if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
             {
-                sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+                sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
             }
             objectChannel++;
         }
@@ -1566,13 +1566,13 @@ checkNextChannel:
     gSfxObjectChannelAgeLo = 0;
     gSfxObjectChannelAgeHi = 0;
     objectChannel = gSfxObjectChannels;
-    lbl_803DC838 = 0;
+    gSfxGlobalCtrlLevel = 0;
     i = SFX_OBJECT_CHANNEL_COUNT - 1;
     do
     {
         if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
         {
-            sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
         }
         objectChannel++;
     }
@@ -1645,13 +1645,13 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
 
 void fn_80009008(void)
 {
-    lbl_803DC7BC = 1;
+    gAudioArqRequestDone = 1;
 }
 
 void fn_80008EDC(TextCallbackEntry* p)
 {
     int i;
-    TextCallbackEntry* e = lbl_80335940;
+    TextCallbackEntry* e = gAudioArqRequests;
     for (i = 0; i < 16; i++)
     {
         if (p == e)
@@ -1719,8 +1719,8 @@ int musicInitMidiWad(void)
             *(int*)&ch->pad14[4] = 0;
             ch++;
         }
-        lbl_803DC814 = 1;
-        lbl_803DC818 = 1;
+        gMusicChannelCounterA = 1;
+        gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= 0x800;
         saved = testAndSet_onlyUseHeap3(0);
         gMidiWadFileData = loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0,
@@ -2030,21 +2030,21 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
 {
     int idx;
     TextCallbackEntry* entry;
-    idx = lbl_803DC7B8;
-    lbl_803DC7B8 = idx + 1;
-    entry = &lbl_80335940[idx];
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
     if (idx + 1 >= 0x10)
     {
-        lbl_803DC7B8 = 0;
+        gAudioArqRequestIndex = 0;
     }
     if ((size & 0x1f) != 0)
     {
         size = (size | 0x1f) + 1;
     }
     DCFlushRange(addr, size);
-    lbl_803DC7BC = 0;
+    gAudioArqRequestDone = 0;
     ARQPostRequest(entry, 0x64, 0, 1, (u32)addr, dest, size, (void (*)(void*))fn_80009008);
-    while (lbl_803DC7BC == 0)
+    while (gAudioArqRequestDone == 0)
     {
     }
 }
@@ -2055,12 +2055,12 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     int idx;
     void* buf;
     TextCallbackEntry* entry;
-    idx = lbl_803DC7B8;
-    lbl_803DC7B8 = idx + 1;
-    entry = &lbl_80335940[idx];
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
     if (idx + 1 >= 0x10)
     {
-        lbl_803DC7B8 = 0;
+        gAudioArqRequestIndex = 0;
     }
     if ((size & 0x1f) != 0)
     {
@@ -2073,7 +2073,7 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     entry->b = p6;
     entry->c = p7;
     DCFlushRange(buf, size);
-    lbl_803DC7BC = 0;
+    gAudioArqRequestDone = 0;
     ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
 }
 #pragma dont_inline reset
@@ -2125,8 +2125,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     extern char sAdpExtension;
     char path[64];
     u8 vol;
-    u8* dvd = (u8*)(int)lbl_80336C40;
-    int* fadeTbl = lbl_802C5DB8;
+    u8* dvd = (u8*)(int)gAudioStreamDvdBlockCurrent;
+    int* fadeTbl = gAudioStreamFadeTable;
     StreamEntry* s = gStreamsData;
     int count = gStreamsCount;
     int slot = -1;
@@ -2180,7 +2180,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((u8*)(int)lbl_80336C40, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync((u8*)(int)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
             OSReport((char*)fadeTbl + 0xC);
             gAudioStreamPlaying = 0;
@@ -2202,7 +2202,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     s->lengthRaw / lbl_803DE5D4;
     if (lbl_803DE5D0 == gAudioStreamEndPos)
     {
-        gAudioStreamEndPos = lbl_803DE5D8;
+        gAudioStreamEndPos = gAudioStreamEndPosInfinite;
     }
 
     gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] == 0 ? 0 : 1;
@@ -2496,7 +2496,7 @@ void Music_Update(void)
             }
             break;
         case 2:
-            ch->field_20 += timeDelta / lbl_803DE564;
+            ch->field_20 += timeDelta / gAudioFramesPerSecond;
             if (ch->field_20 > lbl_803DE568)
             {
                 if (ch->status == 4 || ch->status == 5)
@@ -2759,13 +2759,13 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     channel->field_12 = trigger->pad[9];
     if (channel->pad11)
     {
-        counter = lbl_803DC814;
-        lbl_803DC814 = counter + 1;
+        counter = gMusicChannelCounterA;
+        gMusicChannelCounterA = counter + 1;
     }
     else
     {
-        counter = lbl_803DC818;
-        lbl_803DC818 = counter + 1;
+        counter = gMusicChannelCounterB;
+        gMusicChannelCounterB = counter + 1;
     }
     *(int*)&channel->pad14[4] = counter;
     *(MusicTrigger**)&channel->pad14[8] = trigger;
@@ -2857,8 +2857,8 @@ int audioInit(void)
     int delay;
     int v;
 
-    hooks[0] = lbl_803DE548;
-    hooks[1] = lbl_803DE54C;
+    hooks[0] = gAudioMemAllocHook;
+    hooks[1] = gAudioMemFreeHook;
     if (!gAudioInitStarted)
     {
         gAudioInitStarted = 1;
@@ -2870,7 +2870,7 @@ int audioInit(void)
             return 1;
         }
         gAudioHardwareInitialized = 1;
-        ARInit(lbl_80335D94, 0xa);
+        ARInit(gAudioAramBlock, 0xa);
         ARQInit();
         AIInit(0);
         AISetDSPSampleRate(0);
@@ -2887,15 +2887,15 @@ int audioInit(void)
             gAudioSoundMode = 0;
             sndOutputMode(1);
         }
-        lbl_80335C40[0x13c] = 0;
-        *(f32*)&lbl_80335C40[0x148] = lbl_803DE550;
-        *(f32*)&lbl_80335C40[0x150] = lbl_803DE554;
-        *(f32*)&lbl_80335C40[0x14c] = lbl_803DE558;
-        *(f32*)&lbl_80335C40[0x140] = lbl_803DE558;
-        *(f32*)&lbl_80335C40[0x144] = lbl_803DE55C;
-        sndAuxCallbackUpdateSettingsReverbSTD(lbl_80335C40);
+        gAudioReverbSettings[0x13c] = 0;
+        *(f32*)&gAudioReverbSettings[0x148] = lbl_803DE550;
+        *(f32*)&gAudioReverbSettings[0x150] = lbl_803DE554;
+        *(f32*)&gAudioReverbSettings[0x14c] = lbl_803DE558;
+        *(f32*)&gAudioReverbSettings[0x140] = lbl_803DE558;
+        *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
+        sndAuxCallbackUpdateSettingsReverbSTD(gAudioReverbSettings);
         reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, lbl_80335C40, 0xff, 0, 0, 0,
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0,
                                      0xff, reverbWork);
         if (!sndIsInstalled())
         {

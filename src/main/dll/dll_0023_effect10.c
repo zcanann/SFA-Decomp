@@ -11,12 +11,12 @@
  * bit0 ("position relative") offsets the start position by either the
  * source vector or the model transform (model+0x18..0x20). As a side
  * effect of every call, func04 also unconditionally advances two separate
- * scroll-phase globals (lbl_803DB830/834), distinct from func05's
- * lbl_803DB838/83C pair.
+ * scroll-phase globals (gEffect10ScrollPhaseA/834), distinct from func05's
+ * gEffect10TickScrollPhaseA/83C pair.
  *
  * Effect10_func05 is the per-frame tick: it advances two scroll phases
- * (lbl_803DB838/3C) and two sine oscillators (lbl_803DD3B0/B4 ->
- * lbl_803DD3B8/BC) used as animated effect parameters.
+ * (gEffect10TickScrollPhaseA/3C) and two sine oscillators (gEffect10SineAnglePhaseA/B4 ->
+ * gEffect10SineValueB/BC) used as animated effect parameters.
  *
  * Effect10_func03_nop / Effect10_release / Effect10_initialise are no-ops.
  */
@@ -28,9 +28,9 @@
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
-extern EffectSrcParams lbl_8039C3B0;
-extern f32 lbl_803DB830;
-extern f32 lbl_803DB834;
+extern EffectSrcParams gEffect10DefaultSrcParams;
+extern f32 gEffect10ScrollPhaseA;
+extern f32 gEffect10ScrollPhaseB;
 extern f32 lbl_803DFEC4;
 extern f32 lbl_803DFECC;
 extern f32 lbl_803DFED0;
@@ -55,14 +55,14 @@ extern f32 lbl_803DFF18;
 extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
-extern f32 lbl_803DB838;
-extern f32 lbl_803DB83C;
-extern s32 lbl_803DD3B0;
-extern s32 lbl_803DD3B4;
-extern f32 lbl_803DD3B8;
-extern f32 lbl_803DD3BC;
-extern f32 lbl_803DFF30;
-extern f32 lbl_803DFF34;
+extern f32 gEffect10TickScrollPhaseA;
+extern f32 gEffect10TickScrollPhaseB;
+extern s32 gEffect10SineAnglePhaseA;
+extern s32 gEffect10SineAnglePhaseB;
+extern f32 gEffect10SineValueB;
+extern f32 gEffect10SineValueA;
+extern f32 gEffect10Pi;
+extern f32 gEffect10SinePhaseScale;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
@@ -78,15 +78,15 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     EffectSpawnParams p;
     u32 hasSrc;
 
-    lbl_803DB830 = lbl_803DB830 + lbl_803DFEB8;
-    if (lbl_803DB830 > 1.0f)
+    gEffect10ScrollPhaseA = gEffect10ScrollPhaseA + lbl_803DFEB8;
+    if (gEffect10ScrollPhaseA > 1.0f)
     {
-        lbl_803DB830 = lbl_803DFEBC;
+        gEffect10ScrollPhaseA = lbl_803DFEBC;
     }
-    lbl_803DB834 = lbl_803DB834 + lbl_803DFEC4;
-    if (lbl_803DB834 > 1.0f)
+    gEffect10ScrollPhaseB = gEffect10ScrollPhaseB + lbl_803DFEC4;
+    if (gEffect10ScrollPhaseB > 1.0f)
     {
-        lbl_803DB834 = lbl_803DFEC8;
+        gEffect10ScrollPhaseB = lbl_803DFEC8;
     }
     if (obj == NULL)
     {
@@ -133,14 +133,14 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.unk40 = 0;
     if (src == NULL)
     {
-        lbl_8039C3B0.x = lbl_803DFECC;
-        lbl_8039C3B0.y = lbl_803DFECC;
-        lbl_8039C3B0.z = lbl_803DFECC;
-        lbl_8039C3B0.w = 1.0f;
-        lbl_8039C3B0.rot0 = 0;
-        lbl_8039C3B0.rot1 = 0;
-        lbl_8039C3B0.rot2 = 0;
-        src = &lbl_8039C3B0;
+        gEffect10DefaultSrcParams.x = lbl_803DFECC;
+        gEffect10DefaultSrcParams.y = lbl_803DFECC;
+        gEffect10DefaultSrcParams.z = lbl_803DFECC;
+        gEffect10DefaultSrcParams.w = 1.0f;
+        gEffect10DefaultSrcParams.rot0 = 0;
+        gEffect10DefaultSrcParams.rot1 = 0;
+        gEffect10DefaultSrcParams.rot2 = 0;
+        src = &gEffect10DefaultSrcParams;
     }
     switch (id)
     {
@@ -596,30 +596,30 @@ void Effect10_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB838 + (step = lbl_803DFEB8 * timeDelta);
-    lbl_803DB838 = sum;
+    sum = gEffect10TickScrollPhaseA + (step = lbl_803DFEB8 * timeDelta);
+    gEffect10TickScrollPhaseA = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB838 = lbl_803DFEBC;
+        gEffect10TickScrollPhaseA = lbl_803DFEBC;
     }
-    sum = lbl_803DB83C + step;
-    lbl_803DB83C = sum;
+    sum = gEffect10TickScrollPhaseB + step;
+    gEffect10TickScrollPhaseB = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB83C = lbl_803DFEC8;
+        gEffect10TickScrollPhaseB = lbl_803DFEC8;
     }
-    lbl_803DD3B0 = lbl_803DD3B0 + framesThisStep * 0x64;
-    if (lbl_803DD3B0 > 0x7fff)
+    gEffect10SineAnglePhaseA = gEffect10SineAnglePhaseA + framesThisStep * 0x64;
+    if (gEffect10SineAnglePhaseA > 0x7fff)
     {
-        lbl_803DD3B0 = 0;
+        gEffect10SineAnglePhaseA = 0;
     }
-    lbl_803DD3BC = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
-    lbl_803DD3B4 = lbl_803DD3B4 + framesThisStep * 0x32;
-    if (lbl_803DD3B4 > 0x7fff)
+    gEffect10SineValueA = mathSinf(gEffect10Pi * (f32)(s16)gEffect10SineAnglePhaseA / gEffect10SinePhaseScale);
+    gEffect10SineAnglePhaseB = gEffect10SineAnglePhaseB + framesThisStep * 0x32;
+    if (gEffect10SineAnglePhaseB > 0x7fff)
     {
-        lbl_803DD3B4 = 0;
+        gEffect10SineAnglePhaseB = 0;
     }
-    lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
+    gEffect10SineValueB = mathSinf(gEffect10Pi * (f32)(s16)gEffect10SineAnglePhaseB / gEffect10SinePhaseScale);
 }
 
 void Effect10_func03_nop(void)
