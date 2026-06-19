@@ -139,7 +139,7 @@ extern void* gNewClouds[];
 extern void* lbl_803DD1C8;
 extern void* lbl_803DD1C4;
 extern void* gNewCloudModelLight;
-extern const f32 gNewCloudOne;
+extern const f32 lbl_803DF1A4;
 extern f32 gNewCloudOvercastFadeLevel;
 extern f32 lbl_803DB764;
 extern f32 lbl_803DB768;
@@ -202,7 +202,7 @@ void newclouds_onMapSetup(void)
     gNewCloudScrollPhaseB = a;
     gNewCloudScrollPhaseC = a;
     lbl_803DD190 = a;
-    b = gNewCloudOne;
+    b = lbl_803DF1A4;
     gNewCloudOvercastFadeLevel = b;
     gNewCloudOvercastFadeRate = a;
     gNewCloudSnowFlashAlpha = 0;
@@ -498,7 +498,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     }
     for (i = 0; i < 6; i++)
     {
-        dists[i] = gNewCloudOne / sqrtf__inline(dists[i]);
+        dists[i] = lbl_803DF1A4 / sqrtf__inline(dists[i]);
     }
     for (i = 0; i < 6; i++)
     {
@@ -703,7 +703,7 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
         mathCosf((gNewCloudPi * gSnowFlakeWaveAngle) / lbl_803DF1F4);
         *dst = gSnowFlakeWaveValue * amp;
         gSnowFlakeWaveAngle = gSnowFlakeWaveAngle + lbl_803DF1F8;
-        gSnowFlakeWaveValue = gSnowFlakeWaveValue + gNewCloudOne;
+        gSnowFlakeWaveValue = gSnowFlakeWaveValue + lbl_803DF1A4;
         dst++;
         widx++;
     }
@@ -887,10 +887,10 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     }
     PSVECSubtract(to, from, dir);
     len = PSVECMag(dir);
-    PSVECScale(dir, scaled, gNewCloudOne / len);
+    PSVECScale(dir, scaled, lbl_803DF1A4 / len);
     if (__fabs(scaled[0]) < gNewCloudUpVectorThreshold)
     {
-        up[0] = gNewCloudOne;
+        up[0] = lbl_803DF1A4;
         up[1] = lbl_803DF1A0;
         up[2] = lbl_803DF1A0;
     }
@@ -898,7 +898,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     {
         up[0] = lbl_803DF1A0;
         up[1] = lbl_803DF1A0;
-        up[2] = gNewCloudOne;
+        up[2] = lbl_803DF1A4;
     }
     PSVECCrossProduct(scaled, up, side);
     PSVECCrossProduct(side, scaled, up);
@@ -917,7 +917,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     {
         total += (i + 1);
     }
-    weight = gNewCloudOne / total;
+    weight = lbl_803DF1A4 / total;
     GXSetLineWidth(width, 5);
     GXBegin(0xb0, 2, segs + 1);
     for (i = 0; i <= segs; i++)
@@ -1092,10 +1092,10 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     }
     PSVECSubtract(end, start, dir);
     len = PSVECMag(dir);
-    PSVECScale(dir, scaled, gNewCloudOne / len);
+    PSVECScale(dir, scaled, lbl_803DF1A4 / len);
     if (__fabs(scaled[0]) < gNewCloudUpVectorThreshold)
     {
-        up[0] = gNewCloudOne;
+        up[0] = lbl_803DF1A4;
         up[1] = lbl_803DF1A0;
         up[2] = lbl_803DF1A0;
     }
@@ -1103,7 +1103,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     {
         up[0] = lbl_803DF1A0;
         up[1] = lbl_803DF1A0;
-        up[2] = gNewCloudOne;
+        up[2] = lbl_803DF1A4;
     }
     PSVECCrossProduct(scaled, up, side);
     PSVECCrossProduct(side, scaled, up);
@@ -1122,7 +1122,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     {
         total += (i + 1);
     }
-    weight = gNewCloudOne / total;
+    weight = lbl_803DF1A4 / total;
     px = start[0];
     py = start[1];
     pz = start[2];
@@ -1175,7 +1175,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 ;
                 PSMTXMultVecSR(mtx, offset, offset);
                 PSVECScale(scaled, branchEnd,
-                           (lbl_803DF1CC * ((gNewCloudOne - progress) *
+                           (lbl_803DF1CC * ((lbl_803DF1A4 - progress) *
                                randomGetRange(0, 1000)) +
                     progress
                 )
@@ -1464,7 +1464,7 @@ void snowReposSnowCloud(int cloudId)
             args.f14 = lbl_803DF1A0;
             args.f18 = lbl_803DF1A0;
             args.f1c = lbl_803DF1A0;
-            args.f10 = gNewCloudOne;
+            args.f10 = lbl_803DF1A4;
             args.fc = 0;
             args.fa = 0;
             args.f8 = 0xffff - (*(s16*)cam + randomGetRange(-5000, 5000));
@@ -1473,7 +1473,7 @@ void snowReposSnowCloud(int cloudId)
         args.f14 = dir[0];
         args.f18 = dir[1];
         args.f1c = dir[2];
-        args.f10 = gNewCloudOne;
+        args.f10 = lbl_803DF1A4;
         args.f8 = 0;
         args.fc = 0;
         args.fa = 0;
@@ -1645,7 +1645,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         ((NewCloud*)NC_CLOUD)->cloudHeight = *(f32*)(params + 4);
         ((NewCloud*)NC_CLOUD)->scale = gSnowFlakeSize * *(f32*)(params + 0);
     }
-    if (*(f32*)(params + 8) < gNewCloudOne)
+    if (*(f32*)(params + 8) < lbl_803DF1A4)
     {
         *(f32*)(params + 8) = lbl_803DF1A0;
     }
@@ -1717,7 +1717,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
                 (randomGetRange(*(int*)(strs + params[0x5a] * 8 + 0x58),
                                     *(int*)(strs + params[0x5a] * 8 + 0x5c)) *
                     2);
-            *(f32*)(NC_PARTS + i * 0x18 + 0xc) = gNewCloudOne;
+            *(f32*)(NC_PARTS + i * 0x18 + 0xc) = lbl_803DF1A4;
             *(NC_PARTS + i * 0x18 + 0x16) = 0;
         }
         if (*(s8*)(NC_PARTS + i * 0x18 + 0x14) < 1)
@@ -1737,7 +1737,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[0].vy = lbl_803DF1A0;
         gNewCloudWindSources[0].vz = lbl_803DF1A0;
         normalize(&gNewCloudWindSources[0].vx, &gNewCloudWindSources[0].vy, &gNewCloudWindSources[0].vz);
-        gNewCloudWindSources[0].scale = gNewCloudOne;
+        gNewCloudWindSources[0].scale = lbl_803DF1A4;
         gNewCloudWindSources[0].flag = 0;
         gNewCloudWindSources[1].x = 0x3c5;
         gNewCloudWindSources[1].z = 0xb72;
@@ -1745,7 +1745,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[1].vy = lbl_803DF1A0;
         gNewCloudWindSources[1].vz = lbl_803DF240;
         normalize(&gNewCloudWindSources[1].vx, &gNewCloudWindSources[1].vy, &gNewCloudWindSources[1].vz);
-        gNewCloudWindSources[1].scale = gNewCloudOne;
+        gNewCloudWindSources[1].scale = lbl_803DF1A4;
         gNewCloudWindSources[1].flag = 0;
         gNewCloudWindSources[2].x = 0x335;
         gNewCloudWindSources[2].z = 0xe13;
@@ -1753,7 +1753,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[2].vy = lbl_803DF1A0;
         gNewCloudWindSources[2].vz = lbl_803DF1A0;
         normalize(&gNewCloudWindSources[2].vx, &gNewCloudWindSources[2].vy, &gNewCloudWindSources[2].vz);
-        gNewCloudWindSources[2].scale = gNewCloudOne;
+        gNewCloudWindSources[2].scale = lbl_803DF1A4;
         gNewCloudWindSources[2].flag = 0;
         gNewCloudWindSources[3].x = 0x254;
         gNewCloudWindSources[3].z = 0xc70;
@@ -1761,7 +1761,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[3].vy = lbl_803DF1A0;
         gNewCloudWindSources[3].vz = lbl_803DF1FC;
         normalize(&gNewCloudWindSources[3].vx, &gNewCloudWindSources[3].vy, &gNewCloudWindSources[3].vz);
-        gNewCloudWindSources[3].scale = gNewCloudOne;
+        gNewCloudWindSources[3].scale = lbl_803DF1A4;
         gNewCloudWindSources[3].flag = 0;
         gNewCloudWindSources[4].x = 0x107;
         gNewCloudWindSources[4].z = 0xb4a;
@@ -1769,7 +1769,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[4].vy = lbl_803DF1A0;
         gNewCloudWindSources[4].vz = lbl_803DF1CC;
         normalize(&gNewCloudWindSources[4].vx, &gNewCloudWindSources[4].vy, &gNewCloudWindSources[4].vz);
-        gNewCloudWindSources[4].scale = gNewCloudOne;
+        gNewCloudWindSources[4].scale = lbl_803DF1A4;
         gNewCloudWindSources[4].flag = 0;
         gNewCloudWindSources[5].x = 0x68;
         gNewCloudWindSources[5].z = 0xdf6;
@@ -1777,7 +1777,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[5].vy = lbl_803DF1A0;
         gNewCloudWindSources[5].vz = lbl_803DF240;
         normalize(&gNewCloudWindSources[5].vx, &gNewCloudWindSources[5].vy, &gNewCloudWindSources[5].vz);
-        gNewCloudWindSources[5].scale = gNewCloudOne;
+        gNewCloudWindSources[5].scale = lbl_803DF1A4;
         gNewCloudWindSources[5].flag = 0;
         gNewCloudWindSources[0].x = 0x31e;
         gNewCloudWindSources[0].z = 0xa9c;
@@ -1984,7 +1984,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             args.f14 = lbl_803DF1A0;
             args.f18 = lbl_803DF1A0;
             args.f1c = lbl_803DF1A0;
-            args.f10 = gNewCloudOne;
+            args.f10 = lbl_803DF1A4;
             args.fc = 0;
             args.fa = 0;
             args.f8 = *objA;
@@ -2180,7 +2180,7 @@ void dll_07_func06(void)
                     args.f14 = lbl_803DF1A0;
                     args.f18 = lbl_803DF1A0;
                     args.f1c = lbl_803DF1A0;
-                    args.f10 = gNewCloudOne;
+                    args.f10 = lbl_803DF1A4;
                     args.fc = 0;
                     args.fa = 0;
                     args.f8 = 0xffff - *cam;
@@ -2322,9 +2322,9 @@ void dll_07_func06(void)
     }
     t = gNewCloudOvercastFadeLevel + gNewCloudOvercastFadeRate;
     gNewCloudOvercastFadeLevel = t;
-    if (t > gNewCloudOne)
+    if (t > lbl_803DF1A4)
     {
-        gNewCloudOvercastFadeLevel = gNewCloudOne;
+        gNewCloudOvercastFadeLevel = lbl_803DF1A4;
     }
     else if (t < lbl_803DF1A0)
     {
@@ -2357,10 +2357,10 @@ void dll_07_func06(void)
             else
             {
                 lbl_803DD190 = lbl_803DF26C * timeDelta + lbl_803DD190;
-                lbl_803DB764 = gNewCloudOne;
+                lbl_803DB764 = lbl_803DF1A4;
                 lbl_803DD199 = 0xf8;
                 lbl_803DD19A = 0xfc;
-                lbl_803DB768 = gNewCloudOne;
+                lbl_803DB768 = lbl_803DF1A4;
                 PSMTXRotRad(mtx, 0x7a, rot);
             }
             PSMTXConcat((void*)m, (void*)mtx, (void*)mtx);
@@ -2419,7 +2419,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 vz[3];
     s16 uvs[6] = {-0x30, 0, 0xb0, 0, 0x40, 0x100};
 
-    scale = gNewCloudOne;
+    scale = lbl_803DF1A4;
     if (renderModeSetOrGet(-1) == 1)
     {
         return 0;
@@ -2450,10 +2450,10 @@ int snowPrintSnowCloud(int arg, int cloudId)
     scale = scale * lbl_803DF200;
     initRotationMtx(mtxA, scale, scale, scale);
     memset(mtxB, 0, 0x40);
-    mtxB[0] = gNewCloudOne;
-    mtxB[5] = gNewCloudOne;
-    mtxB[10] = gNewCloudOne;
-    mtxB[15] = gNewCloudOne;
+    mtxB[0] = lbl_803DF1A4;
+    mtxB[5] = lbl_803DF1A4;
+    mtxB[10] = lbl_803DF1A4;
+    mtxB[15] = lbl_803DF1A4;
     if (((NewCloud*)p)->cloudType != 4 && p[0x1451] != 0)
     {
         mtxB[0] = mathCosf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);

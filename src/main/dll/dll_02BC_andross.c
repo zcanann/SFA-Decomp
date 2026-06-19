@@ -59,7 +59,7 @@ extern f32 lbl_803DC4B8;
 extern f32 gAndrossDistortPhaseStep;
 extern f32 gAndrossDistortPhaseReset;
 extern f32 gAndrossDistortPhase;
-extern f32 gAndrossHalf;
+extern f32 lbl_803E74B8;
 extern f32 lbl_803E74BC;
 extern f32 lbl_803E74C0;
 extern f32 lbl_803E74C4;
@@ -151,7 +151,7 @@ void andross_hitDetect(void)
 
 void andross_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, gAndrossOne);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E74DC);
 }
 
 void andross_setPartSignal(int obj, int signal)
@@ -176,7 +176,7 @@ int andross_updateModelAlpha(int obj)
     int model;
     int op;
 
-    *(f32*)(state + 0x68) = gAndrossZero;
+    *(f32*)(state + 0x68) = lbl_803E74D4;
     v = ((AndrossState*)state)->fadeAlpha;
     model = *(int*)Obj_GetActiveModel(obj);
     i = 0;
@@ -210,7 +210,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->unkA0 = -0x8000;
     ((GameObject*)obj)->anim.rotX = -0x8000;
     ((AndrossState*)state)->spawnCooldown = gAndrossInitSpawnCooldown;
-    ((AndrossState*)state)->unkA8 = gAndrossZero;
+    ((AndrossState*)state)->unkA8 = lbl_803E74D4;
     ((AndrossState*)state)->springStiffness = gAndrossSpringStiffness;
     ((AndrossState*)state)->springDamping = gAndrossSpringDamping;
     ((AndrossState*)state)->unkBC = 1;
@@ -245,7 +245,7 @@ void fn_8023A87C(int obj, int state)
     else
     {
         f32 v = ((AndrossState*)state)->spawnCooldown;
-        f32 zero = gAndrossZero;
+        f32 zero = lbl_803E74D4;
         if (v >= zero)
         {
             ((AndrossState*)state)->spawnCooldown = v - timeDelta;
@@ -399,8 +399,8 @@ void andross_update(int obj)
         stateChanged = 1;
     }
     ((AndrossState*)state)->prevFightPhase = found;
-    fval = gAndrossZero;
-    ((AndrossState*)state)->unkD8 = gAndrossZero;
+    fval = lbl_803E74D4;
+    ((AndrossState*)state)->unkD8 = lbl_803E74D4;
     ((AndrossState*)state)->unkDC = fval;
     ((AndrossState*)state)->unkE0 = fval;
     if ((-0x4000 < ((AndrossState*)state)->unkA0) && (((GameObject*)obj)->anim.rotX < 0x4000))
@@ -625,7 +625,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
             if (((AndrossState*)state)->fightPhase == 1)
             {
@@ -652,7 +652,7 @@ void andross_update(int obj)
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -669,7 +669,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0xc, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0C8[0];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -687,7 +687,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionState = 2;
             ((AndrossState*)state)->actionPending = 0;
@@ -705,7 +705,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0xe, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0D0[0];
             ((AndrossState*)state)->durationTimer = lbl_803E74F0;
             ((AndrossState*)state)->actionTimer = 0xffff;
@@ -733,7 +733,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionTimer = lbl_803DC43C;
         }
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionState = 3;
             ((AndrossState*)state)->actionPending = 0;
@@ -751,7 +751,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0xd, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0CC[0];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -769,7 +769,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -778,7 +778,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
             GameBit_Set(0xd, 1);
             ((AndrossState*)state)->durationTimer = lbl_803E7504;
@@ -799,7 +799,7 @@ void andross_update(int obj)
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
             GameBit_Set(0xd, 0);
@@ -817,7 +817,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
             GameBit_Set(0xd, 1);
             ((AndrossState*)state)->durationTimer = lbl_803E7504;
@@ -854,7 +854,7 @@ void andross_update(int obj)
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
             GameBit_Set(0xd, 0);
@@ -864,7 +864,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
             androsshand_setState(((AndrossState*)state)->handObjB, 4, 0);
         }
@@ -1056,7 +1056,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 1, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C09C[0];
             if (((AndrossState*)state)->fightPhase < 5)
             {
@@ -1104,7 +1104,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (lbl_803E7514 * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             switch (((AndrossState*)state)->actionState)
             {
@@ -1118,8 +1118,8 @@ void andross_update(int obj)
                 break;
             }
         }
-        fval = gAndrossHalf * ((GameObject*)obj)->anim.currentMoveProgress;
-        if (fval < gAndrossHalf)
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress;
+        if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
             if (fval < lbl_803E74C8)
@@ -1139,8 +1139,8 @@ void andross_update(int obj)
         turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         break;
     case 0xe:
-        fval = gAndrossHalf * ((GameObject*)obj)->anim.currentMoveProgress + gAndrossHalf;
-        if (fval < gAndrossHalf)
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress + lbl_803E74B8;
+        if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
             if (fval < lbl_803E74C8)
@@ -1161,12 +1161,12 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 2, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0A0[0];
             ((AndrossState*)state)->unkB1[0] = 0;
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionTimer = lbl_803DC44C;
-            ((AndrossState*)state)->durationTimer = gAndrossZero;
+            ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1193,7 +1193,7 @@ void andross_update(int obj)
             GameBit_Set(0xf, 1);
         }
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
             ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer + (f32)(lbl_803DC450);
@@ -1214,8 +1214,8 @@ void andross_update(int obj)
         }
         break;
     case 0xc:
-        fval = gAndrossHalf * ((GameObject*)obj)->anim.currentMoveProgress + gAndrossHalf;
-        if (fval < gAndrossHalf)
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress + lbl_803E74B8;
+        if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
             if (fval < lbl_803E74C8)
@@ -1236,14 +1236,14 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 2, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0A0[0];
             if (((AndrossState*)state)->fightPhase < 5)
             {
                 ((AndrossState*)state)->unkB1[0] = 1;
             }
             ((AndrossState*)state)->actionTimer = lbl_803DC460;
-            ((AndrossState*)state)->durationTimer = gAndrossZero;
+            ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         Sfx_KeepAliveLoopedObjectSound(obj, 0x466);
         if (((AndrossState*)state)->fightPhase == 5)
@@ -1294,7 +1294,7 @@ void andross_update(int obj)
             Rcp_DisableDistortionFilter();
         }
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
             ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer + (f32)(lbl_803DC464);
@@ -1326,7 +1326,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 0x10;
                 *(u8*)(state + 0x2e) = 1;
                 ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->cachedPosZ;
-                ((AndrossState*)state)->unkE0 = gAndrossZero;
+                ((AndrossState*)state)->unkE0 = lbl_803E74D4;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
                 gAndrossDistortPhase += gAndrossDistortPhaseStep;
                 if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
@@ -1356,7 +1356,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x10, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0D8[0];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -1374,7 +1374,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -1383,24 +1383,24 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x10, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_803E7518;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
         fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
-        zero = gAndrossZero;
+        zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
-        zero = gAndrossZero;
+        zero = lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) /
             lbl_803E74A4));
-        ((AndrossState*)state)->targetPosX = (gAndrossZero * fa +
+        ((AndrossState*)state)->targetPosX = (lbl_803E74D4 * fa +
             (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) /
             lbl_803E74A4));
-        ((AndrossState*)state)->targetPosY = (gAndrossZero * fc +
+        ((AndrossState*)state)->targetPosY = (lbl_803E74D4 * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ref = *state;
@@ -1416,7 +1416,7 @@ void andross_update(int obj)
             fval = lbl_803E74EC;
         }
         ((AndrossState*)state)->unkA8 = fval;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             *(s16*)(*state + 6) = *(s16*)(*state + 6) | 0x4000;
             ((AndrossState*)state)->actionState = 0x11;
@@ -1427,7 +1427,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, 0x468);
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x15, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0EC[0];
             arwarwing_addShield(*state, 0xfffffffc);
         }
@@ -1441,20 +1441,20 @@ void andross_update(int obj)
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
         fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
-        zero = gAndrossZero;
+        zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
-        zero = gAndrossZero;
+        zero = lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) /
             lbl_803E74A4));
-        ((AndrossState*)state)->targetPosX = (gAndrossZero * fa +
+        ((AndrossState*)state)->targetPosX = (lbl_803E74D4 * fa +
             (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) /
             lbl_803E74A4));
-        ((AndrossState*)state)->targetPosY = (gAndrossZero * fc +
+        ((AndrossState*)state)->targetPosY = (lbl_803E74D4 * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -1463,7 +1463,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x12, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0E0[0];
             androsshand_setState(((AndrossState*)state)->handObjA, 0, 0);
             androsshand_setState(((AndrossState*)state)->handObjB, 0, 0);
@@ -1474,7 +1474,7 @@ void andross_update(int obj)
         }
         ((AndrossState*)state)->fadeAlpha = ((AndrossState*)state)->fadeAlpha - gAndrossFadeAlphaStep;
         fval = ((AndrossState*)state)->fadeAlpha;
-        fval = (gAndrossZero <= fval) ? fval : gAndrossZero;
+        fval = (lbl_803E74D4 <= fval) ? fval : lbl_803E74D4;
         ((AndrossState*)state)->fadeAlpha = fval;
         fc = ((AndrossState*)state)->fadeAlpha;
         work = *(int*)Obj_GetActiveModel(obj);
@@ -1518,7 +1518,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionState = 0x13;
         }
@@ -1527,7 +1527,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x13, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0E4[0];
             if (((AndrossState*)state)->fightPhase == 5)
             {
@@ -1615,7 +1615,7 @@ void andross_update(int obj)
             fn_8023A168(obj, (int)state);
             ((AndrossState*)state)->actionTimer = lbl_803DC46C;
         }
-        if (((AndrossState*)state)->durationTimer < gAndrossZero)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionState = 0x14;
         }
@@ -1624,7 +1624,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x14, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0E8[0];
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
@@ -1661,7 +1661,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -1672,10 +1672,10 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, 0x4a6);
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 4, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 4, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0A8[0];
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -1687,7 +1687,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionTimer = 0x1e;
             arwarwing_resetFlightState(*state);
             ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->unk70;
-            ((AndrossState*)state)->unkA8 = gAndrossZero;
+            ((AndrossState*)state)->unkA8 = lbl_803E74D4;
         }
         ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
         ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY;
@@ -1709,8 +1709,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
             ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY;
             ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-            fval = gAndrossZero;
-            ((GameObject*)obj)->anim.velocityX = gAndrossZero;
+            fval = lbl_803E74D4;
+            ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
             ((AndrossState*)state)->springStiffness = lbl_803E74C8;
@@ -1739,8 +1739,8 @@ void andross_update(int obj)
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
         {
-            ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - gAndrossOne;
-            if (((AndrossState*)state)->durationTimer < gAndrossZero)
+            ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - lbl_803E74DC;
+            if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
             {
                 *(char*)&((AndrossState*)state)->actionToggle = *(char*)&((AndrossState*)state)->actionToggle + '\x01';
                 if (((AndrossState*)state)->actionToggle > 3)
@@ -1801,8 +1801,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->targetPosX = ((GameObject*)*state)->anim.localPosX;
             ((AndrossState*)state)->targetPosY = ((GameObject*)*state)->anim.localPosY + gAndrossSpawnOffsetY;
             ((AndrossState*)state)->targetPosZ = ((GameObject*)*state)->anim.localPosZ + gAndrossSpawnOffsetZ;
-            fval = gAndrossZero;
-            ((GameObject*)obj)->anim.velocityX = gAndrossZero;
+            fval = lbl_803E74D4;
+            ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
             ref = randomGetRange(0, 1);
@@ -1836,7 +1836,7 @@ void andross_update(int obj)
             }
             Sfx_PlayFromObject(obj, objId);
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
         }
         if (*(u8*)(state + 0x2e) != 0)
@@ -1888,7 +1888,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, 0x470);
             work = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x16, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
             *(f32*)(work + 100) = lbl_8032C0F0[0];
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 0;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 0;
@@ -1937,7 +1937,7 @@ void andross_update(int obj)
         if ((((bval != 2) && (bval != 1)) &&
             (bval = *(char*)&((AndrossState*)found)->unk23, bval != 2)) && (bval != 1))
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
             {
                 ((AndrossState*)state)->actionPending = 1;
             }
@@ -1956,9 +1956,9 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 3, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 3, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0A4[0];
-            ((AndrossState*)state)->unkE4 = gAndrossZero;
+            ((AndrossState*)state)->unkE4 = lbl_803E74D4;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
         ((AndrossState*)state)->unkE4 = ((AndrossState*)state)->unkE4 + timeDelta;
@@ -1985,9 +1985,9 @@ void andross_update(int obj)
         {
             fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8;
-            if (gAndrossZero < fval)
+            if (lbl_803E74D4 < fval)
             {
-                fval = gAndrossZero;
+                fval = lbl_803E74D4;
             }
             ((AndrossState*)state)->unkA8 = fval;
             *(u8*)(state + 0x2e) = 0;
@@ -1995,13 +1995,13 @@ void andross_update(int obj)
             sval = arwarwing_getRotY(*state);
             ref = (int)(fc * lbl_803DC49C + (f32)(sval));
             arwarwing_setRotY(*state, ref);
-            thrustB.x = gAndrossZero;
-            thrustB.y = gAndrossZero;
+            thrustB.x = lbl_803E74D4;
+            thrustB.y = lbl_803E74D4;
             thrustB.z = (float)(fc * lbl_803DC498);
             thrustBArg = thrustB;
             arwarwing_setVelocity(*state, (int)&thrustBArg);
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -2010,7 +2010,7 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
-            ObjAnim_SetCurrentMove(obj, 0x11, gAndrossZero, 0);
+            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C0DC[0];
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
@@ -2029,9 +2029,9 @@ void andross_update(int obj)
         {
             fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8;
-            if (gAndrossZero < fval)
+            if (lbl_803E74D4 < fval)
             {
-                fval = gAndrossZero;
+                fval = lbl_803E74D4;
             }
             ((AndrossState*)state)->unkA8 = fval;
             *(u8*)(state + 0x2e) = 0;
@@ -2039,8 +2039,8 @@ void andross_update(int obj)
             sval = arwarwing_getRotY(*state);
             ref = (int)(fc * lbl_803DC4AC + (f32)(sval));
             arwarwing_setRotY(*state, ref);
-            thrustA.x = gAndrossZero;
-            thrustA.y = gAndrossZero;
+            thrustA.x = lbl_803E74D4;
+            thrustA.y = lbl_803E74D4;
             thrustA.z = (float)(fc * lbl_803DC4A8);
             thrustAArg = thrustA;
             arwarwing_setVelocity(*state, (int)&thrustAArg);
@@ -2050,7 +2050,7 @@ void andross_update(int obj)
                 ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
             }
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= gAndrossOne)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
@@ -2067,7 +2067,7 @@ void andross_update(int obj)
             objId = mapGetDirIdx(0xb);
             lockLevel(objId, 1);
             warpToMap(0x4e, 0);
-            ((AndrossState*)state)->fadeAlpha = gAndrossZero;
+            ((AndrossState*)state)->fadeAlpha = lbl_803E74D4;
             ((AndrossState*)state)->actionState = 0x1f;
         }
     }
@@ -2091,11 +2091,11 @@ void andross_update(int obj)
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.velocityX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((GameObject*)obj)->anim.velocityY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((GameObject*)obj)->anim.velocityZ;
-    if (gAndrossZero == ((AndrossState*)state)->unkE0)
+    if (lbl_803E74D4 == ((AndrossState*)state)->unkE0)
     {
         if (*(u8*)(state + 0x2e) != 0)
         {
-            fn_8023A6A4((int)state, lbl_803DC4B4, lbl_803DC4B8, gAndrossZero);
+            fn_8023A6A4((int)state, lbl_803DC4B4, lbl_803DC4B8, lbl_803E74D4);
         }
         else
         {

@@ -960,7 +960,7 @@ extern void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *se
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
 extern void lightningRender(void *p);
-extern f32 gAndrossOne;
+extern f32 lbl_803E74DC;
 extern f32 lbl_803E75B0;
 extern f32 lbl_803E7600;
 
@@ -1000,7 +1000,7 @@ extern void fn_8006CB50(void);
 extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern f32 gAndrossAlpha255;
-extern f32 gAndrossZero;
+extern f32 lbl_803E74D4;
 extern f32 gAndrossSpringDamping;
 extern f32 gAndrossInitAnimSpeed;
 extern f32 gAndrossInitSpawnCooldown;
@@ -1338,11 +1338,11 @@ extern f32 lbl_803E710C;
 
 
 extern void arwarwing_spawnLaserShot(int obj, int state, int a, int b, int c);
-extern f32 lbl_803E6F04;
+extern f32 gArwingFireTimerReset;
 
 
 extern f32 lbl_803E6F34;
-extern f32 lbl_803E6F24;
+extern f32 gArwingExplodeModeTime;
 extern f32 lbl_803E6F28;
 extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
@@ -1428,7 +1428,7 @@ extern f32 lbl_803E6FB0;
 extern f32 lbl_803E6FB4;
 extern f32 lbl_803E6FB8;
 extern f32 lbl_803E6FBC;
-extern f32 lbl_803E6FC0;
+extern f32 gArwingEscortSearchRadius;
 extern f32 lbl_803E6FC4;
 extern f32 lbl_803E6FC8;
 extern f32 lbl_803E6FCC;
@@ -1516,7 +1516,7 @@ extern int lbl_803DC4E8;
 
 extern f32 lbl_803E74AC;
 extern f32 lbl_803E74B0;
-extern f32 gAndrossZero;
+extern f32 lbl_803E74D4;
 extern f32 lbl_803E74D8;
 
 
@@ -1581,7 +1581,7 @@ extern f32 lbl_803E6EF4;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E6F24;
+extern f32 gArwingExplodeModeTime;
 extern f32 lbl_803E6F28;
 extern f32 lbl_803E6F2C;
 extern f32 lbl_803E6F30;
@@ -1606,14 +1606,14 @@ extern void mapUnload(int a, int b);
 extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void registerNewScore(int a, int b, int c, int d);
-extern u8 lbl_803DC3C8[8];
+extern u8 gArwingCourseMapIds[8];
 typedef struct { u8 scoreFlag : 1; } Arw339Flags;
 
 
 typedef struct { int a; int b; u16 c; } ArwInitCfg;
-extern ArwInitCfg lbl_802C25E8;
-extern int lbl_8032B408[];
-extern int lbl_8032B480[];
+extern ArwInitCfg gArwingInitConfig;
+extern int gArwingPathSetupData[];
+extern int sArwingPathName[];
 
 
 extern f32 PSVECMag(f32 *v);

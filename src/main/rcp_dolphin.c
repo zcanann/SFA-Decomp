@@ -731,22 +731,22 @@ void Rcp_DisableBlurFilter(void) { bEnableBlurFilter = 0x0; }
 
 void fn_800541A4(s16* p, s16 v) { *(s16*)((char*)p + 0x14) = v; }
 
-extern u32 lbl_803DCDA8;
+extern u32 gRcpRenderFlags;
 extern u32 lbl_803DCDB0;
 extern u32 lbl_803DCDB4;
 
-void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
+void fn_80053ED0(u32 bits) { gRcpRenderFlags = gRcpRenderFlags | bits; }
 #pragma scheduling off
 void fn_80053EBC(u32 bits)
 {
-    u32 v = lbl_803DCDA8;
+    u32 v = gRcpRenderFlags;
     u32 nb = -bits - 1;
-    lbl_803DCDA8 = v & nb;
+    gRcpRenderFlags = v & nb;
 }
 
 void fn_800542F4(void)
 {
-    lbl_803DCDA8 = 0;
+    gRcpRenderFlags = 0;
     lbl_803DCDB4 = 0;
     lbl_803DCDB0 = 0;
 }
@@ -820,10 +820,10 @@ typedef struct WarpDestination {
     s16 angle1;
 } WarpDestination;
 
-extern u8 lbl_803879A0[];
+extern u8 gRcpPendingWarpDest[];
 extern u8* lbl_803DCE78;
 extern s16 lbl_803DCEBA;
-extern u8 lbl_803DCEBC;
+extern u8 gRcpWarpTransitionType;
 extern u8 lbl_803DCEBD;
 
 #pragma peephole off
@@ -831,14 +831,14 @@ void warpToMap(int idx, s8 transType)
 {
     u8* p = lbl_803DCE78;
     getTabEntry(p, 28, idx << 4, 16);
-    ((WarpDestination*)lbl_803879A0)->x = *(f32*)(p + 0);
-    ((WarpDestination*)lbl_803879A0)->y = *(f32*)(p + 4);
-    ((WarpDestination*)lbl_803879A0)->z = *(f32*)(p + 8);
-    ((WarpDestination*)lbl_803879A0)->angle0 = *(s16*)(p + 12);
-    ((WarpDestination*)lbl_803879A0)->angle1 = *(s16*)(p + 14);
+    ((WarpDestination*)gRcpPendingWarpDest)->x = *(f32*)(p + 0);
+    ((WarpDestination*)gRcpPendingWarpDest)->y = *(f32*)(p + 4);
+    ((WarpDestination*)gRcpPendingWarpDest)->z = *(f32*)(p + 8);
+    ((WarpDestination*)gRcpPendingWarpDest)->angle0 = *(s16*)(p + 12);
+    ((WarpDestination*)gRcpPendingWarpDest)->angle1 = *(s16*)(p + 14);
     lbl_803DCEBA = (s16)idx;
     lbl_803DCEBD = 1;
-    *(s8*)&lbl_803DCEBC = transType;
+    *(s8*)&gRcpWarpTransitionType = transType;
     if (transType != 0)
     {
         (*gScreenTransitionInterface)->start(2, 1);
@@ -846,7 +846,7 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 
-extern u8 lbl_8037E000[];
+extern u8 gRcpDistortSlots[];
 
 #pragma peephole on
 void ShaderDef_free(int* def)
@@ -862,10 +862,10 @@ void ShaderDef_free(int* def)
     {
         for (i = 0; i < 6; i++)
         {
-            s = *(void**)(lbl_8037E000 + i * 0x1C);
+            s = *(void**)(gRcpDistortSlots + i * 0x1C);
             if (*(u16*)((char*)s + 0xE) != 0 && s == p1)
             {
-                (*(u16*)((char*)*(void**)(lbl_8037E000 + i * 0x1C) + 0xE))--;
+                (*(u16*)((char*)*(void**)(gRcpDistortSlots + i * 0x1C) + 0xE))--;
                 break;
             }
         }
@@ -874,10 +874,10 @@ void ShaderDef_free(int* def)
     if (p2 == NULL) return;
     for (j = 0; j < 6; j++)
     {
-        if (*(u16*)((char*)*(void**)(lbl_8037E000 + j * 0x1C) + 0xE) != 0 &&
-            *(void**)(lbl_8037E000 + j * 0x1C) == p2)
+        if (*(u16*)((char*)*(void**)(gRcpDistortSlots + j * 0x1C) + 0xE) != 0 &&
+            *(void**)(gRcpDistortSlots + j * 0x1C) == p2)
         {
-            (*(u16*)((char*)*(void**)(lbl_8037E000 + j * 0x1C) + 0xE))--;
+            (*(u16*)((char*)*(void**)(gRcpDistortSlots + j * 0x1C) + 0xE))--;
             return;
         }
     }
@@ -1316,9 +1316,9 @@ void shaderInit(u8* def, void** out, u8* obj)
     if (*(void**)(def + 0x8) != NULL)
     {
         if (obj != NULL)
-            slot = (void**)(lbl_8037E000 + (6 - (obj[0xf2] + 1)) * 0x1C);
+            slot = (void**)(gRcpDistortSlots + (6 - (obj[0xf2] + 1)) * 0x1C);
         else
-            slot = (void**)(lbl_8037E000 + 0x8C);
+            slot = (void**)(gRcpDistortSlots + 0x8C);
         s = *slot;
         (*(u16*)((char*)s + 0xE))++;
         out[0] = *slot;
@@ -1326,9 +1326,9 @@ void shaderInit(u8* def, void** out, u8* obj)
     if (*(void**)(def + 0x14) == NULL)
         return;
     if (def[0x20] >= 6)
-        slot = (void**)lbl_8037E000;
+        slot = (void**)gRcpDistortSlots;
     else
-        slot = (void**)(lbl_8037E000 + (def[0x20] >> 1) * 0x1C);
+        slot = (void**)(gRcpDistortSlots + (def[0x20] >> 1) * 0x1C);
     s = *slot;
     (*(u16*)((char*)s + 0xE))++;
     out[1] = *slot;
@@ -1818,7 +1818,7 @@ typedef struct TevSwapEntry
     int b;
 } TevSwapEntry;
 
-extern TevSwapEntry lbl_8030CF04[];
+extern TevSwapEntry gRcpTevSwapTable[];
 extern u8 lbl_803779A0[];
 void fn_80053C40(u8 * tex, u8 * obj);
 
@@ -1831,8 +1831,8 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
     GXSetTevSwapMode(lbl_803DCD90, 0, 1);
-    GXSetTevSwapModeTable(1, lbl_8030CF04[swapsel].r, lbl_8030CF04[swapsel].g,
-                          lbl_8030CF04[swapsel].b, 3);
+    GXSetTevSwapModeTable(1, gRcpTevSwapTable[swapsel].r, gRcpTevSwapTable[swapsel].g,
+                          gRcpTevSwapTable[swapsel].b, 3);
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
@@ -1970,9 +1970,9 @@ extern void GXSetMisc(int token, u32 val);
 
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern f32 sqrtf(f32 x);
-extern u8 lbl_803DCD98;
-extern u32 lbl_803DCD9C;
-extern u8 lbl_803779C0[];
+extern u8 gRcpWarpDistortListBuilt;
+extern u32 gRcpWarpDistortListSize;
+extern u8 gRcpWarpDistortDisplayList[];
 extern F32Pair LastReadFinished_803DEB50;
 extern f32 lbl_803DEB64;
 
@@ -1994,11 +1994,11 @@ void lightFn_80052974(f32 a, f32 b)
     u32 i;
     u32 j;
 
-    if (lbl_803DCD98 == 0)
+    if (gRcpWarpDistortListBuilt == 0)
     {
         GXSetMisc(1, 0);
-        DCInvalidateRange(lbl_803779C0, 0x6640);
-        GXBeginDisplayList(lbl_803779C0, 0x6640);
+        DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
+        GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
         w = LastReadIssued_803DEB58.lo;
         half = LastReadIssued_803DEB58.hi;
         scale = LastReadFinished_803DEB50.hi;
@@ -2046,11 +2046,11 @@ void lightFn_80052974(f32 a, f32 b)
                 *(volatile f32*)0xCC008000 = r;
             }
         }
-        lbl_803DCD9C = GXEndDisplayList();
-        lbl_803DCD98 = 1;
+        gRcpWarpDistortListSize = GXEndDisplayList();
+        gRcpWarpDistortListBuilt = 1;
         GXSetMisc(1, 8);
     }
-    GXCallDisplayList(lbl_803779C0, lbl_803DCD9C);
+    GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
 #pragma opt_loop_invariants reset
 
@@ -2105,11 +2105,11 @@ int textureFn_80052bb4(int model, f32* params)
 #pragma dont_inline reset
 
 extern f32 powfCoreHighPrecision(f32 base, f32 exp);
-extern f32 lbl_803DEB48;
-extern f32 lbl_803DEB4C;
+extern f32 gRcpDistortScaleA;
+extern f32 gRcpDistortPowExp;
 extern u8 lbl_8030D028[];
-extern u8 lbl_803DCDA5;
-extern void* lbl_803DCDA0;
+extern u8 gRcpDistortSlotIndex;
+extern void* gRcpDistortTexture;
 
 void initFn_800534f8(void)
 {
@@ -2125,48 +2125,48 @@ void initFn_800534f8(void)
     f32 inv;
 
     i = 0;
-    p = lbl_8037E000;
+    p = gRcpDistortSlots;
     for (; i < 6; i++)
     {
         *(void**)p = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
         p[0x1a] = 0;
         p += 0x1c;
     }
-    lbl_803DCDA5 = 0;
+    gRcpDistortSlotIndex = 0;
     q = lbl_8030D028;
-    scaleA = lbl_803DEB48;
+    scaleA = gRcpDistortScaleA;
     scaleB = LastReadFinished_803DEB50.lo;
     for (j = 0; j < 6; j++)
     {
         v = *(f32*)(q + 4);
-        slot = lbl_8037E000 + lbl_803DCDA5 * 0x1c;
+        slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
         slot[0xc] = 0xff;
         slot[0xd] = 0xff;
         slot[0xe] = 0xff;
-        inv = scaleA / powfCoreHighPrecision(*(f32*)q, lbl_803DEB4C);
-        slot = lbl_8037E000 + lbl_803DCDA5 * 0x1c;
+        inv = scaleA / powfCoreHighPrecision(*(f32*)q, gRcpDistortPowExp);
+        slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
         half = j & 1;
         *(f32*)(slot + half * 4 + 0x10) = inv;
         *(s8*)(slot + half + 0x18) = scaleB * v;
         slot[0x1b] = 1;
         if (half != 0)
         {
-            lbl_803DCDA5 = lbl_803DCDA5 + 1;
+            gRcpDistortSlotIndex = gRcpDistortSlotIndex + 1;
         }
         q += 8;
     }
-    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
-    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
-    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
-    lbl_803DCDA0 = textureLoadAsset(0x5dc);
+    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
+    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
+    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
+    gRcpDistortTexture = textureLoadAsset(0x5dc);
 }
 
 extern int* getCurrentDataFile(int id);
 extern void loadAssetFileById(void* out, int id);
-extern int* lbl_8037E0B4[3];
-extern int lbl_8037E0A8[3];
-extern u16* lbl_803DCDC0;
-extern void* lbl_803DCDB8;
+extern int* gRcpTexBankTable[3];
+extern int gRcpTexBankCount[3];
+extern u16* gRcpTexIdRemap;
+extern void* gRcpTexHeaderBuffer;
 void* textureLoad(int texId, u8 flag);
 
 void loadTextureFiles(void)
@@ -2179,40 +2179,40 @@ void loadTextureFiles(void)
     gLoadedTextures = (LoadedTextureEntry*)mmAlloc(0x2bc0, 6, 0);
     gLoadedTextureCount = n = 0;
     p = getCurrentDataFile(0x24);
-    lbl_8037E0B4[0] = p;
-    if (lbl_8037E0B4 != NULL)
+    gRcpTexBankTable[0] = p;
+    if (gRcpTexBankTable != NULL)
     {
         while (*p != -1)
         {
             p++;
             n++;
         }
-        lbl_8037E0A8[0] = n - 1;
+        gRcpTexBankCount[0] = n - 1;
     }
     n = 0;
     p = getCurrentDataFile(0x21);
-    lbl_8037E0B4[1] = p;
-    if (lbl_8037E0B4 != NULL)
+    gRcpTexBankTable[1] = p;
+    if (gRcpTexBankTable != NULL)
     {
         while (*p != -1)
         {
             p++;
             n++;
         }
-        lbl_8037E0A8[1] = n - 1;
+        gRcpTexBankCount[1] = n - 1;
     }
     n = 0;
     p = getCurrentDataFile(0x50);
-    lbl_8037E0B4[2] = p;
+    gRcpTexBankTable[2] = p;
     while (*p != -1)
     {
         p++;
         n++;
     }
-    lbl_8037E0A8[2] = n - 1;
-    loadAssetFileById(&lbl_803DCDC0, 0x22);
-    q = lbl_8037E0B4;
-    out = lbl_8037E0A8;
+    gRcpTexBankCount[2] = n - 1;
+    loadAssetFileById(&gRcpTexIdRemap, 0x22);
+    q = gRcpTexBankTable;
+    out = gRcpTexBankCount;
     for (n = 0; n < 2; n++)
     {
         int m = 0;
@@ -2226,7 +2226,7 @@ void loadTextureFiles(void)
         q++;
         out++;
     }
-    lbl_803DCDB8 = (void*)mmAlloc(0x120, 6, 0);
+    gRcpTexHeaderBuffer = (void*)mmAlloc(0x120, 6, 0);
     textureLoad(0, 0);
 }
 
@@ -2245,7 +2245,7 @@ void loadNextMap(void)
         lbl_803DCDE0 -= 1;
         if ((s8)lbl_803DCDE0 < 0)
         {
-            if (lbl_803DCEB8 > -1 && (s8)lbl_803DCEBC != 0)
+            if (lbl_803DCEB8 > -1 && (s8)gRcpWarpTransitionType != 0)
             {
                 (*gScreenTransitionInterface)->step(3, 1);
             }
@@ -2255,7 +2255,7 @@ void loadNextMap(void)
     }
     if ((s8)lbl_803DCEBD != 0)
     {
-        if ((*gScreenTransitionInterface)->isFinished() != 0 || (s8)lbl_803DCEBC == 0)
+        if ((*gScreenTransitionInterface)->isFinished() != 0 || (s8)gRcpWarpTransitionType == 0)
         {
             (*gCloudActionInterface)->freeCloudObjects();
             (*gCloudActionInterface)->onMapSetup();
@@ -2264,11 +2264,11 @@ void loadNextMap(void)
             (*gNewCloudsInterface)->onMapSetup();
             gameUiResetMenuState();
             lbl_803DCEBD = 0;
-            *(f32*)(pos + 0) = ((WarpDestination*)lbl_803879A0)->x;
-            *(f32*)(pos + 4) = ((WarpDestination*)lbl_803879A0)->y;
-            *(f32*)(pos + 8) = ((WarpDestination*)lbl_803879A0)->z;
-            *(s8*)(pos + 0xd) = (s8)((WarpDestination*)lbl_803879A0)->angle0;
-            *(s8*)(pos + 0xc) = (s8)((WarpDestination*)lbl_803879A0)->angle1;
+            *(f32*)(pos + 0) = ((WarpDestination*)gRcpPendingWarpDest)->x;
+            *(f32*)(pos + 4) = ((WarpDestination*)gRcpPendingWarpDest)->y;
+            *(f32*)(pos + 8) = ((WarpDestination*)gRcpPendingWarpDest)->z;
+            *(s8*)(pos + 0xd) = (s8)((WarpDestination*)gRcpPendingWarpDest)->angle0;
+            *(s8*)(pos + 0xc) = (s8)((WarpDestination*)gRcpPendingWarpDest)->angle1;
             mapReload();
             lbl_803DCEB8 = lbl_803DCEBA;
             lbl_803DCEBA = -1;
@@ -2463,12 +2463,12 @@ extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
 extern void modelLightStruct_selectObjectLights(int model, int* lights, int max, int* count, int p5);
 extern void Camera_ApplyFullViewport(void);
-extern u32 lbl_803DB600;
-extern int lbl_803DB604;
-extern u8 lbl_803DCDA4;
+extern u32 gRcpDistortAmbColor;
+extern int gRcpDistortMatColor;
+extern u8 gRcpDistortGroup;
 extern f32 lbl_803DEB80;
-extern f32 lbl_803DEB84;
-extern f32 lbl_803DEB88;
+extern f32 gRcpScreenWidth;
+extern f32 gRcpScreenHeight;
 
 void gxTextureFn_80052efc(void)
 {
@@ -2493,16 +2493,16 @@ void gxTextureFn_80052efc(void)
     mtx[3] = lbl_803DEB74;
     mtx[7] = lbl_803DEB74;
     GXLoadTexMtxImm(mtx, 0x1e, 1);
-    GXSetChanAmbColor(4, *(GXColor8*)&lbl_803DB600);
-    GXSetChanAmbColor(5, *(GXColor8*)&lbl_803DB600);
+    GXSetChanAmbColor(4, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(5, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, 6, 0);
     modelTextureFn_80089970(2);
     i = 0;
-    e = base = lbl_8037E000;
+    e = base = gRcpDistortSlots;
     for (; i < 6; i++)
     {
         tex = *(u8**)e;
-        if (((Texture*)tex)->refCount != 0 && e[0x1b] == 1 && lbl_803DCDA4 == e[0x1a])
+        if (((Texture*)tex)->refCount != 0 && e[0x1b] == 1 && gRcpDistortGroup == e[0x1a])
         {
             c.r = (e[0xc] * e[0x18]) >> 8;
             c.g = 0;
@@ -2512,7 +2512,7 @@ void gxTextureFn_80052efc(void)
             GXSetChanMatColor(5, c);
             textureFn_80052bb4(*(int*)(e + 4), (f32*)(e + 0x10));
             resetLotsOfRenderVars();
-            textureFn_8004ff20(lbl_803DCDA0, mtx, &c2, 0);
+            textureFn_8004ff20(gRcpDistortTexture, mtx, &c2, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
             GXCopyTex(*(u8**)e + 0x60, 0);
@@ -2525,14 +2525,14 @@ void gxTextureFn_80052efc(void)
         e += 0x1c;
     }
     resetLotsOfRenderVars();
-    textureFn_800524ec(&lbl_803DB604);
+    textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
-    GXSetChanMatColor(0, *(GXColor8*)&lbl_803DB604);
+    GXSetChanMatColor(0, *(GXColor8*)&gRcpDistortMatColor);
     sel = 5;
-    e = lbl_8037E000 + 0x8c;
+    e = gRcpDistortSlots + 0x8c;
     for (k = 5; k >= 0; k--)
     {
-        if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && lbl_803DCDA4 == e[0x1a])
+        if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && gRcpDistortGroup == e[0x1a])
         {
             sel = k;
             break;
@@ -2542,7 +2542,7 @@ void gxTextureFn_80052efc(void)
     i = 0;
     for (; i < 6; i++)
     {
-        if (*(u16*)(*(u8**)base + 0xe) != 0 && base[0x1b] == 0 && lbl_803DCDA4 == base[0x1a])
+        if (*(u16*)(*(u8**)base + 0xe) != 0 && base[0x1b] == 0 && gRcpDistortGroup == base[0x1a])
         {
             model = *(int*)(base + 4);
             modelTextureFn_80089970(2 - (i - 3));
@@ -2568,14 +2568,14 @@ void gxTextureFn_80052efc(void)
         }
         base += 0x1c;
     }
-    GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, lbl_803DEB84,
-                  lbl_803DEB88, LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
+    GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, gRcpScreenWidth,
+                  gRcpScreenHeight, LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     GXSetDispCopySrc(0, 0, 0x280, 0x1e0);
     GXSetDispCopyDst(0x280, 0x1e0);
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     Camera_ApplyFullViewport();
-    lbl_803DCDA4 = 0;
+    gRcpDistortGroup = 0;
 }
 #undef mtx
 
@@ -2584,7 +2584,7 @@ extern void printHeapStats(int mode);
 extern int mmSetFreeDelay(int v);
 
 extern void defragMemory(int mode);
-extern char lbl_8030D058[];
+extern char sRcpTexRestructStrings[];
 
 void texRestructRefs(int mode)
 {
@@ -2598,7 +2598,7 @@ void texRestructRefs(int mode)
     u32 size;
     int d;
 
-    strs = (char*)(int)lbl_8030D058;
+    strs = (char*)(int)sRcpTexRestructStrings;
     done = 0;
     pass = 0;
     texFlagFn_80023cbc(2);
@@ -2734,8 +2734,8 @@ void texRestructRefs(int mode)
 }
 
 extern char sDebugIntLineFormat;
-extern u8 lbl_803DCDAC;
-extern u32 lbl_803DB608;
+extern u8 gRcpTexAllocFailed;
+extern u32 gRcpTexAllocTag;
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void tex0GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
@@ -2808,14 +2808,14 @@ void* textureLoad(int texId, u8 flag)
     {
         if (texId >= 0xbb8)
         {
-            m = lbl_803DCDC0[texId];
+            m = gRcpTexIdRemap[texId];
             if (m != 0)
             {
                 texId = m + 1;
                 goto resolved;
             }
         }
-        texId = lbl_803DCDC0[texId];
+        texId = gRcpTexIdRemap[texId];
     }
 resolved:
     id16 = texId & 0xffff;
@@ -2835,35 +2835,35 @@ resolved:
         bank = 0;
         file = 0x23;
     }
-    if (id16 >= lbl_8037E0A8[bank] || id16 < 0)
+    if (id16 >= gRcpTexBankCount[bank] || id16 < 0)
     {
         id16 = 0;
     }
     n = 0;
     p = getCurrentDataFile(0x24);
-    lbl_8037E0B4[0] = p;
-    if (lbl_8037E0B4 != NULL)
+    gRcpTexBankTable[0] = p;
+    if (gRcpTexBankTable != NULL)
     {
         while (*p != -1)
         {
             p++;
             n++;
         }
-        lbl_8037E0A8[0] = n - 1;
+        gRcpTexBankCount[0] = n - 1;
     }
     n = 0;
     p = getCurrentDataFile(0x21);
-    lbl_8037E0B4[1] = p;
-    if (lbl_8037E0B4 != NULL)
+    gRcpTexBankTable[1] = p;
+    if (gRcpTexBankTable != NULL)
     {
         while (*p != -1)
         {
             p++;
             n++;
         }
-        lbl_8037E0A8[1] = n - 1;
+        gRcpTexBankCount[1] = n - 1;
     }
-    word = lbl_8037E0B4[bank][id16];
+    word = gRcpTexBankTable[bank][id16];
     mips = (word >> 24) & 0x3f;
     if (mips == 1)
     {
@@ -2879,28 +2879,28 @@ resolved:
         {
             tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
-        *(int*)lbl_803DCDB8 = 0;
-        *((int*)lbl_803DCDB8 + 1) = sizeOut;
+        *(int*)gRcpTexHeaderBuffer = 0;
+        *((int*)gRcpTexHeaderBuffer + 1) = sizeOut;
         if (frameOut == -1)
         {
-            *((int*)lbl_803DCDB8 + 2) = sizeOut;
+            *((int*)gRcpTexHeaderBuffer + 2) = sizeOut;
         }
         else
         {
-            *((int*)lbl_803DCDB8 + 2) = frameOut;
+            *((int*)gRcpTexHeaderBuffer + 2) = frameOut;
         }
     }
     else if (bank == 0)
     {
-        tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+        tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     else if (bank == 2)
     {
-        texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+        texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     else
     {
-        tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+        tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     first = NULL;
     prev = NULL;
@@ -2913,15 +2913,15 @@ resolved:
         {
             if (bank == 0)
             {
-                tex0GetFrame(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+                tex0GetFrame(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
             else if (bank == 2)
             {
-                texPreGetMipmap(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+                texPreGetMipmap(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
             else
             {
-                tex1GetFrame(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+                tex1GetFrame(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
         }
         size = sizeOut;
@@ -2933,11 +2933,11 @@ resolved:
         {
             sz2 = frameOut;
             texFlagFn_80023cbc(1);
-            buf = (u8*)mmAlloc(size, lbl_803DB608, 0);
+            buf = (u8*)mmAlloc(size, gRcpTexAllocTag, 0);
             texFlagFn_80023cbc(0);
             if (buf == NULL)
             {
-                lbl_803DCDAC = 1;
+                gRcpTexAllocFailed = 1;
                 if (getLoadedFileFlags(0) != 0)
                 {
                     if (disabled == 1)
@@ -2964,7 +2964,7 @@ resolved:
                 k = mips;
                 continue;
             }
-            lbl_803DCDAC = 1;
+            gRcpTexAllocFailed = 1;
             if (getLoadedFileFlags(0) != 0)
             {
                 if (disabled == 1)
@@ -2984,7 +2984,7 @@ resolved:
         }
         if (frameOut == -1)
         {
-            buf = (u8*)loadAndDecompressDataFile(file, 0, base19 + ((int*)lbl_803DCDB8)[k], sz2, 0,
+            buf = (u8*)loadAndDecompressDataFile(file, 0, base19 + ((int*)gRcpTexHeaderBuffer)[k], sz2, 0,
                                                  id16, 0);
             buf[0x49] = 1;
             if (flag != 0)
@@ -2995,7 +2995,7 @@ resolved:
         }
         else
         {
-            loadAndDecompressDataFile(file, (int)buf, base19 + ((int*)lbl_803DCDB8)[k], sz2, 0, id16,
+            loadAndDecompressDataFile(file, (int)buf, base19 + ((int*)gRcpTexHeaderBuffer)[k], sz2, 0, id16,
                                       0);
         }
         if (frameOut != -1)

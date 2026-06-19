@@ -35,10 +35,10 @@ extern u8 gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern f32 lbl_803DE704;
 extern f32 lbl_803DE708;
-extern f32 gGameTextF0_5;
-extern f32 gGameTextF4;
-extern f32 gGameTextF8;
-extern f32 gGameTextF32;
+extern f32 lbl_803DE70C;
+extern f32 lbl_803DE710;
+extern f32 lbl_803DE714;
+extern f32 lbl_803DE718;
 extern f32 lbl_803DC9A0;
 extern f32 lbl_803DC994;
 extern u8 lbl_803DC9A4;
@@ -262,7 +262,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             case 2:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
-                x = ((f32)(u32) * (u16*)(win + 8) - measW) * gGameTextF0_5 +
+                x = ((f32)(u32) * (u16*)(win + 8) - measW) * lbl_803DE70C +
                     (f32) * (s16*)(win + 0x14);
                 break;
             case 3:
@@ -327,26 +327,26 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         v0 = (f32)(*(u16*)(g + 6) << 5);
         fx0 = (f32) * (s8*)(g + 8) * lbl_803DC9A0;
         fx0 = x + fx0;
-        fx0 = gGameTextF4 * fx0;
+        fx0 = lbl_803DE710 * fx0;
         fy0 = (f32) * (s8*)(g + 0xa) * lbl_803DC9A0;
         fy0 = y + fy0;
-        fy0 = gGameTextF4 * fy0;
-        fx1 = gGameTextF4 * ((f32)(u32)
+        fy0 = lbl_803DE710 * fy0;
+        fx1 = lbl_803DE710 * ((f32)(u32)
         g[0xc] * lbl_803DC9A0
         )
         +fx0;
-        fy1 = gGameTextF4 * ((f32)(u32)
+        fy1 = lbl_803DE710 * ((f32)(u32)
         g[0xd] * lbl_803DC9A0
         )
         +fy0;
         if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704)
         {
-            u0 = gGameTextF8 * -fx0 + u0;
+            u0 = lbl_803DE714 * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
         if (fy0 < lbl_803DE704 && fy1 > lbl_803DE704)
         {
-            v0 = gGameTextF8 * -fy0 + v0;
+            v0 = lbl_803DE714 * -fy0 + v0;
             fy0 = lbl_803DE704;
         }
 
@@ -391,10 +391,10 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 fx1 = fx0 + iw;
                 fy0 = (f32)(*(s16*)(winBase + 0xfd6) + ((*(u16*)(winBase + 0xfca) - ih) >> 1));
                 fy1 = fy0 + ih;
-                fx0 = fx0 * gGameTextF4;
-                fx1 = fx1 * gGameTextF4;
-                fy0 = fy0 * gGameTextF4;
-                fy1 = fy1 * gGameTextF4;
+                fx0 = fx0 * lbl_803DE710;
+                fx1 = fx1 * lbl_803DE710;
+                fy0 = fy0 * lbl_803DE710;
+                fy1 = fy1 * lbl_803DE710;
             }
 
             if (mode != 0)
@@ -447,8 +447,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
             if (gameTextDrawFunc != NULL)
             {
-                f32 sW = gGameTextF32 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
-                f32 sH = gGameTextF32 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
+                f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
                 ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
                     fx0, fy0, fx1, fy1,
                     u0 / sW, v0 / sH,
@@ -457,8 +457,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             else
             {
-                f32 sW = gGameTextF32 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
-                f32 sH = gGameTextF32 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
+                f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
                 textRenderChar((int)fx0, fy0, fx1, fy1,
                                u0 / sW, v0 / sH,
                                (u0 + (f32)(g[0xc] << 5)) / sW,
@@ -2981,7 +2981,7 @@ void gameTextInitFn_8001c794(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 gSubtitleZero;
+extern f32 lbl_803DE730;
 extern f32 gSubtitleNoTimeSentinel;
 int GameText_CountPrintableChars(u8 * str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
@@ -3028,7 +3028,7 @@ void subtitleBuildLineTable(void)
     f32 ftotal;
 
     total = 0;
-    curTime = gSubtitleZero;
+    curTime = lbl_803DE730;
     if (gGameTextSequenceMode != 0)
     {
         savedCharset = gameTextGetCharset();

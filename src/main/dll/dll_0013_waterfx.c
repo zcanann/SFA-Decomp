@@ -2,10 +2,10 @@
  * waterfx (DLL 0x13) - water surface impact effects.
  *
  * Maintains four particle pools allocated as one block in
- * waterfx_initialise: ripple quads (WaterEntry7, lbl_803DD238, up to 30),
- * a second ripple/wake pool (WaterEntry, lbl_803DD228, up to 30), splash
- * bursts (WaterParticle, lbl_803DD230, up to 10) and the individual splash
- * drops thrown by each burst (WaterDrop, lbl_803DD220, up to 30). Counts of
+ * waterfx_initialise: ripple quads (WaterEntry7, gWaterfxRipplePool, up to 30),
+ * a second ripple/wake pool (WaterEntry, gWaterfxWakePool, up to 30), splash
+ * bursts (WaterParticle, gWaterfxSplashPool, up to 10) and the individual splash
+ * drops thrown by each burst (WaterDrop, gWaterfxDropPool, up to 30). Counts of
  * live entries are tracked in the lbl_803DD2xx pointer-sized counters.
  *
  * waterfx_func04 is the per-frame entry from a water surface: for each set
@@ -38,14 +38,14 @@ extern void GXBeginDisplayList(void* list, u32 size);
 extern int GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);
 
-extern u16 lbl_803DD204;
+extern u16 gWaterfxSplashDisplayListSize;
 extern f32 lbl_803DF2E0;
 extern f32 lbl_803DF2E4;
 extern f32 lbl_803DF2F0;
 extern f32 lbl_803DF2F4;
 extern f32 lbl_803DF2F8;
 extern f32 lbl_803DF304;
-extern f32 lbl_803DF310;
+extern f32 gWaterfxPi;
 extern f32 lbl_803DF314;
 extern f32 fn_802942EC(f32);
 extern f32 fn_80293F7C(f32);
@@ -103,7 +103,7 @@ int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist)
 void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2)
 {
     int i = 0;
-    WaterEntry7* p = lbl_803DD238;
+    WaterEntry7* p = gWaterfxRipplePool;
     WaterVtx* q;
     WaterEntry7* e;
     int j;
@@ -117,51 +117,51 @@ void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2)
         return;
     }
     j = i * 4;
-    q = &((WaterVtx*)lbl_803DD24C)[j];
+    q = &((WaterVtx*)gWaterfxRippleVtx)[j];
     q->x = -300;
     q->y = 0;
     q->z = 300;
     q->a = 0xff;
     q->u = 0;
     q->v = 0;
-    q = &((WaterVtx*)lbl_803DD24C)[j + 1];
+    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 1];
     q->x = -300;
     q->y = 0;
     q->z = -300;
     q->a = 0xff;
     q->u = 0;
     q->v = 0x7f;
-    q = &((WaterVtx*)lbl_803DD24C)[j + 2];
+    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 2];
     q->x = 300;
     q->y = 0;
     q->z = -300;
     q->a = 0xff;
     q->u = 0x7f;
     q->v = 0x7f;
-    q = &((WaterVtx*)lbl_803DD24C)[j + 3];
+    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 3];
     q->x = 300;
     q->y = 0;
     q->z = 300;
     q->a = 0xff;
     q->u = 0x7f;
     q->v = 0;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->w = d;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->active = 0xff;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->x = a;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->y = b;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->z = c;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->f14 = p1;
-    e = (WaterEntry7*)lbl_803DD238 + i;
-    e->f10 = lbl_803DD20C;
-    e = (WaterEntry7*)lbl_803DD238 + i;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
+    e->f10 = gWaterfxRippleScale;
+    e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->f18 = lbl_803DF2E8 * p2;
-    lbl_803DD23C = (void*)((int)lbl_803DD23C + 1);
+    gWaterfxRippleCount = (void*)((int)gWaterfxRippleCount + 1);
 }
 
 void waterfx_setRippleScale(int flag, f32 val)
@@ -170,13 +170,13 @@ void waterfx_setRippleScale(int flag, f32 val)
     {
         val = lbl_803DF318;
     }
-    lbl_803DD20C = val;
+    gWaterfxRippleScale = val;
 }
 
 void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d)
 {
     int i = 0;
-    WaterEntry* p = lbl_803DD228;
+    WaterEntry* p = gWaterfxWakePool;
     WaterVtx* q;
     WaterEntry* entry;
     int j;
@@ -190,7 +190,7 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d)
         return;
     }
     j = i * 4;
-    q = &((WaterVtx*)lbl_803DD244)[j];
+    q = &((WaterVtx*)gWaterfxWakeVtx)[j];
     q[0].x = -200;
     q[0].y = 0;
     q[0].z = 400;
@@ -215,7 +215,7 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d)
     q[3].a = 0xff;
     q[3].u = 0x80;
     q[3].v = 0;
-    entry = (WaterEntry*)lbl_803DD228 + i;
+    entry = (WaterEntry*)gWaterfxWakePool + i;
     entry->x = a;
     entry->y = b;
     entry->z = c;
@@ -224,7 +224,7 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d)
     entry->active = 0xff;
     entry->f16 = p1;
     entry->f18 = 0;
-    lbl_803DD22C = (void*)((int)lbl_803DD22C + 1);
+    gWaterfxWakeCount = (void*)((int)gWaterfxWakeCount + 1);
 }
 
 #pragma dont_inline on
@@ -240,7 +240,7 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
         d = lbl_803DF31C;
     }
     i = 0;
-    base = lbl_803DD230;
+    base = gWaterfxSplashPool;
     p = base;
     while (i < WATERFX_MAX_SPLASHES && (p->active != 0 || p->f10 < *(f32 *)&lbl_803DF2EC))
     {
@@ -255,10 +255,10 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     slot->x = a;
     slot->y = b;
     slot->z = c;
-    lbl_803DD234 = (void*)((int)lbl_803DD234 + 1);
+    gWaterfxSplashCount = (void*)((int)gWaterfxSplashCount + 1);
     slot->f0c = d;
     rnd = randomGetRange((int)slot->f0c, (int)(lbl_803DF2FC * slot->f0c));
-    slot->active = waterfx_spawnSplashDrops(&((WaterParticle*)lbl_803DD230)[i], i, rnd, slot->f0c);
+    slot->active = waterfx_spawnSplashDrops(&((WaterParticle*)gWaterfxSplashPool)[i], i, rnd, slot->f0c);
     slot->f10 = lbl_803DF300;
     slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
 }
@@ -273,7 +273,7 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
     WaterDrop* slot;
     int j;
     int i;
-    cur = (int)lbl_803DD224;
+    cur = (int)gWaterfxDropCount;
     if (count + cur > WATERFX_POOL_SIZE)
     {
         count = WATERFX_POOL_SIZE - cur;
@@ -281,11 +281,11 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
     if (count != 0)
     {
         i = 0;
-        scale = lbl_803DF324 * v;
+        scale = gWaterfxRippleGrowSpeed * v;
         for (; i < count; i++)
         {
             j = 0;
-            base = (WaterDrop*)lbl_803DD220;
+            base = (WaterDrop*)gWaterfxDropPool;
             p = base;
             while (j < WATERFX_POOL_SIZE && p->idx != -1)
             {
@@ -305,7 +305,7 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
                 slot->x = src->x;
                 slot->y = src->y;
                 slot->z = src->z;
-                lbl_803DD224 = (void*)((int)lbl_803DD224 + 1);
+                gWaterfxDropCount = (void*)((int)gWaterfxDropCount + 1);
             }
         }
     }
@@ -317,17 +317,17 @@ void waterfx_func05(int p1, int p2)
     int i;
     f32 thr;
     WaterDrawObj dp;
-    if ((int)lbl_803DD23C != 0 || (int)lbl_803DD22C != 0 || (int)lbl_803DD234 != 0 ||
-        (int)lbl_803DD224 != 0)
+    if ((int)gWaterfxRippleCount != 0 || (int)gWaterfxWakeCount != 0 || (int)gWaterfxSplashCount != 0 ||
+        (int)gWaterfxDropCount != 0)
     {
         GXSetCullMode(0);
-        if ((int)lbl_803DD23C != 0)
+        if ((int)gWaterfxRippleCount != 0)
         {
-            fn_8007CAF4((int)lbl_803DD21C);
+            fn_8007CAF4((int)gWaterfxRippleTexture);
         }
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
-            WaterEntry7* e = &((WaterEntry7*)lbl_803DD238)[i];
+            WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             if (e->active != 0)
             {
                 setTextColor(p1, 0xff, 0xff, 0xff, (u8)e->active);
@@ -340,14 +340,14 @@ void waterfx_func05(int p1, int p2)
                 dp.fa = 0;
                 Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)lbl_803DD24C + i * 0x40, (char*)lbl_803DD248 + i * 0x20, 2);
+                drawFn_8005cf8c((char*)gWaterfxRippleVtx + i * 0x40, (char*)gWaterfxRippleVtxDesc + i * 0x20, 2);
             }
         }
-        if ((int)lbl_803DD234 != 0)
+        if ((int)gWaterfxSplashCount != 0)
         {
-            fn_8007BD8C((int)lbl_803DD218, (int)lbl_803DD214);
-            GXSetArray(9, lbl_803DD200, 0xc);
-            GXSetArray(0xd, lbl_803DD1FC, 8);
+            fn_8007BD8C((int)gWaterfxSplashTexture0, (int)gWaterfxSplashTexture1);
+            GXSetArray(9, gWaterfxSplashPosArray, 0xc);
+            GXSetArray(0xd, gWaterfxSplashTexCoordArray, 8);
             GXClearVtxDesc();
             GXSetVtxDesc(0, 1);
             GXSetVtxDesc(1, 1);
@@ -358,19 +358,19 @@ void waterfx_func05(int p1, int p2)
         thr = lbl_803DF2EC;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
-            WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
+            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
             if (s->f10 < thr)
             {
                 fn_80095164(s);
             }
         }
-        if ((int)lbl_803DD224 != 0)
+        if ((int)gWaterfxDropCount != 0)
         {
             waterfx_setupSplashDropPointRender();
         }
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
-            WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
+            WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
             if (d->idx != -1)
             {
                 f32 vx, vy, vz;
@@ -383,13 +383,13 @@ void waterfx_func05(int p1, int p2)
                 GXWGFifo.f32 = vz;
             }
         }
-        if ((int)lbl_803DD22C != 0)
+        if ((int)gWaterfxWakeCount != 0)
         {
-            fn_8007C664((int)lbl_803DD210);
+            fn_8007C664((int)gWaterfxWakeTexture);
         }
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
-            WaterEntry* g = &((WaterEntry*)lbl_803DD228)[i];
+            WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor(p1, 0xff, 0xff, 0xff, (u8)g->active);
@@ -402,7 +402,7 @@ void waterfx_func05(int p1, int p2)
                 dp.fa = 0;
                 Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)lbl_803DD244 + i * 0x40, (char*)lbl_803DD240 + i * 0x20, 2);
+                drawFn_8005cf8c((char*)gWaterfxWakeVtx + i * 0x40, (char*)gWaterfxWakeVtxDesc + i * 0x20, 2);
             }
         }
         fn_800542F4();
@@ -414,29 +414,29 @@ void waterfx_run(void)
     int i;
     for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
-        WaterEntry7* e = &((WaterEntry7*)lbl_803DD238)[i];
+        WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
         if (e->active != 0)
         {
-            e->f10 += lbl_803DF324 * timeDelta;
+            e->f10 += gWaterfxRippleGrowSpeed * timeDelta;
             e->active = (s16)(e->active - framesThisStep * e->f18);
             if (e->active < 0)
             {
                 e->active = 0;
-                lbl_803DD23C = (void*)((int)lbl_803DD23C - 1);
+                gWaterfxRippleCount = (void*)((int)gWaterfxRippleCount - 1);
             }
         }
     }
     for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
-        WaterEntry* g = &((WaterEntry*)lbl_803DD228)[i];
+        WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
         if (g->active != 0)
         {
-            g->f10 += lbl_803DF328 * timeDelta;
+            g->f10 += gWaterfxWakeGrowSpeed * timeDelta;
             g->active = (s16)(g->active - framesThisStep * 2);
             if (g->active < 0)
             {
                 g->active = 0;
-                lbl_803DD22C = (void*)((int)lbl_803DD22C - 1);
+                gWaterfxWakeCount = (void*)((int)gWaterfxWakeCount - 1);
             }
         }
     }
@@ -444,27 +444,27 @@ void waterfx_run(void)
         f32 thr = lbl_803DF2EC;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
-            WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
+            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
             if (s->f10 < thr)
             {
                 s->f10 += s->f14 * timeDelta;
                 if (s->f10 >= thr)
                 {
-                    lbl_803DD234 = (void*)((int)lbl_803DD234 - 1);
+                    gWaterfxSplashCount = (void*)((int)gWaterfxSplashCount - 1);
                 }
             }
         }
     }
     for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
-        WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
+        WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
         if (d->idx != -1)
         {
-            WaterParticle* wp = &((WaterParticle*)lbl_803DD230)[d->idx];
-            d->f10 += lbl_803DF32C * timeDelta;
-            d->f0c *= lbl_803DF330;
-            d->f10 *= lbl_803DF330;
-            d->f14 *= lbl_803DF330;
+            WaterParticle* wp = &((WaterParticle*)gWaterfxSplashPool)[d->idx];
+            d->f10 += gWaterfxDropGravity * timeDelta;
+            d->f0c *= gWaterfxDropDamping;
+            d->f10 *= gWaterfxDropDamping;
+            d->f14 *= gWaterfxDropDamping;
             d->x += d->f0c;
             d->y += d->f10;
             d->z += d->f14;
@@ -472,8 +472,8 @@ void waterfx_run(void)
             {
                 wp->active--;
                 d->idx = -1;
-                lbl_803DD224 = (void*)((int)lbl_803DD224 - 1);
-                lbl_803DD20C = lbl_803DF334;
+                gWaterfxDropCount = (void*)((int)gWaterfxDropCount - 1);
+                gWaterfxRippleScale = lbl_803DF334;
                 waterfx_spawnRipple(d->x, wp->y, d->z, 0, lbl_803DF300, 8);
             }
         }
@@ -497,7 +497,7 @@ void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval)
                     waterfx_spawnSplashBurst(p3, vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, lbl_803DF300);
                 }
             }
-            lbl_803DD20C = lbl_803DF318;
+            gWaterfxRippleScale = lbl_803DF318;
             waterfx_spawnRipple(vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, *(s16*)p3, lbl_803DF300, 4);
             gWaterfxPendingImpactPosition[0] = vx;
             gWaterfxPendingImpactPosition[1] = *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4);
@@ -516,7 +516,7 @@ void waterfx_onMapSetup(void)
     {
         f32 initScale;
         f32 initPos;
-        vd = (VtxDesc*)lbl_803DD248;
+        vd = (VtxDesc*)gWaterfxRippleVtxDesc;
         initPos = lbl_803DF300;
         initScale = lbl_803DF318;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
@@ -529,7 +529,7 @@ void waterfx_onMapSetup(void)
             vd[1].b2 = 2;
             vd[1].b3 = 1;
             vd += 2;
-            e = &((WaterEntry7*)lbl_803DD238)[i];
+            e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             e->x = initPos;
             e->y = initPos;
             e->z = initPos;
@@ -545,7 +545,7 @@ void waterfx_onMapSetup(void)
         initThreshold = lbl_803DF2EC;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
-            WaterParticle* s = &((WaterParticle*)lbl_803DD230)[i];
+            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
             s->x = initPos;
             s->y = initPos;
             s->z = initPos;
@@ -556,7 +556,7 @@ void waterfx_onMapSetup(void)
     {
         f32 initScale;
         f32 initPos;
-        vd = (VtxDesc*)lbl_803DD240;
+        vd = (VtxDesc*)gWaterfxWakeVtxDesc;
         initPos = lbl_803DF300;
         initScale = lbl_803DF318;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
@@ -569,7 +569,7 @@ void waterfx_onMapSetup(void)
             vd[1].b2 = 2;
             vd[1].b3 = 1;
             vd += 2;
-            g = &((WaterEntry*)lbl_803DD228)[i];
+            g = &((WaterEntry*)gWaterfxWakePool)[i];
             g->x = initPos;
             g->y = initPos;
             g->z = initPos;
@@ -583,7 +583,7 @@ void waterfx_onMapSetup(void)
         f32 initPos = lbl_803DF300;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
-            WaterDrop* d = &((WaterDrop*)lbl_803DD220)[i];
+            WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
             d->idx = -1;
             d->f0c = initPos;
             d->f10 = initPos;
@@ -597,44 +597,44 @@ void waterfx_onMapSetup(void)
 
 void waterfx_release(void)
 {
-    if (lbl_803DD248 != NULL)
+    if (gWaterfxRippleVtxDesc != NULL)
     {
-        mm_free(lbl_803DD248);
+        mm_free(gWaterfxRippleVtxDesc);
     }
-    if (lbl_803DD21C != NULL)
+    if (gWaterfxRippleTexture != NULL)
     {
-        textureFree((int)lbl_803DD21C);
-        lbl_803DD21C = NULL;
+        textureFree((int)gWaterfxRippleTexture);
+        gWaterfxRippleTexture = NULL;
     }
-    if (lbl_803DD218 != NULL)
+    if (gWaterfxSplashTexture0 != NULL)
     {
-        textureFree((int)lbl_803DD218);
-        lbl_803DD218 = NULL;
+        textureFree((int)gWaterfxSplashTexture0);
+        gWaterfxSplashTexture0 = NULL;
     }
-    if (lbl_803DD214 != NULL)
+    if (gWaterfxSplashTexture1 != NULL)
     {
-        textureFree((int)lbl_803DD214);
-        lbl_803DD214 = NULL;
+        textureFree((int)gWaterfxSplashTexture1);
+        gWaterfxSplashTexture1 = NULL;
     }
-    if (lbl_803DD210 != NULL)
+    if (gWaterfxWakeTexture != NULL)
     {
-        textureFree((int)lbl_803DD210);
-        lbl_803DD210 = NULL;
+        textureFree((int)gWaterfxWakeTexture);
+        gWaterfxWakeTexture = NULL;
     }
-    if (lbl_803DD208 != NULL)
+    if (gWaterfxSplashDisplayList != NULL)
     {
-        mm_free(lbl_803DD208);
-        lbl_803DD208 = NULL;
+        mm_free(gWaterfxSplashDisplayList);
+        gWaterfxSplashDisplayList = NULL;
     }
-    if (lbl_803DD200 != NULL)
+    if (gWaterfxSplashPosArray != NULL)
     {
-        mm_free(lbl_803DD200);
-        lbl_803DD200 = NULL;
+        mm_free(gWaterfxSplashPosArray);
+        gWaterfxSplashPosArray = NULL;
     }
-    if (lbl_803DD1FC != NULL)
+    if (gWaterfxSplashTexCoordArray != NULL)
     {
-        mm_free(lbl_803DD1FC);
-        lbl_803DD1FC = NULL;
+        mm_free(gWaterfxSplashTexCoordArray);
+        gWaterfxSplashTexCoordArray = NULL;
     }
 }
 
@@ -648,27 +648,27 @@ void waterfx_initialise(void)
         debugPrintf(sWaterfxDllAllocFailed);
         return;
     }
-    lbl_803DD248 = buf;
-    lbl_803DD240 = buf + 0x3c0;
+    gWaterfxRippleVtxDesc = buf;
+    gWaterfxWakeVtxDesc = buf + 0x3c0;
     {
         char* p2 = buf + 0x780;
         char* p3;
-        lbl_803DD24C = p2;
-        lbl_803DD244 = p2 + 0x780;
+        gWaterfxRippleVtx = p2;
+        gWaterfxWakeVtx = p2 + 0x780;
         p3 = p2 + 0xf00;
-        lbl_803DD238 = p3;
-        lbl_803DD230 = p3 + 0x348;
-        lbl_803DD220 = p3 + 0x5a0;
-        lbl_803DD228 = p3 + 0x8e8;
+        gWaterfxRipplePool = p3;
+        gWaterfxSplashPool = p3 + 0x348;
+        gWaterfxDropPool = p3 + 0x5a0;
+        gWaterfxWakePool = p3 + 0x8e8;
     }
-    lbl_803DD23C = NULL;
-    lbl_803DD234 = NULL;
-    lbl_803DD224 = NULL;
-    lbl_803DD22C = NULL;
-    lbl_803DD21C = (void*)textureLoadAsset(0x56);
-    lbl_803DD218 = (void*)textureLoadAsset(0xc2a);
-    lbl_803DD214 = (void*)textureLoadAsset(0xc2c);
-    lbl_803DD210 = (void*)textureLoadAsset(0xc2d);
+    gWaterfxRippleCount = NULL;
+    gWaterfxSplashCount = NULL;
+    gWaterfxDropCount = NULL;
+    gWaterfxWakeCount = NULL;
+    gWaterfxRippleTexture = (void*)textureLoadAsset(0x56);
+    gWaterfxSplashTexture0 = (void*)textureLoadAsset(0xc2a);
+    gWaterfxSplashTexture1 = (void*)textureLoadAsset(0xc2c);
+    gWaterfxWakeTexture = (void*)textureLoadAsset(0xc2d);
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }
@@ -737,9 +737,9 @@ void fn_80095164(WaterParticle* s)
     DCStoreRange(s->pad18, 32);
     GXSetArray(11, s->pad18, 4);
     GXSetCullMode(1);
-    GXCallDisplayList(lbl_803DD208, lbl_803DD204);
+    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
     GXSetCullMode(2);
-    GXCallDisplayList(lbl_803DD208, lbl_803DD204);
+    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
 }
 
 void waterfx_drawFn_800953fc(void)
@@ -753,8 +753,8 @@ void waterfx_drawFn_800953fc(void)
     void* dl;
 
     GXSetMisc(1, 0);
-    lbl_803DD200 = mmAlloc(192, 0, 0);
-    lbl_803DD1FC = mmAlloc(1024, 0, 0);
+    gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
+    gWaterfxSplashTexCoordArray = mmAlloc(1024, 0, 0);
     jdiv = lbl_803DF314;
     idiv = lbl_803DF2F8;
     for (i = 0; i < 8; i++)
@@ -763,8 +763,8 @@ void waterfx_drawFn_800953fc(void)
         {
             if (i == 0)
             {
-                f32* pos = (f32*)((u8*)lbl_803DD200 + j * 12);
-                f32 ang = lbl_803DF310 * (f32)(j * 2) / lbl_803DF314;
+                f32* pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
+                f32 ang = gWaterfxPi * (f32)(j * 2) / lbl_803DF314;
                 f32 sv = fn_802942EC(ang);
                 f32 cv = fn_80293F7C(ang);
                 pos[0] = sv;
@@ -773,18 +773,18 @@ void waterfx_drawFn_800953fc(void)
             }
             {
                 int idx = i * 16 + j;
-                f32* tex = (f32*)((u8*)lbl_803DD1FC + idx * 8);
+                f32* tex = (f32*)((u8*)gWaterfxSplashTexCoordArray + idx * 8);
                 tex[0] = j / jdiv;
                 tex[1] = i / idiv;
             }
         }
     }
-    DCStoreRange(lbl_803DD200, 192);
-    DCStoreRange(lbl_803DD1FC, 1024);
+    DCStoreRange(gWaterfxSplashPosArray, 192);
+    DCStoreRange(gWaterfxSplashTexCoordArray, 1024);
     dl = mmAlloc(2880, 0x7F7F7FFF, 0);
-    lbl_803DD208 = dl;
+    gWaterfxSplashDisplayList = dl;
     DCInvalidateRange(dl, 2880);
-    GXBeginDisplayList(lbl_803DD208, 2880);
+    GXBeginDisplayList(gWaterfxSplashDisplayList, 2880);
     GXResetWriteGatherPipe();
     for (k = 0; k < 15; k++)
     {
@@ -804,6 +804,6 @@ void waterfx_drawFn_800953fc(void)
             GXWGFifo.u16 = m * 16 + (k + 1) % 16;
         }
     }
-    lbl_803DD204 = GXEndDisplayList();
+    gWaterfxSplashDisplayListSize = GXEndDisplayList();
     GXSetMisc(1, 8);
 }

@@ -71,71 +71,71 @@ extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
 extern f32 gDBprotPi;
 extern f32 gDBprotAngleUnit;
-extern f32 gDBprotFNeg25;
-extern f32 gDBprotFNeg0_9;
-extern f32 gDBprotF0_9;
-extern f32 gDBprotFNeg0_1;
-extern f32 gDBprotF0_1;
-extern f32 gDBprotF432;
+extern f32 lbl_803E57C8;
+extern f32 lbl_803E57CC;
+extern f32 lbl_803E57D0;
+extern f32 lbl_803E57D4;
+extern f32 lbl_803E57D8;
+extern f32 lbl_803E57DC;
 extern f32 lbl_803E57E0;
 extern f32 lbl_803E56C8;
-extern f32 gDBprotFour;
-extern f32 gDBprotTwo;
-extern f32 gDBprotF35;
-extern f32 gDBprotF1600;
-extern f32 gDBprotF150;
-extern f32 gDBprotF300;
+extern f32 lbl_803E56D0;
+extern f32 lbl_803E56D4;
+extern f32 lbl_803E56D8;
+extern f32 lbl_803E56DC;
+extern f32 lbl_803E56E0;
+extern f32 lbl_803E56EC;
 extern f32 lbl_803E56F0;
-extern f32 gDBprotThree;
-extern f32 gDBprotF0_03125;
-extern f32 gDBprotF0_0625;
-extern f32 gDBprotF50;
-extern f32 gDBprotF0_001;
-extern f32 gDBprotF10;
-extern f32 gDBprotF1700;
-extern f32 gDBprotF800;
-extern f32 gDBprotF500;
-extern f32 gDBprotF250;
-extern f32 gDBprotF535;
-extern f32 gDBprotF220;
+extern f32 lbl_803E56F4;
+extern f32 lbl_803E56F8;
+extern f32 lbl_803E56FC;
+extern f32 lbl_803E5700;
+extern f32 lbl_803E5704;
+extern f32 lbl_803E5708;
+extern f32 lbl_803E570C;
+extern f32 lbl_803E5710;
+extern f32 lbl_803E5714;
+extern f32 lbl_803E5718;
+extern f32 lbl_803E571C;
+extern f32 lbl_803E5720;
 extern f32 lbl_803E5724;
-extern f32 gDBprotF880;
-extern f32 gDBprotF260;
-extern f32 gDBprotF6;
-extern f32 gDBprotFNeg6;
+extern f32 lbl_803E5728;
+extern f32 lbl_803E572C;
+extern f32 lbl_803E5730;
+extern f32 lbl_803E5734;
 extern f32 lbl_803E5738;
-extern f32 gDBprotFNeg1_5;
-extern f32 gDBprotF3_5;
-extern f32 gDBprotFNeg3_5;
-extern f32 gDBprotEighth;
-extern f32 gDBprotF14;
-extern f32 gDBprotF24;
-extern f32 gDBprotF1911;
-extern f32 gDBprotF0_005;
-extern f32 gDBprotF15;
-extern f32 gDBprotF25;
-extern f32 gDBprotF20;
-extern f32 gDBprotF4700;
-extern f32 gDBprotF1500;
-extern f32 gDBprotF1000;
-extern f32 gDBprotF12;
-extern f32 gDBprotF5000;
-extern f32 gDBprotF700;
-extern f32 gDBprotF1100;
-extern f32 gDBprotF200;
-extern f32 gDBprotF1400;
-extern f32 gDBprotF280;
+extern f32 lbl_803E573C;
+extern f32 lbl_803E5740;
+extern f32 lbl_803E5744;
+extern f32 lbl_803E5748;
+extern f32 lbl_803E574C;
+extern f32 lbl_803E5750;
+extern f32 lbl_803E5754;
+extern f32 lbl_803E5758;
+extern f32 lbl_803E575C;
+extern f32 lbl_803E5760;
+extern f32 lbl_803E5764;
+extern f32 lbl_803E5768;
+extern f32 lbl_803E576C;
+extern f32 lbl_803E5770;
+extern f32 lbl_803E5774;
+extern f32 lbl_803E5778;
+extern f32 lbl_803E577C;
+extern f32 lbl_803E5780;
+extern f32 lbl_803E5784;
+extern f32 lbl_803E5788;
+extern f32 lbl_803E578C;
 extern f32 lbl_803E5790;
-extern f32 gDBprotF1200;
-extern f32 gDBprotF30;
-extern f32 gDBprotF3000;
-extern f32 gDBprotF0_45;
+extern f32 lbl_803E5794;
+extern f32 lbl_803E5798;
+extern f32 lbl_803E579C;
+extern f32 lbl_803E57A0;
 extern f32 lbl_803E57A4;
-extern f32 gDBprotF0_17;
-extern f32 gDBprotFNeg1;
-extern f32 gDBprotF0_0041667;
+extern f32 lbl_803E57A8;
+extern f32 lbl_803E57AC;
+extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
-extern f32 gDBprotHalf;
+extern f32 lbl_803E57B8;
 
 #define SCREEN_TRANSITION_FADE(kind, value) \
   (*gScreenTransitionInterface)->start((kind), (value))
@@ -270,7 +270,7 @@ void fn_801DFA28(u8* obj)
         }
         if (((SBGalleonState*)state)->wanderFlagA != 0)
         {
-            ((SBGalleonState*)state)->wanderA = gDBprotFour * timeDelta + ((SBGalleonState*)state)->wanderA;
+            ((SBGalleonState*)state)->wanderA = lbl_803E56D0 * timeDelta + ((SBGalleonState*)state)->wanderA;
         }
         else
         {
@@ -285,7 +285,7 @@ void fn_801DFA28(u8* obj)
         }
         if (((SBGalleonState*)state)->wanderFlagB != 0)
         {
-            ((SBGalleonState*)state)->wanderB = gDBprotFour * timeDelta + ((SBGalleonState*)state)->wanderB;
+            ((SBGalleonState*)state)->wanderB = lbl_803E56D0 * timeDelta + ((SBGalleonState*)state)->wanderB;
         }
         else
         {
@@ -294,14 +294,14 @@ void fn_801DFA28(u8* obj)
     }
     else
     {
-        amp = gDBprotTwo;
+        amp = lbl_803E56D4;
         ((SBGalleonState*)state)->wanderA = -(amp * timeDelta - ((SBGalleonState*)state)->wanderA);
         ((SBGalleonState*)state)->wanderB = -(amp * timeDelta - ((SBGalleonState*)state)->wanderB);
     }
     dx = ((SBGalleonState*)state)->wanderA;
-    ((SBGalleonState*)state)->wanderA = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > gDBprotF35) ? gDBprotF35 : dx;
+    ((SBGalleonState*)state)->wanderA = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
     dx = ((SBGalleonState*)state)->wanderB;
-    ((SBGalleonState*)state)->wanderB = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > gDBprotF35) ? gDBprotF35 : dx;
+    ((SBGalleonState*)state)->wanderB = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
     switch (((SBGalleonState*)state)->phase)
     {
     case 0:
@@ -309,19 +309,19 @@ void fn_801DFA28(u8* obj)
         Sfx_StopObjectChannel((int)obj, 1);
         DBPROT_CAMERA_SHAKE(&camShake, 0);
         ((GameObject*)obj)->unkF4 = 1;
-        tx = ((SBGalleonState*)state)->homeX - gDBprotF1600;
-        tz = gDBprotF150 * mathCosf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
+        tx = ((SBGalleonState*)state)->homeX - lbl_803E56DC;
+        tz = lbl_803E56E0 * mathCosf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
             ((SBGalleonState*)state)->homeZ;
         ty = lbl_803E56F0 * mathSinf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
-            (((SBGalleonState*)state)->homeY - gDBprotF300);
+            (((SBGalleonState*)state)->homeY - lbl_803E56EC);
         ((SBGalleonState*)state)->bobPhase = ((SBGalleonState*)state)->bobPhase + framesThisStep * 0xB6;
         dx = tx - ((GameObject*)obj)->anim.localPosX;
         dy = ty - ((GameObject*)obj)->anim.localPosY;
         dz = tz - ((GameObject*)obj)->anim.localPosZ;
-        ((SBGalleonState*)state)->speed = gDBprotThree;
-        dx = dx * gDBprotF0_03125;
-        dy = dy * gDBprotF0_03125;
-        dz = dz * gDBprotF0_03125;
+        ((SBGalleonState*)state)->speed = lbl_803E56F4;
+        dx = dx * lbl_803E56F8;
+        dy = dy * lbl_803E56F8;
+        dz = dz * lbl_803E56F8;
         limit = ((SBGalleonState*)state)->speed;
         if (dx > limit)
         {
@@ -358,12 +358,12 @@ void fn_801DFA28(u8* obj)
             dy = dy * ((f32)(t - 0x78) / lbl_803E56F0);
         }
         ((SBGalleonState*)state)->phaseTimer += framesThisStep;
-        ((SBGalleonState*)state)->driftX += (dx - ((SBGalleonState*)state)->driftX) * (blendK = gDBprotF0_0625);
+        ((SBGalleonState*)state)->driftX += (dx - ((SBGalleonState*)state)->driftX) * (blendK = lbl_803E56FC);
         ((SBGalleonState*)state)->driftY += (dy - ((SBGalleonState*)state)->driftY) * blendK;
         ((SBGalleonState*)state)->driftZ += (dz - ((SBGalleonState*)state)->driftZ) * blendK;
-        ambA = gDBprotF50;
-        ambB = gDBprotF0_001;
-        ambC = gDBprotF10;
+        ambA = lbl_803E5700;
+        ambB = lbl_803E5704;
+        ambC = lbl_803E5708;
         if (((SBGalleonState*)state)->cycleKind == 0)
         {
             switch (((SBGalleonState*)state)->stage)
@@ -428,9 +428,9 @@ void fn_801DFA28(u8* obj)
         switch (*(s8*)&((SBGalleonState*)state)->flightPattern)
         {
         case 0:
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF1700;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E570C;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF300 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E56EC + ((GameObject*)tricky)->anim.localPosY;
             if ((((SBGalleonState*)state)->headingLatch <= 0) &&
                 ((((SBGalleonState*)state)->phaseCounter == 0) || (((SBGalleonState*)state)->phaseCounter == 5)))
             {
@@ -439,128 +439,128 @@ void fn_801DFA28(u8* obj)
             Sfx_IsPlayingFromObjectChannel((int)obj, 2); /* called for side-effect; result discarded in target */
             break;
         case 1:
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF800;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5710;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF300 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E56EC + ((GameObject*)tricky)->anim.localPosY;
             break;
         case 2:
-            tx = ((GameObject*)tricky)->anim.localPosX - gDBprotF500;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E5714;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF250 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             break;
         case 3:
-            tx = ((GameObject*)tricky)->anim.localPosX - gDBprotF535;
-            tz = gDBprotF220 + ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF250 + ((GameObject*)tricky)->anim.localPosY;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
+            tz = lbl_803E5720 + ((SBGalleonState*)state)->homeZ;
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             tz = tz + (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->posZ);
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         case 4:
-            tx = ((GameObject*)tricky)->anim.localPosX - gDBprotF535;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
             tz = lbl_803E5724 + ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF250 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         case 5:
-            tx = ((GameObject*)tricky)->anim.localPosX - gDBprotF535;
-            tz = ((SBGalleonState*)state)->homeZ - gDBprotF220;
-            ty = gDBprotF250 + ((GameObject*)tricky)->anim.localPosY;
+            tx = ((GameObject*)tricky)->anim.localPosX - lbl_803E571C;
+            tz = ((SBGalleonState*)state)->homeZ - lbl_803E5720;
+            ty = lbl_803E5718 + ((GameObject*)tricky)->anim.localPosY;
             tz = tz + (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->posZ);
             ((SBGalleonState*)state)->unk7B = 0;
             break;
         default:
             ((SBGalleonState*)state)->unk7B = 0;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF880;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5728;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF260 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E572C + ((GameObject*)tricky)->anim.localPosY;
             break;
         }
         tx = tx - ((GameObject*)obj)->anim.localPosX;
         dy = ty - ((GameObject*)obj)->anim.localPosY;
         tz = tz - ((GameObject*)obj)->anim.localPosZ;
-        ((SBGalleonState*)state)->speed = gDBprotThree;
+        ((SBGalleonState*)state)->speed = lbl_803E56F4;
         dist = sqrtf(tz * tz + (tx * tx + dy * dy));
-        tx = tx * gDBprotF0_0625;
-        dy = dy * gDBprotF0_03125;
-        tz = tz * gDBprotF0_03125;
-        if (tx > gDBprotF6)
+        tx = tx * lbl_803E56FC;
+        dy = dy * lbl_803E56F8;
+        tz = tz * lbl_803E56F8;
+        if (tx > lbl_803E5730)
         {
-            tx = gDBprotF6;
+            tx = lbl_803E5730;
         }
-        if (tx < gDBprotFNeg6)
+        if (tx < lbl_803E5734)
         {
-            tx = gDBprotFNeg6;
+            tx = lbl_803E5734;
         }
         if (dy > lbl_803E5738)
         {
             dy = lbl_803E5738;
         }
-        if (dy < gDBprotFNeg1_5)
+        if (dy < lbl_803E573C)
         {
-            dy = gDBprotFNeg1_5;
+            dy = lbl_803E573C;
         }
-        if (tz > gDBprotF3_5)
+        if (tz > lbl_803E5740)
         {
-            tz = gDBprotF3_5;
+            tz = lbl_803E5740;
         }
-        if (tz < gDBprotFNeg3_5)
+        if (tz < lbl_803E5744)
         {
-            tz = gDBprotFNeg3_5;
+            tz = lbl_803E5744;
         }
         ((SBGalleonState*)state)->phaseTimer += framesThisStep;
         lerpD = tx - ((SBGalleonState*)state)->driftX;
-        ((SBGalleonState*)state)->driftX = lerpD * gDBprotEighth + ((SBGalleonState*)state)->driftX;
-        ((SBGalleonState*)state)->driftY += (dy - ((SBGalleonState*)state)->driftY) / gDBprotF14;
-        ((SBGalleonState*)state)->driftZ += (tz - ((SBGalleonState*)state)->driftZ) / gDBprotF24;
-        ambA = gDBprotF1911;
-        ambB = gDBprotF0_005;
+        ((SBGalleonState*)state)->driftX = lerpD * lbl_803E5748 + ((SBGalleonState*)state)->driftX;
+        ((SBGalleonState*)state)->driftY += (dy - ((SBGalleonState*)state)->driftY) / lbl_803E574C;
+        ((SBGalleonState*)state)->driftZ += (tz - ((SBGalleonState*)state)->driftZ) / lbl_803E5750;
+        ambA = lbl_803E5754;
+        ambB = lbl_803E5758;
         ambC = lbl_803E56CC;
         switch (*(s8*)&((SBGalleonState*)state)->flightPattern)
         {
         case 0:
-            if (dist < gDBprotF15)
+            if (dist < lbl_803E575C)
             {
                 ((SBGalleonState*)state)->flightPattern = 1;
                 ((SBGalleonState*)state)->phaseTimer = 0;
             }
             break;
         case 1:
-            if (dist < gDBprotF10)
+            if (dist < lbl_803E5708)
             {
                 ((SBGalleonState*)state)->flightPattern = 2;
                 ((SBGalleonState*)state)->phaseTimer = 0;
             }
             break;
         case 2:
-            if ((((SBGalleonState*)state)->phaseTimer > 0xF0) || (dist < gDBprotF10))
+            if ((((SBGalleonState*)state)->phaseTimer > 0xF0) || (dist < lbl_803E5708))
             {
                 ((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->phaseTimer = 0;
             }
             break;
         case 3:
-            if ((dist < gDBprotF10) || (((SBGalleonState*)state)->phaseTimer > 0x78))
+            if ((dist < lbl_803E5708) || (((SBGalleonState*)state)->phaseTimer > 0x78))
             {
                 ((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->phaseTimer = 0;
             }
             break;
         case 4:
-            if ((dist < gDBprotF10) || (((SBGalleonState*)state)->phaseTimer > 0x78))
+            if ((dist < lbl_803E5708) || (((SBGalleonState*)state)->phaseTimer > 0x78))
             {
                 ((SBGalleonState*)state)->flightPattern = 5;
                 ((SBGalleonState*)state)->phaseTimer = 3;
             }
             break;
         case 5:
-            if ((dist < gDBprotF10) || (((SBGalleonState*)state)->phaseTimer > 0x78))
+            if ((dist < lbl_803E5708) || (((SBGalleonState*)state)->phaseTimer > 0x78))
             {
                 ((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->phaseTimer = 0;
             }
             break;
         default:
-            if (dist < gDBprotF25)
+            if (dist < lbl_803E5760)
             {
                 if (((SBGalleonState*)state)->stage == 2)
                 {
@@ -616,74 +616,74 @@ void fn_801DFA28(u8* obj)
         switch (((SBGalleonState*)state)->phase)
         {
         case 2:
-            speedTarget = gDBprotF20;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF4700;
-            tz = -(gDBprotF1500 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
+            speedTarget = lbl_803E5764;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5768;
+            tz = -(lbl_803E576C * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
             ty = ((SBGalleonState*)state)->homeY;
-            threshold = gDBprotF1000;
+            threshold = lbl_803E5770;
             nextState = 3;
             break;
         case 3:
-            speedTarget = gDBprotF12;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF5000;
-            tz = -(gDBprotF1000 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
+            speedTarget = lbl_803E5774;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5778;
+            tz = -(lbl_803E5770 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
             ty = lbl_803E5724 + ((SBGalleonState*)state)->homeY;
             nextState = 4;
-            threshold = gDBprotF700;
+            threshold = lbl_803E577C;
             break;
         case 4:
-            speedTarget = gDBprotF12;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF4700;
-            tz = -(gDBprotF10 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
+            speedTarget = lbl_803E5774;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5768;
+            tz = -(lbl_803E5708 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
             ty = lbl_803E5724 + ((SBGalleonState*)state)->homeY;
             nextState = 5;
-            threshold = gDBprotF700;
+            threshold = lbl_803E577C;
             break;
         case 5:
-            speedTarget = gDBprotF10;
+            speedTarget = lbl_803E5708;
             ((GameObject*)obj)->unkF4 = 4;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF1100;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5780;
             tz = ((SBGalleonState*)state)->homeZ;
             ty = ((SBGalleonState*)state)->homeY - lbl_803E5724;
             nextState = 6;
-            threshold = gDBprotF700;
+            threshold = lbl_803E577C;
             if ((((SBGalleonState*)state)->headingLatch <= 0) && (((SBGalleonState*)state)->stage == 6))
             {
                 ((SBGalleonState*)state)->headingLatch = 200;
             }
             break;
         case 6:
-            speedTarget = gDBprotFour;
-            tx = gDBprotF200 + ((SBGalleonState*)state)->homeX;
-            tz = -(gDBprotF1500 * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
-            ty = gDBprotF250 + ((SBGalleonState*)state)->homeY;
+            speedTarget = lbl_803E56D0;
+            tx = lbl_803E5784 + ((SBGalleonState*)state)->homeX;
+            tz = -(lbl_803E576C * (f32)((SBGalleonState*)state)->sweepDir - ((SBGalleonState*)state)->homeZ);
+            ty = lbl_803E5718 + ((SBGalleonState*)state)->homeY;
             nextState = 7;
             threshold = lbl_803E5724;
             break;
         case 7:
-            speedTarget = gDBprotFour;
-            tx = gDBprotF1400 + ((SBGalleonState*)state)->homeX;
+            speedTarget = lbl_803E56D0;
+            tx = lbl_803E5788 + ((SBGalleonState*)state)->homeX;
             tz = ((SBGalleonState*)state)->homeZ;
-            ty = gDBprotF280 + ((GameObject*)tricky)->anim.localPosY;
+            ty = lbl_803E578C + ((GameObject*)tricky)->anim.localPosY;
             nextState = 8;
             threshold = lbl_803E5724;
             break;
         case 8:
             speedTarget = lbl_803E5790;
-            tx = ((SBGalleonState*)state)->homeX - gDBprotF1200;
+            tx = ((SBGalleonState*)state)->homeX - lbl_803E5794;
             tz = ((SBGalleonState*)state)->homeZ;
             ty = lbl_803E5724 + ((GameObject*)tricky)->anim.localPosY;
             nextState = 2;
-            threshold = gDBprotF200;
+            threshold = lbl_803E5784;
             break;
         }
         dx = tx - ((SBGalleonState*)state)->posX;
         dy = ty - ((SBGalleonState*)state)->posY;
         dz = tz - ((SBGalleonState*)state)->posZ;
         ((SBGalleonState*)state)->speed =
-            ((SBGalleonState*)state)->speed + (speedTarget - ((SBGalleonState*)state)->speed) / gDBprotF30;
+            ((SBGalleonState*)state)->speed + (speedTarget - ((SBGalleonState*)state)->speed) / lbl_803E5798;
         dist = sqrtf(dx * dx + dz * dz);
-        if ((((SBGalleonState*)state)->phase == 5) && (dist < gDBprotF3000))
+        if ((((SBGalleonState*)state)->phase == 5) && (dist < lbl_803E579C))
         {
             ((GameObject*)obj)->unkF4 = 5;
         }
@@ -738,7 +738,7 @@ void fn_801DFA28(u8* obj)
         dz = ((SBGalleonState*)state)->homeZ - ((GameObject*)obj)->anim.localPosZ;
         sqrtf(dx * dx + dz * dz); /* match: dead sqrt present in target */
         t = ((GameObject*)obj)->anim.rotZ;
-        iv = (int)(gDBprotF0_45 * (f32)((SBGalleonState*)state)->turnRate);
+        iv = (int)(lbl_803E57A0 * (f32)((SBGalleonState*)state)->turnRate);
         dv = (iv - t) >> 3;
         if (dv > 0x3C)
         {
@@ -775,7 +775,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->posY = ((SBGalleonState*)state)->posY + ((SBGalleonState*)state)->driftY;
             ((SBGalleonState*)state)->posZ = ((SBGalleonState*)state)->posZ + ((SBGalleonState*)state)->driftZ;
         }
-        ambB = gDBprotF0_17;
+        ambB = lbl_803E57A8;
         ((GameObject*)obj)->anim.localPosX = ((SBGalleonState*)state)->posX + ((SBGalleonState*)state)->swayX;
         ((GameObject*)obj)->anim.localPosY = ((SBGalleonState*)state)->posY + ((SBGalleonState*)state)->swayY;
         ((GameObject*)obj)->anim.localPosZ = ((SBGalleonState*)state)->posZ + ((SBGalleonState*)state)->swayZ +
@@ -794,14 +794,14 @@ void fn_801DFA28(u8* obj)
                 ((SBGalleonState*)state)->phase = 6;
                 DBPROT_CLOUD_SET_A(0);
                 DBPROT_CLOUD_SET_B(0);
-                CLOUD_ACTION_SET(lbl_803E56CC, gDBprotF25);
+                CLOUD_ACTION_SET(lbl_803E56CC, lbl_803E5760);
                 if (((SBGalleonState*)state)->unk80 == 0)
                 {
                     ((SBGalleonState*)state)->unk80 = 1;
                 }
                 ((SBGalleonState*)state)->cameraState = 1;
                 ((GameObject*)obj)->anim.localPosX = *(f32*)(spawnData + 0x8);
-                ((GameObject*)obj)->anim.localPosY = gDBprotFNeg1;
+                ((GameObject*)obj)->anim.localPosY = lbl_803E57AC;
                 ((GameObject*)obj)->anim.localPosZ = *(f32*)(spawnData + 0x10);
                 Sfx_StopObjectChannel((int)obj, 1);
                 DBPROT_MAP_EVENT(*(u8 *)(obj + 0x34), 2, 1);
@@ -825,7 +825,7 @@ void fn_801DFA28(u8* obj)
         ((SBGalleonState*)state)->posZ =
             ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftZ * timeDelta) + ((SBGalleonState*)
                 state)->posZ;
-        ((SBGalleonState*)state)->moveScale += gDBprotF0_0041667;
+        ((SBGalleonState*)state)->moveScale += lbl_803E57B0;
         if (((SBGalleonState*)state)->moveScale > lbl_803E57A4)
         {
             ((SBGalleonState*)state)->moveScale = lbl_803E57A4;
@@ -847,7 +847,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->swayX = zero;
             ((SBGalleonState*)state)->swayY = zero;
             rollA = (s16)(-((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->unk60);
-            rollB = (s16)(gDBprotHalf * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->unk60));
+            rollB = (s16)(lbl_803E57B8 * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->unk60));
         }
         else
         {
@@ -957,13 +957,13 @@ void DBprotection_updateShield(int* obj)
         lbl_803DDC2C = 0;
     }
 
-    CLOUD_ACTION_SET(gDBprotFNeg25, lbl_803E56CC);
+    CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
     CLOUD_ACTION_ENABLE(0);
 
     angleCos = mathSinf((gDBprotPi * state->shieldAngle) / gDBprotAngleUnit);
     if (state->shieldSfxLatch == 0)
     {
-        if (angleCos < gDBprotFNeg0_9)
+        if (angleCos < lbl_803E57CC)
         {
             if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
@@ -971,7 +971,7 @@ void DBprotection_updateShield(int* obj)
             }
             state->shieldSfxLatch = 1;
         }
-        else if (angleCos > gDBprotF0_9)
+        else if (angleCos > lbl_803E57D0)
         {
             if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0)
             {
@@ -980,12 +980,12 @@ void DBprotection_updateShield(int* obj)
             state->shieldSfxLatch = 1;
         }
     }
-    else if (angleCos > gDBprotFNeg0_1 && angleCos < gDBprotF0_1)
+    else if (angleCos > lbl_803E57D4 && angleCos < lbl_803E57D8)
     {
         state->shieldSfxLatch = 0;
     }
 
-    *(u16*)&((GameObject*)obj)->anim.rotZ = gDBprotF432 * angleCos;
+    *(u16*)&((GameObject*)obj)->anim.rotZ = lbl_803E57DC * angleCos;
     state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + state->shieldAngle);
 }
 

@@ -70,51 +70,51 @@ extern const f32 lbl_803E2A24;
 extern const f32 lbl_803E2A28;
 extern const f32 lbl_803E2A2C;
 extern const f32 lbl_803E2A30;
-extern const f32 gDusterF25;
+extern const f32 lbl_803E2A34;
 extern const f32 lbl_803E2A38;
 extern const f32 lbl_803E2A3C;
 extern const f32 lbl_803E2A40;
 extern const f32 lbl_803E2A48;
 extern const f32 lbl_803E2A4C;
-extern const f32 gDusterF3_25;
+extern const f32 lbl_803E2A50;
 extern const f32 lbl_803E2A54;
 extern const f32 lbl_803E2A58;
 extern const f32 lbl_803E2A60;
 extern const f32 gDusterDayStartSeconds;
 extern const f32 gDusterDayEndSeconds;
 extern const f32 lbl_803E2A78;
-extern const f32 gDusterF3;
-extern const f32 gDusterF180;
+extern const f32 lbl_803E2A7C;
+extern const f32 lbl_803E2A80;
 extern f32 lbl_803E2B18;
-extern const f32 gDusterF0_045;
-extern const f32 gDusterF40;
+extern const f32 lbl_803E2A5C;
+extern const f32 lbl_803E2A84;
 extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 extern const f32 lbl_803E2A98;
-extern const f32 gDusterF250;
-extern const f32 gDusterF150;
-extern const f32 gDusterF600;
-extern const f32 gDusterF20;
+extern const f32 lbl_803E2AA8;
+extern const f32 lbl_803E2AAC;
+extern const f32 lbl_803E2AB0;
+extern const f32 lbl_803E2AB4;
 extern const f32 lbl_803E2AB8;
 extern const f32 lbl_803E2ABC;
-extern const f32 gDusterF0_2;
-extern const f32 gDusterF5;
-extern const f32 gDusterFNeg0_5;
-extern const f32 gDusterF0_05;
+extern const f32 lbl_803E2AC0;
+extern const f32 lbl_803E2AC4;
+extern const f32 lbl_803E2AC8;
+extern const f32 lbl_803E2ACC;
 extern const f32 lbl_803E2AD0;
-extern const f32 gDusterFNeg0_7;
+extern const f32 lbl_803E2AD4;
 extern const f32 lbl_803E2AD8;
-extern const f32 gDusterF0_025;
-extern f32 gDusterF0_005;
-extern const f32 gDusterF700;
-extern const f32 gDusterF60;
-extern const f32 gDusterF0_006;
-extern const f32 gDusterF0_95;
+extern const f32 lbl_803E2ADC;
+extern f32 lbl_803E2AE0;
+extern const f32 lbl_803E2AE4;
+extern const f32 lbl_803E2AE8;
+extern const f32 lbl_803E2AEC;
+extern const f32 lbl_803E2AF0;
 extern const f32 lbl_803E2AF4;
-extern const f32 gDusterF0_15;
-extern const f32 gDusterF0_25;
-extern const f32 gDusterF0_75;
+extern const f32 lbl_803E2AF8;
+extern const f32 lbl_803E2AFC;
+extern const f32 lbl_803E2B00;
 extern const f32 lbl_803E2B04;
 extern const f32 lbl_803E2B38;
 extern const f32 lbl_803E2B3C;
@@ -371,7 +371,7 @@ void rachnopInit(u32 unused, int state)
     float fa;
     float fb;
 
-    ((BaddieState*)state)->speedScale = gDusterF25;
+    ((BaddieState*)state)->speedScale = lbl_803E2A34;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     fa = lbl_803E2A38;
     ((BaddieState*)state)->unk308 = lbl_803E2A38;
@@ -418,12 +418,12 @@ void pollenFn_80155b10(u32 obj, int state)
         b[0] = *(float*)(ref + 0xc);
         b[1] = lbl_803E2A4C + *(float*)(ref + 0x10);
         b[2] = *(float*)(ref + 0x14);
-        spd = gDusterF3_25 *
+        spd = lbl_803E2A50 *
             (lbl_803E2A58 * (f32)(int)
         randomGetRange(-10, 10) + lbl_803E2A54
         )
         ;
-        ref = fn_80169EF4(a, b, spd, 1, gDusterF0_045);
+        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C);
         fn_80293018(ref, &cosVal, &velXZ);
         velXZ = velXZ * spd;
         cosVal = cosVal * spd;
@@ -502,7 +502,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
     {
         if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
-            Baddie_SetMove(obj, state, 5, gDusterF3, 0, 0);
+            Baddie_SetMove(obj, state, 5, lbl_803E2A7C, 0, 0);
         }
     }
     else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
@@ -573,7 +573,7 @@ void fn_80156010(u32 obj, int state)
         if (((GameObject*)obj)->anim.currentMove == 4)
         {
             pollenFn_80155b10(obj, state);
-            *(float*)(state + 0x324) = gDusterF180;
+            *(float*)(state + 0x324) = lbl_803E2A80;
             Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
         }
         else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
@@ -584,7 +584,7 @@ void fn_80156010(u32 obj, int state)
         else if (((GameObject*)obj)->anim.currentMove == 6)
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
-            *(float*)(state + 0x324) = gDusterF180;
+            *(float*)(state + 0x324) = lbl_803E2A80;
         }
         else if ((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
@@ -601,7 +601,7 @@ void baddieInit_80156188(u32 unused, int state)
     float fa;
     float fb;
 
-    ((BaddieState*)state)->speedScale = gDusterF40;
+    ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;
@@ -647,9 +647,9 @@ void fn_8015625C(u32 obj, int state)
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
-    if (*(float*)(state + 0x328) > gDusterF250)
+    if (*(float*)(state + 0x328) > lbl_803E2AA8)
     {
-        *(float*)(state + 0x328) = gDusterF150;
+        *(float*)(state + 0x328) = lbl_803E2AAC;
     }
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
@@ -682,17 +682,17 @@ void fn_8015625C(u32 obj, int state)
         *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
         if (*(float*)(state + 0x324) <= zero)
         {
-            *(float*)(state + 0x324) = gDusterF600;
+            *(float*)(state + 0x324) = lbl_803E2AB0;
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x400) != 0)
     {
-        *(float*)(state + 0x324) = gDusterF600;
+        *(float*)(state + 0x324) = lbl_803E2AB0;
     }
     if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
     {
-        moveSpeed = gDusterF20;
+        moveSpeed = lbl_803E2AB4;
     }
     else
     {
@@ -700,24 +700,24 @@ void fn_8015625C(u32 obj, int state)
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(tracked + 0x18),
                                                          lbl_803E2AB8 + *(float*)(tracked + 0x1c),
                                                          *(float*)(tracked + 0x20),
-                                                         lbl_803E2ABC, gDusterF0_2, gDusterF5,
+                                                         lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                          ((BaddieState*)state)->unk304);
     }
-    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_5)) ||
+    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
     }
     if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
     {
-        ((BaddieState*)state)->unk308 = gDusterF0_05;
+        ((BaddieState*)state)->unk308 = lbl_803E2ACC;
         if (((BaddieState*)state)->hitCounter != 0)
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2AD0;
         }
-        if (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_7)
+        if (((GameObject*)obj)->anim.velocityY < lbl_803E2AD4)
         {
-            ((GameObject*)obj)->anim.velocityY = gDusterFNeg0_7;
+            ((GameObject*)obj)->anim.velocityY = lbl_803E2AD4;
         }
         else if (((GameObject*)obj)->anim.velocityY > lbl_803E2AD8)
         {
@@ -727,9 +727,9 @@ void fn_8015625C(u32 obj, int state)
     else
     {
         ((BaddieState*)state)->seqEntryIndex = 0;
-        if (((BaddieState*)state)->unk308 > gDusterF0_025)
+        if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
         {
-            ((BaddieState*)state)->unk308 = -(gDusterF0_005 * timeDelta - ((BaddieState*)state)->unk308);
+            ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
@@ -789,7 +789,7 @@ void fn_8015652C(u32 obj, int state)
         if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 ||
                     route->atSegmentEnd != 0) &&
                 (*gRomCurveInterface)->goNextPoint(route) != 0) &&
-            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, gDusterF700,
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4,
                                              (int*)&lbl_803DBCD8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
@@ -801,7 +801,7 @@ void fn_8015652C(u32 obj, int state)
         else
         {
             moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, route->posX, route->posY, route->posZ,
-                                                             lbl_803E2ABC, gDusterF0_2, gDusterF5,
+                                                             lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                              ((BaddieState*)state)->unk304);
         }
     }
@@ -812,25 +812,25 @@ void fn_8015652C(u32 obj, int state)
     else
     {
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(placement + 8), *(float*)(placement + 0xc),
-                                                         *(float*)(placement + 0x10), lbl_803E2ABC, gDusterF0_2,
-                                                         gDusterF5,
+                                                         *(float*)(placement + 0x10), lbl_803E2ABC, lbl_803E2AC0,
+                                                         lbl_803E2AC4,
                                                          ((BaddieState*)state)->unk304);
     }
-    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_5)) ||
+    if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
     }
     if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
     {
-        ((BaddieState*)state)->unk308 = gDusterF0_05;
+        ((BaddieState*)state)->unk308 = lbl_803E2ACC;
         if (((BaddieState*)state)->hitCounter != 0)
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2AD0;
         }
-        if (((GameObject*)obj)->anim.velocityY < gDusterFNeg0_7)
+        if (((GameObject*)obj)->anim.velocityY < lbl_803E2AD4)
         {
-            ((GameObject*)obj)->anim.velocityY = gDusterFNeg0_7;
+            ((GameObject*)obj)->anim.velocityY = lbl_803E2AD4;
         }
         else if (((GameObject*)obj)->anim.velocityY > lbl_803E2AD8)
         {
@@ -840,9 +840,9 @@ void fn_8015652C(u32 obj, int state)
     else
     {
         ((BaddieState*)state)->seqEntryIndex = 0;
-        if (((BaddieState*)state)->unk308 > gDusterF0_025)
+        if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
         {
-            ((BaddieState*)state)->unk308 = -(gDusterF0_005 * timeDelta - ((BaddieState*)state)->unk308);
+            ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
     fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
@@ -853,11 +853,11 @@ void wbInit(u32 unused, int state)
     float fa;
     u32 ua;
 
-    ((BaddieState*)state)->speedScale = gDusterF60;
+    ((BaddieState*)state)->speedScale = lbl_803E2AE8;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
-    ((BaddieState*)state)->unk308 = gDusterF0_05;
-    ((BaddieState*)state)->unk300 = gDusterF0_006;
-    ((BaddieState*)state)->unk304 = gDusterF0_95;
+    ((BaddieState*)state)->unk308 = lbl_803E2ACC;
+    ((BaddieState*)state)->unk300 = lbl_803E2AEC;
+    ((BaddieState*)state)->unk304 = lbl_803E2AF0;
     ((BaddieState*)state)->unk320 = 0;
     fa = lbl_803E2AF4;
     *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2AF4;
@@ -890,7 +890,7 @@ void fn_80156950(u32 obj, int state)
     case 7:
         if (*(u16*)(state + 0x2f8) != 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_15)
+            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AF8)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
             }
@@ -903,11 +903,11 @@ void fn_80156950(u32 obj, int state)
     case 8:
         if (*(u16*)(state + 0x2f8) != 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_25)
+            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AFC)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
             }
-            else if (((GameObject*)obj)->anim.currentMoveProgress < gDusterF0_75)
+            else if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2B00)
             {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath4);
             }
@@ -1013,7 +1013,7 @@ void mutatedEbaInit(u32 unused, int state)
 {
     float fa;
 
-    ((BaddieState*)state)->speedScale = gDusterF40;
+    ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
     ((BaddieState*)state)->unk300 = lbl_803E2A88;

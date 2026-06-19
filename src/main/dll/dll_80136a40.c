@@ -67,19 +67,19 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
 extern f32 lbl_803E23E8;
 extern void Obj_FreeObject(u8* obj);
-extern f32 lbl_803E23B8;
-extern f32 lbl_803DD9D8;
-extern f32 lbl_803DD9DC;
-extern u8 lbl_803DD9E0;
-extern u8 lbl_803DD9E1;
-extern void* lbl_803DDA1C;
-extern void* lbl_803DDA20;
-extern void* lbl_803DDA24;
+extern f32 gDebugInitialScale;
+extern f32 gDebugScaleX;
+extern f32 gDebugScaleY;
+extern u8 gDebugScaleBiasX;
+extern u8 gDebugScaleBiasY;
+extern void* gDebugFontTex2;
+extern void* gDebugFontTex1;
+extern void* gDebugFontTex0;
 extern void* debugLogEnd;
 extern u8 debugLogBuffer[0x1100];
 extern u32 getScreenResolution(void);
 
-extern int lbl_803DD9E4;
+extern int gDebugRecordCount;
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern u8 gameTimerIsRunning(void);
@@ -89,20 +89,20 @@ extern f32 lbl_803E22A0;
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
 extern f32 timeDelta;
-extern u32 lbl_803DDA00;
-extern u32 lbl_803DDA08;
+extern u32 gDebugPrintOriginX;
+extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
-extern u8 lbl_803AB118[];
-extern s16 lbl_803DDA40;
-extern u32 lbl_803DDA3C;
+extern u8 gErrDisplayThread[];
+extern s16 gErrExceptionType;
+extern u32 gErrContext;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
 extern void OSResumeThread(u8 * thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 extern void fn_80137DF8(void);
-extern u8 lbl_803AB428[];
+extern u8 gErrDisplayThreadStack[];
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 lbl_803E23DC;
@@ -125,37 +125,37 @@ extern u16* debugDrawFrameBuffer;
 extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern u16* externalFrameBuffer1;
 extern u16* externalFrameBuffer0;
-extern u8 lbl_8031D060[];
+extern u8 gDebugFontGlyphs[];
 extern void selectTexture(char* tex, int slot);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
-extern u32 lbl_803DD9F8;
-extern int lbl_803DDA0C;
-extern f32 lbl_803DD9E8;
-extern f32 lbl_803DD9EC;
-extern u8 lbl_8031CFA0[];
+extern u32 gDebugCurrentFontSet;
+extern int gDebugDrawPass;
+extern f32 gDebugGlyphVScale;
+extern f32 gDebugGlyphUScale;
+extern u8 gDebugGlyphMetricsTable[];
 extern f32 lbl_803E2390;
-extern f32 lbl_803E2394;
+extern f32 gDebugGlyphCellTexels;
 extern f32 lbl_803E2398;
 extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
 extern void GXSetTevColor(int id, int* color);
 extern void setTextColor(int p);
-extern u16 lbl_803DDA14;
-extern u16 lbl_803DDA16;
-extern u16 lbl_803DBC10;
-extern u8 lbl_803DD9F0;
-extern u8 lbl_803DD9F1;
-extern u8 lbl_803DD9F2;
-extern u8 lbl_803DD9F3;
-extern u16 lbl_803DD9F6;
-extern int lbl_803DDA10;
+extern u16 gDebugRectStartX;
+extern u16 gDebugRectStartY;
+extern u16 gDebugTabWidth;
+extern u8 gDebugTextColorA;
+extern u8 gDebugTextColorB;
+extern u8 gDebugTextColorG;
+extern u8 gDebugTextColorR;
+extern u16 gDebugScreenWidth;
+extern int gDebugFixedWidthMode;
 extern u16* debugFrameBuffer;
-extern char lbl_803DBC18;
-extern char lbl_803DBC1C;
-extern char lbl_803DBC20;
-extern char lbl_803DBC28;
+extern char sErrDSI;
+extern char sErrISI;
+extern char sErrFmtPC;
+extern char sErrFmtSP;
 extern char lbl_803DBC30;
 extern char lbl_803DBC34;
 extern int OSDisableInterrupts(void);
@@ -166,9 +166,9 @@ extern void GXSetBreakPtCallback(void* cb);
 extern void VISetNextFrameBuffer(void* fb);
 extern void VIFlush(void);
 extern void VIWaitForRetrace(void);
-extern u16 lbl_803DD9F4;
-extern u32 lbl_803DDA04;
-extern u32 lbl_803DD9FC;
+extern u16 gDebugScreenHeight;
+extern u32 gDebugMarginRight;
+extern u32 gDebugMarginBottom;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
@@ -345,25 +345,25 @@ int trickyFn_80138f14(u8* obj)
 void fn_80137998(void)
 {
     getScreenResolution();
-    lbl_803DD9D8 = lbl_803E23B8;
-    lbl_803DD9DC = lbl_803E23B8;
-    lbl_803DD9E0 = 0;
-    lbl_803DD9E1 = 0;
-    lbl_803DDA24 = textureLoadAsset(0x25D);
-    lbl_803DDA20 = textureLoadAsset(1);
-    lbl_803DDA1C = textureLoadAsset(2);
+    gDebugScaleX = gDebugInitialScale;
+    gDebugScaleY = gDebugInitialScale;
+    gDebugScaleBiasX = 0;
+    gDebugScaleBiasY = 0;
+    gDebugFontTex0 = textureLoadAsset(0x25D);
+    gDebugFontTex1 = textureLoadAsset(1);
+    gDebugFontTex2 = textureLoadAsset(2);
     debugLogEnd = debugLogBuffer;
 }
 
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
  * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
- * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
+ * record counter at gDebugRecordCount has already exceeded 0xFA. */
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
     u8* p;
-    n = lbl_803DD9E4 + 1;
-    lbl_803DD9E4 = n;
+    n = gDebugRecordCount + 1;
+    gDebugRecordCount = n;
     if (n > 0xfa) return;
     p = debugLogEnd;
     debugLogEnd = p + 1;
@@ -508,9 +508,9 @@ void fn_801375A0(void)
     u32 yp;
     u32 xp;
     debugLogEnd = debugLogBuffer;
-    yp = lbl_803DDA08 & 0xffff;
+    yp = gDebugPrintOriginY & 0xffff;
     debugPrintYpos = yp;
-    xp = lbl_803DDA00 & 0xffff;
+    xp = gDebugPrintOriginX & 0xffff;
     debugPrintXpos = xp;
 }
 
@@ -527,15 +527,15 @@ void fn_80138908(u8* obj, u8 v)
 }
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
- * the thread at &lbl_803AB118. */
+ * the thread at &gErrDisplayThread. */
 #pragma scheduling off
 void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 {
-    lbl_803DDA40 = a;
-    lbl_803DDA3C = b;
+    gErrExceptionType = a;
+    gErrContext = b;
     lbl_803DDA38 = c;
     lbl_803DDA34 = d;
-    OSResumeThread(lbl_803AB118);
+    OSResumeThread(gErrDisplayThread);
 }
 
 void fn_80137D28(void)
@@ -548,7 +548,7 @@ void fn_80137D28(void)
     OSSetErrorHandler(15, fn_801388D0);
     OSSetErrorHandler(3, fn_801388D0);
     OSSetErrorHandler(5, fn_801388D0);
-    OSCreateThread(lbl_803AB118, fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
+    OSCreateThread(gErrDisplayThread, fn_80137DF8, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
@@ -931,9 +931,9 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
                 if (*p1 >= 0x21 && *p1 <= 0x5a)
                 {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
+                    fn_80137A00(xx, yy, gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
-                    fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
+                    fn_80137A00(xx, yy, gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
                     xx += 0xf;
                 }
                 break;
@@ -954,62 +954,62 @@ int fn_80136A40(int p1, int c)
 
     if (c <= 0x3f)
     {
-        if (lbl_803DD9F8 != 0)
+        if (gDebugCurrentFontSet != 0)
         {
-            if (lbl_803DDA0C != 0)
+            if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)lbl_803DDA24, 0);
-                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA24 + 10));
-                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA24 + 0xc));
+                selectTexture((char*)gDebugFontTex0, 0);
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 10));
+                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 0xc));
             }
-            lbl_803DD9F8 = 0;
+            gDebugCurrentFontSet = 0;
         }
         c -= 0x21;
     }
     else if (c <= 0x5f)
     {
-        if (lbl_803DD9F8 != 1)
+        if (gDebugCurrentFontSet != 1)
         {
-            if (lbl_803DDA0C != 0)
+            if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)lbl_803DDA20, 0);
-                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA20 + 10));
-                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA20 + 0xc));
+                selectTexture((char*)gDebugFontTex1, 0);
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 10));
+                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 0xc));
             }
-            lbl_803DD9F8 = 1;
+            gDebugCurrentFontSet = 1;
         }
         c -= 0x40;
     }
     else if (c <= 0x7f)
     {
-        if (lbl_803DD9F8 != 2)
+        if (gDebugCurrentFontSet != 2)
         {
-            if (lbl_803DDA0C != 0)
+            if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)lbl_803DDA1C, 0);
-                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA1C + 10));
-                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32) * (u16*)((char*)lbl_803DDA1C + 0xc));
+                selectTexture((char*)gDebugFontTex2, 0);
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 10));
+                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 0xc));
             }
-            lbl_803DD9F8 = 2;
+            gDebugCurrentFontSet = 2;
         }
         c -= 0x60;
     }
-    tbl = lbl_8031CFA0 + lbl_803DD9F8 * 0x40;
+    tbl = gDebugGlyphMetricsTable + gDebugCurrentFontSet * 0x40;
     first = tbl[c * 2];
     c = tbl[c * 2 + 1] - first + 1;
-    if (lbl_803DDA0C != 0)
+    if (gDebugDrawPass != 0)
     {
-        px = (int)((f32)debugPrintYpos * (lbl_803DD9D8 + lbl_803DD9E0));
-        py = (int)((f32)debugPrintXpos * (lbl_803DD9DC + lbl_803DD9E1));
+        px = (int)((f32)debugPrintYpos * (gDebugScaleX + gDebugScaleBiasX));
+        py = (int)((f32)debugPrintXpos * (gDebugScaleY + gDebugScaleBiasY));
         gxDebugTextureFn_80078c1c();
-        sc = lbl_803DD9EC;
+        sc = gDebugGlyphUScale;
         textRenderChar(px << 2, py << 2,
-                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + lbl_803DD9E0) + px)),
-                       (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + lbl_803DD9E1) + py)),
+                       (int)(lbl_803E2398 * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
+                       (int)(lbl_803E2398 * (lbl_803E239C * (gDebugScaleY + gDebugScaleBiasY) + py)),
                        (f32)(first << 5) * sc,
                        lbl_803E23A0,
                        sc * (f32)((first + c) << 5),
-                       lbl_803E23A4 * lbl_803DD9E8);
+                       lbl_803E23A4 * gDebugGlyphVScale);
     }
     return c;
 }
@@ -1049,10 +1049,10 @@ int fn_80136E00(int p1, u8* p)
         switch (c)
         {
         case 0x83:
-            lbl_803DDA10 = 0;
+            gDebugFixedWidthMode = 0;
             break;
         case 0x84:
-            lbl_803DDA10 = 1;
+            gDebugFixedWidthMode = 1;
             break;
         case 0x81:
             c0 = p[0];
@@ -1060,7 +1060,7 @@ int fn_80136E00(int p1, u8* p)
             c2 = p[2];
             c3 = p[3];
             p += 4;
-            if (lbl_803DDA0C != 0)
+            if (gDebugDrawPass != 0)
             {
                 colb1[0] = c0;
                 colb1[1] = c1;
@@ -1071,8 +1071,8 @@ int fn_80136E00(int p1, u8* p)
             }
             break;
         case 0x87:
-            lbl_803DD9E0 = p[0];
-            lbl_803DD9E1 = p[1];
+            gDebugScaleBiasX = p[0];
+            gDebugScaleBiasY = p[1];
             p += 2;
             break;
         case 0x85:
@@ -1081,22 +1081,22 @@ int fn_80136E00(int p1, u8* p)
             c2 = p[2];
             c3 = p[3];
             p += 4;
-            if (lbl_803DDA0C == 0)
+            if (gDebugDrawPass == 0)
             {
-                lbl_803DD9F3 = c0;
-                lbl_803DD9F2 = c1;
-                lbl_803DD9F1 = c2;
-                lbl_803DD9F0 = c3;
+                gDebugTextColorR = c0;
+                gDebugTextColorG = c1;
+                gDebugTextColorB = c2;
+                gDebugTextColorA = c3;
                 setTextColor(p1);
             }
             break;
         case 0x82:
-            if (lbl_803DDA0C == 0)
+            if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
                 y = debugPrintYpos;
-                x0 = lbl_803DDA14;
-                y0 = lbl_803DDA16;
+                x0 = gDebugRectStartX;
+                y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
@@ -1104,13 +1104,13 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + lbl_803DD9E0));
+                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
-                    colb4[0] = lbl_803DD9F3;
-                    colb4[1] = lbl_803DD9F2;
-                    colb4[2] = lbl_803DD9F1;
-                    colb4[3] = lbl_803DD9F0;
+                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    colb4[0] = gDebugTextColorR;
+                    colb4[1] = gDebugTextColorG;
+                    colb4[2] = gDebugTextColorB;
+                    colb4[3] = gDebugTextColorA;
                     colw4 = *(u32*)colb4;
                     hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw4);
                 }
@@ -1120,24 +1120,24 @@ int fn_80136E00(int p1, u8* p)
             debugPrintXpos = p[2];
             debugPrintXpos |= p[3] << 8;
             p += 4;
-            lbl_803DDA16 = debugPrintYpos;
-            lbl_803DDA14 = debugPrintXpos;
+            gDebugRectStartY = debugPrintYpos;
+            gDebugRectStartX = debugPrintXpos;
             break;
         case 0x86:
-            lbl_803DBC10 = p[0];
-            lbl_803DBC10 |= p[1] << 8;
+            gDebugTabWidth = p[0];
+            gDebugTabWidth |= p[1] << 8;
             p += 2;
             break;
         case 0x20:
             w = 6;
             break;
         case 0xa:
-            if (lbl_803DDA0C == 0)
+            if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
                 y = debugPrintYpos;
-                x0 = lbl_803DDA14;
-                y0 = lbl_803DDA16;
+                x0 = gDebugRectStartX;
+                y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
@@ -1145,51 +1145,51 @@ int fn_80136E00(int p1, u8* p)
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = lbl_803DD9D8 + lbl_803DD9E0));
+                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
-                    colb2[0] = lbl_803DD9F3;
-                    colb2[1] = lbl_803DD9F2;
-                    colb2[2] = lbl_803DD9F1;
-                    colb2[3] = lbl_803DD9F0;
+                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    colb2[0] = gDebugTextColorR;
+                    colb2[1] = gDebugTextColorG;
+                    colb2[2] = gDebugTextColorB;
+                    colb2[3] = gDebugTextColorA;
                     colw2 = *(u32*)colb2;
                     hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw2);
                 }
             }
-            debugPrintYpos = lbl_803DDA08;
+            debugPrintYpos = gDebugPrintOriginY;
             debugPrintXpos += 0xb;
-            lbl_803DDA16 = debugPrintYpos;
-            lbl_803DDA14 = debugPrintXpos;
+            gDebugRectStartY = debugPrintYpos;
+            gDebugRectStartX = debugPrintXpos;
             break;
         case 9:
-            rm = debugPrintYpos % lbl_803DBC10;
+            rm = debugPrintYpos % gDebugTabWidth;
             if (rm == 0)
             {
-                w = lbl_803DBC10;
+                w = gDebugTabWidth;
             }
             else
             {
-                w = lbl_803DBC10 - rm;
+                w = gDebugTabWidth - rm;
             }
             break;
         default:
             w = fn_80136A40(p1, c);
             break;
         }
-        if (lbl_803DDA10 != 0 && c >= 0x20 && c <= 0x7f)
+        if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)
         {
             w = 7;
         }
         debugPrintYpos += w;
-        if ((f32)debugPrintYpos * (sc = lbl_803DD9D8 + lbl_803DD9E0) >
-            (f32)(int)(lbl_803DD9F6 - 0x10))
+        if ((f32)debugPrintYpos * (sc = gDebugScaleX + gDebugScaleBiasX) >
+            (f32)(int)(gDebugScreenWidth - 0x10))
         {
-            if (lbl_803DDA0C == 0)
+            if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
                 y = debugPrintYpos;
-                x0 = lbl_803DDA14;
-                y0 = lbl_803DDA16;
+                x0 = gDebugRectStartX;
+                y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
                     if (y0 >= 2)
@@ -1199,19 +1199,19 @@ int fn_80136E00(int p1, u8* p)
                     y1 = y + 2;
                     ca = (u32)((f32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
-                    cc = (u32)((f32)x0 * (sc = lbl_803DD9DC + lbl_803DD9E1));
-                    colb3[0] = lbl_803DD9F3;
-                    colb3[1] = lbl_803DD9F2;
-                    colb3[2] = lbl_803DD9F1;
-                    colb3[3] = lbl_803DD9F0;
+                    cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    colb3[0] = gDebugTextColorR;
+                    colb3[1] = gDebugTextColorG;
+                    colb3[2] = gDebugTextColorB;
+                    colb3[3] = gDebugTextColorA;
                     colw3 = *(u32*)colb3;
                     hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw3);
                 }
             }
-            debugPrintYpos = lbl_803DDA08;
+            debugPrintYpos = gDebugPrintOriginY;
             debugPrintXpos += 0xb;
-            lbl_803DDA16 = debugPrintYpos;
-            lbl_803DDA14 = debugPrintXpos;
+            gDebugRectStartY = debugPrintYpos;
+            gDebugRectStartX = debugPrintXpos;
         }
     }
     return p - start;
@@ -1224,7 +1224,7 @@ int fn_80136E00(int p1, u8* p)
 #pragma ppc_unroll_speculative off
 void fn_80137DF8(void)
 {
-    char* strs = (char*)lbl_8031D060;
+    char* strs = (char*)gDebugFontGlyphs;
     u32* sp;
     int depth;
     int hold;
@@ -1280,7 +1280,7 @@ void fn_80137DF8(void)
             }
             debugPrintfxy(0x10, 0x15, strs + 0x140, fn_80137DF8);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
-            switch (*(u16*)&lbl_803DDA40)
+            switch (*(u16*)&gErrExceptionType)
             {
             case 0:
                 debugPrintfxy(0xa0, 0x2a, strs + 0x160);
@@ -1289,10 +1289,10 @@ void fn_80137DF8(void)
                 debugPrintfxy(0xa0, 0x2a, strs + 0x170);
                 break;
             case 2:
-                debugPrintfxy(0xa0, 0x2a, &lbl_803DBC18);
+                debugPrintfxy(0xa0, 0x2a, &sErrDSI);
                 break;
             case 3:
-                debugPrintfxy(0xa0, 0x2a, &lbl_803DBC1C);
+                debugPrintfxy(0xa0, 0x2a, &sErrISI);
                 break;
             case 5:
                 debugPrintfxy(0xa0, 0x2a, strs + 0x180);
@@ -1322,8 +1322,8 @@ void fn_80137DF8(void)
                     h2++;
                 }
             }
-            debugPrintfxy(0x10, 0x3f, &lbl_803DBC20, *(u32*)(lbl_803DDA3C + 0x198));
-            debugPrintfxy(0x10, 0x4b, &lbl_803DBC28, *(u32*)(lbl_803DDA3C + 4));
+            debugPrintfxy(0x10, 0x3f, &sErrFmtPC, *(u32*)(gErrContext + 0x198));
+            debugPrintfxy(0x10, 0x4b, &sErrFmtSP, *(u32*)(gErrContext + 4));
             if (enableDebugText != 0)
             {
                 h = 0xe380;
@@ -1338,7 +1338,7 @@ void fn_80137DF8(void)
             }
             debugPrintfxy(0x10, 0x60, strs + 0x1e4);
             y = 0x6c;
-            p = (u32*)**(u32**)(lbl_803DDA3C + 4);
+            p = (u32*)**(u32**)(gErrContext + 4);
             n = 0;
             while (p != (u32*)0xffffffff && n++ != 8)
             {
@@ -1389,7 +1389,7 @@ void fn_80137DF8(void)
             y += 0x51;
             if (sp == NULL)
             {
-                sp = *(u32**)(lbl_803DDA3C + 4);
+                sp = *(u32**)(gErrContext + 4);
                 depth = 0;
             }
             else if (hold-- == 0)
@@ -1399,7 +1399,7 @@ void fn_80137DF8(void)
                 depth++;
                 if (sp == (u32*)0xffffffff)
                 {
-                    sp = *(u32**)(lbl_803DDA3C + 4);
+                    sp = *(u32**)(gErrContext + 4);
                     depth = 0;
                 }
             }
@@ -1425,12 +1425,12 @@ void fn_80137DF8(void)
             {
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, &lbl_803DBC34, rr, rr + 7);
-                rp = lbl_803DDA3C + rr * 4;
+                rp = gErrContext + rr * 4;
                 debugPrintfxy(0x10, y + 0x18, strs + 0x22c,
-                              *(u32*)(lbl_803DDA3C + (r & 0xff) * 4), *(u32*)(rp + 4),
+                              *(u32*)(gErrContext + (r & 0xff) * 4), *(u32*)(rp + 4),
                               *(u32*)(rp + 8), *(u32*)(rp + 0xc));
                 y += 0x24;
-                rp = lbl_803DDA3C + rr * 4;
+                rp = gErrContext + rr * 4;
                 debugPrintfxy(0x10, y, strs + 0x22c, *(u32*)(rp + 0x10),
                               *(u32*)(rp + 0x14), *(u32*)(rp + 0x18), *(u32*)(rp + 0x1c));
             }
@@ -1491,47 +1491,47 @@ void debugPrintDraw(int ctx)
     u32 colb;
 
     res = getScreenResolution();
-    lbl_803DD9F4 = (u16)(res >> 0x10);
-    lbl_803DD9F6 = res;
-    GXSetScissor(0, 0, lbl_803DD9F6, lbl_803DD9F4);
-    if (lbl_803DD9F6 <= 0x140)
+    gDebugScreenHeight = (u16)(res >> 0x10);
+    gDebugScreenWidth = res;
+    GXSetScissor(0, 0, gDebugScreenWidth, gDebugScreenHeight);
+    if (gDebugScreenWidth <= 0x140)
     {
-        lbl_803DDA08 = 0x10;
-        lbl_803DDA04 = lbl_803DD9F6 - 0x10;
+        gDebugPrintOriginY = 0x10;
+        gDebugMarginRight = gDebugScreenWidth - 0x10;
     }
     else
     {
-        lbl_803DDA08 = 0x20;
-        lbl_803DDA04 = lbl_803DD9F6 - 0x20;
+        gDebugPrintOriginY = 0x20;
+        gDebugMarginRight = gDebugScreenWidth - 0x20;
     }
-    if (lbl_803DD9F4 <= 0xf0)
+    if (gDebugScreenHeight <= 0xf0)
     {
-        lbl_803DDA00 = 0x10;
-        lbl_803DD9FC = lbl_803DD9F4 - 0x10;
+        gDebugPrintOriginX = 0x10;
+        gDebugMarginBottom = gDebugScreenHeight - 0x10;
     }
     else
     {
-        lbl_803DDA00 = 0x20;
-        lbl_803DD9FC = lbl_803DD9F4 - 0x20;
+        gDebugPrintOriginX = 0x20;
+        gDebugMarginBottom = gDebugScreenHeight - 0x20;
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;
-    debugPrintYpos = lbl_803DDA08;
-    debugPrintXpos = lbl_803DDA00;
-    lbl_803DD9F8 = 0xffffffff;
+    debugPrintYpos = gDebugPrintOriginY;
+    debugPrintXpos = gDebugPrintOriginX;
+    gDebugCurrentFontSet = 0xffffffff;
     pass = 0;
-    lbl_803DDA10 = pass;
-    lbl_803DDA16 = debugPrintYpos;
-    lbl_803DDA14 = debugPrintXpos;
+    gDebugFixedWidthMode = pass;
+    gDebugRectStartY = debugPrintYpos;
+    gDebugRectStartX = debugPrintXpos;
     for (; p != debugLogEnd;)
     {
-        lbl_803DDA0C = pass;
+        gDebugDrawPass = pass;
         p += fn_80136E00(ctx, p);
     }
     x1 = debugPrintXpos + 0xa;
     yv = debugPrintYpos;
-    xs = lbl_803DDA14;
-    ys = lbl_803DDA16;
+    xs = gDebugRectStartX;
+    ys = gDebugRectStartY;
     if ((((yv - ys) == 0) | ((x1 - xs) == 0)) == 0)
     {
         if (ys >= 2)
@@ -1539,28 +1539,28 @@ void debugPrintDraw(int ctx)
             ys -= 2;
         }
         y2 = yv + 2;
-        xa = (u32)((f32)ys * (scale = lbl_803DD9D8 + lbl_803DD9E0));
+        xa = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
         xb = (u32)((f32)y2 * scale);
-        ya = (u32)((f32)xs * (scale = lbl_803DD9DC + lbl_803DD9E1));
+        ya = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
         yb = (u32)((f32)x1 * scale);
-        ((u8*)&colb)[0] = lbl_803DD9F3;
-        ((u8*)&colb)[1] = lbl_803DD9F2;
-        ((u8*)&colb)[2] = lbl_803DD9F1;
-        ((u8*)&colb)[3] = lbl_803DD9F0;
+        ((u8*)&colb)[0] = gDebugTextColorR;
+        ((u8*)&colb)[1] = gDebugTextColorG;
+        ((u8*)&colb)[2] = gDebugTextColorB;
+        ((u8*)&colb)[3] = gDebugTextColorA;
         colw = colb;
         hudDrawRect(xa, ya, xb, yb, &colw);
     }
     p = debugLogBuffer;
-    debugPrintYpos = lbl_803DDA08;
-    debugPrintXpos = lbl_803DDA00;
-    lbl_803DD9F8 = 0xffffffff;
-    lbl_803DDA10 = 0;
+    debugPrintYpos = gDebugPrintOriginY;
+    debugPrintXpos = gDebugPrintOriginX;
+    gDebugCurrentFontSet = 0xffffffff;
+    gDebugFixedWidthMode = 0;
     pass = 1;
     for (; p != debugLogEnd;)
     {
-        lbl_803DDA0C = pass;
+        gDebugDrawPass = pass;
         p += fn_80136E00(ctx, p);
     }
     debugLogEnd = debugLogBuffer;
-    lbl_803DD9E4 = 0;
+    gDebugRecordCount = 0;
 }

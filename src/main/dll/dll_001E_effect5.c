@@ -153,18 +153,18 @@ extern u8 framesThisStep;
 
 extern float mathSinf(float x);
 
-extern f32 lbl_803DB7E8;
-extern f32 lbl_803DB7EC;
-extern int lbl_803DD360;
-extern int lbl_803DD364;
-extern f32 lbl_803DD368;
-extern f32 lbl_803DD36C;
+extern f32 gEffect5AnimProgressC;
+extern f32 gEffect5AnimProgressD;
+extern int gEffect5SinPhaseA;
+extern int gEffect5SinPhaseB;
+extern f32 gEffect5SinValueB;
+extern f32 gEffect5SinValueA;
 extern f32 lbl_803DFBE0;
 extern f32 lbl_803DFBE4;
 extern f32 lbl_803DFBE8;
 extern f32 lbl_803DFBF0;
-extern f32 lbl_803DFC78;
-extern f32 lbl_803DFC7C;
+extern f32 gEffect5Pi;
+extern f32 gEffect5SinPhaseScale;
 
 #pragma scheduling off
 #pragma peephole off
@@ -172,30 +172,30 @@ void Effect5_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB7E8 + (step = lbl_803DFBE0 * timeDelta);
-    lbl_803DB7E8 = sum;
+    sum = gEffect5AnimProgressC + (step = lbl_803DFBE0 * timeDelta);
+    gEffect5AnimProgressC = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7E8 = lbl_803DFBE4;
+        gEffect5AnimProgressC = lbl_803DFBE4;
     }
-    sum = lbl_803DB7EC + step;
-    lbl_803DB7EC = sum;
+    sum = gEffect5AnimProgressD + step;
+    gEffect5AnimProgressD = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7EC = lbl_803DFBF0;
+        gEffect5AnimProgressD = lbl_803DFBF0;
     }
-    lbl_803DD360 = lbl_803DD360 + framesThisStep * 0x64;
-    if (lbl_803DD360 > 0x7fff)
+    gEffect5SinPhaseA = gEffect5SinPhaseA + framesThisStep * 0x64;
+    if (gEffect5SinPhaseA > 0x7fff)
     {
-        lbl_803DD360 = 0;
+        gEffect5SinPhaseA = 0;
     }
-    lbl_803DD36C = mathSinf(lbl_803DFC78 * (f32)(s16)lbl_803DD360 / lbl_803DFC7C);
-    lbl_803DD364 = lbl_803DD364 + framesThisStep * 0x32;
-    if (lbl_803DD364 > 0x7fff)
+    gEffect5SinValueA = mathSinf(gEffect5Pi * (f32)(s16)gEffect5SinPhaseA / gEffect5SinPhaseScale);
+    gEffect5SinPhaseB = gEffect5SinPhaseB + framesThisStep * 0x32;
+    if (gEffect5SinPhaseB > 0x7fff)
     {
-        lbl_803DD364 = 0;
+        gEffect5SinPhaseB = 0;
     }
-    lbl_803DD368 = mathSinf(lbl_803DFC78 * (f32)(s16)lbl_803DD364 / lbl_803DFC7C);
+    gEffect5SinValueB = mathSinf(gEffect5Pi * (f32)(s16)gEffect5SinPhaseB / gEffect5SinPhaseScale);
 }
 
 /*
@@ -208,8 +208,8 @@ void Effect5_func05(void)
 
 extern void vecRotateZXY(void* obj, f32* vec);
 
-extern f32 lbl_803DB7E0;
-extern f32 lbl_803DB7E4;
+extern f32 gEffect5AnimProgressA;
+extern f32 gEffect5AnimProgressB;
 extern f32 lbl_803DFBEC;
 extern f32 lbl_803DFBF4;
 extern f32 lbl_803DFBF8;
@@ -249,10 +249,10 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     MtxBuildArg es;
     PartFxSpawn cfg;
 
-    lbl_803DB7E0 = lbl_803DB7E0 + lbl_803DFBE0;
-    if (lbl_803DB7E0 > 1.0f) lbl_803DB7E0 = lbl_803DFBE4;
-    lbl_803DB7E4 = lbl_803DB7E4 + lbl_803DFBEC;
-    if (lbl_803DB7E4 > 1.0f) lbl_803DB7E4 = lbl_803DFBF0;
+    gEffect5AnimProgressA = gEffect5AnimProgressA + lbl_803DFBE0;
+    if (gEffect5AnimProgressA > 1.0f) gEffect5AnimProgressA = lbl_803DFBE4;
+    gEffect5AnimProgressB = gEffect5AnimProgressB + lbl_803DFBEC;
+    if (gEffect5AnimProgressB > 1.0f) gEffect5AnimProgressB = lbl_803DFBF0;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {

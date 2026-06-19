@@ -36,7 +36,7 @@ extern s32 gEffect20SinePhase1;
 extern f32 gEffect20SineValue1;
 extern f32 gEffect20SineValue0;
 extern f32 gEffect20Pi;
-extern f32 gEffect20F32768;
+extern f32 lbl_803E0348;
 
 #pragma dont_inline on
 
@@ -55,7 +55,7 @@ extern float mathCosf(float x);
 extern f32 gEffect20SpawnScrollA;
 extern f32 gEffect20SpawnScrollB;
 extern f32 lbl_803E031C;
-extern f32 gEffect20Zero;
+extern f32 lbl_803E0324;
 extern f32 lbl_803E0328;
 extern f32 lbl_803E032C;
 extern f32 lbl_803E0330;
@@ -125,7 +125,7 @@ extern f32 lbl_803E0434;
 extern f32 lbl_803E0438;
 extern f32 lbl_803E043C;
 extern f32 lbl_803E0440;
-extern f32 gEffect20F255;
+extern f32 lbl_803E0444;
 extern f32 lbl_803E0448;
 extern f32 lbl_803E044C;
 extern f32 lbl_803E0450;
@@ -194,13 +194,13 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     cfg.renderFlags = 0;
     cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
-    cfg.startPosX = gEffect20Zero;
-    cfg.startPosY = gEffect20Zero;
-    cfg.startPosZ = gEffect20Zero;
-    cfg.velocityX = gEffect20Zero;
-    cfg.velocityY = gEffect20Zero;
-    cfg.velocityZ = gEffect20Zero;
-    cfg.scale = gEffect20Zero;
+    cfg.startPosX = lbl_803E0324;
+    cfg.startPosY = lbl_803E0324;
+    cfg.startPosZ = lbl_803E0324;
+    cfg.velocityX = lbl_803E0324;
+    cfg.velocityY = lbl_803E0324;
+    cfg.velocityZ = lbl_803E0324;
+    cfg.scale = lbl_803E0324;
     cfg.lifetimeFrames = 0;
     cfg.quadVertex3Pad06 = -1;
     cfg.initialAlpha = 0xff;
@@ -328,7 +328,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         intVal
         )
         /
-        gEffect20F32768;
+        lbl_803E0348;
         trigVal = mathCosf(angle);
         cfg.velocityX = (lbl_803E0340 * (f32)(s32)
         randomGetRange(100, 0x96)
@@ -339,7 +339,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         randomGetRange(100, 0x96)
         )
         *trigVal;
-        cfg.velocityZ = gEffect20Zero;
+        cfg.velocityZ = lbl_803E0324;
         cfg.lifetimeFrames = randomGetRange(0x14, 0x1e);
         cfg.behaviorFlags = 0x480000;
         cfg.renderFlags = 0x480800;
@@ -372,7 +372,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         intVal
         )
         /
-        gEffect20F32768;
+        lbl_803E0348;
         trigVal = mathCosf(angle);
         cfg.velocityX = (lbl_803E0330 * (f32)(s32)
         randomGetRange(100, 0x96)
@@ -383,7 +383,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         randomGetRange(100, 0x96)
         )
         *trigVal;
-        cfg.velocityZ = gEffect20Zero;
+        cfg.velocityZ = lbl_803E0324;
         cfg.lifetimeFrames = randomGetRange(0x1e, 0x28);
         cfg.behaviorFlags = 0x480000;
         cfg.renderFlags = 0x480800;
@@ -828,7 +828,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             {
                 cfg.velocityX = lbl_803E0320 * *extraArgs + lbl_803E0310 * (f32)(s32)
                 randomGetRange(0xffffff9c, 100);
-                if (gEffect20Zero != cfg.velocityY)
+                if (lbl_803E0324 != cfg.velocityY)
                 {
                     cfg.velocityY = lbl_803E0320 * extraArgs[1] + lbl_803E0310 * (f32)(s32)
                     randomGetRange(0xffffff9c, 100);
@@ -1014,7 +1014,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                 cfg.startPosX = extraArgs[3];
                 cfg.startPosY = extraArgs[4];
                 cfg.startPosZ = extraArgs[5];
-                if (extraArgs[2] > gEffect20Zero)
+                if (extraArgs[2] > lbl_803E0324)
                 {
                     cfg.velocityY = spawnParams->posX * (spawnParams->scale *
                         (lbl_803E03C4 * (f32)(s32)
@@ -1023,7 +1023,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
                     )
                     ;
                 }
-                else if (extraArgs[2] < gEffect20Zero)
+                else if (extraArgs[2] < lbl_803E0324)
                 {
                     cfg.velocityZ = spawnParams->posX * (spawnParams->scale *
                         (lbl_803E03C4 * (f32)(s32)
@@ -1149,8 +1149,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             )
             )
             ;
-            cfg.velocityY = gEffect20Zero;
-            cfg.velocityX = gEffect20Zero;
+            cfg.velocityY = lbl_803E0324;
+            cfg.velocityX = lbl_803E0324;
             if (extraArgs != NULL)
             {
                 vecRotateZXY(extraArgs, &cfg.velocityX);
@@ -1221,7 +1221,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             intVal
             )
             /
-            gEffect20F32768;
+            lbl_803E0348;
             trigVal = mathSinf(angle);
             cfg.startPosX = radius * trigVal + spawnParams->posX;
             cfg.startPosY = lbl_803E0314 * (f32)(s32)
@@ -1872,7 +1872,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             randomGetRange(0xffffff9c, 100)
             )
             ;
-            cfg.scale = ((f32)spawnParams->unk4 / gEffect20F255) * (lbl_803E033C * (f32)(s32)
+            cfg.scale = ((f32)spawnParams->unk4 / lbl_803E0444) * (lbl_803E033C * (f32)(s32)
             randomGetRange(5, 100)
             )
             ;
@@ -2021,7 +2021,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             vecRotateZXY(spawnParams, &cfg.velocityX);
             cfg.startPosX = cfg.startPosX + cfg.velocityX;
             cfg.startPosZ = cfg.startPosZ + cfg.velocityZ;
-            cfg.velocityX = gEffect20Zero;
+            cfg.velocityX = lbl_803E0324;
             cfg.velocityY = spawnParams->scale * (lbl_803E044C * (f32)(s32)
             randomGetRange(0x32, 100)
             )
@@ -2205,9 +2205,9 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             }
             else
             {
-                cfg.velocityX = gEffect20Zero;
-                cfg.velocityY = gEffect20Zero;
-                cfg.velocityZ = gEffect20Zero;
+                cfg.velocityX = lbl_803E0324;
+                cfg.velocityY = lbl_803E0324;
+                cfg.velocityZ = lbl_803E0324;
             }
             cfg.velocityX = spawnParams->scale * (lbl_803E034C * (f32)(s32)
             randomGetRange(0xffffff9c, 100)
@@ -2371,7 +2371,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         break;
     case 0x7ed:
         cfg.startPosY = lbl_803E0468;
-        cfg.startPosZ = gEffect20Zero;
+        cfg.startPosZ = lbl_803E0324;
         cfg.velocityY = lbl_803E0424;
         cfg.scale = lbl_803E03B0 * (f32)(s32)
         randomGetRange(0x50, 0x58);
@@ -2415,7 +2415,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.velocityZ = gEffect20Zero;
+            cfg.velocityZ = lbl_803E0324;
             cfg.velocityY = spawnParams->scale;
             if (spawnParams->unk6 != 0)
             {
@@ -2968,8 +2968,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         }
         break;
     case 0x805:
-        cfg.startPosY = gEffect20Zero;
-        cfg.startPosZ = gEffect20Zero;
+        cfg.startPosY = lbl_803E0324;
+        cfg.startPosZ = lbl_803E0324;
         cfg.scale = lbl_803E04B4 * (f32)(s32)
         randomGetRange(0x50, 0x58);
         cfg.lifetimeFrames = randomGetRange(100, 0x6e);
@@ -3149,10 +3149,10 @@ void Effect20_func05(void)
     if (sum > 1.0f) gEffect20StepScrollB = lbl_803E0320;
     gEffect20SinePhase0 = gEffect20SinePhase0 + framesThisStep * 0x64;
     if (gEffect20SinePhase0 > 0x7fff) gEffect20SinePhase0 = 0;
-    gEffect20SineValue0 = mathSinf(gEffect20Pi * (f32)(s16)gEffect20SinePhase0 / gEffect20F32768);
+    gEffect20SineValue0 = mathSinf(gEffect20Pi * (f32)(s16)gEffect20SinePhase0 / lbl_803E0348);
     gEffect20SinePhase1 = gEffect20SinePhase1 + framesThisStep * 0x32;
     if (gEffect20SinePhase1 > 0x7fff) gEffect20SinePhase1 = 0;
-    gEffect20SineValue1 = mathSinf(gEffect20Pi * (f32)(s16)gEffect20SinePhase1 / gEffect20F32768);
+    gEffect20SineValue1 = mathSinf(gEffect20Pi * (f32)(s16)gEffect20SinePhase1 / lbl_803E0348);
 }
 
 void Effect20_func03_nop(void)

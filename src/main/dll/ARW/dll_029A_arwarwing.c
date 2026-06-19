@@ -429,7 +429,7 @@ void arwarwing_updateWeaponFire(int obj, int state)
     }
     if ((((ArwingState*)state)->inputFlags & 0x100) == 0 && fire == 0)
         return;
-    ((ArwingState*)state)->fireTimer = lbl_803E6F04;
+    ((ArwingState*)state)->fireTimer = gArwingFireTimerReset;
     if ((s8)((ArwingState*)state)->laserLevel == 2)
     {
         arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
@@ -506,7 +506,7 @@ void arwarwing_update(int obj)
         if (t <= lbl_803E6ECC)
         {
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
-            ((ArwingState*)state)->modeTimer = lbl_803E6F24;
+            ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
@@ -845,7 +845,7 @@ void arwarwing_initAttachments(int obj, int state)
     f32 c6F5C;
     f32 c6EF0;
 
-    radius = lbl_803E6FC0;
+    radius = gArwingEscortSearchRadius;
     mev = (int)(*gMapEventInterface)->getCurCharacterState();
 
     if (*(void**)&((ArwingState*)state)->escortObj == 0)
@@ -1085,7 +1085,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
         {
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
-            ((ArwingState*)state)->modeTimer = lbl_803E6F24;
+            ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
@@ -1145,7 +1145,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
         if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
         {
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
-            ((ArwingState*)state)->modeTimer = lbl_803E6F24;
+            ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
@@ -1292,8 +1292,8 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             else
             {
-                loadMapAndParent(lbl_803DC3C8[((ArwingState*)state)->levelIndex]);
-                lockLevel(mapGetDirIdx(lbl_803DC3C8[((ArwingState*)state)->levelIndex]), 0);
+                loadMapAndParent(gArwingCourseMapIds[((ArwingState*)state)->levelIndex]);
+                lockLevel(mapGetDirIdx(gArwingCourseMapIds[((ArwingState*)state)->levelIndex]), 0);
             }
             switch (((GameObject*)obj)->anim.mapEventSlot)
             {
@@ -1363,13 +1363,13 @@ void arwarwing_init(int obj)
     u8* pathBlock;
     ArwInitCfg cfg;
 
-    *(ArwInitCfgAB*)&cfg = *(ArwInitCfgAB*)&lbl_802C25E8;
-    cfg.c = lbl_802C25E8.c;
+    *(ArwInitCfgAB*)&cfg = *(ArwInitCfgAB*)&gArwingInitConfig;
+    cfg.c = gArwingInitConfig.c;
     state = *(int*)&((GameObject*)obj)->extra;
     pathBlock = ((ArwingState*)state)->pathBlock;
     ((GameObject*)obj)->animEventCallback = arwarwing_SeqFn;
     (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
-    (*gPathControlInterface)->setup(pathBlock, 3, lbl_8032B408, lbl_8032B480, &cfg);
+    (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathName, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
     ObjGroup_AddObject(obj, 0x26);
     gArwing = obj;

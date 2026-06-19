@@ -1098,7 +1098,7 @@ void quakeSpellTextureFn_8016dbf4(void)
 
 extern f32 lbl_803E32A8;
 extern f32 lbl_803E3290;
-extern f32 gStaffF255;
+extern f32 lbl_803E32F4;
 extern f32 lbl_803E32F8;
 extern f32 lbl_803E32FC;
 extern f32 lbl_803E32D0;
@@ -1123,7 +1123,7 @@ void superQuakeFn_8016d9fc(f32* pos)
     *(f32*)(gStaffQuakeSpellState + 0) = pos[0];
     *(f32*)(gStaffQuakeSpellState + 4) = lbl_803E32A8 + pos[1];
     *(f32*)(gStaffQuakeSpellState + 8) = pos[2];
-    *(f32*)(gStaffQuakeSpellState + 0x18) = gStaffF255;
+    *(f32*)(gStaffQuakeSpellState + 0x18) = lbl_803E32F4;
     *(f32*)(gStaffQuakeSpellState + 0xc) = lbl_803E3288;
     *(f32*)(gStaffQuakeSpellState + 0x10) = lbl_803E3290;
     *(f32*)(gStaffQuakeSpellState + 0x14) = lbl_803E3288;
@@ -1366,7 +1366,7 @@ void staff_update(int* obj)
             {
                 if ((u8*)swp == *(u8**)(state + 0x48))
                 {
-                    f32 k = gStaffF255;
+                    f32 k = lbl_803E32F4;
                     f32 t = lbl_803E330C * *(f32*)(state + 0x98) - *(f32*)(vp + 0xc);
                     f32 v;
                     t = k * (t * lbl_803E3310);
@@ -1600,12 +1600,12 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             {
                                 f32 a, b, t1, t2;
                                 int ip = *pidx * 12;
-                                *pE = (f32) * (s16*)((char*)tbl + ip) / gStaffF255;
-                                *pF = (f32) * (s16*)((char*)tbl + ip + 2) / gStaffF255;
-                                *pG = (f32) * (s16*)((char*)tbl + ip + 4) / gStaffF255;
-                                *pH = (f32) * (s16*)((char*)tbl + ip + 6) / gStaffF255;
-                                *pI = (f32) * (s16*)((char*)tbl + ip + 8) / gStaffF255;
-                                *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / gStaffF255;
+                                *pE = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
+                                *pF = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
+                                *pG = (f32) * (s16*)((char*)tbl + ip + 4) / lbl_803E32F4;
+                                *pH = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
+                                *pI = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
+                                *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
                                 a = *pE;
                                 b = *pG;
                                 t1 = sinv * a - cosv * b;
@@ -1641,7 +1641,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                         vidx = ibase + frac;
                         *(f32*)(vp + 0xc) = vidx;
                         {
-                            f32 k = gStaffF255;
+                            f32 k = lbl_803E32F4;
                             f32 t = flb - *(f32*)(vp + 0xc);
                             f32 v;
                             t = k * (t * lbl_803E3310);
@@ -1670,7 +1670,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             swipe + 0x94)) + *(f32*)(swipe + 0x94));
                         *(f32*)(vp + 0x20) = vidx;
                         {
-                            f32 k = gStaffF255;
+                            f32 k = lbl_803E32F4;
                             f32 t = flb - *(f32*)(vp + 0x20);
                             f32 v;
                             t = k * (t * lbl_803E3310);
