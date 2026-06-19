@@ -184,7 +184,7 @@ int FUN_80039520(int obj, uint tag)
         {
             if (tag == *entry)
             {
-                found = *(int*)(obj + 0x70) + offset;
+                found = *(int*)&((GameObject*)obj)->anim.textureSlots + offset;
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -212,7 +212,7 @@ int FUN_8003964c(int obj, uint key)
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (key == *(byte*)(*(int*)(model + 0x10) + entryIdx)))
             {
-                found = *(int*)(obj + 0x6c) + vecOffset;
+                found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
             entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
             vecOffset = vecOffset + 0x12;
@@ -527,7 +527,7 @@ void FUN_8003a1c4(int obj, int ctx)
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                found = (short*)(*(int*)(obj + 0x6c) + vecOffset);
+                found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
             vecOffset = vecOffset + 0x12;
@@ -663,17 +663,17 @@ void FUN_8003ac24(int obj, uint* keys, int count)
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = (short*)0x0;
-        hitDef = *(int*)(obj + 0x50);
+        hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
         if (hitDef != 0)
         {
             entryIdx = 0;
             vecOffset = 0;
             for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(obj + 0xad) + entryIdx + 1) != -1) &&
+                if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
                     (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    found = (short*)(*(int*)(obj + 0x6c) + vecOffset);
+                    found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
                 entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
                 vecOffset = vecOffset + 0x12;
@@ -702,17 +702,17 @@ void FUN_8003ad08(int obj, uint* keys, int count, int out)
     for (idx = 0; idx < count; idx = idx + 1)
     {
         found = (undefined2*)0x0;
-        hitDef = *(int*)(obj + 0x50);
+        hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
         if (hitDef != 0)
         {
             entryIdx = 0;
             vecOffset = 0;
             for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
-                if ((*(char*)(*(int*)(hitDef + 0x10) + *(char*)(obj + 0xad) + entryIdx + 1) != -1) &&
+                if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
                     (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    found = (undefined2*)(*(int*)(obj + 0x6c) + vecOffset);
+                    found = (undefined2*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
                 entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
                 vecOffset = vecOffset + 0x12;
@@ -897,7 +897,7 @@ void FUN_8003b1a4(int obj, int ctx)
         {
             if (*entry == '\x05')
             {
-                found5 = (int*)(*(int*)(obj + 0x70) + offset);
+                found5 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -911,7 +911,7 @@ void FUN_8003b1a4(int obj, int ctx)
         {
             if (*entry == '\x04')
             {
-                found4 = (int*)(*(int*)(obj + 0x70) + offset);
+                found4 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -954,7 +954,7 @@ void FUN_8003b280(int obj, int ctx)
         {
             if (*entry == '\x05')
             {
-                found5 = (int*)(*(int*)(obj + 0x70) + offset);
+                found5 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -968,7 +968,7 @@ void FUN_8003b280(int obj, int ctx)
         {
             if (*entry == '\x04')
             {
-                found4 = (int*)(*(int*)(obj + 0x70) + offset);
+                found4 = (int*)(*(int*)&((GameObject*)obj)->anim.textureSlots + offset);
             }
             entry = entry + 2;
             offset = offset + 0x10;
@@ -1091,7 +1091,7 @@ void FUN_8003b56c(undefined2 param_1, undefined2 param_2, undefined2 param_3)
 void FUN_8003b818(int obj)
 {
     if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
-        (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
+        (FUN_80040a88(obj), *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms != 0))
     {
         FUN_800400b0();
     }
@@ -1118,9 +1118,9 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
 
     ctx = FUN_8028683c();
     ctxHi = (undefined4)((ulonglong)ctx >> 0x20);
-    if (((((*(ushort*)(obj + 0xb0) & 0x40) == 0) && (*(int*)(obj + 0xc4) == 0)) &&
+    if (((((*(ushort*)(obj + 0xb0) & 0x40) == 0) && (*(int*)&((GameObject*)obj)->ownerObj == 0)) &&
             ((*(ushort*)(obj + 6) & 0x4000) == 0)) &&
-        ((*(int*)(obj + 0x30) == 0 || ((*(ushort*)(*(int*)(obj + 0x30) + 6) & 0x4000) == 0))
+        ((*(int*)&((GameObject*)obj)->anim.parent == 0 || ((*(ushort*)(*(int*)&((GameObject*)obj)->anim.parent + 6) & 0x4000) == 0))
         ))
     {
         FUN_80017a04();
@@ -1136,7 +1136,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
                     FUN_802950c8(obj, ctxHi, (int)ctx, param_3, param_4, flag);
                 }
                 else if ((OBJPRINT_ACTIVE_BANK(obj) != 0) &&
-                    (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
+                    (FUN_80040a88(obj), *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms != 0))
                 {
                     FUN_800400b0();
                 }
@@ -1152,7 +1152,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         }
         else if (((flag != '\0') &&
                 (OBJPRINT_ACTIVE_BANK(obj) != 0)) &&
-            (FUN_80040a88(obj), *(int*)(obj + 0x74) != 0))
+            (FUN_80040a88(obj), *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms != 0))
         {
             FUN_800400b0();
         }
