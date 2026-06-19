@@ -1034,8 +1034,8 @@ void ObjList_PartitionForRender(int* out)
     hi = j;
     while (i <= j)
     {
-        arr = (void**)lbl_803DCB88;
         stop = 0;
+        arr = (void**)lbl_803DCB88;
         while (i <= hi && stop == 0)
         {
             if (((ObjAnimComponent*)arr[i])->modelInstance->flags & 1)
