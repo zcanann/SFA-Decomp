@@ -633,7 +633,7 @@ void collectible_applyPickup(int* obj)
     ObjHits_DisableObject((u32)obj);
     if (((GameObject*)obj)->anim.flags & 0x2000)
     {
-        *(f32*)(state + 8) = lbl_803E3450;
+        ((CollectibleState*)state)->despawnTimer = lbl_803E3450;
         if (((GameObject*)obj)->anim.modelState != NULL)
         {
             ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -664,7 +664,7 @@ void collectible_applyPickup(int* obj)
         case 793:
             Sfx_PlayFromObject(obj, 362);
             GameBit_Set(1001, 1);
-            *(s16*)(state + 0x3c) = 1200;
+            ((CollectibleState*)state)->hideFrames = 1200;
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         case 1702:
@@ -734,7 +734,7 @@ void collectible_updateLooseMotion(int* obj)
     (*gPathControlInterface)->update(obj, state + 0x50, timeDelta);
     (*gPathControlInterface)->apply(obj, state + 0x50);
     (*gPathControlInterface)->advance(obj, state + 0x50, timeDelta);
-    if (*(s8*)(state + 0x2b1) != 0)
+    if (*(s8*)&((CollectibleState*)state)->bounceHitFlag != 0)
     {
         f32 nx = -((GameObject*)obj)->anim.velocityX;
         f32 ny = -((GameObject*)obj)->anim.velocityY;
@@ -852,7 +852,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         else if (cmd == 2)
         {
-            *(u8*)((char*)state + 0x3e) = 1;
+            ((CollectibleState*)state)->delayedMsgTimer = 1;
         }
         else if (cmd == 3)
         {
@@ -903,7 +903,7 @@ void collectible_checkProximityPickup(int obj, u8* state)
     {
         dy = -dy;
     }
-    if (dy < lbl_803E3490 && dist < *(f32*)(state + 4) && fn_8029622C(player) != 0)
+    if (dy < lbl_803E3490 && dist < ((CollectibleState*)state)->scale && fn_8029622C(player) != 0)
     {
         ((CollectibleState*)state)->pickupMsgValue = -1;
         switch (((GameObject*)obj)->anim.seqId)
