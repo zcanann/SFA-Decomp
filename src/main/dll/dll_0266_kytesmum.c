@@ -424,7 +424,7 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
     u8 flags = 0;
     for (i = 0; i < (s8)arg[0x1b]; i++)
     {
-        switch ((s8)arg[i + 0x13])
+        switch (*(s8*)(arg + i + 0x13))
         {
         case 0:
             if (sfxData != 0)
