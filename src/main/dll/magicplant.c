@@ -239,7 +239,8 @@ void fn_80153248(int obj, int state)
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        *(f32*)(state + 0x324) = *(f32*)(state + 0x32c) = lbl_803E28B0;
+        *(f32*)(state + 0x324) = lbl_803E28B0;
+        *(f32*)(state + 0x32c) = lbl_803E28B0;
     }
     else
     {
@@ -256,7 +257,8 @@ void fn_80153248(int obj, int state)
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                *(f32*)(state + 0x324) = *(f32*)(state + 0x32c) = lbl_803E28B0;
+                *(f32*)(state + 0x324) = lbl_803E28B0;
+                *(f32*)(state + 0x32c) = lbl_803E28B0;
             }
         }
     }
