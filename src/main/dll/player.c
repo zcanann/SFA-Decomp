@@ -400,10 +400,10 @@ int fn_802974A0(int obj, int state, f32 fv)
     }
     (*(void (*)(int, int, int, f32, f32))(*(int*)(*gPlayerInterface + 0x44)))(
         obj, state, inner->inputHeading, fv, lbl_803E7EE0);
-    *(f32*)((char*)state + 0x2b8) = lbl_803E7EF4;
+    ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E7EF4;
     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
     ((GameObject*)obj)->anim.velocityY = inner->unk784 * fv;
-    if (*(f32*)((char*)state + 0x298) > lbl_803E7EFC)
+    if (((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EFC)
     {
         f32 ryaw = (f32)inner->targetYawRate * fv;
         inner->targetYaw =
@@ -667,7 +667,7 @@ int fn_8029F9D4(int p1, int state)
 {
     if (GameBit_Get(0x2d0))
     {
-        *(int*)((char*)state + 0x308) = (int)fn_802A514C;
+        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return -1;
     }
     return 0;
@@ -1592,12 +1592,12 @@ int fn_802A5384(int obj, int state)
         ((PlayerState*)inner)->yawRate = 0;
     }
     {
-        t = ((*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C < (t = lbl_803E7EA4))
+        t = ((((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C < (t = lbl_803E7EA4))
                 ? t
-                : (((*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C >
+                : (((((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C >
                        (t = lbl_803E7EE0))
                        ? t
-                       : (*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C);
+                       : (((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C);
     }
     ((PlayerState*)inner)->unk408 =
         (((PlayerState*)inner)->maxSpeed - lbl_803E7F6C) *
@@ -2070,7 +2070,7 @@ int fn_802A5384(int obj, int state)
                     if (((PlayerState*)inner)->unk8CC == 4)
                     {
                         if (((PlayerState*)state)->baddie.animSpeedA < *(f32*)(tb + 0x10) &&
-                            *(f32*)((char*)state + 0x298) < lbl_803E7F14)
+                            ((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F14)
                         {
                             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                             return 2;
@@ -2773,7 +2773,7 @@ int fn_802A0680(int obj, int state)
             ((PlayerState*)inner)->unk568 = z;
         }
         fn_802A13F4(obj, state);
-        if (*(f32*)((char*)state + 0x298) <= lbl_803E7EFC)
+        if (((PlayerState*)state)->baddie.inputMagnitude <= lbl_803E7EFC)
         {
             goto store_ph;
         }
@@ -2840,7 +2840,7 @@ int fn_802A0680(int obj, int state)
             {
                 ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->savedPosY;
             }
-            if (*(f32*)((char*)state + 0x298) > lbl_803E7EFC)
+            if (((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EFC)
             {
                 lbl_803DC6A0 =
                 ((getAngle(((PlayerState*)state)->baddie.moveInputX,
@@ -3090,7 +3090,7 @@ int fn_802A0680(int obj, int state)
         }
         if (lbl_803DC6A0 != 0x15 && lbl_803DC6A0 != 0x16)
         {
-            f32 v = *(f32*)((char*)state + 0x298);
+            f32 v = ((PlayerState*)state)->baddie.inputMagnitude;
             if (ph < 0.0f)
             {
                 ph = -(lbl_803E8004 * v + lbl_803E8000);
@@ -5714,7 +5714,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             if (((PlayerState*)state)->baddie.targetObj == NULL)
             {
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0 &&
-                    *(f32*)((char*)state + 0x298) > lbl_803E7EAC)
+                    ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
                 {
                     inner->targetYaw =
                         inner->targetYaw + (s16)inner->targetYawRate * 0xb6;
@@ -6138,7 +6138,7 @@ int fn_802A7160(int obj, int state)
         GameBit_Set(0x970, 0);
         (*gObjectTriggerInterface)->runSequence(0x10, (void*)obj, -1);
     }
-    *(int*)((char*)state + 0x308) = (int)fn_802A514C;
+    *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
     return 2;
 }
 
@@ -6474,7 +6474,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
             if (((ByteFlags*)((char*)inner + 0x3f2))->b01 != 0)
             {
                 ((PlayerState*)state)->baddie.moveSpeed =
-                    lbl_803E7EF8 * *(f32*)((char*)state + 0x298) +
+                    lbl_803E7EF8 * ((PlayerState*)state)->baddie.inputMagnitude +
                     tbl->spdD[inner->stickDirection];
                 nextMove = tbl->moveC[inner->stickDirection];
             }
@@ -7463,24 +7463,24 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState*)inner)->yaw = a;
         ((PlayerState*)inner)->targetYaw = a;
         ((PlayerState*)inner)->lastInputHeading = a;
-        *(f32*)((char*)state + 0x298) = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.inputMagnitude = lbl_803E7EA4;
     }
-    *(f32*)&((PlayerState*)state)->baddie.trackedObj = *(f32*)((char*)state + 0x298);
+    *(f32*)&((PlayerState*)state)->baddie.trackedObj = ((PlayerState*)state)->baddie.inputMagnitude;
     ((PlayerState*)inner)->prevYaw = ((PlayerState*)inner)->yaw;
     ((PlayerState*)inner)->prevTargetYaw = ((PlayerState*)inner)->targetYaw;
-    *(f32*)((char*)state + 0x298) =
+    ((PlayerState*)state)->baddie.inputMagnitude =
         sqrtf(((PlayerState*)state)->baddie.moveInputX * ((PlayerState*)state)->baddie.moveInputX +
             ((PlayerState*)state)->baddie.moveInputZ * ((PlayerState*)state)->baddie.moveInputZ);
-    if (*(f32*)((char*)state + 0x298) > lbl_803E7FA8)
+    if (((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7FA8)
     {
-        *(f32*)((char*)state + 0x298) = *(f32*)&lbl_803E7FA8;
+        ((PlayerState*)state)->baddie.inputMagnitude = *(f32*)&lbl_803E7FA8;
     }
-    *(f32*)((char*)state + 0x298) = *(f32*)((char*)state + 0x298) / lbl_803E7FA8;
+    ((PlayerState*)state)->baddie.inputMagnitude = ((PlayerState*)state)->baddie.inputMagnitude / lbl_803E7FA8;
     ((PlayerState*)inner)->inputMagnitude =
-        *(f32*)((char*)state + 0x298) - *(f32*)&((PlayerState*)state)->baddie.trackedObj;
-    if (*(f32*)((char*)state + 0x298) < lbl_803E7F6C)
+        ((PlayerState*)state)->baddie.inputMagnitude - *(f32*)&((PlayerState*)state)->baddie.trackedObj;
+    if (((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F6C)
     {
-        *(f32*)((char*)state + 0x298) = lbl_803E7EA4;
+        ((PlayerState*)state)->baddie.inputMagnitude = lbl_803E7EA4;
         ((PlayerState*)inner)->inputHeading = ((PlayerState*)inner)->lastInputHeading;
     }
     else
@@ -7521,7 +7521,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         ((PlayerState*)inner)->yawRateSigned = ((PlayerState*)inner)->yawRate;
     }
-    if (*(f32*)((char*)state + 0x298) < lbl_803E7F6C)
+    if (((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F6C)
     {
         *(u8*)((char*)state + 0x34b) = 0;
     }
@@ -7792,7 +7792,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         }
     }
     if (*(f32*)&((PlayerState*)state)->baddie.trackedObj >= lbl_803E7FC8 &&
-        *(f32*)((char*)state + 0x298) >= lbl_803E7FC8 &&
+        ((PlayerState*)state)->baddie.inputMagnitude >= lbl_803E7FC8 &&
         ((PlayerState*)state)->baddie.animSpeedC >= *(f32*)(*(int *)&((PlayerState *)inner)->maxSpeed + 4))
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -7904,7 +7904,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         }
     }
     {
-        f32 frac = (*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+        f32 frac = (((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C;
         t = (frac < lbl_803E7EA4) ? lbl_803E7EA4 : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac);
     }
     ((PlayerState*)inner)->unk408 =
@@ -7949,7 +7949,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState*)inner)->yawRate = 0;
         ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A3;
         ((PlayerState*)inner)->unk8B0 = 0;
-        *(f32*)((char*)state + 0x2b8) = lbl_803E8018;
+        ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E8018;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8084;
         if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
             ((ByteFlags*)((char*)inner + 0x3f1))->b20 == 0)
@@ -9934,7 +9934,7 @@ int fn_80299E44(int obj, int state, f32 fv)
     }
     if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
     {
-        if (*(u8*)((char*)state + 0x34b) == 2 && *(f32*)((char*)state + 0x298) > lbl_803E7EAC)
+        if (*(u8*)((char*)state + 0x34b) == 2 && ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
         {
             inner->moveSlotIndex = 1;
             ObjAnim_SetCurrentMove(
@@ -9944,7 +9944,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
         }
-        if (*(u8*)((char*)state + 0x34b) == 3 && *(f32*)((char*)state + 0x298) > lbl_803E7EAC)
+        if (*(u8*)((char*)state + 0x34b) == 3 && ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
         {
             inner->moveSlotIndex = 4;
             ObjAnim_SetCurrentMove(
@@ -9954,7 +9954,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
         }
-        if (*(u8*)((char*)state + 0x34b) == 1 && *(f32*)((char*)state + 0x298) > lbl_803E7EAC)
+        if (*(u8*)((char*)state + 0x34b) == 1 && ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
         {
             inner->moveSlotIndex = 3;
             ObjAnim_SetCurrentMove(
@@ -9964,7 +9964,7 @@ int fn_80299E44(int obj, int state, f32 fv)
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029BC08;
             return 0x27;
         }
-        if (*(u8*)((char*)state + 0x34b) == 4 && *(f32*)((char*)state + 0x298) > lbl_803E7EAC)
+        if (*(u8*)((char*)state + 0x34b) == 4 && ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
         {
             inner->moveSlotIndex = 2;
             ObjAnim_SetCurrentMove(
@@ -10923,10 +10923,10 @@ void fn_802B18BC(int obj, int state, f32 fv)
     {
         ((PlayerState*)state)->unk410 = *(f32*)&lbl_803E7EA4;
     }
-    *(f32*)((char*)state + 0x878) -= fv;
-    if (*(f32*)((char*)state + 0x878) < lbl_803E7EA4)
+    ((PlayerState*)state)->unk878 -= fv;
+    if (((PlayerState*)state)->unk878 < lbl_803E7EA4)
     {
-        *(f32*)((char*)state + 0x878) = *(f32*)&lbl_803E7EA4;
+        ((PlayerState*)state)->unk878 = *(f32*)&lbl_803E7EA4;
     }
     ((PlayerState*)state)->unk87C -= fv;
     if (((PlayerState*)state)->unk87C < lbl_803E7EA4)
@@ -10945,8 +10945,8 @@ void fn_802B19F8(int obj, int state, f32 fv)
 {
     u8 c;
 
-    *(int*)((char*)state + 0x6d0) = 0;
-    *(int*)((char*)state + 0x6d4) = 0;
+    ((PlayerState*)state)->unk6D0 = 0;
+    ((PlayerState*)state)->unk6D4 = 0;
     ((PlayerState*)state)->buttonsHeld = 0;
     ((PlayerState*)state)->buttonsJustPressed = 0;
     ((PlayerState*)state)->buttonsJustPressedIfNotBusy = 0;
@@ -10954,14 +10954,14 @@ void fn_802B19F8(int obj, int state, f32 fv)
         ((PlayerState*)state)->characterId != -1 &&
         (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
     {
-        *(int*)((char*)state + 0x6d0) = padGetStickX(0);
-        *(int*)((char*)state + 0x6d4) = padGetStickY(0);
+        ((PlayerState*)state)->unk6D0 = padGetStickX(0);
+        ((PlayerState*)state)->unk6D4 = padGetStickY(0);
         ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
         ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
         ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
     }
-    *(f32*)((char*)state + 0x6dc) = (f32) * (int*)((char*)state + 0x6d0);
-    *(f32*)((char*)state + 0x6d8) = (f32) * (int*)((char*)state + 0x6d4);
+    ((PlayerState*)state)->unk6DC = (f32) * (int*)((char*)state + 0x6d0);
+    ((PlayerState*)state)->unk6D8 = (f32) * (int*)((char*)state + 0x6d4);
     fn_802B18BC(obj, state, fv);
 }
 
@@ -11079,10 +11079,10 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 6:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
             sv = (s16)iv;
-            *(s16*)((char*)state + 0x808) = sv;
+            *(s16*)&((PlayerState*)state)->unk808 = sv;
             if (sv <= 0)
             {
-                *(s16*)((char*)state + 0x808) = 0x3c;
+                *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
                 ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
             }
             break;
@@ -11098,10 +11098,10 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 26:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
             sv = (s16)iv;
-            *(s16*)((char*)state + 0x808) = sv;
+            *(s16*)&((PlayerState*)state)->unk808 = sv;
             if (sv <= 0)
             {
-                *(s16*)((char*)state + 0x808) = 0x3c;
+                *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
                 ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
                 ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
             }
@@ -11112,11 +11112,11 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 28:
             if (GameBit_Get(0x21) == 0)
             {
-                *(s16*)((char*)state + 0x8a0) =
+                *(s16*)&((PlayerState*)state)->unk8A0 =
                     (s16)(int)((f32) * (u16*)((char*)state + 0x8a0) + dt);
-                if (0x78 < *(u16*)((char*)state + 0x8a0))
+                if (0x78 < ((PlayerState*)state)->unk8A0)
                 {
-                    *(u16*)((char*)state + 0x8a0) = *(u16*)((char*)state + 0x8a0) - 0x78;
+                    ((PlayerState*)state)->unk8A0 = ((PlayerState*)state)->unk8A0 - 0x78;
                     ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
                     ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
                                               0xffffffff);
@@ -11172,7 +11172,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             GameBit_Set(0x643, 1);
             break;
         default:
-            *(s16*)((char*)state + 0x808) = 0;
+            *(s16*)&((PlayerState*)state)->unk808 = 0;
             if (((PlayerState*)state)->unk7C8 < lbl_803E7EA4)
             {
                 fv2 = lbl_803E7EFC * ((PlayerState*)cfg)->baddie.animSpeedA +
@@ -12351,8 +12351,8 @@ void fn_802B4C18(int obj, int state, f32 fv)
     u8 buf[0x40];
 
     ((PlayerState*)state)->baddie.gravity = lbl_803E7EB4;
-    ((PlayerState*)state)->baddie.moveInputX = *(f32*)((char*)state + 0x6dc);
-    ((PlayerState*)state)->baddie.moveInputZ = *(f32*)((char*)state + 0x6d8);
+    ((PlayerState*)state)->baddie.moveInputX = ((PlayerState*)state)->unk6DC;
+    ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->unk6D8;
     *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
     *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
     Player_GetObjHitsState(obj)->hitVolumePriority = 0;
@@ -12363,7 +12363,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
     ((PlayerState*)state)->unk8C5 = 0;
-    *(u32*)((char*)state + 0x360) &= ~0x2000LL;
+    *(u32*)&((PlayerState*)state)->flags360 &= ~0x2000LL;
     *(int*)state |= 0x1000000;
     fn_802B0EA4(obj, state, state);
     if (fn_802A74A4(obj, state, state, buf, fv, 0x60) == 8)
@@ -12827,7 +12827,7 @@ int fn_802AE480(int obj, int inner, int state)
     if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
         ((PlayerState*)state)->baddie.animSpeedC >
         *(f32*)((char*)((PlayerState*)inner)->unk400 + 0x1c) - lbl_803E7E9C &&
-        *(f32*)((char*)state + 0x298) > lbl_803E7F2C &&
+        ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7F2C &&
         ((PlayerState*)inner)->yawRateSigned >= 0x96)
     {
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 1;
@@ -13702,7 +13702,7 @@ int fn_8029C9C8(int obj, int state)
         return r;
     }
     {
-        f32 x = (*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+        f32 x = (((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C;
         ratio = (x < lbl_803E7EA4) ? lbl_803E7EA4 : ((x > lbl_803E7EE0) ? lbl_803E7EE0 : x);
     }
     {
@@ -13756,7 +13756,7 @@ int fn_8029C9C8(int obj, int state)
         {
             if ((s8)phase == 4)
             {
-                if (*(f32*)((char*)state + 0x298) < lbl_803E7F14)
+                if (((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F14)
                 {
                     *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
                     return 0x25;
@@ -15554,7 +15554,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
         return r;
     }
 
-    t = (*(f32*)((char*)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+    t = (((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C;
     ang = (t < lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
     vx = inner->maxSpeed *
         (ang * -mathSinf(lbl_803E7F94 * (f32)inner->inputHeading / lbl_803E7F98));
@@ -15575,7 +15575,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
                    : ((PlayerState*)state)->baddie.animSpeedC);
 
     if (*(f32*)&((PlayerState*)state)->baddie.trackedObj >= lbl_803E7FC8 &&
-        *(f32*)((char*)state + 0x298) >= lbl_803E7FC8 &&
+        ((PlayerState*)state)->baddie.inputMagnitude >= lbl_803E7FC8 &&
         ((PlayerState*)state)->baddie.animSpeedC >= lbl_80332FC0[1])
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -15821,42 +15821,42 @@ void fn_802AE650(int obj, int state, int p3)
         (ee0 = lbl_803E7EE0) - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
-            *(f32*)((char*)state + 0x844) *
-            ((lbl_803E7F14 + *(f32*)((char*)*(int*)((char*)state + 0x400) + 0x14)) -
+            ((PlayerState*)state)->unk844 *
+            ((lbl_803E7F14 + *(f32*)((char*)((PlayerState*)state)->unk400 + 0x14)) -
                 ((PlayerState*)p3)->baddie.animSpeedA) +
             ((PlayerState*)p3)->baddie.animSpeedA;
         ((PlayerState*)p3)->baddie.animSpeedC = ((PlayerState*)p3)->baddie.animSpeedA;
-        *(f32*)((char*)state + 0x844) =
-            lbl_803E7EFC * timeDelta + *(f32*)((char*)state + 0x844);
-        v = *(f32*)((char*)state + 0x844);
-        *(f32*)((char*)state + 0x844) =
+        ((PlayerState*)state)->unk844 =
+            lbl_803E7EFC * timeDelta + ((PlayerState*)state)->unk844;
+        v = ((PlayerState*)state)->unk844;
+        ((PlayerState*)state)->unk844 =
             (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > ee0) ? ee0 : v);
     }
     if ((*(int*)&((PlayerState*)p3)->baddie.eventFlags & 0x200) != 0)
     {
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, 0x3cd);
-        *(u16*)((char*)state + 0x8d8) |= 4;
+        ((PlayerState*)state)->unk8D8 |= 4;
     }
     {
         f32 fa4 = lbl_803E7FA4;
-        *(f32*)((char*)state + 0x428) = fa4;
-        *(f32*)((char*)state + 0x430) = fa4;
+        ((PlayerState*)state)->unk428 = fa4;
+        ((PlayerState*)state)->unk430 = fa4;
     }
-    b = (*(u8*)((char*)state + 0x3f1) >> 4) & 1;
+    b = (((PlayerState*)state)->unk3F1 >> 4) & 1;
     if (b != 0)
     {
         f32 ea4 = lbl_803E7EA4;
-        *(f32*)((char*)state + 0x42c) = ea4;
-        *(f32*)((char*)state + 0x434) = ea4;
+        ((PlayerState*)state)->unk42C = ea4;
+        ((PlayerState*)state)->unk434 = ea4;
     }
     else
     {
         f32 ed4 = lbl_803E7ED4;
-        *(f32*)((char*)state + 0x42c) = ed4;
-        *(f32*)((char*)state + 0x434) = ed4;
+        ((PlayerState*)state)->unk42C = ed4;
+        ((PlayerState*)state)->unk434 = ed4;
     }
-    *(f32*)((char*)state + 0x7a4) = lbl_803E80E4;
+    ((PlayerState*)state)->unk7A4 = lbl_803E80E4;
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7EE0)
     {
         short tmp;
@@ -15864,10 +15864,10 @@ void fn_802AE650(int obj, int state, int p3)
         lbl_803DC66C = 1;
         ((ByteFlags*)((char*)state + 0x3f1))->b02 = 1;
         ((ByteFlags*)((char*)state + 0x3f1))->b08 = 1;
-        *(u8*)((char*)state + 0x8cc) = 0xc;
-        tmp = *(s16*)((char*)state + 0x484);
-        *(s16*)((char*)state + 0x478) = tmp;
-        *(int*)((char*)state + 0x494) = tmp;
+        *(u8*)&((PlayerState*)state)->unk8CC = 0xc;
+        tmp = ((PlayerState*)state)->yaw;
+        ((PlayerState*)state)->targetYaw = tmp;
+        ((PlayerState*)state)->lastInputHeading = tmp;
         ObjAnim_SetCurrentMove(obj, ((s16*)lbl_80333050)[(s8) * (u8*)((char*)state + 0x8cc)],
                                lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 1);
@@ -15923,7 +15923,7 @@ void fn_802AED2C(int obj, int state, int p3)
     u16 sound;
     u32 b;
 
-    if (*(u8*)((char*)state + 0x8b3) != 0)
+    if (((PlayerState*)state)->unk8B3 != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0x47f, lbl_803E7EA4, 0);
     }
@@ -15932,52 +15932,52 @@ void fn_802AED2C(int obj, int state, int p3)
         ObjAnim_SetCurrentMove(obj, 0x47b, lbl_803E7EA4, 0);
     }
     ((PlayerState*)p3)->baddie.moveSpeed = lbl_803E7F20;
-    *(s16*)((char*)state + 0x478) = *(s16*)((char*)state + 0x484);
-    *(f32*)((char*)state + 0x844) = lbl_803E7EA4;
+    ((PlayerState*)state)->targetYaw = ((PlayerState*)state)->yaw;
+    ((PlayerState*)state)->unk844 = lbl_803E7EA4;
     ((ByteFlags*)((char*)state + 0x3f0))->b10 = 1;
     ((ByteFlags*)((char*)state + 0x3f0))->b80 = 0;
     staffFn_80170380(lbl_803DE450, 2);
     ((ByteFlags*)((char*)state + 0x3f0))->b02 = 0;
-    *(u32*)((char*)state + 0x360) |= 0x800000LL;
+    *(u32*)&((PlayerState*)state)->flags360 |= 0x800000LL;
     ObjHits_SyncObjectPositionIfDirty(obj);
     ((ByteFlags*)((char*)state + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b04 = 0;
-    *(u8*)((char*)state + 0x40d) = 0;
+    ((PlayerState*)state)->unk40D = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b40 = 0;
-    *(int*)((char*)state + 0x488) = 0;
-    *(int*)((char*)state + 0x47c) = 0;
-    *(int*)((char*)state + 0x48c) = 0;
-    *(int*)((char*)state + 0x480) = 0;
+    ((PlayerState*)state)->yawRateSigned = 0;
+    ((PlayerState*)state)->targetYawRateSigned = 0;
+    ((PlayerState*)state)->yawRate = 0;
+    ((PlayerState*)state)->targetYawRate = 0;
     lbl_803DC66C = 4;
-    *(u8*)((char*)state + 0x800) = 0;
+    ((PlayerState*)state)->unk800 = 0;
     if (*(void**)((char*)state + 0x7f8) != NULL)
     {
-        short id = *(s16*)((char*)*(int*)((char*)state + 0x7f8) + 0x46);
+        short id = *(s16*)((char*)((PlayerState*)state)->heldObj + 0x46);
         if (id == 0x3cf || id == 0x662)
         {
-            objThrowFn_80182504(*(int*)((char*)state + 0x7f8));
+            objThrowFn_80182504(((PlayerState*)state)->heldObj);
         }
         else
         {
-            objSaveFn_800ea774(*(int*)((char*)state + 0x7f8));
+            objSaveFn_800ea774(((PlayerState*)state)->heldObj);
         }
-        *(s16*)((char*)*(int*)((char*)state + 0x7f8) + 6) &= ~0x4000;
-        *(int*)((char*)*(int*)((char*)state + 0x7f8) + 0xf8) = 0;
-        *(int*)((char*)state + 0x7f8) = 0;
+        *(s16*)((char*)((PlayerState*)state)->heldObj + 6) &= ~0x4000;
+        *(int*)((char*)((PlayerState*)state)->heldObj + 0xf8) = 0;
+        ((PlayerState*)state)->heldObj = 0;
     }
-    b = (*(u8*)((char*)state + 0x3f1) >> 5) & 1;
+    b = (((PlayerState*)state)->unk3F1 >> 5) & 1;
     if (b != 0)
     {
         short t = ((GameObject*)obj)->anim.rotX;
-        *(s16*)((char*)state + 0x484) = t;
-        *(s16*)((char*)state + 0x478) = t;
-        *(int*)((char*)state + 0x494) = t;
+        ((PlayerState*)state)->yaw = t;
+        ((PlayerState*)state)->targetYaw = t;
+        ((PlayerState*)state)->lastInputHeading = t;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
     }
     ((ByteFlags*)((char*)state + 0x3f1))->b20 = 0;
-    if (*(f32*)((char*)state + 0x838) > lbl_803E7EE0)
+    if (((PlayerState*)state)->unk838 > lbl_803E7EE0)
     {
-        if (*(s16*)((char*)state + 0x81a) == 0)
+        if (((PlayerState*)state)->characterId == 0)
         {
             sound = 0x427;
         }
@@ -15989,7 +15989,7 @@ void fn_802AED2C(int obj, int state, int p3)
     }
     else
     {
-        if (*(s16*)((char*)state + 0x81a) == 0)
+        if (((PlayerState*)state)->characterId == 0)
         {
             sound = 0x3ce;
         }
@@ -18003,7 +18003,7 @@ void fn_802AE9C8(int obj, int inner, int state)
 
     ((PlayerState*)inner)->maxSpeed = lbl_803E8068;
     ((PlayerState*)inner)->unk408 =
-        lbl_803E7EA0 * (lbl_803E806C * *(f32*)((char*)state + 0x298)) +
+        lbl_803E7EA0 * (lbl_803E806C * ((PlayerState*)state)->baddie.inputMagnitude) +
         lbl_803E7EB4 * ((PlayerState*)state)->baddie.animSpeedC;
     ((PlayerState*)inner)->unk408 =
         (((PlayerState*)inner)->unk408 < lbl_803E7F18)
@@ -18508,7 +18508,7 @@ void fn_802AAD44(int obj)
     } xf;
     f32 mtx[16];
 
-    height = *(f32*)((char*)state + 0x7d0);
+    height = ((PlayerState*)state)->unk7D0;
     setTextColor((undefined4*)0, 0xff, 0xff, 0xff, 0x80);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
@@ -18550,7 +18550,7 @@ void fn_802AAD44(int obj)
     xf.px = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
     xf.py = ((GameObject*)obj)->anim.localPosY;
     xf.pz = ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ;
-    xf.rx = *(s16*)((char*)state + 0x478);
+    xf.rx = ((PlayerState*)state)->targetYaw;
     xf.ry = 0;
     xf.rz = 0;
     xf.scale = lbl_803E7F6C;
@@ -18559,7 +18559,7 @@ void fn_802AAD44(int obj)
     GXLoadPosMtxImm(mtx, 0);
     drawFn_8005cf8c(vp, lbl_802C2B30, 0xc);
 
-    if (*(f32*)((char*)state + 0x7d0) >= lbl_803E80E0)
+    if (((PlayerState*)state)->unk7D0 >= lbl_803E80E0)
     {
         int t = ((GameObject*)obj)->anim.alpha - (framesThisStep << 2);
         if (t < 0)
@@ -18590,11 +18590,11 @@ void fn_80295918(int obj, int sel, f32 fval)
     {
     case 1:
         {
-            u8 n = *(u8*)((char*)state + 0x8b8);
+            u8 n = ((PlayerState*)state)->unk8B8;
             u8 v = (u8)iv;
             if (n < 4)
             {
-                *(u8*)((char*)state + 0x8b8) += 1;
+                ((PlayerState*)state)->unk8B8 += 1;
                 *((u8*)((char*)state + 0x8b9) + n) = v;
             }
             break;
@@ -18607,10 +18607,10 @@ void fn_80295918(int obj, int sel, f32 fval)
         *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A514C;
         break;
     case 10:
-        *(u32*)((char*)state + 0x360) |= 0x80000LL;
+        *(u32*)&((PlayerState*)state)->flags360 |= 0x80000LL;
         break;
     case 11:
-        *(u32*)((char*)state + 0x360) &= ~0x80000LL;
+        *(u32*)&((PlayerState*)state)->flags360 &= ~0x80000LL;
         break;
     }
 }
@@ -18651,13 +18651,13 @@ int fn_80295A04(int obj, int sel)
     case 9:
         return *(s8*)&((PlayerState*)state)->baddie.unk34D == 3;
     case 10:
-        return *(u32*)((char*)state + 0x360) & 0x200;
+        return *(u32*)&((PlayerState*)state)->flags360 & 0x200;
     case 11:
-        return *(u32*)((char*)state + 0x360) & 0x100;
+        return *(u32*)&((PlayerState*)state)->flags360 & 0x100;
     case 13:
         return ((PlayerState*)state)->baddie.hasTarget == 1;
     case 14:
-        return *(s16*)((char*)state + 0x80a);
+        return ((PlayerState*)state)->animState;
     case 18:
         {
             void* p = *(void**)((char*)state + 0x7f0);
@@ -18795,25 +18795,25 @@ void fn_802AEF34(int obj, int state)
     model = *(int*)((char*)Obj_GetActiveModel(obj) + 0x30);
     prevChanged = 0;
 
-    if (*(s16*)((char*)state + 0x806) != 3)
+    if (*(s16*)&((PlayerState*)state)->unk806 != 3)
     {
-        u8 b = *(u8*)((char*)state + 0x8b4);
+        u8 b = ((PlayerState*)state)->unk8B4;
         if (b == 1)
         {
             staffDoGrowShrinkAnim(lbl_803DE44C, 0, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
-            *(u8*)((char*)state + 0x8b3) = 0;
-            if (*(s16*)((char*)state + 0x806) != 0 && *(s16*)((char*)state + 0x806) != 0xf)
+            ((PlayerState*)state)->unk8B3 = 0;
+            if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
             {
-                *(s16*)((char*)state + 0x806) = 3;
+                *(s16*)&((PlayerState*)state)->unk806 = 3;
             }
         }
         else if (b == 4)
         {
             staffDoGrowShrinkAnim(lbl_803DE44C, 1, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
-            *(u8*)((char*)state + 0x8b3) = 1;
-            if (*(s16*)((char*)state + 0x806) != 0 && *(s16*)((char*)state + 0x806) != 0xf)
+            ((PlayerState*)state)->unk8B3 = 1;
+            if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
             {
-                *(s16*)((char*)state + 0x806) = 3;
+                *(s16*)&((PlayerState*)state)->unk806 = 3;
             }
         }
     }
@@ -18822,7 +18822,7 @@ void fn_802AEF34(int obj, int state)
     do
     {
         changed = 0;
-        switch (*(s16*)((char*)state + 0x806))
+        switch (*(s16*)&((PlayerState*)state)->unk806)
         {
         case 2:
             if (prevChanged != 0)
@@ -18844,12 +18844,12 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E8130)
             {
-                *(u8*)((char*)state + 0x8b3) = 1;
+                ((PlayerState*)state)->unk8B3 = 1;
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7F1C)
             {
                 staffDoGrowShrinkAnim(lbl_803DE44C, 1, 0, 0);
-                *(s16*)((char*)state + 0x806) = 3;
+                *(s16*)&((PlayerState*)state)->unk806 = 3;
                 changed = 1;
             }
             else
@@ -18878,11 +18878,11 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress <= lbl_803E8130)
             {
-                *(u8*)((char*)state + 0x8b3) = 0;
+                ((PlayerState*)state)->unk8B3 = 0;
             }
             if (((GameObject*)obj)->anim.activeMoveProgress <= lbl_803E7EB4)
             {
-                *(s16*)((char*)state + 0x806) = 3;
+                *(s16*)&((PlayerState*)state)->unk806 = 3;
                 changed = 1;
             }
             else
@@ -18898,13 +18898,13 @@ void fn_802AEF34(int obj, int state)
                     obj, ((GameObject*)obj)->anim.currentMove,
                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
-                    obj, lbl_8033366C[*(u8*)((char*)state + 0x8a2)], lbl_803E7EA4, 0);
+                    obj, lbl_8033366C[((PlayerState*)state)->unk8A2], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0)
             {
-                *(s16*)((char*)state + 0x806) = 3;
-                *(u8*)((char*)state + 0x8a2) = 0xff;
+                *(s16*)&((PlayerState*)state)->unk806 = 3;
+                ((PlayerState*)state)->unk8A2 = 0xff;
                 changed = 1;
             }
             else
@@ -18924,14 +18924,14 @@ void fn_802AEF34(int obj, int state)
                 }
                 if (!ok)
                 {
-                    *(s16*)((char*)state + 0x806) = 3;
-                    *(u8*)((char*)state + 0x8a2) = 0xff;
+                    *(s16*)&((PlayerState*)state)->unk806 = 3;
+                    ((PlayerState*)state)->unk8A2 = 0xff;
                     changed = 1;
                 }
                 else
                 {
                     ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
-                        obj, lbl_8033369C[*(u8*)((char*)state + 0x8a2)], timeDelta, 0);
+                        obj, lbl_8033369C[((PlayerState*)state)->unk8A2], timeDelta, 0);
                 }
             }
             break;
@@ -18945,7 +18945,7 @@ void fn_802AEF34(int obj, int state)
             if (*(u16*)((char*)model + 0x58) == 0)
             {
                 ((GameObject*)obj)->anim.activeMove = -1;
-                *(s16*)((char*)state + 0x806) = 0;
+                *(s16*)&((PlayerState*)state)->unk806 = 0;
             }
             else
             {
@@ -18955,23 +18955,23 @@ void fn_802AEF34(int obj, int state)
             }
             break;
         default:
-            if (*(u8*)((char*)state + 0x8b3) != 0)
+            if (((PlayerState*)state)->unk8B3 != 0)
             {
-                if (*(u8*)((char*)state + 0x8b4) == 0)
+                if (((PlayerState*)state)->unk8B4 == 0)
                 {
                     staffDoGrowShrinkAnim(lbl_803DE44C, 0, 0, 0);
-                    *(s16*)((char*)state + 0x806) = 1;
+                    *(s16*)&((PlayerState*)state)->unk806 = 1;
                     changed = 1;
                 }
             }
-            else if (*(u8*)((char*)state + 0x8b4) == 2)
+            else if (((PlayerState*)state)->unk8B4 == 2)
             {
-                *(s16*)((char*)state + 0x806) = 2;
+                *(s16*)&((PlayerState*)state)->unk806 = 2;
                 changed = 1;
             }
-            if (*(u8*)((char*)state + 0x8a2) == 5 || *(u8*)((char*)state + 0x8a2) == 7)
+            if (((PlayerState*)state)->unk8A2 == 5 || ((PlayerState*)state)->unk8A2 == 7)
             {
-                *(s16*)((char*)state + 0x806) = 0xf;
+                *(s16*)&((PlayerState*)state)->unk806 = 0xf;
                 changed = 1;
             }
             break;
