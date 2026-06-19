@@ -1048,7 +1048,7 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
 {
     extern int* gPlayerInterface; /* #57 */
     extern int* gBaddieControlInterface; /* #57 */
-    int control = *(int*)(sub + 0x40c);
+    int control = *(int*)&((GroundBaddieState*)sub)->control;
 
     ((MediumbasketUpdateDropStateState*)control)->unk46 += framesThisStep;
     if (((MediumbasketUpdateDropStateState*)control)->unk46 >= 300)
@@ -1060,7 +1060,7 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
             Sfx_PlayFromObject(obj, SFXkr_jump2);
         }
     }
-    if ((*(u8*)(sub + 0x404) & 2) != 0)
+    if ((((GroundBaddieState*)sub)->configFlags & 2) != 0)
     {
         ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])(
             obj, state, lbl_803E2D14, -1);
@@ -1070,11 +1070,11 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
         ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])(
             obj, state, lbl_803E2DB0, -1);
     }
-    *(int*)(sub + 0x3e0) = *(int*)&((GameObject*)obj)->pendingParentObj;
+    ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
     ((void (*)(int, int, f32, f32, u8*, u8*))((void**)*gPlayerInterface)[2])(
         obj, state, timeDelta, timeDelta, gMediumBasketStateHandlersA, gMediumBasketStateHandlersB);
-    *(int*)&((GameObject*)obj)->pendingParentObj = *(int*)(sub + 0x3e0);
+    *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 
 #pragma fp_contract off
@@ -1082,7 +1082,7 @@ void fn_8015D3C0(int obj, int sub, int state)
 {
     extern int* gPlayerInterface; /* #57 */
     extern int* gBaddieControlInterface; /* #57 */
-    int control = *(int*)(sub + 0x40c);
+    int control = *(int*)&((GroundBaddieState*)sub)->control;
     u8* target;
     int hitInfo[7];
     f32 targetDelta[3];
