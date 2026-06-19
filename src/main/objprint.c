@@ -2756,11 +2756,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             va[0] = *(f32*)(r + 0x6c);
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
-            {
-                int* v = (int*)((GameObject*)staff)->anim.dll;
-                void(*fn)(int, int, f32 *) = (void (*)(int, int, f32*))*(int*)(*v + 0x28);
-                fn(staff, obj, vb);
-            }
+            (*(void (**)(int, int, f32*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, vb);
             va[0] = va[0] - vb[0];
             va[1] = va[1] - vb[1];
             va[2] = va[2] - vb[2];
