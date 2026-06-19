@@ -62,12 +62,8 @@ void Queue_Peek(RingBufferQueue* queue, void* dst)
 
 void Queue_Pop(RingBufferQueue* queue, void* dst)
 {
-    s16 readIndex;
-
     memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
-    readIndex = queue->readIndex + 1;
-    queue->readIndex = readIndex;
-    if (readIndex == queue->capacity)
+    if (++queue->readIndex == queue->capacity)
     {
         queue->readIndex = 0;
     }
@@ -76,12 +72,8 @@ void Queue_Pop(RingBufferQueue* queue, void* dst)
 
 void Queue_Push(RingBufferQueue* queue, void* src)
 {
-    s16 writeIndex;
-
     memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
-    writeIndex = queue->writeIndex + 1;
-    queue->writeIndex = writeIndex;
-    if (writeIndex == queue->capacity)
+    if (++queue->writeIndex == queue->capacity)
     {
         queue->writeIndex = 0;
     }
@@ -120,12 +112,8 @@ void Stack_Pop(RingBufferQueue* stack, void* dst)
 
 void Stack_Push(RingBufferQueue* stack, void* src)
 {
-    s16 writeIndex;
-
     memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
-    writeIndex = stack->writeIndex + 1;
-    stack->writeIndex = writeIndex;
-    if (writeIndex == stack->capacity)
+    if (++stack->writeIndex == stack->capacity)
     {
         stack->writeIndex = 0;
     }
