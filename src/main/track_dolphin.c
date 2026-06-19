@@ -773,7 +773,7 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
     float scratch1;
     float scratch2;
     float t;
-    double dVar4;
+    double len;
     double dist;
     float normX;
     float normY;
@@ -828,8 +828,8 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
             }
             FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
             FUN_80292b48();
-            dVar4 = (double)FUN_802947f8();
-            param_4[1] = param_4[1] + (float)(dist / dVar4);
+            len = (double)FUN_802947f8();
+            param_4[1] = param_4[1] + (float)(dist / len);
             return 1;
         }
         *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
@@ -855,10 +855,10 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
         {
             FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
             FUN_80292b48();
-            dVar4 = (double)FUN_802949e8();
-            if ((double)lbl_803DF934 != dVar4)
+            len = (double)FUN_802949e8();
+            if ((double)lbl_803DF934 != len)
             {
-                dist = (double)(float)(dist / dVar4);
+                dist = (double)(float)(dist / len);
             }
             normX = *param_6;
             normY = lbl_803DF934;
