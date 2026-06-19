@@ -599,7 +599,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
                 ref = *(int*)(objVal + 0xb8);
-                if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0) &&
+                if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
                     (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                         (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                 {
@@ -666,7 +666,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     if (promptB)
                     {
                         ref = *(int*)(objVal + 0xb8);
-                        if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0) &&
+                        if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
                             (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
                                 (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))))
                         {
@@ -674,7 +674,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                         }
                     }
                     else if ((((promptC) &&
-                                (ref = *(int*)(objVal + 0xb8), (*(u8*)(ref + 0x58) >> 6 & 1) == 0)) &&
+                                (ref = *(int*)(objVal + 0xb8), (*(u8*)(ref + 0x58) >> 6 & 1) == 0u)) &&
                             ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
                         (cond = Sfx_IsPlayingFromObjectChannel(objVal, 0x10), !cond))
                     {
