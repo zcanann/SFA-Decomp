@@ -1640,7 +1640,8 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b
     obj->specularBrightness = b;
     atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
-    GXInitLightAttn(lightObj, (zero = lbl_803DE75C), zero, (one = lbl_803DE760), atten, zero, *(f32*)&lbl_803DE760 - atten);
+    zero = lbl_803DE75C;
+    GXInitLightAttn(lightObj, zero, zero, (one = lbl_803DE760), atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 
