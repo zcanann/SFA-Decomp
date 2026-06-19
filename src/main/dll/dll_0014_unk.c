@@ -2503,6 +2503,7 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
     float dx;
     float dy;
     float dz;
+    float dySq;
     float distance;
 
     bestNeighborIds[1] = -1;
@@ -2520,7 +2521,7 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
-            if (neighborCurve != 0)
+            if ((void*)neighborCurve != NULL)
             {
                 segment.endX = *(f32*)(neighborCurve + 0x8);
                 segment.endY = *(f32*)(neighborCurve + 0xc);
@@ -2530,8 +2531,9 @@ int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
                 dx = segment.nearestX - x;
                 dy = segment.nearestY - y;
                 dz = segment.nearestZ - z;
-                distance = dz * dz + dx * dx + dy * dy;
-                slot = (preferredNeighborId == neighborId);
+                dySq = dy * dy;
+                distance = dySq + dx * dx + dz * dz;
+                slot = (neighborId == preferredNeighborId);
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
