@@ -285,7 +285,7 @@ void vortex_update(int obj)
             }
         }
     }
-    else
+    if (state->flags.active == 0)
     {
         f32 lo;
         if (state->alpha > (lo = lbl_803E73D0))
