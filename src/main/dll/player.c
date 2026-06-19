@@ -8430,9 +8430,9 @@ void fn_802AFB0C(int obj, int inner, int state)
     }
     work = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &surfIdx, &damage, &pos.x, &pos.y, &pos.z);
     orig = work;
-    if (**(s8**)&((PlayerState *)inner)->flags360 <= 0)
+    if (**(s8**)&((PlayerState *)inner)->playerStatus <= 0)
     {
-        **(s8**)&((PlayerState *)inner)->flags360 = 1;
+        **(s8**)&((PlayerState *)inner)->playerStatus = 1;
     }
     if ((*(int (*)(int))ObjHits_IsObjectEnabled)(obj) == 0 || objGetFlagsE5_2(obj) != 0 ||
         ((ByteFlags*)((char*)inner + 0x3f3))->b20 != 0 ||
@@ -8525,7 +8525,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             break;
         case 1:
-            damage = **(s8**)&((PlayerState *)inner)->flags360;
+            damage = **(s8**)&((PlayerState *)inner)->playerStatus;
             break;
         case 0x15:
             switch (*(s16*)(((PlayerState*)inner)->unk7F0 + 0x46))
