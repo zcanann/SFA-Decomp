@@ -254,11 +254,11 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
 
     if ((((GameObject*)obj)->colorFadeFlags & 4) != 0)
     {
-        alpha = (f32)obj[0xef] + lbl_803DE89C * timeDelta;
+        alpha = obj[0xef] + lbl_803DE89C * timeDelta;
     }
     else
     {
-        alpha = (f32)obj[0xef] - lbl_803DE89C * timeDelta;
+        alpha = obj[0xef] - lbl_803DE89C * timeDelta;
     }
 
     if (alpha < lbl_803DE88C)
@@ -272,7 +272,7 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
 
-    ((GameObject*)obj)->colorFadeAlpha = (s8)alpha;
+    ((GameObject*)obj)->colorFadeAlpha = alpha;
     if ((((GameObject*)obj)->colorFadeFlags & 8) == 0)
     {
         ((GameObject*)obj)->colorFadeFrames -= framesThisStep;
@@ -298,7 +298,7 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
     u8* childScan;
     int i;
 
-    ((GameObject*)obj)->colorFadeFrames = (s16)frames;
+    ((GameObject*)obj)->colorFadeFrames = frames;
     ((GameObject*)obj)->colorFadeFlags &= ~4;
     ((GameObject*)obj)->colorFadeFlags |= 2;
     obj[0xec] = red;
@@ -397,7 +397,7 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
             {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
-            ((GameObject*)obj)->colorFadeFrames = (s16)frames;
+            ((GameObject*)obj)->colorFadeFrames = frames;
             ((GameObject*)obj)->colorFadeFlags = (u8)(((GameObject*)obj)->colorFadeFlags | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8*, u8*, f32*, int, f32))ObjModel_EnableDefaultRenderCallback)(
@@ -434,7 +434,7 @@ void objSetHintTextIdx(u8* obj, u16 idx)
     {
         idx = 0;
     }
-    ((GameObject*)obj)->paletteIndex = (u8)idx;
+    ((GameObject*)obj)->paletteIndex = idx;
 }
 
 int Obj_IsLoadingLocked(void)
@@ -509,7 +509,7 @@ void Obj_InsertIntoUpdateList(u8* obj)
             prev = cur;
             cur = *(int*)((u8*)cur + linkOff);
         }
-        objListAdd(&lbl_803DCB7C, prev, (int)obj);
+        objListAdd(&lbl_803DCB7C, prev, obj);
     }
 }
 
@@ -1035,7 +1035,7 @@ void ObjList_PartitionForRender(int* out)
     while (i <= j)
     {
         stop = 0;
-        arr = (void**)lbl_803DCB88;
+        arr = lbl_803DCB88;
         while (i <= hi && stop == 0)
         {
             if (((ObjAnimComponent*)arr[i])->modelInstance->flags & 1)
@@ -1104,7 +1104,7 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
     }
     else
     {
-        Obj_BuildWorldTransformMatrix(parent, (f32*)parentMtx, 1);
+        Obj_BuildWorldTransformMatrix(parent, parentMtx, 1);
         PSMTXConcat((f32*)parentMtx, mtx, mtx);
     }
 }
@@ -1235,11 +1235,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.x = *(f32*)(data + 4);
     tmpl.y = *(f32*)(data + 6);
     tmpl.z = *(f32*)(data + 8);
-    tmpl.typeId = (s16)id;
+    tmpl.typeId = id;
     tmpl.data = data;
     tmpl.seqId = seq;
-    tmpl.fb2 = (s16)arg3;
-    tmpl.fac = (s8)arg2;
+    tmpl.fb2 = arg3;
+    tmpl.fac = arg2;
     tmpl.fa2 = -1;
     tmpl.fb4 = -1;
     tmpl.f36 = 0xff;
@@ -1453,14 +1453,14 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         {
             if ((f32)modelFileHeaderGetCullDistance(*(u8**)m) > max)
             {
-                max = (f32)modelFileHeaderGetCullDistance(*(u8**)m);
+                max = modelFileHeaderGetCullDistance(*(u8**)m);
             }
         }
     }
     v = *(u8*)(obj->def + 0x73);
     if (v != 0)
     {
-        max = max * ((lbl_803DE8CC * (f32)v) / lbl_803DE8D0);
+        max = max * ((lbl_803DE8CC * v) / lbl_803DE8D0);
     }
     obj->cullDist = max;
     if (*(u8*)(def + 0x61) != 0)
@@ -1518,7 +1518,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 #pragma dont_inline off
 void objFreeObjDef(void* objp, int flag)
 {
-    u8* obj = (u8*)objp;
+    u8* obj = objp;
     int defs[40];
     void(*fp)(u8 *, int);
     void(*cb)(u8 *);
@@ -1879,7 +1879,7 @@ void Obj_UpdateAllObjects(u8 flags)
         (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
     {
         Obj_UpdateObject((u8*)obj);
-        *(s8*)(obj + 0x35) = (s8)Obj_BuildTransformMatrixSlot(obj);
+        *(s8*)(obj + 0x35) = Obj_BuildTransformMatrixSlot(obj);
         obj = *(int*)(obj + off);
     }
     if (timeStop == 0)
@@ -2316,7 +2316,7 @@ void Obj_RegisterObject(u8* obj, int flags)
                 prev = cur;
                 cur = *(int*)(cur + off);
             }
-            objListAdd(&lbl_803DCB7C, prev, (int)obj);
+            objListAdd(&lbl_803DCB7C, prev, obj);
         }
     }
     if (object->modelInstance->group8RegistrationCount > 0)
@@ -2348,7 +2348,7 @@ void Obj_FreeObject(u8* obj)
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
         i = 0;
-        p = (u8**)lbl_803DCB88;
+        p = lbl_803DCB88;
         for (n = lbl_803DCB84; n > 0; n--)
         {
             if (*p == obj)
@@ -2386,7 +2386,7 @@ void Obj_FreeObject(u8* obj)
     if (((GameObject*)obj)->unkEA != 0)
     {
         i = 0;
-        base = (u8**)lbl_803DCB90;
+        base = lbl_803DCB90;
         p = base;
         for (n = lbl_803DCB8C; n > 0; n--)
         {
@@ -2447,7 +2447,7 @@ void Obj_InitObjectSystem(void)
     int* q;
     int i;
 
-    lbl_803DCB98 = (void**)mmAlloc(0x640, 0xe, 0);
+    lbl_803DCB98 = mmAlloc(0x640, 0xe, 0);
     lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
     lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
     loadAssetFileById((int)&lbl_803DCBA0, 0x3f);
@@ -2465,8 +2465,8 @@ void Obj_InitObjectSystem(void)
         lbl_803DCBB8++;
     }
     lbl_803DCBB8--;
-    lbl_803DCBA8 = (u8*)mmAlloc(lbl_803DCBB8 * 4, 0xe, 0);
-    lbl_803DCBA4 = (u8*)mmAlloc(lbl_803DCBB8, 0xe, 0);
+    lbl_803DCBA8 = mmAlloc(lbl_803DCBB8 * 4, 0xe, 0);
+    lbl_803DCBA4 = mmAlloc(lbl_803DCBB8, 0xe, 0);
     for (i = 0; i < lbl_803DCBB8; i++)
     {
         lbl_803DCBA4[i] = 0;
@@ -2515,7 +2515,7 @@ u8* loadObjectFile(int id)
         int* t = (int*)((int)lbl_803DCBBC + off);
         size = t[1] - base;
     }
-    buf = (u8*)mmAlloc(size, 0xe, 0);
+    buf = mmAlloc(size, 0xe, 0);
     if (buf != 0)
     {
         fileLoadToBufferOffset(0x3e, buf, base, size);
