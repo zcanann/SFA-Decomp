@@ -6,7 +6,7 @@
  * icon, and warps to map 0x12. frameStart kicks the UI DLL (id 4) once,
  * one frame after init.
  *
- * runLoadingScreens advances a frame counter (lbl_803DD5EC) and fades
+ * runLoadingScreens advances a frame counter (gTitleScreenInitLoadingFrameCounter) and fades
  * three full-screen loading-screen textures in/out across three timed
  * windows, using a precomputed alpha ramp. A DVD read error
  * (gDvdErrorPauseActive) freezes the counter and, once past the third
@@ -32,16 +32,16 @@ extern int loadMapAndParent(int mapId);
 extern void loadSunAndMoon(void);
 extern void warpToMap(int idx, s8 transType);
 extern void loadUiDll(int index);
-extern int lbl_803A4438[];
+extern int gTitleScreenInitLoadingTextures[];
 extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC968;
-extern u8 lbl_803DD5E8;
-extern u32 lbl_803DD5EC;
-extern s8 lbl_803DD5F0;
+extern u8 gTitleScreenInitDvdErrorLatched;
+extern u32 gTitleScreenInitLoadingFrameCounter;
+extern s8 gTitleScreenInitFrameStartPending;
 extern f32 lbl_803DD5F4;
 extern f32 lbl_803E1CF0;
-extern f32 lbl_803E1CF4;
-extern f32 lbl_803E1CF8;
+extern f32 gTitleScreenInitAlphaMax;
+extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
 typedef struct LoadingScreenTexture
@@ -78,22 +78,22 @@ void runLoadingScreens(void)
         u8 bytes[4];
     } colorBuf;
 
-    if (lbl_803DD5EC < 0xf0)
+    if (gTitleScreenInitLoadingFrameCounter < 0xf0)
     {
-        if (lbl_803DD5EC < 0x1e)
+        if (gTitleScreenInitLoadingFrameCounter < 0x1e)
         {
-            alpha = (int)((lbl_803E1CF4 * lbl_803DD5EC) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * gTitleScreenInitLoadingFrameCounter) / gTitleScreenInitFadeFrames);
         }
-        else if (lbl_803DD5EC < 0xd2)
+        else if (gTitleScreenInitLoadingFrameCounter < 0xd2)
         {
             alpha = 0xff;
         }
         else
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)(0xf0 - lbl_803DD5EC)) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
         }
 
-        textureSlot = lbl_803A4438[0];
+        textureSlot = gTitleScreenInitLoadingTextures[0];
         if (lbl_803DC968 != 0)
         {
             colorBuf.bytes[0] = 0;
@@ -110,54 +110,54 @@ void runLoadingScreens(void)
         color = colorBuf.word;
         hudDrawColored(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
     }
-    else if (lbl_803DD5EC < 0x1e0)
+    else if (gTitleScreenInitLoadingFrameCounter < 0x1e0)
     {
-        if (lbl_803DD5EC < 0x10e)
+        if (gTitleScreenInitLoadingFrameCounter < 0x10e)
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)(lbl_803DD5EC - 0xf0)) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) / gTitleScreenInitFadeFrames);
         }
-        else if (lbl_803DD5EC < 0x1c2)
+        else if (gTitleScreenInitLoadingFrameCounter < 0x1c2)
         {
             alpha = 0xff;
         }
         else
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)(0x1e0 - lbl_803DD5EC)) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
         }
-        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(lbl_803A4438[1] + 0xa)) >> 1),
-                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(lbl_803A4438[1] + 0xc)) >> 1),
-                    lbl_803A4438[1], alpha, 0x119);
+        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xa)) >> 1),
+                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xc)) >> 1),
+                    gTitleScreenInitLoadingTextures[1], alpha, 0x119);
     }
-    else if (lbl_803DD5EC < 0x258)
+    else if (gTitleScreenInitLoadingFrameCounter < 0x258)
     {
-        if (lbl_803DD5EC < 0x1fe)
+        if (gTitleScreenInitLoadingFrameCounter < 0x1fe)
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)(lbl_803DD5EC - 0x1e0)) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) / gTitleScreenInitFadeFrames);
         }
-        else if (lbl_803DD5EC < 0x23a)
+        else if (gTitleScreenInitLoadingFrameCounter < 0x23a)
         {
             alpha = 0xff;
         }
         else
         {
-            alpha = (int)((lbl_803E1CF4 * (f32)(0x258 - lbl_803DD5EC)) / lbl_803E1CF8);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
         }
-        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(lbl_803A4438[2] + 0xa)) >> 1),
-                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(lbl_803A4438[2] + 0xc)) >> 1),
-                    lbl_803A4438[2], alpha, 0x119);
+        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xa)) >> 1),
+                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xc)) >> 1),
+                    gTitleScreenInitLoadingTextures[2], alpha, 0x119);
     }
 
     dvdErrorActive = gDvdErrorPauseActive;
     if (dvdErrorActive != 0)
     {
-        lbl_803DD5E8 = 1;
+        gTitleScreenInitDvdErrorLatched = 1;
     }
     if (dvdErrorActive == 0)
     {
-        lbl_803DD5EC++;
+        gTitleScreenInitLoadingFrameCounter++;
     }
 
-    if ((lbl_803DD5E8 != 0) && (lbl_803DD5EC > 0x258) && (*(volatile u8*)&gDvdErrorPauseActive == 0))
+    if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) && (*(volatile u8*)&gDvdErrorPauseActive == 0))
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShowStr(gameTextGetStr(0x565), 0, 0x118, 300);
@@ -179,7 +179,7 @@ void initLoadingScreenTextures(void)
     arenaHi = (int)OSGetArenaHi() - 0x40000;
     for (i = 0; i < 3; i++)
     {
-        textureSlot = &((LoadingScreenTexture**)lbl_803A4438)[i];
+        textureSlot = &((LoadingScreenTexture**)gTitleScreenInitLoadingTextures)[i];
         *textureSlot = (LoadingScreenTexture*)arenaHi;
         textureHeader = *textureSlot;
         textureHeader->unk40 = 0;
@@ -199,8 +199,8 @@ void initLoadingScreenTextures(void)
         textureSize = (*textureSlot)->bufferSize + 0x60;
         arenaHi += textureSize;
     }
-    lbl_803DD5EC = 0;
-    lbl_803DD5E8 = 0;
+    gTitleScreenInitLoadingFrameCounter = 0;
+    gTitleScreenInitDvdErrorLatched = 0;
 }
 
 void TitleScreenInit_render(void)
@@ -213,9 +213,9 @@ void TitleScreenInit_frameEnd(void)
 
 int TitleScreenInit_frameStart(void)
 {
-    if (lbl_803DD5F0 != 0)
+    if (gTitleScreenInitFrameStartPending != 0)
     {
-        lbl_803DD5F0 = 0;
+        gTitleScreenInitFrameStartPending = 0;
         lbl_803DD5F4 = lbl_803E1D00;
         loadUiDll(4);
     }
@@ -228,7 +228,7 @@ void TitleScreenInit_release(void)
 
 void TitleScreenInit_initialise(void)
 {
-    lbl_803DD5F0 = 1;
+    gTitleScreenInitFrameStartPending = 1;
     lbl_803DD5F4 = lbl_803E1D00;
     mapUnload(0x3d, 0x10000000);
     setForceLoadImmediately();

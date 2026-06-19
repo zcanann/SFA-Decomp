@@ -6,7 +6,7 @@
  *   1        warpstone texture + intro text (gameText 0x37C..0x37E)
  *   2,3,5    shared status line (gameText 0x3DD)
  *   4        the level-warp menu: builds the selectable list from the six
- *            warpstone game bits (fn_801343CC over lbl_8031CC38) and drives
+ *            warpstone game bits (fn_801343CC over gWarpStoneUiEntryTable) and drives
  *            the gTitleMenuLinkInterface vtable; a selection issues a map act
  *            on map 0x42.
  * WarpstoneUI_frameStart ramps the overlay opacity (lbl_803DD97C) in/out and
@@ -26,7 +26,7 @@ extern u8 warpstoneUIState;
 extern void* lbl_803DD984;
 extern void* lbl_803DD980;
 extern f32 lbl_803DD97C;
-extern int lbl_803DD978;
+extern int gWarpStoneUiMenuActive;
 extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
@@ -43,10 +43,10 @@ typedef struct
     u8 b3; /* unused/padding */
 } WarpstoneEntry;
 
-extern u8 lbl_8031CC50[];
-extern u8 lbl_803A9DD0[];
-extern WarpstoneEntry lbl_8031CC38[];
-extern int lbl_803A9F38[];
+extern u8 gWarpStoneUiMenuItemTemplates[];
+extern u8 gWarpStoneUiMenuItems[];
+extern WarpstoneEntry gWarpStoneUiEntryTable[];
+extern int gWarpStoneUiSelectedIndices[];
 extern int* gTitleMenuLinkInterface;
 
 #pragma scheduling off
@@ -132,27 +132,27 @@ void WarpstoneUI_showUI(int arg)
     case 4:
         gameTextSetColor(0xff, 0xff, 0xff, lbl_803DD97C);
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
-        if (lbl_803DD978 == 0)
+        if (gWarpStoneUiMenuActive == 0)
         {
-            n = fn_801343CC(lbl_8031CC50, lbl_803A9DD0, (u8*)lbl_8031CC38, 6, lbl_803A9F38);
+            n = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, 6, gWarpStoneUiSelectedIndices);
             (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))
                     ((char*)(*gTitleMenuLinkInterface) + 4))
-                (lbl_803A9DD0, n, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
-            lbl_803DD978 = 1;
+                (gWarpStoneUiMenuItems, n, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+            gWarpStoneUiMenuActive = 1;
         }
         sel = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0xc))();
         idx = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0x14))();
         if (sel > 0)
         {
-            (*gMapEventInterface)->setMapAct(0x42, lbl_8031CC38[lbl_803A9F38[idx]].mapAct);
+            (*gMapEventInterface)->setMapAct(0x42, gWarpStoneUiEntryTable[gWarpStoneUiSelectedIndices[idx]].mapAct);
         }
         (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(arg);
         break;
     }
-    if (lbl_803DD978 != 0 && warpstoneUIState != 4)
+    if (gWarpStoneUiMenuActive != 0 && warpstoneUIState != 4)
     {
         (**(void (**)(void))((char*)(*gTitleMenuLinkInterface) + 8))();
-        lbl_803DD978 = 0;
+        gWarpStoneUiMenuActive = 0;
     }
 }
 #pragma scheduling reset

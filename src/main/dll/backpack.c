@@ -45,10 +45,10 @@ extern u8 framesThisStep;
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;
-extern f32 lbl_803E2FE4;
-extern f32 lbl_803E2FE8;
+extern f32 gBackpackBounceDampingHorizontal;
+extern f32 gBackpackBounceDampingVertical;
 extern f32 lbl_803E2FEC;
-extern f32 lbl_803E2FF0;
+extern f32 gBackpackBounceRestitution;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
@@ -99,40 +99,40 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->objectPairHitVolume = 0;
     *stateWord = *stateWord | LANDED_ARWING_FLAG_BOUNCE;
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizontalDamping = lbl_803E2FE4);
-    ((GameObject*)obj)->anim.velocityY = lbl_803E2FE8 * (((GameObject*)obj)->anim.velocityY - lbl_803E2FEC);
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizontalDamping = gBackpackBounceDampingHorizontal);
+    ((GameObject*)obj)->anim.velocityY = gBackpackBounceDampingVertical * (((GameObject*)obj)->anim.velocityY - lbl_803E2FEC);
     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * horizontalDamping;
     objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
     {
         ((GameObject*)obj)->anim.localPosX = state->boundsMinX;
-        ((GameObject*)obj)->anim.velocityX = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityX;
+        ((GameObject*)obj)->anim.velocityX = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityX;
     }
     if (((GameObject*)obj)->anim.localPosX > state->boundsMaxX)
     {
         ((GameObject*)obj)->anim.localPosX = state->boundsMaxX;
-        ((GameObject*)obj)->anim.velocityX = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityX;
+        ((GameObject*)obj)->anim.velocityX = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityX;
     }
     if (((GameObject*)obj)->anim.localPosY < state->boundsMinY)
     {
         ((GameObject*)obj)->anim.localPosY = state->boundsMinY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityY = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityY;
     }
     if (((GameObject*)obj)->anim.localPosY > state->boundsMaxY)
     {
         ((GameObject*)obj)->anim.localPosY = state->boundsMaxY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityY = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityY;
     }
     if (((GameObject*)obj)->anim.localPosZ < state->boundsMinZ)
     {
         ((GameObject*)obj)->anim.localPosZ = state->boundsMinZ;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityZ;
+        ((GameObject*)obj)->anim.velocityZ = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityZ;
     }
     if (((GameObject*)obj)->anim.localPosZ > state->boundsMaxZ)
     {
         ((GameObject*)obj)->anim.localPosZ = state->boundsMaxZ;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E2FF0 * -((GameObject*)obj)->anim.velocityZ;
+        ((GameObject*)obj)->anim.velocityZ = gBackpackBounceRestitution * -((GameObject*)obj)->anim.velocityZ;
     }
     if (lbl_803E2FF4 == ((GameObject*)obj)->anim.currentMoveProgress)
     {

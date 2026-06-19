@@ -44,7 +44,7 @@ extern float mathCosf(float x);
 extern f64 sqrtf(f64 x);
 extern int getAngle(float y, float x);
 
-extern u8 lbl_803DD528;       /* last bbox-hit result */
+extern u8 gCutCamBboxBlocked;       /* last bbox-hit result */
 extern u8 framesThisStep;
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 extern f32 lbl_803E1688;      /* collision probe / trace radius */
@@ -94,7 +94,7 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     {
         blocked = 0;
     }
-    lbl_803DD528 = blocked;
+    gCutCamBboxBlocked = blocked;
     if (runTrace != 0)
     {
         hitDetect_calcSweptSphereBounds(sweptBounds, fromPos, outPos,
@@ -103,7 +103,7 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     }
     hitDetectFn_80067958(0, fromPos, outPos, 1, (int)traceWork, 0);
     clear = 0;
-    if ((lbl_803DD528 == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
+    if ((gCutCamBboxBlocked == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
     {
         clear = 1;
     }
@@ -492,7 +492,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
                                    camera->anim.localPosZ, &camera->anim.worldPosX,
                                    &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    (int)camera->anim.parent);
-    lbl_803DD528 = 0;
+    gCutCamBboxBlocked = 0;
     if (target->anim.classId == 1)
     {
         cameraGetPrevPos2((int)target, &prev[0], &prev[1], &prev[2]);

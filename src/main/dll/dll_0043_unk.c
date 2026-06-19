@@ -34,11 +34,11 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
-extern f32 lbl_803E1758;
-extern f32 lbl_803E175C;
-extern f32 lbl_803E1760;
-extern f32 lbl_803E1764;
-extern f32 lbl_803E1768;
+extern f32 gCamStaffAnimCurveMin;
+extern f32 gCamStaffAnimCurveMax;
+extern f32 gCamStaffAnimPi;
+extern f32 gCamStaffAnimHalfCircleBams;
+extern f32 gCamStaffAnimDegToBams;
 extern f32 lbl_803E176C;
 extern f32 lbl_803E1770;
 extern f32 lbl_803E1774;
@@ -166,7 +166,7 @@ void camclimb_update(CameraObject* cam)
                                        cam->anim.localPosZ, &cam->anim.worldPosX, &cam->anim.worldPosY,
                                        &cam->anim.worldPosZ, *(int*)&cam->anim.parent);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))
-            ((double)lbl_803E1758, (double)lbl_803E175C, cam, target);
+            ((double)gCamStaffAnimCurveMin, (double)gCamStaffAnimCurveMax, cam, target);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
                                                          &gCamcontrolPathState->curveMin,
                                                          &gCamcontrolPathState->curveMax);
@@ -219,7 +219,7 @@ void camclimb_update(CameraObject* cam)
 #pragma peephole on
 static f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
-    return (lbl_803E1760 * angle) / lbl_803E1764;
+    return (gCamStaffAnimPi * angle) / gCamStaffAnimHalfCircleBams;
 }
 
 #pragma scheduling off
@@ -298,7 +298,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int param_2, u8* settings)
         approachAngle = -approachAngle;
     }
 
-    threshold = (s16)(lbl_803E1768 * (f32)(*(s16*)settings));
+    threshold = (s16)(gCamStaffAnimDegToBams * (f32)(*(s16*)settings));
     if (approachAngle < threshold)
     {
         gCamcontrolPathState->active = 1;
@@ -418,8 +418,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int param_2, u8* settings)
                                         lbl_803E1774, lbl_803E1770, lbl_803E1744,
                                         lbl_803E1778);
 
-        gCamcontrolPathState->curveMin = lbl_803E1758;
-        gCamcontrolPathState->curveMax = lbl_803E175C;
+        gCamcontrolPathState->curveMin = gCamStaffAnimCurveMin;
+        gCamcontrolPathState->curveMax = gCamStaffAnimCurveMax;
     }
 }
 
