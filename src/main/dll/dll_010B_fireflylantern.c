@@ -138,32 +138,32 @@ void FireFlyLantern_init(int obj, int def)
     player = (void*)Obj_GetPlayerObject();
     if (((GameObject*)player)->anim.seqId != 0)
     {
-        *(s16*)(state + 0x20) = 0x13d;
+        ((FireFlyLanternState*)state)->gameBit = 0x13d;
     }
     else
     {
-        *(s16*)(state + 0x20) = 0x5d6;
+        ((FireFlyLanternState*)state)->gameBit = 0x5d6;
     }
 
-    *(u8*)(state + 0x1c) = 0;
-    *(u8*)(state + 0x1d) = GameBit_Get(*(s16*)(state + 0x20));
+    ((FireFlyLanternState*)state)->fireflyCount = 0;
+    ((FireFlyLanternState*)state)->remainingCount = GameBit_Get(((FireFlyLanternState*)state)->gameBit);
 
     if (*(s8*)(def + 0x19) == 1)
     {
-        if (*(u8*)(state + 0x1d) != 0)
+        if (((FireFlyLanternState*)state)->remainingCount != 0)
         {
-            *(u8*)(state + 0x1c) = 1;
+            ((FireFlyLanternState*)state)->fireflyCount = 1;
             *(int*)state = FireFlyLantern_spawnFireFly((int*)obj);
         }
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        *(u8*)(state + 0x1c) = (*(u8*)(state + 0x1d) < 6) ? *(u8*)(state + 0x1d) : 6;
+        ((FireFlyLanternState*)state)->fireflyCount = (((FireFlyLanternState*)state)->remainingCount < 6) ? ((FireFlyLanternState*)state)->remainingCount : 6;
 
         i = 0;
         childSlot = state;
-        while (i < *(u8*)(state + 0x1c))
+        while (i < ((FireFlyLanternState*)state)->fireflyCount)
         {
             *(int*)childSlot = FireFlyLantern_spawnFireFly((int*)obj);
             childSlot += 4;
