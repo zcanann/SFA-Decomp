@@ -1225,7 +1225,7 @@ void fn_80203144(int obj, int p2, int p3)
     {
         near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
     }
-    if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (*(u8*)(data + 0x2b) & 2) != 0)
+    if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (((DbstealerwormPlacement*)data)->unk2B & 2) != 0)
     {
         near = ObjGroup_FindNearestObject(0x24, obj, 0);
     }
@@ -2059,7 +2059,7 @@ void dbstealerworm_update(u8* objp)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
-        entry = tbl + *(s16*)(data + 0x24) * 8;
+        entry = tbl + ((DbstealerwormPlacement*)data)->unk24 * 8;
         entry = entry + 0x15c;
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
@@ -2076,7 +2076,7 @@ void dbstealerworm_update(u8* objp)
         if (((GameObject*)obj)->unkF4 != 0)
         {
             if ((((GroundBaddieState*)blob)->configFlags & 4) == 0 &&
-                (*gMapEventInterface)->shouldNotSaveTime(*(int*)(data + 0x14)) != 0)
+                (*gMapEventInterface)->shouldNotSaveTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId) != 0)
             {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void**)*gBaddieControlInterface)[22])(
                     obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
@@ -2090,10 +2090,10 @@ void dbstealerworm_update(u8* objp)
         }
         else if (((GameObject*)obj)->unkF8 == 0)
         {
-            ((GameObject*)obj)->anim.localPosX = *(f32*)(data + 8);
-            ((GameObject*)obj)->anim.localPosY = *(f32*)(data + 0xc);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)(data + 0x10);
-            (*gObjectTriggerInterface)->runSequence(*(s8*)(data + 0x2e), (void*)obj, -1);
+            ((GameObject*)obj)->anim.localPosX = ((DbstealerwormPlacement*)data)->homePosX;
+            ((GameObject*)obj)->anim.localPosY = ((DbstealerwormPlacement*)data)->homePosY;
+            ((GameObject*)obj)->anim.localPosZ = ((DbstealerwormPlacement*)data)->homePosZ;
+            (*gObjectTriggerInterface)->runSequence(((DbstealerwormPlacement*)data)->seqId, (void*)obj, -1);
             ((GameObject*)obj)->unkF8 = 1;
         }
         else
