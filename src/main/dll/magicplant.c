@@ -698,6 +698,6 @@ void fn_80153E0C(int obj, int state)
     ctr = ((BaddieState*)state)->inWhirlpoolGroup;
     if (ctr != 0)
     {
-        ((BaddieState*)state)->inWhirlpoolGroup = ctr - 1;
+        ((BaddieState*)state)->inWhirlpoolGroup--;
     }
 }
