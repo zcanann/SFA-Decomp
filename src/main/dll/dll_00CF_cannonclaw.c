@@ -45,22 +45,22 @@ int cannonclaw_getObjectTypeId(void) { return 0x0; }
 #pragma scheduling off
 void grimble_initialiseStateHandlerTables(void)
 {
-    gGrimbleStateHandlersA[0] = (void*)grimble_stateHandlerA00;
-    gGrimbleStateHandlersA[1] = (void*)grimble_stateHandlerA01;
-    gGrimbleStateHandlersA[2] = (void*)grimble_stateHandlerA02;
-    gGrimbleStateHandlersA[3] = (void*)grimble_stateHandlerA03;
-    gGrimbleStateHandlersA[4] = (void*)grimble_stateHandlerA04;
-    gGrimbleStateHandlersA[5] = (void*)grimble_stateHandlerA05;
-    gGrimbleStateHandlersA[6] = (void*)grimble_stateHandlerA06;
-    gGrimbleStateHandlersA[7] = (void*)grimble_stateHandlerA07;
-    gGrimbleStateHandlersA[8] = (void*)grimble_stateHandlerA08;
-    gGrimbleStateHandlersA[9] = (void*)grimble_stateHandlerA09;
-    gGrimbleStateHandlersB[0] = (void*)grimble_stateHandlerB00;
-    gGrimbleStateHandlersB[1] = (void*)grimble_stateHandlerB01;
-    gGrimbleStateHandlersB[2] = (void*)scarab_updateProximityGate;
-    gGrimbleStateHandlersB[3] = (void*)grimble_stateHandlerB03;
-    gGrimbleStateHandlersB[4] = (void*)grimble_stateHandlerB04;
-    gGrimbleStateHandlersB[5] = (void*)grimble_stateHandlerB05;
+    gGrimbleStateHandlersA[0] = grimble_stateHandlerA00;
+    gGrimbleStateHandlersA[1] = grimble_stateHandlerA01;
+    gGrimbleStateHandlersA[2] = grimble_stateHandlerA02;
+    gGrimbleStateHandlersA[3] = grimble_stateHandlerA03;
+    gGrimbleStateHandlersA[4] = grimble_stateHandlerA04;
+    gGrimbleStateHandlersA[5] = grimble_stateHandlerA05;
+    gGrimbleStateHandlersA[6] = grimble_stateHandlerA06;
+    gGrimbleStateHandlersA[7] = grimble_stateHandlerA07;
+    gGrimbleStateHandlersA[8] = grimble_stateHandlerA08;
+    gGrimbleStateHandlersA[9] = grimble_stateHandlerA09;
+    gGrimbleStateHandlersB[0] = grimble_stateHandlerB00;
+    gGrimbleStateHandlersB[1] = grimble_stateHandlerB01;
+    gGrimbleStateHandlersB[2] = scarab_updateProximityGate;
+    gGrimbleStateHandlersB[3] = grimble_stateHandlerB03;
+    gGrimbleStateHandlersB[4] = grimble_stateHandlerB04;
+    gGrimbleStateHandlersB[5] = grimble_stateHandlerB05;
 }
 #pragma dont_inline reset
 
@@ -104,7 +104,7 @@ void cannonclaw_update(u8* obj)
 {
     u8* trickyState;
     getTrickyObject();
-    trickyState = (u8*)ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
+    trickyState = ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
     if (((GameObject*)obj)->unkF4 != 0) return;
     if (((GameObject*)obj)->anim.currentMove != CANNONCLAW_MOVE_ARM)
     {

@@ -21,7 +21,7 @@ int Dummy04_func03_ret_m1(void);
 
 extern u8 screenTransitionPause;
 #pragma peephole off
-void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
+void setScreenTransitionPause(u32 pause) { screenTransitionPause = pause; }
 #pragma peephole reset
 
 extern f32 lbl_803E0558;
@@ -41,18 +41,18 @@ extern u8 lbl_803DD42E;
 void screenTransitionFn_800d7b04(int duration, int type)
 {
     screenTransitionAlpha = lbl_803E0558;
-    lbl_803DD424 = lbl_803E0564 / (f32)duration;
+    lbl_803DD424 = lbl_803E0564 / duration;
     lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
+    lbl_803DD42C = type;
     lbl_803DD42E = 5;
 }
 
 void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
     screenTransitionAlpha = lbl_803E0558 * from;
-    lbl_803DD424 = -(lbl_803E055C * from) / (f32)duration;
+    lbl_803DD424 = -(lbl_803E055C * from) / duration;
     lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
+    lbl_803DD42C = type;
     lbl_803DD42E = 1;
 }
 
@@ -63,9 +63,9 @@ void screenTransition_screenFade(int duration, int type)
     {
         screenTransitionAlpha = lbl_803E0558;
     }
-    lbl_803DD424 = lbl_803E0564 / (f32)duration;
+    lbl_803DD424 = lbl_803E0564 / duration;
     lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
+    lbl_803DD42C = type;
     lbl_803DD42E = 1;
 }
 #pragma opt_common_subs reset
@@ -77,9 +77,9 @@ void screenTransition_Do(int duration, int type)
     {
         screenTransitionAlpha = lbl_803E0560;
     }
-    lbl_803DD424 = lbl_803E055C / (f32)duration;
+    lbl_803DD424 = lbl_803E055C / duration;
     lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
+    lbl_803DD42C = type;
     lbl_803DD42E = 0;
 }
 #pragma opt_common_subs reset

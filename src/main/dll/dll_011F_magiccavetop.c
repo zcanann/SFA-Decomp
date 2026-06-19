@@ -152,7 +152,7 @@ void magiccavetop_update(int* obj)
     f32 dist;
     f32 t;
 
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     sub = ((GameObject*)obj)->extra;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     gb = 0;

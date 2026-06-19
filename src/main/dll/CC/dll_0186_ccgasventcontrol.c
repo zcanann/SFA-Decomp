@@ -94,7 +94,7 @@ void ccgasventcontrol_free(int obj)
 void ccgasventcontrol_init(int obj, u8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)CCGasVentControl_SeqFn;
+    ((GameObject*)obj)->animEventCallback = CCGasVentControl_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
     if (GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
@@ -151,7 +151,7 @@ void ccgasventcontrol_update(int obj)
             if (((GameObject*)player)->anim.localPosY <= ((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)
                 ex)->fogRise)
             {
-                ((CcgasventcontrolState*)ex)->airMeter = -(timeDelta * (f32)b - ((CcgasventcontrolState*)ex)->airMeter);
+                ((CcgasventcontrolState*)ex)->airMeter = -(timeDelta * b - ((CcgasventcontrolState*)ex)->airMeter);
             }
             else
             {

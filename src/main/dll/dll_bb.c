@@ -140,18 +140,18 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   Obj_UpdateWorldTransform((s16 *)view);
   loadMapForCameraPos(camera->worldX,camera->worldY,camera->worldZ);
   itmp = Camera_GetViewportYOffset();
-  lbl_803DD4C0 = (short)itmp;
-  if ((int)lbl_803DD4C0 != (int)camera->letterboxTargetOffset) {
-    if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
+  lbl_803DD4C0 = itmp;
+  if ((int)lbl_803DD4C0 != camera->letterboxTargetOffset) {
+    if ((int)lbl_803DD4C0 < camera->letterboxTargetOffset) {
       lbl_803DD4C0 = lbl_803DD4C0 + camera->letterboxStep * (int)timeDelta;
-      if ((int)lbl_803DD4C0 > (int)camera->letterboxTargetOffset) {
-        lbl_803DD4C0 = (short)camera->letterboxTargetOffset;
+      if ((int)lbl_803DD4C0 > camera->letterboxTargetOffset) {
+        lbl_803DD4C0 = camera->letterboxTargetOffset;
       }
     }
     else {
       lbl_803DD4C0 = lbl_803DD4C0 - camera->letterboxStep * (int)timeDelta;
-      if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
-        lbl_803DD4C0 = (short)camera->letterboxTargetOffset;
+      if ((int)lbl_803DD4C0 < camera->letterboxTargetOffset) {
+        lbl_803DD4C0 = camera->letterboxTargetOffset;
       }
     }
     Camera_SetViewportYOffset(lbl_803DD4C0);
@@ -168,7 +168,7 @@ void camcontrol_applyQueuedAction(void)
 
   if (gCamcontrolQueuedActionPending != '\0') {
     if (gCamcontrolQueuedActionBlendFrames > 1) {
-      blendStep = gCamcontrolNormalizedMax / (f32)gCamcontrolQueuedActionBlendFrames;
+      blendStep = gCamcontrolNormalizedMax / gCamcontrolQueuedActionBlendFrames;
       if ((blendStep <= gCamcontrolNormalizedMin) || (blendStep > gCamcontrolNormalizedMax)) {
         blendStep = gCamcontrolNormalizedMax;
       }
@@ -231,7 +231,7 @@ void Camera_func1C(int flags)
 
 void Camera_setLetterbox(int yOffset,int applyNow)
 {
-  if (yOffset > (int)CAMCONTROL_CAMERA->letterboxTargetOffset) {
+  if (yOffset > CAMCONTROL_CAMERA->letterboxTargetOffset) {
     CAMCONTROL_CAMERA->letterboxTargetOffset = yOffset;
     CAMCONTROL_CAMERA->letterboxStep = 2;
     if (applyNow != 0) {

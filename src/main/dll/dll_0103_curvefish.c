@@ -183,8 +183,8 @@ void curvefish_update(int obj)
     }
     else
     {
-        state->speed += ((f32)(int)randomGetRange(-(int)setup2->speedChange,
-                                                  (int)setup2->speedChange << 1) *
+        state->speed += ((f32)(int)randomGetRange(-setup2->speedChange,
+                                                  setup2->speedChange << 1) *
                          timeDelta) /
                         lbl_803E38FC;
         if (state->speed < lbl_803E38F0)
@@ -301,7 +301,7 @@ void curvefish_init(int obj, u8* param_2)
     state = *(int*)&((GameObject*)obj)->extra;
     flags = ((GameObject*)obj)->objectFlags;
     flags |= 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)flags;
+    ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
         ((f32)(u32)((CurveFishSetup*)param_2)->rootMotionScaleParam / lbl_803E3928);
     ((CurveFishState*)state)->mode = 1;

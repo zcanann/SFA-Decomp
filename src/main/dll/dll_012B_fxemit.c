@@ -65,7 +65,7 @@ void fxemit_emitEffect(FxEmitObject* obj)
     spawnFlags = 0;
     if (state->effectId == 0x11)
     {
-        fn_80137948(sCFTreasSharpyDebugFormat, (int)obj, obj->objAnim.localPosX, obj->objAnim.localPosZ);
+        fn_80137948(sCFTreasSharpyDebugFormat, obj, obj->objAnim.localPosX, obj->objAnim.localPosZ);
     }
 
     switch (def->spawnMode)
@@ -409,7 +409,7 @@ void fxemit_update(FxEmitObject* obj)
                         {
                             fxemit_emitEffect(obj);
                         }
-                        obj->emitCooldown = -(int)state->emitCount;
+                        obj->emitCooldown = -state->emitCount;
                     }
                     else if (e < 0 && obj->emitCooldown > 0)
                     {
@@ -458,7 +458,7 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
     state->sfxTimer = (s16)(setup->sfxPeriod * 100);
     state->initialX = obj->objAnim.localPosX;
-    state->startDelay = (s16)randomGetRange(0, 10);
+    state->startDelay = randomGetRange(0, 10);
     state->altEffectId = 0;
 }
 

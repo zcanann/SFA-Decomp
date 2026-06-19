@@ -89,7 +89,7 @@ void dll_197_update(int obj)
     *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)lbl_802C23C8;
 
     player = Obj_GetPlayerObject();
-    distance = Vec_distance((void*)(player + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX);
+    distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
     {
         if (distance >= lbl_803E5138 && state->active != 0)
@@ -242,7 +242,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     u8* camera;
     f32 dist;
     f32 scale;
-    void* dirAlias = (void*)dir;
+    void* dirAlias = dir;
 
     if (visible == 0)
     {

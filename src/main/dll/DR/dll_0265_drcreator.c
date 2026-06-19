@@ -99,12 +99,12 @@ void drcreator_init(int obj, char* arg)
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x1e] << 8);
     ((DrcreatorState*)state)->gameBitId = *(s16*)(arg + 0x18);
     ((DrcreatorState*)state)->unk6 = *(s16*)(arg + 0x1c);
-    ((DrcreatorState*)state)->spawnTimer = (s16)randomGetRange(0, ((DrcreatorState*)state)->unk6);
-    ((DrcreatorState*)state)->timerVariance = (s8)arg[0x1f];
+    ((DrcreatorState*)state)->spawnTimer = randomGetRange(0, ((DrcreatorState*)state)->unk6);
+    ((DrcreatorState*)state)->timerVariance = arg[0x1f];
     *(int*)state = (u8)arg[0x20];
     ((BitFlags8*)(state + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
-    ((GameObject*)obj)->animEventCallback = (void*)drcreator_spawnProjectileCallback;
+    ((GameObject*)obj)->animEventCallback = drcreator_spawnProjectileCallback;
 }
 
 void drcreator_update(int obj)
@@ -151,7 +151,7 @@ void drcreator_update(int obj)
                     if (projectile != NULL)
                     {
                         ((DrcreatorState*)projectile)->unk2 = 0;
-                        ((GameObject*)projectile)->anim.rotX = (s16)randomGetRange(0, 65535);
+                        ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
                         ((DrcreatorState*)projectile)->velocityX =
                             lbl_803E69B8 *
                             (lbl_803E69BC *
@@ -211,7 +211,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
                 if ((void*)projectile != NULL)
                 {
                     ((DrcreatorState*)projectile)->unk2 = 0;
-                    ((GameObject*)projectile)->anim.rotX = (s16)randomGetRange(0, 65535);
+                    ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
                     ((DrcreatorState*)projectile)->velocityX =
                         lbl_803E69A8 * (f32)(int)randomGetRange(
                                                  -((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,

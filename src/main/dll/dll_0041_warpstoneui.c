@@ -81,7 +81,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
         {
             memcpy(dst, src, 0x3c);
             lastDst = dst;
-            *(s16*)(dst + 6) = (s16)yoff;
+            *(s16*)(dst + 6) = yoff;
             *(s8*)(dst + 0x1a) = (s8)(k - 1);
             *(s8*)(dst + 0x1b) = (s8)(k + 1);
             *out = n;
@@ -103,7 +103,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 #pragma scheduling reset
 
 #pragma peephole off
-void WarpstoneUI_setState(int val) { warpstoneUIState = (u8)val; }
+void WarpstoneUI_setState(int val) { warpstoneUIState = val; }
 #pragma peephole reset
 
 #pragma scheduling off
@@ -119,19 +119,19 @@ void WarpstoneUI_showUI(int arg)
     case 2:
     case 3:
     case 5:
-        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+        gameTextSetColor(0xff, 0xff, 0xff, lbl_803DD97C);
         gameTextFn_80016810(0x3dd, 200, lbl_803DBBF8);
         break;
     case 1:
         drawTexture(lbl_803DD980, (f32)(int)(lbl_803DBBFC - 0x1d), (f32)(int)(lbl_803DBC00 + 0xd),
-                    (int)lbl_803DD97C, 0xff);
-        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+                    lbl_803DD97C, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, lbl_803DD97C);
         gameTextShow(0x37c);
         gameTextShow(0x37d);
         gameTextShow(0x37e);
         break;
     case 4:
-        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+        gameTextSetColor(0xff, 0xff, 0xff, lbl_803DD97C);
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
         if (lbl_803DD978 == 0)
         {

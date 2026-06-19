@@ -120,11 +120,11 @@ void WaterFallSpray_update(int* objParam)
                         }
                     }
                 }
-                *(u32*)&((GameObject*)obj)->unkF4 = -(u32)data[0x24];
+                *(u32*)&((GameObject*)obj)->unkF4 = -data[0x24];
             }
             else if (cooldown > 0)
             {
-                *(u32*)&((GameObject*)obj)->unkF4 = cooldown - (u32)framesThisStep;
+                *(u32*)&((GameObject*)obj)->unkF4 = cooldown - framesThisStep;
             }
         }
     }
@@ -145,7 +145,7 @@ void WaterFallSpray_init(u8* obj, u8* data)
     c = (s16)((s32)(s8)data[0x1c] << 8);
     ((GameObject*)obj)->anim.rotX = c;
     *(u32*)&((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)WaterFallSpray_SeqFn;
+    ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
     v = *(int*)((char*)(*(u8**)&((GameObject*)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END && v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
     {
@@ -158,7 +158,7 @@ void WaterFallSpray_init(u8* obj, u8* data)
 }
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
- * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
+ * on data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 

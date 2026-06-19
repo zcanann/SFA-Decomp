@@ -125,7 +125,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.rotX + lbl_803DD540->smoothedYawOffset
         )
         ;
-        camera->anim.rotX = (short)rotVal;
+        camera->anim.rotX = rotVal;
         rotVal = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
         angleDelta = (short)rotVal - camera->anim.rotY;
         if (0x8000 < angleDelta)
@@ -169,7 +169,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.rotZ
         )
         ;
-        camera->anim.rotZ = (short)rotVal;
+        camera->anim.rotZ = rotVal;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
                                        camera->anim.worldPosZ, &camera->anim.localPosX, &camera->anim.localPosY,
                                        &camera->anim.localPosZ, (u32)camera->anim.parent);

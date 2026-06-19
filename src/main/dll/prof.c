@@ -133,14 +133,14 @@ void optionsMenu_openGeneralPanel(void)
     {
         if (isCheatUnlocked((u8)(cheatId - 2)) != 0)
         {
-            panels->optionEntries[entryOffset - 0x21] = (s8)cheatId;
+            panels->optionEntries[entryOffset - 0x21] = cheatId;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
                 (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
             lastUnlocked = cheatId;
         }
         else
         {
-            panels->optionEntries[entryOffset - 0x21] = (s8)lastUnlocked;
+            panels->optionEntries[entryOffset - 0x21] = lastUnlocked;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
                 (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) | OPTION_ENTRY_DISABLED);
         }
@@ -156,7 +156,7 @@ void optionsMenu_openGeneralPanel(void)
     {
         if (isCheatUnlocked((u8)(cheatId - 2)) != 0)
         {
-            panels->optionEntries[entryOffset + 0x1a] = (s8)lastUnlocked;
+            panels->optionEntries[entryOffset + 0x1a] = lastUnlocked;
             *(u16*)(panels->optionEntries + entryOffset + 0x16) =
                 (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
             lastUnlocked = cheatId;
@@ -186,7 +186,7 @@ void optionsMenu_openGeneralPanel(void)
             if (cheatId == 1)
             {
                 slot[2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-                    0x507, cheatId + 0x24, 0, 1, (s16)Rcp_GetColorFilterEnabled());
+                    0x507, cheatId + 0x24, 0, 1, Rcp_GetColorFilterEnabled());
             }
             else
             {

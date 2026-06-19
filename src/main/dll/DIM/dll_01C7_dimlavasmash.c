@@ -206,11 +206,11 @@ void dimlavasmash_init(s16* obj, s8* def)
 
     objAnim = (ObjAnimComponent*)obj;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dimlavasmash_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dimlavasmash_SeqFn;
     inner = ((GameObject*)obj)->extra;
     *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
     *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    *(u8*)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
+    *(u8*)(inner + 2) = GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
     if (*(u8*)(inner + 2) == 1)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

@@ -198,7 +198,7 @@ void shop_free(int* obj)
 void shop_func0B(int* obj, int v, int p3)
 {
     s8* state = ((GameObject*)obj)->extra;
-    state[0] = (s8)v;
+    state[0] = v;
     if (v != 0)
     {
         (*gObjectTriggerInterface)->runSequence(p3, obj, -1);
@@ -206,13 +206,13 @@ void shop_func0B(int* obj, int v, int p3)
 }
 
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
- * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
+ * and obj->_b8[3], stash v in obj->_b8[4]. */
 void shop_func15(int* obj, int v)
 {
     s8* b = ((GameObject*)obj)->extra;
     b[2] = 0;
     b[3] = 0;
-    b[4] = (s8)v;
+    b[4] = v;
 }
 
 /* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
@@ -299,7 +299,7 @@ int shop_isItemAvailable(int p, int idx)
     Obj_GetPlayerObject();
     result = 0;
     slot = *(s16*)(lbl_80327FD0 + idx * 0xc + 0x6);
-    if (slot == -1 || (u32)GameBit_Get(slot) != 0u)
+    if (slot == -1 || GameBit_Get(slot) != 0u)
     {
         result = 1;
     }
@@ -316,7 +316,7 @@ int shop_isItemBought(int p, int idx)
     Obj_GetPlayerObject();
     result = 0;
     slot = *(s16*)(lbl_80327FD0 + idx * 0xc + 0x8);
-    if (slot != -1 && (u32)GameBit_Get(slot) != 0u)
+    if (slot != -1 && GameBit_Get(slot) != 0u)
     {
         result = 1;
     }
@@ -326,7 +326,7 @@ int shop_isItemBought(int p, int idx)
 void shop_setStateField1(int* obj, int v)
 {
     s8* state = ((GameObject*)obj)->extra;
-    state[1] = (s8)v;
+    state[1] = v;
 }
 
 void shop_update(int obj)
@@ -335,7 +335,7 @@ void shop_update(int obj)
     int player;
 
     player = (int)Obj_GetPlayerObject();
-    if ((void*)Player_GetStaffObject(player) != NULL && (u32)GameBit_Get(0x18b) == 0u)
+    if ((void*)Player_GetStaffObject(player) != NULL && GameBit_Get(0x18b) == 0u)
     {
         fn_80295CF4(player, 0);
     }

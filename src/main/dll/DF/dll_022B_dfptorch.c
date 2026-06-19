@@ -58,7 +58,7 @@ void DFP_Torch_init(int obj, int def)
     motionRate = *(s16*)(def + 0x1a);
     if (motionRate > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)motionRate / lbl_803E63E4;
+        ((GameObject*)obj)->anim.rootMotionScale = motionRate / lbl_803E63E4;
     }
     else
     {

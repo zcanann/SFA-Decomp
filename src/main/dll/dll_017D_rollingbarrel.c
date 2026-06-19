@@ -86,8 +86,8 @@ void RollingBarrel_free(int obj)
     u32 a;
     for (i = 0; i < count; i++)
     {
-        a = (u32)arr[i];
-        if (a == (u32)obj)
+        a = arr[i];
+        if (a == obj)
         {
             ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
             break;
@@ -116,8 +116,8 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     ((GameObject*)obj)->anim.localPosZ = params->z;
     ((GameObject*)obj)->anim.worldPosZ = params->z;
 
-    state->verticalSpeed = (f32)params->verticalSpeed / lbl_803E447C;
-    state->curveSpeed = (f32)params->curveSpeed / lbl_803E447C;
+    state->verticalSpeed = params->verticalSpeed / lbl_803E447C;
+    state->curveSpeed = params->curveSpeed / lbl_803E447C;
     state->state = ROLLINGBARREL_STATE_ROLLING;
     state->pitchRising = 1;
     state->timer = lbl_803E4468;
@@ -249,7 +249,7 @@ void RollingBarrel_update(int obj)
                     state->hitVolumeSlot = 5;
                 }
                 r = randomGetRange(0, 2);
-                fn_801A5D88(obj, (int)r);
+                fn_801A5D88(obj, r);
             }
         }
         break;
@@ -308,19 +308,19 @@ void fn_801A5D88(int obj, int explosionVariant)
     if (lbl_803DDB20 > 1)
     {
         r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion(obj, 1, 1, 0, r, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
         r = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion(obj, 1, 1, 0, r, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius(obj,
                               (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
         dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);

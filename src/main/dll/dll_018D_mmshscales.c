@@ -79,7 +79,7 @@ void mmsh_scales_update(int objArg)
         {
             seqTag = *(s8*)(*(int*)&((GameObject*)objArg)->extra + 0x57);
             match = 0;
-            list = (int*)ObjList_GetObjects(&i, &count);
+            list = ObjList_GetObjects(&i, &count);
             siblingCount = 0;
             for (i = 0, groupTag = (int)(s8)seqTag; i < count; i++)
             {
@@ -140,7 +140,7 @@ void mmsh_scales_init(int* obj, s16* def)
     if (loadedBank == 0 && def[12] != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
-        ((GameObject*)obj)->unkF4 = (int)def[12] + 1;
+        ((GameObject*)obj)->unkF4 = def[12] + 1;
     }
     else if (loadedBank != 0 && def[12] != loadedBank - 1)
     {
@@ -149,7 +149,7 @@ void mmsh_scales_init(int* obj, s16* def)
         {
             (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
         }
-        ((GameObject*)obj)->unkF4 = (int)def[12] + 1;
+        ((GameObject*)obj)->unkF4 = def[12] + 1;
     }
     if (Obj_IsLoadingLocked() == 0) return;
     setup = Obj_AllocObjectSetup(0x24, 0x1b8);

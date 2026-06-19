@@ -98,7 +98,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     }
     if (state->partnerObj == NULL)
     {
-        list = (int*)ObjList_GetObjects(&idx, &count);
+        list = ObjList_GetObjects(&idx, &count);
         while (idx < count)
         {
             *(int*)&state->partnerObj = list[idx];
@@ -165,7 +165,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            player, ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
+            player, ((f32)state->spinProgress - state->prevSpinProgress) / animDiv,
             timeDelta, NULL) != 0)
         {
             if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
@@ -177,7 +177,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         if (state->partnerObj != NULL)
         {
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                *(int*)&state->partnerObj, -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
+                *(int*)&state->partnerObj, -((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
                 timeDelta, NULL) != 0)
             {
                 f32 h = ((GameObject*)state->partnerObj)->anim.currentMoveProgress;
@@ -229,7 +229,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         {
             vol = -vol;
         }
-        v = (int)vol;
+        v = vol;
         if (v > 100)
         {
             v = 100;
@@ -322,7 +322,7 @@ void dbsh_symbol_init(int* obj)
     state->flags.active = 1;
 
     ((GameObject*)obj)->anim.localPosY -= lbl_803E5118;
-    ((GameObject*)obj)->animEventCallback = (void*)DBSH_Symbol_SeqFn;
+    ((GameObject*)obj)->animEventCallback = DBSH_Symbol_SeqFn;
 
     ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }

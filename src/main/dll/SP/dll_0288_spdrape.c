@@ -97,7 +97,7 @@ void spdrape_update(int obj)
     char* player;
 
     state = ((GameObject*)obj)->extra;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 0: /* idle: rustle, and swing open when the player is near */
@@ -214,8 +214,8 @@ void spdrape_init(int* obj, u8* def)
     state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
     state[2] = mathCosf(lbl_803E5AC8 * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
     state[3] = -(state[1] * ((GameObject*)obj)->anim.localPosX + state[2] * ((GameObject*)obj)->anim.localPosZ);
-    ((SpdrapeState*)state)->sfxTimer = (s16)randomGetRange(0xb4, 0x12c);
-    player = (int*)Obj_GetPlayerObject();
+    ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
+    player = Obj_GetPlayerObject();
     if (player != NULL)
     {
         if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ + state[

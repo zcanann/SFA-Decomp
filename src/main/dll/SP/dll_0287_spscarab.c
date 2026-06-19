@@ -188,7 +188,7 @@ void spscarab_init(int obj, int def)
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
     ((SpscarabState*)p_b8)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
-    ((SpscarabState*)p_b8)->speedScale = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;
+    ((SpscarabState*)p_b8)->speedScale = lbl_803E5A94 + randomGetRange(0, 0x64) / lbl_803E5A80;
     ((SpscarabState*)p_b8)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 

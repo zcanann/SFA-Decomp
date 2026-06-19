@@ -54,20 +54,20 @@ void drmusiccont_init(int obj)
     int state = *(int*)&((GameObject*)obj)->extra;
     DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
 
-    flags->b_e30 = (u8)GameBit_Get(0xe30);
-    flags->b_e31 = (u8)GameBit_Get(0xe31);
-    flags->b_e32 = (u8)GameBit_Get(0xe32);
-    flags->b_e33 = (u8)GameBit_Get(0xe33);
-    flags->b_e9c = (u8)GameBit_Get(0xe9c);
-    flags->b_e38 = (u8)GameBit_Get(0xe38);
-    flags->b_e3c = (u8)GameBit_Get(0xe3c);
-    flags->b_e3d = (u8)GameBit_Get(0xe3d);
-    flags->b_e3e = (u8)GameBit_Get(0xe3e);
-    flags->b_e39 = (u8)GameBit_Get(0xe39);
-    flags->b_9e0 = (u8)GameBit_Get(0x9e0);
-    flags->b_9e1 = (u8)GameBit_Get(0x9e1);
-    flags->b_9e2 = (u8)GameBit_Get(0x9e2);
-    flags->b_9e7 = (u8)GameBit_Get(0x9e7);
+    flags->b_e30 = GameBit_Get(0xe30);
+    flags->b_e31 = GameBit_Get(0xe31);
+    flags->b_e32 = GameBit_Get(0xe32);
+    flags->b_e33 = GameBit_Get(0xe33);
+    flags->b_e9c = GameBit_Get(0xe9c);
+    flags->b_e38 = GameBit_Get(0xe38);
+    flags->b_e3c = GameBit_Get(0xe3c);
+    flags->b_e3d = GameBit_Get(0xe3d);
+    flags->b_e3e = GameBit_Get(0xe3e);
+    flags->b_e39 = GameBit_Get(0xe39);
+    flags->b_9e0 = GameBit_Get(0x9e0);
+    flags->b_9e1 = GameBit_Get(0x9e1);
+    flags->b_9e2 = GameBit_Get(0x9e2);
+    flags->b_9e7 = GameBit_Get(0x9e7);
 }
 
 void drmusiccont_update(int obj)
@@ -164,7 +164,7 @@ void drmusiccont_update(int obj)
 
     if (flags->b_state != 0)
     {
-        if ((u32)GameBit_Get(0x9f0) == 0 || (u32)GameBit_Get(0x632) != 0)
+        if ((u32)GameBit_Get(0x9f0) == 0 || GameBit_Get(0x632) != 0)
         {
             (*gMapEventInterface)->clearRestartPoint();
             flags->b_state = 0;
@@ -172,7 +172,7 @@ void drmusiccont_update(int obj)
     }
     else
     {
-        if ((u32)GameBit_Get(0x9f0) != 0 && (u32)GameBit_Get(0x632) == 0)
+        if ((u32)GameBit_Get(0x9f0) != 0 && GameBit_Get(0x632) == 0)
         {
             f32 vec[3];
             vec[0] = lbl_803E6BE0;

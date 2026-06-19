@@ -363,7 +363,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p++;
     }
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     if (variant == 0)
     {
         buf.pos[0] = lbl_803E10EC;

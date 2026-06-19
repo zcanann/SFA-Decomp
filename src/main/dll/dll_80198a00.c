@@ -26,7 +26,7 @@ extern const char sMoonrockTriggerIdentFormat[];
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
- * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
+ * on data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 

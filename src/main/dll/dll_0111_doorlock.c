@@ -214,14 +214,14 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
     *obj = (short)((u8)config->rotXByte << 8);
     ((GameObject*)obj)->anim.rotY = (short)(config->rotYByte << 8);
     ((GameObject*)obj)->anim.rotZ = (short)(config->rotZByte << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)Lock_DoorLock_SeqFn;
+    ((GameObject*)obj)->animEventCallback = Lock_DoorLock_SeqFn;
     *(u8*)&objAnim->bankIndex = config->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
     state = ((GameObject*)obj)->extra;
-    state->unlocked = (u8)GameBit_Get(config->lockGameBit);
+    state->unlocked = GameBit_Get(config->lockGameBit);
     ObjGroup_AddObject((u32)obj, 0xf);
     if ((config->flags & 1) != 0)
     {

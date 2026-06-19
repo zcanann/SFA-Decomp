@@ -208,7 +208,7 @@ void chuka_init(int obj, int params)
     u8* modeTable;
 
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(params + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)chuka_SeqFn;
+    ((GameObject*)obj)->animEventCallback = chuka_SeqFn;
     state->startY = ((GameObject*)obj)->anim.localPosY;
     state->modeIndex = *(u8*)(params + 0x19);
 

@@ -187,7 +187,7 @@ void wcpressures_update(int obj)
     f32 thr;
 
     if (setup->activateBit > 0 &&
-        (u32)GameBit_Get(setup->activateBit) == 0)
+        GameBit_Get(setup->activateBit) == 0)
     {
         fn_80137948(sWCPressuresActivateFormat, setup->activateBit);
         return;
@@ -210,7 +210,7 @@ void wcpressures_update(int obj)
                 WCPressuresState* s2 = *(WCPressuresState**)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
                 int slot;
 
-                for (j = 0; (void*)s2->objects[(u8)j] != NULL ||
+                for (j = 0; s2->objects[(u8)j] != NULL ||
                      (u8)j == WCPRESSURES_TRACKED_COUNT - 1;
                      j++);
                 slot = (u8)j;
@@ -304,7 +304,7 @@ void wcpressures_init(u8* obj, u8* setup)
     ((GameObject*)obj)->anim.rotX = objType;
     objFlags = ((GameObject*)obj)->objectFlags | 0x6000;
     ((GameObject*)obj)->objectFlags = objFlags;
-    modelIndex = (s8)setupData->modelIndex;
+    modelIndex = setupData->modelIndex;
     objAnim->bankIndex = modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
@@ -313,7 +313,7 @@ void wcpressures_init(u8* obj, u8* setup)
 
     if ((u32)GameBit_Get(setupData->solvedBit) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY = setupData->y - (f32)setupData->pressDepth;
+        ((GameObject*)obj)->anim.localPosY = setupData->y - setupData->pressDepth;
         state->pressTimer = WCPRESSURES_SOLVED_TIMER;
         state->mode = WCPRESSURES_MODE_PRESSED;
     }

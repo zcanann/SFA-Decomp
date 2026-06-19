@@ -224,7 +224,7 @@ void staffactivated_update(int obj)
         {
             isSet = 1;
         }
-        ((StaffFlags*)&state->flags)->b7 = (u8)isSet;
+        ((StaffFlags*)&state->flags)->b7 = isSet;
         if (((state->flags >> 7) & 1) != 0u)
         {
             stk.oy = lbl_803E3C00;
@@ -250,7 +250,7 @@ void staffactivated_update(int obj)
         {
             isSet = 1;
         }
-        ((StaffFlags*)&state->flags)->b7 = (u8)isSet;
+        ((StaffFlags*)&state->flags)->b7 = isSet;
         break;
     }
 }
@@ -348,7 +348,7 @@ void staffactivated_init(int obj, int setup)
     flags = (StaffFlags*)&state->flags;
     if (setupData->activeGameBit > 0)
     {
-        flags->b7 = (u8)GameBit_Get(setupData->activeGameBit);
+        flags->b7 = GameBit_Get(setupData->activeGameBit);
     }
     else
     {
@@ -358,7 +358,7 @@ void staffactivated_init(int obj, int setup)
 
     if (setupData->lockGameBit > 0)
     {
-        if ((flags->b6 = (u8)GameBit_Get(setupData->lockGameBit)) != 0)
+        if ((flags->b6 = GameBit_Get(setupData->lockGameBit)) != 0)
         {
             switch (setupData->mode)
             {

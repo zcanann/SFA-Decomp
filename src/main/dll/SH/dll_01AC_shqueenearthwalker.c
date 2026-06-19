@@ -222,7 +222,7 @@ void sh_queenearthwalker_update(void* obj)
         ((QueenEarthWalkerState*)state)->flags &= ~0x2;
         if (ObjTrigger_IsSet(obj) != 0 && *(u8*)(*(int*)((u8*)obj + 0x78) + 0x4) != 4)
         {
-            eventIndex = (u8)randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
+            eventIndex = randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
             ((QueenEarthWalkerState*)state)->flags |= 0x2;
             (*gObjectTriggerInterface)->runSequence(
                 ((u8*)((QueenEarthWalkerState*)state)->eventTable)[eventIndex], obj, -1);
@@ -364,6 +364,6 @@ void openPortalFn_801d4364(void* obj, void* state)
 void sh_queenearthwalker_init(void* obj, QueenEarthWalkerMapData* mapData)
 {
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)sh_queenearthwalker_processAnimEvents;
+    ((GameObject*)obj)->animEventCallback = sh_queenearthwalker_processAnimEvents;
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }

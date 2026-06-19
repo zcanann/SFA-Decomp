@@ -37,7 +37,7 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 
     bestDist = lbl_803E1878;
     best = NULL;
-    tmpList = (int*)ObjGroup_GetObjects(7, &count);
+    tmpList = ObjGroup_GetObjects(7, &count);
     for (i = 0, list = tmpList; i < count; i++)
     {
         obj = (int*)*list;
@@ -116,11 +116,11 @@ void CameraModeStatic_update(short* camObj)
             {
                 angle = angle + 0xffff;
             }
-            camObj[1] += (short)((int)(angle * (u32)framesThisStep) >> 3);
+            camObj[1] += (short)((int)(angle * framesThisStep) >> 3);
         }
         if ((*(u8*)(placement + 0x1b) & 4) != 0)
         {
-            viewObj = (int)camObj[2] - (u32)(u16) * (short*)(viewObj + 4);
+            viewObj = camObj[2] - (u32)(u16) * (short*)(viewObj + 4);
             if (0x8000 < viewObj)
             {
                 viewObj = viewObj + -0xffff;
@@ -129,7 +129,7 @@ void CameraModeStatic_update(short* camObj)
             {
                 viewObj = viewObj + 0xffff;
             }
-            camObj[2] += (short)((int)(viewObj * (u32)framesThisStep) >> 3);
+            camObj[2] += (short)((int)(viewObj * framesThisStep) >> 3);
         }
         Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
                                        *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),

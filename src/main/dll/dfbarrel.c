@@ -60,7 +60,7 @@ void DFRope_UpdateSimulation(u8* self)
     partIter = partsInit + DFBARREL_ROPE_PART_SIZE;
     {
         f32 rate = lbl_803E4DF8;
-        for (; i < (int)self[0x8] - 1; i++)
+        for (; i < self[0x8] - 1; i++)
         {
             *(f32*)(partIter + 0x18) =
                 *(f32*)(partIter + 0x18) + rate * (f32)(int)(s8)
@@ -74,7 +74,7 @@ void DFRope_UpdateSimulation(u8* self)
     for (; k < *(int *)&((GameObject *)self)->anim.velocityY; k++)
     {
         link = (u8*)*(int*)(self + 0x4);
-        for (j = 0; j < (int)self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE)
+        for (j = 0; j < self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE)
         {
             PSVECSubtract((Vec*)*(int*)(link + 0x4), (Vec*)*(int*)(link + 0x8), &tmp);
             *(f32*)(link + 0x0) = PSVECMag(&tmp);
@@ -100,7 +100,7 @@ void DFRope_UpdateSimulation(u8* self)
     i = 0;
     {
         f32 cleanZero = lbl_803E4DFC;
-        for (; i < (int)self[0x8]; i++, parts += DFBARREL_ROPE_PART_SIZE)
+        for (; i < self[0x8]; i++, parts += DFBARREL_ROPE_PART_SIZE)
         {
             *(f32*)(parts + 0x18) = cleanZero;
             *(f32*)(parts + 0x1C) = cleanZero;
@@ -129,8 +129,8 @@ void DFRopeLink_AttachNodes(DFRopeLink* linkSelf, DFRopeNode* firstNode, DFRopeN
         nodeLinkIter += 4;
         secondLinkIndex++;
     }
-    if (firstLinkIndex > (int)firstNode->linkCount) return;
-    if (secondLinkIndex > (int)secondNode->linkCount) return;
+    if (firstLinkIndex > firstNode->linkCount) return;
+    if (secondLinkIndex > secondNode->linkCount) return;
     firstNode->links[firstLinkIndex] = linkSelf;
     secondNode->links[secondLinkIndex] = linkSelf;
     linkSelf->a = firstNode;

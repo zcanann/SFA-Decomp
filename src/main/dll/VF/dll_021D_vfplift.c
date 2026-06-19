@@ -215,7 +215,7 @@ void vfplift1_updateState(int obj)
         gate3 = gate2 = gate1 = gate0;
     }
     if (gate0 != 0 && gate1 != 0 && gate2 != 0 && gate3 != 0 &&
-        state->mode == VFPLIFT_STATE_IDLE && (u32)GameBit_Get(VFPLIFT1_READY_GAMEBIT) == 0)
+        state->mode == VFPLIFT_STATE_IDLE && GameBit_Get(VFPLIFT1_READY_GAMEBIT) == 0)
     {
         vfplift_trigger(VFPLIFT1_TRIGGER_READY, obj);
         GameBit_Set(VFPLIFT1_READY_GAMEBIT, 1);
@@ -322,7 +322,7 @@ void vfplift_hitDetect(int obj)
 {
     VfpLiftState* state = vfplift_getState(obj);
 
-    if (state->hitDisableGameBit != -1 && (u32)GameBit_Get(state->hitDisableGameBit) == 0)
+    if (state->hitDisableGameBit != -1 && GameBit_Get(state->hitDisableGameBit) == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
@@ -335,7 +335,7 @@ void vfplift_hitDetect(int obj)
 void vfplift_init(int* obj, VfpLiftPlacement* init)
 {
     VfpLiftState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)vfplift_SeqFn;
+    ((GameObject*)obj)->animEventCallback = vfplift_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(init->rotXByte << 8);
     state->mode = VFPLIFT_STATE_IDLE;
     state->hitDisableGameBit = init->hitDisableGameBit;
@@ -358,7 +358,7 @@ void vfplift_init(int* obj, VfpLiftPlacement* init)
             state->mode = VFPLIFT_STATE_LOWERED;
         }
     }
-    if (((GameObject*)obj)->anim.seqId == VFPLIFT1_OBJTYPE && (u32)GameBit_Get(VFPLIFT1_READY_GAMEBIT) != 0)
+    if (((GameObject*)obj)->anim.seqId == VFPLIFT1_OBJTYPE && GameBit_Get(VFPLIFT1_READY_GAMEBIT) != 0)
     {
         if ((u32)GameBit_Get(state->toggleGameBit) != 0)
         {

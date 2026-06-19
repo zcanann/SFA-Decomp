@@ -110,7 +110,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             mm_free(*(void**)state);
             *(int*)state = 0;
         }
-        ((DrLightBeaFlags*)(state + 4))->bit80 = (u8)GameBit_Get(((DrlightbeaPlacement*)setup)->gameBit);
+        ((DrLightBeaFlags*)(state + 4))->bit80 = GameBit_Get(((DrlightbeaPlacement*)setup)->gameBit);
         if (((DrLightBeaFlags*)(state + 4))->bit80)
         {
             Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
@@ -132,7 +132,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
                 targetPos[2] = ((GameObject*)player)->anim.localPosZ;
             }
             *(void**)state = lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
-                                             (u16)randomGetRange(5, 0xf), 0x60, 0);
+                                             randomGetRange(5, 0xf), 0x60, 0);
         }
     }
 }

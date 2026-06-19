@@ -317,7 +317,7 @@ void areafxemit_update(AreaFxEmitObject* obj)
             }
             else if ((state->emitCount < 0) && (0 < obj->emitCooldown))
             {
-                obj->emitCooldown = obj->emitCooldown - (u32)framesThisStep;
+                obj->emitCooldown = obj->emitCooldown - framesThisStep;
             }
             break;
         }

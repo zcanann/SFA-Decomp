@@ -92,25 +92,25 @@ void vfpstatueball_update(int* obj)
     if (variant == 0)
     {
         objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
-                                    (f32)state->particleAlpha, 0, 0);
+                                    state->particleAlpha, 0, 0);
     }
     else if (variant == 1)
     {
         objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 2, 1, state->particleChance,
-                                    (f32)state->particleAlpha, 0, 0);
+                                    state->particleAlpha, 0, 0);
     }
     else
     {
         objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 1, 1, state->particleChance,
-                                    (f32)state->particleAlpha, 0, 0);
+                                    state->particleAlpha, 0, 0);
     }
 
-    Vec_distance((void*)((char*)Obj_GetPlayerObject() + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX);
+    Vec_distance((void*)((char*)Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX);
     state->prevActive = state->active;
 
     if ((u32)GameBit_Get(state->gameBit) == 0)
     {
-        hitType = ObjHits_GetPriorityHit((int)obj, (int*)&hitObj, 0, 0);
+        hitType = ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
             (((GameObject*)hitObj)->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
         {
@@ -191,5 +191,5 @@ void vfpstatueball_init(int* obj, u8* init)
             ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)*(s16*)((char*)init + 0x1c);
     }
     Obj_SetActiveModelIndex((int)obj, *(s16*)((char*)init + 0x1a));
-    state->active = (u8)GameBit_Get(state->gameBit);
+    state->active = GameBit_Get(state->gameBit);
 }

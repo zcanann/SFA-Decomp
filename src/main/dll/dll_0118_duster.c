@@ -155,7 +155,7 @@ void duster_init(int obj, u8* params)
 
     setup = (DusterSetup*)params;
     state = ((GameObject*)obj)->extra;
-    state->settleTimer = (s16)randomGetRange(0, 0x32);
+    state->settleTimer = randomGetRange(0, 0x32);
     state->moveStepScale = lbl_803E38E0;
     state->activeGameBit = setup->activeGameBit;
     if (state->activeGameBit >= 0x6fe)
@@ -165,10 +165,10 @@ void duster_init(int obj, u8* params)
     }
     else
     {
-        state->active = (u8)GameBit_Get(state->activeGameBit);
+        state->active = GameBit_Get(state->activeGameBit);
         state->completeGameBit = state->activeGameBit + 0x64;
     }
-    state->complete = (u8)GameBit_Get(state->completeGameBit);
+    state->complete = GameBit_Get(state->completeGameBit);
     hitData = ((GameObject*)obj)->anim.hitReactState;
     if (hitData != NULL && state->active == 0)
     {
@@ -179,7 +179,7 @@ void duster_init(int obj, u8* params)
         ObjHits_DisableObject(obj);
     }
     ObjMsg_AllocQueue((void*)obj, 1);
-    ((GameObject*)obj)->animEventCallback = (void*)duster_SeqFn;
+    ((GameObject*)obj)->animEventCallback = duster_SeqFn;
 }
 
 void duster_update(int obj)
@@ -228,7 +228,7 @@ void duster_update(int obj)
     {
         if (state->active == 0)
         {
-            state->active = (u8)GameBit_Get(state->activeGameBit);
+            state->active = GameBit_Get(state->activeGameBit);
             state->settleTimer = 0;
         }
         return;
@@ -287,7 +287,7 @@ void duster_update(int obj)
             Sfx_PlayFromObject(obj, SFXen_riverloop11);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51f, NULL, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x51f, NULL, 2, -1, NULL);
-            state->driftDir = (u8)randomGetRange(0, 4);
+            state->driftDir = randomGetRange(0, 4);
             if (state->useLaunchVelocity != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = lbl_803E38C8;
