@@ -321,14 +321,14 @@ void FUN_8016d188(int param_1, int param_2)
     u16 spawnParam[3];
     short frameCount;
     float spawnAlpha;
-    u16 local_34;
-    u16 local_32;
-    u16 local_30;
+    u16 spawnData;
+    u16 spawnDataB;
+    u16 spawnDataC;
     short frames;
     float alpha;
     float yOffset;
     float scale;
-    u32 local_20;
+    u32 ownerZ;
     s64 amountLL;
 
     amount = *(int*)&((GameObject*)param_1)->extra;
@@ -364,9 +364,9 @@ void FUN_8016d188(int param_1, int param_2)
             }
         }
         FUN_80294c60(param_2, &seqId, &progress);
-        local_34 = 0;
-        local_32 = 0;
-        local_30 = 0;
+        spawnData = 0;
+        spawnDataB = 0;
+        spawnDataC = 0;
         alpha = lbl_803E3F20;
         if (seqId == 0x87)
         {
@@ -374,16 +374,16 @@ void FUN_8016d188(int param_1, int param_2)
             amountLL = (s64)amount;
             frames = 0x15 - amount;
             yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
-            local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+            spawnData = 0xc94;
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
             frames = 9;
             alpha = lbl_803E3F48 * (progress / lbl_803E3F40) + lbl_803E3F44;
             scale = lbl_803E3F4C;
-            local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+            spawnData = 0xc0e;
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
         }
         else if (seqId < 0x87)
         {
@@ -393,8 +393,8 @@ void FUN_8016d188(int param_1, int param_2)
                 frames = 10;
                 scale = lbl_803E3F54;
                 yOffset = lbl_803E3F50;
-                local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                spawnData = 0xc0e;
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
             }
             else if (seqId < 0x7f)
             {
@@ -404,14 +404,14 @@ void FUN_8016d188(int param_1, int param_2)
                     amountLL = (s64)amount;
                     frames = amount + 6;
                     yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
-                    local_34 = 0xc94;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &local_34, 2, -1, NULL);
+                    spawnData = 0xc94;
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &spawnData, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b4, &spawnData, 2, -1, NULL);
                     frames = 9;
                     alpha = lbl_803E3F48 * (progress / lbl_803E3F40) + lbl_803E3F44;
                     scale = lbl_803E3F4C;
-                    local_34 = 0xc0e;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    spawnData = 0xc0e;
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
                 }
             }
             else if (seqId == 0x85)
@@ -424,37 +424,37 @@ void FUN_8016d188(int param_1, int param_2)
                         intensity = progress / lbl_803E3F40;
                         amount = (int)(lbl_803E3F38 * intensity);
                         frames = amount;
-                        local_34 = 0xc94;
+                        spawnData = 0xc94;
                     }
                     else
                     {
                         intensity = progress / lbl_803E3F50;
                         amount = (int)(lbl_803E3F38 * intensity);
                         frames = amount;
-                        local_34 = 0xc75;
+                        spawnData = 0xc75;
                     }
                     amountLL = (s64)amount;
                     yOffset = lbl_803E3F5C * (lbl_803E3F28 - intensity);
                     frames = 0x15 - frames;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
                     frames = 9;
                     useAltTex = FUN_80017690(0xc55);
                     if (useAltTex == 0)
                     {
-                        local_34 = 0xc0e;
+                        spawnData = 0xc0e;
                         intensity = lbl_803E3F40;
                     }
                     else
                     {
-                        local_34 = 0xc75;
+                        spawnData = 0xc75;
                         intensity = lbl_803E3F50;
                     }
                     alpha = lbl_803E3F48 * (progress / intensity) + lbl_803E3F44;
                     scale = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
                 }
             }
             else if (0x84 < seqId)
@@ -462,11 +462,11 @@ void FUN_8016d188(int param_1, int param_2)
                 useAltTex = FUN_80017690(0xc55);
                 if (useAltTex == 0)
                 {
-                    local_34 = 0xc0e;
+                    spawnData = 0xc0e;
                 }
                 else
                 {
-                    local_34 = 0xc75;
+                    spawnData = 0xc75;
                 }
                 intensity = *(float*)(param_2 + 0x98);
                 if (lbl_803E3F68 <= intensity)
@@ -477,7 +477,7 @@ void FUN_8016d188(int param_1, int param_2)
                         frames = 9;
                         alpha = lbl_803E3F20;
                         scale = lbl_803E3F4C;
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
                     }
                 }
                 else
@@ -486,7 +486,7 @@ void FUN_8016d188(int param_1, int param_2)
                     frames = 9;
                     alpha = lbl_803E3F20;
                     scale = lbl_803E3F4C;
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
                 }
             }
         }
@@ -501,22 +501,22 @@ void FUN_8016d188(int param_1, int param_2)
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerXform);
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
-                local_20 = *(u32*)(ownerXform + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                ownerZ = *(u32*)(ownerXform + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &spawnData,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &spawnData,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &spawnData,
                                                  0x200001, -1, spawnParam);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &spawnData,
                                                  0x200001, -1, spawnParam);
                 frameCount = 9;
                 spawnParam[0] = 0xc95;
                 spawnAlpha = lbl_803E3F64 * (progress / lbl_803E3F60) + lbl_803E3F44;
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
-                local_20 = *(u32*)(ownerXform + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &local_34,
+                ownerZ = *(u32*)(ownerXform + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &spawnData,
                                                  0x200001, -1, spawnParam);
             }
         }
@@ -527,11 +527,11 @@ void FUN_8016d188(int param_1, int param_2)
                 frames = 0x23;
                 scale = lbl_803E3F4C;
                 yOffset = lbl_803E3F50;
-                local_34 = 0xc0e;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                spawnData = 0xc0e;
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
                 frames = 0x12;
                 scale = lbl_803E3F54;
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
             }
         }
         else if ((seqId == 0x46f) && (lbl_803E3F4C < progress))
@@ -540,16 +540,16 @@ void FUN_8016d188(int param_1, int param_2)
             amountLL = (s64)amount;
             frames = 0x15 - amount;
             yOffset = lbl_803E3F5C * (lbl_803E3F28 - progress / lbl_803E3F60);
-            local_34 = 0xc94;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
+            spawnData = 0xc94;
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &spawnData, 2, -1, NULL);
             frames = 9;
             alpha = lbl_803E3F48 * (progress / lbl_803E3F60) + lbl_803E3F44;
             scale = lbl_803E3F4C;
-            local_34 = 0xc0e;
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &local_34, 2, -1, NULL);
+            spawnData = 0xc0e;
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b3, &spawnData, 2, -1, NULL);
         }
     }
     return;
