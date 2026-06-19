@@ -1519,7 +1519,8 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != state + 0x72c)
         {
             ((TrickyState*)state)->unk28 = state + 0x72c;
-            ((TrickyState*)state)->stateFlags &= ~0x400;
+            sv = ((TrickyState*)state)->stateFlags;
+            ((TrickyState*)state)->stateFlags = sv & ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
         ((FlagByte728*)(state + 0x728))->bf5 = 0;
@@ -1534,7 +1535,8 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != state + 0x72c)
         {
             ((TrickyState*)state)->unk28 = state + 0x72c;
-            ((TrickyState*)state)->stateFlags &= ~0x400;
+            sv = ((TrickyState*)state)->stateFlags;
+            ((TrickyState*)state)->stateFlags = sv & ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 8;
