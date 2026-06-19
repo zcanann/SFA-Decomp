@@ -106,7 +106,7 @@ void runLoadingScreens(void)
             colorBuf.bytes[1] = 0;
             colorBuf.bytes[2] = 0;
         }
-        *(char*)&colorBuf.bytes[3] = alpha;
+        colorBuf.bytes[3] = alpha;
         color = colorBuf.word;
         hudDrawColored(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
     }
