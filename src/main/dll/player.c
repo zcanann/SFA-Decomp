@@ -1161,7 +1161,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
             *(f32*)((char*)setup + 0x1c) = ((ObjPlacement*)setup)->posZ;
             *(f32*)((char*)setup + 0x20) = *(f32*)&((ObjPlacement*)setup)->mapId;
             *(s16*)((char*)setup + 0x0) = inner->targetYaw;
-            *(s16*)((char*)setup + 0x2) = *(s16*)((char*)slot + 0x2) / 2;
+            ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
         }
         else
         {
@@ -1198,7 +1198,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
                 k * *(f32*)((char*)setup + 0x28) + *(f32*)((char*)slot + 0x10);
             *(f32*)((char*)setup + 0x20) = *(f32*)&((ObjPlacement*)setup)->mapId =
                 k * *(f32*)((char*)setup + 0x2c) + *(f32*)((char*)slot + 0x14);
-            *(s16*)((char*)setup + 0x2) = *(s16*)((char*)slot + 0x2) / 2;
+            ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
             *(s16*)((char*)setup + 0x0) = -*(s16*)((char*)slot + 0x0);
         }
         *(int*)((char*)setup + 0xf4) = 0x5f;
@@ -15906,7 +15906,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
             dy = dy / len;
             dz = dz / len;
             *(s16*)((char*)setup + 0) = (s16)getAngle(dx, dz);
-            *(s16*)((char*)setup + 2) = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
+            ((ObjPlacement*)setup)->unk02 = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
             ((ObjPlacement*)setup)->posX = ((ObjPlacement*)setup)->posX * lbl_803E7EF0;
             arwprojectile_placeForward(setup, lbl_803E7ED8);
             arwprojectile_setLifetime(setup, 0x32);
