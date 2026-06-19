@@ -369,12 +369,12 @@ typedef struct {
 struct RouteState;
 typedef struct {
     s16 x;
-    s16 unk2;
+    s16 z;
     s16 y;
-    u16 unk6;
-    u16 unk8;
-    u8 unkA;
-    u8 unkB;
+    u16 hCost;
+    u16 gCost;
+    u8 parentDir;
+    u8 parentIdx;
     u8 flag;
     u8 unkD;
 } RouteNode;

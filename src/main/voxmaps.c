@@ -668,13 +668,13 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             state->unk1C++;
             n = &state->nodes[idx];
             n->x = box[0];
-            n->unk2 = box[1];
+            n->z = box[1];
             n->y = box[2];
-            n->unk8 = count;
-            n->unkA = (u8)(u16)a3;
+            n->gCost = count;
+            n->parentDir = (u8)(u16)a3;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
-            n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+            n->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
         }
         q = state->queue;
         state->queueCount++;
@@ -845,13 +845,13 @@ searched:
     if (foundIdx >= 0 && savedFlag == 0)
     {
         n = &state->nodes[foundIdx];
-        if (count >= n->unk8)
+        if (count >= n->gCost)
         {
             return;
         }
-        n->unkA = (u8)a3;
-        n->unk8 = count;
-        key = (u16)(n->unk6 + n->unk8);
+        n->parentDir = (u8)a3;
+        n->gCost = count;
+        key = (u16)(n->hCost + n->gCost);
         q = state->queue;
         foundSlot = 0;
         for (slot = 0; slot <= state->queueCount; slot++)
@@ -890,13 +890,13 @@ searched:
         n = &state->nodes[state->unk1C];
         state->unk1C++;
         n->x = box[0];
-        n->unk2 = box[1];
+        n->z = box[1];
         n->y = box[2];
-        n->unk8 = count;
-        n->unkA = (u8)(u16)a3;
+        n->gCost = count;
+        n->parentDir = (u8)(u16)a3;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
-        n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+        n->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
     }
 
     if (n == NULL)
@@ -905,9 +905,9 @@ searched:
         return;
     }
 
-    if (n->unk6 > state->unk24)
+    if (n->hCost > state->unk24)
     {
-        key = (u16)(n->unk6 + n->unk8);
+        key = (u16)(n->hCost + n->gCost);
         q = state->queue;
         state->queueCount++;
         q[state->queueCount].value = (u16)nodeCount;
@@ -916,11 +916,11 @@ searched:
     }
     else
     {
-        if (n->unk6 < state->unk24)
+        if (n->hCost < state->unk24)
         {
-            state->unk24 = n->unk6;
+            state->unk24 = n->hCost;
         }
-        key = (u16)(n->unk6 + n->unk8);
+        key = (u16)(n->hCost + n->gCost);
         q = state->queue;
         state->queueCount++;
         q[state->queueCount].value = (u16)nodeCount;
@@ -1026,17 +1026,17 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 state->unk1C += 1;
                 node = &state->nodes[count];
                 node->x = out[0];
-                node->unk2 = out[1];
+                node->z = out[1];
                 node->y = out[2];
-                node->unk8 = 0;
-                node->unkA = 0xff;
+                node->gCost = 0;
+                node->parentDir = 0xff;
                 dx = node->x - state->tgtX;
                 dz = node->y - state->tgtY;
                 d2 = dx * dx + dz * dz;
-                node->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
+                node->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
             }
             {
-                u16 cost = node->unk6 + node->unk8;
+                u16 cost = node->hCost + node->gCost;
                 CurveHeapNode* queue = state->queue;
                 int pos;
                 u16 key;
@@ -1353,25 +1353,25 @@ int fn_80011EB0(RouteState* state, int count)
     }
     i = state->cur;
     node = &state->nodes[i];
-    node->unkB = 0xff;
-    while ((j = node->unkA) != 0xffu)
+    node->parentIdx = 0xff;
+    while ((j = node->parentDir) != 0xffu)
     {
         node = &state->nodes[j];
-        node->unkB = (u8)i;
+        node->parentIdx = (u8)i;
         i = j;
     }
 
     startNode.x = state->unk12;
-    startNode.unk2 = state->unk14;
+    startNode.z = state->unk14;
     startNode.y = state->unk16;
-    startNode.unkB = (u8)i;
-    if (node->unkB == 0xff)
+    startNode.parentIdx = (u8)i;
+    if (node->parentIdx == 0xff)
     {
         cand = NULL;
     }
     else
     {
-        cand = &state->nodes[node->unkB];
+        cand = &state->nodes[node->parentIdx];
     }
     lastClear = node;
     cur = &startNode;
@@ -1384,7 +1384,7 @@ int fn_80011EB0(RouteState* state, int count)
             if (fn_800119FC((s16*)cand, (s16*)cur, NULL) == 0)
             {
                 local[0] = (f32)(lastClear->x * 10 + 5);
-                local[1] = (f32)(lastClear->unk2 * 10 + 5);
+                local[1] = (f32)(lastClear->z * 10 + 5);
                 local[2] = (f32)(lastClear->y * 10 + 5);
                 if (lbl_803DC8CC != 0)
                 {
@@ -1399,20 +1399,20 @@ int fn_80011EB0(RouteState* state, int count)
             }
         }
         lastClear = cand;
-        if (cand->unkB == 0xff)
+        if (cand->parentIdx == 0xff)
         {
             cand = NULL;
         }
         else
         {
-            cand = &state->nodes[cand->unkB];
+            cand = &state->nodes[cand->parentIdx];
         }
     }
 
     if (idx < count)
     {
         local[0] = (f32)(lastClear->x * 10 + 5);
-        local[1] = (f32)(lastClear->unk2 * 10 + 5);
+        local[1] = (f32)(lastClear->z * 10 + 5);
         local[2] = (f32)(lastClear->y * 10 + 5);
         if (lbl_803DC8CC != 0)
         {
