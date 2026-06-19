@@ -701,8 +701,7 @@ u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
     return 0;
 }
 
-u16 getPatchGroup(float* point, int patchGroupIndex, int unused3, int unused4,
-                  u8 startPatchIndex)
+int getPatchGroup(float* point, int patchGroupIndex)
 {
     char* base;
     u8* active;
