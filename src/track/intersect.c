@@ -4870,7 +4870,7 @@ void renderMotionBlur(f32 alpha)
     Camera_RebuildProjectionMatrix();
 }
 
-void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
+void doBlurFilter(f32 wx, f32 wy, f32 wz, char param4, char param5)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEE4;

@@ -79,7 +79,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
 void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1);
 void doHeatEffect(u8 alpha);
 void renderMotionBlur(f32 alpha);
-void doBlurFilter(double wx, double wy, double wz, char param4, char param5);
+void doBlurFilter(f32 wx, f32 wy, f32 wz, char param4, char param5);
 void fn_8007BD8C(int handle1, int handle2);
 void setupReflectionIndirectTev(u8 flag);
 void fn_8007C664(int param_1);
