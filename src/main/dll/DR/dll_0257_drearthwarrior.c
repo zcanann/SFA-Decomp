@@ -1116,14 +1116,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         if (hitState->contactFlags != 0)
         {
             int i = hitState->contactHitVolume;
-            if (i < 0)
-            {
-                i = 0;
-            }
-            else if (i > 0x23)
-            {
-                i = 0x23;
-            }
+            i = (i < 0) ? 0 : ((i > 0x23) ? 0x23 : i);
             v.mat[0] = lbl_803E8338;
             v.angles[2] = 0;
             v.angles[1] = 0;
