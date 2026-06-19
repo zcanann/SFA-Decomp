@@ -117,6 +117,10 @@ extern const f32 lbl_803E2AF8;
 extern const f32 lbl_803E2AFC;
 extern const f32 lbl_803E2B00;
 extern const f32 lbl_803E2B04;
+extern const f32 lbl_803E2B38;
+extern const f32 lbl_803E2B3C;
+extern const f32 lbl_803E2B40;
+extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
 #pragma opt_common_subs off
@@ -1046,9 +1050,10 @@ void fn_80156DA0(int obj, int state)
 {
     bool resetting;
     int groundHit;
+    u8 noHit;
     ushort randBit;
-    float fromPos[3];
     float toPos[3];
+    float fromPos[3];
     float cosYaw;
     float sinYaw;
     float hitOut[24];
@@ -1084,25 +1089,25 @@ void fn_80156DA0(int obj, int state)
         fromPos[1] = ((GameObject*)obj)->anim.localPosY;
         fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
         fn_80292E20((uint)(ushort) * (short*)obj, &sinYaw, &cosYaw);
-        toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2ABC * sinYaw;
-        toPos[1] = lbl_803E2AC0 + ((GameObject*)obj)->anim.localPosY;
-        toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2ABC * cosYaw;
-        *(int*)hitOut = 0;
+        toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2B38 * sinYaw;
+        toPos[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
+        toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2B38 * cosYaw;
         groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj,
                                    (uint) * (byte*)(state + 0x261), 0xffffffff, 0xff, 0);
-        if (((groundHit & 0xff) == 0) || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
+        noHit = !(groundHit & 0xff);
+        if (noHit || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
         {
-            if ((groundHit & 0xff) != 0)
+            if (!noHit)
             {
                 if (((GameObject*)obj)->anim.currentMove == 0)
                 {
                     *(u16*)(state + 0x338) = 0;
-                    Baddie_SetMove(obj, state, 0, lbl_803E2AC8, 0, 1);
+                    Baddie_SetMove(obj, state, 0, lbl_803E2B40, 0, 1);
                 }
                 else
                 {
                     float fz;
-                    Baddie_SetMove(obj, state, 1, lbl_803E2ACC, 0, 0);
+                    Baddie_SetMove(obj, state, 1, lbl_803E2B44, 0, 0);
                     fz = lbl_803E2B18;
                     ((GameObject*)obj)->anim.velocityX = fz;
                     ((GameObject*)obj)->anim.velocityY = fz;
