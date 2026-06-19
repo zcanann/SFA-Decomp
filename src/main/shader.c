@@ -1127,9 +1127,10 @@ extern int mapGetRomListAndOffsets(int p1, int b);
 void mapLoadForObject(int p1, char* p2)
 {
     int saved = gShaderCurMapEventId;
+    int slot;
     int romList = mapGetRomListAndOffsets(p1, 1);
-    int slot = 0x50;
     int i;
+    slot = 0x50;
 
     for (i = 0; i < 40; i++)
     {
