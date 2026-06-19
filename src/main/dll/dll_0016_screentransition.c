@@ -210,6 +210,8 @@ void screenTransition_do2(int p1, int p2, int p3)
         GXSetScissor(sx, sy, sw, sh);
         break;
     }
+    case 5:
+        break;
     }
 }
 #pragma opt_common_subs reset
