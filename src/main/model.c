@@ -1451,14 +1451,14 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
         u8* pb = b + 12;
         px = *(int*)(pb + (*(u16*)(b + 0x18) & 1) * 4);
     }
-    *(f32*)(c + 4) = e * *(f32*)(c + 0x14);
+    *(f32*)(c + 4) = e * ((GameObject*)c)->anim.localPosZ;
     fl = 0;
     if (((ModelFileHeader*)hdr)->flags & 8)
     {
-        *(u32*)(stk + 0x1c) = *(u32*)(c + 0x1c);
-        *(u32*)(stk + 0x20) = *(u32*)(c + 0x20);
-        *(u32*)(stk + 0x24) = *(u32*)(c + 0x24);
-        *(u32*)(stk + 0x28) = *(u32*)(c + 0x28);
+        *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)c)->anim.worldPosY;
+        *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)c)->anim.worldPosZ;
+        *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)c)->anim.velocityX;
+        *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)c)->anim.velocityY;
         for (j = 0; j < 2; j++)
         {
             if (*(u16*)(c + 0x58))
@@ -1559,10 +1559,10 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
             {
                 n = 2;
             }
-            *(u32*)(stk + 0x1c) = *(u32*)(c + 0x1c);
-            *(u32*)(stk + 0x20) = *(u32*)(c + 0x20);
-            *(u32*)(stk + 0x24) = *(u32*)(c + 0x24);
-            *(u32*)(stk + 0x28) = *(u32*)(c + 0x28);
+            *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)c)->anim.worldPosY;
+            *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)c)->anim.worldPosZ;
+            *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)c)->anim.velocityX;
+            *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)c)->anim.velocityY;
             for (j = 0; j < n; j++)
             {
                 *(u16*)(stk + j * 2 + 0x44) = *(u16*)(c + j * 2 + 0x44);
@@ -2898,7 +2898,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     }
     if ((u8)h & 0x10)
     {
-        *(f32*)(c + 4) = t * *(f32*)(c + 0x14);
+        *(f32*)(c + 4) = t * ((GameObject*)c)->anim.localPosZ;
     }
     i1 = (u8)e;
     p = c + i1;
