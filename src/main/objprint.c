@@ -2037,7 +2037,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
 extern void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 extern f32 lbl_803DE9E4;
 
-void fn_8003A230(int obj, int p2, f32 val)
+void fn_8003A230(int obj, void* p2, f32 val)
 {
     s16* found;
     int* table;

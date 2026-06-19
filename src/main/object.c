@@ -428,7 +428,7 @@ int roundUpTo32(int x);
 
 #pragma scheduling off
 #pragma peephole off
-void objSetHintTextIdx(u8* obj, u16 idx)
+void objSetHintTextIdx(int obj, int idx)
 {
     if (idx > 4)
     {
