@@ -2305,11 +2305,11 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     mag = (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
         lbl_803879B0[2] * lbl_803879B0[2]) *
     (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-    if (mag != 0.0f)
+    if (mag != lbl_803DEC58)
     {
         mag = sqrtf(mag);
     }
-    if (mag != 0.0f)
+    if (mag != lbl_803DEC58)
     {
         lbl_803DCF00 = dot / mag;
         if (lbl_803DCF00 < 0.0f)
