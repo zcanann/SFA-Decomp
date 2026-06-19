@@ -3360,7 +3360,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     if (f29 <= T[10])
     {
         Vec3_Cross(e, T + 6, tmp14);
-        len = (tmp14[1] * nrm[1] + tmp14[0] * nrm[0] - tmp14[2] * nrm[2]) / len;
+        len = -(tmp14[1] * nrm[1] + tmp14[0] * nrm[0] + tmp14[2] * nrm[2]) / len;
         Vec3_Cross(nrm, T + 6, tmp14);
         Vec3_Normalize(tmp14);
         {
