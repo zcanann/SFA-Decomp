@@ -3551,16 +3551,8 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                         segment.endY = linkedCurve->y;
                         segment.endZ = linkedCurve->z;
                         distance = RomCurve_distanceToSegment(pointX, pointY, pointZ, &segment);
-                        absBestDistance = bestDistance;
-                        if (bestDistance < gFloatZero)
-                        {
-                            absBestDistance = -bestDistance;
-                        }
-                        absDistance = distance;
-                        if (distance < gFloatZero)
-                        {
-                            absDistance = -distance;
-                        }
+                        absBestDistance = (bestDistance < gFloatZero) ? -bestDistance : bestDistance;
+                        absDistance = (distance < gFloatZero) ? -distance : distance;
                         if (absDistance < absBestDistance)
                         {
                             gRomCurveLastFindStart = curve;
