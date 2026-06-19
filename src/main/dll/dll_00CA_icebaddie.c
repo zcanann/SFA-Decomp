@@ -1098,7 +1098,7 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
         d[1] = ((GameObject*)target)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         d[2] = ((GameObject*)target)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)state)->baddie.targetDistance =
-            sqrtf(d[2] * d[2] + d[0] * d[0] + d[1] * d[1]);
+            sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
