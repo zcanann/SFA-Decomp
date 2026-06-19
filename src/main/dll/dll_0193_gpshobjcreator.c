@@ -3,13 +3,15 @@
 
 extern f32 timeDelta;
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 extern int Obj_IsLoadingLocked(void);
 
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 typedef struct GpshObjcreatorState
 {
@@ -57,7 +59,7 @@ void gpsh_objcreator_initialise(void)
 void gpsh_objcreator_update(int* obj)
 {
     extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
-    extern u32 GameBit_Get(int eventId); /* #57 */
+ /* #57 */
     u8* sub;
     void* setup;
 

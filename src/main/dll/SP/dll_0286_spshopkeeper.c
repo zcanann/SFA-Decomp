@@ -56,7 +56,7 @@ enum
     SHOPKEEPER_FLAG_TICK = 0x20       /* per-frame tick effect this frame */
 };
 
-extern int randomGetRange(int lo, int hi);
+
 extern void dll_2E_func06();
 
 extern f32 lbl_803E59D8;
@@ -74,11 +74,11 @@ extern void TREX_Lazerwall_popQueuedState(int);
 extern void fn_801E66EC(int);
 extern void fn_801E66E4(int);
 extern void fn_801E66DC(int);
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 lbl_803E5A20;
 extern f32 timeDelta;
 extern f32 lbl_803E59DC;
-extern void gameTextShow(int a);
+
 
 extern int playerGetMoney(void* player);
 extern void characterDoEyeAnims(int obj, int p2);

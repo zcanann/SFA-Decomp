@@ -1,7 +1,8 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern u32 DAT_8039d0b8;
 extern u32 DAT_8039d0bc;

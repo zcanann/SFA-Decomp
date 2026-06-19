@@ -17,11 +17,13 @@
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/pad.h"
 
 extern int Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern u32 getButtonsJustPressed(int port);
+
+
+
 extern int playerGetMoney(int player);
 extern void playerAddMoney(int obj, int amount);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

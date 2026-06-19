@@ -24,6 +24,7 @@
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
 #include "main/game_ui_interface.h"
 #include "main/screen_transition.h"
+#include "main/gamebits.h"
 
 typedef struct EcshIntPair
 {
@@ -61,7 +62,7 @@ extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
 extern s16 lbl_80326238[];
 
-extern u32 GameBit_Get(int eventId);
+
 extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
@@ -181,7 +182,7 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
     extern void fn_80296518(void* obj, int arg, int enable); /* #57 */
     extern void modelLightStruct_setEnabled(int light, int mode, f32 value); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
     MmShrineAnimEvents* eventList;
@@ -342,7 +343,7 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void ecsh_shrine_free(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     int* inner = ((GameObject*)obj)->extra;
     Music_Trigger(0xd8, 0);
     Music_Trigger(0xd9, 0);
@@ -372,7 +373,7 @@ void ecsh_shrine_update(s16* obj)
     extern void* Obj_GetPlayerObject(void); /* #57 */
     extern void fn_801C5990(s16 * obj); /* #57 */
     extern u8 lbl_80326208[]; /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     f32 t[2];
     int msgC;
     int msgA;
@@ -789,7 +790,7 @@ void ecsh_shrine_initialise(void)
 void ecsh_shrine_init(s16* obj, s8* def)
 {
     extern s16* lbl_803DDBC4; /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     int* sub = ((GameObject*)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;

@@ -17,6 +17,12 @@
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/dll/FRONT/title_menu.h"
 #include "main/screen_transition.h"
+#include "main/texture.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/dll/FRONT/dll_39.h"
+#include "main/dll/dll_43.h"
+#include "main/pad.h"
 
 typedef struct SaveSelectPanel
 {
@@ -29,10 +35,10 @@ typedef struct SaveSelectPanel
 } SaveSelectPanel;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void textureFree(u8* tex);
-extern void loadUiDll(int index);
-extern void* mmAlloc(int size, int type, int flag);
-extern void* textureLoadAsset(int asset);
+
+
+
+
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 extern int getUiDllFn_80014930(void);
@@ -68,10 +74,10 @@ extern s16 lbl_803DBA04;
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 void saveSelectGoToChooseSlot(int arg);
-extern void n_attractmode_releaseMovieBuffers(void);
-extern void saveSelectSetSlot(int slot, int value);
 
-extern void mm_free(void* p);
+
+
+
 extern void* lbl_803A8658[10];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
@@ -96,9 +102,9 @@ extern f32 lbl_803E1D6C;
 extern f32 lbl_803E1D70;
 extern f32 lbl_803E1D74;
 extern u8 framesThisStep;
-extern u32 getButtonsJustPressed(int port);
+
 extern int mmSetFreeDelay(int v);
-extern int mapUnload(int mapId, int flags);
+
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);

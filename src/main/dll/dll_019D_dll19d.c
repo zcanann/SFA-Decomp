@@ -1,13 +1,14 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CBA98–0x801CBD88. */
 #include "main/dll/torch1CD.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/torch1CD.h"
 #include "main/objhits.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct Dll19DPlacement
 {
@@ -38,7 +39,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
-extern void Obj_FreeObject(int obj);
+
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E51B8;
 

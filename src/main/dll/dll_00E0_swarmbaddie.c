@@ -38,7 +38,7 @@ extern int ObjHits_GetPriorityHitWithPosition();
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-extern void mm_free(void* p);
+
 
 
 extern void* Obj_GetPlayerObject(void);

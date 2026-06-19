@@ -19,6 +19,8 @@
  */
 #include "main/game_object.h"
 #include "main/dll/player_objects.h"
+#include "main/gameplay_runtime.h"
+#include "main/pad.h"
 
 typedef struct CarryableUpdateHeldState
 {
@@ -32,11 +34,11 @@ typedef struct CarryableUpdateHeldState
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
 
-extern void* Obj_GetPlayerObject(void);
+
 extern void playerSetHeldObject(void* player, int held);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
-extern u32 getButtonsJustPressed(int port);
+
 extern int fn_80295BF0(void* player);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);

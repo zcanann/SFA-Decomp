@@ -1,12 +1,14 @@
 /* DLL 0x19C — torch / flame controller objects [801CBA98-801CBD88) */
 #include "main/dll/dll19cstate_struct.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/resource.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 typedef struct Dll19CPlacement
 {
@@ -19,7 +21,7 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-extern u32 GameBit_Get(int eventId);
+
 extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
@@ -59,7 +61,7 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_19C_update(int* obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     u8* def;
     u8* sub;
     void* res;

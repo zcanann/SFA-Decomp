@@ -13,8 +13,9 @@
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern f32 lbl_803E0110;
 extern f32 lbl_803E0114;

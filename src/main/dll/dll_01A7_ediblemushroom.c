@@ -7,6 +7,8 @@
 #include "main/audio/sfx.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/objhits.h"
+#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
@@ -16,8 +18,8 @@ extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* 
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int randomGetRange(int lo, int hi);
-extern u32 GameBit_Get(int eventId);
+
+
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
@@ -50,7 +52,7 @@ extern f32 lbl_80326BE8[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
-extern void* getTrickyObject(void);
+
 extern int objIsFrozen(u8 * self);
 extern int gameBitIncrement(int bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
@@ -72,8 +74,8 @@ extern f32 lbl_803E52F4;
 #pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
+ /* #57 */
     RomCurveWalker* curve;
     int sval;
     int curMove;
@@ -576,8 +578,8 @@ void ediblemushroom_hitDetect(u8* obj)
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
+ /* #57 */
     u8* state;
     u8* other;
     u8* player;
@@ -679,7 +681,7 @@ end:
 
 void ediblemushroom_init(int obj, int aux)
 {
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     int state;
     int player;
     int curveInitParam;

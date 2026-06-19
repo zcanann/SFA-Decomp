@@ -56,7 +56,7 @@ void chuka_hitDetect(int obj)
 
 void chuka_update(int obj)
 {
-    extern int*ObjList_GetObjects(int*, int*);
+
 
 
     extern u8 gChukaModeTable[];

@@ -24,8 +24,9 @@
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;

@@ -20,8 +20,9 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern void objRenderFn_8003b8f4(f32 v);
+
 extern f32 lbl_803E44D0;
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;

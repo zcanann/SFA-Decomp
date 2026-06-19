@@ -14,11 +14,13 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/mm.h"
 
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 lbl_803E4FF8;
-extern void* mmAlloc(int size, int type, int flag);
+
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;

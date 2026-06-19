@@ -14,8 +14,9 @@
  */
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern f32 timeDelta;
 extern u8 framesThisStep;

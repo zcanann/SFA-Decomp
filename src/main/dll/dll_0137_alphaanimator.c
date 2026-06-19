@@ -28,7 +28,7 @@
 
 extern void* mapGetBlock(int idx);
 extern void objRenderFn_8003b8f4(f32);
-extern void mm_free(void* p);
+
 
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern u8 framesThisStep;

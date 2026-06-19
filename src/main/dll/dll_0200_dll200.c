@@ -28,7 +28,7 @@ typedef struct IntVec3
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
-extern int randomGetRange(int lo, int hi);
+
 
 
 

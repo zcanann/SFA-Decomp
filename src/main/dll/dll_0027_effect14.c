@@ -17,10 +17,11 @@
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void* params, f32* vec);

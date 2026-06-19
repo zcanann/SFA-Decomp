@@ -7,6 +7,7 @@
 #include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
+#include "main/gamebits.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
@@ -57,8 +58,8 @@ int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 void gpsh_shrine_free(int* obj)
 {
     extern void Music_Trigger(int id, int arg); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern u32 GameBit_Get(int eventId); /* #57 */
+ /* #57 */
+ /* #57 */
     void** state = ((GameObject*)obj)->extra;
     void* light = state[0];
 
@@ -109,7 +110,7 @@ typedef struct EcshShrineByte15
 
 int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* sub;
     int* player;
@@ -246,8 +247,8 @@ void gpsh_shrine_update(int obj)
     extern void fn_801C70F0(int obj); /* #57 */
     extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern u32 GameBit_Get(int eventId); /* #57 */
+ /* #57 */
+ /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     int count;
     int data = *(int*)&((GameObject*)obj)->extra;
@@ -477,7 +478,7 @@ void gpsh_shrine_update(int obj)
 
 void gpsh_shrine_init(int* obj, int* def)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     extern void* objCreateLight(int arg, u8 addToList); /* #57 */
     u8* state;
 

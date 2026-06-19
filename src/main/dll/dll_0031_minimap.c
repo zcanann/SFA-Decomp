@@ -22,6 +22,11 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/Tumbleweed.h"
+#include "main/gamebits.h"
+#include "dolphin/gx/GXCull.h"
+#include "main/pad.h"
+#include "main/camera.h"
+#include "main/objlib.h"
 
 typedef struct MinimapRow
 {
@@ -48,13 +53,13 @@ void fn_8013351C(void);
 
 extern int coordsToMapCell(f32 x, f32 z);
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
+
 extern int Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -147,9 +152,9 @@ extern f32 gMinimapTwo;
 extern f32 gMinimapF24576;
 extern f32 gMinimapFNeg24576;
 extern u32 getButtonsHeld(int port);
-extern u32 getButtonsJustPressed(int port);
+
 extern f32 powfCoreFast(f32 base, f32 exp);
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern int getAngle(float y, float x);
 extern u8 gMinimapZoomSfxActive;
 extern u8 gMinimapRadarInited;
@@ -806,7 +811,7 @@ void fn_8013351C(void)
                     gMinimapF110 - cc2, y - s2, &c2);
 }
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+
 
 void fn_8013396C(void)
 {

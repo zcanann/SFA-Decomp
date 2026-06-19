@@ -83,7 +83,7 @@ typedef struct SnowBikeSetTypeState
 } SnowBikeSetTypeState;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void mm_free(void* p);
+
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;

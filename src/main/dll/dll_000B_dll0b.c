@@ -1411,7 +1411,7 @@ void dll_0B_release(void)
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
-extern void mm_free(void* p);
+
 
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);

@@ -23,7 +23,7 @@
 #include "string.h"
 #include "main/object_transform.h"
 
-extern int getAngle(float y, float x);
+
 extern f32 sqrtf(f32 x);
 
 

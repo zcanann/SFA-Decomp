@@ -1,10 +1,12 @@
 #include "main/dll/dll199state_struct.h"
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/resource.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 typedef struct Dll19APlacement
 {
@@ -20,7 +22,7 @@ typedef struct Dll19APlacement
 #define GAMEBIT_DLL19A_RESET 0x5b9
 #define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern u8 framesThisStep;
 

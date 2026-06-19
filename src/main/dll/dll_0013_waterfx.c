@@ -30,7 +30,7 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(void* a, void* b, void* ab);
 
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 
 extern void GXCallDisplayList(void* list, u32 nbytes);
 extern void GXSetMisc(int token, int val);

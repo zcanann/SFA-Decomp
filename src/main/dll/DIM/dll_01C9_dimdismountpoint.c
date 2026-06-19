@@ -24,7 +24,7 @@ typedef struct DimdismountpointState
 
 
 
-extern void objRenderFn_80041018(int obj);
+
 extern f32 lbl_803E4910;
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;

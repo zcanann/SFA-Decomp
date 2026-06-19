@@ -42,7 +42,7 @@ STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 extern int getLActions();
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
+
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 

@@ -23,6 +23,8 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
 
 /* per-file extern decls (homes: engine_shared / dll_80220608_shared /
    objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
@@ -32,14 +34,14 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
-extern void ObjHits_DisableObject(u32 objPtr);
+
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);

@@ -10,9 +10,9 @@
 #include "main/dll/VF/vf_shared.h"
 
 
-extern void* Obj_GetPlayerObject(void);
 
-extern void Obj_FreeObject(int obj);
+
+
 extern void gameBitDecrement(int eventId);
 
 

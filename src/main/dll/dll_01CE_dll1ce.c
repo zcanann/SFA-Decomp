@@ -21,6 +21,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -65,9 +67,9 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 FUN_800067e8();
 extern u32 FUN_80006824();
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int randomGetRange(int lo, int hi);
+
+
+
 extern u32 FUN_80017924();
 extern u32 FUN_80017944();
 extern int FUN_80017a54();
@@ -98,7 +100,7 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
 extern f32 lbl_803E49F0;

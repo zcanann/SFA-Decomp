@@ -31,7 +31,7 @@ void swarmbaddie_release(void);
 void swarmbaddie_initialise(void);
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void mm_free(void* p);
+
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;

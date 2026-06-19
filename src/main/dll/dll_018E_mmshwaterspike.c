@@ -8,6 +8,8 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/gameplay_runtime.h"
+#include "main/dll/MMP/dll_013B_wallanimator.h"
 
 /* placement block read via anim.placementData */
 typedef struct MmshWaterspikePlacement
@@ -29,10 +31,10 @@ typedef struct MmshWaterspikeObjectDef
     u8 pad25[0x28 - 0x25];
 } MmshWaterspikeObjectDef;
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern void* ObjList_FindObjectById(int id);
-extern f32 objFn_801948c0(u8* obj, u8 coord);
+
 extern void fn_80137948(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);

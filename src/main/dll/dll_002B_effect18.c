@@ -2,8 +2,9 @@
  * building PartFxSpawn requests dispatched through gExpgfxInterface->spawnEffect. */
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;

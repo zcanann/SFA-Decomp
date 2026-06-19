@@ -15,8 +15,9 @@
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern void vecRotateZXY(void* rot, f32* vec);
 

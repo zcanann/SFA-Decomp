@@ -22,7 +22,7 @@
 
 
 
-extern void mm_free(void* p);
+
 extern int mmAlloc(int size, int pool, int tag);
 extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern int return0_80060B90(void);

@@ -40,7 +40,7 @@ extern f32 timeDelta;
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
-extern u8* Obj_GetPlayerObject(void);
+
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);

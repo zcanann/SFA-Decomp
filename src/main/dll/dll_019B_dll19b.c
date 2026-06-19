@@ -6,6 +6,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
 
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* return0_8005669C(int);
@@ -20,7 +21,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
-extern u32 GameBit_Get(int eventId);
+
 extern f32 Vec_distance(f32* a, f32* b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
@@ -37,7 +38,7 @@ extern u8 framesThisStep;
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int* gTitleMenuControlInterface;
-    extern void GameBit_Set(int eventId, int value);
+
     int state;
     int i;
 
@@ -159,7 +160,7 @@ typedef struct Dll19BState
 void dll_19B_update(int obj)
 {
     extern void* gTitleMenuControlInterface;
-    extern void GameBit_Set(int eventId, int value);
+
     s16* st;
     int player;
     int near;
@@ -388,7 +389,7 @@ void dll_19C_free(void);
 void dll_19B_init(u8* obj, u8* params)
 {
     extern void* gTitleMenuControlInterface;
-    extern void GameBit_Set(int eventId, int value);
+
     register u8* sub;
     void* res;
 

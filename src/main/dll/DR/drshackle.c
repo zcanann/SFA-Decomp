@@ -20,7 +20,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/DR/DRcloudcage.h"
 
-extern f32 sqrtf(f32 x);
+
 
 
 

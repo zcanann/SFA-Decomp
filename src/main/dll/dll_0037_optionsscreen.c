@@ -37,7 +37,7 @@ extern u8 shouldShowCredits(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern void gameTextSetColor(int r, int g, int b, int a);
+
 
 
 

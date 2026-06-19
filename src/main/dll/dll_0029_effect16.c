@@ -19,8 +19,9 @@
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 extern float mathSinf(float x);
 
 extern f32 timeDelta;

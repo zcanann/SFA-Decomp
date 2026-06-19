@@ -18,10 +18,11 @@
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern u32 GameBit_Get(int eventId);
+
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);

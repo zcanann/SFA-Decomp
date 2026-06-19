@@ -23,7 +23,7 @@
 #include "main/engine_shared.h"
 #include "main/dll/genprops.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern void Obj_FreeObject(int obj);
 

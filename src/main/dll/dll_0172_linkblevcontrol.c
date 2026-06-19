@@ -18,8 +18,9 @@
 #include "main/object_descriptor.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
 extern void* Obj_GetPlayerObject(void);
@@ -142,7 +143,7 @@ void linkb_levcontrol_init(int* obj)
 
 void linkb_levcontrol_update(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
+ /* #57 */
     LinkbLevState* state;
     int* tricky;
     int* player;

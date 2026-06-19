@@ -7,17 +7,18 @@
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
-extern void GameBit_Set(int eventId, int value);
+
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
 extern u32 getButtonsHeld(int port);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
-extern u32 GameBit_Get(int eventId);
+
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);

@@ -8,8 +8,9 @@
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
-extern void GameBit_Set(int eventId, int value);
+
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -38,7 +39,7 @@ extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_MarkObjectPositionDirty();
 extern u32 ObjHits_EnableObject();
-extern u32 GameBit_Get(int eventId);
+
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);

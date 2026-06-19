@@ -57,7 +57,7 @@ extern int FUN_800600e4();
 extern u64 FUN_8028682c();
 extern u32 FUN_80286878();
 
-extern void mm_free(void* p);
+
 
 #pragma scheduling on
 #pragma peephole on
