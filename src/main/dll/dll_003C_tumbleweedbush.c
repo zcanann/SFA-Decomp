@@ -160,11 +160,11 @@ void linkInitTextures(LinkMenuItemDB* item)
 #pragma peephole off
 void Link_func0F(void)
 {
-    extern u8 gTumbleweedBushItemCount; /* #57 */
+    extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     int i;
 
-    for (i = 0; i < (s8)gTumbleweedBushItemCount; i++)
+    for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
         gTumbleweedBushItems[i].field38 = 4;
     }
