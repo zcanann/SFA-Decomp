@@ -650,7 +650,7 @@ extern f32 gGameTextFadeLimit;
 extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
-extern void* gameTextGet();
+extern void* gameTextGet(int textId);
 
 
 #pragma peephole on

@@ -117,7 +117,7 @@ extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
-extern int trickyFindNearestUsableBaddie(int obj, f32 maxRadius, int param_3);
+extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void fn_8013ADFC(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
