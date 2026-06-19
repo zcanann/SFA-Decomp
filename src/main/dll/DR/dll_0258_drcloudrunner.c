@@ -872,7 +872,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
                                         stk.mat[3] - ((GameObject*)obj)->anim.localPosZ);
                 ang = tmp + gDRCloudRunnerHeadingAngleOffset;
             }
-            diff = ang - gDRCloudRunnerSmoothedRotX;
+            diff = ang - (u16)gDRCloudRunnerSmoothedRotX;
             if (diff > 0x8000)
             {
                 diff = diff - 0xffff;
@@ -890,7 +890,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
             {
                 step = 0x50;
             }
-            gDRCloudRunnerSmoothedRotX = gDRCloudRunnerSmoothedRotX + step;
+            gDRCloudRunnerSmoothedRotX = gDRCloudRunnerSmoothedRotX + (s16)step;
             *out = gDRCloudRunnerSmoothedRotX;
         }
         break;
