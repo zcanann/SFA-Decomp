@@ -1228,7 +1228,7 @@ void doNothing_8005D14C(void)
 }
 
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
-u32 isWidescreen(void) { return renderFlags & 0x8; }
+int isWidescreen(void) { return renderFlags & 0x8; }
 u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
 u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
