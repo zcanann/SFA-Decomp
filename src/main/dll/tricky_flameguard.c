@@ -152,7 +152,7 @@ void trickyFlame(int p1, int p2)
         if (*(u8*)(*(int*)(p2 + 0x71c) + 0x3) != 0)
         {
             newTarget = *(int*)(p2 + 0x71c) + 0x8;
-            if (*(u32*)(p2 + 0x28) != (u32)newTarget)
+            if (*(u32*)(p2 + 0x28) != newTarget)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
@@ -165,7 +165,7 @@ void trickyFlame(int p1, int p2)
             *(int*)(p2 + 0x720) =
                 (int)(*gRomCurveInterface)->getById(*(int*)(*(int*)(p2 + 0x71c) + 0x1c));
             newTarget = *(int*)(p2 + 0x720) + 0x8;
-            if (*(u32*)(p2 + 0x28) != (u32)newTarget)
+            if (*(u32*)(p2 + 0x28) != newTarget)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
@@ -179,7 +179,7 @@ void trickyFlame(int p1, int p2)
         trickyDebugPrint(strBase + 0x70c);
         trickyFn_8013b368((void*)p1, lbl_803E2488, (void*)p2);
         if ((u8) * (u8*)(*(int*)(p2 + 0x720) + 0x3) == Objfsa_GetWalkGroupIndexAtPoint(
-            (float*)&((GameObject*)p1)->anim.worldPosX, (void*)0x0))
+            (float*)&((GameObject*)p1)->anim.worldPosX, 0x0))
         {
             *(u8*)(p2 + 0x9) = 1;
             *(u8*)(p2 + 0xa) = 4;
@@ -190,7 +190,7 @@ void trickyFlame(int p1, int p2)
         target = (void*)(*(int*)(p2 + 0x71c) + 0x8);
         trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
         trickyMove(p1, target);
-        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, (void*)0x0) == 0)
+        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, 0x0) == 0)
         {
             ((TrickyRuntime*)p2)->flags |= TRICKY_STATE_RESET_FLAG_10;
             *(u8*)(p2 + 0xa) = 5;
@@ -247,7 +247,7 @@ void trickyFlame(int p1, int p2)
                         setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
-                        *(s16*)((char*)setup + 0x1a) = (s16)i;
+                        *(s16*)((char*)setup + 0x1a) = i;
                         slot[0x700 / 4] = (void*)Obj_SetupObject(setup, 5, ((GameObject*)p1)->anim.mapEventSlot, -1,
                                                                  ((GameObject*)p1)->anim.parent);
                         slot++;
@@ -348,7 +348,7 @@ void trickyFlame(int p1, int p2)
                         setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
-                        *(s16*)((char*)setup + 0x1a) = (s16)i;
+                        *(s16*)((char*)setup + 0x1a) = i;
                         slot[0x700 / 4] = (void*)Obj_SetupObject(setup, 5, ((GameObject*)p1)->anim.mapEventSlot, -1,
                                                                  ((GameObject*)p1)->anim.parent);
                         slot++;
@@ -416,7 +416,7 @@ void trickyFlame(int p1, int p2)
             target = (void*)(*(int*)(p2 + 0x720) + 0x8);
             trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
             trickyMove(p1, target);
-            if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, (void*)0x0) != 0)
+            if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, 0x0) != 0)
             {
                 ((TrickyRuntime*)p2)->growlLatState = 1;
                 *(u8*)(p2 + 0xa) = 0;
@@ -438,7 +438,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     int* list;
     int i;
 
-    list = (int*)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
+    list = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++)
     {
         if (*list == target)
@@ -467,19 +467,19 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     {
     case 0:
         trickyDebugPrint(strBase + 0x648);
-        trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, (void*)0x0);
+        trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, 0x0);
         trickyState->guardPoint[0] = (f32)(trickyState->homeObj->worldPosX - lbl_803E247C *
-            mathSinf((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
+            mathSinf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardPoint[1] = trickyState->homeObj->worldPosY;
         trickyState->guardPoint[2] = (f32)(trickyState->homeObj->worldPosZ - lbl_803E247C *
-            mathCosf((lbl_803E2454 * (int)trickyState->homeObj->rotX) / lbl_803E2458));
+            mathCosf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardCanSpawnHelpers = 0;
         trickyState->guardState = 1;
         break;
     case 1:
         trickyDebugPrint(strBase + 0x654);
         trickyFn_8013b368((void*)p1, lbl_803E2488, (void*)p2);
-        if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(&obj->worldPosX, (void*)0x0))
+        if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(&obj->worldPosX, 0x0))
         {
             trickyState->guardState = 2;
         }
@@ -551,7 +551,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                         setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
-                        *(s16*)((char*)setup + 0x1a) = (s16)i;
+                        *(s16*)((char*)setup + 0x1a) = i;
                         *slot = (void*)Obj_SetupObject(setup, 5, obj->bankIndex, -1, obj->parent);
                         slot++;
                     }
@@ -570,12 +570,12 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else
         {
-            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, (void*)0x0))
+            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, 0x0))
             {
                 break;
             }
             newTarget = (int)&trickyState->homeObj->worldPosX;
-            if ((u32)trickyState->targetPosition != (u32)newTarget)
+            if ((u32)trickyState->targetPosition != newTarget)
             {
                 trickyState->targetPosition = (f32*)newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -611,7 +611,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
-                if ((u32)trickyState->targetPosition != (u32)newTarget)
+                if ((u32)trickyState->targetPosition != newTarget)
                 {
                     trickyState->targetPosition = (f32*)newTarget;
                     TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -623,7 +623,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
             int targ = (int)trickyState->targetPosition;
-            trickyTurnTowardYaw(p1, (s16)getAngle(
+            trickyTurnTowardYaw(p1, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
@@ -651,7 +651,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
             int targ = (int)trickyState->targetPosition;
-            trickyTurnTowardYaw(p1, (s16)getAngle(
+            trickyTurnTowardYaw(p1, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
@@ -684,7 +684,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else
         {
             int targ = (int)trickyState->targetPosition;
-            trickyTurnTowardYaw(p1, (s16)getAngle(
+            trickyTurnTowardYaw(p1, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
@@ -697,7 +697,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
-                if ((u32)trickyState->targetPosition != (u32)newTarget)
+                if ((u32)trickyState->targetPosition != newTarget)
                 {
                     trickyState->targetPosition = (f32*)newTarget;
                     TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -719,13 +719,13 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     int i;
     u32 best = 0;
 
-    list = (int*)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
+    list = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++)
     {
-        d = (f32)getXZDistance((float*)(*list + 0x18), trickyState->guardPoint);
+        d = getXZDistance((float*)(*list + 0x18), trickyState->guardPoint);
         if (best == 0)
         {
-            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float*)(*list + 0x18), (void*)0x0))
+            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float*)(*list + 0x18), 0x0))
             {
                 bestDist = d;
                 best = *list;
@@ -733,7 +733,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
         }
         else if (d < bestDist)
         {
-            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float*)(*list + 0x18), (void*)0x0))
+            if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint((float*)(*list + 0x18), 0x0))
             {
                 bestDist = d;
                 best = *list;

@@ -166,9 +166,9 @@ void dimcannon_init(int* obj, int* arg)
             *(u32*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0x8000LL;
         }
         state = ((GameObject*)obj)->extra;
-        ((DimcannonState*)state)->unk9 = (s8)randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkA = (s8)randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkB = (s8)randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unk9 = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unkA = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unkB = randomGetRange(-0x64, 0x64);
         ((DimcannonState*)state)->unk7 = 1;
         p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         if (p != 0)
@@ -214,7 +214,7 @@ void dimcannon_init(int* obj, int* arg)
         ((DimCannonState*)state)->unkAF = 0x80;
         ((DimCannonState*)state)->unk98 = lbl_803E48B8;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
-        ((GameObject*)obj)->animEventCallback = (void*)fn_801B2550;
+        ((GameObject*)obj)->animEventCallback = fn_801B2550;
         ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
         if (GameBit_Get(*(s16*)((char*)arg + 0x1a)))
@@ -306,7 +306,7 @@ void dimcannon_update(int* obj)
             f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                   (f32*)(*(char**)(state + 0x0) + 0x18));
             int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF10;
-            if (d < (f32)v / lbl_803E48EC)
+            if (d < v / lbl_803E48EC)
             {
                 ((DimCannonState*)state)->fireState = 1;
             }
@@ -368,7 +368,7 @@ void dimcannon_update(int* obj)
             {
                 f32 d2 = ((DimCannonState*)state)->unk10;
                 int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF0C;
-                if (d2 > (f32)v / lbl_803E48EC)
+                if (d2 > v / lbl_803E48EC)
                 {
                     ((DimCannonState*)state)->fireState = 4;
                 }
@@ -435,7 +435,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gGameUIInterface)->showNpcDialogue(0x4b9, 0x14, 0x8c, 1);
                 GameBit_Set(0xdb, 1);
             }
-            delta = (int)(-lbl_803DBF08 * (f32)padGetStickX(0));
+            delta = (int)(-lbl_803DBF08 * padGetStickX(0));
             if (delta != 0)
             {
                 s16 mag = *(s16*)((char*)vec + 0x2) < 0 ? -*(s16*)((char*)vec + 0x2) : *(s16*)((char*)vec + 0x2);

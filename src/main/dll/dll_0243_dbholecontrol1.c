@@ -216,7 +216,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             uVar2 = FUN_80006ab8(psVar4);
             if (uVar2 == 0)
             {
-                FUN_80006ac4(psVar4, (u32) & local_48);
+                FUN_80006ac4(psVar4,  & local_48);
             }
             *(u8*)(iVar5 + 0x34) = 1;
         }
@@ -230,7 +230,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         uVar2 = FUN_80006ab8(psVar4);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4, (u32) & local_30);
+            FUN_80006ac4(psVar4,  & local_30);
         }
         *(u8*)(iVar5 + 0x34) = 1;
         local_34 = *(u32*)(param_10 + 0x2d0);
@@ -240,7 +240,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         uVar2 = FUN_80006ab8(psVar4);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4, (u32) & local_3c);
+            FUN_80006ac4(psVar4,  & local_3c);
         }
         *(u8*)(iVar5 + 0x34) = 1;
     }
@@ -296,7 +296,7 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         busy = FUN_80006ab8(hits);
         if (busy == 0)
         {
-            FUN_80006ac4(hits, (u32) & msg);
+            FUN_80006ac4(hits,  & msg);
         }
         *(u32*)(control + 0x3c) = 0;
     }
@@ -494,7 +494,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
     float info[7];
 
     control = *(int*)(obj + 0x5c);
-    if ((obj != (u16*)0x0) && (target != 0))
+    if ((obj != 0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
         if ((double)lbl_803E6F40 != param_4)
@@ -575,7 +575,7 @@ void dbholecontrol1_init(int* obj, u8* params)
     DbHoleControl1State* sub = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dbholecontrol1_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
     sub->gameBitA = *(s16*)(params + 0x1a);
     sub->gameBitB = *(s16*)(params + 0x1c);
 }

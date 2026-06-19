@@ -106,7 +106,7 @@ void FUN_80192488(void)
 
     pair = FUN_8028682c();
     ctxHi = (int)((u64)pair >> 0x20);
-    ctxLo = (int)pair;
+    ctxLo = pair;
     placement = *(int*)(ctxHi + 0x4c);
     block = FUN_8005b398((double)*(float*)(ctxHi + 0xc), (double)*(float*)(ctxHi + 0x10));
     block = FUN_8005af70(block);
@@ -134,7 +134,7 @@ void FUN_80192488(void)
                         {
                             texU = FUN_80056448((int)*(char*)(ctxLo + 0x11), (int)*(char*)(ctxLo + 0x12), texU,
                                                  texV);
-                            *(char*)(vtx + 0x2a) = (char)texU;
+                            *(char*)(vtx + 0x2a) = texU;
                         }
                         else
                         {
@@ -186,7 +186,7 @@ u8 groundanimator_func0B(int* obj)
     f32 depth = state->sinkDepth;
     int* placement = ((int**)obj)[0x4C / 4];
     u8 maxDepth = *(u8*)((char*)placement + 0x20);
-    return depth > lbl_803E3F98 * (f32)maxDepth;
+    return depth > lbl_803E3F98 * maxDepth;
 }
 
 #pragma peephole off
@@ -350,10 +350,10 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     {
         return;
     }
-    ix = (int)fastFloorf((((GameObject*)obj)->anim.localPosX - playerMapOffsetX) / lbl_803E3FC0);
-    iz = (int)fastFloorf((((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
-    fracX = ((GameObject*)obj)->anim.localPosX - (lbl_803E3FC0 * (f32)ix + playerMapOffsetX);
-    fracZ = ((GameObject*)obj)->anim.localPosZ - (lbl_803E3FC0 * (f32)iz + playerMapOffsetZ);
+    ix = fastFloorf((((GameObject*)obj)->anim.localPosX - playerMapOffsetX) / lbl_803E3FC0);
+    iz = fastFloorf((((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
+    fracX = ((GameObject*)obj)->anim.localPosX - (lbl_803E3FC0 * ix + playerMapOffsetX);
+    fracZ = ((GameObject*)obj)->anim.localPosZ - (lbl_803E3FC0 * iz + playerMapOffsetZ);
     state->entryCount = 0;
     radsq = state->radius * state->radius;
     foff = 0;
@@ -383,12 +383,12 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
                     }
                     d = d * d;
                     ((f32*)state->falloffBuf)[foff] = clampMax - d;
-                    *(s16*)((char*)state->heightBuf + foff * 2) = (s16)vpos[1];
+                    *(s16*)((char*)state->heightBuf + foff * 2) = vpos[1];
                     foff++;
                     vtx = (char*)vtx + 2;
                 }
             }
-            state->blockEntries[(state->entryCount)++] = (s16)blkIdx;
+            state->blockEntries[(state->entryCount)++] = blkIdx;
         }
     }
 }
@@ -462,7 +462,7 @@ void groundanimator_update(int* obj)
         if (*(void**)&g->linkedObj == NULL)
         {
             nd = lbl_803E3F98;
-            g->linkedObj = (int)ObjGroup_FindNearestObject(4, obj, &nd);
+            g->linkedObj = ObjGroup_FindNearestObject(4, obj, &nd);
             near = (void*)g->linkedObj;
             if (near != NULL)
             {

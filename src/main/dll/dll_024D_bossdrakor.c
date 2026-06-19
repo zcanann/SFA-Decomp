@@ -154,7 +154,7 @@ void bossdrakor_update(int obj)
     }
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(*(f32*)state, lbl_803E6568, lbl_803E6520, obj,
                                                          (void*)((char*)state + 0x28), 1,
-                                                         (void*)&((BossDrakorState*)state)->curveFollowState);
+                                                         &((BossDrakorState*)state)->curveFollowState);
     if (((DrakorFlags*)((char*)state + 0x198))->b40)
     {
         player = (int)Obj_GetPlayerObject();
@@ -200,7 +200,7 @@ void bossdrakor_update(int obj)
     }
     else
     {
-        Obj_SmoothTurnAnglesTowardVelocity(obj, (void*)&((GameObject*)obj)->anim.velocityX, 0x2d, lbl_803E6548,
+        Obj_SmoothTurnAnglesTowardVelocity(obj, &((GameObject*)obj)->anim.velocityX, 0x2d, lbl_803E6548,
                                            lbl_803E656C);
     }
     if (moveResult != 0)
@@ -400,7 +400,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                 vec10 = objModelGetVecFn_800395d8(obj, 0x10);
                 if (vec10 != NULL)
                 {
-                    d = (int)(((BossDrakorState*)state)->unk18 * (f32)lbl_803DC19A) - (u16)vecF[1];
+                    d = (int)(((BossDrakorState*)state)->unk18 * lbl_803DC19A) - (u16)vecF[1];
                     if (d > 0x8000)
                     {
                         d = (s16)((int)d - 0xffff);
@@ -485,7 +485,7 @@ int bossdrakor_chooseNextMove(int obj, f32* speedOut)
         }
     }
     v = lbl_80329F90[idx];
-    *speedOut = (f32)lbl_80329FA4[idx];
+    *speedOut = lbl_80329FA4[idx];
     return v;
 }
 
@@ -536,7 +536,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                             prod = lbl_803DC188 * Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX,
                                                                (int*)&((GameObject*)player)->anim.worldPosX);
                             lo = (int)-prod;
-                            hi = (int)prod;
+                            hi = prod;
                             target[0] = ((GameObject*)player)->anim.localPosX + (f32)(s32)randomGetRange(lo, hi);
                             target[1] = ((GameObject*)player)->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);
                             target[2] = ((GameObject*)player)->anim.localPosZ + (f32)(s32)randomGetRange(lo, hi);
@@ -864,7 +864,7 @@ void bossdrakor_init(int obj, BossdrakorPlacement* init)
     storeZeroToFloatParam(&((BossDrakorState*)inner)->attackTimer);
     ObjGroup_AddObject(obj, 0x45);
     storeZeroToFloatParam(&((BossDrakorState*)inner)->unk18);
-    ((GameObject*)obj)->animEventCallback = (void*)bossdrakor_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = bossdrakor_animEventCallback;
     Music_Trigger(0x26, 1);
     Music_Trigger(0x96, 1);
     ((BossDrakorState*)inner)->lightObj = 0;
@@ -902,7 +902,7 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
                     *(u8*)((char*)((BossDrakorState*)inner)->lightObj + 0x2fa) = 0;
                 }
             }
-            *(u8*)((char*)((BossDrakorState*)inner)->lightObj + 0x2f9) = (u8)val;
+            *(u8*)((char*)((BossDrakorState*)inner)->lightObj + 0x2f9) = val;
         }
         light = ((BossDrakorState*)inner)->lightObj;
         if (*(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)

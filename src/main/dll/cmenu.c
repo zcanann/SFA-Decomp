@@ -377,7 +377,7 @@ int cMenuCountVisibleItems(s16* table, char mode)
             }
         }
     }
-    else if (0 < (int)DAT_803de3b8)
+    else if (0 < DAT_803de3b8)
     {
         for (; -1 < *table; table = table + 8)
         {
@@ -410,7 +410,7 @@ int cMenuItemModelRenderFn(int shader, int* block, int idx)
     FUN_80052904();
     colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
     texHandle = FUN_80053078(*(u32*)(rec + 0x24));
-    FUN_80051fc4(texHandle, 0, 0, (char*)&colorWord, 0, 1);
+    FUN_80051fc4(texHandle, 0, 0, &colorWord, 0, 1);
     FUN_800528d0();
     FUN_8025cce8(1, 4, 5, 5);
     gxSetZMode_(0, 7, 0);
@@ -442,13 +442,13 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
                 level = (int)(FLOAT_803e2c90 *
                     (f32)((double)CONCAT44(0x43300000, (u32) * (u8*)(shader + 0x37)) -
                         DOUBLE_803e2b08));
-                colorWord = CONCAT31(colorWord >> 8, (u8)level);
+                colorWord = CONCAT31(colorWord >> 8, level);
             }
             else
             {
                 colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
             }
-            FUN_80051fc4(tabA[rec], 0, 0, (char*)&colorWord, 0, 1);
+            FUN_80051fc4(tabA[rec], 0, 0, &colorWord, 0, 1);
         }
         else
         {
@@ -532,7 +532,7 @@ void drawTrickyHudOverlay(int obj)
                 }
             }
         }
-        gTrickyHudCachedIconIndex = (s16)iconIndex;
+        gTrickyHudCachedIconIndex = iconIndex;
         if (gTrickyHudCachedIconTexture != 0)
         {
             drawTexture((void*)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
@@ -838,7 +838,7 @@ void cMenuRotateFn_80124d80(void)
         {
             best = -d3;
         }
-        r = (s16)(int) - (lbl_803E2030 * (f64)best - lbl_803E2028);
+        r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
         lbl_803DD8D4 = (r > 0) ? r : 0;
     }
     cur = lbl_803DD79C;
@@ -914,6 +914,6 @@ void cMenuRotateFn_80124d80(void)
     {
         best = -d3;
     }
-    r = (s16)(int) - (lbl_803E2030 * (f64)best - lbl_803E2028);
+    r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
     lbl_803DD8D4 = (r > 0) ? r : 0;
 }

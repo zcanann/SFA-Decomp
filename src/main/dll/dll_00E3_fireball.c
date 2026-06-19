@@ -841,7 +841,7 @@ void fireball_hitDetect(int* obj)
         int idx = cmbsrc_getColorIndex(target);
         if ((s8)idx != -1)
         {
-            ((FireballState*)state)->colorIndex = (u8)idx;
+            ((FireballState*)state)->colorIndex = idx;
             if (*(void**)state != NULL)
             {
                 int c = ((FireballState*)state)->colorIndex * 3;
@@ -896,8 +896,8 @@ void fireball_init(int* obj)
     {
         u8* p;
         int i;
-        ((FireballState*)state)->unk40 = (s16)randomGetRange(600, 900);
-        ((FireballState*)state)->unk42 = (s16)randomGetRange(-600, 600);
+        ((FireballState*)state)->unk40 = randomGetRange(600, 900);
+        ((FireballState*)state)->unk42 = randomGetRange(-600, 600);
         ((FireballState*)state)->colorIndex = 0;
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -936,7 +936,7 @@ void fireball_init(int* obj)
             *(u16*)(p + 0x66) = randomGetRange(-1024, 1024);
             p += 2;
         }
-        ((GameObject*)obj)->animEventCallback = (void*)Fireball_SeqFn;
+        ((GameObject*)obj)->animEventCallback = Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, 2);
         if (((GameObject*)obj)->anim.seqId != 2110 && ((FireballPlacement*)params)->unk1A != 0)
         {
@@ -1136,8 +1136,8 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             *(u16*)((char*)model + 0x18) &= ~0x8;
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         }
-        ((GameObject*)obj)->anim.rotZ = (s16)savedRot4;
-        ((GameObject*)obj)->anim.rotY = (s16)savedRot2;
+        ((GameObject*)obj)->anim.rotZ = savedRot4;
+        ((GameObject*)obj)->anim.rotY = savedRot2;
         ((GameObject*)obj)->anim.rootMotionScale = savedF8;
         ((ObjAnimComponent*)obj)->bankIndex = 0;
         *(u8*)((char*)*(int**)((char*)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
@@ -1233,10 +1233,10 @@ void fn_8016F260(int* obj, int* state, int* other)
         angY += framesThisStep * difY;
         angP += framesThisStep * difP;
 
-        f = lbl_803E3338 * (f32)angY / lbl_803E333C;
+        f = lbl_803E3338 * angY / lbl_803E333C;
         ((GameObject*)obj)->anim.velocityX = mathSinf(f);
         ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
-        f = lbl_803E3338 * (f32)angP / lbl_803E333C;
+        f = lbl_803E3338 * angP / lbl_803E333C;
         c = mathSinf(f);
         {
             f32 cosP = mathCosf(f);

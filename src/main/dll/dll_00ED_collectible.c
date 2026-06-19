@@ -557,13 +557,13 @@ int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
 
 void collectible_func0E(int* obj, u32 v)
 {
-    *(u8*)((char*)((GameObject*)obj)->extra + 0x1e) = (u8)v;
+    *(u8*)((char*)((GameObject*)obj)->extra + 0x1e) = v;
 }
 
 void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
 {
     s32 v = 0x8;
-    *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = (u8)v;
+    *(u8*)((char*)((GameObject*)obj)->extra + 0x1d) = v;
     ((GameObject*)obj)->anim.velocityX = f1;
     ((GameObject*)obj)->anim.velocityY = f2;
     ((GameObject*)obj)->anim.velocityZ = f3;
@@ -587,7 +587,7 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 void collectible_func0B(int* obj, int flag)
 {
     char* inner = (char*)((GameObject*)obj)->extra;
-    ((CollectibleState*)inner)->unkF = (u8)flag;
+    ((CollectibleState*)inner)->unkF = flag;
     if (flag != 0)
     {
         ObjHits_DisableObject((u32)obj);
@@ -834,7 +834,7 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
 
     animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < (s32)animUpdate->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
         u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1)
@@ -1131,7 +1131,7 @@ void collectible_updateIdleMotion(int obj)
         {
             ((CollectibleState*)state)->spinSpeed = (f32)(int)
             randomGetRange(600, 800);
-            ((CollectibleState*)state)->spinTimer = (s16)randomGetRange(180, 240);
+            ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
             Sfx_PlayFromObject(obj, SFXwp_whiz3_c);
         }
         ((GameObject*)obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
@@ -1191,9 +1191,9 @@ void collectible_init(int obj, int setup)
     ((GameObject*)obj)->anim.rotZ = (s16)((u8) * (u8*)(setup + 0x23) << 8);
     setupObj = (int)objAnim->modelInstance;
     ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(setupObj + 4);
-    ((GameObject*)obj)->animEventCallback = (void*)collectible_SeqFn;
+    ((GameObject*)obj)->animEventCallback = collectible_SeqFn;
     setupModelIndex = *(s8*)(setup + 0x26);
-    objAnim->bankIndex = (s8)setupModelIndex;
+    objAnim->bankIndex = setupModelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;

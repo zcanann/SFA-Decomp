@@ -202,7 +202,7 @@ void saveFileSelect_init(int sel, int slot)
     {
         if (sel == 1)
         {
-            saveFileSelect_currentSlotIndex = (s8)slot;
+            saveFileSelect_currentSlotIndex = slot;
             i = (s8)(u8)(s8)slot;
             if (saveFileSelect_saveSlots[i].isOccupied == 0)
             {
@@ -245,7 +245,7 @@ void saveSelectSetupMenuItems(SaveSelectPanel* p)
     i = 0;
     off1 = 0;
     off2 = off1;
-    while (i < (int)p->count)
+    while (i < p->count)
     {
         base = (char*)saveFileSelect_saveSlotsBase;
         saveFileSelect_saveSlots = (FrontendSaveSlot*)base;
@@ -258,7 +258,7 @@ void saveSelectSetupMenuItems(SaveSelectPanel* p)
         }
         else
         {
-            *(u16*)((char*)p->entries + off2) = (u16)i;
+            *(u16*)((char*)p->entries + off2) = i;
             *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) & ~0x2);
             *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) | 0x1);
             *(int*)((char*)p->entries + off2 + 0x10) = -1;
@@ -286,7 +286,7 @@ void saveSelectGoToChapterSelect(void)
         for (i = 0, off = 0; i < 6; i++)
         {
             if (i > *(u8*)((char*)saveFileSelect_saveSlots +
-                (s8)saveFileSelect_currentSlotIndex * 36 + 33))
+                saveFileSelect_currentSlotIndex * 36 + 33))
             {
                 *(u16*)((char*)panel->entries + off + 22) =
                     (u16)(*(u16*)((char*)panel->entries + off + 22) | 0x4000);
@@ -297,7 +297,7 @@ void saveSelectGoToChapterSelect(void)
                     (u16)(*(u16*)((char*)panel->entries + off + 22) & ~0x4000);
             }
             if (i <= *(u8*)((char*)saveFileSelect_saveSlots +
-                (s8)saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5)
+                saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5)
             {
                 *(s8*)((char*)panel->entries + off + 27) = (s8)(i + 1);
             }

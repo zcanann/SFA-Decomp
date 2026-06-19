@@ -122,9 +122,9 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
             (*(short*)(param_10 + 0x2a0) != 4))
         {
             entryOff = FUN_80017730();
-            angleDelta = (short)entryOff - *param_9;
-            angle = (u32)angleDelta;
-            if (0x8000 < (int)angle)
+            angleDelta = entryOff - *param_9;
+            angle = angleDelta;
+            if (0x8000 < angle)
             {
                 angle = (u32)(short)(angleDelta + 1);
             }
@@ -169,10 +169,10 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
     *(u8*)(param_10 + 0x2f4) = entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 0xc];
     entryOff = (u32) * (u8*)(param_10 + 0x33a) * 0x10;
     FUN_8014d4c8((double)*(float*)(entry + entryOff), speed, param_3, param_4, param_5, param_6, param_7,
-                 param_8, (int)param_9, param_10, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
+                 param_8, param_9, param_10, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
     FUN_800305c4((double)*(float*)(&DAT_8031e980 +
                      (u32)(u8)entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 8] *
-                 4), (int)param_9
+                 4), param_9
     )
     ;
     *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
@@ -336,7 +336,7 @@ void fn_8015165C(int obj, u8* state)
             {
                 *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
                 fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8], 0,
-                            (u8) * (u32*)&(p28 + *(u16*)(state + 0x338) * 16)[4],
+                            (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4],
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16));
                 ObjAnim_SetMoveProgress(
                     *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4),
@@ -361,17 +361,17 @@ void fn_8015165C(int obj, u8* state)
         if (((GameObject*)obj)->anim.currentMove == p20[8])
         {
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[9];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[9];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x14])
         {
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x15];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[0x15];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x20])
         {
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x21];
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[0x21];
         }
         if ((state[0x323] & 8) == 0)
         {

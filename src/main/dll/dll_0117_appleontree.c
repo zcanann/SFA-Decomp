@@ -220,12 +220,12 @@ void fn_8017D854(int obj, int msg)
         v = 0;
         break;
     }
-    ((AppleOnTreeState*)state)->healthRestore = (u16)v;
+    ((AppleOnTreeState*)state)->healthRestore = v;
     ((AppleOnTreeState*)state)->unk3A = 4;
     ((AppleOnTreeState*)state)->unk08 = timeDelta;
     ((AppleOnTreeState*)state)->unk0C = timeDelta;
-    ((AppleOnTreeState*)state)->rotX = (s16)randomGetRange(-0x8000, 0x7fff);
-    ((AppleOnTreeState*)state)->rotY = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState*)state)->rotX = randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState*)state)->rotY = randomGetRange(-0x8000, 0x7fff);
     ((AppleOnTreeState*)state)->rotZ = 0x2000;
 
     if (fn_80065684(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
@@ -594,7 +594,7 @@ void appleontree_update(int objArg)
     msg = 0;
     if ((*(u8*)(state + 0x5a) & 4) != 0)
     {
-        while (val = ObjMsg_Pop((int)obj, &msg, (u32*)0x0, (u32*)0x0), val != 0)
+        while (val = ObjMsg_Pop((int)obj, &msg, 0x0, 0x0), val != 0)
         {
             switch (msg)
             {
@@ -632,7 +632,7 @@ void appleontree_update(int objArg)
         switch (((AppleOnTreeState*)state)->unk3A)
         {
         case 0:
-            val = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (u32*)0x0);
+            val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -671,7 +671,7 @@ void appleontree_update(int objArg)
             }
             break;
         case 1:
-            val = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (u32*)0x0);
+            val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -744,7 +744,7 @@ void appleontree_update(int objArg)
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * *(float*)(val + 0x24);
                 FUN_80017a78((int)obj, 1);
             }
-            state = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (u32*)0x0);
+            state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((state != 0) ||
                 ((*(short*)(placement + 0x26) != -1 &&
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -760,7 +760,7 @@ void appleontree_update(int objArg)
             }
             else
             {
-                state = ObjHits_GetPriorityHit((int)obj, (u32*)0x0, (int*)0x0, (u32*)0x0);
+                state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
                 if ((state != 0) ||
                     ((*(short*)(placement + 0x26) != -1 &&
                         (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
@@ -895,7 +895,7 @@ void appleontree_init(int obj, int def)
         timeScale = timeScale * timeScale;
         ((CrackAnimState*)state)->unk54 = timeScale * lbl_803E3830;
 
-        ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(-0x8000, 0x7fff);
+        ((GameObject*)obj)->anim.rotX = randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
         Obj_SetActiveModelIndex(obj, 0);
 

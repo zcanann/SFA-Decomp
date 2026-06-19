@@ -69,7 +69,7 @@ int fn_801601C4(int obj, GroundBaddieState* p)
         z = lbl_803E2E68;
         p->baddie.moveInputX = z;
         p->baddie.moveInputZ = z;
-        memcpy(wp, (void*)&((GameObject*)obj)->anim.localPosX, 12);
+        memcpy(wp, &((GameObject*)obj)->anim.localPosX, 12);
         memcpy((void*)(sub->route35C + 0xc), (void*)(*(int*)&p->baddie.targetObj + 0xc), 12);
         voxmaps_updateRoutePath(wp, (char*)(sub->route35C + 0x28));
         if (p->baddie.targetDistance < lbl_803E2E6C && sub->unk405 == 2)
@@ -349,7 +349,7 @@ void dll_CB_init(int* obj, u8* params, int extra)
     ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
         obj, params, (u8*)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
-    ((GameObject*)obj)->animEventCallback = (void*)dll_CB_seqFn;
+    ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
     (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
     if (sub->aggroRange < 0x32)
@@ -559,16 +559,16 @@ int fn_801605D4(int* obj, GroundBaddieState* def)
 
 void dll_CB_initialise(void)
 {
-    ((void**)lbl_803AC5E8)[0] = (void*)fn_80160690;
-    ((void**)lbl_803AC5E8)[1] = (void*)fn_801605D4;
-    ((void**)lbl_803AC5E8)[2] = (void*)fn_801605A8;
-    ((void**)lbl_803AC5E8)[3] = (void*)fn_80160534;
-    lbl_803AC5D0[0] = (void*)fn_8016052C;
-    lbl_803AC5D0[1] = (void*)fn_8016050C;
-    lbl_803AC5D0[2] = (void*)fn_8016043C;
-    lbl_803AC5D0[3] = (void*)fn_801603E8;
-    lbl_803AC5D0[4] = (void*)fn_8016032C;
-    lbl_803AC5D0[5] = (void*)fn_801601C4;
+    ((void**)lbl_803AC5E8)[0] = fn_80160690;
+    ((void**)lbl_803AC5E8)[1] = fn_801605D4;
+    ((void**)lbl_803AC5E8)[2] = fn_801605A8;
+    ((void**)lbl_803AC5E8)[3] = fn_80160534;
+    lbl_803AC5D0[0] = fn_8016052C;
+    lbl_803AC5D0[1] = fn_8016050C;
+    lbl_803AC5D0[2] = fn_8016043C;
+    lbl_803AC5D0[3] = fn_801603E8;
+    lbl_803AC5D0[4] = fn_8016032C;
+    lbl_803AC5D0[5] = fn_801601C4;
 }
 
 #pragma peephole on

@@ -93,7 +93,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
     {
         if ((spawnFlags & 0x200000) != 0)
         {
-            if (spawnParams == (u16*)0x0)
+            if (spawnParams == 0x0)
             {
                 return 0xffffffff;
             }
@@ -108,7 +108,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
         }
         behaviorFlags = 0;
         renderFlags = 0;
-        effectIdByte = (u8)effectId;
+        effectIdByte = effectId;
         startPosX = lbl_803E0E4C;
         startPosY = lbl_803E0E4C;
         startPosZ = lbl_803E0E4C;
@@ -321,7 +321,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
             textureId = 0xdf;
             break;
         case 0x741:
-            if (spawnParams != (u16*)0x0)
+            if (spawnParams != 0x0)
             {
                 startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
             }
@@ -511,10 +511,10 @@ void Effect17_func05(void)
     sum = lbl_803DB85C + step;
     lbl_803DB85C = sum;
     if (sum > 1.0f) lbl_803DB85C = lbl_803E01C8;
-    lbl_803DD3D0 = lbl_803DD3D0 + (s32)framesThisStep * 0x64;
+    lbl_803DD3D0 = lbl_803DD3D0 + framesThisStep * 0x64;
     if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
     lbl_803DD3DC = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
-    lbl_803DD3D4 = lbl_803DD3D4 + (s32)framesThisStep * 0x32;
+    lbl_803DD3D4 = lbl_803DD3D4 + framesThisStep * 0x32;
     if (lbl_803DD3D4 > 0x7fff) lbl_803DD3D4 = 0;
     lbl_803DD3D8 = mathSinf(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
 }
@@ -546,7 +546,7 @@ int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
     cfg.startPosX = lbl_803E01CC;
     cfg.startPosY = lbl_803E01CC;

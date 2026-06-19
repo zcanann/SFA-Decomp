@@ -306,7 +306,7 @@ void fn_80150EDC(void* p1, void* p2)
         {
             SeqRow16* row;
             row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            *(u8*)((u8*)p2 + 0x2f2) = (u8)row->extra;
+            *(u8*)((u8*)p2 + 0x2f2) = row->extra;
             row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
             Baddie_SetMove(p1, p2, row->anim,
                         *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
@@ -519,7 +519,7 @@ void fn_80150910(int* obj, u8* state)
     {
         if (state[0x33d] == 0 && (flags & 0x40000000))
         {
-            u8 r = (u8)randomGetRange(1, tbl4[8]);
+            u8 r = randomGetRange(1, tbl4[8]);
             if (*(u16*)(state + 0x338) != 0)
             {
                 state[0x2f2] = (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 0xc);

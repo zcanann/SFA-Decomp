@@ -118,7 +118,7 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             return 0;
         }
         p.alpha = *extraArgs >> 1;
-        p.scale = lbl_803E0004 * (f32)p.alpha;
+        p.scale = lbl_803E0004 * p.alpha;
         p.count = 1;
         p.flagsA = 0x80000;
         p.flagsB = 0x800;
@@ -291,7 +291,7 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posY = lbl_803E0034 * ((f32)p.alpha * (f32)(int)randomGetRange(0, 10));
         p.posZ = lbl_803E0034 * ((f32)p.alpha * (f32)(int)randomGetRange(-10, 10));
         p.alpha = *(u32*)extraArgs;
-        p.scale = lbl_803E0038 * (f32)p.alpha + lbl_803E0038;
+        p.scale = lbl_803E0038 * p.alpha + lbl_803E0038;
         p.count = randomGetRange(0xf, 0x1e);
         p.flagsA = 0xc1080100;
         p.flagsB = 0x800;

@@ -512,9 +512,9 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                         else
                         {
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
-                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, (char*)o2 + 0x18) >= lbl_803E522C)
+                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, o2 + 0x18) >= lbl_803E522C)
                             {
-                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, (char*)o2 + 0x18) >=
+                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, o2 + 0x18) >=
                                     lbl_803E522C)
                                 {
                                     fn_8014C66C(o2, obj);
@@ -652,7 +652,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
     }
     if (st[0x43c] & 0x40)
     {
-        if (state->airMeterValue < lbl_803E5238 * (f32)state->uiMessageCount)
+        if (state->airMeterValue < lbl_803E5238 * state->uiMessageCount)
         {
             state->airMeterValue += timeDelta;
         }
@@ -930,7 +930,7 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
         }
         break;
     case 4:
-        state->uiMessageCount = (s8)GameBit_Get(0x48b);
+        state->uiMessageCount = GameBit_Get(0x48b);
         if (GameBit_Get(0x102) != 0)
         {
             state->stateIndex = 0x10;
