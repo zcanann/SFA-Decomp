@@ -282,22 +282,22 @@ void fn_801EC7A0(int p1, int p2)
     v.mat[3] = lbl_803E5AE8;
     v.mat[0] = lbl_803E5AEC;
 
-    v.angles[0] = *(s16*)(p2 + 0x40e);
+    v.angles[0] = ((SnowBikeState*)p2)->yaw;
     v.angles[1] = 0;
     v.angles[2] = 0;
     setMatrixFromObjectPos((void*)(p2 + 0x6c), v.angles);
 
-    v.angles[0] = -*(s16*)(p2 + 0x40e);
+    v.angles[0] = -((SnowBikeState*)p2)->yaw;
     v.angles[1] = 0;
     v.angles[2] = 0;
     mtxRotateByVec3s((void*)(p2 + 0xac), v.angles);
 
-    v.angles[0] = *(s16*)(p2 + 0x40c);
+    v.angles[0] = ((SnowBikeState*)p2)->unk40C;
     v.angles[1] = 0;
     v.angles[2] = 0;
     setMatrixFromObjectPos((void*)(p2 + 0xec), v.angles);
 
-    v.angles[0] = -*(s16*)(p2 + 0x40c);
+    v.angles[0] = -((SnowBikeState*)p2)->unk40C;
     v.angles[1] = 0;
     v.angles[2] = 0;
     mtxRotateByVec3s((void*)(p2 + 0x12c), v.angles);
