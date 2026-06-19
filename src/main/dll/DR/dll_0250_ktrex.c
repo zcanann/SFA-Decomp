@@ -1681,8 +1681,11 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState*)gKTRexState)->unkFC = 2;
-        ((KTRexRuntime*)runtime)->unk294 =
-            *(f32*)((u8*)((char*)p + ((KTRexArenaState*)gKTRexState)->unkFC * 4) + 0x38) / lbl_803E67C4;
+        {
+            u8* row = (u8*)p + 0x38;
+            ((KTRexRuntime*)runtime)->unk294 =
+                *(f32*)(row + ((KTRexArenaState*)gKTRexState)->unkFC * 4) / lbl_803E67C4;
+        }
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0)
     {
@@ -1765,8 +1768,9 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         else
         {
-            int push = 2;
+            int push;
             ((KTRexArenaState*)gKTRexState)->unk101 -= 1;
+            push = 2;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
                 Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
