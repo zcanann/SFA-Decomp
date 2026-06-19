@@ -18906,16 +18906,16 @@ void fn_802AEF34(int obj, int state)
                     ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
                         ((PlayerState*)state)->baddie.targetObj != NULL;
                 }
-                if (ok)
-                {
-                    ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
-                        obj, lbl_8033369C[*(u8*)((char*)state + 0x8a2)], timeDelta, 0);
-                }
-                else
+                if (!ok)
                 {
                     *(s16*)((char*)state + 0x806) = 3;
                     *(u8*)((char*)state + 0x8a2) = 0xff;
                     changed = 1;
+                }
+                else
+                {
+                    ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
+                        obj, lbl_8033369C[*(u8*)((char*)state + 0x8a2)], timeDelta, 0);
                 }
             }
             break;
