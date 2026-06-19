@@ -119,7 +119,9 @@ void arwprojectile_placeForward(int obj, f32 dist)
     ArwProjPosSrc src;
 
     state->deflectSpeedScale = dist;
-    src.pos[0] = src.pos[1] = src.pos[2] = lbl_803E7008;
+    src.pos[0] = lbl_803E7008;
+    src.pos[1] = lbl_803E7008;
+    src.pos[2] = lbl_803E7008;
     src.rot[0] = ((GameObject*)obj)->anim.rotX;
     src.rot[1] = ((GameObject*)obj)->anim.rotY;
     src.rot[2] = 0;
