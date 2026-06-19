@@ -602,7 +602,7 @@ void ediblemushroom_update(u8* self)
         {
             if (((u32)msg - 0x70000) != 0xB) continue;
             ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | 0x4000);
-            ObjHits_DisableObject((u32)self);
+            ObjHits_DisableObject((u32)(int)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
             GameBit_Set(0x12E, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
