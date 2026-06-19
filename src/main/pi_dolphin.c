@@ -3140,7 +3140,7 @@ void fn_8004B11C(u32 ctxArg, u32 entryArg, u8 key)
     {
         sel = DAT_803dd988;
         if ((((-1 < *(int*)(entCur + 0x1c)) && ((mask & 0xff & 1 << bit) != 0)) &&
-                (found = (**(code**)(*DAT_803dd71c + 0x1c))(), sel = DAT_803dd988, found != 0)) &&
+                (found = (**(VtableFn**)(*DAT_803dd71c + 0x1c))(), sel = DAT_803dd988, found != 0)) &&
             (sel = found, *(char*)(found + 0x19) == '$'))
         {
             GameBit_Get(0x4e2);

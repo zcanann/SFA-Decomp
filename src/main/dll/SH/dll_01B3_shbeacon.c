@@ -206,7 +206,7 @@ void sh_beacon_update(int obj)
         tmp = (int)getTrickyObject();
         if (((void*)tmp != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
         {
-            (*(code*)(*(int*)(*(int*)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
+            (*(VtableFn*)(*(int*)(*(int*)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
         }
     }
     else

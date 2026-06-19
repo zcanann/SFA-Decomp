@@ -196,7 +196,7 @@ void CameraModeClimb_init(int arg1, int mode, s8* args)
     default:
         memset(lbl_803DD578, 0, sizeof(CameraModeClimbState));
         handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        (*(code*)(**(int**)(handler + 4) + 0x20))(&defaultDistB, &defaultDistA, &defaultMinHeight,
+        (*(VtableFn*)(**(int**)(handler + 4) + 0x20))(&defaultDistB, &defaultDistA, &defaultMinHeight,
                                                   &defaultMaxHeight, &defaultRelPos);
         (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
                                                  arg1, &outX, &outY, &outZ, &defaultDistXZ, 0);

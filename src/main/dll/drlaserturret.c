@@ -283,7 +283,7 @@ int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
         int* target;
         GameBit_Set(DR_LASERTURRET_GAMEBIT_LINK_STARTED, 1);
         target = state->linkedTarget;
-        (**(code***)((char*)target + 0x68))[0x24 / 4](target, 1, 2);
+        (**(VtableFn***)((char*)target + 0x68))[0x24 / 4](target, 1, 2);
     }
     return DR_LASERTURRET_STATE_LINKED_TARGET;
 }
@@ -410,7 +410,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         if ((s8)nudge == 1)
         {
             int* target = state->linkedTarget;
-            (**(code***)((char*)target + 0x68))[0x48 / 4](target);
+            (**(VtableFn***)((char*)target + 0x68))[0x48 / 4](target);
         }
         return (s8)nudge == 1;
     case DR_LASERTURRET_PROMPT_MAX_NUDGE:
@@ -432,8 +432,8 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
         hudFn_8011f6f0(1);
         GameBit_Set(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
         target = state->linkedTarget;
-        (**(code***)((char*)target + 0x68))[0x4c / 4](target, state->digitCount);
-        (*(code**)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
+        (**(VtableFn***)((char*)target + 0x68))[0x4c / 4](target, state->digitCount);
+        (*(VtableFn**)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
     }
     else
     {

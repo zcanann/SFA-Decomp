@@ -175,7 +175,7 @@ void FUN_801ee668(u16 *param_1, int param_2)
     f64 dVar4;
     f64 dVar5;
 
-    (**(code **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
+    (**(VtableFn **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
     dVar3 = FUN_80294964();
     dVar4 = FUN_80293f90();
     fVar1 = lbl_803E6908;
@@ -192,7 +192,7 @@ void FUN_801ee668(u16 *param_1, int param_2)
     dVar2 = -(f64)*(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x78) = *(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x7c) = fVar1;
-    (**(code **)(*DAT_803dd6e4 + 0x28))
+    (**(VtableFn **)(*DAT_803dd6e4 + 0x28))
     ((f64)(((f32)(dVar4 * dVar2 + (f64)(f32)(dVar5 * -dVar3)) * lbl_803DC074) /
          lbl_803E6930),
      (f64)(((f32)(dVar3 * dVar2 + (f64)(f32)(dVar5 * dVar4)) * lbl_803DC074) /

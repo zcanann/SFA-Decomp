@@ -317,8 +317,8 @@ void TitleMenu_render(u8* param_1)
                                     lbl_803E1D18);
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
-        (*(code*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
-        (*(code*)((int)gTitleMenuLinkInterface->vtable + 0x10))(param_1);
+        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
+        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x10))(param_1);
         gameTextSetDrawFunc(0);
         titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
     }

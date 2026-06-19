@@ -601,7 +601,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     bool needsAlpha;
     u16* modelData;
     int subNode;
-    code* callback;
+    VtableFn* callback;
     char callbackResult;
     int* hitList;
     u32* decalEntry;
@@ -644,8 +644,8 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     cmdByte2 = *(u8*)(subNode + 2);
     cmdStream[4] = cmd + 6;
     cmd = (((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cmd & 7)) & 0x3f;
-    callback = (code*)FUN_8001795c((int)node);
-    if ((callback == (code*)0x0) || (callbackResult = (*callback)(modelData, node, cmd), callbackResult == '\0'))
+    callback = (VtableFn*)FUN_8001795c((int)node);
+    if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(modelData, node, cmd), callbackResult == '\0'))
     {
         subNode = FUN_8001792c(*node, cmd);
         hitList = (int*)FUN_80017978((int)node, cmd);
@@ -818,8 +818,8 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             PlayControl();
         }
         FUN_800528d0();
-        callback = (code*)FUN_8001794c((int)node);
-        if (callback == (code*)0x0)
+        callback = (VtableFn*)FUN_8001794c((int)node);
+        if (callback == (VtableFn*)0x0)
         {
             cmd = 1;
             if (((*(char*)((int)modelData + 0x37) != -1) || ((*(u32*)(subNode + 0x3c) & 0x40000000) != 0))
@@ -900,7 +900,7 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     u16* modelData;
     int* renderNode;
     float* mtx;
-    code* callback;
+    VtableFn* callback;
     char callbackResult;
     u32 texId;
     int cmdPtr;
@@ -978,11 +978,11 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
         DAT_803dd8a8 = '\0';
     }
     *(u8*)((int)&color + 3) = *(u8*)((int)modelData + 0x37);
-    callback = (code*)FUN_8001795c((int)renderNode);
-    if ((DAT_803dd8aa == '\0') || (callback != (code*)0x0))
+    callback = (VtableFn*)FUN_8001795c((int)renderNode);
+    if ((DAT_803dd8aa == '\0') || (callback != (VtableFn*)0x0))
     {
         FUN_800069d4();
-        if ((callback == (code*)0x0) || (callbackResult = (*callback)(modelData, renderNode, 0), callbackResult == '\0'))
+        if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(modelData, renderNode, 0), callbackResult == '\0'))
         {
             trackIntersect_drawColorBand();
             FUN_80052904();
@@ -1126,9 +1126,9 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
                 FUN_800178d0(renderNode, localMtx, (float*)&DAT_80343a70);
             }
             done = !done;
-            if ((*(code**)(modelData + 0x84) != (code*)0x0) && ((u16*)(u32)ctx == modelData))
+            if ((*(VtableFn**)(modelData + 0x84) != (VtableFn*)0x0) && ((u16*)(u32)ctx == modelData))
             {
-                (**(code**)(modelData + 0x84))(modelData, renderNode, localMtx);
+                (**(VtableFn**)(modelData + 0x84))(modelData, renderNode, localMtx);
             }
         }
         if (*(char*)(obj + 0xf9) != '\0')

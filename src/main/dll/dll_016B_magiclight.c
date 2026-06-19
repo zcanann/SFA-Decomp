@@ -130,7 +130,7 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
     {
         savedAlpha = *(u8*)((int)param_2 + 0x37);
         *(char*)((int)param_2 + 0x37) = param_8;
-        (**(code**)(**(int**)(param_2 + 0x34) + 0x10))
+        (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x10))
             (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
         *(u8*)((int)param_2 + 0x37) = savedAlpha;
     }
@@ -140,7 +140,7 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
     *(u32*)(param_1 + 0x40) = *(u32*)(param_1 + 6);
     *(u32*)(param_1 + 0x42) = *(u32*)(param_1 + 8);
     *(u32*)(param_1 + 0x44) = *(u32*)(param_1 + 10);
-    (**(code**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
+    (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, local_20, &local_24, &local_28);
     *(u32*)(param_1 + 6) = local_20[0];
     *(u32*)(param_1 + 8) = local_24;
     *(u32*)(param_1 + 10) = local_28;
@@ -218,7 +218,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if ((linkedObj != 0) && (param_11->triggerCommand == 1))
         {
-            (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 0);
+            (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 0);
             param_11->triggerCommand = 0;
         }
     }
@@ -228,7 +228,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         extra[2] = extra[5];
         extra[3] = extra[6];
         extra[4] = extra[7];
-        (**(code**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
+        (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
         FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
         modelState = (int)((GameObject*)param_9)->anim.modelState;
@@ -239,7 +239,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         param_11->hitVolumePair &= ~4;
         param_11->triggerCommand = 0;
     }
-    if ((linkedObj != 0) && (linkedObj = (**(code**)(**(int**)(linkedObj + 0x68) + 0x38))(linkedObj), linkedObj == 2))
+    if ((linkedObj != 0) && (linkedObj = (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x38))(linkedObj), linkedObj == 2))
     {
         param_11->hitVolumePair &= 0xfffc;
     }

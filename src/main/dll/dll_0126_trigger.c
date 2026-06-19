@@ -387,7 +387,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (*gCloudActionInterface)->func09Nop(p[3]);
                         break;
                     case 4:
-                        (*(code*)(*gPlayerShadowInterface + 0xc))(p[3]);
+                        (*(VtableFn*)(*gPlayerShadowInterface + 0xc))(p[3]);
                         break;
                     case 5:
                         fn_8006FC00(p[3]);
@@ -674,7 +674,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         switch (((ObjInterpretSeqPlacement*)p)->unk2)
                         {
                         case 0:
-                            (*(code*)(**(int**)(t + 0x68) + 0x3c))();
+                            (*(VtableFn*)(**(int**)(t + 0x68) + 0x3c))();
                             break;
                         case 1:
                             Obj_FreeObject(getTrickyObject());
@@ -687,7 +687,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             }
                             if ((void*)t2 != NULL)
                             {
-                                (*(code*)(**(int**)(t + 0x68) + 0x38))(t);
+                                (*(VtableFn*)(**(int**)(t + 0x68) + 0x38))(t);
                             }
                             break;
                         case 3:

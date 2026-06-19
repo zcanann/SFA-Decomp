@@ -54,8 +54,8 @@ void fn_80185868(int obj, f32 arg)
 
     sub = ((GameObject*)obj)->extra;
     stk.val = sub->radius;
-    (*(code*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
-    (*(code*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
+    (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
+    (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
     Sfx_PlayFromObject(obj, SFXmn_eggylaugh116);
     fz = lbl_803E3A58;
     ((GameObject*)obj)->anim.velocityX = fz;
@@ -352,7 +352,7 @@ void fn_80185B74(int obj)
         {
             sub = *(int*)&((GameObject*)obj)->extra;
             stkA.val = ((WindLift107State*)sub)->radius;
-            (*(code*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
             return;
         }
@@ -377,7 +377,7 @@ void fn_80185B74(int obj)
             state->launchPhase = 0;
             sub = *(int*)&((GameObject*)obj)->extra;
             stkB.val = ((WindLift107State*)sub)->radius;
-            (*(code*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
             return;
         }
@@ -386,7 +386,7 @@ void fn_80185B74(int obj)
             state->launchPhase = 0;
             sub = *(int*)&((GameObject*)obj)->extra;
             stkC.val = ((WindLift107State*)sub)->radius;
-            (*(code*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
             ((GameObject*)obj)->anim.velocityY = lbl_803E3A58;
             return;

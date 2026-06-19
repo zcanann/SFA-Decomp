@@ -104,7 +104,7 @@ void explodable_update(int obj)
                 o = *(int*)(p + 0x690);
                 if ((void*)o != NULL)
                 {
-                    r = (*(code*)(*(int*)*(int*)(o + 0x68) + FRAGMENT_VTABLE_STATUS))(o);
+                    r = (*(VtableFn*)(*(int*)*(int*)(o + 0x68) + FRAGMENT_VTABLE_STATUS))(o);
                     switch (r)
                     {
                     case 2:

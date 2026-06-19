@@ -5,4 +5,6 @@
 
 #include "dolphin/types.h"
 
+typedef u32 (*VtableFn)();
+
 #endif

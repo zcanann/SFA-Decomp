@@ -142,7 +142,7 @@ void dfpfloorbar_update(int obj)
 
     {
         int objPtr = (int)state->linkedObject;
-        (*(code*)(**(int**)(objPtr + 0x68) + 0x20))(objPtr, gDfpfloorbarModeTable);
+        (*(VtableFn*)(**(int**)(objPtr + 0x68) + 0x20))(objPtr, gDfpfloorbarModeTable);
     }
 
     state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];

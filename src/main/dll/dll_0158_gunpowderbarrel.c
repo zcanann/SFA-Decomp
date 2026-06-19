@@ -143,7 +143,7 @@ void gunpowderbarrel_free(int obj, int param_2)
     int extra;
     void* child;
     extra = *(int*)&((GameObject*)obj)->extra;
-    (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
+    (*(VtableFn*)(*(int*)gCarryableInterface + 0x10))(obj);
     child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && param_2 == 0)
     {

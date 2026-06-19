@@ -1023,7 +1023,7 @@ void lightmap_flushQueuedRenderPackets(void)
             FUN_8006f09c();
             break;
         case 9:
-            (**(code**)(*DAT_803dd718 + 0xc))(0, 0);
+            (**(VtableFn**)(*DAT_803dd718 + 0xc))(0, 0);
         }
         packet = packet + 4;
     }

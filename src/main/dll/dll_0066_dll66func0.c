@@ -199,8 +199,8 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
-    (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
-    (**(code**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
+    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
+    (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
     FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
     FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
     FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);

@@ -100,7 +100,7 @@ void dim2icefloe_update(int obj)
         if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
         {
             ((Dim2IceFloeState*)sub)->followedObj = ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
-            ((Dim2IceFloeState*)sub)->curve.count = (*(code*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
+            ((Dim2IceFloeState*)sub)->curve.count = (*(VtableFn*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
                 ((Dim2IceFloeState*)sub)->followedObj, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
             ((Dim2IceFloeState*)sub)->curve.dir = 0;
             ((Dim2IceFloeState*)sub)->curve.eval = Curve_EvalHermite;

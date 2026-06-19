@@ -1108,7 +1108,7 @@ void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
     short seqId;
     u32 ctxHi;
     int child;
-    code* vfn;
+    VtableFn* vfn;
     int walk;
     char flag;
     int i;
@@ -1142,8 +1142,8 @@ void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
         }
         else if ((*(u16*)(obj + 0xb0) & 0x4000) == 0)
         {
-            vfn = *(code**)(**(int**)(obj + 0x68) + 0x10);
-            if (vfn != (code*)0x0)
+            vfn = *(VtableFn**)(**(int**)(obj + 0x68) + 0x10);
+            if (vfn != (VtableFn*)0x0)
             {
                 (*vfn)(obj, ctxHi, ctx, param_3, param_4, renderFlag);
             }

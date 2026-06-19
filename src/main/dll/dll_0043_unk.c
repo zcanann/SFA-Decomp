@@ -167,9 +167,9 @@ void camclimb_update(CameraObject* cam)
         Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY,
                                        cam->anim.localPosZ, &cam->anim.worldPosX, &cam->anim.worldPosY,
                                        &cam->anim.worldPosZ, *(int*)&cam->anim.parent);
-        (*(code*)(**(int**)(defaultHandler + 4) + 0x1c))
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))
             ((double)lbl_803E1758, (double)lbl_803E175C, cam, target);
-        (*(code*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
                                                          &gCamcontrolPathState->curveMin,
                                                          &gCamcontrolPathState->curveMax);
         if ((cam->anim.currentMove != 0) || (cam->cameraCollisionActive != 0))
@@ -202,7 +202,7 @@ void camclimb_update(CameraObject* cam)
             yawDelta = yawDelta + 0xffff;
         }
         cam->anim.rotX = (s16)(cam->anim.rotX + yawDelta);
-        (*(code*)(**(int**)(defaultHandler + 4) + 0x18))
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))
             ((double)target->anim.worldPosY, (double)relDistXZ, cam);
         if (needsReset != 0)
         {

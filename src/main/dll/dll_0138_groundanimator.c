@@ -311,7 +311,7 @@ f32 groundanimator_setScale(int* obj, int* target)
                 fn_801A80F0(e, 0);
                 break;
             default:
-                (*(code*)(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
+                (*(VtableFn*)(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
                 break;
             }
         }
@@ -480,9 +480,9 @@ void groundanimator_update(int* obj)
                 default:
                     if ((g->flags & 2) == 0)
                     {
-                        (*(code*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
+                        (*(VtableFn*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
                     }
-                    (*(code*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
+                    (*(VtableFn*)(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
                         near, ((GameObject*)obj)->anim.localPosX,
                         ((GameObject*)obj)->anim.localPosY - g->yOffset,
                         ((GameObject*)obj)->anim.localPosZ);
@@ -540,7 +540,7 @@ void groundanimator_update(int* obj)
                         fn_801A80F0((void*)g->linkedObj, 0);
                         break;
                     default:
-                        (*(code*)(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
+                        (*(VtableFn*)(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
                         break;
                     }
                 }
@@ -599,7 +599,7 @@ void groundanimator_update(int* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8;
         if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
         {
-            (*(code*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
+            (*(VtableFn*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
         }
     }
     else

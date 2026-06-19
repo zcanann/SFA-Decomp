@@ -149,7 +149,7 @@ void effectbox_update(int obj)
                             fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->unk1D);
                             break;
                         case 2:
-                            (*(code*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->unk1D);
+                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->unk1D);
                             break;
                         }
                     }

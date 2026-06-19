@@ -350,7 +350,7 @@ void kaldachom_free(int obj)
 
     state = *(u32*)&((GameObject*)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    (*(code*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
+    (*(VtableFn*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
 }
 
 void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -493,13 +493,13 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     {
         initMode |= 1;
     }
-    (*(code*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
+    (*(VtableFn*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
     ((GameObject*)obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-    (*(code*)(*gPlayerInterface + 0x14))(obj, state, 0);
+    (*(VtableFn*)(*gPlayerInterface + 0x14))(obj, state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;

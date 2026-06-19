@@ -278,7 +278,7 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             *(u32*)(control + 0x18) = 0;
         }
         hurt = FUN_80017a98();
-        hurt = (**(code**)(**(int**)(*(int*)(hurt + 200) + 0x68) + 0x44))();
+        hurt = (**(VtableFn**)(**(int**)(*(int*)(hurt + 200) + 0x68) + 0x44))();
         if (hurt == 0)
         {
             busy = randomGetRange(0, 2);

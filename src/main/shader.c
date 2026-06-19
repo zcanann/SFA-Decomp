@@ -317,11 +317,11 @@ void FUN_80056cfc(void)
                 {
                     if (tag == 0x6e)
                     {
-                        (**(code**)(*DAT_803dd71c + 8))(cur);
+                        (**(VtableFn**)(*DAT_803dd71c + 8))(cur);
                     }
                     else
                     {
-                        (**(code**)(*DAT_803dd6ec + 8))(cur);
+                        (**(VtableFn**)(*DAT_803dd6ec + 8))(cur);
                     }
                     if (!found)
                     {
@@ -340,11 +340,11 @@ void FUN_80056cfc(void)
             {
                 if (*cur == 0x6e)
                 {
-                    (**(code**)(*DAT_803dd71c + 0xc))(cur);
+                    (**(VtableFn**)(*DAT_803dd71c + 0xc))(cur);
                 }
                 if (*cur == 5)
                 {
-                    (**(code**)(*DAT_803dd6ec + 0xc))(cur);
+                    (**(VtableFn**)(*DAT_803dd6ec + 0xc))(cur);
                 }
             }
             stepPtr = (u8*)(cur + 1);

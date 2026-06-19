@@ -34,10 +34,10 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
                                    &work.worldX, &work.worldY, work.worldZ, work.model);
     work.targetObj = target;
     handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(code*)(**(int**)(handler + 4) + 0x14))(&work, target);
+    (*(VtableFn*)(**(int**)(handler + 4) + 0x14))(&work, target);
     Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ,
                                    &work.targetX, &work.targetY, work.targetZ, work.model);
-    (*(code*)(**(int**)(handler + 4) + 0x24))
+    (*(VtableFn*)(**(int**)(handler + 4) + 0x24))
         (&work, 1, 3, &gCamcontrolPathState->curveMin, &gCamcontrolPathState->curveMax);
     i = gCamcontrolPathState->pathCurve.count + -3;
     for (; i < gCamcontrolPathState->pathCurve.count; i = i + 1)

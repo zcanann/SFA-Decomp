@@ -124,13 +124,13 @@ void FUN_8018f650(void)
         effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0x58 & 0xffff);
         if (*(short*)(config + 0xc) < 1)
         {
-            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
+            (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
         }
         else
         {
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
+                (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
             }
         }
         FUN_80006b0c((u8*)effectVtbl);
@@ -140,13 +140,13 @@ void FUN_8018f650(void)
         effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0xab & 0xffff);
         if (*(short*)(config + 0xc) < 1)
         {
-            (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
+            (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
         }
         else
         {
             for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
             {
-                (**(code**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
+                (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
             }
         }
         FUN_80006b0c((u8*)effectVtbl);

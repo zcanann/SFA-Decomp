@@ -135,7 +135,7 @@ u32 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, u32 unused, ObjAnim
                     ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
                         SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent2] + 0x68) + SC_VT_HANDLE_EVENT))(
+                    (*(VtableFn*)(**(int**)(objects[startForEvent2] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent2], 2);
                     break;
                 }
@@ -150,7 +150,7 @@ u32 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, u32 unused, ObjAnim
                     ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
                         SC_SEQ_TOTEMPOLE)
                 {
-                    (*(code*)(**(int**)(objects[startForEvent3] + 0x68) + SC_VT_HANDLE_EVENT))(
+                    (*(VtableFn*)(**(int**)(objects[startForEvent3] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent3], 1);
                     break;
                 }

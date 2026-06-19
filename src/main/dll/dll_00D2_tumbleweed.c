@@ -247,7 +247,7 @@ void tumbleweed_free(int* obj)
         int* o = (int*)items[counter];
         if (target_id == *(s16*)((int)o + 0x46))
         {
-            (*(code*)(**(int**)((int)o + 0x68) + 0x20))(o, obj);
+            (*(VtableFn*)(**(int**)((int)o + 0x68) + 0x20))(o, obj);
         }
         counter = counter + 1;
     }
