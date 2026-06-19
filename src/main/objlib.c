@@ -77,7 +77,7 @@ struct ObjLibRegionList
 };
 
 extern ObjContactCallbackEntry gObjContactCallbacks[];
-extern void* lbl_803DCBD8;
+extern void* gObjHitsWorkBuffer;
 extern u8* gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
 extern int gObjContactCallbackCount;
@@ -91,8 +91,8 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE970;
 extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;
-extern f32 lbl_803DE980;
-extern f32 lbl_803DE984;
+extern f32 gObjLibAnglePiNumerator;
+extern f32 gObjLibAngleUnitDivisor;
 extern f32 lbl_803DE998;
 extern f32 lbl_803DE99C;
 extern f32 lbl_803DE9A0;
@@ -100,8 +100,8 @@ extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9A8;
 extern f32 lbl_803DE9AC;
 extern f32 lbl_803DE9B0;
-extern f32 lbl_803DE9B4;
-extern f32 lbl_803DE9B8;
+extern f32 gObjLibBlinkAngleUnitScale;
+extern f32 gObjLibBlinkAnglePiDivisor;
 
 #define OBJMSG_QUEUE_OFFSET 0xdc
 #define OBJMSG_SEND_INCLUDE_SENDER 0x1
@@ -997,7 +997,7 @@ void ObjHits_InitWorkBuffers(void)
         (ObjAnimComponent**)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(ObjAnimComponent*), 0xe, 0);
     gObjHitsPriorityHitStates =
         mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot), 0xe, 0);
-    lbl_803DCBD8 = mmAlloc(0x1900, 0xe, 0);
+    gObjHitsWorkBuffer = mmAlloc(0x1900, 0xe, 0);
     gObjHitsPrimaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
     gObjHitsPrimaryHitboxBufferScratch1 = mmAlloc(0x400, 0xe, 0);
     gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
@@ -2126,12 +2126,12 @@ u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
                 if (entry->type == OBJHITREGION_ROM_ENTRY_TYPE)
                 {
                     f32 yawCos =
-                        mathSinf(lbl_803DE980 * (f32) - (s32)((u32)entry->yaw << 8) / lbl_803DE984);
-                    f32 yawSin = mathCosf(lbl_803DE980 * (f32) - (s32)((u32)entry->yaw << 8) / lbl_803DE984);
+                        mathSinf(gObjLibAnglePiNumerator * (f32) - (s32)((u32)entry->yaw << 8) / gObjLibAngleUnitDivisor);
+                    f32 yawSin = mathCosf(gObjLibAnglePiNumerator * (f32) - (s32)((u32)entry->yaw << 8) / gObjLibAngleUnitDivisor);
                     f32 pitchCos =
-                        mathSinf(lbl_803DE980 * (f32) - (s32)((u32)entry->pitch << 8) / lbl_803DE984);
+                        mathSinf(gObjLibAnglePiNumerator * (f32) - (s32)((u32)entry->pitch << 8) / gObjLibAngleUnitDivisor);
                     f32 pitchSin =
-                        mathCosf(lbl_803DE980 * (f32) - (s32)((u32)entry->pitch << 8) / lbl_803DE984);
+                        mathCosf(gObjLibAnglePiNumerator * (f32) - (s32)((u32)entry->pitch << 8) / gObjLibAngleUnitDivisor);
                     f32 deltaZ;
                     f32 deltaY;
                     f32 deltaX;
@@ -2323,7 +2323,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     phase = lbl_803DE9AC * bs->timer;
     wave = lbl_803DE9A8 * fn_802943F4(phase);
     wave = wave * bs->amount / lbl_803DE9B0;
-    rotation = (lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8;
+    rotation = (gObjLibBlinkAngleUnitScale * (leftScale * wave)) / gObjLibBlinkAnglePiDivisor;
     joint = 0;
     model = objAnim->modelInstance;
     if (model != 0)
@@ -2344,7 +2344,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     }
     *(s16*)(joint + 2) = rotation;
 
-    rotation = (lbl_803DE9B4 * (rightScale * wave)) / lbl_803DE9B8;
+    rotation = (gObjLibBlinkAngleUnitScale * (rightScale * wave)) / gObjLibBlinkAnglePiDivisor;
     joint = 0;
     model = objAnim->modelInstance;
     if (model != 0)

@@ -30,27 +30,27 @@ extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 extern void AttractMovieAudio_DmaCallback(void);
 extern char lbl_803A57C0[0x50C];
-extern char lbl_803A5F08[0x1000];
-extern OSThread lbl_803A6F08;
-extern OSMessageQueue lbl_803A7290;
-extern OSMessageQueue lbl_803A72B0;
-extern OSMessageQueue lbl_803A72D0;
-extern char lbl_803A72F0[0x18];
-extern OSMessageQueue lbl_803A7308;
-extern OSMessageQueue lbl_803A7328;
-extern OSThread lbl_803A8348;
-extern char lbl_803A5D20[0x40];
-extern char lbl_803DB9E8;
-extern f32 lbl_803E1D54;
+extern char gPicMenuReadThreadArea[0x1000];
+extern OSThread gPicMenuReadThread;
+extern OSMessageQueue gPicMenuReadedBuffer2Queue;
+extern OSMessageQueue gPicMenuReadedBufferQueue;
+extern OSMessageQueue gPicMenuFreeReadBufferQueue;
+extern char gPicMenuVideoDecodeThreadArea[0x18];
+extern OSMessageQueue gPicMenuDecodedTextureSetQueue;
+extern OSMessageQueue gPicMenuFreeTextureSetQueue;
+extern OSThread gPicMenuVideoDecodeThread;
+extern char gPicMenuDvdReadBuffer[0x40];
+extern char sPicMenuThpMagic;
+extern f32 gPicMenuMaxVolume;
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
 extern s32 lbl_803DD66C;
 extern u32 lbl_803DD670;
 extern u32 lbl_803DD674;
 extern u32 lbl_803DD678;
-extern s32 lbl_803DD688; /* sbss slot is 8 bytes; upper word unreferenced */
-extern s32 lbl_803DD690;
-extern s32 lbl_803DD694;
+extern s32 gPicMenuReadThreadCreated; /* sbss slot is 8 bytes; upper word unreferenced */
+extern s32 gPicMenuVideoDecodeThreadCreated;
+extern s32 gPicMenuVideoDecodePrepareReady;
 extern u32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
 void THPRead_Reader(void);
@@ -97,17 +97,17 @@ BOOL movieLoad(const char* fileName, void* onMemory)
         return 0;
     }
 
-    result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x40, 0);
+    result = DVDRead((DVDFileInfo*)&lbl_803A5D60, gPicMenuDvdReadBuffer, 0x40, 0);
     if (result < 0)
     {
         DVDClose((DVDFileInfo*)&lbl_803A5D60);
         return 0;
     }
 
-    memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->header, lbl_803A5D20,
+    memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->header, gPicMenuDvdReadBuffer,
            sizeof(((AttractMoviePlayer*)&lbl_803A5D60)->header));
 
-    if (strcmp(((AttractMoviePlayer*)&lbl_803A5D60)->header.mMagic, &lbl_803DB9E8) != 0)
+    if (strcmp(((AttractMoviePlayer*)&lbl_803A5D60)->header.mMagic, &sPicMenuThpMagic) != 0)
     {
         DVDClose((DVDFileInfo*)&lbl_803A5D60);
         return 0;
@@ -122,7 +122,7 @@ BOOL movieLoad(const char* fileName, void* onMemory)
     {
         u32 compOff = ((AttractMoviePlayer*)&lbl_803A5D60)->header.mCompInfoDataOffsets;
 
-        result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x20, compOff);
+        result = DVDRead((DVDFileInfo*)&lbl_803A5D60, gPicMenuDvdReadBuffer, 0x20, compOff);
         if (result < 0)
         {
             DVDClose((DVDFileInfo*)&lbl_803A5D60);
@@ -130,7 +130,7 @@ BOOL movieLoad(const char* fileName, void* onMemory)
         }
 
         compInfo = &((AttractMoviePlayer*)&lbl_803A5D60)->compInfo;
-        memcpy(compInfo, lbl_803A5D20, sizeof(*compInfo));
+        memcpy(compInfo, gPicMenuDvdReadBuffer, sizeof(*compInfo));
         readOff = compOff + sizeof(*compInfo);
         ((AttractMoviePlayer*)&lbl_803A5D60)->audioExists = 0;
     }
@@ -140,23 +140,23 @@ BOOL movieLoad(const char* fileName, void* onMemory)
         switch (((AttractMoviePlayer*)&lbl_803A5D60)->compInfo.mFrameComp[i])
         {
         case THP_COMPONENT_VIDEO:
-            result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x20, readOff);
+            result = DVDRead((DVDFileInfo*)&lbl_803A5D60, gPicMenuDvdReadBuffer, 0x20, readOff);
             if (result < 0)
             {
                 DVDClose((DVDFileInfo*)&lbl_803A5D60);
                 return 0;
             }
-            memcpy(videoInfo, lbl_803A5D20, sizeof(*videoInfo));
+            memcpy(videoInfo, gPicMenuDvdReadBuffer, sizeof(*videoInfo));
             readOff += sizeof(*videoInfo);
             break;
         case THP_COMPONENT_AUDIO:
-            result = DVDRead((DVDFileInfo*)&lbl_803A5D60, lbl_803A5D20, 0x20, readOff);
+            result = DVDRead((DVDFileInfo*)&lbl_803A5D60, gPicMenuDvdReadBuffer, 0x20, readOff);
             if (result < 0)
             {
                 DVDClose((DVDFileInfo*)&lbl_803A5D60);
                 return 0;
             }
-            memcpy(audioInfo, lbl_803A5D20, sizeof(*audioInfo));
+            memcpy(audioInfo, gPicMenuDvdReadBuffer, sizeof(*audioInfo));
             ((AttractMoviePlayer*)&lbl_803A5D60)->audioExists = 1;
             readOff += sizeof(*audioInfo);
             break;
@@ -170,8 +170,8 @@ BOOL movieLoad(const char* fileName, void* onMemory)
     ((AttractMoviePlayer*)&lbl_803A5D60)->playFlags = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->isOnMemory = (s32)onMemory;
     ((AttractMoviePlayer*)pb)->isOpen = 1;
-    ((AttractMoviePlayer*)&lbl_803A5D60)->curVolume = lbl_803E1D54;
-    ((AttractMoviePlayer*)&lbl_803A5D60)->targetVolume = lbl_803E1D54;
+    ((AttractMoviePlayer*)&lbl_803A5D60)->curVolume = gPicMenuMaxVolume;
+    ((AttractMoviePlayer*)&lbl_803A5D60)->targetVolume = gPicMenuMaxVolume;
     ((AttractMoviePlayer*)&lbl_803A5D60)->rampCount = 0;
 
     return 1;
@@ -240,14 +240,14 @@ BOOL AttractMovieAudio_Init(int audioMode)
 
 void PushReadedBuffer2(OSMessage msg)
 {
-    OSSendMessage(&lbl_803A7290, msg, OS_MESSAGE_BLOCK);
+    OSSendMessage(&gPicMenuReadedBuffer2Queue, msg, OS_MESSAGE_BLOCK);
 }
 
 #pragma dont_inline on
 OSMessage PopReadedBuffer2(void)
 {
     OSMessage msg;
-    OSReceiveMessage(&lbl_803A7290, &msg, OS_MESSAGE_BLOCK);
+    OSReceiveMessage(&gPicMenuReadedBuffer2Queue, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
 #pragma dont_inline reset
@@ -255,7 +255,7 @@ OSMessage PopReadedBuffer2(void)
 #pragma dont_inline on
 void PushFreeReadBuffer(OSMessage msg)
 {
-    OSSendMessage(&lbl_803A72D0, msg, OS_MESSAGE_BLOCK);
+    OSSendMessage(&gPicMenuFreeReadBufferQueue, msg, OS_MESSAGE_BLOCK);
 }
 #pragma dont_inline reset
 
@@ -263,14 +263,14 @@ void PushFreeReadBuffer(OSMessage msg)
 OSMessage PopReadedBuffer(void)
 {
     OSMessage msg;
-    OSReceiveMessage(&lbl_803A72B0, &msg, OS_MESSAGE_BLOCK);
+    OSReceiveMessage(&gPicMenuReadedBufferQueue, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
 #pragma dont_inline reset
 
 void THPRead_Reader(void)
 {
-    char* base = lbl_803A5F08;
+    char* base = gPicMenuReadThreadArea;
     int i = 0;
     AttractMoviePlayer* player = (AttractMoviePlayer*)(int)&lbl_803A5D60;
     AttractMovieReadBuffer* req;
@@ -327,24 +327,24 @@ void THPRead_Reader(void)
 
 void ReadThreadCancel(void)
 {
-    if (lbl_803DD688 != 0)
+    if (gPicMenuReadThreadCreated != 0)
     {
-        OSCancelThread(&lbl_803A6F08);
-        lbl_803DD688 = 0;
+        OSCancelThread(&gPicMenuReadThread);
+        gPicMenuReadThreadCreated = 0;
     }
 }
 
 void ReadThreadStart(void)
 {
-    if (lbl_803DD688 != 0)
+    if (gPicMenuReadThreadCreated != 0)
     {
-        OSResumeThread(&lbl_803A6F08);
+        OSResumeThread(&gPicMenuReadThread);
     }
 }
 
 BOOL CreateReadThread(OSPriority priority)
 {
-    char* base = lbl_803A5F08;
+    char* base = gPicMenuReadThreadArea;
     char* stack = base + 0x1000;
 
     if (!OSCreateThread((OSThread*)stack, (void*(*)(void*))THPRead_Reader, NULL,
@@ -356,14 +356,14 @@ BOOL CreateReadThread(OSPriority priority)
     OSInitMessageQueue((OSMessageQueue*)(base + 0x13C8), (void*)(base + 0x1360), 10);
     OSInitMessageQueue((OSMessageQueue*)(base + 0x13A8), (void*)(base + 0x1338), 10);
     OSInitMessageQueue((OSMessageQueue*)(base + 0x1388), (void*)(base + 0x1310), 10);
-    lbl_803DD688 = 1;
+    gPicMenuReadThreadCreated = 1;
     return 1;
 }
 
 OSMessage PopDecodedTextureSet(s32 flags)
 {
     OSMessage msg;
-    if (OSReceiveMessage(&lbl_803A7308, &msg, flags) == 1)
+    if (OSReceiveMessage(&gPicMenuDecodedTextureSetQueue, &msg, flags) == 1)
     {
         return msg;
     }
@@ -372,7 +372,7 @@ OSMessage PopDecodedTextureSet(s32 flags)
 
 void PushFreeTextureSet(OSMessage msg)
 {
-    OSSendMessage(&lbl_803A7328, msg, OS_MESSAGE_NOBLOCK);
+    OSSendMessage(&gPicMenuFreeTextureSetQueue, msg, OS_MESSAGE_NOBLOCK);
 }
 
 void AttractMovieVideo_Decode(void* param)
@@ -383,7 +383,7 @@ void AttractMovieVideo_Decode(void* param)
     u32* compSizes; /* 4th → r28 */
     char* dvdData; /* 5th → r27 */
 
-    db = lbl_803A72F0;
+    db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
     player = &lbl_803A5D60;
     dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr +
@@ -415,10 +415,10 @@ void AttractMovieVideo_Decode(void* param)
                 player2->videoError = dec;
                 if (dec != 0)
                 {
-                    if (lbl_803DD694 != 0)
+                    if (gPicMenuVideoDecodePrepareReady != 0)
                     {
                         PrepareReady(0);
-                        lbl_803DD694 = 0;
+                        gPicMenuVideoDecodePrepareReady = 0;
                     }
                     OSSuspendThread((OSThread*)(db + 0x1058));
                 }
@@ -441,10 +441,10 @@ void AttractMovieVideo_Decode(void* param)
         }
     }
 
-    if (lbl_803DD694 != 0)
+    if (gPicMenuVideoDecodePrepareReady != 0)
     {
         PrepareReady(1);
-        lbl_803DD694 = 0;
+        gPicMenuVideoDecodePrepareReady = 0;
     }
 }
 
@@ -508,7 +508,7 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
                 }
                 else
                 {
-                    OSSuspendThread(&lbl_803A8348);
+                    OSSuspendThread(&gPicMenuVideoDecodeThread);
                 }
             }
             else
@@ -566,25 +566,25 @@ void AttractMovieVideo_Decoder(void)
 
 void VideoDecodeThreadCancel(void)
 {
-    if (lbl_803DD690 != 0)
+    if (gPicMenuVideoDecodeThreadCreated != 0)
     {
-        OSCancelThread(&lbl_803A8348);
-        lbl_803DD690 = 0;
+        OSCancelThread(&gPicMenuVideoDecodeThread);
+        gPicMenuVideoDecodeThreadCreated = 0;
     }
 }
 
 void VideoDecodeThreadStart(void)
 {
-    if (lbl_803DD690 != 0)
+    if (gPicMenuVideoDecodeThreadCreated != 0)
     {
-        OSResumeThread(&lbl_803A8348);
+        OSResumeThread(&gPicMenuVideoDecodeThread);
     }
 }
 
 #pragma peephole on
 BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
 {
-    char* db = lbl_803A72F0;
+    char* db = gPicMenuVideoDecodeThreadArea;
 
     if (onMemoryArg != 0)
     {
@@ -606,8 +606,8 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
 
     OSInitMessageQueue((OSMessageQueue*)(db + 0x38), (void*)(db + 0x0C), 3);
     OSInitMessageQueue((OSMessageQueue*)(db + 0x18), db, 3);
-    lbl_803DD690 = 1;
-    lbl_803DD694 = 1;
+    gPicMenuVideoDecodeThreadCreated = 1;
+    gPicMenuVideoDecodePrepareReady = 1;
     return 1;
 }
 #pragma peephole reset

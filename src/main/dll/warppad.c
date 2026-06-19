@@ -38,20 +38,20 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E3E98;
 extern f32 lbl_803E3E9C;
-extern f32 lbl_803E3EA0;
+extern f32 gWarpPadProximityBurstDistSq;
 extern f32 lbl_803E3EA4;
 extern f32 lbl_803E3EA8;
 extern f32 lbl_803E3EAC;
 extern f32 lbl_803E3EB0;
-extern f32 lbl_803E3EB4;
-extern f32 lbl_803E3EB8;
+extern f32 gWarpPadPulseStage1Time;
+extern f32 gWarpPadPulseStage2Time;
 extern f32 lbl_803E3EBC;
 extern f32 lbl_803E3EC0;
 extern f32 lbl_803E3EC4;
-extern f32 lbl_803E3EC8;
+extern f32 gWarpPadPulseStage3Time;
 extern f32 lbl_803E3ECC;
-extern f32 lbl_803E3ED0;
-extern f32 lbl_803E3EE0;
+extern f32 gWarpPadPulseEndTime;
+extern f32 gWarpPadTriggerDist;
 extern void setAButtonIcon(int x);
 
 /* state->flags bits (see WarpPadState in warp_pad.h) */
@@ -107,7 +107,7 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
@@ -125,7 +125,7 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
@@ -143,7 +143,7 @@ void warpPadFn_8019042c(int obj)
     }
     else
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
@@ -162,7 +162,7 @@ void warpPadFn_8019042c(int obj)
 
     if ((state->flags & WARPPAD_FLAG_PULSE_FX) != 0)
     {
-        if (state->pulseTimer < lbl_803E3EB4)
+        if (state->pulseTimer < gWarpPadPulseStage1Time)
         {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
@@ -170,7 +170,7 @@ void warpPadFn_8019042c(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
             }
         }
-        else if (state->pulseTimer < lbl_803E3EB8)
+        else if (state->pulseTimer < gWarpPadPulseStage2Time)
         {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC
             )
@@ -179,11 +179,11 @@ void warpPadFn_8019042c(int obj)
             }
             fx.count = 0x28;
             fx.unk0 = 0;
-            fx.scale = lbl_803E3EC0 * ((state->pulseTimer - lbl_803E3EB4) / lbl_803E3EC4);
+            fx.scale = lbl_803E3EC0 * ((state->pulseTimer - gWarpPadPulseStage1Time) / lbl_803E3EC4);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7d2, &fx, 2, -1, NULL);
             state->flags = state->flags | WARPPAD_FLAG_LATCH;
         }
-        else if (state->pulseTimer < lbl_803E3EC8)
+        else if (state->pulseTimer < gWarpPadPulseStage3Time)
         {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
@@ -201,7 +201,7 @@ void warpPadFn_8019042c(int obj)
                 }
             }
         }
-        else if (!(state->pulseTimer < lbl_803E3ED0))
+        else if (!(state->pulseTimer < gWarpPadPulseEndTime))
         {
             state->pulseTimer = lbl_803E3E98;
             state->flags = state->flags & ~WARPPAD_FLAG_PULSE_FX;
@@ -255,7 +255,7 @@ void warpPadPlayerStandingOn(int obj)
         if (lbl_803DCEB8 > -1)
         {
             player = Obj_GetPlayerObject();
-            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < lbl_803E3EE0)
+            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < gWarpPadTriggerDist)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 ((GameObject*)obj)->unkF4 = state->activateDelay;

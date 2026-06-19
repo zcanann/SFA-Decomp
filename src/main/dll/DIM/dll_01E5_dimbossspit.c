@@ -53,10 +53,10 @@ extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;
 extern f32 lbl_803E4D48;
-extern f32 lbl_803E4D4C;
+extern f32 gDimBossSpitBurstAlphaScale;
 extern f32 lbl_803E4D50;
-extern f32 lbl_803E4D60;
-extern f32 lbl_803E4D64;
+extern f32 gDimBossSpitGravity;
+extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
 extern void* objCreateLight(int arg, u8 addToList);
@@ -118,7 +118,7 @@ void DIMbossspit_updateBurst(int obj)
     }
     iVar = (int)
     (lbl_803E4D48 * ((f32)(s32)
-    burstTimer * lbl_803E4D4C
+    burstTimer * gDimBossSpitBurstAlphaScale
     )
     )
     ;
@@ -198,8 +198,8 @@ void DIMbossspit_update(int obj)
         }
         ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
         ObjHitbox_SetSphereRadius(obj, 10);
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E4D60 * timeDelta;
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E4D64;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gDimBossSpitGravity * timeDelta;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * gDimBossSpitVelocityDamping;
         ((GameObject*)obj)->anim.rotX = lbl_803E4D68 * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         ((GameObject*)obj)->anim.rotZ = lbl_803E4D6C * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
         ((GameObject*)obj)->anim.rotY = lbl_803E4D6C * timeDelta + (f32)((GameObject*)obj)->anim.rotY;

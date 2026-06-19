@@ -93,35 +93,35 @@ void texFlagFn_80023cbc(int v)
 }
 
 extern int gMmFreeDelay;
-extern int lbl_803DCB14;
-extern int lbl_803DCB08;
-extern int lbl_803DB434;
+extern int gMmOpCount;
+extern int gMmUseHeap3;
+extern int gMmUseHeaps1and2;
 
 #pragma dont_inline on
 int mmSetFreeDelay(int v)
 {
     int old = gMmFreeDelay;
-    lbl_803DCB14++;
+    gMmOpCount++;
     gMmFreeDelay = v;
     return old;
 }
 
 int testAndSet_onlyUseHeap3(int v)
 {
-    lbl_803DCB14++;
+    gMmOpCount++;
     {
-        int old = lbl_803DCB08;
-        lbl_803DCB08 = v;
+        int old = gMmUseHeap3;
+        gMmUseHeap3 = v;
         return old;
     }
 }
 
 int testAndSet_onlyUseHeaps1and2(int v)
 {
-    lbl_803DCB14++;
+    gMmOpCount++;
     {
-        int old = lbl_803DB434;
-        lbl_803DB434 = v;
+        int old = gMmUseHeaps1and2;
+        gMmUseHeaps1and2 = v;
         return old;
     }
 }
@@ -185,7 +185,7 @@ void AtomicSList_Push(void** list, void* node)
 }
 
 typedef f32 Mtx[3][4];
-extern u8 lbl_803DCB42;
+extern u8 gMmRegionCount;
 
 typedef struct
 {
@@ -201,7 +201,7 @@ extern MmRegion gMmRegionTable[];
 int mmGetRegionForPtr(u8* ptr)
 {
     int i;
-    for (i = 0; i < lbl_803DCB42; i++)
+    for (i = 0; i < gMmRegionCount; i++)
     {
         if (ptr > gMmRegionTable[i].start &&
             ptr < gMmRegionTable[i].start + gMmRegionTable[i].size)
@@ -215,7 +215,7 @@ int mmGetRegionForPtr(u8* ptr)
 #pragma dont_inline on
 void* mmInitRegion(u8* buf, int size, int numSlots)
 {
-    int regIdx = lbl_803DCB42++;
+    int regIdx = gMmRegionCount++;
     int slotsBytes = numSlots * 0x1c;
     int after = size - slotsBytes;
     int i;
@@ -254,7 +254,7 @@ extern u32 OSGetTick(void);
 extern void heapFree(int region, int slotIdx);
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
-extern int lbl_803DCB34;
+extern int gMmLastFreeTick;
 extern void OSReport(const char* msg, ...);
 extern void waitNextFrame(void);
 extern int GXFlush_(u8 visible, int unused);
@@ -406,13 +406,13 @@ typedef struct
     MmRegion regions[8];
 } MmGlobal;
 
-extern int lbl_803DCB30;
-extern int lbl_803DCB1C;
+extern int gMmStatsPrintCounter;
+extern int gMmTickCount;
 extern char sMemStatsFormat[];
-extern int lbl_803DCB20;
-extern int lbl_803DCB24;
-extern int lbl_803DCB28;
-extern int lbl_803DCB2C;
+extern int gMmRegion0Used;
+extern int gMmRegion1Used;
+extern int gMmRegion2Used;
+extern int gMmRegion3Used;
 
 #pragma peephole on
 void mmFreeTick(int arg)
@@ -425,8 +425,8 @@ void mmFreeTick(int arg)
     HeapItem* item;
     s16 next;
 
-    lbl_803DCB1C++;
-    lbl_803DCB14++;
+    gMmTickCount++;
+    gMmOpCount++;
 
     d = g->deferred;
     for (i = 0; i < gMmDeferredFreeCount;)
@@ -456,12 +456,12 @@ void mmFreeTick(int arg)
     }
     SaveGame_updateTransientMapBits();
 
-    lbl_803DCB20 = 0;
-    lbl_803DCB28 = 0;
-    lbl_803DCB24 = 0;
-    lbl_803DCB2C = 0;
+    gMmRegion0Used = 0;
+    gMmRegion2Used = 0;
+    gMmRegion1Used = 0;
+    gMmRegion3Used = 0;
 
-    if (lbl_803DCB42 > 1)
+    if (gMmRegionCount > 1)
     {
         base = (HeapItem*)g->regions[1].start;
         item = base;
@@ -469,7 +469,7 @@ void mmFreeTick(int arg)
         {
             if (item->type != 0)
             {
-                lbl_803DCB24 += item->size;
+                gMmRegion1Used += item->size;
             }
             next = item->next;
             if (next != -1)
@@ -485,7 +485,7 @@ void mmFreeTick(int arg)
         {
             if (item->type != 0)
             {
-                lbl_803DCB28 += item->size;
+                gMmRegion2Used += item->size;
             }
             next = item->next;
             if (next != -1)
@@ -501,7 +501,7 @@ void mmFreeTick(int arg)
         {
             if (item->type != 0)
             {
-                lbl_803DCB2C += item->size;
+                gMmRegion3Used += item->size;
             }
             next = item->next;
             if (next != -1)
@@ -512,13 +512,13 @@ void mmFreeTick(int arg)
         while (next != -1);
     }
 
-    if (lbl_803DCB30++ % 500 == 0)
+    if (gMmStatsPrintCounter++ % 500 == 0)
     {
         OSReport(sMemStatsFormat,
                  0, g->regions[0].size,
-                 lbl_803DCB24, g->regions[1].size,
-                 lbl_803DCB28, g->regions[2].size,
-                 lbl_803DCB2C, g->regions[3].size,
+                 gMmRegion1Used, g->regions[1].size,
+                 gMmRegion2Used, g->regions[2].size,
+                 gMmRegion3Used, g->regions[3].size,
                  g->regions[0].f4, g->regions[0].numSlots,
                  g->regions[1].f4, g->regions[1].numSlots,
                  g->regions[2].f4, g->regions[2].numSlots,
@@ -533,7 +533,7 @@ void mmFree(void* p)
     int i;
     u8* slot;
     u8* base;
-    lbl_803DCB34 = OSGetTick();
+    gMmLastFreeTick = OSGetTick();
     region = mmGetRegionForPtr(p);
     if (region != -1)
     {
@@ -607,7 +607,7 @@ extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
 extern void* OSAllocFromHeap(int heap, int size);
 extern int __OSCurrHeap;
-extern int lbl_803DCB18;
+extern int gMmRegion0Size;
 extern void* lbl_803DD498;
 extern void* lbl_803DCAFC;
 
@@ -617,11 +617,11 @@ void mmInit(void)
     int t;
     void* p;
     u8* lo;
-    lbl_803DCB42 = 0;
+    gMmRegionCount = 0;
     lo = OSGetArenaLo();
     t = (u8*)OSGetArenaHi() - lo - 0x6c0000;
     size = t - 0x720;
-    lbl_803DCB18 = size;
+    gMmRegion0Size = size;
     p = OSAllocFromHeap(__OSCurrHeap, size);
     DCFlushRange(p, size);
     mmInitRegion(p, size, 0xfa);
@@ -642,7 +642,7 @@ void mmInit(void)
     DCFlushRange(p, 0x45ffa0);
     mmInitRegion(p, 0x45ffa0, 0x244);
 
-    lbl_803DCB14++;
+    gMmOpCount++;
     gMmFreeDelay = 2;
     gMmDeferredFreeCount = 0;
 }
@@ -652,22 +652,22 @@ extern char sMmSpawnedUnalignedSlotWarning[];
 int printHeapStats(void)
 {
     OSReport(sMemStatsFormat,
-             lbl_803DCB20, gMmRegionTable[0].size,
-             lbl_803DCB24, gMmRegionTable[1].size,
-             lbl_803DCB28, gMmRegionTable[2].size,
-             lbl_803DCB2C, gMmRegionTable[3].size,
+             gMmRegion0Used, gMmRegionTable[0].size,
+             gMmRegion1Used, gMmRegionTable[1].size,
+             gMmRegion2Used, gMmRegionTable[2].size,
+             gMmRegion3Used, gMmRegionTable[3].size,
              gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
              gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
              gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
              gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
-    return lbl_803DCB20 + (lbl_803DCB24 + lbl_803DCB28 + lbl_803DCB2C);
+    return gMmRegion0Used + (gMmRegion1Used + gMmRegion2Used + gMmRegion3Used);
 }
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
-extern int lbl_803DB430;
-extern int lbl_803DCB0C;
+extern int gMmRegion0SpawnEnabled;
+extern int gMmNextAllocId;
 extern int lbl_803DCC7C;
 
 int mmAllocFromRegion(int region, int size, int type, int tag)
@@ -769,7 +769,7 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
         {
             OSReport(msg + 0x50c);
         }
-        if (lbl_803DB430 != 0 && region == 0 && size < 0x33450)
+        if (gMmRegion0SpawnEnabled != 0 && region == 0 && size < 0x33450)
         {
             bestIdx = heapSpawnSlot(region, bestIdx, size, 1, 0, type, tag);
         }
@@ -778,12 +778,12 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
             changeHeapSlot(region, bestIdx, size, 1, 0, type, tag);
         }
         res = &base[bestIdx];
-        if (lbl_803DCB0C == 0x3ef)
+        if (gMmNextAllocId == 0x3ef)
         {
             OSReport(msg + 0x53c);
         }
-        res->f18 = lbl_803DCB0C++;
-        lbl_803DCB14++;
+        res->f18 = gMmNextAllocId++;
+        gMmOpCount++;
         return (int)res->key;
     }
 
@@ -814,13 +814,13 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
         }
         reportAllocFail(
             gMmRegionTable[0].size / 1024,
-            gMmRegionTable[0].size / 1024 - lbl_803DCB20 / 1024,
+            gMmRegionTable[0].size / 1024 - gMmRegion0Used / 1024,
             gMmRegionTable[1].size / 1024,
-            gMmRegionTable[1].size / 1024 - lbl_803DCB24 / 1024,
+            gMmRegionTable[1].size / 1024 - gMmRegion1Used / 1024,
             gMmRegionTable[2].size / 1024,
-            gMmRegionTable[2].size / 1024 - lbl_803DCB28 / 1024,
+            gMmRegionTable[2].size / 1024 - gMmRegion2Used / 1024,
             lbl_803DCC7C,
-            lbl_803DCB1C,
+            gMmTickCount,
             size, t28, t27);
     }
     return 0;
@@ -858,7 +858,7 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
         }
         base[ni].size = size;
         base[ni].f10 = f10val;
-        base[ni].f14 = lbl_803DCB1C;
+        base[ni].f14 = gMmTickCount;
         oldNext = base[idx].next;
         base[ni].next = oldNext;
         base[ni].prev = idx;
@@ -901,7 +901,7 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
         {
             base[oldNext].prev = ni;
         }
-        base[idx].f14 = lbl_803DCB1C;
+        base[idx].f14 = gMmTickCount;
         return ni;
     }
     return idx;
@@ -917,7 +917,7 @@ void heapFree(int region, int idx)
     next = base[idx].next;
     prev = base[idx].prev;
     base[idx].type = 0;
-    lbl_803DCB14++;
+    gMmOpCount++;
     gMmRegionTable[region].f10 -= base[idx].size;
     if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size)
     {
@@ -1085,7 +1085,7 @@ void* mmAlloc(int size, int type, int flag)
     ok = 1;
     for (i = 0; ok && i < 100; i++)
     {
-        if (lbl_803DB434 == 1)
+        if (gMmUseHeaps1and2 == 1)
         {
             result = (void*)mmAllocFromRegion(1, size, type, flag);
             if (result == 0)
@@ -1097,7 +1097,7 @@ void* mmAlloc(int size, int type, int flag)
                 return result;
             }
         }
-        else if (lbl_803DCB08 != 0)
+        else if (gMmUseHeap3 != 0)
         {
             result = (void*)mmAllocFromRegion(3, size, type, flag);
             if (result == 0)
