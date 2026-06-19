@@ -78,9 +78,8 @@ void controllight_init(int obj, int setup)
 void controllight_update(int obj)
 {
     extern void pointlight_setEffectState(int obj, int enabled);
-    u8 bit;
     ControlLightState* state = ((GameObject*)obj)->extra;
-    bit = GameBit_Get(state->gameBit);
+    u8 bit = GameBit_Get(state->gameBit);
 
     if (bit != state->lastBit)
     {
