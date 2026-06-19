@@ -887,7 +887,6 @@ extern void MapBlock_init(void* blk);
 extern int textureLoad(int id, int param);
 extern void MapBlock_initHits(void* blk, int blockId);
 extern void MapBlock_initShaders(void* blk);
-extern void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
 extern int return0_80060B90(void* blk);
 extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 

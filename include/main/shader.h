@@ -74,4 +74,15 @@ u32 FUN_80057ce8(u32 param_1,u32 param_2,int param_3);
 void FUN_80057ea0(float *param_1,int param_2);
 void FUN_80057fd0(void);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void mapReloadWithFadeout(void);
+void initMaps(void);
+void unloadMap(void);
+void beginLoadingMap(void);
+void goToNextMapLayer(void);
+void goToPrevMapLayer(void);
+void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
+void playerVecFn_8005a9b0(void);
+
 #endif /* MAIN_SHADER_H_ */

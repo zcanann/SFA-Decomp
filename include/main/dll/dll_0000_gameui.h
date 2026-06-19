@@ -118,4 +118,12 @@ typedef struct
     void* itemTextures[64]; /* 0x9c8 */
 } GameUiHud;
 
+
+/* extern-cleanup: defining-file public prototypes */
+void fn_8012C000(void);
+void pauseMenuInit(void);
+void CMenu_SetFadeCounter(s16 v);
+void pauseMenuDoSave(void);
+void perspectiveFn_80129db4(void);
+
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

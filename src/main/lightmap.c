@@ -14,6 +14,8 @@
 #include "string.h"
 #include "main/newshadows.h"
 #include "main/sfa_extern_decls.h"
+#include "main/rcp_dolphin.h"
+#include "main/dll/dll_0000_gameui.h"
 extern u32 FUN_80006934();
 extern u32 FUN_8000694c();
 extern u32 FUN_80006974();
@@ -1037,7 +1039,6 @@ void lightmap_flushQueuedRenderPackets(void)
 
 extern u32 lbl_8037E0C0[];
 extern s32 lbl_803DCE30;
-extern void sceneDrawTransparentPolys(void);
 extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32* in, f32* out);
 #pragma dont_inline on
@@ -1197,7 +1198,6 @@ extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
-extern void sceneDraw(void);
 extern void screenFn_8000e944(int v);
 
 void sceneRender(void)
@@ -1659,10 +1659,10 @@ extern u16 lbl_803DCEAC;
 extern u8 lbl_803DCE06;
 
 void getVisibleObjects(s8 * opacity);
-extern void gxTextureFn_80052efc(void);
-extern void perspectiveFn_80129db4(void);
+
+
 extern s32 heatEffectIntensity;
-extern void drawSkyStars(void);
+
 extern u8 lbl_803DCE05;
 extern void screenImageDraw(void);
 extern void lightningRenderActive(void);
@@ -1683,7 +1683,6 @@ extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
 extern void doHeatEffect(int v);
-void sceneDrawTransparentPolys(void);
 extern void quakeSpellTextureFn_8016dbf4(void);
 extern u8 bEnableDistortionFilter;
 extern f32 distortionFilterAngle1;
@@ -2601,7 +2600,7 @@ extern void envFxFn_80088884(void);
 extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 extern int textureAnimFn_80053f2c(void* tex, void* a, void* b);
-extern void loadNextMap(void);
+
 extern f32 timeDelta;
 extern s32 lbl_803DCE00;
 

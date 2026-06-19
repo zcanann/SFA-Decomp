@@ -56,4 +56,8 @@ void wispbaddie_initialise(void);
 
 extern ObjectDescriptor gWispBaddieObjDescriptor;
 
+
+/* extern-cleanup: defining-file public prototypes */
+void wispbaddie_init(int obj, int setup, int initialised);
+
 #endif /* MAIN_DLL_SEQOBJ_H_ */

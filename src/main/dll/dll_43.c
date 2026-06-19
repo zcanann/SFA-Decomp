@@ -18,8 +18,9 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_43.h"
 #include "main/screen_transition.h"
+#include "main/dll/dll_0035_saveselectscreen.h"
 
-extern void saveSelectGoToChooseSlot(int arg);
+
 
 extern u8 lbl_803DB424;
 extern TitleMenuControl* gTitleMenuControlInterface;

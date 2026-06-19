@@ -7,6 +7,7 @@
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sfa_extern_decls.h"
+#include "main/rcp_dolphin.h"
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
@@ -646,7 +647,6 @@ int loadModelAndAnimTabs(void)
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
 
-extern void setGQR6_2(int a, int b, int c, int d);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 
 void copyToCache(void* dst, void* src, u32 count);
@@ -895,7 +895,6 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     ch[0].flags0E = flags | 4;
 }
 
-extern void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f);
 extern f32 lbl_803DE818;
 extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
@@ -1096,8 +1095,6 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
     }
 }
 
-extern void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
-extern void modelAnimResetState(void* m, void* data);
 
 #pragma scheduling off
 void* ObjModel_LoadAnimData(u8* p, int b, int c)
@@ -1114,7 +1111,6 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c)
     return m;
 }
 
-extern int modelLoadAnimations(void* model, int id, void* animBase);
 extern int modelLoad_calcSizes(void* model, int arg, int* out, int flag);
 extern int ModelList_getHeader(void* list, int index, void* out);
 extern void modelInitModelList(void* list, s16 index, void* out);
@@ -1165,7 +1161,7 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
     return header;
 }
 
-extern void ShaderDef_free(int* def);
+
 extern void model_adjustModelList(void* list, int index);
 extern void model_findIdxInModelList(void* list, void* header, int* outIndex);
 extern void* gModelTexAtlasList;

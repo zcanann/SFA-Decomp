@@ -23,4 +23,8 @@ int FUN_80163ac8(float *param_1);
 void FUN_80163b8c(int param_1);
 extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 
+
+/* extern-cleanup: defining-file public prototypes */
+s8 fn_801631C8(int* obj);
+
 #endif /* MAIN_DLL_LADDERS_H_ */

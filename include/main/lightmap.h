@@ -57,4 +57,13 @@ void lightmap_renderQueuedObject(u16 *object);
 void lightmap_flushQueuedRenderPackets(void);
 void FUN_8005e1d8(u32 param_1,u32 param_2,int param_3);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void initMapBlocks(void);
+void doNothing_beforeTitleScreen(void);
+void gameFlagFn_8005ce6c(int v);
+void gameFlagFn_8005cd24(int v);
+void sceneDrawTransparentPolys(void);
+void sceneDraw(void);
+
 #endif /* MAIN_LIGHTMAP_H_ */

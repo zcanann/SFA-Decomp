@@ -12,7 +12,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern u32 DAT_803de944;
 extern u32 DAT_803de946;
 extern f32 lbl_803DC074;
-extern void fn_801FD6B4(int obj);
 extern void* lbl_803DDCD8;
 extern void objRenderFn_80041018(void* obj);
 extern void fn_8003B608(s16 a, s16 b, s16 c);

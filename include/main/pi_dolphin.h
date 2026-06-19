@@ -108,4 +108,14 @@ void FUN_8004bf28(int param_1,char param_2,u32 param_3);
 void FUN_8004c174(int param_1,char param_2);
 void FUN_8004c178(int param_1,float *param_2);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void setDisplayCopyFilter(void);
+void gxTransformFn_8004a83c(void);
+void allocSomething32bytes(void);
+void initViewport(void);
+void tvInit(void);
+void fn_8004AFA0(int* q, int* elem, int idx);
+void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
+
 #endif /* MAIN_PI_DOLPHIN_H_ */

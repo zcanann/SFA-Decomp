@@ -54,7 +54,6 @@ extern u8 lbl_803DDA80;
 extern void* Obj_GetPlayerObject(void);
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 extern int Sfx_PlayFromObject(int* obj, int sfx);
-extern s8 fn_801631C8(int* obj);
 extern float sqrtf(float x);
 extern f32 lbl_803E2F44;
 extern void objRenderFn_8003b8f4(f32);

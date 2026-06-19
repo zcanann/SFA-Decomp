@@ -67,7 +67,6 @@ extern u8 lbl_8031A7F8[];
 extern s16 lbl_803DBA04;
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
-void saveSelectGoToChooseSlot(int arg);
 
 extern void* lbl_803A8658[10];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;

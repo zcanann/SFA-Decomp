@@ -267,4 +267,8 @@ int pushable_savePos(int obj);
 u32 playerHasKrazoaSpirit(u8 checkStoryBits,u32 bit);
 void saveFileStruct_setCheatActive(u8 param_1,u8 param_2);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void* getLastSavedGameTexts(void);
+
 #endif /* MAIN_DLL_CURVES_H_ */

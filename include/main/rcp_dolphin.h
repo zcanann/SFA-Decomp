@@ -76,4 +76,15 @@ void FUN_80053c9c(u64 param_1,double param_2,double param_3,u64 param_4,
                  u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 u32 FUN_80053f60(int param_1);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void loadTextureFiles(void);
+void initFn_800534f8(void);
+void* getLoadedTexture(int key);
+u8 Rcp_GetViewFinderHudEnabled(void);
+void Rcp_SetViewFinderHudEnabled(u8 x);
+void ShaderDef_free(int* def);
+void gxTextureFn_80052efc(void);
+void loadNextMap(void);
+
 #endif /* MAIN_RCP_DOLPHIN_H_ */

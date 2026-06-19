@@ -75,4 +75,10 @@ void FUN_80043030(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void clearLoadedFileFlags_blocks1(void);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
+void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
+void objRenderChild(int* child, int* parent, u8 p3);
+
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

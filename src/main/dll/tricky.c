@@ -27,6 +27,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/dll/tricky.h"
+#include "main/dll/dll_0000_gameui.h"
+#include "main/rcp_dolphin.h"
 
 typedef struct GameUIWork10
 {
@@ -242,7 +244,7 @@ void GameUI_airMeterSetField24(float v)
 
 extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
-extern void pauseMenuInit(void);
+
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern f32 lbl_803E1E60;
@@ -1443,7 +1445,7 @@ void hudDrawFn_80121440(void)
 }
 
 extern int Camera_GetCurrentViewSlot(void);
-extern u8 Rcp_GetViewFinderHudEnabled(void);
+
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);

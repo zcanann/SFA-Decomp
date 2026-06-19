@@ -22,6 +22,10 @@
 #include "main/sfa_extern_decls.h"
 #include "main/newshadows.h"
 #include "main/track_dolphin.h"
+#include "main/shader.h"
+#include "main/pi_dolphin.h"
+#include "main/rcp_dolphin.h"
+#include "main/lightmap.h"
 extern u64 camcontrol_playTargetTypeSfx();
 extern u64 runLoadingScreens();
 
@@ -99,7 +103,7 @@ int getGameState(void)
 }
 
 extern u8 gGameLoopInitComplete;
-extern void init(void);
+
 extern void checkReset(void);
 
 
@@ -225,7 +229,7 @@ void gameTextInit(void);
 
 void* Obj_GetPlayerObject(void);
 
-extern void mapReloadWithFadeout(void);
+
 extern void* loadAsset(void* req);
 extern u8 gGameLoopReloadRequested;
 
@@ -634,17 +638,17 @@ void gameTextInitFn_8001a234(void);
 void gameTextRun(void);
 
 extern void videoInit(void* rmode, int arg);
-extern void setDisplayCopyFilter(void);
+
 extern void initLoadingScreenTextures(void);
 extern void mmInit(void);
-extern void gxTransformFn_8004a83c(void);
+
 extern void Camera_InitState(void);
 
 extern void initControllers(void);
 extern int mmSetFreeDelay(int v);
 extern void padUpdate(void);
 extern u8 audioInit(void);
-extern void allocSomething32bytes(void);
+
 extern u8 initLoadFiles(void);
 
 extern void dvdCheckError(void);
@@ -652,8 +656,8 @@ extern void gameTextRun(void);
 extern u32 getButtonsHeld(int port);
 extern void viFn_8004a56c(int arg);
 
-extern void loadTextureFiles(void);
-extern void initMapBlocks(void);
+
+
 
 
 
@@ -665,15 +669,15 @@ extern void _initCardAndDsp(void);
 extern void fn_802B6F48(void);
 extern void loadTaskTexts(void);
 
-extern void initMaps(void);
-extern void initFn_800534f8(void);
-extern void titleScreenDrawFn_80093db4(void);
+
+
+
 extern int getDataFileSize(int id);
-extern void doNothing_beforeTitleScreen(void);
+
 extern void setDrawCloudsAndLights(int v);
 
-extern void initViewport(void);
-extern void tvInit(void);
+
+
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
 extern void* gRenderModeObj;
@@ -1071,9 +1075,9 @@ void gameLoop(void)
 extern u8 lbl_803DCAC4;
 extern int gGameLoopPendingUiDllId;
 extern void setColor_803db5d0(int r, int g, int b);
-extern void unloadMap(void);
 
-extern void beginLoadingMap(void);
+
+
 
 void doQueuedLoads(void)
 {

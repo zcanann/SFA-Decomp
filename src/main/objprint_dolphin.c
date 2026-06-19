@@ -2517,9 +2517,6 @@ int fn_80041D98(void* block)
 
 extern f32 lbl_803DEA04;
 extern int* Obj_GetActiveModel(int* obj);
-extern void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
-extern void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
-extern void objRenderChild(int* child, int* parent, u8 p3);
 #pragma dont_inline on
 void objRenderShadow(int* obj)
 {

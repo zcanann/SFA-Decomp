@@ -183,4 +183,12 @@ void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);
 void ObjModelChain_AdvancePhase(ObjModelChain *chain);
 void ObjModelChain_Free(ObjModelChain *chain);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void setGQR6_2(int a, int b, int c, int d);
+void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f);
+void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
+void modelAnimResetState(void* m, void* data);
+int modelLoadAnimations(void* model, int id, void* animBase);
+
 #endif

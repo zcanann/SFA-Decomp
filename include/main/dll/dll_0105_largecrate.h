@@ -35,4 +35,8 @@ void largecrate_init(int obj, u8 *initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
 
+
+/* extern-cleanup: defining-file public prototypes */
+f32 largecrate_getReticleDistance(int obj);
+
 #endif /* MAIN_DLL_DLL_0105_LARGECRATE_H_ */

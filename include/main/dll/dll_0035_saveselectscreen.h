@@ -23,4 +23,8 @@ int FUN_8011b5d4(u64 param_1,double param_2,u64 param_3,u64 param_4,
                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void FUN_8011c080(void);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void saveSelectGoToChooseSlot(int arg);
+
 #endif /* MAIN_DLL_DLL_47_H_ */

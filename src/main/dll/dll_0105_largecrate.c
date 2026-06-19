@@ -103,7 +103,6 @@ typedef struct
     f32 scaleW;
 } ExplodeArgs;
 
-f32 largecrate_getReticleDistance(int obj);
 void largecrate_updateConveyorSlide(int obj, int def);
 void largecrate_update(int obj);
 void largecrate_free(int obj);

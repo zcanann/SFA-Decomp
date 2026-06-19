@@ -6,6 +6,7 @@ extern f32 timeDelta;
 #include "main/screen_transition.h"
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
+#include "main/rcp_dolphin.h"
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
@@ -25,7 +26,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void Camera_SetFovY(f32 fovY);
-extern void Rcp_SetViewFinderHudEnabled(u8 x);
+
 extern f32 lbl_803E3D18;
 extern f32 lbl_803E3D20;
 extern f32 lbl_803E3D24;

@@ -170,7 +170,6 @@ extern GridEntry lbl_8031BD30[];
 extern int randomGetRange(int lo, int hi);
 extern void AudioStream_Play(s32 id, void* cb);
 extern void AudioStream_StartPrepared(void);
-extern void fn_8012C000(void);
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
 extern f32 lbl_803E213C;

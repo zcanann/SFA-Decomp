@@ -32,6 +32,9 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/sky_state.h"
+#include "main/lightmap.h"
+#include "main/rcp_dolphin.h"
+#include "main/shader.h"
 
 typedef struct TriggerPlacement
 {
@@ -104,18 +107,18 @@ extern void OSReport(const char* msg, ...);
 extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void setDrawCloudsAndLights(int v);
-extern void gameFlagFn_8005ce6c(int v);
+
 extern void setDrawLights(int v);
 extern void fn_8006FC00(int v);
 extern void skyFn_80088c94(int flags, int mode);
-extern void gameFlagFn_8005cd24(int v);
+
 extern void timeOfDayFn_80055000(void);
 extern void timeOfDayFn_80055038(void);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);
 extern void* getTablesBinEntry(int i);
-extern void* getLoadedTexture(int key);
+
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void textureFree(int tex);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -131,8 +134,8 @@ extern int getArwing(void);
 extern void defragMemory(int mode);
 extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
-extern void goToNextMapLayer(void);
-extern void goToPrevMapLayer(void);
+
+
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;

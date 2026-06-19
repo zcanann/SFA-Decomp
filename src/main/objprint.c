@@ -1691,7 +1691,6 @@ void fn_8003B228(int obj, int p2)
     *(u8*)(p2 + 0x1e) = 1;
 }
 
-extern void modelCalcVtxGroupMtxs(int p1, int p2);
 extern void* ObjModel_GetJointMatrix(int* model, int joint);
 extern int lbl_803DCC48;
 
@@ -1904,7 +1903,6 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
 extern void doNothing_beforeRenderObject(int x);
 extern void doNothing_afterRenderObject(void);
 extern void playerRender(int obj, int a, int b, int c, int d, int flag);
-extern void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
 
 void objRender(int a, int b, int c, int d, int obj, int flag)
 {
@@ -2029,7 +2027,6 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     }
 }
 
-extern void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 extern f32 lbl_803DE9E4;
 
 void fn_8003A230(int obj, void* p2, f32 val)

@@ -20,6 +20,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
+#include "main/dll/dll_0015_curves.h"
 extern u64 FUN_80003494();
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
@@ -121,7 +122,7 @@ extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
 extern u32 uRam803de108;
 extern void mm_free(u32);
-extern void* getLastSavedGameTexts(void);
+
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
 extern u32 lbl_803DD4A8;

@@ -29,7 +29,6 @@ extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
-extern void vfpdoorswitch_updateExplodingVariant(int obj);
 extern int Camera_GetCurrentViewSlot(void);
 extern void PSVECSubtract(void* a, void* b, void* ab);
 extern void PSVECNormalize(void* in, void* out);

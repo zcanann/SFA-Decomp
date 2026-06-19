@@ -4325,7 +4325,6 @@ void fn_8004AAD4(u8* arr, int size, int idx)
     h[idx * 4 + 2] = val;
 }
 #pragma dont_inline reset
-extern void fn_8004AFA0(int* q, int* elem, int idx);
 
 int fn_8004B218(void* q_, u32 n_)
 {
@@ -4378,7 +4377,6 @@ int fn_8004B218(void* q_, u32 n_)
     return result;
 }
 extern char* lbl_803DCD08;
-extern void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
 
 void fn_8004AFA0(int* q, int* elem, int idx)
 {

@@ -35,4 +35,9 @@ STATIC_ASSERT(offsetof(NewCloudsInterface, func0ANop) == 0x20);
 
 extern NewCloudsInterface **gNewCloudsInterface;
 
+
+/* extern-cleanup: defining-file public prototypes */
+void titleScreenDrawFn_80093db4(void);
+void drawSkyStars(void);
+
 #endif /* MAIN_NEWCLOUDS_H_ */

@@ -28,4 +28,8 @@ u32 FUN_801fe750(double param_1,double param_2,int param_3,float *param_4,int pa
 void FUN_801fe924(void);
 void FUN_801feb6c(int param_1);
 
+
+/* extern-cleanup: defining-file public prototypes */
+void fn_801FD6B4(int obj);
+
 #endif /* MAIN_MAIN_H_ */

@@ -864,7 +864,6 @@ extern void LandedArwing_UpdateRetreatChase(void);
 extern void LandedArwing_UpdateBounceFade(void);
 extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
-extern void fn_80167550(int* obj);
 
 void dll_D3_update(int* obj)
 {
