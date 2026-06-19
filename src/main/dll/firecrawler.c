@@ -156,7 +156,7 @@ extern f32 lbl_803E2C54;
 extern f32 lbl_803E2C38;
 extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
-extern void fn_80292E20(u32 angle, f32* s, f32* c);
+extern void fn_80292E20(int q, float* sin_out, float* cos_out);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
 extern int fn_80295C88(void* player);
 extern void* Obj_GetPlayerObject(void);

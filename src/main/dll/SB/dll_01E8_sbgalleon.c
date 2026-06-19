@@ -64,7 +64,7 @@ extern void skyFn_800895e0(int idx, int r, int g, int b, int a, int b2);
 extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
-extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 w);
+extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern int* Obj_GetActiveModel(int obj);
 extern int ObjModel_GetRenderOp(int model, int idx);

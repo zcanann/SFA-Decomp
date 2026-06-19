@@ -39,7 +39,7 @@ extern void AudioDecodeThreadCancel(void);
 extern void ReadThreadCancel(void);
 extern void PushFreeReadBuffer(OSMessage msg);
 extern void PushFreeTextureSet(OSMessage msg);
-extern void PushFreeAudioBuffer(void* msg);
+extern void PushFreeAudioBuffer(void* message);
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];

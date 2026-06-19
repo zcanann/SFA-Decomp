@@ -10,7 +10,7 @@
 #include "main/worldplanet.h"
 
 extern void objRenderFn_8003b8f4(double scale);
-extern void setShowWorldMapHud(int enabled);
+extern void setShowWorldMapHud(u8 param);
 
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
@@ -43,7 +43,7 @@ extern void setFrameCountdown_800202c4(int frames);
 extern int ObjList_FindObjectById(int id);
 extern void AudioStream_StopCurrent(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void setIsOvercast(int mode);
+extern void setIsOvercast(int v);
 extern u32 getButtonsJustPressed(int port);
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;

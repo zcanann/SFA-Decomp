@@ -24,7 +24,7 @@
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void* PopDecodedAudioBuffer(s32 flags);
-extern void PushFreeAudioBuffer(void* buf);
+extern void PushFreeAudioBuffer(void* message);
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetCullMode(GXCullMode mode);

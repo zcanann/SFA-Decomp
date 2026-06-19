@@ -2,7 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_manage.h"
 
-extern void macMakeInactive(McmdVoiceState* state, int x);
+extern void macMakeInactive(McmdVoiceState* sv, int newState);
 
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8* synthVoice;

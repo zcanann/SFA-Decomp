@@ -39,7 +39,7 @@ extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
-extern void Rcp_SetViewFinderHudEnabled(int on);
+extern void Rcp_SetViewFinderHudEnabled(u8 x);
 extern void buttonDisable(int port, u32 mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char* fmt, ...);

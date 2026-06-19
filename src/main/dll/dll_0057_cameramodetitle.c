@@ -38,7 +38,7 @@ extern f32 lbl_803E1BE0;
 extern f32 titleScreenCamProgress;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803E1BE4;
-extern void Movie_SetVolumeFade(int p1, int p2);
+extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void Music_Trigger(int id, int arg);
 extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-extern u8* dataGetCurve(u16 curve);
+extern void* dataGetCurve(u16 cid);
 extern void sndConvertMs(u32 * p);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern s32 sndConvert2Ms(u32 v);

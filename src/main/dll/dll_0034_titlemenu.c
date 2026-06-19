@@ -6,7 +6,7 @@
 #include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
 
-extern void Movie_SetVolumeFade(int volume, int fadeFrames);
+extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void gameTextSetDrawFunc(void* fn);
 extern void titleScreenShowCopyright(u8 arg);
@@ -62,9 +62,9 @@ extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern u32 getButtonsJustPressed(int port);
 extern void loadUiDll(int index);
 extern int mapUnload(int mapId, int flags);
-extern void titleScreenFn_8005cdd4(int arg);
+extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawLights(int v);
-extern void setIsOvercast(int arg);
+extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
 extern int saveFn_800e8508(void);

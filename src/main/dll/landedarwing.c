@@ -21,9 +21,9 @@ extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
 
-extern void fn_80165B3C(int obj, int sub);
+extern void fn_80165B3C(int obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
-extern void fn_80166444(int obj, int sub);
+extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern u8 framesThisStep;

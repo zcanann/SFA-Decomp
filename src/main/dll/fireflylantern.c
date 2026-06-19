@@ -39,7 +39,7 @@ extern void PSVECNormalize(float*, float*);
 extern int getAngle(float y, float x);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
-extern f32 fn_80293DA4(f32);
+extern float fn_80293DA4(float x);
 
 extern u32 lbl_803DBCD0;
 extern f32 timeDelta;

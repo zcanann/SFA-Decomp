@@ -118,7 +118,7 @@ typedef struct
  * event for the channel.
  */
 extern int fn_8026CF78(u8 voice);
-extern f32 floorf(f32 x);
+extern float floorf(float x);
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;

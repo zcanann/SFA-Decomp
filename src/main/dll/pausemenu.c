@@ -50,7 +50,7 @@ extern u16 getNextTaskHintText(void);
 extern f32 SaveGame_getPlayTime(void);
 extern void fn_80128120(void* obj, int v);
 extern void fn_80128470(int v);
-extern void hudDrawMagicBar(int a, int b, int c);
+extern void hudDrawMagicBar(int alpha, int unk2, u32 flags);
 extern f32 hudElementOpacity;
 extern f32 timeDelta;
 extern u8 pauseMenuState;

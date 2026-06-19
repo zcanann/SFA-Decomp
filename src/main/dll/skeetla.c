@@ -49,7 +49,7 @@ extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2450;
 extern f32 getXZDistance(f32* a, f32* b);
-extern void RomCurve_stepClamped(RomCurveWalker *state, f32 dt);
+extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2420;

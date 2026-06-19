@@ -165,7 +165,7 @@ extern void mm_free(void* p);
 extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern int DVDReadAsyncPrio(void* fi, void* addr, int len, int off, void (*cb)(), int prio);
 extern void mergeTableFiles(void* buf, int a, int b, int n);
-extern void texRestructRefs(int a);
+extern void texRestructRefs(int mode);
 extern void animCurvReadCb();
 extern void animCurvTabReadCb();
 extern void voxMapReadCb();
@@ -5154,10 +5154,9 @@ extern u32 randomGetRange(int min, int max);
 extern asm void DCFlushRange(register void* addr, register u32 nBytes);
 extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 extern float mathSinf(float x);
-extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
+extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
-extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod,
-                             int alpha);
+extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
 void textureFn_8004c330(void* p1, void* mtx)
 {
@@ -5378,7 +5377,7 @@ extern void getTextureFn_8006c5e4(void* out);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);
 extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
-extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
+extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
 extern f32 SaveEnd_803DEAD4;
 extern f32 lbl_803DEB04;
 extern f32 lbl_803DEB08;
@@ -7668,7 +7667,7 @@ void logGpuHang(void)
     }
 }
 
-extern void debugPrintfxy(int x, int y, const char* fmt, ...);
+extern void debugPrintfxy(int x, int y, char* fmt, ...);
 extern int OSGetResetButtonState(void);
 extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;

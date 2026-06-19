@@ -63,7 +63,7 @@ extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, i
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
 extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
-extern void RomCurve_stepClamped(RomCurveWalker* route, f32 step);
+extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern s16 getAngle(f32 x, f32 z);
 extern u32 GameBit_Get(int eventId);
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);

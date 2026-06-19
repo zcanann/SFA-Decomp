@@ -3894,7 +3894,7 @@ extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void fn_800897D4(int a, f32* x, f32* y, f32* z);
 extern void skyBuildSunModelMatrix(f32 * out);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32* ox, f32* oy, f32* oz);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
 extern int pauseMenuGetState(void);

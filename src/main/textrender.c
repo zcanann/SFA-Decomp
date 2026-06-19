@@ -2123,7 +2123,7 @@ extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, i
 extern void drawTexture(f32 x, f32 y, void* tex, int alpha, int scale);
 extern void drawScaledTexture(f32 x, f32 y, void* tex, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(f32 x, f32 y, void* tex, int alpha, int scale, int w, int h, int part, int flag);
-extern void drawHudBox(int x, int y, int w, int h, int alpha, int flag);
+extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 
 typedef struct GameTextBox
 {

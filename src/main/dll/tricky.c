@@ -48,7 +48,7 @@ extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int playerHasKrazoaSpirit();
-extern void hudDrawMagicBar(int alpha, int p2, int p3);
+extern void hudDrawMagicBar(int alpha, int unk2, u32 flags);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 
 extern f32 gViewFinderFadeLevel;
@@ -241,7 +241,7 @@ void GameUI_airMeterSetField24(float v)
 }
 
 extern void cutsceneFadeInOut(int a);
-extern void setTimeStop(int x);
+extern void setTimeStop(int v);
 extern void pauseMenuInit(void);
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);

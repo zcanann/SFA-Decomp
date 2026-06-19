@@ -28,7 +28,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void Camera_SetFovY(f32 fovY);
-extern void Rcp_SetViewFinderHudEnabled(int v);
+extern void Rcp_SetViewFinderHudEnabled(u8 x);
 extern f32 lbl_803E3D18;
 extern f32 lbl_803E3D20;
 extern f32 lbl_803E3D24;

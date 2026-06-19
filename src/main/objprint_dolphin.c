@@ -2581,7 +2581,7 @@ extern void setMatrixFromObjectTransposed(void* blk, f32* m);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void objRotateFn_8003bce8(f32 * m, s16 * a, s16 * b, s16 * c);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32* a, f32* b, f32* c);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int* x, int* y, int* z);
 extern int depthReadRequestPoll(int x, int y, int* obj);
 extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
@@ -3518,11 +3518,11 @@ typedef struct
     u8 r, g, b, a;
 } ObjGXColor;
 
-extern void modelLightChannels_reset(int);
+extern void modelLightChannels_reset(u8 v);
 extern void modelLightChannel_configure(int i, int a, int b);
-extern void modelTextureFn_80089970(int idx);
+extern void modelTextureFn_80089970(int slot);
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
-extern void lightGetColor(int light, u8* r, u8* g, u8* b);
+extern void lightGetColor(int i, u8* a, u8* b, u8* c);
 extern void modelLightStruct_selectObjectLights(u8* model, int* arr, u32 n, s32* cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
 extern int modelLightStruct_getProjectedLightChannelPreference(int light);
@@ -5240,15 +5240,15 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 
 extern u8 lbl_80345E10[];
 extern void mm_free(void* p);
-extern void texFlagFn_80023cbc(int);
-extern void texRestructRefs(int);
+extern void texFlagFn_80023cbc(int v);
+extern void texRestructRefs(int mode);
 extern s16 lbl_803DCC78;
 extern int testAndSet_onlyUseHeaps1and2(int v);
-extern int mmGetRegionForPtr(void*);
+extern int mmGetRegionForPtr(u8* ptr);
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
 extern int mmSetFreeDelay(int v);
-extern int getHeapItemSize(void*);
+extern int getHeapItemSize(void* ptr);
 
 #pragma optimization_level 2
 void defragMemory(int mode)

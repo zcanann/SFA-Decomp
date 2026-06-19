@@ -37,7 +37,7 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern int fn_80295C0C(int);     /* gates mode 0x49 (with objFn_80296700) */
-extern int objFn_802962b4(int);  /* gates mode 0x44 */
+extern int objFn_802962b4(int obj);  /* gates mode 0x44 */
 extern int objFn_80296700(int);  /* gates mode 0x49 (with fn_80295C0C) */
 extern float mathSinf(float x);
 extern float mathCosf(float x);

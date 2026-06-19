@@ -57,7 +57,7 @@ typedef union McmdAdsrData
     } dls;
 } McmdAdsrData;
 
-extern McmdAdsrData* dataGetCurve(u16 curve);
+extern void* dataGetCurve(u16 cid);
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)

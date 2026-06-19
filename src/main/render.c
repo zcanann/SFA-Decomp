@@ -1,6 +1,6 @@
 #include "main/engine_shared.h"
 
-extern f32 floorf(f32);
+extern float floorf(float x);
 extern f32 lbl_803DE544;
 
 int getLActions(int a, int b, u16 idx)
