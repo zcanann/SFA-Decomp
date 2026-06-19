@@ -3020,7 +3020,7 @@ int Tricky_func10(int* obj, int targetObj)
         if ((void*)state[0x28 / 4] != (void*)(targetObj + 0x18))
         {
             state[0x28 / 4] = targetObj + 0x18;
-            *(u32*)&state[0x54 / 4] = *(u32*)&state[0x54 / 4] & ~0x400LL;
+            state[0x54 / 4] = state[0x54 / 4] & ~0x400;
             *(s16*)((u8*)state + 0xd2) = 0;
         }
         *((u8*)state + 10) = 0;
