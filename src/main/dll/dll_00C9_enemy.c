@@ -1669,7 +1669,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
     if (dt > lbl_803E256C) dt = lbl_803E256C;
 
     angle = (u16)getAngle(-((TrickyState*)sub)->unk2B8, -((TrickyState*)sub)->unk2C0);
-    delta = angle - (u16) * (s16*)node;
+    delta = angle - (u16)((GameObject*)node)->anim.rotX;
     delta_f = (f32)delta;
     if (delta_f > lbl_803E25B8) delta_f = lbl_803E25EC + delta_f;
     if (delta_f < lbl_803E25F4) delta_f = lbl_803E25F0 + delta_f;
@@ -1785,7 +1785,7 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     f32 t0 = *(f32*)((char*)node + 0xc) - fa;
     f32 t1 = *(f32*)((char*)node + 0x14) - fb;
     delta = getAngle(t0, t1);
-    delta = (s16)(delta - (u16) * (s16*)node);
+    delta = (s16)(delta - (u16)((GameObject*)node)->anim.rotX);
     if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
     if ((s16)delta < -0x8000) delta = (s16)(delta + 0xFFFF);
     delta += p4;
