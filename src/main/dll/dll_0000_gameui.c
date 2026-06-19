@@ -1249,6 +1249,7 @@ void pauseMenuDrawText(void)
 /* EN v1.0 0x8012B4C4  size: 504b  Pause-menu grid cursor stepper. Reads the
  * C-stick X axis, derives a one-step direction, and tweens the grid cursor
  * offsets toward the next cell, clamping when the tween crosses zero. */
+#pragma dont_inline on
 int pauseMenuGridFn_8012b4c4(void)
 {
     int ret = 0;
@@ -1312,6 +1313,7 @@ int pauseMenuGridFn_8012b4c4(void)
 
     return ret;
 }
+#pragma dont_inline reset
 
 /* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
  * the open tween, clamps it, then on the close button fires the per-state
