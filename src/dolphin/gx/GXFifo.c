@@ -294,7 +294,7 @@ void __GXSaveCPUFifoAux(__GXFifoObj* realFifo) {
         __GXSaveFifoCPStat(realFifo);
 #endif
     } else {
-        realFifo->count = (u8*)realFifo->wrPtr - (u8*)realFifo->rdPtr;
+        realFifo->count = (u8*)realFifo->wrPtr - realFifo->rdPtr;
         if (realFifo->count < 0)
             realFifo->count += realFifo->size;
     }
@@ -333,10 +333,10 @@ void GXSaveGPFifo(GXFifoObj* fifo) {
 void GXGetGPStatus(GXBool* overhi, GXBool* underlow, GXBool* readIdle, GXBool* cmdIdle, GXBool* brkpt) {
     __GXData->cpStatus = GX_GET_CP_REG(0);
     *overhi   = GET_REG_FIELD(__GXData->cpStatus, 1, 0);
-    *underlow = (int)GET_REG_FIELD(__GXData->cpStatus, 1, 1);
-    *readIdle = (int)GET_REG_FIELD(__GXData->cpStatus, 1, 2);
-    *cmdIdle  = (int)GET_REG_FIELD(__GXData->cpStatus, 1, 3);
-    *brkpt    = (int)GET_REG_FIELD(__GXData->cpStatus, 1, 4);
+    *underlow = GET_REG_FIELD(__GXData->cpStatus, 1, 1);
+    *readIdle = GET_REG_FIELD(__GXData->cpStatus, 1, 2);
+    *cmdIdle  = GET_REG_FIELD(__GXData->cpStatus, 1, 3);
+    *brkpt    = GET_REG_FIELD(__GXData->cpStatus, 1, 4);
 }
 
 #if SDK_REVISION >= 1
@@ -355,7 +355,7 @@ void GXGetFifoStatus(GXFifoObj* fifo, GXBool* overhi, GXBool* underflow, u32* fi
 
     if (realFifo == CPUFifo) {
         __GXSaveCPUFifoAux(realFifo);
-        *fifowrap = (int)GET_REG_FIELD(GX_GET_PI_REG(5), 1, 26);
+        *fifowrap = GET_REG_FIELD(GX_GET_PI_REG(5), 1, 26);
     }
 
     *overhi    = (realFifo->count > realFifo->hiWatermark);
@@ -377,7 +377,7 @@ void GXGetFifoPtrs(GXFifoObj* fifo, void** readPtr, void** writePtr) {
         SOME_MACRO1(realFifo);
         SOME_MACRO2(realFifo);
     } else {
-        realFifo->count = (u8*)realFifo->wrPtr - (u8*)realFifo->rdPtr;
+        realFifo->count = (u8*)realFifo->wrPtr - realFifo->rdPtr;
         if (realFifo->count < 0) {
             realFifo->count += realFifo->size;
         }
@@ -624,8 +624,8 @@ void GXRestoreWriteGatherPipe(void) {
     __sync();
     while (PPCMfwpar() & 1) {}
     PPCMtwpar((u32)OSUncachedToPhysical((void*)GXFIFO_ADDR));
-    GX_SET_PI_REG(3, (u32)CPUFifo->base & 0x3FFFFFFF);
-    GX_SET_PI_REG(4, (u32)CPUFifo->top & 0x3FFFFFFF);
+    GX_SET_PI_REG(3, CPUFifo->base & 0x3FFFFFFF);
+    GX_SET_PI_REG(4, CPUFifo->top & 0x3FFFFFFF);
     SET_REG_FIELD(1578, reg, 21, 5, ((u32)CPUFifo->wrPtr & 0x3FFFFFFF) >> 5);
     reg &= 0xFBFFFFFF;
     GX_SET_PI_REG(5, reg);

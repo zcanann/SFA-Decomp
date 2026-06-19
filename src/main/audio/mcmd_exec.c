@@ -101,7 +101,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
         detune = (args->flags >> 0x10) & 0xff;
     }
 
-    args->flags = (detune << 0x10) | 0x19 | ((k1 + (sndRand() % (((u8)k2 - (u8)k1) + 1))) << 8);
+    args->flags = (detune << 0x10) | 0x19 | ((k1 + (sndRand() % (((u8)k2 - k1) + 1))) << 8);
     args->value = 0;
     state->key = (args->flags >> 8) & 0x7f;
     state->fineTune = (s8)(args->flags >> 0x10);
@@ -298,7 +298,7 @@ void varSet32(McmdVoiceState* state, u32 useExCtrl, u32 index, u32 value)
 {
     if (useExCtrl != 0)
     {
-        inpSetExCtrl(state, index, (s16)value);
+        inpSetExCtrl(state, index, value);
         return;
     }
     index &= 0x1f;
@@ -374,7 +374,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
     }
     else
     {
-        targetVoice = vidGetInternalId(varGet32(state, 0, (u8)args->value));
+        targetVoice = vidGetInternalId(varGet32(state, 0, args->value));
         if (targetVoice != 0xffffffff)
         {
             voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
@@ -455,9 +455,9 @@ void macHandleActive(McmdVoiceState* sv)
             hwBreak(sv->voiceHandle & 0xff);
         }
 
-        sv->paramCurrent[0] = sv->paramTarget[0] = (u32)sv->startupPan << 16;
+        sv->paramCurrent[0] = sv->paramTarget[0] = sv->startupPan << 16;
         sv->paramCurrent[1] = sv->paramTarget[1] = 0;
-        sv->volume = (u32)sv->startupVolume << 16;
+        sv->volume = sv->startupVolume << 16;
         sv->volTable = 0;
         sv->volumeBase = sv->volume;
         sv->midiSlot = sv->startupMidiSlot;
@@ -739,7 +739,7 @@ void macHandleActive(McmdVoiceState* sv)
                                                        sv->midiEvent) >> 7];
                 adsr.ascale = 0x80000000;
                 adsr.dscale = 0x80000000;
-                hwSetADSR(sv->voiceHandle & 0xff, (u32*)&adsr, 2);
+                hwSetADSR(sv->voiceHandle & 0xff, &adsr, 2);
                 MAC_CFLAGS(sv) |= MAC_FLAG64(0, 0x100);
                 break;
             }
@@ -1011,7 +1011,7 @@ void macHandleActive(McmdVoiceState* sv)
             {
                 s16 prio = sv->priorityGroup + (s16)(cmd >> 0x10);
                 prio = prio < 0 ? 0 : prio > 0xff ? 0xff : prio;
-                voiceSetPriority(sv, (u8)prio);
+                voiceSetPriority(sv, prio);
                 break;
             }
         case 0x38: /* set age counter speed */
@@ -1552,7 +1552,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
             sv->macroBase = addr;
             sv->macroCursor = addr + (step << 3);
             sv->keyBase = key;
-            sv->key = (u8)key;
+            sv->key = key;
             sv->fineTune = 0;
             sv->startupVolume = vol;
             sv->startupPan = panning;

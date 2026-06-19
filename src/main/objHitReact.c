@@ -64,13 +64,13 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
                 (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
                     !sfxActive))
             {
-                Sfx_PlayFromObject(obj, (u16)reactionEntry->primaryHitSfxId);
+                Sfx_PlayFromObject(obj, reactionEntry->primaryHitSfxId);
             }
             if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
                 (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
                     !sfxActive))
             {
-                Sfx_PlayFromObject(obj, (u16)reactionEntry->secondaryHitSfxId);
+                Sfx_PlayFromObject(obj, reactionEntry->secondaryHitSfxId);
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT)
             {
@@ -95,7 +95,7 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
             (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM))
         {
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                (obj, (int)reactionEntry->reactionMoveId, gObjHitsScalarZero, 0);
+                (obj, reactionEntry->reactionMoveId, gObjHitsScalarZero, 0);
             *reactionStepScale = reactionEntry->reactionStepScale;
             reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
         }
@@ -186,12 +186,12 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
                 }
                 if (async == 0)
                 {
-                    getTabEntry(hitState->entries, OBJHITREACT_ENTRY_TAB_FILE_ID, (int)entryByteOffset,
-                                (int)hitState->activeEntryByteCount);
+                    getTabEntry(hitState->entries, OBJHITREACT_ENTRY_TAB_FILE_ID, entryByteOffset,
+                                hitState->activeEntryByteCount);
                     return;
                 }
                 fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID, hitState->entries,
-                                       (int)entryByteOffset, (int)hitState->activeEntryByteCount);
+                                       entryByteOffset, hitState->activeEntryByteCount);
                 return;
             }
         }

@@ -199,7 +199,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     for (i = 0; i < 16; i++)
     {
         nseq->section[i].bpm = bpm;
-        synthSetStudioChannelScale(bpm >> 10, seqId, (u8)i);
+        synthSetStudioChannelScale(bpm >> 10, seqId, i);
         if (arr->masterTrackOffset != 0)
         {
             nseq->section[i].masterTrackBase = song + arr->masterTrackOffset;
@@ -257,9 +257,9 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
                 prg = nseq->normTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->normtab + prg * 6);
-                    nseq->prgState[(u8)i].priority = nseq->normtab[prg * 6 + 2];
-                    nseq->prgState[(u8)i].maxVoices = nseq->normtab[prg * 6 + 3];
+                    nseq->prgState[i].macId = *(u16*)(nseq->normtab + prg * 6);
+                    nseq->prgState[i].priority = nseq->normtab[prg * 6 + 2];
+                    nseq->prgState[i].maxVoices = nseq->normtab[prg * 6 + 3];
                 }
             }
             else
@@ -267,15 +267,15 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
                 prg = nseq->drumTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->drumtab + prg * 6);
-                    nseq->prgState[(u8)i].priority = nseq->drumtab[prg * 6 + 2];
-                    nseq->prgState[(u8)i].maxVoices = nseq->drumtab[prg * 6 + 3];
+                    nseq->prgState[i].macId = *(u16*)(nseq->drumtab + prg * 6);
+                    nseq->prgState[i].priority = nseq->drumtab[prg * 6 + 2];
+                    nseq->prgState[i].maxVoices = nseq->drumtab[prg * 6 + 3];
                 }
             }
-            inpSetMidiCtrl(7, (u8)i, seqId, midiSetup[5]);
-            inpSetMidiCtrl(0xA, (u8)i, seqId, midiSetup[6]);
-            inpSetMidiCtrl(0x5B, (u8)i, seqId, midiSetup[7]);
-            inpSetMidiCtrl(0x5D, (u8)i, seqId, midiSetup[8]);
+            inpSetMidiCtrl(7, i, seqId, midiSetup[5]);
+            inpSetMidiCtrl(0xA, i, seqId, midiSetup[6]);
+            inpSetMidiCtrl(0x5B, i, seqId, midiSetup[7]);
+            inpSetMidiCtrl(0x5D, i, seqId, midiSetup[8]);
             midiSetup += 5;
         }
     }

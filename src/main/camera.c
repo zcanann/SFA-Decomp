@@ -27,7 +27,7 @@ void Obj_UpdateWorldTransform(s16* obj)
     f32* matrix;
 
     parent = *(s16**)(obj + 0x20);
-    if (parent == (s16*)0)
+    if (parent == 0)
     {
         *(f32*)(obj + 0x22) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(obj + 0x24) = ((GameObject*)obj)->anim.localPosY;
@@ -381,14 +381,14 @@ void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32*
     {
         t = ndcX * (f32)(lbl_802C5ED0[0] >> 2);
         t = t + (f32)(lbl_802C5ED0[4] >> 2);
-        *outX = (s32)t;
+        *outX = t;
     }
 
     if (outY != NULL)
     {
         t = ndcY * (f32)(lbl_802C5ED0[1] >> 2);
         t = t + (f32)(lbl_802C5ED0[5] >> 2);
-        *outY = (s32)t;
+        *outY = t;
         *outY = 0x1E0 - *outY;
     }
 
@@ -609,7 +609,7 @@ void viewportEffectFn_8000e380(void)
         {
             lbl_803DC880 = 0;
         }
-        gCameraFarPlane = ((f32)lbl_803DC880 / (f32)lbl_803DC882) * (lbl_803DC8AC - lbl_803DC8A8) + lbl_803DC8A8;
+        gCameraFarPlane = ((f32)lbl_803DC880 / lbl_803DC882) * (lbl_803DC8AC - lbl_803DC8A8) + lbl_803DC8A8;
     }
 
     gObjTransformMatrixSlot = 0;
@@ -924,14 +924,14 @@ void Camera_ApplyFullViewport(void)
 
     if (renderMode->useViewportJitter != 0)
     {
-        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                            (f32)renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0,
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                            renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0,
                             lbl_803DCCBC);
     }
     else
     {
-        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                      (f32)renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0);
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                      renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0);
     }
 }
 
@@ -941,14 +941,14 @@ void fn_8000F83C(void)
 
     if (renderMode->useViewportJitter != 0)
     {
-        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                            (f32)renderMode->xfbHeight, lbl_803DE640, lbl_803DE5F0,
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                            renderMode->xfbHeight, lbl_803DE640, lbl_803DE5F0,
                             lbl_803DCCBC);
     }
     else
     {
-        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                      (f32)renderMode->xfbHeight, lbl_803DE640, lbl_803DB26C);
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                      renderMode->xfbHeight, lbl_803DE640, lbl_803DB26C);
     }
 }
 
@@ -958,14 +958,14 @@ void fn_8000F8F8(void)
 
     if (renderMode->useViewportJitter != 0)
     {
-        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                            (f32)renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0,
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                            renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0,
                             lbl_803DCCBC);
     }
     else
     {
-        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                      (f32)renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0);
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                      renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0);
     }
 }
 
@@ -975,25 +975,25 @@ void fn_8000F9B4(void)
 
     if (renderMode->useViewportJitter != 0)
     {
-        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                            (f32)renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0,
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                            renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0,
                             lbl_803DCCBC);
     }
     else
     {
-        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
-                      (f32)renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0);
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth,
+                      renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0);
     }
 }
 
 u16 fn_8000FA70(void)
 {
-    return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
+    return gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
 }
 
 u16 fn_8000FA90(void)
 {
-    return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
+    return gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
 }
 
 u8 Camera_IsViewYOffsetEnabled(void)

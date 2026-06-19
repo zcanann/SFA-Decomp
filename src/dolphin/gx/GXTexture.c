@@ -289,7 +289,7 @@ void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter min_filt, GXTexFilter mag_filt, 
     mode0 = (mode0 & 0xFFFE01FF) | ((lbias & 0xFF) << 9);
     t->mode0 = mode0;
 
-    ASSERTMSG1LINE(791, (u32)mag_filt <= 1, "%s: invalid mag_filt value", "GXInitTexObjLOD");
+    ASSERTMSG1LINE(791, mag_filt <= 1, "%s: invalid mag_filt value", "GXInitTexObjLOD");
     if (mag_filt == GX_LINEAR) {
         magFilt = 1;
     } else {
@@ -299,7 +299,7 @@ void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter min_filt, GXTexFilter mag_filt, 
     mode0 = (mode0 & 0xFFFFFFEF) | (magFilt << 4);
     t->mode0 = mode0;
 
-    ASSERTMSG1LINE(795, (u32)min_filt <= 5, "%s: invalid min_filt value", "GXInitTexObjLOD");
+    ASSERTMSG1LINE(795, min_filt <= 5, "%s: invalid min_filt value", "GXInitTexObjLOD");
     mode0 = t->mode0;
     mode0 = (mode0 & 0xFFFFFF1F) | (GX2HWFiltConv[min_filt] << 5);
     t->mode0 = mode0;
@@ -363,14 +363,14 @@ u16 GXGetTexObjWidth(const GXTexObj* to) {
     const __GXTexObjInt* t = (const __GXTexObjInt*)to;
 
     ASSERTMSGLINE(1114, to, "Texture Object Pointer is null");
-    return (u32)GET_REG_FIELD(t->image0, 10, 0) + 1;
+    return GET_REG_FIELD(t->image0, 10, 0) + 1;
 }
 
 u16 GXGetTexObjHeight(const GXTexObj* to) {
     const __GXTexObjInt* t = (const __GXTexObjInt*)to;
 
     ASSERTMSGLINE(1120, to, "Texture Object Pointer is null");
-    return (u32)GET_REG_FIELD(t->image0, 10, 10) + 1;
+    return GET_REG_FIELD(t->image0, 10, 10) + 1;
 }
 
 GXTexFmt GXGetTexObjFmt(const GXTexObj* to) {

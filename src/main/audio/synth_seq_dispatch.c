@@ -564,7 +564,7 @@ int fn_8026E9D0(u8 voice, u32 param)
                 *(int*)(gSynthCurrentVoice + voice * 56 + 0x14ec) = *(int*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
                 fn_8026CF78(voice);
                 vp2 = (u8*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-                fm = (f32) * (u32*)(vp2 + 8) * (f32)param;
+                fm = (f32) * (u32*)(vp2 + 8) * param;
                 fm = k80 * fm;
                 fm = fm * (k84 * (f32) * (u16*)(vp2 + 0x32));
                 ftotal = k88 * fm;
@@ -575,7 +575,7 @@ int fn_8026E9D0(u8 voice, u32 param)
                 {
                     ftotal -= k88 * (f32)(s64)(u64)(ftotal / k88);
                 }
-                *(u32*)(vp2 + *(u8*)(vp2 + 0x30) * 8 + 0xc) = (u32)ftotal;
+                *(u32*)(vp2 + *(u8*)(vp2 + 0x30) * 8 + 0xc) = ftotal;
                 *(u32*)(vp2 + *(u8*)(vp2 + 0x30) * 8 + 0x10) = (int)floorf(fm);
             }
             *(u16*)(vp + 0x34) += 1;

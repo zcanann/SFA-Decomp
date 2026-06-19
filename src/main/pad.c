@@ -11,7 +11,7 @@ void setJoypadDisabled(void)
 
 void padFn_80014b18(int value)
 {
-    lbl_803DB2A8 = (u8)value;
+    lbl_803DB2A8 = value;
 }
 
 u32 buttonGetDisabled(int port)

@@ -217,7 +217,7 @@ void OSInit(void)
         BI2DebugFlag = 0; // debug flag from the DVD BI2 header
         BootInfo = (OSBootInfo *)OS_BASE_CACHED; // set pointer to BootInfo
 
-        __DVDLongFileNameFlag = (u32)0; // flag to tell us whether we make it through the debug loading
+        __DVDLongFileNameFlag = 0; // flag to tell us whether we make it through the debug loading
 
         // time to grab a bunch of debug info from the DVD
         // the address for where the BI2 debug info is, is stored at OS_BI2_DEBUG_ADDRESS
@@ -228,7 +228,7 @@ void OSInit(void)
             BI2DebugFlag = &DebugInfo->debugFlag; // debug flag from DVD BI2
             __PADSpec = DebugInfo->padSpec; // some other info from DVD BI2
             *((u8 *)DEBUGFLAG_ADDR) = (u8)*BI2DebugFlag; // store flag in mem
-            *((u8 *)OS_DEBUG_ADDRESS_2) = (u8)__PADSpec; // store other info in mem
+            *((u8 *)OS_DEBUG_ADDRESS_2) = __PADSpec; // store other info in mem
         }
         else if (BootInfo->arenaHi) { // if the top of the heap is already set
             BI2DebugFlagHolder = (u32 *)*((u8 *)DEBUGFLAG_ADDR); // grab whatever's stored at 0x800030E8
@@ -405,11 +405,11 @@ static void OSExceptionInit(void)
     handlerSize = (u32)((u8 *)__OSEVEnd - (u8 *)__OSEVStart);
 
     // Install the DB integrator, only if we are the first OSInit to be run
-    destAddr = (void *)OSPhysicalToCached(OS_DBJUMPPOINT_ADDR);
+    destAddr = OSPhysicalToCached(OS_DBJUMPPOINT_ADDR);
     if (*(u32 *)destAddr == 0) // Lomem should be zero cleared only once by BS2
     {
         DBPrintf("Installing OSDBIntegrator\n");
-        memcpy(destAddr, (void *)__OSDBINTSTART, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
+        memcpy(destAddr, __OSDBINTSTART, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
         DCFlushRangeNoSync(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
         __sync();
         ICInvalidateRange(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
@@ -430,7 +430,7 @@ static void OSExceptionInit(void)
         // Modify opcodes at __DBVECTOR if necessary
         if (__DBIsExceptionMarked(exception)) {
             DBPrintf(">>> OSINIT: exception %d vectored to debugger\n", exception);
-            memcpy((void *)__DBVECTOR, (void *)__OSDBINTEND, (u32)__OSDBJUMPEND - (u32)__OSDBINTEND);
+            memcpy((void *)__DBVECTOR, __OSDBINTEND, (u32)__OSDBJUMPEND - (u32)__OSDBINTEND);
         }
         else {
             // make sure the opcodes are still nop
@@ -443,7 +443,7 @@ static void OSExceptionInit(void)
         }
 
         // Install the modified handler.
-        destAddr = (void *)OSPhysicalToCached(__OSExceptionLocations[(u32)exception]);
+        destAddr = OSPhysicalToCached(__OSExceptionLocations[exception]);
         memcpy(destAddr, handlerStart, handlerSize);
         DCFlushRangeNoSync(destAddr, handlerSize);
         __sync();

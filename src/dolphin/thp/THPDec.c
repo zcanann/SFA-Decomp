@@ -65,7 +65,7 @@ s32 THPVideoDecode(void *file, void *tileY, void *tileU, void *tileV, void *work
     DCZeroRange(__THPInfo, sizeof(THPFileInfo));
     __THPInfo->cnt = 33;
     __THPInfo->decompressedY = 0;
-    __THPInfo->c = (u8*)file;
+    __THPInfo->c = file;
     all_done = FALSE;
 
     for (;;) {
@@ -264,7 +264,7 @@ static u8 __THPReadScaneHeader(void)
     }
 
     __THPInfo->c += 3;
-    __THPInfo->MCUsPerRow = (u16)THPROUNDUP(__THPInfo->xPixelSize, 16);
+    __THPInfo->MCUsPerRow = THPROUNDUP(__THPInfo->xPixelSize, 16);
     __THPInfo->components[0].predDC = 0;
     __THPInfo->components[1].predDC = 0;
     __THPInfo->components[2].predDC = 0;
@@ -349,9 +349,9 @@ static void __THPHuffGenerateSizeTable(void)
     p = 0;
 
     for (l = 1; l <= 16; l++) {
-        i = (s32)__THPHuffmanBits[l - 1];
+        i = __THPHuffmanBits[l - 1];
         while (i--) {
-            __THPHuffmanSizeTab[p++] = (u8)l;
+            __THPHuffmanSizeTab[p++] = l;
         }
     }
 
@@ -1404,7 +1404,7 @@ _getfullword:
         stw     increment, info->cnt;
     }
     // clang-format on
-    return (s32)cnt;
+    return cnt;
 
 _FailedCheckEnoughbits_Updated:
 
@@ -1467,7 +1467,7 @@ _FailedCheckNoBits1 :
     // clang-format on
 }
 
-    info->cnt = (u32)tmp;
+    info->cnt = tmp;
     return (h->Vij[(s32)(code + h->valPtr[cnt])]);
 }
 
@@ -1797,7 +1797,7 @@ static void __THPHuffDecodeDCTCompY(register THPFileInfo *info, THPCoeff *block)
                 bgt     _FailedCheckNoBits1;
             }
             // clang-format on
-            cnt = (u32)code;
+            cnt = code;
             goto _DoneDecodeTab;
 
         _getfullword : {
@@ -1977,7 +1977,7 @@ static void __THPHuffDecodeDCTCompY(register THPFileInfo *info, THPCoeff *block)
                     ssss += ((0xFFFFFFFF << rrrr) + 1);
                 }
 
-                block[__THPJpegNaturalOrder[k]] = (s16)ssss;
+                block[__THPJpegNaturalOrder[k]] = ssss;
                 goto _RECV_END;
             }
 
@@ -2119,7 +2119,7 @@ static void __THPHuffDecodeDCTCompU(register THPFileInfo *info, THPCoeff *block)
                 rrrr += ((0xFFFFFFFF << ssss) + 1);
             }
 
-            block[__THPJpegNaturalOrder[k]] = (s16)rrrr;
+            block[__THPJpegNaturalOrder[k]] = rrrr;
         }
 
         else {
@@ -2252,7 +2252,7 @@ static void __THPHuffDecodeDCTCompV(register THPFileInfo *info, THPCoeff *block)
                 rrrr += ((0xFFFFFFFF << ssss) + 1);
             }
 
-            block[__THPJpegNaturalOrder[k]] = (s16)rrrr;
+            block[__THPJpegNaturalOrder[k]] = rrrr;
         }
         else {
             if (rrrr != 15)

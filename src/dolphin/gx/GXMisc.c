@@ -277,17 +277,17 @@ void GXPokeDither(GXBool dither) {
 }
 
 void GXPokeZMode(GXBool compare_enable, GXCompare func, GXBool update_enable) {
-    u32 reg = (u32)compare_enable;
+    u32 reg = compare_enable;
     volatile u16* pe_reg = (volatile u16*)__peReg;
 
     reg = (reg & 0xFFFFFFF1) | ((u32)func << 1);
     reg = (reg & 0xFFFFFFEF) | ((u32)update_enable << 4);
-    pe_reg[0] = (u16)reg;
+    pe_reg[0] = reg;
 }
 
 #if SDK_REVISION >= 1
 void GXPeekARGB(u16 x, u16 y, u32* color) {
-    u32 addr = (u32)OSPhysicalToUncached(0x08000000);
+    u32 addr = OSPhysicalToUncached(0x08000000);
 
     SET_REG_FIELD(792, addr, 10, 2, x);
     SET_REG_FIELD(793, addr, 10, 12, y);
@@ -298,7 +298,7 @@ void GXPeekARGB(u16 x, u16 y, u32* color) {
 
 #if SDK_REVISION >= 1
 void GXPokeARGB(u16 x, u16 y, u32 color) {
-    u32 addr = (u32)OSPhysicalToUncached(0x08000000);
+    u32 addr = OSPhysicalToUncached(0x08000000);
 
     SET_REG_FIELD(0x322, addr, 10, 2, x);
     SET_REG_FIELD(0x323, addr, 10, 12, y);
@@ -319,7 +319,7 @@ void GXPeekZ(u16 x, u16 y, u32* z) {
 
 #if SDK_REVISION >= 1
 void GXPokeZ(u16 x, u16 y, u32 z) {
-    u32 addr = (u32)OSPhysicalToUncached(0x08000000);
+    u32 addr = OSPhysicalToUncached(0x08000000);
 
     SET_REG_FIELD(822, addr, 10, 2, x);
     SET_REG_FIELD(823, addr, 10, 12, y);

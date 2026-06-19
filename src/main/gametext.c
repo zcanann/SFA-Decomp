@@ -125,8 +125,8 @@ void gameTextShowStr(char* text, int box, int arg2, int arg3)
     if (gameTextDrawFunc != NULL)
     {
         u8* slot = &gTextBoxes[box * 0x20];
-        *(s16*)(slot + 0x18) = (s16)arg2;
-        *(s16*)(slot + 0x1a) = (s16)arg3;
+        *(s16*)(slot + 0x18) = arg2;
+        *(s16*)(slot + 0x1a) = arg3;
         gameTextRenderStrs(text, box);
     }
     else
@@ -207,8 +207,8 @@ void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMax
     lbl_803DC9AC = 0;
     lbl_803DC9B8 = 0x7FFFFFFF;
     lbl_803DC9B4 = 0;
-    *(s16*)(box + 0x18) = (s16)x;
-    *(s16*)(box + 0x1a) = (s16)y;
+    *(s16*)(box + 0x18) = x;
+    *(s16*)(box + 0x1a) = y;
     gameTextRenderStrs(str, boxIdx);
     lbl_803DC9BC = 0;
     if (outMinX != NULL)
@@ -514,11 +514,11 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     total = cursor + (lineCount + lineOff);
     if (outLineH != NULL)
     {
-        buffer = (char**)mmAllocateFromFBMemoryStore(lbl_803DB378);
+        buffer = mmAllocateFromFBMemoryStore(lbl_803DB378);
     }
     else
     {
-        buffer = (char**)mmAlloc(total, 0, 0);
+        buffer = mmAlloc(total, 0, 0);
     }
     if (buffer == NULL)
     {
@@ -607,7 +607,7 @@ void gameTextRenderStrs(char* str, int boxIdx)
                                    slot->f0c, &count, &lineH);
     if (lines == NULL)
     {
-        slot->f1a = (s16)(lineH * (f32)count + (f32)slot->f1a);
+        slot->f1a = (s16)(lineH * count + slot->f1a);
         return;
     }
     if (gameTextDrawFunc != NULL)
@@ -636,13 +636,13 @@ void gameTextRenderStrs(char* str, int boxIdx)
             lbl_803DC9A7 = lbl_803DC992;
             lbl_803DC9A6 = lbl_803DC991;
             lbl_803DC9A5 = lbl_803DC990;
-            textRenderStr(lines[i], slot, 1, (f32)slot->f18, (f32)slot->f1a, lineH);
+            textRenderStr(lines[i], slot, 1, slot->f18, slot->f1a, lineH);
             lbl_803DC9A7 = save7;
             lbl_803DC9A6 = save6;
             lbl_803DC9A5 = save5;
             lbl_803DC9A0 = saveColor;
         }
-        textRenderStr(lines[i], slot, 0, (f32)slot->f18, (f32)slot->f1a, lineH);
+        textRenderStr(lines[i], slot, 0, slot->f18, slot->f1a, lineH);
         slot->f1a = (s16)((f32)slot->f1a + lineH);
         if (closeAtEnd)
         {
@@ -733,9 +733,9 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     }
     if (state->fC != 0)
     {
-        if (lbl_803DC994 < (f32)charCount)
+        if (lbl_803DC994 < charCount)
         {
-            lbl_803DC994 = (f32)charCount;
+            lbl_803DC994 = charCount;
         }
         else
         {
@@ -774,7 +774,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
             }
             if (state->charIndex == def->count - 1)
             {
-                if ((state->fC = 1) != 0 && lbl_803DC994 >= (f32)charCount)
+                if ((state->fC = 1) != 0 && lbl_803DC994 >= charCount)
                 {
                     state->f8 = 1;
                 }
@@ -830,8 +830,8 @@ void gameTextFn_8001658c(int a, int b, int c)
     {
         slot->f12 = slot->f10;
     }
-    slot->f18 = (s16)b;
-    slot->f1a = (s16)c;
+    slot->f18 = b;
+    slot->f1a = c;
 
     if (lbl_803DC9BC == 0)
     {
@@ -856,7 +856,7 @@ void gameTextFn_8001658c(int a, int b, int c)
             }
             else
             {
-                slot->f1a = (s16)v;
+                slot->f1a = v;
             }
         }
     }

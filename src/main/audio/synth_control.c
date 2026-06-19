@@ -64,7 +64,7 @@ extern f32 lbl_803E77A8;
             (fade)->start = (fade)->current;               \
             (fade)->target = target;                       \
             (fade)->progress = SYNTH_FADE_ONE;             \
-            (fade)->progressStep = SYNTH_FADE_TIME_SCALE / (f32)fadeTime; \
+            (fade)->progressStep = SYNTH_FADE_TIME_SCALE / fadeTime; \
         } else {                                           \
             (fade)->target = target;                       \
             (fade)->current = target;                      \
@@ -105,7 +105,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     {
         u8 lowIndex;
 
-        lowIndex = (u8)voiceIndex;
+        lowIndex = voiceIndex;
         *(u32*)(synthVoice + voiceOffset + 0xF4) = SYNTH_INVALID_LINK_ID;
         *(u32*)(synthVoice + voiceOffset + 0x114) = 0;
         *(u32*)(synthVoice + voiceOffset + 0x118) = 0;
@@ -326,7 +326,7 @@ void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle)
     }
 
     fadeTable = gSynthFades;
-    target = (f32)value * SYNTH_FADE_SCALE;
+    target = value * SYNTH_FADE_SCALE;
 
     if (selector == SYNTH_FADE_SELECTOR_ACTION_0_OR_1)
     {

@@ -415,7 +415,7 @@ u32 PADRead(PADStatus* status) {
         }
 
         if (!(EnabledBits & chanBit)) {
-            status->err = (s8)PAD_ERR_NO_CONTROLLER;
+            status->err = PAD_ERR_NO_CONTROLLER;
             memset(status, 0, offsetof(PADStatus, err));
             continue;
         }
@@ -431,7 +431,7 @@ u32 PADRead(PADStatus* status) {
             SIGetResponse(chan, data);
 
             if (WaitingBits & chanBit) {
-                status->err = (s8)PAD_ERR_NONE;
+                status->err = PAD_ERR_NONE;
                 memset(status, 0, offsetof(PADStatus, err));
 
                 if (!(CheckingBits & chanBit)) {
@@ -442,7 +442,7 @@ u32 PADRead(PADStatus* status) {
             }
 
             PADDisable(chan);
-            status->err = (s8)PAD_ERR_NO_CONTROLLER;
+            status->err = PAD_ERR_NO_CONTROLLER;
             memset(status, 0, offsetof(PADStatus, err));
             continue;
         }
@@ -587,7 +587,7 @@ void SPEC0_MakeStatus(s32 chan, PADStatus* status, u32 data[2]) {
     status->substickX = (s8)(data[1]);
     status->substickY = (s8)(data[1] >> 8);
     status->triggerLeft = (u8)(data[0] >> 8);
-    status->triggerRight = (u8)data[0];
+    status->triggerRight = data[0];
     status->analogA = 0;
     status->analogB = 0;
     if (170 <= status->triggerLeft)
@@ -614,7 +614,7 @@ void SPEC1_MakeStatus(s32 chan, PADStatus* status, u32 data[2]) {
     status->substickY = (s8)(data[1] >> 8);
 
     status->triggerLeft = (u8)(data[0] >> 8);
-    status->triggerRight = (u8)data[0];
+    status->triggerRight = data[0];
 
     status->analogA = 0;
     status->analogB = 0;
@@ -735,7 +735,7 @@ inline BOOL PADSync(void) {
 #else
 BOOL PADSync(void) {
 #endif
-    return ResettingBits == 0 && (s32)ResettingChan == 32 && !SIBusy();
+    return ResettingBits == 0 && ResettingChan == 32 && !SIBusy();
 }
 
 #ifndef VERSION_GCCP01
@@ -837,7 +837,7 @@ BOOL __PADDisableRumble(BOOL disable) {
 
     enabled = OSDisableInterrupts();
     prev = (__gUnknown800030E3 & 0x20) ? TRUE : FALSE;
-    bits = __gUnknown800030E3 & (u8)~0x20;
+    bits = __gUnknown800030E3 & ~0x20;
     __gUnknown800030E3 = bits;
     if (disable) {
         __gUnknown800030E3 = bits | 0x20;

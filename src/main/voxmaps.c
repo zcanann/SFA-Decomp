@@ -159,11 +159,11 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
 {
     int v;
     v = grid[0] * 10 + 5;
-    out[0] = (f32)v;
+    out[0] = v;
     v = grid[1] * 10 + 5;
-    out[1] = (f32)v;
+    out[1] = v;
     v = grid[2] * 10 + 5;
-    out[2] = (f32)v;
+    out[2] = v;
     if (lbl_803DC8CC != 0)
     {
         Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
@@ -182,9 +182,9 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     {
         Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, lbl_803DC8CC);
     }
-    ix = (int)sx;
-    iy = (int)sy;
-    iz = (int)sz;
+    ix = sx;
+    iy = sy;
+    iz = sz;
     if (sx < 0.0f)
     {
         ix -= 10;
@@ -281,8 +281,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     VoxBlock* block;
     int ay = obj->z * 10 + 5 - lbl_803DCDCC;
 
-    gridX = (int)fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
-    gridY = (int)fastFloorf((f32)ay / lbl_803DE6B4);
+    gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
+    gridY = fastFloorf((f32)ay / lbl_803DE6B4);
 
     vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
     vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
@@ -339,8 +339,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
-            *(s16*)&vm->slotOrigin[bestSlot].gridX = (s16)vm->blockOriginGridX;
-            *(s16*)&vm->slotOrigin[bestSlot].gridZ = (s16)vm->blockOriginGridZ;
+            *(s16*)&vm->slotOrigin[bestSlot].gridX = vm->blockOriginGridX;
+            *(s16*)&vm->slotOrigin[bestSlot].gridZ = vm->blockOriginGridZ;
             vm->f58 = 0;
         }
     }
@@ -678,7 +678,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         }
         q = state->queue;
         state->queueCount++;
-        q[state->queueCount].value = (u16)idx;
+        q[state->queueCount].value = idx;
         q[state->queueCount].priority = 0xFFFE;
         heapSiftUp(q, state->queueCount);
     }
@@ -849,7 +849,7 @@ searched:
         {
             return;
         }
-        n->parentDir = (u8)a3;
+        n->parentDir = a3;
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
@@ -910,7 +910,7 @@ searched:
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
         state->queueCount++;
-        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
@@ -923,7 +923,7 @@ searched:
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
         state->queueCount++;
-        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
@@ -1132,8 +1132,8 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
         }
     }
 
-    nav->navState = (u8)navState;
-    nav->flag25 = (u8)flag;
+    nav->navState = navState;
+    nav->flag25 = flag;
     return ret;
 }
 
@@ -1357,14 +1357,14 @@ int fn_80011EB0(RouteState* state, int count)
     while ((j = node->parentDir) != 0xffu)
     {
         node = &state->nodes[j];
-        node->parentIdx = (u8)i;
+        node->parentIdx = i;
         i = j;
     }
 
     startNode.x = state->startX;
     startNode.z = state->startZ;
     startNode.y = state->startY;
-    startNode.parentIdx = (u8)i;
+    startNode.parentIdx = i;
     if (node->parentIdx == 0xff)
     {
         cand = NULL;
@@ -1428,7 +1428,7 @@ int fn_80011EB0(RouteState* state, int count)
         }
     }
 
-    state->pathCount = (s16)idx;
+    state->pathCount = idx;
     state->pad22 = 0;
     return idx;
 }

@@ -204,7 +204,7 @@ f32 interpolate(f32 a, f32 t, f32 exp)
 
 int atan2i(int y, int x)
 {
-    return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
+    return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, x));
 }
 
 void mtx44Transpose(f32* src, f32* dst)
@@ -226,7 +226,7 @@ void mtx44Transpose(f32* src, f32* dst)
 void setMatrixFromObjectTransposed(void* obj, f32* out)
 {
     f32 m[16];
-    setMatrixFromObjectPos(m, (u8*)obj);
+    setMatrixFromObjectPos(m, obj);
     out[0] = m[0];
     out[1] = m[4];
     out[2] = m[8];
@@ -295,9 +295,9 @@ int randomGetRange(int lo, int hi)
     v = (f32)(u32)
     rand();
     v = v / lbl_803DE7F8;
-    v = v * (lbl_803DE7C4 + (f32)hi - (f32)lo);
-    v = v + (f32)lo;
-    return (int)v;
+    v = v * (lbl_803DE7C4 + hi - lo);
+    v = v + lo;
+    return v;
 }
 
 void copyMatrix44(f32* src, f32* dst)
@@ -547,28 +547,28 @@ void vecRotateYXZ(s16* a, f32* v)
     y = v[1];
     z = v[2];
 
-    c = mathSinf((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * a[0]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = z * c;
-    c = mathCosf((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * a[0]) / lbl_803DE7EC);
     x *= c;
     z *= c;
     x += s2;
     z -= s1;
 
-    c = mathSinf((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * a[1]) / lbl_803DE7EC);
     s1 = y * c;
     s2 = z * c;
-    c = mathCosf((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * a[1]) / lbl_803DE7EC);
     y *= c;
     z *= c;
     y -= s2;
     z += s1;
 
-    c = mathSinf((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    c = mathSinf((lbl_803DE7E8 * a[2]) / lbl_803DE7EC);
     s1 = x * c;
     s2 = y * c;
-    c = mathCosf((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    c = mathCosf((lbl_803DE7E8 * a[2]) / lbl_803DE7EC);
     x *= c;
     y *= c;
     x -= s2;
@@ -673,7 +673,7 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 {
     extern f32 oneOverTimeDelta;
     extern f32 lbl_803DE7F4;
-    f32* timer = (f32*)timerp;
+    f32* timer = timerp;
     int trig;
     int range;
     int val;
@@ -699,11 +699,11 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
             {
                 rv = rand();
                 {
-                    f32 acc = (f32)rv;
+                    f32 acc = rv;
                     acc = acc / lbl_803DE7F8;
-                    acc = acc * ((lbl_803DE7C4 + (f32)range) - (t = lbl_803DE7C0));
+                    acc = acc * ((lbl_803DE7C4 + range) - (t = lbl_803DE7C0));
                     acc = acc + t;
-                    val = (int)acc;
+                    val = acc;
                 }
             }
             trig = !val;

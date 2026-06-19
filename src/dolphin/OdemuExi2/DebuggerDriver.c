@@ -122,7 +122,7 @@ static BOOL DBGRead(u32 count, u32* buffer, s32 param3) {
     u32 readValue;
 
     error = FALSE;
-    dataPtr = (u32*)buffer;
+    dataPtr = buffer;
     if (!DBGEXISelect(4)) {
         return FALSE;
     }
@@ -152,7 +152,7 @@ static BOOL DBGWrite(u32 count, void* buffer, s32 param3) {
     u32 v;
 
     total = FALSE;
-    buf_p = (u32*)buffer;
+    buf_p = buffer;
     if (!DBGEXISelect(4)) {
         return FALSE;
     }
@@ -264,7 +264,7 @@ int DBRead(void* buffer, u32 count) {
     interrupts = OSDisableInterrupts();
     value = (SendMailData & 0x10000) ? 0x1000 : 0;
 
-    DBGRead(value + 0x1e000, (u32*)buffer, (count + 3U) & 0xfffffffc);
+    DBGRead(value + 0x1e000, buffer, (count + 3U) & 0xfffffffc);
 
     RecvDataLeng = 0;
     EXIInputFlag = 0;
@@ -286,7 +286,7 @@ int DBWrite(const void* src, u32 size) {
     SendCount++;
     v = ((SendCount & 1) ? 0x1000 : 0);
 
-    while (!DBGWrite(v | 0x1c000, (u32*)src, ROUND_UP(size, 4)))
+    while (!DBGWrite(v | 0x1c000, src, ROUND_UP(size, 4)))
         ;
 
     do {

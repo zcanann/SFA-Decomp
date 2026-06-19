@@ -298,15 +298,15 @@ void __VIInit(VITVMode mode)
 	for (a = 0; a < 1000; a++) { }
 
 	__VIRegs[1] = 0;
-	__VIRegs[3] = (u32)tm->hlw;
+	__VIRegs[3] = tm->hlw;
 	__VIRegs[2] = tm->hce | (tm->hcs << 8);
 	__VIRegs[5] = tm->hsy | ((tm->hbe640 & 0x1FF) << 7);
 	__VIRegs[4] = (tm->hbe640 >> 9) | ((tm->hbs640 & 0xFFFF) << 1);
 	if (encoderType == 0) {
 		__VIRegs[0x39] = tm->hbeCCIR656 | 0x8000;
-		__VIRegs[0x3A] = (u32)tm->hbsCCIR656;
+		__VIRegs[0x3A] = tm->hbsCCIR656;
 	}
-	__VIRegs[0]  = (u32)tm->equ;
+	__VIRegs[0]  = tm->equ;
 	__VIRegs[7]  = (u32)(tm->prbOdd + (tm->acv * 2) - 2);
 	__VIRegs[6]  = (u32)(tm->psbOdd + 2);
 	__VIRegs[9]  = (u32)(tm->prbEven + (tm->acv * 2) - 2);
@@ -543,7 +543,7 @@ inline static void setScalingRegs(u16 panSizeX, u16 dispSizeX, BOOL threeD)
 		scale    = (u32)(dispSizeX + (panSizeX << 8) - 1) / dispSizeX;
 		regs[37] = scale | 0x1000;
 		changed |= 0x04000000;
-		regs[56] = (u32)panSizeX;
+		regs[56] = panSizeX;
 		changed |= 0x80;
 	} else {
 		regs[37] = 0x100;
@@ -773,7 +773,7 @@ void VIConfigure(const GXRenderModeObj* rm)
 
 		reg54 = regs[54];
 		if ((s32)rm->viTVmode == VI_TVMODE_NTSC_PROG
-		    || (s32)rm->viTVmode == VI_TVMODE_3) {
+		    || rm->viTVmode == VI_TVMODE_3) {
 			SET_REG_FIELD(0, reg54, 1, 0, 1);
 		} else {
 			SET_REG_FIELD(0, reg54, 1, 0, 0);

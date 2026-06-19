@@ -29,7 +29,7 @@ int adsrStartRelease(int state, u32 divisor)
         {
             adsr->currentIndex = (u32)(193 - voiceAdsrDecayTable[*(int*)&adsr->currentVolume >> 21]) << 16;
         }
-        adsr->cnt = (u32)(lbl_803E7848 * ((f32) * (int*)&adsr->currentIndex * (f32)divisor)) >> 12;
+        adsr->cnt = (u32)(lbl_803E7848 * ((f32) * &adsr->currentIndex * divisor)) >> 12;
         adsr->state = 4;
         if (adsr->cnt == 0)
         {

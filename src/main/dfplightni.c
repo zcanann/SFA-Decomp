@@ -117,20 +117,20 @@ void dfplightni_update(DfpLightniObject* obj)
                 if (eventActive != 0)
                 {
                     randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = (f32)randomZ * lbl_803E64FC + playerObj->position[0];
+                    end[0] = randomZ * lbl_803E64FC + playerObj->position[0];
                     randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = (f32)randomY * lbl_803E64FC + playerObj->position[1];
+                    end[1] = randomY * lbl_803E64FC + playerObj->position[1];
                     randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = (f32)randomX * lbl_803E64FC + playerObj->position[2];
+                    end[2] = randomX * lbl_803E64FC + playerObj->position[2];
                 }
                 else
                 {
                     randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = (f32)randomX * lbl_803E64FC + start[0];
+                    end[0] = randomX * lbl_803E64FC + start[0];
                     randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = (f32)randomY * lbl_803E64FC + obj->position[1];
+                    end[1] = randomY * lbl_803E64FC + obj->position[1];
                     randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = (f32)randomZ * lbl_803E64FC + start[2];
+                    end[2] = randomZ * lbl_803E64FC + start[2];
                 }
                 if (state->effectHandle != 0)
                 {
@@ -202,7 +202,7 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
     {
         state = dfplightni_getState(obj);
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
-        state->timer = (f32)randomValue;
+        state->timer = randomValue;
         state->effectHandle = 0;
         if (mapData->radiusX <= 0)
         {
@@ -214,7 +214,7 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
         }
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         {
-            f32 t = (f32)randomValue;
+            f32 t = randomValue;
             t = lbl_803E6508 + t;
             state->triggerTime = t;
         }

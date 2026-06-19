@@ -100,16 +100,16 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         span2 = span - 0x10000;
     }
 
-    p = lbl_803E7870 * (f32)pan2;
-    sp = lbl_803E7870 * (f32)span2;
+    p = lbl_803E7870 * pan2;
+    sp = lbl_803E7870 * span2;
 
     if (dpl2 != 0)
     {
         SAL_FMOD1(rpan_f, p);
-        rpan_i = (u32)p;
+        rpan_i = p;
         t = lbl_803E7874 - p;
         SAL_FMOD1(rpan_fm, t);
-        rpan_im = (u32)t;
+        rpan_im = t;
     }
 
     if (itd != 0)
@@ -118,24 +118,24 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     }
 
     SAL_FMOD1(pan_f, p);
-    pan_i = (u32)p;
+    pan_i = p;
     SAL_FMOD1(span_f, sp);
-    span_i = (u32)sp;
+    span_i = sp;
     p = lbl_803E7874 - p;
     sp = lbl_803E7874 - sp;
     SAL_FMOD1(pan_fm, p);
-    pan_im = (u32)p;
+    pan_im = p;
     SAL_FMOD1(span_fm, sp);
-    span_im = (u32)sp;
+    span_im = sp;
 
     if (dpl2 == 0)
     {
         ftmp = lbl_803E7858 * vol;
-        i = (u32)ftmp;
+        i = ftmp;
         one_ = lbl_803E785C;
         pan1 = tabs->pan + 1;
         om_span_f = one_ - span_f;
-        v = ftmp - (f32)i;
+        v = ftmp - i;
         om_span_fm = one_ - span_fm;
         f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
         om_pan_f = one_ - pan_f;
@@ -146,8 +146,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
 
         ftmp = lbl_803E7858 * auxa;
-        i = (u32)ftmp;
-        v = ftmp - (f32)i;
+        i = ftmp;
+        v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
         out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
         v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
@@ -155,8 +155,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
 
         ftmp = lbl_803E7858 * auxb;
-        i = (u32)ftmp;
-        v = ftmp - (f32)i;
+        i = ftmp;
+        v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
         out[8] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
         v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
@@ -166,12 +166,12 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     else
     {
         ftmp = lbl_803E7858 * vol;
-        i = (u32)ftmp;
+        i = ftmp;
         one_ = lbl_803E785C;
         pan1 = tabs->pan + 1;
         om_span_f = one_ - span_f;
         om_span_fm = one_ - span_fm;
-        v = ftmp - (f32)i;
+        v = ftmp - i;
         om_pan_f = one_ - pan_f;
         f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
         om_pan_fm = one_ - pan_fm;
@@ -183,8 +183,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[6] = vs * ((one_ - rpan_fm) * tabs->pan_dpl2[rpan_im] + rpan_fm * pan1[rpan_im]);
 
         ftmp = lbl_803E7858 * auxa;
-        i = (u32)ftmp;
-        v = ftmp - (f32)i;
+        i = ftmp;
+        v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
         out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
         v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
@@ -235,7 +235,7 @@ void s3dUpdateRoomDistances(void)
 
                     distanceSq += d.z * d.z + (d.x * d.x + d.y * d.y);
                 }
-                entry->averageDistanceSq = distanceSq / (f32)listenerCount;
+                entry->averageDistanceSq = distanceSq / listenerCount;
             }
         }
     }
@@ -288,7 +288,7 @@ void s3dAllocateRoomStudios(void)
                     distanceSq += d.z * d.z + (d.x * d.x + d.y * d.y);
                 }
                 listenerOwned = false;
-                distanceSq = distanceSq / (f32)listenerCount;
+                distanceSq = distanceSq / listenerCount;
                 for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
                 {
                     if (listener->entry == entry)
@@ -360,7 +360,7 @@ void s3dAllocateRoomStudios(void)
                 {
                     entry->fade = 0;
                 }
-                if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
+                if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                 {
                     synthActivateStudio(entry->assignedVoice, 1, 0);
                 }
@@ -383,7 +383,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0x7f0000;
                         entry->flags &= 0x7fffffff;
                     }
-                    if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
+                    if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }
@@ -400,7 +400,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0;
                         entry->flags &= 0xbfffffff;
                     }
-                    if ((f32)(fadeScale * (f32)entry->fade) >= fadeThreshold)
+                    if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }

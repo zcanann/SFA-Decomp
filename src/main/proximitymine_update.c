@@ -109,7 +109,7 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
 
     if (fn_80080150(&obj->state->renderTimer) == 0)
     {
-        hit = ObjHits_GetPriorityHit((int)obj, (int*)0, (int*)0, (u32*)0);
+        hit = ObjHits_GetPriorityHit((int)obj, 0, 0, 0);
         collider = obj->collider;
         hitFlag = collider->hitFlag;
         if ((hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL))
@@ -244,7 +244,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 f32 trigger;
                 ProximityMineObject* player;
 
-                trigger = (f32)obj->def->parameter;
+                trigger = obj->def->parameter;
                 player = Obj_GetPlayerObject();
                 if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
                 {
@@ -405,7 +405,7 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
         break;
     }
     state->verticalStep =
-        (lbl_803E679C * obj->height) / (f32)lbl_803DC230;
+        (lbl_803E679C * obj->height) / lbl_803DC230;
     state->targetObj = NULL;
     state->effectHandle = NULL;
     return;

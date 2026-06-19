@@ -237,7 +237,7 @@ DSError TRKAppendBuffer_ui32(TRKBuffer* buffer, const u32* data, int count) {
 }
 
 DSError TRKReadBuffer1_ui8(TRKBuffer* buffer, u8* data) {
-    return TRKReadBuffer(buffer, (void*)data, 1);
+    return TRKReadBuffer(buffer, data, 1);
 }
 
 DSError TRKReadBuffer1_ui16(TRKBuffer* buffer, u16* data) {
@@ -253,7 +253,7 @@ DSError TRKReadBuffer1_ui16(TRKBuffer* buffer, u16* data) {
         bigEndianData = swapBuffer;
     }
 
-    err = TRKReadBuffer(buffer, (void*)bigEndianData, sizeof(*data));
+    err = TRKReadBuffer(buffer, bigEndianData, sizeof(*data));
 
     if (!gTRKBigEndian && err == DS_NoError) {
         byteData = (u8*)data;
@@ -278,7 +278,7 @@ DSError TRKReadBuffer1_ui32(TRKBuffer* buffer, u32* data) {
         bigEndianData = swapBuffer;
     }
 
-    err = TRKReadBuffer(buffer, (void*)bigEndianData, sizeof(*data));
+    err = TRKReadBuffer(buffer, bigEndianData, sizeof(*data));
 
     if (!gTRKBigEndian && err == DS_NoError) {
         byteData = (u8*)data;
@@ -306,7 +306,7 @@ DSError TRKReadBuffer1_ui64(TRKBuffer* buffer, u64* data) {
         bigEndianData = swapBuffer;
     }
 
-    err = TRKReadBuffer(buffer, (void*)bigEndianData, sizeof(*data));
+    err = TRKReadBuffer(buffer, bigEndianData, sizeof(*data));
 
     if (!gTRKBigEndian && err == 0) {
         byteData = (u8*)data;

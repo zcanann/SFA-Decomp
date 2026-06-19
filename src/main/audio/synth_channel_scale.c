@@ -133,11 +133,11 @@ void fn_8026EC44(u32 dt)
                         {
                             u32* cv = (u32*)evt[1];
                             st->cur = (u32)cv;
-                            synthSetStudioChannelScale((u32)cv >> 10, (u8)gSynthCurrentVoiceSlotIndex, 0);
+                            synthSetStudioChannelScale((u32)cv >> 10, gSynthCurrentVoiceSlotIndex, 0);
                         }
                         else
                         {
-                            synthSetStudioChannelScale(evt[1], (u8)gSynthCurrentVoiceSlotIndex, 0);
+                            synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex, 0);
                             st->cur = st->evt[1] << 10;
                         }
                         st->evt = st->evt + 2;
@@ -145,7 +145,7 @@ void fn_8026EC44(u32 dt)
                 }
                 cs = gSynthCurrentVoice;
                 st = &cs->streams[0];
-                freq = (c0 * ((f32)st->cur * (f32)dt)) * (c1 * (f32)(u32)
+                freq = (c0 * ((f32)st->cur * dt)) * (c1 * (f32)(u32)
                 st->vol
                 )
                 ;
@@ -154,13 +154,13 @@ void fn_8026EC44(u32 dt)
                 {
                     val = val - range * (f32)(s64)(u64)(val / range);
                 }
-                *(u32*)((u8*)st + st->idx * 8 + 0xc) = (u32)val;
-                *(int*)((u8*)st + st->idx * 8 + 0x10) = (int)floorf(freq);
+                *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
+                *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
                 ret = fn_8026E9D0(0, dt);
                 cb = synthUpdateCallbacks();
                 if (gSynthCurrentVoice->counter == 0)
                 {
-                    for (node = (u32*)gSynthCurrentVoice->cbList; node != NULL; node = nnode)
+                    for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
                         if ((node[2] != 0xffffffff) && (sndFXCheck() == -1))
@@ -199,11 +199,11 @@ void fn_8026EC44(u32 dt)
                                 u32* cv = (u32*)evt[1];
                                 st->cur = (u32)cv;
                                 synthSetStudioChannelScale((u32)cv >> 10,
-                                                           (u8)gSynthCurrentVoiceSlotIndex, ch & 0xff);
+                                                           gSynthCurrentVoiceSlotIndex, ch & 0xff);
                             }
                             else
                             {
-                                synthSetStudioChannelScale(evt[1], (u8)gSynthCurrentVoiceSlotIndex,
+                                synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex,
                                                            ch & 0xff);
                                 st->cur = st->evt[1] << 10;
                             }
@@ -212,7 +212,7 @@ void fn_8026EC44(u32 dt)
                     }
                     cs = gSynthCurrentVoice;
                     st = &cs->streams[ch];
-                    freq = (c0 * ((f32)st->cur * (f32)dt)) * (c1 * (f32)(u32)
+                    freq = (c0 * ((f32)st->cur * dt)) * (c1 * (f32)(u32)
                     st->vol
                     )
                     ;
@@ -221,14 +221,14 @@ void fn_8026EC44(u32 dt)
                     {
                         val = val - range * (f32)(s64)(u64)(val / range);
                     }
-                    *(u32*)((u8*)st + st->idx * 8 + 0xc) = (u32)val;
-                    *(int*)((u8*)st + st->idx * 8 + 0x10) = (int)floorf(freq);
+                    *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
+                    *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
                     ret |= fn_8026E9D0(ch & 0xff, dt);
                 }
                 cb = synthUpdateCallbacks();
                 if (gSynthCurrentVoice->counter == 0)
                 {
-                    for (node = (u32*)gSynthCurrentVoice->cbList; node != NULL; node = nnode)
+                    for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
                         if ((node[2] != 0xffffffff) && (sndFXCheck() == -1))
@@ -406,7 +406,7 @@ void fn_8026F5B8(int state)
     {
         v->portamentoTime = v->portamentoDuration;
     }
-    v->portamentoCurPitch = (u32)v->registeredKey << 0x10;
+    v->portamentoCurPitch = v->registeredKey << 0x10;
 }
 
 /*
@@ -446,7 +446,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                     ((u32)voice->key << 16) + ((s32)voice->fineTune << 16) / 100;
                 voice->registeredKey = voice->key;
                 voice->key =
-                    (u16)key + ((voice->key & 0xff) - voice->keyBase);
+                    key + ((voice->key & 0xff) - voice->keyBase);
                 voice->keyBase = key;
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;

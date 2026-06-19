@@ -86,7 +86,7 @@ void synthUpdateVirtualSamples(void)
                 {
                     u32 sampleId = hwGetVirtualSampleID(entry[VIRTUAL_SAMPLE_VOICE_OFFSET]);
                     u32 expected = ((u32) * (u16*)(entry + VIRTUAL_SAMPLE_GENERATION_OFFSET) << 8) |
-                        (u32)entry[VIRTUAL_SAMPLE_VOICE_OFFSET];
+                        entry[VIRTUAL_SAMPLE_VOICE_OFFSET];
 
                     if (expected == sampleId)
                     {

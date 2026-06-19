@@ -21,7 +21,7 @@ extern void voiceUnregister(int state);
     if (s->field->prev != 0) { \
         s->field->prev->next = s->field->next; \
     } else { \
-        vidRoot = (void *)s->field->next; \
+        vidRoot = s->field->next; \
     } \
     if (s->field->next != 0) { \
         s->field->next->prev = s->field->prev; \
@@ -31,7 +31,7 @@ extern void voiceUnregister(int state);
         ((McmdVidListNode *)vidFree)->prev = s->field; \
     } \
     s->field->prev = 0; \
-    vidFree = (void *)s->field
+    vidFree = s->field
 
 void vidRemoveVoice(int state)
 {
@@ -144,7 +144,7 @@ u32 vidMakeNew(int state, int returnNewId)
         cursor = (int**)*node;
     }
 
-    if ((freeNode = (int**)vidFree) == 0)
+    if ((freeNode = vidFree) == 0)
     {
         return 0xffffffffU;
     }
@@ -168,7 +168,7 @@ u32 vidMakeNew(int state, int returnNewId)
     }
     freeNode[2] = (int*)nextId;
     freeNode[3] = (int*)s->voiceHandle;
-    s->vidMasterListNode = (McmdVidListNode*)(((u32)returnNewId != 0) ? (u32)freeNode : 0);
+    s->vidMasterListNode = (McmdVidListNode*)(((u32)returnNewId != 0) ? freeNode : 0);
     s->vidListNode = (McmdVidListNode*)freeNode;
     if ((u32)returnNewId != 0)
     {

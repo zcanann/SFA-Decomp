@@ -138,7 +138,7 @@ static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, s32 mode) {
 
     err = FALSE;
     err |= !EXIImmEx(chan, cmd, 5, 1);
-    err |= !EXIImmEx(chan, (u8*)card->workArea + (u32)sizeof(CARDID), card->latency, 1);
+    err |= !EXIImmEx(chan, (u8*)card->workArea + sizeof(CARDID), card->latency, 1);
     err |= !EXIImmEx(chan, rbuf, rlen, 0);
     err |= !EXIDeselect(chan);
 
@@ -280,7 +280,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
     DCFlushRange(param, sizeof(DecodeParameters));
 
     task->priority = 255;
-    task->iram_mmem_addr = (u16*)OSPhysicalToCached(CARDUnlockProgram);
+    task->iram_mmem_addr = OSPhysicalToCached(CARDUnlockProgram);
     task->iram_length = 0x160;
     task->iram_addr = 0;
     task->dsp_init_vector = 0x10;

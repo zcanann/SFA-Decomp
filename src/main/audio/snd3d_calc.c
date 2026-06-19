@@ -120,11 +120,11 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
         {
             invSqrt = __frsqrte((f64)listenerDistance);
             invSqrt = k3 * invSqrt *
-                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - listenerDistance * (invSqrt * invSqrt));
             invSqrt = k3 * invSqrt *
-                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - listenerDistance * (invSqrt * invSqrt));
             invSqrt = k3 * invSqrt *
-                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - listenerDistance * (invSqrt * invSqrt));
             tmp1 = (f32)((f64)listenerDistance * invSqrt);
             listenerDistance = tmp1;
         }
@@ -164,13 +164,13 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                         invSqrt = __frsqrte((f64)listenerVelocityDistance);
                         invSqrt = k3 * invSqrt *
                         (k1 -
-                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                            listenerVelocityDistance * (invSqrt * invSqrt));
                         invSqrt = k3 * invSqrt *
                         (k1 -
-                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                            listenerVelocityDistance * (invSqrt * invSqrt));
                         invSqrt = k3 * invSqrt *
                         (k1 -
-                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                            listenerVelocityDistance * (invSqrt * invSqrt));
                         tmp2 = (f32)((f64)listenerVelocityDistance * invSqrt);
                         listenerVelocityDistance = tmp2;
                     }
@@ -189,13 +189,13 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                             invSqrt = __frsqrte((f64)projectedDistance);
                             invSqrt = k3 * invSqrt *
                             (k1 -
-                                (f64)projectedDistance * (invSqrt * invSqrt));
+                                projectedDistance * (invSqrt * invSqrt));
                             invSqrt = k3 * invSqrt *
                             (k1 -
-                                (f64)projectedDistance * (invSqrt * invSqrt));
+                                projectedDistance * (invSqrt * invSqrt));
                             invSqrt = k3 * invSqrt *
                             (k1 -
-                                (f64)projectedDistance * (invSqrt * invSqrt));
+                                projectedDistance * (invSqrt * invSqrt));
                             tmp3 = (f32)((f64)projectedDistance * invSqrt);
                             projectedDistance = tmp3;
                         }
@@ -254,9 +254,9 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
 
     if (listenerCount != 0)
     {
-        *azimuthOut = azimuthSum / (f32)listenerCount;
-        *pitchOut = pitchSum / (f32)listenerCount;
-        *frontBackOut = frontBackSum / (f32)listenerCount;
+        *azimuthOut = azimuthSum / listenerCount;
+        *pitchOut = pitchSum / listenerCount;
+        *frontBackOut = frontBackSum / listenerCount;
     }
 }
 #pragma fp_contract reset

@@ -150,7 +150,7 @@ void snowclaw_init(int* obj, u8* init)
     int* inner;
 
     table = lbl_8032A310;
-    ((GameObject*)obj)->animEventCallback = (void*)snowclaw_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = snowclaw_animEventCallback;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         ((GameObject*)obj)->anim.modelState->flags |= 0x4000;
@@ -206,7 +206,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         *(u8*)(obj2 + 0x6) = 0xff;
         *(u8*)(obj2 + 0x5) = 1;
         *(u8*)(obj2 + 0x7) = 0xff;
-        *(s8*)(obj2 + 0x19) = (s8)b;
+        *(s8*)(obj2 + 0x19) = b;
         *(f32*)(obj2 + 0x8) = ((GameObject*)obj)->anim.localPosX;
         *(f32*)(obj2 + 0xc) = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
         *(f32*)(obj2 + 0x10) = ((GameObject*)obj)->anim.localPosZ;
@@ -217,7 +217,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         switch ((u8)b)
         {
         case 0:
-            *(s16*)(obj2 + 0x1a) = (s16)lbl_803DDD38;
+            *(s16*)(obj2 + 0x1a) = lbl_803DDD38;
             break;
         case 1:
             *(s16*)(obj2 + 0x1a) = (s16)(getAngle(
@@ -326,7 +326,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     if (a9 != 0 && (s8)opacity != 0 && a8 > 0)
     {
         u8 saved = *(u8*)(sub + 0x37);
-        *(u8*)(sub + 0x37) = (u8)a8;
+        *(u8*)(sub + 0x37) = a8;
         (*(void (*)(int, int, int, int, int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x10)))(
             sub, p2, p3, p4, p5, -1);
         *(u8*)(sub + 0x37) = saved;
@@ -453,7 +453,7 @@ void snowclaw_hitDetect(int obj)
             *(s8*)&((SnowclawState*)inner)->health -= 1;
             Sfx_PlayFromObject(obj, SFXsp_sa_climb02);
             Sfx_PlayFromObject(obj, SFXdn_rexthrash11);
-            Sfx_PlayFromObject(obj, (u16)lbl_8032A350[*(s8*)&((SnowclawState*)inner)->health]);
+            Sfx_PlayFromObject(obj, lbl_8032A350[*(s8*)&((SnowclawState*)inner)->health]);
             ((SnowclawState*)inner)->hitCooldown = 0x14;
             ((SnowclawState*)inner)->attackDelay -= 0x28;
             if (*(s8*)&((SnowclawState*)inner)->health < 0)

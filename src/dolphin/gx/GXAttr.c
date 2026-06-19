@@ -140,15 +140,15 @@ void __GXCalculateVLim() {
         nc = GET_REG_FIELD(va, 1, 9);
 
         vlm  = GET_REG_FIELD(vl, 1, 0);
-        vlm += (u8)GET_REG_FIELD(vl, 1, 1);
+        vlm += GET_REG_FIELD(vl, 1, 1);
         vlm += (u8)GET_REG_FIELD(vl, 1, 2);
         vlm += (u8)GET_REG_FIELD(vl, 1, 3);
         vlm += (u8)GET_REG_FIELD(vl, 1, 4);
         vlm += (u8)GET_REG_FIELD(vl, 1, 5);
         vlm += (u8)GET_REG_FIELD(vl, 1, 6);
-        vlm += (u8)GET_REG_FIELD(vl, 1, 7);
-        vlm += (u8)GET_REG_FIELD(vl, 1, 8);
-        vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 9)];
+        vlm += GET_REG_FIELD(vl, 1, 7);
+        vlm += GET_REG_FIELD(vl, 1, 8);
+        vlm += tbl3[GET_REG_FIELD(vl, 2, 9)];
         
         if (nc == 1) {
             b = 3;
@@ -156,10 +156,10 @@ void __GXCalculateVLim() {
             b = 1;
         }
 
-        vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 11)] * b;
+        vlm += tbl3[GET_REG_FIELD(vl, 2, 11)] * b;
         vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 13)];
         vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 15)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 0)];
+        vlm += tbl2[GET_REG_FIELD(vh, 2, 0)];
         vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 2)];
         vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 4)];
         vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 6)];

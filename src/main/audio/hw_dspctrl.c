@@ -131,7 +131,7 @@ static void sal_update_hostplayinfo(DSPvoice* dsp_vptr)
 
 static void AddDpop(s32* sum, s16 delta)
 {
-    *sum += (int)delta;
+    *sum += delta;
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
 }
 
@@ -405,7 +405,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     pb->adpcm.a[i][0] = 0;
                                     pb->adpcm.a[i][1] = 0;
                                 }
-                                addr = (u32)dsp_vptr->smp_info.offset +
+                                addr = dsp_vptr->smp_info.offset +
                                     (base = (u32)dsp_vptr->smp_info.addr);
                                 dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
                                 dsp_vptr->playInfo.posLo = 0;

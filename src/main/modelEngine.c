@@ -584,7 +584,7 @@ void gameTimerRun(void)
         return;
     }
 
-    totalSecs = (int)lbl_803DC900;
+    totalSecs = lbl_803DC900;
     mins = totalSecs / 60;
     hours = mins / 60;
     minutes = mins - hours * 60;
@@ -593,7 +593,7 @@ void gameTimerRun(void)
 
     boxY = getMinimapY() - 0x28;
     drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
-    *(s16*)((char*)box + 0x16) = (s16)boxY;
+    *(s16*)((char*)box + 0x16) = boxY;
 
     if (colorFlag && hundredths < 0x32)
     {

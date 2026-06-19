@@ -72,7 +72,7 @@ void mcmdPlayMacro(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     s32 key;
     u32 new_child;
 
-    key = (u32)svoice->keyBase + (s8)(u8)(cstep->flags >> 8);
+    key = svoice->keyBase + (s8)(u8)(cstep->flags >> 8);
     key = (key < 0) ? 0 : key > 0x7f ? 0x7f : key;
 
     if (svoice->streamKind != 0)
@@ -351,7 +351,7 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
             adsr.linear.dtime = adsr_ptr->linear.dtime >> 8 | adsr_ptr->linear.dtime << 8;
             adsr.linear.slevel = adsr_ptr->linear.slevel >> 8 | adsr_ptr->linear.slevel << 8;
             adsr.linear.rtime = adsr_ptr->linear.rtime >> 8 | adsr_ptr->linear.rtime << 8;
-            hwSetADSR(svoice->voiceHandle & 0xFF, (u32*)&adsr, 0);
+            hwSetADSR(svoice->voiceHandle & 0xFF, &adsr, 0);
         }
         else
         {
@@ -378,17 +378,17 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
             if (ascale != 0x80000000)
             {
-                f32 prod = lbl_803E77F4 * (f32)svoice->volumeBase;
-                adsr.dls.atime += (s32)(prod * (f32)ascale);
+                f32 prod = lbl_803E77F4 * svoice->volumeBase;
+                adsr.dls.atime += (s32)(prod * ascale);
             }
 
             if (dscale != 0x80000000)
             {
-                f32 prod = lbl_803E77F8 * (f32)svoice->keyBase;
-                adsr.dls.dtime += (s32)(prod * (f32)dscale);
+                f32 prod = lbl_803E77F8 * svoice->keyBase;
+                adsr.dls.dtime += (s32)(prod * dscale);
             }
 
-            hwSetADSR(svoice->voiceHandle & 0xFF, (u32*)&adsr, 1);
+            hwSetADSR(svoice->voiceHandle & 0xFF, &adsr, 1);
         }
 
         MAC_CFLAGS(svoice) |= MAC_FLAG64(0, 0x100);
@@ -439,13 +439,13 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
     if (ascale != 0x80000000)
     {
-        f32 prod = lbl_803E77F4 * (f32)svoice->volumeBase;
-        adsr.dls.atime += (s32)(prod * (f32)ascale);
+        f32 prod = lbl_803E77F4 * svoice->volumeBase;
+        adsr.dls.atime += (s32)(prod * ascale);
     }
     if (dscale != 0x80000000)
     {
-        f32 prod = lbl_803E77F8 * (f32)svoice->keyBase;
-        adsr.dls.dtime += (s32)(prod * (f32)dscale);
+        f32 prod = lbl_803E77F8 * svoice->keyBase;
+        adsr.dls.dtime += (s32)(prod * dscale);
     }
 
     svoice->pitchAdsr.mode = 1;

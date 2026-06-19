@@ -11,7 +11,7 @@ void __OSInitAudioSystem(void) {
     u32 start_tick;
 
     memcpy((void*)((u32)OSGetArenaHi() - 0x80), __DSPWorkBuffer, sizeof(DSPInitCode_8032C520));
-    memcpy(__DSPWorkBuffer, (void*)DSPInitCode_8032C520, sizeof(DSPInitCode_8032C520));
+    memcpy(__DSPWorkBuffer, DSPInitCode_8032C520, sizeof(DSPInitCode_8032C520));
     DCFlushRange(__DSPWorkBuffer, sizeof(DSPInitCode_8032C520));
 
     __DSPRegs[9] = 0x43;

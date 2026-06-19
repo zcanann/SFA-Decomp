@@ -73,7 +73,7 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         dspVoice[i].pb->update.dataLo = (u16)(u32)
                         dspVoice[i].patchData;
                         dspVoice[i].pb->itd.bufferHi = (itdPtr >> 16);
-                        dspVoice[i].pb->itd.bufferLo = (u16)itdPtr;
+                        dspVoice[i].pb->itd.bufferLo = itdPtr;
                         dspVoice[i].itdBuffer = (void*)itdPtr;
                         itdPtr += 0x40;
                         dspVoice[i].virtualSampleID = 0xFFFFFFFF;
@@ -256,7 +256,7 @@ int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u
 
 static void AddDpop(s32* sum, s16 delta)
 {
-    *sum += (int)delta;
+    *sum += delta;
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
 }
 

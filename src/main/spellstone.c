@@ -28,7 +28,7 @@ int spellstone_setState(SpellStoneObject* obj, int state)
 
     extra = obj->state;
     oldState = extra->state;
-    extra->state = (u8)state;
+    extra->state = state;
     if (state == 2)
     {
         obj->posY += lbl_803E6750;

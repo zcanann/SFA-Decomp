@@ -877,7 +877,7 @@ DSError TRKTargetAddStopInfo(MessageBuffer* b)
 	}
 
 	if (error == DS_NoError) {
-		error = TRKAppendBuffer1_ui16(b, (u16)gTRKCPUState.Extended1.exceptionID);
+		error = TRKAppendBuffer1_ui16(b, gTRKCPUState.Extended1.exceptionID);
 	}
 
 	if (error == DS_NoError) {
@@ -1107,7 +1107,7 @@ DSError TRKTargetSupportRequest()
 		gTRKCPUState.Default.GPR[3] = ioResult;
 	} else {
 		length = (size_t*)gTRKCPUState.Default.GPR[5];
-		error  = TRKSuppAccessFile((u8)gTRKCPUState.Default.GPR[4], (u8*)gTRKCPUState.Default.GPR[6], length, (DSIOResult*)&ioResult, TRUE,
+		error  = TRKSuppAccessFile((u8)gTRKCPUState.Default.GPR[4], gTRKCPUState.Default.GPR[6], length, (DSIOResult*)&ioResult, TRUE,
 		                           commandId == DSMSG_ReadFile);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
@@ -1201,9 +1201,9 @@ static inline DSError TRKPPCAccessSPR(void* value, u32 spr_register_num, BOOL re
 
 	if (read) {
 		access_func[0] = INSTR_MFSPR(4, spr_register_num);
-		access_func[1] = (u32)INSTR_STW(4, 0, 3);
+		access_func[1] = INSTR_STW(4, 0, 3);
 	} else {
-		access_func[0] = (u32)INSTR_LWZ(4, 0, 3);
+		access_func[0] = INSTR_LWZ(4, 0, 3);
 		access_func[1] = INSTR_MTSPR(spr_register_num, 4);
 	}
 
@@ -1328,7 +1328,7 @@ static inline DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL
 
 	// Flush cache
 	TRK_flush_cache((u32)access_func, (sizeof(access_func) * 10));
-	(*asm_access)((u32*)value, (void*)&TRKvalue128_temp);
+	(*asm_access)((u32*)value, &TRKvalue128_temp);
 
 	return DS_NoError;
 }

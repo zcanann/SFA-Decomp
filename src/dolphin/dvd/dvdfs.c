@@ -53,7 +53,7 @@ static void cbForReadAsync(s32 result, DVDCommandBlock* block);
 static void cbForReadSync(s32 result, DVDCommandBlock* block);
 
 void __DVDFSInit(void) {
-    BootInfo = (void*)OSPhysicalToCached(0);
+    BootInfo = OSPhysicalToCached(0);
     FstStart = BootInfo->FSTLocation;
     if (FstStart) {
         MaxEntryNum = FstStart->nextEntryOrLength;
@@ -101,7 +101,7 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
     
     while (1) {
         if (*pathPtr == '\0') {
-            return (s32)dirLookAt;
+            return dirLookAt;
         } else if (*pathPtr == '/') {
             dirLookAt = 0;
             pathPtr++;
@@ -113,13 +113,13 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
                     pathPtr += 3;
                     continue;
                 } else if (*(pathPtr + 2) == '\0') {
-                    return (s32)parentDir(dirLookAt);
+                    return parentDir(dirLookAt);
                 }
             } else if (*(pathPtr + 1) == '/') {
                 pathPtr += 2;
                 continue;
             } else if (*(pathPtr + 1) == '\0') {
-                return (s32)dirLookAt;
+                return dirLookAt;
             }
         }
         
@@ -171,7 +171,7 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
     
 next_hier:
         if (!isDir) {
-            return (s32)i;
+            return i;
         }
         
         dirLookAt = i;
@@ -182,7 +182,7 @@ next_hier:
 #if SDK_REVISION >= 1
 BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
     ASSERTMSGLINE(455, fileInfo, "DVDFastOpen(): null pointer is specified to file info address  ");
-    ASSERTMSG1LINE(458, (entrynum >= 0) && ((u32) entrynum < (u32) MaxEntryNum), "DVDFastOpen(): specified entry number '%d' is out of range  ", entrynum);
+    ASSERTMSG1LINE(458, (entrynum >= 0) && ((u32) entrynum <  MaxEntryNum), "DVDFastOpen(): specified entry number '%d' is out of range  ", entrynum);
     ASSERTMSG1LINE(461, !entryIsDir(entrynum), "DVDFastOpen(): entry number '%d' is assigned to a directory  ", entrynum);
     
     if (entrynum < 0 || entrynum >= MaxEntryNum || entryIsDir(entrynum)) {
@@ -317,7 +317,7 @@ static void cbForReadAsync(s32 result, DVDCommandBlock* block) {
     DVDFileInfo* fileInfo;
 
     fileInfo = (DVDFileInfo*)((char*)block - offsetof(DVDFileInfo, cb));
-    ASSERTLINE(774, (void*) &fileInfo->cb == (void*) block);
+    ASSERTLINE(774,  &fileInfo->cb ==  block);
     if (fileInfo->callback) {
         fileInfo->callback(result, fileInfo);
     }
@@ -344,7 +344,7 @@ s32 DVDReadPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset, s32 p
     while (TRUE) {
         state = ((volatile DVDCommandBlock*)block)->state;
         if (state == DVD_STATE_END) {
-            retVal = (s32)block->transferredSize;
+            retVal = block->transferredSize;
             break;
         }
         if (state == DVD_STATE_FATAL_ERROR) {

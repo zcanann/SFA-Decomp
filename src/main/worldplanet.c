@@ -141,14 +141,14 @@ void worldplanet_init(int obj)
             }
         }
     }
-    state->unlockedPlanetMask = (u8)mask;
+    state->unlockedPlanetMask = mask;
     if (lbl_803DC1F0 != -1)
     {
-        state->selectedPlanet = (s8)lbl_803DC1F0;
+        state->selectedPlanet = lbl_803DC1F0;
     } else {
         for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++) {
             if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
-                state->selectedPlanet = (s8)lbl_803DC1C0[j];
+                state->selectedPlanet = lbl_803DC1C0[j];
                 break;
             }
         }
@@ -370,9 +370,9 @@ void worldplanet_update(int obj)
                 k += 1;
             }
             while (k < 5);
-            state->unlockedPlanetMask = (u8)m;
+            state->unlockedPlanetMask = m;
         }
-        if (lbl_803DDD04 == 0 && (u8)state->selectionLocked == 0)
+        if (lbl_803DDD04 == 0 && state->selectionLocked == 0)
         {
             while (!done)
             {
@@ -436,7 +436,7 @@ void worldplanet_update(int obj)
                     extern int getAngle(f32, f32);
                     u32 fi = (int)lbl_803DDD2C & 0xff;
                     u32 ni = (fi + 2) & 0xff;
-                    f32 frac = lbl_803DDD2C - (f32)fi;
+                    f32 frac = lbl_803DDD2C - fi;
                     char* seg = WorldObj_GetPathPointWork(pstate, fi);
                     f32 x0 = *(f32*)(seg + 0x10);
                     f32 x1 = *(f32*)(seg + 0x28);
@@ -474,7 +474,7 @@ void worldplanet_update(int obj)
                     {
                         ((GameObject*)galleon)->anim.flags = ((GameObject*)galleon)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
                     }
-                    *(s16*)&((GameObject*)galleon)->anim.rotX = (frac * (f32)dyaw + (f32)yaw);
+                    *(s16*)&((GameObject*)galleon)->anim.rotX = (frac * dyaw + yaw);
                     ((GameObject*)galleon)->anim.localPosX = frac * (x1 - x0) + x0;
                     ((GameObject*)galleon)->anim.localPosY = frac * (y1 - y0) + y0;
                     ((GameObject*)galleon)->anim.localPosZ = frac * (z1 - z0) + z0;
@@ -575,7 +575,7 @@ void worldplanet_update(int obj)
             for (b = 0; b < 5; b++)
             {
                 int p = ObjList_FindObjectById(tbl[b + 10]);
-                ((GameObject*)p)->anim.rotZ = -(s16)ang;
+                ((GameObject*)p)->anim.rotZ = -ang;
             }
             r = lbl_803E6630;
             for (b = 0; b < 5; b++)
@@ -584,7 +584,7 @@ void worldplanet_update(int obj)
                 int* off = &tbl[b + 5];
                 if (tbl[b] == 0x4300d)
                 {
-                    *p = (s16)ang + (s16)tbl[b + 5] + 0x4000;
+                    *p = ang + tbl[b + 5] + 0x4000;
                 }
                 else
                 {

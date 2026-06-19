@@ -12,12 +12,12 @@ static void FormatCallback(s32 chan, s32 result) {
 
     ++card->formatStep;
     if (card->formatStep < CARD_NUM_SYSTEM_BLOCK) {
-        result = __CARDEraseSector(chan, (u32)card->sectorSize * card->formatStep, FormatCallback);
+        result = __CARDEraseSector(chan, card->sectorSize * card->formatStep, FormatCallback);
         if (result >= 0)
             return;
     } else if (card->formatStep < 2 * CARD_NUM_SYSTEM_BLOCK) {
         int step = card->formatStep - CARD_NUM_SYSTEM_BLOCK;
-        result = __CARDWrite(chan, (u32)card->sectorSize * step, CARD_SYSTEM_BLOCK_SIZE,
+        result = __CARDWrite(chan, card->sectorSize * step, CARD_SYSTEM_BLOCK_SIZE,
                              (u8* )card->workArea + (CARD_SYSTEM_BLOCK_SIZE * step), FormatCallback);
         if (result >= 0)
             return;
@@ -96,7 +96,7 @@ s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback) {
     for (i = 0; i < 2; i++) {
         fat = (u16*)((u8*)card->workArea + (3 + i) * CARD_SYSTEM_BLOCK_SIZE);
         memset(fat, 0x00, CARD_SYSTEM_BLOCK_SIZE);
-        fat[CARD_FAT_CHECKCODE] = (u16)i;
+        fat[CARD_FAT_CHECKCODE] = i;
         fat[CARD_FAT_FREEBLOCKS] = (u16)(card->cBlock - CARD_NUM_SYSTEM_BLOCK);
         fat[CARD_FAT_LASTSLOT] = CARD_NUM_SYSTEM_BLOCK - 1;
         __CARDCheckSum(&fat[CARD_FAT_CHECKCODE], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32), &fat[CARD_FAT_CHECKSUM],
@@ -107,7 +107,7 @@ s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback) {
     DCStoreRange(card->workArea, CARD_WORKAREA_SIZE);
 
     card->formatStep = 0;
-    result = __CARDEraseSector(chan, (u32)card->sectorSize * card->formatStep, FormatCallback);
+    result = __CARDEraseSector(chan, card->sectorSize * card->formatStep, FormatCallback);
     if (result < 0)
         __CARDPutControlBlock(card, result);
     return result;

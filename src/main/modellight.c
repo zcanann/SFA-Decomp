@@ -567,7 +567,7 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light)
         light->colorFadeTimer += light->colorFadeStep * timeDelta;
         if (light->colorFadeTimer >= lbl_803DE760)
         {
-            light->colorFadeProgress = (f32)randomGetRange(0, 100) / lbl_803DE778;
+            light->colorFadeProgress = randomGetRange(0, 100) / lbl_803DE778;
             light->colorFadeTimer = lbl_803DE75C;
         }
         break;
@@ -589,13 +589,13 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light)
     }
 
     light->diffuseColor[0] = (light->colorFadeProgress * (f32)(
-        light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + (f32)light->diffuseFadeStartColor[0]);
+        light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + light->diffuseFadeStartColor[0]);
     light->diffuseColor[1] = (light->colorFadeProgress * (f32)(
-        light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + (f32)light->diffuseFadeStartColor[1]);
+        light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + light->diffuseFadeStartColor[1]);
     light->diffuseColor[2] = (light->colorFadeProgress * (f32)(
-        light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + (f32)light->diffuseFadeStartColor[2]);
+        light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + light->diffuseFadeStartColor[2]);
     light->diffuseColor[3] = (light->colorFadeProgress * (f32)(
-        light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + (f32)light->diffuseFadeStartColor[3]);
+        light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + light->diffuseFadeStartColor[3]);
 
     light->diffuseColor[0] = ((f32)light->diffuseColor[0] * light->activeIntensity);
     light->diffuseColor[1] = ((f32)light->diffuseColor[1] * light->activeIntensity);
@@ -603,13 +603,13 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light)
     light->diffuseColor[3] = ((f32)light->diffuseColor[3] * light->activeIntensity);
 
     light->specularColor[0] = (light->colorFadeProgress * (f32)(
-        light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + (f32)light->specularFadeStartColor[0]);
+        light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + light->specularFadeStartColor[0]);
     light->specularColor[1] = (light->colorFadeProgress * (f32)(
-        light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + (f32)light->specularFadeStartColor[1]);
+        light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + light->specularFadeStartColor[1]);
     light->specularColor[2] = (light->colorFadeProgress * (f32)(
-        light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + (f32)light->specularFadeStartColor[2]);
+        light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + light->specularFadeStartColor[2]);
     light->specularColor[3] = (light->colorFadeProgress * (f32)(
-        light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + (f32)light->specularFadeStartColor[3]);
+        light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + light->specularFadeStartColor[3]);
 
     light->specularColor[0] = ((f32)light->specularColor[0] * light->activeIntensity);
     light->specularColor[1] = ((f32)light->specularColor[1] * light->activeIntensity);
@@ -894,10 +894,10 @@ void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
         {
             u8 rgba[4];
             u32 color;
-            rgba[0] = (f32)light[0xa8] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[1] = (f32)light[0xa9] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[2] = (f32)light[0xaa] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[3] = (f32)light[0xab] * ((ModelLightStruct*)light)->lightAmount;
+            rgba[0] = light[0xa8] * ((ModelLightStruct*)light)->lightAmount;
+            rgba[1] = light[0xa9] * ((ModelLightStruct*)light)->lightAmount;
+            rgba[2] = light[0xaa] * ((ModelLightStruct*)light)->lightAmount;
+            rgba[3] = light[0xab] * ((ModelLightStruct*)light)->lightAmount;
             color = *(u32*)rgba;
             GXInitLightColor(light + 0x68, &color);
             GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
@@ -1396,15 +1396,15 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                 intensity = lbl_803DE760 /
                 (((ModelLightStruct*)light)->attenuationK0 +
                     (dist * (((ModelLightStruct*)light)->attenuationK2 * dist) + ((ModelLightStruct*)light)->attenuationK1 * dist));
-                red = intensity * (f32)light[0xa8];
+                red = intensity * light[0xa8];
                 red = (red < 0.0f)
                           ? 0.0f
                           : ((red > 255.0f) ? 255.0f : red);
-                green = intensity * (f32)light[0xa9];
+                green = intensity * light[0xa9];
                 green = (green < 0.0f)
                             ? 0.0f
                             : ((green > 255.0f) ? 255.0f : green);
-                blue = intensity * (f32)light[0xaa];
+                blue = intensity * light[0xaa];
                 blue = (blue < 0.0f)
                            ? 0.0f
                            : ((blue > 255.0f) ? 255.0f : blue);
@@ -1502,15 +1502,15 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
             {
                 intensity = modelLightStruct_getObjectIntensity(light, obj);
                 ((ModelLightStruct*)light)->lightAmount = intensity;
-                red = ((ModelLightStruct*)light)->lightAmount * (f32)light[0xa8];
+                red = ((ModelLightStruct*)light)->lightAmount * light[0xa8];
                 red = (red < 0.0f)
                           ? 0.0f
                           : ((red > 255.0f) ? 255.0f : red);
-                green = intensity * (f32)light[0xa9];
+                green = intensity * light[0xa9];
                 green = (green < 0.0f)
                             ? 0.0f
                             : ((green > 255.0f) ? 255.0f : green);
-                blue = intensity * (f32)light[0xaa];
+                blue = intensity * light[0xaa];
                 blue = (blue < 0.0f)
                            ? 0.0f
                            : ((blue > 255.0f) ? 255.0f : blue);

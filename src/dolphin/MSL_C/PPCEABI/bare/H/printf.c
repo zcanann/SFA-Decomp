@@ -119,7 +119,7 @@ int vprintf(const char* format, va_list arg)
         return -1;
     }
 
-    ret = __pformatter(&__FileWrite, (void*)stdout, format, arg);
+    ret = __pformatter(&__FileWrite, stdout, format, arg);
     return ret;
 }
 
@@ -724,7 +724,7 @@ char * double2hex(long double num, char * buff, print_format format)  {
         return 0;
     }
 
-    form.style = (char) 0;
+    form.style =  0;
     form.digits = 0x20;
     __num2dec(&form, num, &dec);
 

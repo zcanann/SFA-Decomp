@@ -178,7 +178,7 @@ void worldobj_init(int obj, int arg)
         )
         +lbl_803E6668;
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * state->scale;
-        state->spinXStep = (s8)randomGetRange(0xa, 0x19);
+        state->spinXStep = randomGetRange(0xa, 0x19);
         if (randomGetRange(0, 1) != 0)
         {
             state->spinXStep = (s8)(-state->spinXStep);
@@ -234,13 +234,13 @@ void worldobj_init(int obj, int arg)
         }
         break;
     case 0x5da:
-        ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
-        ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
-        ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
-        state->controlByte = (u8)randomGetRange(0, 0xff);
-        state->spinZStep = (s8)randomGetRange(-0xa, 0xa);
-        state->spinYStep = (s8)randomGetRange(-0xa, 0xa);
-        state->spinXStep = (s8)randomGetRange(-0xa, 0xa);
+        ((GameObject*)obj)->anim.rotZ = randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotY = randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
+        state->controlByte = randomGetRange(0, 0xff);
+        state->spinZStep = randomGetRange(-0xa, 0xa);
+        state->spinYStep = randomGetRange(-0xa, 0xa);
+        state->spinXStep = randomGetRange(-0xa, 0xa);
         break;
     case 0x61e:
         state->controlByte = 0;
@@ -318,12 +318,12 @@ void worldobj_update(int obj)
             if ((void*)objA != NULL && (void*)objB != NULL)
             {
                 state->orbitAngle =
-                    (int)((f32)state->spinXStep * timeDelta + (f32)state->orbitAngle);
+                    (int)((f32)state->spinXStep * timeDelta + state->orbitAngle);
                 vec[0] = state->orbitRadiusX *
-                    mathCosf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
+                    mathCosf(lbl_803E6680 * state->orbitAngle / lbl_803E6684);
                 vec[1] = lbl_803E665C;
                 vec[2] = state->orbitRadiusZ *
-                    mathSinf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
+                    mathSinf(lbl_803E6680 * state->orbitAngle / lbl_803E6684);
                 dx = ((GameObject*)objB)->anim.localPosX - ((GameObject*)objA)->anim.localPosX;
                 dz = ((GameObject*)objB)->anim.localPosZ - ((GameObject*)objA)->anim.localPosZ;
                 rot[0] = getAngle(dx, dz);
@@ -333,7 +333,7 @@ void worldobj_update(int obj)
                 ((GameObject*)obj)->anim.localPosX = vec[0] + (((GameObject*)objA)->anim.localPosX - dx);
                 ((GameObject*)obj)->anim.localPosY =
                     state->orbitStartY +
-                    (f32)state->orbitAngle *
+                    state->orbitAngle *
                     (state->orbitEndY - state->orbitStartY) / lbl_803E6688;
                 ((GameObject*)obj)->anim.localPosZ = vec[2] + (((GameObject*)objA)->anim.localPosZ - dz);
             }
@@ -645,7 +645,7 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         randomGetRange(yMin, yMax);
         rot[0] = 0;
         rot[1] = 0;
-        rot[2] = (s16)randomGetRange(-0x7fff, 0x7fff);
+        rot[2] = randomGetRange(-0x7fff, 0x7fff);
         vecRotateZXY(rot, vec);
         params.offsetX = vec[0];
         params.offsetY = vec[1];

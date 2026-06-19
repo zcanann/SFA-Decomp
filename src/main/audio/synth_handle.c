@@ -98,18 +98,18 @@ resolved:
             switch (mode)
             {
             case 0:
-                runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
+                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
                 break;
             case 1:
                 runtime->voices[voiceIndex].pendingUpdate.output = 0;
                 break;
             case 2:
                 runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE2;
-                runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
+                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
                 break;
             case 3:
                 runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE3;
-                runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
+                runtime->voices[voiceIndex].pendingUpdate.studio = value0;
                 break;
             }
         }
@@ -180,7 +180,7 @@ resolved_initial:
         *(u32*)&pendingRequest->value16 = *(u32*)&request->value16;
         SYNTH_VOICE_PENDING_START_ACTIVE(pendingVoice) = 1;
         SYNTH_VOICE_PENDING_START_OUT_HANDLE(pendingVoice) = outHandle;
-        pendingRequest->flags &= (u8)~SYNTH_START_FLAG_PENDING_START;
+        pendingRequest->flags &= ~SYNTH_START_FLAG_PENDING_START;
         *outHandle = request->handle | SYNTH_HANDLE_QUEUED_FLAG;
         return;
     }
@@ -408,7 +408,7 @@ u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut)
     {
         combinedValue = (u32)((high & SYNTH_VARIABLE_PAIR_VALUE_MASK) << 8);
         combinedValue = combinedValue | low;
-        *tagOut = (u16)combinedValue;
+        *tagOut = combinedValue;
         p += 2;
     }
     else
@@ -423,7 +423,7 @@ u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut)
     {
         combinedValue = (u32)((high & SYNTH_VARIABLE_PAIR_VALUE_MASK) << 8);
         combinedValue = combinedValue | low;
-        combined = (s16)combinedValue;
+        combined = combinedValue;
         shift = 1;
         combined <<= shift;
         combined >>= shift;
