@@ -191,8 +191,8 @@ int largecrate_spawnDropContents(int obj, int player, int state)
     {
         return 0;
     }
-    GameBit_Set(*(s16*)(state + 0xe), 1);
-    switch (*(u8*)(state + 0x11))
+    GameBit_Set(((LargeCrateState*)state)->brokenGameBit, 1);
+    switch (((LargeCrateState*)state)->dropType)
     {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
@@ -339,7 +339,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         break;
     case 5:
     case 6:
-        if (*(u8*)(state + 0x11) == 5)
+        if (((LargeCrateState*)state)->dropType == 5)
         {
             setup = Obj_AllocObjectSetup(0x30, 0xb);
         }
@@ -361,7 +361,7 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         break;
     case 7:
     case 8:
-        GameBit_Set(*(s16*)(state + 0xe), 1);
+        GameBit_Set(((LargeCrateState*)state)->brokenGameBit, 1);
         break;
     case 9:
         if (Obj_IsLoadingLocked() != 0)
