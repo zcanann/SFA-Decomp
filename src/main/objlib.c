@@ -1054,7 +1054,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     index = gObjGroupOffsets[group];
     limit = (u32)(&gObjGroupOffsets[group])[1];
     entry = gObjGroupObjects + index;
-    while ((int)index < limit)
+    while ((int)index < (int)limit)
     {
         if (*entry != 0)
         {
@@ -1102,7 +1102,7 @@ int ObjGroup_FindNearestObjectForObject(int group, u32 obj, float* maxDistance)
     index = gObjGroupOffsets[group];
     limit = (u32)(&gObjGroupOffsets[group])[1];
     entry = gObjGroupObjects + index;
-    while ((int)index < limit)
+    while ((int)index < (int)limit)
     {
         if (*entry != obj)
         {
@@ -1149,7 +1149,7 @@ int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance)
     index = gObjGroupOffsets[group];
     limit = (u32)(&gObjGroupOffsets[group])[1];
     entry = gObjGroupObjects + index;
-    while ((int)index < limit)
+    while ((int)index < (int)limit)
     {
         if (*entry != obj)
         {
