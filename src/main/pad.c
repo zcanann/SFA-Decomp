@@ -11,27 +11,27 @@ void setJoypadDisabled(void)
 
 void padFn_80014b18(int value)
 {
-    lbl_803DB2A8 = value;
+    gPadStickRepeatDelay = value;
 }
 
 u32 buttonGetDisabled(int port)
 {
-    return ~lbl_802C6E50[port];
+    return ~gPadButtonMask[port];
 }
 
 void buttonDisable(int port, u32 mask)
 {
-    lbl_802C6E50[port] &= ~mask;
+    gPadButtonMask[port] &= ~mask;
 }
 
 void padClearAnalogInputY(int port)
 {
-    (&lbl_803DC934)[port] = 0;
+    (&gPadAnalogY)[port] = 0;
 }
 
 void padClearAnalogInputX(int port)
 {
-    (&lbl_803DC938)[port] = 0;
+    (&gPadAnalogX)[port] = 0;
 }
 
 void stopRumble2(void)
@@ -39,7 +39,7 @@ void stopRumble2(void)
     if (rumbleEnabled != 0)
     {
         PADControlMotor(0, 2);
-        lbl_803DC90C = lbl_803DE6E8;
+        gRumbleTimer = lbl_803DE6E8;
     }
 }
 
@@ -48,7 +48,7 @@ void stopRumble(void)
     if (rumbleEnabled != 0)
     {
         PADControlMotor(0, 0);
-        lbl_803DC90C = lbl_803DE6E8;
+        gRumbleTimer = lbl_803DE6E8;
     }
 }
 
@@ -59,8 +59,8 @@ void doRumble(f32 duration)
         f32 rumbleTimer;
 
         PADControlMotor(0, 1);
-        rumbleTimer = lbl_803DC90C;
-        lbl_803DC90C = (rumbleTimer > duration) ? rumbleTimer : duration;
+        rumbleTimer = gRumbleTimer;
+        gRumbleTimer = (rumbleTimer > duration) ? rumbleTimer : duration;
     }
 }
 
@@ -77,8 +77,8 @@ void padGetAnalogInput(int port, u8* x, u8* y)
         *y = 0;
         return;
     }
-    *x = (&lbl_803DC938)[port];
-    *y = (&lbl_803DC934)[port];
+    *x = (&gPadAnalogX)[port];
+    *y = (&gPadAnalogY)[port];
 }
 
 u8 padGetCY(int port)
@@ -93,8 +93,8 @@ u8 padGetCY(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].substickY;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].substickY;
 }
 
 u8 padGetCX(int port)
@@ -109,8 +109,8 @@ u8 padGetCX(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].substickX;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].substickX;
 }
 
 u8 padGetStickY(int port)
@@ -125,8 +125,8 @@ u8 padGetStickY(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].stickY;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].stickY;
 }
 
 u8 padGetStickX(int port)
@@ -141,8 +141,8 @@ u8 padGetStickX(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].stickX;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].stickX;
 }
 
 u8 padGetLTrigger(int port)
@@ -153,8 +153,8 @@ u8 padGetLTrigger(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].triggerLeft;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].triggerLeft;
 }
 
 u8 padGetRTrigger(int port)
@@ -165,8 +165,8 @@ u8 padGetRTrigger(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)lbl_803398F0;
-    return statuses[lbl_803DC94C * 4 + port].triggerRight;
+    statuses = (PadStatusLite*)gPadStatuses;
+    return statuses[gPadStatusToggle * 4 + port].triggerRight;
 }
 
 u16 getPadFn_80014d9c(int port)
@@ -179,7 +179,7 @@ u16 getPadFn_80014d9c(int port)
     {
         return 0;
     }
-    return (&lbl_803DC92C)[port];
+    return (&gPadTriggersPressed)[port];
 }
 
 u16 getButtons_80014dd8(int port)
@@ -192,7 +192,7 @@ u16 getButtons_80014dd8(int port)
     {
         return 0;
     }
-    return (&lbl_803DC91C)[port];
+    return (&gPadTriggers)[port];
 }
 
 u32 getButtonsJustPressedIfNotBusy(int port)
@@ -209,7 +209,7 @@ u32 getButtonsJustPressedIfNotBusy(int port)
     {
         return -1;
     }
-    return lbl_803398D0[port] & lbl_802C6E50[port];
+    return lbl_803398D0[port] & gPadButtonMask[port];
 }
 
 u32 getButtonsJustPressed(int port)
@@ -222,7 +222,7 @@ u32 getButtonsJustPressed(int port)
     {
         return 0;
     }
-    return lbl_803398E0[port] & lbl_802C6E50[port];
+    return gPadButtonsJustPressed[port] & gPadButtonMask[port];
 }
 
 u32 getNewInputs(int port)
@@ -231,7 +231,7 @@ u32 getNewInputs(int port)
     {
         return 0;
     }
-    return lbl_803398C0[port];
+    return gPadButtonsHeld[port];
 }
 
 u32 getButtonsHeld(int port)
@@ -244,7 +244,7 @@ u32 getButtonsHeld(int port)
     {
         return 0;
     }
-    return lbl_803398C0[port] & lbl_802C6E50[port];
+    return gPadButtonsHeld[port] & gPadButtonMask[port];
 }
 
 int initControllers(void)
@@ -266,30 +266,30 @@ int initControllers(void)
     u16* triggersPressed;
     PadStatusLite* statuses;
 
-    padStateBlock = lbl_803398B0;
+    padStateBlock = gPadStateBlock;
     statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
-    lbl_803DC910 = 0xF0000000;
+    gPadResetMask = 0xF0000000;
     PADInit();
-    PADRecalibrate(lbl_803DC910);
-    if (PADReset(lbl_803DC910) != 0)
+    PADRecalibrate(gPadResetMask);
+    if (PADReset(gPadResetMask) != 0)
     {
-        lbl_803DC910 = 0;
+        gPadResetMask = 0;
     }
 
-    prevStickY = &lbl_803DC944;
-    prevStickX = &lbl_803DC948;
-    repeatY = &lbl_803DC93C;
-    repeatX = &lbl_803DC940;
-    analogY = &lbl_803DC934;
-    analogX = &lbl_803DC938;
+    prevStickY = &gPadPrevStickY;
+    prevStickX = &gPadPrevStickX;
+    repeatY = &gPadRepeatY;
+    repeatX = &gPadRepeatX;
+    analogY = &gPadAnalogY;
+    analogX = &gPadAnalogX;
     heldButtons = padStateBlock;
     buttonsPressed = padStateBlock + 4;
     buttonsReleased = padStateBlock + 8;
     padStateBlock = padStateBlock + 12;
-    prevTriggers = &lbl_803DC914;
-    triggers = &lbl_803DC91C;
-    triggersReleased = &lbl_803DC924;
-    triggersPressed = &lbl_803DC92C;
+    prevTriggers = &gPadPrevTriggers;
+    triggers = &gPadTriggers;
+    triggersReleased = &gPadTriggersReleased;
+    triggersPressed = &gPadTriggersPressed;
 
     for (i = 0; i < 4; i++)
     {
@@ -308,7 +308,7 @@ int initControllers(void)
         *triggersReleased = 0;
         *triggersPressed = 0;
         memset(statuses, 0, sizeof(PadStatusLite));
-        memset((u8*)lbl_803398B0 + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
+        memset((u8*)gPadStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
 
         prevStickY++;
         prevStickX++;
@@ -327,10 +327,10 @@ int initControllers(void)
         statuses++;
     }
 
-    lbl_803DC94C = 0;
+    gPadStatusToggle = 0;
     rumbleEnabled = 1;
     PADControlMotor(0, 2);
-    lbl_803DC90C = lbl_803DE6E8;
+    gRumbleTimer = lbl_803DE6E8;
     return 0;
 }
 
@@ -362,11 +362,11 @@ void padUpdate(void)
     u8 useprev;
     s32 i;
 
-    padStateBlock = lbl_803398B0;
-    toggle = lbl_803DC94C;
+    padStateBlock = gPadStateBlock;
+    toggle = gPadStatusToggle;
     prevPad = (PadStatusLite*)((u8*)padStateBlock + toggle * 0x30 + 0x40);
     other = toggle ^ 1;
-    lbl_803DC94C = other;
+    gPadStatusToggle = other;
     readPad = (PadStatusLite*)((u8*)padStateBlock + other * 0x30 + 0x40);
     if (PADRead(readPad) == -3)
     {
@@ -375,15 +375,15 @@ void padUpdate(void)
     PADClamp(readPad);
     if (rumbleEnabled != 0)
     {
-        if (lbl_803DC90C > lbl_803DE6E8)
+        if (gRumbleTimer > lbl_803DE6E8)
         {
-            lbl_803DC90C = lbl_803DC90C - timeDelta;
-            if (lbl_803DC90C <= lbl_803DE6E8)
+            gRumbleTimer = gRumbleTimer - timeDelta;
+            if (gRumbleTimer <= lbl_803DE6E8)
             {
                 if (rumbleEnabled != 0)
                 {
                     PADControlMotor(0, 0);
-                    lbl_803DC90C = lbl_803DE6E8;
+                    gRumbleTimer = lbl_803DE6E8;
                 }
             }
         }
@@ -391,22 +391,22 @@ void padUpdate(void)
     useprev = 0;
     joypadDisabled = 0;
 
-    prevStickY = (s8*)&lbl_803DC944;
-    prevStickX = (s8*)&lbl_803DC948;
-    repeatY = (s8*)&lbl_803DC93C;
-    repeatX = (s8*)&lbl_803DC940;
-    analogY = (s8*)&lbl_803DC934;
-    analogX = (s8*)&lbl_803DC938;
+    prevStickY = (s8*)&gPadPrevStickY;
+    prevStickX = (s8*)&gPadPrevStickX;
+    repeatY = (s8*)&gPadRepeatY;
+    repeatX = (s8*)&gPadRepeatX;
+    analogY = (s8*)&gPadAnalogY;
+    analogX = (s8*)&gPadAnalogX;
     heldRaw = padStateBlock;
     curBtn = padStateBlock + 4;
     released = padStateBlock + 8;
     pressed = padStateBlock + 12;
-    prevTriggers = &lbl_803DC914;
-    triggers = &lbl_803DC91C;
-    triggersReleased = &lbl_803DC924;
-    triggersPressed = &lbl_803DC92C;
+    prevTriggers = &gPadPrevTriggers;
+    triggers = &gPadTriggers;
+    triggersReleased = &gPadTriggersReleased;
+    triggersPressed = &gPadTriggersPressed;
     statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
-    buttonMask = lbl_802C6E50;
+    buttonMask = gPadButtonMask;
 
     for (i = 0; i < 4; i++)
     {
@@ -428,7 +428,7 @@ void padUpdate(void)
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PadStatusLite));
             memset((u8*)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
-            lbl_803DC910 |= 0x80000000U >> i;
+            gPadResetMask |= 0x80000000U >> i;
             readPad->error = -1;
         }
         else if ((u8)(readPad->error + 3) <= 1 || lbl_803DCCA5 == 0)
@@ -509,7 +509,7 @@ void padUpdate(void)
             {
                 *repeatY = 0;
             }
-            if (*repeatY > lbl_803DB2A8)
+            if (*repeatY > gPadStickRepeatDelay)
             {
                 *prevStickY = 0;
                 *repeatY = 0;
@@ -527,7 +527,7 @@ void padUpdate(void)
             {
                 *repeatX = 0;
             }
-            if (*repeatX > lbl_803DB2A8)
+            if (*repeatX > gPadStickRepeatDelay)
             {
                 *prevStickX = 0;
                 *repeatX = 0;
@@ -555,16 +555,16 @@ void padUpdate(void)
         buttonMask++;
     }
 
-    if (lbl_803DC910 != 0)
+    if (gPadResetMask != 0)
     {
-        if (PADReset(lbl_803DC910) != 0)
+        if (PADReset(gPadResetMask) != 0)
         {
-            lbl_803DC910 = 0;
+            gPadResetMask = 0;
         }
     }
     if (useprev != 0)
     {
-        lbl_803DC94C ^= 1;
+        gPadStatusToggle ^= 1;
     }
     lbl_803DCCA5 = 0;
 }

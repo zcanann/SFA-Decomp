@@ -146,8 +146,8 @@ extern void fn_8015983C(void);
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern int getAngle(float y, float x);
-extern u32 lbl_8031DBF0[];
-extern u32 lbl_8031DC10[];
+extern u32 gEnemySelfAngleFlagClearMask[];
+extern u32 gEnemyTargetAngleFlagClearMask[];
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
@@ -1262,11 +1262,11 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                     diff = diff + 0xffff;
                 }
                 ang = (short)((diff & 0xffff) >> 0xd);
-                ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~lbl_8031DBF0[ang];
+                ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~gEnemySelfAngleFlagClearMask[ang];
                 if ((flags & 4) != 0)
                 {
                     *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) =
-                        *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+                        *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) & ~gEnemyTargetAngleFlagClearMask[ang];
                 }
             }
         }
@@ -1323,11 +1323,11 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                             diff = diff + 0xffff;
                         }
                         ang = (short)((diff & 0xffff) >> 0xd);
-                        ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~lbl_8031DBF0[ang];
+                        ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~gEnemySelfAngleFlagClearMask[ang];
                         if (b4 != 0)
                         {
                             *(u32*)(*(int*)(cur->obj + 0x5c) + 0x2dc) =
-                                *(u32*)(*(int*)(cur->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+                                *(u32*)(*(int*)(cur->obj + 0x5c) + 0x2dc) & ~gEnemyTargetAngleFlagClearMask[ang];
                         }
                     }
                     cur++;

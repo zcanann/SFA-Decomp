@@ -64,7 +64,7 @@ extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void* lbl_803DBDE8;
+extern void* gCfCrateDefaultSfxTable;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
 extern f32 lbl_803E3E38;
@@ -509,7 +509,7 @@ void cfccrate_init(int obj, int aux)
         *(int*)&((GameObject*)obj)->anim.hitReactState = 0;
         if (((CfccratePlacement*)aux)->param1A == 0)
         {
-            state->sfxTable = (u16*)&lbl_803DBDE8;
+            state->sfxTable = (u16*)&gCfCrateDefaultSfxTable;
             state->sfxCount = 1;
         }
         state->sfxPeriod = (u16)((CfccratePlacement*)aux)->param1C;

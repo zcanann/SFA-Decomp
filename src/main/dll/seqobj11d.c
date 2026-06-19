@@ -67,11 +67,11 @@ extern u32 DAT_803dc8f0;
 extern void* PTR_DAT_8031fdc8;
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
-extern u8 lbl_803AC428[];
-extern u8 lbl_803DBC88[8];
-extern u16 lbl_803DBCA0[4];
+extern u8 gGroundBaddieTargetSearchResult[];
+extern u8 gGroundBaddieAngleSectorOffsets[8];
+extern u16 gGroundBaddieTriggerResponseSeq[4];
 extern f32 timeDelta;
-extern f32 lbl_803DBC98;
+extern f32 gGroundBaddieModelChainDesc;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
@@ -90,8 +90,8 @@ extern f32 lbl_803E27CC;
 extern f32 lbl_803E27D0;
 extern f32 lbl_803E27D8;
 extern f32 lbl_803E27DC;
-extern f32 lbl_803E27E0;
-extern f32 lbl_803E27E4;
+extern f32 gGroundBaddiePi;
+extern f32 gGroundBaddieAngleUnitScale;
 extern f32 lbl_803E27E8;
 
 #pragma scheduling on
@@ -230,14 +230,14 @@ void fn_801513AC(int obj, u8* state)
     s16 d;
 
     entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
-    if (fn_8014C11C(obj, 1, 16, lbl_803AC428, lbl_803E27AC) >= 1)
+    if (fn_8014C11C(obj, 1, 16, gGroundBaddieTargetSearchResult, lbl_803E27AC) >= 1)
     {
-        if (*(u16*)(lbl_803AC428 + 4) <= 40
+        if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40
             && *(u16*)(state + 0x2a0) != 3
             && *(u16*)(state + 0x2a0) != 4)
         {
-            d = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)lbl_803AC428 + 0xc),
-                         ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)lbl_803AC428 + 0x14))
+            d = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0xc),
+                         ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0x14))
                 - (u16)((GameObject*)obj)->anim.rotX;
             if (d > 0x8000)
             {
@@ -247,9 +247,9 @@ void fn_801513AC(int obj, u8* state)
             {
                 d = (d + 0x10000) - 1;
             }
-            state[0x33a] = (u8)(entry[8] + lbl_803DBC88[(s16)((u32)(u16)d >> 13)]);
+            state[0x33a] = (u8)(entry[8] + gGroundBaddieAngleSectorOffsets[(s16)((u32)(u16)d >> 13)]);
         }
-        else if (*(u16*)(lbl_803AC428 + 4) <= 70)
+        else if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 70)
         {
             while ((*(u8*)(entry + state[0x33a] * 16 + 10) & 1) != 0)
             {
@@ -327,7 +327,7 @@ void fn_8015165C(int obj, u8* state)
         if ((((GroundBaddieState*)state)->baddie.controlFlags & 0x40000000) != 0)
         {
             player = Obj_GetPlayerObject();
-            fn_8014C11C(obj, 3, 16, lbl_803AC428, lbl_803E27AC);
+            fn_8014C11C(obj, 3, 16, gGroundBaddieTargetSearchResult, lbl_803E27AC);
             if (*(u16*)(state + 0x338) != 0)
             {
                 *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
@@ -472,7 +472,7 @@ void fn_80151954(int obj, u8* state)
         ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
         state[0x322] = z;
         ((GroundBaddieState*)state)->baddie.unk31C = fz2;
-        *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&lbl_803DBC98, 1);
+        *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&gGroundBaddieModelChainDesc, 1);
         ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
         *(int*)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
         ObjModelChain_SetEnabled((ObjModelChain*)*(int*)(state + 0x36c), 1);
@@ -497,7 +497,7 @@ void fn_80151C68(int obj, u8* state)
         {
             playerAddMoney(player, -25);
             GameBit_Set(*(s16*)(setup + 0x1c), 1);
-            *(u16*)(state + 0x338) = lbl_803DBCA0[2];
+            *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[2];
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
             hudFn_8011f38c(2);
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
@@ -505,14 +505,14 @@ void fn_80151C68(int obj, u8* state)
         else
         {
             hudFn_8011f38c(2);
-            *(u16*)(state + 0x338) = lbl_803DBCA0[1];
+            *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[1];
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
     }
     else
     {
         hudFn_8011f38c(2);
-        *(u16*)(state + 0x338) = lbl_803DBCA0[0];
+        *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[0];
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
 }
@@ -540,14 +540,14 @@ void fn_80151DB8(int obj, u8* state)
     {
         return;
     }
-    px0 = setup->posX - lbl_803E27DC * mathSinf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
-    pz0 = setup->posZ - lbl_803E27DC * mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
+    px0 = setup->posX - lbl_803E27DC * mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
+    pz0 = setup->posZ - lbl_803E27DC * mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
     dx = player->anim.worldPosX - px0;
     dz = player->anim.worldPosZ - pz0;
     if (sqrtf(dx * dx + dz * dz) < ((GroundBaddieState*)state)->baddie.speedScale)
     {
-        cosA = mathSinf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
-        sinA = mathCosf(lbl_803E27E0 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E27E4);
+        cosA = mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
+        sinA = mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
         base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
         f5 = base + (cosA * player->anim.previousWorldPosX + sinA * player->anim.previousWorldPosZ);
         f2v = base + (cosA * player->anim.worldPosX + sinA * player->anim.worldPosZ);

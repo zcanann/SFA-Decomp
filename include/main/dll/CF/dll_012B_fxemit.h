@@ -140,7 +140,7 @@ typedef struct CfCcrateState {
     u8 proximityLatch; /* type 0x125 player-distance hysteresis */
     u8 sfxCount; /* entries in sfxTable */
     u8 pad41[3];
-    u16 *sfxTable; /* &lbl_803DBDE8 when aux+0x1A == 0 */
+    u16 *sfxTable; /* &gCfCrateDefaultSfxTable when aux+0x1A == 0 */
     u16 sfxPeriod; /* base frames between ambient sfx */
     u8 pad4A[2];
 } CfCcrateState;

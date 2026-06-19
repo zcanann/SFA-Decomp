@@ -28,9 +28,9 @@
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
-extern f32 lbl_803E36A4;
-extern const f32 lbl_803E36A8;
-extern const f32 lbl_803E36AC;
+extern f32 gSidekickBallFadeDuration;
+extern const f32 gSidekickBallActiveTimeout;
+extern const f32 gSidekickBallMaxAlpha;
 extern u16 getYButtonItem(s16* out);
 extern int fn_80295BF0(int* player);
 extern int fn_8029669C(int* player);
@@ -53,19 +53,19 @@ extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void fn_80137948(char* fmt, ...);
-extern const f32 lbl_803E36B0;
+extern const f32 gSidekickBallRestitution;
 extern const f32 lbl_803E36B4;
-extern const f32 lbl_803E36B8;
+extern const f32 gSidekickBallFloorDamping;
 extern const f32 lbl_803E36BC;
 extern const f32 lbl_803E36C0;
 extern const f32 lbl_803E36C4;
-extern const f32 lbl_803E36C8;
+extern const f32 gSidekickBallGravity;
 extern const f32 lbl_803E36CC;
 extern const f32 lbl_803E36D0;
 extern const f32 lbl_803E36D4;
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
-extern u8 lbl_80320F30[];
+extern u8 gSidekickBallPathPointData[];
 extern void* Obj_GetPlayerObject(void);
 
 enum SidekickBallMode
@@ -230,7 +230,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 fading:
     params->triggerHit = 0;
     params->pad2CA[0] = 0;
-    params->fadeTimer = lbl_803E36A4;
+    params->fadeTimer = gSidekickBallFadeDuration;
     params->ballMode = SIDEKICK_BALL_FADING;
 
 end:
@@ -275,7 +275,7 @@ void sidekickball_update(u8* self)
         state->ballMode == SIDEKICK_BALL_MOVING)
     {
         state->fadeTimer = state->fadeTimer + timeDelta;
-        if (state->fadeTimer >= lbl_803E36A8)
+        if (state->fadeTimer >= gSidekickBallActiveTimeout)
         {
             state->fadeTimer = lbl_803E369C;
             state->ballMode = SIDEKICK_BALL_FADING;
@@ -310,13 +310,13 @@ void sidekickball_update(u8* self)
         break;
     case SIDEKICK_BALL_FADING:
         state->fadeTimer = state->fadeTimer + timeDelta;
-        if (state->fadeTimer >= *(f32*)&lbl_803E36A4)
+        if (state->fadeTimer >= *(f32*)&gSidekickBallFadeDuration)
         {
             Obj_FreeObject(self);
             return;
         }
         {
-            f32 v = lbl_803E36AC * state->fadeTimer / lbl_803E36A4;
+            f32 v = gSidekickBallMaxAlpha * state->fadeTimer / gSidekickBallFadeDuration;
             ((GameObject*)self)->anim.alpha = (u8)(0xFF - (int)v);
         }
         break;
@@ -371,7 +371,7 @@ u8 trickyBallMove(u8* obj)
     state = ((GameObject*)obj)->extra;
     hasCollisionNormal = 0;
     movedFromCache = 0;
-    restitution = lbl_803E36B0;
+    restitution = gSidekickBallRestitution;
     speed = restitution;
 
     ObjHits_EnableObject((u32)obj);
@@ -420,7 +420,7 @@ u8 trickyBallMove(u8* obj)
 
     if (hasFloorDepth != 0)
     {
-        f32 damp = lbl_803E36B8;
+        f32 damp = gSidekickBallFloorDamping;
         ((GameObject*)obj)->anim.velocityX *= damp;
         ((GameObject*)obj)->anim.velocityY *= damp;
         ((GameObject*)obj)->anim.velocityZ *= damp;
@@ -435,7 +435,7 @@ u8 trickyBallMove(u8* obj)
     }
     else if (hasCollisionNormal == 0)
     {
-        ((GameObject*)obj)->anim.velocityY -= lbl_803E36C8 * timeDelta;
+        ((GameObject*)obj)->anim.velocityY -= gSidekickBallGravity * timeDelta;
     }
 
     objMove((int)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
@@ -493,7 +493,7 @@ u8 trickyBallMove(u8* obj)
 
     if (movedFromCache != 0)
     {
-        ((GameObject*)obj)->anim.velocityY -= lbl_803E36C8 * timeDelta;
+        ((GameObject*)obj)->anim.velocityY -= gSidekickBallGravity * timeDelta;
     }
 
     fn_8002A5DC((int)obj);
@@ -521,8 +521,8 @@ void sidekickball_init(int obj)
     objDef = *(int*)&((GameObject*)obj)->anim.hitReactState;
     ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
     (*gPathControlInterface)->init(state, 0, 0x40007, 1);
-    (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
-    (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
+    (*gPathControlInterface)->setLocalPointCollision(state, 1, gSidekickBallPathPointData, state + 0x268, 1);
+    (*gPathControlInterface)->setup(state, 1, gSidekickBallPathPointData, state + 0x268, &pathFlag);
     (*gPathControlInterface)->attachObject((void*)obj, state);
     ObjHits_DisableObject((u32)obj);
     ((SidekickBallState*)state)->unk25B = 0; /* explicit post-memset store in target */
