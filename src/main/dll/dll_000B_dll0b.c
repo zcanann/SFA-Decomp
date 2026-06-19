@@ -2557,14 +2557,14 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     extern const f32 lbl_803DF43C;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
-    u8* bufB = *(u8**)(slots + *(u8*)((char*)state + 0x130) * 4);
+    u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
     u8* bufA = *(u8**)((char*)state + 0x80);
     int j;
 
     if (mode == 1)
     {
         f32 target = *(f32*)((char*)p + 0x4);
-        s16 frames = *(s16*)((char*)state + 0xfe);
+        s16 frames = ((ModgfxState*)state)->blendFrameCount;
         if (frames != 0)
         {
             ((f32*)((char*)state + 0xac))[k] =
@@ -2613,7 +2613,7 @@ void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
     extern const f32 lbl_803DF43C;
-    u8* buf = ((u8**)((char*)state + 0x78))[*(u8*)((char*)state + 0x130)];
+    u8* buf = ((u8**)((char*)state + 0x78))[((ModgfxState*)state)->activeVertexBufferIndex];
     int j;
 
     if (mode == 1)
@@ -2621,27 +2621,27 @@ void fn_800A0524(void* state, void* p, int mode)
         f32 tr = *(f32*)((char*)p + 0x4);
         f32 tg = *(f32*)((char*)p + 0x8);
         f32 tb = *(f32*)((char*)p + 0xc);
-        if (*(s16*)((char*)state + 0xfe) != 0)
+        if (((ModgfxState*)state)->blendFrameCount != 0)
         {
-            *(f32*)((char*)state + 0xbc) = (f32)(u32)
+            ((ModgfxState*)state)->blendColorR = (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc];
-            *(f32*)((char*)state + 0xc0) = (f32)(u32)
+            ((ModgfxState*)state)->blendColorG = (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd];
-            *(f32*)((char*)state + 0xc4) = (f32)(u32)
+            ((ModgfxState*)state)->blendColorB = (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe];
-            *(f32*)((char*)state + 0xc8) =
+            ((ModgfxState*)state)->blendColorStepR =
                 (tr - (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc]
             )
             /
             (f32) * (s16*)((char*)state + 0xfe);
-            *(f32*)((char*)state + 0xcc) =
+            ((ModgfxState*)state)->blendColorStepG =
                 (tg - (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd]
             )
             /
             (f32) * (s16*)((char*)state + 0xfe);
-            *(f32*)((char*)state + 0xd0) =
+            ((ModgfxState*)state)->blendColorStepB =
                 (tb - (f32)(u32)
             buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe]
             )
@@ -2650,49 +2650,49 @@ void fn_800A0524(void* state, void* p, int mode)
         }
         else
         {
-            *(f32*)((char*)state + 0xbc) = tr;
-            *(f32*)((char*)state + 0xc0) = tg;
-            *(f32*)((char*)state + 0xc4) = tb;
+            ((ModgfxState*)state)->blendColorR = tr;
+            ((ModgfxState*)state)->blendColorG = tg;
+            ((ModgfxState*)state)->blendColorB = tb;
             {
                 f32 z = lbl_803DF430;
-                *(f32*)((char*)state + 0xc8) = z;
-                *(f32*)((char*)state + 0xcc) = z;
-                *(f32*)((char*)state + 0xd0) = z;
+                ((ModgfxState*)state)->blendColorStepR = z;
+                ((ModgfxState*)state)->blendColorStepG = z;
+                ((ModgfxState*)state)->blendColorStepB = z;
             }
         }
     }
-    *(f32*)((char*)state + 0xbc) += *(f32*)((char*)state + 0xc8);
-    *(f32*)((char*)state + 0xc0) += *(f32*)((char*)state + 0xcc);
-    *(f32*)((char*)state + 0xc4) += *(f32*)((char*)state + 0xd0);
-    if (*(f32*)((char*)state + 0xbc) < lbl_803DF430)
+    ((ModgfxState*)state)->blendColorR += ((ModgfxState*)state)->blendColorStepR;
+    ((ModgfxState*)state)->blendColorG += ((ModgfxState*)state)->blendColorStepG;
+    ((ModgfxState*)state)->blendColorB += ((ModgfxState*)state)->blendColorStepB;
+    if (((ModgfxState*)state)->blendColorR < lbl_803DF430)
     {
-        *(f32*)((char*)state + 0xbc) = lbl_803DF430;
+        ((ModgfxState*)state)->blendColorR = lbl_803DF430;
     }
-    else if (*(f32*)((char*)state + 0xbc) > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorR > lbl_803DF43C)
     {
-        *(f32*)((char*)state + 0xbc) = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorR = lbl_803DF43C;
     }
-    if (*(f32*)((char*)state + 0xc0) < lbl_803DF430)
+    if (((ModgfxState*)state)->blendColorG < lbl_803DF430)
     {
-        *(f32*)((char*)state + 0xc0) = lbl_803DF430;
+        ((ModgfxState*)state)->blendColorG = lbl_803DF430;
     }
-    else if (*(f32*)((char*)state + 0xc0) > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorG > lbl_803DF43C)
     {
-        *(f32*)((char*)state + 0xc0) = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorG = lbl_803DF43C;
     }
-    if (*(f32*)((char*)state + 0xc4) < lbl_803DF430)
+    if (((ModgfxState*)state)->blendColorB < lbl_803DF430)
     {
-        *(f32*)((char*)state + 0xc4) = lbl_803DF430;
+        ((ModgfxState*)state)->blendColorB = lbl_803DF430;
     }
-    else if (*(f32*)((char*)state + 0xc4) > lbl_803DF43C)
+    else if (((ModgfxState*)state)->blendColorB > lbl_803DF43C)
     {
-        *(f32*)((char*)state + 0xc4) = lbl_803DF43C;
+        ((ModgfxState*)state)->blendColorB = lbl_803DF43C;
     }
     for (j = 0; j < *(s16*)((char*)p + 0x14); j++)
     {
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)*(f32*)((char*)state + 0xbc);
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)*(f32*)((char*)state + 0xc0);
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)*(f32*)((char*)state + 0xc4);
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
     }
 }
 
@@ -2717,7 +2717,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         }
         else
         {
-            u8* buf2 = *(u8**)((char*)((u32*)state + *(u8*)((char*)state + 0x130)) + 0x78);
+            u8* buf2 = *(u8**)((char*)((u32*)state + ((ModgfxState*)state)->activeVertexBufferIndex) + 0x78);
             u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
@@ -2742,7 +2742,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
     *(f32*)(base + 0x38) = *(f32*)(base + 0x38) + *(f32*)(base + 0x44) * lbl_803DD284;
     {
         u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
-        u8* buf2 = *(u8**)((char*)((u32*)state + *(u8*)((char*)state + 0x130)) + 0x78);
+        u8* buf2 = *(u8**)((char*)((u32*)state + ((ModgfxState*)state)->activeVertexBufferIndex) + 0x78);
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
             if (lbl_803DF434 != *(f32*)(base + 0x30))
