@@ -277,7 +277,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     damageDistance = beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
             yawCos * ((GameObject*)playerObj)->anim.localPosZ);
     if ((DFSH_LASER_PROXIMITY_MODE(runtime) == 1) ||
-        ((lbl_803E4EC0 < damageDistance) &&
+        ((damageDistance > lbl_803E4EC0) &&
             (DFSH_LASER_PROXIMITY_MODE(runtime) != 0)))
     {
         DFSH_LASER_BLOCK_TIMER(runtime) -= framesThisStep;
@@ -320,7 +320,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
         heightThreshold = lbl_803E4EE0 + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
         heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
         if ((heightDelta < heightThreshold) &&
-            (-(lbl_803E4EE4 + heightThreshold) < heightDelta))
+            (heightDelta > -(lbl_803E4EE4 + heightThreshold)))
         {
             xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->localPosX;
             zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->localPosZ;
@@ -345,15 +345,14 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
                 }
                 if ((damageDistance < heightThreshold) &&
-                    (-heightThreshold < damageDistance))
+                    (damageDistance > -heightThreshold))
                 {
-                    pushDistance = lbl_803E4EF4;
-                    if ((beamPlane + (yawSin * ((GameObject*)playerObj)->anim.previousLocalPosX +
+                    pushDistance =
+                        ((beamPlane + (yawSin * ((GameObject*)playerObj)->anim.previousLocalPosX +
                             yawCos * ((GameObject*)playerObj)->anim.previousLocalPosZ)) <
                         lbl_803E4EC0)
-                    {
-                        pushDistance = lbl_803E4EF0;
-                    }
+                            ? lbl_803E4EF0
+                            : lbl_803E4EF4;
                     if (objGetAnimState80A(playerObj) != 0x1D7)
                     {
                         int i;
