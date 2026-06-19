@@ -549,9 +549,9 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     u32 uVar3;
     int iVar4;
     float* pfVar5;
-    u16 local_28;
-    short local_26;
-    short local_24;
+    u16 setupId;
+    short setupSub1;
+    short setupSub2;
     float local_20;
     float local_1c;
     float local_18;
@@ -567,11 +567,11 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         local_18 = local_1c;
         local_14 = local_1c;
         local_20 = lbl_803E42B8;
-        local_24 = psVar2[2];
-        local_26 = psVar2[1];
+        setupSub2 = psVar2[2];
+        setupSub1 = psVar2[1];
         iVar4 = FUN_801365ac((int)psVar2);
-        local_28 = *psVar2 + iVar4;
-        FUN_80017748(&local_28, (float*)(param_9 + 0x24));
+        setupId = *psVar2 + iVar4;
+        FUN_80017748(&setupId, (float*)(param_9 + 0x24));
         if ((psVar2[0x58] & 0x800U) == 0)
         {
             pfVar5 = (float*)(psVar2 + 6);
