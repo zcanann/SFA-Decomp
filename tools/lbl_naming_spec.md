@@ -23,14 +23,17 @@ meaningful** than `lbl_` and **accurate**. A vague/guessed name is WORSE than le
 - File-static strings: prefix `s` (e.g. `sIceBaddieDebugFmt`) only if the content is
   meaningful; trivial format strings like `"%d"` → SKIP.
 
-### Float/double constants
-- **Role-based** when the use reveals a clear role: e.g. a 0.017453f used as
-  `angle * lbl` → `gXxxDegToRad`; a 1/64 used to scale a field → `gXxxFooScale`.
-- **Value-based with unit prefix** when the value is generic and the role is unclear
-  (this is explicitly allowed): `gXxxZero` (0.0), `gXxxOne` (1.0), `gXxxHalf` (0.5),
-  `gXxxTwo` (2.0), `gXxxQuarter` (0.25). For odd values use a readable numeric form,
-  e.g. 1.375 → `gXxxF1_375`, -0.1 → `gXxxFNeg0_1`, 100.0 → `gXxxF100`.
-- Never invent a role you cannot see in the code. Generic → value-based, not a made-up role.
+### Float/double constants (CONSERVATIVE — owner direction)
+- **Name ONLY** floats with a clear ROLE (e.g. a 0.017453f used as `angle * lbl`
+  → `gXxxDegToRad`; a 1/64 scaling a field → `gXxxFooScale`) OR a genuinely
+  distinctive/meaningful value: Pi, deg2rad/rad2deg, the int→float/double
+  `0x43300000` conversion biases, a named threshold/limit the code clamps to.
+- **LEAVE plain generic constants as `lbl_`.** A plain 0.0 / 0.5 / 1.0 / 60.0 /
+  250.0-type value with no clear role must STAY `lbl_` — do NOT value-name it
+  (`gXxxF60`, `gXxxHalf`, `gXxxZero` are NOT wanted). `lbl_` is a clean worklist
+  marker; a value-encoded rename is worse than leaving it.
+- Never invent a role you cannot see in the code. No clear role + not distinctive
+  → skip (leave `lbl_`).
 
 ## Hard rules
 - Names must be valid C identifiers, unique within your mapping, PascalCase after the prefix.
