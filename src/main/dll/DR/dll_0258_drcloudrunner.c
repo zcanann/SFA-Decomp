@@ -1265,8 +1265,8 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
     ((GameObject*)obj)->anim.localPosX = inner->unk3C4;
     ((GameObject*)obj)->anim.localPosY = inner->unk3C8;
     ((GameObject*)obj)->anim.localPosZ = inner->unk3CC;
-    a0 = getAngle(-inner->pathPointX, -inner->pathPointZ);
-    a1 = getAngle(inner->pathPointY,
+    a0 = (u16)getAngle(-inner->pathPointX, -inner->pathPointZ);
+    a1 = (u16)getAngle(inner->pathPointY,
                        sqrtf(inner->pathPointX * inner->pathPointX +
                            inner->pathPointZ * inner->pathPointZ));
     a0 = a0 - (u16)((GameObject*)obj)->anim.rotX;
