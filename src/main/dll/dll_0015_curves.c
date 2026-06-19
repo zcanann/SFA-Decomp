@@ -1015,8 +1015,8 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
     int queryMode;
     RomCurvePoint* outPoint;
-    u32 remaining;
-    u32 pairCount;
+    int remaining;
+    int pairCount;
     RomCurvePoint** hitPoints;
     RomCurvePoint** hitPointCursor;
 
@@ -1033,7 +1033,7 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
         }
         sCurvesCachedHitCount = hitDetectFn_80065e50(obj, x, ((GameObject*)obj)->anim.worldPosY, z,
                                                      &hitPoints, queryMode, 0);
-        if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
+        if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount)
         {
             sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
         }
