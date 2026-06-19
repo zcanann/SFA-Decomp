@@ -12,7 +12,7 @@ typedef struct AlphaAnimatorState
     void* buf; /* 0x10: mode-3 per-vertex alpha buffer */
     s16 alphaLevel; /* 0x14 */
     u8 active; /* 0x16 */
-    u8 gateVal; /* 0x17 */
+    s8 gateVal; /* 0x17 */
     u8 doneCount; /* 0x18 */
     u8 prevGate; /* 0x19 */
     u8 pad1A[2];
