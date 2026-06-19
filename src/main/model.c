@@ -1136,9 +1136,9 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
     int sizes[7];
     int realId;
     u8* header;
-    int off;
-    u8* h;
     int i;
+    u8* h;
+    int off;
     int tex;
     int idc;
     idc = id;
@@ -1156,8 +1156,8 @@ void* ObjModel_Load(int id, int arg2, int* outSize)
         header = ObjModel_LoadModelData(realId);
         ObjModel_RelocateModelData(header);
         h = header;
-        off = 0;
-        i = off;
+        i = 0;
+        off = i;
         for (; i < h[0xf2]; i++)
         {
             tex = textureLoad(-(*(int*)(*(int*)(h + 0x20) + off) | 0x8000), 1);
