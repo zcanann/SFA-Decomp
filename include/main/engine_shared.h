@@ -360,11 +360,11 @@ typedef struct {
     int f28;
 } VoxMapFile;
 typedef struct {
-    s16 f0;
-    s16 f2;
-    s16 f4;
+    s16 x;
+    s16 z;
+    s16 y;
     s16 pad6;
-    u16 f8;
+    u16 cost;
 } VoxBoxArg;
 struct RouteState;
 typedef struct {
