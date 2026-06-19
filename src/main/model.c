@@ -1225,10 +1225,10 @@ void ObjModel_Release(u8* model)
         {
             for (i = 0; i < ((ModelFileHeader*)header)->animationCount; i++)
             {
+                int idx;
                 void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + i * 4);
                 if (tex != NULL && (s8)-- * (u8*)tex <= 0)
                 {
-                    int idx;
                     model_findIdxInModelList(lbl_803DCB50, &tex, &idx);
                     model_adjustModelList(lbl_803DCB50, idx);
                     mm_free(tex);
