@@ -1322,15 +1322,20 @@ void queueGlowRender(ModelLightStruct* light)
     u8 i;
     int visible;
     u8 idx;
+    f32 offsetZ;
+    f32 offsetX;
 
     if (lbl_803DCE06 >= 100) return;
 
-    for (i = 0; i < 5; i++)
+    i = 0;
+    offsetZ = playerMapOffsetZ;
+    offsetX = playerMapOffsetX;
+    for (; i < 5; i++)
     {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
         f32 dot = light->worldY * plane->normalY
-            + plane->normalX * (light->worldX - playerMapOffsetX)
-            + plane->normalZ * (light->worldZ - playerMapOffsetZ)
+            + plane->normalX * (light->worldX - offsetX)
+            + plane->normalZ * (light->worldZ - offsetZ)
             + plane->distance + lbl_803DEBCC;
         if (dot < lbl_803DEBCC)
         {
