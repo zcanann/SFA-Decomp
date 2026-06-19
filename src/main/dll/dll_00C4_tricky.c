@@ -1820,14 +1820,7 @@ void trickyFn_80148d8c(int obj, int state)
         }
     }
     alpha = 0xff - (int)(lbl_803E257C * ((GameObject*)obj)->anim.currentMoveProgress);
-    if (alpha < 0)
-    {
-        alpha = 0;
-    }
-    else if (alpha > 0xff)
-    {
-        alpha = 0xff;
-    }
+    alpha = (alpha < 0) ? 0 : ((alpha > 0xff) ? 0xff : alpha);
     ((GameObject*)obj)->anim.alpha = alpha;
     ((TrickyState*)state)->currentMoveProgress =
         lbl_803E256C + (f32)(0xff - ((GameObject*)obj)->anim.alpha) / lbl_803E257C;
