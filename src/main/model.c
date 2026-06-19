@@ -1746,7 +1746,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     *(int*)&((ObjModel*)out)->jointMatrices[1] = pos;
     pos += szs[6] >> 1;
     *(int*)&((ObjModel*)out)->curMtxBuf = *(int*)&((ObjModel*)out)->jointMatrices[0];
-    if (((ModelFileHeader*)p)->morphTargetCount != 0 || *(int*)&((ModelFileHeader*)p)->vertexAnimEntries != 0 || (((
+    if (((ModelFileHeader*)p)->morphTargetCount != 0 || ((ModelFileHeader*)p)->vertexAnimEntries != NULL || (((
         ModelFileHeader*)p)->flags & 0x10))
     {
         pos = roundUpTo32(pos);
@@ -1766,7 +1766,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         *(int*)&((ObjModel*)out)->vtxBuf1 = end;
         *(int*)&((ObjModel*)out)->vtxBuf0 = end;
     }
-    if (*(int*)&((ModelFileHeader*)p)->blendAnimEntries != 0)
+    if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
         if (((ModelFileHeader*)p)->flags24 & 8)
         {
@@ -1854,8 +1854,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
         *(int*)&((ObjModel*)out)->unk50 = *(int*)&((ObjModel*)out)->unk48;
     }
-    if (*(int*)&((ModelFileHeader*)p)->jointData != 0 && ((ModelFileHeader*)p)->jointCount != 0 && *(int*)&((
-        ModelFileHeader*)p)->unk18 != 0 && *(int*)&((ModelFileHeader*)p)->unk1C != 0)
+    if (((ModelFileHeader*)p)->jointData != NULL && ((ModelFileHeader*)p)->jointCount != 0 && ((
+        ModelFileHeader*)p)->unk18 != NULL && ((ModelFileHeader*)p)->unk1C != NULL)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out)->unk14 = pos;
@@ -1877,13 +1877,13 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     {
         *(int*)&((ObjModel*)out)->unk14 = 0;
     }
-    if (*(int*)&((ModelFileHeader*)p)->vertexAnimEntries != 0)
+    if (((ModelFileHeader*)p)->vertexAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out)->unk40 = pos;
         pos += ((ModelFileHeader*)p)->vertexAnimCount * 4;
     }
-    if (*(int*)&((ModelFileHeader*)p)->blendAnimEntries != 0)
+    if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out)->unk44 = pos;
