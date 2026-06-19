@@ -826,7 +826,7 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
     {
         sortKey = 0;
     }
-    else if (0x7ffffff < (int)sortKey)
+    else if (0x7ffffff < sortKey)
     {
         sortKey = 0x7ffffff;
     }
@@ -870,7 +870,7 @@ void lightmap_sortQueuedRenderPackets(void)
             insertPos = (int)(packets + i * 4);
             j = i;
             while ((gap < j &&
-                (prevIdx = j - gap, (uint)packets[prevIdx * 4 + 2] < sortKey)))
+                (prevIdx = j - gap, packets[prevIdx * 4 + 2] < sortKey)))
             {
                 tmpWord = packets[prevIdx * 4 + 1];
                 *(undefined4*)(insertPos + -0x10) = packets[prevIdx * 4];
@@ -901,7 +901,7 @@ void lightmap_renderQueuedObject(ushort* object)
     {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, object);
         FUN_8003f9f8();
-        FUN_8003b878(0, 0, 0, 0, (int)object, 1);
+        FUN_8003b878(0, 0, 0, 0, object, 1);
         FUN_80006994();
         if ((*(int*)(object + 0x32) == 0) || (*(int*)(*(int*)(object + 0x32) + 0xc) == 0))
         {
@@ -1064,7 +1064,7 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
     t = (s32) - stk[2] + offset;
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | ((b & 0xff) << 27);
 }
 #pragma dont_inline reset
 
@@ -1095,7 +1095,7 @@ void fn_8005D3B4(u8* obj, u8* model, s32 b)
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | ((b & 0xff) << 27);
 }
 
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
@@ -1110,7 +1110,7 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = a;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = b;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | 0x38000000;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
     lbl_803DCE30++;
 }
@@ -1145,9 +1145,9 @@ void renderObjects(s8* arg0)
     LightmapDrawQueue* qbase;
 
     qbase = (LightmapDrawQueue*)lbl_8037E0C0;
-    objects = (int*)ObjList_GetObjects((int*)0, (int*)0);
+    objects = ObjList_GetObjects((int*)0, 0);
     keys = (u32*)((u8*)qbase + 0x8818);
-    for (i = 1; i < (int)gVisibleObjectSortKeyCount; i++)
+    for (i = 1; i < gVisibleObjectSortKeyCount; i++)
     {
         idx = keys[i] & 0x3ff;
         obj = (u8*)objects[idx];
@@ -1289,11 +1289,11 @@ void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ)
 {
     s32 ix, iz;
     f32 s;
-    ix = (s32)fastFloorf(x / gMapBlockWorldSize);
-    iz = (s32)fastFloorf(z / gMapBlockWorldSize);
+    ix = fastFloorf(x / gMapBlockWorldSize);
+    iz = fastFloorf(z / gMapBlockWorldSize);
     s = gMapBlockWorldSize;
-    *outX = s * (f32)ix;
-    *outZ = s * (f32)iz;
+    *outX = s * ix;
+    *outZ = s * iz;
 }
 
 extern void* gMapBlockLayerTables[];
@@ -1331,11 +1331,11 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
     ix = ix + (iz << 4);
     for (i = 0; i < 5; i++)
     {
-        s8* table = (s8*)gMapBlockLayerTables[i];
+        s8* table = gMapBlockLayerTables[i];
         int idx = table[ix];
         if (idx > -1)
         {
-            int* block = (int*)lbl_803DCE9C[idx];
+            int* block = lbl_803DCE9C[idx];
             if (y > (f32)(*(s16*)((char*)block + 138) - 50) &&
                 y < (f32)(*(s16*)((char*)block + 140) + 50))
             {
@@ -1380,7 +1380,7 @@ void* mapGetBlock(int i)
 
 void* mapGetBlockAtPos(int x, int y, int layer)
 {
-    s8* table = (s8*)gMapBlockLayerTables[layer];
+    s8* table = gMapBlockLayerTables[layer];
     s32 idx;
     if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
     idx = table[x + (y << 4)];
@@ -1465,7 +1465,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     mapBlockRender_drawDimmedAabbLights(p1, obj, p3);
     newR = mapBlockRender_setLightmapShader(obj, state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    mapBlockRender_setVtxDcrs(1, obj, newR, state);
     cursor = state[4] + 4;
     state[4] = cursor;
     countShifted = cursor >> 3;
@@ -1508,7 +1508,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    mapBlockRender_setVtxDcrs(1, obj, newR, state);
     cursor = state[4] + 4;
     state[4] = cursor;
     countShifted = cursor >> 3;
@@ -1558,7 +1558,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    mapBlockRender_setVtxDcrs(1, obj, newR, state);
     state[4] += 4;
     cursor = state[4];
     countShifted = cursor >> 3;
@@ -1600,7 +1600,7 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
         total_offset = 0;
         limit = *(u16*)((char*)page + 0x8);
 
-        while (total_offset < (int)limit)
+        while (total_offset < limit)
         {
             if (*(u32*)((char*)p + 0x14) == (u32)needle)
             {
@@ -1795,7 +1795,7 @@ void sceneDraw(void)
     renderSceneGeometry((int*)0, lbl_8030E65C);
     renderResetFn_8003fc60();
     renderObjects(buf);
-    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0)
+    if (CameraShake_IsActive() != 0 || bEnableMotionBlur != 0)
     {
         renderMotionBlur(lbl_803DB62C);
     }
@@ -2130,7 +2130,7 @@ void renderSceneGeometry(int* p1, s8* order)
                 }
                 else
                 {
-                    blk = (u8*)lbl_803DCE9C[idx];
+                    blk = lbl_803DCE9C[idx];
                     *(u16*)(blk + 4) ^= 1;
                     if (map[cell] == 0)
                     {
@@ -2230,7 +2230,7 @@ void getVisibleObjects(s8* opacity)
     f32 depth;
 
     maybeHudFn_8006c91c();
-    objects = (int*)ObjList_GetObjects((int*)0, (int*)0);
+    objects = ObjList_GetObjects((int*)0, 0);
     part = ObjList_PartitionForRender(&count);
     i = 0;
     p = objects;
@@ -2253,7 +2253,7 @@ void getVisibleObjects(s8* opacity)
         }
         if (i >= part)
         {
-            *cur = (s8)objUpdateOpacity(o);
+            *cur = objUpdateOpacity(o);
             if (*cur != 0 || (((ObjAnimComponent*)o)->modelInstance->flags & 0x200000) != 0)
             {
                 if ((((ObjAnimComponent*)o)->modelInstance->flags & 0x80000) != 0)
@@ -2514,7 +2514,7 @@ void initMapBlocks(void)
     loadAssetFileById(&lbl_803DCE84, 0x27);
 
     lbl_803DCE90 = 0;
-    p = (u16*)lbl_803DCE84;
+    p = lbl_803DCE84;
     while (*p != 0xffff)
     {
         p++;

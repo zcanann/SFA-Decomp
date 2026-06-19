@@ -451,7 +451,7 @@ void newshadows_captureProjectedShadow(ushort* object)
         savedScale = (double)*(float*)(object + 4);
         *(float*)(object + 4) = (float)dVar6;
         FUN_80040cd0(1);
-        FUN_8003b878(0, 0, 0, 0, (int)object, 1);
+        FUN_8003b878(0, 0, 0, 0, object, 1);
         FUN_80040cd0(0);
         *(float*)(object + 4) = (float)savedScale;
         renderState = FUN_80017a54((int)object);
@@ -678,7 +678,7 @@ void newshadows_renderQueuedShadowCasters(void)
     if (DAT_803ddbf8 != 0)
     {
         FUN_800069b8();
-        newshadows_sortQueuedShadowCasters(-0x7fc710f8, (uint)DAT_803ddbf8);
+        newshadows_sortQueuedShadowCasters(-0x7fc710f8, DAT_803ddbf8);
         FUN_80006954(1);
         light = FUN_800069a8();
         savedZParam = FUN_800069f8();
@@ -705,7 +705,7 @@ void newshadows_renderQueuedShadowCasters(void)
             obj = *queueEntry;
             model = (float*)((GameObject*)obj)->anim.modelState;
             FUN_80006954(0);
-            visibility = FUN_80061198(obj, (uint)DAT_803dc070);
+            visibility = FUN_80061198(obj, DAT_803dc070);
             FUN_80006954(1);
             if (4 < (visibility & 0xff))
             {
@@ -719,7 +719,7 @@ void newshadows_renderQueuedShadowCasters(void)
                 slotByte = uVar18 & 0xff;
                 slotOff = slotByte * 0x68;
                 shadowMtx = (float*)(&DAT_8038fd18 + slotOff);
-                (&DAT_8038fd7c)[slotOff] = (char)visibility;
+                (&DAT_8038fd7c)[slotOff] = visibility;
                 if ((dirShadowCount < 8) && (*(char*)(queueEntry + 2) != '\0'))
                 {
                     if (dirShadowCount < 3)
@@ -775,8 +775,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     DAT_803ddc04 = randVal & 0xffff;
                     randVal = FUN_80017730();
                     DAT_803ddc08 = (randVal & 0xffff) - 0x3fc8;
-                    light[1] = (short)DAT_803ddc08;
-                    *light = (short)DAT_803ddc04;
+                    light[1] = DAT_803ddc08;
+                    *light = DAT_803ddc04;
                     dVar22 = (double)(float)(dVar28 * dVar28 +
                         (double)(float)(dVar27 * dVar27 + (double)(float)(dVar29 * dVar29)
                         ));
@@ -902,8 +902,8 @@ void newshadows_renderQueuedShadowCasters(void)
                 uVar18 = uVar18 + 1;
                 if ((((ObjModelState*)model)->flags & 0x20) != 0)
                 {
-                    FUN_80003494(obj + 0xc, (uint)savedRow0, 0xc);
-                    FUN_80003494(obj + 0x18, (uint)savedRow1, 0xc);
+                    FUN_80003494(obj + 0xc, savedRow0, 0xc);
+                    FUN_80003494(obj + 0x18, savedRow1, 0xc);
                 }
             }
             queueEntry = queueEntry + 3;
@@ -922,7 +922,7 @@ void newshadows_renderQueuedShadowCasters(void)
         *(float*)(light + 6) = (float)savedLightX;
         *(float*)(light + 8) = (float)savedLightY;
         *(float*)(light + 10) = (float)savedLightZ;
-        light[1] = (short)savedFlag;
+        light[1] = savedFlag;
         *light = savedWord0;
         light[2] = savedWord2;
         uVar18 = FUN_8005d00c();
@@ -983,7 +983,7 @@ void newshadows_queueShadowCaster(int object)
     {
         objAnim = (ObjAnimComponent*)object;
         modelDef = objAnim->modelInstance;
-        (&DAT_8038ef08)[(uint)DAT_803ddbf8 * 3] = object;
+        (&DAT_8038ef08)[DAT_803ddbf8 * 3] = object;
         dx = ((GameObject*)object)->anim.worldPosX - *(float*)(DAT_803ddc68 + 0xc);
         dy = ((GameObject*)object)->anim.worldPosY - *(float*)(DAT_803ddc68 + 0x10);
         dz = ((GameObject*)object)->anim.worldPosZ - *(float*)(DAT_803ddc68 + 0x14);
@@ -996,7 +996,7 @@ void newshadows_queueShadowCaster(int object)
             dist = (double)(float)(dist * DOUBLE_803df9d8 * invSqrt *
                 -(dist * invSqrt * invSqrt - DOUBLE_803df9e0));
         }
-        slotOff = (uint)DAT_803ddbf8 * 0xc;
+        slotOff = DAT_803ddbf8 * 0xc;
         *(float*)(&DAT_8038ef0c + slotOff) = (float)((double)((GameObject*)object)->anim.modelState->shadowScale / dist);
         if (modelDef->shadowType == 2)
         {
@@ -1087,8 +1087,8 @@ void FUN_8006b03c(int param_1, undefined4* param_2, undefined4* param_3, int* pa
     ObjModelState* modelState = ((GameObject*)param_1)->anim.modelState;
     *param_2 = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
     *param_3 = *(undefined4*)&modelState->shadowScale;
-    *param_4 = (int)modelState->shadowOffsetX;
-    *param_5 = (int)modelState->shadowOffsetY;
+    *param_4 = modelState->shadowOffsetX;
+    *param_5 = modelState->shadowOffsetY;
     return;
 }
 
@@ -1218,7 +1218,7 @@ void newshadows_updateFrameState(void)
     DAT_803ddbf8 = 0;
     DAT_803ddc68 = (int)FUN_800069a8();
     DAT_803ddc20 = DAT_803ddc20 + (ushort)DAT_803dc070 * 0x28a;
-    local_20 = CONCAT44(0x43300000, (uint)DAT_803ddc20);
+    local_20 = CONCAT44(0x43300000, DAT_803ddc20);
     depth = (double)FUN_802947f8();
     lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
@@ -1247,7 +1247,7 @@ void newshadows_updateFrameState(void)
         {
             texSize = 0;
         }
-        if ((texSize & 0xff) != (uint)DAT_803ddc00)
+        if ((texSize & 0xff) != DAT_803ddc00)
         {
             FUN_80064384(texSize & 0xff);
         }
@@ -1354,7 +1354,7 @@ void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefi
     char count;
 
     retPair = FUN_80286840();
-    mask = (int)retPair;
+    mask = retPair;
     f1Arg = extraout_f1;
     FUN_800033a8((int)buf, 0, 0x1c);
     bit = 0;
@@ -1363,7 +1363,7 @@ void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefi
     {
         if ((mask >> (bit & 0x3f) & 1U) != 0)
         {
-            bitList[count] = (char)bit;
+            bitList[count] = bit;
             count = count + '\x01';
         }
         if ((mask >> (bit + 1 & 0x3f) & 1U) != 0)
@@ -1490,7 +1490,7 @@ void fn_8006C6A4(int id)
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
-    char* p = (char*)lbl_803DCF7C;
+    char* p = lbl_803DCF7C;
     if (*(u8*)(p + 0x48) != 0)
     {
         GXLoadTexObjPreLoaded(p + 0x20, *(void**)(p + 0x40), idCopy);
@@ -1533,7 +1533,7 @@ void findSomething(void* needle)
     int i;
     for (i = 0; i < 0x25; ++i)
     {
-        if (lbl_8038DF48[i].isActive != 0 && (void*)&lbl_8038DF48[i] == needle)
+        if (lbl_8038DF48[i].isActive != 0 && &lbl_8038DF48[i] == needle)
         {
             lbl_8038DF48[i].isActive = 0;
             return;
@@ -1655,7 +1655,7 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
     u8 v;
     if (idx < 0 || idx >= 0x23) t = 0;
     else t = base[idx + 0xb4];
-    v = (u8)t;
+    v = t;
     switch (b)
     {
     case 0: break;
@@ -1853,9 +1853,9 @@ void initFn_8006d020(void)
                 u16* dst = (u16*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
                     + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
                 fn_8006CD20(lbl_80391978, placed, &o1, &o2,
-                            (f32)row * 0.015625f,
-                            (f32)col * 0.015625f,
-                            (f32)tex);
+                            row * 0.015625f,
+                            col * 0.015625f,
+                            tex);
                 hi = (int)(padFix * o2);
                 lo = (int)(padFix * o1);
                 *dst = (u16)(((hi & 0xffff) << 8) | lo);
@@ -1867,21 +1867,21 @@ void initFn_8006d020(void)
     lbl_803DCFE0 = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++)
     {
-        f32 rv = 0.0981875f * (f32)row;
+        f32 rv = 0.0981875f * row;
         for (col = 0; col < 0x40; col++)
         {
             f32 cv, n1, n2, prod, fa, fb;
             int hi, lo;
             u16* dst = (u16*)(lbl_803DCFE0 + (row & 3) * 2 + (row >> 2) * 0x20
                 + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
-            cv = 0.39275f * (f32)col;
+            cv = 0.39275f * col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
             fb = 127.0f * prod + 127.0f;
             fa = 127.0f * n1 + 127.0f;
-            lo = (int)fa;
-            hi = (int)fb;
+            lo = fa;
+            hi = fb;
             *dst = (u16)(lo | ((hi & 0xffff) << 8));
         }
     }
@@ -1917,7 +1917,7 @@ void allocLotsOfTextures(void)
     memset((void*)(*(int*)(g + 0x3a10) + 0x60), 0, *(u32*)(*(int*)(g + 0x3a10) + 0x44));
     DCFlushRange((void*)(*(int*)(g + 0x3a10) + 0x60), *(int*)(*(int*)(g + 0x3a10) + 0x44));
 
-    lbl_803DCF7C = (char*)textureAlloc(0x140, 0xf0, 4, 0, 0, 0, 0, 1, 1);
+    lbl_803DCF7C = textureAlloc(0x140, 0xf0, 4, 0, 0, 0, 0, 1, 1);
     lbl_803DCFE4 = (int)textureAlloc(0x50, 0x3c, 4, 0, 0, 0, 0, 1, 1);
     lbl_803DCFDC = (int)textureAlloc(0x140, 0xf0, 1, 0, 0, 0, 0, 1, 1);
 
@@ -1929,7 +1929,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = (f32)i - 16.0f;
+        cy = i - 16.0f;
         isum = lowoff + rowoff;
         for (; j < 0x20; j++)
         {
@@ -1963,7 +1963,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = (f32)i - 8.0f;
+        cy = i - 8.0f;
         isum = lowoff + rowoff;
         for (; j < 0x10; j++)
         {
@@ -1996,7 +1996,7 @@ void allocLotsOfTextures(void)
         {
             f32 fi, fi2, rc, rc2;
             j = 0;
-            fi = (f32)i - 32.0f;
+            fi = i - 32.0f;
             fi2 = (f32)(i + 1) - 32.0f;
             rc = fi * 0.03125f;
             rc2 = fi2 * 0.03125f;
@@ -2025,7 +2025,7 @@ void allocLotsOfTextures(void)
                 i = 0;
                 rowoff = (j >> 2) * 0x20;
                 lowoff = (j & 3) * 2;
-                fj = (f32)j - 32.0f;
+                fj = j - 32.0f;
                 fj2 = (f32)(j + 1) - 32.0f;
                 rc = fj * 0.03125f;
                 rc2 = fj2 * 0.03125f;
@@ -2107,7 +2107,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = (f32)i - 64.0f;
+        cy = i - 64.0f;
         isum = lowoff + rowoff;
         cy = cy * 0.015625f;
         for (; j < 0x80; j++)
@@ -2131,7 +2131,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = (f32)i - 64.0f;
+        cy = i - 64.0f;
         isum = lowoff + rowoff;
         cy = cy * 0.015625f;
         cy = __fabsf(cy);
@@ -2160,7 +2160,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        c0 = (f32)i - 16.0f;
+        c0 = i - 16.0f;
         isum = lowoff + rowoff;
         c0 = c0 * 0.0625f;
         c0 = __fabsf(c0);
@@ -2183,7 +2183,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = (f32)i - 64.0f;
+        cy = i - 64.0f;
         isum = lowoff + rowoff;
         cy = cy * 0.015625f;
         for (; j < 0x80; j++)
@@ -2218,7 +2218,7 @@ void allocLotsOfTextures(void)
     lbl_803DCF94 = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 4; i++)
     {
-        f32 x = (f32)i / 3.0f - CPUFifo_803DED38;
+        f32 x = i / 3.0f - CPUFifo_803DED38;
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x60) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)CPUFifo_803DED38 & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x68) =
@@ -2312,7 +2312,7 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     {
         if ((mask >> bit) & 1)
         {
-            buf[buf[0x1b] + 0x13] = (s8)bit;
+            buf[buf[0x1b] + 0x13] = bit;
             buf[0x1b]++;
         }
     }
@@ -2436,11 +2436,11 @@ void fn_8006CB50(void)
     {
         int yhi = (y >> 2) * 0x20;
         int ylo = (y & 3) * 2;
-        f32 fy = (f32)y - Udchuff_803DEDAC;
+        f32 fy = y - Udchuff_803DEDAC;
         for (x = 0; x < 0x100; x++)
         {
             char* addr = (char*)lbl_803DCFBC + ylo + yhi + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = (f32)x - Udchuff_803DEDAC;
+            f32 fx = x - Udchuff_803DEDAC;
             f32 dist = sqrtf(fy * fy + fx * fx);
             f32 ny = fy / dist;
             f32 nx = fx / dist;
@@ -2553,7 +2553,7 @@ void renderShadows(void)
     vAp1 = &vA[1];
     vAp2 = &vA[2];
     mc54p = &mc54[0];
-    for (r22 = 0; (s8)r22 < (int)lbl_803DCF78 && (s8)r22 < 0x64; r22++, casterPtr += 0xc)
+    for (r22 = 0; r22 < lbl_803DCF78 && r22 < 0x64; r22++, casterPtr += 0xc)
     {
         int* obj = *(int**)casterPtr;
         int* of64 = (int*)obj[0x64 / 4];
@@ -2565,10 +2565,10 @@ void renderShadows(void)
         if ((u8)lod <= 4) continue;
         if ((*(int*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
-            memcpy(mc48, (char*)obj + 0xc, 0xc);
-            memcpy(mc54p, (char*)obj + 0x18, 0xc);
-            memcpy((char*)obj + 0xc, (char*)of64 + 0x20, 0xc);
-            memcpy((char*)obj + 0x18, (char*)of64 + 0x20, 0xc);
+            memcpy(mc48, obj + 0xc, 0xc);
+            memcpy(mc54p, obj + 0x18, 0xc);
+            memcpy((char*)obj + 0xc, of64 + 0x20, 0xc);
+            memcpy((char*)obj + 0x18, of64 + 0x20, 0xc);
         }
         castSlot = B + (u8)r24 * 0x68 + 0x1170;
         *(u8*)(castSlot + 0x64) = (u8)lod;
@@ -2627,8 +2627,8 @@ void renderShadows(void)
             dirZ = -f21;
             lbl_803DCF84 = (u16)getAngle(dirX, f21);
             lbl_803DCF88 = getAngle(sqrtf(f22 * f22 + f21 * f21), vAy) - 0x3fc8;
-            ((GameObject*)slot)->anim.rotY = (s16)lbl_803DCF88;
-            ((GameObject*)slot)->anim.rotX = (s16)lbl_803DCF84;
+            ((GameObject*)slot)->anim.rotY = lbl_803DCF88;
+            ((GameObject*)slot)->anim.rotX = lbl_803DCF84;
             {
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
                 if (mag > lbl_803DED28)
