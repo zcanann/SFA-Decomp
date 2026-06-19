@@ -1020,8 +1020,10 @@ void crawler_update(int* obj, u8* state)
                 i = ((BaddieState*)state)->seqEntryIndex * 0xc;
                 Baddie_SetMove(obj, state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
                             *(u8*)(t9 + i + 0xa));
-                p = t9 + ((BaddieState*)state)->seqEntryIndex * 0xc;
-                ((BaddieState*)state)->seqEntryIndex = *(u8*)(p + 9);
+                {
+                    u8* p9 = t9 + 9;
+                    ((BaddieState*)state)->seqEntryIndex = p9[((BaddieState*)state)->seqEntryIndex * 0xc];
+                }
             }
             else
             {
