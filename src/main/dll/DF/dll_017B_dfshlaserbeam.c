@@ -449,7 +449,7 @@ void fn_801C4664(void* objArg)
     f32 trigB;
     s32 angleDelta;
     f32 distance;
-    int animEvents;
+    ObjAnimEventList animEvents;
 
     obj = (DFSHLaserBeamObject*)objArg;
     config = obj->config;
@@ -488,7 +488,7 @@ void fn_801C4664(void* objArg)
     obj->pitch = (s16)(lbl_803E4F20 * (trigB + trigA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4F24, timeDelta,
-                                                                 (ObjAnimEventList*)&animEvents);
+                                                                 &animEvents);
     if (playerObj == NULL)
     {
         return;
