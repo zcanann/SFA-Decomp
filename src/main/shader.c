@@ -2618,7 +2618,7 @@ void beginLoadingMap(void)
     *(f32*)(base + 0x8590) = p[2];
     *(int*)(base + 0x8594) = 1;
     lbl_803DCDC8 = lbl_803DCDD0 * 640;
-    lbl_803DCDCC = lbl_803DCDD4 * 640;
+    lbl_803DCDCC = *(volatile int*)&lbl_803DCDD4 * 640;
     playerMapOffsetX = (f32)lbl_803DCDC8;
     playerMapOffsetZ = (f32)lbl_803DCDCC;
     lbl_803DCED0 = playerMapOffsetX;
