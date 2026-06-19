@@ -1203,7 +1203,9 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->y = pos[1];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->z = pos[2];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->angle = (s8)(angle >> 8);
-    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->map = (s8)b691;
+    ((SaveGameCharacterPosition *)((u8 *)pRestartPoint + SAVEGAME_CHARACTER_POSITION_OFFSET))
+        [gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET]]
+            .map = (s8)b691;
     GameBit_Set(0x970, 0);
     if (flag != 0 && healed != 0)
     {
