@@ -426,7 +426,7 @@ void newshadows_captureProjectedShadow(ushort* object)
                  (double)((GameObject*)object)->anim.localPosY,
                  (double)(((GameObject*)object)->anim.localPosZ - lbl_803DDA5C),
                  (double)(lbl_803DF98C * ((GameObject*)object)->anim.hitboxScale *
-                     *(float*)(object + 4)),
+                     ((GameObject*)object)->anim.rootMotionScale),
                  &projX, &projY, &projZ, &scaleX, &scaleY, &projW);
     scaleX = lbl_803DF994 * scaleX + lbl_803DF990;
     scaleY = lbl_803DF998 * scaleY + lbl_803DF990;
@@ -436,7 +436,7 @@ void newshadows_captureProjectedShadow(ushort* object)
         fVar1 = scaleX;
     }
     invScale = (double)(lbl_803DF99C / fVar1);
-    dVar6 = (double)(float)((double)*(float*)(object + 4) * invScale);
+    dVar6 = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
     dVar4 = -(double)projX;
     dirY = (double)projY;
     FUN_8025da64((double)(float)((double)lbl_803DF994 * dVar4),
@@ -448,12 +448,12 @@ void newshadows_captureProjectedShadow(ushort* object)
     }
     else
     {
-        savedScale = (double)*(float*)(object + 4);
-        *(float*)(object + 4) = (float)dVar6;
+        savedScale = (double)((GameObject*)object)->anim.rootMotionScale;
+        ((GameObject*)object)->anim.rootMotionScale = (float)dVar6;
         FUN_80040cd0(1);
         FUN_8003b878(0, 0, 0, 0, object, 1);
         FUN_80040cd0(0);
-        *(float*)(object + 4) = (float)savedScale;
+        ((GameObject*)object)->anim.rootMotionScale = (float)savedScale;
         renderState = FUN_80017a54((int)object);
         *(ushort*)(renderState + 0x18) = *(ushort*)(renderState + 0x18) & ~0x8;
         gxSetZMode_(1, 3, 1);
@@ -465,13 +465,13 @@ void newshadows_captureProjectedShadow(ushort* object)
     }
     FUN_80006988();
     dVar6 = (double)lbl_803DF994;
-    *(float*)(*(int*)(object + 0x32) + 0x14) = (float)(dVar6 * -dVar4);
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) = (float)(dVar6 * -dVar4);
     dVar4 = (double)lbl_803DF998;
-    *(float*)(*(int*)(object + 0x32) + 0x18) = (float)(dVar4 * -dirY);
-    *(float*)(*(int*)(object + 0x32) + 0x14) =
-        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x14) + dVar6);
-    *(float*)(*(int*)(object + 0x32) + 0x18) =
-        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x18) + dVar4);
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) = (float)(dVar4 * -dirY);
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) =
+        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + dVar6);
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) =
+        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + dVar4);
     fVar1 = lbl_803DF99C;
     shadowSlot = *(float**)(object + 0x32);
     shadowSlot[5] = -(lbl_803DF99C * *shadowSlot - shadowSlot[5]);
