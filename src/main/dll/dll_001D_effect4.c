@@ -1309,10 +1309,10 @@ extern int gEffect4SinPhaseCounterB;
 extern f32 gEffect4SinValueB;
 extern f32 gEffect4SinValueA;
 extern f32 lbl_803DF878;
-extern f32 gEffect4F0_001;
-extern f32 gEffect4F0_1;
-extern f32 gEffect4One;
-extern f32 gEffect4F0_3;
+extern f32 lbl_803DFA88;
+extern f32 lbl_803DFA8C;
+extern f32 lbl_803DFA90;
+extern f32 lbl_803DFA98;
 extern f32 gEffect4Pi;
 extern f32 gEffect4SinPhaseScale;
 extern f32 lbl_803DFCE0;
@@ -1323,17 +1323,17 @@ void Effect4_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = gEffect4TickCyclePhaseFast + (step = gEffect4F0_001 * timeDelta);
+    sum = gEffect4TickCyclePhaseFast + (step = lbl_803DFA88 * timeDelta);
     gEffect4TickCyclePhaseFast = sum;
     if (sum > 1.0f)
     {
-        gEffect4TickCyclePhaseFast = gEffect4F0_1;
+        gEffect4TickCyclePhaseFast = lbl_803DFA8C;
     }
     sum = gEffect4TickCyclePhaseSlow + step;
     gEffect4TickCyclePhaseSlow = sum;
     if (sum > 1.0f)
     {
-        gEffect4TickCyclePhaseSlow = gEffect4F0_3;
+        gEffect4TickCyclePhaseSlow = lbl_803DFA98;
     }
     gEffect4SinPhaseCounterA = gEffect4SinPhaseCounterA + framesThisStep * 0x64;
     if (gEffect4SinPhaseCounterA > 0x7fff)
@@ -1443,82 +1443,82 @@ extern f32 lbl_803DF9D4;
 extern f32 gEffect4SpawnCyclePhaseFast;
 extern f32 gEffect4SpawnCyclePhaseSlow;
 extern f32 gEffect4SpawnCyclePhaseSlowStep;
-extern f32 gEffect4Zero;
-extern f32 gEffect4F0_022;
-extern f32 gEffect4F0_0000035;
-extern f32 gEffect4F12;
-extern f32 gEffect4F0_0000175;
-extern f32 gEffect4F0_01;
-extern f32 gEffect4F0_00005;
-extern f32 gEffect4F450;
-extern f32 gEffect4F0_005;
-extern f32 gEffect4F350;
-extern f32 gEffect4F0_008;
-extern f32 gEffect4F250;
-extern f32 gEffect4F0_0002;
-extern f32 gEffect4F0_0037;
-extern f32 gEffect4F0_05;
-extern f32 gEffect4F0_04;
+extern f32 lbl_803DFA9C;
+extern f32 lbl_803DFAA0;
+extern f32 lbl_803DFAA4;
+extern f32 lbl_803DFAA8;
+extern f32 lbl_803DFAAC;
+extern f32 lbl_803DFAB0;
+extern f32 lbl_803DFAB4;
+extern f32 lbl_803DFAB8;
+extern f32 lbl_803DFABC;
+extern f32 lbl_803DFAC0;
+extern f32 lbl_803DFAC4;
+extern f32 lbl_803DFAC8;
+extern f32 lbl_803DFACC;
+extern f32 lbl_803DFAD0;
+extern f32 lbl_803DFAD4;
+extern f32 lbl_803DFAD8;
 extern f32 lbl_803DFADC;
 extern f32 lbl_803DFAE0;
 extern f32 lbl_803DFAE4;
-extern f32 gEffect4F0_0005;
-extern f32 gEffect4F0_045;
-extern f32 gEffect4F0_013;
-extern f32 gEffect4F0_006;
-extern f32 gEffect4F0_015;
-extern f32 gEffect4F0_8;
-extern f32 gEffect4F0_035;
-extern f32 gEffect4F0_0007;
-extern f32 gEffect4F0_000002;
-extern f32 gEffect4F0_0012;
+extern f32 lbl_803DFAE8;
+extern f32 lbl_803DFAEC;
+extern f32 lbl_803DFAF0;
+extern f32 lbl_803DFAF4;
+extern f32 lbl_803DFAF8;
+extern f32 lbl_803DFAFC;
+extern f32 lbl_803DFB00;
+extern f32 lbl_803DFB04;
+extern f32 lbl_803DFB08;
+extern f32 lbl_803DFB0C;
 extern f32 lbl_803DFB10;
-extern f32 gEffect4F0_0016;
-extern f32 gEffect4F0_000022;
-extern f32 gEffect4F0_00008;
-extern f32 gEffect4F0_2;
-extern f32 gEffect4F0_02;
-extern f32 gEffect4F0_0032;
-extern f32 gEffect4F0_00047;
+extern f32 lbl_803DFB14;
+extern f32 lbl_803DFB18;
+extern f32 lbl_803DFB1C;
+extern f32 lbl_803DFB20;
+extern f32 lbl_803DFB24;
+extern f32 lbl_803DFB28;
+extern f32 lbl_803DFB2C;
 extern f32 lbl_803DFB30;
-extern f32 gEffect4F260;
-extern f32 gEffect4F0_03;
-extern f32 gEffect4F0_000945;
-extern f32 gEffect4F0_0004;
-extern f32 gEffect4FNeg0_03;
-extern f32 gEffect4F0_002;
-extern f32 gEffect4F0_0001545;
-extern f32 gEffect4F0_016;
-extern f32 gEffect4F0_026;
-extern f32 gEffect4F1_35;
-extern f32 gEffect4F0_45;
-extern f32 gEffect4F0_0001;
-extern f32 gEffect4F35;
-extern f32 gEffect4F0_00004;
-extern f32 gEffect4F0_00006;
-extern f32 gEffect4Quarter;
-extern f32 gEffect4F0_000013;
-extern f32 gEffect4F0_4;
-extern f32 gEffect4Half;
-extern f32 gEffect4F0_113;
-extern f32 gEffect4F0_12;
-extern f32 gEffect4F45;
-extern f32 gEffect4F0_000007;
-extern f32 gEffect4F1_2;
-extern f32 gEffect4F0_000068;
-extern f32 gEffect4F10;
-extern f32 gEffect4FNeg0_1;
-extern f32 gEffect4F0_69;
-extern f32 gEffect4FNeg0_15;
-extern f32 gEffect4FNeg0_01;
-extern f32 gEffect4F0_00015;
-extern f32 gEffect4F0_0065;
-extern f32 gEffect4F0_0105;
-extern f32 gEffect4F0_0025;
-extern f32 gEffect4FNeg1;
-extern f32 gEffect4F130;
-extern f32 gEffect4F0_00035;
-extern f32 gEffect4F0_003;
+extern f32 lbl_803DFB34;
+extern f32 lbl_803DFB38;
+extern f32 lbl_803DFB3C;
+extern f32 lbl_803DFB40;
+extern f32 lbl_803DFB44;
+extern f32 lbl_803DFB48;
+extern f32 lbl_803DFB4C;
+extern f32 lbl_803DFB50;
+extern f32 lbl_803DFB54;
+extern f32 lbl_803DFB58;
+extern f32 lbl_803DFB5C;
+extern f32 lbl_803DFB60;
+extern f32 lbl_803DFB64;
+extern f32 lbl_803DFB68;
+extern f32 lbl_803DFB6C;
+extern f32 lbl_803DFB70;
+extern f32 lbl_803DFB74;
+extern f32 lbl_803DFB78;
+extern f32 lbl_803DFB7C;
+extern f32 lbl_803DFB80;
+extern f32 lbl_803DFB84;
+extern f32 lbl_803DFB88;
+extern f32 lbl_803DFB8C;
+extern f32 lbl_803DFB90;
+extern f32 lbl_803DFB94;
+extern f32 lbl_803DFB98;
+extern f32 lbl_803DFB9C;
+extern f32 lbl_803DFBA0;
+extern f32 lbl_803DFBA4;
+extern f32 lbl_803DFBA8;
+extern f32 lbl_803DFBAC;
+extern f32 lbl_803DFBB0;
+extern f32 lbl_803DFBB4;
+extern f32 lbl_803DFBB8;
+extern f32 lbl_803DFBBC;
+extern f32 lbl_803DFBC0;
+extern f32 lbl_803DFBC4;
+extern f32 lbl_803DFBC8;
 
 int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
@@ -1528,10 +1528,10 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     MtxBuildArg es;
     PartFxSpawn cfg;
 
-    gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + gEffect4F0_001;
-    if (gEffect4SpawnCyclePhaseFast > 1.0f) gEffect4SpawnCyclePhaseFast = gEffect4F0_1;
+    gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + lbl_803DFA88;
+    if (gEffect4SpawnCyclePhaseFast > 1.0f) gEffect4SpawnCyclePhaseFast = lbl_803DFA8C;
     gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + gEffect4SpawnCyclePhaseSlowStep;
-    if (gEffect4SpawnCyclePhaseSlow > 1.0f) gEffect4SpawnCyclePhaseSlow = gEffect4F0_3;
+    if (gEffect4SpawnCyclePhaseSlow > 1.0f) gEffect4SpawnCyclePhaseSlow = lbl_803DFA98;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -1549,13 +1549,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     cfg.renderFlags = 0;
     cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
-    cfg.startPosX = gEffect4Zero;
-    cfg.startPosY = gEffect4Zero;
-    cfg.startPosZ = gEffect4Zero;
-    cfg.velocityX = gEffect4Zero;
-    cfg.velocityY = gEffect4Zero;
-    cfg.velocityZ = gEffect4Zero;
-    cfg.scale = gEffect4Zero;
+    cfg.startPosX = lbl_803DFA9C;
+    cfg.startPosY = lbl_803DFA9C;
+    cfg.startPosZ = lbl_803DFA9C;
+    cfg.velocityX = lbl_803DFA9C;
+    cfg.velocityY = lbl_803DFA9C;
+    cfg.velocityZ = lbl_803DFA9C;
+    cfg.scale = lbl_803DFA9C;
     cfg.lifetimeFrames = 0;
     cfg.quadVertex3Pad06 = -1;
     cfg.initialAlpha = 0xff;
@@ -1571,15 +1571,15 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     switch (effectId)
     {
     case 0x1c8:
-        cfg.startPosY = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosY = lbl_803DFA8C * (f32)(s32)
         randomGetRange(0, 0x64);
-        cfg.velocityX = gEffect4F0_022 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAA0 * (f32)(s32)
         randomGetRange(-0x28, 0x28);
-        cfg.velocityZ = cfg.velocityX * (gEffect4F0_022 * (f32)(s32)
+        cfg.velocityZ = cfg.velocityX * (lbl_803DFAA0 * (f32)(s32)
         randomGetRange(-0x1e, 0x1e)
         )
         ;
-        cfg.scale = gEffect4F0_0000035 * (f32)(s32)
+        cfg.scale = lbl_803DFAA4 * (f32)(s32)
         randomGetRange(0xc8, 0x118);
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0xff;
@@ -1588,16 +1588,16 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x566;
         break;
     case 0x1c9:
-        cfg.startPosZ = gEffect4F12;
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        cfg.startPosZ = lbl_803DFAA8;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
         vecRotateZXY(&es, &cfg.startPosX);
-        cfg.scale = gEffect4F0_0000175 * (f32)(s32)
+        cfg.scale = lbl_803DFAAC * (f32)(s32)
         randomGetRange(0xc8, 0x118);
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0xe1;
@@ -1605,11 +1605,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x4f9;
         break;
     case 0x1ca:
-        cfg.velocityX = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x1c, 0x1c);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x1c, 0x1c);
-        cfg.scale = gEffect4F0_00005 * (f32)(s32)
+        cfg.scale = lbl_803DFAB4 * (f32)(s32)
         randomGetRange(0xc8, 0x118);
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xe1;
@@ -1625,11 +1625,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x4f9;
         break;
     case 0x1c7:
-        cfg.velocityX = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x1c, 0x1c);
-        cfg.velocityY = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x1c, 0x1c);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x1c, 0x1c);
         cfg.startPosX = (f32)(s32)
         randomGetRange(-0x46, 0x46);
@@ -1637,7 +1637,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(0x82, 0xaa);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(-0x46, 0x46);
-        cfg.scale = gEffect4F0_01;
+        cfg.scale = lbl_803DFAB0;
         cfg.lifetimeFrames = 0x190;
         cfg.initialAlpha = 0xff;
         cfg.colorWord0 = 0;
@@ -1651,51 +1651,51 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x33;
         break;
     case 0x1c5:
-        cfg.startPosX = gEffect4F450;
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        cfg.startPosX = lbl_803DFAB8;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
         vecRotateZXY(&es, &cfg.startPosX);
-        cfg.scale = gEffect4F0_005;
+        cfg.scale = lbl_803DFABC;
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x480100;
         cfg.textureId = 0x33;
         break;
     case 0x1c4:
-        cfg.startPosX = gEffect4F350;
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        cfg.startPosX = lbl_803DFAC0;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
         vecRotateZXY(&es, &cfg.startPosX);
-        cfg.scale = gEffect4F0_008;
+        cfg.scale = lbl_803DFAC4;
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x480100;
         cfg.textureId = 0x26c;
         break;
     case 0x1c6:
-        cfg.startPosX = gEffect4F250 + (f32)(s32)
+        cfg.startPosX = lbl_803DFAC8 + (f32)(s32)
         randomGetRange(0, 0x5a);
         cfg.startPosY = (f32)(s32)
         randomGetRange(-0xa, 0xa);
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
         vecRotateZXY(&es, &cfg.startPosX);
-        cfg.scale = gEffect4F0_0002 * (f32)(s32)
+        cfg.scale = lbl_803DFACC * (f32)(s32)
         randomGetRange(1, 0x14);
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
@@ -1704,15 +1704,15 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x23c;
         break;
     case 0x1c3:
-        cfg.velocityY = gEffect4F0_1;
-        cfg.scale = gEffect4F0_008;
+        cfg.velocityY = lbl_803DFA8C;
+        cfg.scale = lbl_803DFAC4;
         cfg.lifetimeFrames = 0x3c;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0xa100110;
         cfg.textureId = 0x23b;
         break;
     case 0x190:
-        cfg.scale = gEffect4F0_0037 * (f32)(s32)
+        cfg.scale = lbl_803DFAD0 * (f32)(s32)
         randomGetRange(1, 5);
         cfg.lifetimeFrames = randomGetRange(0xa, 0x14);
         cfg.renderFlags = 0x2;
@@ -1726,9 +1726,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(0, 0x50);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(-0x8, 0x8);
-        cfg.velocityY = gEffect4F0_05 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAD4 * (f32)(s32)
         randomGetRange(-0x3, 0x3);
-        cfg.scale = gEffect4F0_001;
+        cfg.scale = lbl_803DFA88;
         cfg.lifetimeFrames = 0x64;
         cfg.initialAlpha = 0x7d;
         cfg.linkGroup = 0x10;
@@ -1742,7 +1742,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(0, 0x78);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(-0xd0, 0xd0);
-        cfg.velocityY = gEffect4F0_04 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAD8 * (f32)(s32)
         randomGetRange(-0x3, 0x3);
         cfg.scale = lbl_803DFADC;
         cfg.lifetimeFrames = 0xc8;
@@ -1758,7 +1758,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(0, 0x78);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(-0x3a, 0x3a);
-        cfg.velocityY = gEffect4F0_05 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAD4 * (f32)(s32)
         randomGetRange(-0x3, 0x3);
         cfg.scale = lbl_803DFADC;
         cfg.lifetimeFrames = 0x64;
@@ -1768,11 +1768,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0xde;
         break;
     case 0x194:
-        cfg.velocityX = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x3a, 0x3a);
-        cfg.velocityY = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(0, 0x78);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x3a, 0x3a);
         cfg.startPosX = (f32)(s32)
         randomGetRange(-0x5, 0x5);
@@ -1797,17 +1797,17 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0xde;
         break;
     case 0x196:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x1e, 0x1e);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x1e, 0x1e);
-        cfg.velocityX = gEffect4F0_0005 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAE8 * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.velocityY = gEffect4F0_045 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAEC * (f32)(s32)
         randomGetRange(0xf, 0x23);
-        cfg.velocityZ = gEffect4F0_0005 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAE8 * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.scale = gEffect4F0_013;
+        cfg.scale = lbl_803DFAF0;
         cfg.lifetimeFrames = 0x78;
         cfg.initialAlpha = 0xff;
         cfg.linkGroup = 0x10;
@@ -1822,17 +1822,17 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x1dd;
         break;
     case 0x197:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x1e, 0x1e);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x1e, 0x1e);
-        cfg.velocityX = gEffect4F0_006 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAF4 * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.velocityY = gEffect4F0_015 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAF8 * (f32)(s32)
         randomGetRange(0xf, 0x23);
-        cfg.velocityZ = gEffect4F0_006 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAF4 * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.scale = gEffect4F0_01;
+        cfg.scale = lbl_803DFAB0;
         cfg.lifetimeFrames = 0x50;
         cfg.initialAlpha = 0xff;
         cfg.linkGroup = 0x10;
@@ -1847,17 +1847,17 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x1de;
         break;
     case 0x198:
-        cfg.startPosY = gEffect4F0_8 * (f32)(s32)
+        cfg.startPosY = lbl_803DFAFC * (f32)(s32)
         randomGetRange(0, 0x3c);
-        cfg.scale = gEffect4F0_035;
+        cfg.scale = lbl_803DFB00;
         cfg.lifetimeFrames = 0x1e;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x8100200;
         cfg.textureId = 0x91;
         break;
     case 0x199:
-        cfg.scale = gEffect4F0_000002 * (f32)(s32)
-        randomGetRange(0, 0x32) + gEffect4F0_0007;
+        cfg.scale = lbl_803DFB08 * (f32)(s32)
+        randomGetRange(0, 0x32) + lbl_803DFB04;
         cfg.lifetimeFrames = 0;
         cfg.initialAlpha = (u8)(randomGetRange(0, 0x37) + 0xc8);
         cfg.linkGroup = 0;
@@ -1878,8 +1878,8 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x2;
         break;
     case 0x19a:
-        cfg.scale = gEffect4F0_000002 * (f32)(s32)
-        randomGetRange(0, 0x32) + gEffect4F0_0012;
+        cfg.scale = lbl_803DFB08 * (f32)(s32)
+        randomGetRange(0, 0x32) + lbl_803DFB0C;
         cfg.lifetimeFrames = 0xc;
         cfg.initialAlpha = 0x37;
         cfg.linkGroup = 0;
@@ -1888,8 +1888,8 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x2;
         break;
     case 0x19b:
-        cfg.scale = gEffect4F0_000002 * (f32)(s32)
-        randomGetRange(0, 0x32) + gEffect4F0_0012;
+        cfg.scale = lbl_803DFB08 * (f32)(s32)
+        randomGetRange(0, 0x32) + lbl_803DFB0C;
         cfg.lifetimeFrames = 0;
         cfg.initialAlpha = 0x9b;
         cfg.linkGroup = 0;
@@ -1918,7 +1918,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.behaviorFlags = 0x480001;
         break;
     case 0x19d:
-        cfg.scale = gEffect4F0_0016;
+        cfg.scale = lbl_803DFB14;
         cfg.lifetimeFrames = 0xf;
         cfg.initialAlpha = 0x9b;
         cfg.linkGroup = 0;
@@ -1926,13 +1926,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.behaviorFlags = 0x180201;
         break;
     case 0x19f:
-        cfg.startPosX = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosX = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.startPosY = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosY = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.startPosZ = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.scale = gEffect4F0_000022 * (f32)(s32)
+        cfg.scale = lbl_803DFB18 * (f32)(s32)
         randomGetRange(0x4b, 0x64);
         cfg.lifetimeFrames = randomGetRange(0x37, 0x4b);
         cfg.initialAlpha = 0x37;
@@ -1941,7 +1941,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x4402800;
         break;
     case 0x1a0:
-        cfg.scale = gEffect4F0_00008 * (f32)(s32)
+        cfg.scale = lbl_803DFB1C * (f32)(s32)
         randomGetRange(0x4b, 0x64);
         cfg.initialAlpha = 0x37;
         cfg.lifetimeFrames = 0xf;
@@ -1951,13 +1951,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x4000800;
         break;
     case 0x1bc:
-        cfg.startPosX = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosX = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.startPosY = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosY = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.startPosZ = gEffect4F0_005 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFABC * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.scale = gEffect4F0_000022 * (f32)(s32)
+        cfg.scale = lbl_803DFB18 * (f32)(s32)
         randomGetRange(0x4b, 0x64);
         cfg.lifetimeFrames = randomGetRange(0x8c, 0xa5);
         cfg.initialAlpha = 0x37;
@@ -1966,7 +1966,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x4400000;
         break;
     case 0x1bd:
-        cfg.scale = gEffect4F0_00008 * (f32)(s32)
+        cfg.scale = lbl_803DFB1C * (f32)(s32)
         randomGetRange(0x4b, 0x64);
         cfg.initialAlpha = 0x37;
         cfg.lifetimeFrames = 0xf;
@@ -1975,17 +1975,17 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.behaviorFlags = 0x4080100;
         break;
     case 0x1a1:
-        cfg.startPosX = gEffect4F0_2 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB20 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosY = gEffect4F0_2 * (f32)(s32)
+        cfg.startPosY = lbl_803DFB20 * (f32)(s32)
         randomGetRange(-0xa, 0xa);
-        cfg.velocityX = gEffect4F0_045 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAEC * (f32)(s32)
         randomGetRange(0xa, 0x14);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_02 * (f32)(s32)
+        cfg.velocityY = lbl_803DFB24 * (f32)(s32)
         randomGetRange(0xa, 0x14);
-        cfg.scale = gEffect4F0_0032;
+        cfg.scale = lbl_803DFB28;
         cfg.lifetimeFrames = randomGetRange(0x28, 0x50);
         cfg.initialAlpha = 0xff;
         cfg.quadVertex3Pad06 = 0x1a2;
@@ -1994,7 +1994,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x7b;
         break;
     case 0x1a2:
-        cfg.scale = gEffect4F0_0032;
+        cfg.scale = lbl_803DFB28;
         cfg.lifetimeFrames = 0x3c;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x2000104;
@@ -2002,13 +2002,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x7b;
         break;
     case 0x1a3:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_01 * (f32)(s32)
-        randomGetRange(0, 0x1e) + gEffect4F0_2;
-        cfg.scale = gEffect4F0_00047 * (f32)(s32)
+        cfg.velocityY = lbl_803DFAB0 * (f32)(s32)
+        randomGetRange(0, 0x1e) + lbl_803DFB20;
+        cfg.scale = lbl_803DFB2C * (f32)(s32)
         randomGetRange(1, 0xa);
         cfg.lifetimeFrames = randomGetRange(0x5a, 0x8c);
         cfg.behaviorFlags = 0x80500209;
@@ -2026,18 +2026,18 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         {
             cfg.startPosX = (f32)(s32)
             randomGetRange(-0xa, 0xa);
-            cfg.startPosY = gEffect4F260;
+            cfg.startPosY = lbl_803DFB34;
             cfg.startPosZ = (f32)(s32)
             randomGetRange(-0xa, 0xa);
         }
-        cfg.velocityX = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_03 * (f32)(s32)
+        cfg.velocityY = lbl_803DFB38 * (f32)(s32)
         randomGetRange(0, 0x14);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_0004 * (f32)(s32)
-        randomGetRange(0, 0xa) + gEffect4F0_000945;
+        cfg.scale = lbl_803DFB40 * (f32)(s32)
+        randomGetRange(0, 0xa) + lbl_803DFB3C;
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
         cfg.quadVertex3Pad06 = 0x281;
@@ -2059,22 +2059,22 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x1a5:
         if (spawnParams != 0)
         {
-            if (spawnParams->scale <= gEffect4F0_01)
+            if (spawnParams->scale <= lbl_803DFAB0)
             {
-                spawnParams->scale = *(f32*)&gEffect4F0_01;
+                spawnParams->scale = *(f32*)&lbl_803DFAB0;
             }
             cfg.velocityY = -spawnParams->scale;
         }
         else
         {
-            cfg.velocityY = gEffect4FNeg0_03 * (f32)(s32)
+            cfg.velocityY = lbl_803DFB44 * (f32)(s32)
             randomGetRange(0, 0x14);
         }
-        cfg.velocityX = gEffect4F0_002 * (f32)(s32)
+        cfg.velocityX = lbl_803DFB48 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = gEffect4F0_002 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFB48 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_0001545 * (f32)(s32)
+        cfg.scale = lbl_803DFB4C * (f32)(s32)
         randomGetRange(2, 0xa);
         cfg.lifetimeFrames = randomGetRange(0x3c, 0x46);
         cfg.initialAlpha = 0xff;
@@ -2092,18 +2092,18 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         {
             cfg.startPosX = (f32)(s32)
             randomGetRange(-0xa, 0xa);
-            cfg.startPosY = gEffect4F260;
+            cfg.startPosY = lbl_803DFB34;
             cfg.startPosZ = (f32)(s32)
             randomGetRange(-0xa, 0xa);
         }
-        cfg.velocityX = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_03 * (f32)(s32)
+        cfg.velocityY = lbl_803DFB38 * (f32)(s32)
         randomGetRange(0, 0x14);
-        cfg.velocityZ = gEffect4F0_01 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_0004 * (f32)(s32)
-        randomGetRange(0, 0xa) + gEffect4F0_000945;
+        cfg.scale = lbl_803DFB40 * (f32)(s32)
+        randomGetRange(0, 0xa) + lbl_803DFB3C;
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
         cfg.quadVertex3Pad06 = 0x281;
@@ -2136,10 +2136,10 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         }
         else
         {
-            cfg.velocityY = gEffect4F0_04 * (f32)(s32)
+            cfg.velocityY = lbl_803DFAD8 * (f32)(s32)
             randomGetRange(-3, 3);
         }
-        cfg.scale = gEffect4F0_035;
+        cfg.scale = lbl_803DFB00;
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0xff;
         cfg.linkGroup = 0x10;
@@ -2147,7 +2147,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0xc79;
         break;
     case 0x1a7:
-        cfg.scale = gEffect4F0_016;
+        cfg.scale = lbl_803DFB50;
         cfg.lifetimeFrames = randomGetRange(0, 0xfa) + 0x96;
         cfg.linkGroup = 0;
         cfg.quadVertex3Pad06 = 0x1a8;
@@ -2155,7 +2155,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x167;
         break;
     case 0x1a8:
-        cfg.scale = gEffect4F0_026;
+        cfg.scale = lbl_803DFB54;
         cfg.lifetimeFrames = 0xa;
         cfg.linkGroup = 0;
         cfg.initialAlpha = 0xff;
@@ -2166,22 +2166,22 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         if ((int)randomGetRange(0, 0x50) == 0)
         {
             cfg.lifetimeFrames = 0xf0;
-            cfg.velocityX = gEffect4F1_35;
+            cfg.velocityX = lbl_803DFB58;
         }
         else
         {
             cfg.lifetimeFrames = 0x78;
-            cfg.velocityX = gEffect4F0_45;
+            cfg.velocityX = lbl_803DFB5C;
         }
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
         vecRotateZXY(&es, &cfg.velocityX);
-        cfg.scale = gEffect4F0_005;
+        cfg.scale = lbl_803DFABC;
         cfg.linkGroup = 0x10;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80100;
@@ -2189,15 +2189,15 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1b3:
         if (spawnParams == 0) return -1;
-        cfg.velocityX = gEffect4F0_0001 * (f32)(s32)
-        randomGetRange(-0xf, 0xf) + gEffect4F0_001;
-        cfg.velocityY = gEffect4F0_0001 * (f32)(s32)
-        randomGetRange(-0xf, 0xf) + gEffect4F0_001;
-        cfg.velocityZ = gEffect4F0_0001 * (f32)(s32)
-        randomGetRange(-0xf, 0xf) + gEffect4F0_001;
-        cfg.startPosY = gEffect4F35;
+        cfg.velocityX = lbl_803DFB60 * (f32)(s32)
+        randomGetRange(-0xf, 0xf) + lbl_803DFA88;
+        cfg.velocityY = lbl_803DFB60 * (f32)(s32)
+        randomGetRange(-0xf, 0xf) + lbl_803DFA88;
+        cfg.velocityZ = lbl_803DFB60 * (f32)(s32)
+        randomGetRange(-0xf, 0xf) + lbl_803DFA88;
+        cfg.startPosY = lbl_803DFB64;
         vecRotateZXY(spawnParams, &cfg.velocityX);
-        cfg.scale = gEffect4F0_00004 * (f32)(s32)
+        cfg.scale = lbl_803DFB68 * (f32)(s32)
         randomGetRange(0x14, 0x1e);
         cfg.initialAlpha = 0xff;
         cfg.lifetimeFrames = 0x64;
@@ -2208,7 +2208,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x159;
         break;
     case 0x1b4:
-        cfg.scale = gEffect4F0_00006 * (f32)(s32)
+        cfg.scale = lbl_803DFB6C * (f32)(s32)
         randomGetRange(0x14, 0x1e);
         cfg.initialAlpha = 0x37;
         cfg.lifetimeFrames = 0x14;
@@ -2219,17 +2219,17 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1aa:
         if (spawnParams == 0) return -1;
-        cfg.velocityX = gEffect4F0_001 * (f32)(s32)
-        randomGetRange(0, 0x640) + gEffect4Quarter;
+        cfg.velocityX = lbl_803DFA88 * (f32)(s32)
+        randomGetRange(0, 0x640) + lbl_803DFB70;
         vecRotateZXY(spawnParams, &cfg.velocityX);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            cfg.scale = gEffect4F0_005;
+            cfg.scale = lbl_803DFABC;
             cfg.initialAlpha = 0xff;
         }
         else
         {
-            cfg.scale = gEffect4F0_015;
+            cfg.scale = lbl_803DFAF8;
             cfg.initialAlpha = 0x9b;
         }
         cfg.lifetimeFrames = 0xf0;
@@ -2245,7 +2245,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(-1, 1);
         cfg.velocityZ = spawnParams->posX * (f32)(s32)
         randomGetRange(-1, 1);
-        cfg.scale = gEffect4F0_000013 * (f32)(s32)
+        cfg.scale = lbl_803DFB74 * (f32)(s32)
         randomGetRange(0x190, 0x1f4);
         cfg.initialAlpha = 0xff;
         cfg.lifetimeFrames = randomGetRange(0, 0x14) + 0xa0;
@@ -2262,18 +2262,18 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1b0:
         if (spawnParams == 0) return -1;
-        cfg.startPosX = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosZ = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4Half;
+        cfg.scale = lbl_803DFB7C;
         cfg.initialAlpha = 0xff;
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = gEffect4Zero;
-        cfg.sourcePosZ = gEffect4Zero;
-        cfg.sourcePosW = gEffect4Zero;
+        cfg.sourcePosY = lbl_803DFA9C;
+        cfg.sourcePosZ = lbl_803DFA9C;
+        cfg.sourcePosW = lbl_803DFA9C;
         cfg.lifetimeFrames = 0xa0;
         cfg.linkGroup = 0x10;
         cfg.behaviorFlags = 0x6100214;
@@ -2281,11 +2281,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1b1:
         if (spawnParams == 0) return -1;
-        cfg.startPosX = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosZ = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = spawnParams->posX * (gEffect4F0_113 * (f32)(s32)
+        cfg.scale = spawnParams->posX * (lbl_803DFB80 * (f32)(s32)
         randomGetRange(1, 5)
         )
         ;
@@ -2293,22 +2293,22 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = gEffect4Zero;
-        cfg.sourcePosZ = gEffect4Zero;
-        cfg.sourcePosW = gEffect4Zero;
+        cfg.sourcePosY = lbl_803DFA9C;
+        cfg.sourcePosZ = lbl_803DFA9C;
+        cfg.sourcePosW = lbl_803DFA9C;
         cfg.lifetimeFrames = 0xa0;
         cfg.linkGroup = 0x10;
         cfg.behaviorFlags = 0x6100214;
         cfg.textureId = 0x30;
         break;
     case 0x1b2:
-        cfg.velocityX = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityX = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityY = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_000013 * (f32)(s32)
+        cfg.scale = lbl_803DFB74 * (f32)(s32)
         randomGetRange(0xc8, 0x3e8);
         cfg.initialAlpha = (u8)(randomGetRange(0x64, 0xc8) + 0x37);
         cfg.lifetimeFrames = randomGetRange(0, 0x28) + 0x3c;
@@ -2317,13 +2317,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x30;
         break;
     case 0x1ae:
-        cfg.velocityX = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityX = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityY = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityY = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = gEffect4F0_12 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFB84 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_000013 * (f32)(s32)
+        cfg.scale = lbl_803DFB74 * (f32)(s32)
         randomGetRange(0xc8, 0x3e8);
         cfg.initialAlpha = (u8)(randomGetRange(0x64, 0xc8) + 0x37);
         cfg.lifetimeFrames = randomGetRange(0, 0x28) + 0x3c;
@@ -2333,11 +2333,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x30;
         break;
     case 0x1ab:
-        cfg.startPosX = gEffect4F45;
-        es.a = gEffect4Zero;
-        es.b = gEffect4Zero;
-        es.c = gEffect4Zero;
-        es.w = gEffect4One;
+        cfg.startPosX = lbl_803DFB88;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
@@ -2345,7 +2345,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.velocityX = cfg.startPosX / lbl_803DFB30;
         cfg.velocityY = cfg.startPosY / lbl_803DFB30;
         cfg.velocityZ = cfg.startPosZ / lbl_803DFB30;
-        cfg.scale = gEffect4F0_000007 * (f32)(s32)
+        cfg.scale = lbl_803DFB8C * (f32)(s32)
         randomGetRange(0xc8, 0x3e8);
         cfg.initialAlpha = (u8)(randomGetRange(0x64, 0xc8) + 0x37);
         cfg.lifetimeFrames = 0x50;
@@ -2354,13 +2354,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x30;
         break;
     case 0x1ac:
-        cfg.startPosX = gEffect4F1_2 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB90 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosY = gEffect4F1_2 * (f32)(s32)
+        cfg.startPosY = lbl_803DFB90 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosZ = gEffect4F1_2 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFB90 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_000068 * (f32)(s32)
+        cfg.scale = lbl_803DFB94 * (f32)(s32)
         randomGetRange(0x1f4, 0x3e8);
         cfg.initialAlpha = randomGetRange(0x9b, 0xff);
         cfg.lifetimeFrames = randomGetRange(0, 0x28) + 0x1e;
@@ -2376,13 +2376,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x20;
         break;
     case 0x1ad:
-        cfg.startPosX = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosY = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosY = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.startPosZ = gEffect4F0_4 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFB78 * (f32)(s32)
         randomGetRange(-0x14, 0x14);
-        cfg.scale = gEffect4F0_00006 * (f32)(s32)
+        cfg.scale = lbl_803DFB6C * (f32)(s32)
         randomGetRange(0xc8, 0x5dc);
         cfg.lifetimeFrames = randomGetRange(0, 0x28) + 0x1e;
         cfg.initialAlpha = (u8)(randomGetRange(0xb4, 0xc8) + 0x37);
@@ -2398,15 +2398,15 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x20;
         break;
     case 0x1b9:
-        cfg.startPosZ = gEffect4F0_01 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0x2bc, 0x2bc);
-        cfg.startPosX = gEffect4FNeg0_1 * (f32)(s32)
-        randomGetRange(0, 0x3e8) + gEffect4F10;
-        cfg.startPosY = gEffect4F0_69 * cfg.startPosX;
-        cfg.velocityX = gEffect4FNeg0_01 * (f32)(s32)
-        randomGetRange(0, 0xa) + gEffect4FNeg0_15;
-        cfg.velocityY = gEffect4F0_69 * cfg.velocityX;
-        cfg.scale = gEffect4F0_00015 * (f32)(s32)
+        cfg.startPosX = lbl_803DFB9C * (f32)(s32)
+        randomGetRange(0, 0x3e8) + lbl_803DFB98;
+        cfg.startPosY = lbl_803DFBA0 * cfg.startPosX;
+        cfg.velocityX = lbl_803DFBA8 * (f32)(s32)
+        randomGetRange(0, 0xa) + lbl_803DFBA4;
+        cfg.velocityY = lbl_803DFBA0 * cfg.velocityX;
+        cfg.scale = lbl_803DFBAC * (f32)(s32)
         randomGetRange(1, 6);
         cfg.lifetimeFrames = 0xbe;
         cfg.initialAlpha = 0xff;
@@ -2415,24 +2415,24 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.sourceVecZ = 0;
         cfg.sourceVecY = 0x5fb4;
         cfg.sourceVecX = -0x3fff;
-        cfg.sourcePosY = gEffect4Zero;
-        cfg.sourcePosZ = gEffect4Zero;
-        cfg.sourcePosW = gEffect4Zero;
+        cfg.sourcePosY = lbl_803DFA9C;
+        cfg.sourcePosZ = lbl_803DFA9C;
+        cfg.sourcePosW = lbl_803DFA9C;
         break;
     case 0x1bf:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.startPosY = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosY = lbl_803DFA8C * (f32)(s32)
         randomGetRange(0, 0x3e8);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x64, 0x64);
-        cfg.velocityX = gEffect4F0_03 * (f32)(s32)
+        cfg.velocityX = lbl_803DFB38 * (f32)(s32)
         randomGetRange(-0x28, 0x28);
-        cfg.velocityY = gEffect4F0_0065 * (f32)(s32)
+        cfg.velocityY = lbl_803DFBB0 * (f32)(s32)
         randomGetRange(0x1f4, 0x258);
-        cfg.velocityZ = gEffect4F0_03 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFB38 * (f32)(s32)
         randomGetRange(-0x28, 0x28);
-        cfg.scale = gEffect4F0_0105;
+        cfg.scale = lbl_803DFBB4;
         cfg.lifetimeFrames = 0x15e;
         cfg.initialAlpha = 0xff;
         cfg.renderFlags = 0x300020;
@@ -2446,13 +2446,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x23b;
         break;
     case 0x1c0:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x2bc, 0x2bc);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x2bc, 0x2bc);
-        cfg.velocityY = gEffect4F0_0065 * (f32)(s32)
+        cfg.velocityY = lbl_803DFBB0 * (f32)(s32)
         randomGetRange(0x1f4, 0x258);
-        cfg.scale = gEffect4F0_0105;
+        cfg.scale = lbl_803DFBB4;
         cfg.lifetimeFrames = 0x96;
         cfg.initialAlpha = 0xff;
         cfg.renderFlags = 0x200000;
@@ -2460,13 +2460,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x23b;
         break;
     case 0x1c1:
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x2bc, 0x2bc);
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x2bc, 0x2bc);
-        cfg.velocityY = gEffect4F0_0025 * (f32)(s32)
+        cfg.velocityY = lbl_803DFBB8 * (f32)(s32)
         randomGetRange(0x1f4, 0x258);
-        cfg.scale = gEffect4F0_002 * (f32)(s32)
+        cfg.scale = lbl_803DFB48 * (f32)(s32)
         randomGetRange(0x1e, 0x32);
         cfg.lifetimeFrames = 0x96;
         cfg.initialAlpha = 0x9b;
@@ -2481,23 +2481,23 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x60;
         break;
     case 0x1c2:
-        cfg.startPosZ = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0xc8, 0xc8);
-        cfg.startPosY = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosY = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0xc8, 0xc8);
-        cfg.velocityZ = gEffect4F0_0065 * (f32)(s32)
+        cfg.velocityZ = lbl_803DFBB0 * (f32)(s32)
         randomGetRange(0xc8, 0x320);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            cfg.velocityZ = cfg.velocityZ * gEffect4FNeg1;
+            cfg.velocityZ = cfg.velocityZ * lbl_803DFBBC;
         }
-        cfg.velocityY = gEffect4F0_0065 * (f32)(s32)
+        cfg.velocityY = lbl_803DFBB0 * (f32)(s32)
         randomGetRange(0xc8, 0x320);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            cfg.velocityY = cfg.velocityY * gEffect4FNeg1;
+            cfg.velocityY = cfg.velocityY * lbl_803DFBBC;
         }
-        cfg.scale = gEffect4F0_008;
+        cfg.scale = lbl_803DFAC4;
         cfg.lifetimeFrames = randomGetRange(0, 0x1e) + 0x14;
         cfg.initialAlpha = 0xff;
         cfg.renderFlags = 0x200000;
@@ -2505,13 +2505,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x23b;
         break;
     case 0x1ba:
-        cfg.startPosY = gEffect4F130;
-        cfg.startPosX = gEffect4F0_1 * (f32)(s32)
+        cfg.startPosY = lbl_803DFBC0;
+        cfg.startPosX = lbl_803DFA8C * (f32)(s32)
         randomGetRange(-0x3e8, 0x3e8);
-        cfg.startPosZ = gEffect4F0_01 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0xc8, 0xc8);
-        cfg.startPosY = gEffect4F0_69 * cfg.startPosX;
-        cfg.scale = gEffect4F0_00035 * (f32)(s32)
+        cfg.startPosY = lbl_803DFBA0 * cfg.startPosX;
+        cfg.scale = lbl_803DFBC4 * (f32)(s32)
         randomGetRange(1, 6);
         cfg.lifetimeFrames = 0x82;
         cfg.initialAlpha = 0xff;
@@ -2520,11 +2520,11 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x20;
         break;
     case 0x1b8:
-        cfg.startPosX = gEffect4F0_01 * (f32)(s32)
+        cfg.startPosX = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0xbb8, 0xbb8);
-        cfg.startPosZ = gEffect4F0_01 * (f32)(s32)
+        cfg.startPosZ = lbl_803DFAB0 * (f32)(s32)
         randomGetRange(-0xbb8, 0xbb8);
-        cfg.scale = gEffect4F0_003 * (f32)(s32)
+        cfg.scale = lbl_803DFBC8 * (f32)(s32)
         randomGetRange(1, 4);
         cfg.lifetimeFrames = 0x5a;
         cfg.initialAlpha = 0xff;

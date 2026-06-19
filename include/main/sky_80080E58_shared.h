@@ -137,29 +137,29 @@ extern const f32 pEXIInputFlag;
 extern const f32 EXIInputFlag;
 extern f32 timeDelta;
 extern f32 lbl_803DEFB0;
-extern f32 gObjSeqOne;
-extern f32 gObjSeqFNeg1;
-extern f32 gObjSeqF0_016666668;
-extern f32 gObjSeqF0_2;
-extern f32 gSkyF60;
-extern const f32 gSkyFNeg1;
+extern f32 lbl_803DEFC8;
+extern f32 lbl_803DEFF0;
+extern f32 lbl_803DF024;
+extern f32 lbl_803DF028;
+extern f32 lbl_803DF060;
+extern const f32 lbl_803DF06C;
 extern f32 init_803DF080;
 extern f32 gSkyDayStartTime;
-extern f32 gSkyF1_0013;
-extern f32 gSkyHalf;
+extern f32 lbl_803DF064;
+extern f32 lbl_803DF068;
 extern f32 gSkySecondsPerDay;
 extern f32 PSVECMag(f32 *vec);
 extern void PSVECScale(f32 scale, f32 *src, f32 *dst);
 extern void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask);
 extern void modelLightStruct_getWorldPosition(u8 *p, f32 *a, f32 *b, f32 *c);
-extern const f32 gSkyF0_008333334;
+extern const f32 lbl_803DF0F0;
 extern const f32 gSkyInitialTimeOfDay;
-extern const f32 gSkyF10000;
-extern const f32 gSkyF255;
-extern const f32 gSkyF0_2;
-extern const f32 gSkyF10;
+extern const f32 lbl_803DF0F8;
+extern const f32 lbl_803DF0FC;
+extern const f32 lbl_803DF100;
+extern const f32 lbl_803DF104;
 extern void *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
-extern f32 gSkyQuarter;
+extern f32 lbl_803DF07C;
 extern f32 lbl_803DF088;
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
 extern f32 Curve_EvalLinear(f32 *curve, f32 t, int mode);
@@ -178,13 +178,13 @@ extern const f32 gSkySunArcDuration;
 extern const f32 gSkySunFadeInThreshold;
 extern const f32 gSkyAlphaFadeScale;
 extern const f32 gSkySunFadeOutThreshold;
-extern const f32 gSkyF32676;
+extern const f32 lbl_803DF0AC;
 extern const f32 gSkySunRiseDuration;
-extern const f32 gSkyF0_55;
-extern const f32 gSkyTwo;
+extern const f32 lbl_803DF0B4;
+extern const f32 lbl_803DF0B8;
 extern const f32 gSkySunMoonScale;
-extern const f32 gSkyF10800;
-extern const f32 gSkyF14400;
+extern const f32 lbl_803DF0C0;
+extern const f32 lbl_803DF0C4;
 
 typedef struct SkyVec3 {
     f32 x, y, z;
@@ -197,17 +197,17 @@ typedef struct SkyRotQ {
 } SkyRotQ;
 extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
 extern f32 Curve_EvalCatmullRom(u8 *curve, f32 t, int mode);
-extern const f32 gSkyZero;
+extern const f32 lbl_803DF108;
 extern const f32 lbl_803DF10C;
-extern const f32 gSkyF1600;
-extern f32 gSkyOne;
-extern f32 gSkyF255_2;
-extern f32 gSkyF60_2;
-extern f32 gSkyF10_2;
-extern f32 gSkyF950;
-extern f32 gSkyF1210;
-extern f32 gSkyF200;
-extern const f32 gSkyQuarter_2;
+extern const f32 lbl_803DF110;
+extern f32 lbl_803DF114;
+extern f32 lbl_803DF118;
+extern f32 lbl_803DF11C;
+extern f32 lbl_803DF120;
+extern f32 lbl_803DF138;
+extern f32 lbl_803DF13C;
+extern f32 lbl_803DF140;
+extern const f32 lbl_803DF144;
 extern f32 lbl_803DF1A0;
 extern u8 colorScale;
 extern int lbl_803DB610;
@@ -888,10 +888,10 @@ void snowFreeSnowCloud(int index);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
-extern f32 gSkyF20;
-extern const f32 gSkyZero;
-extern f32 gSkyF15;
-extern f32 gSkyF255_2;
+extern f32 lbl_803DF14C;
+extern const f32 lbl_803DF108;
+extern f32 lbl_803DF148;
+extern f32 lbl_803DF118;
 extern s8 lbl_803DB750;
 
 #pragma push
@@ -932,7 +932,7 @@ typedef struct RomCurveInterpState {
 } RomCurveInterpState;
 
 #define ROM_CURVE_NODE_ANGLE(v) ((lbl_803DEFE8 * (f32)((s32)(v) << 8)) / lbl_803DEFEC)
-#define ROM_CURVE_NODE_SCALE(node) (gObjSeqTwo * (f32)(u8)((node)->tangentScale))
+#define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
 
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -944,10 +944,10 @@ extern void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
 extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
-extern f32 gObjSeqTwo;
-extern f32 gObjSeqF0_0625;
-extern f32 gObjSeqF0_125;
-extern f32 gObjSeqF0_1;
+extern f32 lbl_803DF008;
+extern f32 lbl_803DF000;
+extern f32 lbl_803DF01C;
+extern f32 lbl_803DF020;
 
 #pragma push
 #pragma pop
@@ -1027,22 +1027,22 @@ typedef struct SkyBestIdx {
 } SkyBestIdx;
 
 extern void fn_8005CECC(int mode);
-extern const f32 gSkyFNeg0_707;
-extern const f32 gSkyF0_707;
-extern const f32 gSkyFNeg1_2;
-extern const f32 gSkyF86400;
-extern const f32 gSkyF0_125_2;
-extern const f32 gSkyF0_375_2;
-extern const f32 gSkyHalf_2;
-extern const f32 gSkyF0_625_2;
-extern const f32 gSkyF0_75;
-extern const f32 gSkyF0_875_2;
-extern const f32 gSkyF32767;
-extern const f32 gSkyF0_05;
-extern const f32 gSkyF2000;
-extern const f32 gSkyF765;
-extern const f32 gSkyF1950;
-extern const f32 gSkyF2005;
+extern const f32 lbl_803DF150;
+extern const f32 lbl_803DF154;
+extern const f32 lbl_803DF158;
+extern const f32 lbl_803DF15C;
+extern const f32 lbl_803DF160;
+extern const f32 lbl_803DF164;
+extern const f32 lbl_803DF168;
+extern const f32 lbl_803DF16C;
+extern const f32 lbl_803DF170;
+extern const f32 lbl_803DF174;
+extern const f32 lbl_803DF178;
+extern const f32 lbl_803DF17C;
+extern const f32 lbl_803DF180;
+extern const f32 lbl_803DF184;
+extern const f32 lbl_803DF188;
+extern const f32 lbl_803DF18C;
 extern u8 lbl_803DB758;
 extern u16 lbl_803E8460;
 extern u8 lbl_803E8462;
@@ -1093,16 +1093,16 @@ extern int lbl_803E8458;
 extern int coordsToMapCell(f32 x, f32 z);
 extern f32 Camera_GetFovY(void);
 extern u32 getScreenResolution(void);
-extern const f32 gSkyF0_125;
-extern const f32 gSkyF0_375;
-extern const f32 gSkyF0_625;
-extern const f32 gSkyF0_875;
+extern const f32 lbl_803DF0C8;
+extern const f32 lbl_803DF0CC;
+extern const f32 lbl_803DF0D0;
+extern const f32 lbl_803DF0D4;
 extern const f32 lbl_803DF0D8;
-extern const f32 gSkyThree;
+extern const f32 lbl_803DF0DC;
 extern const f32 gSkyPi;
-extern const f32 gSkyF32768;
-extern const f32 gSkyF6;
-extern const f32 gSkyF32;
+extern const f32 lbl_803DF0E4;
+extern const f32 lbl_803DF0E8;
+extern const f32 lbl_803DF0EC;
 
 #pragma push
 #pragma pop
@@ -1119,8 +1119,8 @@ extern int ObjModel_GetRenderOp(int model, int x);
 
 extern void *memset(void *dst, int c, int n);
 extern int lbl_803DB754;
-extern f32 gSkyF1150;
-extern f32 gSkyF1205;
+extern f32 lbl_803DF190;
+extern f32 lbl_803DF194;
 
 #pragma push
 #pragma pop

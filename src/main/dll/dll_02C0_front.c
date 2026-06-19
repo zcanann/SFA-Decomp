@@ -527,7 +527,7 @@ extern f32 gTitleScreenF0_8;
 extern f32 gTitleScreenF0_6;
 extern f32 gTitleScreenF0_9;
 extern f32 gTitleScreenFNeg1;
-extern f32 gTitleScreenF0_01;
+extern f32 lbl_803DBC0C;
 extern u8 gTitleScreenSfxFlagGrid[0x48];
 void fn_80134870(int obj, u8* arr);
 
@@ -608,12 +608,12 @@ void titlescreen_update(u8* obj)
             {
                 if (((GameObject*)obj)->anim.currentMoveProgress < gTitleScreenF0_1)
                 {
-                    gTitleScreenF0_01 = f = gTitleScreenF0_0001 * (f32)(int)
+                    lbl_803DBC0C = f = gTitleScreenF0_0001 * (f32)(int)
                     randomGetRange(0x32, 0x96);
                 }
                 else
                 {
-                    f = gTitleScreenF0_01;
+                    f = lbl_803DBC0C;
                 }
             }
             else

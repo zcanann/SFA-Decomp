@@ -1517,7 +1517,7 @@ extern int lbl_803DC4E8;
 extern f32 lbl_803E74AC;
 extern f32 lbl_803E74B0;
 extern f32 gAndrossZero;
-extern f32 gAndrossThree_2;
+extern f32 lbl_803E74D8;
 
 
 
@@ -1535,7 +1535,7 @@ extern f32 lbl_803E74A8;
 
 
 
-extern f32 gAndrossF50;
+extern f32 lbl_803DC4C0;
 extern f32 gAndrossArwingVelDamp;
 
 

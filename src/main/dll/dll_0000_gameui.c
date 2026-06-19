@@ -157,7 +157,7 @@ extern f32 lbl_803DD760;
 extern f32 lbl_803DD764;
 extern f64 lbl_803E2160;
 extern f64 lbl_803E1F60;
-extern f32 gGameUiFNeg0_1;
+extern f32 lbl_803E2168;
 extern int lbl_803DD81C;
 extern u8 lbl_803DD781;
 extern GridEntry lbl_8031BD30[];
@@ -167,8 +167,8 @@ extern void AudioStream_StartPrepared(void);
 extern void fn_8012C000(void);
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
-extern f32 gGameUiF300;
-extern f32 gGameUiF100;
+extern f32 lbl_803E213C;
+extern f32 lbl_803E2140;
 extern f64 lbl_803E2148;
 extern f64 lbl_803E2150;
 extern f64 lbl_803E2158;
@@ -178,18 +178,18 @@ extern int getNextTaskHintText(void);
 extern u8 lbl_803DBA9C[6];
 extern f32 lbl_803E1FA8;
 extern f32 lbl_803E1FD0;
-extern f32 gGameUiF115;
-extern f32 gGameUiF252_5;
-extern f32 gGameUiF290;
-extern f32 gGameUiF145;
-extern f32 gGameUiF212_5;
-extern f32 gGameUiF327_5;
-extern f32 gGameUiF126_25;
-extern f32 gGameUiF81_25;
-extern f32 gGameUiF225;
-extern f32 gGameUiF171_25;
-extern f32 gGameUiF318_75;
-extern f32 gGameUiF367_5;
+extern f32 lbl_803E20D4;
+extern f32 lbl_803E20D8;
+extern f32 lbl_803E20DC;
+extern f32 lbl_803E20E0;
+extern f32 lbl_803E20E4;
+extern f32 lbl_803E20E8;
+extern f32 lbl_803E20EC;
+extern f32 lbl_803E20F0;
+extern f32 lbl_803E20F4;
+extern f32 lbl_803E20F8;
+extern f32 lbl_803E20FC;
+extern f32 lbl_803E2100;
 extern HintCell lbl_8031BB90[13];
 extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
@@ -205,9 +205,9 @@ extern f32 gTimeListPulseBias;
 extern f32 lbl_803E1E40;
 extern f32 lbl_803E2090;
 extern f32 lbl_803E20BC;
-extern f32 gGameUiF15;
-extern f32 gGameUiF440;
-extern f32 gGameUiF620;
+extern f32 lbl_803E2130;
+extern f32 lbl_803E2134;
+extern f32 lbl_803E2138;
 extern char* fn_800E888C(int track, int row);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern u8 gHighScoreTitleIdTable[];
@@ -220,7 +220,7 @@ extern s16 gHighScorePulseAngle;
 extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;
 extern f32 lbl_803E2068;
-extern f32 gGameUiF1500;
+extern f32 lbl_803E2174;
 extern u8 lbl_803DD7D6;
 extern int lbl_803DD8E0;
 extern s16 lbl_803A8B48[];
@@ -266,15 +266,15 @@ extern float mathSinf(float x);
 extern GridEntry lbl_8031B818[];
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
-extern f32 gGameUiF0_03;
+extern f32 lbl_803DBAC0;
 extern f32 lbl_803DD748;
 extern f64 lbl_803E2088;
 extern f32 lbl_803E20A0;
-extern f32 gGameUiF500;
+extern f32 lbl_803E2104;
 extern f32 lbl_803E1EC8;
 extern f64 lbl_803E2108;
-extern f32 gGameUiF22_5;
-extern f32 gGameUiF12_5;
+extern f32 lbl_803E2110;
+extern f32 lbl_803E2114;
 extern f32 fsin16Approx(u16 angle);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
 extern u8 gTextBoxes[];
@@ -290,20 +290,20 @@ extern f32 lbl_803E2010;
 extern f32 lbl_803E204C;
 extern f32 lbl_803E2050;
 extern f32 lbl_803E2058;
-extern f32 gGameUiF475;
-extern f32 gGameUiF45;
-extern f32 gGameUiF25;
-extern f32 gGameUiF375;
-extern f32 gGameUiF428;
-extern f32 gGameUiF198;
-extern f32 gGameUiF376;
-extern f32 gGameUiF403;
-extern f32 gGameUiF445;
-extern f32 gGameUiF450;
-extern f32 gGameUiF618;
-extern f32 gGameUiF473;
-extern f32 gGameUiF353;
-extern f32 gGameUiF465;
+extern f32 lbl_803E2198;
+extern f32 lbl_803E219C;
+extern f32 lbl_803E21A0;
+extern f32 lbl_803E21A4;
+extern f32 lbl_803E21A8;
+extern f32 lbl_803E21AC;
+extern f32 lbl_803E21B0;
+extern f32 lbl_803E21B4;
+extern f32 lbl_803E21B8;
+extern f32 lbl_803E21BC;
+extern f32 lbl_803E21C0;
+extern f32 lbl_803E21C4;
+extern f32 lbl_803E21C8;
+extern f32 lbl_803E21CC;
 extern int getCurSeqNo(void);
 extern u8 AudioStream_IsPreparing(void);
 extern int getCurGameText(void);
@@ -347,7 +347,7 @@ extern u32 lbl_803E1E00; /* default HUD colour */
 extern f32 lbl_803E20B8; /* 0.25f */
 extern f64 lbl_803E2080;
 extern f64 lbl_803E2118;
-extern f32 gGameUiF220;
+extern f32 lbl_803E2120;
 extern f64 lbl_803E2128;
 extern f32 lbl_8031BFA8[30];
 extern s16 gPauseMenuSwivelAngle;
@@ -355,13 +355,13 @@ extern s16 gPauseMenuPodiumSpinFrame;
 extern f32 lbl_803E1E58;
 extern f32 lbl_803E1E64;
 extern f32 lbl_803E1FC0;
-extern f32 gGameUiF400;
-extern f32 gGameUiFNeg2_1;
-extern f64 gGameUiF0_05;
-extern f32 gGameUiF1048576;
-extern f32 gGameUiF0_13;
-extern f32 gGameUiF0_0009765625;
-extern f32 gGameUiF0_06;
+extern f32 lbl_803E2178;
+extern f32 lbl_803E217C;
+extern f64 lbl_803E2180;
+extern f32 lbl_803E2188;
+extern f32 lbl_803E218C;
+extern f32 lbl_803E2190;
+extern f32 lbl_803E2194;
 extern float mathCosf(float x);
 extern u8 gGameUiHelpTextPending;
 extern s16 gGameUiHelpTextId;
@@ -412,7 +412,7 @@ extern int lbl_803DD898;
 extern s16 lbl_803DD89E;
 extern u8 lbl_803DD8B7;
 extern s16 lbl_803DD8D2;
-extern f32 gGameUiF5476;
+extern f32 lbl_803E21D0;
 extern s16 cMenuFadeCounter;
 extern int getScreenResolution(void);
 extern s16 gHudTextureIds[];
@@ -1330,7 +1330,7 @@ void pauseMenuFn_8012b77c(void)
     {
         u8 i;
         buttonDisable(0, 0x200);
-        lbl_803DD764 = gGameUiFNeg0_1;
+        lbl_803DD764 = lbl_803E2168;
         if (lbl_803DD824 == lbl_8031BD30)
         {
             lbl_803DD7D8 = 1;
@@ -1383,7 +1383,7 @@ void boxDrawFn_8012975c(void)
         return;
     }
     idx = lbl_803DD770 & 0x1f;
-    drawTexture(*(void**)(hudTextures + 0x110), gGameUiF300, gGameUiF100, 0xff, 0x100);
+    drawTexture(*(void**)(hudTextures + 0x110), lbl_803E213C, lbl_803E2140, 0xff, 0x100);
     j = 2;
     alpha = 0xaa;
     c0 = lbl_803E2148;
@@ -1428,18 +1428,18 @@ void fn_80128120(int unused, int p2)
     u8 level;
     s8 i;
 
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x38), gGameUiF115, gGameUiF252_5, n, p2, lbl_803E1F34, 0);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, gGameUiF252_5, n, p2, lbl_803E1F34, 0x1c, 0x1e, 1);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), gGameUiF115, gGameUiF290, n, p2, lbl_803E1F34, 0x1c, 0x1e, 2);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, gGameUiF290, n, p2, lbl_803E1F34, 0x1c, 0x1e, 3);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), gGameUiF145, gGameUiF212_5, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), gGameUiF145, gGameUiF327_5, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF126_25, lbl_803E1FD0, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF81_25, gGameUiF225, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF171_25, gGameUiF225, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF81_25, gGameUiF318_75, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF171_25, gGameUiF318_75, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), gGameUiF126_25, gGameUiF367_5, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20D8, n, p2, lbl_803E1F34, 0);
+    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20D8, n, p2, lbl_803E1F34, 0x1c, 0x1e, 1);
+    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 2);
+    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 3);
+    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E4, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
+    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E8, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20EC, lbl_803E1FD0, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20EC, lbl_803E2100, n, p2, lbl_803E1F34, 0);
 
     v = (u16)getNextTaskHintText();
     if (v > 0xb3) level = 6;
@@ -1623,15 +1623,15 @@ void timeListDraw(void)
     {
         return;
     }
-    drawTexture(*(void**)(hudTextures + 0x28), gGameUiF15, lbl_803E1E40, 0xff, 0x100);
+    drawTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
     drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF15, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
+    drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
     drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E20BC, gGameUiF440, 0xff, 0x100, 0x258, 5, 2);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF620, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF620, gGameUiF440, 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF620, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF15, gGameUiF440, 0xff, 0x100, 5, 5, 2);
+    drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
+    drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
 
     {
         s16 ang;
@@ -1801,7 +1801,7 @@ void pauseMenuRunSubmenu(u8 p1)
                     AudioStream_Play(0x2715, AudioStream_StartPrepared);
                 }
             }
-            if (lbl_803DD768 > gGameUiF1500)
+            if (lbl_803DD768 > lbl_803E2174)
             {
                 AudioStream_Play(randomGetRange(0, 3) + 0x2716, AudioStream_StartPrepared);
                 lbl_803DD768 = 0.0f;
@@ -2350,8 +2350,8 @@ void fn_80128470(int p1)
     }
     fn_80128A7C((u8)lbl_803DD7D8, p1, 0);
     {
-        f32 base = gGameUiF0_03;
-        f32 s = mathSinf(lbl_803E1EC8 * (gGameUiF500 * lbl_803DD748) / lbl_803E1E94);
+        f32 base = lbl_803DBAC0;
+        f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
         f32 amp = base * s + base;
         fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)p1), 4);
     }
@@ -2394,7 +2394,7 @@ void fn_80128470(int p1)
         int ch = (int)(scale * (f32) * (u8*)((char*)e + 0x9));
         int vx = *(u16*)((char*)e + 0x2) + *(s8*)((char*)e + 0xb);
         int x1 = (int)
-        ((f32)vx - gGameUiF22_5 - (f32)(u8)
+        ((f32)vx - lbl_803E2110 - (f32)(u8)
         cw
         )
         ;
@@ -2402,7 +2402,7 @@ void fn_80128470(int p1)
         int vy = *(u16*)((char*)e + 0x4);
         int y1 = (int)
         ((f32)(u32)
-        vy - gGameUiF12_5 - (f32)(u8)
+        vy - lbl_803E2114 - (f32)(u8)
         ch
         )
         ;
@@ -2580,14 +2580,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             }
         }
         lbl_803DD77C++;
-        drawTexture(*(void**)(hudTextures + 0x28), gGameUiF475, gGameUiF45, alpha, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F48, gGameUiF45, alpha, 0x100, 0x82, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF475, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
+        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E2198, lbl_803E219C, alpha, 0x100);
+        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
+        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
         drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
         drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
         drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2058, gGameUiF45, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF475, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
         {
             int row;
             int ph1 = 0;
@@ -2634,41 +2634,41 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     {
         char* gt;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        drawTexture(*(void**)(hudTextures + 0x28), gGameUiF25, gGameUiF375, 0xff, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, gGameUiF375, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF25, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
         drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E1F9C, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, gGameUiF428, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF198, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF198, gGameUiF428, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF198, gGameUiF375, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF25, gGameUiF428, 0xff, 0x100, 5, 5, 2);
-        drawTexture(*(void**)(hudTextures + 0xfc), lbl_803E1FF0, gGameUiF376, 0xff, 0x100);
+        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21AC, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(*(void**)(hudTextures + 0xfc), lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
         gt = gameTextGet(0x2ac);
         if (*(u16*)(gt + 2) > 1)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 4), 0x93, 0x69, 0x17f);
         }
-        drawTexture(*(void**)(hudTextures + 0x10c), lbl_803E1E9C, gGameUiF403, 0xff, 0x100);
+        drawTexture(*(void**)(hudTextures + 0x10c), lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 2)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 8), 0x93, 0x51, 0x194);
         }
-        drawTexture(*(void**)(hudTextures + 0x28), gGameUiF445, gGameUiF375, 0xff, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), gGameUiF450, gGameUiF375, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF445, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x30), gGameUiF450, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), gGameUiF450, gGameUiF428, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), gGameUiF618, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF618, gGameUiF428, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF618, gGameUiF375, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), gGameUiF445, gGameUiF428, 0xff, 0x100, 5, 5, 2);
-        drawTexture(*(void**)(hudTextures + 0x100), gGameUiF473, gGameUiF353, 0xff, 0x100);
+        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21B8, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E21BC, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21C0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(*(void**)(hudTextures + 0x100), lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 4)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x10), 0x93, 0x20c, 0x17f);
         }
-        drawTexture(*(void**)(hudTextures + 0x104), gGameUiF465, lbl_803E1FB8, 0xff, 0x100);
+        drawTexture(*(void**)(hudTextures + 0x104), lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 5)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x14), 0x93, 0x1f6, 0x195);
@@ -3300,7 +3300,7 @@ void pauseMenuFn_80129ee0(void)
                 {
                     Sfx_PlayFromObject(0, 0x418);
                     buttonDisable(0, 0x100);
-                    lbl_803DD764 = gGameUiFNeg0_1;
+                    lbl_803DD764 = lbl_803E2168;
                 }
             }
             else if (lbl_803DD7D8 == 1)
@@ -3424,13 +3424,13 @@ void pauseMenuFn_80129ee0(void)
                     }
                     gPauseMenuTokenConfirmFlag = 1;
                     buttonDisable(0, 0x100);
-                    lbl_803DD764 = gGameUiFNeg0_1;
+                    lbl_803DD764 = lbl_803E2168;
                 }
                 else if ((btn & 0x200) && lbl_803DD764 > lbl_803E2160 &&
                     lbl_803DD760 >= lbl_803E1F60)
                 {
                     buttonDisable(0, 0x200);
-                    lbl_803DD764 = gGameUiFNeg0_1;
+                    lbl_803DD764 = lbl_803E2168;
                     gPauseMenuTokenConfirmFlag = 0;
                 }
                 pauseMenuFn_8012b77c();
@@ -3592,13 +3592,13 @@ void fn_80128A7C(u8 i, int p2, int p3)
             f32 pr;
             v = p2;
             spd = (f32)(spd * (lbl_803E1F60 + lbl_803DD75C / lbl_803E2118));
-            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (gGameUiF500 * lbl_803DD748) /
+            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
                     lbl_803E1E94) +
                 lbl_803E2090;
             dx = lbl_803E1F34 - x;
             pr = dx * lbl_803DD75C;
             x = (f32)(pr * lbl_803E2088 + x);
-            dy = gGameUiF220 - y;
+            dy = lbl_803E2120 - y;
             pr = dy * lbl_803DD75C;
             y = (f32)(pr * lbl_803E2088 + y);
         }
@@ -3711,19 +3711,19 @@ void fn_8012C000(void)
     gPauseMenuPodiumSpinFrame += framesThisStep;
     *(s16*)lbl_803DD868[0] = (s16)(gPauseMenuPodiumSpinFrame << 9);
     *(s16*)((u8*)lbl_803DD868[0] + 0x4) =
-        gGameUiF400 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 1000) / lbl_803E1E94);
+        lbl_803E2178 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 1000) / lbl_803E1E94);
     *(f32*)((u8*)lbl_803DD868[0] + 0x10) =
-        (f32)(gGameUiF0_05 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 400) / lbl_803E1E94) +
-            gGameUiFNeg2_1);
+        (f32)(lbl_803E2180 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 400) / lbl_803E1E94) +
+            lbl_803E217C);
     {
         int d = 0x400 - lbl_803DD78C;
         *(f32*)((u8*)lbl_803DD868[0] + 0x10) =
-            *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / gGameUiF1048576;
+            *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
     }
     *(f32*)((u8*)lbl_803DD868[1] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10);
     {
-        f32 spin = gGameUiF0_13 * lbl_803DD78C;
-        *(f32*)((u8*)lbl_803DD868[1] + 0x8) = spin * gGameUiF0_0009765625;
+        f32 spin = lbl_803E218C * lbl_803DD78C;
+        *(f32*)((u8*)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
                                                                  &animEvents);
@@ -3733,7 +3733,7 @@ void fn_8012C000(void)
     c1E64 = lbl_803E1E64;
     c1E94 = lbl_803E1E94;
     c1EC8 = lbl_803E1EC8;
-    c2190 = gGameUiF0_0009765625;
+    c2190 = lbl_803E2190;
     for (; k <= last; k++)
     {
         f32 sel;
@@ -3749,7 +3749,7 @@ void fn_8012C000(void)
         }
         else
         {
-            sel = gGameUiF0_06;
+            sel = lbl_803E2194;
         }
         sel = lbl_803DD784 * sel;
         *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * c2190;
@@ -4196,7 +4196,7 @@ void GameUI_update(void)
                     }
                     else if (tricky != 0 && lbl_803A9320[1] != 0 && lbl_803A9320[9] <= 3 &&
                         vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, (f32*)(tricky + 0x18)) <
-                        gGameUiF5476)
+                        lbl_803E21D0)
                     {
                         gCMenuButtons |= 0x80000;
                         f26 = 1;
