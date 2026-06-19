@@ -743,7 +743,9 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     extern int ObjHits_IsObjectEnabled(int obj);
     u32 flags;
     int matrixSource;
+    int worldIdx;
     int pointIndex;
+    u8* worldBase;
     int pointOffset;
     f32* localPoint;
     f32 raisedPointOffset;
@@ -801,17 +803,21 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             transform.y = ((GameObject*)obj)->anim.worldPosY;
             transform.z = ((GameObject*)obj)->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
-            pointIndex = 0;
-            pointOffset = 0;
+            worldIdx = 0;
+            pointIndex = worldIdx;
+            worldBase = (u8*)collision;
+            pointOffset = worldIdx;
             while (pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
                 localPoint = (f32*)((u8*)collision->segmentLocalPoints + pointOffset);
                 Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
-                                      &collision->points[pointIndex][0],
-                                      &collision->points[pointIndex][1],
-                                      &collision->points[pointIndex][2]);
+                                      (f32*)(worldBase + 8),
+                                      &collision->points[0][worldIdx + 1],
+                                      &collision->points[0][worldIdx + 2]);
                 collision->segmentHitTypes[pointIndex] = -1;
+                worldBase += 0xc;
                 pointOffset += 0xc;
+                worldIdx += 3;
                 pointIndex++;
             }
             raisedPointOffset = lbl_803E06B8;
