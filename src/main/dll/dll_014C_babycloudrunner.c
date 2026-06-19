@@ -1077,7 +1077,7 @@ void babycloudrunner_update(int* obj)
                 Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
-                objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
+                objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)
                 {
                     if (sub->runnerIndex != -1 && GameBit_Get(sub->runnerIndex + 0xb2a) != 0)
