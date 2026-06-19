@@ -8,7 +8,7 @@ u32 hwExitStream(u32 value)
     return __cvt_fp2unsigned((double)((lbl_803E78E8 * (f32)value) / (f32)lbl_803BD150[0]));
 }
 
-void hwGetStreamPlayBuffer(undefined4 unused, undefined4 value)
+void hwGetStreamPlayBuffer(u32 unused, u32 value)
 {
     aramInit(value);
 }

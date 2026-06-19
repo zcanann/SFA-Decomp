@@ -171,7 +171,7 @@ void dimbossgut2_updateTracking(int obj, int state)
 void dimbossgut2_free(int arg9)
 {
     int obj = arg9;
-    uint handle;
+    u32 handle;
     int state;
     void* childObj;
 
@@ -214,16 +214,16 @@ void dimbossgut2_update(int obj)
 {
     int state;
     int tmpVar;
-    uint randomThreshold;
-    uint n;
+    u32 randomThreshold;
+    u32 n;
     float* posData;
     int val;
     f32 heightDiff;
     f32 xyScale;
     u8* curveLight;
-    uint msgB;
-    uint msgA;
-    uint msgC;
+    u32 msgB;
+    u32 msgA;
+    u32 msgC;
     struct
     {
         u8 pad[8];
@@ -256,7 +256,7 @@ void dimbossgut2_update(int obj)
             }
             if ((heightDiff < lbl_803E4CDC) &&
                 (stk.f4c = posData[3], randomThreshold = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)posData + 0x16) > (int)randomThreshold))
+                    (int)(u32) * (u16*)((int)posData + 0x16) > (int)randomThreshold))
             {
                 xyScale = lbl_803E4CE0 * posData[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -

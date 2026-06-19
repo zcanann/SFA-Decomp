@@ -20,7 +20,7 @@ typedef struct DimdismountpointState
     f32 planeD;  /* plane distance (dot(N, pos)) */
 } DimdismountpointState;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E4910;

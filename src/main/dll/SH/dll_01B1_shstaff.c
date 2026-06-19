@@ -79,7 +79,7 @@ typedef struct ShStaffPlacement
 } ShStaffPlacement;
 
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
@@ -300,7 +300,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 if (state->fadeTimer <= bx)
                 {
                     o = state->slots[0];
-                    if ((uint)o != 0)
+                    if ((u32)o != 0)
                     {
                         ((GameObject*)o)->anim.flags |= 0x4000;
                         state->slots[0] = 0;

@@ -42,7 +42,7 @@
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
 extern void GameBit_Set(int eventId, int value);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void ObjHits_DisableObject(int obj);
 extern int Obj_GetPlayerObject(void);
@@ -167,7 +167,7 @@ void fn_801DFA28(u8* obj)
     int t;
     int nextState;
     int wrap;
-    uint angY;
+    u32 angY;
     int iv;
     int dv;
     int rollA;

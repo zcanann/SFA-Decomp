@@ -9,8 +9,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet(int obj);
 void ccpedstal_updateGameBitGate(int obj, u8* state2);

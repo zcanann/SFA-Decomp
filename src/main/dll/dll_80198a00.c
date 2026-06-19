@@ -4,7 +4,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 
-extern undefined4 objInterpretSeq();
+extern u32 objInterpretSeq();
 
 extern f32 lbl_803E40C8;
 extern f32 lbl_803E40CC;

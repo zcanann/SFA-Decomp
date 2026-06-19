@@ -8,8 +8,8 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
-extern int ObjGroup_FindNearestObject(int group, uint obj, f32* outDist);
+extern u32 GameBit_Get(int eventId);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, f32* outDist);
 
 extern f32 lbl_803E4610; /* search radius seed for FindNearestObject */
 extern f32 lbl_803E4614; /* distance at which the vent activates */
@@ -39,7 +39,7 @@ void ccgasvent_update(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     if (GameBit_Get(CCGASVENT_GAS_GAMEBIT) != 0)
     {
-        ObjGroup_FindNearestObject(5, (uint)obj, &dist);
+        ObjGroup_FindNearestObject(5, (u32)obj, &dist);
         switch (state[0])
         {
         case 0:

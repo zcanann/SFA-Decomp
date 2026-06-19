@@ -17,7 +17,7 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern int fn_80295C40(int obj);

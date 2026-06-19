@@ -21,7 +21,7 @@ static inline int *DIM2Icicle_GetActiveModel(void *obj) {
 }
 
 extern int randomGetRange(int min, int max);
-extern uint ObjPath_GetPointModelMtx();
+extern u32 ObjPath_GetPointModelMtx();
 extern u32 ObjPath_GetPointWorldPosition();
 
 extern u32 gDIMbossAnimTable[];
@@ -423,7 +423,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
   IcicleHitEntry *base;
   ObjHitsPriorityState *hitState;
   int hitType;
-  uint hitVolume;
+  u32 hitVolume;
   int hitId;
   IcicleHitDesc desc;
 

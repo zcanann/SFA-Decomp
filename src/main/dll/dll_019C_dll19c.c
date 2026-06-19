@@ -19,7 +19,7 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u8 framesThisStep;
 
 extern f32 lbl_803E51B0;
@@ -59,7 +59,7 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_19C_update(int* obj)
 {
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     u8* def;
     u8* sub;
     void* res;

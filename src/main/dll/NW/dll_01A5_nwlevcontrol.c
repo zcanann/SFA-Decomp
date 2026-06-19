@@ -16,14 +16,14 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-extern undefined4 Music_Trigger();
-extern byte gameTimerIsRunning();
+extern u32 Music_Trigger();
+extern u8 gameTimerIsRunning();
 extern f32 fn_80014668(void);
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
-extern uint GameBit_Get(int id);
-extern undefined4 GameBit_Set();
-extern undefined4 SCGameBitLatch_Update();
+extern u32 GameBit_Get(int id);
+extern u32 GameBit_Set();
+extern u32 SCGameBitLatch_Update();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 extern f32 lbl_803E5278;
@@ -46,11 +46,11 @@ void nw_levcontrol_update(int objArg)
     short* player;
     u8 mode;
     int val;
-    uint bitVal;
-    uint bitVal3;
-    byte flag;
+    u32 bitVal;
+    u32 bitVal3;
+    u8 flag;
     int bitVal2;
-    uint bitVal4;
+    u32 bitVal4;
     float* state;
 
     obj = objArg;
@@ -129,29 +129,29 @@ void nw_levcontrol_update(int objArg)
     }
     else
     {
-        switch (*(undefined*)(state + 1))
+        switch (*(u8*)(state + 1))
         {
         case 0:
             bitVal = GameBit_Get(0x19d);
             if (bitVal != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                *(undefined*)(state + 1) = 2;
+                *(u8*)(state + 1) = 2;
                 GameBit_Set(0xecd, 1);
             }
             break;
         case 1:
             (*gObjectTriggerInterface)->preempt(obj, 0x64a);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0x20);
-            *(undefined*)(state + 1) = 2;
+            *(u8*)(state + 1) = 2;
             GameBit_Set(0xecd, 1);
             break;
         case 2:
             obj = fn_801CFD68((u8*)state);
             if (obj != 0)
             {
-                *(undefined*)((int)state + 5) = 0x32;
-                *((uint*)state + 2) = *((uint*)state + 2) | 1;
+                *(u8*)((int)state + 5) = 0x32;
+                *((u32*)state + 2) = *((u32*)state + 2) | 1;
             }
             break;
         case 3:
@@ -165,13 +165,13 @@ void nw_levcontrol_update(int objArg)
             obj = fn_801CFD68((u8*)state);
             if (obj == 1)
             {
-                *((uint*)state + 2) = *((uint*)state + 2) | 4;
+                *((u32*)state + 2) = *((u32*)state + 2) | 4;
             }
             break;
         case 9:
             if ((*(u16*)(player + 0x58) & 0x1000) != 0)
             {
-                *(undefined*)(state + 1) = 10;
+                *(u8*)(state + 1) = 10;
             }
             break;
         case 10:
@@ -180,16 +180,16 @@ void nw_levcontrol_update(int objArg)
                 bitVal2 = *((int*)state + 2);
                 if ((bitVal2 & 1) != 0)
                 {
-                    *((uint*)state + 2) = bitVal2 & ~1;
-                    *((uint*)state + 2) = *((uint*)state + 2) | 2;
-                    gameTimerInit(0x15, (uint) * (byte*)((int)state + 5));
+                    *((u32*)state + 2) = bitVal2 & ~1;
+                    *((u32*)state + 2) = *((u32*)state + 2) | 2;
+                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5));
                     timerSetToCountUp();
                     (*gMapEventInterface)->savePoint((int)(player + 6), (int)*player, 0, 0);
                 }
                 else if ((bitVal2 & 4) != 0)
                 {
-                    *((uint*)state + 2) = bitVal2 & ~2;
-                    *((uint*)state + 2) = *((uint*)state + 2) & ~4;
+                    *((u32*)state + 2) = bitVal2 & ~2;
+                    *((u32*)state + 2) = *((u32*)state + 2) & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
                     GameBit_Set(0x19f, 1);
@@ -198,12 +198,12 @@ void nw_levcontrol_update(int objArg)
                 {
                     val = (int)(fn_80014668() / lbl_803E527C);
                     gameTimerStop();
-                    gameTimerInit(0x15, (uint) * (byte*)((int)state + 5) + val);
+                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5) + val);
                     timerSetToCountUp();
                 }
                 (*gObjectTriggerInterface)->runSequence(*(u8*)(state + 3), (void*)obj,
                                                         -1);
-                *(undefined*)(state + 1) = *(undefined*)((int)state + 0xd);
+                *(u8*)(state + 1) = *(u8*)((int)state + 0xd);
             }
             break;
         case 0xb:
@@ -216,7 +216,7 @@ void nw_levcontrol_update(int objArg)
         case 0xc:
             (*gObjectTriggerInterface)->preempt(obj, 0x5a);
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 8);
-            *(undefined*)(state + 1) = 0xb;
+            *(u8*)(state + 1) = 0xb;
         }
     }
     return;

@@ -36,7 +36,7 @@ extern void* memset(void* p, int c, int n);
 extern u8 framesThisStep;
 extern f32 lbl_803E18BC;
 
-uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
+u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 {
     u8 flags;
     f32 d;

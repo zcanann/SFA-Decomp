@@ -65,7 +65,7 @@ void nw_tricky_update(int* obj)
 {
     extern int* getTrickyObject(void);
     extern int Obj_GetPlayerObject(void);
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     int count;
     NwTrickyIds ids;
     char* state;

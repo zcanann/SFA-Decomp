@@ -22,19 +22,19 @@ typedef struct TrickyCurveObjectDef
     u8 pad22[0x28 - 0x22];
 } TrickyCurveObjectDef;
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_80017748();
+extern u32 FUN_80006824();
+extern u32 FUN_800068c4();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
+extern u32 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern int Obj_GetPlayerObject(void);
-extern undefined4 ObjMsg_SendToObject();
+extern u32 ObjMsg_SendToObject();
 extern void TrickyCurve_updateCooldownTrigger(int obj);
-extern uint FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80294c40();
+extern u32 FUN_80286838();
+extern u32 FUN_80286884();
+extern u32 FUN_80294c40();
 
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
@@ -256,25 +256,25 @@ void TrickyCurve_updateBoundsTrigger(int obj)
     return;
 }
 
-void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                         undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                         undefined8 param_7, undefined8 param_8)
+void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
+                                         u64 param_4, u64 param_5, u64 param_6,
+                                         u64 param_7, u64 param_8)
 {
     bool flag;
-    uint obj;
+    u32 obj;
     int ref;
-    uint bitVal;
-    undefined4 unusedArg7;
-    undefined4 unusedArg8;
-    undefined4 unusedArg9;
-    undefined4 unusedArg10;
+    u32 bitVal;
+    u32 unusedArg7;
+    u32 unusedArg8;
+    u32 unusedArg9;
+    u32 unusedArg10;
     char zSide;
     char ySide;
     char xSide;
     int insideCount;
     short* state;
     double ftmp;
-    undefined8 pairWord;
+    u64 pairWord;
     double savedF29;
     double dy;
     double savedF30;
@@ -284,15 +284,15 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     double savedPs29;
     double savedPs30;
     double savedPs31;
-    undefined2 rotX;
-    undefined2 rotY;
-    undefined2 rotZ;
+    u16 rotX;
+    u16 rotY;
+    u16 rotZ;
     float scale;
     float fdx;
     float fdy;
     float fdz;
-    undefined4 convHi0;
-    uint convLo0;
+    u32 convHi0;
+    u32 convLo0;
     float local_28;
     float fStack_24;
     float local_18;
@@ -450,9 +450,9 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     return;
 }
 
-void TrickyCurve_updateState(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                             undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                             undefined8 param_7, undefined8 param_8, int obj)
+void TrickyCurve_updateState(u64 param_1, u64 param_2, u64 param_3,
+                             u64 param_4, u64 param_5, u64 param_6,
+                             u64 param_7, u64 param_8, int obj)
 {
     char triggerKind;
 
@@ -485,45 +485,45 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     int state;
     short angleStep;
     int* handles;
-    ushort rotation[4];
+    u16 rotation[4];
     float baseSeed;
     float baseOffX;
     float baseOffY;
     float baseOffZ;
-    undefined4 convHi0;
-    uint convLo0;
-    longlong convResult;
+    u32 convHi0;
+    u32 convLo0;
+    s64 convResult;
 
     state = *(int*)(obj + 0x5c);
-    if ((((*(byte*)(state + 8) >> 4 & 1) != 0) && ((*(byte*)(state + 8) >> 5 & 1) == 0)) &&
+    if ((((*(u8*)(state + 8) >> 4 & 1) != 0) && ((*(u8*)(state + 8) >> 5 & 1) == 0)) &&
         (0x32 < *(short*)(state + 4)))
     {
-        FUN_800068c4((uint)obj, 0x459);
+        FUN_800068c4((u32)obj, 0x459);
         mode = (*gMapEventInterface)->getMapAct((int)*(char*)(obj + 0x56));
         if (mode == '\x02')
         {
-            convLo0 = (uint) * (byte*)(state + 7);
+            convLo0 = (u32) * (u8*)(state + 7);
             convHi0 = 0x43300000;
             angleDelta = (int)((lbl_803E70F0 +
                     (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803e7108)) *
                 lbl_803E70F4 * lbl_803DC074);
-            convResult = (longlong)angleDelta;
+            convResult = (s64)angleDelta;
             *obj = *obj + (short)angleDelta;
         }
         else
         {
-            convResult = (longlong)(int)(lbl_803E70F4 * lbl_803DC074);
+            convResult = (s64)(int)(lbl_803E70F4 * lbl_803DC074);
             *obj = *obj + (short)(int)(lbl_803E70F4 * lbl_803DC074);
         }
     }
-    if ((*(short*)(state + 4) != 0) && ((*(byte*)(state + 8) >> 4 & 1) != 0))
+    if ((*(short*)(state + 4) != 0) && ((*(u8*)(state + 8) >> 4 & 1) != 0))
     {
-        convResult = (longlong)(int)
+        convResult = (s64)(int)
         lbl_803DC074;
         *(short*)(state + 4) = *(short*)(state + 4) - (short)(int)lbl_803DC074;
         if (*(short*)(state + 4) < 1)
         {
-            *(undefined2*)(state + 4) = 200;
+            *(u16*)(state + 4) = 200;
         }
     }
     baseOffX = lbl_803E70F8;

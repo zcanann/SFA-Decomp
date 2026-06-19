@@ -34,8 +34,8 @@ extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* hitsOut, int 
                                 int mask);
 extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
                                  void* outPos, int mode);
-extern void hitDetectFn_800691c0(int obj, uint* bounds, int mask, int flags);
-extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
+extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 
 extern void mtxRotateByVec3s(void* matrix, void* angles);
@@ -105,7 +105,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_
     int off2;
     int camObj;
     int cameraAddr;
-    uint bounds[6];
+    u32 bounds[6];
     f32 pos[3];
     int hits;
 
@@ -239,12 +239,12 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
 void camslide_update(CameraObject* camera, GameObject* target)
 {
-    extern uint getAngle();
+    extern u32 getAngle();
     extern f64 interpolate(f64 value, f64 rate, f64 t);
     extern f32 sqrtf(f32 x);
     f32 fVar1;
     CamSlideObjectState* state;
-    uint angle;
+    u32 angle;
     int cur;
     f32 high;
     f32 low;
@@ -467,14 +467,14 @@ void camslide_update(CameraObject* camera, GameObject* target)
 
 void firstperson_updatePitch(f32 targetY, CameraObject* camera)
 {
-    extern uint getAngle();
+    extern u32 getAngle();
     extern f64 interpolate(f64 value, f64 rate, f64 t);
     int v;
     f64 d;
 
     v = getAngle((f64)(camera->anim.worldPosY -
         (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff;
-    v -= (uint)camera->anim.rotY & 0xffff;
+    v -= (u32)camera->anim.rotY & 0xffff;
     if (v > 0x8000)
     {
         v -= 0xffff;
@@ -692,7 +692,7 @@ void camstatic_update(CameraObject* camera)
     GameObject* target;
     float fa;
     int val;
-    uint angleDelta;
+    u32 angleDelta;
     u16 yaw;
     float dx;
     float dy;

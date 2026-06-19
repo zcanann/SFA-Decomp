@@ -36,7 +36,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern u32 randomGetRange(int min, int max);
 

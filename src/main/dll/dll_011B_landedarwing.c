@@ -65,9 +65,9 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
 } LandedArwingUpdateDamageTexturePlacement;
 
 extern u32 randomGetRange(int min, int max);
-extern int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance);
+extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjLink_DetachChild(int parent, int child);
-extern void ObjLink_AttachChild(int parent, int child, ushort flags);
+extern void ObjLink_AttachChild(int parent, int child, u16 flags);
 extern int ObjTrigger_IsSet(int obj);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY,
                                           float* outZ, int useInputPosition);

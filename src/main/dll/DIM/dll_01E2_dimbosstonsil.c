@@ -67,7 +67,7 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
-    extern uint GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     extern u8 lbl_803DDBB0;
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;

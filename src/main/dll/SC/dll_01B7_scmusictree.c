@@ -304,7 +304,7 @@ void sc_musictree_update(int obj)
     }
     if (((ScMusictreeState*)inner)->unk4C & 0xc0)
     {
-        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (uint*)&hr3, &vec[0],
+        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (u32*)&hr3, &vec[0],
                                                     &vec[1], &vec[2]);
     }
     else

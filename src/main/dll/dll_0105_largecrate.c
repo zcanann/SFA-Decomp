@@ -55,7 +55,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern int Sfx_IsPlayingFromObject(int obj, u32 sfxId);
 extern void Sfx_PlayFromObject(int obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
 
@@ -527,7 +527,7 @@ void largecrate_update(int obj)
             {
                 ((GameObject*)obj)->anim.rotY = 0;
             }
-            hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)hitInfo, &hitType, (uint*)&hitDamage,
+            hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)hitInfo, &hitType, (u32*)&hitDamage,
                                                      &pos.x, &pos.y, &pos.z);
             if (hit == 0x10)
             {

@@ -139,7 +139,7 @@ void drgenerator_hitDetect(int obj)
     f32 hitPosZ;
     f32 hitPosY;
     f32 hitPosX;
-    uint hitVolume;
+    u32 hitVolume;
     int hitObject;
     void* found;
     if (((BitFlags8*)(p + 0x19b))->b0 || ((BitFlags8*)(p + 0x19b))->b3)

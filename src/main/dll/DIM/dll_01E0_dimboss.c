@@ -15,7 +15,7 @@ extern void Music_Trigger(s32 triggerId, s32 mode);
 extern u64 padUpdate();
 extern u32 dvdCheckError();
 extern u32 gameTextRun();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u64 GameBit_Set(int eventId, int value);
 extern u32 gameTextShow();
 extern u32 checkReset();
@@ -29,7 +29,7 @@ extern u32 getTrickyObject();
 extern u64 ObjGroup_RemoveObject();
 extern u64 clearLoadedFileFlags_blocks1();
 extern u64 setLoadedFileFlags_blocks1();
-extern uint getLoadedFileFlags();
+extern u32 getLoadedFileFlags();
 extern u32 unlockLevel();
 extern u32 lockLevel();
 extern u64 mapUnload();
@@ -181,7 +181,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 param_2, ObjAnimUpdateState* ani
     int updateResult;
     int model;
     int mapDirIndex;
-    uint statusFlags;
+    u32 statusFlags;
     int eventIndex;
     int baddieResult;
 
@@ -199,7 +199,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 param_2, ObjAnimUpdateState* ani
     }
 
     dll_2E_func07(obj, animUpdate, animScratch->animController, 1, 1);
-    for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1)
+    for (eventIndex = 0; eventIndex < (int)(u32)animUpdate->eventCount; eventIndex = eventIndex + 1)
     {
         switch (animUpdate->eventIds[eventIndex])
         {
@@ -491,7 +491,7 @@ void DIMboss_hitDetect(DIMbossObject* obj)
 
 void DIMboss_update(DIMbossObject* obj)
 {
-    uint gameBitCount;
+    u32 gameBitCount;
     u32 targetModel;
     DIMbossTopState* topState;
     DIMbossRuntime* runtime;

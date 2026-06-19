@@ -81,8 +81,8 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int latchBit, int musicId);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern f32 lbl_803E6060;
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
 
 void fn_801F9804(int obj);
 

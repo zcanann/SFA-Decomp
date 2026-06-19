@@ -282,7 +282,7 @@ void wmspiritplace_hitDetect(GameObject* obj)
 void wmspiritplace_update(GameObject* obj)
 {
     WmSpiritPlaceState* state;
-    uint mapId;
+    u32 mapId;
 
     state = obj->extra;
     if (state->transitionDelay != 0)

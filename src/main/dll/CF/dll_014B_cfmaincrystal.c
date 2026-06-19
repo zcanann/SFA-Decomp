@@ -53,7 +53,7 @@ extern int ObjMsg_SendToObjects();
 extern int ObjMsg_SendToObject();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 framesThisStep;
@@ -352,9 +352,9 @@ void cfmaincrystal_hitDetect(void)
 
 void cfmaincrystal_update(int* obj)
 {
-    uint payload;
-    uint msgType;
-    uint srcObjId;
+    u32 payload;
+    u32 msgType;
+    u32 srcObjId;
     s8 t;
     t = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
     switch (t)

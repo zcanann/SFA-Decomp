@@ -30,7 +30,7 @@
 
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
-extern undefined4 FUN_8003b818();
+extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
 

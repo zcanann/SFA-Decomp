@@ -45,7 +45,7 @@ extern f32 lbl_803E14A8;
 extern f32 lbl_803E14AC;
 extern f32 lbl_803E14B0;
 
-void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
+void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {

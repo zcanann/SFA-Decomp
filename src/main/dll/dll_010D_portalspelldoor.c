@@ -20,7 +20,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;

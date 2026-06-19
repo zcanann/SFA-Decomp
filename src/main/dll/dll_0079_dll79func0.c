@@ -43,7 +43,7 @@ void dll_79_func00_nop(void)
 {
 }
 
-int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
+int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {

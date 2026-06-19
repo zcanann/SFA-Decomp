@@ -16,11 +16,11 @@
 #include "main/dll/SC/sc_shared.h"
 #include "main/objlib.h"
 
-extern undefined4 Sfx_SetObjectSfxVolume();
-extern undefined4 Sfx_PlayFromObject();
-extern undefined4 Sfx_KeepAliveLoopedObjectSound();
-extern uint randomGetRange();
-extern undefined4 setAButtonIcon();
+extern u32 Sfx_SetObjectSfxVolume();
+extern u32 Sfx_PlayFromObject();
+extern u32 Sfx_KeepAliveLoopedObjectSound();
+extern u32 randomGetRange();
+extern u32 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
 extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int isGameTimerDisabled(void);

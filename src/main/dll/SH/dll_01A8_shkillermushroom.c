@@ -105,7 +105,7 @@ int enemymushroom_getExtraSize(void)
 
 int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj)
 {
-    return (*(byte*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1f) << 0xb) | 0x400;
+    return (*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1f) << 0xb) | 0x400;
 }
 
 void enemymushroom_free(EnemyMushroomObject* obj)
@@ -197,7 +197,7 @@ void enemymushroom_update(int* obj)
     MushHitInfo hv;
     int hitObject;
     int hitSphereIndex;
-    uint hitVolume;
+    u32 hitVolume;
     int hitType;
 
     player = (u8*)Obj_GetPlayerObject();

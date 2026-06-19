@@ -192,7 +192,7 @@ STATIC_ASSERT(offsetof(PauseMenuHud, spiritBitState) == 0xB58);
 STATIC_ASSERT(offsetof(PauseMenuHud, magicLatch) == 0xB7C);
 STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
 
-void hudDrawMagicBar(int alpha, int unk2, uint flags)
+void hudDrawMagicBar(int alpha, int unk2, u32 flags)
 {
     int total;
     int current;
@@ -1261,7 +1261,7 @@ void cMenuUpdateAnims(void)
     }
 }
 
-int trickyBitFn_801241cc(short* arr, sbyte flag)
+int trickyBitFn_801241cc(short* arr, s8 flag)
 {
     short* entry;
     int count;

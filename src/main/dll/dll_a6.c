@@ -20,8 +20,8 @@ extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
 
 /* pointer-typed first param (vs the header's int) is intentional: it sets the callee-saved
  * register class at the call site and is load-bearing for the match (recipes #126/#77) */
-extern void objRenderFn_8003b8f4(GameObject *reticle, undefined4 a, undefined4 b, undefined4 c,
-                                 undefined4 d, f32 f);
+extern void objRenderFn_8003b8f4(GameObject *reticle, u32 a, u32 b, u32 c,
+                                 u32 d, f32 f);
 
 #define RETICLE_BANK_LOCKON 0
 #define RETICLE_BANK_DEFAULT 1
@@ -31,8 +31,8 @@ extern void objRenderFn_8003b8f4(GameObject *reticle, undefined4 a, undefined4 b
 #pragma peephole off
 
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
-                                    undefined4 arg3, undefined4 arg4,
-                                    undefined4 arg5, undefined4 arg6)
+                                    u32 arg3, u32 arg4,
+                                    u32 arg5, u32 arg6)
 {
     int savedReticleState;
     u8 savedReticleAlpha;

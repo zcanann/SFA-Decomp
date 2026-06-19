@@ -31,7 +31,7 @@ extern u8 lbl_80311DA8[];
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
-void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spawnFlags, int modelId, int* colorArgs)
+void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spawnFlags, int modelId, int* colorArgs)
 {
     struct
     {
