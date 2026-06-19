@@ -220,8 +220,9 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 3; i++)
         {
-            state->radiusScale[i] = base[i];
-            state->alphaScale[i] = base[i + 3];
+            f32* p = &base[i];
+            state->radiusScale[i] = p[0];
+            state->alphaScale[i] = p[3];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
@@ -229,8 +230,9 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 3; i++)
         {
-            state->radiusScale[i] = base[i + 6];
-            state->alphaScale[i] = base[i + 9];
+            f32* p = &base[i];
+            state->radiusScale[i] = p[6];
+            state->alphaScale[i] = p[9];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
         if (state->flags.active != 0)
