@@ -657,13 +657,11 @@ undefined4 Link_update(void)
 #pragma peephole off
 void Link_release(void)
 {
-    u8* p;
     int i;
 
-    for (i = 0, p = linkTextures; i < 6; i++)
+    for (i = 0; i < 6; i++)
     {
-        textureFree(*(void**)p);
-        p += 8;
+        textureFree(((LinkTextureSlot*)linkTextures)[i].texture);
     }
     fn_8001BDD4(3);
 }
