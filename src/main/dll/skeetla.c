@@ -64,10 +64,10 @@ extern f32 lbl_803E2478;
 extern f32 lbl_803E2480;
 extern f32 lbl_803E2484;
 extern f32 oneOverTimeDelta;
-extern char lbl_803DBC4C;
+extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
-extern u32 lbl_803E23D4;
-extern u16 lbl_803E23D8;
+extern u32 gSkeetlaFootstepSfxIds01;
+extern u16 gSkeetlaFootstepSfxId2;
 extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
@@ -472,7 +472,7 @@ int trickyMove(u8* obj, f32* targetPos)
     debugStrings = lbl_8031D2E8;
     state = ((GameObject*)obj)->extra;
     moveSpeed = ((TrickyState*)state)->speed;
-    trickyDebugPrint(&lbl_803DBC4C, moveSpeed);
+    trickyDebugPrint(&sSkeetlaVelDebugFmt, moveSpeed);
 
     ((TrickyState*)state)->dirX = targetPos[0] - ((GameObject*)obj)->anim.worldPosX;
     ((TrickyState*)state)->dirZ = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
@@ -552,8 +552,8 @@ int trickyMove(u8* obj, f32* targetPos)
                         }
                         else
                         {
-                            *(u32*)sfxIds = lbl_803E23D4;
-                            sfxIds[2] = lbl_803E23D8;
+                            *(u32*)sfxIds = gSkeetlaFootstepSfxIds01;
+                            sfxIds[2] = gSkeetlaFootstepSfxId2;
                             if (GameBit_Get(0x25) != 0)
                             {
                                 randomGetRange(0, 2);

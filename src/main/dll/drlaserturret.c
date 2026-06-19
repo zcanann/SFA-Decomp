@@ -40,14 +40,14 @@ extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern s16 lbl_803DC0A0[1];
-__declspec(section ".sdata") extern f32 lbl_803DC0A4[3];
+extern s16 gDrLaserTurretIdleAnimMoves[1];
+__declspec(section ".sdata") extern f32 gDrLaserTurretIdleAnimStepScales[3];
 
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
-extern f32 lbl_803E59E4;
-extern f32 lbl_803E59E8;
-extern f32 lbl_803E59EC;
+extern f32 gDrLaserTurretDefaultAnimStepScale;
+extern f32 gDrLaserTurretPi;
+extern f32 gDrLaserTurretBobPhaseScale;
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A08;
 extern f32 lbl_803E5A0C;
@@ -69,7 +69,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     playerObj = Obj_GetPlayerObject();
     state = obj->state;
     state->promptState = 0xff;
-    animState->animStepScale = lbl_803E59E4;
+    animState->animStepScale = gDrLaserTurretDefaultAnimStepScale;
     if (obj->currentMove != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
@@ -90,9 +90,9 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     obj->y =
         state->bobAmplitude *
         mathSinf(
-            (double)(lbl_803E59E8 *
+            (double)(gDrLaserTurretPi *
                 (float)(u32)state->bobPhase /
-                lbl_803E59EC)) +
+                gDrLaserTurretBobPhaseScale)) +
         state->bobBaseY;
     sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
@@ -166,7 +166,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
                 ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
         action_done:
-            animState->animStepScale = lbl_803E59E4;
+            animState->animStepScale = gDrLaserTurretDefaultAnimStepScale;
             state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
             state->actionTimer = rng;
@@ -177,7 +177,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         if (obj->currentMove != DR_LASERTURRET_ANIM_ALERT && obj->currentMove != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
-            animState->animStepScale = lbl_803E59E4;
+            animState->animStepScale = gDrLaserTurretDefaultAnimStepScale;
         }
     }
     state->actionTimer = state->actionTimer - timeDelta;
@@ -193,8 +193,8 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         else
         {
             rng = randomGetRange(0, 1);
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DC0A0[rng], lbl_803E59DC, 0);
-            animState->animStepScale = lbl_803DC0A4[rng];
+            ObjAnim_SetCurrentMove((int)obj, gDrLaserTurretIdleAnimMoves[rng], lbl_803E59DC, 0);
+            animState->animStepScale = gDrLaserTurretIdleAnimStepScales[rng];
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
@@ -245,9 +245,9 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     obj->y =
         state->bobAmplitude *
         mathSinf(
-            (double)(lbl_803E59E8 *
+            (double)(gDrLaserTurretPi *
                 (float)(u32)state->bobPhase /
-                lbl_803E59EC)) +
+                gDrLaserTurretBobPhaseScale)) +
         state->bobBaseY;
     sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)

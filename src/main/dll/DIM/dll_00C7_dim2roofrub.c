@@ -252,7 +252,7 @@ extern f32 playerMapOffsetZ;
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnDirectionalBurst(int* obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, u32 f);
-extern f32 lbl_803E3240;
+extern f32 gDim2RoofRubEffectScale;
 extern f32 lbl_803E3244;
 extern f32 lbl_803E3248;
 extern f32 lbl_803E324C;
@@ -266,7 +266,7 @@ extern f32 lbl_803E3268;
 extern f32 lbl_803E326C;
 extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
-extern f32 lbl_803E327C;
+extern f32 gDim2RoofRubPi;
 
 void mikabombshadow_update(int* obj);
 
@@ -822,7 +822,7 @@ void dim2roofrub_spawnEffects(int* obj)
     if ((((GameObject*)obj)->unkF8 & 4) != 0)
     {
         u8 i = 0;
-        f32 scale = lbl_803E3240;
+        f32 scale = gDim2RoofRubEffectScale;
         Dim2FxRow* tbl = (Dim2FxRow*)lbl_80320768;
         for (; i < 10; i++)
         {
@@ -847,17 +847,17 @@ void dim2roofrub_spawnEffects(int* obj)
         {
             n = 3;
         }
-        v.x = lbl_803E3240 * (lbl_803E3248 * ((GameObject*)obj)->anim.rootMotionScale);
-        v.y = lbl_803E3240 * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
-        v.z = lbl_803E3240 * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
+        v.x = gDim2RoofRubEffectScale * (lbl_803E3248 * ((GameObject*)obj)->anim.rootMotionScale);
+        v.y = gDim2RoofRubEffectScale * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
+        v.z = gDim2RoofRubEffectScale * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
         objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, n, lbl_803E3258, &v);
         v.x = lbl_803E325C;
-        v.y = lbl_803E3240 * (lbl_803E3260 * ((GameObject*)obj)->anim.rootMotionScale);
-        v.z = lbl_803E3240 * (lbl_803E3264 * ((GameObject*)obj)->anim.rootMotionScale);
+        v.y = gDim2RoofRubEffectScale * (lbl_803E3260 * ((GameObject*)obj)->anim.rootMotionScale);
+        v.z = gDim2RoofRubEffectScale * (lbl_803E3264 * ((GameObject*)obj)->anim.rootMotionScale);
         objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, n, lbl_803E3268, &v);
-        v.x = lbl_803E3240 * (lbl_803E326C * ((GameObject*)obj)->anim.rootMotionScale);
-        v.y = lbl_803E3240 * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
-        v.z = lbl_803E3240 * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
+        v.x = gDim2RoofRubEffectScale * (lbl_803E326C * ((GameObject*)obj)->anim.rootMotionScale);
+        v.y = gDim2RoofRubEffectScale * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
+        v.z = gDim2RoofRubEffectScale * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
         objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, n, lbl_803E3258, &v);
     }
     if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
@@ -909,8 +909,8 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         ((GameObject*)cam)->anim.rotY += 0x8000;
         ((GameObject*)cam)->anim.rootMotionScale = lbl_803E325C;
         PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
-        PSMTXRotRad(mRotY, 'y', lbl_803E327C);
-        PSMTXRotRad(mRotZ, 'z', lbl_803E327C);
+        PSMTXRotRad(mRotY, 'y', gDim2RoofRubPi);
+        PSMTXRotRad(mRotZ, 'z', gDim2RoofRubPi);
         PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
         PSMTXConcat(mTransNeg, mCam, mA);
         PSMTXConcat(mRotY, mA, mB);

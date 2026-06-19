@@ -68,11 +68,11 @@ extern int trickyMove(u8 * obj, u8 * pos);
 extern int getAngle(float y, float x);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern f32 Vec_xzDistance(void* a, void* b);
-extern u32 lbl_803E23D0;
+extern u32 gTrickySubstateSfxIdPairB;
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern f32 getXZDistance(f32* a, f32* b);
 extern float sqrtf(float x);
-extern u32 lbl_803E23CC;
+extern u32 gTrickySubstateSfxIdPairA;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
@@ -119,7 +119,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     f32 vz, vx, spd, z;
 
     base = lbl_8031D2E8;
-    sfxTable = lbl_803E23D0;
+    sfxTable = gTrickySubstateSfxIdPairB;
     switch (state[0xa])
     {
     case 0:
@@ -335,7 +335,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
     f32 z;
     u16 id;
 
-    sfxTable = lbl_803E23CC;
+    sfxTable = gTrickySubstateSfxIdPairA;
     pc = ((TrickyState*)state)->followObj;
     switch (state[0xa])
     {

@@ -14,12 +14,12 @@
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 extern f32 sqrtf(f32 x);
-extern f64 lbl_803E4DF0;
+extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
-extern f32 lbl_803E4E1C;
-extern f32 lbl_803E4E20;
-extern f32 lbl_803E4E24;
+extern f32 gRopeNodeMaxDistance;
+extern f32 gRopeNodeDamping;
+extern f32 gRopeNodeBoundsMargin;
 
 
 extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
@@ -33,26 +33,26 @@ extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern u8 framesThisStep;
-extern void* lbl_803DBF48;
+extern void* gRopeNodeTextures;
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
-extern u8 lbl_802C2358[];
+extern u8 gRopeNodeDisplayList[];
 extern f32 lbl_803E4DF8;
-extern int lbl_803DBF40;
+extern int gRopeNodeTextureAssetIds;
 extern f32 lbl_803DBF50;
-extern u8 lbl_803DBF58;
-extern f32 lbl_803E4E28;
+extern u8 gRopeNodeVariantVisibleFlags;
+extern f32 gRopeNodeLiftHeight;
 
 static inline f32 DFRope_S32AsFloat(s32 value)
 {
     u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32)value ^ 0x80000000)));
-    return (f32)(*(f64*)&bits - lbl_803E4DF0);
+    return (f32)(*(f64*)&bits - gRopeNodeS32ToDoubleBias);
 }
 
 static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
 {
     u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32)value ^ 0x80000000)));
-    return (f32) * (f64*)&bits - (f32)lbl_803E4DF0;
+    return (f32) * (f64*)&bits - (f32)gRopeNodeS32ToDoubleBias;
 }
 
 int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
@@ -89,7 +89,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     {
         return 0;
     }
-    *distanceOut = lbl_803E4E1C;
+    *distanceOut = gRopeNodeMaxDistance;
     localX = worldX - ((GameObject*)obj)->anim.localPosX;
     localY = worldY - ((GameObject*)obj)->anim.localPosY;
     localZ = worldZ - ((GameObject*)obj)->anim.localPosZ;
@@ -285,7 +285,7 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
     length = sqrtf(dx * dx + dy * dy + dz * dz);
     length = length / (f32)(extra->rope->count - 1);
     link = extra->rope->links;
-    extra->rope->damping = lbl_803E4E20;
+    extra->rope->damping = gRopeNodeDamping;
     for (i = 0; i < extra->rope->count - 1; i++, link++)
     {
         link->restLength = length;
@@ -325,7 +325,7 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
         }
     }
 
-    extra->minX = extra->minX - (margin = lbl_803E4E24);
+    extra->minX = extra->minX - (margin = gRopeNodeBoundsMargin);
     extra->minZ -= margin;
     extra->maxX += margin;
     extra->maxZ += margin;
@@ -473,7 +473,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 gxBlendFn_80078b4c();
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
-            selectTexture((&lbl_803DBF48)[((DfropenodePlacement*)objDef)->unk1B], 0);
+            selectTexture((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->unk1B], 0);
             setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                          (u8)alpha);
         }
@@ -482,7 +482,7 @@ void dfropenode_render(int obj, int p2, int p3)
         {
             node++;
             fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
-            drawFn_8005cf8c(matrix, lbl_802C2358, 6);
+            drawFn_8005cf8c(matrix, gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->unk1B == 1)
         {
@@ -500,7 +500,7 @@ void dfropenode_render(int obj, int p2, int p3)
             {
                 node++;
                 fn_801C0BF8(lbl_80325E60, extra->angle, (node - 1)->pos, node->pos, matrix);
-                drawFn_8005cf8c(matrix, lbl_802C2358, 6);
+                drawFn_8005cf8c(matrix, gRopeNodeDisplayList, 6);
             }
         }
     }
@@ -607,7 +607,7 @@ void dfropenode_update(DFropenodeObject* obj)
             extra->maxZ = temp;
         }
         {
-            f32 m = lbl_803E4E24;
+            f32 m = gRopeNodeBoundsMargin;
             extra->minX -= m;
             extra->minZ -= m;
             extra->maxX += m;
@@ -620,7 +620,7 @@ void dfropenode_update(DFropenodeObject* obj)
         linkedX = linkedObj->posX;
         linkedY = linkedObj->posY;
         linkedZ = linkedObj->posZ;
-        liftedY = lbl_803E4E28 + baseY;
+        liftedY = gRopeNodeLiftHeight + baseY;
 
         normalX = liftedY * (baseZ - linkedZ) +
             (baseY * (linkedZ - baseZ) + (linkedY * (baseZ - baseZ)));
@@ -650,7 +650,7 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef)
     DFropenodeExtra* extra;
 
     extra = obj->extra;
-    if ((&lbl_803DBF58)[*(u8*)(objDef + 0x1b)] == 0)
+    if ((&gRopeNodeVariantVisibleFlags)[*(u8*)(objDef + 0x1b)] == 0)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x80;
     }
@@ -667,7 +667,7 @@ void dfropenode_release(void)
 
     for (i = 0; i < 2; i++)
     {
-        textureFree((&lbl_803DBF48)[i]);
+        textureFree((&gRopeNodeTextures)[i]);
     }
 }
 
@@ -677,6 +677,6 @@ void dfropenode_initialise(void)
 
     for (i = 0; i < 2; i++)
     {
-        (&lbl_803DBF48)[i] = textureLoadAsset((&lbl_803DBF40)[i]);
+        (&gRopeNodeTextures)[i] = textureLoadAsset((&gRopeNodeTextureAssetIds)[i]);
     }
 }

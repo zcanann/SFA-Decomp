@@ -68,7 +68,7 @@ void drcagewith_hitDetect(int obj)
     f32 px;
     f32 div;
 
-    maxDist = lbl_803E69F4;
+    maxDist = gDrCageWithFindObjMaxDist;
     state = ((GameObject*)obj)->extra;
     bf31 = (BitFlags8*)(state + 0x31);
 
@@ -122,9 +122,9 @@ void drcagewith_hitDetect(int obj)
         v = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
         v = v * lbl_803E69FC;
         v = interpolate(v - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
-        clamped = (v < lbl_803E6A04 * timeDelta)
-                      ? lbl_803E6A04 * timeDelta
-                      : ((v > lbl_803E6A08 * timeDelta) ? lbl_803E6A08 * timeDelta : v);
+        clamped = (v < gDrCageWithAngVelRateMin * timeDelta)
+                      ? gDrCageWithAngVelRateMin * timeDelta
+                      : ((v > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : v);
         ((DrcagewithState*)state)->angularVel = ((DrcagewithState*)state)->angularVel + clamped;
         for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {
