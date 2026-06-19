@@ -1,10 +1,17 @@
-# Proposed rename: `dll_00CA_mediumbasket` → ice-baddie (cut content)
+# `dll_00CA_mediumbasket` → `dll_00CA_icebaddie` (cut content) — APPLIED
 
-**Status:** proposal for the team-lead. The file/prefix rename touches
-`splits.txt` / `configure.py` / `symbols.txt` (build-config + symbol-map), so it
-is left unapplied here. The behavioral renames *inside* the TU (functions,
-fields, header comment) have already been applied and are match-%-neutral
-(`.text` byte-identical).
+**Status:** APPLIED. The file was renamed to `dll_00CA_icebaddie.c/.h` and all
+`mediumbasket_*` / `dll_CA_*` symbols, the `gMediumBasketStateHandlersA/B`
+tables, the `dll_CA` descriptor object (→ `gIceBaddieObjDescriptor`) and the
+`MediumbasketControl` struct were renamed to the `iceBaddie`/`IceBaddie`
+namespace across `.c` / `.h` / `symbols.txt` / `splits.txt` / `configure.py` /
+`dll_00CE_dllce.c` / `dll_00C9_enemy.c` / `scarab.h`. The rename plus the
+earlier behavioral renames are match-%-neutral (`.text` byte-identical to the
+pristine pre-rename build). The optional slot-handler behavioral names below are
+*not* applied — left for a future pass.
+
+`iceBaddie` is a descriptive placeholder: this is cut content with no retail
+name (see below).
 
 ## Why the current name is wrong
 

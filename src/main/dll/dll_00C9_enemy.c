@@ -13,7 +13,7 @@
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_00C9_enemy.h"
-#include "main/dll/dll_00CA_mediumbasket.h"
+#include "main/dll/dll_00CA_icebaddie.h"
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -209,7 +209,7 @@ extern void fn_801534D8(int obj, u8* state);
 extern void fn_80153C90(int obj, u8* state);
 extern void fn_801542AC(int obj, u8* state);
 extern void mutatedEbaInit(int obj, u8* state);
-extern void mediumbasket_initWhirlpoolState(int obj, u8* state);
+extern void iceBaddie_initWhirlpoolState(int obj, u8* state);
 extern void crawler_initVariant(int obj, u8* state);
 extern void crawler_initScaledVariant(int obj, u8* state);
 extern void fn_8014FF58(int obj, u8* state);
@@ -312,7 +312,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                mediumbasket_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+                iceBaddie_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -389,7 +389,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                mediumbasket_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+                iceBaddie_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -499,7 +499,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80156C34(obj, state);
             break;
         case 0x851:
-            mediumbasket_leaveWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+            iceBaddie_leaveWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
             break;
         case 0x842:
         case 0x84b:
@@ -2460,7 +2460,7 @@ void enemy_init(int obj, u8* setup, int flag)
             mutatedEbaInit(obj, state);
             break;
         case 2129:
-            mediumbasket_initWhirlpoolState(obj, state);
+            iceBaddie_initWhirlpoolState(obj, state);
             break;
         case 2114:
         case 2123:

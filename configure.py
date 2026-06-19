@@ -1147,7 +1147,7 @@ config.libs = [
             Object(NonMatching, "main/dll/fireflylantern.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/duster.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/firecrawler.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_00CA_mediumbasket.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_00CA_icebaddie.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00CE_dllce.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00CC_chukchuk.c"),
             Object(NonMatching, "main/dll/dll_00CD_iceball.c"),

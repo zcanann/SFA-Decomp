@@ -5,7 +5,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/object_descriptor.h"
 
-void dll_CA_update(int param_1,int param_2,int param_3);
+void iceBaddie_update(int param_1,int param_2,int param_3);
 void FUN_8015d99c(int param_1,char param_2);
 void FUN_8015da00(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
