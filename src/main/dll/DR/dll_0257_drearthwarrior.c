@@ -1168,7 +1168,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                     s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000)
                     {
