@@ -412,7 +412,7 @@ void fn_80239FCC(int p1, int p2)
 #pragma optimization_level 1
 void fn_8023A3E4(int p1, int p2)
 {
-    u8 i;
+    int i;
     uint hitVol;
     int hitType;
     int hitObj;
