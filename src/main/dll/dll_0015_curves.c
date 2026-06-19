@@ -260,7 +260,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 {
     RomCurvePoint* point;
     RomCurvePoint* points;
-    u32 hitCount;
+    int hitCount;
     int pointIndex;
     f32 delta[3];
     CurvesHitScratch hitScratch;
@@ -276,7 +276,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
         ((GameObject*)obj)->anim.worldPosY = collision->points[0][1];
     }
 
-    points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], &hitCount, 0);
+    points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
     for (pointIndex = 0, point = points; pointIndex < hitCount;)
     {
         if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > gCurvesSurfaceNormalZThreshold) &&
