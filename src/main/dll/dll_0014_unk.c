@@ -319,7 +319,7 @@ static inline int Objfsa_FindRomCurveById(int curveId)
     lo = 0;
     hi = nRomCurves - 1;
     id = curveId;
-    while (lo <= hi)
+    while (hi >= lo)
     {
         mid = (hi + lo) >> 1;
         curve = (int)romCurves[mid];
