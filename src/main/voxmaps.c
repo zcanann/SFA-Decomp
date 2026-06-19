@@ -400,8 +400,7 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
     errXZ = dz - dx;
     twiceDz = dz * 2;
     errYZ = dy - dz;
-    stepsRemaining = dy + dz;
-    stepsRemaining += dx;
+    stepsRemaining = dx + dy + dz;
 
     voxmaps_updateActiveMap(&cur);
 
