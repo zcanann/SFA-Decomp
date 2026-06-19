@@ -846,9 +846,9 @@ void FUN_80170048(void)
             if (*state != 0)
             {
                 FUN_800175b0(*state, 2);
-                FUN_800175ec((double)*(float*)(obj + 0xc),
-                             (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                             (double)*(float*)(obj + 0x14), (int*)*state);
+                FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                             (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                             (double)((GameObject*)obj)->anim.localPosZ, (int*)*state);
                 FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
                 FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
                 FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
@@ -923,9 +923,9 @@ void FUN_80170048(void)
         if (*state != 0)
         {
             FUN_800175b0(*state, 2);
-            FUN_800175ec((double)*(float*)(obj + 0xc),
-                         (double)(*(float*)(obj + 0x10) - lbl_803E4050),
-                         (double)*(float*)(obj + 0x14), (int*)*state);
+            FUN_800175ec((double)((GameObject*)obj)->anim.localPosX,
+                         (double)(((GameObject*)obj)->anim.localPosY - lbl_803E4050),
+                         (double)((GameObject*)obj)->anim.localPosZ, (int*)*state);
             FUN_8001759c(*state, 0, 0xff, 0xff, 0xff);
             FUN_80017588(*state, 0, 0xff, 0xff, 0xff);
             FUN_800175d0((double)lbl_803E4054, (double)lbl_803E4058, *state);
