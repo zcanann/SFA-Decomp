@@ -114,7 +114,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
                 node = (int)(*gRomCurveInterface)->getById(found);
                 ((GameObject*)arg1)->anim.localPosX = *(f32*)(node + 0x8);
                 ((GameObject*)arg1)->anim.localPosY = lbl_803E59E0 + ((GameObject*)node)->anim.localPosX;
-                ((GameObject*)arg1)->anim.localPosZ = *(f32*)(node + 0x10);
+                ((GameObject*)arg1)->anim.localPosZ = ((GameObject*)node)->anim.localPosY;
                 *(s16*)arg1 = (s16)((s32) * (s8*)(node + 0x2c) << 8);
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9BC = lbl_803E59E0 + ((GameObject*)node)->anim.localPosX;
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9CA = 0;
