@@ -165,7 +165,6 @@ extern void mm_free(void* p);
 extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
 extern int DVDReadAsyncPrio(void* fi, void* addr, int len, int off, void (*cb)(), int prio);
 extern void mergeTableFiles(void* buf, int a, int b, int n);
-extern void texRestructRefs(int mode);
 extern void animCurvReadCb();
 extern void animCurvTabReadCb();
 extern void voxMapReadCb();
@@ -4624,7 +4623,6 @@ found:
     }
 }
 
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void GXFlush(void);
 extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
@@ -5019,7 +5017,6 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
     lbl_803DCD6A += 1;
 }
 
-extern void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
 extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 
 void textureFn_80051348(void* p1, u8 p2)
@@ -6109,7 +6106,6 @@ extern u8 lbl_803DB5E8;
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
 extern f32 lbl_803DEB3C;
-extern void* textureIdxToPtr(int idx);
 extern void GXSetTevOp(int stage, int mode);
 
 int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
@@ -7667,7 +7663,6 @@ void logGpuHang(void)
     }
 }
 
-extern void debugPrintfxy(int x, int y, char* fmt, ...);
 extern int OSGetResetButtonState(void);
 extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;

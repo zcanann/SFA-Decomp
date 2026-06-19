@@ -8,10 +8,7 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void mm_free(void* p);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
-extern void* textureIdxToPtr(int idx);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 
 u16*

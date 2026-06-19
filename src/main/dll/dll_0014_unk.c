@@ -126,7 +126,6 @@ extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;
 extern f32 lbl_803E0654;
 extern f32 lbl_803E05F8;
-extern void mapBlockFn_80059c2c(u8 * outFlags);
 extern f32 lbl_803E0600;
 extern f32 lbl_803E0604;
 extern f32 lbl_803E05FC;

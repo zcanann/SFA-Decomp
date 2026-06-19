@@ -53,7 +53,6 @@ extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
-extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int value, u32 size);
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_800305c4();

@@ -16,8 +16,6 @@
  */
 #include "main/dll/xyzanimator.h"
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -162,25 +160,15 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 void depthoffieldpoint_init(int* obj);
 void depthoffieldpoint_update(int* obj);
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_free(int obj);
 extern void shield_update();
-extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern void Rcp_DisableBlurFilter(void);

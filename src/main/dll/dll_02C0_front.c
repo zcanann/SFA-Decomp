@@ -88,9 +88,6 @@ int titlescreen_getObjectTypeId(u8* obj)
     return 0;
 }
 
-extern void titlescreen_free(u8* obj);
-extern void titlescreen_update(u8* obj);
-extern void titlescreen_init(u8* obj, u8* p);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {

@@ -18,8 +18,6 @@ int mikabomb_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(f32);
 
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -294,25 +292,15 @@ extern f32 lbl_803E40EC;
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_free(int obj);
 extern void shield_update();
-extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E3388;
@@ -1187,7 +1175,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
 
 
 
@@ -1212,7 +1199,6 @@ int flamethrowerspe_getObjectTypeId(void) { return 0x0; }
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
 
@@ -1658,7 +1644,6 @@ void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
-void staff_release(void);
 
 void mikabombshadow_init(int* obj);
 
@@ -1680,18 +1665,14 @@ void flamethrowerspe_init(int* obj, int* params)
     ObjHits_DisableObject(obj);
 }
 
-void animatedobj_free(int* obj, int seqFlag);
 
-void staff_init(int* obj);
 
 
 void dll_F7_init(int* obj, int* params);
 
 void fireball_hitDetect(int* obj);
 
-void dim2roofrub_init(int* obj, int* params);
 
-void animatedobj_init(int* obj, int* params);
 
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
@@ -1753,10 +1734,8 @@ void shield_update(int* obj);
 
 void dll_F7_update(int* obj);
 
-void staff_initialise(void);
 
 
-void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
@@ -1784,6 +1763,5 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 
 #pragma opt_common_subs off
 
-void staff_update(int* obj);
 
 

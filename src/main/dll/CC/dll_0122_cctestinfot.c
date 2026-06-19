@@ -12,7 +12,6 @@ extern void* Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
-extern void showHelpText(s16 val);
 extern f32 timeDelta;
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
 extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */

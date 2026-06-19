@@ -65,7 +65,6 @@ typedef struct Dim2lavacontrolState
 
 #pragma scheduling on
 #pragma peephole on
-extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);

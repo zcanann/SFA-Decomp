@@ -208,8 +208,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
 
 int kaldachompspit_getExtraSize(void);
 int kaldachompspit_getObjectTypeId(void);
-void kaldachompspit_free(int* obj);
-void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,

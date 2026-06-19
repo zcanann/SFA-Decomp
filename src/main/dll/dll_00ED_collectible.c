@@ -80,11 +80,8 @@ extern f32 lbl_803E34A0;
 
 extern void gcbaddieshield_update(int* obj);
 
-extern void animatedobj_init(int* obj, int* params);
-extern void animatedobj_free(int* obj, int seqFlag);
 extern int animatedobj_getExtraSize(void);
 
-extern void dim2roofrub_init(int* obj, int* params);
 extern void dim2roofrub_free(int* obj);
 extern int dim2roofrub_getExtraSize(void);
 
@@ -92,17 +89,12 @@ extern void depthoffieldpoint_init();
 extern void depthoffieldpoint_update();
 extern int depthoffieldpoint_getExtraSize(void);
 
-extern void staff_initialise(void);
-extern void staff_release(void);
-extern void staff_init(int* obj);
-extern void staff_update(int* obj);
 extern void staff_hitDetect(void);
 extern void staff_render(void);
 extern int staff_getObjectTypeId(void);
 extern int staff_getExtraSize(void);
 extern void staff_setScale(void);
 extern void staff_func0B(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void staff_func0F(void);
 extern void staff_func10(int* obj, s32 v);
 extern void staff_setHitReactValue(int* obj, s32 v);
@@ -136,7 +128,6 @@ extern void shield_release(void);
 extern void shield_init(int* obj, void* initData);
 extern void shield_update();
 extern void shield_hitDetect(void);
-extern void shield_free(int obj);
 extern int shield_getObjectTypeId(void);
 extern int shield_getExtraSize(void);
 
@@ -145,7 +136,6 @@ extern void restartmarker_init(int* obj, int* state);
 
 extern void dll_F7_init();
 extern void dll_F7_update();
-extern void dll_F7_free(int obj);
 
 /* ObjMsg slots: collectible notifies the player it is in range, player
    replies to trigger the pickup. */

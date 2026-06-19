@@ -35,7 +35,6 @@ extern void* Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet(void*);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(u8 x);
-extern void hudFn_8011f6f0(u8 x);
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern float mathSinf(float x);
 extern int playerGetMoney(void* playerObj);

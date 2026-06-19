@@ -42,7 +42,6 @@ extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void fn_8014CF7C(int obj, int p, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int p, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int p, int c, f32 a, f32 b, int d);
-extern float fn_80293DA4(float x);
 extern void fn_80154328(int obj, int p);
 extern f64 lbl_803DBCD0;
 extern f32 timeDelta;

@@ -52,7 +52,6 @@ extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
 
-extern void trickyDebugPrint(const char* fmt, ...);
 extern u16 getYButtonItem(s16* out);
 extern void buttonDisable(int port, u32 mask);
 extern char sInWaterMessage[];

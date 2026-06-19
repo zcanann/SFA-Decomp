@@ -57,7 +57,6 @@ extern f32 lbl_803E5A64;
 extern f32 lbl_803E5A68;
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
-extern void showHelpText(s16 val);
 extern void buttonDisable(int port, u32 mask);
 extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);

@@ -68,8 +68,6 @@ extern f32 lbl_803E265C;
 #pragma scheduling on
 #pragma peephole on
 extern void* memset(void* dst, int val, u32 n);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
@@ -121,9 +119,7 @@ extern f32 lbl_803E1AD0;
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
-extern int getAngle(float y, float x);
 extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern float mathCosf(float x);
 extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
 extern u8 framesThisStep;

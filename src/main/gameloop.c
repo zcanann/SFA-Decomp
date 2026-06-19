@@ -1077,7 +1077,6 @@ extern void unloadMap(void);
 extern int mapUnload(int mapId, int flags);
 extern void fn_801375A0(void);
 extern int loadMapAndParent(int mapId);
-extern void mapLoadDataFiles(int mapIdx);
 extern void beginLoadingMap(void);
 
 void doQueuedLoads(void)

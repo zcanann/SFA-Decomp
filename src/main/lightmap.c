@@ -1668,7 +1668,6 @@ extern void getAmbientColor(int slot, u8* r, u8* g, u8* b);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
-extern void renderResetFn_8003fc60(void);
 extern u8 CameraShake_IsActive(void);
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
@@ -1700,7 +1699,6 @@ extern u8 bEnableViewFinderHud;
 extern f32 lbl_803DEC14;
 extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
 extern s32 bEnableColorFilter;
-extern void setShadowFlag_803db658(int v);
 
 void sceneDraw(void)
 {

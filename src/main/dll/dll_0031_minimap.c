@@ -63,7 +63,6 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
 extern void drawHudBox(int id, int x, int y, int w, int alpha, int p6);
 extern void gameTextSetCursor(int a, int b, int c);
-extern void gameTextResetCursor(int flags);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
 
@@ -120,9 +119,6 @@ extern f32 gMinimapF74;
 
 #pragma scheduling off
 #pragma peephole off
-extern void titlescreen_free(u8* obj);
-extern void titlescreen_update(u8* obj);
-extern void titlescreen_init(u8* obj, u8* p);
 extern void* lbl_803DBBC8[2];
 extern void Obj_FreeObject(u8* obj);
 extern int Obj_AllocObjectSetup(int a, int b);

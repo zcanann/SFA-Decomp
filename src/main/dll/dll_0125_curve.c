@@ -22,8 +22,6 @@
 
 extern u32 FUN_8003b818();
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -167,16 +165,8 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern f32 lbl_803E3420;
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();
@@ -274,7 +264,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
 
 void curve_setScale(void)
 {
@@ -299,7 +288,6 @@ int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
 int curve_getObjectTypeId(void) { return 0x0; }
 
-void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
 

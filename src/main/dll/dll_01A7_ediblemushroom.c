@@ -61,7 +61,6 @@ extern f32 sqrtf(f32 x);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue();
-extern u32 GameBit_Get(int eventId);
 extern f32 Vec_distance(int a, int b);
 extern f32 lbl_803E52E0;
 extern f32 lbl_803E52E4;

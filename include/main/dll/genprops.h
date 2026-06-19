@@ -191,4 +191,17 @@ void flamethrowerspe_render(void);
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+void animatedobj_free(int* obj, int seqFlag);
+void animatedobj_init(int* obj, int* params);
+void dim2roofrub_init(int* obj, int* params);
+void staff_update(int* obj);
+void staff_init(int* obj);
+void staff_release(void);
+void staff_initialise(void);
+void staff_hitDetectGeometry(int* obj);
+void dll_F7_free(int obj);
+void shield_free(int obj);
+
 #endif /* MAIN_DLL_GENPROPS_H_ */

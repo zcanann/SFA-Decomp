@@ -33,7 +33,6 @@ extern f32 sqrtf(f32 x);
 extern void* memcpy(void* dst, const void* src, u32 n);
 extern u8 lbl_8031A0E0[];
 extern f32 lbl_803E1C88;
-extern int atan2i(int y, int x);
 extern f32 lbl_803E1C8C;
 extern f32 timeDelta;
 extern f32 lbl_803E1C90;

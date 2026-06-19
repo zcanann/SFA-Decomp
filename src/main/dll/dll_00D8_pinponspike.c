@@ -28,8 +28,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
    the remaining callbacks (render/hitDetect/init/release/initialise) are in xyzanimator.h */
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 

@@ -63,7 +63,6 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
-extern void GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
 extern const f32 lbl_803E3730;

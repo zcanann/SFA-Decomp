@@ -21,8 +21,6 @@ extern u32 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 timeDelta;

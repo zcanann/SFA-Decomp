@@ -30,7 +30,6 @@ typedef struct TrickyGrowlState
     u8 pad59[0x60 - 0x59];
 } TrickyGrowlState;
 
-extern void trickyDebugPrint(const char* fmt, ...);
 extern int trickyFn_8013b368(u8* obj, f32 vel, u8* state);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);

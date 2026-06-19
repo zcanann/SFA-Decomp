@@ -56,10 +56,7 @@ extern void* textureLoadAsset(int asset);
 
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
-extern void resetLotsOfRenderVars(void);
-extern void* textureIdxToPtr(int idx);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
-extern void textureFn_800528bc(void);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);

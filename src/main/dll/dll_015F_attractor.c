@@ -36,7 +36,6 @@ STATIC_ASSERT(offsetof(AttractorMapData, scale) == 0x1a);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 lbl_803E43D0;
 extern void* Obj_GetPlayerObject(void);
-extern int atan2i(int y, int x);
 
 void attractor_hitDetect(void)
 {

@@ -33,7 +33,6 @@ extern f32 lbl_803E1DE4;
 extern u8 shouldShowCredits(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
-extern void gameTextSetDrawFunc(void* fn);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void* gameTextGet(int textId);
@@ -52,7 +51,6 @@ extern void fn_8011C7B4(void);
 extern s8 lbl_803DD704;        /* exit fade countdown */
 extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
 extern void loadUiDll(int index);
-extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);

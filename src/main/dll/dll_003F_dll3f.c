@@ -27,9 +27,6 @@ extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-extern void titlescreen_free(u8* obj);
-extern void titlescreen_update(u8* obj);
-extern void titlescreen_init(u8* obj, u8* p);
 extern int titlescreen_getExtraSize(void);
 extern void titlescreen_hitDetect(void);
 extern int titlescreen_getObjectTypeId(u8* obj);

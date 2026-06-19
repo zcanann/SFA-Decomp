@@ -10,7 +10,6 @@
 #include "main/worldplanet.h"
 
 extern void objRenderFn_8003b8f4(double scale);
-extern void setShowWorldMapHud(u8 param);
 
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
@@ -56,7 +55,6 @@ extern u8 lbl_803DC1E8[8];
 extern u8 lbl_803DC1E0[6];
 extern u8 lbl_803DC1D8[6];
 extern int getAngle(float y, float x);
-extern u8 fn_8012DDAC(void);
 extern int loadMapAndParent(int mapId);
 extern int lockLevel(s32 val, int idx);
 extern void loadModelAndAnimTabs(void);

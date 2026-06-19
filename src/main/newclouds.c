@@ -329,7 +329,6 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
-extern void* textureIdxToPtr(int idx);
 extern const f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 

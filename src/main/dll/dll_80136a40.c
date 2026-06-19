@@ -63,9 +63,6 @@ extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 
 
-extern void titlescreen_free(u8* obj);
-extern void titlescreen_update(u8* obj);
-extern void titlescreen_init(u8* obj, u8* p);
 extern f32 lbl_803E23E8;
 extern void Obj_FreeObject(u8* obj);
 extern f32 lbl_803E23B8;

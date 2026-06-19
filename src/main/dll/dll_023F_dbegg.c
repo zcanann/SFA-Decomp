@@ -83,7 +83,6 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern u32 FUN_80006824();
 extern int randomGetRange(int lo, int hi);
 extern u64 FUN_800305f8();
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;

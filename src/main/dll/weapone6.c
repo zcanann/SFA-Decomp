@@ -52,7 +52,6 @@ extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int trickyFoodFn_8014460c(int obj, int state);
-extern void trickyDebugPrint(const char* fmt, ...);
 extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern f32 sqrtf(f32);

@@ -56,8 +56,6 @@ extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 
 extern void objRenderFn_8003b8f4(f32);
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 extern int fn_80080150(int p);

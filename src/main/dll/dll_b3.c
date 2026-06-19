@@ -19,9 +19,6 @@ typedef struct CamcontrolLockIconRenderOp {
 #define LOCK_ICON_DIM_ALPHA_SCALE 0x60
 
 extern CamcontrolLockIconRenderOp* ObjModel_GetRenderOp(int model, int idx);
-extern void resetLotsOfRenderVars(void);
-extern void textureFn_800528bc(void);
-extern void* textureIdxToPtr(int idx);
 extern void fn_80051D5C(void* tex, void* arg2, int arg3, GXColor* color);
 
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)

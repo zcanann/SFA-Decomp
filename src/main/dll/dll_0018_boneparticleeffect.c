@@ -1614,7 +1614,6 @@ typedef struct
 
 extern ParticleSlot gBoneParticleInitData[];
 extern void* textureLoadAsset(int asset);
-extern void* mmAlloc(int size, int type, int flag);
 
 void boneParticleEffect_initialise(void)
 {

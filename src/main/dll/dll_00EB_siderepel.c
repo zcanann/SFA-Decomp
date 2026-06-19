@@ -32,8 +32,6 @@ void mikabomb_free(int obj, int mode);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -176,16 +174,8 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();
@@ -268,7 +258,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
 
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
@@ -282,7 +271,6 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-void dll_F7_free(int obj);
 
 void dim2roofrub_free(int* obj);
 

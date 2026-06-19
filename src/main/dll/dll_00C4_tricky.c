@@ -80,7 +80,6 @@ extern int voxmaps_traceLine(void* from, void* to, int param_3, u8* hit, int par
 extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
 extern void* getTrickyObject(void);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
@@ -832,7 +831,6 @@ extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
 extern int trickySelectQueuedCommandTarget(int state, int type);
-void trickyDebugPrint(const char* fmt, ...);
 extern int trickyFoodFn_8013db3c(int obj, int state);
 extern void memmove(void* dst, void* src, int n);
 extern void fn_801B17F4(void);

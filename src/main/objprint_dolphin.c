@@ -3518,11 +3518,8 @@ typedef struct
     u8 r, g, b, a;
 } ObjGXColor;
 
-extern void modelLightChannels_reset(u8 v);
-extern void modelLightChannel_configure(int i, int a, int b);
 extern void modelTextureFn_80089970(int slot);
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
-extern void lightGetColor(int i, u8* a, u8* b, u8* c);
 extern void modelLightStruct_selectObjectLights(u8* model, int* arr, u32 n, s32* cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
 extern int modelLightStruct_getProjectedLightChannelPreference(int light);
@@ -3876,13 +3873,10 @@ typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern ObjModelRenderCb ObjModel_GetRenderCallback(int* am);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void _gxSetFogParams(void);
-extern void resetLotsOfRenderVars(void);
-extern void* textureIdxToPtr(int idx);
 extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32 * c);
 extern void renderHeavyFog(f32 * c);
-extern void textureFn_800528bc(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -4734,7 +4728,6 @@ extern void fn_80051B00(void* tex, int mtx, int fl, u8* color);
 extern void fn_80051868(void* tex, int mtx, int fl);
 extern void fn_80051D5C(void* tex, int mtx, int fl, u8* color);
 extern void gxColorFn_80052764(u8 * color);
-extern void gxColorFn_800523d0(void);
 extern void textureFn_800524ec(u8 * color);
 extern f32 lbl_803DEA48;
 
@@ -4931,7 +4924,6 @@ extern u8 textureFn_80050ad8(void* tex, int n, int p3, u32 p4);
 extern void textureFn_80051348(u32 ref, int p2);
 extern void fn_800510F0(u32 ref, int p2, int p3);
 extern void fn_80050FF4(int p1);
-extern void fn_8004D230(void);
 extern void fn_8005011C(f32 * m);
 extern void fn_8004D6D8(void);
 extern u32 modelLightStruct_getProjectionTexture(int light);
@@ -4942,7 +4934,6 @@ extern void textureFn_8004c330(void* tex, f32* m);
 extern void gxTextureFn_8004d5b4(int* op);
 extern void gxTextureFn_80052638(u8 * color);
 extern void fn_80118240(void);
-extern void fn_8004D928(void);
 extern f32 lbl_803967F0[];
 extern u8 lbl_803DCC3C;
 
@@ -5240,15 +5231,10 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 
 extern u8 lbl_80345E10[];
 extern void mm_free(void* p);
-extern void texFlagFn_80023cbc(int v);
-extern void texRestructRefs(int mode);
 extern s16 lbl_803DCC78;
-extern int testAndSet_onlyUseHeaps1and2(int v);
-extern int mmGetRegionForPtr(u8* ptr);
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
 extern int mmSetFreeDelay(int v);
-extern int getHeapItemSize(void* ptr);
 
 #pragma optimization_level 2
 void defragMemory(int mode)
@@ -5929,7 +5915,6 @@ void voxMapTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-extern void mapLoadDataFiles(int mapIdx);
 extern int sMapFileNameIndexRemapTable[];
 extern s16 sMapFileNameAdjacencyTable[];
 
@@ -6186,7 +6171,6 @@ int mapUnload(int mapId, int flags)
     return 1;
 }
 
-extern void debugPrintfxy(int x, int y, char* fmt, ...);
 extern char sAssetIndexOverflowError[];
 
 int mergeTableFiles(u32* tbl, int id, int idx, int count_)

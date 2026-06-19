@@ -35,7 +35,6 @@ extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 
-extern void trickyDebugPrint(const char* fmt, ...);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
 extern u8 Obj_IsLoadingLocked(void);

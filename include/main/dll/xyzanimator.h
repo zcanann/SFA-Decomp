@@ -104,4 +104,9 @@ extern PollenFragmentConfig *lbl_8032059C[];
 /* extern-cleanup: consolidated prototypes */
 void quakeSpellFn_8016cee8(int* obj, int* x);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+void kaldachompspit_free(int* obj);
+void kaldachompspit_update(int obj);
+
 #endif /* MAIN_DLL_DLL_13C_H_ */

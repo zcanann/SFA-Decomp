@@ -91,7 +91,6 @@ extern int trickyFn_8013b368(u8* obj, f32 vel, u8* state);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
-extern void trickyDebugPrint(const char* fmt, ...);
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern int trickyUpdateApproachSpeed(int p1, int p2, f32 f, void* target, int p4);
 extern int trickyMove(int p1, void* p2);

@@ -37,8 +37,6 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -299,7 +297,6 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-void shield_free(int obj);
 
 void dll_F7_hitDetect(void)
 {
@@ -343,16 +340,8 @@ void dll_F7_free(int obj)
 void dim2roofrub_free(int* obj);
 
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);

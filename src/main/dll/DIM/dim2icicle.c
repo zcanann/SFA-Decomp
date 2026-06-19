@@ -205,7 +205,6 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 #define GAMEBIT_DIM2_ICICLE_PHASE1_WIN 0x20b
 #define GAMEBIT_DIM2_ICICLE_PHASE2_WIN 0x266
 
-extern void setShowWorldMapHud(u8 param);
 extern void warpToMap(int idx, s8 transType);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void skyFn_80089710(int id, int enabled, int arg);

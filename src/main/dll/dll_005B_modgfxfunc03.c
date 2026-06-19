@@ -32,7 +32,6 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* p, f32* v);
-extern void* textureIdxToPtr(int idx);
 extern void debugPrintf(char* fmt, ...);
 extern u8 lbl_80311E30[];
 extern u8 lbl_803DB8B0, lbl_803DB8B4;

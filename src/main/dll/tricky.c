@@ -48,7 +48,6 @@ extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int playerHasKrazoaSpirit();
-extern void hudDrawMagicBar(int alpha, int unk2, u32 flags);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 
 extern f32 gViewFinderFadeLevel;
@@ -1103,7 +1102,6 @@ extern void GXSetChanMatColor(int chan, GXColor c);
 extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void* ObjModel_GetRenderOp(int op, int x);
 extern void* Shader_getLayer(char* base, int idx);
-extern void* textureIdxToPtr(int idx);
 extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int lbl_803E1E30;

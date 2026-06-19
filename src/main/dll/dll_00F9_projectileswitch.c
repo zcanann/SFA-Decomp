@@ -26,7 +26,6 @@ void area_initialise(void);
 
 extern u8 framesThisStep;
 
-extern void GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);

@@ -1039,7 +1039,6 @@ void gxColorFn_800523d0(void)
 
 extern void GXSetTevColor(int id, int* color);
 extern void GXSetTevKColorSel(int tev, int sel);
-extern void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
 
 extern f32 LastCommandWasRead_803DEB60;
 extern f32 sDvdfsCurrentDirEntry;
@@ -2054,8 +2053,6 @@ void lightFn_80052974(f32 a, f32 b)
 
 extern void* fn_80089A58(void);
 extern void* fn_80089A50(void);
-extern void modelLightChannels_reset(u8 v);
-extern void modelLightChannel_configure(int i, int a, int b);
 extern void modelLightStruct_setSpecularAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setAngularAttenuation(void* light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, int a);
@@ -2462,7 +2459,6 @@ extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
 extern void modelLightStruct_selectObjectLights(int model, int* lights, int max, int* count, int p5);
-extern void lightGetColor(int i, u8* a, u8* b, u8* c);
 extern void Camera_ApplyFullViewport(void);
 extern u32 lbl_803DB600;
 extern int lbl_803DB604;
@@ -2580,12 +2576,8 @@ void gxTextureFn_80052efc(void)
 }
 #undef mtx
 
-extern void texFlagFn_80023cbc(int v);
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
-extern int testAndSet_onlyUseHeaps1and2(int v);
-extern int mmGetRegionForPtr(u8* ptr);
-extern int getHeapItemSize(void* ptr);
 extern int mmSetFreeDelay(int v);
 extern asm void DCStoreRange(register void* addr, register u32 nBytes);
 extern void defragMemory(int mode);

@@ -3502,7 +3502,6 @@ extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetCullMode(int mode);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);

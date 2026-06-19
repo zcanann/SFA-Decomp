@@ -50,11 +50,9 @@ typedef struct Dim2iciclePlacement
     s16 unk1E;
 } Dim2iciclePlacement;
 
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 #pragma scheduling on
 #pragma peephole on
-extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E4B80;
 extern f32 lbl_803E4B6C;
 extern f32 lbl_803E4B70;

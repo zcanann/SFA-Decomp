@@ -43,8 +43,6 @@ int mikabomb_getObjectTypeId(void);
 
 extern void objRenderFn_8003b8f4(f32);
 
-extern void kaldachompspit_free(int* obj);
-extern void kaldachompspit_update(int obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -255,25 +253,15 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 
 extern void ModelLightStruct_free(void* p);
 extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free(int* obj, int seqFlag);
-extern void animatedobj_init(int* obj, int* params);
-extern void dim2roofrub_init(int* obj, int* params);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_update(int* obj);
-extern void staff_init(int* obj);
-extern void staff_release(void);
-extern void staff_initialise(void);
-extern void staff_hitDetectGeometry(int* obj);
 extern void fireball_free();
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
-extern void shield_free(int obj);
 extern void shield_update();
-extern void dll_F7_free(int obj);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern int* Obj_GetActiveModel(int obj);

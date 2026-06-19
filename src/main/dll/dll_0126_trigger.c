@@ -123,7 +123,6 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void GameBit_Set(int eventId, int value);
 extern int getCurMapLayer(void);
 extern int getTrickyObject(void);
-extern void mapLoadDataFiles(int mapIdx);
 extern void loadModelAndAnimTabs(void);
 extern int mapUnload(int mapId, int flags);
 extern int lockLevel(s32 val, int idx);

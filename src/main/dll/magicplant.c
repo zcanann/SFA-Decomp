@@ -54,7 +54,6 @@ extern f32 lbl_803E2924;
 extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
-extern void fn_80293018(int q, float* sin_out, float* cos_out);
 extern f32 lbl_803E28D4;
 extern f32 lbl_803E28D8;
 extern f32 lbl_803E28F0;

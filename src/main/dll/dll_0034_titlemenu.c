@@ -8,7 +8,6 @@
 
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
-extern void gameTextSetDrawFunc(void* fn);
 extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void titleScreenPositionElements(f32 a, f32 b);
@@ -62,7 +61,6 @@ extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern u32 getButtonsJustPressed(int port);
 extern void loadUiDll(int index);
 extern int mapUnload(int mapId, int flags);
-extern void titleScreenFn_8005cdd4(int v);
 extern void setDrawLights(int v);
 extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
@@ -99,7 +97,6 @@ extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
 extern void envFxActFn_800887f8(u8 value);
 extern void setLinkIsRotated(void);
-extern void titleScreenPositionElements(f32 a, f32 b);
 extern u8* lbl_803DD498;
 
 void n_attractmode_releaseMovieBuffers(void)

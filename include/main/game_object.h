@@ -103,4 +103,29 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
+
+/* extern-cleanup: consolidated prototypes (true-def sigs) */
+void* textureIdxToPtr(int idx);
+void trickyDebugPrint(const char* fmt, ...);
+void resetLotsOfRenderVars(void);
+void textureFn_800528bc(void);
+void showHelpText(s16 val);
+void* gameTextGetPhrase(int textId, int phraseIndex);
+void modelLightChannels_reset(u8 v);
+void modelLightChannel_configure(int i, int a, int b);
+void lightGetColor(int i, u8* a, u8* b, u8* c);
+void gxColorFn_800523d0(void);
+void fn_8004D230(void);
+void fn_8004D928(void);
+void texFlagFn_80023cbc(int v);
+void texRestructRefs(int mode);
+int testAndSet_onlyUseHeaps1and2(int v);
+int mmGetRegionForPtr(u8* ptr);
+int getHeapItemSize(void* ptr);
+void debugPrintfxy(int x, int y, char* fmt, ...);
+void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2);
+u8 fn_8012DDAC(void);
+void gameTextResetCursor(int flags);
+int atan2i(int y, int x);
+
 #endif
