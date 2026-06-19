@@ -12,8 +12,8 @@
  * tears the fog down if it was left active.
  *
  * The fog band is derived from the object's localPosY plus the placement
- * height fields (0x1C/0x1E/0x20), with density at 0x22/0x24 and the
- * enableHeavyFog mode taken from FOG_FLAG_MODE.
+ * height fields (fogTop/fogBottom/fogBase), with fog colors at
+ * fogGreen/fogRed and the enableHeavyFog mode taken from FOG_FLAG_MODE.
  */
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -29,11 +29,11 @@ typedef struct FogcontrolPlacement
     u8 pad0[0x18 - 0x0];
     s16 enableGameBit;
     s16 flags;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
+    s16 fogTop;
+    s16 fogBottom;
+    s16 fogBase;
+    s16 fogGreen;
+    s16 fogRed;
     s16 unk26;
     s16 unk28;
     s16 unk2A;
@@ -114,12 +114,12 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
             st->on = 1;
             st->blend = lbl_803E4074;
             t = ((GameObject*)obj)->anim.localPosY +
-                (st->blend * ((f32)placement->unk1C - placement->unk20) +
-                 placement->unk20);
+                (st->blend * ((f32)placement->fogTop - placement->fogBase) +
+                 placement->fogBase);
             enableHeavyFog(t,
-                           ((f32)placement->unk1E + t) - placement->unk1C,
-                           placement->unk24,
-                           placement->unk22 / lbl_803E4078,
+                           ((f32)placement->fogBottom + t) - placement->fogTop,
+                           placement->fogRed,
+                           placement->fogGreen / lbl_803E4078,
                            lbl_803E407C, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }
     }
@@ -191,13 +191,13 @@ void fogcontrol_update(int obj)
                 st->blend = *(f32*)&lbl_803E4074;
                 st->full = 1;
             }
-            t = st->blend * ((f32)((FogcontrolPlacement*)setup)->unk1C - (f32)((FogcontrolPlacement*)setup)->unk20) +
-                (f32)((FogcontrolPlacement*)setup)->unk20;
+            t = st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
+                (f32)((FogcontrolPlacement*)setup)->fogBase;
             t = ((GameObject*)obj)->anim.localPosY + t;
             enableHeavyFog(t,
-                           ((f32)((FogcontrolPlacement*)setup)->unk1E + t) - (f32)((FogcontrolPlacement*)setup)->unk1C,
-                           (f32)((FogcontrolPlacement*)setup)->unk24,
-                           (f32)((FogcontrolPlacement*)setup)->unk22 / lbl_803E4078,
+                           ((f32)((FogcontrolPlacement*)setup)->fogBottom + t) - (f32)((FogcontrolPlacement*)setup)->fogTop,
+                           (f32)((FogcontrolPlacement*)setup)->fogRed,
+                           (f32)((FogcontrolPlacement*)setup)->fogGreen / lbl_803E4078,
                            lbl_803E407C,
                            *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
         }
