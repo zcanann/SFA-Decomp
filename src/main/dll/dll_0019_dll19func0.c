@@ -1270,21 +1270,21 @@ u16 dll_19_func0A(int obj)
  * current target and turns the yaw by the buffered turn rate. */
 void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
 {
-    if (*(f32*)(st + 0x298) < lbl_803E1C78)
+    if (((BaddieState*)st)->inputMagnitude < lbl_803E1C78)
     {
         f32 rest;
         *(s16*)(st + 0x334) = 0;
         ((BaddieState*)st)->turnRate = 0;
         rest = lbl_803E1C2C;
-        *(f32*)(st + 0x298) = rest;
+        ((BaddieState*)st)->inputMagnitude = rest;
         ((BaddieState*)st)->animSpeedA = rest;
     }
     ((BaddieState*)st)->animSpeedB = lbl_803E1C2C;
     *yaw = lbl_803E1C7C * ((f32)((BaddieState*)st)->turnRate * timeDelta / speed) + (f32) * yaw;
     ((BaddieState*)st)->animSpeedC +=
-        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedC) / *(f32*)(st + 0x2b8));
+        timeDelta * ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedC) / ((BaddieState*)st)->velSmoothTime);
     ((BaddieState*)st)->animSpeedA +=
-        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedA) / *(f32*)(st + 0x2b8));
+        timeDelta * ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedA) / ((BaddieState*)st)->velSmoothTime);
     if (((BaddieState*)st)->animSpeedC > cap)
     {
         ((BaddieState*)st)->animSpeedC = cap;
@@ -1442,7 +1442,7 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
     f32 dx;
     f32 dz;
 
-    dx = *(f32*)(st + 0x18) - px;
+    dx = ((BaddieState*)st)->posY - px;
     dz = *(f32*)(st + 0x20) - pz;
     dist = sqrtf(dx * dx + dz * dz);
     if (dist < range)
@@ -1453,13 +1453,13 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
         c = mathSinf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
         s = mathCosf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
         base = -(c * (px - c) + s * (pz - s));
-        d1 = base + (c * *(f32*)(st + 0x18) + s * *(f32*)(st + 0x20));
+        d1 = base + (c * ((BaddieState*)st)->posY + s * *(f32*)(st + 0x20));
         d2 = base + (c * *(f32*)(st + 0x8c) + s * *(f32*)(st + 0x94));
         if (d1 > lbl_803E1C2C && d2 <= lbl_803E1C48)
         {
-            *(f32*)(st + 0x18) = *(f32*)(st + 0x18) - c * d1;
+            ((BaddieState*)st)->posY = ((BaddieState*)st)->posY - c * d1;
             *(f32*)(st + 0x20) = *(f32*)(st + 0x20) - s * d1;
-            Obj_TransformWorldPointToLocal(*(f32*)(st + 0x18), *(f32*)(st + 0x1c),
+            Obj_TransformWorldPointToLocal(((BaddieState*)st)->posY, ((BaddieState*)st)->posZ,
                                            *(f32*)(st + 0x20), (f32*)(st + 0xc),
                                            (f32*)(st + 0x10), (f32*)(st + 0x14),
                                            *(u32*)(st + 0x30));
@@ -1471,7 +1471,7 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
     }
     if (dist < range)
     {
-        fx = *(f32*)(st + 0x18);
+        fx = ((BaddieState*)st)->posY;
         fz = *(f32*)(st + 0x20);
     }
     else
