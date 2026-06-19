@@ -1026,12 +1026,12 @@ u32 ObjGroup_ContainsObject(u32 obj, int group)
     }
     index = gObjGroupOffsets[group];
     limit = gObjGroupOffsets[group + 1];
-    for (entry = gObjGroupObjects + index; ((int)index < limit && (obj != *entry));
+    for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
          entry = entry + 1, index = index + 1)
     {
     }
     limitXorIndex = limit ^ index;
-    halfDiff = limitXorIndex >> 1;
+    halfDiff = (int)limitXorIndex >> 1;
     limitXorIndex = limitXorIndex & limit;
     return (u32)(halfDiff - limitXorIndex) >> 0x1f;
 }
