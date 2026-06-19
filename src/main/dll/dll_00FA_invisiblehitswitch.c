@@ -77,7 +77,7 @@ int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
 void InvisibleHitSwitch_update(int obj)
 {
-    extern uint GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     int state2;
     int state;
     int hitId;

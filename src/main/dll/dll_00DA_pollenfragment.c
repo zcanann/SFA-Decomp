@@ -19,7 +19,7 @@
 
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void s16toFloat(void* timer, int duration);
 extern void storeZeroToFloatParam(void* timer);
@@ -91,11 +91,11 @@ extern void PSVECAdd(void* a, void* b, void* out);
 void pollenfragment_init(int obj, int config)
 {
     s8 pollenType;
-    uint randomValue;
+    u32 randomValue;
     int spawnCount;
-    undefined4* state;
+    u32* state;
 
-    state = *(undefined4**)&((GameObject*)obj)->extra;
+    state = *(u32**)&((GameObject*)obj)->extra;
     if (*(char*)(config + 0x19) == '\x01')
     {
         *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E3198;

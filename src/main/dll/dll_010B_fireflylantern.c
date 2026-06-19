@@ -6,7 +6,7 @@
 #include "main/dll/CF/CFcrystal.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int Obj_GetPlayerObject(void);
 extern u64 ObjGroup_RemoveObject();
 extern void Obj_FreeObject(int obj);

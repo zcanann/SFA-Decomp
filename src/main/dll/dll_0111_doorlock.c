@@ -37,8 +37,8 @@ typedef struct DoorlockPlacement
 /* one-shot global "doors unlocked" game bit gating the bulk unlock sequence */
 #define GAMEBIT_DOORLOCK_UNLOCKED 0x930
 
-extern void ObjGroup_RemoveObject(uint obj, int group);
-extern void ObjGroup_AddObject(uint obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(int* obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -222,7 +222,7 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
     }
     state = ((GameObject*)obj)->extra;
     state->unlocked = (u8)GameBit_Get(config->lockGameBit);
-    ObjGroup_AddObject((uint)obj, 0xf);
+    ObjGroup_AddObject((u32)obj, 0xf);
     if ((config->flags & 1) != 0)
     {
         if (state->unlocked != 0)

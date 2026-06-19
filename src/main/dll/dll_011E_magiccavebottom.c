@@ -2,7 +2,7 @@
 #include "main/objseq.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);

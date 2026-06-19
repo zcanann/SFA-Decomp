@@ -35,7 +35,7 @@ extern f32 lbl_803E097C;
 extern f32 lbl_803E0980;
 extern f32 lbl_803E0984;
 
-void dll_A3_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_A3_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {
@@ -57,7 +57,7 @@ void dll_A3_func03(int sourceObj, int variant, int posSource, uint flags)
     } buf;
     GfxCmd* e = buf.entries;
     u8* base = lbl_80312F98;
-    uint variantByte = (u8)variant;
+    u32 variantByte = (u8)variant;
     int ctx;
     e[0].layer = 0;
     e[0].flags = 0x15;

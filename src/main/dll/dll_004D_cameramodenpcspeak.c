@@ -24,7 +24,7 @@ extern f32 mathCosf(f32 x);
 extern void Rcp_DisableBlurFilter(void);
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
-extern uint Obj_GetYawDeltaToObject(); /* #57 */
+extern u32 Obj_GetYawDeltaToObject(); /* #57 */
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 extern f32 timeDelta;
 

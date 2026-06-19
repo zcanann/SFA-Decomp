@@ -19,7 +19,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern void* Obj_GetPlayerObject(void);

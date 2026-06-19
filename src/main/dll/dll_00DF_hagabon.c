@@ -48,11 +48,11 @@ typedef struct HagabonPlacement
 
 extern int FUN_80006b0c(int handle);
 extern int FUN_80006b14(int id);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int obj, int group);
 
-extern undefined4 DAT_803de6d0;   /* pressureSwitch shared resource handle */
+extern u32 DAT_803de6d0;   /* pressureSwitch shared resource handle */
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);

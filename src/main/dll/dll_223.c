@@ -129,8 +129,8 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
 {
     int hitObj;
     int modelPart;
-    uint hitVolume;
-    undefined4 spawnArgs[7];
+    u32 hitVolume;
+    u32 spawnArgs[7];
     f32* spawnPos;
     int hit;
 

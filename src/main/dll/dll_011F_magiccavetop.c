@@ -1,7 +1,7 @@
 /* DLL 0x011F (magiccavetop) — Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 
 #include "main/camera_interface.h"

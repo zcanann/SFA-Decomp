@@ -25,7 +25,7 @@
 #include "main/dll_000A_expgfx.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_SetHitVolumeSlot();
 
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -251,9 +251,9 @@ typedef struct FireballState
     s16 unk116;
 } FireballState;
 
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u32 ObjHits_ClearHitVolumes();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 
 extern void ModelLightStruct_free(void* p);
 extern void gcbaddieshield_update(int* obj);
@@ -820,7 +820,7 @@ int Fireball_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHits_EnableObject();
 
 void fireball_hitDetect(int* obj)
 {
@@ -948,7 +948,7 @@ void fireball_init(int* obj)
 
 extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Obj_FreeObject(int* obj);
-extern undefined8 ObjHits_DisableObject();
+extern u64 ObjHits_DisableObject();
 
 void fireball_update(int* obj)
 {

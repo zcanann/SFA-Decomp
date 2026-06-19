@@ -66,7 +66,7 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     GfxBuf buf;
     u8* base = (u8*)(int)lbl_80316FF8;
@@ -233,7 +233,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0)
+        if ((u32)sourceObj != 0)
         {
             buf.pos[0] = lbl_803E11D8 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E11D8 + *(f32*)(sourceObj + 0x1c);

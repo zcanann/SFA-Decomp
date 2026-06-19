@@ -17,7 +17,7 @@
 #include "main/screen_transition.h"
 
 extern u8* getSaveFileStruct(void);
-extern void saveFileStruct_setCheatActive(uint cheatId, u8 enabled);
+extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern void languageMenuInit(void);
 
 extern int* gTitleMenuItemInterface;

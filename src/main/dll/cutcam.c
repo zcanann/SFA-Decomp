@@ -28,11 +28,11 @@
 #include "main/pad.h"
 
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
-extern ushort getPadFn_80014d9c(int controller);
+extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
-extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints,
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints,
                                             float* radii, int pointCount);
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2();
@@ -74,7 +74,7 @@ camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
     u8 blocked;
     int clear;
     float endTmp[3];
-    uint sweptBounds[9];
+    u32 sweptBounds[9];
 
     if (outPos == NULL)
     {
@@ -144,7 +144,7 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     f32 c;
     f32 cosv;
     f32 sinv;
-    uint ang;
+    u32 ang;
     int d;
 
     cosv = mathSinf((lbl_803E168C * (f32)targetAnim->rotX) / lbl_803E1690);
@@ -469,7 +469,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     float endPts[39];
     u8 box[112];
     float radii[13];
-    uint bounds[6];
+    u32 bounds[6];
     float prev[3];
     f32 outB[2];
     f32 outA[2];

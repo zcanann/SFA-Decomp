@@ -24,7 +24,7 @@ typedef struct GfxCmd
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E12C0;
@@ -78,7 +78,7 @@ STATIC_ASSERT(offsetof(GfxBuf, scale) == 0x38);
 STATIC_ASSERT(offsetof(GfxBuf, entries[0]) == 0x60);
 STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
-int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
+int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     GfxBuf buf;
     u8* base = (u8*)(int)lbl_803175E8;
@@ -173,7 +173,7 @@ int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0)
+        if ((u32)sourceObj != 0)
         {
             buf.pos[0] = lbl_803E12C0 + *(f32*)(sourceObj + 0xc);
             buf.pos[1] = lbl_803E12C0 + *(f32*)(sourceObj + 0x10);

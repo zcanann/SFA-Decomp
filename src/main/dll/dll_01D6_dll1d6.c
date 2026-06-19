@@ -53,7 +53,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
@@ -137,7 +137,7 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 #pragma peephole on
 void FUN_801b7314(int param_1, u32 param_2, float* param_3, float* param_4)
 {
-    uint bitValue;
+    u32 bitValue;
     int typeId;
     float* extra;
 

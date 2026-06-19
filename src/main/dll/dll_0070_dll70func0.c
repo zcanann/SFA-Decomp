@@ -50,7 +50,7 @@ void dll_70_func00_nop(void)
 {
 }
 
-void dll_70_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {

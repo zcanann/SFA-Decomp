@@ -98,7 +98,7 @@ typedef struct LightSourceFlagByte
 
 void lightsource_update(int obj)
 {
-    extern uint GameBit_Get(int id);
+    extern u32 GameBit_Get(int id);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);

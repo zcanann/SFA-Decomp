@@ -17,7 +17,7 @@ extern CameraModeBikeState* lbl_803DD540;
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
 extern void vecRotateZXY(void* param_1, void* outVec);
-extern undefined4 setMatrixFromObjectPos();
+extern u32 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
@@ -77,25 +77,25 @@ void CameraModeBike_update(CameraObject* camera)
     float posX;
     CamTalkTransformInput xformIn;
     float mtxBuf[17];
-    longlong local_a0;
-    undefined4 local_98;
-    uint uStack_94;
-    longlong local_90;
-    longlong local_88;
-    undefined4 local_80;
-    uint uStack_7c;
-    undefined4 local_78;
-    uint uStack_74;
-    undefined4 local_70;
-    uint uStack_6c;
-    undefined4 local_68;
-    uint uStack_64;
-    longlong local_60;
-    undefined4 local_58;
-    uint uStack_54;
-    undefined4 local_50;
-    uint uStack_4c;
-    longlong local_48;
+    s64 local_a0;
+    u32 local_98;
+    u32 uStack_94;
+    s64 local_90;
+    s64 local_88;
+    u32 local_80;
+    u32 uStack_7c;
+    u32 local_78;
+    u32 uStack_74;
+    u32 local_70;
+    u32 uStack_6c;
+    u32 local_68;
+    u32 uStack_64;
+    s64 local_60;
+    u32 local_58;
+    u32 uStack_54;
+    u32 local_50;
+    u32 uStack_4c;
+    s64 local_48;
 
     (*gCameraInterface)->getDefaultHandlerEntry();
     target = (GameObject*)camera->anim.targetObj;
@@ -107,9 +107,9 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
         xformIn.yaw = target->anim.rotX;
-        local_a0 = (longlong)(int)
+        local_a0 = (s64)(int)
         lbl_803DD540->pitchTarget;
-        xformIn.pitch = (undefined2)(int)
+        xformIn.pitch = (u16)(int)
         lbl_803DD540->pitchTarget;
         xformIn.roll = 0;
         setMatrixFromObjectPos(mtxBuf, &xformIn);
@@ -153,7 +153,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosY = posY + followDist * sinPitch;
         camera->anim.worldPosZ = posX + cosPitch * sinYaw;
         rotVal = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
-        local_60 = (longlong)rotVal;
+        local_60 = (s64)rotVal;
         angleDelta = (short)rotVal - camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
@@ -247,7 +247,7 @@ void firstPersonExit(CameraObject* camera)
     float dz;
     int targetYaw;
     float targetPos[3];
-    undefined auStack_28[4];
+    u8 auStack_28[4];
 
     target = (GameObject*)self->anim.targetObj;
     lbl_803DD548->posXCurve.start = self->anim.worldPosX;

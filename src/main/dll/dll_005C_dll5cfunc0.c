@@ -37,7 +37,7 @@ extern f32 lbl_803E0784;
 extern f32 lbl_803E0788;
 extern f32 lbl_803E078C;
 
-void dll_5C_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_5C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {

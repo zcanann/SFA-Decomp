@@ -44,7 +44,7 @@ void dll_6A_func00_nop(void)
 {
 }
 
-void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, uint flags)
+void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags)
 {
     struct
     {

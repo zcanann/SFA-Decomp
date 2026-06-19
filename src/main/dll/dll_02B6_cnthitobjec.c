@@ -63,7 +63,7 @@ void cnthitobjec_hitDetect(int obj)
     CntHitObjectState* state;
     CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
     int hit;
-    uint dmg;
+    u32 dmg;
     int amount;
     int model;
 

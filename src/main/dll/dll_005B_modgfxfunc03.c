@@ -46,7 +46,7 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
-int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags, int modelId, s16* countRange)
+int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, int modelId, s16* countRange)
 {
     struct
     {

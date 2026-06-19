@@ -2,7 +2,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
