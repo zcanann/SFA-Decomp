@@ -10619,7 +10619,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
     inner->unk3FE
     )
     ;
-    if (((PlayerState*)state)->baddie.moveSpeed < lbl_803E818C)
+    if (((PlayerState*)state)->baddie.moveSpeed < *(f32*)&lbl_803E818C)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E818C;
     }
