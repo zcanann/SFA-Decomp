@@ -16,7 +16,7 @@ extern CameraModeBikeState* gCamTalkBikeState;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
-extern void vecRotateZXY(void* param_1, void* outVec);
+extern void vecRotateZXY(void* params, void* outVec);
 extern u32 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern GameObject* getSbGalleon(void);
@@ -44,12 +44,12 @@ extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
 
-void CameraModeBike_copyToCurrent(f32* param_1)
+void CameraModeBike_copyToCurrent(f32* inputs)
 {
-    gCamTalkBikeState->turnInput = param_1[0];
-    gCamTalkBikeState->heightInput = param_1[1];
-    gCamTalkBikeState->rollInput = param_1[2];
-    gCamTalkBikeState->pitchTarget = param_1[3];
+    gCamTalkBikeState->turnInput = inputs[0];
+    gCamTalkBikeState->heightInput = inputs[1];
+    gCamTalkBikeState->rollInput = inputs[2];
+    gCamTalkBikeState->pitchTarget = inputs[3];
 }
 
 void CameraModeBike_free(void)
