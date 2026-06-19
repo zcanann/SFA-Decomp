@@ -1684,11 +1684,11 @@ void timeOfDayFn_8008b964(void)
                 *(f32*)&((GameObject*)p)->extra -= *(f32*)(p + 0xb4) * timeDelta;
                 val = *(f32*)(gSkyState + (idx = i + 0xb8));
                 *(f32*)(gSkyState + idx) =
-                    (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
+                    (val < *(f32*)&pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
                 *(f32*)(gSkyState + (idx = i + 0xbc)) -= lbl_803DF0F0 * timeDelta;
                 val = *(f32*)(gSkyState + idx);
                 *(f32*)(gSkyState + idx) =
-                    (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
+                    (val < *(f32*)&pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
                 i += 0xa4;
             }
             ((SkyState*)gSkyState)->unk23C -= ((SkyState*)gSkyState)->unk240 * timeDelta;
