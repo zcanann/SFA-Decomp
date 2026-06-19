@@ -192,7 +192,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
     cfg.startPosX = lbl_803E0324;
     cfg.startPosY = lbl_803E0324;
@@ -251,7 +251,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x7a0:
         if (spawnParams != NULL)
         {
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.behaviorFlags = 0x80080210;
             cfg.renderFlags = 0x8000800;
             cfg.scale = spawnParams->scale * (lbl_803E032C * (f32)(s32)
@@ -279,7 +279,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x7a1:
         if (spawnParams != NULL)
         {
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.behaviorFlags = 0x80080210;
             cfg.renderFlags = 0x8000800;
             cfg.scale = spawnParams->scale * (lbl_803E032C * (f32)(s32)
@@ -395,7 +395,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x7a6:
         if (spawnParams != NULL)
         {
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.behaviorFlags = 0x80080210;
             cfg.renderFlags = 0x8000800;
             cfg.scale = spawnParams->scale * (lbl_803E032C * (f32)(s32)
@@ -423,7 +423,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x7a7:
         if (spawnParams != NULL)
         {
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.behaviorFlags = 0x80080210;
             cfg.renderFlags = 0x8000800;
             cfg.scale = spawnParams->scale * (lbl_803E032C * (f32)(s32)
@@ -614,9 +614,9 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.colorWord0 = (u16)(spawnParams->unk6 >> 1);
             cfg.colorWord1 = (u16)(spawnParams->unk6 >> 1);
             cfg.colorWord2 = (u16)(spawnParams->unk6 >> 1);
-            cfg.overrideColor0 = (uint)spawnParams->unk6;
-            cfg.overrideColor1 = (uint)spawnParams->unk6;
-            cfg.overrideColor2 = (uint)spawnParams->unk6;
+            cfg.overrideColor0 = spawnParams->unk6;
+            cfg.overrideColor1 = spawnParams->unk6;
+            cfg.overrideColor2 = spawnParams->unk6;
         }
         break;
     case 0x7ae:
@@ -721,7 +721,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosY = spawnParams->posX;
             cfg.scale = lbl_803E039C * (f32)(s32)
             randomGetRange(0x1c, 0x20);
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.textureId = spawnParams->arg0;
             cfg.behaviorFlags = 0x480204;
             cfg.renderFlags = 0x808;
@@ -731,7 +731,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         if (spawnParams != NULL)
         {
             cfg.scale = lbl_803E03A0 * spawnParams->scale;
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.velocityY = spawnParams->posY * (f32)(s32)
             randomGetRange(0x154, 0x2d5);
             cfg.startPosY = spawnParams->posX;
@@ -750,7 +750,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosY = spawnParams->posX;
             cfg.scale = lbl_803E039C * (f32)(s32)
             randomGetRange(0x1c, 0x20);
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.textureId = spawnParams->arg0;
             cfg.behaviorFlags = 0x480004;
             cfg.renderFlags = 0x480800;
@@ -1216,7 +1216,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         {
             intVal = randomGetRange(0, 0xffff);
             radius = lbl_803E0330 * (f32)(s32)
-            randomGetRange(0xffffff9c, 100) + (f32)spawnParams->unk6;
+            randomGetRange(0xffffff9c, 100) + spawnParams->unk6;
             angle = (lbl_803E0344 * (f32)(s32)
             intVal
             )
@@ -1225,7 +1225,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             trigVal = mathSinf(angle);
             cfg.startPosX = radius * trigVal + spawnParams->posX;
             cfg.startPosY = lbl_803E0314 * (f32)(s32)
-            randomGetRange(0, (s32)spawnParams->unk4) + spawnParams->posY;
+            randomGetRange(0, spawnParams->unk4) + spawnParams->posY;
             trigVal = mathCosf(angle);
             cfg.startPosZ = radius * trigVal + spawnParams->posZ;
             cfg.lifetimeFrames = randomGetRange(10, 0x28);
@@ -1582,9 +1582,9 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.colorWord0 = (u16)(spawnParams->unk6 >> 1);
             cfg.colorWord1 = (u16)(spawnParams->unk6 >> 1);
             cfg.colorWord2 = (u16)(spawnParams->unk6 >> 1);
-            cfg.overrideColor0 = (uint)spawnParams->unk6;
-            cfg.overrideColor1 = (uint)spawnParams->unk6;
-            cfg.overrideColor2 = (uint)spawnParams->unk6;
+            cfg.overrideColor0 = spawnParams->unk6;
+            cfg.overrideColor1 = spawnParams->unk6;
+            cfg.overrideColor2 = spawnParams->unk6;
         }
         break;
     case 0x7d1:
@@ -1654,7 +1654,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             }
             cfg.scale = spawnParams->scale * (f32)(s32)
             randomGetRange(5, 10);
-            cfg.lifetimeFrames = (int)spawnParams->unk6;
+            cfg.lifetimeFrames = spawnParams->unk6;
             cfg.textureId = spawnParams->unk4;
             cfg.initialAlpha = 0xff;
             cfg.behaviorFlags = 0x80110;
@@ -1771,7 +1771,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         break;
     case 0x7d7:
         cfg.scale = lbl_803E03E4;
-        cfg.lifetimeFrames = (uint)framesThisStep * 3;
+        cfg.lifetimeFrames = framesThisStep * 3;
         cfg.initialAlpha = 0x32;
         cfg.textureId = 0x605;
         cfg.behaviorFlags = 0x80200;
@@ -2604,9 +2604,9 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         }
         else
         {
-            cfg.overrideColor0 = (uint)cfg.colorWord0;
-            cfg.overrideColor1 = (uint)cfg.colorWord1;
-            cfg.overrideColor2 = (uint)cfg.colorWord2;
+            cfg.overrideColor0 = cfg.colorWord0;
+            cfg.overrideColor1 = cfg.colorWord1;
+            cfg.overrideColor2 = cfg.colorWord2;
         }
         cfg.initialAlpha = 0x2c;
         cfg.behaviorFlags = 0x80002;
@@ -3086,7 +3086,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.behaviorFlags = 0x3000000;
         cfg.renderFlags = 0x600820;
         cfg.colorWord0 = 0xffff;
-        cfg.colorWord1 = (u16)randomGetRange(0x7fff, 0xffff);
+        cfg.colorWord1 = randomGetRange(0x7fff, 0xffff);
         cfg.colorWord2 = 0xffff;
         cfg.overrideColor0 = cfg.colorWord0;
         cfg.overrideColor1 = cfg.colorWord1;
@@ -3147,10 +3147,10 @@ void Effect20_func05(void)
     sum = lbl_803DB88C + step;
     lbl_803DB88C = sum;
     if (sum > 1.0f) lbl_803DB88C = lbl_803E0320;
-    lbl_803DD400 = lbl_803DD400 + (s32)framesThisStep * 0x64;
+    lbl_803DD400 = lbl_803DD400 + framesThisStep * 0x64;
     if (lbl_803DD400 > 0x7fff) lbl_803DD400 = 0;
     lbl_803DD40C = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
-    lbl_803DD404 = lbl_803DD404 + (s32)framesThisStep * 0x32;
+    lbl_803DD404 = lbl_803DD404 + framesThisStep * 0x32;
     if (lbl_803DD404 > 0x7fff) lbl_803DD404 = 0;
     lbl_803DD408 = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
 }

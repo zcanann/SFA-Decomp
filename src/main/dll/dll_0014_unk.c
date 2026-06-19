@@ -164,7 +164,7 @@ static inline int Objfsa_IsPointInsidePatch(const float* point, const ObjfsaPatc
 {
     int edgeIndex;
 
-    if (point[1] >= (f32)patch->maxY || (f32)patch->minY >= point[1])
+    if (point[1] >= patch->maxY || patch->minY >= point[1])
     {
         return 0;
     }
@@ -172,8 +172,8 @@ static inline int Objfsa_IsPointInsidePatch(const float* point, const ObjfsaPatc
     for (edgeIndex = 0; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; edgeIndex++)
     {
         if (patch->planeOffsets[edgeIndex] +
-            point[0] * (f32)patch->planes[edgeIndex].normalX +
-            point[2] * (f32)patch->planes[edgeIndex].normalZ >
+            point[0] * patch->planes[edgeIndex].normalX +
+            point[2] * patch->planes[edgeIndex].normalZ >
             lbl_803E05F0)
         {
             return 0;
@@ -187,7 +187,7 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float* point,
 {
     int edgeIndex;
 
-    if (point[1] >= (f32)walkGroup->maxY || (f32)walkGroup->minY >= point[1])
+    if (point[1] >= walkGroup->maxY || walkGroup->minY >= point[1])
     {
         return 0;
     }
@@ -195,8 +195,8 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float* point,
     for (edgeIndex = 0; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; edgeIndex++)
     {
         if (walkGroup->planeOffsets[edgeIndex] +
-            point[0] * (f32)walkGroup->planes[edgeIndex].normalX +
-            point[2] * (f32)walkGroup->planes[edgeIndex].normalZ >
+            point[0] * walkGroup->planes[edgeIndex].normalX +
+            point[2] * walkGroup->planes[edgeIndex].normalZ >
             lbl_803E05F0)
         {
             return 0;
@@ -267,7 +267,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
                             (traceHit == 1)) &&
                         (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj,
-                                            (s8)bboxMode, -1, 0, 0) == 0))
+                                            bboxMode, -1, 0, 0) == 0))
                     {
                         bestDistance = distance;
                         bestCurve = curve;
@@ -283,7 +283,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     if (((traceHit = 0, voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0) != 0) ||
                             (traceHit == 1)) &&
                         (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj,
-                                            (s8)bboxMode, -1, 0, 0) == 0))
+                                            bboxMode, -1, 0, 0) == 0))
                     {
                         bestActionDistance = distance;
                         bestActionCurve = curve;
@@ -322,7 +322,7 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 
     lo = 0;
     hi = nRomCurves - 1;
-    id = (u32)curveId;
+    id = curveId;
     while (lo <= hi)
     {
         mid = (hi + lo) >> 1;
@@ -417,7 +417,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
             }
             if (count != 0)
             {
-                nextId = cand1[(int)randomGetRange(0, count - 1)];
+                nextId = cand1[randomGetRange(0, count - 1)];
             }
             else
             {
@@ -456,7 +456,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     }
     if (count != 0)
     {
-        nextId = cand2[(int)randomGetRange(0, count - 1)];
+        nextId = cand2[randomGetRange(0, count - 1)];
     }
     else
     {
@@ -496,7 +496,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
             }
             if (count != 0)
             {
-                nextId = cand3[(int)randomGetRange(0, count - 1)];
+                nextId = cand3[randomGetRange(0, count - 1)];
             }
             else
             {
@@ -544,7 +544,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
         }
         patch = &lbl_8039CAE8[pidx];
         y = prevPoint[1];
-        if (y < (f32)patch->maxY && y > (f32)patch->minY)
+        if (y < patch->maxY && y > patch->minY)
         {
             i = 0;
             j = 0;
@@ -561,7 +561,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
             if (i == 4)
             {
                 y = nextPoint[1];
-                if (y < (f32)patch->maxY && y > (f32)patch->minY)
+                if (y < patch->maxY && y > patch->minY)
                 {
                     i = 0;
                     j = 0;
@@ -592,7 +592,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
             continue;
         }
         patch = &lbl_8039CAE8[pidx];
-        clz = (uint)__cntlzw(0xff - currentWalkGroupIndex);
+        clz = __cntlzw(0xff - currentWalkGroupIndex);
         pgid = patch->groupId;
         if (((clz >> 5) & pgid) == 0)
         {
@@ -613,7 +613,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
             if (lp->groupId != pgid)
             {
                 y = prevPoint[1];
-                if (y < (f32)lp->maxY && y > (f32)lp->minY)
+                if (y < lp->maxY && y > lp->minY)
                 {
                     i = 0;
                     j = 0;
@@ -630,7 +630,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
                     if (i == 4)
                     {
                         y = nextPoint[1];
-                        if (y < (f32)lp->maxY && y > (f32)lp->minY)
+                        if (y < lp->maxY && y > lp->minY)
                         {
                             i = 0;
                             j = 0;
@@ -676,7 +676,7 @@ uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId)
             if (patch->groupId == groupId)
             {
                 y = point[1];
-                if (y < (f32)patch->maxY && y > (f32)patch->minY)
+                if (y < patch->maxY && y > patch->minY)
                 {
                     patchGroupIndex = 0;
                     j = 0;
@@ -729,7 +729,7 @@ u16 getPatchGroup(float* point, int patchGroupIndex, int unused3, int unused4,
         }
         patch = (ObjfsaPatch*)(base + pidx * 0x30);
         y = point[1];
-        if (y < (f32)patch->maxY && y > (f32)patch->minY)
+        if (y < patch->maxY && y > patch->minY)
         {
             i = 0;
             j = 0;
@@ -775,7 +775,7 @@ uint isInWalkGroupOrPatch(float* point)
     for (; idx < count; idx++, patch++)
     {
         y = point[1];
-        if (y < (f32)patch->maxY && y > (f32)patch->minY)
+        if (y < patch->maxY && y > patch->minY)
         {
             i = 0;
             nz = (s16*)patch;
@@ -784,7 +784,7 @@ uint isInWalkGroupOrPatch(float* point)
             for (; i < 4; i++, offs += 4, nz += 2, nx += 2)
             {
                 if (*(f32*)(offs + 0x10) +
-                    (point[0] * (f32)nx[0] + point[2] * (f32)nz[1]) >
+                    (point[0] * nx[0] + point[2] * nz[1]) >
                     0.0f)
                 {
                     break;
@@ -828,7 +828,7 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
                 patch = &lbl_8039CAE8[pidx];
                 patchInfo->patchGroupIds[k] = patch->groupId;
                 y = point[1];
-                if (y < (f32)patch->maxY && y > (f32)patch->minY)
+                if (y < patch->maxY && y > patch->minY)
                 {
                     i = 0;
                     j = 0;
@@ -865,7 +865,7 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
     for (n = lbl_803DD468; n > 0; n--)
     {
         f32 y = point[1];
-        if (y < (f32)patch->maxY && y > (f32)patch->minY)
+        if (y < patch->maxY && y > patch->minY)
         {
             f32 x;
             f32 z;
@@ -897,7 +897,7 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
     if (Objfsa_IsWalkGroupActive(idx)) {                                           \
         g = &lbl_8039FAE8[idx];                                                    \
         y = point[1];                                                              \
-        if (y < (f32)g->maxY && y > (f32)g->minY) {                                \
+        if (y < g->maxY && y > g->minY) {                                \
             x = point[0];                                                          \
             z = point[2];                                                          \
             i = 0;                                                                 \
@@ -927,7 +927,7 @@ int mathFn_800dbff0(float* point)
     u8 i;
     u8 j;
 
-    down = (s16)lbl_803DD464;
+    down = lbl_803DD464;
     if (lbl_803DD464 == OBJFSA_WALKGROUP_COUNT - 1)
     {
         up = 0;
@@ -974,8 +974,8 @@ int fn_800D9F38(void* a, void* b)
 {
     extern float mathCosf(double x); /* #57 */
     extern float mathSinf(double angle); /* #57 */
-    char* A = (char*)a;
-    char* B = (char*)b;
+    char* A = a;
+    char* B = b;
     if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || b == 0) return 1;
     *(void**)(A + 0xa4) = b;
     if (*(int*)(A + 0x80) != 0)
@@ -1017,7 +1017,7 @@ void RomCurve_setA4(void* a, void* b)
 {
     extern float mathCosf(double x); /* #57 */
     extern float mathSinf(double angle); /* #57 */
-    char* A = (char*)a;
+    char* A = a;
     f32 t;
     if (b != 0 && (u32)b != *(u32*)(A + 0xa4))
     {
@@ -1428,7 +1428,7 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx)
         if (pickIdx > count - 1) pickIdx = count - 1;
         if (pickIdx == -1)
         {
-            pickIdx = (int)randomGetRange(0, count - 1);
+            pickIdx = randomGetRange(0, count - 1);
         }
         return candidates[pickIdx];
     }
@@ -1456,7 +1456,7 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
         if (pickIdx > count - 1) pickIdx = count - 1;
         if (pickIdx == -1)
         {
-            pickIdx = (int)randomGetRange(0, count - 1);
+            pickIdx = randomGetRange(0, count - 1);
         }
         return candidates[pickIdx];
     }
@@ -1511,7 +1511,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
         }
         if (count != 0)
         {
-            linkId = candidates[(int)randomGetRange(0, count - 1)];
+            linkId = candidates[randomGetRange(0, count - 1)];
         }
         else
         {
@@ -1549,7 +1549,7 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     }
     if (count != 0)
     {
-        linkId = candidates[(int)randomGetRange(0, count - 1)];
+        linkId = candidates[randomGetRange(0, count - 1)];
     }
     else
     {
@@ -2248,7 +2248,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
     }
 
-    if ((u32)checksum != (u32)lbl_803DD460)
+    if ((u32)checksum != lbl_803DD460)
     {
         lbl_803DD460 = checksum;
         if (blockFlags[2] != 0 || blockFlags[0x34] != 0)
@@ -2384,7 +2384,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                             {
                                 back = 4;
                             }
-                            wg->patchIndices[slot] = (u8)lbl_803DD468;
+                            wg->patchIndices[slot] = lbl_803DD468;
                             patchBase[npi].groupId = pairId;
                             pairs[npi * 2] = *(u8*)(curve + 3);
                             pairs[npi * 2 + 1] = *(u8*)(linked + 3);
@@ -2426,11 +2426,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 *(f32*)(linked + 0xc);
                             if (fy0 <= fy1)
                             {
-                                OBJFSA_NEWPATCH.maxY = (s16)fy1;
+                                OBJFSA_NEWPATCH.maxY = fy1;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.maxY = (s16)fy0;
+                                OBJFSA_NEWPATCH.maxY = fy0;
                             }
                             fy0 = -(lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) -
                                 *(f32*)(curve + 0xc));
@@ -2438,11 +2438,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 *(f32*)(linked + 0xc));
                             if (fy1 <= fy0)
                             {
-                                OBJFSA_NEWPATCH.minY = (s16)fy1;
+                                OBJFSA_NEWPATCH.minY = fy1;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.minY = (s16)fy0;
+                                OBJFSA_NEWPATCH.minY = fy0;
                             }
                             lbl_803DD468++;
                         }
@@ -2621,7 +2621,7 @@ int RomCurve_func16(double x, double y, double z)
 void walkPath_writeU16LE(u32 v, u8* dst)
 {
     v = v & 0xffff;
-    dst[0] = (u8)v;
+    dst[0] = v;
     dst[1] = (u8)((s32)v >> 8);
 }
 
@@ -2926,7 +2926,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
             }
         }
     }
-    return (int)nearestCurveId;
+    return nearestCurveId;
 }
 
 #define SQ(v) ((v) * (v))
@@ -3078,7 +3078,7 @@ int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink)
                                 *idWrite = node->id;
                                 distWrite++;
                                 idWrite++;
-                                resultLinks[found] = (char)li;
+                                resultLinks[found] = li;
                                 found++;
                             }
                         }
@@ -3090,7 +3090,7 @@ int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink)
                                         ((cand = RomCurve_findByIdWithIndex(node->linkIds[k], &idx)) != NULL)) &&
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
-                                    newDist = SQ(node->z - cand->z) + (f32)(curDist + (f64)SQ(node->x - cand->x)) +
+                                    newDist = SQ(node->z - cand->z) + (f32)(curDist + SQ(node->x - cand->x)) +
                                         SQ(node->y - cand->y);
                                     pos = 0;
                                     for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
@@ -4011,7 +4011,7 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
     {
         return bestLink[1];
     }
-    return (int)ROMCURVE_LINK_ID_NONE;
+    return ROMCURVE_LINK_ID_NONE;
 }
 
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment)

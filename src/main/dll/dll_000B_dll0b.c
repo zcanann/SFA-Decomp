@@ -210,7 +210,7 @@ static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 
 static ModgfxVertexData* modgfx_getInactiveVertexBuffer(ModgfxState* state)
 {
-    return state->vertexBuffers[1 - (uint)state->activeVertexBufferIndex];
+    return state->vertexBuffers[1 - state->activeVertexBufferIndex];
 }
 
 static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
@@ -337,7 +337,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, u8 col
 
     setupWord = FUN_80286840();
     memset((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
+    gExpgfxSpawnConfig.colorByte0.value = setupValue;
     gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
@@ -348,7 +348,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 unused1, undefined4 unused2, u8 col
     gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
     gExpgfxSpawnConfig.colorByte1.value = 0;
     gExpgfxSpawnConfig.colorByte1.lowByte = 0;
-    gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)setupWord;
+    gExpgfxSpawnConfig.quadVertex3Pad06 = setupWord;
     *(undefined4*)&gExpgfxSpawnConfig.scale = scaleBits;
     gExpgfxSpawnConfig.texture.word = textureWord;
     gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
@@ -402,7 +402,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     for (i = 0; i < state->vertexCount; i = i + 1)
     {
-        if (wrapCountS == (int)state->vertexCount)
+        if (wrapCountS == state->vertexCount)
         {
             coord = activeVertexData->texCoordS;
             if (coord < 0x101)
@@ -414,7 +414,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
                 activeVertexData->texCoordS = coord + -0x100;
             }
         }
-        if (wrapCountT == (int)state->vertexCount)
+        if (wrapCountT == state->vertexCount)
         {
             coord = activeVertexData->texCoordT;
             if (coord < 0x101)
@@ -624,15 +624,15 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             state->posStepX =
                 *(float*)(command + 4) /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) -
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) -
                     DOUBLE_803e00c8);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
             state->posStepZ =
                 ((ModgfxVertexGroupCmd*)command)->valueZ /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
         }
         state->posCurX = state->posCurX + state->posStepX;
@@ -675,13 +675,13 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
         else
         {
             state->rotStepZ =
-                (short)(((int)targetRotZ - (int)state->rotOffsetZ) / (int)state->blendFrameCount
+                (short)(((int)targetRotZ - state->rotOffsetZ) / state->blendFrameCount
                 );
             state->rotStepY =
-                (short)(((int)targetRotY - (int)state->rotOffsetY) / (int)state->blendFrameCount
+                (short)(((int)targetRotY - state->rotOffsetY) / state->blendFrameCount
                 );
             state->rotStepX =
-                (short)(((int)targetRotX - (int)state->rotOffsetX) / (int)state->blendFrameCount
+                (short)(((int)targetRotX - state->rotOffsetX) / state->blendFrameCount
                 );
         }
     }
@@ -1359,7 +1359,7 @@ void dll_0B_func12(void)
 
 void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10)
 {
-    u32 sequenceIndex = (u8)gModgfxSequenceParamIndex;
+    u32 sequenceIndex = gModgfxSequenceParamIndex;
     gModgfxPendingSpawnWriteCursor->sequenceIndex = sequenceIndex;
     gModgfxPendingSpawnWriteCursor->param14 = param14;
     gModgfxPendingSpawnWriteCursor->param10 = param10;
@@ -1604,11 +1604,11 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     dy = (s32)(lbl_803DF438 * (in[2] * lbl_803DD284));
 
     cur = state->vertexBuffers[state->activeVertexBufferIndex];
-    prev = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    prev = state->vertexBuffers[1 - state->activeVertexBufferIndex];
 
     ovx = 0;
     ovy = 0;
-    for (i = 0; i < (s32)state->vertexCount; i++)
+    for (i = 0; i < state->vertexCount; i++)
     {
         cur->texCoordS = prev->texCoordS;
         cur->texCoordT = prev->texCoordT;
@@ -1623,9 +1623,9 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     }
 
     slot = state->vertexBuffers[state->activeVertexBufferIndex];
-    for (j = 0; j < (s32)state->vertexCount; j++)
+    for (j = 0; j < state->vertexCount; j++)
     {
-        if ((s32)ovx == (s32)state->vertexCount)
+        if ((s32)ovx == state->vertexCount)
         {
             if ((s32)slot->texCoordS > 0x100)
             {
@@ -1636,7 +1636,7 @@ void fn_800A02DC(ModgfxState* state, f32* in)
                 slot->texCoordS += 0x100;
             }
         }
-        if ((s32)ovy == (s32)state->vertexCount)
+        if ((s32)ovy == state->vertexCount)
         {
             if ((s32)slot->texCoordT > 0x100)
             {
@@ -1679,7 +1679,7 @@ void fn_800A0478(ModgfxState* state)
     ModgfxVertexData* src;
     f32 f1;
     f32 f0;
-    src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    src = state->vertexBuffers[1 - state->activeVertexBufferIndex];
     dst = state->baseVertexData;
     for (i = 0; i < state->vertexCount; i++)
     {
@@ -1769,9 +1769,9 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 {
     if (mode == 1)
     {
-        int tx = (int)params[1];
-        int ty = (int)params[2];
-        int tz = (int)params[3];
+        int tx = params[1];
+        int ty = params[2];
+        int tz = params[3];
         if (((ModgfxState*)obj)->blendFrameCount != 0)
         {
             ((ModgfxState*)obj)->rotStepZ = (s16)(
@@ -1910,7 +1910,7 @@ extern s16 lbl_803DD280;
 
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
-    u8* st = (u8*)base;
+    u8* st = base;
     int slot;
     int found;
     int i;
@@ -2003,7 +2003,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
             u8* dstc = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[k];
             int bias = 0;
             int j;
-            s16* sd = (s16*)d;
+            s16* sd = d;
             for (j = 0; j < e; j++)
             {
                 if ((*(u32*)(st + 0x54) & 0x8000000) && j == divThresh)
@@ -2040,7 +2040,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         {
             u8* dstv = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[k];
             int j;
-            s16* sb = (s16*)b;
+            s16* sb = b;
             for (j = 0; j < c; j++)
             {
                 *(s16*)(dstv + 0) = sb[0];
@@ -2172,8 +2172,8 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     }
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId = lbl_803DD280;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte126 = lbl_803DD282;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexCount = (s16)c;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = (s16)e;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexCount = c;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = e;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st[0x5c];
@@ -2360,7 +2360,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         if (*(int*)((char*)*p + 0xa4) & 0x400000)
         {
             dscale = lbl_803DF458 * *(f32*)((char*)*p + 0xd4);
-            xf.scale = dscale + dscale / (f32)randomGetRange(1, 10);
+            xf.scale = dscale + dscale / randomGetRange(1, 10);
         }
         else
         {
@@ -2457,7 +2457,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             if (*(u8*)((char*)*p + 0x13e) != 0 || (*(int*)((char*)*p + 0xa4) & 0x400))
             {
                 int j;
-                for (j = 0; j < (u8)n131p1; j++)
+                for (j = 0; j < n131p1; j++)
                 {
                     tex = *(void**)tex;
                 }
@@ -2572,7 +2572,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
             bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]
             )
             /
-            (f32)frames;
+            frames;
             ((f32*)((char*)state + 0xac))[k + 1] =
                 (f32)(u32)
             bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
@@ -2580,7 +2580,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
         }
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = (int)target;
+            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
             bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
                 bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
         }
@@ -2979,12 +2979,12 @@ void dll_0B_func05(void)
                 ObjList_GetObjects(&objIdx, &objCount);
                 if (*(int*)(E9 + emOff) & 0x2)
                 {
-                    fn_800A0C78(eff, E9 + emOff, active, (u8)cntC);
+                    fn_800A0C78(eff, E9 + emOff, active, cntC);
                     cntC++;
                 }
                 if (*(int*)(E9 + emOff) & 0x4)
                 {
-                    fn_800A0AB4(eff, E9 + emOff, active, (u8)cntA);
+                    fn_800A0AB4(eff, E9 + emOff, active, cntA);
                     cntA++;
                 }
                 if (*(int*)(E9 + emOff) & 0x8)
@@ -3006,7 +3006,7 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x8000000)
                 {
-                    *(f32*)(E9 + emOff + 0xc) = (f32)randomGetRange(0, 0xffff);
+                    *(f32*)(E9 + emOff + 0xc) = randomGetRange(0, 0xffff);
                     ((ExpFn4)modgfx_stepS16VectorLerp)(eff, E9 + emOff, active, 0);
                 }
                 if (*(int*)(E9 + emOff) & 0x4000)
@@ -3104,7 +3104,7 @@ void dll_0B_func05(void)
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), (char*)eff + 0xc, 0x10002,
+                                                                 *(s16*)(E9 + emOff + 0x14), eff + 0xc, 0x10002,
                                                                  -1, NULL);
                             }
                             else
@@ -3154,7 +3154,7 @@ void dll_0B_func05(void)
                             {
                                 if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                                 {
-                                    (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, (char*)eff + 0xc, 1, -1, NULL);
+                                    (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 0xc, 1, -1, NULL);
                                 }
                                 else
                                 {
@@ -3170,7 +3170,7 @@ void dll_0B_func05(void)
                         {
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
-                                (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, (char*)eff + 0xc, 1, -1, NULL);
+                                (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 0xc, 1, -1, NULL);
                             }
                             else
                             {

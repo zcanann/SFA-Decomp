@@ -159,7 +159,7 @@ static ModgfxVertexData* modgfx_getActiveVertexBuffer(ModgfxState* state)
 
 static ModgfxVertexData* modgfx_getInactiveVertexBuffer(ModgfxState* state)
 {
-    return state->vertexBuffers[1 - (uint)state->activeVertexBufferIndex];
+    return state->vertexBuffers[1 - state->activeVertexBufferIndex];
 }
 
 static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
@@ -286,7 +286,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
-    gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
+    gExpgfxSpawnConfig.colorByte0.value = setupValue;
     gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
     gExpgfxSpawnConfig.velocityZ = lbl_803E00B0;
     gExpgfxSpawnConfig.startPosX.value = lbl_803E00B0;
@@ -297,7 +297,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefi
     gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
     gExpgfxSpawnConfig.colorByte1.value = 0;
     gExpgfxSpawnConfig.colorByte1.lowByte = 0;
-    gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)setupWord;
+    gExpgfxSpawnConfig.quadVertex3Pad06 = setupWord;
     *(undefined4*)&gExpgfxSpawnConfig.scale = scaleBits;
     gExpgfxSpawnConfig.texture.word = textureWord;
     gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
@@ -352,7 +352,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
     activeVertexData = modgfx_getActiveVertexBuffer(state);
     for (i = 0; i < state->vertexCount; i = i + 1)
     {
-        if (wrapCountS == (int)state->vertexCount)
+        if (wrapCountS == state->vertexCount)
         {
             coord = activeVertexData->texCoordS;
             if (coord < 0x101)
@@ -364,7 +364,7 @@ void modgfx_scrollVertexTexcoords(int stateArg, int command)
                 activeVertexData->texCoordS = coord + -0x100;
             }
         }
-        if (wrapCountT == (int)state->vertexCount)
+        if (wrapCountT == state->vertexCount)
         {
             coord = activeVertexData->texCoordT;
             if (coord < 0x101)
@@ -577,15 +577,15 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
         {
             state->posStepX =
                 *(float*)(command + 4) /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) -
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) -
                     DOUBLE_803e00c8);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
             state->posStepZ =
                 ((ModgfxVertexGroupCmd*)command)->valueZ /
-                (float)((double)CONCAT44(0x43300000, (int)state->blendFrameCount ^ 0x80000000) - biasS
+                (float)((double)CONCAT44(0x43300000, state->blendFrameCount ^ 0x80000000) - biasS
                 );
         }
         state->posCurX = state->posCurX + state->posStepX;
@@ -629,13 +629,13 @@ void modgfx_updateEffectRotation(int stateArg, int command, int mode)
         else
         {
             state->rotStepZ =
-                (short)(((int)targetRotZ - (int)state->rotOffsetZ) / (int)state->blendFrameCount
+                (short)(((int)targetRotZ - state->rotOffsetZ) / state->blendFrameCount
                 );
             state->rotStepY =
-                (short)(((int)targetRotY - (int)state->rotOffsetY) / (int)state->blendFrameCount
+                (short)(((int)targetRotY - state->rotOffsetY) / state->blendFrameCount
                 );
             state->rotStepX =
-                (short)(((int)targetRotX - (int)state->rotOffsetX) / (int)state->blendFrameCount
+                (short)(((int)targetRotX - state->rotOffsetX) / state->blendFrameCount
                 );
         }
     }
@@ -1749,9 +1749,9 @@ extern void fn_80137948(char* fmt, ...);
 int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                        u32 modelIdArg, void* extraArgsArg)
 {
-    int modelId = (int)modelIdArg;
-    int effectId = (int)effectIdArg;
-    f32* extraArgs = (f32*)extraArgsArg;
+    int modelId = modelIdArg;
+    int effectId = effectIdArg;
+    f32* extraArgs = extraArgsArg;
     int intVal;
     s16 i;
     u8 variant;
@@ -2022,7 +2022,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     variant = '\0';
     cfg.behaviorFlags = 0x0;
     cfg.renderFlags = 0;
-    cfg.effectIdByte = (u8)effectId;
+    cfg.effectIdByte = effectId;
     cfg.startPosX = lbl_803DF4DC;
     cfg.startPosY = lbl_803DF4DC;
     cfg.startPosZ = lbl_803DF4DC;
@@ -2108,9 +2108,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.colorWord2 = 0x2000;
             cfg.lifetimeFrames = 0x78;
         }
-        cfg.overrideColor0 = (u32)cfg.colorWord0;
-        cfg.overrideColor1 = (u32)cfg.colorWord1;
-        cfg.overrideColor2 = (u32)cfg.colorWord2;
+        cfg.overrideColor0 = cfg.colorWord0;
+        cfg.overrideColor1 = cfg.colorWord1;
+        cfg.overrideColor2 = cfg.colorWord2;
         cfg.initialAlpha = 0x7f;
         cfg.renderFlags = 0x4080020;
         break;
@@ -2807,7 +2807,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80210;
-        cfg.textureId = (s16)effectId + -0x3d5;
+        cfg.textureId = effectId + -0x3d5;
         break;
     case 0x52f:
     case 0x530:
@@ -2842,7 +2842,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         if (extraArgs != NULL)
         {
             intVal = (int)(lbl_803DF548 * (lbl_803DF4D0 - *extraArgs));
-            cfg.initialAlpha = (u8)intVal;
+            cfg.initialAlpha = intVal;
             fn_80137948(sModgfxAlphaDebugFormat, intVal);
         }
         cfg.scale = lbl_803DF54C;
@@ -3860,12 +3860,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         ftmp1 = lbl_803DF5B4;
         for (i = 0; i < 0x1e; i = i + 1)
         {
-            cfg.startPosY = (f32)ftmp4;
+            cfg.startPosY = ftmp4;
             cfg.velocityX = ftmp3 * (f32)(s32)(2 - randomGetRange(0, 4));
             cfg.velocityY = ftmp2 * (f32)(s32)
             randomGetRange(1, 2);
             cfg.velocityZ = ftmp3 * (f32)(s32)(2U - randomGetRange(0, 4));
-            cfg.scale = (f32)ftmp1;
+            cfg.scale = ftmp1;
             cfg.lifetimeFrames = 0x3c;
             cfg.behaviorFlags = 0x108;
             cfg.textureId = 0x5c;
@@ -4013,10 +4013,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         ftmp4 = lbl_803DF660;
         for (i = 0; i < 0x28; i = i + 1)
         {
-            cfg.startPosY = (f32)ftmp1;
+            cfg.startPosY = ftmp1;
             cfg.velocityX = ftmp2 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
             cfg.velocityZ = ftmp2 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
-            cfg.scale = (f32)ftmp3;
+            cfg.scale = ftmp3;
             cfg.lifetimeFrames = (u32)(ftmp4 * (f32)(s32)randomGetRange(1, 4));
             cfg.behaviorFlags = 0x100011;
             cfg.textureId = 0x30;
