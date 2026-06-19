@@ -31,7 +31,7 @@ extern void textureFn_8006c4e0();
 extern void fn_80088730();
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
-extern u8 isHeavyFogEnabled();
+extern u8 isHeavyFogEnabled(void);
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
 extern f32 displayOffsetH_803DEBFC;

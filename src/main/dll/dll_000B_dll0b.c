@@ -2192,7 +2192,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void selectTexture(u8* tex, int mapId);
 extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
-extern void mtx44Transpose(f32 * src, f32 * dst);
+extern void mtx44Transpose(f32* src, f32* dst);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
@@ -2749,7 +2749,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern void ObjList_GetObjects(int* idx, int* count);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern void Sfx_StopObjectChannel(void* obj, int ch);
 extern const f32 lbl_803DF43C;
 

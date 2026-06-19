@@ -168,7 +168,7 @@ void mmp_asteroid_re_init(int obj)
 
 void mmp_asteroid_re_update(int obj)
 {
-    extern void CameraShake_Start(f32 a, f32 b, f32 c);
+    extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;

@@ -13836,7 +13836,7 @@ int fn_8029C9C8(int obj, int state)
     return 0;
 }
 
-extern int gameBitDecrement(int);
+extern int gameBitDecrement(int bit);
 extern u8 objGetByteParam1C(int obj);
 extern f32 lbl_803E8054;
 

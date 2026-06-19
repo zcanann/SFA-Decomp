@@ -82,7 +82,7 @@ extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
-extern f32 fn_802943F4(f32 a);
+extern float fn_802943F4(float x);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 angle);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern f32 lbl_803E2BB8;

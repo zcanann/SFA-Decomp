@@ -45,7 +45,7 @@ extern int gameBitIncrement(int bit);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-extern void gameBitDecrement(int eventId);
+extern int gameBitDecrement(int bit);
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
 extern f32 lbl_803E3AC8;

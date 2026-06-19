@@ -56,7 +56,7 @@ extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int
 extern void modelLightStruct_setLightKind(int light, int v);
 extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
-extern int* ObjList_GetObjects(void* unused, int* objectCount);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 
 void ShipBattle_hitDetect(void)
 {

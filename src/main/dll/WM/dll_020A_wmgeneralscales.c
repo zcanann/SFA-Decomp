@@ -41,7 +41,7 @@ extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 extern f32 lbl_803E5EA4; /* 1.0: render scale */
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 
 int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

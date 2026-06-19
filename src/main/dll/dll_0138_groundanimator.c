@@ -4,7 +4,7 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-extern void* mapGetBlock(int idx);
+extern void* mapGetBlock(int i);
 extern void objRenderFn_8003b8f4(f32);
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"

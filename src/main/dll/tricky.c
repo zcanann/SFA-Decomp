@@ -627,7 +627,7 @@ extern void GXLoadNrmMtxImm(void* m, int id);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetNumChans(int n);
+extern void GXSetNumChans(u8 nChans);
 extern void textureFn_8004c264(void *this, int x);
 extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
 extern void GXSetTevKColorSel(int stage, int sel);

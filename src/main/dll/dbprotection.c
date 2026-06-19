@@ -59,7 +59,7 @@ extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
-extern int fn_801E2570(void);
+extern u32 fn_801E2570(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s8 lbl_803DDC2C;

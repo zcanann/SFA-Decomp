@@ -54,7 +54,7 @@ extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern int playerGetMoney(u8 * player);
+extern int playerGetMoney(void* player);
 extern void playerAddMoney(u8* player, int amount);
 extern void hudFn_8011f38c(u8 x);
 extern float mathCosf(float x);

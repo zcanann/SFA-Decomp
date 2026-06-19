@@ -11,7 +11,7 @@
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "track/intersect.h"
-extern int renderModeSetOrGet(int mode);
+extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxBoundsTemplates[];

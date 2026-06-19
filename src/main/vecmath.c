@@ -5,7 +5,7 @@ extern float powfBitEstimate(float x, float y);
 extern f32 timeDelta;
 
 extern double lbl_803DE7D8;
-extern f32 fcos16(int angle);
+extern float fcos16(int angle);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE7D0;
 extern f32 lbl_803DE808;

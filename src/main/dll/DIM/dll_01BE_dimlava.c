@@ -50,7 +50,7 @@ void imicepillar_free(void);
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern void warpToMap(int idx, s8 transType);
 extern void Music_Trigger(int id, int arg);
 extern f32 timeDelta;

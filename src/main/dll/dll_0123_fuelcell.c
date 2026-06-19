@@ -14,7 +14,7 @@ extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
 extern f32 Vec_distance(f32* a, f32* b);

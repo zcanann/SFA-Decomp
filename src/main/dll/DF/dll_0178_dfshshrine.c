@@ -12,7 +12,7 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);
@@ -54,7 +54,7 @@ extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void playerAddRemoveMagic(int player, int amount);
+extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);

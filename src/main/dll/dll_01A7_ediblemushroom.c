@@ -45,7 +45,7 @@ extern f32 gEdibleMushroomAnimEventTable[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 
-extern int objIsFrozen(u8 * self);
+extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);

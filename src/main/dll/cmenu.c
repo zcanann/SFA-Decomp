@@ -55,8 +55,8 @@ extern int getLoadedFileFlags(int flags);
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
+extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void* Obj_GetPlayerObject(void);
 extern void hudDrawTimedElement(int obj, void* p);
 

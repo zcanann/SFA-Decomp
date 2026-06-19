@@ -133,7 +133,7 @@ extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 extern void Vec_normalize(f32 * dst, f32 * src);
 extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
-extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
+extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE750;
@@ -845,7 +845,7 @@ extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
 extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn,
                           int attnFn);
-extern void GXSetNumChans(int numChannels);
+extern void GXSetNumChans(u8 nChans);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern f32 lbl_803DE7A4;

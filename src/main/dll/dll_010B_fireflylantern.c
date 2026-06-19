@@ -8,7 +8,7 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
-extern void gameBitDecrement(int eventId);
+extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern f32 lbl_803E3AF0;

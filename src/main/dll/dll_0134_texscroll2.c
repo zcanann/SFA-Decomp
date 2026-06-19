@@ -18,7 +18,7 @@
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern void* mapGetBlock(int idx);
+extern void* mapGetBlock(int i);
 extern void* getTablesBinEntry(int i);
 extern void* getLoadedTexture(int key);
 extern void* fn_8006070C(int* obj, int idx);

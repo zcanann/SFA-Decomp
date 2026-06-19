@@ -32,7 +32,7 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderFn_8003b8f4(f32 v);
+extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 
 #pragma scheduling on
@@ -344,7 +344,7 @@ void mmp_moonrock_init(int obj, int param2)
     fn_801A7D74(obj, 1, 2);
 }
 
-extern int* ObjList_GetObjects(int* idx, int* count);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern void setAButtonIcon(int x);
 extern f32 gMoonRockPickupRange;
 

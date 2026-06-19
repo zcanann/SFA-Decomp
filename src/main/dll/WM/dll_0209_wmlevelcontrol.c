@@ -53,7 +53,7 @@ extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-extern void skyFn_80089710(int flags, u32 enabled, int startComplete);
+extern void skyFn_80089710(int flags, int enabled, int startComplete);
 extern f32 fn_8008ED88(void);
 extern void skyFn_800895e0(int flags, int red, int green, int blue, int m1, int m2);
 extern void fn_80089510(int flags, int red, int green, int blue);

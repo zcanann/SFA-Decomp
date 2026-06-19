@@ -169,17 +169,17 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
-extern void fireball_free();
-extern void fireball_hitDetect();
-extern void fireball_update();
-extern void fireball_init();
-extern void flamethrowerspe_update();
-extern void flamethrowerspe_init();
-extern void shield_update();
-extern void dll_F7_update();
-extern void dll_F7_init();
+extern void depthoffieldpoint_update(int* obj);
+extern void depthoffieldpoint_init(int* obj);
+extern void fireball_free(int* obj);
+extern void fireball_hitDetect(int* obj);
+extern void fireball_update(int* obj);
+extern void fireball_init(int* obj);
+extern void flamethrowerspe_update(int* obj);
+extern void flamethrowerspe_init(int* obj, int* params);
+extern void shield_update(int* obj);
+extern void dll_F7_update(int* obj);
+extern void dll_F7_init(int* obj, int* params);
 
 void staticCamera_free(int obj)
 {

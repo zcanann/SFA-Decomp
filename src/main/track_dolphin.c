@@ -3038,7 +3038,7 @@ extern int lbl_803DCF64;
 extern int lbl_803DCF68;
 extern s8 lbl_803DCF60;
 extern const f32 lbl_803DECE8;
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 
 int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
@@ -3224,8 +3224,8 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
 }
 
 extern f32 fn_802925C4(f32 x, f32 y);
-extern f32 fn_802943F4(f32 x);
-extern f32 floor(f32 x);
+extern float fn_802943F4(float x);
+extern float floor(float x);
 extern const f32 lbl_803DECEC;
 
 int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
@@ -3496,7 +3496,7 @@ extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
-extern void GXSetNumChans(int n);
+extern void GXSetNumChans(u8 nChans);
 extern void GXSetTevOrder(int a, int b, int c, int d);
 extern void GXSetTevDirect(int stage);
 extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
@@ -4590,7 +4590,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 s
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8* mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
-extern f32 fastFloorf(f32 x);
+extern float fastFloorf(float x);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
 extern int lbl_803DCDC8;
@@ -4989,7 +4989,7 @@ u8 doEdges;
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
 extern u8* mapGetBlockIdx(int layer);
-extern u8* mapGetBlock(int idx);
+extern void* mapGetBlock(int i);
 extern int getHudHiddenFrameCount(void);
 extern u8 lbl_803DCF44;
 extern int lbl_803DCF40;

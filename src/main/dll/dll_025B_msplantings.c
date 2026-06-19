@@ -63,7 +63,7 @@ typedef struct MoonSeedPlantingSpotState
 STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
 
 extern int randomGetRange(int lo, int hi);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

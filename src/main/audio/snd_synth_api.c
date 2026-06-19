@@ -10,7 +10,7 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/synth_callback.h"
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
+extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);

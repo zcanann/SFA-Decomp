@@ -33,7 +33,7 @@ STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);
 extern u32 playerGetStateFlag310(int obj);

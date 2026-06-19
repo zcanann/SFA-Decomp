@@ -22,7 +22,7 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
 
 #pragma scheduling on
 #pragma peephole on
-extern void objRenderFn_8003b8f4(f32 x);
+extern void objRenderFn_8003b8f4(int* obj);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;

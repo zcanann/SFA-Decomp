@@ -311,26 +311,26 @@ int shield_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
 
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
+extern void depthoffieldpoint_update(int* obj);
+extern void depthoffieldpoint_init(int* obj);
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-extern void fireball_free();
-extern void fireball_hitDetect();
-extern void fireball_update();
-extern void fireball_init();
+extern void fireball_free(int* obj);
+extern void fireball_hitDetect(int* obj);
+extern void fireball_update(int* obj);
+extern void fireball_init(int* obj);
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
-extern void flamethrowerspe_update();
-extern void flamethrowerspe_init();
-extern void shield_update();
+extern void flamethrowerspe_update(int* obj);
+extern void flamethrowerspe_init(int* obj, int* params);
+extern void shield_update(int* obj);
 
 void restartmarker_init(int* obj, int* state);
 
-extern void dll_F7_update();
-extern void dll_F7_init();
+extern void dll_F7_update(int* obj);
+extern void dll_F7_init(int* obj, int* params);
 void staffFn_80170380(int* obj, int cmd);
 extern int* Obj_GetActiveModel(int obj);
 
@@ -980,7 +980,7 @@ void fireball_hitDetect(int* obj);
 
 void flamethrowerspe_update(int* obj);
 
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 
 void mikabomb_init(int* obj);
 
@@ -1436,7 +1436,7 @@ void staff_update(int* obj)
     }
 }
 
-extern f32 fastFloorf(f32 v);
+extern float fastFloorf(float x);
 extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);
 extern f32 gStaffPi;
 extern f32 gStaffAngleUnitScale;

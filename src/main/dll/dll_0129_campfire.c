@@ -8,7 +8,7 @@ extern f32 timeDelta;
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 extern void ModelLightStruct_free(void* effect);
-extern u32 ObjHits_ClearHitVolumes();
+extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void queueGlowRender(void* effect);
 extern f32 lbl_803E3D78;

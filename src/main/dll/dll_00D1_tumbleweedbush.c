@@ -63,7 +63,7 @@ extern f32 lbl_803E2F58;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);
-extern int** ObjList_GetObjects(int* idx, int* count);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E2F40;
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E2F5C;

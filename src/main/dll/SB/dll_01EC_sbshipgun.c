@@ -57,7 +57,7 @@ extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern f32 sqrtf(f32);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);

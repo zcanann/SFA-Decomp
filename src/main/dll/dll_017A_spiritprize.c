@@ -16,7 +16,7 @@
 extern void ModelLightStruct_free(void* light);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);
 extern void* objCreateLight(int* obj, int v);

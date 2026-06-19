@@ -133,7 +133,7 @@ void fn_801CEE0C(int p1, int p2)
 {
     extern int fn_801CE078(int);
     extern int ObjTrigger_IsSetById(int, int);
-    extern int gameBitDecrement(int);
+    extern int gameBitDecrement(int bit);
     extern int lbl_803DBF70;
     extern int lbl_803DBF74;
     extern int lbl_803DBF78;

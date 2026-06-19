@@ -33,7 +33,7 @@ extern u32 Obj_GetPlayerObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern u32 fn_8003B5E0();
-extern u32 objRenderFn_8003b8f4();
+extern void objRenderFn_8003b8f4(int* obj);
 extern u32 objParticleFn_80099d84();
 extern f32 sqrtf(f32);
 extern float mathSinf(float x);

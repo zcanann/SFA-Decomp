@@ -62,7 +62,7 @@ typedef struct TexFrameAnimatorState
 
 void texframeanimator_update(int* obj)
 {
-    extern int* mapGetBlock(int idx); /* #57 */
+    extern void* mapGetBlock(int i); /* #57 */
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
     TexFrameAnimatorState* state;
     u8* params;

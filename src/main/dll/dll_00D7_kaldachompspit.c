@@ -99,7 +99,7 @@ void kaldachompspit_free(int* obj)
 
 void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(f32 scale);
+    extern void objRenderFn_8003b8f4(int* obj);
     u8* light = **(u8***)&((GameObject*)obj)->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {

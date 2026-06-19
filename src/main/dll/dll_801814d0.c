@@ -17,7 +17,7 @@
 #include "main/dll/cfprisonuncle.h"
 #include "main/objfx.h"
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern void ObjHits_ClearHitVolumes();
+extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_DisableObject(u32 objPtr);
 extern int ObjHits_IsObjectEnabled();
 extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);

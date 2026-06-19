@@ -55,7 +55,7 @@ extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, i
 extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
-extern void gameBitFn_800ea2e0(u8 n);
+extern void gameBitFn_800ea2e0(u8 id);
 extern int unlockLevel(s32 val, int idx, int flag);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }

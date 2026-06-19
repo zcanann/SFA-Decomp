@@ -62,7 +62,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern void Obj_FreeObject(int*);
 void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 extern int objUpdateOpacity(int* obj);

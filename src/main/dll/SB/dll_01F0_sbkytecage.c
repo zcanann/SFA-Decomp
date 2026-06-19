@@ -163,7 +163,7 @@ void SB_KyteCage_init(GameObject* obj, int* params)
 
 void SB_KyteCage_update(int obj)
 {
-    extern int* ObjList_GetObjects(int* out_head, int* out_count);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
     SBKyteCageState* state = ((GameObject*)obj)->extra;

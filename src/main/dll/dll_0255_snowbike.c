@@ -168,7 +168,7 @@ extern void fn_801EBD60(int obj, u8* state);
 extern void fn_801EA240(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
-extern void setMotionBlur(int a, f32 b);
+extern void setMotionBlur(u8 enabled, f32 amount);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * dst);
 extern float powfBitEstimate(float x, float y);

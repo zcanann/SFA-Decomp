@@ -206,12 +206,12 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *ru
 
 extern void warpToMap(int idx, s8 transType);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern void skyFn_80089710(int id, int enabled, int arg);
+extern void skyFn_80089710(int flags, int enabled, int startComplete);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void doRumble(f32 duration);
 extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern int lbl_80325AB8[];
 extern f32 lbl_803E4BC4;

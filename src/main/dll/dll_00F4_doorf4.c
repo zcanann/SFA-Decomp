@@ -70,7 +70,7 @@ extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 sqrtf(f32 x);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern f32 lbl_803E3648;

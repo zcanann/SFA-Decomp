@@ -40,7 +40,7 @@
 extern void AudioStream_StopCurrent(void);
 extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
-extern void drawRect(f32 a, f32 b, int c, int d);
+extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetFovY(f32 fovY);
 extern void Camera_SetCurrentViewIndex(int index);
@@ -96,7 +96,7 @@ extern u16 curGameText;
 extern u8 lbl_803A9440[];
 extern u8 AudioStream_IsPreparing(void);
 extern void AudioStream_StartPrepared(void);
-extern void AudioStream_Play(int stream, void (*cb)(void));
+extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void* gameTextGetBox(int box);
 extern void gameTextFreePhrase(u8 * phrase);
 extern int lbl_8031BF90[];

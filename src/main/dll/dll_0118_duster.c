@@ -47,7 +47,7 @@ extern f32 lbl_803E38D4;
 extern f32 lbl_803E38E0;
 extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               void* obj, int flags, int mask, int arg9, int arg10);
 

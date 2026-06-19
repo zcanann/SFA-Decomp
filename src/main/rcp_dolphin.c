@@ -2152,7 +2152,7 @@ void initFn_800534f8(void)
     gRcpDistortTexture = textureLoadAsset(0x5dc);
 }
 
-extern int* getCurrentDataFile(int id);
+extern void* getCurrentDataFile(int id);
 extern void loadAssetFileById(void* out, int id);
 extern int* gRcpTexBankTable[3];
 extern int gRcpTexBankCount[3];
@@ -2270,7 +2270,7 @@ void loadNextMap(void)
     }
 }
 
-extern f32 fastFloorf(f32 x);
+extern float fastFloorf(float x);
 extern f32 gMapBlockWorldSize;
 extern u8* gMapBlockLayerTables[5];
 extern f32 lbl_803DEBB8;

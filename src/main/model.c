@@ -824,7 +824,7 @@ void ObjModel_InitScratchBuffers(void)
     gModelCacheBuffersB[5] = c + 0x3800;
 }
 
-extern void ObjModel_SetBlendChannelTargets(u8* model, int ch, int a, int b, f32 w, int c);
+extern void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 weight, int flags);
 
 #pragma dont_inline off
 void ObjModel_ClearBlendChannels(u8* model)

@@ -3524,7 +3524,7 @@ extern int modelLightStruct_getProjectedLightChannelPreference(int light);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
-extern void GXSetNumChans(int n);
+extern void GXSetNumChans(u8 nChans);
 extern u32 lbl_803DB468;
 extern u32 gObjGxDefaultChanColor;
 extern u32 lbl_803DB470;

@@ -28,7 +28,7 @@ extern f32 lbl_803E536C;
 extern f32 lbl_803E5374;
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
-extern int objIsFrozen(int* obj);
+extern int objIsFrozen(u8* obj);
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;

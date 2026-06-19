@@ -7,7 +7,7 @@
 #include "main/audio/synth_control.h"
 extern void dataInit(int p1, void* p2);
 
-extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u8 studio, u32 studioAux);
+extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern int sndFXCheck(u32 id);
 #define S3D_UNLINK_EMITTER(emitter)                         \
     do {                                                    \

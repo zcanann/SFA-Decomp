@@ -123,8 +123,8 @@ extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);
 extern f32 sqrtf(f32 v);
 extern f32 fn_80292248(f32 v);
-extern f32 floor(f32 v);
-extern f32 fn_802943F4(f32 v);
+extern float floor(float x);
+extern float fn_802943F4(float x);
 
 #pragma scheduling off
 #pragma peephole off
@@ -216,7 +216,7 @@ u32 FUN_8005af70(int idx)
 
 extern s16* lbl_803822A0[];
 extern f32 gMapBlockWorldSize;
-extern f32 fastFloorf(f32 v);
+extern float fastFloorf(float x);
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;
 
@@ -1644,9 +1644,9 @@ extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
-extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn, GXAttnFn attn_fn);
 extern void GXSetChanAmbColor(int chan, GXColor8* c);
-extern void GXSetNumChans(int n);
+extern void GXSetNumChans(u8 nChans);
 extern void setupToRenderMapBlock(int* block, void* posMtx);
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
@@ -2530,8 +2530,8 @@ void initMapBlocks(void)
 }
 
 extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXBegin(int prim, int fmt, u16 nverts);
+extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
+extern void GXBegin(GXPrimitive type, GXVtxFmt vtxfmt, u16 nverts);
 
 typedef union
 {

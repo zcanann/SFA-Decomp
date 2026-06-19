@@ -72,7 +72,7 @@ void fn_8015FBEC(int obj)
 
 static inline u8 scarab_isObjectInList(void* o)
 {
-    extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     int i;
     int count;
     int* objs = ObjList_GetObjects(&i, &count);

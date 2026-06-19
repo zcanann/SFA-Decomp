@@ -62,7 +62,7 @@ extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 gMapBlockWorldSize;
-extern f32 fastFloorf(f32 v);
+extern float fastFloorf(float x);
 extern void OSReport(const char* msg, ...);
 
 int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
@@ -2243,7 +2243,7 @@ int objUpdateOpacity(char* obj)
     return 1;
 }
 
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objShouldUnload(char* obj);
 extern void Obj_FreeObject(char* obj);
 extern int getLoadedFileFlags(int file);
@@ -2767,7 +2767,7 @@ void beginLoadingMap(void)
 extern void setForceLoadImmediately(void);
 extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
-extern int getCurrentDataFile(int id);
+extern void* getCurrentDataFile(int id);
 extern char sTrackPiLockedFormat[];
 extern int lbl_803DCE88;
 extern int lbl_803DCE1C;

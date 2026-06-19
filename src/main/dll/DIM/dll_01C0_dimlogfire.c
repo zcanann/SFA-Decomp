@@ -57,7 +57,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);

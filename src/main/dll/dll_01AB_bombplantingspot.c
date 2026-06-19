@@ -6,7 +6,7 @@
 #include "main/gamebits.h"
 extern int gameBitDecrement(int bit);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
-extern void objRenderFn_80041018(void* obj);
+extern void objRenderFn_80041018(int* obj);
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
 #define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196

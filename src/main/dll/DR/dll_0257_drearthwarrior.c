@@ -237,7 +237,7 @@ extern char gEarthWarriorTailChainDesc;
 extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void fn_80113F94(int p, f32 f);
-extern void objAudioFn_8006edcc(int obj, int a, int b, int c, int d, f32 v, f32 lim);
+extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
 extern void doRumble(f32 duration);

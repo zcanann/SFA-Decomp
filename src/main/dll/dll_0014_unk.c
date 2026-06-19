@@ -26,7 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-extern void OSReport(const char* fmt, ...);
+extern void OSReport(const char* msg, ...);
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
@@ -113,7 +113,7 @@ extern f32 lbl_803E0610;
 extern f32 gRomCurveAnglePi2;
 extern f32 lbl_803E0618;
 extern void Curve_BuildHermiteCoeffs(void);
-extern void Curve_EvalHermite(void);
+extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 gFloatZero;
@@ -967,8 +967,8 @@ void doNothing_onTrickyInit(void)
 #pragma peephole off
 int fn_800D9F38(void* a, void* b)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* A = a;
     char* B = b;
     if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || b == 0) return 1;
@@ -1010,8 +1010,8 @@ int fn_800D9F38(void* a, void* b)
 
 void RomCurve_setA4(void* a, void* b)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* A = a;
     f32 t;
     if (b != 0 && (u32)b != *(u32*)(A + 0xa4))
@@ -1034,8 +1034,8 @@ void RomCurve_setA4(void* a, void* b)
 
 int RomCurve_setClosed(RomCurveWalker* state, int closed)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     float savedPhase;
     float t;
     void* tmpCurve;
@@ -1304,8 +1304,8 @@ clearAndReturn:
 #pragma peephole on
 static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, int useCos)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     f32 angle;
     f32 trig;
 
@@ -3639,8 +3639,8 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
-    extern float mathCosf(double x); /* #57 */
-    extern float mathSinf(double angle); /* #57 */
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     RomCurvePlacementDef* next;
     int done;
     int n;

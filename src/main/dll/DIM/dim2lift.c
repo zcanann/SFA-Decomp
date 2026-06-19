@@ -231,7 +231,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
 {
     f32 zeroProgress;
     extern void Camera_EnableViewYOffset(void);
-    extern void CameraShake_Start(f32, f32, f32);
+    extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
     extern void doRumble(f32 duration);
     extern u32 gDIMbossSequenceFlags;
     extern f32 lbl_803E4BC8;

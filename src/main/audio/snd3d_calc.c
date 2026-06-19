@@ -47,7 +47,7 @@ extern f32 lbl_803E78BC;
 extern f32 lbl_803E78C0;
 
 extern double __frsqrte(double x);
-extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
+extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 

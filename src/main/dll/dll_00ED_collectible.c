@@ -80,8 +80,8 @@ extern void gcbaddieshield_update(int* obj);
 
 
 
-extern void depthoffieldpoint_init();
-extern void depthoffieldpoint_update();
+extern void depthoffieldpoint_init(int* obj);
+extern void depthoffieldpoint_update(int* obj);
 
 
 
@@ -98,16 +98,16 @@ extern void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 extern void staffFn_80170380(int* obj, int cmd);
 
 
-extern void fireball_init();
-extern void fireball_update();
-extern void fireball_hitDetect();
-extern void fireball_free();
+extern void fireball_init(int* obj);
+extern void fireball_update(int* obj);
+extern void fireball_hitDetect(int* obj);
+extern void fireball_free(int* obj);
 
 
 
 
-extern void flamethrowerspe_init();
-extern void flamethrowerspe_update();
+extern void flamethrowerspe_init(int* obj, int* params);
+extern void flamethrowerspe_update(int* obj);
 
 
 
@@ -117,14 +117,14 @@ extern void flamethrowerspe_update();
 
 
 extern void shield_init(int* obj, void* initData);
-extern void shield_update();
+extern void shield_update(int* obj);
 
 
 
 extern void mikabombshadow_update(int* obj);
 extern void restartmarker_init(int* obj, int* state);
-extern void dll_F7_init();
-extern void dll_F7_update();
+extern void dll_F7_init(int* obj, int* params);
+extern void dll_F7_update(int* obj);
 
 /* ObjMsg slots: collectible notifies the player it is in range, player
    replies to trigger the pickup. */

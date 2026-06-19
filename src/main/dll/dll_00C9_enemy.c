@@ -181,7 +181,7 @@ extern f32 lbl_803E328C;
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-extern void objRenderFn_8003b8f4(f32 f);
+extern void objRenderFn_8003b8f4(int* obj);
 extern int objCreateLight(int a, int b);
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);

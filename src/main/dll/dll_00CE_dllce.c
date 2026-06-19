@@ -41,7 +41,7 @@ int fn_8015E3A0(int obj, int p2)
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
     extern void ObjHits_RegisterActiveHitVolumeObject(int);
-    extern int*ObjList_GetObjects(int*, int*);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -94,7 +94,7 @@ int fn_8015E3A0(int obj, int p2)
 #pragma peephole off
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
-    extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     extern void* Obj_GetPlayerObject(void);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD4;
@@ -159,7 +159,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 #pragma peephole off
 int fn_8015DC04(int obj, GroundBaddieState* p)
 {
-    extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
@@ -291,7 +291,7 @@ void fn_8015DAE8(void)
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
-    extern int*ObjList_GetObjects(int* startIndex, int* objectCount);
+    extern void* ObjList_GetObjects(int* outA, int* outB);
     extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DDC;
@@ -696,7 +696,7 @@ void dll_CE_func0B(int obj, int v)
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(f32);
+    extern void objRenderFn_8003b8f4(int* obj);
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E10;

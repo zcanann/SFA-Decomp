@@ -1553,7 +1553,7 @@ void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* out
     *outY = (int)((GameObject*)obj)->anim.modelState->shadowOffsetY;
 }
 
-extern void* textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 
 void* textureAlloc512(void)
 {
@@ -1566,8 +1566,8 @@ void* textureAlloc512(void)
 extern f32 lbl_803DED28;
 extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
-extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
-extern void GXCopyTex(void* dest, u8 clear);
+extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
+extern void GXCopyTex(void* dest, GXBool clear);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 
 #pragma optimization_level 2
@@ -1771,7 +1771,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 }
 
 extern int testAndSet_onlyUseHeap3(int);
-extern f32 fn_802943F4(f32);
+extern float fn_802943F4(float x);
 extern double floor(double);
 extern f32 __PADFixBits;
 extern f32 gNewShadowPlacements[];
@@ -2487,7 +2487,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * o);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e);
-extern void GXSetCopyFilter(int a, void* b, int c, void* d);
+extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
 
 extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);

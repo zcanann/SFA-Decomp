@@ -495,7 +495,7 @@ u32 GameBit_Get(int eventId)
 }
 
 
-extern void gameBitFn_800ea2e0(int a);
+extern void gameBitFn_800ea2e0(u8 id);
 extern char sGameBitSetDuringSaveLoadWarning[];
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #pragma optimization_level 3
@@ -1014,7 +1014,7 @@ extern void viewportEffectFn_8000e380(void);
 extern void loadDataFiles(void);
 extern void audioUpdate(void);
 extern void debugPrintDraw(int a);
-extern void drawRect(f32 a, f32 b, int w, int h);
+extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void objRenderFuzz(void);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;

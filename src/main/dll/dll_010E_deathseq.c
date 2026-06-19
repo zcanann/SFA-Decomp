@@ -18,7 +18,7 @@ extern int fn_80296C5C(void);
 extern void fn_80296C6C(int* player, int v);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_StartPrepared(void);
-extern void AudioStream_Play(int streamId, void* cb);
+extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
 extern void Obj_FreeObject(int* obj);
 extern void showDeathMenu(void);

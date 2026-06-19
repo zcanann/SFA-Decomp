@@ -40,7 +40,7 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -250,17 +250,17 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern void gcbaddieshield_update(int* obj);
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
-extern void fireball_free();
-extern void fireball_hitDetect();
-extern void fireball_update();
-extern void fireball_init();
-extern void flamethrowerspe_update();
-extern void flamethrowerspe_init();
-extern void shield_update();
-extern void dll_F7_update();
-extern void dll_F7_init();
+extern void depthoffieldpoint_update(int* obj);
+extern void depthoffieldpoint_init(int* obj);
+extern void fireball_free(int* obj);
+extern void fireball_hitDetect(int* obj);
+extern void fireball_update(int* obj);
+extern void fireball_init(int* obj);
+extern void flamethrowerspe_update(int* obj);
+extern void flamethrowerspe_init(int* obj, int* params);
+extern void shield_update(int* obj);
+extern void dll_F7_update(int* obj);
+extern void dll_F7_init(int* obj, int* params);
 extern int* Obj_GetActiveModel(int obj);
 extern const f32 lbl_803E3330;
 extern int cmbsrc_getColorIndex(int* p);

@@ -54,7 +54,7 @@ typedef struct PollenFragmentExtra
 
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int* obj);
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 extern f32 timeDelta;

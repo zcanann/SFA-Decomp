@@ -6,7 +6,7 @@
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sfa_extern_decls.h"
-extern int saveFileStruct_isCheatActive();
+extern int saveFileStruct_isCheatActive(u8 idx);
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -2296,7 +2296,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 }
 
 extern int mmSetFreeDelay(int v);
-extern u8* textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
+extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 
 typedef struct GameTextCharset
 {

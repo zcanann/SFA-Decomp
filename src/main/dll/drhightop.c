@@ -40,7 +40,7 @@ extern float powfBitEstimate(float x, float y);
 extern float mathSinf(float x);
 extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
-extern int arrayIndexOf();
+extern int arrayIndexOf(int* arr, int count, int target);
 extern void SnowBike_func15();
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
