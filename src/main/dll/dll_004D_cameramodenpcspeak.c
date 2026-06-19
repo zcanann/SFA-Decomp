@@ -1,7 +1,7 @@
 /*
  * DLL 0x004D (cameramodenpcspeak) - the dialogue/"NPC speak" camera mode.
  *
- * Lazily allocates a single CameraModeNpcSpeakState (lbl_803DD584) on first
+ * Lazily allocates a single CameraModeNpcSpeakState (gCamNpcSpeakState) on first
  * init and frees it on free. init() seeds the anchor point from the init
  * params or, when none are given, from the focused NPC's position, then
  * picks a tuning preset from the mode id (0-8; mode 4 randomizes to 0-3)
@@ -29,9 +29,9 @@ extern f32 timeDelta;
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-extern CameraModeNpcSpeakState* lbl_803DD584;
-extern f32 lbl_803E19D0;
-extern f32 lbl_803E19D4;
+extern CameraModeNpcSpeakState* gCamNpcSpeakState;
+extern f32 gCamNpcSpeakPi;
+extern f32 gCamNpcSpeakAngleToRadDivisor;
 extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 extern const f32 lbl_803E19E8;
@@ -65,8 +65,8 @@ void CameraModeNpcSpeak_copyToCurrent_nop(void)
 
 void CameraModeNpcSpeak_free(void)
 {
-    mm_free(lbl_803DD584);
-    lbl_803DD584 = 0;
+    mm_free(gCamNpcSpeakState);
+    gCamNpcSpeakState = 0;
     Rcp_DisableBlurFilter();
 }
 
@@ -99,17 +99,17 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     f32 vc, vb, va;
     u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
-    if (lbl_803DD584 == NULL)
+    if (gCamNpcSpeakState == NULL)
     {
-        lbl_803DD584 = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
+        gCamNpcSpeakState = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
     }
 
     if (p3 != NULL)
     {
         CameraModeNpcSpeakInitParams* params = (CameraModeNpcSpeakInitParams*)p3;
-        lbl_803DD584->anchorX = params->anchorX;
-        lbl_803DD584->anchorY = params->anchorY;
-        lbl_803DD584->anchorZ = params->anchorZ;
+        gCamNpcSpeakState->anchorX = params->anchorX;
+        gCamNpcSpeakState->anchorY = params->anchorY;
+        gCamNpcSpeakState->anchorZ = params->anchorZ;
         mode = params->mode;
     }
     else
@@ -118,20 +118,20 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         f32* fpos;
         if (focus == NULL)
         {
-            lbl_803DD584->anchorX = lbl_803E19E8;
-            lbl_803DD584->anchorY = lbl_803E19E8;
-            lbl_803DD584->anchorZ = lbl_803E19E8;
+            gCamNpcSpeakState->anchorX = lbl_803E19E8;
+            gCamNpcSpeakState->anchorY = lbl_803E19E8;
+            gCamNpcSpeakState->anchorZ = lbl_803E19E8;
         }
         fpos = *(f32**)((u8*)focus + 0x74);
         if (fpos == NULL)
         {
-            lbl_803DD584->anchorX = lbl_803E19E8;
-            lbl_803DD584->anchorY = lbl_803E19E8;
-            lbl_803DD584->anchorZ = lbl_803E19E8;
+            gCamNpcSpeakState->anchorX = lbl_803E19E8;
+            gCamNpcSpeakState->anchorY = lbl_803E19E8;
+            gCamNpcSpeakState->anchorZ = lbl_803E19E8;
         }
-        lbl_803DD584->anchorX = fpos[0];
-        lbl_803DD584->anchorY = fpos[1];
-        lbl_803DD584->anchorZ = fpos[2];
+        gCamNpcSpeakState->anchorX = fpos[0];
+        gCamNpcSpeakState->anchorY = fpos[1];
+        gCamNpcSpeakState->anchorZ = fpos[2];
     }
     if (mode == 4)
     {
@@ -139,72 +139,72 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     }
     {
         f32 a, b;
-        lbl_803DD584->unk20 = 0;
-        lbl_803DD584->mode = mode;
-        lbl_803DD584->unk14 = lbl_803E19E8;
+        gCamNpcSpeakState->unk20 = 0;
+        gCamNpcSpeakState->mode = mode;
+        gCamNpcSpeakState->unk14 = lbl_803E19E8;
         a = lbl_803E19EC;
-        lbl_803DD584->targetHeightOffset = a;
-        lbl_803DD584->lookAtHeightOffset = lbl_803E19DC;
-        lbl_803DD584->lookAtYScale = lbl_803E19F0;
+        gCamNpcSpeakState->targetHeightOffset = a;
+        gCamNpcSpeakState->lookAtHeightOffset = lbl_803E19DC;
+        gCamNpcSpeakState->lookAtYScale = lbl_803E19F0;
         b = lbl_803E19F4;
-        lbl_803DD584->anchorLerpScale = b;
-        lbl_803DD584->lookAtXZScale = b;
-        lbl_803DD584->minDistance = a;
+        gCamNpcSpeakState->anchorLerpScale = b;
+        gCamNpcSpeakState->lookAtXZScale = b;
+        gCamNpcSpeakState->minDistance = a;
     }
-    lbl_803DD584->orbitAngleOffset = randomGetRange(0x2000, 0x2c00);
+    gCamNpcSpeakState->orbitAngleOffset = randomGetRange(0x2000, 0x2c00);
 
     switch (mode)
     {
     case 0:
-        lbl_803DD584->distanceOffset = lbl_803E19F8;
+        gCamNpcSpeakState->distanceOffset = lbl_803E19F8;
         break;
     case 1:
-        lbl_803DD584->distanceOffset = lbl_803E19FC;
+        gCamNpcSpeakState->distanceOffset = lbl_803E19FC;
         break;
     case 2:
-        lbl_803DD584->distanceOffset = lbl_803E1A00;
+        gCamNpcSpeakState->distanceOffset = lbl_803E1A00;
         break;
     case 5:
-        lbl_803DD584->distanceOffset = lbl_803E1A04;
+        gCamNpcSpeakState->distanceOffset = lbl_803E1A04;
         break;
     case 3:
-        lbl_803DD584->distanceOffset = lbl_803DB9C0;
-        lbl_803DD584->orbitAngleOffset = randomGetRange(0xf00, 0x1f00);
-        lbl_803DD584->lookAtHeightOffset = lbl_803E19E8;
+        gCamNpcSpeakState->distanceOffset = lbl_803DB9C0;
+        gCamNpcSpeakState->orbitAngleOffset = randomGetRange(0xf00, 0x1f00);
+        gCamNpcSpeakState->lookAtHeightOffset = lbl_803E19E8;
         break;
     case 6:
-        lbl_803DD584->targetHeightOffset = lbl_803DB9A8;
-        lbl_803DD584->lookAtHeightOffset = lbl_803DB9AC;
-        lbl_803DD584->anchorLerpScale = lbl_803DD580;
-        lbl_803DD584->lookAtYScale = lbl_803DB9B0;
-        lbl_803DD584->orbitAngleOffset = lbl_803DB9BC;
-        lbl_803DD584->lookAtXZScale = lbl_803DB9B4;
-        lbl_803DD584->distanceOffset = lbl_803DB9B8;
-        lbl_803DD584->orbitAngleVelocity = 0xb6;
-        lbl_803DD584->minDistance = lbl_803E19E8;
+        gCamNpcSpeakState->targetHeightOffset = lbl_803DB9A8;
+        gCamNpcSpeakState->lookAtHeightOffset = lbl_803DB9AC;
+        gCamNpcSpeakState->anchorLerpScale = lbl_803DD580;
+        gCamNpcSpeakState->lookAtYScale = lbl_803DB9B0;
+        gCamNpcSpeakState->orbitAngleOffset = lbl_803DB9BC;
+        gCamNpcSpeakState->lookAtXZScale = lbl_803DB9B4;
+        gCamNpcSpeakState->distanceOffset = lbl_803DB9B8;
+        gCamNpcSpeakState->orbitAngleVelocity = 0xb6;
+        gCamNpcSpeakState->minDistance = lbl_803E19E8;
         break;
     case 7:
-        lbl_803DD584->distanceOffset = lbl_803E19F8;
-        lbl_803DD584->targetHeightOffset = lbl_803E1A08;
-        lbl_803DD584->anchorLerpScale = lbl_803E1A0C;
-        lbl_803DD584->lookAtXZScale = lbl_803E1A10;
-        lbl_803DD584->lookAtYScale = lbl_803E1A14;
-        lbl_803DD584->orbitAngleOffset = randomGetRange(0x1800, 0x1c00);
+        gCamNpcSpeakState->distanceOffset = lbl_803E19F8;
+        gCamNpcSpeakState->targetHeightOffset = lbl_803E1A08;
+        gCamNpcSpeakState->anchorLerpScale = lbl_803E1A0C;
+        gCamNpcSpeakState->lookAtXZScale = lbl_803E1A10;
+        gCamNpcSpeakState->lookAtYScale = lbl_803E1A14;
+        gCamNpcSpeakState->orbitAngleOffset = randomGetRange(0x1800, 0x1c00);
         break;
     case 8:
-        lbl_803DD584->distanceOffset = lbl_803E1A18;
-        lbl_803DD584->lookAtHeightOffset = lbl_803E1A1C;
+        gCamNpcSpeakState->distanceOffset = lbl_803E1A18;
+        gCamNpcSpeakState->lookAtHeightOffset = lbl_803E1A1C;
         break;
     default:
-        lbl_803DD584->distanceOffset = lbl_803E19F8;
+        gCamNpcSpeakState->distanceOffset = lbl_803E19F8;
         break;
     }
 
-    yawA = getAngle(camera->anim.worldPosX - lbl_803DD584->anchorX,
-                         camera->anim.worldPosZ - lbl_803DD584->anchorZ);
-    yawB = (u16)getAngle(target->anim.worldPosX - lbl_803DD584->anchorX,
-                         target->anim.worldPosZ - lbl_803DD584->anchorZ);
-    spd = lbl_803DD584->orbitAngleOffset;
+    yawA = getAngle(camera->anim.worldPosX - gCamNpcSpeakState->anchorX,
+                         camera->anim.worldPosZ - gCamNpcSpeakState->anchorZ);
+    yawB = (u16)getAngle(target->anim.worldPosX - gCamNpcSpeakState->anchorX,
+                         target->anim.worldPosZ - gCamNpcSpeakState->anchorZ);
+    spd = gCamNpcSpeakState->orbitAngleOffset;
     d1 = (yawB + spd) - yawA;
     if (d1 > 0x8000)
     {
@@ -233,8 +233,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
     }
     if (d2 < d1)
     {
-        lbl_803DD584->orbitAngleOffset = -spd;
-        lbl_803DD584->orbitAngleVelocity = -0x80;
+        gCamNpcSpeakState->orbitAngleOffset = -spd;
+        gCamNpcSpeakState->orbitAngleVelocity = -0x80;
     }
 
     if (mode != 6 && mode != 7 && (npc = (void*)getFocusedNpc()) != NULL)
@@ -260,15 +260,15 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         {
             dd += 0xffff;
         }
-        if ((dd > 0x1000 && lbl_803DD584->orbitAngleOffset > 0) ||
-            (dd < -0x1000 && lbl_803DD584->orbitAngleOffset < 0))
+        if ((dd > 0x1000 && gCamNpcSpeakState->orbitAngleOffset > 0) ||
+            (dd < -0x1000 && gCamNpcSpeakState->orbitAngleOffset < 0))
         {
-            lbl_803DD584->orbitAngleOffset = -lbl_803DD584->orbitAngleOffset;
+            gCamNpcSpeakState->orbitAngleOffset = -gCamNpcSpeakState->orbitAngleOffset;
         }
     }
 
     fn_8010DB7C(target, &va, &vb, &vc);
-    camcontrol_traceMove(&camera->anim.worldPosX, &va, &lbl_803DD584->cameraX, traceWork, 3, 1,
+    camcontrol_traceMove(&camera->anim.worldPosX, &va, &gCamNpcSpeakState->cameraX, traceWork, 3, 1,
                          1, lbl_803E1A20);
 }
 #undef target
@@ -286,31 +286,31 @@ void CameraModeNpcSpeak_update(u8* obj)
     {
         return;
     }
-    speakState = lbl_803DD584;
+    speakState = gCamNpcSpeakState;
     if (speakState->mode == 6)
     {
         speakState->orbitAngleOffset =
             (s32)((f32)speakState->orbitAngleVelocity * timeDelta + speakState->orbitAngleOffset);
-        if (lbl_803DD584->orbitAngleVelocity > 0 && lbl_803DD584->orbitAngleOffset > 0xd6d8)
+        if (gCamNpcSpeakState->orbitAngleVelocity > 0 && gCamNpcSpeakState->orbitAngleOffset > 0xd6d8)
         {
-            lbl_803DD584->orbitAngleOffset = 0xd6d8;
+            gCamNpcSpeakState->orbitAngleOffset = 0xd6d8;
         }
-        else if (lbl_803DD584->orbitAngleVelocity < 0 && lbl_803DD584->orbitAngleOffset < -0xd6d8)
+        else if (gCamNpcSpeakState->orbitAngleVelocity < 0 && gCamNpcSpeakState->orbitAngleOffset < -0xd6d8)
         {
-            lbl_803DD584->orbitAngleOffset = -0xd6d8;
+            gCamNpcSpeakState->orbitAngleOffset = -0xd6d8;
         }
-        fn_8010DB7C(target, &lbl_803DD584->cameraX, &lbl_803DD584->cameraY, &lbl_803DD584->cameraZ);
+        fn_8010DB7C(target, &gCamNpcSpeakState->cameraX, &gCamNpcSpeakState->cameraY, &gCamNpcSpeakState->cameraZ);
     }
-    camera->anim.worldPosX = lbl_803DD584->cameraX;
-    camera->anim.worldPosY = lbl_803DD584->cameraY;
-    camera->anim.worldPosZ = lbl_803DD584->cameraZ;
+    camera->anim.worldPosX = gCamNpcSpeakState->cameraX;
+    camera->anim.worldPosY = gCamNpcSpeakState->cameraY;
+    camera->anim.worldPosZ = gCamNpcSpeakState->cameraZ;
     dx = target->anim.worldPosX - speakState->anchorX;
-    dy = (target->anim.worldPosY + lbl_803DD584->lookAtHeightOffset) - speakState->anchorY;
+    dy = (target->anim.worldPosY + gCamNpcSpeakState->lookAtHeightOffset) - speakState->anchorY;
     dz = target->anim.worldPosZ - speakState->anchorZ;
-    dx *= lbl_803DD584->lookAtXZScale;
-    dy *= lbl_803DD584->lookAtYScale;
-    dz *= lbl_803DD584->lookAtXZScale;
-    if (lbl_803DD584->mode == 3)
+    dx *= gCamNpcSpeakState->lookAtXZScale;
+    dy *= gCamNpcSpeakState->lookAtYScale;
+    dz *= gCamNpcSpeakState->lookAtXZScale;
+    if (gCamNpcSpeakState->mode == 3)
     {
         camera->anim.rotY = (s16)(s32)
         getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
@@ -322,7 +322,7 @@ void CameraModeNpcSpeak_update(u8* obj)
     ey = camera->anim.worldPosY - dy;
     ez = camera->anim.worldPosZ - dz;
     camera->anim.rotX = (s16)(0x8000 - getAngle(ex, ez));
-    if (lbl_803DD584->mode != 3)
+    if (gCamNpcSpeakState->mode != 3)
     {
         camera->anim.rotY = (s16)(s32)
         getAngle(ey, sqrtf(ex * ex + ez * ez));
@@ -335,7 +335,7 @@ void CameraModeNpcSpeak_update(u8* obj)
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
 {
-    CameraModeNpcSpeakState* state = lbl_803DD584;
+    CameraModeNpcSpeakState* state = gCamNpcSpeakState;
     f32 dx;
     f32 dz;
     f32 dist;
@@ -349,24 +349,24 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
     angle = getAngle(dx, dz);
 
     {
-        f32 scale = lbl_803DD584->anchorLerpScale;
+        f32 scale = gCamNpcSpeakState->anchorLerpScale;
         dx *= scale;
         dz *= scale;
     }
     dx += state->anchorX;
     dz += state->anchorZ;
 
-    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)(angle + lbl_803DD584->orbitAngleOffset) / lbl_803E19D4);
-    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)(angle + lbl_803DD584->orbitAngleOffset) / lbl_803E19D4);
+    cosVal = mathSinf(gCamNpcSpeakPi * (f32)(s32)(angle + gCamNpcSpeakState->orbitAngleOffset) / gCamNpcSpeakAngleToRadDivisor);
+    sinVal = mathCosf(gCamNpcSpeakPi * (f32)(s32)(angle + gCamNpcSpeakState->orbitAngleOffset) / gCamNpcSpeakAngleToRadDivisor);
 
-    if (dist < lbl_803DD584->minDistance)
+    if (dist < gCamNpcSpeakState->minDistance)
     {
-        dist = lbl_803DD584->minDistance;
+        dist = gCamNpcSpeakState->minDistance;
     }
-    dist += lbl_803DD584->distanceOffset;
+    dist += gCamNpcSpeakState->distanceOffset;
 
     *outX = cosVal * dist + dx;
-    *outY = (target->anim.worldPosY + lbl_803DD584->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.
+    *outY = (target->anim.worldPosY + gCamNpcSpeakState->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.
         worldPosY) - state->anchorY);
     *outZ = sinVal * dist + dz;
 }

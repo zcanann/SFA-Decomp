@@ -46,7 +46,7 @@ extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
 extern f32 timeDelta;
 extern char lbl_803AD088[];
-extern int lbl_8032852C[];
+extern int gDrHighTopHitObjectKinds[];
 extern int lbl_803DC0BC;
 extern f32 lbl_803DC0C8;
 extern int lbl_803DC0CC;
@@ -83,7 +83,7 @@ extern f32 lbl_803E5BC0;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5BC8;
 extern f32 lbl_803E5BCC;
-extern f32 lbl_803E5BD0;
+extern f32 gDrHighTopPi;
 extern f32 lbl_803E5BD4;
 extern f32 lbl_803E5BD8;
 extern f32 lbl_803E5BDC;
@@ -456,7 +456,7 @@ void fn_801EB634(int obj, int stateRaw)
         hit = *(u32*)(hitReact + 0x50);
         if (((hit != 0) &&
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
-            (hitKind = arrayIndexOf(lbl_8032852C, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
+            (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
             fn_8009A8C8((double)lbl_803E5BB0, obj);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
@@ -547,10 +547,10 @@ void fn_801EB940(short* obj, int stateRaw)
         st->unk590 * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->haloPitchDrift =
         st->haloYawDrift *
-        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk588) / lbl_803E5BD4);
+        mathSinf((gDrHighTopPi * (f32)(s32)st->unk588) / lbl_803E5BD4);
     st->unk598 =
         st->unk590 *
-        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
+        mathSinf((gDrHighTopPi * (f32)(s32)st->unk58A) / lbl_803E5BD4);
     yawDelta = (int)*obj - ((int)st->yaw & 0xffffU);
     if (0x8000 < yawDelta)
     {

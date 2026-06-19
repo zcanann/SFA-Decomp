@@ -105,7 +105,7 @@ extern f32 lbl_803E1C54;
 extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
-extern GameObject* lbl_803DD5E4;
+extern GameObject* gDll19NearestObj;
 extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
 extern f32 lbl_803E1C38;
@@ -118,8 +118,8 @@ extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
 extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern const f32 lbl_803E1C80;
-extern const f32 lbl_803E1C84;
+extern const f32 gDll19AnglePi;
+extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
 void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
@@ -908,24 +908,24 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
                 }
             }
             nearDist = lbl_803E1C58;
-            lbl_803DD5E4 = (GameObject*)ObjGroup_FindNearestObject(4, p1, &nearDist);
+            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(4, p1, &nearDist);
             source->anim.worldPosX = savedX;
             source->anim.worldPosY = savedY;
             source->anim.worldPosZ = savedZ;
-            if (lbl_803DD5E4 != NULL)
+            if (gDll19NearestObj != NULL)
             {
                 f32 xx, yy, zz;
                 xx = source->anim.localPosX;
-                lbl_803DD5E4->anim.worldPosX = xx;
-                lbl_803DD5E4->anim.localPosX = xx;
+                gDll19NearestObj->anim.worldPosX = xx;
+                gDll19NearestObj->anim.localPosX = xx;
                 yy = source->anim.localPosY + lbl_803E1C5C;
-                lbl_803DD5E4->anim.worldPosY = yy;
-                lbl_803DD5E4->anim.localPosY = yy;
+                gDll19NearestObj->anim.worldPosY = yy;
+                gDll19NearestObj->anim.localPosY = yy;
                 zz = source->anim.localPosZ;
-                lbl_803DD5E4->anim.worldPosZ = zz;
-                lbl_803DD5E4->anim.localPosZ = zz;
+                gDll19NearestObj->anim.worldPosZ = zz;
+                gDll19NearestObj->anim.localPosZ = zz;
             }
-            return (int)lbl_803DD5E4;
+            return (int)gDll19NearestObj;
         case 6:
             setup = Obj_AllocObjectSetup(48, 1702);
             *(u8*)((u8*)setup + 27) = 0;
@@ -956,8 +956,8 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     *(u8*)((u8*)setup + 6) = state[6];
     *(u8*)((u8*)setup + 5) = state[5];
     *(u8*)((u8*)setup + 7) = state[7];
-    lbl_803DD5E4 = Obj_SetupObject(setup, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&source->anim.parent);
-    return (int)lbl_803DD5E4;
+    gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&source->anim.parent);
+    return (int)gDll19NearestObj;
 }
 
 void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, int p7)
@@ -1108,10 +1108,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
 {
     extern int* gPlayerInterface;
-    extern f32 lbl_803DD5D8;
-    extern s8 lbl_803DD5DC;
+    extern f32 gDll19SeqMinDist;
+    extern s8 gDll19SeqStallCount;
     extern const f32 lbl_803E1C2C;
-    extern f32 lbl_803E1C70;
+    extern f32 gDll19SeqMinDistInit;
     extern f32 lbl_803E1C74;
     extern const f32 lbl_803E1C6C;
     extern const f32 lbl_803E1C5C;
@@ -1136,8 +1136,8 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
         seq->posOffsetX = ((GameObject*)obj)->anim.localPosX;
         seq->posOffsetY = ((GameObject*)obj)->anim.localPosY;
         seq->posOffsetZ = ((GameObject*)obj)->anim.localPosZ;
-        lbl_803DD5D8 = lbl_803E1C70;
-        lbl_803DD5DC = 0;
+        gDll19SeqMinDist = gDll19SeqMinDistInit;
+        gDll19SeqStallCount = 0;
     }
     seq->flags = 0;
     seq->movementState = 1;
@@ -1166,11 +1166,11 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
         {
             step = lbl_803E1C5C;
         }
-        if (dist <= lbl_803DD5D8)
+        if (dist <= gDll19SeqMinDist)
         {
-            lbl_803DD5DC = lbl_803DD5DC + 1;
+            gDll19SeqStallCount = gDll19SeqStallCount + 1;
         }
-        if (dist >= total || lbl_803DD5DC > 9)
+        if (dist >= total || gDll19SeqStallCount > 9)
         {
             char* t2 = *(char**)&((BaddieState*)st)->targetObj;
             int delta = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t2;
@@ -1191,7 +1191,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
                 delta = -0x2000;
             }
             ((GameObject*)obj)->anim.rotX -= (delta * framesThisStep) >> 3;
-            if ((s8)lbl_803DD5DC > 10)
+            if ((s8)gDll19SeqStallCount > 10)
             {
                 delta = 0;
             }
@@ -1220,7 +1220,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
                 obj, st, td, td, p4, p5);
         }
     }
-    lbl_803DD5D8 = dist;
+    gDll19SeqMinDist = dist;
     if ((s8)seq->movementState == 0)
     {
         *(u8*)(st + 0x405) = 0;
@@ -1387,7 +1387,7 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
     }
     for (i = 0; i < 4; i++)
     {
-        a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
+        a = gDll19AnglePi * (f32)((s16)cur + (i << 14)) / gDll19BinaryAngleScale;
         world[0] = ((GameObject*)obj)->anim.localPosX - dist * mathSinf(a);
         world[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
         world[2] = ((GameObject*)obj)->anim.localPosZ - dist * mathCosf(a);
@@ -1443,8 +1443,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
         f32 base;
         f32 d1;
         f32 d2;
-        c = mathSinf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
-        s = mathCosf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
+        c = mathSinf(gDll19AnglePi * (f32)((GameObject*)obj)->anim.rotX / gDll19BinaryAngleScale);
+        s = mathCosf(gDll19AnglePi * (f32)((GameObject*)obj)->anim.rotX / gDll19BinaryAngleScale);
         base = -(c * (px - c) + s * (pz - s));
         d1 = base + (c * ((BaddieState*)st)->posY + s * *(f32*)(st + 0x20));
         d2 = base + (c * *(f32*)(st + 0x8c) + s * *(f32*)(st + 0x94));
@@ -1472,8 +1472,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
         fx = px;
         fz = pz;
     }
-    c = mathSinf(lbl_803E1C80 * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
-    s = mathCosf(lbl_803E1C80 * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
+    c = mathSinf(gDll19AnglePi * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / gDll19BinaryAngleScale);
+    s = mathCosf(gDll19AnglePi * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / gDll19BinaryAngleScale);
     return -(-(((GameObject*)obj)->anim.localPosX * c + ((GameObject*)obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
 

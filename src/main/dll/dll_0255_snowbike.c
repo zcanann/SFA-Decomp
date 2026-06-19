@@ -111,7 +111,7 @@ extern f32 lbl_803E5B90;
 extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
-extern int lbl_80328590[];
+extern int gSnowBikeMountRomListTable[];
 extern void objRenderFn_8003b8f4(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
@@ -126,8 +126,8 @@ extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern s16 lbl_8032855C[];
-extern char lbl_803DC0E4;
+extern s16 gSnowBikeHitObjectIdTable[];
+extern char sSnowBikeVelDebugFmt;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E5B28;
 extern f32 lbl_803E5B88;
@@ -181,7 +181,7 @@ extern int getAngle(float y, float x);
 extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
-extern f32 lbl_803E5C18;
+extern f32 gSnowBikeBamToDeg;
 
 void SnowBike_func17(void)
 {
@@ -224,7 +224,7 @@ void SnowBike_func15(int obj)
     void* found;
     f32 zero;
 
-    table = (int*)((int)lbl_80328590 + (int)(((SnowBikeMountState*)t)->unk434) * 12);
+    table = (int*)((int)gSnowBikeMountRomListTable + (int)(((SnowBikeMountState*)t)->unk434) * 12);
     found = mapRomListFindItem(table[((SnowBikeMountState*)t)->unk435], 0, 0, 0, 0);
     if (found != NULL)
     {
@@ -538,7 +538,7 @@ void SnowBike_hitDetect(int obj)
     }
     if (state->unk3D6 == 0)
     {
-        if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0 && arrayIndexOf(lbl_8032855C, 10, ((GameObject*)other)->anim.seqId) == -1)
+        if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0 && arrayIndexOf(gSnowBikeHitObjectIdTable, 10, ((GameObject*)other)->anim.seqId) == -1)
         {
         }
         else
@@ -587,7 +587,7 @@ void SnowBike_hitDetect(int obj)
     if (*(void**)&state->unk42C != NULL)
     {
         k = lbl_803E5C00;
-        OSReport(&lbl_803DC0E4, mag);
+        OSReport(&sSnowBikeVelDebugFmt, mag);
         if (*(s16*)(state->unk42C + 0x46) == 909
             || *(s16*)(state->unk42C + 0x46) == 910
             || *(s16*)(state->unk42C + 0x46) == 1236)
@@ -1021,7 +1021,7 @@ void SnowBike_update(int obj)
                 ((SnowBikeState*)state)->buttonsJustPressed = getButtonsJustPressed(0);
                 ((SnowBikeState*)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);
                 ((SnowBikeState*)state)->unk44C = (f32)(u16)
-                getAngle(((SnowBikeState*)state)->stickX, (f32) - (int)((SnowBikeState*)state)->stickY) / lbl_803E5C18;
+                getAngle(((SnowBikeState*)state)->stickX, (f32) - (int)((SnowBikeState*)state)->stickY) / gSnowBikeBamToDeg;
                 ((SnowBikeState*)state)->stickX = ((SnowBikeState*)state)->stickX / lbl_803E5B6C;
                 v = ((SnowBikeState*)state)->stickX;
                 if (v < lbl_803E5B70)
