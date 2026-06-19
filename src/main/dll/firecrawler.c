@@ -1850,7 +1850,8 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    if (*(f32*)(state + 0x328) != (cap = lbl_803E2BA8) && *(u8*)(state + 0x33f) != 0)
+    cap = lbl_803E2BA8;
+    if (*(f32*)(state + 0x328) != cap && *(u8*)(state + 0x33f) != 0)
     {
         *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
         if (*(f32*)(state + 0x328) <= cap)
@@ -1905,9 +1906,10 @@ void crawler_updateB(s16* obj, u8* state)
                         if (mv == 0)
                         {
                             int i2 = *(u8*)(state + 0x33e) * 0xc;
+                            u8* p9 = (u8*)t4 + 9;
                             Baddie_SetMove((int*)obj, state, *(u8*)((char*)t4 + i2 + 8), *(f32*)((int)t4 + i2), 0,
                                         *(u8*)((char*)t4 + i2 + 0xa));
-                            *(u8*)(state + 0x33e) = *(u8*)((char*)t4 + *(u8*)(state + 0x33e) * 0xc + 9);
+                            *(u8*)(state + 0x33e) = p9[*(u8*)(state + 0x33e) * 0xc];
                         }
                         else
                         {
@@ -1985,7 +1987,10 @@ void crawler_updateB(s16* obj, u8* state)
                                     *(u8*)((char*)tC + i + 0xa));
                     }
                 }
-                *(u8*)(state + 0x33e) = *(u8*)((char*)t4 + *(u8*)(state + 0x33e) * 0xc + 9);
+                {
+                    u8* p9 = (u8*)t4 + 9;
+                    *(u8*)(state + 0x33e) = p9[*(u8*)(state + 0x33e) * 0xc];
+                }
             }
         }
     }
