@@ -1166,7 +1166,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 }
                 objAudioFn_800393f8(obj, (void*)((int)((char*)inner + 0x3bc)), 0x28e, 0x1000, -1, 1);
                 {
-                    s16 d = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)hitObj;
+                    s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
                     if (d > 0x8000)
                     {
                         d -= 0xffff;
