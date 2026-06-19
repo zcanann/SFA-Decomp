@@ -62,11 +62,30 @@ def main():
         Path("objdiff.json").write_bytes(bak)
     if r.returncode != 0:
         print("report FAILED:\n", r.stderr[-2000:]); sys.exit(1)
-    base = json.load(open("build/GSAE01/lbl_baseline.json"))
-    cur = {u["name"]: u["measures"].get("fuzzy_match_percent")
-           for u in json.load(open("build/GSAE01/report.json"))["units"]}
-    reg = [(n, base[n], cur[n]) for n in cur
-           if n in base and cur[n] is not None and base[n] is not None and cur[n] < base[n] - 1e-6]
+    def regressions():
+        base = json.load(open("build/GSAE01/lbl_baseline.json"))
+        cur = {u["name"]: u["measures"].get("fuzzy_match_percent")
+               for u in json.load(open("build/GSAE01/report.json"))["units"]}
+        return [(n, base[n], cur[n]) for n in cur
+                if n in base and cur[n] is not None and base[n] is not None and cur[n] < base[n] - 1e-6], cur
+
+    reg, cur = regressions()
+    # Stale-.o false alarms: a flagged unit we didn't touch may just need rebuilding
+    # (its .o went stale from an upstream shared-header change). Rebuild flagged units
+    # fresh and re-report before treating any regression as real.
+    if reg:
+        objdiff = json.load(open("objdiff.json"))
+        by_name = {u["name"]: u for u in objdiff["units"]}
+        rebuilt = []
+        for n, _, _ in reg:
+            u = by_name.get(n)
+            if u and u.get("base_path"):
+                Path(u["base_path"]).unlink(missing_ok=True)
+                rebuilt.append(u["base_path"])
+        if rebuilt:
+            run(["ninja", "-k", "0"] + rebuilt)
+            run(["build/tools/objdiff-cli", "report", "generate", "-o", "build/GSAE01/report.json"])
+            reg, cur = regressions()
     if reg:
         print(f"REGRESSIONS ({len(reg)}):")
         for n, b, c in sorted(reg, key=lambda x: x[2] - x[1])[:30]:
