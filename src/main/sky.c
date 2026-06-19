@@ -26,7 +26,7 @@ void envFxActFn_800887f8(u8 value)
     int masked;
 
     lbl_803DD140 = value;
-    masked = (u8)value;
+    masked = value;
     masked &= 8;
     if (masked == 0)
     {
