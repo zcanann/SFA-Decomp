@@ -2211,8 +2211,8 @@ void fn_80026928(int* obj, int b, int* p3)
         int lim;
 
         *(f32*)(dst + 0x18) = *(f32*)(*(int*)(b + 0x3c) + e * 0x1c + 4);
-        *(f32*)(dst + 0x1c) = *(f32*)(*(int*)(b + 0x3c) + e * 0x1c + 8);
-        *(f32*)(dst + 0x20) = *(f32*)(*(int*)(b + 0x3c) + e * 0x1c + 0xc);
+        *(f32*)&((ObjModel*)dst)->vtxBuf0 = *(f32*)(*(int*)(b + 0x3c) + e * 0x1c + 8);
+        *(f32*)&((ObjModel*)dst)->vtxBuf1 = *(f32*)(*(int*)(b + 0x3c) + e * 0x1c + 0xc);
 
         idx = e;
         hdr = *(u8**)obj;
@@ -2229,7 +2229,7 @@ void fn_80026928(int* obj, int b, int* p3)
         {
             idx = 0;
         }
-        *(f32*)(dst + 0) = *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0xc);
+        *(f32*)&((ObjModel*)dst)->file = *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0xc);
 
         idx = e;
         hdr = *(u8**)obj;
