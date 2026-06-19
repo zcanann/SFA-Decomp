@@ -641,9 +641,9 @@ void FUN_8019f1dc(void)
             savedX = (double)((GameObject *)obj)->anim.localPosX;
             savedY = (double)((GameObject *)obj)->anim.localPosY;
             savedZ = (double)((GameObject *)obj)->anim.localPosZ;
-            *(u32*)(obj + 0xc) = *(u32*)(childOrTarget + 0xc);
-            *(u32*)(obj + 0x10) = *(u32*)(childOrTarget + 0x10);
-            *(u32*)(obj + 0x14) = *(u32*)(childOrTarget + 0x14);
+            *(u32*)&((GameObject*)obj)->anim.localPosX = *(u32*)(childOrTarget + 0xc);
+            *(u32*)&((GameObject*)obj)->anim.localPosY = *(u32*)(childOrTarget + 0x10);
+            *(u32*)&((GameObject*)obj)->anim.localPosZ = *(u32*)(childOrTarget + 0x14);
             FUN_800e8630(obj);
             ((GameObject *)obj)->anim.localPosX = (float)savedX;
             ((GameObject *)obj)->anim.localPosY = (float)savedY;
