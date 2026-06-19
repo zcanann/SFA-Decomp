@@ -414,18 +414,18 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
     kMax = lbl_803E0504;
     do
     {
-        if (*(s32*)(o + 0x10) < 0)
+        if (((CheckpointRouteState*)o)->startCheckpointId < 0)
         {
             return 1;
         }
-        n = Checkpoint_find(*(s32*)(o + 0x10), &local_idx);
+        n = Checkpoint_find(((CheckpointRouteState*)o)->startCheckpointId, &local_idx);
         if (n == NULL)
         {
             return 1;
         }
         if (n->forwardLink0 < 0)
         {
-            *(s32*)(o + 0x10) = -1;
+            ((CheckpointRouteState*)o)->startCheckpointId = -1;
             return 1;
         }
         alt = 0;
@@ -439,7 +439,7 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         }
         len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
             ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
-        t = *(f32*)(o + 8) + dist / len;
+        t = ((CheckpointRouteState*)o)->pathT + dist / len;
         clamp = 0;
         if (t < kMin)
         {
@@ -478,25 +478,25 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         }
         if (clamp == -1 && seg < dist)
         {
-            *(s32*)(o + 0x10) = n->backLinkIds[alt];
-            *(f32*)(o + 8) = lbl_803E0508;
-            if (alt != 0 && *(s32*)(o + 0x10) < 0)
+            ((CheckpointRouteState*)o)->startCheckpointId = n->backLinkIds[alt];
+            ((CheckpointRouteState*)o)->pathT = lbl_803E0508;
+            if (alt != 0 && ((CheckpointRouteState*)o)->startCheckpointId < 0)
             {
-                *(s32*)(o + 0x10) = n->backLink0;
+                ((CheckpointRouteState*)o)->startCheckpointId = n->backLink0;
             }
         }
         else if (clamp == 1 && seg < dist)
         {
-            *(s32*)(o + 0x10) = n->forwardLinkIds[alt];
-            *(f32*)(o + 8) = lbl_803E04E8;
-            if (alt != 0 && *(s32*)(o + 0x10) < 0)
+            ((CheckpointRouteState*)o)->startCheckpointId = n->forwardLinkIds[alt];
+            ((CheckpointRouteState*)o)->pathT = lbl_803E04E8;
+            if (alt != 0 && ((CheckpointRouteState*)o)->startCheckpointId < 0)
             {
-                *(s32*)(o + 0x10) = n->forwardLink0;
+                ((CheckpointRouteState*)o)->startCheckpointId = n->forwardLink0;
             }
         }
         else
         {
-            *(f32*)(o + 8) = t;
+            ((CheckpointRouteState*)o)->pathT = t;
         }
         dist -= seg;
         *(f32*)(out + 0xc) = x;
