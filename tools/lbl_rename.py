@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SYMS = ROOT / "config/GSAE01/symbols.txt"
-SRC = ROOT / "src"
+CODE_DIRS = [ROOT / "src", ROOT / "include"]
 
 NAME_RE = re.compile(r"^[A-Za-z_]\w*$")
 
@@ -66,8 +66,11 @@ def apply(mapping: dict[str, str]) -> dict:
         SYMS.write_bytes(new_text.encode("utf-8"))
         stats["symbols"] = n
 
-    # source tree (bytes for SJIS safety)
-    for f in list(SRC.rglob("*.c")) + list(SRC.rglob("*.h")):
+    # source + headers (bytes for SJIS safety)
+    code_files = []
+    for d in CODE_DIRS:
+        code_files += list(d.rglob("*.c")) + list(d.rglob("*.h"))
+    for f in code_files:
         raw = f.read_bytes()
         try:
             txt = raw.decode("utf-8")
