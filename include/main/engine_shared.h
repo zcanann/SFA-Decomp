@@ -801,7 +801,7 @@ extern void *gMidiWadPayloadStart;
 extern int gMidiWadPayloadSize;
 extern int gMidiWadArenaSize;
 extern char sMidiWadPath[];
-extern uint mmSetFreeDelay(uint delay);
+extern u32 mmSetFreeDelay(u32 delay);
 extern u8 testAndSet_onlyUseHeap3(int arg);
 extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
 extern void fn_80008F38(void *addr, u32 dest, u32 size);

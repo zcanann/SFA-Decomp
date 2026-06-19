@@ -20,63 +20,63 @@ extern ObjectDescriptor24 gShopObjDescriptor;
 
 void SB_FireBall_hitDetect(int *obj);
 void FUN_801e4350(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
-void FUN_801e451c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801e4378(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
+void FUN_801e451c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
-void FUN_801e481c(uint param_1);
+void FUN_801e481c(u32 param_1);
 void FUN_801e48f4(int obj);
 void FUN_801e4928(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e4950(int param_1);
-void FUN_801e4a14(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9);
+void FUN_801e4a14(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9);
 void FUN_801e4c58(int param_1);
 void FUN_801e4cb0(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801e4cd8(uint param_1);
-void FUN_801e4d6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9);
+void FUN_801e4cd8(u32 param_1);
+void FUN_801e4d6c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9);
 void FUN_801e50a4(int param_1);
-undefined4 FUN_801e514c(uint param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+u32 FUN_801e514c(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801e521c(int param_1);
-void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,undefined4 param_10,undefined4 param_11,int param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_801e55c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,int param_10);
-void FUN_801e55c4(uint param_1);
+void FUN_801e524c(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,u32 param_11,int param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+void FUN_801e55c0(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,int param_10);
+void FUN_801e55c4(u32 param_1);
 void FUN_801e5684(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e56ac(int param_1);
 void FUN_801e5734(int obj);
 void FUN_801e5790(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e57e0(short *param_1);
-void FUN_801e59ec(uint param_1);
+void FUN_801e59ec(u32 param_1);
 void FUN_801e5afc(int param_1);
 void FUN_801e5b80(int param_1);
-void FUN_801e5bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801e5bd4(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
 void FUN_801e5dd0(int param_1,int param_2);
 void FUN_801e5f78(int param_1);
 void FUN_801e5fc4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-undefined4 FUN_801e5fec(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+u32 FUN_801e5fec(int param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-void FUN_801e60cc(uint param_1);
+void FUN_801e60cc(u32 param_1);
 void FUN_801e62b8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e62e0(int param_1);
-void FUN_801e63f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void FUN_801e63f4(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,int param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 void FUN_801e64c4(void);
-void FUN_801e6510(uint param_1);
-void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801e6510(u32 param_1);
+void FUN_801e6558(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
 void shop_initialise(void);
 void shop_release(void);

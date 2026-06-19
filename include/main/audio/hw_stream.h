@@ -5,8 +5,8 @@
 
 void hwRemoveInput(u32 idx, void *input);
 int hwChangeStudio(int slot);
-void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
-              undefined4 callbackArg);
+void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback,
+              u32 callbackArg);
 void hwFlushStream(int stream);
 void hwInitStream(void);
 

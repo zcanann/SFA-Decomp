@@ -94,7 +94,7 @@ extern void *gKTRexState;
 extern void *gKTRexRuntime;
 extern void ktrex_initialiseStateHandlerTables(void);
 extern int ktrex_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
-extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void objRenderFn_8003b8f4(void *obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void *Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void *p);
@@ -277,7 +277,7 @@ extern void PSVECNormalize(f32 *out, f32 *in);
 extern void PSVECScale(f32 *out, f32 *in, f32 scale);
 extern void PSVECAdd(f32 *out, f32 *a, f32 *b);
 extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  uint *outHitVolume);
+                                  u32 *outHitVolume);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern f32 lbl_803DC2B0;
 extern f32 lbl_803DC2B4;
@@ -325,7 +325,7 @@ extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
 extern void lightningRender(void *p);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHitObject, int *outSphereIndex,
-                                             uint *outHitVolume, f32 *outHitPosX,
+                                             u32 *outHitVolume, f32 *outHitPosX,
                                              f32 *outHitPosY, f32 *outHitPosZ);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *p, f32 v);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);

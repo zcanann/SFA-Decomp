@@ -36,7 +36,7 @@ typedef struct DfpStatue1Object {
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   DfpStatue1State *state;
-  undefined4 (*updateState)(int obj, undefined4 param_2, int hitState);
+  u32 (*updateState)(int obj, u32 param_2, int hitState);
 } DfpStatue1Object;
 
 STATIC_ASSERT(offsetof(DfpStatue1MapData, yawByte) == 0x18);

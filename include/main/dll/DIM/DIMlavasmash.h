@@ -5,9 +5,9 @@
 #include "main/objanim_update.h"
 
 void dimlogfire_update(int obj);
-undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
-void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+u32 FUN_801b09dc(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
+void FUN_801b0ae8(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
 void dimlogfire_init(int obj,int def);
 int dimsnowball_getExtraSize(void);

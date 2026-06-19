@@ -13,11 +13,11 @@ typedef struct MMSHShrineSequenceState {
   u8 commandCount;
 } MMSHShrineSequenceState;
 
-int MMSH_Shrine_SeqFn(int obj, undefined4 unused, MMSHShrineSequenceState *seq);
+int MMSH_Shrine_SeqFn(int obj, u32 unused, MMSHShrineSequenceState *seq);
 int mmsh_shrine_getExtraSize(void);
 int mmsh_shrine_getObjectTypeId(void);
 void mmsh_shrine_free(int param_1);
-void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
+void mmsh_shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
                         char flag);
 void mmsh_shrine_hitDetect(void);
 void mmsh_shrine_update(int param_1);

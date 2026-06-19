@@ -26,8 +26,8 @@ typedef struct SBGalleonVtbl {
 
 void fn_801E1588(int param_1,int param_2);
 int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
-undefined4 FUN_801e1ee4(void);
-undefined4 FUN_801e2184(void);
+u32 FUN_801e1ee4(void);
+u32 FUN_801e2184(void);
 int SB_Galleon_func0E(int *obj);
 u8 SB_Galleon_getDamagePhase(int *obj);
 int SB_Galleon_getPhase(int *obj);

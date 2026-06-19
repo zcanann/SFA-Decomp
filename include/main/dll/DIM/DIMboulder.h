@@ -12,40 +12,40 @@ extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
 void imicemountain_updateEventState(int *obj);
 void FUN_801ac24c(int param_1);
-void FUN_801ac340(int param_1,undefined *param_2);
-void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-undefined4 FUN_801accf4(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+void FUN_801ac340(int param_1,u8 *param_2);
+void FUN_801ac490(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 int param_9,u32 param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+u32 FUN_801accf4(int param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801acd7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801acda4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void FUN_801acda4(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 int param_9,u32 param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 void FUN_801ad248(int param_1);
 double FUN_801ad24c(int param_1);
 void FUN_801ad318(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801ad350(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
-                 ,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_801ad350(u64 param_1,double param_2,double param_3,double param_4,u64 param_5
+                 ,u64 param_6,u64 param_7,u64 param_8);
 void FUN_801ad97c(int param_1,int param_2);
 void FUN_801ad980(void);
-undefined4
-FUN_801ad984(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
-void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+u32
+FUN_801ad984(u64 param_1,u64 param_2,double param_3,u64 param_4,
+            u64 param_5,u64 param_6,u64 param_7,u64 param_8,int param_9);
+void FUN_801adb28(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
 void FUN_801adbec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801adc20(undefined2 *param_1);
-void FUN_801adc9c(undefined2 *param_1,int param_2);
-void FUN_801adca0(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 param_6,char param_7,int param_8,int param_9);
-undefined4
-FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10,
-            ObjAnimUpdateState *animUpdate,undefined4 param_12,uint *param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
+void FUN_801adc20(u16 *param_1);
+void FUN_801adc9c(u16 *param_1,int param_2);
+void FUN_801adca0(u16 *param_1,u16 *param_2,u32 param_3,u32 param_4,
+                 u32 param_5,u32 param_6,char param_7,int param_8,int param_9);
+u32
+FUN_801addec(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
+            u64 param_6,u64 param_7,u64 param_8,int param_9,u32 param_10,
+            ObjAnimUpdateState *animUpdate,u32 param_12,u32 *param_13,u32 param_14,
+            u32 param_15,u32 param_16);
 
 int imicemountain_getExtraSize(void);
 int imicemountain_getObjectTypeId(void);

@@ -4,9 +4,9 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
-                 undefined4 param_13,undefined *param_14,int param_15,undefined4 param_16);
+void FUN_801f4ecc(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,ObjAnimUpdateState *animUpdate,u32 param_12,
+                 u32 param_13,u8 *param_14,int param_15,u32 param_16);
 
 #endif /* MAIN_DLL_BOULDER_H_ */

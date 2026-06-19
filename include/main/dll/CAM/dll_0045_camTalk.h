@@ -7,9 +7,9 @@
 
 typedef struct CamTalkTransformInput {
   u16 yaw;
-  undefined2 pitch;
-  undefined2 roll;
-  undefined2 pad;
+  u16 pitch;
+  u16 roll;
+  u16 pad;
   f32 scale;
   f32 x;
   f32 y;

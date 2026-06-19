@@ -3,17 +3,17 @@
 
 #include "ghidra_import.h"
 
-undefined4 fn_801659B8(s16 *obj,u32 *params);
-undefined4
-FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,uint *param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
-undefined4
-FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,uint *param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
+u32 fn_801659B8(s16 *obj,u32 *params);
+u32
+FUN_801659b8(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
+            u64 param_6,u64 param_7,u64 param_8,short *param_9,u32 *param_10,
+            u32 param_11,u32 param_12,u32 param_13,u32 param_14,
+            u32 param_15,u32 param_16);
+u32
+FUN_80165e74(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
+            u64 param_6,u64 param_7,u64 param_8,short *param_9,u32 *param_10,
+            u32 param_11,u32 param_12,u32 param_13,u32 param_14,
+            u32 param_15,u32 param_16);
 void fn_80165B3C(int obj,int state);
 void FUN_801660c0(int param_1,int param_2);
 struct LandedArwingState;
@@ -25,8 +25,8 @@ void fn_80166840(int obj,int state,float *hit,float *end);
 void FUN_80166c6c(int param_1,int param_2,float *param_3,float *param_4);
 void updateConstrainedChaseVelocity(int obj,float targetX,float targetY,float targetZ,float blend);
 void FUN_80166e9c(double param_1,double param_2,double param_3,double param_4,int param_5);
-void FUN_8016716c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_8016716c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
 void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible);
 void FUN_8016725c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);

@@ -15,9 +15,9 @@ void FUN_8018c1a0(int param_1);
 void FUN_8018c4a0(int param_1);
 void FUN_8018c528(int param_1);
 void FUN_8018c5b0(void);
-void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void FUN_8018c928(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
 void FUN_8018cbc8(int param_1);
 void FUN_8018cbcc(int param_1);
 void fuelcell_modelMtxFn(u8 *model);

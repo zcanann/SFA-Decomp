@@ -3,7 +3,7 @@
 
 #include "main/dll/SH/SHthorntail_internal.h"
 
-undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj);
-undefined4 playerFn_801d6d58(void);
+u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj);
+u32 playerFn_801d6d58(void);
 
 #endif /* MAIN_DLL_SC_SCLANTERN_H_ */

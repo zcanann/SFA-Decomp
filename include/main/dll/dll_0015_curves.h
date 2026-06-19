@@ -206,38 +206,38 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, updateMode) == 0x262);
 STATIC_ASSERT(offsetof(CurvesCollisionState, secondaryHitType) == 0x263);
 STATIC_ASSERT(offsetof(CurvesCollisionState, activeTimer) == 0x264);
 
-undefined4
+u32
 RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
                                       float *outLateralOffset,float *outVerticalOffset,
                                       float *outPhase);
-undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int param_4,int param_5);
+u32 FUN_800e1b2c(double param_1,u64 param_2,double param_3,int param_4,int param_5);
 int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance);
 int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4);
-int RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4);
+int RomCurve_func13(u32 curveId,int typeFilter,u32 param_3,int *param_4);
 int RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outCurveId);
 int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,int *previousLinkId);
 int curves_findByAction(int action);
-f32 curves_distXZ(f32 x,f32 z,uint curveId);
-f32 curves_distFn0B(int obj,uint curveId);
+f32 curves_distXZ(f32 x,f32 z,u32 curveId);
+f32 curves_distFn0B(int obj,u32 curveId);
 f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ);
-RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
+RomCurveDef *RomCurve_findByIdWithIndex(u32 curveId,int *outIndex);
 int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ, s8 *outTypes);
 int RomCurve_countRandomPoints(RomCurveDef *curve);
-int RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ);
+int RomCurve_func1E(u32 *curveIds,float *outX,float *outY,float *outZ);
 void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds);
 int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int excludeLinkId);
 f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,RomCurveSegmentProjection *segment);
 int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId);
 int RomCurve_getLinkIds(RomCurveDef *curve,int excludeLinkId,int *outIds);
 int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId);
-RomCurveDef *RomCurve_getById(uint curveId);
+RomCurveDef *RomCurve_getById(u32 curveId);
 int RomCurve_find(int *types,int typeCount,f32 x,f32 y,f32 z,int action);
 void curves_remove(RomCurveDef *curve);
 void curves_addCurveDef(RomCurveDef *curve);
 void curves_initialise(void);
 void curves_release(void);
 void curves_countRandomPoints(int obj,CurvesCollisionState *state);
-void FUN_800e49c0(int param_1,uint *param_2);
+void FUN_800e49c0(int param_1,u32 *param_2);
 void fn_800E56A4(int obj,CurvesCollisionState *state);
 void fn_800E58FC(int obj,CurvesCollisionState *state);
 void fn_800E5CBC(short *param_1,int param_2);
@@ -250,10 +250,10 @@ void curves_preparePointCollisionFrame(int obj,CurvesCollisionState *state);
 void curves_updateLocalPointTransforms(int obj,CurvesCollisionState *state);
 void dll_15_func0A(int obj,CurvesCollisionState *state);
 f32 dll_15_func0B(int obj,f32 x,f32 baseY,f32 z,f32 height);
-double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);
+double FUN_800e56bc(u64 param_1,double param_2,double param_3,double param_4,int param_5);
 RomCurvePoint *curves_getCurves(int obj,f32 x,f32 z,u32 *outCount,int queryAll);
-void dll_15_func08(short *curveObj,CurvesCollisionState *state,uint updateValue,f32 step);
-void FUN_800e6140(undefined4 param_1,CurvesCollisionState *state);
+void dll_15_func08(short *curveObj,CurvesCollisionState *state,u32 updateValue,f32 step);
+void FUN_800e6140(u32 param_1,CurvesCollisionState *state);
 void dll_15_func05(CurvesCollisionState *state,int count,f32 *segmentLocalPoints,f32 *radii,
                    s8 *types);
 void dll_15_func06(GameObject *obj,CurvesCollisionState *state);
@@ -262,9 +262,9 @@ void FUN_800e65c8(CurvesCollisionState *state,u8 pointCount,f32 *localPointPosit
 void curves_setLocalPointCollisionEx(CurvesCollisionState *state,int pointCount,
                                      f32 *localPointPositions,f32 *localPointRadii,
                                      int primaryHitType,int secondaryHitType);
-void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subtype);
+void curves_clear(CurvesCollisionState *state,int updateMode,u32 flags,int subtype);
 int pushable_savePos(int obj);
-uint playerHasKrazoaSpirit(u8 checkStoryBits,uint bit);
-void saveFileStruct_setCheatActive(uint param_1,u8 param_2);
+u32 playerHasKrazoaSpirit(u8 checkStoryBits,u32 bit);
+void saveFileStruct_setCheatActive(u32 param_1,u8 param_2);
 
 #endif /* MAIN_DLL_CURVES_H_ */

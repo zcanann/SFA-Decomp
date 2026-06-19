@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801c5990(u64 param_1,u64 param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
 void FUN_801c5c2c(int param_1);
 struct MmShrineAnimObj;

@@ -12,7 +12,7 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
 void fn_8006FC00(int param_1);
 void mapInitFn_8006fccc(void);
 int depthReadRequestPoll(int x, int y, int id);
-uint getScreenResolution(void);
+u32 getScreenResolution(void);
 void setScreenWidth(u32 param_1);
 void clearScreenWidth(void);
 void matrixFn_8006ff0c(f32 param_1,f32 param_2,f32 param_3,f32 param_4,f32 param_5,

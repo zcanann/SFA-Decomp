@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void DFSH_LaserBeam_update(uint param_1);
+void DFSH_LaserBeam_update(u32 param_1);
 void DFSH_LaserBeam_free(void *obj,void *config);
 void DFSH_LaserBeam_release(void);
 void DFSH_LaserBeam_initialise(void);

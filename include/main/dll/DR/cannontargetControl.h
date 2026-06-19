@@ -5,11 +5,11 @@
 
 void gunpowderbarrel_hitDetect(int param_1);
 void FUN_801a1df8(int param_1,int param_2);
-void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 param_6);
+void FUN_801a1ec4(u32 param_1,u32 param_2,u32 param_3,u32 param_4,
+                 u32 param_5,u32 param_6);
 void FUN_801a1fb8(int *param_1);
-void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_801a2350(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 int blasted_getExtraSize(void);
 int blasted_getObjectTypeId(void);
 void blasted_free(void);

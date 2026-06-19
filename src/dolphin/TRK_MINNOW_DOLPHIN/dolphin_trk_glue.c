@@ -137,13 +137,13 @@ UARTError WriteUARTFlush(void)
     return error;
 }
 
-UARTError WriteUART1(u8 u8)
+UARTError WriteUART1(u8 byte)
 {
-    lbl_803D99A4[lbl_803D8888.writeLen++] = u8;
+    lbl_803D99A4[lbl_803D8888.writeLen++] = byte;
     return UART_NoError;
 }
 
-UARTError TRKReadUARTPoll(s8* u8)
+UARTError TRKReadUARTPoll(s8* byte)
 {
     UARTError error = UART_NoData;
     UARTInlineBuffer* uart = &lbl_803D8888;
@@ -166,7 +166,7 @@ UARTError TRKReadUARTPoll(s8* u8)
     }
 
     if (uart->readPos < uart->readLen) {
-        *u8 = uart->readData[uart->readPos++];
+        *byte = uart->readData[uart->readPos++];
         error = UART_NoError;
     }
 

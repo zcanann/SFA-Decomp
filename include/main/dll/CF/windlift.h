@@ -5,8 +5,8 @@
 #include "main/object_descriptor.h"
 
 void scarab_update(int obj);
-void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_80184a54(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void fn_80185868(int obj, f32 arg);
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState);
 void fn_80185B74(int obj);

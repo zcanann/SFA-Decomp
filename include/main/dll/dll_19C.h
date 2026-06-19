@@ -6,13 +6,13 @@
 
 void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void dfsh_shrine_update(int obj);
-void FUN_801c3134(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+void FUN_801c3134(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801c3288(int param_1);
 void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9);
-void FUN_801c3a9c(undefined2 *param_1,int param_2);
+void FUN_801c33b4(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9);
+void FUN_801c3a9c(u16 *param_1,int param_2);
 void FUN_801c3aa0(int param_1);
 void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void SpiritPrize_free(int obj);

@@ -6,11 +6,11 @@
 
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime);
-void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runtime,
+void SHthorntail_updateLevelControlMode1(u32 objectId,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config);
 void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config);
-undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused,
+u32 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused,
                                                ObjAnimUpdateState *animUpdate);
 int SHthorntail_getExtraSize(void);
 void SHthorntail_free(SHthorntailObject *obj);

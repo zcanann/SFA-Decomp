@@ -48,11 +48,11 @@ void FUN_80197e14(int param_1);
 void FUN_80197e54(int param_1);
 void FUN_80197e84(void);
 void FUN_80198230(int param_1,int param_2);
-undefined4 FUN_80198348(uint param_1);
+u32 FUN_80198348(u32 param_1);
 void FUN_8019836c(int obj);
-void FUN_801983a0(uint param_1);
+void FUN_801983a0(u32 param_1);
 void FUN_80198634(int param_1);
-void FUN_801986d4(uint param_1);
+void FUN_801986d4(u32 param_1);
 void FUN_80198d58(int param_1,int param_2);
 void FUN_80198e08(void);
 

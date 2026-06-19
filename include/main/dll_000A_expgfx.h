@@ -8,20 +8,20 @@
 extern ObjectDescriptor14 expgfx_funcs;
 extern ExpgfxInterface **gExpgfxInterface;
 
-void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot);
+void expgfxRemove(u32 slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot);
 void expgfxRemoveAll(void);
 int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
-                       int preferredPoolIndex,uint sourceId);
+                       int preferredPoolIndex,u32 sourceId);
 void expgfx_initSlotQuad(void *slot);
 void expgfx_updateActivePools(u8 sourceMode,int sourceId,int resetSourceFrameState);
-int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s16 resourceId);
+int expgfx_addToTable(u32 resourceHandle,u32 sourceId,u32 attachedTableKey,s16 resourceId);
 int expgfx_updateSourceFrameFlags(void *sourceObject);
 void expgfx_ownerFree3(u32 sourceId);
 void expgfx_func0B_nop(void);
 void expgfx_func0A_nop(void);
 int expgfx_func09(void);
 void expgfx_renderSourcePools(int sourceId,int sourceMode);
-void drawGlow(uint slotPoolBase,int poolIndex);
+void drawGlow(u32 slotPoolBase,int poolIndex);
 void renderParticles(void);
 void expgfx_updateResourceEntries(int unused);
 int expgfx_acquireResourceEntry(int resourceId);

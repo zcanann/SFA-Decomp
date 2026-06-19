@@ -5,7 +5,7 @@
 
 void firstPersonDoControls(short *param_1);
 int firstPersonEnter(u8 *cam, s16 *p2);
-void CameraModeViewfinder_copyToCurrent(undefined2 *param_1);
+void CameraModeViewfinder_copyToCurrent(u16 *param_1);
 void CameraModeViewfinder_free(int param_1);
 void CameraModeViewfinder_update(s16 *param_1);
 void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3);

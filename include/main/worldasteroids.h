@@ -36,8 +36,8 @@ extern ObjectDescriptor gWorldAsteroidsObjDescriptor;
 int worldasteroids_getExtraSize(void);
 int worldasteroids_getObjectTypeId(void);
 void worldasteroids_free(void);
-void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                           undefined4 param_4,undefined4 param_5,s8 visible);
+void worldasteroids_render(u32 param_1,u32 param_2,u32 param_3,
+                           u32 param_4,u32 param_5,s8 visible);
 void worldasteroids_hitDetect(void);
 void worldasteroids_update(WorldAsteroidsObject *obj);
 void worldasteroids_init(WorldAsteroidsObject *obj);

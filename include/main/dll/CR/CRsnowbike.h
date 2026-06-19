@@ -9,17 +9,17 @@ extern ObjectDescriptor12 gSC_levelcontrolObjDescriptor;
 extern ObjectDescriptor gSC_MusicTreeObjDescriptor;
 
 void sh_emptytumblew_init(s16 *p1, int p2);
-void FUN_801db57c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,int param_10);
-void FUN_801db580(undefined4 param_1);
+void FUN_801db57c(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,int param_10);
+void FUN_801db580(u32 param_1);
 void FUN_801db5b8(short *param_1,int param_2);
-undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
-void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2);
+u32 sc_levelcontrol_processAnimEvents(int param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
+void sc_levelcontrol_setAnimEventState(int param_1,u8 param_2);
 void FUN_801db8c4(void);
 void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
-                 undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
+void FUN_801db94c(u64 param_1,double param_2,double param_3,double param_4,double param_5,
+                 u64 param_6,u64 param_7,u64 param_8,int param_9);
 
 u8 sc_levelcontrol_getAnimEventState(int *obj);
 int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);

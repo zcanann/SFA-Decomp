@@ -95,8 +95,8 @@ extern ObjectDescriptor gWorldPlanetObjDescriptor;
 int worldplanet_getExtraSize(void);
 int worldplanet_func08(void);
 void worldplanet_free(void);
-void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                        undefined4 param_4,undefined4 param_5,char visible);
+void worldplanet_render(u32 param_1,u32 param_2,u32 param_3,
+                        u32 param_4,u32 param_5,char visible);
 void worldplanet_hitDetect(void);
 void worldplanet_update(int obj);
 void worldplanet_init(int obj);

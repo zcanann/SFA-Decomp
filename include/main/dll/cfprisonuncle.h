@@ -74,28 +74,28 @@ STATIC_ASSERT(offsetof(MagicPlantObject, childLinkActive) == 0xEB);
 
 void fn_8017F4F4(int obj, MagicPlantSetup *setup, MagicPlantState *state);
 void fn_8017F7B8(int obj,int objectId);
-void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,undefined4 param_10,int *param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void FUN_8017f7ec(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,int *param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 int MagicPlant_getExtraSize(void);
 u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj);
 void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);
 void MagicPlant_init(int obj, MagicPlantSetup *setup);
-void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined2 param_10);
-undefined4 FUN_8017fba8(void);
-void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_8017fa14(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 int param_9,u16 param_10);
+u32 FUN_8017fba8(void);
+void FUN_8017fbe0(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
 void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void FUN_8017fd40(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,u32 param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 typedef struct TrickyWarpState {
   u8 patchGroup;
   u8 active;
@@ -110,8 +110,8 @@ int fn_8017FFD0(int obj, TrickyWarpState *state);
 void trickywarp_init(s16 *obj, u8 *param_2);
 void FUN_801804a0(short *param_1,int param_2);
 void FUN_801804a4(int param_1);
-void FUN_801804d8(int param_1,undefined4 param_2,byte *param_3,int param_4,int param_5);
-void FUN_801804dc(undefined4 param_1,undefined4 param_2,byte *param_3,int param_4,int param_5);
+void FUN_801804d8(int param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
+void FUN_801804dc(u32 param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
 void trickyguard_update();
 void trickyguard_init(s16 *obj, u8 *param_2);
 void StayPoint_update(int obj);
@@ -125,14 +125,14 @@ void FUN_80180700(int param_1);
 void FUN_801807cc(int param_1);
 void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80180984(int *param_1);
-void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_80180a0c(u64 param_1,u64 param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void FUN_801811c8(int param_1,int param_2);
 void FUN_801811cc(void);
 void FUN_80181a90(int param_1,int param_2);
-void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11);
+void FUN_80181b50(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,int param_11);
 int curvefish_getExtraSize(void);
 void curvefish_update(int obj);
 void curvefish_init(int obj, u8 *param_2);

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int stateParam);
+u32 pressureswitchfb_updateStateMode(int obj,u32 param_2,int stateParam);
 int pressureswitchfb_getExtraSize(void);
 void pressureswitchfb_free(int obj);
 

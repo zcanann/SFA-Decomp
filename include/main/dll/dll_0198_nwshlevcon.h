@@ -5,17 +5,17 @@
 #include "main/objanim_update.h"
 
 void dll_197_init(int obj, int data);
-void FUN_801caa30(undefined2 *param_1,int param_2);
-undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+void FUN_801caa30(u16 *param_1,int param_2);
+u32 FUN_801cab60(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801caca0(void);
-void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801cacfc(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
 void FUN_801caeac(int param_1);
-void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
-                 undefined4 param_13,int param_14,undefined4 param_15,undefined4 param_16);
+void FUN_801caeb0(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,ObjAnimUpdateState *animUpdate,u32 param_12,
+                 u32 param_13,int param_14,u32 param_15,u32 param_16);
 void dll_197_release(void);
 void dll_197_initialise(void);
 int dll_199_getExtraSize(void);

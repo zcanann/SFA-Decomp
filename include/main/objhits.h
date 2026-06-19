@@ -276,8 +276,8 @@ int ObjHits_TestTaperedCapsule3D(float *point,float pointRadius,float baseRadius
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
-u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,uint mask,
-                           uint volMask);
+u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,u32 mask,
+                           u32 volMask);
 void doNothing_800333C8(int objA,int objB,int att,void *state,void *attState,f32 dt);
 void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt);
 void ObjHits_RegisterActiveHitVolumeObject(int obj);
@@ -299,7 +299,7 @@ void ObjHits_MarkObjectPositionDirty(int obj);
 void ObjHits_SyncObjectPositionIfDirty(u32 obj);
 void ObjHits_DisableObject(u32 obj);
 void ObjHits_EnableObject(u32 obj);
-ushort ObjHits_IsObjectEnabled(int obj);
+u16 ObjHits_IsObjectEnabled(int obj);
 void ObjHits_SyncObjectPosition(u32 obj);
 void ObjHits_RefreshObjectState(int obj);
 void ObjHits_AddContactObject(int obj,int contactObj);
@@ -307,11 +307,11 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
 int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,
                               char priority,u8 hitVolume,u8 sphereIndex);
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
-                uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
-int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume);
+                u32 *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
+int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,u32 *outHitVolume);
 int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObject,
                                         float *outHitPos);
-int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR,uint colorG,
-                                              uint colorB,uint sfxId,float *cooldown);
+int ObjHits_PollPriorityHitEffectWithCooldown(int obj,u32 hitFxMode,u32 colorR,u32 colorG,
+                                              u32 colorB,u32 sfxId,float *cooldown);
 
 #endif /* MAIN_OBJHITS_H_ */

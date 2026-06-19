@@ -59,6 +59,6 @@ STATIC_ASSERT(offsetof(LandedArwingState, scriptTimer) == 0x8E);
 STATIC_ASSERT(offsetof(LandedArwingState, surfaceMode) == 0x90);
 STATIC_ASSERT(offsetof(LandedArwingState, flags92) == 0x92);
 
-undefined4 LandedArwing_UpdateFlightChase(int obj, int state);
+u32 LandedArwing_UpdateFlightChase(int obj, int state);
 
 #endif /* MAIN_DLL_LANDEDARWING_H_ */

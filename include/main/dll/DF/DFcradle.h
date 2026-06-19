@@ -36,7 +36,7 @@ typedef struct CCriverflowObject {
 #define CCRIVERFLOW_DEFAULT_SPEED 0xFF
 
 void dimbossfire_update(int param_1);
-void dimbossfire_init(int obj, undefined4 param_2, int param_3);
+void dimbossfire_init(int obj, u32 param_2, int param_3);
 void dimbossfire_release(void);
 void dimbossfire_initialise(void);
 int ccriverflow_getExtraSize(void);

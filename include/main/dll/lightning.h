@@ -13,7 +13,7 @@ void FUN_80173fdc(int param_1);
 void FUN_80173ffc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80174024(int param_1);
 void FUN_8017437c(int param_1,int param_2);
-undefined4 FUN_801743f0(uint param_1,int param_2);
+u32 FUN_801743f0(u32 param_1,int param_2);
 void FUN_80174524(int param_1,int param_2);
 int effectbox_getExtraSize(void);
 int effectbox_getObjectTypeId(void);

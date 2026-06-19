@@ -213,9 +213,9 @@ STATIC_ASSERT(sizeof(ExpgfxFloatWord) == 4);
  */
 typedef struct ExpgfxTableEntry {
   /* The add/remove paths key entries by source identity plus an optional attached-source key. */
-  uint sourceId;
-  uint attachedTableKey;
-  uint resource;
+  u32 sourceId;
+  u32 attachedTableKey;
+  u32 resource;
   u16 refCount;
   s16 resourceId;
 } ExpgfxTableEntry;

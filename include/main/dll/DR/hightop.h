@@ -4,20 +4,20 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-undefined4 FUN_801993b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,int param_12,
-                 int param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+u32 FUN_801993b0(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,u32 param_11,int param_12,
+                 int param_13,u32 param_14,u32 param_15,u32 param_16);
 void FUN_8019ada4(int param_1);
-void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,float *param_11,undefined4 param_12,
-                 int param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_8019b6ac(ushort *param_1,short *param_2);
+void FUN_8019ae30(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,float *param_11,u32 param_12,
+                 int param_13,u32 param_14,u32 param_15,u32 param_16);
+void FUN_8019b6ac(u16 *param_1,short *param_2);
 void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void FUN_8019b86c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
 void FUN_8019bc2c(int param_1);
 
 int Trigger_getExtraSize(void);

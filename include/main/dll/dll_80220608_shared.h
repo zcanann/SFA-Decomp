@@ -26,7 +26,7 @@
 #include "main/dll/cnthitobjec_state.h"
 
 /* Pattern wrappers. */
-extern byte framesThisStep;
+extern u8 framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
 extern void mm_free(void *ptr);
@@ -725,7 +725,7 @@ extern int lbl_803DC428;
 extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
 extern int arrayIndexOf(int array, int count, int value);
 extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  uint *outHitVolume);
+                                  u32 *outHitVolume);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 
@@ -749,8 +749,8 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern f32 lbl_803E7340;
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colorR,
-                                                     uint colorG, uint colorB, uint sfxId,
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR,
+                                                     u32 colorG, u32 colorB, u32 sfxId,
                                                      float *cooldown);
 
 
@@ -835,7 +835,7 @@ extern void Music_Trigger(int id, int p2);
 
 extern int getArwing(void);
 extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  uint *outHitVolume);
+                                  u32 *outHitVolume);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 mathCosf(f32 x);
@@ -1013,7 +1013,7 @@ extern f32 lbl_803E7598;
 
 
 extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  uint *outHitVolume);
+                                  u32 *outHitVolume);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f,
                                     int g, int h, int i, int j, int k);
@@ -1141,7 +1141,7 @@ extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern void vecRotateZXY(int obj, f32 *vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHitObject, int *outSphereIndex,
-                                              uint *outHitVolume, float *outHitPosX,
+                                              u32 *outHitVolume, float *outHitPosX,
                                               float *outHitPosY, float *outHitPosZ);
 extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume,
                                    u8 sphereIndex);

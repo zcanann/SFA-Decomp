@@ -23,13 +23,13 @@ void wm_column_initialise(void);
 extern ObjectDescriptor gWM_ColumnObjDescriptor;
 extern ObjectDescriptor13 gAppleOnTreeObjDescriptor;
 void appleontree_func0B(int obj,float *pos);
-void FUN_8017db40(uint param_1,int param_2);
-void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void FUN_8017db40(u32 param_1,int param_2);
+void FUN_8017de58(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
 void FUN_8017e0f8(int obj);
 void FUN_8017e12c(int param_1);
-undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3);
-undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3);
+u32 FUN_8017e15c(double param_1,u16 *param_2,int param_3);
+u32 FUN_8017e3c0(double param_1,u16 *param_2,int param_3);
 
 #endif /* MAIN_DLL_GROUNDANIMATOR_H_ */

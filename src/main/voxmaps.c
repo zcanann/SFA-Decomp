@@ -7,7 +7,7 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
     int e3 = e * 2 + e;
     u8* cur;
     u8* end;
-    u8 u8;
+    u8 bits;
 
     if ((f >> 3) != 0)
     {
@@ -26,19 +26,19 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, i
     }
     while (cur < end)
     {
-        u8 = *cur;
-        while (u8 != 0)
+        bits = *cur;
+        while (bits != 0)
         {
-            u8 &= u8 - 1;
+            bits &= bits - 1;
             count++;
         }
         cur++;
     }
-    u8 = *cur;
-    u8 &= (u8)((u32)0xff >> (8 - (d & 7)));
-    while (u8 != 0)
+    bits = *cur;
+    bits &= (u8)((u32)0xff >> (8 - (d & 7)));
+    while (bits != 0)
     {
-        u8 &= u8 - 1;
+        bits &= bits - 1;
         count++;
     }
     return nodeBase + count;

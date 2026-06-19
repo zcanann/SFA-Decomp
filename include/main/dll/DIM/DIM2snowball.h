@@ -11,26 +11,26 @@ extern ObjectDescriptor gDIM2SnowBallObjDescriptor;
 void dim_levelcontrol_update(int obj);
 void FUN_801b6d24(int param_1);
 void FUN_801b6eb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b6ee0(undefined2 *param_1,int param_2);
+void FUN_801b6ee0(u16 *param_1,int param_2);
 void FUN_801b6f88(int param_1);
 void FUN_801b6fa8(int param_1);
-void FUN_801b7064(uint param_1);
+void FUN_801b7064(u32 param_1);
 void FUN_801b728c(int param_1,int param_2);
 void FUN_801b7478(int param_1);
 void FUN_801b749c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b74c4(uint param_1);
-void FUN_801b7604(undefined2 *param_1,int param_2);
+void FUN_801b74c4(u32 param_1);
+void FUN_801b7604(u16 *param_1,int param_2);
 void FUN_801b7720(int param_1);
 void FUN_801b7780(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801b77a8(short *param_1);
-void FUN_801b7c38(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,int param_10);
+void FUN_801b7c38(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,int param_10);
 void FUN_801b7fa4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b7fcc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801b7fcc(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9);
-void FUN_801b7fd0(undefined2 *param_1,int param_2);
+void FUN_801b7fd0(u16 *param_1,int param_2);
 
 int dim_tricky_getExtraSize(void);
 int dim_tricky_getObjectTypeId(void);

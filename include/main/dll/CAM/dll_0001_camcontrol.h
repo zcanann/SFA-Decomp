@@ -52,8 +52,8 @@ STATIC_ASSERT(sizeof(CamcontrolTriggeredAction) == 0x10);
 STATIC_ASSERT(offsetof(CamcontrolTriggeredAction, triggerMode) == 0x0D);
 
 typedef struct CamcontrolQueuedActionParam {
-  uint actionIndex;
-  byte noBlendFlag;
+  u32 actionIndex;
+  u8 noBlendFlag;
 } CamcontrolQueuedActionParam;
 
 STATIC_ASSERT(sizeof(CamcontrolQueuedActionParam) == 0x08);
@@ -276,8 +276,8 @@ extern f32 gCamcontrolDefaultFovY;
 
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
-                                    undefined4 arg3, undefined4 arg4, undefined4 arg5,
-                                    undefined4 arg6);
+                                    u32 arg3, u32 arg4, u32 arg5,
+                                    u32 arg6);
 CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState,
                                                   ObjAnimComponent *focus);
 void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);

@@ -20,11 +20,11 @@ int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dll_144_init(int obj);
 void paymentkiosk_release(void);
 void paymentkiosk_initialise(void);
-void FUN_801df45c(undefined2 *param_1);
-uint FUN_801df69c(int param_1,undefined4 param_2,int param_3);
-void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11);
+void FUN_801df45c(u16 *param_1);
+u32 FUN_801df69c(int param_1,u32 param_2,int param_3);
+void FUN_801df784(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,int param_11);
 void FUN_801df788(int param_1);
 int FEseqobject_getExtraSize(void);
 int FEseqobject_getObjectTypeId(void);

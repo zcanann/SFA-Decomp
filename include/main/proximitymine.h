@@ -81,8 +81,8 @@ void proximitymine_resetToIdle(ProximityMineObject *obj);
 int proximitymine_getExtraSize(void);
 int proximitymine_getObjectTypeId(void);
 void proximitymine_free(ProximityMineObject *obj);
-void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4 param_3,
-                          undefined4 param_4,undefined4 param_5);
+void proximitymine_render(ProximityMineObject *obj,u32 param_2,u32 param_3,
+                          u32 param_4,u32 param_5);
 void proximitymine_hitDetect(ProximityMineObject *obj);
 void proximitymine_update(ProximityMineObject *obj);
 void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def);

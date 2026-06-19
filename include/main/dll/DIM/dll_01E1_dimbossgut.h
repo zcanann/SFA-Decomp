@@ -10,8 +10,8 @@ extern ObjectDescriptor gDIM_BossGutObjDescriptor;
 int DIMbossgut_getExtraSize(void);
 int DIMbossgut_getObjectTypeId(void);
 void DIMbossgut_free(void);
-void DIMbossgut_render(int obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                       undefined4 param_5,char shouldRender);
+void DIMbossgut_render(int obj,u32 param_2,u32 param_3,u32 param_4,
+                       u32 param_5,char shouldRender);
 void DIMbossgut_hitDetect(void);
 void DIMbossgut_update(void);
 void DIMbossgut_init(void *obj);

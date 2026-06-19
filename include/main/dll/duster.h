@@ -3,45 +3,45 @@
 
 #include "ghidra_import.h"
 
-uint FUN_8015536c(double param_1,short *param_2,int param_3,uint param_4);
+u32 FUN_8015536c(double param_1,short *param_2,int param_3,u32 param_4);
 void FUN_801556d4(double param_1,double param_2,float *param_3,float *param_4);
 void FUN_80155830(int *param_1,int param_2);
-void rachnopUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
-void FUN_80155b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void rachnopUpdateWhileFrozen(u32 param_1,int param_2,u32 param_3,int param_4);
+void FUN_80155b6c(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9,int param_10);
-void FUN_80155cac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_80155cac(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9,int param_10);
-void FUN_80155e00(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_80155e00(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9,int param_10);
-void rachnopInit(undefined4 param_1,int param_2);
-void pollenFn_80155b10(uint param_9,int param_10);
+void rachnopInit(u32 param_1,int param_2);
+void pollenFn_80155b10(u32 param_9,int param_10);
 void timeOfDayFn_80155cf8(int param_9,int param_10);
-void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param_11,
-                                      int param_12,undefined4 param_13,int param_14);
-void FUN_8015666c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void baddieUpdateWhileFrozen_80155e10(u32 param_9,int param_10,u32 param_11,
+                                      int param_12,u32 param_13,int param_14);
+void FUN_8015666c(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
-void FUN_80156978(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,int param_10);
-void baddieInit_80156188(undefined4 param_1,int param_2);
-void wbUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
-void FUN_80156eb8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_80157220(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 *param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void wbInit(undefined4 param_1,int param_2);
-void FUN_801577c8(uint param_1,int param_2);
-void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,int param_12);
-void FUN_801579f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,int param_10);
+void FUN_80156978(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,int param_10);
+void baddieInit_80156188(u32 param_1,int param_2);
+void wbUpdateWhileFrozen(u32 param_1,int param_2,u32 param_3,int param_4);
+void FUN_80156eb8(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,int param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+void FUN_80157220(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u16 *param_9,u32 *param_10,u32 param_11,u32 param_12,
+                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+void wbInit(u32 param_1,int param_2);
+void FUN_801577c8(u32 param_1,int param_2);
+void mutatedEbaUpdateWhileFrozen(u32 param_9,int param_10,u32 param_11,int param_12);
+void FUN_801579f4(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,int param_10);
 
 #endif /* MAIN_DLL_DUSTER_H_ */

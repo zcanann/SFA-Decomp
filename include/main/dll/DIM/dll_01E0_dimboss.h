@@ -267,7 +267,7 @@ typedef struct DIMbossObject {
   s16 animStateId;
   u8 padB6[0xB8 - 0xB6];
   DIMbossRuntime *runtime;
-  int (*updateState)(struct DIMbossObject *obj,undefined4 param_2,
+  int (*updateState)(struct DIMbossObject *obj,u32 param_2,
                      ObjAnimUpdateState *animUpdate);
   u8 padC0[0xC8 - 0xC0];
   void *childObject;
@@ -357,17 +357,17 @@ STATIC_ASSERT(offsetof(DIMbossObject, updateMode) == 0xE4);
 STATIC_ASSERT(offsetof(DIMbossObject, renderPause) == 0xF4);
 STATIC_ASSERT(offsetof(DIMbossObject, updateInitialized) == 0xF8);
 
-int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+int DIMboss_updateState(DIMbossObject *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
 void DIMboss_func0B(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);
 int DIMboss_getObjectTypeId(void);
 void DIMboss_free(DIMbossObject *obj);
-void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                    undefined4 param_5,char shouldRender);
+void DIMboss_render(DIMbossObject *obj,u32 param_2,u32 param_3,u32 param_4,
+                    u32 param_5,char shouldRender);
 void DIMboss_hitDetect(DIMbossObject *obj);
 void DIMboss_update(DIMbossObject *obj);
-void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3);
+void DIMboss_init(DIMbossObject *obj,u32 param_2,int param_3);
 void DIMboss_release(void);
 void DIMboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);

@@ -12,30 +12,30 @@
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 
-extern undefined4 ObjHits_SetTargetMask();
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined8 ObjHits_SetHitVolumeSlot();
-extern undefined8 ObjHits_DisableObject();
-extern undefined8 ObjHits_EnableObject();
-extern undefined4 ObjHits_RecordObjectHit();
+extern u32 ObjHits_SetTargetMask();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_ClearHitVolumes();
+extern u64 ObjHits_SetHitVolumeSlot();
+extern u64 ObjHits_DisableObject();
+extern u64 ObjHits_EnableObject();
+extern u32 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
 extern int Obj_IsObjectAlive();
 extern int ObjHits_PollPriorityHitEffectWithCooldown();
-extern undefined4 ObjLink_DetachChild();
-extern undefined8 ObjLink_AttachChild();
+extern u32 ObjLink_DetachChild();
+extern u64 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
 extern int ObjList_FindNearestObjectByDefNo();
-extern uint ObjPath_GetPointModelMtx();
-extern uint SnowBike_hitDetect();
+extern u32 ObjPath_GetPointModelMtx();
+extern u32 SnowBike_hitDetect();
 extern double SeekTwiceBeforeRead();
-extern uint countLeadingZeros();
+extern u32 countLeadingZeros();
 
 extern f64 DOUBLE_803e7188;
 extern f64 DOUBLE_803e71c0;

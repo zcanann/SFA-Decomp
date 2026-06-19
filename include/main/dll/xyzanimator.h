@@ -36,15 +36,15 @@ void kaldachompspit_hitDetect(void);
 void kaldachompspit_init(int obj);
 void kaldachompspit_release(void);
 void kaldachompspit_initialise(void);
-void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_80169d38(u64 param_1,u64 param_2,u64 param_3,double param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
 int FUN_8016a534(double param_1,double param_2,float *param_3,float *param_4,char param_5);
 void FUN_8016a6d4(int obj);
-void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_8016a708(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
-void FUN_8016aa90(uint param_1);
+void FUN_8016aa90(u32 param_1);
 void FUN_8016aae4(int obj);
 void FUN_8016ab18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016ab40(int param_1);
@@ -57,11 +57,11 @@ void pinponspike_update(int obj);
 void pinponspike_init(int obj);
 void pinponspike_release(void);
 void pinponspike_initialise(void);
-void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
-void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
-                 ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
+void FUN_8016aba8(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
+void FUN_8016ae64(double param_1,double param_2,double param_3,u64 param_4,u64 param_5
+                 ,u64 param_6,u64 param_7,u64 param_8,int param_9);
 int pollen_getExtraSize(void);
 int pollen_getObjectTypeId(void);
 void pollen_free(int obj);
@@ -82,11 +82,11 @@ void pollenfragment_release(void);
 void pollenfragment_initialise(void);
 void FUN_8016b174(int param_1);
 void FUN_8016b1dc(void);
-void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
-void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
-                 double param_5,double param_6,undefined8 param_7,undefined8 param_8,ushort *param_9
+void FUN_8016b228(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9);
+void FUN_8016b428(u64 param_1,u64 param_2,u64 param_3,double param_4,
+                 double param_5,double param_6,u64 param_7,u64 param_8,u16 *param_9
                  );
 
 extern ObjectDescriptor gKaldaChompSpitObjDescriptor;

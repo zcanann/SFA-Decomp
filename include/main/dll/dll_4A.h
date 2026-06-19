@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-undefined4
-EnterSaveNameScreen_run(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,undefined4 param_5
-                        ,undefined4 param_6,undefined4 param_7,undefined4 param_8);
+u32
+EnterSaveNameScreen_run(u32 param_1,u32 param_2,int param_3,u32 param_4,u32 param_5
+                        ,u32 param_6,u32 param_7,u32 param_8);
 void EnterSaveNameScreen_release(void);
 void EnterSaveNameScreen_initialise(void);
 

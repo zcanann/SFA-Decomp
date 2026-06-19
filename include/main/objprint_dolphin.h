@@ -4,34 +4,34 @@
 #include "ghidra_import.h"
 
 void FUN_8003d6f8(int param_1);
-void FUN_8003d97c(ushort *param_1,int param_2);
+void FUN_8003d97c(u16 *param_1,int param_2);
 void FUN_8003db90(void);
-void FUN_8003df64(undefined4 param_1,undefined4 param_2,int *param_3,float *param_4);
-void FUN_8003e0ec(undefined4 param_1,undefined4 param_2,int *param_3,float *param_4,float *param_5,
-                 uint param_6,uint param_7,uint param_8);
-void FUN_8003e358(int param_1,undefined4 param_2,int *param_3);
-void FUN_8003e4a0(undefined4 param_1,undefined4 param_2,int *param_3,int *param_4,uint param_5,
-                 undefined *param_6,undefined *param_7);
-char fn_8003EA84(undefined4 param_1,undefined4 param_2,int *param_3,uint param_4,int param_5,
+void FUN_8003df64(u32 param_1,u32 param_2,int *param_3,float *param_4);
+void FUN_8003e0ec(u32 param_1,u32 param_2,int *param_3,float *param_4,float *param_5,
+                 u32 param_6,u32 param_7,u32 param_8);
+void FUN_8003e358(int param_1,u32 param_2,int *param_3);
+void FUN_8003e4a0(u32 param_1,u32 param_2,int *param_3,int *param_4,u32 param_5,
+                 u8 *param_6,u8 *param_7);
+char fn_8003EA84(u32 param_1,u32 param_2,int *param_3,u32 param_4,int param_5,
                 int param_6);
-void fn_8003EEEC(undefined4 param_1,undefined4 param_2,int *param_3,int *param_4);
-void FUN_8003f3b4(undefined4 param_1,undefined4 param_2,int param_3);
-void fn_8003F8EC(undefined4 param_1,undefined4 param_2,int param_3);
+void fn_8003EEEC(u32 param_1,u32 param_2,int *param_3,int *param_4);
+void FUN_8003f3b4(u32 param_1,u32 param_2,int param_3);
+void fn_8003F8EC(u32 param_1,u32 param_2,int param_3);
 void FUN_8003f9f8(void);
-void fn_8003FDA8(undefined4 param_1,undefined4 param_2,int param_3);
-void FUN_800400ac(undefined4 param_1,undefined4 param_2,int param_3,uint param_4);
+void fn_8003FDA8(u32 param_1,u32 param_2,int param_3);
+void FUN_800400ac(u32 param_1,u32 param_2,int param_3,u32 param_4);
 void FUN_800400b0(void);
-void FUN_800401a0(float *param_1,float *param_2,short *param_3,int param_4,ushort *param_5,
+void FUN_800401a0(float *param_1,float *param_2,short *param_3,int param_4,u16 *param_5,
                  int param_6);
-void FUN_8004034c(undefined param_1,undefined param_2,undefined param_3);
-void FUN_8004036c(undefined4 param_1);
+void FUN_8004034c(u8 param_1,u8 param_2,u8 param_3);
+void FUN_8004036c(u32 param_1);
 void FUN_80040374(int param_1);
 void FUN_80040434(int param_1);
 void FUN_800404cc(int param_1);
 void FUN_800406cc(int param_1);
-void FUN_80040784(undefined4 param_1,undefined4 param_2,uint param_3);
+void FUN_80040784(u32 param_1,u32 param_2,u32 param_3);
 void FUN_80040a88(int param_1);
-void FUN_80040cd0(undefined param_1);
+void FUN_80040cd0(u8 param_1);
 void FUN_80040cdc(int param_1,int *param_2);
 int FUN_80040d44(int param_1);
 void FUN_80040d88(void);
@@ -54,25 +54,25 @@ void FUN_800419a0(int param_1,int *param_2);
 void FUN_80041a3c(int param_1,int *param_2);
 void FUN_80041ad8(int param_1,int *param_2);
 void FUN_80041b74(int param_1,int *param_2);
-void FUN_80041c10(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_80041c10(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
-int FUN_80041ff8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+int FUN_80041ff8(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                 int param_9);
 void FUN_800427c8(void);
 void FUN_80042800(void);
-undefined4 FUN_80042830(void);
-undefined4 FUN_80042838(void);
-uint FUN_8004286c(void);
+u32 FUN_80042830(void);
+u32 FUN_80042838(void);
+u32 FUN_8004286c(void);
 int FUN_80042b9c(int param_1,int param_2,int param_3);
-int FUN_80042bec(undefined4 param_1,int param_2);
-void FUN_80042c18(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 *param_11);
-undefined * FUN_80042f88(int param_1);
-void FUN_80043030(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int FUN_80042bec(u32 param_1,int param_2);
+void FUN_80042c18(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
+                 u32 param_9,u32 param_10,u32 *param_11);
+u8 * FUN_80042f88(int param_1);
+void FUN_80043030(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void clearLoadedFileFlags_blocks1(void);
 
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

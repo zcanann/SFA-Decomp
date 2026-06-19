@@ -52,7 +52,7 @@ typedef struct DbshShrineObject {
     u8 mapFlags;
     u8 padB0[8];
     DbshShrineRuntime *runtime;
-    int (*messageFn)(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate);
+    int (*messageFn)(int obj, u32 unused, ObjAnimUpdateState *animUpdate);
     u8 padC0[0x34];
     s32 introDelay;
 } DbshShrineObject;

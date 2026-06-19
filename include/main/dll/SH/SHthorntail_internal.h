@@ -152,7 +152,7 @@ typedef struct SHthorntailPathControlInterface {
   u8 pad00[0x04];
   void (*initControl)(int control,int mode,int flags,int loopMode);
   u8 pad08[0x0C - 0x08];
-  void (*attachPathData)(int control,int channel,u8 *headers,u8 *pathData,undefined4 *events);
+  void (*attachPathData)(int control,int channel,u8 *headers,u8 *pathData,u32 *events);
   void (*advanceControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
   void (*applyControl)(SHthorntailObject *obj,u8 *control);
   void (*finishControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
@@ -261,8 +261,8 @@ static inline s16 SHthorntail_GetLinkedGameBit(SHthorntailConfig *config) {
   return *(s16 *)&config->controlMode;
 }
 
-void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
-uint SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
+void SHthorntail_updateTailSwing(u32 objectId,SHthorntailRuntime *runtime);
+u32 SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config);
 
 #endif /* MAIN_DLL_SH_SHTHORNTAIL_INTERNAL_H_ */

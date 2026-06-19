@@ -54,9 +54,9 @@ typedef struct FirePipeObject {
     };
     u8 padB0[0xB8 - sizeof(ObjAnimComponent)];
     FirePipeExtra *extra;
-    undefined4 (*sequenceCallback)(struct FirePipeObject *obj);
+    u32 (*sequenceCallback)(struct FirePipeObject *obj);
     u8 padC0[0xC4 - 0xC0];
-    undefined4 (*callback)(struct FirePipeObject *obj);
+    u32 (*callback)(struct FirePipeObject *obj);
 } FirePipeObject;
 
 STATIC_ASSERT(offsetof(FirePipeMapData, rotX) == 0x18);
@@ -83,7 +83,7 @@ int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj);
 int firepipe_setLinkedUpdateFlag(FirePipeObject *obj);
 void firepipe_updateState(FirePipeObject *obj);
 int firepipe_getExtraSize(void);
-undefined4 firepipe_stateCallback(FirePipeObject *obj);
+u32 firepipe_stateCallback(FirePipeObject *obj);
 int firepipe_getObjectTypeId(void);
 void firepipe_free(FirePipeObject *obj);
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6);

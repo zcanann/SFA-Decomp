@@ -11,26 +11,26 @@ extern ObjectDescriptor12 gDIM2LavaControlObjDescriptor;
 
 void dll_1DA_update(int obj);
 void FUN_801b8c60(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b8c88(uint param_1);
+void FUN_801b8c88(u32 param_1);
 void FUN_801b8d0c(int *param_1);
 void FUN_801b932c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b9354(uint param_1);
-void FUN_801b968c(undefined2 *param_1,int param_2);
+void FUN_801b9354(u32 param_1);
+void FUN_801b968c(u16 *param_1,int param_2);
 void FUN_801b9700(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b9728(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801b9728(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
-void FUN_801b972c(undefined2 *param_1,int param_2);
+void FUN_801b972c(u16 *param_1,int param_2);
 void FUN_801b98ec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b9914(uint param_1);
-void FUN_801b9c2c(undefined2 *param_1,int param_2);
+void FUN_801b9914(u32 param_1);
+void FUN_801b9c2c(u16 *param_1,int param_2);
 void FUN_801b9d2c(void);
 void FUN_801b9d64(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b9d8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801b9d8c(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9);
-void FUN_801ba288(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+void FUN_801ba288(u64 param_1,double param_2,double param_3,u64 param_4,
+                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);
 void FUN_801ba434(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801ba45c(int param_1);

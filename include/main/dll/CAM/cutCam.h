@@ -27,7 +27,7 @@ typedef struct CamcontrolAction44Payload {
 int
 camcontrol_traceMove(float *fromPos,float *toPos,float *outPos,u8 *traceWork,
                      char traceMode,u8 runTrace,u8 runBbox,float radius);
-undefined camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *outPos);
+u8 camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *outPos);
 u8 camcontrol_getTargetPosition(CameraObject *camera,ObjAnimComponent *targetAnim,
                                 f32 *outPos,s16 *outRotY);
 void camcontrol_updateTargetAction(CameraObject *camera,GameObject *target);
