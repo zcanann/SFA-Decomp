@@ -14223,7 +14223,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                                       (f32*)((char*)inner + 0x770), 0);
         if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) != 0)
         {
-            if (lbl_803DE428 == 0)
+            if ((void*)lbl_803DE428 == NULL)
             {
                 int* mdl = (int*)Obj_GetActiveModel(obj);
                 int m = *mdl;
