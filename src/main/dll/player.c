@@ -7588,12 +7588,12 @@ void fn_802B0EA4(int obj, int inner, int state)
     cam = *(char**)((char*)inner + 0x4b8);
     if (cam != NULL)
     {
-        dx = *(f32*)(cam + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        dz = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        dx = ((GameObject*)cam)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+        dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         ((PlayerState*)inner)->unk4AC = getAngle(-dx, -dz) & 0xffff;
         ((PlayerState*)inner)->unk4B0 = sqrtf(dx * dx + dz * dz);
         ((PlayerState*)inner)->unk4B4 =
-            *(u8*)(*(int*)(*(int*)(cam + 0x50) + 0x40) + 0x10) & 0xf;
+            *(u8*)(*(int*)(*(int*)&((GameObject*)cam)->anim.modelInstance + 0x40) + 0x10) & 0xf;
     }
     d = ((PlayerState*)inner)->unk4AC - (u16)((PlayerState*)inner)->targetYaw;
     if (d > 0x8000)
