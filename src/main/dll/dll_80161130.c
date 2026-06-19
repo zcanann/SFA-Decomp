@@ -108,7 +108,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2EB8, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = lbl_803E2EE8;
@@ -129,7 +129,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
         *(int*)&state->baddie.targetObj = 0;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     }
     if (((GameObject*)obj)->anim.alpha == 0)
@@ -201,7 +201,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
         Sfx_PlayFromObject(obj, SFXsc_death02);
         if (*(char*)&p->baddie.moveJustStartedA != '\0')
         {
-            ObjAnim_SetCurrentMove(obj, 2, lbl_803E2EB8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
             *(s8*)&p->baddie.moveDone = 0;
         }
         p->baddie.moveSpeed = lbl_803E2EE4;
@@ -243,13 +243,13 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     {
         if (*(char*)&p->baddie.moveJustStartedA != '\0')
         {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E2EB8, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2EB8, 0);
             *(s8*)&p->baddie.moveDone = 0;
         }
     }
     else if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 4, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E2EB8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
@@ -299,7 +299,7 @@ int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
     hit = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 7, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2EB8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
@@ -351,7 +351,7 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
     hit = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 6, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 6, lbl_803E2EB8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
@@ -393,7 +393,7 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
     hit = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2EB8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
@@ -439,7 +439,7 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     hit = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)&p->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 2, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EE4;

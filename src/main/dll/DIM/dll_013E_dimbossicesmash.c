@@ -87,7 +87,7 @@ void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)(obj)->anim.placementData + 0x18) << 11) | 0x400; }
+u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((GameObject*)obj)->anim.placementData + 0x18) << 11) | 0x400; }
 
 void dimbossicesmash_free(int* obj)
 {
@@ -101,7 +101,7 @@ void fogcontrol_free(int* obj);
  * the lifetime window, and emit the two trail particles. */
 void dimbossicesmash_update(u8* obj)
 {
-    u8* state = (obj)->extra;
+    u8* state = ((GameObject*)obj)->extra;
     u8 flags = state[0x29e];
     u8* setup;
     uint triggerBit;
@@ -123,15 +123,15 @@ void dimbossicesmash_update(u8* obj)
 
     if ((flags & 2) != 0)
     {
-        if (((obj)->anim.flags & 0x2000) != 0)
+        if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
         {
             Obj_FreeObject(obj);
         }
-        (obj)->anim.alpha = 0;
+        ((GameObject*)obj)->anim.alpha = 0;
     }
     else
     {
-        setup = *(u8**)&(obj)->anim.placementData;
+        setup = *(u8**)&((GameObject*)obj)->anim.placementData;
         if ((flags & 1) == 0)
         {
             if (((ObjAnimComponent*)obj)->bankIndex == 0)
@@ -148,11 +148,11 @@ void dimbossicesmash_update(u8* obj)
             {
                 state[0x29e] = flags | 1;
             }
-            (obj)->anim.alpha = 0;
+            ((GameObject*)obj)->anim.alpha = 0;
         }
         else
         {
-            (obj)->anim.alpha = 0xff;
+            ((GameObject*)obj)->anim.alpha = 0xff;
             cnt = (((DimBossIceSmashState*)state)->unk29C += framesThisStep);
             if (cnt >= ((DimbossicesmashPlacement*)setup)->unk38)
             {
@@ -174,13 +174,13 @@ void dimbossicesmash_update(u8* obj)
                 {
                     alphaVal = 0;
                 }
-                (obj)->anim.alpha = (u8)alphaVal;
+                ((GameObject*)obj)->anim.alpha = (u8)alphaVal;
             }
-            (obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + (obj)
+            ((GameObject*)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + ((GameObject*)obj)
                 ->anim.velocityX;
-            (obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState*)state)->unk294 + (obj)
+            ((GameObject*)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState*)state)->unk294 + ((GameObject*)obj)
                 ->anim.velocityY;
-            (obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState*)state)->unk298 + (obj)
+            ((GameObject*)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState*)state)->unk298 + ((GameObject*)obj)
                 ->anim.velocityZ;
             ((DimBossIceSmashState*)state)->unk278 =
                 timeDelta * ((DimBossIceSmashState*)state)->unk284 + ((DimBossIceSmashState*)state)->unk278;
@@ -190,25 +190,25 @@ void dimbossicesmash_update(u8* obj)
                 timeDelta * ((DimBossIceSmashState*)state)->unk28C + ((DimBossIceSmashState*)state)->unk280;
             if ((state[0x29f] & 1) != 0)
             {
-                if ((obj)->anim.velocityX < *(f32*)&lbl_803E4034)
+                if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E4034)
                 {
-                    (obj)->anim.velocityX = lbl_803E4034;
+                    ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
                 }
             }
-            else if ((obj)->anim.velocityX > *(f32*)&lbl_803E4034)
+            else if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E4034)
             {
-                (obj)->anim.velocityX = lbl_803E4034;
+                ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
             }
             if ((state[0x29f] & 2) != 0)
             {
-                if ((obj)->anim.velocityZ < *(f32*)&lbl_803E4034)
+                if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4034)
                 {
-                    (obj)->anim.velocityZ = lbl_803E4034;
+                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
                 }
             }
-            else if ((obj)->anim.velocityZ > *(f32*)&lbl_803E4034)
+            else if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4034)
             {
-                (obj)->anim.velocityZ = lbl_803E4034;
+                ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
             }
             if ((state[0x29f] & 4) != 0)
             {
@@ -243,17 +243,17 @@ void dimbossicesmash_update(u8* obj)
             {
                 ((DimBossIceSmashState*)state)->unk280 = lbl_803E4034;
             }
-            (obj)->anim.localPosX = (obj)->anim.velocityX * timeDelta + (obj)->
+            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
                 anim.localPosX;
-            (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->
+            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
                 anim.localPosY;
-            (obj)->anim.localPosZ = (obj)->anim.velocityZ * timeDelta + (obj)->
+            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
                 anim.localPosZ;
-            (obj)->anim.rotX = ((DimBossIceSmashState*)state)->unk278 * timeDelta + (f32)(obj)
+            ((GameObject*)obj)->anim.rotX = ((DimBossIceSmashState*)state)->unk278 * timeDelta + (f32)((GameObject*)obj)
                 ->anim.rotX;
-            (obj)->anim.rotY = ((DimBossIceSmashState*)state)->unk27C * timeDelta + (f32)(obj)
+            ((GameObject*)obj)->anim.rotY = ((DimBossIceSmashState*)state)->unk27C * timeDelta + (f32)((GameObject*)obj)
                 ->anim.rotY;
-            (obj)->anim.rotZ = ((DimBossIceSmashState*)state)->unk280 * timeDelta + (f32)(obj)
+            ((GameObject*)obj)->anim.rotZ = ((DimBossIceSmashState*)state)->unk280 * timeDelta + (f32)((GameObject*)obj)
                 ->anim.rotZ;
             if ((((DimbossicesmashPlacement*)setup)->unk3C & 2) != 0)
             {
@@ -262,9 +262,9 @@ void dimbossicesmash_update(u8* obj)
                 (*gPathControlInterface)->advance(obj, state, timeDelta);
                 if (((DimBossIceSmashState*)state)->unk261 != 0)
                 {
-                    nx = -(obj)->anim.velocityX;
-                    ny = -(obj)->anim.velocityY;
-                    nz = -(obj)->anim.velocityZ;
+                    nx = -((GameObject*)obj)->anim.velocityX;
+                    ny = -((GameObject*)obj)->anim.velocityY;
+                    nz = -((GameObject*)obj)->anim.velocityZ;
                     len = sqrtf(nz * nz + (nx * nx + ny * ny));
                     if (lbl_803E4034 != len)
                     {
@@ -278,32 +278,32 @@ void dimbossicesmash_update(u8* obj)
                     fz = ((DimBossIceSmashState*)state)->unk70;
                     dot = lbl_803E4050 *
                         (nz * fz + (nx * fx + ny * fy));
-                    (obj)->anim.velocityX = fx * dot;
-                    (obj)->anim.velocityY = fy * dot;
-                    (obj)->anim.velocityZ = fz * dot;
-                    (obj)->anim.velocityX = (obj)->anim.velocityX - nx;
-                    (obj)->anim.velocityY = (obj)->anim.velocityY - ny;
-                    (obj)->anim.velocityZ = (obj)->anim.velocityZ - nz;
-                    (obj)->anim.velocityY = (obj)->anim.velocityY * len;
-                    (obj)->anim.velocityY = (obj)->anim.velocityY * lbl_803E4054;
-                    (obj)->anim.velocityX = (obj)->anim.velocityX * len;
-                    (obj)->anim.velocityZ = (obj)->anim.velocityZ * len;
-                    (obj)->anim.velocityX = (obj)->anim.velocityX * (ff = lbl_803E4058);
-                    (obj)->anim.velocityZ = (obj)->anim.velocityZ * ff;
+                    ((GameObject*)obj)->anim.velocityX = fx * dot;
+                    ((GameObject*)obj)->anim.velocityY = fy * dot;
+                    ((GameObject*)obj)->anim.velocityZ = fz * dot;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - nx;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - ny;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - nz;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * len;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E4054;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * len;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * len;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (ff = lbl_803E4058);
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ff;
                 }
             }
-            if ((((DimbossicesmashPlacement*)setup)->unk3C & 4) != 0 && (obj)->anim.alpha == 0xff)
+            if ((((DimbossicesmashPlacement*)setup)->unk3C & 4) != 0 && ((GameObject*)obj)->anim.alpha == 0xff)
             {
-                dx = (obj)->anim.localPosX - (obj)->anim.previousLocalPosX;
-                dy = (obj)->anim.localPosY - (obj)->anim.previousLocalPosY;
-                dz = (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ;
+                dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+                dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
                 i = 0;
                 do
                 {
                     k = (f32)i * lbl_803E405C;
-                    stk.pos[0] = dx * k + (obj)->anim.previousLocalPosX;
-                    stk.pos[1] = dy * k + (obj)->anim.previousLocalPosY;
-                    stk.pos[2] = dz * k + (obj)->anim.previousLocalPosZ;
+                    stk.pos[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
+                    stk.pos[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
+                    stk.pos[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
                     (*gPartfxInterface)->spawnObject(obj, 1000, &stk, 0x200001, -1, NULL);
                     i++;
                 }
@@ -321,21 +321,21 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     f32 vx, vy, vz;
     f32 spd, len;
 
-    (obj)->anim.localPosX = ((DimBossIceSmashState*)state)->unk26C * (obj)->anim.
+    ((GameObject*)obj)->anim.localPosX = ((DimBossIceSmashState*)state)->unk26C * ((GameObject*)obj)->anim.
         rootMotionScale + ((ObjPlacement*)setup)->posX;
-    (obj)->anim.localPosY = ((DimBossIceSmashState*)state)->unk270 * (obj)->anim.
+    ((GameObject*)obj)->anim.localPosY = ((DimBossIceSmashState*)state)->unk270 * ((GameObject*)obj)->anim.
         rootMotionScale + ((ObjPlacement*)setup)->posY;
-    (obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * (obj)->anim.
+    ((GameObject*)obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * ((GameObject*)obj)->anim.
         rootMotionScale + ((ObjPlacement*)setup)->posZ;
-    (obj)->anim.rotX = *(s16*)(setup + 0x1a);
-    (obj)->anim.rotY = *(s16*)(setup + 0x1c);
-    (obj)->anim.rotZ = *(s16*)(setup + 0x1e);
+    ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
     if ((*(u8*)(setup + 0x3c) & 1) != 0)
     {
         spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
-        vx = (obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
-        vy = (obj)->anim.localPosY - (f32) * (s16*)(setup + 0x44);
-        vz = (obj)->anim.localPosZ - (f32) * (s16*)(setup + 0x46);
+        vx = ((GameObject*)obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
+        vy = ((GameObject*)obj)->anim.localPosY - (f32) * (s16*)(setup + 0x44);
+        vz = ((GameObject*)obj)->anim.localPosZ - (f32) * (s16*)(setup + 0x46);
         len = sqrtf(vz * vz + (vx * vx + vy * vy));
         if (lbl_803E4034 != len)
         {
@@ -343,24 +343,24 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
             vy = vy / len;
             vz = vz / len;
         }
-        (obj)->anim.velocityX = spd * vx;
-        (obj)->anim.velocityY = spd * vy;
-        (obj)->anim.velocityZ = spd * vz;
+        ((GameObject*)obj)->anim.velocityX = spd * vx;
+        ((GameObject*)obj)->anim.velocityY = spd * vy;
+        ((GameObject*)obj)->anim.velocityZ = spd * vz;
     }
     else
     {
-        (obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / 100.0f;
-        (obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / 100.0f;
-        (obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / 100.0f;
+        ((GameObject*)obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / 100.0f;
+        ((GameObject*)obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / 100.0f;
+        ((GameObject*)obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / 100.0f;
     }
     ((DimBossIceSmashState*)state)->unk278 = (f32) * (s16*)(setup + 0x2c);
     ((DimBossIceSmashState*)state)->unk27C = (f32) * (s16*)(setup + 0x2e);
     ((DimBossIceSmashState*)state)->unk280 = (f32) * (s16*)(setup + 0x30);
-    if ((obj)->anim.velocityX > lbl_803E4034)
+    if (((GameObject*)obj)->anim.velocityX > lbl_803E4034)
     {
         state[0x29f] = state[0x29f] | 1;
     }
-    if ((obj)->anim.velocityZ > lbl_803E4034)
+    if (((GameObject*)obj)->anim.velocityZ > lbl_803E4034)
     {
         state[0x29f] = state[0x29f] | 2;
     }
@@ -394,7 +394,7 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
 
     buf[0] = 5;
     ((ObjAnimComponent*)obj)->bankIndex = params[0x18];
-    state = (obj)->extra;
+    state = ((GameObject*)obj)->extra;
     fz = lbl_803E4034;
     ((DimBossIceSmashState*)state)->unk26C = lbl_803E4034;
     ((DimBossIceSmashState*)state)->unk270 = fz;

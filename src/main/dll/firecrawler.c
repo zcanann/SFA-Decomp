@@ -654,7 +654,7 @@ void crawler_checkNearbyActive(int obj, u8* state)
         u8 i;
         for (i = 0; (u32)i < (u32)count; i++)
         {
-            u32 objectIndex = i;
+            u32 objectIndex = (u8)i;
             int e = lbl_803AC4A8[objectIndex * 2];
             if (((GameObject*)e)->anim.seqId == 0x6a3)
             {
@@ -691,10 +691,10 @@ void fn_8015A52C(s16* obj)
         if (setup != NULL)
         {
             ((GameObject*)setup)->anim.velocityX = lbl_803E2C9C * -mathSinf(
-                (lbl_803E2CA0 * (f32) * obj) / lbl_803E2CA4);
+                (lbl_803E2CA0 * (f32) * (s16*)obj) / lbl_803E2CA4);
             ((GameObject*)setup)->anim.velocityY = lbl_803E2CA8;
             ((GameObject*)setup)->anim.velocityZ = lbl_803E2C9C * -mathCosf(
-                (lbl_803E2CA0 * (f32) * obj) / lbl_803E2CA4);
+                (lbl_803E2CA0 * (f32) * (s16*)obj) / lbl_803E2CA4);
         }
     }
 }
@@ -785,7 +785,7 @@ void snowworm_update(int* obj, u8* state)
         }
         if (((GameObject*)obj)->anim.currentMove == 9)
         {
-            fn_8015A52C(obj);
+            fn_8015A52C((s16*)obj);
         }
         else if (((GameObject*)obj)->anim.currentMove == 1)
         {
@@ -844,7 +844,7 @@ void hoodedZyck_update(s16* obj, u8* state)
         f32 diff;
         f32 z;
         u32 ang;
-        *obj = (f32) * (u16*)(state + 0x338) * timeDelta + (f32)(int) * obj;
+        *(s16*)obj = (f32) * (u16*)(state + 0x338) * timeDelta + (f32)(int) * (s16*)obj;
         z = lbl_803E2B18;
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
@@ -853,7 +853,7 @@ void hoodedZyck_update(s16* obj, u8* state)
         ang = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
                        ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14)) &
             0xffff;
-        diff = (f32)(int)(ang - ((int)*obj & 0xffffu));
+        diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
         {
             diff = lbl_803E2B28 + diff;
@@ -1153,7 +1153,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     {
         *(f32*)(state + 0x324) = lbl_803E2C70;
     }
-    *obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * obj;
+    *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * (s16*)obj;
     *(f32*)(state + 0x328) = lbl_803E2C38;
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
@@ -1250,11 +1250,11 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         f32 diff;
         void* other;
 
-        *obj = *obj + *(u16*)(state + 0x338);
+        *(s16*)obj = *(s16*)obj + *(u16*)(state + 0x338);
         posA[0] = ((GameObject*)obj)->anim.localPosX;
         posA[1] = ((GameObject*)obj)->anim.localPosY;
         posA[2] = ((GameObject*)obj)->anim.localPosZ;
-        fn_80292E20((u16) * obj, &sinA, &cosA);
+        fn_80292E20((u16) * (s16*)obj, &sinA, &cosA);
         tgtA[0] = -(lbl_803E2B38 * sinA - ((GameObject*)obj)->anim.localPosX);
         tgtA[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
@@ -1262,7 +1262,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         ang = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
                        ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14)) &
             0xffff;
-        diff = (f32)(int)(ang - ((int)*obj & 0xffffu));
+        diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
         {
             diff = lbl_803E2B28 + diff;
@@ -1303,11 +1303,11 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                 }
                 if (t < 0x4000)
                 {
-                    *obj = -*obj;
+                    *(s16*)obj = -*(s16*)obj;
                     posB[0] = ((GameObject*)obj)->anim.localPosX;
                     posB[1] = ((GameObject*)obj)->anim.localPosY;
                     posB[2] = ((GameObject*)obj)->anim.localPosZ;
-                    fn_80292E20((u16) * obj, &sinB, &cosB);
+                    fn_80292E20((u16) * (s16*)obj, &sinB, &cosB);
                     tgtB[0] = -(lbl_803E2B38 * sinB - ((GameObject*)obj)->anim.localPosX);
                     tgtB[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
                     tgtB[2] = -(lbl_803E2B38 * cosB - ((GameObject*)obj)->anim.localPosZ);
@@ -1321,7 +1321,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                         ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
                         ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
                     }
-                    *obj = -*obj;
+                    *(s16*)obj = -*(s16*)obj;
                 }
                 return;
             }
@@ -1661,7 +1661,7 @@ void crawler_updateC(s16* obj, u8* state)
                 dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(lbl_803AC4A8[0] + 0x18);
                 dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(lbl_803AC4A8[0] + 0x1c);
                 dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(lbl_803AC4A8[0] + 0x20);
-                rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*obj & 0xffffu);
+                rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
                     rel = rel - 0xffff;
@@ -1708,7 +1708,7 @@ void crawler_updateC(s16* obj, u8* state)
                 f32 t;
                 f32 a;
                 diff = (f32)(int)(((getAngle(base->tangentX, base->tangentZ) & 0xffff) + 0x8000)
-                    - ((int)*obj & 0xffffu));
+                    - ((int)*(s16*)obj & 0xffffu));
                 if (diff > lbl_803E2BC8)
                 {
                     diff = lbl_803E2BC4 + diff;
@@ -1750,7 +1750,7 @@ void crawler_updateC(s16* obj, u8* state)
                     dp2[0] = ((GameObject*)obj)->anim.worldPosX - base->posX;
                     dp2[1] = ((GameObject*)obj)->anim.worldPosY - base->posY;
                     dp2[2] = ((GameObject*)obj)->anim.worldPosZ - base->posZ;
-                    rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)*obj & 0xffffu);
+                    rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                     if (rel2 > 0x8000)
                     {
                         rel2 = rel2 - 0xffff;
@@ -1887,7 +1887,7 @@ void crawler_updateB(s16* obj, u8* state)
                 dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(lbl_803AC4A8[0] + 0x18);
                 dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(lbl_803AC4A8[0] + 0x1c);
                 dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(lbl_803AC4A8[0] + 0x20);
-                rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*obj & 0xffffu);
+                rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
                     rel = rel - 0xffff;
@@ -2132,7 +2132,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
         *(f32*)(state + 0x324) = -(lbl_803E2C54 * timeDelta - *(f32*)(state + 0x324));
-        *obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * obj;
+        *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int) * (s16*)obj;
     }
     else
     {
