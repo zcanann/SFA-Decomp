@@ -392,7 +392,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
         *(f32*)((u8*)runtime + 0x14) + range;
     DFSH_LASER_HEIGHT_WINDOW(runtime) = 8;
     ((GameObject*)obj)->anim.currentMoveProgress += lbl_803E4EF8 * timeDelta;
-    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4EC8)
+    if (((GameObject*)obj)->anim.currentMoveProgress > *(f32*)&lbl_803E4EC8)
     {
         ((GameObject*)obj)->anim.currentMoveProgress -= lbl_803E4EC8;
     }
