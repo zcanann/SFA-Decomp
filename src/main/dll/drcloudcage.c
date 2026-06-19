@@ -26,8 +26,8 @@
 #include "main/vecmath.h"
 #include "string.h"
 
-/* lbl_803DC0BC/lbl_803DC0E0/lbl_803AD088 are shared route-rank state owned by
-   drhightop; the lbl_803E5* pool and lbl_802C2428 point template live in this
+/* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
+   drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u32 volumeByte, f32 volume);
@@ -38,11 +38,11 @@ extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, vo
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
-extern f32 lbl_803DC0E0;
+extern f32 gDrCloudCageRouteDistGate;
 extern f32 timeDelta;
-extern f32 lbl_803DDC64;
+extern f32 gDrCloudCageWindVolume;
 extern u8 lbl_803AD088[];
-extern struct DRCloudCagePoints lbl_802C2428;
+extern struct DRCloudCagePoints gDrCloudCagePointTemplate;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF0;
@@ -172,7 +172,7 @@ void fn_801E9C00(int obj, int state)
     f32 minDelta;
     f32 scaleV;
 
-    localPoints = lbl_802C2428;
+    localPoints = gDrCloudCagePointTemplate;
 
     for (trailIndex = 0, p = (u8*)state; trailIndex < DRCLOUDCAGE_TRAIL_COUNT;
          p += DRCLOUDCAGE_TRAIL_STRIDE, trailIndex++)
@@ -382,18 +382,18 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
     {
         if (Sfx_IsPlayingFromObjectChannel(obj, 8))
         {
-            lbl_803DDC64 = lbl_803E5B0C * clamped;
-            if (lbl_803DDC64 < lbl_803E5AE8)
+            gDrCloudCageWindVolume = lbl_803E5B0C * clamped;
+            if (gDrCloudCageWindVolume < lbl_803E5AE8)
             {
-                lbl_803DDC64 = -lbl_803DDC64;
+                gDrCloudCageWindVolume = -gDrCloudCageWindVolume;
             }
-            if (lbl_803DDC64 < *(f32*)&lbl_803E5B10) /* #81 launder */
+            if (gDrCloudCageWindVolume < *(f32*)&lbl_803E5B10) /* #81 launder */
             {
-                lbl_803DDC64 = lbl_803E5B10;
+                gDrCloudCageWindVolume = lbl_803E5B10;
             }
-            if (lbl_803DDC64 > *(f32*)&lbl_803E5B14) /* #81 launder */
+            if (gDrCloudCageWindVolume > *(f32*)&lbl_803E5B14) /* #81 launder */
             {
-                lbl_803DDC64 = lbl_803E5B14;
+                gDrCloudCageWindVolume = lbl_803E5B14;
             }
             if (*(f32*)(state + 0x424) < lbl_803E5B18)
             {
@@ -411,7 +411,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             {
                 vol = 0;
             }
-            Sfx_SetObjectChannelVolume(obj, 8, vol & 0xff, lbl_803E5B20 + lbl_803DDC64 / lbl_803E5B08);
+            Sfx_SetObjectChannelVolume(obj, 8, vol & 0xff, lbl_803E5B20 + gDrCloudCageWindVolume / lbl_803E5B08);
         }
     }
     if (channelFlags & 2)
@@ -425,17 +425,17 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 {
                     d = clamped * (f32)((GameObject*)obj)->anim.rotZ / lbl_803E5B24;
                 }
-                lbl_803DDC64 = d;
+                gDrCloudCageWindVolume = d;
                 fv = (f32)(f64)d;
                 if (fv < 0.0f)
                 {
-                    lbl_803DDC64 = -fv;
+                    gDrCloudCageWindVolume = -fv;
                 }
                 else if (fv > lbl_803E5AEC)
                 {
-                    lbl_803DDC64 = lbl_803E5AEC;
+                    gDrCloudCageWindVolume = lbl_803E5AEC;
                 }
-                vol = (int)(lbl_803E5B28 * lbl_803DDC64);
+                vol = (int)(lbl_803E5B28 * gDrCloudCageWindVolume);
                 if ((f32)vol > lbl_803E5B28)
                 {
                     vol = 0x7f;
@@ -444,7 +444,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 {
                     vol = 0;
                 }
-                Sfx_SetObjectChannelVolume(obj, 1, vol & 0xff, lbl_803E5B20 + lbl_803DDC64);
+                Sfx_SetObjectChannelVolume(obj, 1, vol & 0xff, lbl_803E5B20 + gDrCloudCageWindVolume);
             }
         }
     }
@@ -554,7 +554,7 @@ f32 fn_801EA678(int obj, int state)
         {
             d = stateMetric - templateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
-            if (d > lbl_803DC0E0)
+            if (d > gDrCloudCageRouteDistGate)
             {
                 result = *(f32*)&lbl_803E5AE8;
             }

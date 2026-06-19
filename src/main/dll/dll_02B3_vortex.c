@@ -78,7 +78,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             state->particleTimer = lbl_803E73D8;
             particleArgs[2] =
-                ((f32)setup->radiusParam / lbl_803E73DC) *
+                ((f32)setup->radiusParam / gVortexRadiusParamScale) *
                 (((GameObject*)obj)->anim.rootMotionScale * state->alpha);
             particleArgs[4] = lbl_803E73D0;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7f7, particleArgs, 2, -1, NULL);
@@ -91,10 +91,10 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objZ = ((GameObject*)obj)->anim.localPosY;
         for (i = 0; i < 2; i++)
         {
-            ((GameObject*)obj)->anim.rotZ = lbl_803DC414[i];
+            ((GameObject*)obj)->anim.rotZ = gVortexRotZTable[i];
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = state->angles[i] + dt * lbl_803DC410[i];
-            ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / lbl_803E73DC) * state->alpha *
+            state->angles[i] = state->angles[i] + dt * gVortexAngleSpeed835[i];
+            ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / gVortexRadiusParamScale) * state->alpha *
                 (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -127,7 +127,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         for (i = 0; i < 3; i++)
         {
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = state->angles[i] + dt * lbl_803DC3E8[i];
+            state->angles[i] = state->angles[i] + dt * gVortexAngleSpeed83D[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -167,7 +167,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         for (i = 0; i < 3; i++)
         {
             ((GameObject*)obj)->anim.rotX = state->angles[i];
-            state->angles[i] = state->angles[i] + dt * lbl_803DC3F0[i];
+            state->angles[i] = state->angles[i] + dt * gVortexAngleSpeedDefault[i];
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -188,7 +188,7 @@ void vortex_hitDetect(void)
 
 void vortex_init(int obj, int initData)
 {
-    f32* base = lbl_8032BE20;
+    f32* base = gVortexScaleParams;
     VortexSetup* setup = (VortexSetup*)initData;
     VortexState* state = ((GameObject*)obj)->extra;
     u8 i;
@@ -202,8 +202,8 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 2; i++)
         {
-            state->radiusScale[i] = lbl_803DC3F8[i];
-            state->alphaScale[i] = lbl_803DC400[i];
+            state->radiusScale[i] = gVortexRadiusScaleInit[i];
+            state->alphaScale[i] = gVortexAlphaScaleInit835[i];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
@@ -211,8 +211,8 @@ void vortex_init(int obj, int initData)
     {
         for (i = 0; i < 2; i++)
         {
-            state->radiusScale[i] = lbl_803DC3F8[i];
-            state->alphaScale[i] = lbl_803DC408[i];
+            state->radiusScale[i] = gVortexRadiusScaleInit[i];
+            state->alphaScale[i] = gVortexAlphaScaleInit838[i];
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
@@ -278,7 +278,7 @@ void vortex_update(int obj)
         f32 hi;
         if (state->alpha < (hi = lbl_803E73E0))
         {
-            state->alpha = lbl_803E7400 * timeDelta + state->alpha;
+            state->alpha = gVortexAlphaFadeSpeed * timeDelta + state->alpha;
             if (state->alpha > hi)
             {
                 state->alpha = hi;
@@ -290,7 +290,7 @@ void vortex_update(int obj)
         f32 lo;
         if (state->alpha > (lo = lbl_803E73D0))
         {
-            state->alpha = state->alpha - lbl_803E7400 * timeDelta;
+            state->alpha = state->alpha - gVortexAlphaFadeSpeed * timeDelta;
             if (state->alpha < lo)
             {
                 state->alpha = lo;

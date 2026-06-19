@@ -18,19 +18,19 @@
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-extern f32 lbl_803DB878;
-extern f32 lbl_803DB87C;
+extern f32 gEffect19ScrollPhase2;
+extern f32 gEffect19ScrollPhase3;
 extern f32 lbl_803E02D8;
 extern f32 lbl_803E02DC;
 extern f32 lbl_803E02E8;
-extern s32 lbl_803DD3F0;
-extern s32 lbl_803DD3F4;
-extern f32 lbl_803DD3F8;
-extern f32 lbl_803DD3FC;
-extern f32 lbl_803E0308;
-extern f32 lbl_803E030C;
-extern f32 lbl_803DB870;
-extern f32 lbl_803DB874;
+extern s32 gEffect19Osc0Angle;
+extern s32 gEffect19Osc1Angle;
+extern f32 gEffect19Osc1Value;
+extern f32 gEffect19Osc0Value;
+extern f32 gEffect19Pi;
+extern f32 gEffect19SineAngleScale;
+extern f32 gEffect19ScrollPhase0;
+extern f32 gEffect19ScrollPhase1;
 extern f32 lbl_803E02E4;
 extern f32 lbl_803E02EC;
 extern f32 lbl_803E02F0;
@@ -44,10 +44,10 @@ int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     int spawnResult;
     PartFxSpawn cfg;
 
-    lbl_803DB870 = lbl_803DB870 + lbl_803E02D8;
-    if (lbl_803DB870 > 1.0f) lbl_803DB870 = lbl_803E02DC;
-    lbl_803DB874 = lbl_803DB874 + lbl_803E02E4;
-    if (lbl_803DB874 > 1.0f) lbl_803DB874 = lbl_803E02E8;
+    gEffect19ScrollPhase0 = gEffect19ScrollPhase0 + lbl_803E02D8;
+    if (gEffect19ScrollPhase0 > 1.0f) gEffect19ScrollPhase0 = lbl_803E02DC;
+    gEffect19ScrollPhase1 = gEffect19ScrollPhase1 + lbl_803E02E4;
+    if (gEffect19ScrollPhase1 > 1.0f) gEffect19ScrollPhase1 = lbl_803E02E8;
     if (sourceObj == NULL)
     {
         spawnResult = -1;
@@ -138,18 +138,18 @@ void Effect19_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB878 + (step = lbl_803E02D8 * timeDelta);
-    lbl_803DB878 = sum;
-    if (sum > 1.0f) lbl_803DB878 = lbl_803E02DC;
-    sum = lbl_803DB87C + step;
-    lbl_803DB87C = sum;
-    if (sum > 1.0f) lbl_803DB87C = lbl_803E02E8;
-    lbl_803DD3F0 = lbl_803DD3F0 + framesThisStep * 0x64;
-    if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
-    lbl_803DD3FC = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
-    lbl_803DD3F4 = lbl_803DD3F4 + framesThisStep * 0x32;
-    if (lbl_803DD3F4 > 0x7fff) lbl_803DD3F4 = 0;
-    lbl_803DD3F8 = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
+    sum = gEffect19ScrollPhase2 + (step = lbl_803E02D8 * timeDelta);
+    gEffect19ScrollPhase2 = sum;
+    if (sum > 1.0f) gEffect19ScrollPhase2 = lbl_803E02DC;
+    sum = gEffect19ScrollPhase3 + step;
+    gEffect19ScrollPhase3 = sum;
+    if (sum > 1.0f) gEffect19ScrollPhase3 = lbl_803E02E8;
+    gEffect19Osc0Angle = gEffect19Osc0Angle + framesThisStep * 0x64;
+    if (gEffect19Osc0Angle > 0x7fff) gEffect19Osc0Angle = 0;
+    gEffect19Osc0Value = mathSinf(gEffect19Pi * (f32)(s16)gEffect19Osc0Angle / gEffect19SineAngleScale);
+    gEffect19Osc1Angle = gEffect19Osc1Angle + framesThisStep * 0x32;
+    if (gEffect19Osc1Angle > 0x7fff) gEffect19Osc1Angle = 0;
+    gEffect19Osc1Value = mathSinf(gEffect19Pi * (f32)(s16)gEffect19Osc1Angle / gEffect19SineAngleScale);
 }
 
 void Effect19_func03_nop(void)

@@ -31,7 +31,7 @@ extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
-extern u8 lbl_8031A0E0[];
+extern u8 gMoveLibDefaultMoveData[];
 extern f32 lbl_803E1C88;
 extern f32 lbl_803E1C8C;
 extern f32 timeDelta;
@@ -51,8 +51,8 @@ extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 lbl_803E1CB4;
 extern f32 lbl_803E1CB8;
-extern f32 lbl_803E1CBC;
-extern f32 lbl_803E1CC0;
+extern f32 gMoveLibPi;
+extern f32 gMoveLibAngleHalfScale;
 extern f32 Vec_distance(f32* a, f32* b);
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
@@ -195,8 +195,8 @@ void dll_2E_func08(int obj, int v1, int v2)
 
 void dll_2E_func09(int obj, void* src1, void* src2)
 {
-    if (src1 == NULL) src1 = lbl_8031A0E0;
-    if (src2 == NULL) src2 = lbl_8031A0E0;
+    if (src1 == NULL) src1 = gMoveLibDefaultMoveData;
+    if (src2 == NULL) src2 = gMoveLibDefaultMoveData;
     memcpy((char*)obj + 0x5bc, src1, (u32) * (u8*)(obj + 0x610) * 2);
     memcpy((char*)obj + 0x5da, src2, (u32) * (u8*)(obj + 0x610) * 2);
 }
@@ -317,7 +317,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
     fn_8003AC14(obj, seqFn_800394a0(), count);
     objFn_8003acfc((int*)obj, seqFn_800394a0(), count, st + 0x1c);
     fn_8003A9C0(st + 0x1c, *(u8*)(st + 0x610), 0, 0);
-    dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
+    dll_2E_func09((int)st, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData);
 }
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
@@ -592,7 +592,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             delta = delta + 0xffff;
         }
-        speed = speed * -mathCosf(lbl_803E1CBC * delta / lbl_803E1CC0);
+        speed = speed * -mathCosf(gMoveLibPi * delta / gMoveLibAngleHalfScale);
         ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, speed, out);
     }
     return 0;

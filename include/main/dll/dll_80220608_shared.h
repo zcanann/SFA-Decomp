@@ -631,25 +631,25 @@ extern f32 lbl_803E73E0;
 extern f32 lbl_803E73D0;
 extern f32 lbl_803E73D4;
 extern f32 lbl_803E73D8;
-extern f32 lbl_803E73DC;
+extern f32 gVortexRadiusParamScale;
 extern f32 lbl_803E73E4;
 extern f32 lbl_803E73E8;
 extern f32 lbl_803E73EC;
 extern double lbl_803E73F0;
 extern double lbl_803E73F8;
-extern f32 lbl_803E7400;
+extern f32 gVortexAlphaFadeSpeed;
 
 
 
 
-extern s16 lbl_803DC3E8[4];
-extern s16 lbl_803DC3F0[4];
-extern s16 lbl_803DC410[2];
-extern s16 lbl_803DC414[2];
-extern f32 lbl_8032BE20[];
-extern f32 lbl_803DC3F8[2];
-extern f32 lbl_803DC400[2];
-extern f32 lbl_803DC408[2];
+extern s16 gVortexAngleSpeed83D[4];
+extern s16 gVortexAngleSpeedDefault[4];
+extern s16 gVortexAngleSpeed835[2];
+extern s16 gVortexRotZTable[2];
+extern f32 gVortexScaleParams[];
+extern f32 gVortexRadiusScaleInit[2];
+extern f32 gVortexAlphaScaleInit835[2];
+extern f32 gVortexAlphaScaleInit838[2];
 extern f32 lbl_803E7404;
 extern int getHudHiddenFrameCount(void);
 
