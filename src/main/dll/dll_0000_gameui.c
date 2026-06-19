@@ -3947,16 +3947,14 @@ void GameUI_release(void)
     {
         u8 k = j;
         void** tex = (void**)((u8*)g + k * 4);
-        s16* idx = (s16*)((u8*)g + k * 2);
-        u8* flag = (u8*)g + k;
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {
             textureFree(*tex);
             *tex = NULL;
         }
-        idx[1188] = -1;
-        flag[1096] = 1;
+        g->itemSlots[k] = -1;
+        g->itemFlags[k] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -3975,16 +3973,14 @@ void GameUI_release(void)
     {
         u8 k = j;
         void** tex = (void**)((u8*)g + k * 4);
-        s16* idx = (s16*)((u8*)g + k * 2);
-        u8* flag = (u8*)g + k;
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {
             textureFree(*tex);
             *tex = NULL;
         }
-        idx[1188] = -1;
-        flag[1096] = 1;
+        g->itemSlots[k] = -1;
+        g->itemFlags[k] = 1;
     }
 
     textureFree(lbl_803DD8C4);
