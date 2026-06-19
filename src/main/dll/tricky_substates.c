@@ -67,7 +67,7 @@ extern int Objfsa_GetWalkGroupIndexAtPoint(void* pos, int a);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, u8* pos, int flag);
 extern int trickyMove(u8 * obj, u8 * pos);
 extern int getAngle(float y, float x);
-extern void trickyTurnTowardYaw(u8* obj, int yaw);
+extern void trickyTurnTowardYaw(u8* obj, s16 yaw);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 gTrickySubstateSfxIdPairB;
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
