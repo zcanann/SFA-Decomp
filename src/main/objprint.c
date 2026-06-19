@@ -1440,13 +1440,13 @@ void fn_8003A168(int p1, int p2)
         n = (s32)(u32) * (u8*)((char*)table + 0x5a);
         for (k = 0; k < n; k++)
         {
-            bank = *(int*)((int)table + 0x10);
+            bank = *(int*)&((ObjDef*)table)->jointData;
             if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(p1) + i + 1) != 0xff &&
                 (int)*(u8*)(bank + i) == 0)
             {
                 found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
             }
-            i = i + *(s8*)((char*)table + 0x55) + 1;
+            i = i + ((ObjDef*)table)->modelCount + 1;
             j += 0x12;
         }
     }
@@ -1484,7 +1484,7 @@ void objModelClearVecFn_8003aa40(int obj)
             n = (s32)(u32)((ObjDef*)table)->jointCount;
             for (k = 0; k < n; k++)
             {
-                bank = *(int*)((int)table + 0x10);
+                bank = *(int*)&((ObjDef*)table)->jointData;
                 if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                     (int)*(u8*)(bank + i) == slot)
                 {
@@ -1526,7 +1526,7 @@ void fn_8003AC14(int obj, int* keys, int count)
             n = (s32)(u32)((ObjDef*)table)->jointCount;
             for (k = 0; k < n; k++)
             {
-                bank = *(int*)((int)table + 0x10);
+                bank = *(int*)&((ObjDef*)table)->jointData;
                 if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                     (int)*(u8*)(bank + i) == key)
                 {
@@ -1569,7 +1569,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
             n = (s32)(u32)((ObjDef*)table)->jointCount;
             for (k = 0; k < n; k++)
             {
-                bank = *(int*)((int)table + 0x10);
+                bank = *(int*)&((ObjDef*)table)->jointData;
                 if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                     (int)*(u8*)(bank + i) == key)
                 {
@@ -1612,8 +1612,8 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
             n = (s32)(u32)((ObjDef*)table)->jointCount;
             for (k = 0; k < n; k++)
             {
-                if ((int)*(u8*)(*(int*)((int)table + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(*(int*)((int)table + 0x10) + i) == key)
+                if ((int)*(u8*)(*(int*)&((ObjDef*)table)->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
+                    (int)*(u8*)(*(int*)&((ObjDef*)table)->jointData + i) == key)
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
@@ -1777,7 +1777,7 @@ void fn_8003B500(int obj, int p4)
         n = (s32)(u32)((ObjDef*)table)->jointCount;
         for (k = 0; k < n; k++)
         {
-            bank = *(int*)((int)table + 0x10);
+            bank = *(int*)&((ObjDef*)table)->jointData;
             if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                 (int)*(u8*)(bank + i) == 0)
             {
@@ -2062,7 +2062,7 @@ void fn_8003A230(int obj, int p2, f32 val)
         n = (s32)(u32)((ObjDef*)table)->jointCount;
         for (k = 0; k < n; k++)
         {
-            bank = *(int*)((int)table + 0x10);
+            bank = *(int*)&((ObjDef*)table)->jointData;
             if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                 (int)*(u8*)(bank + i) == 0)
             {
