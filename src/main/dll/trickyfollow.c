@@ -1389,7 +1389,7 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         f32 deltaSpeedSq = deltaSpeed * deltaSpeed;
         ctx = ((GameObject*)obj)->extra;
         otherTarget = (f32*)((TrickyState*)ctx)->unk28;
-        if (otherTarget == (f32*)((TrickyState*)ctx)->previousPathPoint)
+        if (otherTarget == ((TrickyState*)ctx)->previousPathPoint)
         {
             dx = ((TrickyState*)ctx)->previousPathX - ((GameObject*)obj)->anim.worldPosX;
             dz = ((TrickyState*)ctx)->previousPathZ - ((GameObject*)obj)->anim.worldPosZ;

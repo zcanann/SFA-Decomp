@@ -2197,7 +2197,7 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
                 {
                     found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
                 }
-                entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
+                entryIdx += ((ObjDef*)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
@@ -2625,7 +2625,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
-            entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
+            entryIdx += ((ObjDef*)m)->modelCount + 1;
             vecOffset += 0x12;
         }
     }
@@ -3042,7 +3042,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 {
                     found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
-                entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
+                entryIdx += ((ObjDef*)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
