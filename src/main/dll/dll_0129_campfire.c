@@ -1,7 +1,7 @@
 /* DLL 0x0129 — campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
 extern void objRenderFn_8003b8f4(f32);

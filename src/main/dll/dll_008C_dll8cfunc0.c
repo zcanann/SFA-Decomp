@@ -30,7 +30,7 @@ extern f32 lbl_803E10CC;
 extern f32 lbl_803E10D0;
 extern f32 lbl_803E10D4;
 
-void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = lbl_80316950;
@@ -47,7 +47,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     e[1].flags = 0xe;
     e[1].tex = base + 0x194;
     e[1].mode = 2;
-    if ((uint)posSource != 0)
+    if ((u32)posSource != 0)
     {
         e[1].x = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
         e[1].y = lbl_803E10B4 * (lbl_803E10BC * (f32) * (s16*)(posSource + 0));
@@ -63,7 +63,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     e[2].flags = 7;
     e[2].tex = base + 0x174;
     e[2].mode = 2;
-    if ((uint)posSource != 0)
+    if ((u32)posSource != 0)
     {
         e[2].x = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
         e[2].y = lbl_803E10B4 * (lbl_803E10C0 * (f32) * (s16*)(posSource + 0));
@@ -95,7 +95,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     e[5].mode = 0x100;
     e[5].x = lbl_803E10B0;
     e[5].y = lbl_803E10B0;
-    if ((uint)posSource != 0)
+    if ((u32)posSource != 0)
     {
         e[5].z = (f32) * (s16*)(posSource + 2);
     }
@@ -116,7 +116,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     e[7].mode = 0x100;
     e[7].x = lbl_803E10B0;
     e[7].y = lbl_803E10B0;
-    if ((uint)posSource != 0)
+    if ((u32)posSource != 0)
     {
         e[7].z = (f32) * (s16*)(posSource + 2);
     }
@@ -137,7 +137,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     e[9].mode = 0x100;
     e[9].x = lbl_803E10B0;
     e[9].y = lbl_803E10B0;
-    if ((uint)posSource != 0)
+    if ((u32)posSource != 0)
     {
         e[9].z = (f32) * (s16*)(posSource + 2);
     }
@@ -201,7 +201,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0)
+        if ((u32)sourceObj != 0)
         {
             buf.pos[0] = lbl_803E10B0 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E10B0 + *(f32*)(sourceObj + 0x1c);

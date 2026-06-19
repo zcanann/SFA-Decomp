@@ -3,9 +3,9 @@
 #include "main/dll/genpropswgpipe_struct.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
 
@@ -165,51 +165,51 @@ extern u8 framesThisStep;
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 
-extern undefined4 FUN_80006810();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
+extern u32 FUN_80006810();
+extern u64 FUN_80006824();
+extern u32 FUN_8001753c();
+extern u32 FUN_80017588();
+extern u32 FUN_8001759c();
+extern u32 FUN_800175b0();
+extern u32 FUN_800175bc();
+extern u32 FUN_800175cc();
+extern u32 FUN_800175d0();
+extern u32 FUN_800175d8();
+extern u32 FUN_800175ec();
 extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
+extern u32 FUN_80017688();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
 extern int FUN_80017a54();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
+extern u32 FUN_80017ac8();
+extern u64 FUN_8002fc3c();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u32 FUN_800810f8();
+extern u32 FUN_80081118();
+extern u64 FUN_800e842c();
 extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
+extern u32 FUN_80286884();
+extern u32 fcos16Precise();
+extern u32 FUN_80294c48();
+extern u32 FUN_80294c60();
 extern int FUN_80294cf8();
 extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
+extern u32 FUN_80294d60();
+extern u32 FUN_80294d6c();
 
-extern undefined4 DAT_80321678;
+extern u32 DAT_80321678;
 extern int DAT_80321688;
-extern undefined4 DAT_80321698;
+extern u32 DAT_80321698;
 extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
+extern u32 DAT_803ad324;
+extern u32 DAT_803ad328;
+extern u32 DAT_803ad32c;
+extern u32 DAT_803ad330;
+extern u32 DAT_803ad334;
+extern u32 DAT_803ad338;
 extern f64 DOUBLE_803e3e88;
 extern f64 DOUBLE_803e4068;
 extern f32 lbl_803DC074;
@@ -317,15 +317,15 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
 
 void staticCamera_init(short* param_1, int param_2, int param_3)
 {
-    undefined* dst;
+    u8* dst;
 
     *param_1 = -*(short*)(param_2 + 0x1c);
     param_1[1] = -*(short*)(param_2 + 0x1e);
     param_1[2] = -*(short*)(param_2 + 0x20);
-    dst = *(undefined**)(param_1 + 0x5c);
-    *dst = *(undefined*)(param_2 + 0x19);
+    dst = *(u8**)(param_1 + 0x5c);
+    *dst = *(u8*)(param_2 + 0x19);
     *(float*)(dst + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
     dst[1] = 0;
     if (param_3 == 0)
     {
@@ -338,24 +338,24 @@ void FUN_8016d188(int param_1, int param_2)
 {
     float intensity;
     int scratch2;
-    uint useAltTex;
+    u32 useAltTex;
     int amount;
     double spawnScale;
     int ownerXform;
     float progress;
     int seqId;
-    undefined2 spawnParam[3];
+    u16 spawnParam[3];
     short frameCount;
     float spawnAlpha;
-    undefined2 local_34;
-    undefined2 local_32;
-    undefined2 local_30;
+    u16 local_34;
+    u16 local_32;
+    u16 local_30;
     short frames;
     float alpha;
     float yOffset;
     float scale;
-    undefined4 local_20;
-    longlong amountLL;
+    u32 local_20;
+    s64 amountLL;
 
     amount = *(int*)&((GameObject*)param_1)->extra;
     if ((param_1 != 0) && (param_2 != 0))
@@ -373,19 +373,19 @@ void FUN_8016d188(int param_1, int param_2)
                 progress = lbl_803E3F20;
                 intensity = lbl_803E3F20;
             }
-            if (*(byte*)(amount + 0xbb) == 7)
+            if (*(u8*)(amount + 0xbb) == 7)
             {
                 spawnScale = (double)lbl_803E3F2C;
-                amountLL = (longlong)(int)(lbl_803E3F30 * intensity);
+                amountLL = (s64)(int)(lbl_803E3F30 * intensity);
                 FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), param_1, 7,
-                             (uint) * (byte*)(amount + 0xba), 1, (int)(lbl_803E3F30 * intensity), 0, 0);
+                             (u32) * (u8*)(amount + 0xba), 1, (int)(lbl_803E3F30 * intensity), 0, 0);
             }
             else
             {
                 spawnScale = (double)lbl_803E3F20;
-                amountLL = (longlong)(int)(lbl_803E3F30 * intensity);
+                amountLL = (s64)(int)(lbl_803E3F30 * intensity);
                 FUN_800810f8(spawnScale, spawnScale, spawnScale, (double)(lbl_803E3F34 * progress), param_1,
-                             (uint) * (byte*)(amount + 0xbb), (uint) * (byte*)(amount + 0xba), 1,
+                             (u32) * (u8*)(amount + 0xbb), (u32) * (u8*)(amount + 0xba), 1,
                              (int)(lbl_803E3F30 * intensity), 0, 0);
             }
         }
@@ -397,7 +397,7 @@ void FUN_8016d188(int param_1, int param_2)
         if (seqId == 0x87)
         {
             amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F30));
-            amountLL = (longlong)amount;
+            amountLL = (s64)amount;
             frames = 0x15 - (short)amount;
             yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
             local_34 = 0xc94;
@@ -427,7 +427,7 @@ void FUN_8016d188(int param_1, int param_2)
                 if ((seqId == 0x43) && (lbl_803E3F4C < progress))
                 {
                     amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F30));
-                    amountLL = (longlong)amount;
+                    amountLL = (s64)amount;
                     frames = (short)amount + 6;
                     yOffset = lbl_803E3F3C * (progress / lbl_803E3F40 - lbl_803E3F2C);
                     local_34 = 0xc94;
@@ -459,7 +459,7 @@ void FUN_8016d188(int param_1, int param_2)
                         frames = (short)amount;
                         local_34 = 0xc75;
                     }
-                    amountLL = (longlong)amount;
+                    amountLL = (s64)amount;
                     yOffset = lbl_803E3F5C * (lbl_803E3F28 - intensity);
                     frames = 0x15 - frames;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &local_34, 2, -1, NULL);
@@ -521,13 +521,13 @@ void FUN_8016d188(int param_1, int param_2)
             if (lbl_803E3F4C < progress)
             {
                 amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F60));
-                amountLL = (longlong)amount;
+                amountLL = (s64)amount;
                 frameCount = 0x15 - (short)amount;
                 spawnParam[0] = 0xc95;
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerXform);
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
-                local_20 = *(undefined4*)(ownerXform + 0x14);
+                local_20 = *(u32*)(ownerXform + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
                                                  0x200001, -1, spawnParam);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &local_34,
@@ -541,7 +541,7 @@ void FUN_8016d188(int param_1, int param_2)
                 spawnAlpha = lbl_803E3F64 * (progress / lbl_803E3F60) + lbl_803E3F44;
                 yOffset = *(float*)(ownerXform + 0xc);
                 scale = *(float*)(ownerXform + 0x10);
-                local_20 = *(undefined4*)(ownerXform + 0x14);
+                local_20 = *(u32*)(ownerXform + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &local_34,
                                                  0x200001, -1, spawnParam);
             }
@@ -563,7 +563,7 @@ void FUN_8016d188(int param_1, int param_2)
         else if ((seqId == 0x46f) && (lbl_803E3F4C < progress))
         {
             amount = (int)(lbl_803E3F38 * (progress / lbl_803E3F60));
-            amountLL = (longlong)amount;
+            amountLL = (s64)amount;
             frames = 0x15 - (short)amount;
             yOffset = lbl_803E3F5C * (lbl_803E3F28 - progress / lbl_803E3F60);
             local_34 = 0xc94;
@@ -581,43 +581,43 @@ void FUN_8016d188(int param_1, int param_2)
     return;
 }
 
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
+void FUN_8016d994(int param_1, u8 param_2, u8 param_3)
 {
     int extra;
 
     extra = *(int*)&((GameObject*)param_1)->extra;
-    *(undefined*)(extra + 0xbb) = param_2;
-    *(undefined*)(extra + 0xba) = param_3;
+    *(u8*)(extra + 0xbb) = param_2;
+    *(u8*)(extra + 0xba) = param_3;
     return;
 }
 
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9)
 {
     short level;
     int scratch;
     int* emitter;
-    uint partIdx;
+    u32 partIdx;
     int partPtr;
     int* extra;
     double computed;
     double clamped;
-    undefined8 local_18;
+    u64 local_18;
 
     extra = ((GameObject*)param_9)->extra;
     scratch = FUN_80017a54(param_9);
-    *(ushort*)(scratch + 0x18) = *(ushort*)(scratch + 0x18) & ~0x8;
+    *(u16*)(scratch + 0x18) = *(u16*)(scratch + 0x18) & ~0x8;
     FUN_8002fc3c((double)(float)extra[0x14], (double)lbl_803DC074);
     scratch = 3;
     emitter = extra;
     do
     {
-        if ((*(byte*)(emitter + 5) & 2) != 0)
+        if ((*(u8*)(emitter + 5) & 2) != 0)
         {
-            partIdx = (uint) * (ushort*)(emitter + 3);
+            partIdx = (u32) * (u16*)(emitter + 3);
             partPtr = *emitter + partIdx * 0x14;
-            for (; (int)partIdx < (int)(uint) * (ushort*)((int)emitter + 0xe); partIdx = partIdx + 2)
+            for (; (int)partIdx < (int)(u32) * (u16*)((int)emitter + 0xe); partIdx = partIdx + 2)
             {
                 if (emitter == (int*)extra[0x12])
                 {
@@ -631,7 +631,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                         clamped = param_3;
                     }
                     *(short*)(partPtr + 0x10) = (short)(int)(param_3 - clamped);
-                    *(undefined2*)(partPtr + 0x24) = *(undefined2*)(partPtr + 0x10);
+                    *(u16*)(partPtr + 0x24) = *(u16*)(partPtr + 0x10);
                 }
                 else
                 {
@@ -639,7 +639,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                     *(short*)(partPtr + 0x10) =
                         (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
                             (double)(f32)(s32)((int)*(short*)(partPtr + 0x10)));
-                    *(undefined2*)(partPtr + 0x24) = *(undefined2*)(partPtr + 0x10);
+                    *(u16*)(partPtr + 0x24) = *(u16*)(partPtr + 0x10);
                 }
                 level = *(short*)(partPtr + 0x10);
                 if (level < 0)
@@ -670,7 +670,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
             }
             if ((emitter != (int*)extra[0x12]) && (*(short*)((int)emitter + 0x12) == 0))
             {
-                *(byte*)(emitter + 5) = *(byte*)(emitter + 5) & 0xfd;
+                *(u8*)(emitter + 5) = *(u8*)(emitter + 5) & 0xfd;
             }
         }
         emitter = emitter + 6;
@@ -679,7 +679,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
     while (scratch != 0);
     FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
     FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)extra + 0xb9) = 0;
+    *(u8*)((int)extra + 0xb9) = 0;
     if (DAT_803ad338 != '\0')
     {
         DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
@@ -706,10 +706,10 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
 void FUN_80170048(void)
 {
     float value;
-    uint world;
+    u32 world;
     int scratch;
     int* elem;
-    uint randVal;
+    u32 randVal;
     int effectObj;
     int* state;
     int* src;
@@ -719,12 +719,12 @@ void FUN_80170048(void)
     double phase;
     double bias;
     double offset;
-    undefined8 ret;
-    undefined8 local_78;
-    undefined8 local_70;
+    u64 ret;
+    u64 local_78;
+    u64 local_70;
 
     ret = FUN_80286838();
-    world = (uint)((ulonglong)ret >> 0x20);
+    world = (u32)((u64)ret >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
     state = *(int**)(world + 0xb8);
     scratch = FUN_80017a98();
@@ -734,7 +734,7 @@ void FUN_80170048(void)
         effectObj = FUN_80294cf8(scratch);
     }
     value = lbl_803E4064;
-    switch ((uint)ret & 0xff)
+    switch ((u32)ret & 0xff)
     {
     case 0:
         if (*state != 0)
@@ -799,7 +799,7 @@ void FUN_80170048(void)
             bias = DOUBLE_803e4068;
             do
             {
-                *(undefined2*)(elem + 0xd) = 0xc000;
+                *(u16*)(elem + 0xd) = 0xc000;
                 cosVal = (double)fcos16Precise();
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(phase + cosVal) * base));
                 state[5] = *src;
@@ -872,7 +872,7 @@ void FUN_80170048(void)
         elem = state;
         do
         {
-            *(undefined2*)(state + 0xd) = 0;
+            *(u16*)(state + 0xd) = 0;
             base = (double)fcos16Precise();
             elem[9] = (int)(*scaleTbl * (float)((double)(float)(offset + base) * bias));
             elem[5] = *src;
@@ -900,7 +900,7 @@ void FUN_80170048(void)
         bias = DOUBLE_803e4068;
         do
         {
-            *(undefined2*)(state + 0xd) = 0xc000;
+            *(u16*)(state + 0xd) = 0xc000;
             cosVal = (double)fcos16Precise();
             elem[9] = (int)(*scaleTbl * (float)((double)(float)(offset + cosVal) * base));
             elem[5] = *src;
@@ -933,7 +933,7 @@ void FUN_80170048(void)
         elem = state;
         do
         {
-            *(undefined2*)(state + 0xd) = 0x4000;
+            *(u16*)(state + 0xd) = 0x4000;
             base = (double)fcos16Precise();
             elem[9] = (int)(*scaleTbl * (float)((double)(float)(bias + base) * offset));
             elem[5] = *src;
@@ -959,10 +959,10 @@ void FUN_80170048(void)
         state[3] = (int)value;
         state[4] = (int)value;
         state[1] = (int)value;
-        *(byte*)(state + 0x17) = *(byte*)(state + 0x17) | 1;
-        *(byte*)((int)state + 0x5d) = *(byte*)((int)state + 0x5d) | 1;
-        *(byte*)((int)state + 0x5e) = *(byte*)((int)state + 0x5e) | 1;
-        *(byte*)((int)state + 0x5f) = *(byte*)((int)state + 0x5f) | 1;
+        *(u8*)(state + 0x17) = *(u8*)(state + 0x17) | 1;
+        *(u8*)((int)state + 0x5d) = *(u8*)((int)state + 0x5d) | 1;
+        *(u8*)((int)state + 0x5e) = *(u8*)((int)state + 0x5e) | 1;
+        *(u8*)((int)state + 0x5f) = *(u8*)((int)state + 0x5f) | 1;
     }
     FUN_80286884();
     return;
@@ -983,18 +983,18 @@ void mikabombshadow_update(int* obj)
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * f;
 }
 
-void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
+void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     short seqOrType;
     char counter;
-    uint scratchU;
+    u32 scratchU;
     int audioObj;
     int placement;
     int extra;
-    undefined8 result;
+    u64 result;
 
     extra = *(int*)&((GameObject*)param_9)->extra;
     placement = *(int*)&((GameObject*)param_9)->anim.placementData;
@@ -1004,7 +1004,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
     FUN_80017a98();
     FUN_80017a90();
     result = ObjHits_DisableObject(param_9);
-    if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
     {
         *(float*)(extra + 8) = lbl_803E40E8;
         if (((GameObject*)param_9)->anim.modelState != NULL)
@@ -1017,12 +1017,12 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_80017698((int)*(short*)(extra + 0x10), 1);
         result = FUN_800e842c(param_9);
     }
-    scratchU = (uint) * (short*)(placement + 0x1e);
+    scratchU = (u32) * (short*)(placement + 0x1e);
     if (scratchU != 0xffffffff)
     {
         result = FUN_80017698(scratchU, 1);
     }
-    scratchU = (uint) * (short*)(placement + 0x2c);
+    scratchU = (u32) * (short*)(placement + 0x2c);
     if (0 < (int)scratchU)
     {
         FUN_80017688(scratchU);
@@ -1061,7 +1061,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         {
             FUN_80006824(param_9, SFXwp_gprop2_c);
             FUN_80017698(0x3e9, 1);
-            *(undefined2*)(extra + 0x3c) = 0x4b0;
+            *(u16*)(extra + 0x3c) = 0x4b0;
             FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
         }
         else
@@ -1104,7 +1104,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
     }
 LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
+    *(u32*)&((GameObject*)param_9)->anim.rootMotionScale = *(u32*)(*(int*)&((GameObject*)param_9)->anim.
         modelInstance + 4);
     ((GameObject*)param_9)->unkF4 = 1;
     return;
@@ -1599,7 +1599,7 @@ void staff_release(void);
 
 void mikabombshadow_init(int* obj)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     f32 out;
     fn_80065684((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

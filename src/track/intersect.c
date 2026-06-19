@@ -598,7 +598,7 @@ int depthReadRequestPoll(int x, int y, int requestKey)
     return 0;
 }
 
-uint getScreenResolution(void)
+u32 getScreenResolution(void)
 {
     u32 v = screenWidth;
     if (v != 0) {

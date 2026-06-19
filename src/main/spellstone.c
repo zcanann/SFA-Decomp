@@ -6,8 +6,8 @@
 extern f32 Vec_distance(void* posA, void* posB);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_RemoveFromUpdateList(void* obj);
-extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                                 undefined4 param_5, double scale);
+extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
+                                 u32 param_5, double scale);
 extern int spellstone_idleCallback(void);
 
 extern s16 lbl_803DC228;
@@ -48,12 +48,12 @@ int spellstone_getObjectTypeId(void)
 
 void spellstone_free(SpellStoneObject* obj)
 {
-    ObjGroup_RemoveObject((uint)obj, 0x1e);
+    ObjGroup_RemoveObject((u32)obj, 0x1e);
     return;
 }
 
-void spellstone_render(SpellStoneObject* obj, undefined4 p2, undefined4 p3,
-                       undefined4 p4, undefined4 p5, char visible)
+void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3,
+                       u32 p4, u32 p5, char visible)
 {
     SpellStoneState* state;
 
@@ -132,7 +132,7 @@ void spellstone_init(SpellStoneObject* obj)
     SpellStoneState* state;
 
     state = obj->state;
-    ObjGroup_AddObject((uint)obj, 0x1e);
+    ObjGroup_AddObject((u32)obj, 0x1e);
     state->state = 1;
     obj->callback = spellstone_idleCallback;
     return;

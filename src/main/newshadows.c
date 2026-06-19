@@ -1,117 +1,117 @@
 #include "main/game_object.h"
 
-extern undefined4 FUN_800033a8();
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_8000693c();
-extern undefined4 FUN_8000694c();
-extern undefined4 FUN_80006954();
-extern undefined4 FUN_80006974();
+extern u32 FUN_800033a8();
+extern u32 FUN_80003494();
+extern u32 FUN_8000693c();
+extern u32 FUN_8000694c();
+extern u32 FUN_80006954();
+extern u32 FUN_80006974();
 extern void* FUN_8000697c();
-extern undefined4 FUN_80006984();
-extern undefined4 FUN_80006988();
+extern u32 FUN_80006984();
+extern u32 FUN_80006988();
 extern void* FUN_800069a8();
-extern undefined4 FUN_800069b8();
-extern undefined4 FUN_800069bc();
-extern undefined4 FUN_800069d4();
-extern undefined4 FUN_800069f4();
+extern u32 FUN_800069b8();
+extern u32 FUN_800069bc();
+extern u32 FUN_800069d4();
+extern u32 FUN_800069f4();
 extern double FUN_800069f8();
-extern undefined4 FUN_80006a00();
+extern u32 FUN_80006a00();
 extern int FUN_800176d0();
-extern uint FUN_80017730();
+extern u32 FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017814();
+extern u32 FUN_80017814();
 extern int FUN_80017970();
-extern undefined4 FUN_80017a50();
+extern u32 FUN_80017a50();
 extern int FUN_80017a54();
-extern undefined4 FUN_8003b7dc();
-extern undefined4 FUN_8003b878();
-extern undefined4 FUN_80040cd0();
-extern undefined4 FUN_80045be8();
-extern undefined4 FUN_80048048();
+extern u32 FUN_8003b7dc();
+extern u32 FUN_8003b878();
+extern u32 FUN_80040cd0();
+extern u32 FUN_80045be8();
+extern u32 FUN_80048048();
 extern char FUN_80048094();
 extern int FUN_800537a0();
-extern uint FUN_8005d00c();
-extern uint FUN_8005d06c();
-extern undefined4 FUN_800606a4();
-extern undefined4 FUN_800606a8();
-extern undefined4 FUN_80060710();
-extern ushort FUN_80061198();
-extern undefined4 FUN_80064384();
-extern undefined4 objAudioFn_8006ef38();
-extern undefined4 FUN_8006f788();
-extern undefined4 FUN_8006f790();
+extern u32 FUN_8005d00c();
+extern u32 FUN_8005d06c();
+extern u32 FUN_800606a4();
+extern u32 FUN_800606a8();
+extern u32 FUN_80060710();
+extern u16 FUN_80061198();
+extern u32 FUN_80064384();
+extern u32 objAudioFn_8006ef38();
+extern u32 FUN_8006f788();
+extern u32 FUN_8006f790();
 extern void gxSetZMode_();
-extern undefined4 FUN_800709e8();
-extern undefined4 FUN_80080f6c();
-extern undefined4 FUN_802420e0();
-extern undefined4 FUN_802475e4();
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247a48();
-extern undefined4 FUN_80247a7c();
-extern undefined4 FUN_80247b70();
-extern undefined4 FUN_80247dfc();
-extern undefined4 FUN_80247edc();
-extern undefined4 FUN_80247ef8();
+extern u32 FUN_800709e8();
+extern u32 FUN_80080f6c();
+extern u32 FUN_802420e0();
+extern u32 FUN_802475e4();
+extern u32 FUN_80247618();
+extern u32 FUN_80247a48();
+extern u32 FUN_80247a7c();
+extern u32 FUN_80247b70();
+extern u32 FUN_80247dfc();
+extern u32 FUN_80247edc();
+extern u32 FUN_80247ef8();
 extern double SeekTwiceBeforeRead();
 extern double FUN_80247f90();
-extern undefined4 FUN_80258c24();
-extern undefined4 FUN_80259400();
-extern undefined4 FUN_80259504();
-extern undefined4 FUN_80259858();
-extern undefined4 FUN_80259c0c();
-extern undefined4 FUN_8025aeac();
-extern undefined4 FUN_8025b054();
-extern undefined4 FUN_8025b210();
-extern undefined4 FUN_8025b280();
-extern undefined4 FUN_8025d6ac();
-extern undefined4 FUN_8025da64();
-extern undefined4 FUN_8025da88();
-extern undefined4 FUN_8028680c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286858();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_802947f8();
-extern undefined4 SQRT();
+extern u32 FUN_80258c24();
+extern u32 FUN_80259400();
+extern u32 FUN_80259504();
+extern u32 FUN_80259858();
+extern u32 FUN_80259c0c();
+extern u32 FUN_8025aeac();
+extern u32 FUN_8025b054();
+extern u32 FUN_8025b210();
+extern u32 FUN_8025b280();
+extern u32 FUN_8025d6ac();
+extern u32 FUN_8025da64();
+extern u32 FUN_8025da88();
+extern u32 FUN_8028680c();
+extern u64 FUN_80286840();
+extern u32 FUN_80286858();
+extern u32 FUN_8028688c();
+extern u32 FUN_802947f8();
+extern u32 SQRT();
 
-extern undefined4 DAT_8038ee3c;
-extern undefined4 DAT_8038ee48;
+extern u32 DAT_8038ee3c;
+extern u32 DAT_8038ee48;
 extern int DAT_8038eec8;
 extern int DAT_8038ef08;
-extern undefined4 DAT_8038ef0c;
-extern undefined4 DAT_8038ef10;
-extern undefined4 DAT_8038fd18;
-extern undefined4 DAT_8038fd48;
-extern undefined4 DAT_8038fd50;
-extern undefined4 DAT_8038fd54;
-extern undefined4 DAT_8038fd74;
-extern undefined4 DAT_8038fd78;
-extern undefined4 DAT_8038fd7c;
-extern undefined4 DAT_8038fd7d;
+extern u32 DAT_8038ef0c;
+extern u32 DAT_8038ef10;
+extern u32 DAT_8038fd18;
+extern u32 DAT_8038fd48;
+extern u32 DAT_8038fd50;
+extern u32 DAT_8038fd54;
+extern u32 DAT_8038fd74;
+extern u32 DAT_8038fd78;
+extern u32 DAT_8038fd7c;
+extern u32 DAT_8038fd7d;
 extern int DAT_803925b8;
-extern undefined4 DAT_803925bc;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc2c8;
-extern undefined4 DAT_803dd970;
-extern undefined4 DAT_803ddbf8;
-extern undefined4 DAT_803ddbfc;
-extern undefined4 DAT_803ddc00;
-extern undefined4 DAT_803ddc04;
-extern undefined4 DAT_803ddc08;
-extern undefined4 DAT_803ddc0c;
-extern undefined4 DAT_803ddc10;
-extern undefined4 DAT_803ddc18;
-extern undefined4 DAT_803ddc1c;
-extern undefined4 DAT_803ddc20;
-extern undefined4 DAT_803ddc30;
-extern undefined4 DAT_803ddc38;
-extern undefined4 DAT_803ddc3c;
-extern undefined4 DAT_803ddc40;
-extern undefined4 DAT_803ddc54;
-extern undefined4 DAT_803ddc58;
-extern undefined4 DAT_803ddc5c;
-extern undefined4 DAT_803ddc60;
-extern undefined4 DAT_803ddc64;
-extern undefined4 DAT_803ddc68;
+extern u32 DAT_803925bc;
+extern u32 DAT_803dc070;
+extern u32 DAT_803dc2c8;
+extern u32 DAT_803dd970;
+extern u32 DAT_803ddbf8;
+extern u32 DAT_803ddbfc;
+extern u32 DAT_803ddc00;
+extern u32 DAT_803ddc04;
+extern u32 DAT_803ddc08;
+extern u32 DAT_803ddc0c;
+extern u32 DAT_803ddc10;
+extern u32 DAT_803ddc18;
+extern u32 DAT_803ddc1c;
+extern u32 DAT_803ddc20;
+extern u32 DAT_803ddc30;
+extern u32 DAT_803ddc38;
+extern u32 DAT_803ddc3c;
+extern u32 DAT_803ddc40;
+extern u32 DAT_803ddc54;
+extern u32 DAT_803ddc58;
+extern u32 DAT_803ddc5c;
+extern u32 DAT_803ddc60;
+extern u32 DAT_803ddc64;
+extern u32 DAT_803ddc68;
 extern f64 DOUBLE_803df9d8;
 extern f64 DOUBLE_803df9e0;
 extern f64 DOUBLE_803dfa08;
@@ -403,7 +403,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
 
 #pragma scheduling on
 #pragma peephole on
-void newshadows_captureProjectedShadow(ushort* object)
+void newshadows_captureProjectedShadow(u16* object)
 {
     float fVar1;
     int renderState;
@@ -455,7 +455,7 @@ void newshadows_captureProjectedShadow(ushort* object)
         FUN_80040cd0(0);
         ((GameObject*)object)->anim.rootMotionScale = (float)savedScale;
         renderState = FUN_80017a54((int)object);
-        *(ushort*)(renderState + 0x18) = *(ushort*)(renderState + 0x18) & ~0x8;
+        *(u16*)(renderState + 0x18) = *(u16*)(renderState + 0x18) & ~0x8;
         gxSetZMode_(1, 3, 1);
         FUN_80259400(0x100, 0xb0, 0x80, 0x80);
         FUN_80259504(0x80, 0x80, 0x2a, 0);
@@ -484,12 +484,12 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
 {
     int remaining;
     float tmpKey;
-    undefined4 tmpWord2;
-    undefined4 cmpKey;
+    u32 tmpWord2;
+    u32 cmpKey;
     int gap;
-    undefined4 tmpWord0;
+    u32 tmpWord0;
     int destPtr;
-    undefined4* slot;
+    u32* slot;
     int iOff;
     int curPtr;
     int cmpPtr;
@@ -510,22 +510,22 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
         {
             do
             {
-                tmpWord0 = *(undefined4*)(curPtr + -0xc);
+                tmpWord0 = *(u32*)(curPtr + -0xc);
                 tmpKey = *(float*)(curPtr + -8);
-                tmpWord2 = *(undefined4*)(curPtr + -4);
+                tmpWord2 = *(u32*)(curPtr + -4);
                 destPtr = queueBase + iOff;
                 j = i;
                 while ((gap < j &&
                     (cmpPtr = queueBase + (j - gap) * 0xc, *(float*)(cmpPtr + -8) < tmpKey)))
                 {
-                    cmpKey = *(undefined4*)(cmpPtr + -8);
-                    *(undefined4*)(destPtr + -0xc) = *(undefined4*)(cmpPtr + -0xc);
-                    *(undefined4*)(destPtr + -8) = cmpKey;
-                    *(undefined4*)(destPtr + -4) = *(undefined4*)(cmpPtr + -4);
+                    cmpKey = *(u32*)(cmpPtr + -8);
+                    *(u32*)(destPtr + -0xc) = *(u32*)(cmpPtr + -0xc);
+                    *(u32*)(destPtr + -8) = cmpKey;
+                    *(u32*)(destPtr + -4) = *(u32*)(cmpPtr + -4);
                     destPtr = destPtr + gap * -0xc;
                     j = j - gap;
                 }
-                slot = (undefined4*)(queueBase + j * 0xc + -0xc);
+                slot = (u32*)(queueBase + j * 0xc + -0xc);
                 *slot = tmpWord0;
                 slot[1] = tmpKey;
                 slot[2] = tmpWord2;
@@ -542,24 +542,24 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
 
 void newshadows_renderQueuedShadowCasters(void)
 {
-    undefined2 savedWord0;
-    undefined2 savedWord2;
-    uint slotByte;
+    u16 savedWord0;
+    u16 savedWord2;
+    u32 slotByte;
     int slotOff;
-    undefined2* light;
-    ushort visibility;
-    uint randVal;
+    u16* light;
+    u16 visibility;
+    u32 randVal;
     int* piVar7;
     int pivot;
     float* viewMtx;
     float* shadowMtx;
     float* model;
     int obj;
-    uint baseTexSize;
-    uint texSize;
+    u32 baseTexSize;
+    u32 texSize;
     char casterIdx;
-    byte dirShadowCount;
-    uint uVar18;
+    u8 dirShadowCount;
+    u32 uVar18;
     int* queueEntry;
     double invSqrt;
     double savedZParam;
@@ -593,8 +593,8 @@ void newshadows_renderQueuedShadowCasters(void)
     double savedPs29;
     double savedPs30;
     double savedPs31;
-    undefined4 uStack_260;
-    undefined4 uStack_25c;
+    u32 uStack_260;
+    u32 uStack_25c;
     float blendX;
     float blendY;
     float blendZ;
@@ -607,8 +607,8 @@ void newshadows_renderQueuedShadowCasters(void)
     float dirX;
     float dirY;
     float dirZ;
-    undefined savedRow0[12];
-    undefined savedRow1[12];
+    u8 savedRow0[12];
+    u8 savedRow1[12];
     float projMtx[16];
     float local_1d0;
     float local_1cc;
@@ -624,10 +624,10 @@ void newshadows_renderQueuedShadowCasters(void)
     float local_1a4;
     float transMtx[12];
     float lightMtx[24];
-    undefined4 local_110;
-    uint uStack_10c;
-    undefined4 local_108;
-    uint uStack_104;
+    u32 local_110;
+    u32 uStack_10c;
+    u32 local_108;
+    u32 uStack_104;
     int savedFlag;
     float local_a8;
     float fStack_a4;
@@ -699,7 +699,7 @@ void newshadows_renderQueuedShadowCasters(void)
         dirShadowCount = 0;
         uVar18 = 0;
         queueEntry = &DAT_8038ef08;
-        for (casterIdx = '\0'; ((int)casterIdx < (int)(uint)DAT_803ddbf8 && (casterIdx < 100));
+        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)DAT_803ddbf8 && (casterIdx < 100));
              casterIdx = casterIdx + '\x01')
         {
             obj = *queueEntry;
@@ -711,10 +711,10 @@ void newshadows_renderQueuedShadowCasters(void)
             {
                 if ((((ObjModelState*)model)->flags & 0x20) != 0)
                 {
-                    FUN_80003494((uint)savedRow0, obj + 0xc, 0xc);
-                    FUN_80003494((uint)savedRow1, obj + 0x18, 0xc);
-                    FUN_80003494(obj + 0xc, (uint)(model + 8), 0xc);
-                    FUN_80003494(obj + 0x18, (uint)(model + 8), 0xc);
+                    FUN_80003494((u32)savedRow0, obj + 0xc, 0xc);
+                    FUN_80003494((u32)savedRow1, obj + 0x18, 0xc);
+                    FUN_80003494(obj + 0xc, (u32)(model + 8), 0xc);
+                    FUN_80003494(obj + 0x18, (u32)(model + 8), 0xc);
                 }
                 slotByte = uVar18 & 0xff;
                 slotOff = slotByte * 0x68;
@@ -744,7 +744,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     }
                     if (*(char*)(queueEntry + 2) == '\x02')
                     {
-                        texSize = (uint) * (ushort*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 10);
+                        texSize = (u32) * (u16*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 10);
                         baseTexSize = texSize;
                     }
                     FUN_80080f6c(obj, &dirX, &dirY, &dirZ);
@@ -795,7 +795,7 @@ void newshadows_renderQueuedShadowCasters(void)
                         dVar29 = (double)(float)(dVar29 * dVar22);
                         dVar28 = (double)(float)(dVar28 * dVar22);
                     }
-                    *(undefined4*)(light + 0x20) = 0;
+                    *(u32*)(light + 0x20) = 0;
                     model[5] = -dirX;
                     model[6] = -dirY;
                     model[7] = -dirZ;
@@ -850,11 +850,11 @@ void newshadows_renderQueuedShadowCasters(void)
                         (&DAT_8038fd74)[slotByte * 0x1a] = lbl_803DF9AC;
                         FUN_80247618((float*)(&DAT_8038fd48 + slotOff), viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                         FUN_80259400(0, 0, texSize, texSize);
-                        FUN_80259504((ushort)texSize, (ushort)texSize, 0x11, 0);
-                        FUN_80259858('\0', (byte*)(DAT_803dd970 + 0x1a), '\0', (byte*)(DAT_803dd970 + 0x32));
+                        FUN_80259504((u16)texSize, (u16)texSize, 0x11, 0);
+                        FUN_80259858('\0', (u8*)(DAT_803dd970 + 0x1a), '\0', (u8*)(DAT_803dd970 + 0x32));
                         FUN_80259c0c(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 0x60, 1);
                         FUN_80045be8();
-                        (&DAT_8038fd78)[slotByte * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.modelState +
+                        (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState +
                             4);
                     }
                     else
@@ -863,7 +863,7 @@ void newshadows_renderQueuedShadowCasters(void)
                         {
                             gxSetZMode_(1, 3, 1);
                             FUN_80259400(0, 0, texSize, texSize);
-                            FUN_80259504((ushort)baseTexSize, (ushort)baseTexSize, 0x20, 1);
+                            FUN_80259504((u16)baseTexSize, (u16)baseTexSize, 0x20, 1);
                             FUN_80259c0c(*piVar7 + 0x60, 1);
                             (&DAT_8038fd78)[slotByte * 0x1a] = *piVar7;
                         }
@@ -872,7 +872,7 @@ void newshadows_renderQueuedShadowCasters(void)
                 }
                 else
                 {
-                    (&DAT_8038fd78)[slotByte * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
+                    (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
                     dVar23 = (double)((GameObject*)obj)->anim.localPosX;
                     dVar22 = (double)((GameObject*)obj)->anim.localPosZ;
                     if (*(int*)&((GameObject*)obj)->anim.parent == 0)
@@ -911,7 +911,7 @@ void newshadows_renderQueuedShadowCasters(void)
         if (1 < dirShadowCount)
         {
             gxSetZMode_(1, 3, 1);
-            FUN_80259858('\0', (byte*)(DAT_803dd970 + 0x1a), '\0', (byte*)(DAT_803dd970 + 0x32));
+            FUN_80259858('\0', (u8*)(DAT_803dd970 + 0x1a), '\0', (u8*)(DAT_803dd970 + 0x32));
             FUN_80259400(0, 0, 0x100, 0x100);
             FUN_80259504(0x100, 0x100, 0x28, 0);
             FUN_80259c0c(DAT_803925bc + 0x60, 1);
@@ -1082,11 +1082,11 @@ void newshadows_getShadowNoiseTexture(int* textureOut)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8006b03c(int param_1, undefined4* param_2, undefined4* param_3, int* param_4, int* param_5)
+void FUN_8006b03c(int param_1, u32* param_2, u32* param_3, int* param_4, int* param_5)
 {
     ObjModelState* modelState = ((GameObject*)param_1)->anim.modelState;
     *param_2 = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
-    *param_3 = *(undefined4*)&modelState->shadowScale;
+    *param_3 = *(u32*)&modelState->shadowScale;
     *param_4 = modelState->shadowOffsetX;
     *param_5 = modelState->shadowOffsetY;
     return;
@@ -1105,11 +1105,11 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
 {
     if (*(char*)(DAT_803ddbfc + 0x48) == '\0')
     {
-        FUN_8025b054((uint*)(DAT_803ddbfc + 0x20), textureSlot);
+        FUN_8025b054((u32*)(DAT_803ddbfc + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((uint*)(DAT_803ddbfc + 0x20), *(uint**)(DAT_803ddbfc + 0x40), textureSlot);
+        FUN_8025aeac((u32*)(DAT_803ddbfc + 0x20), *(u32**)(DAT_803ddbfc + 0x40), textureSlot);
     }
     return;
 }
@@ -1137,11 +1137,11 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
 {
     if (*(char*)(DAT_803ddc64 + 0x48) == '\0')
     {
-        FUN_8025b054((uint*)(DAT_803ddc64 + 0x20), textureSlot);
+        FUN_8025b054((u32*)(DAT_803ddc64 + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((uint*)(DAT_803ddc64 + 0x20), *(uint**)(DAT_803ddc64 + 0x40), textureSlot);
+        FUN_8025aeac((u32*)(DAT_803ddc64 + 0x20), *(u32**)(DAT_803ddc64 + 0x40), textureSlot);
     }
     return;
 }
@@ -1154,7 +1154,7 @@ void newshadows_refreshShadowCaptureTexture(void)
     FUN_80259c0c(DAT_803ddc64 + 0x60, 1);
     if (*(char*)(DAT_803ddc64 + 0x48) != '\0')
     {
-        FUN_8025b280(DAT_803ddc64 + 0x20, *(uint**)(DAT_803ddc64 + 0x40));
+        FUN_8025b280(DAT_803ddc64 + 0x20, *(u32**)(DAT_803ddc64 + 0x40));
     }
     return;
 }
@@ -1169,11 +1169,11 @@ void newshadows_flushShadowRenderTargets(void)
     FUN_80259c0c(DAT_803ddc5c + 0x60, 0);
     if (*(char*)(DAT_803ddbfc + 0x48) != '\0')
     {
-        FUN_8025b280(DAT_803ddbfc + 0x20, *(uint**)(DAT_803ddbfc + 0x40));
+        FUN_8025b280(DAT_803ddbfc + 0x20, *(u32**)(DAT_803ddbfc + 0x40));
     }
     if (*(char*)(DAT_803ddc5c + 0x48) != '\0')
     {
-        FUN_8025b280(DAT_803ddc5c + 0x20, *(uint**)(DAT_803ddc5c + 0x40));
+        FUN_8025b280(DAT_803ddc5c + 0x20, *(u32**)(DAT_803ddc5c + 0x40));
     }
     if ((*(char*)(DAT_803ddbfc + 0x48) == '\0') || (*(char*)(DAT_803ddc5c + 0x48) == '\0'))
     {
@@ -1185,17 +1185,17 @@ void newshadows_flushShadowRenderTargets(void)
 
 void newshadows_updateFrameState(void)
 {
-    uint texSize;
+    u32 texSize;
     int scrollDisabled;
     char shadowMapEnabled;
-    undefined* view;
+    u8* view;
     double depth;
     double savedF31;
     double focusDepth;
     double savedPs31;
     float nearDepth;
     float farDepth;
-    undefined8 local_20;
+    u64 local_20;
     float local_8;
     float fStack_4;
 
@@ -1217,7 +1217,7 @@ void newshadows_updateFrameState(void)
     }
     DAT_803ddbf8 = 0;
     DAT_803ddc68 = (int)FUN_800069a8();
-    DAT_803ddc20 = DAT_803ddc20 + (ushort)DAT_803dc070 * 0x28a;
+    DAT_803ddc20 = DAT_803ddc20 + (u16)DAT_803dc070 * 0x28a;
     local_20 = CONCAT44(0x43300000, DAT_803ddc20);
     depth = (double)FUN_802947f8();
     lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
@@ -1234,8 +1234,8 @@ void newshadows_updateFrameState(void)
         {
             if ((double)nearDepth < focusDepth)
             {
-                texSize = (uint)((lbl_803DF99C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
-                local_20 = (longlong)(int)
+                texSize = (u32)((lbl_803DF99C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
+                local_20 = (s64)(int)
                 texSize;
             }
             else
@@ -1280,8 +1280,8 @@ void newshadows_buildShadowDirectionTexture(void)
     float encodeBias;
     float encodeScale;
     double convBiasConst;
-    uint y;
-    uint x;
+    u32 y;
+    u32 x;
     int xCount;
     double dy;
     double dx;
@@ -1289,7 +1289,7 @@ void newshadows_buildShadowDirectionTexture(void)
     double falloffLimit;
     double epsilon;
     double len;
-    undefined8 convBias;
+    u64 convBias;
 
     DAT_803ddc3c = FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
     convBiasConst = DOUBLE_803dfa48;
@@ -1324,11 +1324,11 @@ void newshadows_buildShadowDirectionTexture(void)
                 intensity = lbl_803DF9B4 * -(float)((double)lbl_803DF9C8 * len - (double)lbl_803DFA30)
                     * lbl_803DFA34;
             }
-            *(ushort*)
+            *(u16*)
                 (DAT_803ddc3c + (y & 3) * 2 + ((int)y >> 2) * 0x20 + (x & 3) * 8 +
                     ((int)x >> 2) * 0x800 + 0x60) =
-                (ushort)(int)(encodeScale * (float)(dx / len) * intensity + encodeBias) |
-                (ushort)(((int)(encodeScale * (float)(dy / len) * intensity + encodeBias) & 0xffffU) << 8);
+                (u16)(int)(encodeScale * (float)(dx / len) * intensity + encodeBias) |
+                (u16)(((int)(encodeScale * (float)(dy / len) * intensity + encodeBias) & 0xffffU) << 8);
             x = x + 1;
             xCount = xCount + -1;
         }
@@ -1340,17 +1340,17 @@ void newshadows_buildShadowDirectionTexture(void)
     return;
 }
 
-void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefined4 param_4,
-                  uint param_5, int param_6, int param_7)
+void FUN_8006dca8(u64 param_1, double param_2, u32 param_3, u32 param_4,
+                  u32 param_5, int param_6, int param_7)
 {
     int mask;
-    uint bit;
+    u32 bit;
     int loop;
-    undefined8 extraout_f1;
-    undefined8 f1Arg;
-    undefined8 retPair;
-    undefined buf[19];
-    undefined bitList[8];
+    u64 extraout_f1;
+    u64 f1Arg;
+    u64 retPair;
+    u8 buf[19];
+    u8 bitList[8];
     char count;
 
     retPair = FUN_80286840();
@@ -1385,7 +1385,7 @@ void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefi
         loop = loop + -1;
     }
     while (loop != 0);
-    objAudioFn_8006ef38(f1Arg, param_2, (int)((ulonglong)retPair >> 0x20), buf, param_5, param_6, param_7);
+    objAudioFn_8006ef38(f1Arg, param_2, (int)((u64)retPair >> 0x20), buf, param_5, param_6, param_7);
     FUN_8028688c();
     return;
 }

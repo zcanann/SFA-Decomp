@@ -65,17 +65,17 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern u32 FUN_800067e8();
 extern u32 FUN_80006824();
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern u32 FUN_80017924();
-extern uint FUN_80017944();
+extern u32 FUN_80017944();
 extern int FUN_80017a54();
 extern u32 FUN_8002fc3c();
 extern int FUN_80039520();
 extern u32 FUN_80242114();
 extern u64 FUN_80286834();
-extern uint FUN_8028683c();
+extern u32 FUN_8028683c();
 extern u32 FUN_80286880();
 extern u32 FUN_80286888();
 extern u32 FUN_802924b4();
@@ -111,7 +111,7 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-void FUN_801b3de4(u32 param_1, uint param_2)
+void FUN_801b3de4(u32 param_1, u32 param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
     return;
@@ -119,10 +119,10 @@ void FUN_801b3de4(u32 param_1, uint param_2)
 
 void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
 {
-    byte slotIdx;
+    u8 slotIdx;
     char stateByte;
     int lifetime;
-    uint obj;
+    u32 obj;
     u8 extraout_r4;
     int sub4c;
     int state;
@@ -135,9 +135,9 @@ void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
     obj = FUN_8028683c();
     sub4c = *(int *)&((GameObject *)obj)->anim.placementData;
     state = *(int *)&((GameObject *)obj)->extra;
-    slotIdx = *(byte*)(state + 0xa58);
-    *(byte*)(state + 0xa58) = slotIdx + 1;
-    slotOff = (uint)slotIdx * 0x30;
+    slotIdx = *(u8*)(state + 0xa58);
+    *(u8*)(state + 0xa58) = slotIdx + 1;
+    slotOff = (u32)slotIdx * 0x30;
     *(float*)(state + slotOff) = (float)param_2;
     slot = state + slotOff;
     *(float*)(slot + 4) = (float)param_3;
@@ -214,9 +214,9 @@ LAB_801b44d4:
     return;
 }
 
-void explosion_release(uint obj);
+void explosion_release(u32 obj);
 
-void fn_explosion_release_v11_unused(uint param_1)
+void fn_explosion_release_v11_unused(u32 param_1)
 {
     short hitShapeId;
     float clampedSpeed;
@@ -274,7 +274,7 @@ void fn_explosion_release_v11_unused(uint param_1)
     }
     else
     {
-        count = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
+        count = (u32)((GameObject*)param_1)->anim.alpha + (u32)DAT_803dc070 * -0x10;
         if (count < 0)
         {
             count = 0;
@@ -292,20 +292,20 @@ void FUN_801b5b8c(void)
     int* model;
     u16* outVtx;
     short* srcVtx;
-    uint fifoArg;
+    u32 fifoArg;
     int modelData;
     int i;
-    uint vtxCount;
+    u32 vtxCount;
     double rnd;
     u64 objHandle;
     u64 local_58;
     u64 local_50;
 
     objHandle = FUN_80286834();
-    obj = (int)((ulonglong)objHandle >> 0x20);
+    obj = (int)((u64)objHandle >> 0x20);
     model = (int*)FUN_80017a54(obj);
     modelData = *model;
-    for (i = 0; vtxCount = (uint) * (ushort*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
+    for (i = 0; vtxCount = (u32) * (u16*)(modelData + 0xe4), i < (int)vtxCount; i = i + 1)
     {
         outVtx = (u16*)FUN_80017944((int)model, i);
         srcVtx = (short*)FUN_80017924(modelData, i);
@@ -334,7 +334,7 @@ void FUN_801b5b8c(void)
 void FUN_801b5d00(int param_1, int param_2)
 {
     int channel;
-    uint phase;
+    u32 phase;
 
     channel = FUN_80039520(param_1, 0);
     *(short*)(channel + 10) = *(short*)(channel + 10) + 0x14;
@@ -353,13 +353,13 @@ void FUN_801b5d00(int param_1, int param_2)
     {
         *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
     }
-    phase = (uint) * (ushort*)(param_2 + 0x60) + (uint)DAT_803dc070 * 0x100;
+    phase = (u32) * (u16*)(param_2 + 0x60) + (u32)DAT_803dc070 * 0x100;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;
     }
     *(short*)(param_2 + 0x60) = (short)phase;
-    phase = (uint) * (ushort*)(param_2 + 0x62) + (uint)DAT_803dc070 * 0x80;
+    phase = (u32) * (u16*)(param_2 + 0x62) + (u32)DAT_803dc070 * 0x80;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;

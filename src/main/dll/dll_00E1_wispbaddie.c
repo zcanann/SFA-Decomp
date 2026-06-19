@@ -8,11 +8,11 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
 
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_DisableObject();
+extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 
 extern f32 lbl_803DC074;
 
@@ -54,21 +54,21 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 extern void* mmAlloc(int size, int tag, int flags);
-extern void* memset(void* dst, int value, uint size);
+extern void* memset(void* dst, int value, u32 size);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_800305c4();
+extern u32 FUN_800305c4();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
-extern undefined4 FUN_8014d3d0();
-extern undefined4 FUN_8014d4c8();
-extern undefined4 FUN_80151844();
+extern u32 FUN_8014d3d0();
+extern u32 FUN_8014d4c8();
+extern u32 FUN_80151844();
 extern void fn_801513AC(int obj, int state);
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 DAT_8031e980;
-extern undefined4 DAT_8031feac;
-extern undefined4 DAT_8031fead;
+extern u64 FUN_80286840();
+extern u32 FUN_8028688c();
+extern u32 DAT_8031e980;
+extern u32 DAT_8031feac;
+extern u32 DAT_8031fead;
 extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
 extern f32 lbl_803E33E0;
@@ -409,14 +409,14 @@ void wispbaddie_init(int obj, int setup, int initialised)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-void FUN_8014fef8(undefined4 param_1, int param_2, undefined4 param_3, int param_4)
+void FUN_8014fef8(u32 param_1, int param_2, u32 param_3, int param_4)
 {
     if (param_4 == 0x10)
     {
-        *(uint*)(param_2 + 0x2e8) = *(uint*)(param_2 + 0x2e8) | 0x20;
+        *(u32*)(param_2 + 0x2e8) = *(u32*)(param_2 + 0x2e8) | 0x20;
         return;
     }
-    *(uint*)(param_2 + 0x2e8) = *(uint*)(param_2 + 0x2e8) | 8;
+    *(u32*)(param_2 + 0x2e8) = *(u32*)(param_2 + 0x2e8) | 8;
     return;
 }
 
@@ -427,40 +427,40 @@ void FUN_8014ff20(void)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ff24(short* param_1, undefined4 param_2)
+void FUN_8014ff24(short* param_1, u32 param_2)
 {
     FUN_8014d3d0(param_1, param_2, 0xf, 0);
     return;
 }
 
-void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  undefined4 param_9, undefined4 param_10, uint param_11, undefined4 param_12,
-                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
+void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9, u32 param_10, u32 param_11, u32 param_12,
+                  u32 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
-    byte bVar1;
+    u8 bVar1;
     float fVar2;
     float fVar3;
     int iVar4;
     short* psVar5;
-    uint uVar6;
+    u32 uVar6;
     int iVar7;
-    undefined* puVar8;
+    u8* puVar8;
     float* pfVar9;
     double dVar10;
     double dVar11;
-    undefined8 uVar12;
+    u64 uVar12;
 
     uVar12 = FUN_80286840();
     fVar3 = lbl_803E33D8;
-    psVar5 = (short*)((ulonglong)uVar12 >> 0x20);
+    psVar5 = (short*)((u64)uVar12 >> 0x20);
     iVar7 = (int)uVar12;
-    puVar8 = (&PTR_DAT_8031fdc4)[(uint) * (byte*)(iVar7 + 0x33b) * 10];
-    if (((*(uint*)(iVar7 + 0x2dc) & 0x4000) != 0) ||
+    puVar8 = (&PTR_DAT_8031fdc4)[(u32) * (u8*)(iVar7 + 0x33b) * 10];
+    if (((*(u32*)(iVar7 + 0x2dc) & 0x4000) != 0) ||
         ((dVar10 = (double)*(float*)(iVar7 + 0x328), dVar10 != (double)lbl_803E33D8 &&
             (*(short*)(iVar7 + 0x338) != 0))))
         goto LAB_80150818;
-    bVar1 = *(byte*)(iVar7 + 0x2f1);
+    bVar1 = *(u8*)(iVar7 + 0x2f1);
     uVar6 = bVar1 & 0x1f;
     if ((bVar1 & 0x10) != 0)
     {
@@ -480,14 +480,14 @@ void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefi
     if (((param_11 & 0xff) != 0) &&
         ((((bVar1 != 0 ||
                 (dVar10 = (double)*(float*)(iVar7 + 0x324), dVar10 != (double)lbl_803E33D8)) &&
-            ((*(uint*)(iVar7 + 0x2dc) & 0x40) == 0)) && ((bVar1 & 0x20) == 0))))
+            ((*(u32*)(iVar7 + 0x2dc) & 0x40) == 0)) && ((bVar1 & 0x20) == 0))))
     {
         param_2 = (double)*(float*)(iVar7 + 0x324);
         dVar10 = (double)lbl_803E33D8;
         if (param_2 == dVar10)
         {
-            iVar4 = (uint) * (byte*)(iVar7 + 0x33b) * 2;
-            uVar6 = randomGetRange((uint)(byte)(&DAT_8031feac)[iVar4], (uint)(byte)(&DAT_8031fead)[iVar4]);
+            iVar4 = (u32) * (u8*)(iVar7 + 0x33b) * 2;
+            uVar6 = randomGetRange((u32)(u8)(&DAT_8031feac)[iVar4], (u32)(u8)(&DAT_8031fead)[iVar4]);
             *(float*)(iVar7 + 0x324) =
                 *(float*)(iVar7 + 0x334) +
                 (f32)(s32)(uVar6);
@@ -499,8 +499,8 @@ void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefi
         *(float*)(iVar7 + 0x324) = fVar3;
     }
     if ((((((param_11 & 0xff) == 0) || (*(char*)(iVar7 + 0x2f1) == '\0')) ||
-            (puVar8[uVar6 * 0xc + 8] == '\0')) && ((*(byte*)(iVar7 + 0x2f1) & 0x20) == 0)) ||
-        ((*(byte*)(iVar7 + 0x33c) == uVar6 &&
+            (puVar8[uVar6 * 0xc + 8] == '\0')) && ((*(u8*)(iVar7 + 0x2f1) & 0x20) == 0)) ||
+        ((*(u8*)(iVar7 + 0x33c) == uVar6 &&
             (dVar10 = (double)lbl_803E33D8, dVar10 != (double)*(float*)(iVar7 + 0x32c)))))
     {
         if (*(float*)(iVar7 + 0x32c) != lbl_803E33D8)
@@ -511,14 +511,14 @@ void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefi
             {
                 *(float*)(iVar7 + 0x308) = *(float*)(iVar7 + 0x308) - lbl_803E33EC;
             }
-            if ((*(uint*)(iVar7 + 0x2dc) & 0x40000000) != 0)
+            if ((*(u32*)(iVar7 + 0x2dc) & 0x40000000) != 0)
             {
-                iVar4 = (uint) * (byte*)(iVar7 + 0x33c) * 0xc;
+                iVar4 = (u32) * (u8*)(iVar7 + 0x33c) * 0xc;
                 FUN_8014d4c8((double)*(float*)(puVar8 + iVar4), dVar10, dVar11, param_4, param_5, param_6,
-                             param_7, param_8, (int)psVar5, iVar7, (uint)(byte)puVar8[iVar4 + 8], 0,
-                             *(uint*)(puVar8 + iVar4 + 4) & 0xff, param_14, param_15, param_16);
+                             param_7, param_8, (int)psVar5, iVar7, (u32)(u8)puVar8[iVar4 + 8], 0,
+                             *(u32*)(puVar8 + iVar4 + 4) & 0xff, param_14, param_15, param_16);
                 FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                 (uint)(byte)puVar8[(uint) * (byte*)(iVar7 + 0x33c) * 0xc + 8]
+                                 (u32)(u8)puVar8[(u32) * (u8*)(iVar7 + 0x33c) * 0xc + 8]
                              * 4), (int)psVar5
                 )
                 ;
@@ -527,16 +527,16 @@ void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefi
             if (*(float*)(iVar7 + 0x32c) <= lbl_803E33D8)
             {
                 *(float*)(iVar7 + 0x32c) = lbl_803E33D8;
-                *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) & 0xffffffbf;
-                *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) | 0x40000000;
-                *(byte*)(iVar7 + 0x2f2) = *(byte*)(iVar7 + 0x2f2) & 0x7f;
-                *(undefined*)(iVar7 + 0x33c) = 0;
+                *(u32*)(iVar7 + 0x2dc) = *(u32*)(iVar7 + 0x2dc) & 0xffffffbf;
+                *(u32*)(iVar7 + 0x2dc) = *(u32*)(iVar7 + 0x2dc) | 0x40000000;
+                *(u8*)(iVar7 + 0x2f2) = *(u8*)(iVar7 + 0x2f2) & 0x7f;
+                *(u8*)(iVar7 + 0x33c) = 0;
             }
         }
     }
-    else if (((*(uint*)(iVar7 + 0x2dc) & 0x800080) == 0) && ((*(byte*)(iVar7 + 0x2f1) & 0x20) == 0))
+    else if (((*(u32*)(iVar7 + 0x2dc) & 0x800080) == 0) && ((*(u8*)(iVar7 + 0x2f1) & 0x20) == 0))
     {
-        if ((*(uint*)(iVar7 + 0x2dc) & 0x40000000) != 0)
+        if ((*(u32*)(iVar7 + 0x2dc) & 0x40000000) != 0)
         {
             FUN_80151844(dVar10, param_2, dVar11, param_4, param_5, param_6, param_7, param_8, psVar5, iVar7);
         }
@@ -547,14 +547,14 @@ void FUN_8014ffa8(undefined8 param_1, double param_2, undefined8 param_3, undefi
         fVar3 = lbl_803E33E4 * (float)(dVar11 * (double)*pfVar9);
         *(float*)(iVar7 + 0x330) = fVar3;
         *(float*)(iVar7 + 0x32c) = fVar3;
-        *(uint*)(iVar7 + 0x2dc) = *(uint*)(iVar7 + 0x2dc) | 0x40;
-        *(byte*)(iVar7 + 0x2f2) = *(byte*)(iVar7 + 0x2f2) | 0x80;
-        *(undefined*)(iVar7 + 0x2f3) = 0;
-        *(undefined*)(iVar7 + 0x2f4) = 0;
+        *(u32*)(iVar7 + 0x2dc) = *(u32*)(iVar7 + 0x2dc) | 0x40;
+        *(u8*)(iVar7 + 0x2f2) = *(u8*)(iVar7 + 0x2f2) | 0x80;
+        *(u8*)(iVar7 + 0x2f3) = 0;
+        *(u8*)(iVar7 + 0x2f4) = 0;
         FUN_8014d4c8((double)(float)(dVar11 * (double)*pfVar9), param_2, dVar11, param_4, param_5, param_6,
-                     param_7, param_8, (int)psVar5, iVar7, (uint) * (byte*)(pfVar9 + 2), 0,
-                     (uint)pfVar9[1] & 0xff, param_14, param_15, param_16);
-        FUN_800305c4((double)*(float*)(&DAT_8031e980 + (uint) * (byte*)(pfVar9 + 2) * 4), (int)psVar5);
+                     param_7, param_8, (int)psVar5, iVar7, (u32) * (u8*)(pfVar9 + 2), 0,
+                     (u32)pfVar9[1] & 0xff, param_14, param_15, param_16);
+        FUN_800305c4((double)*(float*)(&DAT_8031e980 + (u32) * (u8*)(pfVar9 + 2) * 4), (int)psVar5);
         *(char*)(iVar7 + 0x33c) = (char)uVar6;
     }
 LAB_80150818:

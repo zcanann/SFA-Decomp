@@ -133,7 +133,7 @@ extern f32 lbl_803E5BA4;
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5C4C;
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 fn_801EAE4C();
 extern u32 fn_801EB0D4();
 extern u32 fn_801EB634();

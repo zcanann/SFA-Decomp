@@ -121,42 +121,42 @@ extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
 
-undefined2*
-FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , int param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u16*
+FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+             , int param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     return 0;
 }
 
-undefined2*
-FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u16*
+FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     return 0;
 }
 
-undefined4
-FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
+u32
+FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
 {
     return 0;
 }
 
-undefined4
-FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12)
+u32
+FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
+             u32 param_10, u32 param_11, u32 param_12)
 {
     return 0;
 }
 
-undefined*
-FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+u8*
+FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
 )
 {
     return 0;
@@ -1563,7 +1563,7 @@ void objFreeObjDef(void* objp, int flag)
     (*gExpgfxInterface)->freeOwner3((u32)obj);
     if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
     {
-        ObjGroup_RemoveObject((uint)obj, 6);
+        ObjGroup_RemoveObject((u32)obj, 6);
         if (flag == 0)
         {
             count = 0;
@@ -1611,7 +1611,7 @@ void objFreeObjDef(void* objp, int flag)
     }
     if (((ObjAnimComponent*)obj)->modelInstance->group8RegistrationCount > 0)
     {
-        ObjGroup_RemoveObject((uint)obj, 8);
+        ObjGroup_RemoveObject((u32)obj, 8);
     }
     modelState = ((ObjAnimComponent*)obj)->modelState;
     if (modelState != NULL)
@@ -1674,10 +1674,10 @@ void objFreeObjDef(void* objp, int flag)
     {
         Obj_ClearModelColorFadeRecursive(obj);
     }
-    group = ObjGroup_GetObjectGroup((uint)obj);
+    group = ObjGroup_GetObjectGroup((u32)obj);
     if (group != 0)
     {
-        ObjGroup_RemoveObject((uint)obj, group - 1);
+        ObjGroup_RemoveObject((u32)obj, group - 1);
     }
     type = ((GameObject*)obj)->anim.defId;
     if (*(u8*)(lbl_803DCBA4 + type) == 0)
@@ -2289,7 +2289,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (object->modelInstance->flags & 0x40)
     {
-        ObjGroup_AddObject((uint)obj, 6);
+        ObjGroup_AddObject((u32)obj, 6);
         if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40))
         {
             object->activeHitboxMode = 0x5a;
@@ -2321,7 +2321,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (object->modelInstance->group8RegistrationCount > 0)
     {
-        ObjGroup_AddObject((uint)obj, 8);
+        ObjGroup_AddObject((u32)obj, 8);
     }
     if (object->modelInstance->flags & 1)
     {

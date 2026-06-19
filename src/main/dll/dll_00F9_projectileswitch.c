@@ -124,7 +124,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
     state2 = *(int*)&((GameObject*)obj)->anim.placementData;
     state = *(int*)&((GameObject*)obj)->extra;
-    hitId = ObjHits_GetPriorityHit(obj, &hitObj, (int*)0x0, (uint*)0x0);
+    hitId = ObjHits_GetPriorityHit(obj, &hitObj, (int*)0x0, (u32*)0x0);
     if (hitId != 0xe && hitId != 0xf) return;
 
     isSpecial = 0;
@@ -187,7 +187,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
 void ProjectileSwitch_update(int obj)
 {
-    extern uint GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     int state;
     int state2;
     ObjTextureRuntimeSlot* tex;
@@ -228,7 +228,7 @@ void ProjectileSwitch_update(int obj)
 
 void ProjectileSwitch_init(int obj, u8* initData)
 {
-    extern uint GameBit_Get(int eventId);
+    extern u32 GameBit_Get(int eventId);
     extern void ObjHitbox_SetSphereRadius(int obj, short radius);
     ObjAnimComponent* objAnim;
     int state;

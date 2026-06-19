@@ -11,26 +11,26 @@
 #include "main/shader.h"
 
 extern float ABS();
-extern undefined4 FUN_8000693c();
-extern undefined4 FUN_80006958();
-extern undefined4 FUN_8001771c();
+extern u32 FUN_8000693c();
+extern u32 FUN_80006958();
+extern u32 FUN_8001771c();
 extern int FUN_80017a98();
 extern void* ObjGroup_GetObjects();
 extern int mapLoadDataFile();
-extern undefined4 piRomLoadSection();
-extern undefined8 FUN_80286834();
-extern undefined4 FUN_80286880();
+extern u32 piRomLoadSection();
+extern u64 FUN_80286834();
+extern u32 FUN_80286880();
 
 extern int DAT_80382eac;
-extern undefined4 DAT_8038859c;
-extern undefined4 DAT_803885a0;
-extern undefined4 DAT_803885a4;
-extern undefined4 DAT_803885a8;
-extern undefined4* DAT_803dd6ec;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803dda61;
-extern undefined4 DAT_803dda6c;
-extern undefined4 DAT_803ddae8;
+extern u32 DAT_8038859c;
+extern u32 DAT_803885a0;
+extern u32 DAT_803885a4;
+extern u32 DAT_803885a8;
+extern u32* DAT_803dd6ec;
+extern u32* DAT_803dd71c;
+extern u32 DAT_803dda61;
+extern u32 DAT_803dda6c;
+extern u32 DAT_803ddae8;
 extern int* DAT_803ddaec;
 extern f64 DOUBLE_803df840;
 extern f32 lbl_803DDA58;
@@ -248,27 +248,27 @@ int FUN_80056600(void)
 
 void FUN_80056cfc(void)
 {
-    byte* stepPtr;
+    u8* stepPtr;
     short tag;
     bool found;
-    uint v;
-    uint* q;
-    uint* tbl;
+    u32 v;
+    u32* q;
+    u32* tbl;
     int in_r6;
-    uint mask;
+    u32 mask;
     int pos;
-    uint count;
+    u32 count;
     short* cur;
     int page;
-    undefined8 ret;
+    u64 ret;
 
     ret = FUN_80286834();
-    page = (int)((ulonglong)ret >> 0x20);
-    tbl = (uint*)ret;
+    page = (int)((u64)ret >> 0x20);
+    tbl = (u32*)ret;
     found = false;
     mask = 0;
     cur = *(short**)(page + 0x20);
-    count = (uint) * (ushort*)(page + 8);
+    count = (u32) * (u16*)(page + 8);
     if (count != 0)
     {
         pos = 0;
@@ -308,7 +308,7 @@ void FUN_80056cfc(void)
             tbl[0x1e] = 0xffffffff;
             tbl[0x1f] = 0xffffffff;
         }
-        for (; pos < count; pos = pos + (uint) * stepPtr * 4)
+        for (; pos < count; pos = pos + (u32) * stepPtr * 4)
         {
             if (in_r6 == 0)
             {
@@ -329,11 +329,11 @@ void FUN_80056cfc(void)
                         found = true;
                     }
                 }
-                else if (((*(byte*)(cur + 2) & 0x10) != 0) &&
-                    ((mask & 1 << (uint) * (byte*)(cur + 3)) == 0))
+                else if (((*(u8*)(cur + 2) & 0x10) != 0) &&
+                    ((mask & 1 << (u32) * (u8*)(cur + 3)) == 0))
                 {
-                    tbl[*(byte*)(cur + 3)] = (int)cur - *(int*)(page + 0x20);
-                    mask = mask | 1 << (uint) * (byte*)(cur + 3);
+                    tbl[*(u8*)(cur + 3)] = (int)cur - *(int*)(page + 0x20);
+                    mask = mask | 1 << (u32) * (u8*)(cur + 3);
                 }
             }
             else
@@ -347,8 +347,8 @@ void FUN_80056cfc(void)
                     (**(code**)(*DAT_803dd6ec + 0xc))(cur);
                 }
             }
-            stepPtr = (byte*)(cur + 1);
-            cur = cur + (uint) * stepPtr * 2;
+            stepPtr = (u8*)(cur + 1);
+            cur = cur + (u32) * stepPtr * 2;
         }
         if (in_r6 == 0)
         {
@@ -465,10 +465,10 @@ void FUN_800571f8(u8* outFlags)
     while (true);
 }
 
-undefined4 FUN_800575b4(double radius, float* pos)
+u32 FUN_800575b4(double radius, float* pos)
 {
-    uint planeIdx;
-    byte i;
+    u32 planeIdx;
+    u8 i;
 
     i = 0;
     while (true)
@@ -490,14 +490,14 @@ undefined4 FUN_800575b4(double radius, float* pos)
     return 0;
 }
 
-undefined4 FUN_80057690(int param_1)
+u32 FUN_80057690(int param_1)
 {
     float projSize;
     int viewObj;
-    undefined4 result;
-    byte planeIdx;
+    u32 result;
+    u8 planeIdx;
     int placementData;
-    uint alpha;
+    u32 alpha;
     double nearDist;
     double dist;
     double range;
@@ -507,7 +507,7 @@ undefined4 FUN_80057690(int param_1)
     float fStack_3c;
     u8 auStack_38[4];
     u8 auStack_34[4];
-    undefined8 local_30;
+    u64 local_30;
 
     if (((GameObject*)param_1)->anim.alpha == 0)
     {
@@ -515,7 +515,7 @@ undefined4 FUN_80057690(int param_1)
         return 0;
     }
     placementData = *(int*)&((GameObject*)param_1)->anim.placementData;
-    if ((placementData == 0) || ((*(byte*)(placementData + 5) & 1) == 0))
+    if ((placementData == 0) || ((*(u8*)(placementData + 5) & 1) == 0))
     {
         range = (double)*(float*)(param_1 + 0x40);
         if (range < (double)lbl_803DF838)
@@ -524,7 +524,7 @@ undefined4 FUN_80057690(int param_1)
             return 0;
         }
         viewObj = FUN_80017a98();
-        if (((placementData == 0) || ((*(byte*)(placementData + 5) & 2) == 0)) || (viewObj == 0))
+        if (((placementData == 0) || ((*(u8*)(placementData + 5) & 2) == 0)) || (viewObj == 0))
         {
             dist = (double)FUN_80006958((double)((GameObject*)param_1)->anim.worldPosX,
                                          (double)((GameObject*)param_1)->anim.worldPosY,
@@ -543,9 +543,9 @@ undefined4 FUN_80057690(int param_1)
         nearDist = (double)(float)(range - (double)lbl_803DF854);
         if (nearDist < dist)
         {
-            alpha = (uint)(lbl_803DF858 *
+            alpha = (u32)(lbl_803DF858 *
                 (lbl_803DF85C - (float)(dist - nearDist) / (float)(range - nearDist)));
-            local_30 = (double)(longlong)(int)
+            local_30 = (double)(s64)(int)
             alpha;
         }
         FUN_8000693c((double)(((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58),
@@ -563,7 +563,7 @@ undefined4 FUN_80057690(int param_1)
         if (projSize < lbl_803DF868)
         {
             local_30 = (double)CONCAT44(0x43300000, alpha ^ 0x80000000);
-            alpha = (uint)(((float)(local_30 - DOUBLE_803df840) * (projSize - lbl_803DF860)) /
+            alpha = (u32)(((float)(local_30 - DOUBLE_803df840) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
         *(char*)(param_1 + 0x37) = (char)(alpha * (((GameObject*)param_1)->anim.alpha + 1) >> 8);

@@ -76,10 +76,10 @@ extern f32 mathSinf(f32 x);
 #define EFFECT10_FLAGA_POS_RELATIVE 0x1 /* offset start pos by source vector / model xform */
 #define EFFECT10_FLAGA_UNK2 0x2 /* cleared when set alongside POS_RELATIVE; meaning unknown */
 
-int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
+int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* p6)
 {
     EffectSpawnParams p;
-    uint hasSrc;
+    u32 hasSrc;
 
     lbl_803DB830 = lbl_803DB830 + lbl_803DFEB8;
     if (lbl_803DB830 > 1.0f)

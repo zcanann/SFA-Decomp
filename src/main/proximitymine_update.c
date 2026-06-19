@@ -6,8 +6,8 @@
 #include "main/objtexture.h"
 
 extern void modelLightStruct_freeSlot(void* handle);
-extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                                 undefined4 param_5, double scale);
+extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
+                                 u32 param_5, double scale);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void queueGlowRender(void* effect);
 extern int fn_80080150(void* timer);
@@ -70,8 +70,8 @@ void proximitymine_free(ProximityMineObject* obj)
     return;
 }
 
-void proximitymine_render(ProximityMineObject* obj, undefined4 p2, undefined4 p3,
-                          undefined4 p4, undefined4 p5)
+void proximitymine_render(ProximityMineObject* obj, u32 p2, u32 p3,
+                          u32 p4, u32 p5)
 {
     int mapBlock;
     ProximityMineEffect* effect;
@@ -109,7 +109,7 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
 
     if (fn_80080150(&obj->state->renderTimer) == 0)
     {
-        hit = ObjHits_GetPriorityHit((int)obj, (int*)0, (int*)0, (uint*)0);
+        hit = ObjHits_GetPriorityHit((int)obj, (int*)0, (int*)0, (u32*)0);
         collider = obj->collider;
         hitFlag = collider->hitFlag;
         if ((hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL))

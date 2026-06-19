@@ -11,42 +11,42 @@
 #define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
 
 extern bool FUN_800067f0();
-extern undefined4 FUN_8000681c();
+extern u32 FUN_8000681c();
 extern double FUN_80006a30();
 extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017798();
+extern u32 FUN_80017798();
 extern int FUN_8001779c();
 extern int FUN_80017970();
-extern undefined4 FUN_80017a00();
-extern undefined4 FUN_80017a04();
-extern undefined4 objRenderFuzzFn_8003d6f8();
-extern undefined4 FUN_800400b0();
-extern undefined4 FUN_80040a88();
+extern u32 FUN_80017a00();
+extern u32 FUN_80017a04();
+extern u32 objRenderFuzzFn_8003d6f8();
+extern u32 FUN_800400b0();
+extern u32 FUN_80040a88();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 FUN_802420e0();
-extern undefined4 GXSetBlendMode();
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293900();
-extern undefined4 FUN_802950c8();
+extern u32 FUN_802420e0();
+extern u32 GXSetBlendMode();
+extern u64 FUN_8028683c();
+extern u64 FUN_80286840();
+extern u32 FUN_80286888();
+extern u32 FUN_8028688c();
+extern u32 FUN_80293900();
+extern u32 FUN_802950c8();
 
-extern uint DAT_802cba60;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dd888;
-extern undefined4 DAT_803dd889;
-extern undefined4 DAT_803dd88a;
-extern undefined4 DAT_803dd88b;
-extern undefined4 DAT_803dd88c;
-extern undefined4 DAT_803dd88d;
-extern undefined4 DAT_803dd890;
-extern undefined4 DAT_803dd894;
-extern undefined4 DAT_803dd896;
-extern undefined4 DAT_803dd898;
-extern undefined4 DAT_803dd8c8;
+extern u32 DAT_802cba60;
+extern u32 DAT_803dc070;
+extern u32 DAT_803dd888;
+extern u32 DAT_803dd889;
+extern u32 DAT_803dd88a;
+extern u32 DAT_803dd88b;
+extern u32 DAT_803dd88c;
+extern u32 DAT_803dd88d;
+extern u32 DAT_803dd890;
+extern u32 DAT_803dd894;
+extern u32 DAT_803dd896;
+extern u32 DAT_803dd898;
+extern u32 DAT_803dd8c8;
 extern f64 DOUBLE_803df650;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DF61C;
@@ -133,17 +133,17 @@ void objAnimFn_80038f38(int obj, char* p2)
     }
 }
 
-void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort sfxId, short pitch, uint frame,
-                  uint force)
+void FUN_80039468(u32 param_1, u32 param_2, u16 sfxId, short pitch, u32 frame,
+                  u32 force)
 {
-    uint obj;
+    u32 obj;
     bool playing;
-    undefined* state;
-    undefined8 ctx;
+    u8* state;
+    u64 ctx;
 
     ctx = FUN_80286840();
-    obj = (uint)((ulonglong)ctx >> 0x20);
-    state = (undefined*)ctx;
+    obj = (u32)((u64)ctx >> 0x20);
+    state = (u8*)ctx;
     if (((force & 0xff) != 0) || (playing = FUN_800067f0(obj, 0x10), !playing))
     {
         FUN_8000681c(obj, 0x10, sfxId);
@@ -157,16 +157,16 @@ void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort sfxId, short pi
     return;
 }
 
-undefined4* FUN_80039518(void)
+u32* FUN_80039518(void)
 {
     return &DAT_802cba60;
 }
 
-int FUN_80039520(int obj, uint tag)
+int FUN_80039520(int obj, u32 tag)
 {
-    uint remaining;
+    u32 remaining;
     int hitDef;
-    byte* entry;
+    u8* entry;
     int offset;
     int found;
 
@@ -174,13 +174,13 @@ int FUN_80039520(int obj, uint tag)
     hitDef = (int)((GameObject*)obj)->anim.modelInstance;
     if (hitDef != 0)
     {
-        entry = *(byte**)(hitDef + 0xc);
-        if (entry == (byte*)0x0)
+        entry = *(u8**)(hitDef + 0xc);
+        if (entry == (u8*)0x0)
         {
             return 0;
         }
         offset = 0;
-        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
             if (tag == *entry)
             {
@@ -193,9 +193,9 @@ int FUN_80039520(int obj, uint tag)
     return found;
 }
 
-int FUN_8003964c(int obj, uint key)
+int FUN_8003964c(int obj, u32 key)
 {
-    uint remaining;
+    u32 remaining;
     int vecOffset;
     int entryIdx;
     int model;
@@ -210,7 +210,7 @@ int FUN_8003964c(int obj, uint key)
         for (remaining = OBJPRINT_JOINT_COUNT(model); remaining != 0; remaining = remaining - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
-                (key == *(byte*)(*(int*)(model + 0x10) + entryIdx)))
+                (key == *(u8*)(*(int*)(model + 0x10) + entryIdx)))
             {
                 found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
@@ -221,22 +221,22 @@ int FUN_8003964c(int obj, uint key)
     return found;
 }
 
-undefined4 FUN_8003988c(double a, double b, int curve, short* outAngle)
+u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
 {
-    undefined4 uVar1;
+    u32 uVar1;
     double dVar2;
     double dVar3;
     float local_48;
     float local_44;
     float local_40;
     float local_3c;
-    undefined4 local_38;
-    uint uStack_34;
-    undefined4 local_30;
-    uint uStack_2c;
-    undefined8 local_28;
-    undefined4 local_20;
-    uint uStack_1c;
+    u32 local_38;
+    u32 uStack_34;
+    u32 local_30;
+    u32 uStack_2c;
+    u64 local_28;
+    u32 local_20;
+    u32 uStack_1c;
 
     local_48 = (float)a;
     local_44 = (float)a;
@@ -293,22 +293,22 @@ undefined4 FUN_8003988c(double a, double b, int curve, short* outAngle)
     return uVar1;
 }
 
-undefined4 FUN_80039a28(int curve, int state)
+u32 FUN_80039a28(int curve, int state)
 {
-    undefined4 uVar1;
+    u32 uVar1;
     double dVar2;
     double dVar3;
     float local_48;
     float local_44;
     float local_40;
     float local_3c;
-    undefined4 local_38;
-    uint uStack_34;
-    undefined4 local_30;
-    uint uStack_2c;
-    undefined8 local_28;
-    undefined4 local_20;
-    uint uStack_1c;
+    u32 local_38;
+    u32 uStack_34;
+    u32 local_30;
+    u32 uStack_2c;
+    u64 local_28;
+    u32 local_20;
+    u32 uStack_1c;
 
     local_48 = lbl_803DF658;
     local_44 = lbl_803DF658;
@@ -357,7 +357,7 @@ undefined4 FUN_80039a28(int curve, int state)
         if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(state + 2))) ||
             (*(short*)(state + 2) < -0x1ffe))
         {
-            *(undefined2*)(state + 2) = *(undefined2*)(curve + 0x14);
+            *(u16*)(state + 2) = *(u16*)(curve + 0x14);
             uVar1 = 1;
         }
         else
@@ -371,23 +371,23 @@ undefined4 FUN_80039a28(int curve, int state)
 void FUN_80039e6c(double val, short* obj, char* curve, int state)
 {
     float fVar1;
-    ushort uVar2;
+    u16 uVar2;
     float fVar3;
-    uint uVar4;
+    u32 uVar4;
     int iVar5;
     bool bVar6;
 
     bVar6 = (double)lbl_803DF664 < val;
-    if (((uint)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != bVar6)
+    if (((u32)(int) * (short*)(curve + 0x1a) >> 8 & 0xff) != bVar6)
     {
-        *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
+        *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
     }
-    uVar2 = *(ushort*)(curve + 0x1a) & 0xff;
+    uVar2 = *(u16*)(curve + 0x1a) & 0xff;
     if (uVar2 == 2)
     {
         if ((*curve != '\0') || (iVar5 = FUN_80039a28((int)curve, state), iVar5 != 0))
         {
-            *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
+            *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
         }
     }
     else if (uVar2 < 2)
@@ -396,21 +396,21 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
         {
             if (*curve == '\0')
             {
-                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 1;
+                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 1;
                 uVar4 = randomGetRange(100, 400);
                 *(short*)(curve + 0x1c) = uVar4;
-                *(undefined2*)(curve + 0x14) = *(undefined2*)(state + 2);
+                *(u16*)(curve + 0x14) = *(u16*)(state + 2);
             }
             else
             {
-                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 3;
-                *(undefined2*)(curve + 0x16) = *(undefined2*)(state + 2);
+                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 3;
+                *(u16*)(curve + 0x16) = *(u16*)(state + 2);
                 *(float*)(curve + 0x10) = lbl_803DF61C;
             }
         }
         else
         {
-            *(ushort*)(curve + 0x1c) = *(short*)(curve + 0x1c) - (ushort)DAT_803dc070;
+            *(u16*)(curve + 0x1c) = *(short*)(curve + 0x1c) - (u16)DAT_803dc070;
             if (*(short*)(curve + 0x1c) < 0)
             {
                 iVar5 = (int)*(short*)(curve + 0x14);
@@ -441,10 +441,10 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                     }
                     *(short*)(curve + 0x14) = -*(short*)(curve + 0x14);
                 }
-                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8 | 2;
+                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8 | 2;
                 curve[0x1c] = '\0';
                 curve[0x1d] = '\0';
-                *(undefined2*)(curve + 0x16) = *(undefined2*)(state + 2);
+                *(u16*)(curve + 0x16) = *(u16*)(state + 2);
             }
         }
     }
@@ -452,7 +452,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
     {
         if (*curve == '\0')
         {
-            *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
+            *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
         }
         else
         {
@@ -467,7 +467,7 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
                 *(short*)(curve + 0x14) = *(short*)(curve + 0x14) + -1;
             }
             fVar3 = lbl_803DF624;
-            uVar4 = (uint) * (short*)(curve + 0x14);
+            uVar4 = (u32) * (short*)(curve + 0x14);
             if (((int)uVar4 < 0x2000) && (-0x2000 < uVar4))
             {
                 if (*(float*)(curve + 0x10) <= lbl_803DF624)
@@ -493,24 +493,24 @@ void FUN_80039e6c(double val, short* obj, char* curve, int state)
             }
             else
             {
-                *(ushort*)(curve + 0x1a) = (ushort)bVar6 << 8;
+                *(u16*)(curve + 0x1a) = (u16)bVar6 << 8;
             }
         }
     }
     if (*(short*)(state + 2) < -0x1fff)
     {
-        *(undefined2*)(state + 2) = 0xe001;
+        *(u16*)(state + 2) = 0xe001;
     }
     else if (0x1fff < *(short*)(state + 2))
     {
-        *(undefined2*)(state + 2) = 0x1fff;
+        *(u16*)(state + 2) = 0x1fff;
     }
     return;
 }
 
 void FUN_8003a1c4(int obj, int ctx)
 {
-    uint scaled;
+    u32 scaled;
     short* found;
     int model;
     int entryIdx;
@@ -538,14 +538,14 @@ void FUN_8003a1c4(int obj, int ctx)
         if (*found != 0)
         {
             scaled = *found * 3;
-            *found = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
+            *found = (short)((int)scaled >> 2) + (u16)((int)scaled < 0 && (scaled & 3) != 0);
         }
         if (found[1] != 0)
         {
             scaled = found[1] * 3;
-            found[1] = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
+            found[1] = (short)((int)scaled >> 2) + (u16)((int)scaled < 0 && (scaled & 3) != 0);
         }
-        *(undefined2*)(ctx + 0x1a) = 0;
+        *(u16*)(ctx + 0x1a) = 0;
         return;
     }
     return;
@@ -553,7 +553,7 @@ void FUN_8003a1c4(int obj, int ctx)
 
 void fn_8003A328(double amount, short* obj, char* ctx)
 {
-    uint tmp;
+    u32 tmp;
     short* found;
     int model;
     int entryIdx;
@@ -581,7 +581,7 @@ void fn_8003A328(double amount, short* obj, char* ctx)
         if (*found != 0)
         {
             tmp = *found * 3;
-            *found = (short)((int)tmp >> 2) + (ushort)((int)tmp < 0 && (tmp & 3) != 0);
+            *found = (short)((int)tmp >> 2) + (u16)((int)tmp < 0 && (tmp & 3) != 0);
         }
         if (amount < (double)lbl_803DF624)
         {
@@ -589,21 +589,21 @@ void fn_8003A328(double amount, short* obj, char* ctx)
         }
         if ((double)lbl_803DF664 < amount)
         {
-            FUN_80039bc4(amount, (undefined4)(u32)obj, ctx, (int)found);
+            FUN_80039bc4(amount, (u32)(u32)obj, ctx, (int)found);
         }
         else
         {
             FUN_80039e6c(amount, obj, ctx, (int)found);
         }
-        *(ushort*)(ctx + 0x1a) = *(ushort*)(ctx + 0x1a) & 0xff;
-        *(ushort*)(ctx + 0x1a) =
-            *(ushort*)(ctx + 0x1a) | (ushort)((double)lbl_803DF664 < amount) << 8;
+        *(u16*)(ctx + 0x1a) = *(u16*)(ctx + 0x1a) & 0xff;
+        *(u16*)(ctx + 0x1a) =
+            *(u16*)(ctx + 0x1a) | (u16)((double)lbl_803DF664 < amount) << 8;
     }
 }
 
-void FUN_8003a9c8(int base, uint count, undefined2 a, undefined2 b)
+void FUN_8003a9c8(int base, u32 count, u16 a, u16 b)
 {
-    uint blocks;
+    u32 blocks;
 
     if ((int)count < 1)
     {
@@ -614,22 +614,22 @@ void FUN_8003a9c8(int base, uint count, undefined2 a, undefined2 b)
     {
         do
         {
-            *(undefined2*)(base + 0x14) = a;
-            *(undefined2*)(base + 0x44) = b;
-            *(undefined2*)(base + 0x74) = a;
-            *(undefined2*)(base + 0xa4) = b;
-            *(undefined2*)(base + 0xd4) = a;
-            *(undefined2*)(base + 0x104) = b;
-            *(undefined2*)(base + 0x134) = a;
-            *(undefined2*)(base + 0x164) = b;
-            *(undefined2*)(base + 0x194) = a;
-            *(undefined2*)(base + 0x1c4) = b;
-            *(undefined2*)(base + 500) = a;
-            *(undefined2*)(base + 0x224) = b;
-            *(undefined2*)(base + 0x254) = a;
-            *(undefined2*)(base + 0x284) = b;
-            *(undefined2*)(base + 0x2b4) = a;
-            *(undefined2*)(base + 0x2e4) = b;
+            *(u16*)(base + 0x14) = a;
+            *(u16*)(base + 0x44) = b;
+            *(u16*)(base + 0x74) = a;
+            *(u16*)(base + 0xa4) = b;
+            *(u16*)(base + 0xd4) = a;
+            *(u16*)(base + 0x104) = b;
+            *(u16*)(base + 0x134) = a;
+            *(u16*)(base + 0x164) = b;
+            *(u16*)(base + 0x194) = a;
+            *(u16*)(base + 0x1c4) = b;
+            *(u16*)(base + 500) = a;
+            *(u16*)(base + 0x224) = b;
+            *(u16*)(base + 0x254) = a;
+            *(u16*)(base + 0x284) = b;
+            *(u16*)(base + 0x2b4) = a;
+            *(u16*)(base + 0x2e4) = b;
             base = base + 0x300;
             blocks = blocks - 1;
         }
@@ -642,8 +642,8 @@ void FUN_8003a9c8(int base, uint count, undefined2 a, undefined2 b)
     }
     do
     {
-        *(undefined2*)(base + 0x14) = a;
-        *(undefined2*)(base + 0x44) = b;
+        *(u16*)(base + 0x14) = a;
+        *(u16*)(base + 0x44) = b;
         base = base + 0x60;
         count = count - 1;
     }
@@ -651,9 +651,9 @@ void FUN_8003a9c8(int base, uint count, undefined2 a, undefined2 b)
     return;
 }
 
-void FUN_8003ac24(int obj, uint* keys, int count)
+void FUN_8003ac24(int obj, u32* keys, int count)
 {
-    uint remaining;
+    u32 remaining;
     int idx;
     short* found;
     int hitDef;
@@ -668,10 +668,10 @@ void FUN_8003ac24(int obj, uint* keys, int count)
         {
             entryIdx = 0;
             vecOffset = 0;
-            for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
+            for (remaining = (u32) * (u8*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
                 if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
-                    (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
+                    (*keys == (u32) * (u8*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
                     found = (short*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
@@ -690,10 +690,10 @@ void FUN_8003ac24(int obj, uint* keys, int count)
     return;
 }
 
-void FUN_8003ad08(int obj, uint* keys, int count, int out)
+void FUN_8003ad08(int obj, u32* keys, int count, int out)
 {
-    uint remaining;
-    undefined2* found;
+    u32 remaining;
+    u16* found;
     int hitDef;
     int entryIdx;
     int vecOffset;
@@ -701,27 +701,27 @@ void FUN_8003ad08(int obj, uint* keys, int count, int out)
 
     for (idx = 0; idx < count; idx = idx + 1)
     {
-        found = (undefined2*)0x0;
+        found = (u16*)0x0;
         hitDef = *(int*)&((GameObject*)obj)->anim.modelInstance;
         if (hitDef != 0)
         {
             entryIdx = 0;
             vecOffset = 0;
-            for (remaining = (uint) * (byte*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
+            for (remaining = (u32) * (u8*)(hitDef + 0x5a); remaining != 0; remaining = remaining - 1)
             {
                 if ((*(char*)(*(int*)(hitDef + 0x10) + ((GameObject*)obj)->anim.bankIndex + entryIdx + 1) != -1) &&
-                    (*keys == (uint) * (byte*)(*(int*)(hitDef + 0x10) + entryIdx)))
+                    (*keys == (u32) * (u8*)(*(int*)(hitDef + 0x10) + entryIdx)))
                 {
-                    found = (undefined2*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                    found = (u16*)(*(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
                 entryIdx = *(char*)(hitDef + 0x55) + entryIdx + 1;
                 vecOffset = vecOffset + 0x12;
             }
         }
-        if (found != (undefined2*)0x0)
+        if (found != (u16*)0x0)
         {
-            *(undefined2*)(out + 0x16) = found[1];
-            *(undefined2*)(out + 0x46) = *found;
+            *(u16*)(out + 0x16) = found[1];
+            *(u16*)(out + 0x46) = *found;
         }
         keys = keys + 1;
         out = out + 0x60;
@@ -729,13 +729,13 @@ void FUN_8003ad08(int obj, uint* keys, int count, int out)
     return;
 }
 
-void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_4, uint flag,
-                  uint param_6)
+void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
+                  u32 param_6)
 {
     int iVar1;
     float fVar2;
     float fVar3;
-    uint uVar4;
+    u32 uVar4;
     short sVar5;
     short sVar6;
     int iVar7;
@@ -752,12 +752,12 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    undefined8 uVar13;
+    u64 uVar13;
     short local_88[4];
-    undefined4 local_80;
-    uint uStack_7c;
-    longlong local_78;
-    undefined8 local_70;
+    u32 local_80;
+    u32 uStack_7c;
+    s64 local_78;
+    u64 local_70;
     double local_68;
     float local_38;
     float fStack_34;
@@ -777,7 +777,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
     local_38 = (float)in_f28;
     fStack_34 = (float)in_ps28_1;
     uVar13 = FUN_8028683c();
-    psVar9 = (short*)((ulonglong)uVar13 >> 0x20);
+    psVar9 = (short*)((u64)uVar13 >> 0x20);
     iVar7 = uVar13;
     psVar12 = 0x0;
     iVar8 = *(int*)(psVar9 + 0x28);
@@ -785,7 +785,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
     {
         iVar10 = 0;
         iVar11 = 0;
-        for (uVar4 = (uint) * (byte*)(iVar8 + 0x5a); uVar4 != 0; uVar4 = uVar4 - 1)
+        for (uVar4 = (u32) * (u8*)(iVar8 + 0x5a); uVar4 != 0; uVar4 = uVar4 - 1)
         {
             if ((*(char*)(*(int*)(iVar8 + 0x10) + *(char*)((int)psVar9 + 0xad) + iVar10 + 1) != -1) &&
                 (*(char*)(*(int*)(iVar8 + 0x10) + iVar10) == '\0'))
@@ -828,12 +828,12 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
             local_80 = 0x43300000;
             iVar7 = (int)(lbl_803DF66C *
                 (f32)(s32)(param_4));
-            local_78 = (longlong)iVar7;
+            local_78 = (s64)iVar7;
             sVar5 = iVar7;
             psVar9 = local_88;
             fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
             iVar7 = fVar2;
-            local_68 = (double)(longlong)iVar7;
+            local_68 = (double)(s64)iVar7;
             iVar8 = -(int)(short)iVar7;
             iVar10 = -sVar5;
             iVar11 = 2;
@@ -849,10 +849,10 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
                 else
                 {
                     iVar1 = fVar2;
-                    local_68 = (double)(longlong)iVar1;
+                    local_68 = (double)(s64)iVar1;
                     if ((int)(short)iVar1 < sVar6)
                     {
-                        local_70 = (double)(longlong)iVar1;
+                        local_70 = (double)(s64)iVar1;
                         sVar6 = iVar1;
                     }
                 }
@@ -881,7 +881,7 @@ void FUN_8003add8(undefined4 param_1, undefined4 param_2, int state, uint param_
 
 void FUN_8003b1a4(int obj, int ctx)
 {
-    uint remaining;
+    u32 remaining;
     int* found5;
     char* entry;
     int* found4;
@@ -893,7 +893,7 @@ void FUN_8003b1a4(int obj, int ctx)
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
-        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
             if (*entry == '\x05')
             {
@@ -907,7 +907,7 @@ void FUN_8003b1a4(int obj, int ctx)
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
-        for (remaining = (uint) * (byte*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
+        for (remaining = (u32) * (u8*)(hitDef + 0x59); remaining != 0; remaining = remaining - 1)
         {
             if (*entry == '\x04')
             {
@@ -932,14 +932,14 @@ void FUN_8003b1a4(int obj, int ctx)
     }
     *found5 = hitDef;
     *found4 = hitDef;
-    *(undefined*)(ctx + 0x1e) = 1;
+    *(u8*)(ctx + 0x1e) = 1;
     return;
 }
 
 void FUN_8003b280(int obj, int ctx)
 {
     int* found5;
-    uint state;
+    u32 state;
     char* entry;
     int* found4;
     int hitDef;
@@ -950,7 +950,7 @@ void FUN_8003b280(int obj, int ctx)
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
-        for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
+        for (state = (u32) * (u8*)(hitDef + 0x59); state != 0; state = state - 1)
         {
             if (*entry == '\x05')
             {
@@ -964,7 +964,7 @@ void FUN_8003b280(int obj, int ctx)
     if ((hitDef != 0) && (entry = *(char**)(hitDef + 0xc), entry != 0x0))
     {
         offset = 0;
-        for (state = (uint) * (byte*)(hitDef + 0x59); state != 0; state = state - 1)
+        for (state = (u32) * (u8*)(hitDef + 0x59); state != 0; state = state - 1)
         {
             if (*entry == '\x04')
             {
@@ -987,14 +987,14 @@ void FUN_8003b280(int obj, int ctx)
                     if (hitDef + -0x200 < 0)
                     {
                         hitDef = 0;
-                        *(undefined*)(ctx + 0x1e) = 0;
+                        *(u8*)(ctx + 0x1e) = 0;
                     }
                     else
                     {
                         hitDef = 0x2ff;
-                        *(undefined*)(ctx + 0x1e) = 0x81;
+                        *(u8*)(ctx + 0x1e) = 0x81;
                     }
-                    *(undefined*)(ctx + 0x1f) = 0x28;
+                    *(u8*)(ctx + 0x1f) = 0x28;
                 }
             }
             else
@@ -1003,8 +1003,8 @@ void FUN_8003b280(int obj, int ctx)
                 if (hitDef < 0)
                 {
                     hitDef = 0;
-                    *(undefined*)(ctx + 0x1e) = 0;
-                    *(undefined*)(ctx + 0x1f) = 0;
+                    *(u8*)(ctx + 0x1e) = 0;
+                    *(u8*)(ctx + 0x1f) = 0;
                 }
             }
             *found5 = hitDef;
@@ -1017,13 +1017,13 @@ void FUN_8003b280(int obj, int ctx)
                 state = randomGetRange(0, 1000);
                 if (0x3de < state)
                 {
-                    *(undefined*)(ctx + 0x1e) = 1;
-                    *(undefined*)(ctx + 0x1f) = 0;
+                    *(u8*)(ctx + 0x1e) = 1;
+                    *(u8*)(ctx + 0x1f) = 0;
                 }
             }
             else
             {
-                *(byte*)(ctx + 0x1f) = *(char*)(ctx + 0x1f) - DAT_803dc070;
+                *(u8*)(ctx + 0x1f) = *(char*)(ctx + 0x1f) - DAT_803dc070;
             }
         }
         FUN_800396cc(obj, ctx);
@@ -1033,7 +1033,7 @@ void FUN_8003b280(int obj, int ctx)
 
 void FUN_8003b444(short* obj, char* ctx)
 {
-    uint scaled;
+    u32 scaled;
     short* found;
     int model;
     int entryIdx;
@@ -1045,7 +1045,7 @@ void FUN_8003b444(short* obj, char* ctx)
     {
         entryIdx = 0;
         vecOffset = 0;
-        for (scaled = (uint) * (byte*)(model + 0x5a); scaled != 0; scaled = scaled - 1)
+        for (scaled = (u32) * (u8*)(model + 0x5a); scaled != 0; scaled = scaled - 1)
         {
             if ((*(char*)(*(int*)(model + 0x10) + *(char*)((int)obj + 0xad) + entryIdx + 1) != -1) &&
                 (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
@@ -1061,15 +1061,15 @@ void FUN_8003b444(short* obj, char* ctx)
         if (*found != 0)
         {
             scaled = *found * 3;
-            *found = (short)((int)scaled >> 2) + (ushort)((int)scaled < 0 && (scaled & 3) != 0);
+            *found = (short)((int)scaled >> 2) + (u16)((int)scaled < 0 && (scaled & 3) != 0);
         }
         FUN_80039e6c((double)lbl_803DF624, obj, ctx, (int)found);
-        *(ushort*)(ctx + 0x1a) = *(ushort*)(ctx + 0x1a) & 0xff;
+        *(u16*)(ctx + 0x1a) = *(u16*)(ctx + 0x1a) & 0xff;
     }
     return;
 }
 
-void FUN_8003b540(undefined param_1, undefined param_2, undefined param_3, undefined param_4)
+void FUN_8003b540(u8 param_1, u8 param_2, u8 param_3, u8 param_4)
 {
     DAT_803dd88d = param_1;
     DAT_803dd88c = param_2;
@@ -1079,7 +1079,7 @@ void FUN_8003b540(undefined param_1, undefined param_2, undefined param_3, undef
     return;
 }
 
-void FUN_8003b56c(undefined2 param_1, undefined2 param_2, undefined2 param_3)
+void FUN_8003b56c(u16 param_1, u16 param_2, u16 param_3)
 {
     DAT_803dd898 = param_1;
     DAT_803dd896 = param_2;
@@ -1098,33 +1098,33 @@ void FUN_8003b818(int obj)
     return;
 }
 
-void FUN_8003b870(undefined4 param_1)
+void FUN_8003b870(u32 param_1)
 {
     DAT_803dd890 = param_1;
     return;
 }
 
-void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                  int obj, undefined4 renderFlag)
+void FUN_8003b878(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
+                  int obj, u32 renderFlag)
 {
     short seqId;
-    undefined4 ctxHi;
+    u32 ctxHi;
     int child;
     code* vfn;
     int walk;
     char flag;
     int i;
-    undefined8 ctx;
+    u64 ctx;
 
     ctx = FUN_8028683c();
-    ctxHi = (undefined4)((ulonglong)ctx >> 0x20);
-    if (((((*(ushort*)(obj + 0xb0) & 0x40) == 0) && (*(int*)&((GameObject*)obj)->ownerObj == 0)) &&
-            ((*(ushort*)(obj + 6) & 0x4000) == 0)) &&
-        ((*(int*)&((GameObject*)obj)->anim.parent == 0 || ((*(ushort*)(*(int*)&((GameObject*)obj)->anim.parent + 6) & 0x4000) == 0))
+    ctxHi = (u32)((u64)ctx >> 0x20);
+    if (((((*(u16*)(obj + 0xb0) & 0x40) == 0) && (*(int*)&((GameObject*)obj)->ownerObj == 0)) &&
+            ((*(u16*)(obj + 6) & 0x4000) == 0)) &&
+        ((*(int*)&((GameObject*)obj)->anim.parent == 0 || ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 6) & 0x4000) == 0))
         ))
     {
         FUN_80017a04();
-        *(ushort*)(obj + 0xb0) = *(ushort*)(obj + 0xb0) | 0x800;
+        *(u16*)(obj + 0xb0) = *(u16*)(obj + 0xb0) | 0x800;
         flag = renderFlag;
         if (*(int**)(obj + 0x68) == 0x0)
         {
@@ -1142,7 +1142,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
                 }
             }
         }
-        else if ((*(ushort*)(obj + 0xb0) & 0x4000) == 0)
+        else if ((*(u16*)(obj + 0xb0) & 0x4000) == 0)
         {
             vfn = *(code**)(**(int**)(obj + 0x68) + 0x10);
             if (vfn != (code*)0x0)
@@ -1158,7 +1158,7 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
         }
         FUN_80017a00();
         walk = obj;
-        for (i = 0; i < (int)(uint) * (byte*)(obj + 0xeb); i = i + 1)
+        for (i = 0; i < (int)(u32) * (u8*)(obj + 0xeb); i = i + 1)
         {
             child = *(int*)&((GameObject*)walk)->childObjs[0];
             if (*(short*)(child + 0x44) == 0x2d)
@@ -1174,18 +1174,18 @@ void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
 
 void FUN_8003c10c(int model, int* mtxArr)
 {
-    uint rem;
+    u32 rem;
     int cache;
-    uint mtx;
-    uint count;
-    uint dst;
+    u32 mtx;
+    u32 count;
+    u32 dst;
 
     cache = FUN_8001779c();
     if (*(char*)(model + 0xf4) != '\0')
     {
         FUN_8003be6c();
     }
-    count = (uint) * (byte*)(model + 0xf3) + (uint) * (byte*)(model + 0xf4);
+    count = (u32) * (u8*)(model + 0xf3) + (u32) * (u8*)(model + 0xf4);
     if ((count < 2) || (100 < count))
     {
         DAT_803dd8c8 = 3;

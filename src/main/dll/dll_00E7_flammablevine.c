@@ -52,7 +52,7 @@ typedef struct FlammablevineState
     f32 burnIntensity;    /* 0x10 */
 } FlammablevineState;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetCapsuleBounds();
 extern void ObjHits_SetHitVolumeSlot();

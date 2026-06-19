@@ -21,12 +21,12 @@
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXGet.h"
 
-extern void hudDrawColored(int texture, int x, int y, uint* color, uint scale, int flags);
-extern void drawTexture(double x, double y, int texture, uint alpha, uint flags);
+extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
+extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
 extern void gameTextSetColor(u8 red, u8 green, u8 blue, u8 alpha);
 extern char* gameTextGetStr(int id);
 extern void gameTextShowStr(char* text, int font, int x, int y);
-extern void mapUnload(int mapId, uint flags);
+extern void mapUnload(int mapId, u32 flags);
 extern void setForceLoadImmediately(void);
 extern void loadMapAndParent(int param_1);
 extern void clearForceLoadImmediately(void);
@@ -40,7 +40,7 @@ extern int lbl_803A4438[];
 extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC968;
 extern u8 lbl_803DD5E8;
-extern uint lbl_803DD5EC;
+extern u32 lbl_803DD5EC;
 extern s8 lbl_803DD5F0;
 extern f32 lbl_803DD5F4;
 extern f32 lbl_803E1CF0;
@@ -50,23 +50,23 @@ extern f32 lbl_803E1D00;
 
 typedef struct LoadingScreenTexture
 {
-    undefined _00[0xa];
+    u8 _00[0xa];
     u16 width;
     u16 height;
     u16 unk0e;
     u16 unk10;
-    undefined _12[4];
+    u8 _12[4];
     u8 format;
     u8 wrapS;
     u8 wrapT;
     u8 minFilter;
     u8 magFilter;
-    undefined _1b[5];
+    u8 _1b[5];
     u32 texObj[8];
     int unk40;
-    uint bufferSize;
+    u32 bufferSize;
     u8 unk48;
-    undefined _49[0x17];
+    u8 _49[0x17];
     u8 imageData[1];
 } LoadingScreenTexture;
 
@@ -75,7 +75,7 @@ void runLoadingScreens(void)
     int alpha;
     int textureSlot;
     u8 dvdErrorActive;
-    uint color;
+    u32 color;
     union
     {
         u32 word;
@@ -128,8 +128,8 @@ void runLoadingScreens(void)
         {
             alpha = (int)((lbl_803E1CF4 * (f32)(0x1e0 - lbl_803DD5EC)) / lbl_803E1CF8);
         }
-        drawTexture((double)(f32)(uint)((int)(0x280 - (uint) * (u16*)(lbl_803A4438[1] + 0xa)) >> 1),
-                    (double)(f32)(uint)((int)(0x1e0 - (uint) * (u16*)(lbl_803A4438[1] + 0xc)) >> 1),
+        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(lbl_803A4438[1] + 0xa)) >> 1),
+                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(lbl_803A4438[1] + 0xc)) >> 1),
                     lbl_803A4438[1], alpha, 0x119);
     }
     else if (lbl_803DD5EC < 0x258)
@@ -146,8 +146,8 @@ void runLoadingScreens(void)
         {
             alpha = (int)((lbl_803E1CF4 * (f32)(0x258 - lbl_803DD5EC)) / lbl_803E1CF8);
         }
-        drawTexture((double)(f32)(uint)((int)(0x280 - (uint) * (u16*)(lbl_803A4438[2] + 0xa)) >> 1),
-                    (double)(f32)(uint)((int)(0x1e0 - (uint) * (u16*)(lbl_803A4438[2] + 0xc)) >> 1),
+        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(lbl_803A4438[2] + 0xa)) >> 1),
+                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(lbl_803A4438[2] + 0xc)) >> 1),
                     lbl_803A4438[2], alpha, 0x119);
     }
 

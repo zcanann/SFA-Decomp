@@ -30,14 +30,14 @@
 extern u32 randomGetRange(int min, int max);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int atan2_8002178c(f32 dx, f32 dz);
-extern void ObjGroup_RemoveObject(uint obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
 extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
                                 void* hits, int hitCount);
-extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
-extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
+extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
@@ -467,12 +467,12 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-undefined4 fn_801659B8(s16* obj, u32* params)
+u32 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
     state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(undefined*)((int)params + 0x34d) = 1;
+    *(u8*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
@@ -485,8 +485,8 @@ undefined4 fn_801659B8(s16* obj, u32* params)
         state->animSpeed = lbl_803E2FDC;
     }
     ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
-    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
-    *(undefined*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
+    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
+    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
     ObjHits_RegisterActiveHitVolumeObject((int)obj);
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
@@ -518,14 +518,14 @@ void fn_80165B3C(int obj, int state)
     f32 dz;
     f32 start[3];
     f32 end[3];
-    uint bounds[6];
+    u32 bounds[6];
     struct
     {
         f32 hit[16];
         f32 hitRadius;
-        undefined pad[0x10];
-        undefined hitType;
-        undefined pad2[0x1f];
+        u8 pad[0x10];
+        u8 hitType;
+        u8 pad2[0x1f];
     } hitScratch;
     f32 damping;
     int hitFound;
@@ -725,13 +725,13 @@ void fn_80166444(int obj, int state)
     f32 dz;
     f32 start[3];
     f32 end[3];
-    uint bounds[6];
+    u32 bounds[6];
     struct
     {
         f32 hit[16];
         f32 hitRadius;
-        undefined pad[0x10];
-        undefined hitType;
+        u8 pad[0x10];
+        u8 hitType;
     } hitScratch;
     f32 fVar1;
 

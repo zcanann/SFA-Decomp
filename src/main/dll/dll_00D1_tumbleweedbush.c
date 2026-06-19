@@ -40,7 +40,7 @@ typedef struct TumbleweedBushState
     u8 pad51[3];
 } TumbleweedBushState;
 
-extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern u32 ObjHitbox_SetCapsuleBounds();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern f32 timeDelta;
 

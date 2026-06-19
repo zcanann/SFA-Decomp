@@ -27,7 +27,7 @@ extern f32 lbl_803E0DF0;
 extern f32 lbl_803E0DF4;
 extern f32 lbl_803E0DF8;
 
-int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5,
+int dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                   f32* arg6)
 {
     int ret;
@@ -137,7 +137,7 @@ int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefin
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0)
+        if ((u32)sourceObj != 0)
         {
             buf.pos[0] = lbl_803E0DDC + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E0DDC + *(f32*)(sourceObj + 0x1c);

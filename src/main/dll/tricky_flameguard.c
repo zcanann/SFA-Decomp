@@ -152,7 +152,7 @@ void trickyFlame(int p1, int p2)
         if (*(u8*)(*(int*)(p2 + 0x71c) + 0x3) != 0)
         {
             newTarget = *(int*)(p2 + 0x71c) + 0x8;
-            if (*(uint*)(p2 + 0x28) != (uint)newTarget)
+            if (*(u32*)(p2 + 0x28) != (u32)newTarget)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
@@ -165,7 +165,7 @@ void trickyFlame(int p1, int p2)
             *(int*)(p2 + 0x720) =
                 (int)(*gRomCurveInterface)->getById(*(int*)(*(int*)(p2 + 0x71c) + 0x1c));
             newTarget = *(int*)(p2 + 0x720) + 0x8;
-            if (*(uint*)(p2 + 0x28) != (uint)newTarget)
+            if (*(u32*)(p2 + 0x28) != (u32)newTarget)
             {
                 *(int*)(p2 + 0x28) = newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(p2);
@@ -488,7 +488,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         trickyDebugPrint(strBase + 0x664);
         if (trickyFn_8013b368((void*)p1, lbl_803E2488, (void*)p2) == 0)
         {
-            if ((uint)trickyState->targetPosition != (uint)trickyState->guardPoint)
+            if ((u32)trickyState->targetPosition != (u32)trickyState->guardPoint)
             {
                 trickyState->targetPosition = trickyState->guardPoint;
                 TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -575,7 +575,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 break;
             }
             newTarget = (int)&trickyState->homeObj->worldPosX;
-            if ((uint)trickyState->targetPosition != (uint)newTarget)
+            if ((u32)trickyState->targetPosition != (u32)newTarget)
             {
                 trickyState->targetPosition = (f32*)newTarget;
                 TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -611,7 +611,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
-                if ((uint)trickyState->targetPosition != (uint)newTarget)
+                if ((u32)trickyState->targetPosition != (u32)newTarget)
                 {
                     trickyState->targetPosition = (f32*)newTarget;
                     TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -697,7 +697,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             if (trickyGuardFindBaddieTarget(trickyState) == 0)
             {
                 newTarget = (int)&trickyState->homeObj->worldPosX;
-                if ((uint)trickyState->targetPosition != (uint)newTarget)
+                if ((u32)trickyState->targetPosition != (u32)newTarget)
                 {
                     trickyState->targetPosition = (f32*)newTarget;
                     TRICKY_CLEAR_TARGET_DIRTY(trickyState);
@@ -717,7 +717,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     f32 bestDist;
     int* list;
     int i;
-    uint best = 0;
+    u32 best = 0;
 
     list = (int*)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++)
@@ -744,7 +744,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     if (best != 0)
     {
         trickyState->guardTarget = (ObjAnimComponent*)best;
-        if ((uint)trickyState->targetPosition != (best + 0x18))
+        if ((u32)trickyState->targetPosition != (best + 0x18))
         {
             trickyState->targetPosition = (f32*)(best + 0x18);
             trickyState->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG;

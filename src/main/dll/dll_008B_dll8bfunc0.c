@@ -37,7 +37,7 @@ extern f32 lbl_803E109C;
 extern f32 lbl_803E10A0;
 extern f32 lbl_803E10A4;
 
-void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5,
+void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                    f32* arg6)
 {
     FbBuf buf;
@@ -242,7 +242,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefi
         buf.flags |= flags;
         if ((buf.flags & 1) != 0)
         {
-            if ((uint)sourceObj != 0)
+            if ((u32)sourceObj != 0)
             {
                 buf.pos[0] = zero + *(f32*)(sourceObj + 0x18);
                 buf.pos[1] = zero + *(f32*)(sourceObj + 0x1c);

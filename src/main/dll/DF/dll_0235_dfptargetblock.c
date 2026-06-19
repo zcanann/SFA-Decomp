@@ -280,7 +280,7 @@ static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
     u8 mode;
-    undefined bitVal;
+    u8 bitVal;
     DfpTargetBlockState* state;
     DfpTargetBlockHome* home;
     float buf[6];
@@ -352,7 +352,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
     bool found;
     int count;
     int entry;
-    undefined bitVal;
+    u8 bitVal;
     int j;
     int i;
     DfpTargetBlockState* state;
@@ -372,7 +372,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
     else
     {
         fconv = (double)lbl_803E64CC;
-        for (i = 0; i < (int)(uint) * (ushort*)(model + 0xe4); i = i + 1)
+        for (i = 0; i < (int)(u32) * (u16*)(model + 0xe4); i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
             if ((double)point.y < fconv)
@@ -380,7 +380,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
                 fconv = (double)point.y;
             }
         }
-        for (i = 0; i < (int)(uint) * (ushort*)(model + 0xe4); i = i + 1)
+        for (i = 0; i < (int)(u32) * (u16*)(model + 0xe4); i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
             if ((double)point.y == fconv)

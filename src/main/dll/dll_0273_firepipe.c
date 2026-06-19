@@ -436,13 +436,13 @@ void firepipe_free(FirePipeObject* obj)
     ObjGroup_RemoveObject(obj, 0x4a);
     i = 0;
     iter = (int*)extra;
-    while (i < (int)(uint)extra->effectCount)
+    while (i < (int)(u32)extra->effectCount)
     {
         Obj_FreeObject(*iter);
         iter++;
         i++;
     }
-    if ((uint)extra->glowLight != 0)
+    if ((u32)extra->glowLight != 0)
     {
         modelLightStruct_freeSlot((int)&extra->glowLight);
     }
@@ -455,11 +455,11 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
 
     extra = obj->extra;
     glowLight = extra->glowLight;
-    if ((uint)glowLight != 0 && *(u8*)(glowLight + 0x2f8) != 0 && *(u8*)(glowLight + 0x4c) != 0)
+    if ((u32)glowLight != 0 && *(u8*)(glowLight + 0x2f8) != 0 && *(u8*)(glowLight + 0x4c) != 0)
     {
         queueGlowRender();
     }
-    if (visible != 0 && (uint)((extra->flags >> 1) & 1) != 0)
+    if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
         objRenderFn_8003b8f4((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
@@ -479,7 +479,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     short startTime;
     short cycleTime;
     u32 bitVal;
-    uint val;
+    u32 val;
 
     extra = obj->extra;
     if ((int)mapData->scale != 0)
@@ -578,7 +578,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         extra->activeSpawn = 0;
         bitVal = GameBit_Get((int)mapData->gameBit);
         {
-            uint clz = __cntlzw(bitVal);
+            u32 clz = __cntlzw(bitVal);
             ((FirePipeBitFlags*)&extra->flags)->lastGameBitState = (u8)(clz >> 5);
         }
         if ((mapData->flags & 1) != 0)

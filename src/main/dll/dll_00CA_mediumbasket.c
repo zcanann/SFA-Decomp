@@ -58,11 +58,11 @@ typedef struct MediumbasketUpdateHeightBlendStateState
 } MediumbasketUpdateHeightBlendStateState;
 
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjMsg_SendToObjects();
-extern uint ObjPath_GetPointModelMtx();
-extern undefined4 ObjPath_GetPointWorldPosition();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u64 ObjMsg_SendToObjects();
+extern u32 ObjPath_GetPointModelMtx();
+extern u32 ObjPath_GetPointWorldPosition();
 
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;
@@ -147,7 +147,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #pragma peephole off
 int mediumbasket_updateOpenState(int obj, int p)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 lbl_803E2D70;
     extern f32 lbl_803E2D74;
@@ -198,7 +198,7 @@ int mediumbasket_updateOpenState(int obj, int p)
 
 int mediumbasket_updateOpenHitState(int obj, int p)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     extern int* gPlayerInterface; /* #57 */
     extern f32 lbl_803E2D78;
     extern f32 lbl_803E2D7C;
@@ -281,7 +281,7 @@ int mediumbasket_stateHandlerB04(int obj, int state)
 
 int mediumbasket_stateHandlerB03(int obj, int state)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     GroundBaddieState* sub;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -693,7 +693,7 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 
 int mediumbasket_updateHideResetState(int obj, int state)
 {
-    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Set(int eventId, int value); /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
 
@@ -1332,23 +1332,23 @@ void mediumbasket_tryAcquireTarget(int obj, int sub, int state)
 {
     extern int* gBaddieControlInterface; /* #57 */
     extern int* gPlayerInterface; /* #57 */
-    uint acquired;
+    u32 acquired;
 
     ObjHits_DisableObject(obj);
 
     if ((((GroundBaddieState*)sub)->configFlags & 0x4) != 0)
     {
-        acquired = (**(uint (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
+        acquired = (**(u32 (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
             obj, state, lbl_803E2D54, 0x8000);
     }
     else if ((((GroundBaddieState*)sub)->configFlags & 0x8) != 0)
     {
-        acquired = (**(uint (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
+        acquired = (**(u32 (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
             obj, state, lbl_803E2D24 * (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
     }
     else
     {
-        acquired = (**(uint (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
+        acquired = (**(u32 (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
             obj, state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
     }
 

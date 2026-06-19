@@ -40,7 +40,7 @@ typedef struct
 } ScreenSeq;
 
 #pragma opt_propagation off
-void dll_9A_func03(int target, int variant, int parent, uint flags)
+void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenSeq seq;
     ScreenFxPart parts[32];

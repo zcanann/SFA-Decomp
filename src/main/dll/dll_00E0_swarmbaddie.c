@@ -23,14 +23,14 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 DAT_803de6d0;
+extern u32 FUN_80006b0c();
+extern u32 FUN_80006b14();
+extern u32 DAT_803de6d0;
 
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);

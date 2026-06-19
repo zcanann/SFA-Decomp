@@ -8,11 +8,11 @@
 #include "main/resource.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017ac8();
+extern u32 FUN_80017ac8();
 
 extern ModgfxInterface** gModgfxInterface;
-extern undefined4 DAT_803de944;
-extern undefined4 DAT_803de946;
+extern u32 DAT_803de944;
+extern u32 DAT_803de946;
 extern f32 lbl_803DC074;
 
 extern void fn_801FD6B4(int obj);
@@ -43,12 +43,12 @@ extern f32 lbl_803E61B4;
 extern void* getTrickyObject(void);
 extern f32 mathSinf(f32 x);
 
-void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9)
 {
     char cVar1;
-    uint uVar2;
+    u32 uVar2;
     int iVar3;
     short* psVar4;
     double dVar5;

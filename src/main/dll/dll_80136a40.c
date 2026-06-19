@@ -51,11 +51,11 @@ typedef struct TrickyImpressState
     u8 pad80C[0x810 - 0x80C];
 } TrickyImpressState;
 
-extern uint ObjGroup_ContainsObject();
+extern u32 ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
+extern u64 ObjLink_DetachChild();
+extern u32 ObjLink_AttachChild();
 
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);

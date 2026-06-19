@@ -5,7 +5,7 @@
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern void* mapGetBlock(int idx);
 
@@ -95,7 +95,7 @@ void FUN_80192488(void)
     int block;
     int polyIdx;
     int cell;
-    uint gameBit;
+    u32 gameBit;
     int texU;
     int ctxLo;
     int mapId;
@@ -105,7 +105,7 @@ void FUN_80192488(void)
     u64 pair;
 
     pair = FUN_8028682c();
-    ctxHi = (int)((ulonglong)pair >> 0x20);
+    ctxHi = (int)((u64)pair >> 0x20);
     ctxLo = (int)pair;
     placement = *(int*)(ctxHi + 0x4c);
     block = FUN_8005b398((double)*(float*)(ctxHi + 0xc), (double)*(float*)(ctxHi + 0x10));
@@ -120,17 +120,17 @@ void FUN_80192488(void)
         if ((polyIdx != 0) &&
             (placement = FUN_8005337c(-*(int*)(polyIdx + *(short*)(placement + 0x18) * 4)), placement != 0))
         {
-            for (polyIdx = 0; polyIdx < (int)(uint) * (byte*)(block + 0xa2); polyIdx = polyIdx + 1)
+            for (polyIdx = 0; polyIdx < (int)(u32) * (u8*)(block + 0xa2); polyIdx = polyIdx + 1)
             {
                 cell = FUN_800600e4(block, polyIdx);
                 vtx = cell;
-                for (vtxIdx = 0; vtxIdx < (int)(uint) * (byte*)(cell + 0x41); vtxIdx = vtxIdx + 1)
+                for (vtxIdx = 0; vtxIdx < (int)(u32) * (u8*)(cell + 0x41); vtxIdx = vtxIdx + 1)
                 {
                     if (*(int*)(vtx + 0x24) == placement)
                     {
-                        texU = (uint) * (ushort*)(placement + 10) << 6;
-                        texV = (uint) * (ushort*)(placement + 0xc) << 6;
-                        if (*(byte*)(vtx + 0x2a) == 0xff)
+                        texU = (u32) * (u16*)(placement + 10) << 6;
+                        texV = (u32) * (u16*)(placement + 0xc) << 6;
+                        if (*(u8*)(vtx + 0x2a) == 0xff)
                         {
                             texU = FUN_80056448((int)*(char*)(ctxLo + 0x11), (int)*(char*)(ctxLo + 0x12), texU,
                                                  texV);
@@ -141,16 +141,16 @@ void FUN_80192488(void)
                             mapId = *(int*)(*(int*)(ctxHi + 0x4c) + 0x14);
                             if ((mapId == 0x49b2f) || (mapId == 0x49b67))
                             {
-                                gameBit = GameBit_Get(*(uint*)(ctxLo + 8));
+                                gameBit = GameBit_Get(*(u32*)(ctxLo + 8));
                                 if (gameBit != 0)
                                 {
-                                    FUN_80056418((uint) * (byte*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
+                                    FUN_80056418((u32) * (u8*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
                                                  (int)*(char*)(ctxLo + 0x12), texU, texV);
                                 }
                             }
                             else
                             {
-                                FUN_80056418((uint) * (byte*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
+                                FUN_80056418((u32) * (u8*)(vtx + 0x2a), (int)*(char*)(ctxLo + 0x11),
                                              (int)*(char*)(ctxLo + 0x12), texU, texV);
                             }
                         }

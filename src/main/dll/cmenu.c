@@ -19,13 +19,13 @@
 #include "main/game_object.h"
 #include "main/dll/cmenu_item_table.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
 extern u32 FUN_800528d0();
 extern u32 FUN_80052904();
-extern uint FUN_80053078();
+extern u32 FUN_80053078();
 extern void gxSetPeControl_ZCompLoc_(int a);
 extern void gxSetZMode_(int a, int b, int c);
 extern u32 FUN_8025c754();
@@ -349,7 +349,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
 #pragma peephole on
 int cMenuCountVisibleItems(s16* table, char mode)
 {
-    uint bitVal;
+    u32 bitVal;
     int count;
     s16* entry;
 
@@ -402,14 +402,14 @@ void cMenuNullRenderFn(u64 param_1, f64 param_2, f64 param_3, u64 param_4,
 int cMenuItemModelRenderFn(int shader, int* block, int idx)
 {
     int rec;
-    uint texHandle;
-    uint colorWord;
+    u32 texHandle;
+    u32 colorWord;
 
     colorWord = DAT_803e2a94;
     rec = FUN_8001792c(*block, idx);
     FUN_80052904();
     colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
-    texHandle = FUN_80053078(*(uint*)(rec + 0x24));
+    texHandle = FUN_80053078(*(u32*)(rec + 0x24));
     FUN_80051fc4(texHandle, 0, 0, (char*)&colorWord, 0, 1);
     FUN_800528d0();
     FUN_8025cce8(1, 4, 5, 5);
@@ -423,9 +423,9 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
 {
     int level;
     int rec;
-    uint colorWord;
-    uint* tabA;
-    uint* tabB;
+    u32 colorWord;
+    u32* tabA;
+    u32* tabB;
 
     colorWord = DAT_803e2a90;
     rec = FUN_8001792c(*block, idx);
@@ -440,7 +440,7 @@ int cMenuStaffModelRenderFn(int shader, int* block, int idx)
             if (tabB[rec] == 0)
             {
                 level = (int)(FLOAT_803e2c90 *
-                    (f32)((double)CONCAT44(0x43300000, (uint) * (u8*)(shader + 0x37)) -
+                    (f32)((double)CONCAT44(0x43300000, (u32) * (u8*)(shader + 0x37)) -
                         DOUBLE_803e2b08));
                 colorWord = CONCAT31(colorWord >> 8, (u8)level);
             }
