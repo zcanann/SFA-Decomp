@@ -14575,7 +14575,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
         }
         {
-            u32 btn = getButtons_80014dd8(0);
+            int btn = getButtons_80014dd8(0);
             if ((btn & 0x20) != 0)
             {
                 if (!((ByteFlags*)((char*)inner + 0x3f4))->b40 ||
