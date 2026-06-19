@@ -178,7 +178,7 @@ void arwarwing_setFlightHalfWidth(int arwing, f32 width)
 int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur; }
 
 #pragma scheduling off
-void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = rotY; }
+void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = (s16)rotY; }
 #pragma scheduling reset
 
 void arwarwing_getVelocity(int out, int arwing)
