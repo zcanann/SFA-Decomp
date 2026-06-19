@@ -135,14 +135,14 @@ void treasurechest_update(int obj)
     u32 nearestObject;
     int hitResult;
     ChestHitBlock blk;
-    float local_3c;
+    float nearestDist;
     u32 hitVolume;
-    int local_44;
+    int hitPriority;
     int hitObject;
 
     flags = ((GameObject*)obj)->extra;
     setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
-    local_3c = lbl_803E3C28;
+    nearestDist = lbl_803E3C28;
     if (flags->trigger != 0 && flags->open != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
@@ -154,7 +154,7 @@ void treasurechest_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
             fn_802967E0(Obj_GetPlayerObject(), 1);
-            nearestObject = ObjGroup_FindNearestObject(4, obj, &local_3c);
+            nearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDist);
             if (nearestObject != 0)
             {
                 (*gObjectTriggerInterface)->setObjects((int)*(short*)(nearestObject + 0x46), 0, 0);
@@ -171,8 +171,8 @@ void treasurechest_update(int obj)
         }
         flags->trigger = 0;
         blk.params = lbl_802C22B0;
-        local_44 = 0xffffffff;
-        hitResult = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &local_44,
+        hitPriority = 0xffffffff;
+        hitResult = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitPriority,
                                                    &hitVolume, &blk.x, &blk.y,
                                                    blk.z);
         if ((hitResult != 0) && (hitResult != 0xe))
