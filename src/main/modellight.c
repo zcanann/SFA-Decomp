@@ -1595,15 +1595,16 @@ extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 
 #pragma opt_common_subs off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f32 b)
 {
+    f32 z;
     obj->projectionFovY = a;
     obj->projectionAspect = b;
     obj->projectionType = 1;
+    z = lbl_803DE790;
     C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
-                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790,
-                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790);
+                          z, z, z, z);
+    z = lbl_803DE790;
     C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect,
-                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790,
-                          *(volatile f32*)&lbl_803DE790, *(volatile f32*)&lbl_803DE790);
+                          z, z, z, z);
 }
 #pragma opt_common_subs reset
 
