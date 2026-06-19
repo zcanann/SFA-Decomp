@@ -931,6 +931,7 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
     u8* worldBase;
     int pointOffset;
     f32* localPoint;
+    f32 one;
     CurvesTransformScratch transform;
     f32 matrix[16];
 
@@ -971,13 +972,14 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
             worldIdx += 3;
             pointIndex++;
         }
+        one = lbl_803E068C;
         for (pointIndex = 0;
              pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK);
              pointIndex++)
         {
             collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
             collision->localPointTarget[pointIndex][1] =
-                lbl_803E068C + collision->localPointWorld[pointIndex][1];
+                one + collision->localPointWorld[pointIndex][1];
             collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
         }
         fn_80063368((short*)obj);
