@@ -15,8 +15,8 @@ typedef struct LightningEffect
     u16 timer;
     u16 lifetime;
     u16 seed;
-    u8 unk26;
-    u8 unk27;
+    u8 width;
+    u8 flags;
 } LightningEffect;
 
 extern void* mmAlloc(int size, int type, int flag);
@@ -227,10 +227,10 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
     p->radiusX = c;
     p->radiusY = d;
     *(s16*)&p->lifetime = e;
-    p->unk26 = f;
+    p->width = f;
     p->timer = 0;
     p->seed = 0xFFFF;
-    p->unk27 = g;
+    p->flags = g;
     return p;
 }
 
@@ -587,8 +587,8 @@ void lightningRender(void* state)
     srand(p->seed);
     PSVECSubtract(end, start, diff);
     PSVECMag(diff);
-    lightningDrawBolt(start, end, p->unk26, p->radiusX, p->radiusY, &savedSeed, 0,
-                      p->unk27);
+    lightningDrawBolt(start, end, p->width, p->radiusX, p->radiusY, &savedSeed, 0,
+                      p->flags);
     srand(savedSeed);
 }
 
