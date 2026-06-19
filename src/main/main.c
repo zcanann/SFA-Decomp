@@ -311,8 +311,7 @@ void vfpflamepoint_update(int obj)
     else
     {
         u8 v = (u8)GameBit_Get(d->showGameBit);
-        d->done = v;
-        if (!d->done)
+        if (!(d->done = v))
         {
             d->counter = (s8) * (s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a);
         }
