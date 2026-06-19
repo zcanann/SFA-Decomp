@@ -169,7 +169,7 @@ void ktrexfloorswitch_update(int obj)
     ObjTextureRuntimeSlot* tex;
     int* player;
     int moved;
-    u32 level;
+    u8 level;
     int scroll;
     f32 vecA[3];
     f32 vecB[3];
