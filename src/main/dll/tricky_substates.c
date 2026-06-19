@@ -140,7 +140,8 @@ void trickyDigTunnel(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk708 + 8)
         {
             ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk708 + 8;
-            ((TrickyState*)state)->stateFlags &= ~0x400LL;
+            v = *(u32*)&((TrickyState*)state)->stateFlags;
+            *(u32*)&((TrickyState*)state)->stateFlags = v & ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 1;
