@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
+#include "main/sfa_extern_decls.h"
 extern int ObjGroup_FindNearestObject();
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
@@ -26,8 +27,8 @@ extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-extern int titlescreen_getExtraSize(void);
-extern void titlescreen_hitDetect(void);
+
+
 extern int titlescreen_getObjectTypeId(u8* obj);
 
 void dll_3F_frameEnd_nop(void)

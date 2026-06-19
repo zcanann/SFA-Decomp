@@ -16,6 +16,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/camera.h"
+#include "main/sfa_extern_decls.h"
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
@@ -86,7 +87,7 @@ extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
-extern int getCurMapType(void);
+
 extern u8 gObjCameraSetupBlock[];
 extern s16 gObjPlayerSpawnIdTable[2];
 extern f32 lbl_803DE8BC;

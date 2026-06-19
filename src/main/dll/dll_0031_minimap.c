@@ -27,6 +27,7 @@
 #include "main/pad.h"
 #include "main/camera.h"
 #include "main/objlib.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct MinimapRow
 {
@@ -130,7 +131,7 @@ extern f32 gMinimapFNeg9_8;
 extern f32 gMinimapFNeg40;
 extern f32 gMinimapF0_05;
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
-extern void viewFn_80129c74(void);
+
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
 extern void* Obj_GetActiveModel(u8* obj);

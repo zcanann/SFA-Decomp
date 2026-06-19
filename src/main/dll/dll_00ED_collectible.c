@@ -28,6 +28,7 @@
 #include "main/dll/collectible_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/sfa_extern_decls.h"
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -73,50 +74,50 @@ extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
 extern void gcbaddieshield_update(int* obj);
-extern int animatedobj_getExtraSize(void);
+
 extern void dim2roofrub_free(int* obj);
-extern int dim2roofrub_getExtraSize(void);
+
 extern void depthoffieldpoint_init();
 extern void depthoffieldpoint_update();
-extern int depthoffieldpoint_getExtraSize(void);
-extern void staff_hitDetect(void);
-extern void staff_render(void);
-extern int staff_getObjectTypeId(void);
-extern int staff_getExtraSize(void);
-extern void staff_setScale(void);
-extern void staff_func0B(void);
-extern void staff_func0F(void);
+
+
+
+
+
+
+
+
 extern void staff_func10(int* obj, s32 v);
 extern void staff_setHitReactValue(int* obj, s32 v);
 extern void staff_addHitReactValue(int* obj, s32 delta);
 extern void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 extern void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 extern void staffFn_80170380(int* obj, int cmd);
-extern void fireball_initialise(void);
-extern void fireball_release(void);
+
+
 extern void fireball_init();
 extern void fireball_update();
 extern void fireball_hitDetect();
 extern void fireball_free();
-extern int fireball_getObjectTypeId(void);
-extern int fireball_getExtraSize(void);
-extern void flamethrowerspe_initialise(void);
-extern void flamethrowerspe_release(void);
+
+
+
+
 extern void flamethrowerspe_init();
 extern void flamethrowerspe_update();
-extern void flamethrowerspe_hitDetect(void);
-extern void flamethrowerspe_free(void);
-extern int flamethrowerspe_getObjectTypeId(void);
-extern int flamethrowerspe_getExtraSize(void);
+
+
+
+
 extern void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
-extern void flamethrowerspe_modelMtxFn(void);
-extern void shield_initialise(void);
-extern void shield_release(void);
+
+
+
 extern void shield_init(int* obj, void* initData);
 extern void shield_update();
-extern void shield_hitDetect(void);
-extern int shield_getObjectTypeId(void);
-extern int shield_getExtraSize(void);
+
+
+
 extern void mikabombshadow_update(int* obj);
 extern void restartmarker_init(int* obj, int* state);
 extern void dll_F7_init();

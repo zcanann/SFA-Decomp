@@ -7,6 +7,7 @@
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
 #include "string.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -24,7 +25,7 @@ extern void mtx44Transpose(float* src, float* dst);
 extern int* Obj_GetActiveModel(int obj);
 extern void Obj_UpdateObject(ObjAnimComponent * obj, ObjModelInstance * modelInstance);
 extern void fn_80054F74(int obj, float* pos);
-extern ObjLibRegionList** RomList_GetLoadedPages(void);
+
 extern void debugPrintf(char* fmt, ...);
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);

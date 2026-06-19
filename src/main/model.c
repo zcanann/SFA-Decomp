@@ -6,6 +6,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "main/sfa_extern_decls.h"
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
@@ -644,7 +645,7 @@ int loadModelAndAnimTabs(void)
 
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
-extern void ObjModel_InitScratchBuffers(void);
+
 extern void setGQR6_2(int a, int b, int c, int d);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 

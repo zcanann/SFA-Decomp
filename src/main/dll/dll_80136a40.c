@@ -32,6 +32,7 @@
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct TrickyImpressState
 {
@@ -95,7 +96,7 @@ extern u32 lbl_803DDA34;
 extern void OSResumeThread(u8 * thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
-extern void fn_80137DF8(void);
+
 extern u8 gErrDisplayThreadStack[];
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);

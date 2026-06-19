@@ -21,6 +21,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "ghidra_import.h"
+#include "main/sfa_extern_decls.h"
 
 /* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
 #define TITLEMENULINK_SETUP_WIDGETS 0x4
@@ -54,7 +55,7 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void textureFree(u32);
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int idx, s8 transType);
-extern void cutsceneExit(void);
+
 extern void buttonDisable(int port, u32 mask);
 extern f32 timeDelta;
 extern f32 lbl_803E1DF0;       /* save-phase timer limit */

@@ -24,6 +24,7 @@
 #include "main/texture.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
+#include "main/sfa_extern_decls.h"
 extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
 extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
 extern s16 linkItemOpacity;
@@ -44,7 +45,7 @@ extern u8 framesThisStep;
 extern void OSReport(const char* msg, ...);
 extern char lbl_8031C234[]; /* "too many slots" overflow error format string */
 extern char lbl_8031C1A8[]; /* base of the nav-link out-of-range error format strings */
-extern int getCurLanguage(void);
+
 extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextFn_80016810(int a, int b, int c);
@@ -58,8 +59,8 @@ extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void buttonDisable(int port, u32 mask);
-extern void linkDrawFn_801302c0(void);
-extern void linkDrawFn_80130484(void);
+
+
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
 extern void fn_8001BE2C(int mode); /* mode 3: (re)load the three subtitle textures */
 extern void* memcpy(void* dst, const void* src, int size);

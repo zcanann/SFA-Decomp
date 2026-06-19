@@ -9,6 +9,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct ObjModelRenderOp
 {
@@ -4924,11 +4925,11 @@ extern void textureFn_80051348(u32 ref, int p2);
 extern void fn_800510F0(u32 ref, int p2, int p3);
 extern void fn_80050FF4(int p1);
 extern void fn_8005011C(f32 * m);
-extern void fn_8004D6D8(void);
+
 extern u32 modelLightStruct_getProjectionTexture(int light);
 extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
 extern void fn_80050A28(int t);
-extern void fn_80050F2C(void);
+
 extern void textureFn_8004c330(void* tex, f32* m);
 extern void gxTextureFn_8004d5b4(int* op);
 extern void gxTextureFn_80052638(u8 * color);

@@ -5,6 +5,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "main/sfa_extern_decls.h"
 extern int saveFileStruct_isCheatActive();
 
 u16*
@@ -947,7 +948,7 @@ int gameTextGetState(int i)
     return gGameTextCharsets[i].state;
 }
 
-extern void subtitleBuildLineTable(void);
+
 extern int gGameTextSequenceMode;
 extern int gSubtitleActive;
 extern void* gGameTextPendingDir;
@@ -976,7 +977,7 @@ int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-extern void gameTextInitFn_8001c794(void);
+
 extern void gameTextLoadDir(int dirId);
 extern u8 lbl_803DC980;
 
@@ -1020,7 +1021,7 @@ int setSubtitlesEnabled(int enabled)
 extern int gGameTextClearColor;
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern int gGameTextLastDir;
-extern int subtitleIsActive(void);
+
 extern int gameTextFn_8001b44c(int x);
 extern void gameTextLoadForCurMap(int sourceId);
 
@@ -1558,7 +1559,7 @@ extern u8 lbl_803DC991;
 extern u8 lbl_803DC992;
 extern u8* lbl_803DC9C4;
 extern int lbl_803DB378;
-extern void gameTextLoadGraphicsFn_8001a918(void);
+
 
 void gameTextInitFn_8001a234(void)
 {

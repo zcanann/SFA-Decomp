@@ -3,11 +3,12 @@
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
-extern void spscarab_hitDetect(void);
-extern void spscarab_render(void);
+#include "main/sfa_extern_decls.h"
+
+
 extern void spscarab_free(int x);
-extern int spscarab_getObjectTypeId(void);
-extern int spscarab_getExtraSize(void);
+
+
 
 ObjectDescriptor gSPScarabObjDescriptor = {
     0,

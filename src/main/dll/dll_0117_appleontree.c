@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/dll_00FC_babycloudrunner.h"
+#include "main/sfa_extern_decls.h"
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
@@ -34,8 +35,8 @@ extern void appleontree_init();
 extern void appleontree_update();
 extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 extern void appleontree_free(int* obj);
-extern int appleontree_getExtraSize(void);
-extern void appleontree_setScale(void);
+
+
 extern u8 appleontree_modelMtxFn(int* obj);
 
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {

@@ -36,6 +36,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
+#include "main/sfa_extern_decls.h"
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -123,7 +124,7 @@ extern f32 lbl_803E2B60;
 extern f32 lbl_803DBCE0;
 extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
-extern void fn_8001FE90(void);
+
 extern f32 lbl_803E2BA8;
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind();

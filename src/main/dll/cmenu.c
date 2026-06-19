@@ -22,6 +22,7 @@
 #include "main/texture.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/camera.h"
+#include "main/sfa_extern_decls.h"
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
@@ -58,7 +59,7 @@ extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
 extern void hudDrawTimedElement(int obj, void* p);
-extern void drawViewFinderHud(void);
+
 extern int getHudHiddenFrameCount(void);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern u8 pauseMenuState;

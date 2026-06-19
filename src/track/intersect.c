@@ -15,6 +15,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
 #include "main/pad.h"
+#include "main/sfa_extern_decls.h"
 
 /* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
  * only the fields evidenced in this TU are typed. */
@@ -1031,7 +1032,7 @@ void screenImageDraw(u8 alpha)
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
-    extern void updateReflectionTextures(void);
+
     extern void selectReflectionTexture(int);
     extern void selectTexture(int handle, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
@@ -1214,7 +1215,7 @@ void doSpiritVisionFilter(void)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void updateReflectionTextures(void);
+
     extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
@@ -1335,7 +1336,7 @@ void doColorFilter(u8* mod)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void updateReflectionTextures(void);
+
     extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();

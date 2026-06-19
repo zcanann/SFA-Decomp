@@ -160,6 +160,7 @@ extern f32 timeDelta;
 #include "main/camera_interface.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct AnimatedobjPlacement
 {
@@ -327,7 +328,7 @@ extern void shield_update();
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
-extern void clearCurSeqNo(void);
+
 extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;

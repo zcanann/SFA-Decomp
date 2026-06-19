@@ -6,6 +6,7 @@
 #include "main/objseq.h"
 #include "main/sky_80080E58_shared.h"
 #include "main/pad.h"
+#include "main/sfa_extern_decls.h"
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
@@ -41,7 +42,7 @@ extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int AudioStream_Play(int stream, void* cb);
-extern void streamCb_80080384(void);
+
 extern u8 gObjSeqStreamTableB[];
 extern int lbl_803DB718;
 extern int lbl_803DB728;

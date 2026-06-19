@@ -3,6 +3,7 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_virtual_sample.h"
+#include "main/sfa_extern_decls.h"
 extern u8 gSynthInitialized;
 extern u8 salTimeOffset;
 extern u8 salNumVoices;
@@ -12,7 +13,7 @@ extern u32 salMessageCallback;
 extern u8* dspVoice;
 extern void salExitDspCtrl(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
-extern void salHandleAuxProcessing(void);
+
 extern void fn_8026EC44(u32 value);
 extern void audioFn_80271498(u32 value);
 

@@ -12,6 +12,7 @@
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/sfa_extern_decls.h"
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -53,7 +54,7 @@ extern int coordsToMapCell(f32 x, f32 z);
 extern void gameTextShow(int a);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int idx, s8 transType);
-extern void timeListFn_8012df14(void);
+
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 lbl_803DC060[4];
 extern f32 timeDelta;

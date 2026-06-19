@@ -27,6 +27,7 @@
 #include "dolphin/os/OSReboot.h"
 #include "string.h"
 #include "main/gamebits.h"
+#include "main/sfa_extern_decls.h"
 
 typedef struct SaveGameData
 {
@@ -82,10 +83,10 @@ extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void cutsceneExit(void);
+
 extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
-extern void resetYbutton(void);
+
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
 extern void loadUiDll(int index);

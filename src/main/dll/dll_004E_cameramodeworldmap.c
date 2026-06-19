@@ -23,6 +23,7 @@
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/object_transform.h"
+#include "main/sfa_extern_decls.h"
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
@@ -36,7 +37,7 @@ extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 extern int ObjList_FindObjectById(int id);
 extern u32 getButtonsHeld(int port);
-extern int isWidescreen(void);
+
 extern u8 padGetCX(int port);
 extern u8 padGetCY(int port);
 extern void fn_8012DDB8(int mode);
