@@ -1006,7 +1006,7 @@ state_selected:
             *(u32*)(state + 0x80) = *(u32*)(node + 0x10);
             k = *(f32*)(state + 0x64);
             *(f32*)(state + 0x6c) =
-                -(lbl_803E24B0 * k * k - (*(f32*)(node + 0xc) - ((GameObject*)obj)->anim.worldPosY)) / k;
+                -(lbl_803E24B0 * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
             objAnimFn_8013a3f0(obj, 0x16, lbl_803E23DC, 0x4000000);
             ((TrickyState*)state)->unk3C = *(f32*)(state + 0x68) / *(f32*)(state + 0x64);
             ((TrickyState*)state)->speed = lbl_803E24A4;
