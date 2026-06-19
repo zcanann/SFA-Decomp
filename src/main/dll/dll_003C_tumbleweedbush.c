@@ -709,28 +709,24 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         item = gTumbleweedBushItems;
         for (i = 0; i < count; i++)
         {
-            linkedIndex = item->upLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count))
+            if ((item->upLink < -1) || (item->upLink >= count))
             {
-                OSReport(defaultText + 0xa4, linkedIndex);
+                OSReport(defaultText + 0xa4, item->upLink);
             }
 
-            linkedIndex = item->downLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count))
+            if ((item->downLink < -1) || (item->downLink >= count))
             {
-                OSReport(defaultText + 0xb8, linkedIndex);
+                OSReport(defaultText + 0xb8, item->downLink);
             }
 
-            linkedIndex = item->leftLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count))
+            if ((item->leftLink < -1) || (item->leftLink >= count))
             {
-                OSReport(defaultText + 0xd0, linkedIndex);
+                OSReport(defaultText + 0xd0, item->leftLink);
             }
 
-            linkedIndex = item->rightLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count))
+            if ((item->rightLink < -1) || (item->rightLink >= count))
             {
-                OSReport(defaultText + 0xe8, linkedIndex);
+                OSReport(defaultText + 0xe8, item->rightLink);
             }
 
             if (items->textureAssetId != -1)
@@ -763,7 +759,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
             if ((item->flags & LINK_FLAG_CENTRE) != 0)
             {
-                item->x -= (s16)(item->field14 >> 1);
+                item->x -= item->field14 >> 1;
                 item->field04 = item->x;
             }
 
