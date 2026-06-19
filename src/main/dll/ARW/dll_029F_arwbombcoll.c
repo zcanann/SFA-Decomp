@@ -184,9 +184,9 @@ int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
         if (dy < lbl_803E70A0)
             dy = -dy;
         dz = objAnim->localPosZ - arwingAnim->localPosZ;
-        if (dy <= lbl_803E70A4)
+        if (dy <= gArwBombCollHitToleranceY)
         {
-            if (dx * dx + dz * dz < lbl_803E70A8)
+            if (dx * dx + dz * dz < gArwBombCollHitRadiusSq)
                 return 1;
         }
     }
@@ -199,7 +199,7 @@ int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
         {
             f32 dx = objAnim->localPosX - arwingAnim->localPosX;
             f32 dy = objAnim->localPosY - arwingAnim->localPosY;
-            if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
+            if (sqrtf(dx * dx + dy * dy) < gArwBombCollPlaneHitRadius)
                 return 1;
             if (state->mode == 2 && f->bit20)
                 gameTextFn_80125ba4(0xa);
@@ -243,7 +243,7 @@ void arwbombcoll_update(int obj)
     if (flags->b80 == 0)
     {
         arwingCheck = getArwing();
-        if ((((u32)arwingCheck != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)arwingCheck)->anim.localPosZ < lbl_803E7080) : 0) != 0)
+        if ((((u32)arwingCheck != 0) ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)arwingCheck)->anim.localPosZ < gArwBombCollActivateDistanceZ) : 0) != 0)
         {
             goto active;
         }
@@ -256,7 +256,7 @@ active :
         int alpha;
 
         alpha = (int)
-        (lbl_803E7084 * timeDelta + (f32)(u32)
+        (gArwBombCollAlphaFadeRate * timeDelta + (f32)(u32)
         objAnim->alpha
         )
         ;
@@ -266,7 +266,7 @@ active :
         }
         objAnim->alpha = alpha;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = gArwBombCollSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
         if (flags->b40 != 0)
         {

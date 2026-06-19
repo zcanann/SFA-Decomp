@@ -4,15 +4,15 @@
 extern void lightningRender(void* state);
 extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 extern f32 timeDelta;
-extern f32 lbl_803E64E0;
+extern f32 gDfpLightningTimerMax;
 extern f32 lbl_803E64E4;
-extern f32 lbl_803E64E8;
-extern f32 lbl_803E64F8;
-extern f32 lbl_803E64FC;
-extern f32 lbl_803E6500;
-extern const f32 lbl_803E6504;
-extern f32 lbl_803E6508;
-extern const f32 lbl_803E650C;
+extern f32 gDfpLightningTimerInactiveMax;
+extern f32 gDfpLightningTimerActiveReset;
+extern f32 gDfpLightningOffsetScale;
+extern f32 gDfpLightningRadiusMin;
+extern const f32 gDfpLightningRadiusMax;
+extern f32 gDfpLightningTriggerTimeBase;
+extern const f32 gDfpLightningRadiusNormDivisor;
 
 static inline DfpLightniState* dfplightni_getState(DfpLightniObject* obj)
 {
@@ -54,7 +54,7 @@ void dfplightni_render(DfpLightniObject* obj)
     if (obj != 0)
     {
         state = dfplightni_getState(obj);
-        if (state->timer >= lbl_803E64E0)
+        if (state->timer >= gDfpLightningTimerMax)
         {
             eventActive = GameBit_Get(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
             if (state->effectHandle != 0)
@@ -63,13 +63,13 @@ void dfplightni_render(DfpLightniObject* obj)
             }
             if (eventActive != 0)
             {
-                if (state->timer >= lbl_803E64E0 + (f32)(s32)state->delayFrames
+                if (state->timer >= gDfpLightningTimerMax + (f32)(s32)state->delayFrames
                 )
                 {
                     state->timer = lbl_803E64E4;
                 }
             }
-            else if (state->timer >= lbl_803E64E8)
+            else if (state->timer >= gDfpLightningTimerInactiveMax)
             {
                 state->timer = lbl_803E64E4;
             }
@@ -102,11 +102,11 @@ void dfplightni_update(DfpLightniObject* obj)
         {
             state->timer += timeDelta;
             eventActive = GameBit_Get(state->eventId);
-            if ((eventActive != 0) && (state->timer < lbl_803E64E0))
+            if ((eventActive != 0) && (state->timer < gDfpLightningTimerMax))
             {
-                state->timer = lbl_803E64F8;
+                state->timer = gDfpLightningTimerActiveReset;
             }
-            if ((state->timer > state->triggerTime) && (state->timer < lbl_803E64E0))
+            if ((state->timer > state->triggerTime) && (state->timer < gDfpLightningTimerMax))
             {
                 start[0] = obj->position[0];
                 start[1] = obj->position[1];
@@ -114,20 +114,20 @@ void dfplightni_update(DfpLightniObject* obj)
                 if (eventActive != 0)
                 {
                     randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = randomZ * lbl_803E64FC + playerObj->position[0];
+                    end[0] = randomZ * gDfpLightningOffsetScale + playerObj->position[0];
                     randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = randomY * lbl_803E64FC + playerObj->position[1];
+                    end[1] = randomY * gDfpLightningOffsetScale + playerObj->position[1];
                     randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = randomX * lbl_803E64FC + playerObj->position[2];
+                    end[2] = randomX * gDfpLightningOffsetScale + playerObj->position[2];
                 }
                 else
                 {
                     randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = randomX * lbl_803E64FC + start[0];
+                    end[0] = randomX * gDfpLightningOffsetScale + start[0];
                     randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = randomY * lbl_803E64FC + obj->position[1];
+                    end[1] = randomY * gDfpLightningOffsetScale + obj->position[1];
                     randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = randomZ * lbl_803E64FC + start[2];
+                    end[2] = randomZ * gDfpLightningOffsetScale + start[2];
                 }
                 if (state->effectHandle != 0)
                 {
@@ -144,17 +144,17 @@ void dfplightni_update(DfpLightniObject* obj)
                     Sfx_PlayFromObjectLimited((u32)obj, DFPLIGHTNI_SFX_ID, DFPLIGHTNI_SFX_MAX_COUNT);
                     if (eventActive != 0)
                     {
-                        clampY = (radiusY < lbl_803E6500)
-                                     ? lbl_803E6500
-                                     : (radiusY > lbl_803E6504)
-                                     ? lbl_803E6504
+                        clampY = (radiusY < gDfpLightningRadiusMin)
+                                     ? gDfpLightningRadiusMin
+                                     : (radiusY > gDfpLightningRadiusMax)
+                                     ? gDfpLightningRadiusMax
                                      : radiusY;
                         effectStart = start;
                         effectEnd = end;
-                        clampX = (radiusX < *(f32*)&lbl_803E6500)
-                                     ? *(f32*)&lbl_803E6500
-                                     : (radiusX > *(f32*)&lbl_803E6504)
-                                     ? *(f32*)&lbl_803E6504
+                        clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)
+                                     ? *(f32*)&gDfpLightningRadiusMin
+                                     : (radiusX > *(f32*)&gDfpLightningRadiusMax)
+                                     ? *(f32*)&gDfpLightningRadiusMax
                                      : radiusX;
                         state->effectHandle =
                             lightningCreate(effectStart, effectEnd, clampX, clampY,
@@ -164,17 +164,17 @@ void dfplightni_update(DfpLightniObject* obj)
                     }
                     else
                     {
-                        clampY = (radiusY < lbl_803E6500)
-                                     ? lbl_803E6500
-                                     : (radiusY > lbl_803E6504)
-                                     ? lbl_803E6504
+                        clampY = (radiusY < gDfpLightningRadiusMin)
+                                     ? gDfpLightningRadiusMin
+                                     : (radiusY > gDfpLightningRadiusMax)
+                                     ? gDfpLightningRadiusMax
                                      : radiusY;
                         effectStart = start;
                         effectEnd = end;
-                        clampX = (radiusX < *(f32*)&lbl_803E6500)
-                                     ? *(f32*)&lbl_803E6500
-                                     : (radiusX > *(f32*)&lbl_803E6504)
-                                     ? *(f32*)&lbl_803E6504
+                        clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)
+                                     ? *(f32*)&gDfpLightningRadiusMin
+                                     : (radiusX > *(f32*)&gDfpLightningRadiusMax)
+                                     ? *(f32*)&gDfpLightningRadiusMax
                                      : radiusX;
                         state->effectHandle =
                             lightningCreate(effectStart, effectEnd, clampX, clampY, (u16)state->delayFrames,
@@ -182,7 +182,7 @@ void dfplightni_update(DfpLightniObject* obj)
                                             DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
                 }
-                state->timer = lbl_803E64E0;
+                state->timer = gDfpLightningTimerMax;
             }
         }
     }
@@ -211,11 +211,11 @@ void dfplightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         {
             f32 t = randomValue;
-            t = lbl_803E6508 + t;
+            t = gDfpLightningTriggerTimeBase + t;
             state->triggerTime = t;
         }
-        state->radiusX = ((f32)(s32)mapData->radiusX / lbl_803E650C) * lbl_803E6504;
-        state->radiusY = ((f32)(s32)mapData->radiusY / lbl_803E650C) * lbl_803E6504;
+        state->radiusX = ((f32)(s32)mapData->radiusX / gDfpLightningRadiusNormDivisor) * gDfpLightningRadiusMax;
+        state->radiusY = ((f32)(s32)mapData->radiusY / gDfpLightningRadiusNormDivisor) * gDfpLightningRadiusMax;
         state->angleIndex = mapData->angleIndex;
         state->delayFrames = mapData->delayTicks * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
         state->eventId = mapData->eventId;

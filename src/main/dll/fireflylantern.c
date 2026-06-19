@@ -59,7 +59,7 @@ extern f32 lbl_803E29E8;
 extern f32 lbl_803E29EC;
 extern f32 lbl_803E29F0;
 extern f32 lbl_803E29F4;
-extern f32 lbl_803E29F8;
+extern f32 gFireflyLanternPathStepScale;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern f32 lbl_803E2A08;
@@ -190,7 +190,7 @@ void fn_80154C24(int obj, int state)
     *(float*)(state + 0x330) = lbl_803E29F4;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
-    fval = lbl_803E29F8 * fval;
+    fval = gFireflyLanternPathStepScale * fval;
     ((BaddieState*)state)->pathStep = fval;
 }
 

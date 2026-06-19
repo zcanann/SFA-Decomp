@@ -1266,9 +1266,9 @@ typedef struct Vec12 { int a, b, c; } Vec12;
 
 extern int gameBitIncrement(int id);
 extern f32 lbl_803E70A0;
-extern f32 lbl_803E70A4;
-extern f32 lbl_803E70A8;
-extern f32 lbl_803E70AC;
+extern f32 gArwBombCollHitToleranceY;
+extern f32 gArwBombCollHitRadiusSq;
+extern f32 gArwBombCollPlaneHitRadius;
 
 
 
@@ -1446,9 +1446,9 @@ extern f32 lbl_803E6EF4;
 
 
 extern f32 lbl_803E707C;
-extern f32 lbl_803E7080;
-extern f32 lbl_803E7084;
-extern f32 lbl_803E7088;
+extern f32 gArwBombCollActivateDistanceZ;
+extern f32 gArwBombCollAlphaFadeRate;
+extern f32 gArwBombCollSpinRate;
 extern f32 lbl_803E708C;
 
 typedef struct {

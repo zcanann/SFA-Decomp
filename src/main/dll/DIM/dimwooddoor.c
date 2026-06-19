@@ -68,8 +68,8 @@ extern f32 lbl_803DBEF0;
 extern f32 lbl_803DBF14;
 extern f32 lbl_803E48A4;
 extern f32 lbl_803E48AC;
-extern f32 lbl_803E48B0;
-extern f32 lbl_803E48B4;
+extern f32 gDimWoodDoorPi;
+extern f32 gDimWoodDoorAngleHalfCircle;
 extern f32 lbl_803E48B8;
 extern f32 lbl_803E48C8;
 extern f32 lbl_803E48CC;
@@ -132,10 +132,10 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     launchSpeed = state->launchSpeed;
     launchScale = lbl_803E48AC * launchSpeed;
     *(s16*)shard = ((GameObject*)obj)->anim.rotX + modelVec[1];
-    angle = (lbl_803E48B0 * (f32)(s32) * (s16*)shard) / lbl_803E48B4;
+    angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
     ((GameObject*)shard)->anim.velocityX = launchScale * -mathSinf(angle);
     ((GameObject*)shard)->anim.velocityY = launchSpeed;
-    angle = (lbl_803E48B0 * (f32)(s32) * (s16*)shard) / lbl_803E48B4;
+    angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
     ((GameObject*)shard)->anim.velocityZ = launchScale * -mathCosf(angle);
 
     state->shouldSpawnShard = 0;

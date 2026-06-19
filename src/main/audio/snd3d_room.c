@@ -9,7 +9,7 @@ extern u8 snd_base_studio;
 extern u8 snd_max_studios;
 extern f32 lbl_803E7880;
 extern f32 lbl_803E7890;
-extern f32 lbl_803E7894;
+extern f32 gSnd3dRoomFadeFixedToFloat;
 extern f64 lbl_803E7898;
 extern f32 lbl_803E78A0;
 extern void synthActivateStudio(u8 studio, int active, int unk);
@@ -25,12 +25,12 @@ typedef struct
     f32 end;
 } SalVolTab;
 
-extern SalVolTab lbl_8032FDB8;
+extern SalVolTab gSnd3dRoomVolTable;
 extern f32 voiceAdsrSustainTable[129];
-extern f32 lbl_803E7858;
+extern f32 gSnd3dRoomVolIndexScale;
 extern f32 lbl_803E785C;
 extern f32 lbl_803E7860;
-extern f32 lbl_803E7870;
+extern f32 gSnd3dRoomPanFixedToFloat;
 extern f32 lbl_803E7874;
 extern f32 lbl_803E7878;
 extern f32 lbl_803E787C;
@@ -64,7 +64,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     f32 om_span_f, om_span_fm, om_pan_f, om_pan_fm;
     f32* pan1;
 
-    tabs = &lbl_8032FDB8;
+    tabs = &gSnd3dRoomVolTable;
     if (voltab_index == 0)
     {
         vol_tab = tabs->vol;
@@ -97,8 +97,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         span2 = span - 0x10000;
     }
 
-    p = lbl_803E7870 * pan2;
-    sp = lbl_803E7870 * span2;
+    p = gSnd3dRoomPanFixedToFloat * pan2;
+    sp = gSnd3dRoomPanFixedToFloat * span2;
 
     if (dpl2 != 0)
     {
@@ -127,7 +127,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
 
     if (dpl2 == 0)
     {
-        ftmp = lbl_803E7858 * vol;
+        ftmp = gSnd3dRoomVolIndexScale * vol;
         i = ftmp;
         one_ = lbl_803E785C;
         pan1 = tabs->pan + 1;
@@ -142,7 +142,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[1] = f * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
         out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
 
-        ftmp = lbl_803E7858 * auxa;
+        ftmp = gSnd3dRoomVolIndexScale * auxa;
         i = ftmp;
         v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
@@ -151,7 +151,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[4] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
         out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
 
-        ftmp = lbl_803E7858 * auxb;
+        ftmp = gSnd3dRoomVolIndexScale * auxb;
         i = ftmp;
         v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
@@ -162,7 +162,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     }
     else
     {
-        ftmp = lbl_803E7858 * vol;
+        ftmp = gSnd3dRoomVolIndexScale * vol;
         i = ftmp;
         one_ = lbl_803E785C;
         pan1 = tabs->pan + 1;
@@ -179,7 +179,7 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
         out[7] = vs * ((one_ - rpan_f) * tabs->pan_dpl2[rpan_i] + rpan_f * pan1[rpan_i]);
         out[6] = vs * ((one_ - rpan_fm) * tabs->pan_dpl2[rpan_im] + rpan_fm * pan1[rpan_im]);
 
-        ftmp = lbl_803E7858 * auxa;
+        ftmp = gSnd3dRoomVolIndexScale * auxa;
         i = ftmp;
         v = ftmp - i;
         v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
@@ -250,7 +250,7 @@ void s3dAllocateRoomStudios(void)
     f32 fadeScale;
     f64 fadeThreshold;
 
-    fadeScale = lbl_803E7894;
+    fadeScale = gSnd3dRoomFadeFixedToFloat;
     fadeThreshold = lbl_803E7898;
     s3dUpdateRoomDistances();
 
