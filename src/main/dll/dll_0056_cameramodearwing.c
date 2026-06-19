@@ -142,9 +142,9 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     f32 fc;
     if (mode != 1)
     {
-        ((CameraArwingWork*)lbl_803A43C0)->unkC = *(f32*)((char*)a4 + 0x18);
-        ((CameraArwingWork*)lbl_803A43C0)->unk10 = *(f32*)((char*)a4 + 0x1C);
-        ((CameraArwingWork*)lbl_803A43C0)->unk14 = *(f32*)((char*)a4 + 0x20);
+        ((CameraArwingWork*)lbl_803A43C0)->unkC = ((GameObject*)a4)->anim.worldPosX;
+        ((CameraArwingWork*)lbl_803A43C0)->unk10 = ((GameObject*)a4)->anim.worldPosY;
+        ((CameraArwingWork*)lbl_803A43C0)->unk14 = ((GameObject*)a4)->anim.worldPosZ;
     }
     *(p = (f32*)((base = (char*)lbl_803A43C0) + 48)) = lbl_803E1BA4;
     *(f32*)(base + 52) = lbl_803E1BC0;
@@ -166,9 +166,9 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     ((CameraArwingWork*)lbl_803A43C0)->unk8 = fc;
     ((CameraArwingWork*)lbl_803A43C0)->unk4 = fc;
     ((CameraArwingWork*)lbl_803A43C0)->unk0 = fc;
-    ((GameObject*)obj)->anim.worldPosX = *(f32*)((char*)a4 + 0x18);
-    ((GameObject*)obj)->anim.worldPosY = *(f32*)((char*)a4 + 0x1C);
-    ((GameObject*)obj)->anim.worldPosZ = *(f32*)((char*)a4 + 0x20) + *(f32*)(base + 56);
+    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)a4)->anim.worldPosX;
+    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)a4)->anim.worldPosY;
+    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)a4)->anim.worldPosZ + *(f32*)(base + 56);
 }
 #pragma opt_common_subs reset
 
