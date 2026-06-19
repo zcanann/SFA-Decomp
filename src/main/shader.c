@@ -85,7 +85,7 @@ int objShouldLoad(int obj, int viewSlot, int mapEventGroup)
     f32 dy;
     f32 range;
 
-    strs = (char*)lbl_8030E4B0;
+    strs = lbl_8030E4B0;
     if (*(u32*)&((GameObject*)obj)->anim.localPosZ == 0x49054)
     {
         verbose = 1;
@@ -143,8 +143,8 @@ test:
     }
     if ((s8)viewSlot == 0)
     {
-        bx = (int)fastFloorf((((GameObject*)obj)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
-        bz = (int)fastFloorf((((GameObject*)obj)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
+        bx = fastFloorf((((GameObject*)obj)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = fastFloorf((((GameObject*)obj)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
             if (verbose)
@@ -243,7 +243,7 @@ void FUN_80056418(int idx, int xStep, int yStep, int texWidthFixed, int texHeigh
 
 int FUN_80056600(void)
 {
-    return (int)DAT_803dda61;
+    return DAT_803dda61;
 }
 
 void FUN_80056cfc(void)
@@ -308,7 +308,7 @@ void FUN_80056cfc(void)
             tbl[0x1e] = 0xffffffff;
             tbl[0x1f] = 0xffffffff;
         }
-        for (; pos < (int)count; pos = pos + (uint) * stepPtr * 4)
+        for (; pos < count; pos = pos + (uint) * stepPtr * 4)
         {
             if (in_r6 == 0)
             {
@@ -354,7 +354,7 @@ void FUN_80056cfc(void)
         {
             v = tbl[0x21];
             mask = count;
-            if ((v != 0xffffffff) && ((int)v < (int)count))
+            if ((v != 0xffffffff) && ((int)v < count))
             {
                 mask = v;
             }
@@ -363,42 +363,42 @@ void FUN_80056cfc(void)
             do
             {
                 v = *q;
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[1];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[2];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[3];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[4];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[5];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[6];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
                 v = q[7];
-                if ((v != 0xffffffff) && ((int)v < (int)mask))
+                if ((v != 0xffffffff) && ((int)v < mask))
                 {
                     mask = v;
                 }
@@ -432,7 +432,7 @@ void FUN_800571f8(u8* outFlags)
     do
     {
         foundIdx = 0;
-        remain = (int)DAT_803dda6c;
+        remain = DAT_803dda6c;
         entry = &DAT_80382eac;
         if (0 < remain)
         {
@@ -477,7 +477,7 @@ undefined4 FUN_800575b4(double radius, float* pos)
         {
             return 1;
         }
-        planeIdx = (uint)i;
+        planeIdx = i;
         if ((float)(radius +
                 (double)((float)(&DAT_803885a8)[planeIdx * 5] +
                     (float)(&DAT_803885a4)[planeIdx * 5] * (pos[2] - lbl_803DDA5C) +
@@ -580,7 +580,7 @@ undefined4 FUN_80057690(int param_1)
     {
         for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
         {
-            alpha = (uint)planeIdx;
+            alpha = planeIdx;
             if (((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale +
                 (float)(&DAT_803885a8)[alpha * 5] +
                 (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C) +
@@ -850,7 +850,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
         }
     }
     curMapLayer = 0;
-    mapY = (s32)fastFloorf(c / gMapBlockWorldSize);
+    mapY = fastFloorf(c / gMapBlockWorldSize);
     mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
     mapCount = (s32)((u32)getDataFileSize(0x1f) >> 5);
     if (mapId < 0 || mapId >= mapCount)
@@ -866,7 +866,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     lbl_803DCEB4 = 0;
     if (curMapType == 1)
     {
-        lbl_803DCEB6 = (s16)mapId;
+        lbl_803DCEB6 = mapId;
         lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);
     }
     *outMapId = mapId;
@@ -920,7 +920,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     }
     if (blockId < 0)
     {
-        statusArr[slotIdx] = (s8)blockId;
+        statusArr[slotIdx] = blockId;
         return 0;
     }
     statusArr[slotIdx] = -1;
@@ -931,7 +931,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
         if (*arr == blockId)
         {
             lbl_803DCE8C[i]++;
-            statusArr[slotIdx] = (s8)i;
+            statusArr[slotIdx] = i;
             return 1;
         }
         arr++;
@@ -1069,9 +1069,9 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
         }
     }
     statusArr = (s8*)gMapBlockLayerTables[layer];
-    statusArr[slotIdx] = (s8)i;
+    statusArr[slotIdx] = i;
     lbl_803DCE9C[i] = (int)blk;
-    lbl_803DCE94[i] = (s16)blockId;
+    lbl_803DCE94[i] = blockId;
     lbl_803DCE8C[i] = 1;
     setMapBlockFlag();
 }
@@ -1139,7 +1139,7 @@ void mapLoadForObject(int p1, char* p2)
         }
         slot++;
     }
-    *(u8*)(p2 + 0x34) = (u8)slot;
+    *(u8*)(p2 + 0x34) = slot;
     (*gMapEventInterface)->setMapActLut(p1, slot);
     defStartFn_8005972c((char*)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
     (*gMapEventInterface)->updateObjGroups(slot);
@@ -1259,7 +1259,7 @@ int mapProcessRomList(int slot)
         gMapBlockWorldSize * (f32)(rects[0] + *(s16*)((char*)lbl_803DCEA0 + 4));
     *(f32*)((char*)lbl_803DCEA0 + 0x28) =
         gMapBlockWorldSize * (f32)(rects[2] + *(s16*)((char*)lbl_803DCEA0 + 6));
-    cur = (char*)lbl_803DCEA0;
+    cur = lbl_803DCEA0;
     dz = *(f32*)(cur + 0x28);
     dx = *(f32*)(cur + 0x24);
     if (cur != 0)
@@ -1383,7 +1383,7 @@ void playerUpdateFn_8005649c(void)
     {
         int* obj = *e;
         slot = *(s8*)((char*)obj + 0x35) + 1;
-        if (*(void**)(cam + 0x40) == (void*)obj)
+        if (*(void**)(cam + 0x40) == obj)
         {
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = ((GameObject*)cam)->anim.localPosX;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ((GameObject*)cam)->anim.localPosY;
@@ -1946,8 +1946,8 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     int j;
     int hit;
 
-    fx = gMapBlockWorldSize * (f32)bx;
-    fz = gMapBlockWorldSize * (f32)bz;
+    fx = gMapBlockWorldSize * bx;
+    fz = gMapBlockWorldSize * bz;
     x2 = gMapBlockWorldSize + fx;
     z2 = gMapBlockWorldSize + fz;
     if (obj)
@@ -2280,7 +2280,7 @@ void mapLoadUnloadObjects(int flag)
     int vis;
     int idx;
 
-    base = (char*)lbl_8037E0C0;
+    base = lbl_8037E0C0;
     count = 0;
     tp = (int*)(base + 0x41E0);
     for (i = 0; i < 5; i++)
@@ -2462,7 +2462,7 @@ void mapLoadUnloadObjects(int flag)
             }
         }
         {
-            int* objs2 = (int*)ObjGroup_GetObjects(6, &n);
+            int* objs2 = ObjGroup_GetObjects(6, &n);
             for (i = 0; i < n; i++)
             {
                 char* obj2 = (char*)objs2[i];
@@ -2584,7 +2584,7 @@ void beginLoadingMap(void)
     int bo;
     char buf[0x110];
 
-    base = (char*)lbl_8037E0C0;
+    base = lbl_8037E0C0;
     if (lbl_803DCEB8 == -1)
     {
         lbl_803DCEB8 = -2;
@@ -2611,16 +2611,16 @@ void beginLoadingMap(void)
     lbl_803DCDEC = 0;
     mapKind = (*gMapEventInterface)->getCurChar();
     p = (f32*)(*gMapEventInterface)->getCurCharPos();
-    lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
-    lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
+    lbl_803DCDD0 = fastFloorf(p[0] / gMapBlockWorldSize);
+    lbl_803DCDD4 = fastFloorf(p[2] / gMapBlockWorldSize);
     *(f32*)(base + 0x8588) = p[0];
     *(f32*)(base + 0x858C) = p[1];
     *(f32*)(base + 0x8590) = p[2];
     *(int*)(base + 0x8594) = 1;
     lbl_803DCDC8 = lbl_803DCDD0 * 640;
     lbl_803DCDCC = *(volatile int*)&lbl_803DCDD4 * 640;
-    playerMapOffsetX = (f32)lbl_803DCDC8;
-    playerMapOffsetZ = (f32)lbl_803DCDCC;
+    playerMapOffsetX = lbl_803DCDC8;
+    playerMapOffsetZ = lbl_803DCDCC;
     lbl_803DCED0 = playerMapOffsetX;
     lbl_803DCECC = playerMapOffsetZ;
     lbl_803DCEC8 = -1;
@@ -2809,7 +2809,7 @@ void doPendingMapLoads(void)
     s16 recs[1200];
     int oa[4], ob[4], oc[4], od[4];
 
-    base = (char*)lbl_8037E0C0;
+    base = lbl_8037E0C0;
     waited = 0;
     if (!(renderFlags & 0x1000))
     {
@@ -2829,8 +2829,8 @@ void doPendingMapLoads(void)
         {
             renderFlags &= ~2LL;
             dz = lbl_803DCE5C - playerMapOffsetZ;
-            gx = (int)fastFloorf((lbl_803DCE64 - playerMapOffsetX) / gMapBlockWorldSize);
-            gz = (int)fastFloorf(dz / gMapBlockWorldSize);
+            gx = fastFloorf((lbl_803DCE64 - playerMapOffsetX) / gMapBlockWorldSize);
+            gz = fastFloorf(dz / gMapBlockWorldSize);
             {
                 u32 t = renderFlags;
                 doLoad = t & 0x800;
@@ -2935,10 +2935,10 @@ void doPendingMapLoads(void)
                 }
                 lbl_803DCDD0 = (gx + lbl_803DCDD0) - 7;
                 lbl_803DCDD4 = (gz + lbl_803DCDD4) - 7;
-                playerMapOffsetX = gMapBlockWorldSize * (f32)lbl_803DCDD0;
-                playerMapOffsetZ = gMapBlockWorldSize * (f32)lbl_803DCDD4;
-                lbl_803DCDC8 = (int)playerMapOffsetX;
-                lbl_803DCDCC = (int)playerMapOffsetZ;
+                playerMapOffsetX = gMapBlockWorldSize * lbl_803DCDD0;
+                playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
+                lbl_803DCDC8 = playerMapOffsetX;
+                lbl_803DCDCC = playerMapOffsetZ;
                 for (i = 0; i < lbl_803DCDEC; i++)
                 {
                     *(s8*)(base + 0x418C + i * 8 + 6) = 0;
@@ -3276,7 +3276,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         entry = (char*)*(u32*)(p2 + slot * 8);
         pairs = (s16*)lbl_80382238[2];
         cv3 = (s8)pairs[id << 1];
-        cv4 = (s8)pairs[(id << 1) + 1];
+        cv4 = pairs[(id << 1) + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
@@ -3375,9 +3375,9 @@ void mapDebugRender(int* state)
 
     if (lbl_803DCDED != 0)
     {
-        bx = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) /
+        bx = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) /
             gMapBlockWorldSize);
-        bz = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
+        bz = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
             gMapBlockWorldSize);
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
@@ -3399,8 +3399,8 @@ void mapDebugRender(int* state)
             gMapBlockWorldSize));
         sz = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0x14) /
             gMapBlockWorldSize));
-        wx = (int)(*(f32*)((char*)lbl_803DCEA8 + 0xc) - (f32)sx);
-        wz = (int)(*(f32*)((char*)lbl_803DCEA8 + 0x14) - (f32)sz);
+        wx = (int)(*(f32*)((char*)lbl_803DCEA8 + 0xc) - sx);
+        wz = (int)(*(f32*)((char*)lbl_803DCEA8 + 0x14) - sz);
         if (blk != 0)
         {
             y0 = *(s16*)(blk + 0x8a);
@@ -3409,9 +3409,9 @@ void mapDebugRender(int* state)
                 y0a = y0 - 1;
             cy = *(f32*)((char*)lbl_803DCEA8 + 0x10);
             y1 = *(s16*)(blk + 0x8c);
-            if (cy > (f32)y1)
+            if (cy > y1)
                 cy = (f32)(y1 - 1);
-            yy = (int)cy;
+            yy = cy;
             dy = yy - y0a;
             h = y1 - y0;
             if (h / 80 < 8)
