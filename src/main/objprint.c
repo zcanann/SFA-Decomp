@@ -1256,11 +1256,12 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
         int entryIdx = 0, vecOffset = 0;
         int count = OBJPRINT_JOINT_COUNT(m);
         int i;
+        int entries;
         for (i = 0; i < count; i++)
         {
-            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-            u8* adj = entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
-            if ((int)adj[1] != 0xff && (s32)entries[entryIdx] == target)
+            entries = *(int*)&((ObjDef*)m)->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                (s32)*(u8*)(entries + entryIdx) == target)
             {
                 result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
