@@ -1817,19 +1817,19 @@ void MapBlock_initShaders(int obj)
         p = (char*)block;
         for (j = 0; j < *(u8*)(block + 0x41); j++)
         {
-            v = *(int*)(p + 0x24);
+            v = *(int*)&((ObjModelState*)p)->overrideWorldPosY;
             if (v != -1)
             {
-                *(int*)(p + 0x24) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
+                *(int*)&((ObjModelState*)p)->overrideWorldPosY = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
                 v = *(u8*)(p + 0x29);
                 if ((u32)v != 0u)
                 {
-                    mapTextureOverrideAcquire(*(int*)(p + 0x24), 0, v);
+                    mapTextureOverrideAcquire(*(int*)&((ObjModelState*)p)->overrideWorldPosY, 0, v);
                 }
             }
             else
             {
-                *(int*)(p + 0x24) = 0;
+                *(int*)&((ObjModelState*)p)->overrideWorldPosY = 0;
             }
             *(u8*)(p + 0x2a) = 0xff;
             p += 8;
