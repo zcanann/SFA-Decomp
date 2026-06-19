@@ -22,8 +22,8 @@
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
-extern f32 lbl_803DE89C;
-extern f32 lbl_803DE8A0;
+extern f32 gObjColorFadeRate;
+extern f32 gObjColorFadeAlphaMax;
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 
 extern void* memset(void* dst, int val, int n);
@@ -36,16 +36,16 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
 extern int getLoadedFileFlags(int);
-extern s8 lbl_803DCB74;
-extern int lbl_803408A8[];
+extern s8 gObjPtrTableCount;
+extern int gObjPtrTable[];
 extern void objList_remove(void* list, void* item);
-extern int lbl_803DCBAC;
-extern int* lbl_803DCBB0;
-extern u8* lbl_803DCBB4;
-extern int lbl_803DCB7C;
+extern int gObjTablesBinCount;
+extern int* gObjTablesBinIndex;
+extern u8* gObjTablesBinData;
+extern int gObjUpdateList;
 extern f32 sqrtf(f32 x);
-extern int lbl_803DCB84;
-extern void* lbl_803DCB88;
+extern int gObjCount;
+extern void* gObjList;
 extern f32 lbl_803DE890;
 extern void mtx44Transpose(f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
@@ -53,15 +53,15 @@ extern void OSReport(char* fmt, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern const f32 lbl_803DE8B8;
 extern void objFreeObjDef(void* def, int flags);
-extern int lbl_803DCB94;
-extern void** lbl_803DCB98;
+extern int gObjDeferredFreeCount;
+extern void** gObjDeferredFreeList;
 extern void Obj_RegisterObject(u8* obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
-extern char lbl_802CAC54[];
+extern char sObjDebugStrings[];
 extern void objLoadPlayerFromSave(u8 * obj);
-extern s16 lbl_803DCBC4;
-extern int lbl_803DCB9C;
-extern s16* lbl_803DCBA0;
+extern s16 gObjPartitionPivot;
+extern int gObjSeqToObjIdMax;
+extern s16* gObjSeqToObjIdTable;
 extern char sObjUnknownTypeUsingDummyObjectWarning[];
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
@@ -80,22 +80,22 @@ extern void fn_802B4DE0(u8* obj, int flag);
 extern void Obj_FreeObject(u8 * obj);
 extern void fn_80059A50(int arg);
 extern void* textureFn_8006c5c4(void);
-extern u8* lbl_803DCBA4;
-extern u8* lbl_803DCBA8;
+extern u8* gObjFileRefCount;
+extern u8* gObjFileBufferTable;
 extern char sObjFreeObjdefError[];
 extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
-extern u32 lbl_803DCB78;
+extern u32 gObjUpdateFlags;
 extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 extern int getCurMapType(void);
-extern u8 lbl_802CABF8[];
-extern s16 lbl_803DB44C[2];
+extern u8 gObjCameraSetupBlock[];
+extern s16 gObjPlayerSpawnIdTable[2];
 extern f32 lbl_803DE8BC;
-extern f32 lbl_803DE8C0;
+extern f32 gObjPi;
 extern f32 lbl_803DE8C4;
 extern f32 lbl_803DE8C8;
 extern f32 mathSinf(f32);
@@ -105,14 +105,14 @@ extern int getCurUiDll(void);
 extern int lbl_803DCB70;
 extern void fn_80013B6C(int* p, int n);
 extern void AudioStream_StopAll(void);
-extern int lbl_803DB448;
+extern int gObjDefCaptureMode;
 extern int lbl_803DCB8C;
 extern void mapLoadForObject(int id, void* obj);
 extern char sObjFreeNonExistentObjectWarning[];
 extern void* lbl_803DCB90;
 extern void* lbl_803DCBC0;
-extern int* lbl_803DCBBC;
-extern int lbl_803DCBB8;
+extern int* gObjFileOffsetTable;
+extern int gObjFileCount;
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8 * buf);
 extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
@@ -253,11 +253,11 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
 
     if ((((GameObject*)obj)->colorFadeFlags & 4) != 0)
     {
-        alpha = obj[0xef] + lbl_803DE89C * timeDelta;
+        alpha = obj[0xef] + gObjColorFadeRate * timeDelta;
     }
     else
     {
-        alpha = obj[0xef] - lbl_803DE89C * timeDelta;
+        alpha = obj[0xef] - gObjColorFadeRate * timeDelta;
     }
 
     if (alpha < lbl_803DE88C)
@@ -265,9 +265,9 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
         alpha = -alpha;
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
-    else if (alpha > lbl_803DE8A0)
+    else if (alpha > gObjColorFadeAlphaMax)
     {
-        alpha = lbl_803DE8A0 - (alpha - lbl_803DE8A0);
+        alpha = gObjColorFadeAlphaMax - (alpha - gObjColorFadeAlphaMax);
         ((GameObject*)obj)->colorFadeFlags ^= 4;
     }
 
@@ -457,30 +457,30 @@ void fn_8002B758(void* v)
 {
     int i;
 
-    for (i = 0; i < lbl_803DCB74; i++)
+    for (i = 0; i < gObjPtrTableCount; i++)
     {
-        if ((void*)lbl_803408A8[i] == v)
+        if ((void*)gObjPtrTable[i] == v)
         {
             break;
         }
     }
-    if (i == lbl_803DCB74)
+    if (i == gObjPtrTableCount)
     {
         return;
     }
-    for (; i < lbl_803DCB74 - 1; i++)
+    for (; i < gObjPtrTableCount - 1; i++)
     {
-        lbl_803408A8[i] = lbl_803408A8[i + 1];
+        gObjPtrTable[i] = gObjPtrTable[i + 1];
     }
-    lbl_803DCB74--;
+    gObjPtrTableCount--;
 }
 
 #pragma peephole on
 void fn_8002B860(void* v)
 {
-    s8 i = lbl_803DCB74;
-    lbl_803DCB74 = i + 1;
-    lbl_803408A8[i] = (int)v;
+    s8 i = gObjPtrTableCount;
+    gObjPtrTableCount = i + 1;
+    gObjPtrTable[i] = (int)v;
 }
 
 void mm_free(void* p);
@@ -488,18 +488,18 @@ void mm_free(void* p);
 #pragma peephole off
 void* getTablesBinEntry(int i)
 {
-    if (i < 0 || i >= lbl_803DCBAC)
+    if (i < 0 || i >= gObjTablesBinCount)
     {
-        return lbl_803DCBB4;
+        return gObjTablesBinData;
     }
-    return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
+    return gObjTablesBinData + gObjTablesBinIndex[i] * 4;
 }
 
 void Obj_InsertIntoUpdateList(u8* obj)
 {
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
-        int* list = &lbl_803DCB7C;
+        int* list = &gObjUpdateList;
         int prev = 0;
         int cur = list[1];
         int linkOff = *(s16*)((u8*)list + 2);
@@ -508,7 +508,7 @@ void Obj_InsertIntoUpdateList(u8* obj)
             prev = cur;
             cur = *(int*)((u8*)cur + linkOff);
         }
-        objListAdd(&lbl_803DCB7C, prev, obj);
+        objListAdd(&gObjUpdateList, prev, obj);
     }
 }
 
@@ -516,7 +516,7 @@ void Obj_RemoveFromUpdateList(u8* obj)
 {
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
-        objList_remove(&lbl_803DCB7C, obj);
+        objList_remove(&gObjUpdateList, obj);
     }
 }
 
@@ -539,9 +539,9 @@ void* ObjList_GetObjects(int* outA, int* outB)
     }
     if (outB != NULL)
     {
-        *outB = lbl_803DCB84;
+        *outB = gObjCount;
     }
-    return lbl_803DCB88;
+    return gObjList;
 }
 
 void* loadAssetFileById(int id, int arg);
@@ -598,8 +598,8 @@ ObjListObject* ObjList_FindObjectById(u32 objectId)
     ObjListObjectDef* def;
     ObjListObject* obj;
     int i;
-    int count = lbl_803DCB84;
-    ObjListObject** arr = lbl_803DCB88;
+    int count = gObjCount;
+    ObjListObject** arr = gObjList;
     for (i = 0; i < count; i++)
     {
         obj = arr[i];
@@ -752,9 +752,9 @@ int objApplyVelocity(u8* obj)
 void Obj_ApplyPendingParentLinks(void)
 {
     int i;
-    for (i = 0; i < lbl_803DCB84; i++)
+    for (i = 0; i < gObjCount; i++)
     {
-        u8* obj = ((u8**)lbl_803DCB88)[i];
+        u8* obj = ((u8**)gObjList)[i];
         obj[0xaf] &= ~7;
         if (((GameObject*)obj)->pendingParentObj != NULL)
         {
@@ -771,16 +771,16 @@ void Obj_ApplyPendingParentLinks(void)
 void Obj_FlushDeferredFreeList(void)
 {
     int i;
-    for (i = 0; i < lbl_803DCB94; i++)
+    for (i = 0; i < gObjDeferredFreeCount; i++)
     {
-        void* p = lbl_803DCB98[i];
+        void* p = gObjDeferredFreeList[i];
         if (p != NULL)
         {
             objFreeObjDef(p, 0);
-            lbl_803DCB98[i] = NULL;
+            gObjDeferredFreeList[i] = NULL;
         }
     }
-    lbl_803DCB94 = 0;
+    gObjDeferredFreeCount = 0;
 }
 
 void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound,
@@ -837,7 +837,7 @@ void* Obj_SetupObject(int a, int b, int c, int d, int e)
     if (obj != NULL)
     {
         Obj_RegisterObject(obj, b);
-        OSReport(lbl_802CAC54, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
+        OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
     }
     return obj;
 }
@@ -860,7 +860,7 @@ void* loadObjectAtObject(u8* src, int arg1)
         if (obj != NULL)
         {
             Obj_RegisterObject(obj, 5);
-            OSReport(lbl_802CAC54, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
+            OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
         }
     }
     return obj;
@@ -1023,18 +1023,18 @@ void ObjList_PartitionForRender(int* out)
     int j;
     int hi;
 
-    *out = lbl_803DCB84;
-    if (lbl_803DCBC4 != 0)
+    *out = gObjCount;
+    if (gObjPartitionPivot != 0)
     {
         return;
     }
     i = 0;
-    j = lbl_803DCB84 - 1;
+    j = gObjCount - 1;
     hi = j;
     while (i <= j)
     {
         stop = 0;
-        arr = lbl_803DCB88;
+        arr = gObjList;
         while (i <= hi && stop == 0)
         {
             if (((ObjAnimComponent*)arr[i])->modelInstance->flags & 1)
@@ -1062,12 +1062,12 @@ void ObjList_PartitionForRender(int* out)
         {
             tmp = arr[i];
             arr[i] = arr[j];
-            ((void**)lbl_803DCB88)[j] = tmp;
+            ((void**)gObjList)[j] = tmp;
             i++;
             j--;
         }
     }
-    lbl_803DCBC4 = i;
+    gObjPartitionPivot = i;
 }
 
 #pragma dont_inline on
@@ -1200,11 +1200,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     else
     {
-        if (seq > lbl_803DCB9C)
+        if (seq > gObjSeqToObjIdMax)
         {
             return NULL;
         }
-        id = lbl_803DCBA0[seq];
+        id = gObjSeqToObjIdTable[seq];
     }
     memset(&tmpl, 0, 0x10c);
     tp = &tmpl;
@@ -1566,9 +1566,9 @@ void objFreeObjDef(void* objp, int flag)
         if (flag == 0)
         {
             count = 0;
-            for (i = 0; i < lbl_803DCB84; i++)
+            for (i = 0; i < gObjCount; i++)
             {
-                o = ((u8**)lbl_803DCB88)[i];
+                o = ((u8**)gObjList)[i];
                 if (((GameObject*)o)->anim.parent == obj)
                 {
                     *(int*)&((GameObject*)o)->anim.parent = 0;
@@ -1588,19 +1588,19 @@ void objFreeObjDef(void* objp, int flag)
     }
     if (flag == 0 && ((GameObject*)obj)->anim.classId == 0x10)
     {
-        for (i = 0; i < lbl_803DCB84; i++)
+        for (i = 0; i < gObjCount; i++)
         {
-            if (*(u8**)(((u8**)lbl_803DCB88)[i] + 0xc0) == obj)
+            if (*(u8**)(((u8**)gObjList)[i] + 0xc0) == obj)
             {
-                *(int*)(((u8**)lbl_803DCB88)[i] + 0xc0) = 0;
+                *(int*)(((u8**)gObjList)[i] + 0xc0) = 0;
             }
         }
     }
-    for (i = 0; i < lbl_803DCB84; i++)
+    for (i = 0; i < gObjCount; i++)
     {
-        if (*(s16*)(((u8**)lbl_803DCB88)[i] + 0x44) == 0x10)
+        if (*(s16*)(((u8**)gObjList)[i] + 0x44) == 0x10)
         {
-            bp = *(int**)(((u8**)lbl_803DCB88)[i] + 0xb8);
+            bp = *(int**)(((u8**)gObjList)[i] + 0xb8);
             if (*(u8**)bp == obj)
             {
                 *bp = 0;
@@ -1679,16 +1679,16 @@ void objFreeObjDef(void* objp, int flag)
         ObjGroup_RemoveObject((u32)obj, group - 1);
     }
     type = ((GameObject*)obj)->anim.defId;
-    if (*(u8*)(lbl_803DCBA4 + type) == 0)
+    if (*(u8*)(gObjFileRefCount + type) == 0)
     {
         debugPrintf(sObjFreeObjdefError);
     }
     else
     {
-        *(u8*)(lbl_803DCBA4 + type) -= 1;
-        if (*(u8*)(lbl_803DCBA4 + type) == 0)
+        *(u8*)(gObjFileRefCount + type) -= 1;
+        if (*(u8*)(gObjFileRefCount + type) == 0)
         {
-            o = ((u8**)lbl_803DCBA8)[type];
+            o = ((u8**)gObjFileBufferTable)[type];
             if (*(void**)&((GameObject*)o)->anim.parent != NULL)
             {
                 mm_free(((GameObject*)o)->anim.parent);
@@ -1729,7 +1729,7 @@ void Obj_UpdateObject(u8* obj)
     {
         return;
     }
-    if (lbl_803DCB78 & 1)
+    if (gObjUpdateFlags & 1)
     {
         switch (object->seqId)
         {
@@ -1859,16 +1859,16 @@ void Obj_UpdateAllObjects(u8 flags)
     void (*cb)(int);
 
     f = flags;
-    lbl_803DCB78 = f;
-    off = *(s16*)((u8*)&lbl_803DCB7C + 2);
+    gObjUpdateFlags = f;
+    off = *(s16*)((u8*)&gObjUpdateList + 2);
     timeStop = f & 1;
     if (timeStop == 0)
     {
         objFn_80065604();
     }
     Obj_UpdateModelBlendStates();
-    ObjHitReact_ResetActiveObjects(lbl_803DCB84);
-    obj = *(int*)((u8*)&lbl_803DCB7C + 4);
+    ObjHitReact_ResetActiveObjects(gObjCount);
+    obj = *(int*)((u8*)&gObjUpdateList + 4);
     while (obj != 0 && ((ObjAnimComponent*)obj)->activeHitboxMode == 0x64)
     {
         Obj_UpdateObject((u8*)obj);
@@ -1916,8 +1916,8 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if (timeStop == 0)
     {
-        ObjHits_Update(lbl_803DCB84);
-        obj = *(int*)((u8*)&lbl_803DCB7C + 4);
+        ObjHits_Update(gObjCount);
+        obj = *(int*)((u8*)&gObjUpdateList + 4);
         for (; obj != 0; obj = *(int*)(obj + off))
         {
             if ((((GameObject*)obj)->objectFlags & 0x2000) == 0)
@@ -2027,7 +2027,7 @@ void mapSetupPlayer(void)
     u8* vp;
     CharSpawn spawn;
 
-    base = (u8*)(int)&lbl_802CABF8;
+    base = (u8*)(int)&gObjCameraSetupBlock;
     mapType = getCurMapType();
     if (mapType == 2 || mapType == 3)
     {
@@ -2052,7 +2052,7 @@ void mapSetupPlayer(void)
             spawn.unk5 = 4;
             spawn.unk6 = 0xff;
             spawn.unk7 = 0xff;
-            spawn.id = lbl_803DB44C[playerNo];
+            spawn.id = gObjPlayerSpawnIdTable[playerNo];
             spawn.unk2 = 0x18;
             spawn.x = x;
             spawn.y = y;
@@ -2072,11 +2072,11 @@ void mapSetupPlayer(void)
                 }
             }
         }
-        *(f32*)(base + 8) = lbl_803DE8BC * mathSinf((lbl_803DE8C0 * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4)
+        *(f32*)(base + 8) = lbl_803DE8BC * mathSinf((gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4)
             + x;
         *(f32*)(base + 0xc) = lbl_803DE8C8 + y;
         *(f32*)(base + 0x10) = lbl_803DE8BC * mathCosf(
-            (lbl_803DE8C0 * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
+            (gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
         uiDll = getCurUiDll();
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7)
         {
@@ -2088,7 +2088,7 @@ void mapSetupPlayer(void)
         else
         {
             (*gCameraInterface)->init(obj, *(f32*)(base + 8), *(f32*)(base + 0xc), *(f32*)(base + 0x10));
-            (*gCameraInterface)->setMode(0x42, 0, 0, 0x20, (u8*)(int)&lbl_802CABF8, 0, 0xff);
+            (*gCameraInterface)->setMode(0x42, 0, 0, 0x20, (u8*)(int)&gObjCameraSetupBlock, 0, 0xff);
             (*gCameraInterface)->update(1);
         }
         vp = Camera_GetCurrentViewSlot();
@@ -2111,47 +2111,47 @@ void Obj_ResetObjectSystem(void)
     i = 0;
     off = i;
     zero = i;
-    for (; i < lbl_803DCB94; i++)
+    for (; i < gObjDeferredFreeCount; i++)
     {
-        if (*(void**)((int)lbl_803DCB98 + off) != 0)
+        if (*(void**)((int)gObjDeferredFreeList + off) != 0)
         {
-            objFreeObjDef(*(void**)((int)lbl_803DCB98 + off), 0);
-            *(int*)((int)lbl_803DCB98 + off) = zero;
+            objFreeObjDef(*(void**)((int)gObjDeferredFreeList + off), 0);
+            *(int*)((int)gObjDeferredFreeList + off) = zero;
         }
         off += 4;
     }
-    lbl_803DCB94 = 0;
-    lbl_803DB448 = 0;
-    i = lbl_803DCB84 - 1;
+    gObjDeferredFreeCount = 0;
+    gObjDefCaptureMode = 0;
+    i = gObjCount - 1;
     off = i << 2;
     for (; i >= 0; i--)
     {
-        Obj_FreeObject(*(void**)((int)lbl_803DCB88 + off));
+        Obj_FreeObject(*(void**)((int)gObjList + off));
         off -= 4;
     }
     i = 0;
     off = i;
     zero = i;
-    for (; i < lbl_803DCB94; i++)
+    for (; i < gObjDeferredFreeCount; i++)
     {
-        if (*(void**)((int)lbl_803DCB98 + off) != 0)
+        if (*(void**)((int)gObjDeferredFreeList + off) != 0)
         {
-            objFreeObjDef(*(void**)((int)lbl_803DCB98 + off), 0);
-            *(int*)((int)lbl_803DCB98 + off) = zero;
+            objFreeObjDef(*(void**)((int)gObjDeferredFreeList + off), 0);
+            *(int*)((int)gObjDeferredFreeList + off) = zero;
         }
         off += 4;
     }
-    lbl_803DB448 = 2;
-    lbl_803DCB94 = 0;
+    gObjDefCaptureMode = 2;
+    gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
-    lbl_803DCB84 = 0;
-    fn_80013B6C(&lbl_803DCB7C, 0x38);
-    lbl_803DCB94 = 0;
+    gObjCount = 0;
+    fn_80013B6C(&gObjUpdateList, 0x38);
+    gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
     lbl_803DCB70 = 0;
-    lbl_803DCB84 = 0;
-    fn_80013B6C(&lbl_803DCB7C, 0x38);
-    lbl_803DCBC4 = 0;
+    gObjCount = 0;
+    fn_80013B6C(&gObjUpdateList, 0x38);
+    gObjPartitionPivot = 0;
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
     (*gCameraInterface)->setFocus(NULL, 0);
@@ -2176,9 +2176,9 @@ void Obj_UpdateModelBlendStates(void)
 
     i = 0;
     ioff = 0;
-    for (; i < lbl_803DCB84; i++)
+    for (; i < gObjCount; i++)
     {
-        obj = *(u8**)((int)lbl_803DCB88 + ioff);
+        obj = *(u8**)((int)gObjList + ioff);
         objAnim = (ObjAnimComponent*)obj;
         if (obj != 0 && objAnim->modelInstance != NULL)
         {
@@ -2304,18 +2304,18 @@ void Obj_RegisterObject(u8* obj, int flags)
     if (flags & 1)
     {
         ((GameObject*)obj)->objectFlags |= 0x10;
-        ((u8**)lbl_803DCB88)[lbl_803DCB84++] = obj;
+        ((u8**)gObjList)[gObjCount++] = obj;
         if (((GameObject*)obj)->objectFlags & 0x10)
         {
             prev = 0;
-            cur = *(int*)((u8*)&lbl_803DCB7C + 4);
-            off = *(s16*)((u8*)&lbl_803DCB7C + 2);
+            cur = *(int*)((u8*)&gObjUpdateList + 4);
+            off = *(s16*)((u8*)&gObjUpdateList + 2);
             while (cur != 0 && object->activeHitboxMode < *(s8*)(cur + 0xae))
             {
                 prev = cur;
                 cur = *(int*)(cur + off);
             }
-            objListAdd(&lbl_803DCB7C, prev, obj);
+            objListAdd(&gObjUpdateList, prev, obj);
         }
     }
     if (object->modelInstance->group8RegistrationCount > 0)
@@ -2324,7 +2324,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (object->modelInstance->flags & 1)
     {
-        lbl_803DCBC4 = 0;
+        gObjPartitionPivot = 0;
     }
 }
 
@@ -2347,8 +2347,8 @@ void Obj_FreeObject(u8* obj)
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
         i = 0;
-        p = lbl_803DCB88;
-        for (n = lbl_803DCB84; n > 0; n--)
+        p = gObjList;
+        for (n = gObjCount; n > 0; n--)
         {
             if (*p == obj)
             {
@@ -2357,13 +2357,13 @@ void Obj_FreeObject(u8* obj)
             p++;
             i++;
         }
-        if (i < lbl_803DCB84)
+        if (i < gObjCount)
         {
-            lbl_803DCB84--;
+            gObjCount--;
             off = i << 2;
-            for (; i < lbl_803DCB84; i++)
+            for (; i < gObjCount; i++)
             {
-                q = (u8*)lbl_803DCB88 + off;
+                q = (u8*)gObjList + off;
                 *(int*)q = *(int*)(q + 4);
                 off += 4;
             }
@@ -2374,11 +2374,11 @@ void Obj_FreeObject(u8* obj)
         }
         if (((GameObject*)obj)->objectFlags & 0x10)
         {
-            objList_remove(&lbl_803DCB7C, obj);
+            objList_remove(&gObjUpdateList, obj);
         }
-        lbl_803DCBC4 = 0;
+        gObjPartitionPivot = 0;
     }
-    for (i = 0; i < lbl_803DCB94; i++)
+    for (i = 0; i < gObjDeferredFreeCount; i++)
     {
     }
     ((GameObject*)obj)->objectFlags |= 0x40;
@@ -2407,14 +2407,14 @@ void Obj_FreeObject(u8* obj)
             return;
         }
     }
-    if (lbl_803DB448 == 2)
+    if (gObjDefCaptureMode == 2)
     {
-        i = lbl_803DCB94;
-        if (lbl_803DCB94 != 0)
+        i = gObjDeferredFreeCount;
+        if (gObjDeferredFreeCount != 0)
         {
             i = 0;
-            p = (u8**)lbl_803DCB98;
-            for (n = lbl_803DCB94; n > 0; n--)
+            p = (u8**)gObjDeferredFreeList;
+            for (n = gObjDeferredFreeCount; n > 0; n--)
             {
                 if (*p == obj)
                 {
@@ -2424,19 +2424,19 @@ void Obj_FreeObject(u8* obj)
                 i++;
             }
         }
-        if (i == lbl_803DCB94)
+        if (i == gObjDeferredFreeCount)
         {
-            ((u8**)lbl_803DCB98)[lbl_803DCB94] = obj;
-            lbl_803DCB94++;
-            if (lbl_803DCB94 == 400)
+            ((u8**)gObjDeferredFreeList)[gObjDeferredFreeCount] = obj;
+            gObjDeferredFreeCount++;
+            if (gObjDeferredFreeCount == 400)
             {
-                lbl_803DCB94--;
+                gObjDeferredFreeCount--;
             }
         }
     }
     else
     {
-        objFreeObjDef(obj, !lbl_803DB448);
+        objFreeObjDef(obj, !gObjDefCaptureMode);
     }
 }
 
@@ -2446,46 +2446,46 @@ void Obj_InitObjectSystem(void)
     int* q;
     int i;
 
-    lbl_803DCB98 = mmAlloc(0x640, 0xe, 0);
+    gObjDeferredFreeList = mmAlloc(0x640, 0xe, 0);
     lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
     lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
-    loadAssetFileById((int)&lbl_803DCBA0, 0x3f);
-    lbl_803DCB9C = (getDataFileSize(0x3f) >> 1) - 1;
-    for (p = lbl_803DCBA0 + lbl_803DCB9C; *p == 0;)
+    loadAssetFileById((int)&gObjSeqToObjIdTable, 0x3f);
+    gObjSeqToObjIdMax = (getDataFileSize(0x3f) >> 1) - 1;
+    for (p = gObjSeqToObjIdTable + gObjSeqToObjIdMax; *p == 0;)
     {
         p--;
-        lbl_803DCB9C--;
+        gObjSeqToObjIdMax--;
     }
-    loadAssetFileById((int)&lbl_803DCBBC, 0x3d);
-    lbl_803DCBB8 = 0;
-    for (q = lbl_803DCBBC; *q != -1;)
+    loadAssetFileById((int)&gObjFileOffsetTable, 0x3d);
+    gObjFileCount = 0;
+    for (q = gObjFileOffsetTable; *q != -1;)
     {
         q++;
-        lbl_803DCBB8++;
+        gObjFileCount++;
     }
-    lbl_803DCBB8--;
-    lbl_803DCBA8 = mmAlloc(lbl_803DCBB8 * 4, 0xe, 0);
-    lbl_803DCBA4 = mmAlloc(lbl_803DCBB8, 0xe, 0);
-    for (i = 0; i < lbl_803DCBB8; i++)
+    gObjFileCount--;
+    gObjFileBufferTable = mmAlloc(gObjFileCount * 4, 0xe, 0);
+    gObjFileRefCount = mmAlloc(gObjFileCount, 0xe, 0);
+    for (i = 0; i < gObjFileCount; i++)
     {
-        lbl_803DCBA4[i] = 0;
+        gObjFileRefCount[i] = 0;
     }
-    loadAssetFileById((int)&lbl_803DCBB4, 0x16);
-    loadAssetFileById((int)&lbl_803DCBB0, 0x17);
-    lbl_803DCBAC = 0;
-    for (q = lbl_803DCBB0; *q != -1;)
+    loadAssetFileById((int)&gObjTablesBinData, 0x16);
+    loadAssetFileById((int)&gObjTablesBinIndex, 0x17);
+    gObjTablesBinCount = 0;
+    for (q = gObjTablesBinIndex; *q != -1;)
     {
         q++;
-        lbl_803DCBAC++;
+        gObjTablesBinCount++;
     }
-    lbl_803DCB88 = mmAlloc(0x960, 0xe, 0);
+    gObjList = mmAlloc(0x960, 0xe, 0);
     ObjHits_InitWorkBuffers();
-    lbl_803DCB94 = 0;
+    gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
     lbl_803DCB70 = 0;
-    lbl_803DCB84 = 0;
-    fn_80013B6C(&lbl_803DCB7C, 0x38);
-    lbl_803DCBC4 = 0;
+    gObjCount = 0;
+    fn_80013B6C(&gObjUpdateList, 0x38);
+    gObjPartitionPivot = 0;
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
 }
@@ -2499,19 +2499,19 @@ u8* loadObjectFile(int id)
     int n;
     s16 modLine;
 
-    if (id >= lbl_803DCBB8)
+    if (id >= gObjFileCount)
     {
         return 0;
     }
-    if (lbl_803DCBA4[id] != 0)
+    if (gObjFileRefCount[id] != 0)
     {
-        lbl_803DCBA4[id]++;
-        return *(u8**)((int)lbl_803DCBA8 + (id << 2));
+        gObjFileRefCount[id]++;
+        return *(u8**)((int)gObjFileBufferTable + (id << 2));
     }
     off = id << 2;
-    base = ((int*)lbl_803DCBBC)[id];
+    base = ((int*)gObjFileOffsetTable)[id];
     {
-        int* t = (int*)((int)lbl_803DCBBC + off);
+        int* t = (int*)((int)gObjFileOffsetTable + off);
         size = t[1] - base;
     }
     buf = mmAlloc(size, 0xe, 0);
@@ -2555,8 +2555,8 @@ u8* loadObjectFile(int id)
             *(u8*)(buf + 0x5c) = modLine;
             intersectModLineBuild(buf);
         }
-        *(u8**)((int)lbl_803DCBA8 + off) = buf;
-        lbl_803DCBA4[id] = 1;
+        *(u8**)((int)gObjFileBufferTable + off) = buf;
+        gObjFileRefCount[id] = 1;
         return buf;
     }
     return 0;

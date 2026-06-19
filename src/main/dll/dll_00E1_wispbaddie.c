@@ -35,7 +35,7 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;
-extern f32 lbl_803E26DC;
+extern f32 gWispBaddiePi;
 extern f32 lbl_803E26E0;
 extern f32 lbl_803E26E4;
 extern const f32 lbl_803E26E8;
@@ -47,7 +47,7 @@ extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
 
 
-extern int lbl_803DDA68;
+extern int gWispBaddieLastSegmentEnd;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
@@ -155,16 +155,16 @@ void fn_8014F620(int obj, WispBaddieState* state)
     state->pathWavePhase += (s16)(lbl_803E26D0 * timeDelta);
     state->hoverWavePhase += (s16)(lbl_803E26D4 * timeDelta);
 
-    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32)state->pathWavePhase) / lbl_803E26E0);
+    wave = lbl_803E26D8 + mathSinf((gWispBaddiePi * (f32)state->pathWavePhase) / lbl_803E26E0);
     done = Curve_AdvanceAlongPath(curve, state->hitRadius * wave);
-    if (((done != 0) || (curve->atSegmentEnd != lbl_803DDA68)) &&
+    if (((done != 0) || (curve->atSegmentEnd != gWispBaddieLastSegmentEnd)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4,
                                           &lbl_803DBC80, -1) != 0))
     {
         state->flags = state->flags & ~1;
     }
-    lbl_803DDA68 = curve->atSegmentEnd;
+    gWispBaddieLastSegmentEnd = curve->atSegmentEnd;
 
     if ((state->flags & 2) != 0)
     {
@@ -172,7 +172,7 @@ void fn_8014F620(int obj, WispBaddieState* state)
             lbl_803E26E8 * (state->playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
             ((GameObject*)obj)->anim.velocityX;
 
-        wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
+        wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) -
                 ((GameObject*)obj)->anim.localPosY) * lbl_803E26E8 +
@@ -187,7 +187,7 @@ void fn_8014F620(int obj, WispBaddieState* state)
             +
             ((GameObject*)obj)->anim.velocityX;
 
-        wave = mathSinf((lbl_803E26DC * (f32)state->hoverWavePhase) / lbl_803E26E0);
+        wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
         ((GameObject*)obj)->anim.velocityY =
             ((lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - ((GameObject*)obj)->anim.localPosY) *
             lbl_803E26E8 +

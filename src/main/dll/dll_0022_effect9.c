@@ -1290,21 +1290,21 @@ extern u8 framesThisStep;
 
 extern float mathSinf(float x);
 
-extern f32 lbl_803DB828;
-extern f32 lbl_803DB82C;
-extern int lbl_803DD3A0;
-extern int lbl_803DD3A4;
-extern f32 lbl_803DD3A8;
-extern f32 lbl_803DD3AC;
+extern f32 gEffect9PhaseC;
+extern f32 gEffect9PhaseD;
+extern int gEffect9SineAngleFast;
+extern int gEffect9SineAngleSlow;
+extern f32 gEffect9SineSlow;
+extern f32 gEffect9SineFast;
 extern f32 lbl_803DFE28;
 extern f32 lbl_803DFE2C;
 extern f32 lbl_803DFE38;
-extern f32 lbl_803DFEB0;
-extern f32 lbl_803DFEB4;
+extern f32 gEffect9Pi;
+extern f32 gEffect9SineAngleScale;
 
 extern FxNode9 lbl_8039C398;
-extern f32 lbl_803DB820;
-extern f32 lbl_803DB824;
+extern f32 gEffect9PhaseA;
+extern f32 gEffect9PhaseB;
 extern f32 lbl_803DFE34;
 extern f32 lbl_803DFE40;
 extern f32 lbl_803DFE44;
@@ -1358,10 +1358,10 @@ int Effect9_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     int spawnResult;
     PartFxSpawn cfg;
 
-    lbl_803DB820 = lbl_803DB820 + lbl_803DFE28;
-    if (lbl_803DB820 > 1.0f) lbl_803DB820 = lbl_803DFE2C;
-    lbl_803DB824 = lbl_803DB824 + lbl_803DFE34;
-    if (lbl_803DB824 > 1.0f) lbl_803DB824 = lbl_803DFE38;
+    gEffect9PhaseA = gEffect9PhaseA + lbl_803DFE28;
+    if (gEffect9PhaseA > 1.0f) gEffect9PhaseA = lbl_803DFE2C;
+    gEffect9PhaseB = gEffect9PhaseB + lbl_803DFE34;
+    if (gEffect9PhaseB > 1.0f) gEffect9PhaseB = lbl_803DFE38;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -1792,28 +1792,28 @@ void Effect9_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB828 + (step = lbl_803DFE28 * timeDelta);
-    lbl_803DB828 = sum;
+    sum = gEffect9PhaseC + (step = lbl_803DFE28 * timeDelta);
+    gEffect9PhaseC = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB828 = lbl_803DFE2C;
+        gEffect9PhaseC = lbl_803DFE2C;
     }
-    sum = lbl_803DB82C + step;
-    lbl_803DB82C = sum;
+    sum = gEffect9PhaseD + step;
+    gEffect9PhaseD = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB82C = lbl_803DFE38;
+        gEffect9PhaseD = lbl_803DFE38;
     }
-    lbl_803DD3A0 = lbl_803DD3A0 + framesThisStep * 0x64;
-    if (lbl_803DD3A0 > 0x7fff)
+    gEffect9SineAngleFast = gEffect9SineAngleFast + framesThisStep * 0x64;
+    if (gEffect9SineAngleFast > 0x7fff)
     {
-        lbl_803DD3A0 = 0;
+        gEffect9SineAngleFast = 0;
     }
-    lbl_803DD3AC = mathSinf(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A0 / lbl_803DFEB4);
-    lbl_803DD3A4 = lbl_803DD3A4 + framesThisStep * 0x32;
-    if (lbl_803DD3A4 > 0x7fff)
+    gEffect9SineFast = mathSinf(gEffect9Pi * (f32)(s16)gEffect9SineAngleFast / gEffect9SineAngleScale);
+    gEffect9SineAngleSlow = gEffect9SineAngleSlow + framesThisStep * 0x32;
+    if (gEffect9SineAngleSlow > 0x7fff)
     {
-        lbl_803DD3A4 = 0;
+        gEffect9SineAngleSlow = 0;
     }
-    lbl_803DD3A8 = mathSinf(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A4 / lbl_803DFEB4);
+    gEffect9SineSlow = mathSinf(gEffect9Pi * (f32)(s16)gEffect9SineAngleSlow / gEffect9SineAngleScale);
 }

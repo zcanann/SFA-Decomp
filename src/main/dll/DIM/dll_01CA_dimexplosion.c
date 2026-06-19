@@ -37,7 +37,7 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 
 extern void textureFree(int tex);
-extern int lbl_803AC960[4];
+extern int gExplosionTextures[4];
 extern int Obj_GetActiveModel(int obj);
 
 extern void ModelLightStruct_free(void*);
@@ -76,17 +76,17 @@ extern f32 lbl_803E49C8;
 extern f32 lbl_803E49CC;
 extern int lbl_803E4928;
 extern int lbl_803E8468;
-extern u8 lbl_803DDB58;
-extern f32 lbl_803DDB5C;
-extern f32 lbl_803DDB60;
-extern f32 lbl_803DDB64;
-extern f32 lbl_803DDB68;
-extern f32 lbl_803DDB6C;
-extern f32 lbl_803DDB70;
+extern u8 gExplosionUpdateTick;
+extern f32 gExplosionFalloffScaleBlue;
+extern f32 gExplosionFalloffScaleGreen;
+extern f32 gExplosionFalloffScaleRed;
+extern f32 gExplosionDebrisColorScale;
+extern f32 gExplosionDebrisAlphaScale;
+extern f32 gExplosionDebrisSpeedScale;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_80325528[];
-extern FbTexTbl lbl_802C2328;
+extern f32 gExplosionSpreadDirs[];
+extern FbTexTbl gExplosionTexTable;
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
@@ -127,10 +127,10 @@ void explosion_release(u32 obj)
 
     for (i = 0; i < 4; i++)
     {
-        if (((int**)lbl_803AC960)[i] != NULL)
+        if (((int**)gExplosionTextures)[i] != NULL)
         {
-            textureFree((int)((int**)lbl_803AC960)[i]);
-            ((int**)lbl_803AC960)[i] = NULL;
+            textureFree((int)((int**)gExplosionTextures)[i]);
+            ((int**)gExplosionTextures)[i] = NULL;
         }
     }
 }
@@ -255,11 +255,11 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
             * (int*)((char*)e14 + 0x14));
         f32 d = sp - *(f32*)((char*)e + 0x18);
         f32 t = d * ev;
-        *(f32*)((char*)e + 0xc) = sp - lbl_803DDB70 * t;
+        *(f32*)((char*)e + 0xc) = sp - gExplosionDebrisSpeedScale * t;
         ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(e = (int) * (int*)((char*)e14 + 0x14)));
         t = lbl_803E4938 * ev;
         p = (char*)state;
-        *(s8*)(p + idx * 0x30 + 0x2e) = lbl_803E4938 - lbl_803DDB6C * t;
+        *(s8*)(p + idx * 0x30 + 0x2e) = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
         *(int*)(p + idx * 0x30 + 0x20) = lbl_803E4940;
         *(int*)(p + idx * 0x30 + 0x24) = *(int*)(p + idx * 0x30 + 0x20);
         *(u8*)(p + idx * 0x30 + 0x2f) = 1;
@@ -276,9 +276,9 @@ void fn_801B40B8(f32 a, f32 b, u8 mode, u8* out)
     s16 c1;
     s16 c2;
     s16 c3;
-    c1 = 0xff - (u8)(int)(lbl_803DDB64 * (lbl_803E4938 * expf((lbl_803E4950 * a) / b)));
-    c2 = 0xff - (u8)(int)(lbl_803DDB60 * (lbl_803E4938 * expf((lbl_803E4954 * a) / b)));
-    c3 = 0xff - (u8)(int)(lbl_803DDB5C * (lbl_803E4938 * expf(a / b)));
+    c1 = 0xff - (u8)(int)(gExplosionFalloffScaleRed * (lbl_803E4938 * expf((lbl_803E4950 * a) / b)));
+    c2 = 0xff - (u8)(int)(gExplosionFalloffScaleGreen * (lbl_803E4938 * expf((lbl_803E4954 * a) / b)));
+    c3 = 0xff - (u8)(int)(gExplosionFalloffScaleBlue * (lbl_803E4938 * expf(a / b)));
     v1 = (c1 < 1) ? 1 : ((c1 > 0xff) ? 0xff : c1);
     v2 = (c2 < 1) ? 1 : ((c2 > 0xff) ? 0xff : c2);
     v3 = (c3 < 1) ? 1 : ((c3 > 0xff) ? 0xff : c3);
@@ -358,7 +358,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
                 ((u8*)&colA)[3] = ((ExplosionDebris*)p)->unk2E;
-                cv = lbl_803DDB68 * (lbl_803E4938 * expf(
+                cv = gExplosionDebrisColorScale * (lbl_803E4938 * expf(
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14));
                 ((u8*)&colB)[0] = cv;
@@ -368,7 +368,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 fn_801B40B8((f32)(int)((ExplosionDebris*)p)->unk10,
                             (f32)(int)((ExplosionDebris*)p)->unk14,
                             ((ExplosionState*)state)->modelKind, (u8*)&colA);
-                tex = (void**)((int*)lbl_803AC960)[((ExplosionState*)state)->modelKind];
+                tex = (void**)((int*)gExplosionTextures)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
                 {
                     tex = (void**)*tex;
@@ -434,7 +434,7 @@ void explosion_update(int obj)
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
     int p;
-    lbl_803DDB58 += 1;
+    gExplosionUpdateTick += 1;
     p = state;
     ((ExplosionState*)state)->frameCounter += framesThisStep;
     for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
@@ -448,10 +448,10 @@ void explosion_update(int obj)
                     f32)(int)((ExplosionDebris*)p)->unk14);
             f32 d = sp - ((ExplosionDebris*)p)->unk18;
             f32 t = d * ev;
-            ((ExplosionDebris*)p)->unkC = sp - lbl_803DDB70 * t;
+            ((ExplosionDebris*)p)->unkC = sp - gExplosionDebrisSpeedScale * t;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
-            *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - lbl_803DDB6C * t;
+            *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
             if (((ExplosionDebris*)p)->unk10 >= ((ExplosionDebris*)p)->unk14)
             {
                 ((ExplosionDebris*)p)->unk2F = 0;
@@ -548,7 +548,7 @@ void explosion_update(int obj)
                 fake.worldPosX = fake.localPosX;
                 fake.worldPosY = fake.localPosY;
                 fake.worldPosZ = fake.localPosZ;
-                if (lbl_803DDB58 & 1)
+                if (gExplosionUpdateTick & 1)
                 {
                     int t = *(int*)((char*)p + 0x97c);
                     if (t < 0x40)
@@ -744,9 +744,9 @@ void explosion_init(int obj, int p2)
                 f32 mag = (f32)(int)randomGetRange(0x14, 0x28) *lbl_803E49C0;
                 u8 idx = i % 4;
                 mag = lbl_803E49BC * mag + lbl_803E49BC;
-                vsp[0] = mag * lbl_80325528[idx * 3];
-                vsp[1] = mag * lbl_80325528[idx * 3 + 1];
-                vsp[2] = mag * lbl_80325528[idx * 3 + 2];
+                vsp[0] = mag * gExplosionSpreadDirs[idx * 3];
+                vsp[1] = mag * gExplosionSpreadDirs[idx * 3 + 1];
+                vsp[2] = mag * gExplosionSpreadDirs[idx * 3 + 2];
                 PSMTXRotRad(mB, 0x7a, (f32)(
                                 lbl_803E4968 * (f64)(((f32)(int)randomGetRange(0, 0x8000) - lbl_803E49C8) /
                                 lbl_803E49C4))
@@ -838,15 +838,15 @@ void explosion_initialise(void)
 {
     FbTexTbl t;
     int i;
-    t = lbl_802C2328;
-    lbl_803DDB70 = lbl_803E492C / expf(lbl_803E4934);
-    lbl_803DDB6C = lbl_803E492C / expf(lbl_803E493C);
-    lbl_803DDB68 = lbl_803E492C / expf(lbl_803E4958);
-    lbl_803DDB64 = lbl_803E492C / expf(lbl_803E4950);
-    lbl_803DDB60 = lbl_803E492C / expf(lbl_803E4954);
-    lbl_803DDB5C = lbl_803E492C / expf(lbl_803E492C);
+    t = gExplosionTexTable;
+    gExplosionDebrisSpeedScale = lbl_803E492C / expf(lbl_803E4934);
+    gExplosionDebrisAlphaScale = lbl_803E492C / expf(lbl_803E493C);
+    gExplosionDebrisColorScale = lbl_803E492C / expf(lbl_803E4958);
+    gExplosionFalloffScaleRed = lbl_803E492C / expf(lbl_803E4950);
+    gExplosionFalloffScaleGreen = lbl_803E492C / expf(lbl_803E4954);
+    gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
     for (i = 0; i < 4; i++)
     {
-        lbl_803AC960[i] = textureLoadAsset(t.v[i]);
+        gExplosionTextures[i] = textureLoadAsset(t.v[i]);
     }
 }
