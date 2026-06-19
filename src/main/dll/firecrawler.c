@@ -19,7 +19,7 @@
  * (RomCurveWalker / gRomCurveInterface), tracks the player, reacts to hits
  * (crawler_onHit), FireCrawler spawns a linked "firepipe" projectile
  * (firecrawler_spawnFirepipe), and HagabonMK2 flies with a dynamic light +
- * looping engine SFX (0x3e8). Move/sequence sub-tables live at lbl_8031FAE8
+ * looping engine SFX (0x3e8). Move/sequence sub-tables live at gCrawlerDescriptorTable
  * (CrawlerSeq12 / CrawlerSeq16 / CrawlerDescriptor). controlFlags bits
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
@@ -73,12 +73,12 @@ extern f32 lbl_803E2C88;
 extern f32 lbl_803E2C8C;
 extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
-extern u8 lbl_8031FB70[];
-extern u8 lbl_8031FC2C[];
-extern char lbl_8031FAE8[];
+extern u8 gCrawlerSeqTable[];
+extern u8 gCrawlerModelChainIds[];
+extern char gCrawlerDescriptorTable[];
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
-extern u8 lbl_8031FD48[];
+extern u8 gCrawlerReactionTables[];
 extern void crawler_playReactionEffects(int* obj, int* st);
 extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
@@ -99,22 +99,22 @@ extern f32 lbl_803E2BFC;
 extern f32 lbl_803E2C00;
 extern f32 lbl_803E2C04;
 extern f32 lbl_803E2C08;
-extern f32 lbl_803E2C0C;
+extern f32 gCrawlerS8Norm127;
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-extern int lbl_803AC4A8[];
+extern int gCrawlerNearbyObjectBuffer[];
 extern f32 lbl_803E2B80;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 lbl_803E2C98;
 extern f32 lbl_803E2C9C;
-extern f32 lbl_803E2CA0;
-extern f32 lbl_803E2CA4;
+extern f32 gCrawlerPi;
+extern f32 gCrawlerHalfCircleBams;
 extern f32 lbl_803E2CA8;
 extern f32 lbl_803E2B84;
 extern f32 lbl_803E2B88;
 extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern u8 lbl_803DBD28[4];
-extern u8 lbl_803DBD2C[4];
+extern u8 gSnowwormSeqIndexReset[4];
+extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
 extern int getAngle(float y, float x);
 extern f32 timeDelta;
@@ -155,7 +155,7 @@ extern f32 lbl_803E2C70;
 extern f32 lbl_803E2C54;
 extern f32 lbl_803E2C38;
 extern f32 lbl_803E2C40;
-extern f32 lbl_803E2C6C;
+extern f32 gCrawlerSfxVolMax127;
 extern void fn_80292E20(u32 angle, f32* s, f32* c);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
 extern int fn_80295C88(void* player);
@@ -164,13 +164,13 @@ extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
 extern f32 lbl_803E2B50;
 extern f32 lbl_803DBCE8;
-extern f32 lbl_803DDA70;
+extern f32 gCrawlerHitSfxTimer;
 extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;
 extern char lbl_803DBCF0;
 extern int Curve_AdvanceAlongPath(RomCurveWalker *path, f32 step);
-extern u8 lbl_8031FB48[];
+extern u8 gCrawlerSpeedThresholds[];
 extern f32 lbl_803E2BA0;
 extern f32 lbl_803E2BA4;
 extern f32 lbl_803E2BBC;
@@ -234,7 +234,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
     {
         u8* bbase;
         u32 idx;
-        bbase = lbl_8031FD48;
+        bbase = gCrawlerReactionTables;
         idx = *(u16*)((char*)st + 0x338);
         bbase = bbase + idx * 8;
         base = *(u8**)(bbase + 4);
@@ -278,7 +278,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
 
 void snowworm_applyReactionState(int* obj, int* st)
 {
-    u8* t1 = *(u8**)((char*)lbl_8031FD48 + *(u16*)((char*)st + 0x338) * 8);
+    u8* t1 = *(u8**)((char*)gCrawlerReactionTables + *(u16*)((char*)st + 0x338) * 8);
     *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
     if ((((BaddieState*)st)->controlFlags & 0x40000000) != 0)
     {
@@ -390,8 +390,8 @@ void crawler_initTailModel(int* obj, int* st)
     }
     ((BaddieState*)st)->pathStep = ((BaddieState*)st)->pathStep * lbl_803E2C88;
     {
-        f32* fbase = (f32*)lbl_8031FB70;
-        u8* bbase = lbl_8031FB70;
+        f32* fbase = (f32*)gCrawlerSeqTable;
+        u8* bbase = gCrawlerSeqTable;
         u32 idx = *((u8*)st + 0x33a);
         u32 off = idx * 0xc;
         Baddie_SetMove(obj, st, bbase[off + 8],
@@ -399,7 +399,7 @@ void crawler_initTailModel(int* obj, int* st)
     }
     *(f32*)((char*)st + 0x328) = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
-    *(int**)((char*)st + 0x36c) = (int*)ObjModelChain_Alloc(lbl_8031FC2C, 5);
+    *(int**)((char*)st + 0x36c) = (int*)ObjModelChain_Alloc(gCrawlerModelChainIds, 5);
     ObjModelChain_SetOrigin((ObjModelChain*)*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
@@ -513,11 +513,11 @@ void fn_80157CDC(int obj, int p2)
         char* p;
     } CrawlerDescE;
     char* sub;
-    CrawlerDescE* d = (CrawlerDescE*)lbl_8031FAE8;
+    CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
     char* entry = d[((BaddieState*)p2)->inWhirlpoolGroup].p;
     u8 i;
 
-    lbl_803DDA70 = lbl_803DDA70 - timeDelta;
+    gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
 
     for (i = 0; i <= 12; i++)
     {
@@ -636,7 +636,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
     {
         ((BaddieState*)state)->controlFlags |= 1;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E2C08 + ((f32)(s32)(s8)params[0x28] / lbl_803E2C0C);
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E2C08 + ((f32)(s32)(s8)params[0x28] / gCrawlerS8Norm127);
 }
 
 /* Nearby-object scan. Asks fn_8014C11C for up to 40 objects
@@ -647,7 +647,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
 #pragma dont_inline on
 void crawler_checkNearbyActive(int obj, u8* state)
 {
-    u8 count = fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, lbl_803AC4A8);
+    u8 count = fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, gCrawlerNearbyObjectBuffer);
     u8 noMatch = 1;
     if (count >= 1)
     {
@@ -655,7 +655,7 @@ void crawler_checkNearbyActive(int obj, u8* state)
         for (i = 0; i < count; i++)
         {
             u32 objectIndex = (u8)i;
-            int e = lbl_803AC4A8[objectIndex * 2];
+            int e = gCrawlerNearbyObjectBuffer[objectIndex * 2];
             if (((GameObject*)e)->anim.seqId == 0x6a3)
             {
                 u32 flags = *(u32*)((char*)((GameObject*)e)->extra + 0x2dc);
@@ -691,10 +691,10 @@ void fn_8015A52C(s16* obj)
         if (setup != NULL)
         {
             ((GameObject*)setup)->anim.velocityX = lbl_803E2C9C * -mathSinf(
-                (lbl_803E2CA0 * (f32) * obj) / lbl_803E2CA4);
+                (gCrawlerPi * (f32) * obj) / gCrawlerHalfCircleBams);
             ((GameObject*)setup)->anim.velocityY = lbl_803E2CA8;
             ((GameObject*)setup)->anim.velocityZ = lbl_803E2C9C * -mathCosf(
-                (lbl_803E2CA0 * (f32) * obj) / lbl_803E2CA4);
+                (gCrawlerPi * (f32) * obj) / gCrawlerHalfCircleBams);
         }
     }
 }
@@ -737,7 +737,7 @@ void fn_80157B58(int* obj, u8* state)
 
 void snowworm_update(int* obj, u8* state)
 {
-    u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
+    u8* tbl = *(u8**)((char*)gCrawlerReactionTables + *(u16*)(state + 0x338) * 8);
     int i;
 
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
@@ -769,9 +769,9 @@ void snowworm_update(int* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         *(char*)&((BaddieState*)state)->seqEntryIndex += 1;
-        if (((BaddieState*)state)->seqEntryIndex > lbl_803DBD2C[*(u16*)(state + 0x338)])
+        if (((BaddieState*)state)->seqEntryIndex > gSnowwormSeqIndexMax[*(u16*)(state + 0x338)])
         {
-            ((BaddieState*)state)->seqEntryIndex = lbl_803DBD28[*(u16*)(state + 0x338)];
+            ((BaddieState*)state)->seqEntryIndex = gSnowwormSeqIndexReset[*(u16*)(state + 0x338)];
         }
         if (*(u16*)(state + 0x2a0) < 4)
         {
@@ -791,7 +791,7 @@ void snowworm_update(int* obj, u8* state)
         {
             int r = randomGetRange(0, ((BaddieState*)state)->inWhirlpoolGroup);
             s16 a = randomGetRange(-0x8000, 0x7fff);
-            f32 angle = (lbl_803E2CA0 * a) / lbl_803E2CA4;
+            f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
             ((GameObject*)obj)->anim.localPosX = r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.
                 placementData + 8);
             ((GameObject*)obj)->anim.localPosZ = r * mathCosf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.
@@ -944,7 +944,7 @@ void crawler_update(int* obj, u8* state)
         u8* t18;
         u8 pad2[4];
     } CrawlerDescL;
-    CrawlerDescL* d = (CrawlerDescL*)lbl_8031FAE8;
+    CrawlerDescL* d = (CrawlerDescL*)gCrawlerDescriptorTable;
     u8* t9 = d[((BaddieState*)state)->inWhirlpoolGroup].t10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].t18;
     u8* t7 = d[((BaddieState*)state)->inWhirlpoolGroup].tC;
@@ -1012,7 +1012,7 @@ void crawler_update(int* obj, u8* state)
                 {
                     ((BaddieState*)state)->seqEntryIndex = 0;
                 }
-                fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, lbl_803AC4A8);
+                fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, gCrawlerNearbyObjectBuffer);
                 p = t9 + ((BaddieState*)state)->seqEntryIndex * 0xc;
                 if ((((BaddieState*)state)->controlFlags & *(u32*)(p + 4)) == 0
                     && *(u8*)(p + 9) != 0)
@@ -1135,9 +1135,9 @@ void hagabonMK2_update(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-        Baddie_SetMove((int*)obj, state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
+        Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
         {
-            CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
+            CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
             ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
         }
     }
@@ -1174,7 +1174,7 @@ void hagabonMK2_update(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, 0x3e8);
         {
             f32 t = *(f32*)(state + 0x324);
-            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((lbl_803E2C6C * t) / lbl_803E2C70),
+            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / lbl_803E2C70);
         }
     }
@@ -1376,7 +1376,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         u8 pad2[8];
     } CrawlerDesc;
     u8 idx;
-    CrawlerDesc* d = (CrawlerDesc*)lbl_8031FAE8;
+    CrawlerDesc* d = (CrawlerDesc*)gCrawlerDescriptorTable;
     CrawlerSeq16* tbl = d[(idx = ((BaddieState*)state)->inWhirlpoolGroup)].seq;
 
     if (cmd == 0xe)
@@ -1401,7 +1401,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
-            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL)
+            if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
@@ -1413,7 +1413,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                     Sfx_PlayFromObject(obj, 0x22);
                     break;
                 }
-                lbl_803DDA70 = lbl_803E2BAC;
+                gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
@@ -1455,7 +1455,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
-            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL)
+            if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
@@ -1468,7 +1468,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                     break;
                 }
                 Sfx_PlayFromObject(obj, 0x4aa);
-                lbl_803DDA70 = lbl_803E2BAC;
+                gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
@@ -1505,7 +1505,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
-                if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL)
+                if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
@@ -1518,7 +1518,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                         break;
                     }
                     Sfx_PlayFromObject(obj, 0x4aa);
-                    lbl_803DDA70 = lbl_803E2BAC;
+                    gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
@@ -1532,7 +1532,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
             *(f32*)(state + 0x328) = lbl_803E2BB4 * (f32) * (u16*)(state + 0x2ec);
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
-                if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL)
+                if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
@@ -1545,7 +1545,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                         break;
                     }
                     Sfx_PlayFromObject(obj, 0x4aa);
-                    lbl_803DDA70 = lbl_803E2BAC;
+                    gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
@@ -1561,7 +1561,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
     {
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
-            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL)
+            if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
@@ -1574,7 +1574,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                     break;
                 }
                 Sfx_PlayFromObject(obj, 0x4aa);
-                lbl_803DDA70 = lbl_803E2BAC;
+                gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
@@ -1599,7 +1599,7 @@ typedef struct
 
 void crawler_updateC(s16* obj, u8* state)
 {
-    CrawlerDescriptor* d = (CrawlerDescriptor*)lbl_8031FAE8;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
     u8* t0 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl0;
     CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
@@ -1652,15 +1652,15 @@ void crawler_updateC(s16* obj, u8* state)
         u32 flags = ((BaddieState*)state)->controlFlags;
         if ((flags & 0x2000) != 0)
         {
-            int count = fn_8014C11C((int)obj, lbl_803E2BB8, 1, 0x28, lbl_803AC4A8);
-            if (count >= 1 && (f32) * (u16*)((char*)lbl_803AC4A8 + 4) <= lbl_803E2BB8)
+            int count = fn_8014C11C((int)obj, lbl_803E2BB8, 1, 0x28, gCrawlerNearbyObjectBuffer);
+            if (count >= 1 && (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) <= lbl_803E2BB8)
             {
                 f32* dp = dv;
                 int rel;
                 u16 oct;
-                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(lbl_803AC4A8[0] + 0x18);
-                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(lbl_803AC4A8[0] + 0x1c);
-                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(lbl_803AC4A8[0] + 0x20);
+                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x18);
+                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x1c);
+                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x20);
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
@@ -1673,11 +1673,11 @@ void crawler_updateC(s16* obj, u8* state)
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct == 3 || oct == 4)
                 {
-                    scale = (f32) * (u16*)((char*)lbl_803AC4A8 + 4) / lbl_803E2BB8;
+                    scale = (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8;
                 }
                 else if (oct == 0 || oct == 7)
                 {
-                    scale = lbl_803E2BB4 * (lbl_803E2BA4 - (f32) * (u16*)((char*)lbl_803AC4A8 + 4) / lbl_803E2BB8) +
+                    scale = lbl_803E2BB4 * (lbl_803E2BA4 - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
                         lbl_803E2BA4;
                 }
             }
@@ -1768,17 +1768,17 @@ void crawler_updateC(s16* obj, u8* state)
                         {
                             f32 v = *(f32*)(state + 0x310);
                             int j = ((BaddieState*)state)->inWhirlpoolGroup * 0xc;
-                            if (v > *(f32*)((int)lbl_8031FB48 + j))
+                            if (v > *(f32*)((int)gCrawlerSpeedThresholds + j))
                             {
                                 *(u8*)(state + 0x323) = 1;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x2c), lbl_803E2BA8, 0);
                             }
-                            else if (v > *(f32*)((char*)lbl_8031FB48 + j + 4))
+                            else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 4))
                             {
                                 *(u8*)(state + 0x323) = 1;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x20), lbl_803E2BA8, 0);
                             }
-                            else if (v > *(f32*)((char*)lbl_8031FB48 + j + 8))
+                            else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 8))
                             {
                                 *(u8*)(state + 0x323) = 1;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 0x14), lbl_803E2BA8, 0);
@@ -1817,7 +1817,7 @@ void crawler_updateC(s16* obj, u8* state)
 
 void crawler_updateB(s16* obj, u8* state)
 {
-    CrawlerDescriptor* d = (CrawlerDescriptor*)lbl_8031FAE8;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
     u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
     u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
@@ -1865,7 +1865,7 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    count = fn_8014C11C((int)obj, lbl_803E2BE0, 1, 0x28, lbl_803AC4A8);
+    count = fn_8014C11C((int)obj, lbl_803E2BE0, 1, 0x28, gCrawlerNearbyObjectBuffer);
     if (count >= 1)
     {
         if ((*(u8*)(state + 0x33d) & 0x20) == 0 || (((BaddieState*)state)->controlFlags & 0x40000000) != 0)
@@ -1884,9 +1884,9 @@ void crawler_updateB(s16* obj, u8* state)
                 f32* dp = dv;
                 int rel;
                 u16 oct;
-                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(lbl_803AC4A8[0] + 0x18);
-                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(lbl_803AC4A8[0] + 0x1c);
-                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(lbl_803AC4A8[0] + 0x20);
+                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x18);
+                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x1c);
+                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x20);
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
@@ -2082,7 +2082,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
     {
-        CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
+        CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].mode;
         *(f32*)(state + 0x328) = lbl_803E2C38;
         Sfx_StopFromObject((int)obj, 1000);
@@ -2123,9 +2123,9 @@ void hagabonMK2_updateB(s16* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        CrawlerSeq12* sq = (CrawlerSeq12*)lbl_8031FB70;
+        CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-        Baddie_SetMove((int*)obj, state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
+        Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
     }
 
@@ -2188,7 +2188,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, 0x3e8);
         {
             f32 t = *(f32*)(state + 0x324);
-            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((lbl_803E2C6C * t) / lbl_803E2C70),
+            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / lbl_803E2C70);
         }
     }
