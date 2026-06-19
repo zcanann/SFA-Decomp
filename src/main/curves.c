@@ -448,7 +448,7 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
     f32 p0 = values[0];
     f32 k698 = lbl_803DE698;
     f32 a = p3 + (tangent1 + (k660 * p0 + k698 * values[1]));
-    f32 b = (k698 * tangent1 + (lbl_803DE668 * p0 + lbl_803DE664 * values[1])) - p3;
+    f32 b = ((lbl_803DE664 * values[1] + lbl_803DE668 * p0) + k698 * tangent1) - p3;
 
     if (outTangent != NULL)
     {
