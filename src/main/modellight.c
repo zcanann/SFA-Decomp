@@ -892,10 +892,11 @@ void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
         {
             u8 rgba[4];
             u32 color;
-            rgba[0] = light[0xa8] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[1] = light[0xa9] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[2] = light[0xaa] * ((ModelLightStruct*)light)->lightAmount;
-            rgba[3] = light[0xab] * ((ModelLightStruct*)light)->lightAmount;
+            f32 amt;
+            rgba[0] = light[0xa8] * (amt = ((ModelLightStruct*)light)->lightAmount);
+            rgba[1] = light[0xa9] * amt;
+            rgba[2] = light[0xaa] * amt;
+            rgba[3] = light[0xab] * amt;
             color = *(u32*)rgba;
             GXInitLightColor(light + 0x68, &color);
             GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
