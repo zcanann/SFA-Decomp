@@ -61,7 +61,7 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E55F0;
+extern f32 gTotemPuzzleAngleStep;
 extern f32 lbl_803E55F4;
 extern f32 lbl_803E55F8;
 extern f32 lbl_803E55FC;
@@ -102,7 +102,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                         solvedCount++;
                         if (peer == obj)
                         {
-                            state->angleTarget = lbl_803E55F0 * (f32)(state->step + 1);
+                            state->angleTarget = gTotemPuzzleAngleStep * (f32)(state->step + 1);
                             obj->angle = (s16)(s32)state->angleTarget;
                             solvedThisObject = 1;
                         }
@@ -117,7 +117,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                     solvedCount++;
                     if (peer == obj)
                     {
-                        state->angleTarget = lbl_803E55F0 * state->step;
+                        state->angleTarget = gTotemPuzzleAngleStep * state->step;
                         obj->angle = (s16)(s32)state->angleTarget;
                         solvedThisObject = 1;
                     }
@@ -214,10 +214,10 @@ extern f32 timeDelta;
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;
-extern f32 lbl_803E5624;
+extern f32 gTotemPuzzleAngleWrap;
 extern f32 lbl_803E5628;
 
-extern s16 lbl_80327A18[];
+extern s16 gTotemPuzzleStepAngles[];
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);
@@ -312,7 +312,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             {
                 if (--state->stepIndex < 0)
                 {
-                    state->angle += lbl_803E5624;
+                    state->angle += gTotemPuzzleAngleWrap;
                     state->stepIndex = 7;
                 }
             }
@@ -320,7 +320,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
             {
                 if (++state->stepIndex > 7)
                 {
-                    state->angle -= lbl_803E5624;
+                    state->angle -= gTotemPuzzleAngleWrap;
                     state->stepIndex = 0;
                 }
             }
@@ -329,12 +329,12 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     else
     {
         if (((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0) &&
-            (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1))))
+            (state->angle > (gTotemPuzzleAngleStep * (f32)(s32)(state->stepIndex + 1))))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle -= step * timeDelta;
         }
-        else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex))
+        else if (state->angle < (gTotemPuzzleAngleStep * (f32)(s32)state->stepIndex))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle += step * timeDelta;
@@ -381,7 +381,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     state->stepIndex = obj->puzzleIndex;
     if (GameBit_Get(0x639) == 0)
     {
-        state->angle = (f32)(s32)lbl_80327A18[state->stepIndex];
+        state->angle = (f32)(s32)gTotemPuzzleStepAngles[state->stepIndex];
     }
     else
     {

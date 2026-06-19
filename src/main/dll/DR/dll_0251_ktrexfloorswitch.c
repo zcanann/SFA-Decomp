@@ -121,7 +121,7 @@ void ktrexfloorswitch_init(int obj, char* placement)
         KtrexfloorswitchPlacement* pl =
             (KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
         curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-            pl->curveX, pl->baseHeight, pl->curveZ, &lbl_803DC2A0, 1, 0);
+            pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
     }
     if (curve != -1)
     {
@@ -198,7 +198,7 @@ void ktrexfloorswitch_update(int obj)
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
-                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1);
+                &gKTrexFloorSwitchCurveFindResult, 1, GameBit_Get(0x572) >> 1);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
@@ -230,7 +230,7 @@ void ktrexfloorswitch_update(int obj)
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
-                &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1);
+                &gKTrexFloorSwitchCurveFindResult, 1, GameBit_Get(0x572) >> 1);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
@@ -252,7 +252,7 @@ void ktrexfloorswitch_update(int obj)
         player = Obj_GetPlayerObject();
         if (player != 0)
         {
-            PSMTXRotRad(mtx, 0x79, (f32)(lbl_803E6860 * (f64) * (s16*)obj / lbl_803E6868));
+            PSMTXRotRad(mtx, 0x79, (f32)(gKTrexFloorSwitchPi * (f64) * (s16*)obj / gKTrexFloorSwitchBamHalfCircle));
             PSMTXMultVecSR(mtx, vecA, vecA);
             PSMTXMultVecSR(mtx, vecB, vecB);
             cx = ((GameObject*)obj)->anim.localPosX;
@@ -279,10 +279,10 @@ void ktrexfloorswitch_update(int obj)
                 zHi = sumZ;
                 zLo = cz;
             }
-            xLo += lbl_803E6870;
-            xHi -= lbl_803E6870;
-            zLo += lbl_803E6870;
-            zHi -= lbl_803E6870;
+            xLo += gKTrexFloorSwitchTriggerBoxInset;
+            xHi -= gKTrexFloorSwitchTriggerBoxInset;
+            zLo += gKTrexFloorSwitchTriggerBoxInset;
+            zHi -= gKTrexFloorSwitchTriggerBoxInset;
             if (((GameObject*)player)->anim.localPosX >= xLo && ((GameObject*)player)->anim.localPosX <= xHi &&
                 ((GameObject*)player)->anim.localPosZ >= zLo && ((GameObject*)player)->anim.localPosZ <= zHi)
             {
@@ -295,7 +295,7 @@ void ktrexfloorswitch_update(int obj)
         height = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
         if (((GameObject*)obj)->anim.localPosY > height)
         {
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E6874 * timeDelta;
+            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - gKTrexFloorSwitchRiseSpeed * timeDelta;
             if (((GameObject*)obj)->anim.localPosY <= height)
             {
                 ((GameObject*)obj)->anim.localPosY = height;
@@ -312,7 +312,7 @@ void ktrexfloorswitch_update(int obj)
     {
         if (((GameObject*)obj)->anim.localPosY < ((KtrexfloorswitchPlacement*)placement)->baseHeight)
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E6874 * timeDelta + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)obj)->anim.localPosY = gKTrexFloorSwitchRiseSpeed * timeDelta + ((GameObject*)obj)->anim.localPosY;
             if (((GameObject*)obj)->anim.localPosY >= ((KtrexfloorswitchPlacement*)placement)->baseHeight)
             {
                 ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight;
@@ -330,7 +330,7 @@ void ktrexfloorswitch_update(int obj)
         height = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->retractDepth;
         if (((GameObject*)obj)->anim.localPosY > height)
         {
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E6878 * timeDelta;
+            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - gKTrexFloorSwitchRetractSpeed * timeDelta;
             if (((GameObject*)obj)->anim.localPosY < height)
             {
                 ((GameObject*)obj)->anim.localPosY = height;
@@ -375,7 +375,7 @@ void ktrexfloorswitch_update(int obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.localPosY = lbl_803E6878 * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = gKTrexFloorSwitchRetractSpeed * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY > ((KtrexfloorswitchPlacement*)placement)->baseHeight)
         {
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight;
@@ -412,18 +412,18 @@ void ktrexfloorswitch_update(int obj)
         GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit);
         GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, 0);
     }
-    if ((s8)moved != 0 && lbl_803DDD60 == 0)
+    if ((s8)moved != 0 && gKTrexFloorSwitchPrevMoved == 0)
     {
         Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);
     }
-    lbl_803DDD60 = (s8)moved;
+    gKTrexFloorSwitchPrevMoved = (s8)moved;
     if (((GameObject*)obj)->unkF4 == 2)
     {
         if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0)
         {
             if (lbl_803E687C == ((KtrexfloorswitchState*)state)->scrollSpeed)
             {
-                ((KtrexfloorswitchState*)state)->scrollSpeed = lbl_803E6880;
+                ((KtrexfloorswitchState*)state)->scrollSpeed = gKTrexFloorSwitchScrollSpeed;
             }
             scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + tex->textureId);
             if (scroll > 0x200)

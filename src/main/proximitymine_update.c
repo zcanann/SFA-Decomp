@@ -38,12 +38,12 @@ extern f32 lbl_803DC244;
 extern f32 lbl_803DC248;
 extern f32 lbl_803E677C;
 extern f32 lbl_803E6780;
-extern f32 lbl_803E6784;
-extern f32 lbl_803E6788;
+extern f32 gProximityMineMinVelocityY;
+extern f32 gProximityMineGravityAccel;
 extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 extern s32 lbl_803DC230;
 extern f32 lbl_803E6774;
-extern f32 lbl_803E6798;
+extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;
 
 int proximitymine_getExtraSize(void)
@@ -298,9 +298,9 @@ void proximitymine_update(ProximityMineObject* obj)
                 s16toFloat(&state->renderTimer, 10);
                 return;
             }
-            if (obj->velocityY > lbl_803E6784)
+            if (obj->velocityY > gProximityMineMinVelocityY)
             {
-                obj->velocityY += lbl_803E6788 * timeDelta;
+                obj->velocityY += gProximityMineGravityAccel * timeDelta;
             }
             obj->angle += framesThisStep << 10;
             obj->angle2 += framesThisStep * 0x700;
@@ -384,14 +384,14 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
         s16toFloat(&state->resetTimer, def->parameter);
         state->mode = 2;
         Obj_SetActiveModelIndex(obj, 1);
-        obj->height *= lbl_803E6798;
+        obj->height *= gProximityMineHeightScale;
         break;
     case 1:
         s16toFloat(&state->launchTimer, 800);
         s16toFloat(&state->resetTimer, 800);
         obj->angle = def->parameter;
         state->mode = -1;
-        obj->height *= lbl_803E6798;
+        obj->height *= gProximityMineHeightScale;
         break;
     case 2:
         storeZeroToFloatParam(&state->lifespanTimer);

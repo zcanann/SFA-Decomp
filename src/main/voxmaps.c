@@ -144,7 +144,7 @@ void voxmaps_allocRouteWork(void** p)
 
 void voxmaps_updateTimers(void)
 {
-    int* p = lbl_803387B8;
+    int* p = gVoxMapsSlotTimers;
     int i;
     for (i = 0; i < 6; i++)
     {
@@ -165,9 +165,9 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
     out[1] = v;
     v = grid[2] * 10 + 5;
     out[2] = v;
-    if (lbl_803DC8CC != 0)
+    if (gVoxMapsTransformObj != 0)
     {
-        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
+        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], gVoxMapsTransformObj);
     }
 }
 
@@ -179,9 +179,9 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     sx = in[0];
     sy = in[1];
     sz = in[2];
-    if (lbl_803DC8CC != 0)
+    if (gVoxMapsTransformObj != 0)
     {
-        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, lbl_803DC8CC);
+        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, gVoxMapsTransformObj);
     }
     ix = sx;
     iy = sy;
@@ -206,11 +206,11 @@ void voxmaps_worldToGrid(f32* in, s16* out)
 
 void voxmaps_resetLoadedMaps(void)
 {
-    VoxMapSlotOrigin* slotOrigin = lbl_803387A0.slotOrigin;
-    u8* b = lbl_803DC8D0;
-    int* timer = lbl_803387A0.timer;
-    int* blockId = lbl_803387A0.blockId;
-    void** mapBuffer = lbl_803387A0.mapBuffer;
+    VoxMapSlotOrigin* slotOrigin = gVoxMaps.slotOrigin;
+    u8* b = gVoxMapsSlotInUse;
+    int* timer = gVoxMaps.timer;
+    int* blockId = gVoxMaps.blockId;
+    void** mapBuffer = gVoxMaps.mapBuffer;
     int i;
     for (i = 0; i < 6; i++)
     {
@@ -234,44 +234,44 @@ void voxmaps_resetLoadedMaps(void)
 
 void voxmaps_initialise(void)
 {
-    VoxMaps* mgr = &lbl_803387A0;
+    VoxMaps* mgr = &gVoxMaps;
     int* p;
     int i;
 
-    loadAssetFileById((void**)&lbl_803DC8E0, 53);
+    loadAssetFileById((void**)&gVoxMapsMapList, 53);
     i = 0;
-    p = lbl_803DC8E0;
+    p = gVoxMapsMapList;
     while (*p != -1)
     {
         p++;
         i++;
     }
-    lbl_803DC8C8 = i - 1;
-    lbl_803DC8DC = mmAlloc(640, 16, NULL);
+    gVoxMapsMaxMapIndex = i - 1;
+    gVoxMapsScratchBuffer = mmAlloc(640, 16, NULL);
 
     for (i = 0; i < 6; i++)
     {
         mgr->mapBuffer[i] = NULL;
         mgr->blockId[i] = -2;
         mgr->timer[i] = 0x40000000;
-        lbl_803DC8D0[i] = 0;
+        gVoxMapsSlotInUse[i] = 0;
         mgr->slotOrigin[i].gridX = 0;
         mgr->slotOrigin[i].gridZ = 0;
     }
 
-    lbl_803DC8D8 = *(void* volatile*)&lbl_803DC8DC;
-    lbl_803DC8CC = 0;
-    lbl_803DC8C0[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
-    lbl_803DC8C0[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
-    lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
-    lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsScratchBufferPtr = *(void* volatile*)&gVoxMapsScratchBuffer;
+    gVoxMapsTransformObj = 0;
+    gVoxMapsLargeTextures[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsLargeTextures[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsSmallTextures[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsSmallTextures[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
 
 #pragma opt_propagation off
 #pragma opt_strength_reduction off
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
-    VoxMaps* vm = &lbl_803387A0;
+    VoxMaps* vm = &gVoxMaps;
     int gridX;
     int gridY;
     int blockId;
@@ -282,8 +282,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     VoxBlock* block;
     int ay = obj->z * 10 + 5 - lbl_803DCDCC;
 
-    gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
-    gridY = fastFloorf((f32)ay / lbl_803DE6B4);
+    gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / gVoxMapsBlockWorldSize);
+    gridY = fastFloorf((f32)ay / gVoxMapsBlockWorldSize);
 
     vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
     vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
@@ -322,7 +322,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             bestVal = -1;
             for (i = 0; i < 6; i++)
             {
-                if (lbl_803DC8D0[i] == 0 && vm->timer[i] > bestVal)
+                if (gVoxMapsSlotInUse[i] == 0 && vm->timer[i] > bestVal)
                 {
                     bestSlot = i;
                     bestVal = vm->timer[i];
@@ -404,7 +404,7 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
 
     voxmaps_updateActiveMap(&cur);
 
-    st = &lbl_803387E8;
+    st = &gVoxMapsRouteState;
     localX64 = (cur.x - st->originX) & 0x3f;
     tileX = localX64 >> 2;
     localZ64 = (cur.z - st->originZ) & 0x3f;
@@ -674,7 +674,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             n->parentDir = (u8)(u16)a3;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
-            n->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+            n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
         }
         q = state->queue;
         state->queueCount++;
@@ -683,7 +683,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         heapSiftUp(q, state->queueCount);
     }
 
-    vs = &lbl_803387E8;
+    vs = &gVoxMapsRouteState;
     dx = box[0] - vs->originX;
     dz = box[2] - vs->originZ;
     if ((dx >> 6) != 0 || (dz >> 6) != 0)
@@ -896,12 +896,12 @@ searched:
         n->parentDir = (u8)(u16)a3;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
-        n->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+        n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
     }
 
     if (n == NULL)
     {
-        debugPrintf(lbl_802C6184);
+        debugPrintf(sVoxMapsDebugStrings);
         return;
     }
 
@@ -1033,7 +1033,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 dx = node->x - state->tgtX;
                 dz = node->y - state->tgtY;
                 d2 = dx * dx + dz * dz;
-                node->hCost = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
+                node->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)d2));
             }
             {
                 u16 cost = node->hCost + node->gCost;
@@ -1180,7 +1180,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
 
     voxmaps_updateActiveMap(&cur);
 
-    st = &lbl_803387E8;
+    st = &gVoxMapsRouteState;
     voxX6 = (cur.x - st->originX) & 0x3f;
     voxX = voxX6 >> 2;
     voxZ6 = (cur.z - st->originZ) & 0x3f;
@@ -1386,10 +1386,10 @@ int fn_80011EB0(RouteState* state, int count)
                 local[0] = (f32)(lastClear->x * 10 + 5);
                 local[1] = (f32)(lastClear->z * 10 + 5);
                 local[2] = (f32)(lastClear->y * 10 + 5);
-                if (lbl_803DC8CC != 0)
+                if (gVoxMapsTransformObj != 0)
                 {
                     Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2],
-                                                   lbl_803DC8CC);
+                                                   gVoxMapsTransformObj);
                 }
                 state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
                 state->pathPoints[idx * 3 + 1] = (f32)(int)
@@ -1414,9 +1414,9 @@ int fn_80011EB0(RouteState* state, int count)
         local[0] = (f32)(lastClear->x * 10 + 5);
         local[1] = (f32)(lastClear->z * 10 + 5);
         local[2] = (f32)(lastClear->y * 10 + 5);
-        if (lbl_803DC8CC != 0)
+        if (gVoxMapsTransformObj != 0)
         {
-            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], gVoxMapsTransformObj);
         }
         state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
         state->pathPoints[idx * 3 + 1] = (f32)(int)
