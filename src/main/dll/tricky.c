@@ -1068,13 +1068,13 @@ void hudDrawAirMeter(void)
                 break;
             }
             {
-                int base = (0x1a4 - (*(u16*)((char*)m[0xc] + 0xc) >> 1)) + lbl_803DBAEC;
+                int base = (0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1)) + lbl_803DBAEC;
                 drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
                             (f32)(int)(base + ((s8)off + lbl_803DD7F8)),
                             ((TrickyAirMeter*)m)->unk18, 0x100);
             }
             by = *(u16*)((char*)m[0xc] + 0xa) + 0xb4;
-            cy = 0x1a4 - (*(u16*)((char*)m[0xd] + 0xc) >> 1);
+            cy = 0x1a4 - ((u32)*(u16*)((char*)m[0xd] + 0xc) >> 1);
             if (m[2] < 0x9e)
             {
                 m[2] = m[2] + framesThisStep * gTrickyAirMeterFillSpeed;
@@ -1087,7 +1087,7 @@ void hudDrawAirMeter(void)
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
                               ((TrickyAirMeter*)m)->unk18, 0x100, clampedC, 0x1a, 0);
             drawTexture((void*)m[0xd], (f32)(int)(by + m[2]),
-                        (f32)(int)(0x1a4 - (*(u16*)((char*)m[0xd] + 0xc) >> 1)),
+                        (f32)(int)(0x1a4 - ((u32)*(u16*)((char*)m[0xd] + 0xc) >> 1)),
                         ((TrickyAirMeter*)m)->unk18, 0x100);
             break;
         }
