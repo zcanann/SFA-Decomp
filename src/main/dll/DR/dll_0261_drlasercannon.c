@@ -555,10 +555,6 @@ void drlasercannon_update(int obj)
             }
             switch (state->hasFirepipe)
             {
-            case 1:
-                state->hitExcludeType = DR_LASERCANNON_FIREPIPE_OBJECT_TYPE;
-                firepipe_setLinkedUpdateFlag(state->firepipeObject);
-                break;
             case 0:
                 state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
                 if (timerCountDown(&state->reloadTimer) != 0)
@@ -606,6 +602,10 @@ void drlasercannon_update(int obj)
                     }
                     s16toFloat(&state->reloadTimer, (s16)(setup->reloadFrames << 2));
                 }
+                break;
+            case 1:
+                state->hitExcludeType = DR_LASERCANNON_FIREPIPE_OBJECT_TYPE;
+                firepipe_setLinkedUpdateFlag(state->firepipeObject);
                 break;
             }
         }
