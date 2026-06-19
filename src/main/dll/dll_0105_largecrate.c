@@ -67,7 +67,7 @@ extern f32 playerMapOffsetZ;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 lbl_803E39A8;
-extern f32 lbl_803E39AC;
+extern const f32 lbl_803E39AC;
 extern f32 lbl_803E39B8;
 extern f32 lbl_803E39BC;
 extern f32 lbl_803E39C0;
