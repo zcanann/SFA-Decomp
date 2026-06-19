@@ -180,9 +180,9 @@ int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animU
     int i;
     if (q != 0)
     {
-        *(f32*)((char*)q + 0xc) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)((char*)q + 0x10) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)((char*)q + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+        ((DrshacklePlacement*)q)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((DrshacklePlacement*)q)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((DrshacklePlacement*)q)->posZ = ((GameObject*)obj)->anim.localPosZ;
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
