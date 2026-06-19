@@ -1284,7 +1284,7 @@ int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
     extern int* gPlayerInterface; /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
-    if (state->baddie.hitPoints < 1) return 3;
+    if ((s8)state->baddie.hitPoints < 1) return 3;
     if ((s8)state->baddie.moveDone != 0)
     {
         if (state->baddie.controlMode == 12)
