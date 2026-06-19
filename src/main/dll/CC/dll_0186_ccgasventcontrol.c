@@ -137,7 +137,7 @@ void ccgasventcontrol_update(int obj)
         (*gGameUIInterface)->initAirMeter(6000, 0x603);
         ((CcgasventcontrolState*)ex)->airMeter = lbl_803E4624;
         *(u8*)ex = 3;
-        *(u8*)((char*)ex + 0xc) = b;
+        ((CcgasventcontrolState*)ex)->ventCount = b;
         break;
     case 3:
         if (b != 0)
@@ -178,10 +178,10 @@ void ccgasventcontrol_update(int obj)
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                 *(u8*)ex = 4;
             }
-            if (b != *(u8*)((char*)ex + 0xc))
+            if (b != ((CcgasventcontrolState*)ex)->ventCount)
             {
                 Sfx_PlayFromObject(0, 0x409);
-                *(u8*)((char*)ex + 0xc) = b;
+                ((CcgasventcontrolState*)ex)->ventCount = b;
             }
         }
         else
