@@ -76,7 +76,7 @@ extern f32 gIceBaddieF256;
 extern f32 gIceBaddieF75;
 extern f32 gIceBaddieZero;
 extern f32 gIceBaddieF110;
-extern f32 lbl_803E2D18;
+extern f32 gIceBaddieF60_2;
 extern f32 gIceBaddieF15;
 extern f32 gIceBaddieF30;
 extern f32 gIceBaddieHalf;
@@ -110,12 +110,12 @@ extern f32 gIceBaddieF0_17;
 extern f32 gIceBaddieF240;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 lbl_803E2CE8;
+extern f32 gIceBaddieF60;
 extern f32 gIceBaddieF160;
-extern f32 lbl_803E2CF0;
+extern f32 gIceBaddieF0_01;
 extern f32 gIceBaddieF0_006;
 extern f32 gIceBaddieF0_95;
-extern f32 lbl_803E2CFC;
+extern f32 gIceBaddieOne_2;
 extern int* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
@@ -779,13 +779,13 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(
             obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), gIceBaddieZero,
-            gIceBaddieZero, lbl_803E2D18);
+            gIceBaddieZero, gIceBaddieF60_2);
     }
     else
     {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(
             obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), gIceBaddieF15,
-            gIceBaddieF30, lbl_803E2D18);
+            gIceBaddieF30, gIceBaddieF60_2);
     }
     if (((GroundBaddieState*)state)->baddie.unk32E > 0x78 &&
         ((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(
@@ -1196,15 +1196,15 @@ void iceBaddie_hitDetect(int obj)
 void iceBaddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
 {
     f32 fz;
-    state->baddie.speedScale = lbl_803E2CE8;
+    state->baddie.speedScale = gIceBaddieF60;
     *(char*)&state->baddie.inWhirlpoolGroup = state->baddie.unk2A8;
     state->baddie.unk2A8 = gIceBaddieF160;
     state->baddie.unk2E4 = 0x42001;
-    state->baddie.unk308 = lbl_803E2CF0;
+    state->baddie.unk308 = gIceBaddieF0_01;
     state->baddie.unk300 = gIceBaddieF0_006;
     state->baddie.unk304 = gIceBaddieF0_95;
     state->baddie.unk320 = 0;
-    fz = lbl_803E2CFC;
+    fz = gIceBaddieOne_2;
     *(f32*)&state->baddie.eventFlags = fz;
     state->baddie.unk321 = 5;
     state->baddie.unk318 = fz;
