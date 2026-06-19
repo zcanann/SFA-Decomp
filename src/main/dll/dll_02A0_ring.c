@@ -286,8 +286,8 @@ void ring_update(int obj)
                         ((GameObject*)obj)->anim.velocityZ * timeDelta);
             }
             {
-                f32 sixty = lbl_803E70BC;
-                if (state->pullTimer > sixty)
+                f32 sixty;
+                if (state->pullTimer > (sixty = lbl_803E70BC))
                 {
                     ((GameObject*)obj)->anim.rotX =
                         (s16)(((GameObject*)obj)->anim.rotX + lbl_8032B720[state->mode].f10);
