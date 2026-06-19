@@ -100,14 +100,14 @@ void gameUiLoadResources(void)
             ((GameObject*)(*arrA))->anim.localPosX = fa;
             ((GameObject*)(*arrA))->anim.localPosY = fb;
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
-            ((GameObject*)(*arrA))->anim.rotX = (s16)val;
-            *(s8*)(*arrA + 0xad) = (s8)i;
+            ((GameObject*)(*arrA))->anim.rotX = val;
+            *(s8*)(*arrA + 0xad) = i;
             ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), cMenuRingModelRenderFn);
             *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65f), 4, -1, -1, 0);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
-            ((GameObject*)(*arrB))->anim.rotX = (s16)val;
+            ((GameObject*)(*arrB))->anim.rotX = val;
             ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrB), cMenuRingIconRenderFn);
             val += 0x5555;
             arrA++;
@@ -190,7 +190,7 @@ extern s16 aButtonIcon;
 #pragma peephole reset
 void forceAButtonIcon(int x)
 {
-    aButtonIcon = (s16)x;
+    aButtonIcon = x;
 }
 
 extern s16 yButtonItemTextureId;
@@ -208,7 +208,7 @@ void setBButtonIcon(int x)
 {
     if (bButtonIcon == 0)
     {
-        bButtonIcon = (u8)x;
+        bButtonIcon = x;
     }
 }
 
@@ -216,7 +216,7 @@ void setAButtonIcon(int x)
 {
     if (aButtonIcon == 0)
     {
-        aButtonIcon = (s16)x;
+        aButtonIcon = x;
     }
 }
 
@@ -297,7 +297,7 @@ void arwingHudSetVisible(u32 x)
         arwingHudAlpha = 0;
         return;
     }
-    arwingHudAlpha = (s16)0xff;
+    arwingHudAlpha = 0xff;
 }
 
 extern u16 yButtonItem;
@@ -307,8 +307,8 @@ u16 getYButtonItem(s16* out)
     s32 t;
     if (yButtonState != 0)
     {
-        t = (s16)yButtonItem;
-        *out = (s16)t;
+        t = yButtonItem;
+        *out = t;
     }
     return yButtonState;
 }
@@ -333,7 +333,7 @@ extern void mm_free(void* p);
 #pragma dont_inline on
 void GameUI_airMeterShutdown(void)
 {
-    int* m = (int*)airMeter;
+    int* m = airMeter;
     if (m == NULL) return;
     ((TrickyAirMeter*)m)->unk18 = 0;
     switch (m[0x10])
@@ -372,13 +372,13 @@ void GameUI_initAirMeter(int a, int b)
     {
         return;
     }
-    m = (int*)mmAlloc(0x48, 0x19, 0);
+    m = mmAlloc(0x48, 0x19, 0);
     memset(m, 0, 0x48);
     m[0] = 0;
     m[1] = a;
     m[2] = 0;
     m[0xc] = (int)textureLoadAsset(b);
-    ((TrickyAirMeter*)m)->unk2C = (u16)b;
+    ((TrickyAirMeter*)m)->unk2C = b;
     m[0xd] = (int)textureLoadAsset(0x5d4);
     m[0xe] = (int)textureLoadAsset(0x5d3);
     m[0xf] = (int)textureLoadAsset(0x5d2);
@@ -393,7 +393,7 @@ extern u8 lbl_803DB424;
 void showDeathMenu(void)
 {
     MapEventInterface* mapEvents = *gMapEventInterface;
-    int* r = (int*)mapEvents->getCurCharacterState();
+    int* r = mapEvents->getCurCharacterState();
     pauseMenuInit();
     if (*((u8*)r + 9) != 0)
     {
@@ -419,13 +419,13 @@ void GameUI_func15(s16 a, int b, int c)
     lbl_803A9398[0] = (int)t;
     if (t == NULL) return;
     lbl_803A9398[1] = b;
-    ((GameUIWork10*)lbl_803A9398)->unkC = (s16)c;
+    ((GameUIWork10*)lbl_803A9398)->unkC = c;
     ((GameUIWork10*)lbl_803A9398)->unk8 = lbl_803E1E3C;
 }
 
 void GameUI_airMeterRun(int v)
 {
-    int* m = (int*)airMeter;
+    int* m = airMeter;
     int clamped;
     if (m == NULL) return;
     clamped = (v < 0) ? 0 : ((v > m[1]) ? m[1] : v);
@@ -489,7 +489,7 @@ void GameUI_airMeterInitType0(int a, int b, int c)
 {
     int* m;
     if (airMeter != NULL) return;
-    m = (int*)mmAlloc(0x48, 0x19, 0);
+    m = mmAlloc(0x48, 0x19, 0);
     memset(m, 0, 0x48);
     m[0] = 0;
     m[1] = a;
@@ -526,7 +526,7 @@ void GameUI_func14(s16 a, int b, int c)
     if (*(void**)lbl_803A9398 != NULL)
     {
         lbl_803A9398[1] = b;
-        ((GameUIWork10*)lbl_803A9398)->unkC = (s16)c;
+        ((GameUIWork10*)lbl_803A9398)->unkC = c;
         ((GameUIWork10*)lbl_803A9398)->unk8 = lbl_803E1E3C;
     }
 }
@@ -584,20 +584,20 @@ void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, in
 {
     int dx, dy;
     f32 c0, c1;
-    pauseMenuMapFn_8011de20(this, p5, (s16)p4, p7 & 4);
+    pauseMenuMapFn_8011de20(this, p5, p4, p7 & 4);
     dx = (*(u16*)((char*)this + 0xa) << 2) * (u16)p6 / 256;
     dy = (*(u16*)((char*)this + 0xc) << 2) * (u16)p6 / 256;
     fx = lbl_803E1E80 * fx;
     fy = lbl_803E1E80 * fy;
     GXBegin(0x80, 1, 4);
-    GXWGFifo.s16 = (s16)fx;
-    GXWGFifo.s16 = (s16)fy;
+    GXWGFifo.s16 = fx;
+    GXWGFifo.s16 = fy;
     GXWGFifo.s16 = (s16)(p4 << 2);
     c0 = lbl_803E1E3C;
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
-    GXWGFifo.s16 = (s16)fy;
+    GXWGFifo.s16 = fy;
     GXWGFifo.s16 = (s16)(p4 << 2);
     c1 = lbl_803E1E68;
     GXWGFifo.f32 = c1;
@@ -607,7 +607,7 @@ void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, in
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = c1;
     GXWGFifo.f32 = c1;
-    GXWGFifo.s16 = (s16)fx;
+    GXWGFifo.s16 = fx;
     GXWGFifo.s16 = (s16)(fy + (f32)(u32)dy);
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = c0;
@@ -650,7 +650,7 @@ void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c)
 {
     GXColor colA = *(GXColor*)&lbl_803E1E34;
     GXColor colB = *(GXColor*)&lbl_803E1E38;
-    colA.a = (u8)a;
+    colA.a = a;
     GXSetTevColor(1, colA);
     GXLoadPosMtxImm(lbl_803A8830, 0);
     GXLoadNrmMtxImm(lbl_803A8830, 0);
@@ -718,10 +718,10 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     y0 -= 0x3c0;
     x1 -= 0x500;
     y1 -= 0x3c0;
-    x0 = (f32)x0 * lbl_803DBA8C;
-    y0 = (f32)y0 * lbl_803DBA8C;
-    x1 = (f32)x1 * lbl_803DBA8C;
-    y1 = (f32)y1 * lbl_803DBA8C;
+    x0 = x0 * lbl_803DBA8C;
+    y0 = y0 * lbl_803DBA8C;
+    x1 = x1 * lbl_803DBA8C;
+    y1 = y1 * lbl_803DBA8C;
     GXBegin(0x80, 1, 4);
     z = (s16)(lbl_803DBA8A << 2);
     GXWGFifo.s16 = (s16)(x0 + 0x500);
@@ -753,25 +753,25 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
 {
     f32 u1, u0, v0, sy, sx, v1;
     u32 w, h;
-    pauseMenuMapFn_8011de20(this, p5, (s16)p4, 0);
+    pauseMenuMapFn_8011de20(this, p5, p4, 0);
     sx = lbl_803E1E80 * f1;
     sy = lbl_803E1E80 * f2;
     w = *(u16*)((char*)this + 0xa);
     h = *(u16*)((char*)this + 0xc);
     u0 = (f32)(u32)
-    p8 / (f32)w;
+    p8 / w;
     v0 = (f32)(u32)
-    p9 / (f32)h;
-    u1 = (f32)(u32)(p6 + p8) / (f32)w;
-    v1 = (f32)(u32)(p7 + p9) / (f32)h;
+    p9 / h;
+    u1 = (f32)(u32)(p6 + p8) / w;
+    v1 = (f32)(u32)(p7 + p9) / h;
     GXBegin(0x80, 1, 4);
-    GXWGFifo.s16 = (s16)sx;
-    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = sx;
+    GXWGFifo.s16 = sy;
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v0;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)(p6 << 2));
-    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = sy;
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v0;
@@ -780,7 +780,7 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
-    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = sx;
     GXWGFifo.s16 = (s16)(sy + (f32)(u32)(p7 << 2));
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u0;
@@ -791,8 +791,8 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
 {
     f32 ua, ub, va, vb, tu, tv;
     u32 dx, dy;
-    u8 flags = (u8)p9;
-    pauseMenuMapFn_8011de20(this, p5, (s16)p4, flags & 4);
+    u8 flags = p9;
+    pauseMenuMapFn_8011de20(this, p5, p4, flags & 4);
     dx = ((u32)(p7 << 2) * (u16)p6) >> 8;
     dy = ((u32)(p8 << 2) * (u16)p6) >> 8;
     f1 = lbl_803E1E80 * f1;
@@ -820,13 +820,13 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
         vb = tv;
     }
     GXBegin(0x80, 1, 4);
-    GXWGFifo.s16 = (s16)f1;
-    GXWGFifo.s16 = (s16)f2;
+    GXWGFifo.s16 = f1;
+    GXWGFifo.s16 = f2;
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ua;
     GXWGFifo.f32 = va;
     GXWGFifo.s16 = (s16)(f1 + (f32)(u32)dx);
-    GXWGFifo.s16 = (s16)f2;
+    GXWGFifo.s16 = f2;
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ub;
     GXWGFifo.f32 = va;
@@ -835,7 +835,7 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ub;
     GXWGFifo.f32 = vb;
-    GXWGFifo.s16 = (s16)f1;
+    GXWGFifo.s16 = f1;
     GXWGFifo.s16 = (s16)(f2 + (f32)(u32)dy);
     GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ua;
@@ -907,9 +907,9 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)objs[0])->anim.worldPosY = lbl_803DD814;
     ((GameObject*)objs[0])->anim.worldPosZ = lbl_803DD810;
     *(f32*)(objs[0] + 0x8) = f4;
-    ((GameObject*)objs[0])->anim.rotZ = (s16)a;
-    ((GameObject*)objs[0])->anim.rotY = (s16)b;
-    ((GameObject*)objs[0])->anim.rotX = (s16)c;
+    ((GameObject*)objs[0])->anim.rotZ = a;
+    ((GameObject*)objs[0])->anim.rotY = b;
+    ((GameObject*)objs[0])->anim.rotX = c;
     ((GameObject*)objs[1])->anim.localPosX = lbl_803DD818;
     ((GameObject*)objs[1])->anim.localPosY = lbl_803DD814;
     ((GameObject*)objs[1])->anim.localPosZ = lbl_803DD810;
@@ -917,9 +917,9 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)objs[1])->anim.worldPosY = lbl_803DD814;
     ((GameObject*)objs[1])->anim.worldPosZ = lbl_803DD810;
     *(f32*)(objs[1] + 0x8) = f4;
-    ((GameObject*)objs[1])->anim.rotZ = (s16)a;
-    ((GameObject*)objs[1])->anim.rotY = (s16)b;
-    ((GameObject*)objs[1])->anim.rotX = (s16)c;
+    ((GameObject*)objs[1])->anim.rotZ = a;
+    ((GameObject*)objs[1])->anim.rotY = b;
+    ((GameObject*)objs[1])->anim.rotX = c;
 }
 #pragma opt_propagation reset
 
@@ -940,7 +940,7 @@ void fearTestMeterDraw(void)
     int sc0, sc1, sc2, sc3;
     void* texB = *(void**)(hudTextures + 0x180);
     u16 hgt = ((Texture*)texB)->height;
-    int gap = (u8)fearTestMeterOuterHalfWidth - (u8)fearTestMeterInnerHalfWidth;
+    int gap = fearTestMeterOuterHalfWidth - fearTestMeterInnerHalfWidth;
     void* texA = *(void**)(hudTextures + 0x17c);
     int wid = (u8)((Texture*)texA)->width;
     if (lbl_803DD76E != 0)
@@ -963,13 +963,13 @@ void fearTestMeterDraw(void)
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     drawScaledTexture(*(void**)(hudTextures + 0x17c),
-                      (f32)(int)(0x140 - (u8)fearTestMeterOuterHalfWidth - wid), lbl_803E1E9C,
+                      (f32)(int)(0x140 - fearTestMeterOuterHalfWidth - wid), lbl_803E1E9C,
                       (u8)lbl_803DD76C, 0x100, wid, hgt, 1);
     drawScaledTexture(*(void**)(hudTextures + 0x180),
-                      (f32)(int)(0x140 - (u8)fearTestMeterInnerHalfWidth), lbl_803E1E9C,
-                      (u8)lbl_803DD76C, 0x100, (u8)fearTestMeterInnerHalfWidth << 1, hgt, 0);
+                      (f32)(int)(0x140 - fearTestMeterInnerHalfWidth), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, fearTestMeterInnerHalfWidth << 1, hgt, 0);
     drawScaledTexture(*(void**)(hudTextures + 0x184),
-                      (f32)(int)(0x140 - (u8)fearTestMeterOuterHalfWidth), lbl_803E1E9C,
+                      (f32)(int)(0x140 - fearTestMeterOuterHalfWidth), lbl_803E1E9C,
                       (u8)lbl_803DD76C, 0x100, gap, hgt, 0);
     drawScaledTexture(*(void**)(hudTextures + 0x184),
                       (f32)(int)((u8)fearTestMeterInnerHalfWidth + 0x140), lbl_803E1E9C,
@@ -980,13 +980,13 @@ void fearTestMeterDraw(void)
     col.r = 0xff;
     col.g = 0;
     col.b = 0;
-    col.a = (u8)lbl_803DD76C;
+    col.a = lbl_803DD76C;
     {
-        int half = (u8)lbl_803DBAEF;
+        int half = lbl_803DBAEF;
         hudDrawRect((fearTestMeterMarkerX + 0x140) - half,
-                    (u8)lbl_803DBAEE + 0x32,
+                    lbl_803DBAEE + 0x32,
                     half + (fearTestMeterMarkerX + 0x140),
-                    (hgt + 0x32) - (u8)lbl_803DBAEE,
+                    (hgt + 0x32) - lbl_803DBAEE,
                     col);
     }
     GXSetScissor(sc0, sc1, sc2, sc3);
@@ -1003,7 +1003,7 @@ void hudDrawAirMeter(void)
 {
     int sc0, sc1, sc2, sc3;
     int* player = Obj_GetPlayerObject();
-    int* m = (int*)airMeter;
+    int* m = airMeter;
     AirMeterFlags* p = (AirMeterFlags*)airMeter;
     s16 alpha;
     s16 clamped;
@@ -1015,7 +1015,7 @@ void hudDrawAirMeter(void)
     {
         alpha = (s16)(alpha - (framesThisStep << 2));
         clamped = (alpha < 0) ? 0 : alpha;
-        ((TrickyAirMeter*)m)->unk18 = (u8)clamped;
+        ((TrickyAirMeter*)m)->unk18 = clamped;
         if (((TrickyAirMeter*)m)->unk18 == 0 && p->bit7)
         {
             p->bit7 = 0;
@@ -1027,7 +1027,7 @@ void hudDrawAirMeter(void)
     {
         alpha = (s16)(alpha + (framesThisStep << 2));
         clamped = (alpha > 0xff) ? 0xff : alpha;
-        ((TrickyAirMeter*)m)->unk18 = (u8)clamped;
+        ((TrickyAirMeter*)m)->unk18 = clamped;
     }
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
@@ -1039,7 +1039,7 @@ void hudDrawAirMeter(void)
             int i;
             for (i = 0; i < m[1]; i++)
             {
-                void* tex = (i < m[3]) ? (void*)m[0xb] : (void*)m[0xc];
+                void* tex = (i < m[3]) ? m[0xb] : (void*)m[0xc];
                 drawTexture(tex, (f32)(int)x, (f32)(u32)(0x1a4 - m[5]),
                             ((TrickyAirMeter*)m)->unk18, 0x100);
                 x += m[4];
@@ -1078,7 +1078,7 @@ void hudDrawAirMeter(void)
             }
             clampedC = (m[3] < 0) ? 0 : ((m[3] > m[2]) ? m[2] : m[3]);
             m[3] = clampedC;
-            clampedC = (s16)clampedC;
+            clampedC = clampedC;
             drawScaledTexture((void*)m[0xf], (f32)(int)(by + clampedC), (f32)(int)cy,
                               ((TrickyAirMeter*)m)->unk18, 0x100, m[2] - clampedC, 0x1a, 0);
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
@@ -1315,8 +1315,8 @@ void hudDrawFn_80121440(void)
     int magicId;
     int i;
     f32 op;
-    player = (int*)Obj_GetPlayerObject();
-    tricky = (int*)getTrickyObject();
+    player = Obj_GetPlayerObject();
+    tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (((TrickyHud*)base)->magicCur >= lbl_803E1E3C || ((TrickyHud*)base)->scarabCur >= lbl_803E1E3C ||
         ((TrickyHud*)base)->keyCur >= lbl_803E1E3C || cMenuFadeCounter != 0)
@@ -1333,7 +1333,7 @@ void hudDrawFn_80121440(void)
         lbl_803DD844 = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
         if (lbl_803DD844 < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
     }
-    alpha = (int)lbl_803DD83C;
+    alpha = lbl_803DD83C;
     if ((u8)alpha != 0)
     {
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
@@ -1350,7 +1350,7 @@ void hudDrawFn_80121440(void)
                 if ((int)(u8)i < (b74 >> 2)) sel = 0x16;
                 else if ((int)(u8)i > (b74 >> 2)) sel = 0x12;
                 else sel = (b74 & 3) + 0x12;
-                drawTexture(*(void**)(base + 0x1c0 + (u8)sel * 4),
+                drawTexture(*(void**)(base + 0x1c0 + sel * 4),
                             (f32)(int)((u8)i * 0x21 + 0x1e), lbl_803E1FAC, alpha, 0x100);
             }
         }
@@ -1366,7 +1366,7 @@ void hudDrawFn_80121440(void)
     else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
     {
-        drawTexture(*(void**)(base + 0x1c0 + (u8)magicId * 4),
+        drawTexture(*(void**)(base + 0x1c0 + magicId * 4),
                     (f32)(int)(s16)(krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
     if ((u8)krazoa != 0)
@@ -1397,7 +1397,7 @@ void hudDrawFn_80121440(void)
             {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(*(void**)(base + 0x1c0 + (u8)sel * 4), (f32)(int)(yo + 0x40),
+                drawTexture(*(void**)(base + 0x1c0 + sel * 4), (f32)(int)(yo + 0x40),
                             lbl_803E1FB4, alpha, 0x100);
             }
         }
@@ -1485,8 +1485,8 @@ extern int sprintf(char*, ...);
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
     _c.a = hudElementOpacity * gViewFinderFadeLevel; \
-    _a = (s16)getAngle(gA1, gA2); \
-    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
+    _a = getAngle(gA1, gA2); \
+    _r = lbl_803E1EC8 * _a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
     _sn = mathCosf(_r); \
     _c2 = _c; \
@@ -1502,8 +1502,8 @@ extern int sprintf(char*, ...);
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
     _c.a = hudElementOpacity * gViewFinderFadeLevel; \
-    _a = (s16)getAngle(gA1, gA2); \
-    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
+    _a = getAngle(gA1, gA2); \
+    _r = lbl_803E1EC8 * _a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
     _sn = mathCosf(_r); \
     _c2 = _c; \
@@ -1558,8 +1558,8 @@ void drawViewFinderHud(void)
             f32 _r, _cs, _sn, _cx, _sx;
             *(int*)&_c = lbl_803E1E2C;
             _c.a = hudElementOpacity * gViewFinderFadeLevel;
-            _a = (s16)getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
-            _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+            _a = getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
+            _r = lbl_803E1EC8 * _a / lbl_803E1E94;
             _cs = mathSinf(_r);
             _sn = mathCosf(_r);
             _c2 = _c;
@@ -1575,8 +1575,8 @@ void drawViewFinderHud(void)
             f32 _r, _cs, _sn, _cx, _sx;
             *(int*)&_c = lbl_803E1E2C;
             _c.a = hudElementOpacity * gViewFinderFadeLevel;
-            _a = (s16)getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
-            _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+            _a = getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
+            _r = lbl_803E1EC8 * _a / lbl_803E1E94;
             _cs = mathSinf(_r);
             _sn = mathCosf(_r);
             _c2 = _c;
@@ -1631,8 +1631,8 @@ void drawViewFinderHud(void)
                     *(int*)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     fdx = f31 - f27;
-                    _a = (s16)getAngle(fdx, f15 - f16);
-                    _r = kEC8 * (f32)_a / kE94;
+                    _a = getAngle(fdx, f15 - f16);
+                    _r = kEC8 * _a / kE94;
                     _cs = mathSinf(_r);
                     _sn = mathCosf(_r);
                     _c2 = _c;
@@ -1654,8 +1654,8 @@ void drawViewFinderHud(void)
                     f15 = (f32)(lbl_803DD7F4 + (kF40 + _sn));
                     *(int*)&_c = lbl_803E1E2C;
                     _c.a = alpha;
-                    _a = (s16)getAngle(fdx, f16 - f15);
-                    _r = kEC8 * (f32)_a / kE94;
+                    _a = getAngle(fdx, f16 - f15);
+                    _r = kEC8 * _a / kE94;
                     _cs = mathSinf(_r);
                     _sn = mathCosf(_r);
                     _c2 = _c;
@@ -1677,8 +1677,8 @@ void drawViewFinderHud(void)
                     f15 = lbl_803DD7F4 + (kF48 + _sn);
                     *(int*)&_c = lbl_803E1E2C;
                     _c.a = alpha;
-                    _a = (s16)getAngle(fdx, f16 - f15);
-                    _r = kEC8 * (f32)_a / kE94;
+                    _a = getAngle(fdx, f16 - f15);
+                    _r = kEC8 * _a / kE94;
                     _cs = mathSinf(_r);
                     _sn = mathCosf(_r);
                     _c2 = _c;
@@ -1698,9 +1698,9 @@ void drawViewFinderHud(void)
             t = (int)((xc - lbl_803E1F60) * lbl_803E1F68);
             r29v = (t < 0) ? 0 : ((t > 0xc8) ? 0xc8 : t);
             r5v = (int)((f32)lbl_803DD7EC / lbl_803E1F70);
-            num = (f32)lbl_803DD7EC - (f32)r5v * lbl_803E1F70;
-            f19 = xc * (lbl_803E1F70 / (f32)lbl_803DBAE8);
-            f18 = (f32)(lbl_803E1F78 + (num / (f32)lbl_803DBAE8) * xc);
+            num = lbl_803DD7EC - r5v * lbl_803E1F70;
+            f19 = xc * (lbl_803E1F70 / lbl_803DBAE8);
+            f18 = (f32)(lbl_803E1F78 + (num / lbl_803DBAE8) * xc);
             r28v = -r5v;
             while (f18 > lbl_803E1E3C)
             {
@@ -1724,12 +1724,12 @@ void drawViewFinderHud(void)
                     q = r28v / lbl_803E1EF8;
                     if (q != (int)q)
                     {
-                        r27v = (u8)r30v;
+                        r27v = r30v;
                         r25v = 7;
                     }
                     else
                     {
-                        r27v = (u8)r29v;
+                        r27v = r29v;
                         r25v = 0xa;
                     }
                 }
@@ -1782,8 +1782,8 @@ void drawViewFinderHud(void)
                     *(int*)&_c = lbl_803E1E2C;
                     _c.a = alpha;
                     fx = lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78;
-                    _a = (s16)getAngle((f32)fx - f18, f16 - f15);
-                    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+                    _a = getAngle((f32)fx - f18, f16 - f15);
+                    _r = lbl_803E1EC8 * _a / lbl_803E1E94;
                     _cs = mathSinf(_r);
                     _sn = mathCosf(_r);
                     _c2 = _c;
@@ -1797,7 +1797,7 @@ void drawViewFinderHud(void)
         {
             f32 farP = Camera_GetFarPlane();
             f32 nearP = Camera_GetNearPlane();
-            int depth = depthReadRequestPoll(0x140, 0xf0, (void*)drawViewFinderHud);
+            int depth = depthReadRequestPoll(0x140, 0xf0, drawViewFinderHud);
             f32 dist = (-farP * nearP) / (((f32)(u32)
             depth / lbl_803E1F94 - lbl_803E1E68
             )

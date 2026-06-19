@@ -212,7 +212,7 @@ void FUN_80144e40(int param_1, int param_2)
     {
         *(float*)(param_2 + 0x720) = lbl_803E306C;
     }
-    scratch = ObjHits_GetPriorityHit(param_1, hit, (int*)0x0, (uint*)0x0);
+    scratch = ObjHits_GetPriorityHit(param_1, hit, 0x0, 0x0);
     if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
         (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
     {
@@ -477,7 +477,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     for (commandCount = (uint)((TrickyState*)state)->unk798; 0 < commandCount;
          commandCount = commandCount - 1)
     {
-        if (*(uint*)(commandEntry + 0x748) == (uint)targetObj)
+        if (*(uint*)(commandEntry + 0x748) == targetObj)
         {
             *(u8*)((state + 0x74e) + commandIndex * 8) = 3;
             return;
@@ -486,8 +486,8 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
         commandIndex = commandIndex + 1;
     }
     *(int*)((state + 0x748) + (uint)((TrickyState*)state)->unk798 * 8) = targetObj;
-    *(char*)((state + 0x74c) + (uint)((TrickyState*)state)->unk798 * 8) = (s8)commandKind;
-    *(char*)((state + 0x74d) + (uint)((TrickyState*)state)->unk798 * 8) = (s8)commandType;
+    *(char*)((state + 0x74c) + (uint)((TrickyState*)state)->unk798 * 8) = commandKind;
+    *(char*)((state + 0x74d) + (uint)((TrickyState*)state)->unk798 * 8) = commandType;
     *(u8*)((state + 0x74e) + (uint)((TrickyState*)state)->unk798 * 8) = 3;
     ((TrickyState*)state)->unk798++;
     return;
@@ -547,7 +547,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             for (i = 0; i < *(byte*)(state + 0x798); i++)
             {
-                ref = state + (uint)i * 8;
+                ref = state + i * 8;
                 cmdByte = *(char*)(ref + 0x74c);
                 if (cmdByte == '\0')
                 {
@@ -891,7 +891,7 @@ extern void fn_8003A230(int obj, void* p, f32 f);
     else if (used_[2] == -1) { slot_ = 2; } \
     else if (used_[3] == -1) { slot_ = 3; } \
     else { slot_ = -1; } \
-    ((TrickySlotBits *)((state) + 0x7bc))->slotC = (u8)slot_; \
+    ((TrickySlotBits *)((state) + 0x7bc))->slotC = slot_; \
     *(int *)((state) + 0x7b8) = Obj_SetupObject(setup_, 4, -1, -1, *(int *)((obj) + 0x30)); \
     ObjLink_AttachChild((obj), *(int *)((state) + 0x7b8), ((TrickySlotBits *)((state) + 0x7bc))->slotC); \
     z = lbl_803E23DC; \
@@ -927,7 +927,7 @@ void Tricky_update(int obj)
     TrickyCmdQuery cmdQuery;
     TrickySfxPair pair;
 
-    base = (char*)lbl_8031D2E8;
+    base = lbl_8031D2E8;
     state = *(int*)&((GameObject*)obj)->extra;
     found = 0;
     cmdQuery = *(TrickyCmdQuery*)lbl_802C21C8;
@@ -1241,19 +1241,19 @@ void Tricky_update(int obj)
                     switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
                     {
                     case 0x1c9:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)fn_801B17F4;
+                        *(void**)&((TrickyState*)state)->unk724 = fn_801B17F4;
                         break;
                     case 0x718:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)fn_801B6D40;
+                        *(void**)&((TrickyState*)state)->unk724 = fn_801B6D40;
                         break;
                     case 0x551:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)fn_801FD4A8;
+                        *(void**)&((TrickyState*)state)->unk724 = fn_801FD4A8;
                         break;
                     case 0x191:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)fn_801B0784;
+                        *(void**)&((TrickyState*)state)->unk724 = fn_801B0784;
                         break;
                     case 0x470:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)drchimmey_countdownCallback;
+                        *(void**)&((TrickyState*)state)->unk724 = drchimmey_countdownCallback;
                         break;
                     case 0x102:
                     case 0x194:
@@ -1263,10 +1263,10 @@ void Tricky_update(int obj)
                         *(void**)&((TrickyState*)state)->unk724 = 0;
                         break;
                     case 0x3c:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)fn_801DA9CC;
+                        *(void**)&((TrickyState*)state)->unk724 = fn_801DA9CC;
                         break;
                     case 0x50f:
-                        *(void**)&((TrickyState*)state)->unk724 = (void*)wcbeacon_aButtonCallback;
+                        *(void**)&((TrickyState*)state)->unk724 = wcbeacon_aButtonCallback;
                         break;
                     default:
                         TRICKY_RESET_COMMAND(state);
@@ -1666,7 +1666,7 @@ void Tricky_init(int obj)
     {
         GameBit_Set(0x3f8, 1);
     }
-    ((GameObject*)obj)->animEventCallback = (void*)tricky_SeqFn;
+    ((GameObject*)obj)->animEventCallback = tricky_SeqFn;
     ObjGroup_AddObject(obj, 1);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[0]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[1]);
@@ -1687,7 +1687,7 @@ void Tricky_init(int obj)
     ((TrickyState*)state)->homePosY = ((GameObject*)obj)->anim.worldPosY;
     ((TrickyState*)state)->homePosZ = ((GameObject*)obj)->anim.worldPosZ;
     modelVariant = *(u8*)(((TrickyState*)state)->progressPtr + 2) / 10;
-    modelVariant = (u8)modelVariant;
+    modelVariant = modelVariant;
     ((TrickyState*)state)->modelVariant = modelVariant;
     model = Obj_GetActiveModel(obj);
     *(u8*)(*(int*)(model + 0x34) + 8) = ((TrickyState*)state)->modelVariant;
@@ -2379,7 +2379,7 @@ void baddieInstantiateWeapon(int obj, int state)
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
             child = ((GameObject*)obj)->childObjs[0];
-            ObjLink_DetachChild(obj, (int)child);
+            ObjLink_DetachChild(obj, child);
             Obj_FreeObject((int)child);
         }
         if (Obj_IsLoadingLocked() != 0)
@@ -2390,7 +2390,7 @@ void baddieInstantiateWeapon(int obj, int state)
                 *(u8*)(setup + 5) = *(u8*)(setup + 5) | (((BaddieInstantiateWeaponPlacement*)parentSetup)->unk5 & 0x18);
                 child = (void*)Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                *(int*)&((GameObject*)obj)->anim.parent);
-                ObjLink_AttachChild(obj, (int)child, 0);
+                ObjLink_AttachChild(obj, child, 0);
                 *(s16*)&((TrickyState*)state)->unk2B4 = *(s16*)(state + 0x2b6);
             }
         }
@@ -2787,7 +2787,7 @@ void Tricky_hitDetect(int obj)
     else
     {
         firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
-        if ((firepipeObj != (void*)0) &&
+        if ((firepipeObj != 0) &&
             (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)firepipeObj + 0x18)) < lbl_803E2540))
         {
             ((TrickyStatusFlags58*)&((TrickyState*)state)->statusFlags)->heightTracking = 1;
@@ -2868,7 +2868,7 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
     packed = FUN_8028683c();
     target = (int*)((ulonglong)packed >> 0x20);
-    player = (int)packed;
+    player = packed;
     local_a0[0] = '\0';
     blocked = '\0';
     if (*(int*)(player + 0x29c) != 0)
@@ -2934,7 +2934,7 @@ int trickyFn_801451d8(int obj, int state)
     u8 pathBytes[16];
     u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)(obj + 0x18), 0);
 
-    pathByte = (u8)pathByte;
+    pathByte = pathByte;
     pathBytes[0] = pathByte;
     if (pathByte == 0)
     {
