@@ -177,7 +177,7 @@ int tumbleweed_func0E(int obj)
 void tumbleweed_render2(int* obj, int p2)
 {
     int* state = ((GameObject*)obj)->extra;
-    *(u8*)((char*)state + 0x278) = 6;
+    ((TumbleweedState*)state)->mode = 6;
     *(int*)((char*)state + 0x290) = p2;
     *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
     ObjHits_DisableObject((u32)obj);
@@ -186,11 +186,11 @@ void tumbleweed_render2(int* obj, int p2)
 void tumbleweed_modelMtxFn(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    if (*(u8*)(state + 0x278) == 1)
+    if (((TumbleweedState*)state)->mode == 1)
     {
         ObjHits_EnableObject((u32)obj);
-        *(u8*)(state + 0x278) = 2;
-        *(u8*)(state + 0x27a) |= 3;
+        ((TumbleweedState*)state)->mode = 2;
+        ((TumbleweedState*)state)->effectFlags |= 3;
         if (((GameObject*)obj)->anim.seqId == 0x4c1)
         {
             *(f32*)(state + 0x2a0) = lbl_803E2F9C;
