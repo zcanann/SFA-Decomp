@@ -229,32 +229,30 @@ void fn_8014E1DC(int obj, HagabonState* state)
     ((GameObject*)obj)->anim.velocityY *= damp;
     ((GameObject*)obj)->anim.velocityZ *= damp;
 
-    maxSpeed = lbl_803E2634;
-    if (((GameObject*)obj)->anim.velocityX > maxSpeed)
+    if (((GameObject*)obj)->anim.velocityX > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityX = maxSpeed;
+        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2634;
     }
-    if (((GameObject*)obj)->anim.velocityY > maxSpeed)
+    if (((GameObject*)obj)->anim.velocityY > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityY = maxSpeed;
+        ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E2634;
     }
-    if (((GameObject*)obj)->anim.velocityZ > maxSpeed)
+    if (((GameObject*)obj)->anim.velocityZ > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityZ = maxSpeed;
+        ((GameObject*)obj)->anim.velocityZ = *(f32*)&lbl_803E2634;
     }
 
-    minSpeed = lbl_803E2638;
-    if (((GameObject*)obj)->anim.velocityX < minSpeed)
+    if (((GameObject*)obj)->anim.velocityX < lbl_803E2638)
     {
-        ((GameObject*)obj)->anim.velocityX = minSpeed;
+        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2638;
     }
-    if (((GameObject*)obj)->anim.velocityY < minSpeed)
+    if (((GameObject*)obj)->anim.velocityY < lbl_803E2638)
     {
-        ((GameObject*)obj)->anim.velocityY = minSpeed;
+        ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E2638;
     }
-    if (((GameObject*)obj)->anim.velocityZ < minSpeed)
+    if (((GameObject*)obj)->anim.velocityZ < lbl_803E2638)
     {
-        ((GameObject*)obj)->anim.velocityZ = minSpeed;
+        ((GameObject*)obj)->anim.velocityZ = *(f32*)&lbl_803E2638;
     }
 
     objMove(obj,
