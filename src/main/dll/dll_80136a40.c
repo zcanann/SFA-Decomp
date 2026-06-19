@@ -240,11 +240,11 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         f32 dx, dy, dz;
     } stk;
     u8 i = 0x14;
-    u32 flags = *(u32*)(b + 0x54);
+    u32 flags = ((TrickyImpressState*)b)->unk54;
     if ((flags & 0x1800) == 0) return;
-    stk.dx = *(f32*)(b + 0x408) - *(f32*)(a + 0x18);
-    stk.dy = *(f32*)(b + 0x40c) - *(f32*)(a + 0x1c);
-    stk.dz = *(f32*)(b + 0x410) - *(f32*)(a + 0x20);
+    stk.dx = ((TrickyImpressState*)b)->unk408 - *(f32*)(a + 0x18);
+    stk.dy = ((TrickyImpressState*)b)->unk40C - *(f32*)(a + 0x1c);
+    stk.dz = ((TrickyImpressState*)b)->unk410 - *(f32*)(a + 0x20);
     stk.fk = lbl_803E23E8;
     stk.hx = *(s16*)(a + 0);
     stk.hy = *(s16*)(a + 2);
@@ -255,7 +255,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         {
             (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
         }
-        *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000LL;
+        ((TrickyImpressState*)b)->unk54 = ((TrickyImpressState*)b)->unk54 & ~0x1000LL;
     }
 }
 
@@ -806,36 +806,36 @@ void objAnimFreeChildren(int a, int b, void** c)
     v0 = *(void**)(b + 0x7a8);
     if (v0 != NULL)
     {
-        buf[*(u8*)(b + 0x7bc) >> 6 & 3] = 1;
+        buf[((TrickyImpressState*)b)->unk7BC >> 6 & 3] = 1;
     }
     v1 = *(void**)(b + 0x7b0);
     if (v1 != NULL)
     {
-        buf[*(u8*)(b + 0x7bc) >> 4 & 3] = 1;
+        buf[((TrickyImpressState*)b)->unk7BC >> 4 & 3] = 1;
     }
     v2 = *(void**)(b + 0x7b8);
     if (v2 != NULL)
     {
-        buf[*(u8*)(b + 0x7bc) >> 2 & 3] = 1;
+        buf[((TrickyImpressState*)b)->unk7BC >> 2 & 3] = 1;
     }
     if (buf[0] == -1)
     {
         if (v0 != NULL)
         {
             ObjLink_DetachChild(a, (int)v0);
-            ObjLink_AttachChild(a, *(int*)(b + 0x7a8), 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7A8, 0);
             ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
         else if (v1 != NULL)
         {
             ObjLink_DetachChild(a, (int)v1);
-            ObjLink_AttachChild(a, *(int*)(b + 0x7b0), 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B0, 0);
             ((AnimSlots*)(b + 0x7bc))->s1 = 0;
         }
         else if (v2 != NULL)
         {
             ObjLink_DetachChild(a, (int)v2);
-            ObjLink_AttachChild(a, *(int*)(b + 0x7b8), 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B8, 0);
             ((AnimSlots*)(b + 0x7bc))->s2 = 0;
         }
     }
