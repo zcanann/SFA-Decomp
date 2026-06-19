@@ -302,7 +302,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
     for (i = 0; i < 8; i++)
     {
         p = lbl_8039A828[i];
-        if (p != NULL && cloudId == *(int*)((char*)p + 0x13f0))
+        if (p != NULL && cloudId == ((NewCloud*)p)->cloudId)
         {
             break;
         }
@@ -316,14 +316,14 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
     {
         return;
     }
-    if (cloudId != *(int*)((char*)p + 0x13f0))
+    if (cloudId != ((NewCloud*)p)->cloudId)
     {
         debugPrintf(sSnowKillSnowCloudInvalidCloudId, cloudId);
         return;
     }
-    *(int*)((char*)p + 0x13f8) = 1;
+    ((NewCloud*)p)->unk13F8 = 1;
     p = lbl_8039A828[i];
-    *(f32*)((char*)p + 0x1430) =
+    ((NewCloud*)p)->unk1430 =
         -((f32)flag / (f32) * (int*)((char*)p + 0x13fc));
 }
 
