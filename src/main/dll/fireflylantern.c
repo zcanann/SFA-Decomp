@@ -97,7 +97,7 @@ void fn_80154870(int obj, int* state)
         *(f32*)(state + 0xc9) = lbl_803E2990;
     }
     ((GameObject*)obj)->anim.rotY =
-        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8*)((u8*)state + 0x33a)) -
+        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
             (f32)((GameObject*)obj)->anim.rotY);
     if (flag == 0)
     {
@@ -121,7 +121,7 @@ void fn_80154870(int obj, int* state)
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
                 {
                     *(f32*)(state + 0xca) = lbl_803E29E0;
-                    *(u8*)((u8*)state + 0x33b) += 1;
+                    ((BaddieState*)state)->inWhirlpoolGroup += 1;
                 }
                 else
                 {
@@ -158,9 +158,9 @@ void fn_80154870(int obj, int* state)
             }
         }
     }
-    *(u8*)((u8*)state + 0x33a) += 1;
+    ((BaddieState*)state)->seqEntryIndex += 1;
     ((GameObject*)obj)->anim.rotY =
-    (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8*)((u8*)state + 0x33a)) +
+    (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
         (f32)((GameObject*)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
@@ -177,7 +177,7 @@ void fn_80154C24(int obj, int state)
     ((BaddieState*)state)->unk304 = lbl_803E29EC;
     ((BaddieState*)state)->unk320 = 0;
     fval = lbl_803E29F0;
-    *(float*)(state + 0x314) = lbl_803E29F0;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E29F0;
     ((BaddieState*)state)->unk321 = 1;
     ((BaddieState*)state)->unk318 = lbl_803E2994;
     ((BaddieState*)state)->unk322 = 0;
@@ -187,8 +187,8 @@ void fn_80154C24(int obj, int state)
     *(float*)(state + 0x328) = fval;
     *(float*)(state + 0x32c) = ((GameObject*)obj)->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
-    *(u8*)(state + 0x33a) = randVal;
-    *(u8*)(state + 0x33b) = 0;
+    ((BaddieState*)state)->seqEntryIndex = randVal;
+    ((BaddieState*)state)->inWhirlpoolGroup = 0;
     *(float*)(state + 0x330) = lbl_803E29F4;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
