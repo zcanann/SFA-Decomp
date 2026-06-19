@@ -19,9 +19,10 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
-extern void* Obj_GetPlayerObject(void);
+
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void envFxActFn_800887f8(u8 value);

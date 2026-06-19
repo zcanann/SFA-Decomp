@@ -24,6 +24,8 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -61,9 +63,9 @@ extern void objRenderFn_8003b8f4(int* obj);
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
 extern int getAngle(float y, float x);
-extern void vecRotateZXY(void* rot, void* vec);
+
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;
@@ -148,9 +150,9 @@ enum
 void SB_ShipGun_update(int obj)
 {
     extern f32 Vec_distance(f32* a, f32* b);
-    extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
-    extern void* Obj_AllocObjectSetup(int size, int b);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
+
+
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern void* Obj_GetPlayerObject(void);
     extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);

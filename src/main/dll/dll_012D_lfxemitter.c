@@ -6,11 +6,12 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/mm.h"
+#include "main/dll/objfsa.h"
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
 extern u32 FUN_80017748();
 extern void Obj_FreeObject(int obj);
-extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
+
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 extern u8 framesThisStep;

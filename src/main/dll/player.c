@@ -6,6 +6,7 @@
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
+#include "main/dll/DIM/dll_802B9780_shared.h"
 
 void fn_802960E4(void)
 {
@@ -4093,7 +4094,7 @@ extern f32 lbl_803E8098;
 extern f32 lbl_803E809C;
 extern f32 lbl_803E80A0;
 extern char sNotOnGroundFailureMessage[];
-extern void fn_80137948(char* fmt, ...);
+
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
 
 s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
@@ -6845,8 +6846,8 @@ int fn_802A2EE0(int obj, int state, f32 fv)
     return 0;
 }
 
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+
+
 extern f32 lbl_803E8104;
 extern f32 lbl_803E8108;
 extern f32 lbl_803E810C;

@@ -20,6 +20,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/objhits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -74,7 +75,7 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern u32 FUN_80006824();
 extern u32 FUN_80006ab8();
 extern u64 FUN_80006ac4();
-extern int randomGetRange(int lo, int hi);
+
 extern int FUN_80017a98();
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
@@ -585,7 +586,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2);
 
 int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern u8 Obj_IsLoadingLocked(void);
+
     extern void*mapRomListFindItem(int, int, int, int, int);
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);

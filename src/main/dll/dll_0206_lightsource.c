@@ -18,6 +18,7 @@
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 
 /* Light-glow object: the bytes named here (0x4C, 0x2F8) live in the
    shared ModelLightStruct. */
@@ -99,9 +100,9 @@ typedef struct LightSourceFlagByte
 void lightsource_update(int obj)
 {
 
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
-    extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+
+
+
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     extern f32 timeDelta;
     extern f32 lbl_803E5E14;

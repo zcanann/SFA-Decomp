@@ -29,6 +29,8 @@
 #include "main/dll/tricky.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/rcp_dolphin.h"
+#include "main/lightmap.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
 typedef struct GameUIWork10
 {
@@ -1227,7 +1229,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
 }
 
 extern int objIsCurModelNotZero(void* obj);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern int fn_802972A8(int* player);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
@@ -1474,7 +1476,7 @@ extern u16 gViewFinderCamAngle;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 extern void gameTextSetColor(int, int, int, int);
-extern int sprintf(char* s, const char* format, ...);
+
 
 #define VFTICK(gA1, gA2, A, B, C) do { \
     GXColor _c2; \

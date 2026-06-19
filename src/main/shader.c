@@ -17,6 +17,7 @@
 #include "main/dll/savegame.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_dolphin.h"
+#include "dolphin/os/OSCache.h"
 extern float ABS();
 extern u32 FUN_8000693c();
 extern u32 FUN_80006958();
@@ -889,7 +890,7 @@ extern int textureLoad(int id, int param);
 extern void MapBlock_initHits(void* blk, int blockId);
 extern void MapBlock_initShaders(void* blk);
 extern int return0_80060B90(void* blk);
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 
 int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 {

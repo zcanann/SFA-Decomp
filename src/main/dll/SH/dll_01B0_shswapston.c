@@ -398,6 +398,7 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
 }
 
 #include "main/dll/SC/SClantern.h"
+#include "main/audio/sfx.h"
 
 typedef struct WarpstoneState
 {
@@ -413,7 +414,7 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
 extern s16* objModelGetVecFn_800395d8(int obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
-extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
+
 extern void objAnimFn_80038f38(int obj, int* animState);
 extern void characterDoEyeAnims(int obj, void* state);
 extern s16 lbl_803DC044;

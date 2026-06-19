@@ -13,12 +13,14 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/engine_shared.h"
+#include "main/objlib.h"
+#include "main/lightmap.h"
 extern void ModelLightStruct_free(void* light);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern void Obj_FreeObject(int obj);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern void* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);

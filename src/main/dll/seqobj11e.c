@@ -33,6 +33,7 @@
 #include "main/objtexture.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/seqobj11e.h"
+#include "main/dll/objfsa.h"
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -68,7 +69,7 @@ void fn_80152440(GameObject* obj, int p, int p3, int msg)
 
 
 extern void Obj_FreeObject(int* obj);
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
+
 extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);

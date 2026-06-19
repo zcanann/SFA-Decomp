@@ -15,10 +15,11 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern int randomGetRange(int lo, int hi);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern u8 framesThisStep;

@@ -21,6 +21,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/objfsa.h"
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -38,7 +39,7 @@ extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
+
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);

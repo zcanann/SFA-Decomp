@@ -23,15 +23,17 @@
 #include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/gx/GXCull.h"
 #include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTexture.h"
+#include "dolphin/gx/GXBump.h"
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, GXTexFmt format, GXTexWrapMode wrap_s, GXTexWrapMode wrap_t, GXBool mipmap);
 extern void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter min_filt, GXTexFilter mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias, u8 bias_clamp, u8 do_edge_lod, GXAnisotropy max_aniso);
-extern void GXLoadTexObj(GXTexObj* obj, GXTexMapID id);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetTevDirect(GXTevStageID tev_stage);
+
+
+
 extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
 extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
 extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);

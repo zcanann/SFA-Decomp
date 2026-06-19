@@ -9,7 +9,8 @@
  * the whole swarm tracks the spacecraft.
  */
 #include "main/game_object.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/engine_shared.h"
+
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern u8 framesThisStep;

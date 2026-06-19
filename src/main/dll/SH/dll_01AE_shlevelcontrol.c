@@ -20,6 +20,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/SP/SPshopkeeper.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
 extern u64 FUN_80286838();
@@ -30,7 +31,7 @@ extern f32 lbl_803E54B0;
 extern f32 lbl_803E54B4;
 extern f32 timeDelta;
 extern void fn_80137948(char* fmt, ...);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern int ObjList_FindObjectById(int objectId);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);

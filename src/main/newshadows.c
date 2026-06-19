@@ -3,6 +3,7 @@
 #include "dolphin/gx/GXManage.h"
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/DR/dll_80209FE0_shared.h"
 extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
@@ -21,7 +22,7 @@ extern double FUN_800069f8();
 extern u32 FUN_80006a00();
 extern int FUN_800176d0();
 extern u32 FUN_80017730();
-extern int randomGetRange(int lo, int hi);
+
 extern u32 FUN_80017814();
 extern int FUN_80017970();
 extern u32 FUN_80017a50();
@@ -55,7 +56,7 @@ extern u32 FUN_80247b70();
 extern u32 FUN_80247dfc();
 extern u32 FUN_80247edc();
 extern u32 FUN_80247ef8();
-extern double SeekTwiceBeforeRead();
+
 extern double FUN_80247f90();
 extern u32 FUN_80258c24();
 extern u32 FUN_80259400();
@@ -2470,11 +2471,11 @@ extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern int fn_800626C8(int* obj, int frames);
 extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
-extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern f32 PSVECMag(f32 * v);
-extern void PSVECScale(f32* v, f32* out, f32 s);
-extern void PSVECNormalize(f32 * v, f32 * out);
-extern int getAngle(float y, float x);
+
+
+
+
+
 extern void setScreenWidth(int w);
 extern void clearScreenWidth(void);
 extern f32* ObjModel_GetJointMatrix(int* model, int joint);

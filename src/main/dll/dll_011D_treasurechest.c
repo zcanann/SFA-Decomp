@@ -90,7 +90,8 @@ void treasurechest_hitDetect(int obj)
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-extern void* Obj_GetPlayerObject(void);
+#include "main/dll/VF/vf_shared.h"
+
 extern void fn_802967E0(void* obj, int enabled);
 
 typedef struct ChestHitParams

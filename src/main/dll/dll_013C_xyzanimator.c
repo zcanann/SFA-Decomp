@@ -17,8 +17,9 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+#include "dolphin/os/OSCache.h"
 extern int mmAlloc(int size, int pool, int tag);
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 extern int return0_80060B90(void);
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);

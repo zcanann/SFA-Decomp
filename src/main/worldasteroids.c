@@ -1,5 +1,6 @@
 #include "main/worldasteroids.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/engine_shared.h"
+
 extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 fsin16Approx(u16 angle);

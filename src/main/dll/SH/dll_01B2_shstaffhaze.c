@@ -7,9 +7,10 @@
  * animation has been hidden.
  */
 #include "main/game_object.h"
+#include "main/dll/VF/vf_shared.h"
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void Obj_FreeObject(int obj);
+
 extern f32 lbl_803E5518;
 extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;

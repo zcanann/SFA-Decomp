@@ -13,6 +13,9 @@
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/track_dolphin.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "dolphin/os/OSArena.h"
+#include "dolphin/gx/GXLighting.h"
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -157,7 +160,7 @@ extern int lbl_803DCC70;
 extern int lbl_803DCC7C;
 extern int lbl_803DCC80;
 extern int lbl_803DCC8C;
-extern int sprintf(char* s, const char* format, ...);
+
 extern int AtomicSList_Pop(int list);
 extern void AtomicSList_Push(int list, int e);
 extern int DVDOpen(char* fileName, void* fileInfo);
@@ -7754,9 +7757,9 @@ void gpuErrorHandler(void)
     }
 }
 
-extern void* OSGetArenaLo(void);
-extern void* OSGetArenaHi(void);
-extern void OSSetArenaLo(void* lo);
+
+
+
 extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
 extern int OSCreateHeap(void* start, void* end);
 extern void OSSetCurrentHeap(int heap);
@@ -7779,8 +7782,8 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
-extern void GXSetNumChans(u8 nChans);
-extern void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn, GXAttnFn attn_fn);
+
+
 extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void GXSetCurrentMtx(u32 id);

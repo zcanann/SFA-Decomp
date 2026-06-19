@@ -6,6 +6,7 @@
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sfa_extern_decls.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern int saveFileStruct_isCheatActive(u8 idx);
 
 u16*
@@ -650,7 +651,7 @@ extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern void* gameTextGet();
-extern int sprintf(char* s, const char* format, ...);
+
 
 #pragma peephole on
 void* gameTextGetPhrase(int textId, int phraseIndex)

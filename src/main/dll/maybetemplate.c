@@ -22,6 +22,7 @@
 #include "main/dll/player_status.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
@@ -57,7 +58,7 @@ extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern int sprintf(char* s, const char* format, ...);
+
 extern char sTemplateProgressCounterFormat[];
 extern char lbl_803DBB48;
 extern char lbl_803DBB50;

@@ -7,9 +7,11 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/audio/sfx.h"
 extern void ModelLightStruct_free(void* effect);
-extern void ObjHits_ClearHitVolumes(int objPtr);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+
+
 extern void queueGlowRender(void* effect);
 extern f32 lbl_803E3D78;
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
@@ -36,7 +38,7 @@ extern f32 lbl_803E3D98;
 
 void campfire_update(int obj)
 {
-    extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
     extern void* Obj_GetPlayerObject(void);
     int* state;

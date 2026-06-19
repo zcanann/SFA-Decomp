@@ -24,6 +24,8 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 /* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
    (the per-file spelling is load-bearing for codegen). */
@@ -31,8 +33,8 @@
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void fn_80137948(char* fmt, ...);
+
+
 extern ModgfxInterface** gModgfxInterface;
 extern char sCFTreasSharpyDebugFormat[];
 extern f32 lbl_803E3E48;

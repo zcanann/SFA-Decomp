@@ -23,6 +23,8 @@
 #include "main/dll/MMP/dll_013B_wallanimator.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
@@ -30,11 +32,11 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern void objRenderFn_8003b8f4(f32);
-extern void vecRotateZXY(void* in, void* out);
-extern int randomGetRange(int lo, int hi);
+
+
 extern void objRenderFn_80041018(int obj);
 extern int getTrickyObject(void);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern const f32 lbl_803E3FFC; /* nearest-object search radius seed */
 extern const f32 lbl_803E3FD0; /* debris jitter-X scale */
 extern const f32 lbl_803E3FD4; /* debris base spread; also out-of-range scale fallback */

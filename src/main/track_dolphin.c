@@ -13,6 +13,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
+#include "dolphin/os/OSCache.h"
 
 typedef struct TrackP6Entry
 {
@@ -2854,7 +2855,7 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 }
 
 extern f32 __PADFixBits;
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 
 void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 {

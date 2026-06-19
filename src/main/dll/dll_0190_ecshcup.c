@@ -2,7 +2,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
-extern void* Obj_GetPlayerObject(void);
+#include "main/engine_shared.h"
+
 extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E5060;
@@ -23,7 +24,7 @@ extern const f32 lbl_803E5088;
 extern u32 gEcShCupNearestObject;
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_802C23B8[];
-extern float mathSinf(float x);
+
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern const f32 lbl_803E50A0;
@@ -266,7 +267,7 @@ void ecsh_cup_release(void)
 #pragma peephole off
 void ecsh_cup_init(int obj, int def)
 {
-    extern int randomGetRange(int lo, int hi); /* #57 */
+ /* #57 */
     int state;
     f32 dist;
 

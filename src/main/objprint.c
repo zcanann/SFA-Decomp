@@ -5,6 +5,7 @@
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXCull.h"
 
 #define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
@@ -3138,7 +3139,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern u32*Shader_getLayer(u8* shader, int idx);
     extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
-    extern void GXSetTevDirect(GXTevStageID tev_stage);
+
     extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
     extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
     extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
@@ -3154,10 +3155,10 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-    extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
-    extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
+
+
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
-    extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
+
     extern void GXSetNumTevStages(u8 nStages);
     extern void GXSetNumTexGens(u8 nTexGens);
     extern void* objCreateLight(int arg, u8 addToList);
@@ -3169,7 +3170,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);
     extern void ModelLightStruct_free(int* lt);
     extern void fn_8006C4C0(int* a, int* b, int* c);
-    extern void GXSetCullMode(GXCullMode mode);
+
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
     extern IndTexMtx23 lbl_802C1B40;
@@ -3371,7 +3372,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern u32*Shader_getLayer(u8* shader, int idx);
     extern void selectTexture(u8* tex, int mapId);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
-    extern void GXSetTevDirect(GXTevStageID tev_stage);
+
     extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
     extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
     extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
@@ -3388,13 +3389,13 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-    extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
-    extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
+
+
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
-    extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
+
     extern void GXSetNumTevStages(u8 nStages);
     extern void GXSetNumTexGens(u8 nTexGens);
-    extern void GXSetCullMode(GXCullMode mode);
+
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
     extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);

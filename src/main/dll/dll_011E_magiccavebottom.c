@@ -2,11 +2,12 @@
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/dll/player_80295318_shared.h"
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(u8 value);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void setAButtonIcon(int x);
+
 extern void warpToMap(int idx, s8 transType);
 
 int magiccavebottom_getExtraSize(void)
@@ -16,7 +17,7 @@ int magiccavebottom_getExtraSize(void)
 
 void magiccavebottom_free(int obj)
 {
-    extern void Music_Trigger(int id, int arg);
+
 
     (void)obj;
     GameBit_Set(0xefb, 0);
@@ -27,7 +28,7 @@ void treasurechest_init(int* obj);
 
 void magiccavebottom_update(int* obj)
 {
-    extern void Music_Trigger(int id, int arg);
+
 
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;

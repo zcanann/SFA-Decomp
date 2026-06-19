@@ -33,6 +33,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/sfa_extern_decls.h"
+#include "dolphin/os/OSCache.h"
 
 typedef struct TrickyImpressState
 {
@@ -117,7 +118,7 @@ extern f32 fn_8014C5D0(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 extern u16* externalFrameBuffer1;
 extern u16* externalFrameBuffer0;
 extern u8 gDebugFontGlyphs[];

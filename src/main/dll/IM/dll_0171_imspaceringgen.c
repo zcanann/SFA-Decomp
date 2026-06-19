@@ -14,6 +14,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(int* obj);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
@@ -21,7 +22,7 @@ extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-extern void* ObjList_GetObjects(int* outA, int* outB);
+
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47C0; /* render scale */
 extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */

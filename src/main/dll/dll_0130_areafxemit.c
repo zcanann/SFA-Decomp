@@ -22,8 +22,9 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-extern void vecRotateZXY(s16 * in, f32 * out);
-extern f32 sqrtf(f32 value);
+#include "main/dll/DR/dr_802bbc10_shared.h"
+
+
 extern u8 framesThisStep;
 
 enum {

@@ -7,6 +7,7 @@ extern int Obj_IsLoadingLocked(void);
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 
 typedef struct GpshObjcreatorState
 {
@@ -27,7 +28,7 @@ typedef struct GpshObjcreatorObjectDef
 } GpshObjcreatorObjectDef;
 
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
-extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern f32 lbl_803E504C;
 extern f32 lbl_803E5050;

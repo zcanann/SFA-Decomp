@@ -6,6 +6,7 @@
 #include "string.h"
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_802420b0();
 extern u32 FUN_802420e0();
@@ -747,7 +748,7 @@ typedef struct
 extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
 extern int DVDClose(DVDFileInfoStub* fi);
 extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
-extern int sprintf(char* s, const char* format, ...);
+
 extern u8 lbl_803DC968;
 extern int lbl_803DD05C;
 extern char sMemoryCardFileNameString[];

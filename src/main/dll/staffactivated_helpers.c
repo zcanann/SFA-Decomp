@@ -20,8 +20,9 @@
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 extern int randomGetRange(int lo, int hi);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern void doRumble(f32 duration);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);

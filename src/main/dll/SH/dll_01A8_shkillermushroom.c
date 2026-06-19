@@ -15,9 +15,10 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 gKillerMushroomRiseStepEpsilon;
 extern f32 lbl_803E52FC;
 extern f32 lbl_803E5300;
@@ -39,7 +40,7 @@ extern void objFn_8002b67c(int* obj);
 extern void Obj_StartModelFadeIn(int* obj, int frames);
 extern void Obj_ResetModelColorState(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
-extern f32 sqrtf(f32 x);
+
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;

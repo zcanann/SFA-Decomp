@@ -38,6 +38,7 @@
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/dll/objfsa.h"
 
 #pragma dont_inline on
 
@@ -47,7 +48,7 @@ extern int Obj_SetupObject();
 extern int Obj_IsLoadingLocked(void);
 extern u8 objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
-extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 dt);
+
 extern char lbl_803DBCD8;
 extern void fn_80154D0C(int, int, u16*, float*);
 extern u32 fn_80154FB4(short*, int, u32, double);

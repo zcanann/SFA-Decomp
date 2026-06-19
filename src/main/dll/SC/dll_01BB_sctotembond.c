@@ -26,8 +26,9 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

@@ -38,6 +38,7 @@
 #include "main/dll/modgfx.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/firecrawler.h"
+#include "main/dll/objfsa.h"
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -166,7 +167,7 @@ extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;
 extern char lbl_803DBCF0;
-extern int Curve_AdvanceAlongPath(RomCurveWalker *path, f32 step);
+
 extern u8 gCrawlerSpeedThresholds[];
 extern f32 lbl_803E2BA0;
 extern f32 lbl_803E2BA4;

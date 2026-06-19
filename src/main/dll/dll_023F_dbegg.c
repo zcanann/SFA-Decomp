@@ -44,6 +44,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -583,7 +584,7 @@ void dbegg_update(int obj)
     extern int fn_801FE560(int, f32*, f32, f32, int);
     extern void fn_801FE774(int, f32*);
     extern void objMove(int, f32, f32, f32);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern int randomGetRange(int lo, int hi);
     extern f32 Vec_xzDistance(int, int);

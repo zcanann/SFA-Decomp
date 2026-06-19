@@ -16,6 +16,7 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
@@ -39,7 +40,7 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
-extern void* Obj_GetPlayerObject(void);
+
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern int getCurSeqNo(void);

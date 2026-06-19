@@ -13,6 +13,9 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
+#include "main/lightmap.h"
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -32,8 +35,8 @@ extern void Music_Trigger(int id, int arg);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
+
 extern f32 lbl_803E5550;
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern int mapGetDirIdx(int idx);
@@ -50,7 +53,7 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern void gameTextShow(int a);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int idx, s8 transType);

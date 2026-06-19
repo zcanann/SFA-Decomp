@@ -16,9 +16,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern int randomGetRange(int lo, int hi);
 extern int ObjTrigger_IsSetById();
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);

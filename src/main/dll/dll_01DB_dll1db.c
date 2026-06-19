@@ -29,6 +29,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
@@ -38,7 +39,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void* Obj_GetPlayerObject(void);
+
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 timeDelta;
 extern f32 lbl_803E4B08; /* render scale */

@@ -22,7 +22,8 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
-extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
+#include "main/dll/objfsa.h"
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern int fn_80296448(int obj);

@@ -22,6 +22,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE 0x400
@@ -196,7 +197,7 @@ void wcpushblock_initialise(void)
 #pragma opt_common_subs off
 void wcpushblock_update(int obj)
 {
-    extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
     GameObject* player = (GameObject*)Obj_GetPlayerObject();

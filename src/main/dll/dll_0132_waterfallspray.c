@@ -1,12 +1,13 @@
 /* DLL 0x132 — waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
 #include "main/dll/MMP/MMP_asteroid.h"
 extern u8 framesThisStep;
-extern f32 sqrtf(f32);
+
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 typedef struct WaterFallSprayState
 {
@@ -14,7 +15,7 @@ typedef struct WaterFallSprayState
     u32 unk4;
 } WaterFallSprayState;
 
-extern f32 sqrtf(f32 value);
+
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */

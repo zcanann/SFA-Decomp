@@ -14,10 +14,11 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+
+
 extern int lbl_803DDC68; /* live WM_WallCraw population counter */
 extern const f32 lbl_803E5CC8; /* 1.0 (#127 const: LICM-hoistable in case 6) */
 extern f32 lbl_803E5CCC; /* 10.0: eastward drift base velocity */

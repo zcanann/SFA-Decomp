@@ -20,9 +20,10 @@
 #include "main/dll/dim2conveyor.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_shared.h"
-extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+#include "main/audio/sfx.h"
+
+
+
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
                                 void* scratch, f32 scaleX, f32 scaleZ);
 extern void fn_8003A168(int obj, void* p);

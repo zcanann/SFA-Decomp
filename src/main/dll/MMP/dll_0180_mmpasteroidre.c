@@ -17,17 +17,18 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
-extern int randomGetRange(int lo, int hi);
+
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern void setDrawLights(int v);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
-extern void doRumble(f32 duration);
-extern float mathSinf(float x);
+
+
 extern f32 timeDelta;
 extern char gMmpAsteroidIntensityHeightTable[];
 extern char gMmpAsteroidDustSpawnParams[];
@@ -168,7 +169,7 @@ void mmp_asteroid_re_init(int obj)
 
 void mmp_asteroid_re_update(int obj)
 {
-    extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
+
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;

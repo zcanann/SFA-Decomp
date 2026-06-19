@@ -1,7 +1,7 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
-extern int randomGetRange(int lo, int hi);
+
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -15,6 +15,7 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/engine_shared.h"
 extern u64 FUN_80017698();
 extern u32 FUN_80041ff8();
 extern u32 FUN_80042b9c();

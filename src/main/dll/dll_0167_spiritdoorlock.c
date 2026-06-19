@@ -25,6 +25,7 @@
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/audio/sfx.h"
 
 /* per-file extern decls (homes: engine_shared / dll_80220608_shared /
    objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
@@ -32,8 +33,8 @@
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+
+
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);

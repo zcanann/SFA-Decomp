@@ -15,7 +15,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
-extern int randomGetRange(int lo, int hi);
+
 extern int getAngle(float y, float x);
 extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
@@ -23,6 +23,7 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/engine_shared.h"
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
@@ -172,7 +173,7 @@ void SB_CloudBall_update(GameObject* obj)
 {
     extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
-    extern void* Obj_GetPlayerObject(void);
+
     SBCloudBallState* state = obj->extra;
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;

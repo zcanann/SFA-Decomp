@@ -12,6 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
+#include "main/audio/sfx.h"
 
 typedef struct WMColrisePlacement
 {
@@ -57,8 +58,8 @@ void WM_colrise_hitDetect(void)
 {
 }
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+
+
 extern f32 timeDelta;
 extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise (#127 const: hoistable past the timer store) */
 extern f32 lbl_803E5DD0; /* 20.0 */

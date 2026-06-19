@@ -6,6 +6,7 @@
 #include "main/dll/torch1CD.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx.h"
 
 typedef struct Dll19DPlacement
 {
@@ -34,7 +35,7 @@ extern u32 getLActions();
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E51B0;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 lbl_803E51B8;
 
 void dll_19D_render(void)

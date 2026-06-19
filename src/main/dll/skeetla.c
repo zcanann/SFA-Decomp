@@ -24,6 +24,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
+#include "main/lightmap.h"
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
@@ -40,7 +41,7 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;

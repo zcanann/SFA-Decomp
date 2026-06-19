@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct PressureswitchPlacement
 {
@@ -83,7 +84,7 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 extern f32 lbl_803E5D78;
 extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
+
 extern void* getTrickyObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 

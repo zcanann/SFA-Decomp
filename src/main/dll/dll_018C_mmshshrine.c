@@ -17,6 +17,7 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int param_1, int param_2);
@@ -30,7 +31,7 @@ extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern void fn_801C4664(int obj);

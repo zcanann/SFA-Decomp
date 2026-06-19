@@ -17,6 +17,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 extern u8 hudTextures[0x198];
@@ -43,7 +44,7 @@ extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1,
 
 extern void* gameTextGetBox(int box);
 extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
-extern int sprintf(char* s, const char* format, ...);
+
 extern u16 getNextTaskHintText(void);
 
 extern void fn_80128120(void* obj, int v);

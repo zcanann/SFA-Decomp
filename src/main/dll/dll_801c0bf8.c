@@ -1,7 +1,7 @@
 /* DLL 0x801C0BF8 - DIM level control [801C0BF8-...) */
 #include "main/dll_000A_expgfx.h"
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -11,6 +11,7 @@ extern float mathCosf(float x);
 
 #include "main/game_object.h"
 #include "string.h"
+#include "main/dll/dll_80220608_shared.h"
 extern f32 lbl_803E4DE0;
 extern f32 lbl_803E4DE4;
 extern f32 lbl_803E4DE8;

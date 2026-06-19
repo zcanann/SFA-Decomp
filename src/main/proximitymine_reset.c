@@ -1,7 +1,8 @@
 #include "main/proximitymine.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
-extern void* Obj_GetPlayerObject(void);
+#include "main/engine_shared.h"
+
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);

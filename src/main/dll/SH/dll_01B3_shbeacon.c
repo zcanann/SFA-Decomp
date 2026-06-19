@@ -18,6 +18,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gameloop.h"
+#include "main/audio/sfx.h"
 
 typedef struct ShBeaconPlacement
 {
@@ -36,8 +37,8 @@ extern void Obj_FreeObject(int obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+
+
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 extern f32 lbl_803E5530;

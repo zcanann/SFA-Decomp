@@ -16,18 +16,20 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx.h"
 extern u32 Music_Trigger();
 extern u32 gameTimerIsRunning(void);
 extern f32 fn_80014668(void);
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
 extern u32 SCGameBitLatch_Update();
-extern void* Obj_GetPlayerObject(void);
+
 extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);

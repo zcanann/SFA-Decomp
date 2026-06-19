@@ -2,6 +2,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/gameplay.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSArena.h"
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -603,8 +604,8 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     return 0;
 }
 
-extern void* OSGetArenaLo(void);
-extern void* OSGetArenaHi(void);
+
+
 extern void* OSAllocFromHeap(int heap, int size);
 extern int __OSCurrHeap;
 extern int gMmRegion0Size;

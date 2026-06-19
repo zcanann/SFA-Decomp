@@ -23,6 +23,8 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "dolphin/gx/GXTransform.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX 0x152
@@ -52,7 +54,7 @@ extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int Obj_GetActiveModel(int obj);
 extern float fsin16Approx(int angle);
@@ -113,7 +115,7 @@ extern int arwarwing_getRequiredRingCount(int* arwing);
 extern int arwarwing_getScore(int* arwing);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern int sprintf(char* s, const char* format, ...);
+
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
 extern char sHeadDisplayScoreFmt;

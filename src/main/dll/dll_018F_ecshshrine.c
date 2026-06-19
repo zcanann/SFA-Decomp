@@ -24,6 +24,7 @@
 #include "main/game_ui_interface.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct EcshIntPair
 {
@@ -31,9 +32,9 @@ typedef struct EcshIntPair
     int b;
 } EcshIntPair;
 
-extern int randomGetRange(int lo, int hi);
+
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern float mathSinf(float x);
+
 extern f32 timeDelta;
 extern f32 gEcShShrineOrbitSpeedA;
 extern f32 gEcShShrineOrbitSpeedB;
@@ -105,7 +106,7 @@ typedef struct MmShrineAnimEvents
 void fn_801C5990(MmShrineAnimObj* obj)
 {
     extern int getAngle(float y, float x); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     u8* config;
     MmShrineAnimState* state;
     void* player;
@@ -178,7 +179,7 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
 {
     extern void fn_80296518(void* obj, int arg, int enable); /* #57 */
     extern void modelLightStruct_setEnabled(int light, int mode, f32 value); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
+ /* #57 */
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
     MmShrineAnimEvents* eventList;

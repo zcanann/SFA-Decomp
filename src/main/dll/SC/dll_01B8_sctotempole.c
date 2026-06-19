@@ -10,7 +10,8 @@
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+#include "main/audio/sfx.h"
+
 extern f32 fn_8001461C(void);
 extern f32 timeDelta;
 extern int lbl_803DC068;    /* tracking-test record-time GameBit id table */

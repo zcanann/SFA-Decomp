@@ -25,6 +25,7 @@
 #include "main/objseq.h"
 #include "main/dll/FRONT/dll_0034_n_filemenu.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
 typedef struct TitlescreenState
 {
@@ -264,7 +265,7 @@ extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void* obj);
-extern int sprintf(char* s, const char* format, ...);
+
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 

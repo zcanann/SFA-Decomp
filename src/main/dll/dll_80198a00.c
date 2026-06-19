@@ -3,12 +3,13 @@
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/dll/fx_800944A0_shared.h"
 extern u32 objInterpretSeq();
 extern f32 lbl_803E40C8;
 extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
+
+
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void OSReport(const char* msg, ...);
 extern const char sMoonrockTriggerIdentFormat[];

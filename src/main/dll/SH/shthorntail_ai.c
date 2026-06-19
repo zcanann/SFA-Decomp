@@ -14,10 +14,11 @@
  */
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/frustum.h"
+#include "main/audio/sfx.h"
 
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
    floats and the debug string); the rest are engine-wide imports. */
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 getXZDistance(Vec * a, Vec * b);
 extern f32 vec3f_distanceSquared(Vec * a, Vec * b);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);

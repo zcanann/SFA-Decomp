@@ -3,9 +3,10 @@
 #include "main/spellstone.h"
 #include "main/objlib.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 extern f32 Vec_distance(void* posA, void* posB);
-extern void* Obj_GetPlayerObject(void);
+
 extern void Obj_RemoveFromUpdateList(void* obj);
 extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
                                  u32 param_5, double scale);

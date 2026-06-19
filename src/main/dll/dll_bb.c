@@ -21,12 +21,13 @@
 #include "main/dll/dll_BB.h"
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 extern void Obj_UpdateWorldTransform(s16* obj);
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern s16 Camera_GetViewportYOffset(void);
 extern void Camera_SetFovY(f32 fovY);
-extern f32 interpolate(f32 a, f32 t, f32 exp);
+
 extern void loadMapForCameraPos(f32 x,f32 y,f32 z);
 extern void OSReport(const char* msg, ...);
 extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);

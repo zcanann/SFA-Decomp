@@ -3,11 +3,12 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/IM/IMspacecraft.h"
+#include "main/audio/sfx.h"
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
+
+
 extern int getAngle(float y, float x);
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);

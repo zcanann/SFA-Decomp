@@ -20,6 +20,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
+#include "main/audio/sfx.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -66,7 +67,7 @@ extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 getXZDistance(f32* a, f32* b);
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);

@@ -10,6 +10,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/sfa_extern_decls.h"
+#include "main/dll/DR/dll_80209FE0_shared.h"
 
 typedef struct ObjModelRenderOp
 {
@@ -4292,7 +4293,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
 extern u16 lbl_803DEA4A[3];

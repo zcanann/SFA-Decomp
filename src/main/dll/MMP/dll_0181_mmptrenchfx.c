@@ -16,10 +16,11 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/dll/DR/dr_802bbc10_shared.h"
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
-extern void vecRotateZXY(u8* p, f32* v);
+
 extern f32 timeDelta;
 extern char lbl_803AC930[];
 extern f32 lbl_803E45C0;

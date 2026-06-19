@@ -8,6 +8,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx.h"
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 extern void skyFn_80088c94(int flags, int mode);
@@ -240,7 +241,7 @@ void gpsh_shrine_update(int obj)
     extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e); /* #57 */
     extern void fn_801C70F0(int obj); /* #57 */
     extern int getEnvfxAct(int a, int b, u16 idx, int d); /* #57 */
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId); /* #57 */
+ /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     int count;
     int data = *(int*)&((GameObject*)obj)->extra;

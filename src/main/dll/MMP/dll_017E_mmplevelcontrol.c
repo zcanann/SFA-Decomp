@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
+#include "main/lightmap.h"
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
@@ -22,7 +23,7 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern void gameTextShow(int a);
 extern void envFxActFn_800887f8(u8 value);
 extern void skyFn_80088c94(int flags, int mode);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
                                   int setBit, int textId);
 extern int mapGetDirIdx(int idx);

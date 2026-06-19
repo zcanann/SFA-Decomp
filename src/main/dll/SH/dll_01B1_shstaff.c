@@ -63,6 +63,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/dll/DR/shstaff_state.h"
+#include "main/audio/sfx.h"
 
 typedef struct ShStaffPlacement
 {
@@ -420,7 +421,7 @@ extern void fn_8029672C(int obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;

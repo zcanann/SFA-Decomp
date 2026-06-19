@@ -4,8 +4,9 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
+#include "main/dll/DR/dr_802bbc10_shared.h"
+
+
 extern f32 timeDelta;
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
 extern f32 lbl_803E4088;

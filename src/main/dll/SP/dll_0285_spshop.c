@@ -4,12 +4,13 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
-extern int randomGetRange(int lo, int hi);
+
 extern void objRenderFn_8003b8f4(f32);
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct ShopBuyItemState
 {
@@ -127,7 +128,7 @@ void Flag_init(int* obj, int* def);
 
 void shop_buyItem(int obj, int price)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     int player;
     int state;
     int mapEventState;
@@ -288,7 +289,7 @@ void shop_init(int obj, int objDef)
  * unset.  (i.e. open by default, gated when slot != -1.) */
 int shop_isItemAvailable(int p, int idx)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -305,7 +306,7 @@ int shop_isItemAvailable(int p, int idx)
  * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
 int shop_isItemBought(int p, int idx)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -326,7 +327,7 @@ void shop_setStateField1(int* obj, int v)
 
 void shop_update(int obj)
 {
-    extern void* Obj_GetPlayerObject(void);
+
     int player;
 
     player = (int)Obj_GetPlayerObject();

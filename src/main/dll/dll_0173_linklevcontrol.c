@@ -20,6 +20,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/lightmap.h"
 
 /* Area cells handled by this controller (GameObject::anim.mapEventSlot). */
 enum
@@ -41,7 +42,7 @@ enum
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern int getSaveGameLoadStatus(void);
-extern int coordsToMapCell(f32 x, f32 z);
+
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);

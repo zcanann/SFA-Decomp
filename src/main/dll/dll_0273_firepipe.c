@@ -30,6 +30,7 @@
 #include "main/dll/dll_0273_firepipe.h"
 #include "string.h"
 #include "main/gamebits.h"
+#include "main/mm.h"
 extern void modelLightStruct_freeSlot(int param_1);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
@@ -39,7 +40,7 @@ extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject * obj);
 extern int mmSetFreeDelay(int v);
-extern void mm_free(void* p);
+
 extern void ObjHits_EnableObject(FirePipeObject * obj);
 extern void ObjHits_DisableObject(FirePipeObject * obj);
 extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);
