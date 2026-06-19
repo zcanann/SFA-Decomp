@@ -524,7 +524,7 @@ int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     *(u32*)&inner->sub.unk360 |= 0x800000LL;
-    (*gPathControlInterface)->attachObject((void*)obj, &inner->baddie + 4);
+    (*gPathControlInterface)->attachObject((void*)obj, (char*)&inner->baddie + 4);
     fz = lbl_803E8304;
     inner->baddie.animSpeedC = fz;
     inner->baddie.animSpeedB = fz;
