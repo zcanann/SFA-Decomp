@@ -54,7 +54,7 @@ extern void gameTextShow(int textId);
 extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int getHudHiddenFrameCount(void);
 extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int pad);
@@ -470,7 +470,7 @@ typedef struct LinkMenuItem
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
 #pragma peephole off
-undefined4 Link_update(void)
+u32 Link_update(void)
 {
     extern LinkMenuItem lbl_803A9458[40]; /* #57 */
     extern s8 lbl_803DD911; /* #57 */

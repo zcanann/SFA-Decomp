@@ -178,7 +178,7 @@ void arwingandrossstuff_hitDetect(int obj)
     if (objAnim->seqId == ARW_SEQID_BOMB)
     {
         int hit;
-        uint vol;
+        u32 vol;
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {

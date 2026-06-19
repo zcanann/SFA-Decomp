@@ -7,7 +7,7 @@ extern u32 GameBit_Get(int eventId);
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
-extern uint GameBit_Get(int bit);
+extern u32 GameBit_Get(int bit);
 extern int gameBitDecrement(int bit);
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(void* obj);

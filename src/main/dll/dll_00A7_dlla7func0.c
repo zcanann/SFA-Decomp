@@ -36,9 +36,9 @@ extern f32 lbl_803E1580;
 extern f32 lbl_803E1584;
 extern f32 lbl_803E1588;
 
-void dll_A7_func03(short* sourceObj, int variant, u8* posSource, uint flags,
+void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
                    u32 arg5, /* unused — passed in r8 by caller */
-                   uint* extraArgs)
+                   u32* extraArgs)
 {
     struct
     {
@@ -65,7 +65,7 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, uint flags,
     u8* tab = (u8*)(int)lbl_80318E40;
     GfxCmd* e = buf.entries;
     GfxCmd* p;
-    uint argX, argY, argZ;
+    u32 argX, argY, argZ;
     int argFlags;
     u32 fl;
 

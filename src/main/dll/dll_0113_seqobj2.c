@@ -28,8 +28,8 @@
 #include "main/gamebits.h"
 #include "dolphin/os.h"
 
-extern uint FUN_80017690();
-extern void FUN_80017698(uint param_1, uint param_2);
+extern u32 FUN_80017690();
+extern void FUN_80017698(u32 param_1, u32 param_2);
 extern void FUN_800723a0(void);
 extern const char sSeqObjNeedBitUsedBitFormat[];
 extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
@@ -93,7 +93,7 @@ void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void seqObject_update(int obj)
 {
-    uint bitValue;
+    u32 bitValue;
     u8 flagBits;
     SeqObjectPlacement * def;
     SeqObjectState* state;
@@ -175,7 +175,7 @@ void seqObj2_free(int obj)
 
 void seqObj2_update(int obj)
 {
-    uint bitValue;
+    u32 bitValue;
     SeqObjectPlacement * def;
     SeqObj2State* state;
 
@@ -277,7 +277,7 @@ void seqobj2_init(int* obj, SeqObjectPlacement* def)
             state->flags = (u8)(state->flags | SEQOBJECT_STATE_OPEN);
         }
     }
-    ObjGroup_AddObject((uint)obj, 15);
+    ObjGroup_AddObject((u32)obj, 15);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 

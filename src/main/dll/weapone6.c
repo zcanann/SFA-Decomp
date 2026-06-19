@@ -145,7 +145,7 @@ void fn_8013F100(int obj, register int state)
             else if (status == 2)
             {
                 extra = *(int*)&((GameObject*)obj)->extra;
-                if ((((uint) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
+                if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
                     move = ((GameObject*)obj)->anim.currentMove;
                     if (move >= 48 || move < 41)
@@ -246,7 +246,7 @@ void fn_8013F100(int obj, register int state)
                     ((TrickyState*)state)->unk7A4 = (f32)(s32)
                     randomGetRange(150, 300);
                     extra = *(int*)&((GameObject*)obj)->extra;
-                    if ((((uint) * (u8*)(extra + 0x58) >> 6) & 1) != 0)
+                    if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) != 0)
                     {
                         break;
                     }
@@ -451,7 +451,7 @@ void fn_8013F9E4(int obj, int state)
                 ((TrickyState*)state)->unk740 = (f32)(s32)
                 randomGetRange(500, 750);
                 extra = *(int*)&((GameObject*)obj)->extra;
-                if ((((uint) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
+                if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
                     move = ((GameObject*)obj)->anim.currentMove;
                     if (move >= 48 || move < 41)
@@ -517,7 +517,7 @@ void fn_8013FBE4(int obj, register int state)
     f32 fz;
     float* targetPos;
     u8* trackedObj;
-    uint currentBit;
+    u32 currentBit;
     u8 bitIndex;
     u8 newBit;
 

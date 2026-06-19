@@ -41,7 +41,7 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))

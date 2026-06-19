@@ -40,9 +40,9 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjGroup_FindNearestObject();
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
+extern u32 ObjGroup_FindNearestObject();
 
 #pragma scheduling on
 #pragma peephole on

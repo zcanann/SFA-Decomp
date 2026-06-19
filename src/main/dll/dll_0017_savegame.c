@@ -38,26 +38,26 @@ typedef struct SaveGameData
     u8 pad6A6[0xF70 - 0x6A6];
 } SaveGameData;
 
-extern undefined4 FUN_80006768();
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006c20();
-extern undefined4 FUN_80017500();
-extern undefined4 FUN_8005d018();
+extern u32 FUN_80006768();
+extern u32 FUN_8000676c();
+extern u32 FUN_80006c20();
+extern u32 FUN_80017500();
+extern u32 FUN_8005d018();
 extern void OSSetSaveRegion(void* start, void* end);
 
 extern u8 gGameplayPreviewSettings;
-extern undefined4 DAT_803a3e26;
-extern undefined4 DAT_803a3e27;
-extern undefined4 DAT_803a3e28;
-extern undefined4 DAT_803a3e2a;
-extern undefined4 DAT_803a3e2c;
-extern undefined4 DAT_803a3e2d;
+extern u32 DAT_803a3e26;
+extern u32 DAT_803a3e27;
+extern u32 DAT_803a3e28;
+extern u32 DAT_803a3e2a;
+extern u32 DAT_803a3e2c;
+extern u32 DAT_803a3e2d;
 extern u32 gGameplayPreviewColorRed;
 extern u32 gGameplayPreviewColorGreen;
 extern u32 gGameplayPreviewColorBlue;
 extern u32 gGameplayRegisteredDebugOptions;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6e8;
+extern u32* DAT_803dd6d0;
+extern u32* DAT_803dd6e8;
 extern u8 gSaveGameData[];
 extern u8 saveGameLoadStatus;
 extern s8 lbl_803DB890;
@@ -674,19 +674,19 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                      undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                      undefined8 param_8)
+void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                      u64 param_5, u64 param_6, u64 param_7,
+                      u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
     (**(code**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((uint)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorBlue, 10, 0, 0, 1);
+    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
     return;
 }
 

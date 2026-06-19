@@ -46,7 +46,7 @@ extern f32 lbl_803E1560;
 extern f32 lbl_803E1564;
 
 #pragma opt_propagation off
-void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
+void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {

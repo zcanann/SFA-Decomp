@@ -20,7 +20,7 @@
 #include "main/objseq.h"
 
 extern u64 FUN_80006824();
-extern uint FUN_80017690();
+extern u32 FUN_80017690();
 extern u32 FUN_80017698();
 extern u32 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
@@ -83,7 +83,7 @@ extern f32 lbl_803E4258;
 extern u8 lbl_803DBE28;
 extern u8 lbl_803DBE30;
 extern void storeZeroToFloatParam(void* p);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
@@ -121,22 +121,22 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* sfxTable)
+void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
 {
-    uint obj;
+    u32 obj;
     int tailSfxSlot;
     int eventIdx;
     u64 retPair;
 
     retPair = FUN_80286840();
-    obj = (uint)((ulonglong)retPair >> 0x20);
+    obj = (u32)((u64)retPair >> 0x20);
     tailSfxSlot = 0;
     for (eventIdx = 0; eventIdx < *(char*)((int)retPair + 0x1b); eventIdx = eventIdx + 1)
     {
         switch (*(u8*)((int)retPair + eventIdx + 0x13))
         {
         case 0:
-            if (sfxTable != (ushort*)0x0)
+            if (sfxTable != (u16*)0x0)
             {
                 FUN_80006824(obj, *sfxTable);
             }
@@ -154,7 +154,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* sfxTable)
             tailSfxSlot = 4;
             break;
         case 7:
-            if (sfxTable != (ushort*)0x0)
+            if (sfxTable != (u16*)0x0)
             {
                 FUN_80006824(obj, sfxTable[1]);
             }
@@ -163,7 +163,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* sfxTable)
             FUN_80006824(obj, SFXsk_trwhin3);
         }
     }
-    if ((tailSfxSlot != 0) && (sfxTable != (ushort*)0x0))
+    if ((tailSfxSlot != 0) && (sfxTable != (u16*)0x0))
     {
         FUN_80006824(obj, sfxTable[2]);
     }
@@ -189,10 +189,10 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     float local_54;
     float local_50[2];
     u32 local_48;
-    uint uStack_44;
+    u32 uStack_44;
     u32 local_40;
-    uint uStack_3c;
-    longlong local_38;
+    u32 uStack_3c;
+    s64 local_38;
 
     if (param_3 == (short*)0x0)
     {
@@ -233,7 +233,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
                     )) * (float)(param_1 * (double)lbl_803DC074)) / dist)
             )
             ;
-            local_38 = (longlong)newAng;
+            local_38 = (s64)newAng;
             *param_2 = (short)newAng;
             dist = (double)*(float*)(param_2 + 0x14);
             velZ = (double)*(float*)(param_2 + 0x16);
@@ -321,16 +321,16 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, uint param_9
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
              , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
     int eventIdx;
-    uint bitSet;
+    u32 bitSet;
     short* objType;
-    uint popState;
-    uint msgId;
-    uint msgArgs[4];
+    u32 popState;
+    u32 msgId;
+    u32 msgArgs[4];
 
     objType = ((GameObject*)param_9)->extra;
     popState = 0;
@@ -366,7 +366,7 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (eventIdx = 0; eventIdx < (int)(uint)animUpdate->eventCount; eventIdx = eventIdx + 1)
+    for (eventIdx = 0; eventIdx < (int)(u32)animUpdate->eventCount; eventIdx = eventIdx + 1)
     {
         if (((animUpdate->eventIds[eventIdx] == 1) && (bitSet = FUN_80017690(0x54), bitSet != 0))
             && ((bitSet = FUN_80017690(0x55), bitSet != 0 && (bitSet = FUN_80017690(0x56), bitSet != 0))))
@@ -379,7 +379,7 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
 u32
 FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, uint param_9,
+             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
              u32 param_10, u32 param_11, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
@@ -418,12 +418,12 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
-            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf;
+            *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf;
         }
-        else if ((*(byte*)(state + 0x244) >> 6 & 1) == 0)
+        else if ((*(u8*)(state + 0x244) >> 6 & 1) == 0)
         {
             FUN_80006824(param_9, SFXand_spitout);
-            *(byte*)(state + 0x244) = *(byte*)(state + 0x244) & 0xbf | 0x40;
+            *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf | 0x40;
         }
     }
     FUN_8002fc3c(pitch, (double)lbl_803DC074);
@@ -550,7 +550,7 @@ void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, 
 #pragma peephole on
 void FUN_8019f1dc(void)
 {
-    uint obj;
+    u32 obj;
     int childOrTarget;
     int* objs;
     int objId;
@@ -566,9 +566,9 @@ void FUN_8019f1dc(void)
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    ulonglong objPair;
+    u64 objPair;
     int local_68;
-    ushort local_64[4];
+    u16 local_64[4];
     float local_5c;
     float local_58;
     float local_54;
@@ -587,7 +587,7 @@ void FUN_8019f1dc(void)
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
     objPair = FUN_8028683c();
-    obj = (uint)(objPair >> 0x20);
+    obj = (u32)(objPair >> 0x20);
     subObj = *(int *)&((GameObject *)obj)->extra;
     childOrTarget = FUN_80017a98();
     childOrTarget = *(int*)(childOrTarget + 0xb8);
@@ -608,12 +608,12 @@ void FUN_8019f1dc(void)
     local_5c = lbl_803E4F74;
     local_64[2] = 0;
     local_64[1] = 0;
-    local_64[0] = *(ushort*)(subObj + 0x50);
+    local_64[0] = *(u16*)(subObj + 0x50);
     FUN_80017748(local_64, (float*)(subObj + 0x20));
-    *(byte*)(subObj + 0x49) = *(byte*)(subObj + 0x49) | 1;
+    *(u8*)(subObj + 0x49) = *(u8*)(subObj + 0x49) | 1;
     FUN_80006824(obj, SFXsk_baptr6_c);
-    *(byte*)(subObj + 0x49) = *(byte*)(subObj + 0x49) | 2;
-    if ((*(byte*)(subObj + 0x48) >> 6 & 1) != 0)
+    *(u8*)(subObj + 0x49) = *(u8*)(subObj + 0x49) | 2;
+    if ((*(u8*)(subObj + 0x48) >> 6 & 1) != 0)
     {
         subObj = *(int *)&((GameObject *)obj)->anim.placementData;
         childOrTarget = 0;

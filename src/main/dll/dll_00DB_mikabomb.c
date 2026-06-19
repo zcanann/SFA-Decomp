@@ -25,8 +25,8 @@
 #include "main/resource.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_SetHitVolumeSlot();
 extern void FUN_8003b818(int obj);
 
 extern ModgfxInterface** gModgfxInterface;
@@ -38,8 +38,8 @@ extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-extern void ObjGroup_RemoveObject(uint obj, int group);
-extern void ObjGroup_AddObject(uint obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern u8 Obj_IsLoadingLocked(void);
@@ -297,15 +297,15 @@ void staticCamera_render(int obj, int param_2, int param_3, int param_4, int par
 
 void staticCamera_init(short* obj, int params, int deferAdd)
 {
-    undefined* camData;
+    u8* camData;
 
     *obj = -*(short*)(params + 0x1c);
     obj[1] = -*(short*)(params + 0x1e);
     obj[2] = -*(short*)(params + 0x20);
-    camData = *(undefined**)(obj + 0x5c);
-    *camData = *(undefined*)(params + 0x19);
+    camData = *(u8**)(obj + 0x5c);
+    *camData = *(u8*)(params + 0x19);
     *(float*)(camData + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(params + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(params + 0x1a)) - DOUBLE_803e3e88);
     camData[1] = 0;
     if (deferAdd == 0)
     {
@@ -781,7 +781,7 @@ void mikabomb_update(int* obj)
     extern void ObjHits_EnableObject(); /* #57 */
     extern void ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    uint timer = ((GameObject*)obj)->anim.alpha;
+    u32 timer = ((GameObject*)obj)->anim.alpha;
 
     if (timer < 0xff)
     {
@@ -862,7 +862,7 @@ void mikabomb_update(int* obj)
 
 void mikabomb_init(int* obj)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     f32 out;
     void* alloc;

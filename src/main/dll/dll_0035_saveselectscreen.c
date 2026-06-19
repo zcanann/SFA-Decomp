@@ -98,7 +98,7 @@ extern f32 lbl_803E1D6C;
 extern f32 lbl_803E1D70;
 extern f32 lbl_803E1D74;
 extern u8 framesThisStep;
-extern uint getButtonsJustPressed(int arg);
+extern u32 getButtonsJustPressed(int arg);
 extern int mmSetFreeDelay(int delay);
 extern void mapUnload(int mapId, u32 flags);
 extern void Music_Trigger(int id, int arg);

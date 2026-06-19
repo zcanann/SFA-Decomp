@@ -33,7 +33,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern u8* Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
@@ -105,7 +105,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
     }
 }
 
-undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
+u32 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
     int countForEvent2;

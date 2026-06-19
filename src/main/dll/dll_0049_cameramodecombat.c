@@ -12,13 +12,13 @@ extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
-extern undefined4 Camera_GetCurrentViewSlot();
+extern u32 Camera_GetCurrentViewSlot();
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern uint fn_8029630C(int obj);
+extern u32 fn_8029630C(int obj);
 extern int objAnimFn_80296328(int obj);
-extern undefined4 cameraGetPrevPos2();
+extern u32 cameraGetPrevPos2();
 extern s32 lbl_803DD56C;
 extern f64 lbl_803E1918;
 extern f32 lbl_803E18CC;
@@ -173,7 +173,7 @@ void CameraModeCombat_update(short* cam)
     int ang;
     int diff;
     int abs2;
-    uint ad;
+    u32 ad;
     short classId;
 
     if (lbl_803DD568->invalidTarget != 0)
@@ -480,7 +480,7 @@ void CameraModeCombat_update(short* cam)
     }
 }
 
-void CameraModeCombat_init(CameraObject* camera, undefined4 arg2, GameObject** targetPtr)
+void CameraModeCombat_init(CameraObject* camera, u32 arg2, GameObject** targetPtr)
 {
     float dx;
     float dz;

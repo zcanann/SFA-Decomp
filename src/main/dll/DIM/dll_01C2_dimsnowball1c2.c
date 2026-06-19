@@ -38,7 +38,7 @@ extern f32 lbl_803E4860;
 extern void objRenderFn_8003b8f4(f32);
 extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
-extern uint fn_802972A8(int player);
+extern u32 fn_802972A8(int player);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4864;

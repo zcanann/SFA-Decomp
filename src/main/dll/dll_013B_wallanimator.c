@@ -27,7 +27,7 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_RemoveObject(int obj, int group);

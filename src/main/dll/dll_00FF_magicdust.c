@@ -8,11 +8,11 @@
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 ObjLink_DetachChild();
+extern u32 ObjMsg_SendToObject();
+extern u32 ObjMsg_AllocQueue();
+extern u32 ObjLink_DetachChild();
 
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);
@@ -51,7 +51,7 @@ extern const f32 lbl_803E34D4;
 extern const f32 lbl_803E34D8;
 extern const f32 lbl_803E34DC;
 extern const f32 lbl_803E34E0;
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
@@ -61,7 +61,7 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
 void magicdust_free(int param_1)
 {
-    if (*(uint*)(param_1 + 0xc4) != 0)
+    if (*(u32*)(param_1 + 0xc4) != 0)
     {
         ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
     }
@@ -75,13 +75,13 @@ void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
 
 void magicdust_update(int obj)
 {
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject(); /* #57 */
     float fval;
     short sVar2;
-    byte flagsByte;
+    u8 flagsByte;
     int player;
     int ref;
-    uint val;
+    u32 val;
     int state;
     double dVar9;
     char fxArg;
@@ -91,7 +91,7 @@ void magicdust_update(int obj)
 
     player = (int)Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)obj)->extra;
-    while (ref = ObjMsg_Pop(obj, (uint*)msg, (uint*)0x0, (uint*)0x0), ref != 0)
+    while (ref = ObjMsg_Pop(obj, (u32*)msg, (u32*)0x0, (u32*)0x0), ref != 0)
     {
         switch (msg[0])
         {
@@ -150,10 +150,10 @@ void magicdust_update(int obj)
                 ((MagicDustState*)state)->ambientTimer = (short)val;
             }
         }
-        if (*(uint*)&((GameObject*)obj)->ownerObj != 0)
+        if (*(u32*)&((GameObject*)obj)->ownerObj != 0)
         {
             player = (int)((GameObject*)obj)->anim.modelState;
-            if ((uint)player != 0)
+            if ((u32)player != 0)
             {
                 ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
@@ -161,11 +161,11 @@ void magicdust_update(int obj)
             goto LAB_80173f80;
         }
         ref = (int)((GameObject*)obj)->anim.modelState;
-        if ((uint)ref != 0)
+        if ((u32)ref != 0)
         {
             ((GameObject*)obj)->anim.modelState->flags &= ~0x1000LL;
         }
-        *(undefined*)&((MagicDustState*)state)->unk25B = 1;
+        *(u8*)&((MagicDustState*)state)->unk25B = 1;
         if ((((MagicDustState*)state)->flags27A & 3) == 0)
         {
             ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34BC;
@@ -310,10 +310,10 @@ LAB_80173f80:
 
 void magicdust_init(int obj, int placement)
 {
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_DisableObject(); /* #57 */
     short mode;
     float chaseTime;
-    uint randVal;
+    u32 randVal;
     int ref;
     int state;
     f32 ang;
@@ -321,12 +321,12 @@ void magicdust_init(int obj, int placement)
     u16 texPickA[2];
     u16 texPickB[2];
     u8 pathArgs[4];
-    undefined4 convHi0;
-    uint convLo0;
-    undefined4 convHi1;
-    uint convLo1;
-    undefined4 convHi2;
-    uint convLo2;
+    u32 convHi0;
+    u32 convLo0;
+    u32 convHi1;
+    u32 convLo1;
+    u32 convHi2;
+    u32 convLo2;
 
     state = *(int*)&((GameObject*)obj)->extra;
     pathArgs[0] = 3;
@@ -354,7 +354,7 @@ void magicdust_init(int obj, int placement)
     {
         ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 1;
         ((GameObject*)obj)->anim.alpha = 1;
-        if (*(uint*)&((GameObject*)obj)->anim.hitReactState != 0)
+        if (*(u32*)&((GameObject*)obj)->anim.hitReactState != 0)
         {
             ObjHits_DisableObject(obj);
         }
@@ -392,37 +392,37 @@ void magicdust_init(int obj, int placement)
     {
     case 0x2c4:
         randVal = randomGetRange(0, 1);
-        *(undefined*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickA + randVal);
-        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54f;
-        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54b;
-        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x58;
-        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b0;
-        *(undefined*)&((MagicDustState*)state)->mode = 4;
+        *(u8*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickA + randVal);
+        *(u16*)&((MagicDustState*)state)->ambientEffectId = 0x54f;
+        *(u16*)&((MagicDustState*)state)->burstEffectId = 0x54b;
+        *(u16*)&((MagicDustState*)state)->sfxId = 0x58;
+        *(u16*)&((MagicDustState*)state)->unk276 = 0x5b0;
+        *(u8*)&((MagicDustState*)state)->mode = 4;
         break;
     case 0x2cd:
         randVal = randomGetRange(0, 1);
-        *(undefined*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickB + randVal);
-        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54e;
-        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54a;
-        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x59;
-        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b1;
-        *(undefined*)&((MagicDustState*)state)->mode = 1;
+        *(u8*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickB + randVal);
+        *(u16*)&((MagicDustState*)state)->ambientEffectId = 0x54e;
+        *(u16*)&((MagicDustState*)state)->burstEffectId = 0x54a;
+        *(u16*)&((MagicDustState*)state)->sfxId = 0x59;
+        *(u16*)&((MagicDustState*)state)->unk276 = 0x5b1;
+        *(u8*)&((MagicDustState*)state)->mode = 1;
         break;
     case 0x2ce:
-        *(undefined*)(*(int*)(ref + 0x34) + 8) = 3;
-        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54d;
-        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x549;
-        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x5a;
-        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b2;
-        *(undefined*)&((MagicDustState*)state)->mode = 2;
+        *(u8*)(*(int*)(ref + 0x34) + 8) = 3;
+        *(u16*)&((MagicDustState*)state)->ambientEffectId = 0x54d;
+        *(u16*)&((MagicDustState*)state)->burstEffectId = 0x549;
+        *(u16*)&((MagicDustState*)state)->sfxId = 0x5a;
+        *(u16*)&((MagicDustState*)state)->unk276 = 0x5b2;
+        *(u8*)&((MagicDustState*)state)->mode = 2;
         break;
     default:
-        *(undefined*)(*(int*)(ref + 0x34) + 8) = 2;
-        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x550;
-        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54c;
-        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x5b;
-        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b3;
-        *(undefined*)&((MagicDustState*)state)->mode = 6;
+        *(u8*)(*(int*)(ref + 0x34) + 8) = 2;
+        *(u16*)&((MagicDustState*)state)->ambientEffectId = 0x550;
+        *(u16*)&((MagicDustState*)state)->burstEffectId = 0x54c;
+        *(u16*)&((MagicDustState*)state)->sfxId = 0x5b;
+        *(u16*)&((MagicDustState*)state)->unk276 = 0x5b3;
+        *(u8*)&((MagicDustState*)state)->mode = 6;
         break;
     }
     ((MagicDustState*)state)->unk268 = lbl_803E34F8;

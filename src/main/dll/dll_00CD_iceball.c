@@ -25,10 +25,10 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 ObjHits_DisableObject();
+extern u32 ObjHits_EnableObject();
 
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
@@ -146,7 +146,7 @@ void fn_8015FCCC(int obj)
     }
 }
 
-void iceball_update(undefined2* obj, int unused)
+void iceball_update(u16* obj, int unused)
 {
     int p;
 

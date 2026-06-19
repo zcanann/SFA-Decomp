@@ -1776,7 +1776,7 @@ int musicInitMidiWad(void)
 
 void poolDataMLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sPoolDataMLoadedCallbackLoadError);
@@ -1798,7 +1798,7 @@ void poolDataMLoadedCallback(int status, void* fileInfo)
 
 void poolDataSLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sPoolDataSLoadedCallbackLoadError);
@@ -1820,7 +1820,7 @@ void poolDataSLoadedCallback(int status, void* fileInfo)
 
 void projectDataMLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sProjectDataMLoadedCallbackLoadError);
@@ -1842,7 +1842,7 @@ void projectDataMLoadedCallback(int status, void* fileInfo)
 
 void projectDataSLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sProjectDataSLoadedCallbackLoadError);
@@ -1864,7 +1864,7 @@ void projectDataSLoadedCallback(int status, void* fileInfo)
 
 void sampleBufferMLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sSampleBufferMLoadedCallbackLoadError);
@@ -1886,7 +1886,7 @@ void sampleBufferMLoadedCallback(int status, void* fileInfo)
 
 void sampleBufferSLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sSampleBufferSLoadedCallbackLoadError);
@@ -1908,7 +1908,7 @@ void sampleBufferSLoadedCallback(int status, void* fileInfo)
 
 void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sSampleDirectoryMLoadedCallbackLoadError);
@@ -1930,7 +1930,7 @@ void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
 
 void sampleDirectorySLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sSampleDirectorySLoadedCallbackLoadError);
@@ -1952,7 +1952,7 @@ void sampleDirectorySLoadedCallback(int status, void* fileInfo)
 
 void sfxTriggersLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sSfxTriggersLoadedCallbackLoadError);
@@ -1974,7 +1974,7 @@ void sfxTriggersLoadedCallback(int status, void* fileInfo)
 
 void musicTriggersLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sMusicTriggersLoadedCallbackLoadError);
@@ -1996,7 +1996,7 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
 
 void streamsLoadedCallback(int status, void* fileInfo)
 {
-    uint saved;
+    u32 saved;
     if (status < 0)
     {
         OSReport(sStreamsLoadedCallbackLoadError);

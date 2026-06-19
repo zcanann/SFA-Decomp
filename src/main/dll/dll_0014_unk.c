@@ -35,13 +35,13 @@ extern void OSReport(const char* fmt, ...);
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7,
                               int p8, int p9, int p10);
 extern int mathFn_800dbff0(float* point);
 extern f32 sqrtf(f32 x);
-extern uint countLeadingZeros();
+extern u32 countLeadingZeros();
 extern void voxmaps_worldToGrid(f32 * world, s16 * grid);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
 
@@ -205,7 +205,7 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float* point,
     return 1;
 }
 
-static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGroupIndex)
+static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGroupIndex)
 {
     if (((countLeadingZeros(0xff - currentWalkGroupIndex) >> 5) & patchGroupId) != 0)
     {
@@ -518,14 +518,14 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     return total;
 }
 
-int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGroupIndex)
+int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     u8 k;
     u8 k2;
-    uint pidx;
-    uint lpidx;
-    uint clz;
-    uint lidx;
+    u32 pidx;
+    u32 lpidx;
+    u32 clz;
+    u32 lidx;
     u16 pgid;
     u8 i;
     u8 j;
@@ -659,11 +659,11 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGro
     return 0;
 }
 
-uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId)
+u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
     u8 k;
-    uint pidx;
-    uint j;
+    u32 pidx;
+    u32 j;
     ObjfsaPatch* patch;
     f32 y;
 
@@ -691,7 +691,7 @@ uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId)
                         }
                     }
                 }
-                return (uint)__cntlzw(4 - (patchGroupIndex & 0xff)) >> 5;
+                return (u32)__cntlzw(4 - (patchGroupIndex & 0xff)) >> 5;
             }
         }
     }
@@ -707,7 +707,7 @@ u16 getPatchGroup(float* point, int patchGroupIndex, int unused3, int unused4,
     char* wg;
     ObjfsaPatch* patch;
     u8 k;
-    uint pidx;
+    u32 pidx;
     u8 i;
     u8 j;
     f32 y;
@@ -753,7 +753,7 @@ u16 getPatchGroup(float* point, int patchGroupIndex, int unused3, int unused4,
 }
 
 #pragma peephole on
-uint isInWalkGroupOrPatch(float* point)
+u32 isInWalkGroupOrPatch(float* point)
 {
     s16 idx;
     s16 i;
@@ -802,11 +802,11 @@ uint isInWalkGroupOrPatch(float* point)
 #pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo)
 {
-    uint wgi;
+    u32 wgi;
     ObjfsaWalkGroup* wg;
     u8 k;
     u8 mask;
-    uint pidx;
+    u32 pidx;
     u8 i;
     u8 j;
     ObjfsaPatch* patch;
@@ -1465,7 +1465,7 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
 
 int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase)
 {
-    extern undefined4 RomCurve_getAdjacentWindow(); /* #57 */
+    extern u32 RomCurve_getAdjacentWindow(); /* #57 */
     extern int RomCurve_projectPointToAdjacentWindow(); /* #57 */
     int projected;
     int linkId;
@@ -2203,11 +2203,11 @@ void walkgroupFindExitPointFn_800dc398(void)
     int npi;
     int iter;
     int pi;
-    uint gi;
+    u32 gi;
     u8 ga;
     u8 gb;
     u8 e;
-    uint j2;
+    u32 j2;
     u16 pairId;
     u8 found;
     int searchCount;
@@ -2475,7 +2475,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             }
             while (iter++ != 100);
             OSReport(sObjfsaMissingPatchExitPoint0, p[1].groupId & 0xff,
-                     (int)(uint)p[1].groupId >> 8);
+                     (int)(u32)p[1].groupId >> 8);
         exit0Done:
             iter = 0;
             do
@@ -2489,7 +2489,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             }
             while (iter++ != 100);
             OSReport(sObjfsaMissingPatchExitPoint1, p[1].groupId & 0xff,
-                     (int)(uint)p[1].groupId >> 8);
+                     (int)(u32)p[1].groupId >> 8);
         exit1Done:
             p++;
         }
@@ -2717,7 +2717,7 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
 int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
                                           f32 z, f32 unusedW);
 
-undefined4
+u32
 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                                       float* outLateralOffset, float* outVerticalOffset,
                                       float* outPhase)
@@ -2931,7 +2931,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 
 #define SQ(v) ((v) * (v))
 
-int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink)
+int RomCurve_func13(u32 curveId, int typeFilter, u32 maxDist, int* outLink)
 {
     int done;
     int found;
@@ -3438,7 +3438,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     return candidates[randomGetRange(0, candidateCount - 1)];
 }
 
-f32 curves_distXZ(f32 x, f32 z, uint curveId)
+f32 curves_distXZ(f32 x, f32 z, u32 curveId)
 {
     RomCurveDef* curve;
     f32 dx;
@@ -3455,7 +3455,7 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId)
     return gFloatNegOne;
 }
 
-f32 curves_distFn0B(int obj, uint curveId)
+f32 curves_distFn0B(int obj, u32 curveId)
 {
     RomCurveDef* curve;
     f32 dx;
@@ -3578,7 +3578,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
     return bestDistance;
 }
 
-RomCurveDef* RomCurve_findByIdWithIndex(uint curveId, int* outIndex)
+RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex)
 {
     int high;
     int low;
@@ -3654,7 +3654,7 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
     int count;
     int link;
     int id;
-    uint mask;
+    u32 mask;
     int i;
     int idsB[ROMCURVE_LINK_COUNT];
     int idsA[ROMCURVE_LINK_COUNT];
@@ -3768,7 +3768,7 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
 
 int RomCurve_countRandomPoints(RomCurveDef* curve)
 {
-    uint mask;
+    u32 mask;
     int linkCount;
     int link;
     int count;
@@ -3807,9 +3807,9 @@ int RomCurve_countRandomPoints(RomCurveDef* curve)
     return count;
 }
 
-int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
+int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 {
-    uint* idCursor;
+    u32* idCursor;
     float* outXStart;
     float* outXCursor;
     RomCurveDef** windowCursor;
@@ -3821,7 +3821,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
     float* outZCursor;
     float* outYCursor;
     RomCurveDef** resolveCursor;
-    uint curveId;
+    u32 curveId;
     int remaining;
     RomCurveDef* windowCurves[4];
 
@@ -3891,7 +3891,7 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ)
 
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
 {
-    extern undefined4 RomCurve_getAdjacentWindow(); /* #57 */
+    extern u32 RomCurve_getAdjacentWindow(); /* #57 */
     int linkId;
     int adjacentId;
     int low;
@@ -4083,7 +4083,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
 {
     int link;
     int count;
-    uint mask;
+    u32 mask;
     int i;
     int result;
     int eligibleLinks[ROMCURVE_LINK_COUNT];
@@ -4145,7 +4145,7 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId)
 {
     int link;
     int count;
-    uint mask;
+    u32 mask;
     int i;
     int result;
     int eligibleLinks[ROMCURVE_LINK_COUNT];
@@ -4174,7 +4174,7 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId)
     return result;
 }
 
-RomCurveDef* RomCurve_getById(uint curveId)
+RomCurveDef* RomCurve_getById(u32 curveId)
 {
     int high;
     int low;

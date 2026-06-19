@@ -533,7 +533,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.overrideColor2 = randomGetRange(0, 0xffff);
             cfg.colorWord0 = 0xffff;
             cfg.colorWord1 = randomGetRange(0, 0x7fff);
-            cfg.colorWord2 = (ushort)cfg.overrideColor2;
+            cfg.colorWord2 = (u16)cfg.overrideColor2;
         }
         break;
     case 0x7ab:
@@ -788,7 +788,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.overrideColor2 = randomGetRange(0, 0xffff);
             cfg.colorWord0 = 0xffff;
             cfg.colorWord1 = randomGetRange(0, 0x7fff);
-            cfg.colorWord2 = (ushort)cfg.overrideColor2;
+            cfg.colorWord2 = (u16)cfg.overrideColor2;
         }
         break;
     case 0x7b6:
@@ -2103,21 +2103,21 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.textureId = spawnParams->unk6;
             if (spawnParams->unk2 == 1)
             {
-                cfg.colorWord0 = (ushort)(randomGetRange(0x63bf, 0xffff) & 0xffff);
+                cfg.colorWord0 = (u16)(randomGetRange(0x63bf, 0xffff) & 0xffff);
                 cfg.overrideColor0 = cfg.colorWord0;
-                cfg.colorWord1 = (ushort)(randomGetRange(0x3caf, 0xd8ef) & 0xffff);
+                cfg.colorWord1 = (u16)(randomGetRange(0x3caf, 0xd8ef) & 0xffff);
                 cfg.overrideColor1 = cfg.colorWord1;
-                cfg.colorWord2 = (ushort)(randomGetRange(0x159f, 0x3caf) & 0xffff);
+                cfg.colorWord2 = (u16)(randomGetRange(0x159f, 0x3caf) & 0xffff);
                 cfg.overrideColor2 = cfg.colorWord2;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
             }
             else if (spawnParams->unk2 == 2)
             {
-                cfg.colorWord0 = (ushort)(randomGetRange(0x3caf, 0x7fff) & 0xffff);
+                cfg.colorWord0 = (u16)(randomGetRange(0x3caf, 0x7fff) & 0xffff);
                 cfg.overrideColor0 = cfg.colorWord0;
-                cfg.colorWord1 = (ushort)(randomGetRange(0x7fff, 0xffff) & 0xffff);
+                cfg.colorWord1 = (u16)(randomGetRange(0x7fff, 0xffff) & 0xffff);
                 cfg.overrideColor1 = cfg.colorWord1;
-                cfg.colorWord2 = (ushort)(randomGetRange(0x159f, 0x3caf) & 0xffff);
+                cfg.colorWord2 = (u16)(randomGetRange(0x159f, 0x3caf) & 0xffff);
                 cfg.overrideColor2 = cfg.colorWord2;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
             }

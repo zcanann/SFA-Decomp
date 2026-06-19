@@ -159,7 +159,7 @@ void texscroll2_update(TexScroll2Object* obj)
     {
         if (block != NULL)
         {
-            if (GameBit_Get(state->gameBit) != *(uint*)&state->previousGameBitValue && state->needsApply == 0)
+            if (GameBit_Get(state->gameBit) != *(u32*)&state->previousGameBitValue && state->needsApply == 0)
             {
                 texscroll2_applyMapTextureScroll(obj, state);
                 state->needsApply = 0;

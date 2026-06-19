@@ -52,29 +52,29 @@ extern f32 gCamcontrolSavedFocusLocalZ;
 extern f32 gCamcontrolSavedFocusLocalY;
 extern f32 gCamcontrolSavedFocusLocalX;
 extern s8 lbl_803DD4CB;
-extern undefined4 lbl_803DD4CC;
+extern u32 lbl_803DD4CC;
 
 static inline CamcontrolBaddieControlInterface* camcontrol_GetBaddieControlInterface(void)
 {
     return *gBaddieControlInterface;
 }
 
-static inline uint camcontrol_GetTargetKind(CamcontrolTargetObject* target)
+static inline u32 camcontrol_GetTargetKind(CamcontrolTargetObject* target)
 {
     return target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
 }
 
 void camcontrol_updateTargetFeedback(void)
 {
-    uint targetKind;
+    u32 targetKind;
     s16 objType;
     f32 alphaScale;
     CamcontrolTargetObject* target;
     ObjAnimComponent* reticle;
     u8 buttonPressed;
     int result;
-    uint buttons;
-    uint buttonMask;
+    u32 buttons;
+    u32 buttonMask;
     f32 targetDistance;
 
     target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->currentTarget;
@@ -158,7 +158,7 @@ void camcontrol_updateTargetFeedback(void)
                                                                         NULL);
         }
     }
-    else if (((uint)CAMCONTROL_CAMERA->targetReticleFocus != (uint)target) &&
+    else if (((u32)CAMCONTROL_CAMERA->targetReticleFocus != (u32)target) &&
         (reticle->currentMoveProgress >= gCamcontrolNormalizedMax))
     {
         gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
@@ -195,7 +195,7 @@ void camcontrol_updateTargetFeedback(void)
         CAMCONTROL_CAMERA->targetReticleFocus = 0;
     }
     if ((gCamcontrolTargetState == CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE) &&
-        ((uint)CAMCONTROL_CAMERA->targetReticleFocus != 0))
+        ((u32)CAMCONTROL_CAMERA->targetReticleFocus != 0))
     {
         target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus;
         if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) != 0)
@@ -438,7 +438,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
         return;
     case CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2:
         triggerType2Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
-        triggerType2Param.noBlendFlag = (byte)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
+        triggerType2Param.noBlendFlag = (u8)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
         if (triggerType2Param.noBlendFlag != 0)
         {
             blendFrames = 0;

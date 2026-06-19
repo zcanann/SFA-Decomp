@@ -213,8 +213,8 @@ typedef struct DllF7State
 } DllF7State;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(uint obj, int group);
-extern void ObjGroup_AddObject(uint obj, int group);
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 
 void staticCamera_free(int obj)
 {
@@ -826,7 +826,7 @@ void dll_F7_init(int* obj, int* params)
 void dll_F7_update(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
-    extern undefined4 ObjGroup_FindNearestObject(); /* #57 */
+    extern u32 ObjGroup_FindNearestObject(); /* #57 */
     DllF7State* state = ((GameObject*)obj)->extra;
     f32 pz;
     f32 py;
@@ -834,7 +834,7 @@ void dll_F7_update(int* obj)
     s16 trio[3];
     DllF7Vec vec = lbl_802C2260;
     f32 radius;
-    uint hitVolume;
+    u32 hitVolume;
 
     if (state->byte9 != 0)
     {

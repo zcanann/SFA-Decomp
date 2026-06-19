@@ -242,7 +242,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 void dbsh_symbol_update(int obj)
 {
     s16 phase;
-    uint puzzleStarted;
+    u32 puzzleStarted;
     DbshSymbolState* state;
 
     state = ((GameObject*)obj)->extra;

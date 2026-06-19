@@ -24,7 +24,7 @@
 #include "main/objhits.h"
 
 extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 t);
-extern uint randomGetRange(int min, int max);
+extern u32 randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);
 extern char fn_80296448(int playerObj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
@@ -36,7 +36,7 @@ extern void PSVECSubtract(float*, float*, float*);
 extern f32 PSVECDotProduct(float*, float*);
 extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
-extern uint getAngle(f32, f32);
+extern u32 getAngle(f32, f32);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
 extern f32 fn_80293DA4(f32);
@@ -168,7 +168,7 @@ void fn_80154870(int obj, int* state)
 void fn_80154C24(int obj, int state)
 {
     float fval;
-    uint randVal;
+    u32 randVal;
 
     ((BaddieState*)state)->speedScale = lbl_803E29E8;
     ((BaddieState*)state)->unk2E4 = 0x8000009;
@@ -213,7 +213,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     f32 d;
     int targetObj;
     int delta;
-    uint angle;
+    u32 angle;
 
     vecA[0] = *(f32*)(state + 0x360);
     vecA[1] = *(f32*)(state + 0x358);
@@ -281,7 +281,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     *outDistance = sqrtf(dxDiff * dxDiff + dy * dy);
 }
 
-uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
+u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
 {
     f32 moveTarget[3];
     f32 moveDelta[3];
@@ -305,7 +305,7 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     int targetObj;
     int delta;
     int angleStep;
-    uint angle;
+    u32 angle;
 
     vecA[0] = *(f32*)(state + 0x360);
     vecA[1] = *(f32*)(state + 0x358);

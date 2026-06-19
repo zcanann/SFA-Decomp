@@ -31,7 +31,7 @@ extern f32 lbl_803E0EA0;
 extern f32 lbl_803E0EA4;
 extern f32 lbl_803E0EA8;
 
-void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_81_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315548;
@@ -260,7 +260,7 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0)
+        if ((u32)sourceObj != 0)
         {
             buf.pos[0] = lbl_803E0E80 + *(f32*)(sourceObj + 0x18);
             buf.pos[1] = lbl_803E0E80 + *(f32*)(sourceObj + 0x1c);
@@ -281,7 +281,7 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags)
     {
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0x23d, 0);
     }
-    else if ((uint)(variant - 10) <= 3 || variant == 0xe)
+    else if ((u32)(variant - 10) <= 3 || variant == 0xe)
     {
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, 0x2e, 0);
     }

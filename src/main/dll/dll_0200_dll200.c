@@ -47,7 +47,7 @@ void fn_801F20D4(int obj)
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
     extern void GameBit_Set(int slot, int val);
-    extern uint GameBit_Get(int id);
+    extern u32 GameBit_Get(int id);
     int sub;
     IntVec3 stk;
 
@@ -105,7 +105,7 @@ void fn_801F27E4(int obj)
     extern f32 lbl_803E5D9C;
     extern f32 lbl_803E5DA0;
     extern void GameBit_Set(int slot, int val);
-    extern uint GameBit_Get(int id);
+    extern u32 GameBit_Get(int id);
     int sub;
 
     sub = *(int*)&((GameObject*)obj)->extra;
@@ -356,7 +356,7 @@ typedef struct ArwAttachTarget
 void fn_801F2290(int obj)
 {
     extern void*Obj_GetPlayerObject(void);
-    extern uint GameBit_Get(int id);
+    extern u32 GameBit_Get(int id);
     extern void GameBit_Set(int slot, int val);
     extern void buttonDisable(int a, int b);
     extern int getAngle(f32 x, f32 y);

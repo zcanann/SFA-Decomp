@@ -38,7 +38,7 @@ extern f32 lbl_803E0FA0;
 
 #define FX_VARIANT_BURST 4
 
-void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315FA8;
@@ -233,19 +233,19 @@ void dll_85_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)buf.ctx != 0 && (uint)posSource != 0)
+        if ((u32)buf.ctx != 0 && (u32)posSource != 0)
         {
             buf.pos[0] += *(f32*)(buf.ctx + 0x18) + *(f32*)(posSource + 0xc);
             buf.pos[1] += *(f32*)(buf.ctx + 0x1c) + *(f32*)(posSource + 0x10);
             buf.pos[2] += *(f32*)(buf.ctx + 0x20) + *(f32*)(posSource + 0x14);
         }
-        else if ((uint)buf.ctx != 0)
+        else if ((u32)buf.ctx != 0)
         {
             buf.pos[0] += *(f32*)(buf.ctx + 0x18);
             buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
             buf.pos[2] += *(f32*)(buf.ctx + 0x20);
         }
-        else if ((uint)posSource != 0)
+        else if ((u32)posSource != 0)
         {
             buf.pos[0] += *(f32*)(posSource + 0xc);
             buf.pos[1] += *(f32*)(posSource + 0x10);

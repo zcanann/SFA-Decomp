@@ -1,7 +1,7 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern f32 timeDelta;
 

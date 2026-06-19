@@ -105,9 +105,9 @@ void EnterSaveNameScreen_frameEnd(void)
 #define ENTER_SAVE_NAME_SFX_DELETE 0x419
 #define ENTER_SAVE_NAME_SFX_TYPE 0x41A
 
-undefined4
-EnterSaveNameScreen_run(undefined4 param_1, undefined4 param_2, int param_3, undefined4 param_4, undefined4 param_5
-                        , undefined4 param_6, undefined4 param_7, undefined4 param_8)
+u32
+EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 param_5
+                        , u32 param_6, u32 param_7, u32 param_8)
 {
     extern char lbl_803DD6F0;
     extern s32 lbl_803DD6E4;

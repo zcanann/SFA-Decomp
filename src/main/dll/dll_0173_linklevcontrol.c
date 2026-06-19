@@ -36,7 +36,7 @@ enum
     LEVCON_SAVE_STATUS_LOADED = 2
 };
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void Music_Trigger(int track, int flag);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern int getSaveGameLoadStatus(void);
