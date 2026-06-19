@@ -1254,7 +1254,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         posA[0] = ((GameObject*)obj)->anim.localPosX;
         posA[1] = ((GameObject*)obj)->anim.localPosY;
         posA[2] = ((GameObject*)obj)->anim.localPosZ;
-        fn_80292E20((u16) * (s16*)obj, &sinA, &cosA);
+        fn_80292E20((u16)((GameObject*)obj)->anim.rotX, &sinA, &cosA);
         tgtA[0] = -(lbl_803E2B38 * sinA - ((GameObject*)obj)->anim.localPosX);
         tgtA[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
@@ -1307,7 +1307,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                     posB[0] = ((GameObject*)obj)->anim.localPosX;
                     posB[1] = ((GameObject*)obj)->anim.localPosY;
                     posB[2] = ((GameObject*)obj)->anim.localPosZ;
-                    fn_80292E20((u16) * (s16*)obj, &sinB, &cosB);
+                    fn_80292E20((u16)((GameObject*)obj)->anim.rotX, &sinB, &cosB);
                     tgtB[0] = -(lbl_803E2B38 * sinB - ((GameObject*)obj)->anim.localPosX);
                     tgtB[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
                     tgtB[2] = -(lbl_803E2B38 * cosB - ((GameObject*)obj)->anim.localPosZ);
