@@ -174,8 +174,8 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     f32 d[3];
     f32* dp;
     f32 horiz;
-    s16 yaw;
-    s16 pitch;
+    int yaw;
+    int pitch;
     int clamp;
     int negClamp;
     s16 negClampS;
@@ -199,10 +199,8 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     dp[1] = target->anim.localPosY - eyePos[1];
     dp[2] = target->anim.localPosZ - eyePos[2];
     horiz = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
-    yaw = (s16)(int)
-    getAngle(dp[0], dp[2]);
-    pitch = (s16)(int)
-    getAngle(dp[1], horiz);
+    yaw = (s16)getAngle(dp[0], dp[2]);
+    pitch = (s16)getAngle(dp[1], horiz);
     if (self->anim.seqId == DR_LASERCANNON_PITCH_FLIP_TYPE)
     {
         pitch = (s16) - pitch;
