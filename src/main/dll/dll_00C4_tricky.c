@@ -498,12 +498,13 @@ typedef struct PromptSlotByte
 
 int Tricky_updateSideCommandPrompts(int obj)
 {
+    int objVal;
+    int state;
     char cmdByte;
     u16 promptId;
     u8 promptA;
     u8 promptB;
     u8 promptC;
-    int objVal;
     u32 bitVal;
     u32 commandMask;
     int ref;
@@ -511,7 +512,6 @@ int Tricky_updateSideCommandPrompts(int obj)
     u16* setup;
     u32 spawnedObj;
     u8 i;
-    int state;
     char flagsA[4];
     char flagsB[4];
     u32 promptTable[4];
