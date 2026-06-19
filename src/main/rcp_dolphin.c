@@ -2598,7 +2598,7 @@ void texRestructRefs(int mode)
     testAndSet_onlyUseHeaps1and2(1);
     i = 0;
     off = 0;
-    for (; i < gLoadedTextureCount; i++, off += 16)
+    for (; i < gLoadedTextureCount; off += 16, i++)
     {
         tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
         if (tex != NULL && ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->flag != 0 &&
