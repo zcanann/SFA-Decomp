@@ -41,12 +41,14 @@ def main():
     # rebuild only touched unit .o explicitly (avoids the broken-unit cascade)
     for o in objs:
         Path(o).unlink(missing_ok=True)
+    failed = []
     if objs:
-        r = run(["ninja"] + objs)
-        missing = [o for o in objs if not Path(o).exists()]
-        if missing:
-            print("BUILD FAILED for:", missing)
-            print(r.stdout[-3000:]); sys.exit(1)
+        run(["ninja", "-k", "0"] + objs)  # -k0: keep going so all failures are visible
+        failed = [o for o in objs if not Path(o).exists()]
+        if failed:
+            print("BUILD FAILED for (revert these units' renames before commit):")
+            for m in failed:
+                print("  ", m)
     # filtered objdiff report
     cfg = json.load(open("objdiff.json"))
     cfg["units"] = [u for u in cfg["units"]
@@ -70,6 +72,9 @@ def main():
         for n, b, c in sorted(reg, key=lambda x: x[2] - x[1])[:30]:
             print(f"  {n}: {b:.3f} -> {c:.3f}")
         sys.exit(1)
+    if failed:
+        print(f"NOTE: {len(failed)} touched unit(s) failed to build (see above) — revert them.")
+        sys.exit(2)
     print(f"OK: no regressions across {len(cur)} units ({len(units)} rebuilt)")
 
 
