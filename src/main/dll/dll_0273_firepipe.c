@@ -384,7 +384,7 @@ sound_update:
         if (effectObj != 0)
         {
             ((GameObject*)effectObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
-            *(f32*)(effectObj + 0x10) = ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)effectObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY;
             *(f32*)(effectObj + 0x14) = ((GameObject*)obj)->anim.localPosZ;
             *(s16*)(effectObj + 0) = ((GameObject*)obj)->anim.rotX;
             *(s16*)(effectObj + 2) = ((GameObject*)obj)->anim.rotY;
