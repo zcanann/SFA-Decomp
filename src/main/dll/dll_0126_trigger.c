@@ -58,21 +58,18 @@ typedef struct ObjInterpretSeqPlacement
 typedef struct TriggerState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u32 unk8;
+    f32 rangeSq;
+    u32 timer;
     u8 padC[0x1C - 0xC];
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
+    f32 targetPosX;
+    f32 targetPosY;
+    f32 targetPosZ;
+    f32 prevTargetPosX;
+    f32 prevTargetPosY;
+    f32 prevTargetPosZ;
     u8 pad34[0x80 - 0x34];
-    s16 unk80;
-    s16 unk82;
-    s16 unk84;
-    s16 unk86;
-    s16 unk88;
+    s16 gameBit;
+    s16 gateBits[4];
     u8 pad8A[0xAC - 0x8A];
 } TriggerState;
 
@@ -88,11 +85,11 @@ STATIC_ASSERT(offsetof(TriggerPlacement, unk46) == 0x46);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk2) == 0x2);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk4) == 0x4);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk6) == 0x6);
-STATIC_ASSERT(offsetof(TriggerState, unk4) == 0x4);
-STATIC_ASSERT(offsetof(TriggerState, unk8) == 0x8);
-STATIC_ASSERT(offsetof(TriggerState, unk1C) == 0x1C);
-STATIC_ASSERT(offsetof(TriggerState, unk80) == 0x80);
-STATIC_ASSERT(offsetof(TriggerState, unk82) == 0x82);
+STATIC_ASSERT(offsetof(TriggerState, rangeSq) == 0x4);
+STATIC_ASSERT(offsetof(TriggerState, timer) == 0x8);
+STATIC_ASSERT(offsetof(TriggerState, targetPosX) == 0x1C);
+STATIC_ASSERT(offsetof(TriggerState, gameBit) == 0x80);
+STATIC_ASSERT(offsetof(TriggerState, gateBits) == 0x82);
 STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
 
 extern int getLActions();
@@ -197,19 +194,19 @@ void Trigger_init(u8* obj, u8* params)
     {
     case 0x4b:
         t = (f32)(s32)(params[0x3a] * 2);
-        ((TriggerState*)sub)->unk4 = t * t;
+        ((TriggerState*)sub)->rangeSq = t * t;
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
         ((GameObject*)obj)->anim.rootMotionScale = t / lbl_803E40F8;
         break;
     case 0x4c:
-        ((TriggerState*)sub)->unk82 = *(s16*)(params + 0x48);
+        ((TriggerState*)sub)->gateBits[0] = *(s16*)(params + 0x48);
         objFn_80198fa4(obj, params);
         break;
     case 0x230:
-        ((TriggerState*)sub)->unk4 = (f32)(s32)(params[0x3a] * 2);
-        ((TriggerState*)sub)->unk4 = ((TriggerState*)sub)->unk4 * ((TriggerState*)sub)->unk4;
+        ((TriggerState*)sub)->rangeSq = (f32)(s32)(params[0x3a] * 2);
+        ((TriggerState*)sub)->rangeSq = ((TriggerState*)sub)->rangeSq * ((TriggerState*)sub)->rangeSq;
         break;
     case 0x4d:
         ((GameObject*)obj)->anim.rotX = (s16)(params[0x3d] << 8);
@@ -217,10 +214,10 @@ void Trigger_init(u8* obj, u8* params)
         ((GameObject*)obj)->anim.rotZ = 0;
         break;
     case 0x54:
-        ((TriggerState*)sub)->unk82 = *(s16*)(params + 0x48);
-        ((TriggerState*)sub)->unk84 = *(s16*)(params + 0x4a);
-        ((TriggerState*)sub)->unk86 = *(s16*)(params + 0x4c);
-        ((TriggerState*)sub)->unk88 = *(s16*)(params + 0x4e);
+        ((TriggerState*)sub)->gateBits[0] = *(s16*)(params + 0x48);
+        ((TriggerState*)sub)->gateBits[1] = *(s16*)(params + 0x4a);
+        ((TriggerState*)sub)->gateBits[2] = *(s16*)(params + 0x4c);
+        ((TriggerState*)sub)->gateBits[3] = *(s16*)(params + 0x4e);
         ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
         break;
     case 0x51:
@@ -230,8 +227,8 @@ void Trigger_init(u8* obj, u8* params)
     default:
         break;
     }
-    ((TriggerState*)sub)->unk80 = *(s16*)(params + 0x44);
-    if (GameBit_Get(((TriggerState*)sub)->unk80) == 1)
+    ((TriggerState*)sub)->gameBit = *(s16*)(params + 0x44);
+    if (GameBit_Get(((TriggerState*)sub)->gameBit) == 1)
     {
         sub[0] = (u8)(sub[0] | 0x04);
     }
@@ -436,7 +433,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 5:
-                    if (((TriggerState*)state)->unk4 != lbl_803E40D8)
+                    if (((TriggerState*)state)->rangeSq != lbl_803E40D8)
                     {
                         break;
                     }
@@ -777,7 +774,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     if ((s8)p3 > 0)
     {
         *state |= 1;
-        GameBit_Set(((TriggerState*)state)->unk80, 1);
+        GameBit_Set(((TriggerState*)state)->gameBit, 1);
     }
     else if ((s8)p3 < 0)
     {
@@ -868,41 +865,41 @@ void Trigger_hitDetect(int obj)
                     {
                         if ((s8)def[0x43] == 2)
                         {
-                            ((TriggerState*)state)->unk1C = ((GameObject*)target)->anim.worldPosX;
-                            ((TriggerState*)state)->unk20 = ((GameObject*)target)->anim.worldPosY;
-                            ((TriggerState*)state)->unk24 = ((GameObject*)target)->anim.worldPosZ;
+                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.worldPosX;
+                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.worldPosY;
+                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.worldPosZ;
                         }
                         else if ((s8)def[0x43] < 2)
                         {
-                            ((TriggerState*)state)->unk1C = ((GameObject*)target)->anim.previousWorldPosX;
-                            ((TriggerState*)state)->unk20 = ((GameObject*)target)->anim.previousWorldPosY;
-                            ((TriggerState*)state)->unk24 = ((GameObject*)target)->anim.previousWorldPosZ;
+                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousWorldPosX;
+                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousWorldPosY;
+                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousWorldPosZ;
                         }
                         else
                         {
-                            ((TriggerState*)state)->unk1C = ((GameObject*)target)->anim.previousLocalPosX;
-                            ((TriggerState*)state)->unk20 = ((GameObject*)target)->anim.previousLocalPosY;
-                            ((TriggerState*)state)->unk24 = ((GameObject*)target)->anim.previousLocalPosZ;
+                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousLocalPosX;
+                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousLocalPosY;
+                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousLocalPosZ;
                         }
                         *state &= ~0x40;
                     }
                     else
                     {
-                        ((TriggerState*)state)->unk1C = ((TriggerState*)state)->unk28;
-                        ((TriggerState*)state)->unk20 = ((TriggerState*)state)->unk2C;
-                        ((TriggerState*)state)->unk24 = ((TriggerState*)state)->unk30;
+                        ((TriggerState*)state)->targetPosX = ((TriggerState*)state)->prevTargetPosX;
+                        ((TriggerState*)state)->targetPosY = ((TriggerState*)state)->prevTargetPosY;
+                        ((TriggerState*)state)->targetPosZ = ((TriggerState*)state)->prevTargetPosZ;
                     }
                     if ((s8)def[0x43] < 3)
                     {
-                        ((TriggerState*)state)->unk28 = ((GameObject*)target)->anim.worldPosX;
-                        ((TriggerState*)state)->unk2C = ((GameObject*)target)->anim.worldPosY;
-                        ((TriggerState*)state)->unk30 = ((GameObject*)target)->anim.worldPosZ;
+                        ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.worldPosX;
+                        ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.worldPosY;
+                        ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.worldPosZ;
                     }
                     else
                     {
-                        ((TriggerState*)state)->unk28 = ((GameObject*)target)->anim.localPosX;
-                        ((TriggerState*)state)->unk2C = ((GameObject*)target)->anim.localPosY;
-                        ((TriggerState*)state)->unk30 = ((GameObject*)target)->anim.localPosZ;
+                        ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.localPosX;
+                        ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.localPosY;
+                        ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.localPosZ;
                     }
                 }
                 switch (*(s16*)def)
@@ -921,7 +918,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->unk82 != -1 && GameBit_Get(((TriggerState*)state)->unk82) == 0u)
+                    if (((TriggerState*)state)->gateBits[0] != -1 && GameBit_Get(((TriggerState*)state)->gateBits[0]) == 0u)
                     {
                         ok2 = 0;
                     }
@@ -931,8 +928,8 @@ void Trigger_hitDetect(int obj)
                     }
                     break;
                 case 0x4e:
-                    ((TriggerState*)state)->unk8 = *(int*)&((TriggerState*)state)->unk8 + framesThisStep;
-                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->unk8)
+                    ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
+                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->timer)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
