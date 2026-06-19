@@ -193,7 +193,7 @@ void FUN_80051fc4(undefined4 param_1, undefined4 param_2, int param_3, char* par
         colorWord = *(undefined4*)param_4;
         FUN_8025c510(DAT_803dd9f4, (byte*)&colorWord);
         GXSetBlendMode(DAT_803dda10, DAT_803dd9f0);
-        if (*(int*)(tex + 0x50) == 0)
+        if (((Texture*)tex)->imageOffset == 0)
         {
             FUN_8025c5f0(DAT_803dda10, DAT_803dd9ec);
         }
@@ -209,7 +209,7 @@ void FUN_80051fc4(undefined4 param_1, undefined4 param_2, int param_3, char* par
     {
         FUN_80047d88(param_4, '\x01', '\x01', blendArgs, &blendModeId);
         GXSetBlendMode(DAT_803dda10, blendArgs[0]);
-        if (*(int*)(tex + 0x50) == 0)
+        if (((Texture*)tex)->imageOffset == 0)
         {
             FUN_8025c5f0(DAT_803dda10, blendModeId);
         }
@@ -243,7 +243,7 @@ void FUN_80051fc4(undefined4 param_1, undefined4 param_2, int param_3, char* par
     DAT_803dd9b0 = 1;
     if (tex != 0)
     {
-        if (*(char*)(tex + 0x48) == '\0')
+        if (*(char*)&((Texture*)tex)->preloaded == '\0')
         {
             FUN_8025b054((uint*)(tex + 0x20), DAT_803dda0c);
         }
@@ -251,13 +251,13 @@ void FUN_80051fc4(undefined4 param_1, undefined4 param_2, int param_3, char* par
         {
             FUN_8025aeac((uint*)(tex + 0x20), *(uint**)(tex + 0x40), DAT_803dda0c);
         }
-        if (*(int*)(tex + 0x50) != 0)
+        if (((Texture*)tex)->imageOffset != 0)
         {
             FUN_800530b8(tex, (uint*)&DAT_80378600);
             FUN_8025b054((uint*)&DAT_80378600, 1);
         }
     }
-    if (*(int*)(tex + 0x50) != 0)
+    if (((Texture*)tex)->imageOffset != 0)
     {
         DAT_803dd9ea = DAT_803dd9ea + '\x01';
         DAT_803dda10 = DAT_803dda10 + 1;
@@ -629,7 +629,7 @@ void FUN_800537a0(undefined4 param_1, undefined4 param_2, int param_3, char para
     if (tex != 0)
     {
         FUN_800033a8(tex, 0, 100);
-        *(char*)(tex + 0x16) = (char)param_3;
+        *(char*)&((Texture*)tex)->unk16 = (char)param_3;
         *(short*)(tex + 10) = (short)((ulonglong)dims >> 0x20);
         *(short*)(tex + 0xc) = (short)dims;
         *(undefined2*)(tex + 0x10) = 1;
