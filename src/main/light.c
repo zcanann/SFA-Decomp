@@ -109,66 +109,66 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    char cVar2;
-    u32 uVar1;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
+    char mapAct;
+    u32 bitHandle;
+    int iface2;
+    int iface1;
+    int eventIdx;
+    int hitVolume;
     u64 extraout_f1;
     u64 uVar7;
     u64 extraout_f1_00;
 
-    iVar6 = *(int*)&((GameObject*)param_9)->extra;
+    hitVolume = *(int*)&((GameObject*)param_9)->extra;
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    for (iVar5 = 0; iVar5 < animUpdate->eventCount; iVar5 = iVar5 + 1)
+    for (eventIdx = 0; eventIdx < animUpdate->eventCount; eventIdx = eventIdx + 1)
     {
-        if ((*(short*)(iVar6 + 8) == 0xd) && (animUpdate->eventIds[iVar5] == 0x14))
+        if ((*(short*)(hitVolume + 8) == 0xd) && (animUpdate->eventIds[eventIdx] == 0x14))
         {
             GameBit_Set(0x500, 0);
             GameBit_Set(0xd72, 1);
             GameBit_Set(0xd44, 1);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
-            iVar4 = (int)*gMapEventInterface;
+            iface1 = (int)*gMapEventInterface;
             (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 0x16, 1);
-            cVar2 = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
-            if (cVar2 == '\x01')
+            mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
+            if (mapAct == '\x01')
             {
                 uVar7 = extraout_f1;
                 FUN_80042b9c(0, 0, 1);
-                uVar1 = FUN_80044404(0x46);
-                FUN_80042bec(uVar1, 1);
-                uVar1 = FUN_80044404(4);
-                FUN_80042bec(uVar1, 0);
+                bitHandle = FUN_80044404(0x46);
+                FUN_80042bec(bitHandle, 1);
+                bitHandle = FUN_80044404(4);
+                FUN_80042bec(bitHandle, 0);
                 FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
-                iVar3 = (int)*gMapEventInterface;
+                iface2 = (int)*gMapEventInterface;
                 (*gMapEventInterface)->setMapAct(0x12, 2);
-                FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3,
-                             iVar4, param_13, param_14, param_15, param_16);
+                FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iface2,
+                             iface1, param_13, param_14, param_15, param_16);
             }
             else
             {
-                cVar2 = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
-                if (cVar2 == '\x02')
+                mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
+                if (mapAct == '\x02')
                 {
                     uVar7 = extraout_f1_00;
                     FUN_80042b9c(0, 0, 1);
-                    uVar1 = FUN_80044404(0x46);
-                    FUN_80042bec(uVar1, 1);
-                    uVar1 = FUN_80044404(4);
-                    FUN_80042bec(uVar1, 0);
+                    bitHandle = FUN_80044404(0x46);
+                    FUN_80042bec(bitHandle, 1);
+                    bitHandle = FUN_80044404(4);
+                    FUN_80042bec(bitHandle, 0);
                     FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
                     (*gMapEventInterface)->setMapAct(0xb, 4);
-                    iVar3 = (int)*gMapEventInterface;
+                    iface2 = (int)*gMapEventInterface;
                     (*gMapEventInterface)->setMapAct(8, 6);
-                    FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3
-                                 , iVar4, param_13, param_14, param_15, param_16);
+                    FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iface2
+                                 , iface1, param_13, param_14, param_15, param_16);
                 }
             }
         }
-        animUpdate->eventIds[iVar5] = 0;
+        animUpdate->eventIds[eventIdx] = 0;
     }
     return 0;
 }
