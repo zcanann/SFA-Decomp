@@ -144,9 +144,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     int max;
     int ang;
     int diff;
+    f32 ratio;
     f32 num;
     f32 den;
-    f32 ratio;
     f32 sc;
     f32 mag;
     struct
@@ -182,9 +182,10 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     {
         num = (f32)(int)
         Player_GetCurrentHealth((int)player);
+        ratio = num;
         den = (f32)(int)
         Player_GetMaxHealth((int)player);
-        ratio = num / den;
+        ratio = ratio / den;
         ratio = ratio * lbl_803E3930;
         if (ratio <= lbl_803E3940)
         {
