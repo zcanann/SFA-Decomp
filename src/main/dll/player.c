@@ -3138,7 +3138,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     f32 nearArg;
 
     tbl = (int)lbl_80332EC0;
-    ctrl = *(int*)((char*)obj2 + 0x4c);
+    ctrl = *(int*)&((GameObject*)obj2)->anim.placementData;
     inner = ((GameObject*)obj)->extra;
     result = 0;
     va = (int)objModelGetVecFn_800395d8(obj, 0);
@@ -3225,8 +3225,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             if ((s8)seq->movementState != 2)
             {
                 seq->posOffsetScale = lbl_803E7EE0;
-                seq->posOffsetX = ((GameObject*)obj)->anim.localPosX - *(f32*)((char*)obj2 + 0xc);
-                seq->posOffsetY = ((GameObject*)obj)->anim.localPosY - *(f32*)((char*)obj2 + 0x10);
+                seq->posOffsetX = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj2)->anim.localPosX;
+                seq->posOffsetY = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj2)->anim.localPosY;
                 seq->posOffsetZ = ((GameObject*)obj)->anim.localPosZ - ((PlayerState*)obj2)->baddie.posX;
                 seq->rotOffsetX = ((PlayerState*)inner)->targetYaw - (u16) * (s16*)obj2;
                 if (seq->rotOffsetX > 0x8000)
@@ -3488,7 +3488,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 f32 az = seq->posOffsetZ - ((GameObject*)obj)->anim.localPosZ;
                 dist = sqrtf(ax * ax + az * az);
             }
-            dx2 = *(f32*)((char*)obj2 + 0xc) - seq->posOffsetX;
+            dx2 = ((GameObject*)obj2)->anim.localPosX - seq->posOffsetX;
             dz2 = ((PlayerState*)obj2)->baddie.posX - seq->posOffsetZ;
             d2 = sqrtf(dx2 * dx2 + dz2 * dz2);
             if (dist <= lbl_803DE468)
@@ -5537,7 +5537,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     }
     if (changed != 0)
     {
-        *(int*)((char*)obj + 0x5c) = inner->moveSlots +
+        *(int*)&((GameObject*)obj)->anim.weaponDaTable = inner->moveSlots +
             ((u32)inner->moveSlotIndex * 0xb0 + 0x60);
         {
             int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
@@ -12782,12 +12782,12 @@ int fn_802AB1D0(int obj)
     for (; i < count;)
     {
         cur = ((int*)objs)[i++];
-        if ((*(s16*)((char*)cur + 0x44) == 0x1c || *(s16*)((char*)cur + 0x44) == 0x2a) &&
+        if ((((GameObject*)cur)->anim.classId == 0x1c || ((GameObject*)cur)->anim.classId == 0x2a) &&
             ((GameObject*)cur)->anim.alpha == 0xff)
         {
-            f32 dx = *(f32*)((char*)cur + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-            f32 dy = *(f32*)((char*)cur + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-            f32 dz = *(f32*)((char*)cur + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+            f32 dx = ((GameObject*)cur)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+            f32 dy = ((GameObject*)cur)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+            f32 dz = ((GameObject*)cur)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
             dist = dx * dx + dy * dy + dz * dz;
             if (dist < lbl_803E80E8)
             {
@@ -14742,13 +14742,13 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
             mode = 4;
         }
     }
-    out[7] = *(f32*)((char*)cam + 0x1c);
-    out[8] = *(f32*)((char*)cam + 0x20);
-    out[9] = *(f32*)((char*)cam + 0x24);
+    out[7] = ((GameObject*)cam)->anim.worldPosY;
+    out[8] = ((GameObject*)cam)->anim.worldPosZ;
+    out[9] = ((GameObject*)cam)->anim.velocityX;
     out[7] = -out[7];
     out[8] = -out[8];
     out[9] = -out[9];
-    out[10] = -*(f32*)((char*)cam + 0x28);
+    out[10] = -((GameObject*)cam)->anim.velocityY;
     out[0xb] = vec[0];
     out[0xc] = vec[1];
     out[0xd] = vec[2];
@@ -14779,12 +14779,12 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         planes[1] = lbl_803E7EA4;
         planes[2] = -out[7];
         planes[3] = -(planes[0] * *(f32*)((char*)cam + 0x4) +
-            planes[2] * *(f32*)((char*)cam + 0x14));
+            planes[2] * ((GameObject*)cam)->anim.localPosZ);
         planes[4] = -planes[0];
         planes[5] = lbl_803E7EA4;
         planes[6] = -planes[2];
-        p7c = -(planes[4] * *(f32*)((char*)cam + 0x8) +
-            planes[6] * *(f32*)((char*)cam + 0x18));
+        p7c = -(planes[4] * ((GameObject*)cam)->anim.rootMotionScale +
+            planes[6] * ((GameObject*)cam)->anim.worldPosX);
         i = 0;
         pl = planes;
         dp = dists;
@@ -14873,9 +14873,9 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
             out[0x14] = f * out[7] + out[0xb];
             out[0x16] = f * out[9] + out[0xd];
         }
-        out[1] = *(f32*)((char*)cam + 0xc) +
+        out[1] = ((GameObject*)cam)->anim.localPosX +
             *(f32*)((char*)cam + 0x48) *
-            (*(f32*)((char*)cam + 0x10) - *(f32*)((char*)cam + 0xc));
+            (((GameObject*)cam)->anim.localPosY - ((GameObject*)cam)->anim.localPosX);
         dists[2] = out[0x14];
         dists[3] = out[1];
         z9c = out[0x16];
@@ -14935,7 +14935,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         {
             out[0x12] = out[1];
         }
-        out[2] = *(f32*)((char*)cam + 0xc);
+        out[2] = ((GameObject*)cam)->anim.localPosX;
         out[0] = out[1] - out[2];
         *(u8*)((char*)out + 0x5e) = *(u8*)((char*)cam + 0x50);
         *(u8*)((char*)out + 0x60) = *(u8*)((char*)cam + 0x53);
@@ -16299,7 +16299,7 @@ void fn_802AB38C(int a, int b, int c)
             void* cam = (void*)(*gCameraInterface)->getTarget();
             if (cam != NULL)
             {
-                s16 id = *(s16*)((char*)cam + 0x46);
+                s16 id = ((GameObject*)cam)->anim.seqId;
                 if (id == 0x414 || id == 0x4a9)
                 {
                     c = 0x5bd;
