@@ -1577,8 +1577,7 @@ void initMaps(void)
     lbl_80382238[3] = (int)mmAlloc(128, 5, 0);
     lbl_80382238[4] = (int)mmAlloc(8192, 5, 0);
     memset((void*)lbl_80382238[4], 0, 8192);
-    idx = 0;
-    ofs = 0;
+    idx = ofs = 0;
     for (i = 0; i < 16; i++)
     {
         e = (char*)lbl_80382238[1] + ofs;
