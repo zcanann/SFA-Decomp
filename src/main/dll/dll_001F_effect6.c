@@ -1305,19 +1305,19 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern float mathSinf(float x);
-extern f32 lbl_803DB7F8;
-extern f32 lbl_803DB7FC;
-extern int lbl_803DD370;
-extern int lbl_803DD374;
-extern f32 lbl_803DD378;
-extern f32 lbl_803DD37C;
+extern f32 gEffect6ScrollPhase2;
+extern f32 gEffect6ScrollPhase3;
+extern int gEffect6Osc0Angle;
+extern int gEffect6Osc1Angle;
+extern f32 gEffect6Osc1Value;
+extern f32 gEffect6Osc0Value;
 extern f32 lbl_803DFC80;
 extern f32 lbl_803DFC84;
 extern f32 lbl_803DFC90;
-extern f32 lbl_803DFCD0;
-extern f32 lbl_803DFCD4;
-extern f32 lbl_803DB7F0;
-extern f32 lbl_803DB7F4;
+extern f32 gEffect6Pi;
+extern f32 gEffect6SineAngleScale;
+extern f32 gEffect6ScrollPhase0;
+extern f32 gEffect6ScrollPhase1;
 extern f32 lbl_803DFC8C;
 extern f32 lbl_803DFC94;
 extern f32 lbl_803DFC98;
@@ -1348,10 +1348,10 @@ int Effect6_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     int spawnResult;
     PartFxSpawn cfg;
 
-    lbl_803DB7F0 = lbl_803DB7F0 + lbl_803DFC80;
-    if (lbl_803DB7F0 > 1.0f) lbl_803DB7F0 = lbl_803DFC84;
-    lbl_803DB7F4 = lbl_803DB7F4 + lbl_803DFC8C;
-    if (lbl_803DB7F4 > 1.0f) lbl_803DB7F4 = lbl_803DFC90;
+    gEffect6ScrollPhase0 = gEffect6ScrollPhase0 + lbl_803DFC80;
+    if (gEffect6ScrollPhase0 > 1.0f) gEffect6ScrollPhase0 = lbl_803DFC84;
+    gEffect6ScrollPhase1 = gEffect6ScrollPhase1 + lbl_803DFC8C;
+    if (gEffect6ScrollPhase1 > 1.0f) gEffect6ScrollPhase1 = lbl_803DFC90;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -1573,28 +1573,28 @@ void Effect6_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB7F8 + (step = lbl_803DFC80 * timeDelta);
-    lbl_803DB7F8 = sum;
+    sum = gEffect6ScrollPhase2 + (step = lbl_803DFC80 * timeDelta);
+    gEffect6ScrollPhase2 = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7F8 = lbl_803DFC84;
+        gEffect6ScrollPhase2 = lbl_803DFC84;
     }
-    sum = lbl_803DB7FC + step;
-    lbl_803DB7FC = sum;
+    sum = gEffect6ScrollPhase3 + step;
+    gEffect6ScrollPhase3 = sum;
     if (sum > 1.0f)
     {
-        lbl_803DB7FC = lbl_803DFC90;
+        gEffect6ScrollPhase3 = lbl_803DFC90;
     }
-    lbl_803DD370 = lbl_803DD370 + framesThisStep * 0x64;
-    if (lbl_803DD370 > 0x7fff)
+    gEffect6Osc0Angle = gEffect6Osc0Angle + framesThisStep * 0x64;
+    if (gEffect6Osc0Angle > 0x7fff)
     {
-        lbl_803DD370 = 0;
+        gEffect6Osc0Angle = 0;
     }
-    lbl_803DD37C = mathSinf(lbl_803DFCD0 * (f32)(s16)lbl_803DD370 / lbl_803DFCD4);
-    lbl_803DD374 = lbl_803DD374 + framesThisStep * 0x32;
-    if (lbl_803DD374 > 0x7fff)
+    gEffect6Osc0Value = mathSinf(gEffect6Pi * (f32)(s16)gEffect6Osc0Angle / gEffect6SineAngleScale);
+    gEffect6Osc1Angle = gEffect6Osc1Angle + framesThisStep * 0x32;
+    if (gEffect6Osc1Angle > 0x7fff)
     {
-        lbl_803DD374 = 0;
+        gEffect6Osc1Angle = 0;
     }
-    lbl_803DD378 = mathSinf(lbl_803DFCD0 * (f32)(s16)lbl_803DD374 / lbl_803DFCD4);
+    gEffect6Osc1Value = mathSinf(gEffect6Pi * (f32)(s16)gEffect6Osc1Angle / gEffect6SineAngleScale);
 }

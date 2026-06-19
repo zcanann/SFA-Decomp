@@ -220,31 +220,31 @@ int cmbsrc_cycleColor(int obj, int state)
         {
             sourceState->colorCycleIndex = 0;
         }
-        idx = lbl_803DC3E0[sourceState->colorCycleIndex];
+        idx = gCmbsrcColorCycleIndexTable[sourceState->colorCycleIndex];
         if (sourceState->light != NULL)
         {
             int base = idx * 3;
-            modelLightStruct_setDiffuseColor(sourceState->light, lbl_8032BD50[base],
-                                             lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
-            modelLightStruct_setSpecularColor(sourceState->light, lbl_8032BD50[base],
-                                              lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
+            modelLightStruct_setDiffuseColor(sourceState->light, gCmbsrcColorRgbTable[base],
+                                             gCmbsrcColorRgbTable[base + 1], gCmbsrcColorRgbTable[base + 2], 0xff);
+            modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[base],
+                                              gCmbsrcColorRgbTable[base + 1], gCmbsrcColorRgbTable[base + 2], 0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 1]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base + 1]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base + 2]),
                                                    0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE)
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
-                                               lbl_8032BD50[base + 2], 0x87,
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[base], gCmbsrcColorRgbTable[base + 1],
+                                               gCmbsrcColorRgbTable[base + 2], 0x87,
                                                lbl_803E736C * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
-                                               lbl_8032BD50[base + 2], 0x87,
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[base], gCmbsrcColorRgbTable[base + 1],
+                                               gCmbsrcColorRgbTable[base + 2], 0x87,
                                                lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
@@ -252,7 +252,7 @@ int cmbsrc_cycleColor(int obj, int state)
     }
     else
     {
-        idx = lbl_803DC3E0[sourceState->colorCycleIndex];
+        idx = gCmbsrcColorCycleIndexTable[sourceState->colorCycleIndex];
     }
     return idx;
 }
@@ -443,7 +443,7 @@ int cmbsrc_update(int obj)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj,
-                                               lbl_8032BD00[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
+                                               gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
             if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
                 *(u8*)((int)state->light + 0x4c) != 0)
@@ -556,7 +556,7 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
             }
-            c0 = &lbl_8032BD50[(u8)lightVariant * 0x30];
+            c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30];
             c1 = c0 + 1;
             c2 = c0 + 2;
             modelLightStruct_setDiffuseColor(state->light, c0[mapData->colorIndex * 3],
@@ -639,7 +639,7 @@ void cmbsrc_init(int obj, u8* setup)
         state->hitFlags.disabled = 1;
         ObjHitbox_SetSphereRadius(obj,
                                   (int)(lbl_803E7374 *
-                                      (mapData->radius * (cmbsrc->objAnim.rootMotionScale * lbl_8032BD10[mapData->
+                                      (mapData->radius * (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->
                                           colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
         {

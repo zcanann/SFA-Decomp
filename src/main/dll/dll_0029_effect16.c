@@ -23,14 +23,14 @@
 extern float mathSinf(float x);
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 lbl_803DB840;
-extern f32 lbl_803DB844;
-extern f32 lbl_803DB848;
-extern f32 lbl_803DB84C;
-extern s32 lbl_803DD3C0;
-extern s32 lbl_803DD3C4;
-extern f32 lbl_803DD3C8;
-extern f32 lbl_803DD3CC;
+extern f32 gEffect16ScrollPhaseA;
+extern f32 gEffect16ScrollPhaseB;
+extern f32 gEffect16TimedScrollPhaseA;
+extern f32 gEffect16TimedScrollPhaseB;
+extern s32 gEffect16SinPhaseCounterA;
+extern s32 gEffect16SinPhaseCounterB;
+extern f32 gEffect16SinValueB;
+extern f32 gEffect16SinValueA;
 extern f32 lbl_803E00A8;
 extern f32 lbl_803E00AC;
 extern f32 lbl_803E00B0;
@@ -52,26 +52,26 @@ extern f32 lbl_803E00EC;
 extern f32 lbl_803E00F0;
 extern f32 lbl_803E00F4;
 extern f32 lbl_803E00F8;
-extern f32 lbl_803E0108;
-extern f32 lbl_803E010C;
-extern WaterfxCfg lbl_8039C410;
+extern f32 gEffect16Pi;
+extern f32 gEffect16SinPhaseScale;
+extern WaterfxCfg gEffect16DefaultSpawnSource;
 
 void Effect16_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = lbl_803DB848 + (step = lbl_803E00A8 * timeDelta);
-    lbl_803DB848 = sum;
-    if (sum > 1.0f) lbl_803DB848 = lbl_803E00AC;
-    sum = lbl_803DB84C + step;
-    lbl_803DB84C = sum;
-    if (sum > 1.0f) lbl_803DB84C = lbl_803E00B8;
-    lbl_803DD3C0 = lbl_803DD3C0 + framesThisStep * 0x64;
-    if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
-    lbl_803DD3CC = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
-    lbl_803DD3C4 = lbl_803DD3C4 + framesThisStep * 0x32;
-    if (lbl_803DD3C4 > 0x7fff) lbl_803DD3C4 = 0;
-    lbl_803DD3C8 = mathSinf(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
+    sum = gEffect16TimedScrollPhaseA + (step = lbl_803E00A8 * timeDelta);
+    gEffect16TimedScrollPhaseA = sum;
+    if (sum > 1.0f) gEffect16TimedScrollPhaseA = lbl_803E00AC;
+    sum = gEffect16TimedScrollPhaseB + step;
+    gEffect16TimedScrollPhaseB = sum;
+    if (sum > 1.0f) gEffect16TimedScrollPhaseB = lbl_803E00B8;
+    gEffect16SinPhaseCounterA = gEffect16SinPhaseCounterA + framesThisStep * 0x64;
+    if (gEffect16SinPhaseCounterA > 0x7fff) gEffect16SinPhaseCounterA = 0;
+    gEffect16SinValueA = mathSinf(gEffect16Pi * (f32)(s16)gEffect16SinPhaseCounterA / gEffect16SinPhaseScale);
+    gEffect16SinPhaseCounterB = gEffect16SinPhaseCounterB + framesThisStep * 0x32;
+    if (gEffect16SinPhaseCounterB > 0x7fff) gEffect16SinPhaseCounterB = 0;
+    gEffect16SinValueB = mathSinf(gEffect16Pi * (f32)(s16)gEffect16SinPhaseCounterB / gEffect16SinPhaseScale);
 }
 
 int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
@@ -80,10 +80,10 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     int spawnResult;
     PartFxSpawn cfg;
 
-    lbl_803DB840 = lbl_803DB840 + lbl_803E00A8;
-    if (lbl_803DB840 > 1.0f) lbl_803DB840 = lbl_803E00AC;
-    lbl_803DB844 = lbl_803DB844 + lbl_803E00B4;
-    if (lbl_803DB844 > 1.0f) lbl_803DB844 = lbl_803E00B8;
+    gEffect16ScrollPhaseA = gEffect16ScrollPhaseA + lbl_803E00A8;
+    if (gEffect16ScrollPhaseA > 1.0f) gEffect16ScrollPhaseA = lbl_803E00AC;
+    gEffect16ScrollPhaseB = gEffect16ScrollPhaseB + lbl_803E00B4;
+    if (gEffect16ScrollPhaseB > 1.0f) gEffect16ScrollPhaseB = lbl_803E00B8;
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
@@ -124,14 +124,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6d7:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -145,14 +145,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6d8:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -235,11 +235,11 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.textureId = 0xc79;
         break;
     case 0x6de:
-        cfg.velocityX = lbl_803E00DC * lbl_803DB840 * (f32)(s32)
+        cfg.velocityX = lbl_803E00DC * gEffect16ScrollPhaseA * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.velocityZ = lbl_803E00DC * lbl_803DB840 * (f32)(s32)
+        cfg.velocityZ = lbl_803E00DC * gEffect16ScrollPhaseA * (f32)(s32)
         randomGetRange(-0xf, 0xf);
-        cfg.velocityY = lbl_803E00DC * lbl_803DB840 * (f32)(s32)
+        cfg.velocityY = lbl_803E00DC * gEffect16ScrollPhaseA * (f32)(s32)
         randomGetRange(-0xf, 0xf);
         cfg.initialAlpha = 0x7d;
         cfg.scale = lbl_803E00E0 * (f32)(s32)
@@ -296,14 +296,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f2:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -325,14 +325,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f3:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -348,14 +348,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f4:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -371,14 +371,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f5:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -394,14 +394,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f6:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -417,14 +417,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f7:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
@@ -440,14 +440,14 @@ int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x6f8:
         if (spawnParams == 0)
         {
-            lbl_8039C410.posX = lbl_803E00BC;
-            lbl_8039C410.posY = lbl_803E00BC;
-            lbl_8039C410.posZ = lbl_803E00BC;
-            lbl_8039C410.scale = lbl_803E00B0;
-            lbl_8039C410.rotX = 0;
-            lbl_8039C410.rotY = 0;
-            lbl_8039C410.rotZ = 0;
-            spawnParams = (PartFxSpawnParams*)&lbl_8039C410;
+            gEffect16DefaultSpawnSource.posX = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posY = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.posZ = lbl_803E00BC;
+            gEffect16DefaultSpawnSource.scale = lbl_803E00B0;
+            gEffect16DefaultSpawnSource.rotX = 0;
+            gEffect16DefaultSpawnSource.rotY = 0;
+            gEffect16DefaultSpawnSource.rotZ = 0;
+            spawnParams = (PartFxSpawnParams*)&gEffect16DefaultSpawnSource;
         }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;

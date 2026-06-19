@@ -71,8 +71,8 @@ extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E37C8;
-extern f32 lbl_803E37EC;
-extern f32 lbl_803E37F0;
+extern f32 gAppleOnTreePickupXZRange;
+extern f32 gAppleOnTreePickupRange;
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
@@ -138,8 +138,8 @@ void appleontree_handleCollectableHit(int obj)
     int state = *(int*)&((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
-    if (!(Vec_xzDistance((float*)(player + 0x18), (float*)(obj + 0x18)) < lbl_803E37EC)) return;
-    if (!(Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18)) < lbl_803E37F0)) return;
+    if (!(Vec_xzDistance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupXZRange)) return;
+    if (!(Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupRange)) return;
 
     if (GameBit_Get(0x90f) == 0)
     {

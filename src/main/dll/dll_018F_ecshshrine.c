@@ -8,11 +8,11 @@
  *
  * ecsh_shrine_update is the main state machine: it runs a six-slot rune
  * puzzle whose working set lives in a shared scratch buffer (EcshPuzzleState
- * at lbl_80326208 - color floats plus current/next rune arrays that are
+ * at gEcShShrinePuzzleState - color floats plus current/next rune arrays that are
  * rotated/swapped per round), and sequences the screen transitions, object
  * sequences and looping SFX as the puzzle advances through its phases.
  * Several render/query helpers (modelMtxFn, func0E, render2, func0B,
- * setScale) read the active instance through the lbl_803DDBC4 singleton.
+ * setScale) read the active instance through the gEcShShrineActiveObject singleton.
  *
  * The DLL owns a cluster of GameBits set on init/free/transition (0xefa,
  * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...) and a torch GameBit (0x58b).
@@ -35,17 +35,17 @@ extern int randomGetRange(int lo, int hi);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern float mathSinf(float x);
 extern f32 timeDelta;
-extern f32 lbl_803E4F90;
-extern f32 lbl_803E4F94;
-extern f32 lbl_803E4F98;
+extern f32 gEcShShrineOrbitSpeedA;
+extern f32 gEcShShrineOrbitSpeedB;
+extern f32 gEcShShrineOrbitSpeedC;
 extern f32 lbl_803E4F9C;
-extern f32 lbl_803E4FA0;
-extern f32 lbl_803E4FA4;
+extern f32 gEcShShrinePi;
+extern f32 gEcShShrineAngleUnitScale;
 extern f32 lbl_803E4FA8;
 extern f32 lbl_803E4FAC;
 extern f32 lbl_803E4FB0;
-extern f32 lbl_803E4FB4;
-extern f32 lbl_803E4FB8;
+extern f32 gEcShShrineFadeDistance;
+extern f32 gEcShShrineFadeAlphaMax;
 extern f32 lbl_803E4FC8;
 extern f32 lbl_803E4FCC;
 extern f32 lbl_803E4FD0;
@@ -59,7 +59,7 @@ extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
-extern s16 lbl_80326238[];
+extern s16 gEcShShrineRuneIndexTable[];
 extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
@@ -126,21 +126,21 @@ void fn_801C5990(MmShrineAnimObj* obj)
         return;
     }
 
-    state->orbitA = (s16)(state->orbitA + (s32)(lbl_803E4F90 * timeDelta));
-    state->orbitB = (s16)(state->orbitB + (s32)(lbl_803E4F94 * timeDelta));
-    state->orbitC = (s16)(state->orbitC + (s32)(lbl_803E4F98 * timeDelta));
+    state->orbitA = (s16)(state->orbitA + (s32)(gEcShShrineOrbitSpeedA * timeDelta));
+    state->orbitB = (s16)(state->orbitB + (s32)(gEcShShrineOrbitSpeedB * timeDelta));
+    state->orbitC = (s16)(state->orbitC + (s32)(gEcShShrineOrbitSpeedC * timeDelta));
 
     obj->posY = lbl_803E4F9C +
     (*(f32*)(config + 0xC) +
-        mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4));
+        mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
 
-    trigA = mathSinf((lbl_803E4FA0 * state->orbitB) / lbl_803E4FA4);
-    trigB = mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((gEcShShrinePi * state->orbitB) / gEcShShrineAngleUnitScale);
+    trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
     trigB = trigB + trigA;
     obj->roll = lbl_803E4FA8 * trigB;
 
-    trigA = mathSinf((lbl_803E4FA0 * state->orbitC) / lbl_803E4FA4);
-    trigB = mathSinf((lbl_803E4FA0 * state->orbitA) / lbl_803E4FA4);
+    trigA = mathSinf((gEcShShrinePi * state->orbitC) / gEcShShrineAngleUnitScale);
+    trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
     trigB = trigB + trigA;
     obj->pitch = lbl_803E4FA8 * trigB;
 
@@ -163,9 +163,9 @@ void fn_801C5990(MmShrineAnimObj* obj)
 
         obj->yaw = (s16)(*(s16*)(int)&obj->yaw + (s32)(((f32)angleDelta * timeDelta) / lbl_803E4FB0));
         distance = Vec_xzDistance((f32*)((int)&obj->posX), (f32*)((int)player + 0x18));
-        if (distance <= lbl_803E4FB4)
+        if (distance <= gEcShShrineFadeDistance)
         {
-            obj->fadeAlpha = (u8)(s32)(lbl_803E4FB8 * (distance / lbl_803E4FB4));
+            obj->fadeAlpha = (u8)(s32)(gEcShShrineFadeAlphaMax * (distance / gEcShShrineFadeDistance));
         }
         else
         {
@@ -236,8 +236,8 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
 
 void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 {
-    extern int lbl_803DDBC4; /* type varies per fn for coloring - #57 */
-    int* obj = (int*)lbl_803DDBC4;
+    extern int gEcShShrineActiveObject; /* type varies per fn for coloring - #57 */
+    int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
@@ -247,8 +247,8 @@ void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 
 void ecsh_shrine_func0E(u8 v)
 {
-    extern int lbl_803DDBC4; /* #57 */
-    int* obj = (int*)lbl_803DDBC4;
+    extern int gEcShShrineActiveObject; /* #57 */
+    int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
@@ -270,31 +270,31 @@ typedef struct EcshRenderPair
 
 void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 {
-    extern EcshRenderPair lbl_80326208[]; /* #57 */
-    extern int lbl_803DDBC4; /* #57 */
+    extern EcshRenderPair gEcShShrinePuzzleState[]; /* #57 */
+    extern int gEcShShrineActiveObject; /* #57 */
     int v;
-    if ((int*)lbl_803DDBC4 == NULL) return;
-    v = lbl_80326238[idx];
-    lbl_80326208[v].a = a;
-    lbl_80326208[v].b = b;
+    if ((int*)gEcShShrineActiveObject == NULL) return;
+    v = gEcShShrineRuneIndexTable[idx];
+    gEcShShrinePuzzleState[v].a = a;
+    gEcShShrinePuzzleState[v].b = b;
 }
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
-    extern u8 lbl_80326208[]; /* #57 */
-    extern void* lbl_803DDBC4; /* #57 */
+    extern u8 gEcShShrinePuzzleState[]; /* #57 */
+    extern void* gEcShShrineActiveObject; /* #57 */
     int j;
-    if (lbl_803DDBC4 == NULL) return;
-    j = lbl_80326238[idx];
-    *out1 = *(f32*)((char*)lbl_80326208 + j * 8);
-    j = lbl_80326238[idx];
-    *out2 = *(f32*)((char*)lbl_80326208 + j * 8 + 4);
+    if (gEcShShrineActiveObject == NULL) return;
+    j = gEcShShrineRuneIndexTable[idx];
+    *out1 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8);
+    j = gEcShShrineRuneIndexTable[idx];
+    *out2 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8 + 4);
 }
 
 void ecsh_shrine_setScale(s16* out)
 {
-    extern void* lbl_803DDBC4; /* #57 */
-    int* obj = lbl_803DDBC4;
+    extern void* gEcShShrineActiveObject; /* #57 */
+    int* obj = gEcShShrineActiveObject;
     int* state;
     if (obj == NULL) return;
     state = ((GameObject*)obj)->extra;
@@ -367,7 +367,7 @@ void ecsh_shrine_update(s16* obj)
 {
     extern void* Obj_GetPlayerObject(void); /* #57 */
     extern void fn_801C5990(s16 * obj); /* #57 */
-    extern u8 lbl_80326208[]; /* #57 */
+    extern u8 gEcShShrinePuzzleState[]; /* #57 */
     f32 t[2];
     int msgC;
     int msgA;
@@ -382,7 +382,7 @@ void ecsh_shrine_update(s16* obj)
     f32 z;
     f32 fv;
 
-    ps = (EcshPuzzleState*)lbl_80326208;
+    ps = (EcshPuzzleState*)gEcShShrinePuzzleState;
     sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     *(EcshIntPair*)&t[0] = *(EcshIntPair*)&lbl_803E8470;
@@ -783,11 +783,11 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
-    extern s16* lbl_803DDBC4; /* #57 */
+    extern s16* gEcShShrineActiveObject; /* #57 */
     int* sub = ((GameObject*)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;
-    lbl_803DDBC4 = 0;
+    gEcShShrineActiveObject = 0;
     *obj = (s16)((s32)def[0x18] << 8);
     ((EcshShrineState*)sub)->unk2F = 0;
     ((EcshShrineState*)sub)->unk30 = 0;
@@ -810,7 +810,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->unk1E = 0;
     gv = GameBit_Get(0x58b);
     ((EcshShrineState*)sub)->unk32 = gv;
-    lbl_803DDBC4 = obj;
+    gEcShShrineActiveObject = obj;
     ObjGroup_AddObject(obj, 0xb);
     ((GameObject*)obj)->unkF4 = 1;
     if (*(void**)sub == NULL)
