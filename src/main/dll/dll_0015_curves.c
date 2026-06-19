@@ -547,7 +547,7 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
 
 void fn_800E5F1C(int obj, CurvesCollisionState* collision)
 {
-    u32 hitCount;
+    int hitCount;
     RomCurvePoint* point;
     int i;
     s8 foundBelow;
@@ -562,7 +562,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     zero = lbl_803E0668;
     one = lbl_803E068C;
     foundBelow = 0;
-    points = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
+    points = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], (u32*)&hitCount, 0);
     collision->waterY[0] = topSentinel;
     collision->floorY[0] = topSentinel;
     collision->ceilingY[0] = floorSentinel;
@@ -587,7 +587,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
                 }
                 foundBelow = 1;
             }
-            else if ((point->x >= (lbl_803E06AC + collision->points[0][1])) && (point->z < zero))
+            else if ((point->x >= (lbl_803E06AC + collision->points[0][1])) && (point->z < lbl_803E0668))
             {
                 collision->ceilingY[0] = point->x;
             }
@@ -600,7 +600,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     }
     if (((s8)collision->surfaceFlags & 0x10) != 0)
     {
-        collision->floorGap[0] = zero;
+        collision->floorGap[0] = lbl_803E0668;
     }
     point = points;
     for (i = 0; i < hitCount; i++)
