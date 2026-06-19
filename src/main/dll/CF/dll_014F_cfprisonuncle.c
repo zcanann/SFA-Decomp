@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
+#include "main/objprint.h"
 
 extern int randomGetRange(int lo, int hi);
 extern int ObjMsg_Pop();
@@ -19,7 +20,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int ObjPath_GetPointWorldPosition();
-extern void objAnimFn_80038f38(int obj, char* p2);
+
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);

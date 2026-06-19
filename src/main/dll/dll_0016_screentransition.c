@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
+#include "dolphin/gx/GXCull.h"
 
 extern u32 DAT_803de0af;
 
@@ -105,7 +106,7 @@ typedef struct
 extern u8 gDvdErrorPauseActive;
 extern f32 lbl_803E0568;
 extern void GXGetScissor(int* x, int* y, int* w, int* h);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);

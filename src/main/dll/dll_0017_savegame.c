@@ -24,6 +24,9 @@
 #include "main/dll/gameplay.h"
 #include "main/dll/player_status.h"
 #include "main/mapEventTypes.h"
+#include "dolphin/os/OSReboot.h"
+#include "string.h"
+#include "main/gamebits.h"
 
 typedef struct SaveGameData
 {
@@ -43,7 +46,7 @@ extern u32 FUN_8000676c();
 extern u32 FUN_80006c20();
 extern u32 FUN_80017500();
 extern u32 FUN_8005d018();
-extern void OSSetSaveRegion(void* start, void* end);
+
 
 extern u8 gGameplayPreviewSettings;
 extern u32 DAT_803a3e26;
@@ -77,12 +80,12 @@ extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 extern f32 timeDelta;
 
-extern void* memset(void* dst, int val, u32 n);
-extern void* memcpy(void* dst, const void* src, u32 n);
+
+
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
-extern void GameBit_Set(int eventId, int value);
-extern u32 GameBit_Get(int eventId);
+
+
 extern int maybeTryLoadSave(int a);
 extern void mm_free(u32);
 extern int unlockLevel(s32 val, int idx, int flag);

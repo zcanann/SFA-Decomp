@@ -34,9 +34,12 @@ extern void OSReport(const char* fmt, ...);
 
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
+#include "main/gamebits.h"
+#include "main/dll/modgfx.h"
+#include "string.h"
 
-extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
+
+
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7,
                               int p8, int p9, int p10);
 extern int mathFn_800dbff0(float* point);
@@ -104,7 +107,7 @@ extern u8 lbl_803A1730[];
 
 #pragma scheduling on
 #pragma peephole on
-extern void* memset(void* dst, int val, u32 n);
+
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
@@ -120,7 +123,7 @@ extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
-extern void* memcpy(void* dst, const void* src, u32 n);
+
 extern f32 lbl_803E0648;
 extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;

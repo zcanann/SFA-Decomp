@@ -27,9 +27,15 @@
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
+#include "main/gamebits.h"
+#include "main/camera.h"
+#include "dolphin/gx/GXDraw.h"
+#include "string.h"
 
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+
+
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -208,8 +214,8 @@ typedef struct StaffDoGrowShrinkAnimState
 } StaffDoGrowShrinkAnimState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
+
+
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
@@ -247,7 +253,7 @@ void staticCamera_init(s16* obj, int params, int flag)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern u32 GameBit_Get(int eventId);
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 
 void mikabombshadow_update(int* obj);
@@ -1050,12 +1056,10 @@ void staff_initialise(void)
 
 
 extern void quakeSpellTextureFn_8007366c(int param);
-extern f32* Camera_GetViewMatrix(void);
+
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXDrawTorus(f32 rc, u8 numc, u8 numt);
-extern void* memcpy(void* dst, const void* src, unsigned int n);
 extern f32 gStaffHalfPi;
 
 void quakeSpellTextureFn_8016dbf4(void)

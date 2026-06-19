@@ -6,6 +6,8 @@
  */
 #include "main/game_object.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {
@@ -24,7 +26,7 @@ typedef struct DFDoorSpeciExtra
     u8 pad04[2];
 } DFDoorSpeciExtra;
 
-extern u32 GameBit_Get(int eventId);
+
 extern float mathCosf(float x);
 extern u8 framesThisStep;
 extern f32 lbl_803E4E30;
@@ -33,7 +35,7 @@ extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
 
-extern void objRenderFn_8003b8f4(f32);
+
 
 int DFSH_Door2Speci_SeqFn(int obj)
 {

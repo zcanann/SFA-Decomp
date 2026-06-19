@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
 
 #define CCGASVENT_GROUP 0x3f
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -40,8 +41,8 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 #pragma scheduling on

@@ -38,8 +38,14 @@
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
+#include "main/objlib.h"
+#include "main/texture.h"
+#include "dolphin/gx/GXCull.h"
+#include "main/dll/maybeTemplate.h"
+#include "main/pad.h"
+#include "main/gamebits.h"
 
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
+
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;
 extern u16 lbl_803DE3F4;
@@ -312,7 +318,7 @@ extern int hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dirId);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8 * buf);
-extern void textureFree(u8* tex);
+
 extern void Obj_FreeObject(char* obj);
 extern int fn_80296C4C(u8 * player);
 extern void fn_80296C84(u8 * player);
@@ -376,11 +382,11 @@ extern void* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
 extern void gameTextFn_80016c18(int text, int* arg);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern int fn_8029605C(void* obj, f32* outX, f32* outY);
 extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
 extern void hudDrawFn_80121440(int a, int b, int c);
-extern void hudDrawButtons(int a, int b, int c);
+
 extern void drawTrickyHudOverlay(int a, int b, int c);
 extern void Camera_ApplyCurrentViewport(int a);
 extern void hudDrawAirMeter(void);
@@ -429,10 +435,10 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void cutsceneFadeInOut(int a);
 extern void Music_Trigger(int id, int arg);
 extern void buttonDisable(int port, u32 mask);
-extern u32 getButtonsJustPressed(int port);
+
 extern u32 getButtonsHeld(int port);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int objIsCurModelNotZero();
 extern s8 padGetCX(s32 chan);
 extern void* getArwing(void);
@@ -445,7 +451,7 @@ extern s8 gCMenuCloseSfx;
 extern void* gameTextGetBox(int box);
 extern void gameTextAppendStr(char* str, int arg2);
 extern int cMenuSetItems(int handle, int flag);
-extern void* textureLoadAsset(int asset);
+
 extern void* fn_802972A8(void* player);
 
 void fn_80129FB0(void)

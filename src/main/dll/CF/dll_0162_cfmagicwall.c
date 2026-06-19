@@ -7,6 +7,7 @@
  */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/gamebits.h"
 
 typedef struct CfMagicWallMapData
 {
@@ -25,7 +26,7 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 /* a quarter turn: the wall is invisible when viewed from behind */
 #define CFMAGICWALL_SIDE_ANGLE 0x4000
 
-extern u32 GameBit_Get(int eventId);
+
 extern int Obj_GetYawDeltaToObject();
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);

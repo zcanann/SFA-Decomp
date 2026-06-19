@@ -22,6 +22,9 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/camera.h"
+#include "string.h"
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -32,11 +35,11 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern int randomGetRange(int lo, int hi);
+
 extern void textureFree(int tex);
 extern int lbl_803AC960[4];
 extern int Obj_GetActiveModel(int obj);
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+
 extern void ModelLightStruct_free(void*);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -97,7 +100,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
-extern f32* Camera_GetViewMatrix(void);
+
 extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
@@ -114,7 +117,7 @@ extern void modelLightStruct_setEnabled(int h, int n, f32 v);
 extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
 extern void Obj_FreeObject(int obj);
-extern void* memcpy(void* dst, const void* src, unsigned long n);
+
 
 #pragma scheduling off
 #pragma peephole off

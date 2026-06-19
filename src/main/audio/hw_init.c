@@ -1,5 +1,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/dsp_voice.h"
+#include "main/audio/sal_dsp.h"
+#include "main/audio/synth_jobs.h"
+#include "main/audio/synth_virtual_sample.h"
 
 extern u8 gSynthInitialized;
 extern u8 salTimeOffset;
@@ -10,18 +13,18 @@ extern u32 salMessageCallback;
 extern u8* dspVoice;
 
 extern void salExitDspCtrl(void);
-extern int salStartDsp(void);
-extern void sndBegin(void);
-extern void hwInitIrq(void);
+
+
+
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
-extern int salInitDsp(u32 flags);
-extern void doNothing_802737E8(void);
-extern void salCtrlDsp(u32 dest);
+
+
+
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
 extern void audioFn_80271498(u32 value);
-extern void synthUpdateJobTable(void);
-extern void synthUpdateVirtualSamples(void);
+
+
 
 void snd_handle_irq(void)
 {

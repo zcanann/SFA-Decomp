@@ -7,19 +7,22 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
+#include "main/texture.h"
+#include "main/objlib.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern int randomGetRange(int lo, int hi);
 extern f32 timeDelta;
 
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
-extern void textureFree(u8* tex);
 
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
+
+
+
 extern void* Obj_GetPlayerObject(void);
-extern void GameBit_Set(int eventId, int value);
+
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern int getAngle(float y, float x);
@@ -27,7 +30,7 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
-extern void* textureLoadAsset(int asset);
+
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int objGetAnimState80A(void* obj);

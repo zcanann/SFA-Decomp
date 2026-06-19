@@ -1,16 +1,20 @@
 #include "main/unknown/autos/musyx_dsp.h"
+#include "string.h"
+#include "dolphin/os/OSCache.h"
+#include "main/audio/sal_dsp.h"
+#include "main/audio/aram.h"
 
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
  * recovered against the public MusyX runtime source. */
 
-extern void* memset(void* dst, int val, u32 n);
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
-extern asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes);
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
-extern asm void DCStoreRangeNoSync(register void* addr, register u32 nBytes);
-extern void* salMalloc(u32 size);
-extern void salFree(void* ptr);
-extern u32 aramGetBaseAddress(void);
+
+
+
+
+
+
+
+
 
 extern void* dspCmdBuffer; /* dspHrtfHistoryBuffer */
 extern DSPvoice* dspVoice;

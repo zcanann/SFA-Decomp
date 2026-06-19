@@ -14,6 +14,9 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/dll/DIM/DIMboulder.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -25,15 +28,15 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
-extern void ObjHits_DisableObject(u32 objPtr);
 
 
-extern void imicepillar_free(void);
-extern int imicepillar_getObjectTypeId(void);
-extern int imicepillar_getExtraSize(void);
+
+
+
+
 
 void imicepillar_hitDetect(void);
 
@@ -68,7 +71,7 @@ extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
+
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);

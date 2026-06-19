@@ -8,6 +8,8 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
 /* Cog-puzzle gamebits for DIM2 bridge puzzle */
 #define COGBIT_PANEL_A     0x17a
@@ -37,11 +39,11 @@ typedef struct DimbridgecogmaiPlacement
     s16 unk1E;
 } DimbridgecogmaiPlacement;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern f32 lbl_803E4900;
-extern void objRenderFn_8003b8f4(f32);
+
 
 void dimbridgecogmai_hitDetect(void)
 {

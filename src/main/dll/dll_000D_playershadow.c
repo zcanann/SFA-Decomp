@@ -20,6 +20,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
+#include "main/camera.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -1336,7 +1337,7 @@ void playerShadow_renderObject(void* obj)
                 ((GameObject*)obj)->anim.localPosZ - tileInfo[2]);
 }
 
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern f32 sqrtf(f32 x);
 extern f32 lbl_8030FDE8[];
 extern s16 lbl_803DD29A;

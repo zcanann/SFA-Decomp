@@ -4,6 +4,8 @@
  * list, latching a gamebit so the gate stays open on reload.
  */
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
 #define DIMGATE_TRIGGER_OBJ_TYPE 399
 
@@ -20,11 +22,11 @@ typedef struct DimgatePlacement
     s16 gateGameBit;
 } DimgatePlacement;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
 
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E4878;
 
 void dimgate_free(void)

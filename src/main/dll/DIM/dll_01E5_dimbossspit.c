@@ -10,6 +10,8 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
 
 typedef struct DIMbossspitUpdateBurstState
 {
@@ -39,9 +41,9 @@ typedef struct DIMbossspitState
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_EnableObject(u32 objPtr);
+
+
+
 extern void objRenderFn_8003b8f4(f32 scale);
 
 extern f32 lbl_803E4D44;

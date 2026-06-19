@@ -6,6 +6,8 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/baddie/chuka.h"
+#include "main/gamebits.h"
+#include "main/dll/dll_80220608_shared.h"
 
 typedef struct ChukaPlacement
 {
@@ -55,8 +57,8 @@ void chuka_hitDetect(int obj)
 void chuka_update(int obj)
 {
     extern int*ObjList_GetObjects(int*, int*);
-    extern u32 GameBit_Get(int eventId);
-    extern void Obj_SetActiveModelIndex(int, int);
+
+
     extern u8 gChukaModeTable[];
     extern f32 lbl_803E63F8;
     extern f32 lbl_803E63FC;

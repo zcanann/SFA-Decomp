@@ -1,10 +1,13 @@
 #include "ghidra_import.h"
+#include "main/audio/sal_dsp.h"
+#include "dolphin/os/OSCache.h"
+#include "dolphin/ar.h"
 
-extern void* salMalloc(u32 size);
-extern void salFree(void* ptr);
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
-extern u32 ARGetBaseAddress(void);
-extern u32 ARGetSize(void);
+
+
+
+
+
 
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;

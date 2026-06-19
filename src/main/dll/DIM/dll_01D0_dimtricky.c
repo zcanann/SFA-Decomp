@@ -29,12 +29,14 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -47,7 +49,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4A38;
-extern void* getTrickyObject(void);
+
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {

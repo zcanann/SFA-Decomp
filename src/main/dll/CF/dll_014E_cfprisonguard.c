@@ -12,6 +12,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
 typedef struct CfPrisonGuardMapData
 {
@@ -43,11 +45,11 @@ extern int ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
+
+
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
+
+
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);

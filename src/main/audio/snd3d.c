@@ -1,12 +1,17 @@
 #include "main/audio/snd3d.h"
+#include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_job_init.h"
+#include "main/audio/vsample_alloc.h"
+#include "main/audio/synth_virtual_sample.h"
+#include "main/audio/synth_delay.h"
 
 extern void dataInit(int p1, void* p2);
-extern void fn_8026F30C(void);
+
 extern void synthInit(u32 sampleRate, u32 voiceCount);
-extern void synthInitJobTable(void);
-extern void synthInitVirtualSampleTable(void);
-extern void synthResetLoadedGroupCount(void);
-extern u32 synthSendKeyOff(u32 handle);
+
+
+
+
 extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u8 studio, u32 studioAux);
 extern int sndFXCheck(u32 id);
 #define S3D_UNLINK_EMITTER(emitter)                         \

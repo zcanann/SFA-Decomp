@@ -36,7 +36,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern int randomGetRange(int lo, int hi);
 
@@ -58,6 +58,7 @@ extern f32 timeDelta;
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
+#include "main/gamebits.h"
 
 typedef struct Lavaball1bfPlacement
 {

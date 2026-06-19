@@ -1,5 +1,6 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/voice_unregister.h"
 
 extern u8 vidListNodes[];
 
@@ -10,7 +11,7 @@ extern void* vidRoot;
 extern void* vidFree;
 extern u16 voicePrioSortRootListRoot;
 extern McmdVoiceState* synthVoice;
-extern void voiceUnregister(int state);
+
 
 
 

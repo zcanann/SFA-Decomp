@@ -8,6 +8,7 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct Dim2prisonmammothPlacement
 {
@@ -46,7 +47,7 @@ extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 extern f32 lbl_803E82D0;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
 
@@ -62,7 +63,7 @@ extern f32 lbl_803E82C8;
 extern f32 lbl_803E82CC;
 extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
-extern int randomGetRange(int lo, int hi);
+
 
 extern int *gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);

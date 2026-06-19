@@ -10,6 +10,8 @@
 #include "main/dll/DF/DFlantern.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/gamebits.h"
+#include "main/objlib.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
@@ -17,7 +19,7 @@ extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
-extern void GameBit_Set(int eventId, int value);
+
 extern void fn_80296518(void* obj, int arg, int enable);
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(void* a, void* b);
@@ -50,7 +52,7 @@ typedef struct DFlanternShrineState
 } DFlanternShrineState;
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
+
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern u8 lbl_803DBF60;
 extern u16 lbl_80325F88[];
@@ -308,7 +310,7 @@ typedef struct DfshShrineFlagsBits
 
 void dfsh_shrine_update(int obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     extern int Obj_GetPlayerObject(void);
     u16* base = lbl_80325F88;
     int player;

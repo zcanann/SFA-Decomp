@@ -4,6 +4,7 @@
  * synthdata.c); SFA's build uses sndBegin/sndEnd for the IRQ guard.
  */
 #include "ghidra_import.h"
+#include "main/audio/sal_dsp.h"
 
 typedef struct SAMPLE_HEADER
 {
@@ -142,8 +143,8 @@ extern DATA_TAB dataGetKeymap_key;
 extern DATA_TAB* dataGetKeymap_result;
 extern LAYER_TAB* dataGetLayer_result;
 
-extern void sndBegin(void);
-extern void sndEnd(void);
+
+
 extern void hwSaveSample(SAMPLE_HEADER** header, void** addr);
 extern void hwRemoveSample(SAMPLE_HEADER* header, void* addr);
 extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);

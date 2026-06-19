@@ -3,6 +3,13 @@
 #include "main/audio/voice_prio.h"
 #include "main/audio/mcmd_volume.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/data_tables.h"
+#include "main/audio/snd_synth_api.h"
+#include "main/audio/voice_alloc.h"
+#include "main/audio/voice_id.h"
+#include "main/audio/hw_init.h"
+#include "main/audio/synth_channel_scale.h"
+#include "main/audio/mcmd_wait.h"
 
 extern int mcmdLoop();
 
@@ -13,19 +20,19 @@ extern int macTimeQueueRoot;
 extern int macRealTimeHi;
 extern int macRealTimeLo;
 extern void synthQueueVoicePrimaryUpdates(void* state);
-extern u8* dataGetMacro(u16 key);
-extern u16 seqGetMIDIPriority(u8 slot, u8 event);
-extern u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 streamKind);
-extern void vidRemoveVoice(int state);
-extern u32 vidMakeNew(int state, int returnNewId);
-extern u32 hwIsActive(u32 slot);
-extern void voiceFree(int state);
+
+
+
+
+
+
+
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
-extern void fn_8026F5B8(int state);
+
 extern u32 voiceIsRegistered(int state);
-extern int mcmdWait(McmdVoiceState * state, McmdCommandArgs * args);
-extern int vidGetInternalId(u32 id);
+
+
 extern void (*synthMessageCallback)(u32 id);
 
 #define SYNTH_VOICE_STRIDE 0x404

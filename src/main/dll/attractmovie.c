@@ -9,8 +9,9 @@
  *   AttractMovie_CloseFile      - close the DVD file handle when playback ends.
  */
 #include "main/dll/FRONT/dll_44.h"
+#include "dolphin/os/OSCache.h"
 
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
+
 
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 

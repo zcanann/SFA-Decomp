@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 
 typedef struct CfForceFieldFlags
 {
@@ -64,7 +65,7 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
 extern int randomGetRange(int lo, int hi);
-extern u32 GameBit_Get(int eventId);
+
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern float mathCosf(float x);

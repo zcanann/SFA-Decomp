@@ -8,10 +8,12 @@
  */
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/dll/DR/dll_80209FE0_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int ObjTrigger_IsSetById();
+
+
+
 extern int ObjTrigger_IsSet(int obj);
 void ccpedstal_updateGameBitGate(int obj, u8* state2);
 void ccpedstal_updateAltVariant(int obj, u8* state2);

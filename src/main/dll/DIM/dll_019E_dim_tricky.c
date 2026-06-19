@@ -6,11 +6,13 @@
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
+#include "main/camera.h"
+#include "main/gamebits.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern float sqrtf(float x);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
@@ -179,7 +181,7 @@ typedef struct Dll19EResArgs
 
 void dll_19E_update(void* obj)
 {
-    extern void GameBit_Set(int eventId, int value);
+
     Dll19EState* state;
     void* resource;
     struct

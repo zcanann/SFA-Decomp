@@ -30,8 +30,8 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern f32 timeDelta;
 
@@ -42,6 +42,7 @@ extern float mathSinf(float x);
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 

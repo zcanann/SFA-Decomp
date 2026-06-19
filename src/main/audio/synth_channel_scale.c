@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/hw_init.h"
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
@@ -8,7 +9,7 @@ extern u8* synthVoice;
 extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
 extern void vidRemoveVoice(McmdVoiceState * svoice);
 extern void voiceRegister(McmdVoiceState * svoice);
-extern u32 hwIsActive(u32 slot);
+
 
 typedef struct
 {

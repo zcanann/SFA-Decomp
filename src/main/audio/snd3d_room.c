@@ -1,4 +1,5 @@
 #include "main/audio/snd3d_room.h"
+#include "main/audio/synth_delay.h"
 
 extern Snd3DEmitter* s3dEmitterRoot;
 extern SndSpatialListener* s3dListenerRoot;
@@ -13,7 +14,7 @@ extern f32 lbl_803E7894;
 extern f64 lbl_803E7898;
 extern f32 lbl_803E78A0;
 
-extern u32 synthSendKeyOff(u32 handle);
+
 extern void synthActivateStudio(u8 studio, int active, int unk);
 extern void synthDeactivateStudio(u8 studio);
 extern void synthAddStudioInput(u8 studio, u8* input);

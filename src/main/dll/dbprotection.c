@@ -26,6 +26,9 @@
 #include "main/dll/DB/sbgalleon_state.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/vecmath.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -41,10 +44,10 @@
 #define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
 
-extern void GameBit_Set(int eventId, int value);
-extern u32 GameBit_Get(int eventId);
+
+
 extern int randomGetRange(int lo, int hi);
-extern void ObjHits_DisableObject(u32 objPtr);
+
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -57,7 +60,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
-extern void setMatrixFromObjectPos(f32* matrix, void* objPos);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern int fn_801E2570(void);

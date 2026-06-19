@@ -1,6 +1,7 @@
 #include "main/audio/adsr.h"
+#include "main/audio/adsr_setup.h"
 
-extern int fn_8027A660(int state);
+
 
 extern u16 lbl_8032F618[];
 

@@ -8,10 +8,12 @@
  * driven by the dll_2E_func* helpers.
  */
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void objRenderFn_8003b8f4(f32);
+
+
+
 extern f32 timeDelta;
 extern u32 ObjHits_DisableObject();
 extern u32 dll_2E_func03();
@@ -19,7 +21,7 @@ extern void dll_2E_func06(int* obj, void* state, int flags);
 extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
-extern void* Obj_GetPlayerObject(void);
+
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(int obj, void* p);
 

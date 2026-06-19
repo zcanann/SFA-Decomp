@@ -8,8 +8,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/resource.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 
-extern void objRenderFn_8003b8f4(f32 scale);
+
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
@@ -78,7 +80,7 @@ typedef struct DfshObjCreatorState
 
 void dfsh_objcreator_update(int obj)
 {
-    extern u32 GameBit_Get(int eventId);
+
     u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     DfshObjCreatorState* state = ((GameObject*)obj)->extra;
     void* resource;

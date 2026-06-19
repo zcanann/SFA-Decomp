@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
+#include "main/objhits.h"
 
 typedef struct Dimbossgut2State
 {
@@ -47,7 +48,7 @@ STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 extern void ModelLightStruct_free(void* light);
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
-extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void objRenderFn_8003b8f4(f32 scale);

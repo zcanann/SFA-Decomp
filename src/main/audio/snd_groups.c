@@ -1,4 +1,6 @@
 #include "main/audio/snd_groups.h"
+#include "main/audio/hw_samplemem.h"
+#include "main/audio/sal_dsp.h"
 
 typedef struct GROUP_DATA
 {
@@ -87,11 +89,11 @@ extern void dataAddSampleReference(u16 id);
 extern void dataRemoveSampleReference(u16 id);
 extern u32 hwInitStream(void* samples);
 extern u32 dataInsertSDir(void* sdir, u32 addr);
-extern void hwSyncSampleMem(void);
+
 extern void dataInsertFX(u16 gid, void* fx, u16 num);
 extern u32 seqStartPlay(void* norm, void* drum, void* midiSetup, void* arrfile, void* para, u8 studio, u16 sgid);
-extern void sndBegin(void);
-extern void sndEnd(void);
+
+
 
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;

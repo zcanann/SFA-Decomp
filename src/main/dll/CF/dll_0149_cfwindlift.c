@@ -12,6 +12,7 @@
 
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
+#include "main/gamebits.h"
 
 typedef struct WindliftPlacement
 {
@@ -78,7 +79,7 @@ extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void objRenderFn_8003b8f4(f32);
-extern u32 GameBit_Get(int eventId);
+
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern u8 framesThisStep;

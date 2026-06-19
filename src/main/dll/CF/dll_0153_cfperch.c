@@ -7,9 +7,11 @@
 #include "main/game_object.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
+#include "main/gamebits.h"
 
-extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
-extern u32 GameBit_Get(int eventId);
+
+
 
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */

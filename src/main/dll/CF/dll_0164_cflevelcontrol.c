@@ -12,6 +12,7 @@
 #include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct CflevelcontrolState
 {
@@ -37,8 +38,8 @@ typedef struct CfLevelControlFlags
     u8 rest : 3;
 } CfLevelControlFlags;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void s16toFloat(void* p, int duration);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void storeZeroToFloatParam(void* p);

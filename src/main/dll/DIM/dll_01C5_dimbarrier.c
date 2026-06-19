@@ -5,6 +5,8 @@
  */
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470
 
@@ -21,10 +23,10 @@ typedef struct DimbarrierState
     s8 countdown;
 } DimbarrierState;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
-extern void objRenderFn_8003b8f4(f32);
+
+
+
 extern f32 lbl_803E4898;
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u8 framesThisStep;

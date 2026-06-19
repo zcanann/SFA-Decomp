@@ -16,6 +16,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/player_control_interface.h"
+#include "main/dll/DIM/dll_223.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803DDB98;
@@ -33,7 +34,7 @@ extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 
 extern void doRumble(f32 duration);
-extern void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state);
+
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG 0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8

@@ -12,6 +12,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
+#include "main/gamebits.h"
 
 extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
@@ -67,7 +68,7 @@ int dll_DIM_BossGutSpik_update(void* obj, u32 p2, ObjAnimUpdateState* animUpdate
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
-    extern u32 GameBit_Get(int eventId);
+
     extern u8 lbl_803DDBB0;
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;
@@ -370,7 +371,7 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
 {
     extern u32* gBaddieControlInterface;
     extern void modelLightStruct_setEnabled(void* handle, int p2, f32 param_3);
-    extern u32 GameBit_Get(int eventId);
+
     u8 variant;
     int state;
 

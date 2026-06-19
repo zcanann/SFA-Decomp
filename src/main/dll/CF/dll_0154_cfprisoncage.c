@@ -16,6 +16,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 typedef struct CfPrisonCageMapData
 {
@@ -59,7 +60,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E42B0;
-extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
+
 extern f32 lbl_803E42B4;
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 

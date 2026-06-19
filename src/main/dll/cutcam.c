@@ -26,8 +26,9 @@
 #include "main/dll/dll_B8.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
+#include "main/curve.h"
 
-extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
+
 extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);

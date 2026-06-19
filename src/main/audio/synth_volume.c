@@ -1,9 +1,10 @@
 #include "main/dll/synthfade_struct.h"
+#include "main/audio/inp_ctrl.h"
 
 extern void voiceKill(u8 voiceIdx);
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
-extern void sndConvertMs(u32 * p);
+
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD364[];

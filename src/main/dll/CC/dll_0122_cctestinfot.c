@@ -7,8 +7,9 @@
  * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
  */
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
-extern void* Obj_GetPlayerObject(void);
+
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);

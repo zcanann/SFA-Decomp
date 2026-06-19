@@ -7,13 +7,16 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
+#include "main/camera.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
 extern ModgfxInterface** gModgfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E63E4;
@@ -86,7 +89,7 @@ void DFP_Torch_init(int obj, int def)
 #pragma fp_contract off
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void* Camera_GetCurrentViewSlot(void);
+
     extern void voxmaps_worldToGrid(f32* in, s16* out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     extern f32 sqrtf(f32 x);
@@ -186,9 +189,9 @@ void DFP_Torch_update(int obj)
     extern void Sfx_PlayFromObject(int, int);
     extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
     extern void objUpdateOpacity(int);
-    extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
-    extern u32 GameBit_Get(int eventId);
-    extern void GameBit_Set(int eventId, int value);
+
+
+
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;
     extern f32 lbl_803E63E0;

@@ -1,6 +1,7 @@
 #include "global.h"
+#include "main/gameplay_runtime.h"
 
-extern int randomGetRange(int lo, int hi);
+
 
 extern f32 lbl_803E5ED8;
 

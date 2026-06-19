@@ -1,8 +1,10 @@
 #include "main/audio/voice_manage.h"
+#include "main/audio/hw_init.h"
+#include "main/audio/synth_jobs.h"
 
-extern u32 hwIsActive(u32 slot);
+
 extern u32 get_vidlist(u32 id);
-extern void synthCancelJob(int voice);
+
 
 typedef struct VoiceListNode
 {

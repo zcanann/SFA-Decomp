@@ -18,8 +18,12 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/cmenu_item_table.h"
+#include "main/gamebits.h"
+#include "main/texture.h"
+#include "dolphin/gx/GXCull.h"
+#include "main/camera.h"
 
-extern u32 GameBit_Get(int eventId);
+
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
@@ -51,8 +55,8 @@ extern int gTrickyHudItemMask;
 extern int gTrickyHudActionMask;
 extern int getTrickyObject(void);
 extern int getLoadedFileFlags(int flags);
-extern void textureFree(u8* tex);
-extern void* textureLoadAsset(int asset);
+
+
 
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
@@ -60,7 +64,7 @@ extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void* Obj_GetPlayerObject(void);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+
 extern void hudDrawTimedElement(int obj, void* p);
 extern void drawViewFinderHud(void);
 extern int getHudHiddenFrameCount(void);
@@ -79,7 +83,7 @@ extern void* lbl_803A93C4[7];
 extern int lbl_803A93A8[7];
 extern f32 lbl_803E2010;
 extern void gxColorFn_80052764(void* p);
-extern void* Camera_GetCurrentViewSlot(void);
+
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);

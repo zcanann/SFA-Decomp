@@ -5,6 +5,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
+#include "main/dll/infopoint.h"
+#include "main/gamebits.h"
 
 extern u32 FUN_80006824();
 extern u32 FUN_800068c4();
@@ -14,7 +16,7 @@ extern u32 FUN_80017748();
 extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern u32 ObjMsg_SendToObject();
-extern void TrickyCurve_updateCooldownTrigger(int obj);
+
 extern u32 FUN_80286838();
 extern u32 FUN_80286884();
 extern u32 FUN_80294c40();
@@ -37,8 +39,8 @@ extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
 extern void gameTimerStop(void);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 
 extern u32 lbl_803E6450;

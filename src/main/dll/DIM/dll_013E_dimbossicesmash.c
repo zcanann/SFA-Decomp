@@ -5,8 +5,8 @@
  * fully opaque. */
 #include "main/game_object.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 
 extern void objRenderFn_8003b8f4(f32);
@@ -15,6 +15,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
+#include "main/gamebits.h"
 
 typedef struct DimbossicesmashPlacement
 {

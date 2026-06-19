@@ -1,9 +1,12 @@
 #include "main/audio/data_ref.h"
 #include "main/audio/synth_job.h"
+#include "main/audio/sal_dsp.h"
+#include "main/audio/voice_manage.h"
+#include "dolphin/os/OSCache.h"
 
-extern void sndBegin(void);
-extern void sndEnd(void);
-extern void voiceBreakAndFree(u32 voice);
+
+
+
 
 extern u8 lbl_803BD150[];
 extern u8 dataSmpSDirTable[];
@@ -30,7 +33,7 @@ typedef struct SynthSampleInfo
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u8* synthVoice;
-extern asm void DCInvalidateRange(register void* addr, register u32 nBytes);
+
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern u32 hwChangeStudio(u32 voice); /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */

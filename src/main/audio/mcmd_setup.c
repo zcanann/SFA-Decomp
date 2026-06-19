@@ -1,16 +1,17 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/mcmd_exec.h"
+#include "main/audio/voice_conv.h"
+#include "main/audio/data_tables.h"
 
 extern McmdVoiceState* synthVoice;
-extern u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
-                    u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                    u8 new_vid, u8 vGroup, u8 studio, u32 itd);
+
 extern void synthFXCloneMidiSetup(McmdVoiceState * voice, McmdVoiceState * state);
 void DoSetPitch(McmdVoiceState * svoice);
 extern void sndConvertMs(u32 * p);
 extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState * state);
-extern u32 voiceConvertDbToLinear(u32 dbCents);
+
 extern int adsrSetup(McmdEnvelopeState * state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
@@ -57,7 +58,7 @@ typedef union McmdAdsrData
     } dls;
 } McmdAdsrData;
 
-extern void* dataGetCurve(u16 cid);
+
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)

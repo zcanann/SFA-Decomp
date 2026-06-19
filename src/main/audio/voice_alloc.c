@@ -1,8 +1,9 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/mcmd_exec.h"
 
-extern void macMakeInactive(McmdVoiceState* sv, int newState);
+
 
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8* synthVoice;

@@ -6,8 +6,10 @@
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/dll/dll_80220608_shared.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
@@ -68,7 +70,7 @@ STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1E) == 0x1E);
 STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
-extern void Obj_FreeObject(int obj);
+
 extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerA02();
 
@@ -119,8 +121,8 @@ void dfpobjcreator_init(int obj, s8* def)
 
 void dfpobjcreator_update(int obj)
 {
-    extern u8 Obj_IsLoadingLocked(void);
-    extern u32 GameBit_Get(int eventId);
+
+
     extern void* Obj_AllocObjectSetup(int size, int b);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
     extern f32 timeDelta;

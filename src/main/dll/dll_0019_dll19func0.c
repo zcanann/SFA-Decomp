@@ -21,6 +21,10 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
 #include "main/dll/dll19_state.h"
 #include "main/dll/baddie_state.h"
+#include "main/gamebits.h"
+#include "main/dll/modgfx.h"
+#include "string.h"
+#include "main/object_transform.h"
 
 typedef struct Dll19Placement
 {
@@ -36,10 +40,10 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
-extern void GameBit_Set(int eventId, int value);
+
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
-extern u32 FUN_80017ac8();
+
 extern u32 FUN_80017ae4();
 extern u32 FUN_80017ae8();
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -67,7 +71,7 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
-extern void* memset(void* dst, int val, u32 n);
+
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
@@ -107,7 +111,7 @@ extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
 extern GameObject* lbl_803DD5E4;
-extern u32 GameBit_Get(int eventId);
+
 extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
 extern f32 lbl_803E1C38;
@@ -1429,7 +1433,7 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
  * object's facing plane and returns the lateral offset of the result. */
 f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 {
-    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+ /* #57 */
     f32 dist;
     f32 fz;
     f32 fx;

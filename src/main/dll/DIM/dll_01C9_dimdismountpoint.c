@@ -7,6 +7,8 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
 
 #define DIMDISMOUNT_GAMEBIT_DONE  0x3e3
 #define DIMDISMOUNT_GROUP         0x13
@@ -20,7 +22,7 @@ typedef struct DimdismountpointState
     f32 planeD;  /* plane distance (dot(N, pos)) */
 } DimdismountpointState;
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E4910;
@@ -29,9 +31,9 @@ extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void objRenderFn_8003b8f4(f32);
+
 extern f32 lbl_803E490C;
-extern void* Obj_GetPlayerObject(void);
+
 
 void dimdismountpoint_hitDetect(void)
 {

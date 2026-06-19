@@ -6,6 +6,7 @@
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 #define DIMICEWALL_MAPID_NO_SFX 7433
 
@@ -19,8 +20,8 @@ typedef struct DimicewallPlacement
     s16 shatterGameBit;
 } DimicewallPlacement;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);

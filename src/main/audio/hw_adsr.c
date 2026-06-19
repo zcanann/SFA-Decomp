@@ -1,9 +1,10 @@
 #include "main/audio/dsp_voice.h"
+#include "main/audio/voice_conv.h"
 
 extern u8 voiceAdsrDecayTable[];
 extern u8* dspVoice;
 
-extern u32 voiceConvertDbToLinear(u32 dbCents);
+
 
 typedef struct HwAdsrEnvelope
 {

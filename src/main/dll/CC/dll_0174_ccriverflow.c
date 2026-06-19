@@ -8,8 +8,9 @@
 #include "main/objlib.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
+#include "main/gamebits.h"
 
-extern u32 GameBit_Get(int eventId);
+
 
 extern f32 lbl_803E4DD0; /* height-offset scale */
 extern f32 lbl_803E4DD4; /* minimum surface height */

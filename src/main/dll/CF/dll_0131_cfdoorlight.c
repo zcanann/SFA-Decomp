@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
 
 typedef struct CfDoorLightFlags
 {
@@ -51,8 +52,8 @@ STATIC_ASSERT(offsetof(CfDoorLightMapData, resetFrame) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, doneEvent) == 0x1E);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
 

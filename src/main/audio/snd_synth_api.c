@@ -1,26 +1,35 @@
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/sal_dsp.h"
+#include "main/audio/synth_delay.h"
+#include "main/audio/synth_volume.h"
+#include "main/audio/voice_id.h"
+#include "main/audio/synth_jobs.h"
+#include "main/audio/hw_input.h"
+#include "main/audio/hw_init.h"
+#include "main/audio/hw_samplemem.h"
+#include "main/audio/synth_callback.h"
 
-extern void sndBegin(void);
-extern void sndEnd(void);
+
+
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
-extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
-extern u32 synthSendKeyOff(u32 handle);
+
+
+
 extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
-extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
-extern int vidGetInternalId(u32 id);
-extern void synthRefreshJobVolumes(void);
-extern void hwAddInput(u8 idx, void* input);
+
+
+
+
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
 extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser,
                                         void* auxBCallback, void* auxBUser);
-extern u32 hwIsActive(u32 slot);
+
 extern void hwOff(u32 slot);
-extern void hwDisableHRTF(void);
-extern u32 synthResolveHandle(u32 handle);
+
+
 extern void voiceKillById(u32 value);
 
 extern u8 lbl_803BCC90[];

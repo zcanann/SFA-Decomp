@@ -1,11 +1,12 @@
 #include "main/audio/hw_stream.h"
 #include "main/audio/dsp_voice.h"
+#include "main/engine_shared.h"
 
 extern void salRemoveStudioInput(void* p, void* input);
 extern int aramGetStreamBufferAddress(int stream, void* out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback,
                            u32 callbackArg);
-extern asm void DCStoreRange(register void* addr, register u32 nBytes);
+
 
 extern u8 lbl_803CC1E0[];
 extern u8* dspVoice;

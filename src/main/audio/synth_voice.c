@@ -2,6 +2,10 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
+#include "main/audio/synth_channel.h"
+#include "main/audio/hw_samplemem.h"
+#include "main/audio/synth_channel_scale.h"
+#include "main/audio/voice_id.h"
 
 typedef struct SynthDelayedNode
 {
@@ -45,10 +49,10 @@ extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
 extern void synthQueueHandle(u32 handle);
 extern void synthFreeHandle(u32 handle);
-extern void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1);
+
 extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
-extern void hwFrameDone(void);
+
 extern u8 lbl_803BCD90[];
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
@@ -64,14 +68,14 @@ extern f32 lbl_803E77D0;
 typedef void (*SynthAuxCallback)(int active, u16* samples, u32 user);
 
 extern u8* dataGetKeymap(u32 sampleId);
-extern int audioFn_8026f630(u32 key, u32 midi, u32 midiSet, u32 vidFlag, u32* rejected);
+
 extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                                  u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                  u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                     u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                     u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-extern int vidGetInternalId(u32 id);
+
 extern u32 hwIsActive(u32 slot);
 
 typedef struct SynthVoiceLfo

@@ -10,13 +10,15 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/gamebits.h"
+#include "main/pi_dolphin.h"
 
 extern void Music_Trigger(int id, int arg);
 extern void padUpdate(void);
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void gameTextShow(int a);
 extern void checkReset(void);
 extern void mmFreeTick(int arg);
@@ -34,7 +36,7 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
 extern void defragMemory(int mode);
-extern u32 mapLoadDataFile(int mapId, int fileId);
+
 extern int mapGetDirIdx(int idx);
 extern void loadDataFiles(void);
 extern int GXFlush_(u8 visible, int unused);

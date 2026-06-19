@@ -28,6 +28,9 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
+#include "main/texture.h"
+#include "main/mm.h"
+#include "main/vecmath.h"
 
 typedef struct ModgfxEffectSlot
 {
@@ -1409,7 +1412,7 @@ void dll_0B_release(void)
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 extern void mm_free(void* p);
-extern void textureFree(u8* tex);
+
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
@@ -1566,8 +1569,8 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
 
-extern void* textureLoadAsset(int asset);
-extern void* mmAlloc(int size, int type, int flag);
+
+
 
 extern const f32 lbl_803DF438;
 
@@ -2195,7 +2198,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void selectTexture(u8* tex, int mapId);
 extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
-extern void setMatrixFromObjectPos(f32 * mtx, s16 * src);
+
 extern void mtx44Transpose(f32 * src, f32 * dst);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);

@@ -1,4 +1,5 @@
 #include "dolphin/mtx.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
 
 static f32 lbl_803DC550[] = { 0.0f, 1.0f };
 
@@ -9,9 +10,9 @@ extern const f32 lbl_803E7624;
 extern const f32 lbl_803E7628;
 extern const f32 lbl_803E762C;
 
-extern f32 sinf(f32);
-extern f32 cosf(f32);
-extern f32 tanf(f32);
+
+
+
 
 extern void fn_80246E54(void);
 extern void fn_80246E80(void);

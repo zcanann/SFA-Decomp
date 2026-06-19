@@ -9,6 +9,8 @@
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/sfxplayer.h"
+#include "main/dll/infopoint.h"
+#include "main/gamebits.h"
 
 typedef struct TrickyCurveObjectDef
 {
@@ -31,7 +33,7 @@ extern int randomGetRange(int lo, int hi);
 extern int FUN_80017a98();
 extern int Obj_GetPlayerObject(void);
 extern u32 ObjMsg_SendToObject();
-extern void TrickyCurve_updateCooldownTrigger(int obj);
+
 extern u32 FUN_80286838();
 extern u32 FUN_80286884();
 extern u32 FUN_80294c40();
@@ -48,8 +50,8 @@ extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void vecRotateZXY(u8* p, f32* v);
 
 extern f32 lbl_803E6460;

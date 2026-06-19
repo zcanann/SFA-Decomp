@@ -30,9 +30,9 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern int randomGetRange(int lo, int hi);
+
+
+
 
 extern f32 timeDelta;
 
@@ -41,6 +41,8 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct DimtruthhorniceObjectDef
 {
@@ -61,7 +63,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern u32 ObjHits_DisableObject();
-extern void* getTrickyObject(void);
+
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 

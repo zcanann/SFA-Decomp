@@ -10,6 +10,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
+#include "main/gamebits.h"
 
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
@@ -44,8 +45,8 @@ extern const f32 lbl_803E64B4;
 extern const f32 lbl_803E64B8;
 extern const f32 lbl_803E64BC;
 extern const f32 lbl_803E64C0;
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,

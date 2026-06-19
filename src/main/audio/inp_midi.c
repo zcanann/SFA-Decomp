@@ -1,7 +1,8 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
+#include "string.h"
 
-extern void* memcpy(void* dst, const void* src, u32 n);
+
 extern int inpTranslateExCtrl(int input);
 
 extern u8 sInpMidiCtrlFullResetPreset[];

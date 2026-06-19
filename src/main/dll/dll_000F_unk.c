@@ -18,13 +18,15 @@
 #include "main/dll/baddie_state.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
+#include "string.h"
+#include "main/vecmath.h"
 
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
-extern void* memset(void* dst, int val, u32 n);
+
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
-extern void setMatrixFromObjectPos(f32* mtx, void* desc);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);

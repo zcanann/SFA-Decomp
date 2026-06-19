@@ -5,8 +5,9 @@
  * extra state.
  */
 #include "main/dll/anim.h"
+#include "main/engine_shared.h"
 
-extern void OSReport(const char* msg, ...);
+
 
 void doorswitch_render(void)
 {

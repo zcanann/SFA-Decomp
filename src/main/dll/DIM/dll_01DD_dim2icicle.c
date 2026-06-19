@@ -22,20 +22,22 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int randomGetRange(int lo, int hi);
 
 extern f32 timeDelta;
 
 extern void objRenderFn_8003b8f4(f32);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
 extern u8 framesThisStep;
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
+#include "main/gamebits.h"
+#include "main/objhits.h"
 
 typedef struct Dim2iciclePlacement
 {

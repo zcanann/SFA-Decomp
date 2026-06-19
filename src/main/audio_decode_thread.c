@@ -1,7 +1,8 @@
 #include "main/audio_decode_thread.h"
+#include "main/dll/FRONT/dll_3B.h"
 
-extern void* AudioDecoderForOnMemory(void*);
-extern void* AudioDecoder(void*);
+
+
 extern int gAttractMovieAudioThreadActive;
 
 typedef struct THPAudioDecodeContext

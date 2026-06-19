@@ -20,6 +20,7 @@
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
+#include "main/gamebits.h"
 
 extern int randomGetRange(int lo, int hi);
 extern u32 FUN_8003b818();
@@ -193,7 +194,7 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern f64 DOUBLE_803e3e88;
 
 extern f32 lbl_803E3420;
-extern u32 GameBit_Get(int eventId);
+
 extern void gcbaddieshield_update(int* obj);
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
@@ -208,7 +209,7 @@ extern void dll_F7_update();
 extern void dll_F7_init();
 extern f32 lbl_803E3220;
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void GameBit_Set(int eventId, int value);
+
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 

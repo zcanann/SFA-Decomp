@@ -24,8 +24,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
@@ -37,6 +37,7 @@ extern void* Obj_GetPlayerObject(void);
 extern int getSaveGameLoadStatus(void);
 
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct Dim2lavacontrolPlacement
 {

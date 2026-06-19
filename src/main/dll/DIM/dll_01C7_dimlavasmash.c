@@ -9,17 +9,20 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
+#include "main/gamebits.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/objhits.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 
 #pragma scheduling on
 #pragma peephole on
-extern void objRenderFn_8003b8f4(f32 x);
+
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);

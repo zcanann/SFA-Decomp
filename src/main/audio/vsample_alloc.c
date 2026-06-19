@@ -1,4 +1,5 @@
 #include "main/audio/synth_virtual_sample.h"
+#include "main/audio/aram.h"
 
 typedef struct VsInfo
 {
@@ -34,7 +35,7 @@ typedef struct VS
 } VS;
 
 extern u8 synthVirtualSampleState[];
-extern u32 aramGetStreamBufferAddress(u8 slot, u32* outPos);
+
 
 
 /*

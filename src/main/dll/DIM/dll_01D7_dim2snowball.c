@@ -34,8 +34,8 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -45,6 +45,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 
 typedef struct Dim2snowballObjectDef
 {

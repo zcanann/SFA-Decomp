@@ -11,6 +11,10 @@
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
+#include "main/camera.h"
+#include "main/objhits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct CfccratePlacement
 {
@@ -41,11 +45,11 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-extern u32 GameBit_Get(int eventId);
+
 extern f32 lbl_803E3DD8;
-extern void* Camera_GetCurrentViewSlot(void);
-extern void GameBit_Set(int eventId, int value);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+
+
+
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
@@ -86,7 +90,7 @@ void cfccrate_free(int obj)
 
 void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
     int objectType;
     CfCcrateState* state;
 
@@ -151,9 +155,9 @@ void cfccrate_hitDetect(void)
 void cfccrate_update(int obj)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern int randomGetRange(int lo, int hi);
-    extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-    extern void* Obj_GetPlayerObject(void);
+
+
+
     CfCcrateState* state;
     int viewslot;
     int cam;
@@ -348,7 +352,7 @@ void cfccrate_update(int obj)
 
 void cfccrate_init(int obj, int aux)
 {
-    extern int randomGetRange(int lo, int hi);
+
     ObjAnimComponent* objAnim;
     CfCcrateState* state;
     short id;

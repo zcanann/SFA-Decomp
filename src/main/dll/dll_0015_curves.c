@@ -30,14 +30,17 @@
 #include "main/objlib.h"
 #include <string.h>
 #include "main/game_object.h"
+#include "main/gamebits.h"
+#include "main/object_transform.h"
+#include "main/vecmath.h"
 
-extern u32 GameBit_Get(int eventId);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
+
+
+
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern void mtxRotateByVec3s(float* outMtx, short* angles);
+
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void setMatrixFromObjectPos(float* mtx, void* obj);
+
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               s8 p7, int p8, int p9, int p10);
 extern void fn_80063368(short* obj);

@@ -1,9 +1,12 @@
 #include "main/audio/sal_ai.h"
+#include "main/audio/sal_dsp.h"
+#include "string.h"
+#include "dolphin/os/OSCache.h"
 
-extern void* salMalloc(u32 size);
-extern void salFree(void* ptr);
-extern void* memset(void*, int, u32);
-extern asm void DCFlushRange(register void* addr, register u32 nBytes);
+
+
+
+
 
 extern u8 lbl_803BD150[];
 extern void* salAiCallback;

@@ -17,6 +17,8 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objtexture.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct DimmagicbridgeFlameSeqFnState
 {
@@ -35,14 +37,14 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER   0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH     0x1e8
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
+
+
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int matchVal, int obj, int flag);
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+
 extern f32 lbl_803E4A18;
-extern void* Obj_GetPlayerObject(void);
+
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
 extern u8 framesThisStep;
