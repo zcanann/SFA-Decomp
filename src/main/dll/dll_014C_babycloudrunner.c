@@ -729,7 +729,7 @@ int babycloudrunner_func0B(void* p)
     player = Obj_GetPlayerObject();
     r = *(u8**)&((GameObject*)obj)->anim.placementData;
     flag = 0;
-    if (Vec_distance((char*)player + 0x18, obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
+    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
     {
         if (sub->runnerState == 3)
         {
@@ -752,7 +752,7 @@ int babycloudrunner_func0B(void* p)
         ((GameObject*)obj)->unkF4 = 0;
         return 1;
     }
-    objAudioFn_800393f8((int)obj, sub + 0x6c, 0x296, 0x1000, -1, 1);
+    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
     Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
