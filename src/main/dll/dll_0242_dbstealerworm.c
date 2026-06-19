@@ -1243,7 +1243,7 @@ void fn_80203144(int obj, int p2, int p3)
         player = Obj_GetPlayerObject();
         if (player != NULL)
         {
-            stk.d[0] = *(f32*)(player + 0x18) - ((GameObject*)obj)->anim.worldPosX;
+            stk.d[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
             stk.d[1] = *(f32*)(player + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
             stk.d[2] = *(f32*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
             dist = sqrtf(stk.d[2] * stk.d[2] + (stk.d[0] * stk.d[0] + stk.d[1] * stk.d[1]));
