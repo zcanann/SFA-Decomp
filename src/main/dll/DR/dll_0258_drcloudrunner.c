@@ -793,7 +793,7 @@ void fn_802BF0C8(int obj, int p2, int mode)
     u8* base = gDRCloudRunnerMoveParamTable;
     int stk = lbl_803E83A0;
     u8* pathState = (u8*)&((CloudRunnerState*)p2)->baddie + 4;
-    u32 m;
+    u8 m;
     pathState[0x25b] = 1;
     m = mode;
     if (m == 1)
