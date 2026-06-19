@@ -2040,13 +2040,13 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
     if (n != 0)
     {
         cur = val - *(f32*)arr[0];
-        cur = cur >= __AR_Callback ? cur : -cur;
+        if (cur >= __AR_Callback) {} else { cur = -cur; }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
             cur = val - *(f32*)arr[i];
-            cur = cur >= __AR_Callback ? cur : -cur;
+            cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
                 best = cur;
