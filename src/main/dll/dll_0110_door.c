@@ -41,17 +41,17 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-extern f32 lbl_803E3780;
+extern f32 gDoorOne;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3784;
-extern f32 lbl_803E3788;
+extern f32 gDoorRootMotionScaleFactor;
+extern f32 gDoorZero;
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);
 
-void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
+void Door_render(void) { objRenderFn_8003b8f4(gDoorOne); }
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -62,10 +62,10 @@ void Door_init(int* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = Door_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->unk21 * lbl_803E3784;
-    if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3788)
+    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->unk21 * gDoorRootMotionScaleFactor;
+    if (((GameObject*)obj)->anim.rootMotionScale == gDoorZero)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3780;
+        ((GameObject*)obj)->anim.rootMotionScale = gDoorOne;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
