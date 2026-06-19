@@ -2121,12 +2121,12 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     table = (void*)((GameObject*)obj)->anim.modelInstance;
     if (table != NULL)
     {
-        bank = *(u8**)((int)table + 0x10);
         i = 0;
         j = 0;
         n = (s32)(u32)((ObjDef*)table)->jointCount;
         for (k = 0; k < n; k++)
         {
+            bank = *(u8**)((int)table + 0x10);
             if ((int)bank[OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1] != 0xff &&
                 (int)bank[i] == 0)
             {
