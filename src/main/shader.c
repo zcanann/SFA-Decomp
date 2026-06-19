@@ -1376,7 +1376,7 @@ void playerUpdateFn_8005649c(void)
         *(int*)(lbl_80386648 + i * 0x10 + 0xc) = 0;
     *(f32*)(lbl_80386648 + 0) = *(f32*)(cam + 0x44);
     *(f32*)(lbl_80386648 + 4) = *(f32*)(cam + 0x48);
-    *(f32*)(lbl_80386648 + 8) = *(f32*)(cam + 0x4c);
+    *(f32*)(lbl_80386648 + 8) = *(f32*)&((GameObject*)cam)->anim.placementData;
     *(int*)(lbl_80386648 + 0xc) = 1;
     e = objs;
     for (i = 0; i < count; i++)
@@ -1385,13 +1385,13 @@ void playerUpdateFn_8005649c(void)
         slot = *(s8*)((char*)obj + 0x35) + 1;
         if (*(void**)(cam + 0x40) == (void*)obj)
         {
-            *(f32*)(lbl_80386648 + slot * 0x10 + 0) = *(f32*)(cam + 0xc);
-            *(f32*)(lbl_80386648 + slot * 0x10 + 4) = *(f32*)(cam + 0x10);
-            *(f32*)(lbl_80386648 + slot * 0x10 + 8) = *(f32*)(cam + 0x14);
+            *(f32*)(lbl_80386648 + slot * 0x10 + 0) = ((GameObject*)cam)->anim.localPosX;
+            *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ((GameObject*)cam)->anim.localPosY;
+            *(f32*)(lbl_80386648 + slot * 0x10 + 8) = ((GameObject*)cam)->anim.localPosZ;
         }
         else
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x44), *(f32*)(cam + 0x48), *(f32*)(cam + 0x4c), &lx, &ly,
+            Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x44), *(f32*)(cam + 0x48), *(f32*)&((GameObject*)cam)->anim.placementData, &lx, &ly,
                                            &lz);
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = lx;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ly;
