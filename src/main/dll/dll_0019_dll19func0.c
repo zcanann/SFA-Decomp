@@ -724,9 +724,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posX;
     f32 posY;
     f32 posZ;
-    f32 zeroV = lbl_803E1C2C;
+    f32 zeroV;
 
-    if (*(f32*)(state + 1000) > zeroV)
+    if (*(f32*)(state + 1000) > (zeroV = lbl_803E1C2C))
     {
         *(f32*)(state + 1000) = timeDelta * *(f32*)(state + 1004) + *(f32*)(state + 1000);
         if ((*(u16*)(state + 1024) & 0x20) != 0)
