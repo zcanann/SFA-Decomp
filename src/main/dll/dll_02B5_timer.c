@@ -103,7 +103,7 @@ void timer_addDuration(int obj, int duration)
     TimerState* state = ((GameObject*)obj)->extra;
     if (fn_80080150((int)state) != 0)
     {
-        state->countdownTimer = state->countdownTimer + (f32)duration;
+        state->countdownTimer = state->countdownTimer + duration;
         if (state->mode == TIMER_MODE_GLOBAL)
         {
             gameTimerInit(GAME_TIMER_ID, (int)(state->countdownTimer / lbl_803E7408));
@@ -255,7 +255,7 @@ void timer_update(int obj)
                 }
                 modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, lbl_803E741C);
             }
-            flags->flag20 = (u8)scroll;
+            flags->flag20 = scroll;
         }
         if (state->lightSlot != NULL)
         {

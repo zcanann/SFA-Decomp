@@ -173,7 +173,7 @@ void vfpminifire_update(int obj)
         {
             alpha = 0;
         }
-        ((GameObject*)obj)->anim.alpha = (u8)alpha;
+        ((GameObject*)obj)->anim.alpha = alpha;
     }
 
     if (((GameObject*)obj)->anim.localPosY < state->baseY - lbl_803E60A0)

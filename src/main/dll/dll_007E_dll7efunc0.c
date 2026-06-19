@@ -107,7 +107,7 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     p[3].z = lbl_803E0E04;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0E04;
     buf.pos[1] = lbl_803E0E04;
     buf.pos[2] = lbl_803E0E04;

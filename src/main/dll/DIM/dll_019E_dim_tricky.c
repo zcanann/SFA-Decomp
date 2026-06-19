@@ -86,7 +86,7 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
     else if (state->active != 0)
     {
         state->losVisible = 1;
-        camera = (u8*)Camera_GetCurrentViewSlot();
+        camera = Camera_GetCurrentViewSlot();
         stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
         stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
         stk.delta[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
@@ -245,8 +245,8 @@ void dll_19E_update(void* obj)
             if (state->active != 0)
             {
                 resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
-                resourceArgs[1] = (u32)state->sequenceIndex * 2 + 0x19d;
-                resourceArgs[2] = (u32)state->sequenceIndex * 2 + 0x19e;
+                resourceArgs[1] = state->sequenceIndex * 2 + 0x19d;
+                resourceArgs[2] = state->sequenceIndex * 2 + 0x19e;
                 (*(void (*)(void*, int, u8*, int, int, u32*))(*(int*)(*(int*)resource + 4)))(
                     obj, 1, effectBuf.args, 0x10004, -1, resourceArgs);
                 Resource_Release(resource);
@@ -324,7 +324,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     ((GameObject*)obj)->anim.rotX = (s16)(((s32)setup->objectType & 0x3f) << 10);
     if (setup->scaleTimer > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)setup->scaleTimer / lbl_803E51E4;
+        ((GameObject*)obj)->anim.rootMotionScale = setup->scaleTimer / lbl_803E51E4;
     }
     else
     {
@@ -349,7 +349,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
         }
         break;
     case 1:
-        state->sequenceIndex = (u8)setup->sequenceIndex;
+        state->sequenceIndex = setup->sequenceIndex;
         state->needsOpenSfx = 0;
         state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
         state->previousActive = 0;

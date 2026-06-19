@@ -82,7 +82,7 @@ void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* 
 {
     TrickyGuardSpotState* state = obj->state;
     ObjGroup_AddObject((int)obj, TRICKY_GUARD_SPOT_GROUP);
-    state->resetTimer = (int)def->resetSeconds * 60;
+    state->resetTimer = def->resetSeconds * 60;
     obj->objAnim.rotX = (s16)(s32)
     def->initialYaw;
 }

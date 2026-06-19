@@ -109,9 +109,9 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
         ents[0].flags = variant != 0 ? 4 : 3;
         ents[0].tex = variant != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
         ents[0].mode = 8;
-        ents[0].x = (f32)r;
-        ents[0].y = (f32)g;
-        ents[0].z = (f32)b;
+        ents[0].x = r;
+        ents[0].y = g;
+        ents[0].z = b;
         ra = (f32)(int)randomGetRange(0, 0xfffe);
         rb = (f32)(int)randomGetRange(-0xbb8, -0x2ee0);
         ents[1].layer = 0;
@@ -192,6 +192,6 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
         }
         (*gModgfxInterface)->spawnEffect(&buf, 0, variant != 0 ? 4 : 3,
                                          variant != 0 ? &base[0x20] : base, variant != 0 ? 2 : 1,
-                                         variant != 0 ? (u8*)&base[0x48] : &lbl_803DB898, 0, 0);
+                                         variant != 0 ? &base[0x48] : &lbl_803DB898, 0, 0);
     }
 }

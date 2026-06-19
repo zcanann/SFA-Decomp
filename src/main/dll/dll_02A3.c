@@ -73,7 +73,7 @@ void dll_2A3_update(int obj)
     {
         alpha = lbl_803E7124;
     }
-    ((GameObject*)obj)->anim.alpha = (u8)alpha;
+    ((GameObject*)obj)->anim.alpha = alpha;
 
     ((GameObject*)obj)->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32) * (s16*)(obj + 0));
     ((GameObject*)obj)->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32) * (s16*)(obj + 2));
@@ -112,5 +112,5 @@ void fn_8023137C(int obj, int velocity)
 void fn_8023134C(int obj, int lifetime)
 {
     Dll2A3State* state = ((GameObject*)obj)->extra;
-    state->lifetime = (f32)lifetime;
+    state->lifetime = lifetime;
 }

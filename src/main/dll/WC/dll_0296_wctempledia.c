@@ -248,7 +248,7 @@ void wctempledia_init(int obj, int setup)
         state->currentSpeed = state->targetTable[0];
     }
     state->targetSpeed = state->currentSpeed;
-    ((GameObject*)obj)->animEventCallback = (void*)wctempledia_interactCallback;
+    ((GameObject*)obj)->animEventCallback = wctempledia_interactCallback;
     wctempledia_syncPartVisibility(obj, state->stageMask);
 }
 

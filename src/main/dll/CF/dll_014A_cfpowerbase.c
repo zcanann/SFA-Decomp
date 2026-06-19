@@ -195,7 +195,7 @@ void cfpowerbase_init(int* obj, u8* params)
         Obj_SetActiveModelIndex(obj, 1);
         break;
     }
-    ((GameObject*)obj)->animEventCallback = (void*)cfpowerbase_SeqFn;
+    ((GameObject*)obj)->animEventCallback = cfpowerbase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
     if (GameBit_Get(sub->litBit) != 0)
     {

@@ -328,7 +328,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         ctrl->movieIndex = movieIndex;
     }
 
-    ctrl->playFlags = (u8)playFlags;
+    ctrl->playFlags = playFlags;
     ctrl->field670 = 0;
 
     if (ctrl->preloaded != 0)

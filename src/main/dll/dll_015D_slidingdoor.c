@@ -202,7 +202,7 @@ void slidingdoor_init(u8* obj, u8* data)
     u32 doorState = 0;
     *(u32*)&((GameObject*)obj)->unkF4 = doorState;
     ((GameObject*)obj)->anim.rotX = (s16)(data[0x1f] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)slidingdoor_SeqFn;
+    ((GameObject*)obj)->animEventCallback = slidingdoor_SeqFn;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;
     ((GameObject*)obj)->anim.rootMotionScale = v;
     ((GameObject*)obj)->anim.rootMotionScale =

@@ -172,14 +172,14 @@ void effectbox_init(int obj, EffectboxPlacement* def)
     gameBit = def->unk20;
     if (gameBit > -1)
     {
-        ((GameObject*)obj)->unkF8 = (int)gameBit;
+        ((GameObject*)obj)->unkF8 = gameBit;
     }
     else
     {
         ((GameObject*)obj)->unkF8 = -1;
     }
     flags = (u32)((GameObject*)obj)->objectFlags | 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)flags;
+    ((GameObject*)obj)->objectFlags = flags;
 }
 
 /* gEffectBoxObjDescriptor (.data 0x80320D10) lives in a separate DLL

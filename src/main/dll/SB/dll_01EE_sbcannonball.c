@@ -131,16 +131,16 @@ void SB_CannonBall_update(GameObject* obj)
     {
         f64 scale = lbl_803E58C0;
         state->posX = (f32)(
-            scale * (f64)(state->velocityX * timeDelta) + (f64)state->posX);
+            scale * (f64)(state->velocityX * timeDelta) + state->posX);
         state->posY = (f32)(
-            scale * (f64)(state->velocityY * timeDelta) + (f64)state->posY);
+            scale * (f64)(state->velocityY * timeDelta) + state->posY);
         state->posZ = (f32)(
-            scale * (f64)(state->velocityZ * timeDelta) + (f64)state->posZ);
+            scale * (f64)(state->velocityZ * timeDelta) + state->posZ);
     }
     obj->anim.localPosX = state->posX;
     obj->anim.localPosY = state->posY;
     obj->anim.localPosZ = state->posZ;
-    obj->unkF4 = obj->unkF4 - (int)framesThisStep;
+    obj->unkF4 = obj->unkF4 - framesThisStep;
     if (obj->unkF4 < 0)
     {
         Obj_FreeObject((int*)obj);

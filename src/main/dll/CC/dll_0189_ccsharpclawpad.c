@@ -97,7 +97,7 @@ void ccsharpclawpad_update(int obj)
                 showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[0]);
             }
         }
-        player = (int*)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             lbl_803E46C4
             && playerIsDisguised((int)player) != 0)

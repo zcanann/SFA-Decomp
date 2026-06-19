@@ -135,12 +135,12 @@ void dll_1FF_update(int obj)
         grab = 0;
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
-            state->msgLo = (s16)grab;
+            state->msgLo = grab;
             state->msgHi = 0x28;
             buttonDisable(0, DLL1FF_BUTTON_ACTION);
             grab = 1;
         }
-        state->grabPhase = (s8)grab;
+        state->grabPhase = grab;
         if (state->grabPhase != 0)
         {
             state->sendFlag = 1;

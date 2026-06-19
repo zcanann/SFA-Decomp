@@ -73,7 +73,7 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
     {
         inner[0] = DIMGATE_STATE_CLOSED;
     }
-    ((GameObject*)obj)->animEventCallback = (void*)dimgate_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dimgate_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(param + 0x18) << 8);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }

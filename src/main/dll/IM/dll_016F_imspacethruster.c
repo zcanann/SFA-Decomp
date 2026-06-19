@@ -108,7 +108,7 @@ void imspacethruster_update(GameObject* obj)
         }
         if (state->kind < 5)
         {
-            f32 weight = (f32)obj->anim.alpha / lbl_803E4794;
+            f32 weight = obj->anim.alpha / lbl_803E4794;
             if (weight > lbl_803E4788)
             {
                 weight = lbl_803E4788;

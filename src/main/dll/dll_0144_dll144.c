@@ -69,7 +69,7 @@ void dll_144_update(void)
 void dll_144_init(int obj)
 {
     ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_144_SeqFn;
+    ((GameObject*)obj)->animEventCallback = dll_144_SeqFn;
 }
 
 void dll_144_release(void)

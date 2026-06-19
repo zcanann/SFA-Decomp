@@ -72,7 +72,7 @@ int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         }
         cfg.behaviorFlags = 0;
         cfg.renderFlags = 0;
-        cfg.effectIdByte = (u8)effectId;
+        cfg.effectIdByte = effectId;
         cfg.attachedSource = sourceObj;
         cfg.startPosX = lbl_803E02EC;
         cfg.startPosY = lbl_803E02EC;
@@ -103,7 +103,7 @@ int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             randomGetRange(0, 0x64) + lbl_803E02DC;
             cfg.startPosZ = lbl_803E02DC *
                 (f32)(s32)
-            randomGetRange((s32)extraArgs[0], (s32)extraArgs[1]);
+            randomGetRange((s32)extraArgs[0], extraArgs[1]);
             cfg.startPosX = lbl_803E02F4;
             if (spawnParams->posX > lbl_803E02EC) cfg.startPosX = lbl_803E02F8;
             cfg.scale = lbl_803E02FC * (f32)(s32)
@@ -148,10 +148,10 @@ void Effect19_func05(void)
     sum = lbl_803DB87C + step;
     lbl_803DB87C = sum;
     if (sum > 1.0f) lbl_803DB87C = lbl_803E02E8;
-    lbl_803DD3F0 = lbl_803DD3F0 + (s32)framesThisStep * 0x64;
+    lbl_803DD3F0 = lbl_803DD3F0 + framesThisStep * 0x64;
     if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
     lbl_803DD3FC = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
-    lbl_803DD3F4 = lbl_803DD3F4 + (s32)framesThisStep * 0x32;
+    lbl_803DD3F4 = lbl_803DD3F4 + framesThisStep * 0x32;
     if (lbl_803DD3F4 > 0x7fff) lbl_803DD3F4 = 0;
     lbl_803DD3F8 = mathSinf(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
 }

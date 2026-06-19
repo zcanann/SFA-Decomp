@@ -57,9 +57,9 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     }
     if (state->liftReset == 0)
     {
-        state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
+        state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - state->liftVelocity);
         state->liftHeight =
-            (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
+            (s32)((f32)state->liftVelocity * timeDelta + state->liftHeight);
         if (state->liftHeight > state->peakLiftHeight)
         {
             state->peakLiftHeight = state->liftHeight;
@@ -98,7 +98,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                               &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;
-    ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, (f32)state->liftHeight / lbl_803E3BCC);
+    ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->liftHeight / lbl_803E3BCC);
 }
 
 typedef struct PrisonGuardStateFlags
@@ -166,7 +166,7 @@ void staffactivated_spawnMapEventDebris(int obj)
         Obj_IsLoadingLocked() != 0)
     {
         (*gMapEventInterface)->addTime(setup->base.mapId,
-                                               lbl_803E3BD8 * (f32)setup->timedEventSeconds);
+                                               lbl_803E3BD8 * setup->timedEventSeconds);
         if (tricky != 0)
         {
             trickyImpress(tricky);
@@ -210,11 +210,11 @@ void staffactivated_spawnMapEventDebris(int obj)
             rotate.scale = lbl_803E3BBC;
             rotate.z = 0;
             rotate.x = 0;
-            rotate.y = (s16)randomGetRange(-10000, 10000);
+            rotate.y = randomGetRange(-10000, 10000);
             vecRotateZXY(&rotate, (void*)(spawnedObj + 0x24));
 
             yawDelta = ((GameObject*)spawnedObj)->anim.rotX -
-                (u16)getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
+                getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
             if (yawDelta > 0x8000)
             {
                 yawDelta -= 0xffff;
@@ -223,7 +223,7 @@ void staffactivated_spawnMapEventDebris(int obj)
             {
                 yawDelta += 0xffff;
             }
-            ((GameObject*)spawnedObj)->anim.rotX = (s16)yawDelta;
+            ((GameObject*)spawnedObj)->anim.rotX = yawDelta;
             i++;
         }
     }

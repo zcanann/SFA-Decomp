@@ -98,7 +98,7 @@ void saveFileSelect_checkCheatCodes(void)
     }
     if (saveFileSelect_saveCheatProgress == CHEAT_SEQUENCE_LEN)
     {
-        saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].cheatFlag = 5;
+        saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag = 5;
         saveFileSelect_saveDirty = 1;
         Sfx_PlayFromObject(0, SFXen_waterblock_stop);
     }
@@ -118,13 +118,13 @@ void saveSelect_drawText(int unused, int alpha)
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
 
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase; /* retail draw path resets the working slot pointer to the base */
-    gameTextShowStr((char*)&saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex], 0x41, 0, 0);
+    gameTextShowStr((char*)&saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex], 0x41, 0, 0);
 
     sprintf(buf, sFrontendCompletionPercentFormat,
-            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].completionPercent);
+            saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].completionPercent);
     gameTextShowStr(buf, 0x42, 0, 0);
 
-    secs = saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].playTimeSeconds;
+    secs = saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].playTimeSeconds;
     hours = secs / SECONDS_PER_HOUR;
     rem = secs - hours * SECONDS_PER_HOUR;
     minutes = rem / SECONDS_PER_MINUTE;
@@ -134,10 +134,10 @@ void saveSelect_drawText(int unused, int alpha)
     gameTextShowStr(buf, 0x43, 0, 0);
 
     sprintf(buf, sFrontendSingleDigitFormat,
-            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].lifeCount);
+            saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].lifeCount);
     gameTextShowStr(buf, 0x44, 0, 0);
 
     sprintf(buf, sFrontendSingleDigitFormat,
-            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].magicCount);
+            saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }

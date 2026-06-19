@@ -148,7 +148,7 @@ void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg
     p[3].z = lbl_803E15A0;
     p[4].layer = 3;
     p[4].flags = 1;
-    p[4].tex = (void*)0;
+    p[4].tex = 0;
     p[4].mode = 0x2000;
     p[4].x = lbl_803E15A0;
     p[4].y = lbl_803E15A0;

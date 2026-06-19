@@ -66,7 +66,7 @@ void infopoint_update(GameObject* obj)
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         buttonDisable(0, 0x100);
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
     }
 }
 
@@ -78,7 +78,7 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 1: inner[0xb] = (s16)0xff;
+        case 1: inner[0xb] = 0xff;
             break;
         case 2: inner[0xb] = 0;
             break;
@@ -93,7 +93,7 @@ void infopoint_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     int* txt;
-    ((GameObject*)obj)->animEventCallback = (void*)InfoPoint_SeqFn;
+    ((GameObject*)obj)->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
         *(int*)lbl_803219A0 = textureLoadAsset(616);

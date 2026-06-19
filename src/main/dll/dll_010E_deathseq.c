@@ -125,7 +125,7 @@ void deathseq_update(int* obj)
         if (((GameObject*)obj)->anim.currentMove != 0x92)
         {
             AudioStream_StopCurrent();
-            AudioStream_Play(0x51e1, (void*)AudioStream_StartPrepared);
+            AudioStream_Play(0x51e1, AudioStream_StartPrepared);
             ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
         }
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);

@@ -142,7 +142,7 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
     e[6].z = lbl_803E12A4;
     buf.unk_58 = 0;
     buf.sourceObj = sourceObj;
-    buf.variant = (s16)variant;
+    buf.variant = variant;
     buf.pos[0] = lbl_803E12A4;
     buf.pos[1] = lbl_803E12A4;
     buf.pos[2] = lbl_803E12A4;

@@ -146,7 +146,7 @@ void pointlight_update(int obj)
     if (state->enabled != 0)
     {
         s16 bit = setup->enableBit;
-        if (bit > 0 && (u32)GameBit_Get(bit) == 0)
+        if (bit > 0 && GameBit_Get(bit) == 0)
         {
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, lbl_803E7234);
@@ -161,7 +161,7 @@ void pointlight_update(int obj)
     else
     {
         s16 bit = setup->enableBit;
-        if (bit > 0 && (u32)GameBit_Get(bit) != 0)
+        if (bit > 0 && GameBit_Get(bit) != 0)
         {
             state->enabled = 1;
             modelLightStruct_setEnabled(state->light, 1, lbl_803E7234);
@@ -221,7 +221,7 @@ void pointlight_init(int obj, int setup)
             {
                 brightness = POINTLIGHT_MAX_SPOT_BRIGHTNESS;
             }
-            modelLightStruct_setSpotAttenuation(state->light, (f32)brightness, setupData->spotMode);
+            modelLightStruct_setSpotAttenuation(state->light, brightness, setupData->spotMode);
         }
 
         modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7230);

@@ -65,12 +65,12 @@ void cclevcontrol_init(int* obj)
     int* state;
     envfxTable = lbl_80323548;
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)cclevcontrol_SeqFn;
+    ((GameObject*)obj)->animEventCallback = cclevcontrol_SeqFn;
     fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately((void*)0, (void*)0, 0x242, 0);
+        getEnvfxActImmediately((void*)0, 0, 0x242, 0);
     }
     else
     {
@@ -146,7 +146,7 @@ void cclevcontrol_update(int obj)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
     }
-    tricky = (int*)getTrickyObject();
+    tricky = getTrickyObject();
     if (state[1] & 1)
     {
         if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0

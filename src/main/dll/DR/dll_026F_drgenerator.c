@@ -86,7 +86,7 @@ void drgenerator_init(int obj, char* arg)
     if (((GameObject*)obj)->anim.seqId == 0x72e)
     {
         ObjTextureRuntimeSlot* t;
-        ((GameObject*)obj)->animEventCallback = (void*)drgenerator_eventCallback;
+        ((GameObject*)obj)->animEventCallback = drgenerator_eventCallback;
         t = objFindTexture((void*)obj, 0, 0);
         if (t != 0)
         {
@@ -113,7 +113,7 @@ void drgenerator_init(int obj, char* arg)
             duration = 0x14;
             break;
         }
-        ((DrgeneratorState*)p)->timerDuration = (s16)duration;
+        ((DrgeneratorState*)p)->timerDuration = duration;
     }
     ((DrgeneratorState*)p)->timerDuration = ((DrgeneratorState*)p)->timerDuration * 0x3c;
     ((DrgeneratorState*)p)->unk124 = lbl_803E6B68;

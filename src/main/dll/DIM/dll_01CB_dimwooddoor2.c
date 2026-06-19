@@ -113,7 +113,7 @@ void dimwooddoor2_update(int* obj)
         if (v < 0) v = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = (u8)v;
+        ((GameObject*)obj)->anim.alpha = v;
     }
     else
     {

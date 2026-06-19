@@ -146,7 +146,7 @@ void imanimspacecraft_update(GameObject* obj)
 void imanimspacecraft_init(GameObject* obj)
 {
     f32 pos;
-    obj->animEventCallback = (void*)imanimspacecraft_SeqFn;
+    obj->animEventCallback = imanimspacecraft_SeqFn;
     pos = lbl_803E4784;
     *(f32*)(lbl_803AC948 + 0xc) = pos;
     *(f32*)(lbl_803AC948 + 0x10) = pos;

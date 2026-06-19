@@ -93,7 +93,7 @@ void wm_column_update(int obj)
             for (; i < count; i++)
             {
                 other = objects[i];
-                if (((u32)other != (u32)obj) && (((GameObject*)other)->anim.seqId == 499) &&
+                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
                 {
                     other = ((WmColumnPlacement*)((GameObject*)objects[i])->anim.placement)->gameBit;
@@ -129,7 +129,7 @@ void wm_column_update(int obj)
             for (; i < count; i++)
             {
                 other = objects[i];
-                if (((u32)other != (u32)obj) && (((GameObject*)other)->anim.seqId == 499) &&
+                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
                 {
                     int mapData = *(int*)&((GameObject*)objects[i])->anim.placementData;
@@ -171,7 +171,7 @@ void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     obj->objectFlags |= 0x2000;
     obj->unkF4 = 0;
-    obj->anim.bankIndex = (s8)mapData->modelIndex;
+    obj->anim.bankIndex = mapData->modelIndex;
     if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
     {
         obj->anim.bankIndex = 0;

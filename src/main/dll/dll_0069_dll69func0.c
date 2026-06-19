@@ -118,9 +118,9 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     entries[4].flags = d;
     entries[4].tex = NULL;
     entries[4].mode = 0x20000000;
-    entries[4].x = (f32)a;
-    entries[4].y = (f32)b;
-    entries[4].z = (f32)c;
+    entries[4].x = a;
+    entries[4].y = b;
+    entries[4].z = c;
     e = &entries[5];
     if (variant == 0)
     {
@@ -158,9 +158,9 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     e[3].flags = 0;
     e[3].tex = NULL;
     e[3].mode = 0x20000000;
-    e[3].x = (f32)a;
-    e[3].y = (f32)b;
-    e[3].z = (f32)c;
+    e[3].x = a;
+    e[3].y = b;
+    e[3].z = c;
     buf.v58 = variant;
     buf.ctx = sourceObj;
     buf.v44 = variant;

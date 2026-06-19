@@ -190,7 +190,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
         leg = -2;
     }
 end:
-    objInterpretSeq(obj, arg2, (int)leg, (int)distSqB);
+    objInterpretSeq(obj, arg2, leg, distSqB);
 }
 
 void objSeqFn_801992ec(void* obj, int arg2)
@@ -220,5 +220,5 @@ void objSeqFn_801992ec(void* obj, int arg2)
     {
         cat = (d0 < ((MmpGyserventState*)state)->nearRadiusSq) ? -1 : -2;
     }
-    objInterpretSeq(obj, arg2, (int)cat, (int)d1);
+    objInterpretSeq(obj, arg2, cat, d1);
 }

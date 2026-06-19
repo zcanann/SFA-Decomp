@@ -151,14 +151,14 @@ void suntemple_init(u8* obj, u8* setup)
     gameObj->anim.rotX = (s16)(cfg->rotXByte << 8);
     gameObj->anim.rotY = (s16)(cfg->rotYByte << 8);
     gameObj->anim.rotZ = (s16)(cfg->rotZByte << 8);
-    gameObj->animEventCallback = (void*)suntemple_interactCallback;
+    gameObj->animEventCallback = suntemple_interactCallback;
     gameObj->anim.bankIndex = cfg->bankIndex;
     if (gameObj->anim.bankIndex >= gameObj->anim.modelInstance->modelCount)
     {
         gameObj->anim.bankIndex = 0;
     }
     state = gameObj->extra;
-    state->activationLatched = (u8)GameBit_Get(cfg->activationGameBit);
+    state->activationLatched = GameBit_Get(cfg->activationGameBit);
     state->mapEventMode = (*gMapEventInterface)->getMapAct(gameObj->anim.mapEventSlot);
     if ((cfg->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0)
     {
@@ -184,7 +184,7 @@ void suntemple_update(int obj)
 
     state = gameObj->extra;
     cfg = (SunTempleSetup*)gameObj->anim.placementData;
-    state->activationLatched = (u8)GameBit_Get(cfg->activationGameBit);
+    state->activationLatched = GameBit_Get(cfg->activationGameBit);
     if (state->activationLatched == 0)
     {
         texture = objFindTexture((void*)obj, 0, 0);
@@ -232,14 +232,14 @@ void suntemple_update(int obj)
                     if (gameObj->anim.seqId == SUNTEMPLE_SEQ_WC_INV_USE)
                     {
                         if (state->mapEventMode == 1 &&
-                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 || (u32)GameBit_Get(
+                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 || GameBit_Get(
                                 SUNTEMPLE_GAMEBIT_WC_INV_B) != 0))
                         {
                             (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,
                                                                     SUNTEMPLE_SEQUENCE_INVALID);
                         }
                         else if (state->mapEventMode == 2 &&
-                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 || (u32)GameBit_Get(
+                            ((u32)GameBit_Get(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 || GameBit_Get(
                                 SUNTEMPLE_GAMEBIT_WC_INV_D) != 0))
                         {
                             (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,

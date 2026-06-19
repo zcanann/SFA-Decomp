@@ -43,7 +43,7 @@ void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].z = lbl_803E1014;
     e[2].layer = 0;
     e[2].flags = 0x7a;
-    e[2].tex = (void*)0;
+    e[2].tex = 0;
     e[2].mode = 0x10000;
     e[2].x = lbl_803E1014;
     e[2].y = lbl_803E1014;
@@ -92,7 +92,7 @@ void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[8].z = lbl_803E1014;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.v44 = (s16)variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1014;
     buf.pos[1] = lbl_803E1014;
     buf.pos[2] = lbl_803E1014;

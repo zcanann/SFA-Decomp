@@ -136,7 +136,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    while (ObjMsg_Pop((void*)self, (u32*)&msg, &sender, &param) != 0)
+    while (ObjMsg_Pop((void*)self, &msg, &sender, &param) != 0)
     {
         if ((animUpdate->sequenceControlFlags & OBJSEQ_CONTROL_SUPPRESS_MSG) == 0)
         {
@@ -146,21 +146,21 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_1, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_1, self, 0);
                 }
                 break;
             case FESEQOBJECT_MSG_IN_2:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_2, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_2, self, 0);
                 }
                 break;
             case FESEQOBJECT_MSG_IN_3:
                 controlObj = FEseqobject_findControlObject();
                 if (controlObj != 0)
                 {
-                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_3, (void*)self, 0);
+                    ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_3, self, 0);
                 }
                 break;
             }
@@ -210,7 +210,7 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void FEseqobject_init(int obj)
 {
     *(short*)obj = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)FEseqobject_SeqFn;
+    ((GameObject*)obj)->animEventCallback = FEseqobject_SeqFn;
     ObjMsg_AllocQueue((void*)obj, 0xa);
 }
 

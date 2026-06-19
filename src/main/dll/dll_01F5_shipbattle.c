@@ -171,7 +171,7 @@ void ShipBattle_update(int obj)
         return;
     }
 
-    i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)lbl_803DB411);
+    i = (*gObjectTriggerInterface)->update((u8*)obj, lbl_803DB411);
     if (i == 0)
     {
         return;

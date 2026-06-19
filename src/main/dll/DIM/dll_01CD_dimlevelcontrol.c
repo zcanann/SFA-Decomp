@@ -133,7 +133,7 @@ void dim_levelcontrol_update(int obj)
     st->b6 = b;
     st->b5 = c;
     st->b4 = d;
-    if (!st->b3 && (u32)GameBit_Get(0xa21) != 0)
+    if (!st->b3 && GameBit_Get(0xa21) != 0)
     {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         st->b3 = 1;
@@ -141,7 +141,7 @@ void dim_levelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if ((u32)GameBit_Get(0xa82) == 0 ||
-            ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0))
+            ((u32)GameBit_Get(0x17) != 0 && GameBit_Get(0xead) == 0))
         {
             if (((GameObject*)obj)->unkF4 == 2)
             {
@@ -207,7 +207,7 @@ void dim_levelcontrol_update(int obj)
         GameBit_Set(0x3e8, t2);
         st->saveState = t2;
     }
-    if (!(u8)GameBit_Get(0x8a5) && (u32)GameBit_Get(0x89d) != 0)
+    if (!(u8)GameBit_Get(0x8a5) && GameBit_Get(0x89d) != 0)
     {
         GameBit_Set(0x8a4, 1);
     }
@@ -270,17 +270,17 @@ void dim_levelcontrol_init(int obj)
     {
         gameBitFn_800ea2e0(i);
     }
-    st->dialogueFired = (u8)GameBit_Get(0xdc);
+    st->dialogueFired = GameBit_Get(0xdc);
     GameBit_Set(0xf0a, 0);
-    if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0)
+    if ((u32)GameBit_Get(0x89d) != 0 && GameBit_Get(0x8a5) == 0)
     {
         GameBit_Set(0x89d, 0);
     }
-    st->b7 = (u8)GameBit_Get(0xd0b);
-    st->b6 = (u8)GameBit_Get(0xd0c);
-    st->b5 = (u8)GameBit_Get(0xd0d);
-    st->b4 = (u8)GameBit_Get(0xd0e);
-    st->b3 = (u8)GameBit_Get(0xa21);
+    st->b7 = GameBit_Get(0xd0b);
+    st->b6 = GameBit_Get(0xd0c);
+    st->b5 = GameBit_Get(0xd0d);
+    st->b4 = GameBit_Get(0xd0e);
+    st->b3 = GameBit_Get(0xa21);
     (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 1);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     unlockLevel(0, 0, 1);

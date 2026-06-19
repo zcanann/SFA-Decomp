@@ -151,7 +151,7 @@ void tree_updateAmbientEffects(int obj, int p2)
                 ((TreeState*)p2)->ambientSpawnTimers[i] -= timeDelta;
                 if (((TreeState*)p2)->ambientSpawnTimers[i] <= lbl_803E72F8)
                 {
-                    ((TreeState*)p2)->ambientSpawnTimers[i] = (f32)randomGetRange(0x3c, 0x12c);
+                    ((TreeState*)p2)->ambientSpawnTimers[i] = randomGetRange(0x3c, 0x12c);
                     tree_spawnAmbientEffect(obj, p2, i);
                 }
             }
@@ -372,7 +372,7 @@ void tree_update(int obj)
             dx = object->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = object->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
-            hit = (int)dist;
+            hit = dist;
             if ((u16)hit < state->proximityRadius)
             {
                 if ((state->flags & TREE_FLAG_PLAYER_PROXIMITY_BURST) &&
