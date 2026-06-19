@@ -287,8 +287,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
 
     vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
     vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
-    vm->blockOriginGridX = vm->blockOriginWorldX / 10;
-    vm->blockOriginGridZ = vm->blockOriginWorldZ / 10;
+    vm->blockOriginGridX = *(volatile int*)&vm->blockOriginWorldX / 10;
+    vm->blockOriginGridZ = *(volatile int*)&vm->blockOriginWorldZ / 10;
 
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
