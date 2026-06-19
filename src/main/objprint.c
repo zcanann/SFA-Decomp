@@ -3154,7 +3154,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-    extern void GXSetIndTexOrder(int a, int b, int c);
+    extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
     extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
@@ -3388,7 +3388,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-    extern void GXSetIndTexOrder(int a, int b, int c);
+    extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
     extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);

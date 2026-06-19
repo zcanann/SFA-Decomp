@@ -98,7 +98,7 @@ extern int Obj_GetPlayerObject(void);
 extern int fn_80296464(void);
 extern int* Obj_GetActiveModel(int player);
 extern void fn_80295B2C(int player, f32 x, f32 y, f32 z);
-extern void playerRender(int player, int p2, int p3, int p4, int p5, int last);
+extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern f32 lbl_803E549C;
 
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)

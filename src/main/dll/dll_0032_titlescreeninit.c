@@ -25,7 +25,7 @@
 extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern char* gameTextGetStr(int id);
+extern void* gameTextGetStr(int textId);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);

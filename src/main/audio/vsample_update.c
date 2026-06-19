@@ -1,6 +1,6 @@
 #include "main/audio/vsample_update.h"
 
-extern u32 hwChangeStudio(int slot);
+extern int hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u32 hwVoiceInStartup(int slot);

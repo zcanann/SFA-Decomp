@@ -140,7 +140,7 @@ extern f32 lbl_803E1F34; /*  320.0f */
 extern f32 lbl_803E2024; /*  240.0f */
 extern f32 lbl_803E2044; /*  43.0f  (FOV value) */
 extern s8 lbl_803DBA64;
-extern void shadowRenderFn_8006b558(void*);
+extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);

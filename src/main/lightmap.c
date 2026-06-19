@@ -1393,7 +1393,7 @@ void* mapGetBlockAtPos(int x, int y, int layer)
 extern f32 shdwChanged_803DEC18;
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
-extern void Camera_SetAspectRatio(f32 ratio);
+extern void Camera_SetAspectRatio(f32 aspectRatio);
 
 int setWidescreen(u8 v)
 {

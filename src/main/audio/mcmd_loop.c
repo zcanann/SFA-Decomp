@@ -1,6 +1,6 @@
 #include "main/audio/mcmd_loop.h"
 #include "main/audio/hw_init.h"
-extern u32 sndRand(void);
+extern u16 sndRand(void);
 
 void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
 {

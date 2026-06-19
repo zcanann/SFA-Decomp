@@ -18,7 +18,7 @@ extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* au
                                         void* auxBCallback, void* auxBUser);
 
 extern void hwOff(u32 slot);
-extern void voiceKillById(u32 value);
+extern int voiceKillById(u32 id);
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
 extern void* lbl_803BD9A4[8];

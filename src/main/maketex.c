@@ -460,7 +460,7 @@ int timerCountDown(f32* p)
 
 extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
-extern void gameTextLoadTaskText(int);
+extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
 extern u32 lbl_803DB718;
 

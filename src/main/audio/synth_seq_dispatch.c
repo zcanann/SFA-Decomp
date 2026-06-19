@@ -7,7 +7,7 @@ extern int gSynthCurrentVoiceSlotIndex;
 extern u32* gSynthFreeCallbacks;
 extern u8* synthReadVariablePair(u8 * p, u16 * tagOut, s16 * valueOut);
 extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data);
+extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void synthStartHandleFromRequest(int request, u32* outHandle, u8 noLock);
 extern void synthFlushCallbacks(void);

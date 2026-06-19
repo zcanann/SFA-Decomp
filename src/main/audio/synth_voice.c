@@ -194,9 +194,9 @@ typedef struct SynthMasterFader
 
 extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
 extern u16 voiceScaleSampleRate(u32 rate);
-extern void hwSetPitch(u32 voice, u16 pitch);
+extern void hwSetPitch(int slot, u32 pitch);
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
-extern void hwSetPriority(u32 voice, u32 prio);
+extern void hwSetPriority(int slot, u32 value);
 extern void hwStart(u32 voice, u8 studio);
 extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);

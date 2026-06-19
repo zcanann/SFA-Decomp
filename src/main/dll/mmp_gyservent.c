@@ -55,7 +55,7 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reachAX) == 0x1C);
 STATIC_ASSERT(offsetof(MmpGyserventState, reachBX) == 0x28);
 STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
-extern void mtxRotateByVec3s(void* out, void* vec);
+extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(void* m, void* out);
 extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, int legCode, int distanceSquared);

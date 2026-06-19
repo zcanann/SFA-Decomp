@@ -29,7 +29,7 @@
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
-extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
+extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
                                 void* hits, int hitCount);

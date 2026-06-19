@@ -1770,7 +1770,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
     *out2 = acc5;
 }
 
-extern int testAndSet_onlyUseHeap3(int);
+extern int testAndSet_onlyUseHeap3(int v);
 extern float fn_802943F4(float x);
 extern double floor(double);
 extern f32 __PADFixBits;
@@ -2361,8 +2361,7 @@ extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern f32 lbl_803DED0C, lbl_803DED10;
 extern const f32 lbl_803DED14, Chan_803DED18;
 extern f32 Enabled_803DED20, BarnacleEnabled_803DED24, lbl_803DED2C;
-extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 r,
-                                      f32* a, f32* b, f32* c, f32* d, f32* e, f32* f);
+extern void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
@@ -2462,7 +2461,7 @@ extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetFovY(f32 fovY);
-extern void Camera_SetAspectRatio(f32 x);
+extern void Camera_SetAspectRatio(f32 aspectRatio);
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_RebuildProjectionMatrix(void);

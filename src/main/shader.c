@@ -2145,8 +2145,7 @@ extern f32 lbl_803DEBD4;
 extern f32 lbl_803DEBD8;
 extern f32 lbl_803DEBDC;
 extern f32 Vec_distance(f32* a, f32* b);
-extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY,
-                                      f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outDepth);
+extern void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
 
 int objUpdateOpacity(char* obj)
 {

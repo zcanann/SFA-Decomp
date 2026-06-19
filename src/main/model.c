@@ -11,7 +11,7 @@
 #include "main/objprint_dolphin.h"
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void gxTextureFn_80072dfc(void* obj, void** model, int param_3);
+extern void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 

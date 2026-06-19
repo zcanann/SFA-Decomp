@@ -2576,7 +2576,7 @@ extern f32 sqrtf(f32);
 extern int getAngle(float y, float x);
 extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-extern void setMatrixFromObjectTransposed(void* blk, f32* m);
+extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void objRotateFn_8003bce8(f32 * m, s16 * a, s16 * b, s16 * c);
