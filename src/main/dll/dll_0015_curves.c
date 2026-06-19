@@ -553,9 +553,9 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     s8 foundBelow;
     RomCurvePoint* points;
     f32 topSentinel;
-    f32 floorSentinel;
-    f32 zero;
     f32 one;
+    f32 zero;
+    f32 floorSentinel;
 
     topSentinel = gCurvesBoundsMaxSeed;
     floorSentinel = gCurvesBoundsMinSeed;
@@ -616,7 +616,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
         }
         point++;
     }
-    if (collision->waterY[0] != topSentinel)
+    if (topSentinel != collision->waterY[0])
     {
         collision->waterDepth[0] = collision->waterY[0] - collision->points[0][1];
     }
