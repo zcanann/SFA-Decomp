@@ -127,7 +127,7 @@ void ecsh_cup_update(short* obj)
             state->unk2E = *(u8*)&state->unk2E * -1LL;
             state->unk20 = lbl_803E5070;
         }
-        ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * (f32)state->unk2E + ((GameObject*)obj)->
+        ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->unk2E + ((GameObject*)obj)->
             anim.localPosY;
         if (mode == 1 && state->unk24 == 1)
         {
@@ -200,7 +200,7 @@ void ecsh_cup_update(short* obj)
         {
             if (state->unk28 == buf[0])
             {
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             }
             state->unk24 = mode;
         }
@@ -251,7 +251,7 @@ void ecsh_cup_update(short* obj)
                         (u8)state->unk28);
                     if (state->unk28 == buf[0])
                     {
-                        (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+                        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                     }
                 }
             }
@@ -288,8 +288,8 @@ void ecsh_cup_init(int obj, int def)
     }
     ((EcshCupState*)state)->unk24 = 0;
     ((EcshCupState*)state)->unk28 = *(s16*)(def + 0x1a);
-    ((EcshCupState*)state)->unk20 = (f32)randomGetRange(0, 0x258);
-    ((EcshCupState*)state)->unk2C = (s16)randomGetRange(-0x320, 0x320);
+    ((EcshCupState*)state)->unk20 = randomGetRange(0, 0x258);
+    ((EcshCupState*)state)->unk2C = randomGetRange(-0x320, 0x320);
     *(u8*)&((EcshCupState*)state)->unk2E = 1;
     *(u8*)(obj + 0x37) = 0;
     ((EcshCupState*)state)->unk1C = lbl_803E5068;
@@ -355,7 +355,7 @@ void fn_801C8B68(int obj)
     {
         float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
         float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
-        int ang = (int)getAngle(dx, dz);
+        int ang = getAngle(dx, dz);
         delta = (int)(u16)ang - (int)(u16)((GameObject*)self)->anim.rotX;
         if (delta > 0x8000) delta -= 0xffff;
         if (delta < -0x8000) delta += 0xffff;

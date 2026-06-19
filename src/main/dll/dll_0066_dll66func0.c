@@ -196,7 +196,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                       u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -353,17 +353,17 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = savedX;
-    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = savedY;
-    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = savedZ;
+    (&DAT_803a458c)[DAT_803a3f28 * 4] = savedX;
+    (&DAT_803a4590)[DAT_803a3f28 * 4] = savedY;
+    (&DAT_803a4594)[DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
-    if (name == (char*)0x0)
+    if (name == 0x0)
     {
         DAT_803a3f24 = 0x46;
         DAT_803a3f25 = 0x4f;
         DAT_803a3f26 = 0x58;
         DAT_803a3f27 = 0;
-        name = (char*)0x0;
+        name = 0x0;
     }
     else
     {
@@ -378,10 +378,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         while (cVar8 != '\0');
     }
     uVar9 = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    cVar8 = (char)uVar10;
-    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, name != (char*)0x0))
+    cVar8 = uVar10;
+    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, name != 0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)uVar10 & 0xff,
+        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar10 & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -406,7 +406,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
 
     packed = FUN_80286830();
     actId = (u32)((u64)packed >> 0x20);
-    bit = (u32)packed;
+    bit = packed;
     table = &DAT_803a3be0;
     if (0x4fffffffff < packed)
     {
@@ -481,13 +481,13 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
                     rowPtr = table;
                     do
                     {
-                        if ((((((actId == (int)*rowPtr) && (foundIndex = rowBase, bit == (u8)rowPtr[1])) ||
-                                    ((foundIndex = rowBase + '\x01', actId == (int)rowPtr[3] && (bit == (u8)rowPtr[4])))
-                                ) || ((foundIndex = rowBase + '\x02', actId == (int)rowPtr[6] &&
-                                    (bit == (u8)rowPtr[7])))) ||
-                                ((foundIndex = rowBase + '\x03', actId == (int)rowPtr[9] && (bit == (u8)rowPtr[10]))))
-                            || ((actId == (int)rowPtr[0xc] &&
-                                (foundIndex = rowBase + '\x04', bit == (u8)rowPtr[0xd]))))
+                        if ((((((actId == (int)*rowPtr) && (foundIndex = rowBase, bit == rowPtr[1])) ||
+                                    ((foundIndex = rowBase + '\x01', actId == rowPtr[3] && (bit == rowPtr[4])))
+                                ) || ((foundIndex = rowBase + '\x02', actId == rowPtr[6] &&
+                                    (bit == rowPtr[7])))) ||
+                                ((foundIndex = rowBase + '\x03', actId == rowPtr[9] && (bit == rowPtr[10]))))
+                            || ((actId == rowPtr[0xc] &&
+                                (foundIndex = rowBase + '\x04', bit == rowPtr[0xd]))))
                             goto LAB_800e9628;
                         rowPtr = rowPtr + 0xf;
                         rowBase = rowBase + '\x05';
@@ -505,8 +505,8 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
                             if (*table == -1)
                             {
                                 i = i * 3;
-                                (&DAT_803a3be0)[i] = (char)actId;
-                                (&DAT_803a3be1)[i] = (char)packed;
+                                (&DAT_803a3be0)[i] = actId;
+                                (&DAT_803a3be1)[i] = packed;
                                 (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
@@ -590,7 +590,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    slotIdx = (u32)DAT_803a3f28;
+    slotIdx = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
                  (double)(float)(&DAT_803a4594)[slotIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[slotIdx * 0x10], extraout_r4, sizeArg, in_r6, in_r7, in_r8, in_r9,
@@ -648,7 +648,7 @@ void FUN_800ea9b8(void)
     if (hist[6] == '\0')
     {
         idPtr = &DAT_80312632;
-        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
+        for (scanId = 1; scanId < 0xce; scanId = scanId + 1)
         {
             if ((*idPtr == 0xffff) || (*idPtr == -1))
             {
@@ -677,7 +677,7 @@ void FUN_800ea9b8(void)
         {
             hist[i] = hist[i + -1];
         }
-        *hist = (char)id;
+        *hist = id;
         if ((u32)(u8)hist[5] == (id & 0xff)
         )
         {

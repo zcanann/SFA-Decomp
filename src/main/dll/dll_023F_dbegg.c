@@ -310,8 +310,8 @@ void dbegg_hitDetect(int obj)
     }
     if (state[0x118] != 9)
     {
-        void* hitFrom = (void*)&((GameObject*)obj)->anim.previousLocalPosX;
-        void* hitTo = (void*)&((GameObject*)obj)->anim.localPosX;
+        void* hitFrom = &((GameObject*)obj)->anim.previousLocalPosX;
+        void* hitTo = &((GameObject*)obj)->anim.localPosX;
         f32 hitRadius = lbl_803E6218;
         if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
         {
@@ -498,8 +498,8 @@ void fn_801FE774(int cam, f32* vel)
     {
         f32 w;
         f32 m;
-        sumX = sumX / (f32)count;
-        sumZ = sumZ / (f32)count;
+        sumX = sumX / count;
+        sumZ = sumZ / count;
         w = lbl_803E6200;
         vel[0] = -(w * sumX - vel[0]);
         vel[2] = -(w * sumZ - vel[2]);
@@ -764,7 +764,7 @@ void dbegg_update(int obj)
                     ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                         ((GameObject*)obj)->anim.localPosX,
                         ((GameObject*)obj)->anim.localPosY - ((DbEggState*)blob)->waterOffset,
-                        ((GameObject*)obj)->anim.localPosZ, ((GameObject*)obj)->anim.rotX, (f32)randomGetRange(1, 10), 1);
+                        ((GameObject*)obj)->anim.localPosZ, ((GameObject*)obj)->anim.rotX, randomGetRange(1, 10), 1);
                 }
             }
             if (GameBit_Get(0x426) != 0)

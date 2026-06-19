@@ -370,7 +370,7 @@ void SnowBike_setType(int obj, int type)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
     u32 bit;
-    ((SnowBikeSetTypeState*)t)->bikeType = (s8)type;
+    ((SnowBikeSetTypeState*)t)->bikeType = type;
     if (type == 2)
     {
         GameBit_Set(((SnowBikeSetTypeState*)t)->completionGameBit, 1);
@@ -767,7 +767,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->unk00C = ((GameObject*)obj)->anim.localPosX;
     ((SnowBikeState*)state)->unk010 = ((GameObject*)obj)->anim.localPosY;
     ((SnowBikeState*)state)->unk014 = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->animEventCallback = (void*)SnowBike_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = SnowBike_animEventCallback;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0)
     {
@@ -1020,7 +1020,7 @@ void SnowBike_update(int obj)
             {
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
-                ((SnowBikeState*)state)->stickX = (f32)padGetStickX(0);
+                ((SnowBikeState*)state)->stickX = padGetStickX(0);
                 ((SnowBikeState*)state)->stickY = (f32)padGetStickY(0);
                 ((SnowBikeState*)state)->buttonsHeld = getButtonsHeld(0);
                 ((SnowBikeState*)state)->buttonsJustPressed = getButtonsJustPressed(0);

@@ -105,7 +105,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     z = z - z2;
     d = sqrtf(x * x + z * z);
     x = d;
-    angle = getAngle(y, (f32)d);
+    angle = getAngle(y, d);
     ((GameObject*)obj)->anim.rotY = (lbl_803E2EBC - lbl_803E2F00 * ((GameObject*)obj)->anim.currentMoveProgress) *
         (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
@@ -121,11 +121,11 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
         {
             if (dist > 0x1f4)
             {
-                vel *= lbl_803E2EBC + (f32)dist / 100.0f;
+                vel *= lbl_803E2EBC + dist / 100.0f;
             }
             else
             {
-                vel *= lbl_803E2EBC + (f32)dist / lbl_803E2F08;
+                vel *= lbl_803E2EBC + dist / lbl_803E2F08;
             }
         }
         ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->unk48 - vel;
@@ -193,7 +193,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     z = z - z2;
     d = sqrtf(x * x + z * z);
     x = d;
-    angle = getAngle(y, (f32)d);
+    angle = getAngle(y, d);
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
@@ -257,7 +257,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     z = z - z2;
     d = sqrtf(x * x + z * z);
     x = d;
-    angle = getAngle(y, (f32)d);
+    angle = getAngle(y, d);
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
@@ -277,7 +277,7 @@ void fn_801627F4(int obj)
     char* sub;
 
     state = ((GameObject*)obj)->extra;
-    ptr = (int*)ObjGroup_GetObjects(0x17, &count);
+    ptr = ObjGroup_GetObjects(0x17, &count);
     if (count != 0)
     {
         sub = *(char**)(state + 0x40c);
@@ -456,7 +456,7 @@ void grimble_init(int obj, int p2, int p3)
     }
     (*(void (**)(int, int, char*, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
         obj, p2, state, 0, 0, 0, flags, lbl_803E2F28);
-    ((GameObject*)obj)->animEventCallback = (void*)grimble_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = grimble_animEventCallback;
     (*(void (**)(int, char*, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2EB8;

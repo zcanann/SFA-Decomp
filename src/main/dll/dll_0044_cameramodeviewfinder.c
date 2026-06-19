@@ -95,7 +95,7 @@ void firstPersonDoControls(s16* obj)
     stickY = padGetStickY(0);
     t = (lbl_803E17E0 - *(f32*)(obj + 0x5a)) / lbl_803E17E4;
     zoom = (t < lbl_803E17C4) ? lbl_803E17C4 : ((t > lbl_803E17E8) ? lbl_803E17E8 : t);
-    spin = (f32)stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);
+    spin = stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);
     spin = interpolate(spin - lbl_803DD548->yawSpeed, lbl_803E17F4, timeDelta);
     lbl_803DD548->yawSpeed = lbl_803DD548->yawSpeed + spin;
     if ((lbl_803DD548->yawSpeed > lbl_803E17F8) &&
@@ -115,7 +115,7 @@ void firstPersonDoControls(s16* obj)
         pitchDelta = pitchDelta + 0xffff;
     }
     spin = interpolate((f32)pitchDelta, lbl_803E17E8 / (lbl_803E180C * zoom + lbl_803E1808), timeDelta);
-    obj[1] = (f32)obj[1] + spin;
+    obj[1] = obj[1] + spin;
     if (0x3c00 < obj[1])
     {
         obj[1] = 0x3c00;
@@ -140,7 +140,7 @@ void firstPersonDoControls(s16* obj)
     {
         zoom2 = *(f32*)(obj + 0x5a);
         stickX = padGetCY(0);
-        t = (f32) - (int)stickX;
+        t = (f32) - stickX;
         t = lbl_803E1810 * t;
         zoom2 = t * timeDelta + zoom2;
         viewFinderSetZoom(Camera_GetFovY());
@@ -191,13 +191,13 @@ int firstPersonEnter(u8* cam, s16* p2)
     }
     if (state != NULL)
     {
-        state[54] = (u8)conv;
+        state[54] = conv;
         if ((u8*)Obj_GetPlayerObject() == state)
         {
             Player_GetHeldObject((int)state, &other);
             if ((u32)other != 0)
             {
-                *(u8*)(other + 54) = (u8)conv;
+                *(u8*)(other + 54) = conv;
                 if (*(u8*)(other + 54) == 1)
                 {
                     *(u8*)(other + 54) = 0;
@@ -277,7 +277,7 @@ void CameraModeViewfinder_free(int camObj)
     {
         ((GameObject*)viewObj)->anim.alpha = 0xff;
         player = Obj_GetPlayerObject();
-        if ((u32)player == (u32)viewObj)
+        if ((u32)player == viewObj)
         {
             Player_GetHeldObject(viewObj, outBuf);
             if ((u32)outBuf[0] != 0)
@@ -505,8 +505,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     {
         absDiff = diff;
     }
-    spinRate = (f32)diff / lbl_803E17E4;
-    rollRate = (f32)absDiff / lbl_803E1830;
+    spinRate = diff / lbl_803E17E4;
+    rollRate = absDiff / lbl_803E1830;
     lbl_803DD548->viewCurve.px = &lbl_803DD548->posXCurve.start;
     lbl_803DD548->viewCurve.py = &lbl_803DD548->posYCurve.start;
     lbl_803DD548->viewCurve.pz = &lbl_803DD548->posZCurve.start;
@@ -523,8 +523,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
         dz = dz / dist;
     }
     firstPersonPlaceCamera((GameObject*)camObj, 1);
-    cosv = -mathSinf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
-    sinv = -mathCosf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
+    cosv = -mathSinf((lbl_803E1834 * camObj[0]) / lbl_803E17C8);
+    sinv = -mathCosf((lbl_803E1834 * camObj[0]) / lbl_803E17C8);
     lbl_803DD548->posXCurve.start = ((GameObject*)obj)->anim.worldPosX;
     lbl_803DD548->posXCurve.end = lbl_803DD548->camPosX;
     lbl_803DD548->posXCurve.startTangent = -dz * spinRate;
@@ -555,7 +555,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     {
         a2 = a2 + 0xffff;
     }
-    lbl_803DD548->yawCurve.start = (f32)a2;
+    lbl_803DD548->yawCurve.start = a2;
     zero = lbl_803E17C4;
     lbl_803DD548->yawCurve.end = zero;
     lbl_803DD548->yawCurve.startTangent = zero;
@@ -572,7 +572,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
             lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
         }
     }
-    lbl_803DD548->pitchCurve.start = (f32)obj[1];
+    lbl_803DD548->pitchCurve.start = obj[1];
     zero = lbl_803E17C4;
     lbl_803DD548->pitchCurve.end = zero;
     lbl_803DD548->pitchCurve.startTangent = zero;

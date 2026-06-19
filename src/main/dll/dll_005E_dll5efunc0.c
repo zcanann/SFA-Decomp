@@ -156,7 +156,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                       u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -314,9 +314,9 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = savedX;
-    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = savedY;
-    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = savedZ;
+    (&DAT_803a458c)[DAT_803a3f28 * 4] = savedX;
+    (&DAT_803a4590)[DAT_803a3f28 * 4] = savedY;
+    (&DAT_803a4594)[DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
     if (src == NULL)
     {
@@ -339,10 +339,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         while (c != '\0');
     }
     saveHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    c = (char)result;
+    c = result;
     if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
-        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)result & 0xff,
+        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -368,7 +368,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 
     rawId = FUN_80286830();
     flagId = (u32)((u64)rawId >> 0x20);
-    bitIndex = (u32)rawId;
+    bitIndex = rawId;
     histPtr = &DAT_803a3be0;
     if (0x4fffffffff < rawId)
     {
@@ -443,13 +443,13 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                     histScan = histPtr;
                     do
                     {
-                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == (u8)histScan[1])) ||
-                                    ((slotIdx = slotBase + '\x01', flagId == (int)histScan[3] && (bitIndex == (u8)histScan[4])))
-                                ) || ((slotIdx = slotBase + '\x02', flagId == (int)histScan[6] &&
-                                    (bitIndex == (u8)histScan[7])))) ||
-                                ((slotIdx = slotBase + '\x03', flagId == (int)histScan[9] && (bitIndex == (u8)histScan[10]))))
-                            || ((flagId == (int)histScan[0xc] &&
-                                (slotIdx = slotBase + '\x04', bitIndex == (u8)histScan[0xd]))))
+                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == histScan[1])) ||
+                                    ((slotIdx = slotBase + '\x01', flagId == histScan[3] && (bitIndex == histScan[4])))
+                                ) || ((slotIdx = slotBase + '\x02', flagId == histScan[6] &&
+                                    (bitIndex == histScan[7])))) ||
+                                ((slotIdx = slotBase + '\x03', flagId == histScan[9] && (bitIndex == histScan[10]))))
+                            || ((flagId == histScan[0xc] &&
+                                (slotIdx = slotBase + '\x04', bitIndex == histScan[0xd]))))
                             goto LAB_800e9628;
                         histScan = histScan + 0xf;
                         slotBase = slotBase + '\x05';
@@ -467,8 +467,8 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                             if (*histPtr == -1)
                             {
                                 i = i * 3;
-                                (&DAT_803a3be0)[i] = (char)flagId;
-                                (&DAT_803a3be1)[i] = (char)rawId;
+                                (&DAT_803a3be0)[i] = flagId;
+                                (&DAT_803a3be1)[i] = rawId;
                                 (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
@@ -542,7 +542,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    slotIdx = (u32)DAT_803a3f28;
+    slotIdx = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
                  (double)(float)(&DAT_803a4594)[slotIdx * 4],
                  (int)(char)(&DAT_803a4599)[slotIdx * 0x10], sizeArg);
@@ -600,7 +600,7 @@ void FUN_800ea9b8(void)
     if (history[6] == '\0')
     {
         mapFlags = &DAT_80312632;
-        for (scanId = 1; (short)scanId < 0xce; scanId++)
+        for (scanId = 1; scanId < 0xce; scanId++)
         {
             if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
@@ -629,7 +629,7 @@ void FUN_800ea9b8(void)
         {
             history[i] = history[i + -1];
         }
-        *history = (char)mapId;
+        *history = mapId;
         if ((u32)(u8)history[5] == (mapId & 0xff)
         )
         {

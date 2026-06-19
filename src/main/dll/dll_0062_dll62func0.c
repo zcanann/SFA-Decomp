@@ -175,7 +175,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                       u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -334,17 +334,17 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = uVar1;
-    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = uVar2;
-    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = uVar3;
+    (&DAT_803a458c)[DAT_803a3f28 * 4] = uVar1;
+    (&DAT_803a4590)[DAT_803a3f28 * 4] = uVar2;
+    (&DAT_803a4594)[DAT_803a3f28 * 4] = uVar3;
     DAT_803a4465 = 1;
-    if (pcVar7 == (char*)0x0)
+    if (pcVar7 == 0x0)
     {
         DAT_803a3f24 = 0x46;
         DAT_803a3f25 = 0x4f;
         DAT_803a3f26 = 0x58;
         DAT_803a3f27 = 0;
-        pcVar7 = (char*)0x0;
+        pcVar7 = 0x0;
     }
     else
     {
@@ -359,10 +359,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         while (cVar8 != '\0');
     }
     uVar9 = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    cVar8 = (char)uVar10;
-    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, pcVar7 != (char*)0x0))
+    cVar8 = uVar10;
+    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, pcVar7 != 0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)uVar10 & 0xff,
+        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar10 & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -388,7 +388,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 
     lVar14 = FUN_80286830();
     uVar10 = (u32)((u64)lVar14 >> 0x20);
-    uVar8 = (u32)lVar14;
+    uVar8 = lVar14;
     pcVar11 = &DAT_803a3be0;
     if (0x4fffffffff < lVar14)
     {
@@ -463,13 +463,13 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                     pcVar6 = pcVar11;
                     do
                     {
-                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (u8)pcVar6[1])) ||
-                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (u8)pcVar6[4])))
-                                ) || ((cVar2 = cVar4 + '\x02', uVar10 == (int)pcVar6[6] &&
-                                    (uVar8 == (u8)pcVar6[7])))) ||
-                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (u8)pcVar6[10]))))
-                            || ((uVar10 == (int)pcVar6[0xc] &&
-                                (cVar2 = cVar4 + '\x04', uVar8 == (u8)pcVar6[0xd]))))
+                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == pcVar6[1])) ||
+                                    ((cVar2 = cVar4 + '\x01', uVar10 == pcVar6[3] && (uVar8 == pcVar6[4])))
+                                ) || ((cVar2 = cVar4 + '\x02', uVar10 == pcVar6[6] &&
+                                    (uVar8 == pcVar6[7])))) ||
+                                ((cVar2 = cVar4 + '\x03', uVar10 == pcVar6[9] && (uVar8 == pcVar6[10]))))
+                            || ((uVar10 == pcVar6[0xc] &&
+                                (cVar2 = cVar4 + '\x04', uVar8 == pcVar6[0xd]))))
                             goto LAB_800e9628;
                         pcVar6 = pcVar6 + 0xf;
                         cVar4 = cVar4 + '\x05';
@@ -487,8 +487,8 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                             if (*pcVar11 == -1)
                             {
                                 iVar12 = iVar12 * 3;
-                                (&DAT_803a3be0)[iVar12] = (char)uVar10;
-                                (&DAT_803a3be1)[iVar12] = (char)lVar14;
+                                (&DAT_803a3be0)[iVar12] = uVar10;
+                                (&DAT_803a3be1)[iVar12] = lVar14;
                                 (&DAT_803a3be2)[iVar12] = 3;
                                 break;
                             }
@@ -573,7 +573,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    uVar1 = (u32)DAT_803a3f28;
+    uVar1 = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[uVar1 * 4], (double)(float)(&DAT_803a4590)[uVar1 * 4],
                  (double)(float)(&DAT_803a4594)[uVar1 * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[uVar1 * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
@@ -632,7 +632,7 @@ void FUN_800ea9b8(void)
     if (puVar2[6] == '\0')
     {
         psVar9 = &DAT_80312632;
-        for (uVar8 = 1; (short)uVar8 < 0xce; uVar8 = uVar8 + 1)
+        for (uVar8 = 1; uVar8 < 0xce; uVar8 = uVar8 + 1)
         {
             if ((*psVar9 == 0xffff) || (*psVar9 == -1))
             {
@@ -661,7 +661,7 @@ void FUN_800ea9b8(void)
         {
             puVar2[sVar3] = puVar2[sVar3 + -1];
         }
-        *puVar2 = (char)uVar1;
+        *puVar2 = uVar1;
         if ((u32)(u8)puVar2[5] == (uVar1 & 0xff)
         )
         {
@@ -795,7 +795,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].z = lbl_803E08B0;
     e[6].layer = 2;
     e[6].flags = 0x3a;
-    e[6].tex = (void*)0;
+    e[6].tex = 0;
     e[6].mode = 0x1800000;
     e[6].x = v;
     e[6].y = lbl_803E08A0;
@@ -809,7 +809,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[7].z = lbl_803E08B0;
     e[8].layer = 3;
     e[8].flags = 0x3a;
-    e[8].tex = (void*)0;
+    e[8].tex = 0;
     e[8].mode = 0x1800000;
     e[8].x = v;
     e[8].y = lbl_803E08A0;
@@ -823,7 +823,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[9].z = lbl_803E08B0;
     e[10].layer = 4;
     e[10].flags = 2;
-    e[10].tex = (void*)0;
+    e[10].tex = 0;
     e[10].mode = 0x2000;
     e[10].x = lbl_803E08A0;
     e[10].y = lbl_803E08A0;

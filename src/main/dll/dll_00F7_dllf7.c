@@ -787,7 +787,7 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         f32 v = state->bounceOffset;
         if (v != lbl_803E3400)
         {
-            fn_8003B5E0(0xc8, 0, 0, (int)v);
+            fn_8003B5E0(0xc8, 0, 0, v);
         }
         ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3404);
     }
@@ -893,7 +893,7 @@ void dll_F7_update(int* obj)
         {
             if ((u8)Obj_IsLoadingLocked() != 0)
             {
-                s16* alloc = (s16*)Obj_AllocObjectSetup(0x30, 0xb);
+                s16* alloc = Obj_AllocObjectSetup(0x30, 0xb);
                 alloc[0xe] = -1;
                 *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)((char*)alloc + 0xc) = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
@@ -908,7 +908,7 @@ void dll_F7_update(int* obj)
         {
             int* near;
             radius = lbl_803E3414;
-            near = (int*)ObjGroup_FindNearestObject(4, (int)obj, &radius);
+            near = (int*)ObjGroup_FindNearestObject(4, obj, &radius);
             if (near != NULL)
             {
                 ((GameObject*)near)->anim.worldPosX = ((GameObject*)near)->anim.localPosX = ((GameObject*)obj)->anim.

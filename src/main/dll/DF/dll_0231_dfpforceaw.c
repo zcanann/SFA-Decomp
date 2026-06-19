@@ -228,22 +228,22 @@ void TrickyCurve_updateBoundsTrigger(int obj)
         insideCount = insideCount + 1;
     }
     if ((dz <= lbl_803E6438) &&
-        (-(float)((double)CONCAT44(0x43300000, (int)state[1] ^ 0x80000000) - DOUBLE_803e70d8) < dz))
+        (-(float)((double)CONCAT44(0x43300000, state[1] ^ 0x80000000) - DOUBLE_803e70d8) < dz))
     {
         insideCount = insideCount + 1;
     }
     if ((lbl_803E6438 < dz) &&
-        (dz < (float)((double)CONCAT44(0x43300000, (int)state[1] ^ 0x80000000) - DOUBLE_803e70d8)))
+        (dz < (float)((double)CONCAT44(0x43300000, state[1] ^ 0x80000000) - DOUBLE_803e70d8)))
     {
         insideCount = insideCount + 1;
     }
     if ((dy <= lbl_803E6438) &&
-        (-(float)((double)CONCAT44(0x43300000, (int)state[2] ^ 0x80000000) - DOUBLE_803e70d8) < dy))
+        (-(float)((double)CONCAT44(0x43300000, state[2] ^ 0x80000000) - DOUBLE_803e70d8) < dy))
     {
         insideCount = insideCount + 1;
     }
     if ((lbl_803E6438 < dy) &&
-        (dy < (float)((double)CONCAT44(0x43300000, (int)state[2] ^ 0x80000000) - DOUBLE_803e70d8)))
+        (dy < (float)((double)CONCAT44(0x43300000, state[2] ^ 0x80000000) - DOUBLE_803e70d8)))
     {
         insideCount = insideCount + 1;
     }
@@ -350,7 +350,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
         }
         if (dz <= (double)lbl_803E6438)
         {
-            convLo0 = (int)state[1] ^ 0x80000000;
+            convLo0 = state[1] ^ 0x80000000;
             convHi0 = 0x43300000;
             ftmp = DOUBLE_803e70d8;
             if (-(double)(f32)(s32)convLo0 < dz
@@ -362,7 +362,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
         }
         if ((double)lbl_803E6438 < dz)
         {
-            convLo0 = (int)state[1] ^ 0x80000000;
+            convLo0 = state[1] ^ 0x80000000;
             convHi0 = 0x43300000;
             ftmp = DOUBLE_803e70d8;
             if (dz < (double)(f32)(s32)convLo0
@@ -374,7 +374,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
         }
         if (dy <= (double)lbl_803E6438)
         {
-            convLo0 = (int)state[2] ^ 0x80000000;
+            convLo0 = state[2] ^ 0x80000000;
             convHi0 = 0x43300000;
             ftmp = DOUBLE_803e70d8;
             if (-(double)(f32)(s32)convLo0 < dy
@@ -386,7 +386,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
         }
         if ((double)lbl_803E6438 < dy)
         {
-            convLo0 = (int)state[2] ^ 0x80000000;
+            convLo0 = state[2] ^ 0x80000000;
             convHi0 = 0x43300000;
             ftmp = DOUBLE_803e70d8;
             if (dy < (double)(f32)(s32)convLo0
@@ -508,7 +508,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
                     (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803e7108)) *
                 lbl_803E70F4 * lbl_803DC074);
             convResult = (s64)angleDelta;
-            *obj = *obj + (short)angleDelta;
+            *obj = *obj + angleDelta;
         }
         else
         {

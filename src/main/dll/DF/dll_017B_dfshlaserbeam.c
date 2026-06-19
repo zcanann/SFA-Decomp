@@ -201,7 +201,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     config = obj->config;
     runtime = obj->runtime;
 
-    DFSH_LASER_CYCLE_TIMER(runtime) -= (s16)framesThisStep;
+    DFSH_LASER_CYCLE_TIMER(runtime) -= framesThisStep;
     if (GameBit_Get(config->disableGameBit) == 0)
     {
         if (DFSH_LASER_CYCLE_TIMER(runtime) < 0)
@@ -268,8 +268,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     range = (f32)(int)config->rangeAngle;
     rangeSq = range * range;
-    yawSin = mathCosf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
-    yawCos = mathSinf((lbl_803E4ED8 * (f32)obj->yaw) / lbl_803E4EDC);
+    yawSin = mathCosf((lbl_803E4ED8 * obj->yaw) / lbl_803E4EDC);
+    yawCos = mathSinf((lbl_803E4ED8 * obj->yaw) / lbl_803E4EDC);
     beamPlane = -(obj->localPosX * yawSin + obj->localPosZ * yawCos);
     playerObj = Obj_GetPlayerObject();
 
@@ -286,7 +286,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
         ((lbl_803E4EC0 < damageDistance) &&
             (DFSH_LASER_PROXIMITY_MODE(runtime) != 0)))
     {
-        DFSH_LASER_BLOCK_TIMER(runtime) -= (s16)framesThisStep;
+        DFSH_LASER_BLOCK_TIMER(runtime) -= framesThisStep;
         if (DFSH_LASER_BLOCK_TIMER(runtime) < 0)
         {
             DFSH_LASER_BLOCK_TIMER(runtime) = 0;
@@ -295,7 +295,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     }
     else
     {
-        DFSH_LASER_BLOCK_TIMER(runtime) += (s16)framesThisStep;
+        DFSH_LASER_BLOCK_TIMER(runtime) += framesThisStep;
         if (DFSH_LASER_BLOCK_TIMER(runtime) > 0x3C)
         {
             DFSH_LASER_BLOCK_TIMER(runtime) = 0x3C;
@@ -478,18 +478,18 @@ void fn_801C4664(void* objArg)
 
     obj->localPosY = lbl_803E4F14 +
     (*(f32*)((u8*)config + 0xC) +
-        mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+        mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
             lbl_803E4F1C));
 
-    trigA = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_B(runtime)) /
+    trigA = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_B(runtime)) /
         lbl_803E4F1C);
-    trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+    trigB = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
         lbl_803E4F1C);
     obj->roll = (s16)(lbl_803E4F20 * (trigB + trigA));
 
-    trigA = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_C(runtime)) /
+    trigA = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_C(runtime)) /
         lbl_803E4F1C);
-    trigB = mathSinf((lbl_803E4F18 * (f32)DFSH_LASER_ORBIT_A(runtime)) /
+    trigB = mathSinf((lbl_803E4F18 * DFSH_LASER_ORBIT_A(runtime)) /
         lbl_803E4F1C);
     obj->pitch = (s16)(lbl_803E4F20 * (trigB + trigA));
 
@@ -571,7 +571,7 @@ int fn_801C49B8(void* objArg)
 
     runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
     swayValue = (int)(lbl_803E4F4C * runtime->swayPhase);
-    fearTestMeterSetRange(0x60, 0x39, (s16)swayValue);
+    fearTestMeterSetRange(0x60, 0x39, swayValue);
     if ((swayValue > 0x39) || (swayValue < -0x39))
     {
         return 1;

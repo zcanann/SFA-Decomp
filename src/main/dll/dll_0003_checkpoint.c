@@ -129,18 +129,18 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         prodD = sclB * -cosB;
         do
         {
-            out1[0] = (f32)p->sideOffsets[i] * prodA + p->posX;
-            out1[1] = (f32)q->sideOffsets[i] * prodB + q->posX;
+            out1[0] = p->sideOffsets[i] * prodA + p->posX;
+            out1[1] = q->sideOffsets[i] * prodB + q->posX;
             out1[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
                 mathSinf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
             out1[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
                 mathSinf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
-            out2[0] = sclA * (f32)p->heightOffsets[i] + p->posY;
-            out2[1] = sclB * (f32)q->heightOffsets[i] + q->posY;
+            out2[0] = sclA * p->heightOffsets[i] + p->posY;
+            out2[1] = sclB * q->heightOffsets[i] + q->posY;
             out2[2] = 0.0f;
             out2[3] = 0.0f;
-            v3[0] = (f32)p->sideOffsets[i] * prodC + p->posZ;
-            v3[1] = (f32)q->sideOffsets[i] * prodD + q->posZ;
+            v3[0] = p->sideOffsets[i] * prodC + p->posZ;
+            v3[1] = q->sideOffsets[i] * prodD + q->posZ;
             v3[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
                 mathCosf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
             v3[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
@@ -178,21 +178,21 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
     else
     {
         s32 pointIdx = mode - 2;
-        out1[0] = (f32)p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
-        out1[1] = (f32)q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
+        out1[0] = p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
+        out1[1] = q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
         out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
             mathSinf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
         out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
             mathSinf(lbl_803E04D8 * (f32)(q->wavePhase << 8) / lbl_803E04DC));
-        out2[0] = sclA * (f32)p->heightOffsets[pointIdx] + p->posY;
-        out2[1] = sclB * (f32)q->heightOffsets[pointIdx] + q->posY;
+        out2[0] = sclA * p->heightOffsets[pointIdx] + p->posY;
+        out2[1] = sclB * q->heightOffsets[pointIdx] + q->posY;
         {
             f32 e8 = lbl_803E04E8;
             out2[2] = e8;
             out2[3] = e8;
         }
-        out3[0] = (f32)p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
-        out3[1] = (f32)q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
+        out3[0] = p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
+        out3[1] = q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
         out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
             mathCosf(lbl_803E04D8 * (f32)(p->wavePhase << 8) / lbl_803E04DC));
         out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
@@ -508,10 +508,10 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
         i += 1;
     }
     while (i < 3);
-    *(s16*)(out + 0) = (s16)ang1;
+    *(s16*)(out + 0) = ang1;
     if (flag != 0)
     {
-        *(s16*)(out + 2) = (s16)ang2;
+        *(s16*)(out + 2) = ang2;
     }
     return 0;
 }
@@ -672,7 +672,7 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
     int i = 0;
     CheckpointSlot* p = lbl_8039C458;
     int count;
-    while (i < (count = lbl_803DD410) && (u32)entry->sortKey > p[i].key)
+    while (i < (count = lbl_803DD410) && entry->sortKey > p[i].key)
     {
         i++;
     }
@@ -702,7 +702,7 @@ void Checkpoint_remove(CheckpointRouteEntry* obj)
     CheckpointSlot* p = lbl_8039C458;
     CheckpointSlot* e;
 
-    while (i < (count = lbl_803DD410) && (u32)obj->sortKey != p[i].key)
+    while (i < (count = lbl_803DD410) && obj->sortKey != p[i].key)
     {
         i++;
     }
@@ -852,7 +852,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                     {
                         frac = lbl_803E0518;
                     }
-                    b1 = (f32)cp->width;
+                    b1 = cp->width;
                     width = frac * ((f32)n->width - b1) + b1;
                     px = -(dx * frac - cp->posX);
                     py = -(dy * frac - cp->posY);

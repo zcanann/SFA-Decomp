@@ -283,7 +283,7 @@ void fn_801557D4(int* obj, int state)
     else
     {
         if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
-            (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
+            (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
@@ -305,7 +305,7 @@ void fn_80155884(int* obj, int state)
         fn_801554B4(obj, state);
     }
     else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
-        (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
+        (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
@@ -333,7 +333,7 @@ void fn_80155948(int* obj, int state)
         fn_801554B4(obj, state);
     }
     else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
-        (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
+        (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
         move = *(short*)(obj + 0x28);
@@ -972,13 +972,13 @@ void fn_80156B0C(u32 obj, int state)
         if (*(u16*)(state + 0x2a0) < 4)
         {
             tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, (u32)lbl_8031F318[tblOff + 8],
+            Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 8],
                         *(float*)(lbl_8031F318 + tblOff), 0, 0);
         }
         else
         {
             tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, (u32)lbl_8031F318[tblOff + 9],
+            Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 9],
                         *(float*)(lbl_8031F318 + tblOff), 0, 0);
         }
     }
@@ -1003,7 +1003,7 @@ void fn_80156C34(u32 obj, int state)
             ((BaddieState*)state)->seqEntryIndex = 0;
         }
         tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
-        Baddie_SetMove(obj, state, (u32)lbl_8031F318[tblOff + 8],
+        Baddie_SetMove(obj, state, lbl_8031F318[tblOff + 8],
                     *(float*)(lbl_8031F318 + tblOff), 0, 0);
     }
     fn_80156950(obj, state);
@@ -1112,7 +1112,7 @@ void fn_80156DA0(int obj, int state)
                     ((GameObject*)obj)->anim.velocityX = fz;
                     ((GameObject*)obj)->anim.velocityY = fz;
                     ((GameObject*)obj)->anim.velocityZ = fz;
-                    randBit = (u16)randomGetRange(0, 1);
+                    randBit = randomGetRange(0, 1);
                     *(u16*)(state + 0x338) = (u16)((randBit - 1) * 0x12c);
                 }
             }

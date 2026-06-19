@@ -191,7 +191,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                       u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -347,9 +347,9 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = savedX;
-    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = savedY;
-    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = savedZ;
+    (&DAT_803a458c)[DAT_803a3f28 * 4] = savedX;
+    (&DAT_803a4590)[DAT_803a3f28 * 4] = savedY;
+    (&DAT_803a4594)[DAT_803a3f28 * 4] = savedZ;
     DAT_803a4465 = 1;
     if (src == NULL)
     {
@@ -372,10 +372,10 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         while (c != '\0');
     }
     saveHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    c = (char)result;
+    c = result;
     if ((c != -1) && (DAT_803dc4f0 = c, src != NULL))
     {
-        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)result & 0xff,
+        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, result & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
@@ -400,7 +400,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 
     rawId = FUN_80286830();
     flagId = (u32)((u64)rawId >> 0x20);
-    bitIndex = (u32)rawId;
+    bitIndex = rawId;
     histPtr = &DAT_803a3be0;
     if (0x4fffffffff < rawId)
     {
@@ -475,13 +475,13 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                     histScan = histPtr;
                     do
                     {
-                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == (u8)histScan[1])) ||
-                                    ((slotIdx = slotBase + '\x01', flagId == (int)histScan[3] && (bitIndex == (u8)histScan[4])))
-                                ) || ((slotIdx = slotBase + '\x02', flagId == (int)histScan[6] &&
-                                    (bitIndex == (u8)histScan[7])))) ||
-                                ((slotIdx = slotBase + '\x03', flagId == (int)histScan[9] && (bitIndex == (u8)histScan[10]))))
-                            || ((flagId == (int)histScan[0xc] &&
-                                (slotIdx = slotBase + '\x04', bitIndex == (u8)histScan[0xd]))))
+                        if ((((((flagId == (int)*histScan) && (slotIdx = slotBase, bitIndex == histScan[1])) ||
+                                    ((slotIdx = slotBase + '\x01', flagId == histScan[3] && (bitIndex == histScan[4])))
+                                ) || ((slotIdx = slotBase + '\x02', flagId == histScan[6] &&
+                                    (bitIndex == histScan[7])))) ||
+                                ((slotIdx = slotBase + '\x03', flagId == histScan[9] && (bitIndex == histScan[10]))))
+                            || ((flagId == histScan[0xc] &&
+                                (slotIdx = slotBase + '\x04', bitIndex == histScan[0xd]))))
                             goto LAB_800e9628;
                         histScan = histScan + 0xf;
                         slotBase = slotBase + '\x05';
@@ -499,8 +499,8 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
                             if (*histPtr == -1)
                             {
                                 i = i * 3;
-                                (&DAT_803a3be0)[i] = (char)flagId;
-                                (&DAT_803a3be1)[i] = (char)rawId;
+                                (&DAT_803a3be0)[i] = flagId;
+                                (&DAT_803a3be1)[i] = rawId;
                                 (&DAT_803a3be2)[i] = 3;
                                 break;
                             }
@@ -584,7 +584,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    slotIdx = (u32)DAT_803a3f28;
+    slotIdx = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[slotIdx * 4], (double)(float)(&DAT_803a4590)[slotIdx * 4],
                  (double)(float)(&DAT_803a4594)[slotIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[slotIdx * 0x10], extraout_r4, sizeArg, in_r6, in_r7, in_r8, in_r9,
@@ -642,7 +642,7 @@ void FUN_800ea9b8(void)
     if (history[6] == '\0')
     {
         mapFlags = &DAT_80312632;
-        for (scanId = 1; (short)scanId < 0xce; scanId = scanId + 1)
+        for (scanId = 1; scanId < 0xce; scanId = scanId + 1)
         {
             if ((*mapFlags == 0xffff) || (*mapFlags == -1))
             {
@@ -671,7 +671,7 @@ void FUN_800ea9b8(void)
         {
             history[i] = history[i + -1];
         }
-        *history = (char)mapId;
+        *history = mapId;
         if ((u32)(u8)history[5] == (mapId & 0xff)
         )
         {
@@ -723,14 +723,14 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
     int ctx;
     buf.entries[0].layer = 0;
     buf.entries[0].flags = 0x32;
-    buf.entries[0].tex = (void*)0;
+    buf.entries[0].tex = 0;
     buf.entries[0].mode = 0x800000;
     buf.entries[0].x = lbl_803E0800;
     buf.entries[0].y = lbl_803E0804;
     buf.entries[0].z = lbl_803E0804;
     buf.entries[1].layer = 0;
     buf.entries[1].flags = 0x7a;
-    buf.entries[1].tex = (void*)0;
+    buf.entries[1].tex = 0;
     buf.entries[1].mode = 0x10000;
     buf.entries[1].x = lbl_803E0804;
     buf.entries[1].y = lbl_803E0804;
@@ -772,21 +772,21 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[6].z = lbl_803E0818;
     buf.entries[7].layer = 0;
     buf.entries[7].flags = 1;
-    buf.entries[7].tex = (void*)0;
+    buf.entries[7].tex = 0;
     buf.entries[7].mode = 0x8000;
     buf.entries[7].x = lbl_803E0804;
     buf.entries[7].y = lbl_803E081C;
     buf.entries[7].z = lbl_803E0804;
     buf.entries[8].layer = 0;
     buf.entries[8].flags = 1;
-    buf.entries[8].tex = (void*)0;
+    buf.entries[8].tex = 0;
     buf.entries[8].mode = 0x80000;
     buf.entries[8].x = lbl_803E0804;
     buf.entries[8].y = lbl_803E0820;
     buf.entries[8].z = lbl_803E0804;
     buf.entries[9].layer = 1;
     buf.entries[9].flags = 1;
-    buf.entries[9].tex = (void*)0;
+    buf.entries[9].tex = 0;
     buf.entries[9].mode = 0x80000;
     buf.entries[9].x = lbl_803E0804;
     buf.entries[9].y = lbl_803E0804;
@@ -807,7 +807,7 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[11].z = lbl_803E0804;
     buf.entries[12].layer = 2;
     buf.entries[12].flags = 1;
-    buf.entries[12].tex = (void*)0;
+    buf.entries[12].tex = 0;
     buf.entries[12].mode = 0x80000;
     buf.entries[12].x = lbl_803E0804;
     buf.entries[12].y = lbl_803E0828;

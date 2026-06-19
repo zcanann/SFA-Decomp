@@ -221,7 +221,7 @@ void drawFn_80125424(void)
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
-        GXSetViewport(lbl_803E2048, (f32)ypos - lbl_803E2024,
+        GXSetViewport(lbl_803E2048, ypos - lbl_803E2024,
                       (f32)(u32) * (u16*)(gRenderModeObj + 4), (f32)(u32) * (u16*)(gRenderModeObj + 8),
                       lbl_803E1E3C, lbl_803E1E68);
         if (*(u8**)&lbl_803A93F8[type] != NULL)
@@ -258,8 +258,8 @@ void drawFn_80125424(void)
             {
                 alphaI = 0;
             }
-            randX = (int)randomGetRange(0, 0x1e) << 1;
-            randY = (int)randomGetRange(0, 0x1e) << 1;
+            randX = randomGetRange(0, 0x1e) << 1;
+            randY = randomGetRange(0, 0x1e) << 1;
             if (alphaI > 0xff)
             {
                 alphaI = 0xff;
@@ -270,8 +270,8 @@ void drawFn_80125424(void)
             {
                 alphaI = 0;
             }
-            randX = (int)randomGetRange(0, 0x1e) << 1;
-            randY = (int)randomGetRange(0, 0x1e) << 1;
+            randX = randomGetRange(0, 0x1e) << 1;
+            randY = randomGetRange(0, 0x1e) << 1;
             if (alphaI > 0xff)
             {
                 alphaI = 0xff;
@@ -279,18 +279,18 @@ void drawFn_80125424(void)
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), alphaI & 0xff, 0x100, 0x78, 2, randY,
                                randX);
         }
-        panelW = (s16)width;
+        panelW = width;
         xLeft = panelW - 5;
-        drawTexture(hudTextures[10], lbl_803E2054, (f32)xLeft, alpha & 0xff, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)xLeft, alpha & 0xff, 0x100, 0x78, 5, 0);
-        panelH = (s16)height;
-        drawScaledTexture(hudTextures[11], lbl_803E2054, (f32)panelW, alpha & 0xff, 0x100, 5, panelH, 0);
+        drawTexture(hudTextures[10], lbl_803E2054, xLeft, alpha & 0xff, 0x100);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, xLeft, alpha & 0xff, 0x100, 0x78, 5, 0);
+        panelH = height;
+        drawScaledTexture(hudTextures[11], lbl_803E2054, panelW, alpha & 0xff, 0x100, 5, panelH, 0);
         xRight = panelW + panelH;
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (f32)xRight, alpha & 0xff, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, (f32)panelW, alpha & 0xff, 0x100, 5, panelH, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)xRight, alpha & 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (f32)xLeft, alpha & 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, (f32)xRight, alpha & 0xff, 0x100, 5, 5, 2);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, xRight, alpha & 0xff, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, panelW, alpha & 0xff, 0x100, 5, panelH, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, xRight, alpha & 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, xLeft, alpha & 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, xRight, alpha & 0xff, 0x100, 5, 5, 2);
     }
 }
 
@@ -302,7 +302,7 @@ void fn_80125D04(void)
         int* obj = (int*)lbl_803A93F8[i];
         if (obj != NULL)
         {
-            if ((u32) * (int*)&((GameObject*)obj)->anim.placementData > 0x90000000u)
+            if ((u32) * &((GameObject*)obj)->anim.placementData > 0x90000000u)
             {
                 *(int*)&((GameObject*)obj)->anim.placementData = 0;
             }
@@ -350,7 +350,7 @@ void gameTextFn_80125ba4(int idx)
                     lbl_803DD8D0 = 0;
                     curGameText = textId;
                     lbl_803DD8C8 = 0;
-                    lbl_803DD8CA = (s16)boxId;
+                    lbl_803DD8CA = boxId;
                     lbl_803DD8CC = (f32)(s16)boxId;
                     gameTextFreePhrase(lbl_803A9440);
                     lbl_803DD7A9 = 0;
@@ -422,7 +422,7 @@ void drawArwingHud(void)
     {
         if (arwingHudVisible != 0)
         {
-            arwingHudAlpha = (int)(lbl_803E1FA0 * (f32)(u32)framesThisStep + (f32)arwingHudAlpha);
+            arwingHudAlpha = (int)(lbl_803E1FA0 * (f32)(u32)framesThisStep + arwingHudAlpha);
             if (arwingHudAlpha > 0xff)
             {
                 arwingHudAlpha = 0xff;
@@ -430,7 +430,7 @@ void drawArwingHud(void)
         }
         else
         {
-            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)framesThisStep - (f32)arwingHudAlpha);
+            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)framesThisStep - arwingHudAlpha);
             if (arwingHudAlpha < 0)
             {
                 arwingHudAlpha = 0;
@@ -454,13 +454,13 @@ void drawArwingHud(void)
             {
                 texIdx = 0x16;
             }
-            else if (fullPips < (int)pip)
+            else if (fullPips < pip)
             {
                 texIdx = 0x12;
             }
             else
             {
-                texIdx = (u8)partialFrame;
+                texIdx = partialFrame;
             }
             drawTexture(hudTextures[(u8)texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);

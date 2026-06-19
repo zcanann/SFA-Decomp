@@ -133,7 +133,7 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
         pieceSlot = sub;
         pe = lbl_803201E8 + idx * 0x30;
         pieceOffset = sub;
-        for (; i < (int)sub[0x50]; i++)
+        for (; i < sub[0x50]; i++)
         {
             *(int*)(pieceSlot + 0xc) = 0;
             memcpy(pieceOffset + 0x1c, pe, 0xc);
@@ -166,7 +166,7 @@ void tumbleweedbush_update(int* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hit0, hitExtra) != 0)
     {
         if (((GameObject*)hit0)->anim.seqId != 0x4ba)
@@ -232,7 +232,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     bestDist = lbl_803E2F58;
     bestObj = NULL;
     {
-        void** tmp = (void**)ObjGroup_GetObjects(0x31, &count);
+        void** tmp = ObjGroup_GetObjects(0x31, &count);
         i = 0;
         list = tmp;
     }
@@ -262,7 +262,7 @@ void tumbleweedbush_setScale(u8* obj, void* match)
     int i;
     state = ((GameObject*)obj)->extra;
     i = 0;
-    while (i < (int)state->pieceCount)
+    while (i < state->pieceCount)
     {
         if (state->pieceObjects[i] == match)
         {
@@ -372,7 +372,7 @@ s8 fn_801631C8(int* obj)
             (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
     }
     *(u16*)(state + 0x4e) += 1;
-    return (s8)freeSlot;
+    return freeSlot;
 }
 
 void fn_80163990(int* piece, u8* state)

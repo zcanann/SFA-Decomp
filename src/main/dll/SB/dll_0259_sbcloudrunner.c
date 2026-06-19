@@ -176,8 +176,8 @@ void FUN_801ee668(u16 *param_1, int param_2)
     f64 dVar5;
 
     (**(code **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
-    dVar3 = (f64)FUN_80294964();
-    dVar4 = (f64)FUN_80293f90();
+    dVar3 = FUN_80294964();
+    dVar4 = FUN_80293f90();
     fVar1 = lbl_803E6908;
     if (*(int *)(param_2 + 0x10) != 0)
     {
@@ -188,7 +188,7 @@ void FUN_801ee668(u16 *param_1, int param_2)
         lbl_803DC074 * (fVar1 - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
         *(f32 *)(param_2 + 0x60);
     fVar1 = lbl_803E692C;
-    dVar5 = (f64)lbl_803E692C;
+    dVar5 = lbl_803E692C;
     dVar2 = -(f64)*(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x78) = *(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x7c) = fVar1;
@@ -556,7 +556,7 @@ void SB_CloudRunner_free(GameObject *obj)
 void SB_CloudRunner_init(GameObject *obj)
 {
     SBCloudRunnerState *state = obj->extra;
-    obj->animEventCallback = (void *)SB_CloudRunner_SeqFn;
+    obj->animEventCallback = SB_CloudRunner_SeqFn;
     state->spawnPosX = obj->anim.localPosX;
     state->spawnPosY = obj->anim.localPosY;
     state->spawnPosZ = obj->anim.localPosZ;
@@ -585,7 +585,7 @@ void SB_CloudRunner_update(GameObject *obj)
     if (*(void **)&((SBCloudRunnerState *)state)->targetObj == NULL)
     {
         int count;
-        int *objs = (int *)ObjGroup_GetObjects(3, &count);
+        int *objs = ObjGroup_GetObjects(3, &count);
         int i;
         for (i = 0; i < count; i++)
         {

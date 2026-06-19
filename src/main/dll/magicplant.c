@@ -491,13 +491,13 @@ void fn_8015383C(int obj, int state)
             {
                 mode = 4;
                 rnd = randomGetRange(1, 2);
-                ((BaddieState*)state)->seqEntryIndex = (u8)rnd;
+                ((BaddieState*)state)->seqEntryIndex = rnd;
             }
         }
         else
         {
             rnd = randomGetRange(2, 4);
-            mode = (u8)rnd;
+            mode = rnd;
             if (mode == 2)
             {
                 mode = 0;

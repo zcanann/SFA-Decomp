@@ -442,7 +442,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
     if ((xx + zz) > lbl_803E23EC)
     {
         yaw = getAngle(-dx, -dz);
-        *turnDeltaOut = trickyTurnTowardYaw(obj, (s16)yaw);
+        *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
         ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
         ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
     }
@@ -555,7 +555,7 @@ int trickyMove(u8* obj, f32* targetPos)
                     {
                         if (moveSpeed > lbl_803E23E8)
                         {
-                            sfxId = (u16)randomGetRange(0x34d, 0x34e);
+                            sfxId = randomGetRange(0x34d, 0x34e);
                             skeetla_playFootstepSfx(obj, sfxId);
                         }
                         else
