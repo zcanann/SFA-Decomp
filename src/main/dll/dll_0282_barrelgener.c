@@ -186,7 +186,7 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     if (PSVECMag(cross) > lbl_803E6C38)
     {
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
-        if ((f32)(ang > c) != lbl_803E6C38)
+        if ((f32)(ang > c))
         {
             PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
             PSMTXMultVecSR(mtx, n1, n2);
