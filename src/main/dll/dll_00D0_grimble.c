@@ -88,18 +88,18 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
         ((GroundBaddieState*)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1)));
-    if (((GrimbleControl*)sub)->unk48 < lbl_803E2EF4)
+    if (((GrimbleControl*)sub)->pathProgress < lbl_803E2EF4)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF4;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF4;
     }
-    else if (((GrimbleControl*)sub)->unk48 > lbl_803E2EF8)
+    else if (((GrimbleControl*)sub)->pathProgress > lbl_803E2EF8)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF8;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF8;
     }
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48 - lbl_803E2EFC, &x, &y, &z);
+        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress - lbl_803E2EFC, &x, &y, &z);
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->unk48, &x2, &y2, &z2);
+        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->pathProgress, &x2, &y2, &z2);
     x = x - x2;
     y = y - y2;
     z = z - z2;
@@ -128,7 +128,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
                 vel *= lbl_803E2EBC + dist / lbl_803E2F08;
             }
         }
-        ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->unk48 - vel;
+        ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->pathProgress - vel;
         f = ((GrimbleControl*)sub)->targetProgress;
         f = (f > lbl_803E2EBC) ? f : lbl_803E2EBC;
         ((GrimbleControl*)sub)->targetProgress = f;
@@ -166,14 +166,14 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
         lbl_803E2F18 * (((GroundBaddieState*)state)->baddie.moveSpeed * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1))));
-    if (((GrimbleControl*)sub)->unk48 < lbl_803E2EF4)
+    if (((GrimbleControl*)sub)->pathProgress < lbl_803E2EF4)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF4;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF4;
         hitEdge = 1;
     }
-    else if (((GrimbleControl*)sub)->unk48 > lbl_803E2EF8)
+    else if (((GrimbleControl*)sub)->pathProgress > lbl_803E2EF8)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF8;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF8;
         hitEdge = 1;
     }
     else
@@ -185,9 +185,9 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
         return 7;
     }
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48 - lbl_803E2EFC, &x, &y, &z);
+        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress - lbl_803E2EFC, &x, &y, &z);
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->unk48, &x2, &y2, &z2);
+        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->pathProgress, &x2, &y2, &z2);
     x = x - x2;
     y = y - y2;
     z = z - z2;
@@ -221,22 +221,22 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
         ((GroundBaddieState*)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1)));
-    if (((GrimbleControl*)sub)->unk48 < lbl_803E2EF4)
+    if (((GrimbleControl*)sub)->pathProgress < lbl_803E2EF4)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF4;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF4;
     }
-    else if (((GrimbleControl*)sub)->unk48 > lbl_803E2EF8)
+    else if (((GrimbleControl*)sub)->pathProgress > lbl_803E2EF8)
     {
-        ((GrimbleControl*)sub)->unk48 = lbl_803E2EF8;
+        ((GrimbleControl*)sub)->pathProgress = lbl_803E2EF8;
     }
     (*(void (**)(int, int, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
         obj, *(int*)&((GroundBaddieState*)state)->baddie.targetObj, 0x10, &zone, &pad, &dist);
-    if (zone > 3 && zone < 0xc && dist > 0x190 && ((GrimbleControl*)sub)->unk48 > lbl_803E2F00 &&
-        ((GrimbleControl*)sub)->unk48 < lbl_803E2F1C)
+    if (zone > 3 && zone < 0xc && dist > 0x190 && ((GrimbleControl*)sub)->pathProgress > lbl_803E2F00 &&
+        ((GrimbleControl*)sub)->pathProgress < lbl_803E2F1C)
     {
         return 3;
     }
-    if ((((GrimbleControl*)sub)->reversed ^ (((GrimbleControl*)sub)->unk48 >= ((GrimbleControl*)sub)->targetProgress))
+    if ((((GrimbleControl*)sub)->reversed ^ (((GrimbleControl*)sub)->pathProgress >= ((GrimbleControl*)sub)->targetProgress))
         != 0 &&
         *(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
@@ -249,9 +249,9 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
         Sfx_PlayFromObject(obj, SFXsc_death01);
     }
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48 - lbl_803E2EFC, &x, &y, &z);
+        ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress - lbl_803E2EFC, &x, &y, &z);
     (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->unk48, &x2, &y2, &z2);
+        ((GrimbleControl*)sub)->pathObj, lbl_803E2EFC + ((GrimbleControl*)sub)->pathProgress, &x2, &y2, &z2);
     x = x - x2;
     y = y - y2;
     z = z - z2;
@@ -281,35 +281,35 @@ void fn_801627F4(int obj)
     if (count != 0)
     {
         sub = *(char**)(state + 0x40c);
-        ((GrimbleControl*)sub)->unk34 = 0;
-        ((GrimbleControl*)sub)->unk3C = lbl_803E2F20;
+        ((GrimbleControl*)sub)->candidatePathObj = 0;
+        ((GrimbleControl*)sub)->nearestDist = lbl_803E2F20;
         for (i = 0; i < count; i++)
         {
             if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(*ptr + 0x68)) + 0x30))(
                     *ptr, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, &dist,
                     &hitY, &unk) != 0 &&
-                dist < ((GrimbleControl*)sub)->unk3C)
+                dist < ((GrimbleControl*)sub)->nearestDist)
             {
-                ((GrimbleControl*)sub)->unk34 = *ptr;
-                ((GrimbleControl*)sub)->unk3C = dist;
-                ((GrimbleControl*)sub)->unk40 = hitY;
+                ((GrimbleControl*)sub)->candidatePathObj = *ptr;
+                ((GrimbleControl*)sub)->nearestDist = dist;
+                ((GrimbleControl*)sub)->candidateProgress = hitY;
             }
             ptr++;
         }
-        if (*(void**)&((GrimbleControl*)sub)->unk34 != NULL)
+        if (*(void**)&((GrimbleControl*)sub)->candidatePathObj != NULL)
         {
-            ((GrimbleControl*)sub)->pathObj = ((GrimbleControl*)sub)->unk34;
-            ((GrimbleControl*)sub)->unk48 = ((GrimbleControl*)sub)->unk40;
+            ((GrimbleControl*)sub)->pathObj = ((GrimbleControl*)sub)->candidatePathObj;
+            ((GrimbleControl*)sub)->pathProgress = ((GrimbleControl*)sub)->candidateProgress;
             (*(void (**)(int, char*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x20))(
                 ((GrimbleControl*)sub)->pathObj, sub + 0xc);
             (*(void (**)(int, f32, f32*, f32*, f32*))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
-                ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48, (f32*)(sub + 0x1c), (f32*)(sub + 0x20),
+                ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress, (f32*)(sub + 0x1c), (f32*)(sub + 0x20),
                 (f32*)(sub + 0x24));
             ((GrimbleControl*)sub)->baseRotX =
                 (*(s16 (**)(int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x34))(
                     ((GrimbleControl*)sub)->pathObj);
-            ((GrimbleControl*)sub)->unk4C = ((GrimbleControl*)sub)->unk48;
+            ((GrimbleControl*)sub)->unk4C = ((GrimbleControl*)sub)->pathProgress;
             ((GrimbleControl*)sub)->unk46 = 0;
             ((GrimbleControl*)sub)->unk4 = ((GrimbleControl*)sub)->unk20;
             ((GrimbleControl*)sub)->unk8 = ((GameObject*)obj)->anim.localPosY;
@@ -331,7 +331,7 @@ void fn_801627F4(int obj)
             ((GrimbleControl*)sub)->reversed = facing;
             ((GameObject*)obj)->anim.rotX = ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed <<
                 15);
-            f = ((GrimbleControl*)sub)->unk48 -
+            f = ((GrimbleControl*)sub)->pathProgress -
                 (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) *
                 ((f32)(int)
             randomGetRange(0xa, 0x3c) / lbl_803E2F24
@@ -396,14 +396,14 @@ void grimble_update(int obj)
     }
     else
     {
-        if (*(void**)&((GrimbleControl*)sub)->unk34 != NULL)
+        if (*(void**)&((GrimbleControl*)sub)->candidatePathObj != NULL)
         {
             void* target;
             int r;
             (*(void (**)(double, double, int, char*, void*, void*))(*(int*)gPlayerInterface + 0x8))(
                 (double)lbl_803E2EBC, (double)lbl_803E2EBC, obj, state, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
             (*(void (**)(int, f32, int, int, int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) +
-                0x24))(((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->unk48,
+                0x24))(((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress,
                        obj + 0xc, obj + 0x10, obj + 0x14);
             (*(void (**)(int, char*, char*, int, char*, int, int, int))(*(int*)gBaddieControlInterface +
                 0x54))(
