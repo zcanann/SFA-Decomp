@@ -8118,7 +8118,7 @@ void playerDoHitDetection(int obj)
     f32 y;
     f32 z;
 
-    *(u32*)&((PlayerState*)inner)->flags360 &= 0xf7ffffff;
+    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x8000000LL;
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
         (((GameObject*)obj)->objectFlags & 0x1000) != 0)
     {
