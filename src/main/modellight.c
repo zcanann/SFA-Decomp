@@ -1624,9 +1624,11 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, 
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
                     obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
                     eScale);
-    C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, *(volatile f32*)&lbl_803DE790,
-                    lbl_803DE790, lbl_803DE790, lbl_803DE790);
+    {
+        f32 unit = *(volatile f32*)&lbl_803DE790;
+        C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
+                        obj->projectionLeft, obj->projectionRight, unit, unit, unit, unit);
+    }
 }
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
