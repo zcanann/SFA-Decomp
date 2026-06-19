@@ -622,13 +622,13 @@ extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE658;
 extern f32 lbl_803DE674;
-extern f32 lbl_803DE690;
+extern f32 gCurveSegmentCount;
 extern f32 lbl_803DE67C;
 extern f32 lbl_803DE660;
 extern f32 lbl_803DE680;
-extern f32 lbl_803DC8B0;
-extern int lbl_803DB270;
-extern f32 lbl_80338790[];
+extern f32 gCurveForwardDiffStep;
+extern int gCurveCachedSampleCount;
+extern f32 gCurveForwardDiffCoeffs[];
 extern f32 Curve_EvalBezier(f32 t, f32 *values, f32 *outTangent);
 extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern void debugPrintf(char *message, ...);

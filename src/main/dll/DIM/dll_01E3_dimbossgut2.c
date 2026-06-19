@@ -64,8 +64,8 @@ extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;
 extern f32 lbl_803E4CDC;
 extern f32 lbl_803E4CE0;
-extern f32 lbl_803E4CE4;
-extern f32 lbl_803E4CE8;
+extern f32 gDimBossGut2Pi;
+extern f32 gDimBossGut2AngleUnitToRadians;
 extern f32 lbl_803E4CEC;
 extern f32 lbl_803E4D20;
 extern int Curve_AdvanceAlongPath(int a, f32 f);
@@ -257,9 +257,9 @@ void dimbossgut2_update(int obj)
             {
                 xyScale = lbl_803E4CE0 * posData[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                    xyScale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
+                    xyScale * mathSinf(gDimBossGut2Pi * (f32) * (s16*)obj / gDimBossGut2AngleUnitToRadians);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                    xyScale * mathCosf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
+                    xyScale * mathCosf(gDimBossGut2Pi * (f32) * (s16*)obj / gDimBossGut2AngleUnitToRadians);
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
                                                  NULL);

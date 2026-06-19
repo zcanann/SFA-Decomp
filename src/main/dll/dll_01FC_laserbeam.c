@@ -4,7 +4,7 @@
  * Object callbacks (LaserBeam_*): init/free set up the beam from its
  * placement (yaw byte, fire period, beamKind, texture asset chosen by
  * beamKind 1/30/other), initialise/release acquire+release the shared modgfx
- * effect resource (Resource_Acquire 0x81) into lbl_803DDC80. update() runs the
+ * effect resource (Resource_Acquire 0x81) into gLaserBeamObjModgfxResource. update() runs the
  * per-frame state machine: counts down fireTimer, drives the emitter through
  * the modgfx vtable (slot +4) per beamKind, sweeps the beam, projects the
  * player onto the beam axis (mathCosf/mathSinf of rotX), and on a hit plays
@@ -147,15 +147,15 @@ void LaserBeam_update(int obj2)
     extern int objGetAnimState80A(void* obj);
     extern float mathCosf(float x);
     extern float mathSinf(float x);
-    extern int* lbl_803DDC80;
+    extern int* gLaserBeamObjModgfxResource;
     extern u8 framesThisStep;
     extern f32 timeDelta;
     extern f32 lbl_803E5D10;
     extern f32 lbl_803E5D14;
     extern f32 lbl_803E5D18;
     extern f32 lbl_803E5D1C;
-    extern f32 lbl_803E5D20;
-    extern f32 lbl_803E5D24;
+    extern f32 gLaserBeamObjPi;
+    extern f32 gLaserBeamObjAngleToRadScale;
     extern f32 lbl_803E5D28;
     extern f32 lbl_803E5D2C;
     extern f32 lbl_803E5D30;
@@ -224,15 +224,15 @@ void LaserBeam_update(int obj2)
                 c = b->beamKind;
                 if (c == 1)
                 {
-                    if (lbl_803DDC80 != NULL)
+                    if (gLaserBeamObjModgfxResource != NULL)
                     {
-                        (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                        (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                             obj2, 2, 0, 0x10004, -1, 0);
                     }
                 }
                 else if (c != 30 && c != 0)
                 {
-                    (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                    (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                         obj2, 0, 0, 0x10004, -1, 0);
                 }
             }
@@ -251,41 +251,41 @@ void LaserBeam_update(int obj2)
                     c = b->beamKind;
                     if (c == 1)
                     {
-                        if (lbl_803DDC80 != NULL)
+                        if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                            (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                 obj2, 3, 0, 0x10004, -1, 0);
                         }
                     }
                     else if (c == 30)
                     {
-                        if (lbl_803DDC80 != NULL)
+                        if (gLaserBeamObjModgfxResource != NULL)
                         {
                             b->emitterSlot =
-                                (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                                (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                     obj2, 30, 0, 0x10004, -1, 0);
                         }
                     }
                     else if (c != 0)
                     {
-                        if (lbl_803DDC80 != NULL)
+                        if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                            (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                 obj2, 1, 0, 0x10004, -1, 0);
                         }
                     }
                     else
                     {
-                        if (lbl_803DDC80 != NULL && b->emitterSlot == -1)
+                        if (gLaserBeamObjModgfxResource != NULL && b->emitterSlot == -1)
                         {
                             if (b->emitterSlot != -1)
                             {
                                 (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
                             }
-                            if (lbl_803DDC80 != NULL)
+                            if (gLaserBeamObjModgfxResource != NULL)
                             {
                                 b->emitterSlot =
-                                    (*(s16 (**)(int, int, int, int, int, int))(*lbl_803DDC80 + 4))(
+                                    (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                         obj2, 0, 0, 0x10004, -1, 0);
                             }
                         }
@@ -304,8 +304,8 @@ void LaserBeam_update(int obj2)
     }
     dz = (f32)(int)((LaserBeamPlacement*)t)->unk1A;
     dz2 = dz * dz;
-    sinv = mathCosf((lbl_803E5D20 * (f32)(int)((GameObject*)obj2)->anim.rotX) / lbl_803E5D24);
-    cosv = mathSinf((lbl_803E5D20 * (f32)(int)((GameObject*)obj2)->anim.rotX) / lbl_803E5D24);
+    sinv = mathCosf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
+    cosv = mathSinf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
     dot = -(((GameObject*)obj2)->anim.localPosX * sinv + ((GameObject*)obj2)->anim.localPosZ * cosv);
     player = Obj_GetPlayerObject();
     b->unk27 = (s8)(b->unk27 - framesThisStep);
@@ -463,17 +463,17 @@ void LaserBeam_update(int obj2)
     }
 }
 
-extern void* lbl_803DDC80;
+extern void* gLaserBeamObjModgfxResource;
 
 void LaserBeam_initialise(void)
 {
-    lbl_803DDC80 = Resource_Acquire(0x81, 1);
+    gLaserBeamObjModgfxResource = Resource_Acquire(0x81, 1);
 }
 
 void LaserBeam_release(void)
 {
-    Resource_Release(lbl_803DDC80);
-    lbl_803DDC80 = NULL;
+    Resource_Release(gLaserBeamObjModgfxResource);
+    gLaserBeamObjModgfxResource = NULL;
 }
 
 #pragma opt_strength_reduction off

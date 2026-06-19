@@ -36,7 +36,7 @@ extern f32 lbl_803E3CCC;
 extern f32 lbl_803E3CD0;
 extern f32 lbl_803E3CD4;
 extern f32 lbl_803E3CD8;
-extern f32 lbl_803E3CDC;
+extern f32 gFuelCellMaxLinkDistSq;
 extern f32 lbl_803E3CE0;
 extern f32 lbl_803E3CE4;
 extern f32 lbl_803E3CE8;
@@ -278,7 +278,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                                 ok = 1;
                             }
                             if (ok && vec3f_distanceSquared(((GameObjPos*)other)->pos2, ((GameObjPos*)obj)->pos2) <
-                                lbl_803E3CDC)
+                                gFuelCellMaxLinkDistSq)
                             {
                                 candidates[pickCount++] = *(int**)((char*)list + ofs);
                             }

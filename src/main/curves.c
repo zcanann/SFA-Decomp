@@ -12,40 +12,40 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     f32 step;
     int i;
 
-    if (count != lbl_803DB270)
+    if (count != gCurveCachedSampleCount)
     {
         step = lbl_803DE674 / count;
-        lbl_803DC8B0 = step;
-        lbl_80338790[0] = step * step;
-        lbl_80338790[1] = lbl_803DE660 * lbl_80338790[0];
-        lbl_80338790[2] = step * lbl_80338790[0];
-        lbl_80338790[3] = lbl_803DE680 * lbl_80338790[2];
-        lbl_803DB270 = count;
+        gCurveForwardDiffStep = step;
+        gCurveForwardDiffCoeffs[0] = step * step;
+        gCurveForwardDiffCoeffs[1] = lbl_803DE660 * gCurveForwardDiffCoeffs[0];
+        gCurveForwardDiffCoeffs[2] = step * gCurveForwardDiffCoeffs[0];
+        gCurveForwardDiffCoeffs[3] = lbl_803DE680 * gCurveForwardDiffCoeffs[2];
+        gCurveCachedSampleCount = count;
     }
 
     if (px != NULL)
     {
         evalFn(px, bufX);
         vx = bufX[3];
-        d1x = lbl_803DC8B0 * bufX[2] + (lbl_80338790[2] * bufX[0] + lbl_80338790[0] * bufX[1]);
-        d2x = lbl_80338790[3] * bufX[0] + lbl_80338790[1] * bufX[1];
-        d3x = lbl_80338790[3] * bufX[0];
+        d1x = gCurveForwardDiffStep * bufX[2] + (gCurveForwardDiffCoeffs[2] * bufX[0] + gCurveForwardDiffCoeffs[0] * bufX[1]);
+        d2x = gCurveForwardDiffCoeffs[3] * bufX[0] + gCurveForwardDiffCoeffs[1] * bufX[1];
+        d3x = gCurveForwardDiffCoeffs[3] * bufX[0];
     }
     if (py != NULL)
     {
         evalFn(py, bufY);
         vy = bufY[3];
-        d1y = lbl_803DC8B0 * bufY[2] + (lbl_80338790[2] * bufY[0] + lbl_80338790[0] * bufY[1]);
-        d2y = lbl_80338790[3] * bufY[0] + lbl_80338790[1] * bufY[1];
-        d3y = lbl_80338790[3] * bufY[0];
+        d1y = gCurveForwardDiffStep * bufY[2] + (gCurveForwardDiffCoeffs[2] * bufY[0] + gCurveForwardDiffCoeffs[0] * bufY[1]);
+        d2y = gCurveForwardDiffCoeffs[3] * bufY[0] + gCurveForwardDiffCoeffs[1] * bufY[1];
+        d3y = gCurveForwardDiffCoeffs[3] * bufY[0];
     }
     if (pz != NULL)
     {
         evalFn(pz, bufZ);
         vz = bufZ[3];
-        d1z = lbl_803DC8B0 * bufZ[2] + (lbl_80338790[2] * bufZ[0] + lbl_80338790[0] * bufZ[1]);
-        d2z = lbl_80338790[3] * bufZ[0] + lbl_80338790[1] * bufZ[1];
-        d3z = lbl_80338790[3] * bufZ[0];
+        d1z = gCurveForwardDiffStep * bufZ[2] + (gCurveForwardDiffCoeffs[2] * bufZ[0] + gCurveForwardDiffCoeffs[0] * bufZ[1]);
+        d2z = gCurveForwardDiffCoeffs[3] * bufZ[0] + gCurveForwardDiffCoeffs[1] * bufZ[1];
+        d3z = gCurveForwardDiffCoeffs[3] * bufZ[0];
     }
 
     for (i = 0; i <= count; i++)
@@ -135,7 +135,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 
     if (step > lbl_803DE658)
     {
-        seg = (int)(lbl_803DE690 * curve->t);
+        seg = (int)(gCurveSegmentCount * curve->t);
         if (seg == 20)
         {
             seg--;
@@ -187,9 +187,9 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
             }
         }
         step += lengths[seg + 1];
-        base = seg / lbl_803DE690;
+        base = seg / gCurveSegmentCount;
         frac = step / lengths[seg + 1];
-        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
         if (curve->px != NULL)
         {
             curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
@@ -209,7 +209,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
     }
     else if (step < lbl_803DE658)
     {
-        seg = (int)(lbl_803DE690 * curve->t);
+        seg = (int)(gCurveSegmentCount * curve->t);
         if (seg == 20)
         {
             seg--;
@@ -259,9 +259,9 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 seg = 19;
             }
         }
-        base = seg / lbl_803DE690;
+        base = seg / gCurveSegmentCount;
         frac = step / lengths[seg + 1];
-        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
         if (curve->px != NULL)
         {
             curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);

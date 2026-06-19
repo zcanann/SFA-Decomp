@@ -2,7 +2,7 @@
  * DLL 0x0206 (lightsource) — a placeable point-light / flame object.
  *
  * init builds a ModelLightStruct (objCreateLight), sets its kind/colour
- * (from the lbl_802C2488 colour table indexed by fxType), distance
+ * (from the gLightSourceColorTable colour table indexed by fxType), distance
  * attenuation, glow and projection radius, then primes the spark/fx
  * timers.  update toggles the lit state on a priority hit (mode 1),
  * latches the associated game bit, drives the per-frame particle fx
@@ -45,10 +45,10 @@ extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
 extern void lightSetField4D(void*, int);
 extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
 extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
-extern u8 lbl_802C2488[];
+extern u8 gLightSourceColorTable[];
 extern f32 lbl_803E5E0C;
-extern f32 lbl_803E5E10;
-extern f32 lbl_803E5E20;
+extern f32 gLightSourceFxTimerPeriod;
+extern f32 gLightSourceRangeScale;
 extern f32 lbl_803E5E24;
 extern f32 lbl_803E5E28;
 extern f32 lbl_803E5E2C;
@@ -106,7 +106,7 @@ void lightsource_update(int obj)
     extern f32 timeDelta;
     extern f32 lbl_803E5E14;
     extern f32 lbl_803E5E18;
-    extern f32 lbl_803E5E1C;
+    extern f32 gLightSourceSparkTimerPeriod;
     LightSourceState* b;
     char* t;
     s16 sum;
@@ -157,7 +157,7 @@ void lightsource_update(int obj)
         if (b->fxTimer <= lbl_803E5E0C)
         {
             sfxFlag = b->fxArg;
-            b->fxTimer = b->fxTimer + lbl_803E5E10;
+            b->fxTimer = b->fxTimer + gLightSourceFxTimerPeriod;
         }
         else
         {
@@ -184,7 +184,7 @@ void lightsource_update(int obj)
             {
                 fx.scale = lbl_803E5E08;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7cb, &fx, 2, -1, NULL);
-                b->unk0C = b->unk0C + lbl_803E5E1C;
+                b->unk0C = b->unk0C + gLightSourceSparkTimerPeriod;
             }
         }
     }
@@ -241,12 +241,12 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     int colorBase;
 
     state = obj->extra;
-    colors = *(LightColorTable*)lbl_802C2488;
+    colors = *(LightColorTable*)gLightSourceColorTable;
     obj->anim.rotX = (s16)(((int)setup->yaw & 0x3fU) << 10);
     range = setup->range;
     if (range > 0)
     {
-        obj->anim.rootMotionScale = range / lbl_803E5E20;
+        obj->anim.rootMotionScale = range / gLightSourceRangeScale;
     }
     else
     {
@@ -366,7 +366,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
         state->fxType = 0;
     }
     obj->objectFlags |= 0x2000;
-    state->fxTimer = lbl_803E5E10;
+    state->fxTimer = gLightSourceFxTimerPeriod;
     state->sparkTimer = lbl_803E5E08;
 }
 

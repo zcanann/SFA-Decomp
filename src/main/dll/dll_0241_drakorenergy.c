@@ -61,17 +61,17 @@ typedef struct DrakorenergyPlacement
 extern f32 lbl_803E627C;
 extern f32 lbl_803E62A0;
 extern f32 lbl_803E6278;
-extern f32 lbl_803E6280;
+extern f32 gDrakorEnergyBounceRestitution;
 extern f32 lbl_803E6284;
-extern f32 lbl_803E6288;
-extern f32 lbl_803E628C;
-extern f32 lbl_803E6290;
+extern f32 gDrakorEnergyGravity;
+extern f32 gDrakorEnergyPi;
+extern f32 gDrakorEnergyPhaseDivisor;
 extern f32 lbl_803E6294;
-extern f32 lbl_803DC160;
-extern f32 lbl_803DC164;
+extern f32 gDrakorEnergyBobAmplitude;
+extern f32 gDrakorEnergySeekRange;
 extern f32 lbl_803DC168;
-extern f32 lbl_803DC16C;
-extern int lbl_803DC170;
+extern f32 gDrakorEnergyChaseSpeed;
+extern int gDrakorEnergyHealAmount;
 extern f32 lbl_803DC174;
 extern s16 lbl_803DC178;
 
@@ -156,7 +156,7 @@ void drakorenergy_update(int obj)
     case 1:
         if (((DrakorEnergyState*)blob)->startY - ((GameObject*)obj)->anim.localPosY > (v = lbl_803E627C))
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E6280 * -((GameObject*)obj)->anim.velocityY;
+            ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBounceRestitution * -((GameObject*)obj)->anim.velocityY;
             dist = (((GameObject*)obj)->anim.velocityY >= v) ? ((GameObject*)obj)->anim.velocityY : -((GameObject*)obj)->anim.velocityY;
             if (dist < lbl_803E6284)
             {
@@ -167,7 +167,7 @@ void drakorenergy_update(int obj)
                 break;
             }
         }
-        ((GameObject*)obj)->anim.velocityY += lbl_803E6288;
+        ((GameObject*)obj)->anim.velocityY += gDrakorEnergyGravity;
         objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         trio[2] = 0xff;
@@ -176,11 +176,11 @@ void drakorenergy_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 0x357, trio, 0, -1, NULL);
         break;
     case 2:
-        ((GameObject*)obj)->anim.velocityY = lbl_803DC160 * mathSinf(
-            lbl_803E628C * (f32)((DrakorEnergyState*)blob)->phase / lbl_803E6290);
+        ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBobAmplitude * mathSinf(
+            gDrakorEnergyPi * (f32)((DrakorEnergyState*)blob)->phase / gDrakorEnergyPhaseDivisor);
         objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
-        if (Vec_distance(obj + 0x18, player + 0x18) < lbl_803DC164)
+        if (Vec_distance(obj + 0x18, player + 0x18) < gDrakorEnergySeekRange)
         {
             ((DrakorEnergyState*)blob)->mode = 3;
         }
@@ -190,13 +190,13 @@ void drakorenergy_update(int obj)
         dist = Vec_xzDistance(obj + 0x18, player + 0x18);
         if (dist < lbl_803DC168)
         {
-            playerAddHealth(player, lbl_803DC170);
+            playerAddHealth(player, gDrakorEnergyHealAmount);
             Sfx_PlayFromObject(obj, 0x49);
             ((DrakorEnergyState*)blob)->mode = 4;
         }
         else
         {
-            spd = lbl_803DC16C;
+            spd = gDrakorEnergyChaseSpeed;
             Obj_PredictInterceptPoint(player, obj + 0xc, v1, spd / lbl_803E6294);
             PSVECSubtract(v1, (f32*)(obj + 0xc), v2);
             PSVECNormalize(v2, v2);
