@@ -4879,6 +4879,7 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     f32 d2;
     f32 nx;
     f32 ny;
+    f32 c38;
     *(f32*)((char*)out + 0x44) = *(f32*)((char*)vec + 0x0);
     *(f32*)((char*)out + 0x48) = *(f32*)((char*)src + 0xc);
     *(f32*)((char*)out + 0x4c) = *(f32*)((char*)vec + 0x8);
@@ -4900,19 +4901,20 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     *(f32*)((char*)out + 0x34) = -*(f32*)((char*)src + 0x24);
     *(f32*)((char*)out + 0x38) = lbl_803E7EA4;
     *(f32*)((char*)out + 0x3c) = *(f32*)((char*)src + 0x1c);
-    *(f32*)((char*)out + 0x40) = -(*(f32*)((char*)out + 0x48) * *(f32*)((char*)out + 0x38) +
+    c38 = *(f32*)((char*)out + 0x38);
+    *(f32*)((char*)out + 0x40) = -(*(f32*)((char*)out + 0x48) * c38 +
         *(f32*)((char*)out + 0x44) * *(f32*)((char*)out + 0x34) +
         *(f32*)((char*)out + 0x4c) * *(f32*)((char*)out + 0x3c));
     nx = -*(f32*)((char*)out + 0x2c);
     ny = *(f32*)((char*)out + 0x24);
     d1 = -(nx * *(f32*)((char*)src + 0x4) + ny * *(f32*)((char*)src + 0x14)) +
     (ny * *(f32*)((char*)out + 0x4c) +
-        (nx * *(f32*)((char*)out + 0x44) + *(f32*)((char*)out + 0x38) * *(f32*)((char*)out + 0x48)));
+        (nx * *(f32*)((char*)out + 0x44) + c38 * *(f32*)((char*)out + 0x48)));
     nx = -nx;
     ny = -ny;
     d2 = -(nx * *(f32*)((char*)src + 0x8) + ny * *(f32*)((char*)src + 0x18)) +
     (ny * *(f32*)((char*)out + 0x4c) +
-        (nx * *(f32*)((char*)out + 0x44) + *(f32*)((char*)out + 0x38) * *(f32*)((char*)out + 0x48)));
+        (nx * *(f32*)((char*)out + 0x44) + c38 * *(f32*)((char*)out + 0x48)));
     if (d1 > lbl_803E80BC && d2 > lbl_803E80BC)
     {
         *(f32*)((char*)out + 0x8) = *(f32*)((char*)src + 0xc);
