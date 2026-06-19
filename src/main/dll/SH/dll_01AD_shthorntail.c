@@ -570,7 +570,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         runtime->activeMoveValid = 1;
         if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
         {
-            gSHthorntailActiveConfigToken = config->configToken;
+            gSHthorntailActiveConfigToken = obj->config->configToken;
             obj->modelScale = -(lbl_803E544C * timeDelta - obj->modelScale);
             (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
             (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
