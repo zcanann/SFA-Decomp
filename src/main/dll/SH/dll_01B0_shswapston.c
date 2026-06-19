@@ -28,9 +28,9 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     u8 flagsD4;     /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern uint getButtonsJustPressed(int controller);
+extern u32 getButtonsJustPressed(int controller);
 extern u32 ObjPath_GetPointWorldPosition();
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);

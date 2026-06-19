@@ -28,7 +28,7 @@
    drhightop; the lbl_803E5* pool and lbl_802C2428 point template live in this
    DLL's data; timeDelta is the global frame delta. */
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, uint volumeByte, f32 volume);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(int* from, int* to);

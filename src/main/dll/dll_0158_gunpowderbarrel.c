@@ -704,7 +704,7 @@ void gunpowderbarrel_update(int obj)
     }
     {
         u32 arg;
-        uint msg;
+        u32 msg;
         msg = 0;
         arg = 0;
         while ((int)ObjMsg_Pop((void*)obj, &msg, 0, &arg) != 0)
@@ -760,8 +760,8 @@ void gunpowderbarrel_update(int obj)
             if (((GunpowderbarrelPlacement*)def)->unk1A != 0)
             {
                 int cnt;
-                uint* objs = ObjGroup_GetObjects(0x3a, &cnt);
-                uint* p;
+                u32* objs = ObjGroup_GetObjects(0x3a, &cnt);
+                u32* p;
                 i = 0;
                 p = objs;
                 for (; i < cnt; i++)
@@ -1054,9 +1054,9 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         if (*(s16*)(params + 0x1a) != 0)
         {
             int count;
-            uint* barrels = ObjGroup_GetObjects(0x3a, &count);
+            u32* barrels = ObjGroup_GetObjects(0x3a, &count);
             int i;
-            uint* p;
+            u32* p;
             for (i = 0, p = barrels; i < count; i++)
             {
                 if (((GunpowderbarrelPlacement*)params)->unk1A == barrelgener_getLinkId(*p))

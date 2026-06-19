@@ -175,7 +175,7 @@ void SB_ShipHead_update(int obj)
                 }
             }
         }
-        if ((int)ObjMsg_Pop((void*)obj, (uint*)&msg, (uint*)tmp2, (uint*)&tmp3) != 0)
+        if ((int)ObjMsg_Pop((void*)obj, (u32*)&msg, (u32*)tmp2, (u32*)&tmp3) != 0)
         {
             switch (msg)
             {
@@ -190,7 +190,7 @@ void SB_ShipHead_update(int obj)
             }
         }
         if ((SB_GALLEON_VTBL(galleon)->getPhase((int)galleon) >= 2)
-            && (o->unkF8 <= 0) && (((uint)(galleonPhase - 3) <= 1 || (galleonPhase == 5)))
+            && (o->unkF8 <= 0) && (((u32)(galleonPhase - 3) <= 1 || (galleonPhase == 5)))
             && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             && (((GameObject*)hit)->anim.seqId != SB_FIREBALL_OBJID))
         {

@@ -7,7 +7,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
@@ -120,7 +120,7 @@ void dfpobjcreator_init(int obj, s8* def)
 void dfpobjcreator_update(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     extern u8*Obj_AllocObjectSetup(int, int);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
     extern f32 timeDelta;

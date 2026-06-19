@@ -10,7 +10,7 @@
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -72,7 +72,7 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
 extern u32 FUN_80006824();
-extern uint FUN_80006ab8();
+extern u32 FUN_80006ab8();
 extern u64 FUN_80006ac4();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
@@ -127,15 +127,15 @@ extern int dbstealerworm_stateHandlerB06();
 
 u32
 FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, uint obj, int state,
+             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
     int control;
 
     control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    *(byte*)(control + 0x15) = *(byte*)(control + 0x15) | 4;
+    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
+    *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
     *(float*)(state + 0x2a0) = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
     {
@@ -167,7 +167,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_15, u32 param_16)
 {
     float fVar1;
-    uint uVar2;
+    u32 uVar2;
     int iVar3;
     short* psVar4;
     int iVar5;
@@ -186,8 +186,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     float local_1c;
 
     iVar5 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(byte*)(iVar5 + 0x14) = *(byte*)(iVar5 + 0x14) | 2;
-    *(byte*)(iVar5 + 0x15) = *(byte*)(iVar5 + 0x15) & 0xfb;
+    *(u8*)(iVar5 + 0x14) = *(u8*)(iVar5 + 0x14) | 2;
+    *(u8*)(iVar5 + 0x15) = *(u8*)(iVar5 + 0x15) & 0xfb;
     fVar1 = lbl_803E6F88;
     *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
     *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / fVar1;
@@ -216,7 +216,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             uVar2 = FUN_80006ab8(psVar4);
             if (uVar2 == 0)
             {
-                FUN_80006ac4(psVar4, (uint) & local_48);
+                FUN_80006ac4(psVar4, (u32) & local_48);
             }
             *(u8*)(iVar5 + 0x34) = 1;
         }
@@ -230,7 +230,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         uVar2 = FUN_80006ab8(psVar4);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_30);
+            FUN_80006ac4(psVar4, (u32) & local_30);
         }
         *(u8*)(iVar5 + 0x34) = 1;
         local_34 = *(u32*)(param_10 + 0x2d0);
@@ -240,7 +240,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         uVar2 = FUN_80006ab8(psVar4);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4, (uint) & local_3c);
+            FUN_80006ac4(psVar4, (u32) & local_3c);
         }
         *(u8*)(iVar5 + 0x34) = 1;
     }
@@ -249,12 +249,12 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, uint obj, int state,
+             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
     int hurt;
-    uint busy;
+    u32 busy;
     short* hits;
     int control;
     u32 msg;
@@ -282,12 +282,12 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         if (hurt == 0)
         {
             busy = randomGetRange(0, 2);
-            FUN_80006824(obj, (ushort) * (u32*)(&DAT_8032a290 + busy * 4));
+            FUN_80006824(obj, (u16) * (u32*)(&DAT_8032a290 + busy * 4));
         }
         else
         {
             busy = randomGetRange(3, 4);
-            FUN_80006824(obj, (ushort) * (u32*)(&DAT_8032a290 + busy * 4));
+            FUN_80006824(obj, (u16) * (u32*)(&DAT_8032a290 + busy * 4));
         }
         msgTarget = *(u32*)(control + 0x30);
         msgArg = *(u32*)(control + 0x2c);
@@ -296,7 +296,7 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         busy = FUN_80006ab8(hits);
         if (busy == 0)
         {
-            FUN_80006ac4(hits, (uint) & msg);
+            FUN_80006ac4(hits, (u32) & msg);
         }
         *(u32*)(control + 0x3c) = 0;
     }
@@ -337,11 +337,11 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     *(u8*)(state + 0x34d) = 1;
     control = *(int*)(control + 0x40c);
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
-    if ((*(uint*)(state + 0x314) & 1) != 0)
+    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
+    if ((*(u32*)(state + 0x314) & 1) != 0)
     {
-        *(uint*)(state + 0x314) = *(uint*)(state + 0x314) & ~1;
-        *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 1;
+        *(u32*)(state + 0x314) = *(u32*)(state + 0x314) & ~1;
+        *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 1;
     }
     if (*(char*)(state + 0x346) != '\0')
     {
@@ -387,7 +387,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 {
     extern u32 ObjHits_EnableObject(); /* #57 */
     extern u32 ObjHits_SetHitVolumeSlot(); /* #57 */
-    uint pick;
+    u32 pick;
     u32 animId;
     int extra;
     int control;
@@ -421,7 +421,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         *(u8*)(state + 0x34d) = 1;
         *(float*)(state + 0x2a0) =
             lbl_803E6FDC +
-            (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(extra + 0x406)) - DOUBLE_803e6f78) /
+            (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(extra + 0x406)) - DOUBLE_803e6f78) /
             lbl_803E6FE0;
     }
     *(float*)(state + 0x280) = lbl_803E6F40;
@@ -429,12 +429,12 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         *(u8*)(control + 0x34) = 1;
     }
-    *(byte*)(control + 0x14) = *(byte*)(control + 0x14) | 2;
+    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
     return 0;
 }
 
 u32
-FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, ushort* obj,
+FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* obj,
              int target)
 {
     int yawDelta;
@@ -485,7 +485,7 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, ushort
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
 u32
-FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, ushort* obj,
+FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* obj,
              int target)
 {
     int yawDelta;
@@ -494,7 +494,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, ushort
     float info[7];
 
     control = *(int*)(obj + 0x5c);
-    if ((obj != (ushort*)0x0) && (target != 0))
+    if ((obj != (u16*)0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
         if ((double)lbl_803E6F40 != param_4)
@@ -555,7 +555,7 @@ void dbholecontrol1_initialise(void)
 
 void dbholecontrol1_update(int* obj)
 {
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk1E) != 0)

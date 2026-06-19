@@ -136,7 +136,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
         }
         break;
     case SHTHORNTAIL_STATE_TAIL_SWING:
-        SHthorntail_updateTailSwing((uint)obj, runtime);
+        SHthorntail_updateTailSwing((u32)obj, runtime);
         if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
             (tailSwingQueued = (*gSkyInterface)->getSunPosition(0), tailSwingQueued == 0))
         {
@@ -161,7 +161,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
 void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {
     int randomIdleWait;
-    uint gameBitValue;
+    u32 gameBitValue;
 
     runtime->impactSfxTable = &gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
     switch (runtime->locomotionMode)
@@ -243,8 +243,8 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
 {
     int linkedEventPending;
     int objectTriggerIsSet;
-    uint triggerIsSet;
-    uint triggerEventId;
+    u32 triggerIsSet;
+    u32 triggerEventId;
     int randomTime;
 
     runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;

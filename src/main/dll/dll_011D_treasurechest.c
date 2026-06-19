@@ -6,7 +6,7 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -133,11 +133,11 @@ void treasurechest_update(int obj)
     extern void GameBit_Set(int eventId, int value);
     ChestFlags* flags;
     TreasureChestSetup* setup;
-    uint nearestObject;
+    u32 nearestObject;
     int hitResult;
     ChestHitBlock blk;
     float local_3c;
-    uint hitVolume;
+    u32 hitVolume;
     int local_44;
     int hitObject;
 
@@ -146,14 +146,14 @@ void treasurechest_update(int obj)
     local_3c = lbl_803E3C28;
     if (flags->trigger != 0 && flags->open != 0)
     {
-        *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3C2C, 0);
     }
     if (flags->open == 0)
     {
-        if ((*(byte*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
         {
-            *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
             fn_802967E0(Obj_GetPlayerObject(), 1);
             nearestObject = ObjGroup_FindNearestObject(4, obj, &local_3c);
             if (nearestObject != 0)

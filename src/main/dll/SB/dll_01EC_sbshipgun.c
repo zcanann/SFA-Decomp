@@ -161,7 +161,7 @@ void SB_ShipGun_update(int obj)
     int* state;
     int galleonStage;
     int hit;
-    uint randDelay;
+    u32 randDelay;
     u16* spawned;
     int placement;
     struct
@@ -200,7 +200,7 @@ void SB_ShipGun_update(int obj)
     }
     else
     {
-        if (*(uint*)state == 0)
+        if (*(u32*)state == 0)
         {
             /* find and cache the CloudRunner object (galleon reused as the
                object-list base here, before it holds the parent Galleon). */
@@ -284,7 +284,7 @@ void SB_ShipGun_update(int obj)
                 fdx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
                 fdz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
                 *(short*)(state + 1) = (short)
-                (((uint)(u16)
+                (((u32)(u16)
                 getAngle(-fdz, fdx) & 0xffff
                 )
                 <<
@@ -395,7 +395,7 @@ void SB_ShipGun_update(int obj)
                 stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
                 stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
                 stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
-                for (placement = 0; placement < (int)(uint)framesThisStep; placement = placement + 1)
+                for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
                 {
                     (*gPartfxInterface)->spawnObject(
                         (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,
@@ -428,7 +428,7 @@ void SB_ShipGun_update(int obj)
             stk.b = stk.b - ((GameObject*)obj)->anim.worldPosX;
             stk.c = stk.c - ((GameObject*)obj)->anim.worldPosY;
             stk.d = stk.d - ((GameObject*)obj)->anim.worldPosZ;
-            for (placement = 0; placement < (int)(uint)framesThisStep; placement = placement + 1)
+            for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
             {
                 (*gPartfxInterface)->spawnObject(
                     (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, stk.rot,

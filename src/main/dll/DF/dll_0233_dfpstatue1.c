@@ -10,7 +10,7 @@
 #include "main/gamebits.h"
 
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitState);
+extern u32 sfxplayer_updateState(int obj, u32 param_2, int hitState);
 
 extern f32 timeDelta;
 

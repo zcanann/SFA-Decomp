@@ -21,7 +21,7 @@ typedef struct DimbarrierState
     s8 countdown;
 } DimbarrierState;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);

@@ -398,7 +398,7 @@ void drlasercannon_hitDetect(int obj)
     f32 hitPosZ;
     f32 hitPosY;
     f32 hitPosX;
-    uint hitVolume;
+    u32 hitVolume;
     int hitObject;
     int hit;
     int* tricky;

@@ -80,7 +80,7 @@ void dll_127_init(short* obj, int def)
     Dll127Placement* placement;
     ObjAnimComponent* objAnim;
     float scale;
-    uint yawBits;
+    u32 yawBits;
     u8 swayMag;
 
     placement = (Dll127Placement*)def;

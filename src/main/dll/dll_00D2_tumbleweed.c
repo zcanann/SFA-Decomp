@@ -54,15 +54,15 @@ void tumbleweed_updateRollingMotion(int obj, int state)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
     int hitCount;
-    uint uval;
-    undefined4* hitEntry;
+    u32 uval;
+    u32* hitEntry;
     int i;
     int bestHit;
     f32 dy;
     f32 bestDy;
-    undefined4* hitList[2];
+    u32* hitList[2];
 
-    hitList[0] = (undefined4*)0x0;
+    hitList[0] = (u32*)0x0;
     bestDy = lbl_803E2F78;
     hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
@@ -121,7 +121,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     ((short*)obj)[1] = (short)hitCount;
     hitCount = (int)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (short*)obj);
     *(short*)obj = (short)hitCount;
-    if (hitList[0] != (undefined4*)0x0)
+    if (hitList[0] != (u32*)0x0)
     {
         if (((GameObject*)obj)->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
         {
@@ -133,14 +133,14 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             if (((short*)obj)[0x23] == 0x3fb)
             {
                 uval = randomGetRange(0x8c, 0xb4);
-                dy = (f32) * (ushort*)(state + 0x268) / (f32)(int)uval;
+                dy = (f32) * (u16*)(state + 0x268) / (f32)(int)uval;
                 ((GameObject*)obj)->anim.velocityY =
                     -(lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY * dy);
             }
             else
             {
                 uval = randomGetRange(0x14, 0x28);
-                dy = (f32) * (ushort*)(state + 0x268) / (f32)(int)uval;
+                dy = (f32) * (u16*)(state + 0x268) / (f32)(int)uval;
                 ((GameObject*)obj)->anim.velocityY =
                     -(lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY * dy);
             }
@@ -153,7 +153,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             {
                 Sfx_PlayFromObject(obj, SFXsc_gethit02);
                 uval = randomGetRange(0, 5);
-                if ((uval == 0) && ((*(byte*)(state + 0x27a) & 8) != 0))
+                if ((uval == 0) && ((*(u8*)(state + 0x27a) & 8) != 0))
                 {
                     Sfx_PlayFromObject(obj, SFXsc_gethit03);
                 }
@@ -171,7 +171,7 @@ void tumbleweed_func0F(int obj, int value)
 
 int tumbleweed_func0E(int obj)
 {
-    return *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x278) == 6;
+    return *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x278) == 6;
 }
 
 void tumbleweed_render2(int* obj, int p2)
@@ -208,7 +208,7 @@ void tumbleweed_func0B(int obj, float x, float y)
 
 int tumbleweed_setScale(int obj)
 {
-    return *(byte*)(*(int*)&((GameObject*)obj)->extra + 0x278);
+    return *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x278);
 }
 
 int tumbleweed_getExtraSize(void)
@@ -409,7 +409,7 @@ void tumbleweed_updateStateMachine(int obj)
                 ((BackpackState*)aux)->unk298 = 0x195;
                 ((BackpackState*)aux)->unk29A = 0;
                 ((BackpackState*)aux)->unk29C = lbl_803E2F98;
-                ObjMsg_SendToObject(player, 0x7000a, (void*)obj, (uint)(aux + 0x298));
+                ObjMsg_SendToObject(player, 0x7000a, (void*)obj, (u32)(aux + 0x298));
                 ((BackpackState*)aux)->phase = 4;
             }
             else

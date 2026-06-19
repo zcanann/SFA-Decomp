@@ -28,7 +28,7 @@ extern f32 lbl_803E13E0;
 extern f32 lbl_803E13E4;
 extern f32 lbl_803E13E8;
 
-void dll_9C_func03(int a, int b, int p, uint flags)
+void dll_9C_func03(int a, int b, int p, u32 flags)
 {
     ScreenFxHdr hdr;
     ScreenFxPart parts[32];

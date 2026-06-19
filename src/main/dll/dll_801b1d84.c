@@ -18,7 +18,7 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */

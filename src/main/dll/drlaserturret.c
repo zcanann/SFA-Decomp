@@ -29,7 +29,7 @@ extern void timerSetToCountUp(void);
 extern void gameTimerInit(int, int);
 extern int buttonDisable(int, int);
 extern int padGetAnalogInput(int, char*, char*);
-extern uint getButtonsJustPressed(int);
+extern u32 getButtonsJustPressed(int);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet(void*);
@@ -96,10 +96,10 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
         state->bobAmplitude *
         mathSinf(
             (double)(lbl_803E59E8 *
-                (float)(uint)state->bobPhase /
+                (float)(u32)state->bobPhase /
                 lbl_803E59EC)) +
         state->bobBaseY;
-    sum = (uint)state->bobPhase + (uint)framesThisStep * 0x100;
+    sum = (u32)state->bobPhase + (u32)framesThisStep * 0x100;
     if (sum > 0xffff)
     {
         float rngf;
@@ -251,10 +251,10 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         state->bobAmplitude *
         mathSinf(
             (double)(lbl_803E59E8 *
-                (float)(uint)state->bobPhase /
+                (float)(u32)state->bobPhase /
                 lbl_803E59EC)) +
         state->bobBaseY;
-    sum = (uint)state->bobPhase + (uint)framesThisStep * 0x100;
+    sum = (u32)state->bobPhase + (u32)framesThisStep * 0x100;
     if (sum > 0xffff)
     {
         rng = randomGetRange(0xf, 0x23);

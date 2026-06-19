@@ -55,7 +55,7 @@ extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern u32 FUN_80017ac8();
 extern u32 FUN_80017ae4();
-extern uint FUN_80017ae8();
+extern u32 FUN_80017ae8();
 extern u32 FUN_800305f8();
 
 extern u32 DAT_802c2a88;
@@ -105,14 +105,14 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
             {
                 *(u8*)((int)state + 0xb) = 0;
                 getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
-                            (uint) * (ushort*)(state + 2), 0, 0, 0, in_r9, in_r10);
+                            (u32) * (u16*)(state + 2), 0, 0, 0, in_r9, in_r10);
             }
         }
         else
         {
             *(u8*)((int)state + 0xb) = 1;
             getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
-                        (uint) * (ushort*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
+                        (u32) * (u16*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
         }
     }
     return 0;
@@ -159,10 +159,10 @@ void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
 u32
 FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
              u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
-             , ObjAnimUpdateState* param_11, u32 param_12, uint* param_13, u32 param_14, u32 param_15
+             , ObjAnimUpdateState* param_11, u32 param_12, u32* param_13, u32 param_14, u32 param_15
              , u32 param_16)
 {
-    uint active;
+    u32 active;
     u16* setup;
     u32 spawned;
     int modelState;
@@ -204,7 +204,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             {
                 setup = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
                 param_12 = 0xffffffff;
-                param_13 = *(uint**)&((GameObject*)param_9)->anim.parent;
+                param_13 = *(u32**)&((GameObject*)param_9)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
                 *(u32*)(param_9 + 200) = spawned;

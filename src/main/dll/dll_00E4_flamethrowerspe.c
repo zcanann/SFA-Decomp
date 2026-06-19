@@ -3,9 +3,9 @@
 #include "main/dll/genpropswgpipe_struct.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003b818();
+extern u32 ObjHitbox_SetSphereRadius();
+extern u32 ObjHits_SetHitVolumeSlot();
+extern u32 FUN_8003b818();
 
 
 void mikabomb_hitDetect(void);
@@ -200,51 +200,51 @@ typedef struct FlamethrowerspeState
     s16 unk116;
 } FlamethrowerspeState;
 
-extern undefined4 FUN_80006810();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175bc();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175d8();
-extern undefined4 FUN_800175ec();
+extern u32 FUN_80006810();
+extern u64 FUN_80006824();
+extern u32 FUN_8001753c();
+extern u32 FUN_80017588();
+extern u32 FUN_8001759c();
+extern u32 FUN_800175b0();
+extern u32 FUN_800175bc();
+extern u32 FUN_800175cc();
+extern u32 FUN_800175d0();
+extern u32 FUN_800175d8();
+extern u32 FUN_800175ec();
 extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
+extern u32 FUN_80017688();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
 extern int FUN_80017a54();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081118();
-extern undefined8 FUN_800e842c();
+extern u32 FUN_80017ac8();
+extern u64 FUN_8002fc3c();
+extern u64 ObjGroup_RemoveObject();
+extern u32 ObjGroup_AddObject();
+extern u32 FUN_800810f8();
+extern u32 FUN_80081118();
+extern u64 FUN_800e842c();
 extern int FUN_80286838();
-extern undefined4 FUN_80286884();
-extern undefined4 fcos16Precise();
-extern undefined4 FUN_80294c48();
-extern undefined4 FUN_80294c60();
+extern u32 FUN_80286884();
+extern u32 fcos16Precise();
+extern u32 FUN_80294c48();
+extern u32 FUN_80294c60();
 extern int FUN_80294cf8();
 extern int FUN_80294d10();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80294d6c();
+extern u32 FUN_80294d60();
+extern u32 FUN_80294d6c();
 
-extern undefined4 DAT_80321678;
+extern u32 DAT_80321678;
 extern int DAT_80321688;
-extern undefined4 DAT_80321698;
+extern u32 DAT_80321698;
 extern int DAT_803216a8;
-extern undefined4 DAT_803ad324;
-extern undefined4 DAT_803ad328;
-extern undefined4 DAT_803ad32c;
-extern undefined4 DAT_803ad330;
-extern undefined4 DAT_803ad334;
-extern undefined4 DAT_803ad338;
+extern u32 DAT_803ad324;
+extern u32 DAT_803ad328;
+extern u32 DAT_803ad32c;
+extern u32 DAT_803ad330;
+extern u32 DAT_803ad334;
+extern u32 DAT_803ad338;
 extern f64 DOUBLE_803e3e88;
 extern f64 DOUBLE_803e4068;
 extern f32 lbl_803DC074;
@@ -358,15 +358,15 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
 
 void staticCamera_init(short* param_1, int param_2, int param_3)
 {
-    undefined* dst;
+    u8* dst;
 
     *param_1 = -*(short*)(param_2 + 0x1c);
     param_1[1] = -*(short*)(param_2 + 0x1e);
     param_1[2] = -*(short*)(param_2 + 0x20);
-    dst = *(undefined**)(param_1 + 0x5c);
-    *dst = *(undefined*)(param_2 + 0x19);
+    dst = *(u8**)(param_1 + 0x5c);
+    *dst = *(u8*)(param_2 + 0x19);
     *(float*)(dst + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
+        (float)((double)CONCAT44(0x43300000, (u32) * (u8*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
     dst[1] = 0;
     if (param_3 == 0)
     {
@@ -379,24 +379,24 @@ void FUN_8016d188(int param_1, int param_2)
 {
     float factor;
     int mode;
-    uint cfgFlag;
+    u32 cfgFlag;
     int stateExtra;
     double colorD;
     int ownerData;
     float intensity;
     int spawnType;
-    undefined2 fxArgs[3];
+    u16 fxArgs[3];
     short fxArgsCount;
     float fxArgsScale;
-    undefined2 fxId;
-    undefined2 local_32;
-    undefined2 local_30;
+    u16 fxId;
+    u16 local_32;
+    u16 local_30;
     short fxCount;
     float fxScale;
     float fxParam28;
     float fxParam24;
-    undefined4 local_20;
-    longlong tmpLL;
+    u32 local_20;
+    s64 tmpLL;
 
     stateExtra = *(int*)&((GameObject*)param_1)->extra;
     if ((param_1 != 0) && (param_2 != 0))
@@ -414,19 +414,19 @@ void FUN_8016d188(int param_1, int param_2)
                 intensity = lbl_803E3F20;
                 factor = lbl_803E3F20;
             }
-            if (*(byte*)(stateExtra + 0xbb) == 7)
+            if (*(u8*)(stateExtra + 0xbb) == 7)
             {
                 colorD = (double)lbl_803E3F2C;
-                tmpLL = (longlong)(int)(lbl_803E3F30 * factor);
+                tmpLL = (s64)(int)(lbl_803E3F30 * factor);
                 FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * intensity), param_1, 7,
-                             (uint) * (byte*)(stateExtra + 0xba), 1, (int)(lbl_803E3F30 * factor), 0, 0);
+                             (u32) * (u8*)(stateExtra + 0xba), 1, (int)(lbl_803E3F30 * factor), 0, 0);
             }
             else
             {
                 colorD = (double)lbl_803E3F20;
-                tmpLL = (longlong)(int)(lbl_803E3F30 * factor);
+                tmpLL = (s64)(int)(lbl_803E3F30 * factor);
                 FUN_800810f8(colorD, colorD, colorD, (double)(lbl_803E3F34 * intensity), param_1,
-                             (uint) * (byte*)(stateExtra + 0xbb), (uint) * (byte*)(stateExtra + 0xba), 1,
+                             (u32) * (u8*)(stateExtra + 0xbb), (u32) * (u8*)(stateExtra + 0xba), 1,
                              (int)(lbl_803E3F30 * factor), 0, 0);
             }
         }
@@ -438,7 +438,7 @@ void FUN_8016d188(int param_1, int param_2)
         if (spawnType == 0x87)
         {
             stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
-            tmpLL = (longlong)stateExtra;
+            tmpLL = (s64)stateExtra;
             fxCount = 0x15 - (short)stateExtra;
             fxParam28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
             fxId = 0xc94;
@@ -468,7 +468,7 @@ void FUN_8016d188(int param_1, int param_2)
                 if ((spawnType == 0x43) && (lbl_803E3F4C < intensity))
                 {
                     stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F30));
-                    tmpLL = (longlong)stateExtra;
+                    tmpLL = (s64)stateExtra;
                     fxCount = (short)stateExtra + 6;
                     fxParam28 = lbl_803E3F3C * (intensity / lbl_803E3F40 - lbl_803E3F2C);
                     fxId = 0xc94;
@@ -500,7 +500,7 @@ void FUN_8016d188(int param_1, int param_2)
                         fxCount = (short)stateExtra;
                         fxId = 0xc75;
                     }
-                    tmpLL = (longlong)stateExtra;
+                    tmpLL = (s64)stateExtra;
                     fxParam28 = lbl_803E3F5C * (lbl_803E3F28 - factor);
                     fxCount = 0x15 - fxCount;
                     (*gPartfxInterface)->spawnObject((void*)param_1, 0x7b2, &fxId, 2, -1, NULL);
@@ -562,13 +562,13 @@ void FUN_8016d188(int param_1, int param_2)
             if (lbl_803E3F4C < intensity)
             {
                 stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
-                tmpLL = (longlong)stateExtra;
+                tmpLL = (s64)stateExtra;
                 fxArgsCount = 0x15 - (short)stateExtra;
                 fxArgs[0] = 0xc95;
                 FUN_80294c48(*(int*)&((GameObject*)param_1)->ownerObj, &ownerData);
                 fxParam28 = *(float*)(ownerData + 0xc);
                 fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(undefined4*)(ownerData + 0x14);
+                local_20 = *(u32*)(ownerData + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
                                                  0x200001, -1, fxArgs);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7b9, &fxId,
@@ -582,7 +582,7 @@ void FUN_8016d188(int param_1, int param_2)
                 fxArgsScale = lbl_803E3F64 * (intensity / lbl_803E3F60) + lbl_803E3F44;
                 fxParam28 = *(float*)(ownerData + 0xc);
                 fxParam24 = *(float*)(ownerData + 0x10);
-                local_20 = *(undefined4*)(ownerData + 0x14);
+                local_20 = *(u32*)(ownerData + 0x14);
                 (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)param_1)->ownerObj, 0x7ba, &fxId,
                                                  0x200001, -1, fxArgs);
             }
@@ -604,7 +604,7 @@ void FUN_8016d188(int param_1, int param_2)
         else if ((spawnType == 0x46f) && (lbl_803E3F4C < intensity))
         {
             stateExtra = (int)(lbl_803E3F38 * (intensity / lbl_803E3F60));
-            tmpLL = (longlong)stateExtra;
+            tmpLL = (s64)stateExtra;
             fxCount = 0x15 - (short)stateExtra;
             fxParam28 = lbl_803E3F5C * (lbl_803E3F28 - intensity / lbl_803E3F60);
             fxId = 0xc94;
@@ -622,43 +622,43 @@ void FUN_8016d188(int param_1, int param_2)
     return;
 }
 
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3)
+void FUN_8016d994(int param_1, u8 param_2, u8 param_3)
 {
     int stateExtra;
 
     stateExtra = *(int*)&((GameObject*)param_1)->extra;
-    *(undefined*)(stateExtra + 0xbb) = param_2;
-    *(undefined*)(stateExtra + 0xba) = param_3;
+    *(u8*)(stateExtra + 0xbb) = param_2;
+    *(u8*)(stateExtra + 0xba) = param_3;
     return;
 }
 
-void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9)
 {
     short clamped;
     int hits;
     int* group;
-    uint idx;
+    u32 idx;
     int particle;
     int* state;
     double colorD;
     double clampedColor;
-    undefined8 local_18;
+    u64 local_18;
 
     state = ((GameObject*)param_9)->extra;
     hits = FUN_80017a54(param_9);
-    *(ushort*)(hits + 0x18) = *(ushort*)(hits + 0x18) & ~0x8;
+    *(u16*)(hits + 0x18) = *(u16*)(hits + 0x18) & ~0x8;
     FUN_8002fc3c((double)(float)state[0x14], (double)lbl_803DC074);
     hits = 3;
     group = state;
     do
     {
-        if ((*(byte*)(group + 5) & 2) != 0)
+        if ((*(u8*)(group + 5) & 2) != 0)
         {
-            idx = (uint) * (ushort*)(group + 3);
+            idx = (u32) * (u16*)(group + 3);
             particle = *group + idx * 0x14;
-            for (; (int)idx < (int)(uint) * (ushort*)((int)group + 0xe); idx = idx + 2)
+            for (; (int)idx < (int)(u32) * (u16*)((int)group + 0xe); idx = idx + 2)
             {
                 if (group == (int*)state[0x12])
                 {
@@ -672,7 +672,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                         clampedColor = param_3;
                     }
                     *(short*)(particle + 0x10) = (short)(int)(param_3 - clampedColor);
-                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
+                    *(u16*)(particle + 0x24) = *(u16*)(particle + 0x10);
                 }
                 else
                 {
@@ -680,7 +680,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
                     *(short*)(particle + 0x10) =
                         (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
                             (double)(f32)(s32)((int)*(short*)(particle + 0x10)));
-                    *(undefined2*)(particle + 0x24) = *(undefined2*)(particle + 0x10);
+                    *(u16*)(particle + 0x24) = *(u16*)(particle + 0x10);
                 }
                 clamped = *(short*)(particle + 0x10);
                 if (clamped < 0)
@@ -711,7 +711,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
             }
             if ((group != (int*)state[0x12]) && (*(short*)((int)group + 0x12) == 0))
             {
-                *(byte*)(group + 5) = *(byte*)(group + 5) & 0xfd;
+                *(u8*)(group + 5) = *(u8*)(group + 5) & 0xfd;
             }
         }
         group = group + 6;
@@ -720,7 +720,7 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
     while (hits != 0);
     FUN_8016d188(param_9, *(int*)&((GameObject*)param_9)->ownerObj);
     FUN_80294d6c(*(int*)&((GameObject*)param_9)->ownerObj);
-    *(undefined*)((int)state + 0xb9) = 0;
+    *(u8*)((int)state + 0xb9) = 0;
     if (DAT_803ad338 != '\0')
     {
         DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
@@ -747,10 +747,10 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
 void FUN_80170048(void)
 {
     float defaultVal;
-    uint objHi;
+    u32 objHi;
     int seqObj;
     int* writer;
-    uint rand;
+    u32 rand;
     int glowObj;
     int* state;
     int* colorTbl;
@@ -760,12 +760,12 @@ void FUN_80170048(void)
     double phase;
     double biasC;
     double offsetC;
-    undefined8 packed;
-    undefined8 local_78;
-    undefined8 local_70;
+    u64 packed;
+    u64 local_78;
+    u64 local_70;
 
     packed = FUN_80286838();
-    objHi = (uint)((ulonglong)packed >> 0x20);
+    objHi = (u32)((u64)packed >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
     state = *(int**)(objHi + 0xb8);
     seqObj = FUN_80017a98();
@@ -775,7 +775,7 @@ void FUN_80170048(void)
         glowObj = FUN_80294cf8(seqObj);
     }
     defaultVal = lbl_803E4064;
-    switch ((uint)packed & 0xff)
+    switch ((u32)packed & 0xff)
     {
     case 0:
         if (*state != 0)
@@ -840,7 +840,7 @@ void FUN_80170048(void)
             offsetC = DOUBLE_803e4068;
             do
             {
-                *(undefined2*)(writer + 0xd) = 0xc000;
+                *(u16*)(writer + 0xd) = 0xc000;
                 cosVal = (double)fcos16Precise();
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(scaleC + cosVal) * phase));
                 state[5] = *colorTbl;
@@ -913,7 +913,7 @@ void FUN_80170048(void)
         writer = state;
         do
         {
-            *(undefined2*)(state + 0xd) = 0;
+            *(u16*)(state + 0xd) = 0;
             scaleC = (double)fcos16Precise();
             writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + scaleC) * offsetC));
             writer[5] = *colorTbl;
@@ -941,7 +941,7 @@ void FUN_80170048(void)
         offsetC = DOUBLE_803e4068;
         do
         {
-            *(undefined2*)(state + 0xd) = 0xc000;
+            *(u16*)(state + 0xd) = 0xc000;
             cosVal = (double)fcos16Precise();
             writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + cosVal) * phase));
             writer[5] = *colorTbl;
@@ -974,7 +974,7 @@ void FUN_80170048(void)
         writer = state;
         do
         {
-            *(undefined2*)(state + 0xd) = 0x4000;
+            *(u16*)(state + 0xd) = 0x4000;
             scaleC = (double)fcos16Precise();
             writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + scaleC) * phase));
             writer[5] = *colorTbl;
@@ -1000,10 +1000,10 @@ void FUN_80170048(void)
         state[3] = (int)defaultVal;
         state[4] = (int)defaultVal;
         state[1] = (int)defaultVal;
-        *(byte*)(state + 0x17) = *(byte*)(state + 0x17) | 1;
-        *(byte*)((int)state + 0x5d) = *(byte*)((int)state + 0x5d) | 1;
-        *(byte*)((int)state + 0x5e) = *(byte*)((int)state + 0x5e) | 1;
-        *(byte*)((int)state + 0x5f) = *(byte*)((int)state + 0x5f) | 1;
+        *(u8*)(state + 0x17) = *(u8*)(state + 0x17) | 1;
+        *(u8*)((int)state + 0x5d) = *(u8*)((int)state + 0x5d) | 1;
+        *(u8*)((int)state + 0x5e) = *(u8*)((int)state + 0x5e) | 1;
+        *(u8*)((int)state + 0x5f) = *(u8*)((int)state + 0x5f) | 1;
     }
     FUN_80286884();
     return;
@@ -1014,18 +1014,18 @@ void FUN_80170048(void)
 void mikabombshadow_update(int* obj);
 
 
-void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
-                  uint param_9)
+void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+                  u32 param_9)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     short seqId;
     char counter;
-    uint tmp;
+    u32 tmp;
     int setupData;
     int placementData;
     int stateExtra;
-    undefined8 callResult;
+    u64 callResult;
 
     stateExtra = *(int*)&((GameObject*)param_9)->extra;
     placementData = *(int*)&((GameObject*)param_9)->anim.placementData;
@@ -1035,7 +1035,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
     FUN_80017a98();
     FUN_80017a90();
     callResult = ObjHits_DisableObject(param_9);
-    if ((*(ushort*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)param_9)->anim.flags & 0x2000) != 0)
     {
         *(float*)(stateExtra + 8) = lbl_803E40E8;
         if (((GameObject*)param_9)->anim.modelState != NULL)
@@ -1048,12 +1048,12 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_80017698((int)*(short*)(stateExtra + 0x10), 1);
         callResult = FUN_800e842c(param_9);
     }
-    tmp = (uint) * (short*)(placementData + 0x1e);
+    tmp = (u32) * (short*)(placementData + 0x1e);
     if (tmp != 0xffffffff)
     {
         callResult = FUN_80017698(tmp, 1);
     }
-    tmp = (uint) * (short*)(placementData + 0x2c);
+    tmp = (u32) * (short*)(placementData + 0x2c);
     if (0 < (int)tmp)
     {
         FUN_80017688(tmp);
@@ -1092,7 +1092,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         {
             FUN_80006824(param_9, SFXwp_gprop2_c);
             FUN_80017698(0x3e9, 1);
-            *(undefined2*)(stateExtra + 0x3c) = 0x4b0;
+            *(u16*)(stateExtra + 0x3c) = 0x4b0;
             FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
         }
         else
@@ -1135,7 +1135,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
         FUN_80081118((double)lbl_803E40EC, param_9, 0xff, 0x28);
     }
 LAB_801725bc:
-    *(undefined4*)&((GameObject*)param_9)->anim.rootMotionScale = *(undefined4*)(*(int*)&((GameObject*)param_9)->anim.
+    *(u32*)&((GameObject*)param_9)->anim.rootMotionScale = *(u32*)(*(int*)&((GameObject*)param_9)->anim.
         modelInstance + 4);
     ((GameObject*)param_9)->unkF4 = 1;
     return;
@@ -1685,7 +1685,7 @@ void StaticCamera_init(int* obj, int* params, int flag);
 void flamethrowerspe_init(int* obj, int* params)
 {
     extern void storeZeroToFloatParam(f32 * p); /* #57 */
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam((f32*)((char*)state + 4));
     {
@@ -1718,8 +1718,8 @@ void flamethrowerspe_update(int* obj)
     extern int timerCountDown(f32 * p); /* #57 */
     extern void s16toFloat(f32* out, s16 v); /* #57 */
     extern void objMove(int* obj, f32 x, f32 y, f32 z); /* #57 */
-    extern undefined4 ObjHits_EnableObject(); /* #57 */
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
+    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     switch (((FlamethrowerspeState*)state)->unk10)

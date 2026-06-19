@@ -196,7 +196,7 @@ void MMP_levelcontrol_initialise(void)
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
-    extern undefined4 GameBit_Set(int eventId, int value);
+    extern u32 GameBit_Set(int eventId, int value);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     if (getSaveGameLoadStatus() != 0)
     {

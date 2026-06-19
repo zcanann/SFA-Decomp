@@ -78,7 +78,7 @@ extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern int ObjMsg_SendToObject();
 extern void objRenderFn_8003b8f4(f32);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -119,7 +119,7 @@ extern f32 lbl_803E41BC;
  * and player-mode handoff. The spring model pulls a rider toward the
  * lift column and lifts it with the wind; slot->b10 carries the rider's
  * phase bits. */
-void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
+void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
 {
     char* player;
     f32 lim;

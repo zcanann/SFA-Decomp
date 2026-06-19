@@ -45,7 +45,7 @@ extern f32 lbl_803E1120;
 extern f32 lbl_803E1124;
 extern f32 lbl_803E1128;
 
-int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
+int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     FbCmd* p;
@@ -69,7 +69,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x80;
-        if ((uint)posSource != 0)
+        if ((u32)posSource != 0)
         {
             p->x = *(f32*)(posSource + 0xc);
             p->y = *(f32*)(posSource + 0x10);
@@ -132,7 +132,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x80;
-        if ((uint)posSource != 0)
+        if ((u32)posSource != 0)
         {
             p->x = *(f32*)(posSource + 0xc);
             p->y = *(f32*)(posSource + 0x10);
@@ -179,7 +179,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x80;
-        if ((uint)posSource != 0)
+        if ((u32)posSource != 0)
         {
             p->x = *(f32*)(posSource + 0xc);
             p->y = *(f32*)(posSource + 0x10);
@@ -398,7 +398,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)buf.ctx != 0)
+        if ((u32)buf.ctx != 0)
         {
             buf.pos[0] += *(f32*)(buf.ctx + 0x18);
             buf.pos[1] += *(f32*)(buf.ctx + 0x1c);

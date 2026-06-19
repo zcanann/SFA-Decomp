@@ -14,109 +14,109 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern undefined4 FUN_800033a8();
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_80006768();
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006770();
+extern u32 FUN_800033a8();
+extern u64 FUN_80003494();
+extern u32 FUN_80006768();
+extern u32 FUN_8000676c();
+extern u32 FUN_80006770();
 extern int FUN_80006b7c();
-extern undefined4 FUN_80006b84();
-extern undefined4 FUN_80006b8c();
-extern undefined4 FUN_80006c20();
-extern undefined4 FUN_80017488();
-extern undefined4 FUN_80017498();
-extern undefined4 FUN_80017500();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_800176cc();
-extern undefined4 FUN_800176dc();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_8005d018();
-extern undefined4 FUN_80072564();
-extern undefined4 FUN_800d783c();
-extern undefined4 FUN_8011e80c();
-extern longlong FUN_80286830();
-extern uint FUN_80286834();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern undefined4 DAT_802c28f0;
-extern undefined4 DAT_802c28f4;
-extern undefined4 DAT_802c28f8;
+extern u32 FUN_80006b84();
+extern u32 FUN_80006b8c();
+extern u32 FUN_80006c20();
+extern u32 FUN_80017488();
+extern u32 FUN_80017498();
+extern u32 FUN_80017500();
+extern u32 FUN_80017690();
+extern u64 FUN_80017698();
+extern u32 FUN_800176cc();
+extern u32 FUN_800176dc();
+extern u32 FUN_80042b9c();
+extern u32 FUN_8005d018();
+extern u32 FUN_80072564();
+extern u32 FUN_800d783c();
+extern u32 FUN_8011e80c();
+extern s64 FUN_80286830();
+extern u32 FUN_80286834();
+extern u64 FUN_80286840();
+extern u32 FUN_8028687c();
+extern u32 FUN_80286880();
+extern u32 FUN_8028688c();
+extern u32 DAT_802c28f0;
+extern u32 DAT_802c28f4;
+extern u32 DAT_802c28f8;
 extern short DAT_80312370;
 extern short DAT_80312460;
-extern undefined4 DAT_80312630;
+extern u32 DAT_80312630;
 extern short DAT_80312632;
 extern char DAT_803a3be0;
-extern undefined4 DAT_803a3be1;
-extern undefined4 DAT_803a3be2;
-extern uint DAT_803a3c1c;
-extern undefined4 DAT_803a3dac;
-extern undefined1 gGameplayPreviewSettings;
-extern undefined4 DAT_803a3e26;
-extern undefined4 DAT_803a3e27;
-extern undefined4 DAT_803a3e28;
-extern undefined4 DAT_803a3e2a;
-extern undefined4 DAT_803a3e2c;
-extern undefined4 DAT_803a3e2d;
-extern undefined4 gGameplayPreviewColorRed;
-extern undefined4 gGameplayPreviewColorGreen;
-extern undefined4 gGameplayPreviewColorBlue;
-extern undefined4 gGameplayRegisteredDebugOptions;
-extern undefined1 DAT_803a3f08;
-extern undefined4 DAT_803a3f09;
-extern undefined4 DAT_803a3f0c;
-extern undefined4 DAT_803a3f0e;
-extern undefined4 DAT_803a3f12;
-extern undefined4 DAT_803a3f14;
-extern undefined4 DAT_803a3f15;
-extern undefined4 DAT_803a3f18;
-extern undefined4 DAT_803a3f1a;
-extern undefined4 DAT_803a3f1e;
-extern undefined4 DAT_803a3f21;
+extern u32 DAT_803a3be1;
+extern u32 DAT_803a3be2;
+extern u32 DAT_803a3c1c;
+extern u32 DAT_803a3dac;
+extern u8 gGameplayPreviewSettings;
+extern u32 DAT_803a3e26;
+extern u32 DAT_803a3e27;
+extern u32 DAT_803a3e28;
+extern u32 DAT_803a3e2a;
+extern u32 DAT_803a3e2c;
+extern u32 DAT_803a3e2d;
+extern u32 gGameplayPreviewColorRed;
+extern u32 gGameplayPreviewColorGreen;
+extern u32 gGameplayPreviewColorBlue;
+extern u32 gGameplayRegisteredDebugOptions;
+extern u8 DAT_803a3f08;
+extern u32 DAT_803a3f09;
+extern u32 DAT_803a3f0c;
+extern u32 DAT_803a3f0e;
+extern u32 DAT_803a3f12;
+extern u32 DAT_803a3f14;
+extern u32 DAT_803a3f15;
+extern u32 DAT_803a3f18;
+extern u32 DAT_803a3f1a;
+extern u32 DAT_803a3f1e;
+extern u32 DAT_803a3f21;
 extern char DAT_803a3f24;
-extern undefined4 DAT_803a3f25;
-extern undefined4 DAT_803a3f26;
-extern undefined4 DAT_803a3f27;
-extern undefined4 DAT_803a3f28;
-extern undefined4 DAT_803a3f29;
-extern undefined4 DAT_803a3f2b;
-extern undefined4 DAT_803a4070;
-extern undefined4 DAT_803a4074;
-extern undefined4 DAT_803a4078;
-extern undefined4 DAT_803a407c;
-extern undefined4 DAT_803a4460;
-extern undefined4 DAT_803a4465;
-extern undefined4 DAT_803a458c;
-extern undefined4 DAT_803a4590;
-extern undefined4 DAT_803a4594;
-extern undefined4 DAT_803a4599;
-extern undefined4 DAT_803a459a;
-extern undefined4 DAT_803a45aa;
-extern undefined4 DAT_803a45ac;
-extern undefined4 DAT_803a45b0;
-extern undefined4 DAT_803a45b4;
-extern undefined4 DAT_803a45b6;
-extern undefined4 DAT_803a45ba;
-extern undefined4 DAT_803a45bc;
-extern undefined4 DAT_803a45be;
-extern undefined4 DAT_803a45c0;
-extern undefined4 DAT_803a45c2;
-extern undefined4 DAT_803a45f0;
-extern undefined4 DAT_803a45f1;
-extern undefined4 DAT_803a45f2;
-extern undefined4 DAT_803a45f3;
-extern undefined4 DAT_803a4e78;
-extern undefined4 DAT_803dc4f0;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6e8;
-extern undefined4 DAT_803de100;
-extern undefined4 DAT_803de104;
-extern undefined4 DAT_803de10c;
-extern undefined4* DAT_803de110;
+extern u32 DAT_803a3f25;
+extern u32 DAT_803a3f26;
+extern u32 DAT_803a3f27;
+extern u32 DAT_803a3f28;
+extern u32 DAT_803a3f29;
+extern u32 DAT_803a3f2b;
+extern u32 DAT_803a4070;
+extern u32 DAT_803a4074;
+extern u32 DAT_803a4078;
+extern u32 DAT_803a407c;
+extern u32 DAT_803a4460;
+extern u32 DAT_803a4465;
+extern u32 DAT_803a458c;
+extern u32 DAT_803a4590;
+extern u32 DAT_803a4594;
+extern u32 DAT_803a4599;
+extern u32 DAT_803a459a;
+extern u32 DAT_803a45aa;
+extern u32 DAT_803a45ac;
+extern u32 DAT_803a45b0;
+extern u32 DAT_803a45b4;
+extern u32 DAT_803a45b6;
+extern u32 DAT_803a45ba;
+extern u32 DAT_803a45bc;
+extern u32 DAT_803a45be;
+extern u32 DAT_803a45c0;
+extern u32 DAT_803a45c2;
+extern u32 DAT_803a45f0;
+extern u32 DAT_803a45f1;
+extern u32 DAT_803a45f2;
+extern u32 DAT_803a45f3;
+extern u32 DAT_803a4e78;
+extern u32 DAT_803dc4f0;
+extern u32* DAT_803dd6d0;
+extern u32* DAT_803dd6e8;
+extern u32 DAT_803de100;
+extern u32 DAT_803de104;
+extern u32 DAT_803de10c;
+extern u32* DAT_803de110;
 extern f32 lbl_803E1348;
-extern undefined4 uRam803de108;
+extern u32 uRam803de108;
 extern u8 lbl_80312E58[];
 extern f32 lbl_803E0930;
 extern f32 lbl_803E0934;
@@ -138,13 +138,13 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
-void saveFileStruct_unlockCheat(uint cheatId)
+void saveFileStruct_unlockCheat(u32 cheatId)
 {
     gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
     return;
 }
 
-uint isCheatUnlocked(uint cheatId)
+u32 isCheatUnlocked(u32 cheatId)
 {
     return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
@@ -162,36 +162,36 @@ u8* getSaveFileStruct(void)
     return &gGameplayPreviewSettings;
 }
 
-void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-                      undefined8 param_5, undefined8 param_6, undefined8 param_7,
-                      undefined8 param_8)
+void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+                      u64 param_5, u64 param_6, u64 param_7,
+                      u64 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
     (**(code**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-    FUN_8000676c((uint)gGameplayPreviewColorGreen, 10, 0, 1, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorRed, 10, 1, 0, 0);
-    FUN_8000676c((uint)gGameplayPreviewColorBlue, 10, 0, 0, 1);
+    FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
+    FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
     return;
 }
 
-undefined* FUN_800e82d8(void)
+u8* FUN_800e82d8(void)
 {
-    return (undefined*)&DAT_803a4460;
+    return (u8*)&DAT_803a4460;
 }
 
 void FUN_800e8630(int param_1)
 {
     int iVar1;
-    undefined1* puVar2;
+    u8* puVar2;
     int iVar3;
     int iVar4;
     int iVar5;
 
-    if ((*(ushort*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -227,51 +227,51 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    (&DAT_803a4070)[iVar4 * 4] = *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[iVar4 * 4] = *(undefined4*)&((GameObject*)param_1)->anim.localPosZ;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(undefined4*)&((GameObject*)param_1)->anim
+    (&DAT_803a4070)[iVar4 * 4] = *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    (&DAT_803a4074)[iVar4 * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosX;
+    (&DAT_803a4078)[iVar4 * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosY;
+    (&DAT_803a407c)[iVar4 * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosZ;
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(u32*)&((GameObject*)param_1)->anim
         .localPosX;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(undefined4*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(u32*)&((GameObject*)param_1)->
         anim.localPosY;
-    *(undefined4*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(undefined4*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(u32*)&((GameObject*)param_1)->
         anim.localPosZ;
     return;
 }
 
-undefined4* FUN_800e87a8(void)
+u32* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
 
 
-undefined FUN_800e8b98(void)
+u8 FUN_800e8b98(void)
 {
     return DAT_803de100;
 }
 
-void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 uVar1;
-    undefined4 uVar2;
-    undefined4 uVar3;
+    u32 uVar1;
+    u32 uVar2;
+    u32 uVar3;
     char* pcVar4;
     int iVar5;
     short* psVar6;
     char* pcVar7;
     char cVar8;
-    undefined8 uVar9;
-    undefined8 uVar10;
+    u64 uVar9;
+    u64 uVar10;
 
     uVar10 = FUN_80286840();
     uVar3 = DAT_802c28f8;
     uVar2 = DAT_802c28f4;
     uVar1 = DAT_802c28f0;
-    pcVar7 = (char*)((ulonglong)uVar10 >> 0x20);
+    pcVar7 = (char*)((u64)uVar10 >> 0x20);
     FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
-    if ((*(byte*)(DAT_803de110 + 0x21) & 0x80) == 0)
+    if ((*(u8*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
         FUN_800033a8(DAT_803de110, 0, 0x6ec);
     }
@@ -326,9 +326,9 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     FUN_800e95e8(0x13, 0, 1);
     FUN_800e95e8(0x13, 0x16, 1);
     FUN_80017698(0x967, 1);
-    (&DAT_803a458c)[(uint)DAT_803a3f28 * 4] = uVar1;
-    (&DAT_803a4590)[(uint)DAT_803a3f28 * 4] = uVar2;
-    (&DAT_803a4594)[(uint)DAT_803a3f28 * 4] = uVar3;
+    (&DAT_803a458c)[(u32)DAT_803a3f28 * 4] = uVar1;
+    (&DAT_803a4590)[(u32)DAT_803a3f28 * 4] = uVar2;
+    (&DAT_803a4594)[(u32)DAT_803a3f28 * 4] = uVar3;
     DAT_803a4465 = 1;
     if (pcVar7 == (char*)0x0)
     {
@@ -354,41 +354,41 @@ void FUN_800e8f58(undefined8 param_1, double param_2, undefined8 param_3, undefi
     cVar8 = (char)uVar10;
     if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, pcVar7 != (char*)0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)uVar10 & 0xff,
+        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (u32)uVar10 & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
     return;
 }
 
-void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
 {
     bool bVar1;
     char cVar2;
-    uint uVar3;
+    u32 uVar3;
     char cVar4;
     short* psVar5;
     char* pcVar6;
-    uint* puVar7;
-    uint uVar8;
-    uint uVar9;
-    uint uVar10;
+    u32* puVar7;
+    u32 uVar8;
+    u32 uVar9;
+    u32 uVar10;
     char* pcVar11;
     int iVar12;
     int iVar13;
-    longlong lVar14;
+    s64 lVar14;
 
     lVar14 = FUN_80286830();
-    uVar10 = (uint)((ulonglong)lVar14 >> 0x20);
-    uVar8 = (uint)lVar14;
+    uVar10 = (u32)((u64)lVar14 >> 0x20);
+    uVar8 = (u32)lVar14;
     pcVar11 = &DAT_803a3be0;
     if (0x4fffffffff < lVar14)
     {
-        uVar10 = (uint)(byte)(&DAT_803a3dac)[uVar10];
+        uVar10 = (u32)(u8)(&DAT_803a3dac)[uVar10];
     }
     if ((int)uVar10 < 0x78)
     {
-        if ((ushort)(&DAT_80312460)[uVar10] != 0)
+        if ((u16)(&DAT_80312460)[uVar10] != 0)
         {
             if (param_3 == -1)
             {
@@ -399,7 +399,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             {
                 param_3 = 0;
             }
-            uVar3 = FUN_80017690((uint)(ushort)(&DAT_80312460)[uVar10]);
+            uVar3 = FUN_80017690((u32)(u16)(&DAT_80312460)[uVar10]);
             if (param_3 == 0)
             {
                 uVar9 = uVar3 & ~(1 << uVar8);
@@ -408,7 +408,7 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
             {
                 uVar9 = uVar3 | 1 << uVar8;
             }
-            FUN_80017698((uint)(ushort)(&DAT_80312460)[uVar10], uVar9);
+            FUN_80017698((u32)(u16)(&DAT_80312460)[uVar10], uVar9);
             DAT_803de104 = uVar10;
             uRam803de108 = uVar9;
             if (param_3 == 0)
@@ -455,13 +455,13 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
                     pcVar6 = pcVar11;
                     do
                     {
-                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (byte)pcVar6[1])) ||
-                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (byte)pcVar6[4])))
+                        if ((((((uVar10 == (int)*pcVar6) && (cVar2 = cVar4, uVar8 == (u8)pcVar6[1])) ||
+                                    ((cVar2 = cVar4 + '\x01', uVar10 == (int)pcVar6[3] && (uVar8 == (u8)pcVar6[4])))
                                 ) || ((cVar2 = cVar4 + '\x02', uVar10 == (int)pcVar6[6] &&
-                                    (uVar8 == (byte)pcVar6[7])))) ||
-                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (byte)pcVar6[10]))))
+                                    (uVar8 == (u8)pcVar6[7])))) ||
+                                ((cVar2 = cVar4 + '\x03', uVar10 == (int)pcVar6[9] && (uVar8 == (u8)pcVar6[10]))))
                             || ((uVar10 == (int)pcVar6[0xc] &&
-                                (cVar2 = cVar4 + '\x04', uVar8 == (byte)pcVar6[0xd]))))
+                                (cVar2 = cVar4 + '\x04', uVar8 == (u8)pcVar6[0xd]))))
                             goto LAB_800e9628;
                         pcVar6 = pcVar6 + 0xf;
                         cVar4 = cVar4 + '\x05';
@@ -541,20 +541,20 @@ void FUN_800e95e8(undefined4 param_1, undefined4 param_2, int param_3)
 
 void FUN_800e9e9c(void)
 {
-    uint uVar1;
+    u32 uVar1;
     int iVar2;
-    undefined4 extraout_r4;
-    undefined4 uVar3;
-    undefined4 in_r6;
-    undefined4 in_r7;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined8 in_f4;
-    undefined8 in_f5;
-    undefined8 in_f6;
-    undefined8 in_f7;
-    undefined8 in_f8;
+    u32 extraout_r4;
+    u32 uVar3;
+    u32 in_r6;
+    u32 in_r7;
+    u32 in_r8;
+    u32 in_r9;
+    u32 in_r10;
+    u64 in_f4;
+    u64 in_f5;
+    u64 in_f6;
+    u64 in_f7;
+    u64 in_f8;
 
     DAT_803de10c = 0xff;
     DAT_803de104 = 0xffffffff;
@@ -565,7 +565,7 @@ void FUN_800e9e9c(void)
     FUN_80006770(7);
     FUN_80006b8c();
     FUN_8011e80c();
-    uVar1 = (uint)DAT_803a3f28;
+    uVar1 = (u32)DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[uVar1 * 4], (double)(float)(&DAT_803a4590)[uVar1 * 4],
                  (double)(float)(&DAT_803a4594)[uVar1 * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
                  (int)(char)(&DAT_803a4599)[uVar1 * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
@@ -580,26 +580,26 @@ void FUN_800e9e9c(void)
     return;
 }
 
-undefined4
-FUN_800ea8c8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
+u32
+FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    undefined4 uVar1;
-    undefined* puVar2;
+    u32 uVar1;
+    u8* puVar2;
 
     uVar1 = FUN_80017498();
     puVar2 = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (uint)(byte)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (uint)(byte)puVar2[5] * 2)
+                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)puVar2[5] * 2)
     ]
     )
     ;
     return uVar1;
 }
 
-undefined FUN_800ea9ac(void)
+u8 FUN_800ea9ac(void)
 {
-    undefined* puVar1;
+    u8* puVar1;
 
     puVar1 = FUN_800e82d8();
     return puVar1[5];
@@ -607,15 +607,15 @@ undefined FUN_800ea9ac(void)
 
 void FUN_800ea9b8(void)
 {
-    uint uVar1;
-    undefined* puVar2;
+    u32 uVar1;
+    u8* puVar2;
     short sVar3;
-    uint uVar4;
-    uint uVar5;
-    uint uVar6;
-    uint unaff_r27;
-    uint uVar7;
-    uint uVar8;
+    u32 uVar4;
+    u32 uVar5;
+    u32 uVar6;
+    u32 unaff_r27;
+    u32 uVar7;
+    u32 uVar8;
     short* psVar9;
 
     uVar1 = FUN_80286834();
@@ -629,7 +629,7 @@ void FUN_800ea9b8(void)
             if ((*psVar9 == 0xffff) || (*psVar9 == -1))
             {
                 uVar5 = 1 << (uVar8 & 0x1f);
-                uVar6 = (uint)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
+                uVar6 = (u32)(short)((short)((uVar8 & 0xff) >> 5) + 0x12f);
                 uVar4 = FUN_80017690(uVar6);
                 if ((uVar4 & uVar5) == 0)
                 {
@@ -640,7 +640,7 @@ void FUN_800ea9b8(void)
         }
     }
     uVar6 = 1 << (uVar1 & 0x1f);
-    uVar4 = (uint)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
+    uVar4 = (u32)(short)((short)((uVar1 & 0xff) >> 5) + 0x12f);
     uVar8 = FUN_80017690(uVar4);
     if ((uVar8 & uVar6) == 0)
     {
@@ -654,20 +654,20 @@ void FUN_800ea9b8(void)
             puVar2[sVar3] = puVar2[sVar3 + -1];
         }
         *puVar2 = (char)uVar1;
-        if ((uint)(byte)puVar2[5] == (uVar1 & 0xff)
+        if ((u32)(u8)puVar2[5] == (uVar1 & 0xff)
         )
         {
             do
             {
                 puVar2[5] = puVar2[5] + '\x01';
-                uVar1 = (uint)(short)(((byte)puVar2[5] >> 5) + 0x12f);
+                uVar1 = (u32)(short)(((u8)puVar2[5] >> 5) + 0x12f);
                 if (uVar1 != (int)(short)uVar7)
                 {
                     unaff_r27 = FUN_80017690(uVar1);
                     uVar7 = uVar1;
                 }
             }
-            while ((unaff_r27 & 1 << ((byte)puVar2[5] & 0x1f)) != 0);
+            while ((unaff_r27 & 1 << ((u8)puVar2[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
@@ -706,7 +706,7 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
+void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {
@@ -878,5 +878,5 @@ void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &base[0], 0xc, &base[140], 0x40, 0);
 }
 
-void dll_66_func03(int sourceObj, int variant, int posSource, uint flags);
+void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags);
 

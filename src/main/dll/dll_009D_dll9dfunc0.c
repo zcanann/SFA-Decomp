@@ -56,7 +56,7 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
+void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     GfxBuf buf;
     u8* tab = (u8*)(int)lbl_80318038;

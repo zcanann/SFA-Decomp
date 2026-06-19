@@ -27,11 +27,11 @@ typedef struct CamcontrolIconColor {
     u8 a;
 } CamcontrolIconColor;
 
-extern CamcontrolIconRenderOp* ObjModel_GetRenderOp(void* model, undefined4 idx);
+extern CamcontrolIconRenderOp* ObjModel_GetRenderOp(void* model, u32 idx);
 extern void* textureIdxToPtr(int idx);
 extern void resetLotsOfRenderVars(void);
 extern void textureFn_800528bc(void);
-extern void fn_80051D5C(void* tex, void* a, undefined4 b, CamcontrolIconColor* color);
+extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
@@ -40,7 +40,7 @@ extern void GXSetCullMode(int mode);
 
 #define ICON_VARIANT_PRESS_A 1
 
-int aButtonIconTexCb(GameObject* obj, void** objPtr, undefined4 renderOpIdx)
+int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
 {
     CamcontrolIconRenderOp* renderOp;
     CamcontrolIconColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */

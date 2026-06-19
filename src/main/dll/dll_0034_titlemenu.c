@@ -18,7 +18,7 @@ extern void titleScreenTextDrawFunc(void);
 static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern void* mmAlloc(int size, int heap, int flags);
-extern uint mmSetFreeDelay(uint delay);
+extern u32 mmSetFreeDelay(u32 delay);
 extern void mm_free(void* ptr);
 extern void printHeapStats(int param_1);
 extern void defragMemory(int param_1);
@@ -55,15 +55,15 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
 #pragma dont_inline on
-extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
-extern void buttonDisable(int controller, uint buttons);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void buttonDisable(int controller, u32 buttons);
 extern void padClearAnalogInputY(int controller);
 extern void padClearAnalogInputX(int controller);
 extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
-extern uint getButtonsJustPressed(int controller);
+extern u32 getButtonsJustPressed(int controller);
 extern void loadUiDll(int id);
 extern void doNothing_onSaveSelectScreenExit(void);
-extern void mapUnload(int mapId, uint flags);
+extern void mapUnload(int mapId, u32 flags);
 extern void titleScreenFn_8005cdd4(int arg);
 extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
@@ -168,9 +168,9 @@ void n_attractmode_prepareMovie(void)
     int movieBuffer1Size;
     int movieBuffer2Size;
     int movieBuffer3Size;
-    uint optionalBufferSize;
+    u32 optionalBufferSize;
     int workBufferSize;
-    uint movieBuffer0Size[3];
+    u32 movieBuffer0Size[3];
 
     attractModeStrings = sNAttractModeStringBlock;
     gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
@@ -186,8 +186,8 @@ void n_attractmode_prepareMovie(void)
         else
         {
             THPPlayerGetVideoInfo(&gAttractMovieDims);
-            gAttractMovieOffsetX = ((uint)gRenderModeObj[2] - gAttractMovieDims.width) >> 1;
-            gAttractMovieOffsetY = ((uint)gRenderModeObj[3] - gAttractMovieDims.height) >> 1;
+            gAttractMovieOffsetX = ((u32)gRenderModeObj[2] - gAttractMovieDims.width) >> 1;
+            gAttractMovieOffsetY = ((u32)gRenderModeObj[3] - gAttractMovieDims.height) >> 1;
             AttractMovie_GetBufferSizes(movieBuffer0Size, &movieBuffer1Size, &movieBuffer2Size,
                                         &movieBuffer3Size, &optionalBufferSize, &workBufferSize);
             gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0], NATTRACTMODE_MOVIE_HEAP, 0);

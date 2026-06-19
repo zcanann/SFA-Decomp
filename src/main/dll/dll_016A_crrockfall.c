@@ -21,7 +21,7 @@
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);

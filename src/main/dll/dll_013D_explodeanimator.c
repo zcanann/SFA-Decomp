@@ -12,7 +12,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern u64 ObjGroup_RemoveObject();

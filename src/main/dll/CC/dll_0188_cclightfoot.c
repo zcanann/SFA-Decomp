@@ -13,11 +13,11 @@
 #define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
 #define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjLink_AttachChild();
+extern u32 ObjLink_AttachChild();
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
@@ -31,7 +31,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 #include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/player_target.h"
 
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -51,7 +51,7 @@ void cclightfoot_init(int* obj, int* def)
 
 void cclightfoot_free(int* obj, int p2)
 {
-    extern undefined4 ObjLink_DetachChild();
+    extern u32 ObjLink_DetachChild();
     int* state = ((GameObject*)obj)->extra;
     int* sub = (int*)state[0];
     if (sub != NULL)
@@ -113,7 +113,7 @@ extern f32 lbl_803E4670;
 #pragma scheduling off
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern undefined4 ObjLink_DetachChild();
+    extern u32 ObjLink_DetachChild();
     int* state = ((GameObject*)obj)->extra;
     if (animUpdate->eventCount != 0)
     {
@@ -176,7 +176,7 @@ void cclightfoot_update(int obj)
 {
     extern f32 getXZDistance(void* a, void* b);
     extern void* Obj_GetPlayerObject(void);
-    extern undefined4 ObjLink_DetachChild();
+    extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)lbl_80323408;
     u32 fallback;
     int* state = ((GameObject*)obj)->extra;

@@ -45,11 +45,11 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* auxParam)
+int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* auxParam)
 {
   EffectSrcParams local;
   EffectSpawnParams p;
-  uint hasOffset;
+  u32 hasOffset;
 
   if (obj == NULL)
   {
