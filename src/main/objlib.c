@@ -2091,7 +2091,7 @@ int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut)
     {
         *distOut = sqrtf(dx * dx + dz * dz);
     }
-    yawDelta = (int)(short)yawDelta - (u32)(u16) * obj;
+    yawDelta = (int)(short)yawDelta - (u32)(u16)*(s16*)obj;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;
