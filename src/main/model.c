@@ -2914,7 +2914,8 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     *(f32*)(stk + 0x18) = *(f32*)(p + 0x14);
     *(f32*)(stk + 8) = *(f32*)(p + 4);
     i2 = (u8)g;
-    *(int*)(stk + 0x38) = ((ChF34*)c)->vals[i2];
+    p = c + 0x34;
+    *(int*)(stk + 0x38) = *(int*)(p + i2 * 4);
     if (*(u16*)(hdr + 2) & 0x40)
     {
         *(u16*)(stk + 0x44) = 0;
