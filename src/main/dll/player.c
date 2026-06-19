@@ -18715,7 +18715,7 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 
     *(f32*)((char*)dst + 0x38) = -*(f32*)((char*)src + 0x24);
     *(f32*)((char*)dst + 0x3c) = zero = lbl_803E7EA4;
-    *(f32*)((char*)dst + 0x40) = *(f32*)((char*)src + 0x1c);
+    *(f32*)((char*)dst + 0x40) = *(f32*)((int)src + 0x1c);
     *(f32*)((char*)dst + 0x44) =
         -(*(f32*)((char*)dst + 0x48) * *(f32*)((char*)dst + 0x38) +
             *(f32*)((char*)dst + 0x4c) * *(f32*)((char*)dst + 0x3c) +
