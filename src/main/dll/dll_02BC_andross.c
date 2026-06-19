@@ -270,21 +270,21 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
     f32 vel[3];
 
     result = 0;
-    dx = *(f32*)(state + 0xc0) - ((GameObject*)*(int*)state)->anim.localPosX;
-    dy = *(f32*)(state + 0xc4) - ((GameObject*)*(int*)state)->anim.localPosY;
-    dz = *(f32*)(state + 0xc8) - ((GameObject*)*(int*)state)->anim.localPosZ;
+    dx = ((AndrossState*)state)->cachedPosX - ((GameObject*)*(int*)state)->anim.localPosX;
+    dy = ((AndrossState*)state)->cachedPosY - ((GameObject*)*(int*)state)->anim.localPosY;
+    dz = ((AndrossState*)state)->cachedPosZ - ((GameObject*)*(int*)state)->anim.localPosZ;
     dist = sqrtf(dx * dx + dy * dy);
     yaw = (s16)getAngle(dx, dy);
     if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
         result = 1;
     val = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
     ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
-    *(f32*)(state + 0xd8) = val * mathSinf(ang);
-    *(f32*)(state + 0xdc) = val * mathCosf(ang);
+    ((AndrossState*)state)->unkD8 = val * mathSinf(ang);
+    ((AndrossState*)state)->unkDC = val * mathCosf(ang);
     arwarwing_getVelocity((int)vel, *(int*)state);
-    *(f32*)(state + 0xd8) -= vel[0] * lbl_803DC4C4;
-    *(f32*)(state + 0xdc) -= vel[1] * lbl_803DC4C4;
-    *(f32*)(state + 0xe0) = zVel;
+    ((AndrossState*)state)->unkD8 -= vel[0] * lbl_803DC4C4;
+    ((AndrossState*)state)->unkDC -= vel[1] * lbl_803DC4C4;
+    ((AndrossState*)state)->unkE0 = zVel;
     return result;
 }
 
