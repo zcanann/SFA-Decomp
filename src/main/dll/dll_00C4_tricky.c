@@ -2468,7 +2468,7 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     Vec delta;
     u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
     s16 baseAngle;
-    int i;
+    u16 i;
     u8 visible;
     f32 angle;
     f32 angleScale;
