@@ -21,8 +21,6 @@ typedef u16 wchar_t;
 #define NAN 0.0f
 #endif
 
-typedef u32 (*code)();
-
 #define CONCAT11(x, y) ((u16)(((u16)(u8)(x) << 8) | (u8)(y)))
 #define CONCAT12(x, y) ((u32)(((u32)(u8)(x) << 16) | (u16)(y)))
 #define CONCAT13(x, y) ((u32)(((u32)(u8)(x) << 24) | (u32)(y)))
