@@ -1122,7 +1122,7 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c)
     }
     ObjModel_RelocateAnimData(p, m);
     *(int*)(p + 8) = 0;
-    DCStoreRange(p, *(int*)(p + 0xc));
+    DCStoreRange(p, ((ModelFileHeader*)p)->dataSize);
     return m;
 }
 
@@ -1333,7 +1333,7 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         }
     store:
         ax += *(s16*)(p + 0);
-        ay += *(s16*)(p + 2);
+        ay += *(s16*)&((ModelFileHeader*)p)->flags;
         az += *(s16*)(p + 4);
         *(s16*)(out + 0) = ax;
         *(s16*)(out + 2) = ay;
@@ -1348,7 +1348,7 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         by = (u32)(by * f) >> 16;
         bz = (u32)(bz * f) >> 16;
         bx += *(s16*)(p + 0);
-        by += *(s16*)(p + 2);
+        by += *(s16*)&((ModelFileHeader*)p)->flags;
         bz += *(s16*)(p + 4);
         *(s16*)(out + 0) = bx;
         *(s16*)(out + 2) = by;
@@ -2431,7 +2431,7 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     while (i < *(int*)(anim + 8) + 1)
     {
         u8* p = *(u8**)anim + off;
-        *(f32*)(p + 0xc) = *(f32*)(p + 0xc) * *(f32*)(m + 0xc) + lbl_802CABB8[0] * amp;
+        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * *(f32*)(m + 0xc) + lbl_802CABB8[0] * amp;
         *(f32*)(p + 0x10) = lbl_802CABB8[1] * amp + (*(f32*)(p + 0x10) * *(f32*)(m + 0xc) + *(f32*)(m + 0x10));
         *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * *(f32*)(m + 0xc) + lbl_802CABB8[2] * amp;
         off += 0x54;
@@ -2906,7 +2906,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     p = c + i1 * 4;
     *(f32*)(stk + 0x14) = *(f32*)(p + 0x14);
     *(f32*)(stk + 4) = *(f32*)(p + 4);
-    *(int*)(stk + 0x34) = *(int*)(p + 0x34);
+    *(int*)(stk + 0x34) = *(int*)&((ModelFileHeader*)p)->unk34;
     i2 = (u8)f;
     p = c + i2;
     *(u8*)(stk + 0x61) = *(u8*)(p + 0x60);
@@ -2922,12 +2922,12 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
         *(u16*)(stk + 0x46) = 1;
         p = c + i1 * 2;
         p = c + *(u16*)(p + 0x44) * 4;
-        *(int*)(stk + 0x1c) = *(int*)(p + 0x1c);
+        *(int*)(stk + 0x1c) = *(int*)&((ModelFileHeader*)p)->unk1C;
         if (i2 < 2)
         {
             p = c + i2 * 2;
             p = c + *(u16*)(p + 0x44) * 4;
-            *(int*)(stk + 0x20) = *(int*)(p + 0x1c);
+            *(int*)(stk + 0x20) = *(int*)&((ModelFileHeader*)p)->unk1C;
         }
         else
         {
