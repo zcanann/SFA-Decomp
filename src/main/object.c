@@ -182,16 +182,14 @@ void ObjModel_SetRenderCallback(u8* model, void* callback);
 
 #pragma scheduling off
 #pragma peephole off
-void Obj_SetModelRenderOpAlpha(u8* obj, int alpha)
+void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
 {
     ObjAnimComponent* objAnim;
-    int renderOpAlpha;
-    int renderOpIndex;
     ObjModelFileHeaderLite* modelFile;
+    int renderOpIndex;
     ObjModelInstanceLite* model;
 
     objAnim = (ObjAnimComponent*)obj;
-    renderOpAlpha = alpha;
     model = (ObjModelInstanceLite*)objAnim->banks[objAnim->bankIndex];
     if (model != NULL)
     {
@@ -201,7 +199,7 @@ void Obj_SetModelRenderOpAlpha(u8* obj, int alpha)
             for (renderOpIndex = 0; renderOpIndex < modelFile->renderOpCount; renderOpIndex++)
             {
                 ((ObjModelRenderOpLite*)ObjModel_GetRenderOp((u8*)modelFile, renderOpIndex))
-                    ->alpha = renderOpAlpha;
+                    ->alpha = alpha;
             }
         }
     }
