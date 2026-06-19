@@ -972,15 +972,15 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
             worldIdx += 3;
             pointIndex++;
         }
+        pointIndex = 0;
+        worldBase = (u8*)collision;
         one = lbl_803E068C;
-        for (pointIndex = 0;
-             pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK);
-             pointIndex++)
+        for (; pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); pointIndex++)
         {
-            collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
-            collision->localPointTarget[pointIndex][1] =
-                one + collision->localPointWorld[pointIndex][1];
-            collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
+            *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
+            *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
+            *(f32*)(worldBase + 284) = *(f32*)(worldBase + 236);
+            worldBase += 0xc;
         }
         fn_80063368((short*)obj);
     }
