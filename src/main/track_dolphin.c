@@ -205,16 +205,16 @@ int* bs;
 void FUN_8005fab0(int block, float* posMtx)
 {
     float nrmMtx[3];
-    float local_5c;
-    float local_4c;
-    float local_3c;
+    float nrmMtxW0;
+    float nrmMtxW1;
+    float nrmMtxW2;
     float texMtx[12];
 
     FUN_8025d80c(posMtx, 0);
     FUN_802475e4(posMtx, nrmMtx);
-    local_5c = lbl_803DF84C;
-    local_4c = lbl_803DF84C;
-    local_3c = lbl_803DF84C;
+    nrmMtxW0 = lbl_803DF84C;
+    nrmMtxW1 = lbl_803DF84C;
+    nrmMtxW2 = lbl_803DF84C;
     FUN_8025d848(nrmMtx, 0);
     FUN_80247618((float*)&DAT_80397450, posMtx, texMtx);
     FUN_8025d8c4(texMtx, 0x24, 0);
