@@ -32,7 +32,7 @@ typedef struct GrimblePlacement
 } GrimblePlacement;
 
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern int getAngle(f32 dx, f32 dz);
 extern void* Obj_GetPlayerObject(void);

@@ -38,11 +38,11 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int textId);
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int getCurSeqNo(void);
 
 extern f32 lbl_803E5E70; /* 0.0 */
@@ -225,7 +225,7 @@ void wmlevelcontrol_hitDetect(void)
 
 void wmlevelcontrol_update(int obj)
 {
-    uint mode6;
+    u32 mode6;
     int loadingDone;
     WmLevelControlState* state;
     float timer;

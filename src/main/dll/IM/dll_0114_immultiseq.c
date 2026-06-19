@@ -15,7 +15,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern void ObjGroup_AddObject();
 extern void ObjGroup_RemoveObject();
@@ -162,7 +162,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
     i = 0;
     while (i < 4)
     {
-        if ((uint)((params->polarityMask >> (i + 4)) & 1) == GameBit_Get(params->completionGameBits[i]))
+        if ((u32)((params->polarityMask >> (i + 4)) & 1) == GameBit_Get(params->completionGameBits[i]))
         {
             break;
         }

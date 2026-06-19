@@ -11,18 +11,18 @@ extern float mathCosf(float x);
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
+extern u32 FUN_80017ac8();
+extern u32 FUN_80017ae4();
+extern u32 FUN_80017ae8();
+extern u64 FUN_8028683c();
+extern u32 FUN_80286888();
 extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern u32 FUN_80293f90();
+extern u32 FUN_80294964();
 
-extern undefined4 DAT_802c2910;
-extern undefined4 DAT_802c2914;
-extern undefined4 DAT_802c2918;
+extern u32 DAT_802c2910;
+extern u32 DAT_802c2914;
+extern u32 DAT_802c2918;
 extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
@@ -49,7 +49,7 @@ extern f32 lbl_803E1AB4;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 mathCosf(f32 x);
 
-void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
+void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
 {
     float fVar1;
     float* pfVar2;
@@ -59,11 +59,11 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
     double dVar6;
     double dVar7;
     double dVar8;
-    undefined8 uVar9;
+    u64 uVar9;
 
     uVar9 = FUN_8028683c();
     pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((ulonglong)uVar9 >> 0x20);
+    iVar3 = (int)((u64)uVar9 >> 0x20);
     dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
     dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
     dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
@@ -85,20 +85,20 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
     return;
 }
 
-void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
-                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
+                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9, int param_10)
 {
-    uint uVar1;
-    undefined2* puVar2;
-    undefined4 uVar3;
-    undefined4 in_r8;
-    undefined4 in_r9;
-    undefined4 in_r10;
-    undefined2 uStack_1a;
-    undefined4 local_18;
-    undefined4 local_14;
-    undefined2 local_10;
+    u32 uVar1;
+    u16* puVar2;
+    u32 uVar3;
+    u32 in_r8;
+    u32 in_r9;
+    u32 in_r10;
+    u16 uStack_1a;
+    u32 local_18;
+    u32 local_14;
+    u16 local_10;
 
     local_18 = DAT_802c2910;
     local_14 = DAT_802c2914;
@@ -110,7 +110,7 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                    *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(undefined4*)&((GameObject*)param_9)->childObjs[0] = 0;
+            *(u32*)&((GameObject*)param_9)->childObjs[0] = 0;
         }
         uVar1 = FUN_80017ae8();
         if ((uVar1 & 0xff) == 0)
@@ -123,10 +123,10 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
             {
                 puVar2 = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(param_10 + 0x407)]);
                 uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
-                                     4, 0xff, 0xffffffff, *(uint**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
+                                     4, 0xff, 0xffffffff, *(u32**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
                                      in_r10);
-                *(undefined4*)&((GameObject*)param_9)->childObjs[0] = uVar3;
-                *(ushort*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
+                *(u32*)&((GameObject*)param_9)->childObjs[0] = uVar3;
+                *(u16*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
                     7;
             }
             *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);

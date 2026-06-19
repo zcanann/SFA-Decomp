@@ -89,8 +89,8 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     register int self = obj;
     int i;
     int msg;
-    uint sender;
-    uint param;
+    u32 sender;
+    u32 param;
     int controlObj;
     f32 one;
     f32 zero;
@@ -136,7 +136,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    while (ObjMsg_Pop((void*)self, (uint*)&msg, &sender, &param) != 0)
+    while (ObjMsg_Pop((void*)self, (u32*)&msg, &sender, &param) != 0)
     {
         if ((animUpdate->sequenceControlFlags & OBJSEQ_CONTROL_SUPPRESS_MSG) == 0)
         {

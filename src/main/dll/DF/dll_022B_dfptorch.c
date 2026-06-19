@@ -8,7 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
@@ -189,7 +189,7 @@ void DFP_Torch_update(int obj)
     extern void Sfx_StopObjectChannel(int, int);
     extern void objUpdateOpacity(int);
     extern int ObjHits_GetPriorityHit(int, int, int, int);
-    extern uint GameBit_Get(int);
+    extern u32 GameBit_Get(int);
     extern void GameBit_Set(int, int);
     extern u8 lbl_803DDCE8;
     extern f32 timeDelta;

@@ -62,11 +62,11 @@ extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 
-int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, u16* extraArgs)
+int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, u16* extraArgs)
 {
     EffectSrcParams rotCtx;
     EffectSpawnParams p;
-    uint hasOffset;
+    u32 hasOffset;
 
     if (obj == NULL)
     {

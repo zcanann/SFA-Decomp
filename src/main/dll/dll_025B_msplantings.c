@@ -59,7 +59,7 @@ typedef struct MoonSeedPlantingSpotState
 
 STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
@@ -173,7 +173,7 @@ void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, MSPLANTING_OBJ_
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
-    ((MoonSeedPlantingSpotState*)obj)->flags = (u8)((uint)((MoonSeedPlantingSpotState*)obj)->flags | MSPLANTING_FLAG_PLANTED);
+    ((MoonSeedPlantingSpotState*)obj)->flags = (u8)((u32)((MoonSeedPlantingSpotState*)obj)->flags | MSPLANTING_FLAG_PLANTED);
     return 0;
 }
 

@@ -70,7 +70,7 @@ void dll_99_func00_nop(void)
 {
 }
 
-void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, int arg5, f32* extraArgs)
+void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* entry;
@@ -184,19 +184,19 @@ void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, int ar
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((uint)sourceObj != 0 && (uint)posSource != 0)
+        if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
             buf.pos[0] = lbl_803E1344 + (*(f32*)(sourceObj + 0x18) + *(f32*)(posSource + 0xc));
             buf.pos[1] = lbl_803E1344 + (*(f32*)(sourceObj + 0x1c) + *(f32*)(posSource + 0x10));
             buf.pos[2] = lbl_803E1344 + (*(f32*)(sourceObj + 0x20) + *(f32*)(posSource + 0x14));
         }
-        else if ((uint)sourceObj != 0)
+        else if ((u32)sourceObj != 0)
         {
             buf.pos[0] += *(f32*)(buf.ctx + 0x18);
             buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
             buf.pos[2] += *(f32*)(buf.ctx + 0x20);
         }
-        else if ((uint)posSource != 0)
+        else if ((u32)posSource != 0)
         {
             buf.pos[0] += *(f32*)(posSource + 0xc);
             buf.pos[1] += *(f32*)(posSource + 0x10);

@@ -22,7 +22,7 @@ extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern byte framesThisStep;
+extern u8 framesThisStep;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;
 extern f32 lbl_803E5164;

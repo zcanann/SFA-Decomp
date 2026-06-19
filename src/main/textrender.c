@@ -4,20 +4,20 @@
 extern int saveFileStruct_isCheatActive();
 extern void mm_free(void* ptr);
 
-undefined2*
-FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , int param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u16*
+FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+             , int param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     return 0;
 }
 
-undefined2*
-FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
-             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u16*
+FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     return 0;
 }
@@ -871,25 +871,25 @@ void* gameTextGet(int textId)
     return lbl_803DC974;
 }
 
-undefined4
+u32
 #pragma scheduling on
-FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
+FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
 {
     return 0;
 }
 
-undefined4
-FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
-             undefined4 param_10, undefined4 param_11, undefined4 param_12)
+u32
+FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
+             u32 param_10, u32 param_11, u32 param_12)
 {
     return 0;
 }
 
-undefined*
-FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+u8*
+FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
 )
 {
     return 0;

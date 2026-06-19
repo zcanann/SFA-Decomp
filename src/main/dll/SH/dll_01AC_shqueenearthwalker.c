@@ -15,7 +15,7 @@
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 GameBit_Set(int eventId, int value);
 extern int randomGetRange(int min, int max);
 extern int ObjTrigger_IsSetById();

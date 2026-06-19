@@ -15,7 +15,7 @@
  * this DLL live in the adjacent unit main/light.c (next .text range).
  */
 
-extern undefined4 DAT_803de940;
+extern u32 DAT_803de940;
 extern f64 DOUBLE_803e6d90;
 extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;
@@ -103,21 +103,21 @@ void FUN_801fc978(int param_1)
     return;
 }
 
-undefined4
-FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
-             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
-             undefined4 param_15, undefined4 param_16)
+u32
+FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
+             u32 param_15, u32 param_16)
 {
     char cVar2;
-    undefined4 uVar1;
+    u32 uVar1;
     int iVar3;
     int iVar4;
     int iVar5;
     int iVar6;
-    undefined8 extraout_f1;
-    undefined8 uVar7;
-    undefined8 extraout_f1_00;
+    u64 extraout_f1;
+    u64 uVar7;
+    u64 extraout_f1_00;
 
     iVar6 = *(int*)&((GameObject*)param_9)->extra;
     animUpdate->activeHitVolumePair = -1;
@@ -173,7 +173,7 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-void FUN_801fc374(undefined4 param_1)
+void FUN_801fc374(u32 param_1)
 {
 }
 
@@ -669,8 +669,8 @@ void vfpdraghead_update(int* obj)
 
 int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
-    extern undefined4 loadMapAndParent(int); /* #57 */
-    extern undefined4 lockLevel(undefined4, int); /* #57 */
+    extern u32 loadMapAndParent(int); /* #57 */
+    extern u32 lockLevel(u32, int); /* #57 */
     SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
 
@@ -1029,7 +1029,7 @@ void vfpplatform_update(int obj)
     }
 }
 
-void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
+void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9);
 
 #pragma scheduling on
 #pragma peephole on

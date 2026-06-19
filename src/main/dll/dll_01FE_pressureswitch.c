@@ -106,7 +106,7 @@ void pressureswitch_initialise(void)
 void pressureswitch_init(int* obj, u8* init)
 {
     PressureSwitchState* sub;
-    uint mapId;
+    u32 mapId;
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)PressureSwitch_SeqFn;

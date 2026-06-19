@@ -9,8 +9,8 @@ extern void objRenderFn_80041018(void);
 
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -68,24 +68,24 @@ typedef struct MagicPlantBridgeState
     s8 mode;
 } MagicPlantBridgeState;
 
-void dll_14D_update(undefined2* obj)
+void dll_14D_update(u16* obj)
 {
-    extern undefined4 ObjGroup_FindNearestObject(); /* #57 */
-    byte mode;
-    undefined4 found;
-    uint bitVal;
+    extern u32 ObjGroup_FindNearestObject(); /* #57 */
+    u8 mode;
+    u32 found;
+    u32 bitVal;
     int eventReady;
     int placement;
-    byte* state;
+    u8* state;
     float dist;
 
     dist = lbl_803E3854;
     placement = *(int*)(obj + 0x26);
-    state = *(byte**)(obj + 0x5c);
+    state = *(u8**)(obj + 0x5c);
     if (*(void**)(state + 4) == NULL)
     {
-        found = ObjGroup_FindNearestObject((uint) * (byte*)(placement + 0x21), obj, &dist);
-        *(undefined4*)(state + 4) = found;
+        found = ObjGroup_FindNearestObject((u32) * (u8*)(placement + 0x21), obj, &dist);
+        *(u32*)(state + 4) = found;
         if (*(void**)(state + 4) == NULL)
         {
             return;
@@ -97,7 +97,7 @@ void dll_14D_update(undefined2* obj)
         else
         {
             bitVal = GameBit_Get(*(s16*)(placement + 0x1a));
-            state[1] = (byte)bitVal;
+            state[1] = (u8)bitVal;
         }
         if ((state[1] != 0) && (*(s16*)(placement + 0x1e) != -1))
         {
@@ -118,33 +118,33 @@ void dll_14D_update(undefined2* obj)
     switch (mode)
     {
     case 1:
-        *(byte*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
-        *(byte*)((int)obj + 0xaf) |= 8;
+        *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+        *(u8*)((int)obj + 0xaf) |= 8;
         (*gObjectTriggerInterface)->preempt((int)obj, *(s16*)(placement + 0x1e));
-        (*gObjectTriggerInterface)->runSequence(*(byte*)(placement + 0x22), obj,
-                                                *(byte*)(placement + 0x20));
+        (*gObjectTriggerInterface)->runSequence(*(u8*)(placement + 0x22), obj,
+                                                *(u8*)(placement + 0x20));
         *state = 4;
         break;
     case 2:
-        if ((state[1] != 0) && ((*(byte*)(placement + 0x23) & 1) == 0))
+        if ((state[1] != 0) && ((*(u8*)(placement + 0x23) & 1) == 0))
         {
-            *(byte*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
-            *(byte*)((int)obj + 0xaf) |= 8;
+            *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+            *(u8*)((int)obj + 0xaf) |= 8;
             *state = 4;
         }
         else if ((*(s16*)(placement + 0x18) != -1) &&
             (bitVal = GameBit_Get(*(s16*)(placement + 0x18)), bitVal == 0))
         {
-            *(byte*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
-            *(byte*)((int)obj + 0xaf) |= 8;
+            *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+            *(u8*)((int)obj + 0xaf) |= 8;
             *state = 3;
         }
-        else if (((*(byte*)((int)obj + 0xaf) & 1) != 0) &&
+        else if (((*(u8*)((int)obj + 0xaf) & 1) != 0) &&
             ((*(s16*)(placement + 0x1c) == -1) ||
                 (eventReady = (*gGameUIInterface)->isEventReady(*(s16*)(placement + 0x1c)),
                     eventReady != 0)))
         {
-            if ((*(byte*)(placement + 0x23) & 2) != 0)
+            if ((*(u8*)(placement + 0x23) & 2) != 0)
             {
                 GameBit_Set(*(s16*)(placement + 0x18), 0);
             }
@@ -152,15 +152,15 @@ void dll_14D_update(undefined2* obj)
             {
                 GameBit_Set(*(s16*)(placement + 0x1a), 1);
             }
-            *(byte*)((int)obj + 0xaf) |= 8;
+            *(u8*)((int)obj + 0xaf) |= 8;
             state[1] = 1;
-            (*gObjectTriggerInterface)->runSequence(*(byte*)(placement + 0x22), obj,
+            (*gObjectTriggerInterface)->runSequence(*(u8*)(placement + 0x22), obj,
                                                     0xffffffff);
         }
         else
         {
-            *(byte*)(*(int*)(state + 4) + 0xaf) |= 0x20;
-            *(byte*)((int)obj + 0xaf) &= ~8;
+            *(u8*)(*(int*)(state + 4) + 0xaf) |= 0x20;
+            *(u8*)((int)obj + 0xaf) &= ~8;
         }
         break;
     case 3:

@@ -51,7 +51,7 @@ STATIC_ASSERT(offsetof(CfDoorLightMapData, resetFrame) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, doneEvent) == 0x1E);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }

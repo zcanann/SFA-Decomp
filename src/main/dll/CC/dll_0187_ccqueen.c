@@ -9,12 +9,12 @@
  */
 #include "main/game_object.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
+extern u32 GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 dll_2E_func03();
+extern u32 ObjHits_DisableObject();
+extern u32 dll_2E_func03();
 extern void dll_2E_func06(int* obj, void* state, int flags);
 extern void dll_2E_func05(int* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);

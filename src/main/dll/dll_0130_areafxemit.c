@@ -21,7 +21,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-extern uint GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void vecRotateZXY(s16 * in, f32 * out);
 extern u32 randomGetRange(int min, int max);
 extern int Obj_GetPlayerObject(void);

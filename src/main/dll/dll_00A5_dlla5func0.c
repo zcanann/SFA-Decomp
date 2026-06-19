@@ -36,7 +36,7 @@ extern f32 lbl_803E1524;
 extern u8 lbl_803DB970;
 extern u8 lbl_803DB978;
 
-void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
+void dll_A5_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {

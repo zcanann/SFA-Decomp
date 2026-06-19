@@ -35,7 +35,7 @@ void dll_69_func00_nop(void)
 {
 }
 
-void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int unused, int* overrideParams)
+void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unused, int* overrideParams)
 {
     struct
     {

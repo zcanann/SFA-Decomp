@@ -8,74 +8,74 @@
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 
-extern undefined4 FUN_80006934();
-extern undefined4 FUN_8000694c();
-extern undefined4 FUN_80006974();
-extern undefined4 FUN_80006984();
-extern undefined4 FUN_80006988();
-extern undefined4 FUN_80006994();
+extern u32 FUN_80006934();
+extern u32 FUN_8000694c();
+extern u32 FUN_80006974();
+extern u32 FUN_80006984();
+extern u32 FUN_80006988();
+extern u32 FUN_80006994();
 extern void* FUN_800069a8();
-extern undefined4 FUN_800069bc();
-extern undefined4 FUN_800069d4();
-extern undefined4 FUN_800069f4();
-extern undefined4 FUN_8001761c();
+extern u32 FUN_800069bc();
+extern u32 FUN_800069d4();
+extern u32 FUN_800069f4();
+extern u32 FUN_8001761c();
 extern int FUN_80017a54();
 extern int FUN_80017a98();
-extern undefined4 FUN_8003b878();
-extern undefined4 FUN_8003d97c();
-extern undefined4 FUN_8003f9f8();
-extern undefined4 FUN_800404cc();
-extern undefined4 FUN_800566ec();
+extern u32 FUN_8003b878();
+extern u32 FUN_8003d97c();
+extern u32 FUN_8003f9f8();
+extern u32 FUN_800404cc();
+extern u32 FUN_800566ec();
 extern int FUN_80057ce8();
-extern undefined4 FUN_80057fd0();
-extern undefined4 mapBlockRender_setVtxDcrs();
-extern undefined4 FUN_8005fab0();
-extern undefined4 FUN_8005fb68();
-extern undefined4 FUN_80060a64();
-extern undefined4 FUN_80061194();
-extern undefined4 FUN_8006f09c();
-extern undefined4 FUN_80071fb4();
-extern undefined4 FUN_80080f88();
+extern u32 FUN_80057fd0();
+extern u32 mapBlockRender_setVtxDcrs();
+extern u32 FUN_8005fab0();
+extern u32 FUN_8005fb68();
+extern u32 FUN_80060a64();
+extern u32 FUN_80061194();
+extern u32 FUN_8006f09c();
+extern u32 FUN_80071fb4();
+extern u32 FUN_80080f88();
 extern void* FUN_800e87a8();
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247a48();
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_802570dc();
-extern undefined4 FUN_80257b5c();
-extern undefined4 FUN_80259000();
-extern undefined4 FUN_8025a2ec();
-extern undefined4 FUN_8025a5bc();
-extern undefined4 FUN_8025a608();
-extern undefined4 FUN_80286818();
-extern undefined4 FUN_80286830();
-extern undefined4 FUN_80286864();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_802924c4();
-extern byte FUN_80294c20();
-extern undefined4 FUN_802950c4();
-extern undefined4 builtin_strncpy();
+extern u32 FUN_80247618();
+extern u32 FUN_80247a48();
+extern u32 FUN_80247bf8();
+extern u32 FUN_802570dc();
+extern u32 FUN_80257b5c();
+extern u32 FUN_80259000();
+extern u32 FUN_8025a2ec();
+extern u32 FUN_8025a5bc();
+extern u32 FUN_8025a608();
+extern u32 FUN_80286818();
+extern u32 FUN_80286830();
+extern u32 FUN_80286864();
+extern u32 FUN_8028687c();
+extern u32 FUN_802924c4();
+extern u8 FUN_80294c20();
+extern u32 FUN_802950c4();
+extern u32 builtin_strncpy();
 
-extern undefined4 DAT_8037ed10;
+extern u32 DAT_8037ed10;
 extern int DAT_8037ed20;
-extern undefined4 DAT_8037ed28;
-extern undefined4 DAT_80382efc;
-extern undefined4 DAT_80382f00;
+extern u32 DAT_8037ed28;
+extern u32 DAT_80382efc;
+extern u32 DAT_80382f00;
 extern int DAT_80382f14;
 extern int DAT_80382f24;
 extern int DAT_803870c8;
 extern ModgfxInterface** gModgfxInterface;
-extern undefined4* DAT_803dd718;
-extern undefined4 DAT_803dda50;
-extern undefined4 DAT_803dda54;
-extern undefined4 DAT_803dda68;
-extern undefined4 DAT_803ddab0;
-extern undefined4 DAT_803ddb08;
-extern undefined4 DAT_803ddb18;
-extern undefined4 DAT_803ddb1c;
-extern undefined4 DAT_803ddb24;
-extern undefined4 DAT_803ddb28;
-extern undefined4 DAT_803ddb40;
-extern undefined4 DAT_cc008000;
+extern u32* DAT_803dd718;
+extern u32 DAT_803dda50;
+extern u32 DAT_803dda54;
+extern u32 DAT_803dda68;
+extern u32 DAT_803ddab0;
+extern u32 DAT_803ddb08;
+extern u32 DAT_803ddb18;
+extern u32 DAT_803ddb1c;
+extern u32 DAT_803ddb24;
+extern u32 DAT_803ddb28;
+extern u32 DAT_803ddb40;
+extern u32 DAT_cc008000;
 extern f64 DOUBLE_803df840;
 extern f32 lbl_803DC2D0;
 extern f32 lbl_803DDA58;
@@ -198,11 +198,11 @@ void updateVisibleGeometry(void)
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 
-undefined4 FUN_8005af70(int idx)
+u32 FUN_8005af70(int idx)
 {
-    if ((-1 < idx) && (idx < (int)(uint)DAT_803ddb18))
+    if ((-1 < idx) && (idx < (int)(u32)DAT_803ddb18))
     {
-        return *(undefined4*)(DAT_803ddb1c + idx * 4);
+        return *(u32*)(DAT_803ddb1c + idx * 4);
     }
     return 0;
 }
@@ -252,14 +252,14 @@ int FUN_8005b024(void)
     return cellX;
 }
 
-int FUN_8005b398(undefined8 param_1, double y)
+int FUN_8005b398(u64 param_1, double y)
 {
     int block;
     int* layerTable;
     int cellX;
     int cellZ;
     double coord;
-    undefined8 cvtTmp;
+    u64 cvtTmp;
 
     coord = (double)FUN_802924c4();
     cellX = (int)(coord - (double)(f32)(s32)(DAT_803dda50));
@@ -296,12 +296,12 @@ void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
 {
     int scratch;
     int remain;
-    uint cmpKey;
+    u32 cmpKey;
     int insertPtr;
     int srcPtr;
     int i;
     int j;
-    uint key;
+    u32 key;
     int gap;
 
     scratch = keyCount / 9 + (keyCount >> 0x1f);
@@ -318,17 +318,17 @@ void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
         {
             do
             {
-                key = *(uint*)(srcPtr + -4);
+                key = *(u32*)(srcPtr + -4);
                 insertPtr = queueBase + scratch;
                 j = i;
                 while ((gap < j &&
-                    (cmpKey = *(uint*)(queueBase + (j - gap) * 4 + -4), cmpKey < key)))
+                    (cmpKey = *(u32*)(queueBase + (j - gap) * 4 + -4), cmpKey < key)))
                 {
-                    *(uint*)(insertPtr + -4) = cmpKey;
+                    *(u32*)(insertPtr + -4) = cmpKey;
                     insertPtr = insertPtr + gap * -4;
                     j = j - gap;
                 }
-                *(uint*)(queueBase + j * 4 + -4) = key;
+                *(u32*)(queueBase + j * 4 + -4) = key;
                 srcPtr = srcPtr + 4;
                 i = i + 1;
                 scratch = scratch + 4;
@@ -351,9 +351,9 @@ void FUN_8005bdbc(void)
     int iVar6;
     int layer;
     int iVar8;
-    uint uVar9;
-    uint uVar10;
-    undefined4* layerDat;
+    u32 uVar9;
+    u32 uVar10;
+    u32* layerDat;
     int* layerTbl;
     int iVar13;
     double in_f29;
@@ -382,10 +382,10 @@ void FUN_8005bdbc(void)
     int local_188;
     int local_184;
     char local_180[256];
-    undefined4 local_80;
-    uint uStack_7c;
-    undefined4 local_78;
-    uint uStack_74;
+    u32 local_80;
+    u32 uStack_7c;
+    u32 local_78;
+    u32 uStack_74;
     float local_28;
     float fStack_24;
     float local_18;
@@ -576,7 +576,7 @@ void FUN_8005bdbc(void)
         pcVar1 = extraout_r4;
         do
         {
-            uVar10 = (uint) * pcVar1;
+            uVar10 = (u32) * pcVar1;
             iVar8 = 0;
             uStack_7c = uVar10 ^ 0x80000000;
             local_80 = 0x43300000;
@@ -586,7 +586,7 @@ void FUN_8005bdbc(void)
             pcVar4 = extraout_r4;
             do
             {
-                uVar9 = (uint) * pcVar4;
+                uVar9 = (u32) * pcVar4;
                 iVar3 = uVar10 + uVar9 * 0x10;
                 iVar2 = (int)*(char*)(cellTable + iVar3);
                 if (iVar2 < 0)
@@ -604,14 +604,14 @@ void FUN_8005bdbc(void)
                         uStack_74 = (int)*(short*)(iVar6 + 0x8e) ^ 0x80000000;
                         local_78 = 0x43300000;
                         FUN_80247a48(dVar14, (f64)(f32)(s32)uStack_74, (double)lbl_803DDAD4,
-                                     (undefined4*)(iVar6 + 0xc));
+                                     (u32*)(iVar6 + 0xc));
                         FUN_8005fb68();
                     }
                 }
                 else
                 {
                     iVar6 = *(int*)(DAT_803ddb1c + iVar2 * 4);
-                    *(ushort*)(iVar6 + 4) = *(ushort*)(iVar6 + 4) ^ 1;
+                    *(u16*)(iVar6 + 4) = *(u16*)(iVar6 + 4) ^ 1;
                     if (local_180[iVar3] != '\0') goto LAB_8005c210;
                 }
                 iVar8 = iVar8 + 1;
@@ -668,7 +668,7 @@ void FUN_8005cff0(int param_1)
     return;
 }
 
-undefined4 FUN_8005d018(char param_1)
+u32 FUN_8005d018(char param_1)
 {
     if (param_1 == '\0')
     {
@@ -683,43 +683,43 @@ undefined4 FUN_8005d018(char param_1)
     return 0;
 }
 
-uint FUN_8005d06c(void)
+u32 FUN_8005d06c(void)
 {
     return DAT_803dda68 & 8;
 }
 
 void FUN_8005d0ac(int param_1)
 {
-    undefined4* puVar1;
+    u32* puVar1;
 
     puVar1 = FUN_800e87a8();
     if (param_1 == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffbf;
-        *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) & 0xf7;
+        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf7;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x40;
-        *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) | 8;
+        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 8;
     }
     return;
 }
 
 void FUN_8005d17c(int param_1)
 {
-    undefined4* puVar1;
+    u32* puVar1;
 
     puVar1 = FUN_800e87a8();
     if (param_1 == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffaf;
-        *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) & 0xf6;
+        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf6;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x50;
-        *(byte*)(puVar1 + 0x10) = *(byte*)(puVar1 + 0x10) | 9;
+        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 9;
     }
     return;
 }
@@ -739,17 +739,17 @@ void FUN_8005d1e8(int param_1)
 
 void fn_8005D108(int vtxTable, int indices, int triCount)
 {
-    volatile byte* fifo8;
-    volatile ushort* fifo16;
-    undefined2* vtx;
+    volatile u8* fifo8;
+    volatile u16* fifo16;
+    u16* vtx;
     int idx;
     int vtxAddr;
     int i;
     int corner;
     int cornerCount;
 
-    fifo8 = (volatile byte*)&DAT_cc008000;
-    fifo16 = (volatile ushort*)&DAT_cc008000;
+    fifo8 = (volatile u8*)&DAT_cc008000;
+    fifo16 = (volatile u16*)&DAT_cc008000;
     FUN_80257b5c();
     FUN_802570dc(0, 1);
     FUN_802570dc(9, 1);
@@ -764,18 +764,18 @@ void fn_8005D108(int vtxTable, int indices, int triCount)
         {
             *fifo8 = 0;
             idx = corner + 1;
-            vtx = (undefined2*)(vtxTable + (uint) * (byte*)(indices + idx) * 0x10);
+            vtx = (u16*)(vtxTable + (u32) * (u8*)(indices + idx) * 0x10);
             *fifo16 = *vtx;
             *fifo16 = vtx[1];
             *fifo16 = vtx[2];
-            vtxAddr = vtxTable + (uint) * (byte*)(indices + idx) * 0x10;
-            *fifo8 = *(undefined*)(vtxAddr + 0xc);
-            *fifo8 = *(undefined*)(vtxAddr + 0xd);
-            *fifo8 = *(undefined*)(vtxAddr + 0xe);
-            *fifo8 = *(undefined*)(vtxAddr + 0xf);
-            idx = vtxTable + (uint) * (byte*)(indices + idx) * 0x10;
-            *fifo16 = *(undefined2*)(idx + 8);
-            *fifo16 = *(undefined2*)(idx + 10);
+            vtxAddr = vtxTable + (u32) * (u8*)(indices + idx) * 0x10;
+            *fifo8 = *(u8*)(vtxAddr + 0xc);
+            *fifo8 = *(u8*)(vtxAddr + 0xd);
+            *fifo8 = *(u8*)(vtxAddr + 0xe);
+            *fifo8 = *(u8*)(vtxAddr + 0xf);
+            idx = vtxTable + (u32) * (u8*)(indices + idx) * 0x10;
+            *fifo16 = *(u16*)(idx + 8);
+            *fifo16 = *(u16*)(idx + 10);
             corner = corner + 1;
             cornerCount = cornerCount + -1;
         }
@@ -785,8 +785,8 @@ void fn_8005D108(int vtxTable, int indices, int triCount)
     return;
 }
 
-void FUN_8005d370(undefined4 param_1, undefined param_2, undefined param_3, undefined param_4,
-                  undefined param_5)
+void FUN_8005d370(u32 param_1, u8 param_2, u8 param_3, u8 param_4,
+                  u8 param_5)
 {
     FUN_80071fb4(param_2, param_3, param_4, param_5);
     return;
@@ -795,7 +795,7 @@ void FUN_8005d370(undefined4 param_1, undefined param_2, undefined param_3, unde
 void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
 {
     int idx;
-    uint sortKey;
+    u32 sortKey;
     float* viewMtx;
     float viewX;
     float viewY;
@@ -838,17 +838,17 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
 void lightmap_sortQueuedRenderPackets(void)
 {
     int byteOff;
-    undefined4 word1;
-    undefined4 word3;
-    undefined4 tmpWord;
+    u32 word1;
+    u32 word3;
+    u32 tmpWord;
     int prevIdx;
     int i;
     int gap;
-    undefined4 word0;
-    uint sortKey;
+    u32 word0;
+    u32 sortKey;
     int insertPos;
-    undefined4* src;
-    undefined4* packets;
+    u32* src;
+    u32* packets;
     int j;
 
     packets = &DAT_8037ed10;
@@ -873,11 +873,11 @@ void lightmap_sortQueuedRenderPackets(void)
                 (prevIdx = j - gap, packets[prevIdx * 4 + 2] < sortKey)))
             {
                 tmpWord = packets[prevIdx * 4 + 1];
-                *(undefined4*)(insertPos + -0x10) = packets[prevIdx * 4];
-                *(undefined4*)(insertPos + -0xc) = tmpWord;
+                *(u32*)(insertPos + -0x10) = packets[prevIdx * 4];
+                *(u32*)(insertPos + -0xc) = tmpWord;
                 tmpWord = packets[prevIdx * 4 + 3];
-                *(undefined4*)(insertPos + -8) = packets[prevIdx * 4 + 2];
-                *(undefined4*)(insertPos + -4) = tmpWord;
+                *(u32*)(insertPos + -8) = packets[prevIdx * 4 + 2];
+                *(u32*)(insertPos + -4) = tmpWord;
                 insertPos = insertPos + gap * -0x10;
                 j = j - gap;
             }
@@ -892,7 +892,7 @@ void lightmap_sortQueuedRenderPackets(void)
     return;
 }
 
-void lightmap_renderQueuedObject(ushort* object)
+void lightmap_renderQueuedObject(u16* object)
 {
     int val;
 
@@ -925,18 +925,18 @@ void lightmap_renderQueuedObject(ushort* object)
 
 void lightmap_flushQueuedRenderPackets(void)
 {
-    byte bval;
+    u8 bval;
     float* mtx;
     int entryObj;
     int ref;
     int i;
     int* packet;
-    undefined4 convHi0;
-    uint convLo0;
-    undefined4 convHi1;
-    uint convLo1;
-    undefined4 convHi2;
-    uint convLo2;
+    u32 convHi0;
+    u32 convLo0;
+    u32 convHi1;
+    u32 convLo1;
+    u32 convHi2;
+    u32 convLo2;
     float mtxBuf[28];
 
     FUN_80286830();
@@ -948,7 +948,7 @@ void lightmap_flushQueuedRenderPackets(void)
         {
         case 0:
             expgfx_renderSourcePools(*packet, 0);
-            lightmap_renderQueuedObject((ushort*)*packet);
+            lightmap_renderQueuedObject((u16*)*packet);
             expgfx_renderSourcePools(*packet, 1);
             break;
         case 1:
@@ -976,14 +976,14 @@ void lightmap_flushQueuedRenderPackets(void)
         case 3:
             FUN_80006994();
             ref = FUN_80017a54(*packet);
-            FUN_80060a64((ushort*)*packet, ref);
+            FUN_80060a64((u16*)*packet, ref);
             FUN_80006988();
             break;
         case 4:
             ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&convHi2, (byte*)((int)&convHi2 + 1), (byte*)((int)&convHi2 + 2));
+            FUN_80080f88(0, (u8*)&convHi2, (u8*)((int)&convHi2 + 1), (u8*)((int)&convHi2 + 2));
             convLo2 = convHi2;
             FUN_8025a2ec(0, &convLo2);
             FUN_8025a5bc(1);
@@ -996,7 +996,7 @@ void lightmap_flushQueuedRenderPackets(void)
             ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&convHi1, (byte*)((int)&convHi1 + 1), (byte*)((int)&convHi1 + 2));
+            FUN_80080f88(0, (u8*)&convHi1, (u8*)((int)&convHi1 + 1), (u8*)((int)&convHi1 + 2));
             convLo1 = convHi1;
             FUN_8025a2ec(0, &convLo1);
             FUN_8025a5bc(1);
@@ -1009,7 +1009,7 @@ void lightmap_flushQueuedRenderPackets(void)
             ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&convHi0, (byte*)((int)&convHi0 + 1), (byte*)((int)&convHi0 + 2));
+            FUN_80080f88(0, (u8*)&convHi0, (u8*)((int)&convHi0 + 1), (u8*)((int)&convHi0 + 2));
             convLo0 = convHi0;
             FUN_8025a2ec(0, &convLo0);
             FUN_8025a5bc(1);
@@ -1972,7 +1972,7 @@ void sceneDrawTransparentPolys(void)
             modelRenderFn_8005d4ec((int*)*e, (int*)e[1], m);
             break;
         case 7:
-            drawGlow((uint) * e, e[1]);
+            drawGlow((u32) * e, e[1]);
             break;
         case 8:
             drawFn_8006f500();

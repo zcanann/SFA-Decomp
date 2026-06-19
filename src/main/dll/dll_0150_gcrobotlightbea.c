@@ -30,7 +30,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 
 extern u64 FUN_80006824();
-extern uint FUN_80017690();
+extern u32 FUN_80017690();
 extern u32 FUN_80017698();
 extern u32 FUN_80017748();
 extern u32 FUN_80017a88();
@@ -102,22 +102,22 @@ extern void PSVECScale(void* in, void* out, f32 scale);
 extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* param_3)
+void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)
 {
-    uint uVar1;
+    u32 uVar1;
     int iVar2;
     int iVar3;
     u64 uVar4;
 
     uVar4 = FUN_80286840();
-    uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
+    uVar1 = (u32)((u64)uVar4 >> 0x20);
     iVar2 = 0;
     for (iVar3 = 0; iVar3 < *(char*)((int)uVar4 + 0x1b); iVar3 = iVar3 + 1)
     {
         switch (*(u8*)((int)uVar4 + iVar3 + 0x13))
         {
         case 0:
-            if (param_3 != (ushort*)0x0)
+            if (param_3 != (u16*)0x0)
             {
                 FUN_80006824(uVar1, *param_3);
             }
@@ -135,7 +135,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* param_3)
             iVar2 = 4;
             break;
         case 7:
-            if (param_3 != (ushort*)0x0)
+            if (param_3 != (u16*)0x0)
             {
                 FUN_80006824(uVar1, param_3[1]);
             }
@@ -144,7 +144,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, ushort* param_3)
             FUN_80006824(uVar1, SFXsk_trwhin3);
         }
     }
-    if ((iVar2 != 0) && (param_3 != (ushort*)0x0))
+    if ((iVar2 != 0) && (param_3 != (u16*)0x0))
     {
         FUN_80006824(uVar1, param_3[2]);
     }
@@ -170,10 +170,10 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     float local_54;
     float local_50[2];
     u32 local_48;
-    uint uStack_44;
+    u32 uStack_44;
     u32 local_40;
-    uint uStack_3c;
-    longlong local_38;
+    u32 uStack_3c;
+    s64 local_38;
 
     if (param_3 == (short*)0x0)
     {
@@ -214,7 +214,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
                     )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
             )
             ;
-            local_38 = (longlong)iVar1;
+            local_38 = (s64)iVar1;
             *param_2 = (short)iVar1;
             dVar4 = (double)*(float*)(param_2 + 0x14);
             dVar5 = (double)*(float*)(param_2 + 0x16);
@@ -302,16 +302,16 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, uint param_9
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
              , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
     int iVar1;
-    uint uVar2;
+    u32 uVar2;
     short* psVar3;
-    uint local_28;
-    uint local_24;
-    uint local_20[4];
+    u32 local_28;
+    u32 local_24;
+    u32 local_20[4];
 
     psVar3 = ((GameObject*)param_9)->extra;
     local_28 = 0;
@@ -347,7 +347,7 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (iVar1 = 0; iVar1 < (int)(uint)animUpdate->eventCount; iVar1 = iVar1 + 1)
+    for (iVar1 = 0; iVar1 < (int)(u32)animUpdate->eventCount; iVar1 = iVar1 + 1)
     {
         if (((animUpdate->eventIds[iVar1] == 1) && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
             && ((uVar2 = FUN_80017690(0x55), uVar2 != 0 && (uVar2 = FUN_80017690(0x56), uVar2 != 0))))
@@ -360,7 +360,7 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
 u32
 FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, uint param_9,
+             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
              u32 param_10, u32 param_11, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
@@ -399,12 +399,12 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
-            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf;
+            *(u8*)(iVar1 + 0x244) = *(u8*)(iVar1 + 0x244) & 0xbf;
         }
-        else if ((*(byte*)(iVar1 + 0x244) >> 6 & 1) == 0)
+        else if ((*(u8*)(iVar1 + 0x244) >> 6 & 1) == 0)
         {
             FUN_80006824(param_9, SFXand_spitout);
-            *(byte*)(iVar1 + 0x244) = *(byte*)(iVar1 + 0x244) & 0xbf | 0x40;
+            *(u8*)(iVar1 + 0x244) = *(u8*)(iVar1 + 0x244) & 0xbf | 0x40;
         }
     }
     FUN_8002fc3c(dVar2, (double)lbl_803DC074);
@@ -461,7 +461,7 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 void FUN_8019f1dc(void)
 {
-    uint uVar1;
+    u32 uVar1;
     int iVar2;
     int* piVar3;
     int iVar4;
@@ -477,9 +477,9 @@ void FUN_8019f1dc(void)
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    ulonglong uVar11;
+    u64 uVar11;
     int local_68;
-    ushort local_64[4];
+    u16 local_64[4];
     float local_5c;
     float local_58;
     float local_54;
@@ -498,7 +498,7 @@ void FUN_8019f1dc(void)
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
     uVar11 = FUN_8028683c();
-    uVar1 = (uint)(uVar11 >> 0x20);
+    uVar1 = (u32)(uVar11 >> 0x20);
     iVar5 = *(int*)(uVar1 + 0xb8);
     iVar2 = FUN_80017a98();
     iVar2 = *(int*)(iVar2 + 0xb8);
@@ -519,12 +519,12 @@ void FUN_8019f1dc(void)
     local_5c = lbl_803E4F74;
     local_64[2] = 0;
     local_64[1] = 0;
-    local_64[0] = *(ushort*)(iVar5 + 0x50);
+    local_64[0] = *(u16*)(iVar5 + 0x50);
     FUN_80017748(local_64, (float*)(iVar5 + 0x20));
-    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 1;
+    *(u8*)(iVar5 + 0x49) = *(u8*)(iVar5 + 0x49) | 1;
     FUN_80006824(uVar1, SFXsk_baptr6_c);
-    *(byte*)(iVar5 + 0x49) = *(byte*)(iVar5 + 0x49) | 2;
-    if ((*(byte*)(iVar5 + 0x48) >> 6 & 1) != 0)
+    *(u8*)(iVar5 + 0x49) = *(u8*)(iVar5 + 0x49) | 2;
+    if ((*(u8*)(iVar5 + 0x48) >> 6 & 1) != 0)
     {
         iVar5 = *(int*)(uVar1 + 0x4c);
         iVar2 = 0;

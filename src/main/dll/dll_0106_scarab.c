@@ -749,7 +749,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 int scarab_sweptCollide(int obj)
 {
     extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount);
-    extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
+    extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
     extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
     extern f32 lbl_803AC7A0[4];
 

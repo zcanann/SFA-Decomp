@@ -6,17 +6,17 @@
 extern u32 randomGetRange(int min, int max);
 
 #if 0
-undefined4
-FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint spawnFlags, u8 modelId,
+u32
+FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 modelId,
              int useWorldOffset)
 {
-    undefined4 result;
-    uint rngRoll;
+    u32 result;
+    u32 rngRoll;
     int cfg[3];
-    undefined2 srcRotX;
-    undefined2 srcRotY;
-    undefined2 srcRotZ;
-    undefined4 srcScale;
+    u16 srcRotX;
+    u16 srcRotY;
+    u16 srcRotZ;
+    u32 srcScale;
     float srcPosX;
     float srcPosY;
     float srcPosZ;
@@ -27,28 +27,28 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
     float startPosY;
     float startPosZ;
     float scale;
-    undefined2 linkGroup;
-    undefined2 textureId;
-    uint behaviorFlags;
-    undefined4 renderFlags;
-    undefined4 overrideColor0;
-    uint overrideColor1;
-    uint overrideColor2;
-    undefined2 colorWord0;
-    undefined2 colorWord1;
-    undefined2 colorWord2;
+    u16 linkGroup;
+    u16 textureId;
+    u32 behaviorFlags;
+    u32 renderFlags;
+    u32 overrideColor0;
+    u32 overrideColor1;
+    u32 overrideColor2;
+    u16 colorWord0;
+    u16 colorWord1;
+    u16 colorWord2;
     u8 effectIdByte;
     u8 initialAlpha;
     u8 textureSetupFlags;
     u8 modelIdByte;
-    undefined4 local_30;
-    uint rngTmp0;
-    undefined4 local_28;
-    uint rngTmp1;
-    undefined4 local_20;
-    uint rngTmp2;
-    undefined4 local_18;
-    uint rngTmp3;
+    u32 local_30;
+    u32 rngTmp0;
+    u32 local_28;
+    u32 rngTmp1;
+    u32 local_20;
+    u32 rngTmp2;
+    u32 local_18;
+    u32 rngTmp3;
 
     lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
     if (lbl_803E0E40 < lbl_803DC4B0)
@@ -68,14 +68,14 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
     {
         if ((spawnFlags & 0x200000) != 0)
         {
-            if (spawnParams == (undefined2*)0x0)
+            if (spawnParams == (u16*)0x0)
             {
                 return 0xffffffff;
             }
             srcPosX = ((PartFxSpawnParams*)spawnParams)->posX;
             srcPosY = ((PartFxSpawnParams*)spawnParams)->posY;
             srcPosZ = ((PartFxSpawnParams*)spawnParams)->posZ;
-            srcScale = *(undefined4*)&((PartFxSpawnParams*)spawnParams)->scale;
+            srcScale = *(u32*)&((PartFxSpawnParams*)spawnParams)->scale;
             srcRotZ = ((PartFxSpawnParams*)spawnParams)->unk4;
             srcRotY = ((PartFxSpawnParams*)spawnParams)->unk2;
             srcRotX = *spawnParams;
@@ -83,7 +83,7 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
         }
         behaviorFlags = 0;
         renderFlags = 0;
-        effectIdByte = (undefined)effectId;
+        effectIdByte = (u8)effectId;
         startPosX = lbl_803E0E4C;
         startPosY = lbl_803E0E4C;
         startPosZ = lbl_803E0E4C;
@@ -296,7 +296,7 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
             textureId = 0xdf;
             break;
         case 0x741:
-            if (spawnParams != (undefined2*)0x0)
+            if (spawnParams != (u16*)0x0)
             {
                 startPosY = ((PartFxSpawnParams*)spawnParams)->posY;
             }
@@ -385,7 +385,7 @@ FUN_800c8110(int sourceObj, undefined4 effectId, undefined2* spawnParams, uint s
     return result;
 }
 
-undefined4 FUN_800c9030(uint key, int* outIndex)
+u32 FUN_800c9030(u32 key, int* outIndex)
 {
     int hi;
     int lo;
@@ -408,10 +408,10 @@ undefined4 FUN_800c9030(uint key, int* outIndex)
                 return 0;
             }
             mid = hi + lo >> 1;
-            if (key <= (uint)(&DAT_8039d0b8)[mid * 2]) break;
+            if (key <= (u32)(&DAT_8039d0b8)[mid * 2]) break;
             lo = mid + 1;
         }
-        if ((uint)(&DAT_8039d0b8)[mid * 2] <= key) break;
+        if ((u32)(&DAT_8039d0b8)[mid * 2] <= key) break;
         hi = mid + -1;
     }
     *outIndex = mid;

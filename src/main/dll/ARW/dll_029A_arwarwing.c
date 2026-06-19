@@ -1140,7 +1140,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
 
     if (objGetFlagsE5_2(obj) != 0)
         return;
-    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, (uint*)&hitVol) != 0 && hitVol != 0)
+    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, (u32*)&hitVol) != 0 && hitVol != 0)
     {
         if (((ArwingState*)state)->mode == ARWING_MODE_DEAD)
         {

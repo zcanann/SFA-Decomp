@@ -40,7 +40,7 @@ typedef struct DllCBPlacement
     u8 pad2F[0x30 - 0x2F];
 } DllCBPlacement;
 
-extern undefined8 ObjGroup_RemoveObject();
+extern u64 ObjGroup_RemoveObject();
 
 #pragma scheduling off
 #pragma peephole off

@@ -4,19 +4,19 @@
 #include "main/objseq.h"
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_802420b0();
-extern undefined4 FUN_802420e0();
+extern u32 FUN_802420b0();
+extern u32 FUN_802420e0();
 extern int FUN_802640ac();
 extern int FUN_80264428();
-extern undefined4 FUN_80264624();
+extern u32 FUN_80264624();
 
-extern undefined4 DAT_80397560;
-extern undefined4 DAT_803dc360;
-extern undefined4 DAT_803dc364;
-extern undefined4 DAT_803ddcc4;
-extern undefined4 DAT_803ddcd0;
-extern undefined4 DAT_803ddcd4;
-extern undefined4 DAT_803ddd0c;
+extern u32 DAT_80397560;
+extern u32 DAT_803dc360;
+extern u32 DAT_803dc364;
+extern u32 DAT_803ddcc4;
+extern u32 DAT_803ddcd0;
+extern u32 DAT_803ddcd4;
+extern u32 DAT_803ddd0c;
 extern f64 DOUBLE_803dfc28;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DFC20;
@@ -30,32 +30,32 @@ int saveCb_8007e77c(u8 idx, int unused, void* dst)
     return 0;
 }
 
-int FUN_8007eb04(uint slot)
+int FUN_8007eb04(u32 slot)
 {
-    uint uVar1;
-    uint uVar2;
-    uint uVar3;
-    ushort i;
-    uint uVar5;
-    uint uVar6;
-    uint uVar7;
-    uint uVar8;
-    uint uVar9;
-    uint uVar10;
-    uint uVar11;
-    uint uVar12;
+    u32 uVar1;
+    u32 uVar2;
+    u32 uVar3;
+    u16 i;
+    u32 uVar5;
+    u32 uVar6;
+    u32 uVar7;
+    u32 uVar8;
+    u32 uVar9;
+    u32 uVar10;
+    u32 uVar11;
+    u32 uVar12;
     int iVar13;
     int sum2;
-    uint uVar15;
-    uint uVar16;
-    uint uVar17;
-    uint uVar18;
-    uint uVar19;
-    uint uVar20;
-    uint uVar21;
-    uint uVar22;
-    uint* wp;
-    uint uVar24;
+    u32 uVar15;
+    u32 uVar16;
+    u32 uVar17;
+    u32 uVar18;
+    u32 uVar19;
+    u32 uVar20;
+    u32 uVar21;
+    u32 uVar22;
+    u32* wp;
+    u32 uVar24;
     bool carry;
 
     uVar7 = DAT_803ddcc4;
@@ -65,7 +65,7 @@ int FUN_8007eb04(uint slot)
     iVar13 = 0;
     for (i = 0; i < 0x3f7; i = i + 8)
     {
-        wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
+        wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
         uVar12 = wp[1];
         carry = CARRY4(uVar6, uVar12);
         uVar3 = uVar6 + uVar12;
@@ -86,14 +86,14 @@ int FUN_8007eb04(uint slot)
         uVar1 = uVar1 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
             wp[0xc] ^ wp[0xe];
         uVar6 = uVar11 + uVar21;
-        iVar13 = iVar13 + *wp + (uint)carry + wp[2] + (uint)CARRY4(uVar3, uVar15) +
-            wp[4] + (uint)CARRY4(uVar5, uVar16) + wp[6] + (uint)CARRY4(uVar24, uVar17) +
-            wp[8] + (uint)CARRY4(uVar8, uVar18) + wp[10] + (uint)CARRY4(uVar9, uVar19) +
-            wp[0xc] + (uint)CARRY4(uVar10, uVar20) + wp[0xe] + (uint)CARRY4(uVar11, uVar21);
+        iVar13 = iVar13 + *wp + (u32)carry + wp[2] + (u32)CARRY4(uVar3, uVar15) +
+            wp[4] + (u32)CARRY4(uVar5, uVar16) + wp[6] + (u32)CARRY4(uVar24, uVar17) +
+            wp[8] + (u32)CARRY4(uVar8, uVar18) + wp[10] + (u32)CARRY4(uVar9, uVar19) +
+            wp[0xc] + (u32)CARRY4(uVar10, uVar20) + wp[0xe] + (u32)CARRY4(uVar11, uVar21);
     }
     for (; i < 0x3ff; i = i + 1)
     {
-        wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
+        wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
         uVar3 = *wp;
         uVar5 = wp[1];
         uVar2 = uVar2 ^ uVar5;
@@ -103,9 +103,9 @@ int FUN_8007eb04(uint slot)
         iVar13 = iVar13 + uVar3 + carry;
     }
     uVar2 = uVar2 ^ uVar6 + 0xd;
-    uVar1 = uVar1 ^ iVar13 + (uint)(0xfffffff2 < uVar6);
-    *(uint*)(DAT_803ddcc4 + 0x1ffc) = uVar2;
-    *(uint*)(uVar7 + 0x1ff8) = uVar1;
+    uVar1 = uVar1 ^ iVar13 + (u32)(0xfffffff2 < uVar6);
+    *(u32*)(DAT_803ddcc4 + 0x1ffc) = uVar2;
+    *(u32*)(uVar7 + 0x1ff8) = uVar1;
     FUN_802420e0(DAT_803ddcc4, 0x2000);
     uVar7 = (slot & 0xff) << 0xd;
     iVar13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
@@ -129,7 +129,7 @@ int FUN_8007eb04(uint slot)
             sum2 = 0;
             for (i = 0; i < 0x3f7; i = i + 8)
             {
-                wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
+                wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
                 uVar15 = wp[1];
                 carry = CARRY4(uVar7, uVar15);
                 uVar5 = uVar7 + uVar15;
@@ -150,16 +150,16 @@ int FUN_8007eb04(uint slot)
                 uVar6 = uVar6 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
                     wp[0xc] ^ wp[0xe];
                 uVar7 = uVar12 + uVar22;
-                sum2 = sum2 + *wp + (uint)carry + wp[2] + (uint)CARRY4(uVar5, uVar16) +
-                    wp[4] + (uint)CARRY4(uVar24, uVar17) + wp[6] + (uint)CARRY4(uVar8, uVar18)
-                    + wp[8] + (uint)CARRY4(uVar9, uVar19) +
-                    wp[10] + (uint)CARRY4(uVar10, uVar20) +
-                    wp[0xc] + (uint)CARRY4(uVar11, uVar21) +
-                    wp[0xe] + (uint)CARRY4(uVar12, uVar22);
+                sum2 = sum2 + *wp + (u32)carry + wp[2] + (u32)CARRY4(uVar5, uVar16) +
+                    wp[4] + (u32)CARRY4(uVar24, uVar17) + wp[6] + (u32)CARRY4(uVar8, uVar18)
+                    + wp[8] + (u32)CARRY4(uVar9, uVar19) +
+                    wp[10] + (u32)CARRY4(uVar10, uVar20) +
+                    wp[0xc] + (u32)CARRY4(uVar11, uVar21) +
+                    wp[0xe] + (u32)CARRY4(uVar12, uVar22);
             }
             for (; i < 0x3ff; i = i + 1)
             {
-                wp = (uint*)(DAT_803ddcc4 + (uint)i * 8);
+                wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
                 uVar5 = *wp;
                 uVar24 = wp[1];
                 uVar3 = uVar3 ^ uVar24;
@@ -169,7 +169,7 @@ int FUN_8007eb04(uint slot)
                 sum2 = sum2 + uVar5 + carry;
             }
             uVar3 = uVar3 ^ uVar7 + 0xd;
-            uVar6 = uVar6 ^ sum2 + (uint)(0xfffffff2 < uVar7);
+            uVar6 = uVar6 ^ sum2 + (u32)(0xfffffff2 < uVar7);
             if (uVar2 != uVar3 || uVar1 != uVar6)
             {
                 iVar13 = -0x55;
@@ -184,11 +184,11 @@ int FUN_8007eb04(uint slot)
     return iVar13;
 }
 
-undefined4
-FUN_8007f350(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
-             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, char param_9
-             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
-             undefined4 param_14, undefined4 param_15, undefined4 param_16)
+u32
+FUN_8007f350(u64 param_1, double param_2, u64 param_3, u64 param_4,
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, char param_9
+             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
+             u32 param_14, u32 param_15, u32 param_16)
 {
     return 0;
 }
@@ -257,12 +257,12 @@ int FUN_8007f56c(int* pairs, int count, int key)
     return 0;
 }
 
-uint FUN_8007f6c8(float* timer)
+u32 FUN_8007f6c8(float* timer)
 {
-    return ((uint)(byte)((lbl_803DFC20 == *timer) << 1) << 0x1c) >> 0x1d ^ 1;
+    return ((u32)(u8)((lbl_803DFC20 == *timer) << 1) << 0x1c) >> 0x1d ^ 1;
 }
 
-void FUN_8007f6e4(undefined4* timer)
+void FUN_8007f6e4(u32* timer)
 {
     *timer = lbl_803DFC20;
     return;
@@ -274,7 +274,7 @@ void FUN_8007f718(float* out, short val)
     return;
 }
 
-undefined4 FUN_8007f764(float* timer)
+u32 FUN_8007f764(float* timer)
 {
     float zero;
 
@@ -1358,7 +1358,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         *(f32*)(state + 0x40) = 0.0f;
         *(f32*)(state + 0x44) = 0.0f;
         *(f32*)(state + 0x48) = 0.0f;
-        yawd = Obj_GetYawDeltaToObject((ushort*)obj, player, (float*)0);
+        yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
         if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4)
         {
             turn = 0;
@@ -1441,7 +1441,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         if (v != NULL)
         {
             *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
-            yawd = Obj_GetYawDeltaToObject((ushort*)obj, player, (float*)0);
+            yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
             g = (f32)(s16)
             yawd;
             {

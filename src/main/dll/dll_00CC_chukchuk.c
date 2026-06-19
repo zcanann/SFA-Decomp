@@ -26,7 +26,7 @@ extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 extern f32 lbl_803E2E30;
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 ObjHits_DisableObject();
+extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 
 void chukchuk_free(void)
