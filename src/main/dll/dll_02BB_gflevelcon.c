@@ -355,13 +355,13 @@ void fn_8023A268(int p1, int p2, int p3)
         dz = *(f32*)(p2 + 0xc8) - *(f32*)(*(int*)p2 + 0x14);
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
-        lbl_803DDDBC = (u16)getAngle(*(f32*)(p2 + 0xc4) - *(f32*)(*(int*)p2 + 0x10), dist) >> 8;
+        gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(p2 + 0xc4) - *(f32*)(*(int*)p2 + 0x10), dist) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
         *(f32*)(newObj + 8) = *(f32*)(p2 + 0xc0);
         *(f32*)(newObj + 0xc) = *(f32*)(p2 + 0xc4);
         *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8);
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
-        *(u8*)(newObj + 0x19) = lbl_803DDDBC;
+        *(u8*)(newObj + 0x19) = gGfLevelConProjectilePitch;
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
@@ -385,7 +385,7 @@ void fn_80239FCC(int p1, int p2)
 
     if (Obj_IsLoadingLocked())
     {
-        yaw = lbl_803DDDC4;
+        yaw = gGfLevelConProjectileYaw;
         lbl_803DDDC0 = lbl_803DDDC6;
         rndYaw = (s16)randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);

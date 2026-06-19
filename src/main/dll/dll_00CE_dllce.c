@@ -6,7 +6,7 @@
  * into gBaddieControlInterface (mode 7/6, obj type id 0x49) and dll_CE_update
  * ticks the control interface each frame, dispatching melee/move/hit events.
  * dll_CE_initialise installs the two per-object handler tables
- * (lbl_803AC5B0 = the move/attack handlers, lbl_803AC598 = the
+ * (gChukChukMoveHandlers = the move/attack handlers, gChukChukCheckHandlers = the
  * begin/check handlers) used by the control interface; each fn_8015E*
  * entry implements one move state. Handlers coordinate sibling instances
  * of the same DLL by walking the object list and calling their
@@ -760,8 +760,8 @@ void dll_CE_update(int obj, int p2, int p3)
     extern int* gBaddieControlInterface;
     extern MapEventInterface** gMapEventInterface;
     extern int* gPlayerInterface;
-    extern void* lbl_803AC5B0[];
-    extern void* lbl_803AC598[];
+    extern void* gChukChukMoveHandlers[];
+    extern void* gChukChukCheckHandlers[];
     extern f32 timeDelta;
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E14;
@@ -845,7 +845,7 @@ void dll_CE_update(int obj, int p2, int p3)
                 sub->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
                 *(int*)&((GameObject*)obj)->pendingParentObj = 0;
                 (*(void (**)(int, int, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
-                    obj, (int)sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
+                    obj, (int)sub, timeDelta, timeDelta, gChukChukMoveHandlers, gChukChukCheckHandlers);
                 *(int*)&((GameObject*)obj)->pendingParentObj = sub->savedObjC0;
             }
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - lbl_803E2E18;
@@ -995,24 +995,24 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-extern void* lbl_803AC5B0[];
-extern void* lbl_803AC598[];
+extern void* gChukChukMoveHandlers[];
+extern void* gChukChukCheckHandlers[];
 
 void dll_CE_initialise(void)
 {
-    lbl_803AC5B0[0] = fn_8015E8BC;
-    lbl_803AC5B0[1] = fn_8015E798;
-    lbl_803AC5B0[2] = fn_8015E5DC;
-    lbl_803AC5B0[3] = fn_8015E520;
-    lbl_803AC5B0[4] = fn_8015E3A0;
-    lbl_803AC5B0[5] = fn_8015E210;
-    lbl_803AC5B0[6] = fn_8015E0C8;
-    lbl_803AC598[0] = fn_8015E044;
-    lbl_803AC598[1] = fn_8015E00C;
-    lbl_803AC598[2] = fn_8015DF20;
-    lbl_803AC598[3] = fn_8015DEB4;
-    lbl_803AC598[4] = fn_8015DE50;
-    lbl_803AC598[5] = fn_8015DC04;
+    gChukChukMoveHandlers[0] = fn_8015E8BC;
+    gChukChukMoveHandlers[1] = fn_8015E798;
+    gChukChukMoveHandlers[2] = fn_8015E5DC;
+    gChukChukMoveHandlers[3] = fn_8015E520;
+    gChukChukMoveHandlers[4] = fn_8015E3A0;
+    gChukChukMoveHandlers[5] = fn_8015E210;
+    gChukChukMoveHandlers[6] = fn_8015E0C8;
+    gChukChukCheckHandlers[0] = fn_8015E044;
+    gChukChukCheckHandlers[1] = fn_8015E00C;
+    gChukChukCheckHandlers[2] = fn_8015DF20;
+    gChukChukCheckHandlers[3] = fn_8015DEB4;
+    gChukChukCheckHandlers[4] = fn_8015DE50;
+    gChukChukCheckHandlers[5] = fn_8015DC04;
 }
 
 void dll_CE_free(int* obj)

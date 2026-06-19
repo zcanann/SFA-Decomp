@@ -20,7 +20,7 @@ extern const f32 lbl_803E507C;
 extern const f32 lbl_803E5080;
 extern const f32 lbl_803E5084;
 extern const f32 lbl_803E5088;
-extern u32 lbl_803DDBC8;
+extern u32 gEcShCupNearestObject;
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_802C23B8[];
 extern float mathSinf(float x);
@@ -30,8 +30,8 @@ extern const f32 lbl_803E50A0;
 extern const f32 lbl_803E50A4;
 extern const f32 lbl_803E50A8;
 extern const f32 lbl_803E50AC;
-extern const f32 lbl_803E50B0;
-extern const f32 lbl_803E50B4;
+extern const f32 gEcShCupPi;
+extern const f32 gEcShCupAngleToRadDivisor;
 extern const f32 lbl_803E50B8;
 extern const f32 lbl_803E50BC;
 extern const f32 lbl_803E50C0;
@@ -99,13 +99,13 @@ void ecsh_cup_update(short* obj)
     dist = lbl_803E5064;
     mode = -1;
     buf[0] = 0;
-    if (lbl_803DDBC8 == 0)
+    if (gEcShCupNearestObject == 0)
     {
-        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);
     }
-    if (lbl_803DDBC8 != 0 && *(short*)(lbl_803DDBC8 + 0x44) != 0)
+    if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
     {
-        (*(void (*)(int*, u8*))*(int*)(*(int*)(*(int*)(lbl_803DDBC8 + 0x68)) + 0x28))(&mode, buf);
+        (*(void (*)(int*, u8*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x28))(&mode, buf);
         *obj = *obj + state->unk2C;
         if (mode != 6)
         {
@@ -204,7 +204,7 @@ void ecsh_cup_update(short* obj)
         }
         else if (mode == 1 && mode != state->unk24)
         {
-            (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(lbl_803DDBC8 + 0x68)) + 0x24))(
+            (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
                 (u8)state->unk28, &v.x, &v.z);
             state->unkC = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
             state->unk14 = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
@@ -222,7 +222,7 @@ void ecsh_cup_update(short* obj)
         {
             state->unkC = lbl_803E5068;
             state->unk14 = lbl_803E5068;
-            (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)(lbl_803DDBC8 + 0x68)) + 0x2c))(
+            (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x2c))(
                 (u8)state->unk28, ((GameObject*)obj)->anim.localPosX,
                 ((GameObject*)obj)->anim.localPosZ);
             state->unk24 = mode;
@@ -233,7 +233,7 @@ void ecsh_cup_update(short* obj)
         }
         else if (mode == 4 && mode != state->unk24)
         {
-            (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(lbl_803DDBC8 + 0x68)) + 0x24))(
+            (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
                 (u8)state->unk28, &v.x, &v.z);
             ((GameObject*)obj)->anim.localPosX = v.x;
             ((GameObject*)obj)->anim.localPosZ = v.z;
@@ -245,7 +245,7 @@ void ecsh_cup_update(short* obj)
             {
                 if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) < lbl_803E5088)
                 {
-                    (*(void (*)(int))*(int*)(*(int*)(*(int*)(lbl_803DDBC8 + 0x68)) + 0x30))(
+                    (*(void (*)(int))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x30))(
                         (u8)state->unk28);
                     if (state->unk28 == buf[0])
                     {
@@ -272,7 +272,7 @@ void ecsh_cup_init(int obj, int def)
 
     state = *(int*)&((GameObject*)obj)->extra;
     dist = lbl_803E5064;
-    lbl_803DDBC8 = 0;
+    gEcShCupNearestObject = 0;
     ((EcshCupState*)state)->unk0 = ((GameObject*)obj)->anim.localPosX;
     ((EcshCupState*)state)->unk4 = ((GameObject*)obj)->anim.localPosY;
     ((EcshCupState*)state)->unk8 = ((GameObject*)obj)->anim.localPosZ;
@@ -291,9 +291,9 @@ void ecsh_cup_init(int obj, int def)
     *(u8*)&((EcshCupState*)state)->unk2E = 1;
     *(u8*)(obj + 0x37) = 0;
     ((EcshCupState*)state)->unk1C = lbl_803E5068;
-    if (lbl_803DDBC8 == 0)
+    if (gEcShCupNearestObject == 0)
     {
-        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);
     }
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
@@ -337,12 +337,12 @@ void fn_801C8B68(int obj)
         + (int)(lbl_803E50A8 * timeDelta));
 
     ((GameObject*)self)->anim.localPosY = lbl_803E50AC + (*(float*)(state2 + 0xc) +
-        mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4));
-    angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x10)) / lbl_803E50B4);
-    angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
+        mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor));
+    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x10)) / gEcShCupAngleToRadDivisor);
+    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
     *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * (angB + angA));
-    angA = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0x12)) / lbl_803E50B4);
-    angB = mathSinf((lbl_803E50B0 * (f32)(s32) * (short*)(state + 0xe)) / lbl_803E50B4);
+    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x12)) / gEcShCupAngleToRadDivisor);
+    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
     *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * (angB + angA));
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,

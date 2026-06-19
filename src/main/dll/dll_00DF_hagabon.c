@@ -64,7 +64,7 @@ extern f32 lbl_803E260C;
 extern f32 lbl_803E2610;
 extern f32 lbl_803E2614;
 extern f32 lbl_803E2618;
-extern f32 lbl_803E261C;
+extern f32 gHagabonPi;
 extern f32 lbl_803E2620;
 extern const f32 lbl_803E2624;
 extern f32 lbl_803E2628;
@@ -74,7 +74,7 @@ extern f32 lbl_803E2634;
 extern f32 lbl_803E2638;
 extern f32 lbl_803E263C;
 extern f32 lbl_803E2650;
-extern f32 lbl_803E2654;
+extern f32 gHagabonAlphaMax;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 extern f32 lbl_803E2660;
@@ -165,21 +165,21 @@ void fn_8014E1DC(int obj, HagabonState* state)
     state->wavePhaseB += (s32)(lbl_803E2610 * timeDelta);
     state->wavePhaseC += (s32)(lbl_803E2614 * timeDelta);
 
-    waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
+    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) /
         lbl_803E2620
     )
     ;
-    waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
         lbl_803E2620
     )
     ;
     ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
 
-    waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseC) /
+    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) /
         lbl_803E2620
     )
     ;
-    waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
         lbl_803E2620
     )
     ;
@@ -205,11 +205,11 @@ void fn_8014E1DC(int obj, HagabonState* state)
     else
     {
         ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
-        waveA = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseB) /
+        waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) /
             lbl_803E2620
         )
         ;
-        waveB = mathSinf((lbl_803E261C * (f32)(u32)state->wavePhaseA) /
+        waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
             lbl_803E2620
         )
         ;
@@ -339,12 +339,12 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E2650, 3,
-                                       (f32)(u32)((GameObject*)obj)->anim.alpha / lbl_803E2654, 0);
+                                       (f32)(u32)((GameObject*)obj)->anim.alpha / gHagabonAlphaMax, 0);
             }
             if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E2650, 4,
-                                       (f32)(u32)((GameObject*)obj)->anim.alpha / lbl_803E2654, 0);
+                                       (f32)(u32)((GameObject*)obj)->anim.alpha / gHagabonAlphaMax, 0);
             }
             break;
         }

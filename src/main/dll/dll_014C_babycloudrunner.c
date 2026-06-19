@@ -77,8 +77,8 @@ extern f32 lbl_803E4F74;
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
-extern u8 lbl_803DBE28;
-extern u8 lbl_803DBE30;
+extern u8 gBabyCloudRunnerMutterSfxTable;
+extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
 extern void storeZeroToFloatParam(void* p);
 extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -107,9 +107,9 @@ extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f3
 extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
 extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
-extern int lbl_80322B28[];
-extern f32 lbl_803DBE38;
-extern f32 lbl_803DBE3C;
+extern int gBabyCloudRunnerAirMeterValues[];
+extern f32 gBabyCloudRunnerTargetNearDist;
+extern f32 gBabyCloudRunnerPlayerFarDist;
 extern f32 lbl_803DBE40;
 extern f32 lbl_803DBE44;
 extern f32 lbl_803DBE48;
@@ -515,7 +515,7 @@ void babycloudrunner_init(int* obj, u8* def)
         {
             sub->runnerIndex = -1;
             sub->curveSpeed = lbl_803E4244;
-            sub->mutterSfxTable = &lbl_803DBE30;
+            sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTableSpecial;
         }
         else
         {
@@ -524,7 +524,7 @@ void babycloudrunner_init(int* obj, u8* def)
                 sub->runnerState = 3;
             }
             sub->curveSpeed = lbl_803E4258;
-            sub->mutterSfxTable = &lbl_803DBE28;
+            sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTable;
             ObjGroup_AddObject(obj, 0x20);
         }
         ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
@@ -1081,8 +1081,8 @@ void babycloudrunner_update(int* obj)
                     {
                         sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
-                        (*gGameUIInterface)->initAirMeter(lbl_80322B28[sub->runnerIndex], 0x5d1);
-                        s16toFloat((int)((char*)sub + 0x238), lbl_80322B28[sub->runnerIndex]);
+                        (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], 0x5d1);
+                        s16toFloat((int)((char*)sub + 0x238), gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;
@@ -1090,10 +1090,10 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
-                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), sub + 0x18) < lbl_803DBE38)
+                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), sub + 0x18) < gBabyCloudRunnerTargetNearDist)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, (u8*)sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, near + 0x18) > lbl_803DBE3C)
+                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, near + 0x18) > gBabyCloudRunnerPlayerFarDist)
                         {
                             fn_8014C66C(near, obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)

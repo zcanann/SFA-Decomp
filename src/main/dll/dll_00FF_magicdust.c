@@ -31,17 +31,17 @@ extern u16 lbl_803E34A8;
 extern u16 lbl_803E34AC;
 extern u8 lbl_80320CB8[];
 extern const f32 lbl_803E34E4;
-extern const f32 lbl_803E34E8;
-extern const f32 lbl_803E34EC;
+extern const f32 gMagicDustPi;
+extern const f32 gMagicDustAngleRandScale;
 extern const f32 lbl_803E34F0;
 extern const f32 lbl_803E34F4;
 extern const f32 lbl_803E34F8;
 extern const f32 lbl_803E34FC;
 extern f32 timeDelta;
 extern const f32 lbl_803E34B4;
-extern const f32 lbl_803E34B8;
+extern const f32 gMagicDustActivateDistSq;
 extern const f32 lbl_803E34BC;
-extern const f32 lbl_803E34C0;
+extern const f32 gMagicDustGravity;
 extern const f32 lbl_803E34C4;
 extern const f32 lbl_803E34C8;
 extern const f32 lbl_803E34CC;
@@ -113,7 +113,7 @@ void magicdust_update(int obj)
     if ((((MagicDustState*)state)->flags27A & 0x10) == 0)
     {
         if (((((MagicDustState*)state)->flags27A & 0x40) == 0) &&
-            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E34B8))
+            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gMagicDustActivateDistSq))
         {
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x10;
             fxArg = '\0';
@@ -129,7 +129,7 @@ void magicdust_update(int obj)
     }
     else
     {
-        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) >= lbl_803E34B8)
+        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) >= gMagicDustActivateDistSq)
         {
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~0x10;
             (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -168,7 +168,7 @@ void magicdust_update(int obj)
         {
             ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34BC;
             ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34BC;
-            ((GameObject*)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
+            ((GameObject*)obj)->anim.velocityY = -(gMagicDustGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
         }
         ((MagicDustState*)state)->burstTimer = ((MagicDustState*)state)->burstTimer - timeDelta;
         flagsByte = ((MagicDustState*)state)->flags27A;
@@ -333,11 +333,11 @@ void magicdust_init(int obj, int placement)
     randVal = randomGetRange(0, 0xffff);
     spd = (f32)(int)
     randomGetRange(0x27, 0x2c) / lbl_803E34E4;
-    ang = (lbl_803E34E8 * (f32)(int)
+    ang = (gMagicDustPi * (f32)(int)
     randVal
     )
     /
-    lbl_803E34EC;
+    gMagicDustAngleRandScale;
     ((GameObject*)obj)->anim.velocityX = spd * mathSinf(ang);
     ((GameObject*)obj)->anim.velocityZ = spd * mathCosf(ang);
     ((GameObject*)obj)->anim.velocityY = (f32)(int)
