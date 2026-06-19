@@ -802,14 +802,14 @@ void staffSetGlow(int* obj, u8 a, u8 b)
 
 void staff_func10(int* obj, s32 v)
 {
-    ((StaffState*)(int*)((GameObject*)obj)->extra)->fieldB2 = (s16)v;
+    ((StaffState*)(int*)((GameObject*)obj)->extra)->fieldB2 = v;
 }
 
 void staff_setHitReactValue(int* obj, s32 v)
 {
     s16* p = &((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
     if (v > 0xff) v = 0xff;
-    *p = (s16)v;
+    *p = v;
 }
 
 extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
@@ -843,7 +843,7 @@ void staff_addHitReactValue(int* obj, s32 delta)
     {
         v = 0xff;
     }
-    *p = (s16)v;
+    *p = v;
 }
 
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB)
@@ -1162,7 +1162,7 @@ void superQuakeFn_8016d9fc(f32* pos)
     *(f32*)(lbl_803AC6B8 + 0x10) = lbl_803E3290;
     *(f32*)(lbl_803AC6B8 + 0x14) = lbl_803E3288;
     CameraShake_Start(lbl_803E32F8, lbl_803E32A8, lbl_803E32FC);
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
         QuakePartVec v;
@@ -1434,7 +1434,7 @@ void staff_update(int* obj)
                     {
                         c = 255;
                     }
-                    *(s16*)(vp + 0x10) = (s16)c;
+                    *(s16*)(vp + 0x10) = c;
                     c = *(s16*)(vp + 0x24);
                     if (c < 0)
                     {
@@ -1444,7 +1444,7 @@ void staff_update(int* obj)
                     {
                         c = 255;
                     }
-                    *(s16*)(vp + 0x24) = (s16)c;
+                    *(s16*)(vp + 0x24) = c;
                 }
                 if (*(s16*)(vp + 0x10) <= 0 && *(s16*)(vp + 0x24) <= 0)
                 {
@@ -1471,7 +1471,7 @@ void staff_update(int* obj)
             f32 sc = *(f32*)(q + 0xc) + lbl_803E32E0;
             f32 w;
             *(f32*)(q + 0xc) = sc;
-            ObjHitbox_SetSphereRadius(*(int*)(q + 0x1c), (int)sc);
+            ObjHitbox_SetSphereRadius(*(int*)(q + 0x1c), sc);
             ObjHits_SetHitVolumeSlot(*(int*)(q + 0x1c), 17, 5, 0);
             w = *(f32*)(lbl_803AC6B8 + 0x18) + lbl_803E32E4;
             *(f32*)(lbl_803AC6B8 + 0x18) = w;
@@ -1568,8 +1568,8 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                 tmax = tmax * lbl_803E32A4;
                 flb = fastFloorf(tmax) / lbl_803E32A4;
                 flb = flb * lbl_803E330C;
-                ibase = (int)fla;
-                frac = fla - (f32)ibase;
+                ibase = fla;
+                frac = fla - ibase;
                 count2 = (int)((flb - fla) / lbl_803E32AC);
                 if (count2 == 0)
                 {
@@ -1580,7 +1580,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                     return;
                 }
                 acc = lbl_803E32B4;
-                step = lbl_803E3288 / (f32)count2;
+                step = lbl_803E3288 / count2;
                 first = 1;
                 while (count2 != 0)
                 {
@@ -1672,7 +1672,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             0x90)) + *(f32*)(swipe + 0x90));
                         *(f32*)(vp + 8) = *(f32*)(vp + 8) + (acc * (((GameObject*)obj)->anim.worldPosZ - *(f32*)(swipe +
                             0x94)) + *(f32*)(swipe + 0x94));
-                        vidx = (f32)ibase + frac;
+                        vidx = ibase + frac;
                         *(f32*)(vp + 0xc) = vidx;
                         {
                             f32 k = lbl_803E32F4;

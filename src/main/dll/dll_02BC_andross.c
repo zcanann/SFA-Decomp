@@ -215,7 +215,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->springDamping = lbl_803E7530;
     ((AndrossState*)state)->unkBC = 1;
     ObjHits_SetTargetMask(obj, 4);
-    ((GameObject*)obj)->animEventCallback = (void*)andross_updateModelAlpha;
+    ((GameObject*)obj)->animEventCallback = andross_updateModelAlpha;
     fn_8006CB50();
     model = *(int*)Obj_GetActiveModel(obj);
     for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)
@@ -278,7 +278,7 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
     if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
         result = 1;
     val = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
-    ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
+    ang = lbl_803E74A0 * yaw / lbl_803E74A4;
     ((AndrossState*)state)->unkD8 = val * mathSinf(ang);
     ((AndrossState*)state)->unkDC = val * mathCosf(ang);
     arwarwing_getVelocity((int)vel, *(int*)state);
@@ -365,7 +365,7 @@ void andross_update(int obj)
         *state = found;
         if (*(void**)state == NULL) goto LAB_8023ef14;
         ((AndrossState*)state)->unk70 = ((GameObject*)*state)->anim.localPosZ;
-        arwarwing_setFlightHalfWidth(*state, (f32)lbl_803DC438);
+        arwarwing_setFlightHalfWidth(*state, lbl_803DC438);
     }
     for (work = 0; (u8)work < 4; work = work + 1)
     {
@@ -730,7 +730,7 @@ void andross_update(int obj)
         if (((AndrossState*)state)->actionTimer < 0)
         {
             fn_8023A268(obj, (int)state, 0);
-            ((AndrossState*)state)->actionTimer = (short)lbl_803DC43C;
+            ((AndrossState*)state)->actionTimer = lbl_803DC43C;
         }
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
@@ -1165,7 +1165,7 @@ void andross_update(int obj)
             ((AndrossState*)ref)->animSpeed = lbl_8032C0A0[0];
             ((AndrossState*)state)->unkB1[0] = 0;
             GameBit_Set(0x10, 0);
-            ((AndrossState*)state)->actionTimer = (short)lbl_803DC44C;
+            ((AndrossState*)state)->actionTimer = lbl_803DC44C;
             ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         lbl_803DDDCA += lbl_803DC4BC;
@@ -1242,7 +1242,7 @@ void andross_update(int obj)
             {
                 ((AndrossState*)state)->unkB1[0] = 1;
             }
-            ((AndrossState*)state)->actionTimer = (short)lbl_803DC460;
+            ((AndrossState*)state)->actionTimer = lbl_803DC460;
             ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         Sfx_KeepAliveLoopedObjectSound(obj, 0x466);
@@ -1542,7 +1542,7 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x469);
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; ref < 6; ref = ref + 1)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
@@ -1576,7 +1576,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         ref = (int)((AndrossState*)state)->durationTimer;
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - (f32)framesThisStep;
+        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - framesThisStep;
         if (((AndrossState*)state)->fightPhase == 5)
         {
             delayPair[0] = 300;
@@ -1613,7 +1613,7 @@ void andross_update(int obj)
         if (((AndrossState*)state)->actionTimer < 0)
         {
             fn_8023A168(obj, (int)state);
-            ((AndrossState*)state)->actionTimer = (short)lbl_803DC46C;
+            ((AndrossState*)state)->actionTimer = lbl_803DC46C;
         }
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
@@ -1761,13 +1761,13 @@ void andross_update(int obj)
             {
                 randVal = randomGetRange(0x14, 0x1e);
                 ((AndrossState*)state)->actionTimer = randVal;
-                val = randomGetRange((int)-lbl_803DC470, (int)lbl_803DC470);
+                val = randomGetRange((int)-lbl_803DC470, lbl_803DC470);
                 ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX + (f32)(int)
                 val;
-                randOffsetY = randomGetRange((int)-lbl_803DC474, (int)lbl_803DC474);
+                randOffsetY = randomGetRange((int)-lbl_803DC474, lbl_803DC474);
                 ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY + (f32)(int)
                 randOffsetY;
-                val = randomGetRange((int)-lbl_803DC478, (int)lbl_803DC478);
+                val = randomGetRange((int)-lbl_803DC478, lbl_803DC478);
                 ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ + (f32)(int)
                 val;
             }
@@ -1797,7 +1797,7 @@ void andross_update(int obj)
         {
             androssbrain_setState(((AndrossState*)state)->lightAnchorObj, 1, 0);
             ObjHits_DisableObject(obj);
-            ((AndrossState*)state)->actionTimer = (short)lbl_803DC484;
+            ((AndrossState*)state)->actionTimer = lbl_803DC484;
             ((AndrossState*)state)->targetPosX = ((GameObject*)*state)->anim.localPosX;
             ((AndrossState*)state)->targetPosY = ((GameObject*)*state)->anim.localPosY + lbl_803DC47C;
             ((AndrossState*)state)->targetPosZ = ((GameObject*)*state)->anim.localPosZ + lbl_803DC480;
@@ -1865,7 +1865,7 @@ void andross_update(int obj)
         {
             sval = sval + -1;
         }
-        ref = (int)sval;
+        ref = sval;
         if (ref < 0)
         {
             ref = -ref;
@@ -2132,7 +2132,7 @@ void andross_update(int obj)
     if (ref != 0)
     {
         *(float*)&((AndrossState*)ref)->unk14 = *(float*)&((AndrossState*)ref)->unk14 - lbl_803E74D8;
-        ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - (u32)framesThisStep;
+        ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - framesThisStep;
         if (((AndrossState*)state)->spawnedObjLifetime < 0)
         {
             Obj_FreeObject(((AndrossState*)state)->unk14);

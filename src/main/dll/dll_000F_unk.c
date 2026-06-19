@@ -247,7 +247,7 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     *(s8*)((char*)state + 0x34c) |= 1;
     if ((s8)lbl_803DD434 == 0)
     {
-        ang = (lbl_803E05A4 * (f32)angle) / lbl_803E05A8;
+        ang = (lbl_803E05A4 * angle) / lbl_803E05A8;
         vx = scale * (((BaddieState*)state)->inputMagnitude * -mathSinf(ang));
         vz = scale * (((BaddieState*)state)->inputMagnitude * -mathCosf(ang));
         if (((BaddieState*)state)->inputMagnitude < lbl_803E05AC)
@@ -337,7 +337,7 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
     enemy = (int*)ctx[0x2d0 / 4];
     if (enemy != 0)
     {
-        if ((u32)enemy[0x30 / 4] == (u32)obj[0x30 / 4])
+        if ((u32)enemy[0x30 / 4] == obj[0x30 / 4])
         {
             dx = *(f32*)((char*)enemy + 0xc) - ((GameObject*)obj)->anim.localPosX;
             dz = *(f32*)((char*)enemy + 0x14) - ((GameObject*)obj)->anim.localPosZ;
@@ -358,7 +358,7 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
         }
         ((GameObject*)obj)->anim.rotX =
             (s16)(((GameObject*)obj)->anim.rotX +
-                (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
+                (int)((f32)diff * timeDelta / (lbl_803E0584 * spd)));
     }
 }
 #pragma opt_common_subs reset
@@ -429,7 +429,7 @@ void fn_800D8414(int* obj, int* ctx)
         ((BaddieState*)ctx)->inputMagnitude = *(f32 *)&lbl_803E0578;
     }
     ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
-    lbl_803DD44C = (s16)getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
+    lbl_803DD44C = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
     lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState*)ctx)->cameraYaw);
     diff = lbl_803DD44C - (u16)((GameObject*)obj)->anim.rotX;
     if (diff > 0x8000)
@@ -588,7 +588,7 @@ void player_setScale(short* moveState, u32* obj, f32 dt, int flags)
     f32 stopVal;
 
     buf.flag = 0;
-    *(s8*)&((BaddieState*)obj)->moveDone = (s8)ObjAnim_AdvanceCurrentMove(
+    *(s8*)&((BaddieState*)obj)->moveDone = ObjAnim_AdvanceCurrentMove(
         ((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
 
     ((BaddieState*)obj)->eventFlags = 0;
@@ -671,8 +671,8 @@ void player_setOverride(u32 x) { playerOverride = x; }
 void player_init(int unused, void* obj, int a, int b)
 {
     memset(obj, 0, 0x35c);
-    *(s16*)((char*)obj + 0x26c) = (s16)a;
-    *(s16*)((char*)obj + 0x26e) = (s16)b;
+    *(s16*)((char*)obj + 0x26c) = a;
+    *(s16*)((char*)obj + 0x26e) = b;
     ((BaddieState*)obj)->moveJustStartedA = 1;
     ((BaddieState*)obj)->moveJustStartedB = 1;
     ((BaddieState*)obj)->velSmoothTime = lbl_803E05BC;
@@ -731,10 +731,10 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         else if (result < 0)
         {
             result = -result;
-            ((BaddieState*)state)->controlMode = (s16)result;
+            ((BaddieState*)state)->controlMode = result;
             if (result != currentState)
             {
-                ((BaddieState*)state)->unk276 = (s16)currentState;
+                ((BaddieState*)state)->unk276 = currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
                 if (exitFn != NULL)
                 {
@@ -799,10 +799,10 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 
         t = (f32)(int) * (s16*)(pos + 2) * dt;
         decay = (s32)(t * lbl_803E05C0);
-        *(s16*)(pos + 2) -= (s16)decay;
+        *(s16*)(pos + 2) -= decay;
         t = (f32)(int) * (s16*)(pos + 4) * dt;
         decay = (s32)(t * lbl_803E05C0);
-        *(s16*)(pos + 4) -= (s16)decay;
+        *(s16*)(pos + 4) -= decay;
     }
 }
 
@@ -1016,7 +1016,7 @@ void player_setState(void* ctx, void* p, int new_state)
     void* q;
     if (((BaddieState*)p)->controlMode == new_state) goto end;
     ((BaddieState*)p)->unk276 = ((BaddieState*)p)->controlMode;
-    ((BaddieState*)p)->controlMode = (s16)new_state;
+    ((BaddieState*)p)->controlMode = new_state;
     {
         void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
         if (fn != 0)

@@ -82,7 +82,7 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 
     for (i = 1; i < n + 1; i++)
     {
-        t = (f32)i / (f32)n;
+        t = (f32)i / n;
 
         buf[0] = *(f32*)(p1 + 0);
         buf[1] = *(f32*)(p3 + 0);
@@ -221,7 +221,7 @@ void fn_80114B1C(int* obj)
     char* state;
     int* types;
 
-    types = (int*)seqFn_800394a0();
+    types = seqFn_800394a0();
     state = ((GameObject*)obj)->extra;
 
     (*gCameraInterface)->setTarget(0);
@@ -302,7 +302,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
 
     *(s16*)(st + 0x60c) = a;
     *(s16*)(st + 0x60e) = b;
-    *(u8*)(st + 0x610) = (u8)count;
+    *(u8*)(st + 0x610) = count;
     *(int*)(st + 0x5fc) = 0;
     z = lbl_803E1C90;
     *(f32*)(st + 0x0) = z;
@@ -317,7 +317,7 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
     *(f32*)(st + 0xc) = z;
     *(int*)(st + 0x618) = -1;
     fn_8003AC14(obj, seqFn_800394a0(), count);
-    objFn_8003acfc((int*)obj, (int*)seqFn_800394a0(), count, st + 0x1c);
+    objFn_8003acfc((int*)obj, seqFn_800394a0(), count, st + 0x1c);
     fn_8003A9C0(st + 0x1c, *(u8*)(st + 0x610), 0, 0);
     dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
 }
@@ -474,7 +474,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
             switch (*(u8*)(st + 0x600))
             {
             case 3:
-                objFn_8003acfc((int*)obj, (int*)types, *(u8*)(st + 0x610), st + 0x1c);
+                objFn_8003acfc((int*)obj, types, *(u8*)(st + 0x610), st + 0x1c);
                 *(int*)(st + 0x5f8) = 0;
                 *(u8*)(st + 0x600) = 2;
             case 2:
@@ -490,7 +490,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                 break;
             }
             *(int*)(st + 0x604) = player;
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, *(f32*)(st + 0x0), (f32)framesThisStep,
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, *(f32*)(st + 0x0), framesThisStep,
                                                                         NULL);
             if (*(u8*)(st + 0x600) == 7)
             {
@@ -575,7 +575,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
             delta = delta + 0xffff;
         }
         ((GameObject*)obj)->anim.rotX = (f32)((GameObject*)obj)->anim.rotX +
-            (lbl_803E1CB8 + (f32)delta) * (speed * timeDelta) / dist;
+            (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
     objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
@@ -595,7 +595,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             delta = delta + 0xffff;
         }
-        speed = speed * -mathCosf(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
+        speed = speed * -mathCosf(lbl_803E1CBC * delta / lbl_803E1CC0);
         ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, speed, out);
     }
     return 0;
@@ -711,9 +711,9 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 }
                 if ((*(int*)(state + 0x618) != -1) && (target == *(u32*)(state + 0x604)))
                 {
-                    ival = -(u32)framesThisStep + *(int*)(state + 0x620);
+                    ival = -framesThisStep + *(int*)(state + 0x620);
                     *(int*)(state + 0x620) = ival;
-                    if ((ival <= 0) && (0 < (int)(*(int*)(state + 0x620) + (u32)framesThisStep)))
+                    if ((ival <= 0) && (0 < (int)(*(int*)(state + 0x620) + framesThisStep)))
                     {
                         objFn_8003acfc((int)obj, seqHandle, (u32) * (u8*)(state + 0x610), state + 0x1c);
                         *(u32*)(state + 0x5f8) = 0x50;
@@ -851,7 +851,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         distance = (double)lbl_803E1CD0;
     }
 
-    yawDelta = Obj_GetYawDeltaToObject((u16*)objAnim, (int)obj, NULL);
+    yawDelta = Obj_GetYawDeltaToObject((u16*)objAnim, obj, NULL);
     if ((control->flags & 0x10) != 0)
     {
         fn_80038F1C(0, 1);
@@ -859,7 +859,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     }
 
     hitResult = objMathFn_8003a380(objAnim, obj, control->primary,
-                                   ((control->flags & 8) != 0) ? (void*)0 : control->secondary,
+                                   ((control->flags & 8) != 0) ? 0 : control->secondary,
                                    control->events, distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
@@ -876,8 +876,8 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
 
     if (control->blocked == 0)
     {
-        if (((s16)yawDelta > -(int)control->yawLimit) &&
-            ((s16)yawDelta < (int)control->yawLimit))
+        if (((s16)yawDelta > -control->yawLimit) &&
+            ((s16)yawDelta < control->yawLimit))
         {
             *turnSpeed = lbl_803E1CC4;
             *turning = 0;

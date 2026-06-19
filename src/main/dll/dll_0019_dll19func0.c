@@ -294,12 +294,12 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
         v = *(s16*)((char*)p2 + 1020);
         if (v != 0)
         {
-            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, (u16)v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, v, 0, 0, 0);
         }
         v = *(s16*)((char*)p2 + 1018);
         if (v != 0)
         {
-            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, (u16)v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, v, 0, 0, 0);
         }
     }
     voxmaps_freeRouteWork((char*)p2 + 900);
@@ -352,7 +352,7 @@ f32 dll_19_func1A(int obj)
         s8 numer = ((Dll19State*)p_b8)->progressNumerator;
         if (numer != 0)
         {
-            return (f32)numer / (f32)denom;
+            return (f32)numer / denom;
         }
     }
     return lbl_803E1C2C;
@@ -774,7 +774,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         return 0;
     }
     hit = ObjHits_GetPriorityHitWithPosition(p1, &hitId, &v28, &v24, &posX, &posY, &posZ);
-    state[1034] = (s8)v28;
+    state[1034] = v28;
     if (hit == 0)
     {
         return hit;
@@ -827,7 +827,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                     *(s16*)(p2 + 624) = p7;
                 }
             }
-            p2[847] = (s8)hit;
+            p2[847] = hit;
         }
         Sfx_StopObjectChannel((int*)p1, 16);
         ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
@@ -979,7 +979,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     *(int*)(p3 + 1036) = (int)(p3 + 1040);
     *(s16*)(p3 + 1026) = 0;
 
-    flags = (u8)p7;
+    flags = p7;
     b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
@@ -993,7 +993,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     *(f32*)(p3 + 644) = lbl_803E1C2C;
     if (p2[50] != 0)
     {
-        p3[852] = (s8)p2[50];
+        p3[852] = p2[50];
     }
     else
     {
@@ -1015,10 +1015,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, (void*)&lbl_803DB9E0, 4);
+    (*gPathControlInterface)->setLocalPointCollision(path, 1, lbl_8031A054, &lbl_803DB9E0, 4);
     if ((flags & 4) != 0)
     {
-        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void*)&lbl_803DD5E0, &byteLocal);
+        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, &lbl_803DD5E0, &byteLocal);
     }
     (*gPathControlInterface)->attachObject((void*)p1, path);
     p3[1028] = p2[43];
@@ -1176,7 +1176,7 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
         {
             lbl_803DD5DC = lbl_803DD5DC + 1;
         }
-        if (dist >= total || (s8)lbl_803DD5DC > 9)
+        if (dist >= total || lbl_803DD5DC > 9)
         {
             char* t2 = *(char**)&((BaddieState*)st)->targetObj;
             int delta = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t2;
@@ -1344,7 +1344,7 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
         {
             delta += 0xffff;
         }
-        *outDelta = (u16)delta;
+        *outDelta = delta;
         if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b)
         {
             ((Dll19State*)st)->unk400 &= ~0x10;
