@@ -222,9 +222,9 @@ void dimcannon_init(int* obj, int* arg)
             *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
             ((DimCannonState*)state)->fireState = 5;
         }
-        ((DimCannonState*)state)->unk8C = ((GameObject*)obj)->anim.localPosX;
-        ((DimCannonState*)state)->unk90 = ((GameObject*)obj)->anim.localPosY;
-        ((DimCannonState*)state)->unk94 = ((GameObject*)obj)->anim.localPosZ;
+        ((DimCannonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((DimCannonState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((DimCannonState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
     }
 
     ((GameObject*)obj)->objectFlags |= 0x2000;
@@ -296,7 +296,7 @@ void dimcannon_update(int* obj)
         }
     case 4:
         DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4, *(f32*)&((DimCannonState*)state)->unk8,
-                                   ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->unk10);
+                                   ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
         if (GameBit_Get(((DimcannonPlacement*)src)->unk1A))
         {
             ((DimCannonState*)state)->fireState = 5;
@@ -359,14 +359,14 @@ void dimcannon_update(int* obj)
             {
                 ((DimCannonState*)state)->aimPitch -= framesThisStep;
             }
-            ((DimCannonState*)state)->unk10 = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+            ((DimCannonState*)state)->distance = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                                             (f32*)(*(char**)(state + 0x0) + 0x18));
             DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4,
                                        *(f32*)&((DimCannonState*)state)->unk8,
-                                       ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->unk10);
+                                       ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
             DIMwooddoor_spawnShard(obj, 0);
             {
-                f32 d2 = ((DimCannonState*)state)->unk10;
+                f32 d2 = ((DimCannonState*)state)->distance;
                 int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF0C;
                 if (d2 > v / lbl_803E48EC)
                 {

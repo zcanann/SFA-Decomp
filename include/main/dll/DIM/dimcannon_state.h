@@ -8,7 +8,7 @@ typedef struct DimCannonState {
     s32 unk4;
     s32 unk8;
     f32 unkC;
-    f32 unk10;
+    f32 distance;   /* 0x10 XZ distance to player (getXZDistance) */
     u8 pad14[0x18 - 0x14];
     u8 unk18;
     u8 pad19[0x1A - 0x19];
@@ -16,9 +16,9 @@ typedef struct DimCannonState {
     u8 unk1B;
     u8 pad1C[0x88 - 0x1C];
     f32 unk88;
-    f32 unk8C;
-    f32 unk90;
-    f32 unk94;
+    f32 posX;       /* 0x8C snapshot of anim.localPosX */
+    f32 posY;       /* 0x90 snapshot of anim.localPosY */
+    f32 posZ;       /* 0x94 snapshot of anim.localPosZ */
     f32 unk98;
     u8 pad9C[8];
     s16 aimYaw;     /* 0xa4 */
