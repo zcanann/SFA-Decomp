@@ -704,7 +704,7 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                 dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
                 if ((dVar9 < (double)local_48) && ((ushort*)puVar4[iVar6] != puVar2))
                 {
-                    *param_4 = (int)puVar4[iVar6];
+                    *param_4 = puVar4[iVar6];
                     dVar9 = FUN_80293900(dVar9);
                     local_30 = (longlong)(int)
                     dVar9;
@@ -725,7 +725,7 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                             local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                         }
                         uVar3 = FUN_80017730();
-                        if (*(short**)(puVar2 + 0x18) == (short*)0x0)
+                        if (*(short**)(puVar2 + 0x18) == 0x0)
                         {
                             uVar1 = *puVar2;
                         }
@@ -733,8 +733,8 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                         {
                             uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
                         }
-                        uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
-                        if (0x8000 < (int)uVar3)
+                        uVar3 = (uVar3 & 0xffff) - uVar1;
+                        if (0x8000 < uVar3)
                         {
                             uVar3 = uVar3 - 0xffff;
                         }
@@ -785,7 +785,7 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                     local_38 = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
                 }
                 uVar3 = FUN_80017730();
-                if (*(short**)(puVar2 + 0x18) == (short*)0x0)
+                if (*(short**)(puVar2 + 0x18) == 0x0)
                 {
                     uVar1 = *puVar2;
                 }
@@ -793,8 +793,8 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
                 {
                     uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
                 }
-                uVar3 = (uVar3 & 0xffff) - (uint)uVar1;
-                if (0x8000 < (int)uVar3)
+                uVar3 = (uVar3 & 0xffff) - uVar1;
+                if (0x8000 < uVar3)
                 {
                     uVar3 = uVar3 - 0xffff;
                 }
@@ -1008,7 +1008,7 @@ void baddieAfterUpdateBonesCb(int obj, int* p2)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x7C8:
-        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, (void*)fn_8015983C);
+        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, fn_8015983C);
         break;
     default:
         playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, NULL);
@@ -1283,7 +1283,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
         radius = (f32)(f64)
         radius * (f32)(f64)
         radius;
-        arr = (short**)ObjGroup_GetObjects(3, &count);
+        arr = ObjGroup_GetObjects(3, &count);
         if (count != 0)
         {
             i = 0;
@@ -1670,7 +1670,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
 
     angle = (u16)getAngle(-((TrickyState*)sub)->unk2B8, -((TrickyState*)sub)->unk2C0);
     delta = angle - (u16)((GameObject*)node)->anim.rotX;
-    delta_f = (f32)delta;
+    delta_f = delta;
     if (delta_f > lbl_803E25B8) delta_f = lbl_803E25EC + delta_f;
     if (delta_f < lbl_803E25F4) delta_f = lbl_803E25F0 + delta_f;
     delta_f *= dt;
@@ -1686,7 +1686,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
         else
         {
             s32 step = (s32)(oneOverTimeDelta * (delta_f * fa));
-            ((GameObject*)node)->anim.rotZ = (s16)step;
+            ((GameObject*)node)->anim.rotZ = step;
             {
                 s16 v = ((GameObject*)node)->anim.rotZ;
                 if (v > 0x2000) ((GameObject*)node)->anim.rotZ = 0x2000;
@@ -1702,7 +1702,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
         f32 hyp = sqrtf(dz2 + dx2);
         int angle2 = (u16)getAngle(((TrickyState*)sub)->unk2BC * fb, hyp);
         s32 d2 = angle2 - (u16)((GameObject*)node)->anim.rotY;
-        f32 d2f = (f32)d2;
+        f32 d2f = d2;
         s16 newVal2;
         if (d2f > lbl_803E25B8) d2f = lbl_803E25EC + d2f;
         if (d2f < lbl_803E25F4) d2f = lbl_803E25F0 + d2f;
@@ -1736,7 +1736,7 @@ void fn_8014BC98(int* node, int* sub)
             d[1] = ((GameObject*)node)->anim.worldPosY - *(f32*)((char*)target + 0x1c);
             d[2] = ((GameObject*)node)->anim.worldPosZ - *(f32*)((char*)target + 0x20);
         }
-        ua = (u16)getAngle(-d[0], -d[2]);
+        ua = getAngle(-d[0], -d[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
         {
             raw = (s16)(((GameObject*)node)->anim.rotX + **(s16**)&((GameObject*)node)->anim.parent);
@@ -1749,7 +1749,7 @@ void fn_8014BC98(int* node, int* sub)
         raw;
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
-        ((TrickyState*)sub)->unk2A2 = (u16)delta;
+        ((TrickyState*)sub)->unk2A2 = delta;
         ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
 
         {
@@ -1874,7 +1874,7 @@ void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, 
         FUN_80293900((double)(*(float*)(param_4 + 0x2c0) * *(float*)(param_4 + 0x2c0) +
             *(float*)(param_4 + 0x2b8) * *(float*)(param_4 + 0x2b8)));
         uVar1 = FUN_80017730();
-        local_48 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - (uint)param_3[1] ^ 0x80000000);
+        local_48 = (double)CONCAT44(0x43300000, (uVar1 & 0xffff) - param_3[1] ^ 0x80000000);
         dVar2 = (double)(float)(local_48 - DOUBLE_803e3218);
         if ((double)lbl_803E324C < dVar2)
         {
@@ -1896,7 +1896,7 @@ void FUN_8014d3d0(short* param_1, undefined4 param_2, uint param_3, short param_
     int iVar3;
 
     iVar3 = FUN_80017730();
-    sVar2 = (short)iVar3 - *param_1;
+    sVar2 = iVar3 - *param_1;
     if (0x8000 < sVar2)
     {
         sVar2 = sVar2 + 1;
@@ -1934,7 +1934,7 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
         *(float*)(param_10 + 0x308) =
             (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
     }
-    *(char*)(param_10 + 0x323) = (char)param_13;
+    *(char*)(param_10 + 0x323) = param_13;
     FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                  param_9, param_11 & 0xff, param_12, param_12, param_13, param_14, param_15, param_16);
     hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
@@ -2377,7 +2377,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 255;
     }
-    ((EnemyState*)state)->unk2FC = (f32)setup[0x2f] / lbl_803E257C;
+    ((EnemyState*)state)->unk2FC = setup[0x2f] / lbl_803E257C;
     ((EnemyState*)state)->aggroRange = (f32)(u32)(setup[0x29] << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
@@ -2416,7 +2416,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
         ((GameObject*)obj)->objectFlags |= *(s8*)(setup + 0x28) & 7;
         ((EnemyState*)state)->unk2B0 = setup[0x32];
-        ((GameObject*)obj)->animEventCallback = (void*)enemy_animEventCallback;
+        ((GameObject*)obj)->animEventCallback = enemy_animEventCallback;
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 17:
@@ -2499,7 +2499,7 @@ void enemy_init(int obj, u8* setup, int flag)
         state[0x2ef] = 2;
         if (*(void**)state == NULL)
         {
-            *(int*)state = (int)mmAlloc(264, 26, 0);
+            *(int*)state = mmAlloc(264, 26, 0);
         }
         if (*(void**)state != NULL)
         {

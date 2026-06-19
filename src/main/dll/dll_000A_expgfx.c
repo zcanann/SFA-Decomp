@@ -141,7 +141,7 @@ static inline f64 Expgfx_U16AsDouble(u16 value)
 {
     u64 bits;
 
-    bits = CONCAT44(0x43300000, (u32)value);
+    bits = CONCAT44(0x43300000, value);
     return *(f64*)&bits - lbl_803DF378;
 }
 
@@ -152,7 +152,7 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 
     rawSource = FUN_80286830();
     currentSource.sourceId = (int)((ulonglong)rawSource >> 0x20);
-    currentSource.sourceMode = (int)rawSource;
+    currentSource.sourceMode = rawSource;
     return currentSource;
 }
 
@@ -332,8 +332,8 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
             activeBit = 1 << slotIndex;
             if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
             {
-                *slotIndexOut = (s16)slotIndex;
-                *poolIndexOut = (s16)poolIndex;
+                *slotIndexOut = slotIndex;
+                *poolIndexOut = poolIndex;
                 runtime->poolActiveMasks[poolIndex] |= activeBit;
                 runtime->poolActiveCounts[poolIndex]++;
                 return 1;
@@ -372,8 +372,8 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
         activeBit = 1 << slotIndex;
         if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
         {
-            *slotIndexOut = (s16)slotIndex;
-            *poolIndexOut = (s16)poolIndex;
+            *slotIndexOut = slotIndex;
+            *poolIndexOut = poolIndex;
             runtime->poolActiveMasks[poolIndex] |= activeBit;
             gExpgfxStaticPoolSlotTypeIds[poolIndex] = slotType;
             runtime->poolActiveCounts[poolIndex]++;
@@ -774,7 +774,7 @@ foundFirst:
             slot = (ExpgfxSlot*)curCache;
             if (next > -1)
             {
-                nextBuf = (u8*)cache + (u32)parity * 0x1000;
+                nextBuf = (u8*)cache + parity * 0x1000;
                 copyToCache(nextBuf, (void*)runtime->slotPoolBases[next], EXPGFX_POOL_CACHE_LINE_COUNT);
                 curCache = nextBuf;
                 prefetched = 1;
@@ -783,7 +783,7 @@ foundFirst:
             cacheQueueWait(prefetched);
             slot--;
             maskPtr = &runtime->poolActiveMasks[pool];
-            curPoolBuf = (u8*)cache + (u32)parity * 0x1000;
+            curPoolBuf = (u8*)cache + parity * 0x1000;
             for (slotIdx = 0; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++)
             {
                 ExpgfxQuadVertex* quad;
@@ -1164,7 +1164,7 @@ foundFirst:
                         (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && (int)randomGetRange(0, 4) == 1)
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1)
                     {
                         slot->velocityX +=
                             lbl_803DF3F8 - (f32)(int)
@@ -1173,10 +1173,10 @@ foundFirst:
                             lbl_803DF3F8 - (f32)(int)
                         randomGetRange(0, 9) / lbl_803DF3FC;
                     }
-                    if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && (int)randomGetRange(0, 10) ==
+                    if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) ==
                         1)
                     {
-                        if ((f32)slot->lifetimeFrame < (f32)slot->lifetimeFrameLimit)
+                        if ((f32)slot->lifetimeFrame < slot->lifetimeFrameLimit)
                         {
                             slot->velocityX +=
                                 lbl_803DF400 * (f32)(int)
@@ -1191,7 +1191,7 @@ foundFirst:
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0)
                     {
-                        if ((f32)slot->lifetimeFrame < lbl_803DF38C * (f32)slot->lifetimeFrameLimit)
+                        if ((f32)slot->lifetimeFrame < lbl_803DF38C * slot->lifetimeFrameLimit)
                         {
                             f32 boost = lbl_803DF404;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
@@ -1260,24 +1260,24 @@ foundFirst:
                         int colB;
                         f32 ratio;
 
-                        ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
+                        ratio = (f32)slot->lifetimeFrame / slot->lifetimeFrameLimit;
                         colR = (int)(ratio * (f32)(quad[1].alpha - slot->colorByte0) +
-                            (f32)slot->colorByte0);
+                            slot->colorByte0);
                         colG = (int)(ratio * (f32)(quad[2].alpha - slot->colorByte1) +
-                            (f32)slot->colorByte1);
+                            slot->colorByte1);
                         colB = (int)(ratio * (f32)(quad[3].alpha - slot->colorByte2) +
-                            (f32)slot->colorByte2);
+                            slot->colorByte2);
                         if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0)
                         {
-                            quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
-                            quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
-                            quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
+                            quad[0].colorR = colR * (ambR8 + 1) >> 8;
+                            quad[0].colorG = colG * (ambG8 + 1) >> 8;
+                            quad[0].colorB = colB * (ambB8 + 1) >> 8;
                         }
                         else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0)
                         {
-                            quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
-                            quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
-                            quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
+                            quad[0].colorR = colR * ambRPlus1 >> 8;
+                            quad[0].colorG = colG * ambGPlus1 >> 8;
+                            quad[0].colorB = colB * ambBPlus1 >> 8;
                         }
                         else
                         {
@@ -1361,11 +1361,11 @@ foundFirst:
                         slot->scaleTarget
                         )
                         ;
-                        baseX = (int)axisX;
+                        baseX = axisX;
                         quad[0].x = baseX;
-                        baseY = (int)axisY;
+                        baseY = axisY;
                         quad[0].y = baseY;
-                        baseZ = (int)axisZ;
+                        baseZ = axisZ;
                         quad[0].z = baseZ;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
@@ -1412,9 +1412,9 @@ foundFirst:
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
                         vecRotateZXY(&rot, vecBuf);
-                        quad[0].x = (int)vecBuf[0];
-                        quad[0].y = (int)vecBuf[1];
-                        quad[0].z = (int)vecBuf[2];
+                        quad[0].x = vecBuf[0];
+                        quad[0].y = vecBuf[1];
+                        quad[0].z = vecBuf[2];
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
                         vecBuf[0] = (f32)
@@ -1434,9 +1434,9 @@ foundFirst:
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
                         vecRotateZXY(&rot, vecBuf);
-                        quad[1].x = (int)vecBuf[0];
-                        quad[1].y = (int)vecBuf[1];
-                        quad[1].z = (int)vecBuf[2];
+                        quad[1].x = vecBuf[0];
+                        quad[1].y = vecBuf[1];
+                        quad[1].z = vecBuf[2];
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
                         vecBuf[0] = (f32)
@@ -1456,9 +1456,9 @@ foundFirst:
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
                         vecRotateZXY(&rot, vecBuf);
-                        quad[2].x = (int)vecBuf[0];
-                        quad[2].y = (int)vecBuf[1];
-                        quad[2].z = (int)vecBuf[2];
+                        quad[2].x = vecBuf[0];
+                        quad[2].y = vecBuf[1];
+                        quad[2].z = vecBuf[2];
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
                         vecBuf[0] = (f32)
@@ -1478,9 +1478,9 @@ foundFirst:
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
                         vecRotateZXY(&rot, vecBuf);
-                        quad[3].x = (int)vecBuf[0];
-                        quad[3].y = (int)vecBuf[1];
-                        quad[3].z = (int)vecBuf[2];
+                        quad[3].x = vecBuf[0];
+                        quad[3].y = vecBuf[1];
+                        quad[3].z = vecBuf[2];
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
@@ -2002,7 +2002,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
-        if ((*poolActiveCounts != 0) && (*poolSourceIds == (u32)sourceId) &&
+        if ((*poolActiveCounts != 0) && (*poolSourceIds == sourceId) &&
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET))
         {
             boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
@@ -2078,7 +2078,7 @@ void drawGlow(uint slotPoolBase, int poolIndex)
     GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
     GXSetNumChans(1);
     GXSetCullMode(0);
-    viewMatrix = (void*)Camera_GetViewMatrix();
+    viewMatrix = Camera_GetViewMatrix();
     GXLoadPosMtxImm((void*)viewMatrix, 0);
     PSMTXCopy((void*)viewMatrix, lbl_803967C0);
     fn_8007D670();
@@ -2254,8 +2254,8 @@ void drawGlow(uint slotPoolBase, int poolIndex)
                     aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
                     PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
                     {
-                        f32 absX = (f32)__fabs(aimDelta[0]);
-                        f32 absZ = (f32)__fabs(aimDelta[2]);
+                        f32 absX = __fabs(aimDelta[0]);
+                        f32 absZ = __fabs(aimDelta[2]);
                         if (absX > absZ)
                         {
                             getAngle(absX, aimDelta[1]);
@@ -2389,9 +2389,9 @@ void drawGlow(uint slotPoolBase, int poolIndex)
         GXBegin(0x80, 4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
-            f32 px = scaleFactor * (f32)vtxStream[0];
-            f32 py = scaleFactor * (f32)vtxStream[1];
-            f32 pz = scaleFactor * (f32)vtxStream[2];
+            f32 px = scaleFactor * vtxStream[0];
+            f32 py = scaleFactor * vtxStream[1];
+            f32 pz = scaleFactor * vtxStream[2];
             f32 outX, outY, outZ;
             f32 ax, ay;
             f32 ay_cosB, pz_sinB;
@@ -2428,7 +2428,7 @@ void drawGlow(uint slotPoolBase, int poolIndex)
             *(volatile u8*)0xCC008000 = slot->colorByte0;
             *(volatile u8*)0xCC008000 = slot->colorByte1;
             *(volatile u8*)0xCC008000 = slot->colorByte2;
-            *(volatile u8*)0xCC008000 = (u8)alpha;
+            *(volatile u8*)0xCC008000 = alpha;
             *(volatile s16*)0xCC008000 = vtxStream[4];
             *(volatile s16*)0xCC008000 = vtxStream[5];
             vtxStream += 8;
@@ -2792,9 +2792,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
 
         if ((int)poolIndex < EXPGFX_POOL_COUNT)
         {
-            runtime->poolSourceIds[(int)poolIndex] = (int)config->attachedSource;
+            runtime->poolSourceIds[poolIndex] = (int)config->attachedSource;
         }
-        trackedFrameMask = &runtime->trackedSourceFrameMasks[(uint)poolIndex & 1];
+        trackedFrameMask = &runtime->trackedSourceFrameMasks[poolIndex & 1];
         if ((int)poolIndex < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
@@ -2812,10 +2812,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             trackedFrameMask->lowWord = maskLowWord & inverseBit;
             trackedFrameMask->highWord = maskHighWord & (uint)((int)inverseBit >> 0x1f);
         }
-        slot = (ExpgfxSlot*)(runtime->slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)(runtime->slotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
-        if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < (short)gExpgfxSequenceCounter)
+        if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < gExpgfxSequenceCounter)
         {
             gExpgfxSequenceCounter = 0;
         }
@@ -2827,22 +2827,22 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->texture.parts.textureId);
         if (resourceTableIndex < 0)
         {
-            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle = (ExpgfxResourceHandle*)runtime->resourceTable[resourceTableIndex].resource;
         if (resourceHandle == NULL)
         {
-            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         if (resourceHandle->refCount == EXPGFX_REFCOUNT_OVERFLOW)
         {
-            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle->refCount = resourceHandle->refCount + 1;
-        resourceHandle->linkGroup = (u16)config->linkGroup;
+        resourceHandle->linkGroup = config->linkGroup;
 
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0)
@@ -2893,10 +2893,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX)
         {
             debugPrintf(sExpgfxInvalidTabIndex);
-            expgfxRemove(runtime->slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
+            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        Expgfx_SetSlotTableIndex(slot, (u8)expTabIndex);
+        Expgfx_SetSlotTableIndex(slot, expTabIndex);
 
         slot->posX.value = config->startPosX.value;
         slot->startPosX.value = config->startPosX.value;
@@ -2908,9 +2908,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         slot->velocityY = config->velocityY;
         slot->velocityZ = config->velocityZ;
         slot->initialAlpha = config->initialAlpha;
-        quadVertices[3].pad06 = (s16)config->quadVertex3Pad06;
-        slot->lifetimeFrame = (s16)config->lifetimeFrames;
-        slot->lifetimeFrameLimit = (s16)config->lifetimeFrames;
+        quadVertices[3].pad06 = config->quadVertex3Pad06;
+        slot->lifetimeFrame = config->lifetimeFrames;
+        slot->lifetimeFrameLimit = config->lifetimeFrames;
 
         if (config->scale > lbl_803DF354)
         {
@@ -3043,21 +3043,21 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         quadVertices[0].colorG = 0xff;
         quadVertices[0].colorB = 0xff;
 
-        quadVertices[0].texS = (s16)texS0;
-        quadVertices[0].texT = (s16)texT0;
-        quadVertices[1].texS = (s16)texS1;
-        quadVertices[1].texT = (s16)texT0;
-        quadVertices[2].texS = (s16)texS1;
-        quadVertices[2].texT = (s16)texT1;
-        quadVertices[3].texS = (s16)texS0;
-        quadVertices[3].texT = (s16)texT1;
+        quadVertices[0].texS = texS0;
+        quadVertices[0].texT = texT0;
+        quadVertices[1].texS = texS1;
+        quadVertices[1].texT = texT0;
+        quadVertices[2].texS = texS1;
+        quadVertices[2].texT = texT1;
+        quadVertices[3].texS = texS0;
+        quadVertices[3].texT = texT1;
 
         if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0)
         {
             expgfx_initSlotQuad(slot);
         }
 
-        poolSourceModesByte = &runtime->poolSourceModes[(s16)poolIndex];
+        poolSourceModesByte = &runtime->poolSourceModes[poolIndex];
         modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
         *poolSourceModesByte = modeFlag;
         if (*poolSourceModesByte != 0 &&
@@ -3065,7 +3065,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         {
             *poolSourceModesByte = *poolSourceModesByte + 1;
         }
-        runtime->poolBoundsTemplateIds[(s16)poolIndex] = boundsTemplateId;
+        runtime->poolBoundsTemplateIds[poolIndex] = boundsTemplateId;
 
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);
         gExpgfxLastAddedSlot = (int)slot;

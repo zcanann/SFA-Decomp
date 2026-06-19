@@ -236,7 +236,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     point2[2] = point2[2] + playerMapOffsetZ;
 
     ((void**)((char*)gKTRexState + 0x17c))[slot] =
-        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, (u16)angle, 96, 0);
+        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
 }
 #pragma dont_inline reset
 
@@ -403,27 +403,27 @@ int ktrex_shouldAdvanceArenaPhase(void)
 
 void ktrex_initialiseStateHandlerTables(void)
 {
-    gKTRexStateHandlersB[0] = (void*)ktrex_stateHandlerB00;
-    gKTRexStateHandlersB[1] = (void*)ktrex_stateHandlerB01;
-    gKTRexStateHandlersB[2] = (void*)ktrex_stateHandlerB02;
-    gKTRexStateHandlersB[3] = (void*)ktrex_stateHandlerB03;
-    gKTRexStateHandlersB[4] = (void*)ktrex_stateHandlerB04;
-    gKTRexStateHandlersB[5] = (void*)ktrex_stateHandlerB05;
-    gKTRexStateHandlersB[6] = (void*)ktrex_stateHandlerB06;
-    gKTRexStateHandlersB[7] = (void*)ktrex_stateHandlerB07;
-    gKTRexStateHandlersB[8] = (void*)ktrex_stateHandlerB08;
-    gKTRexStateHandlersA[0] = (void*)ktrex_stateHandlerA00;
-    gKTRexStateHandlersA[1] = (void*)ktrex_stateHandlerA01;
-    gKTRexStateHandlersA[2] = (void*)ktrex_stateHandlerA02;
-    gKTRexStateHandlersA[3] = (void*)ktrex_stateHandlerA03;
-    gKTRexStateHandlersA[4] = (void*)ktrex_stateHandlerA04;
-    gKTRexStateHandlersA[5] = (void*)ktrex_stateHandlerA05;
-    gKTRexStateHandlersA[6] = (void*)ktrex_stateHandlerA06;
-    gKTRexStateHandlersA[7] = (void*)ktrex_stateHandlerA07;
-    gKTRexStateHandlersA[8] = (void*)ktrex_stateHandlerA08;
-    gKTRexStateHandlersA[9] = (void*)ktrex_stateHandlerA09;
-    gKTRexStateHandlersA[10] = (void*)ktrex_stateHandlerA10;
-    gKTRexStateHandlersA[11] = (void*)ktrex_stateHandlerA11;
+    gKTRexStateHandlersB[0] = ktrex_stateHandlerB00;
+    gKTRexStateHandlersB[1] = ktrex_stateHandlerB01;
+    gKTRexStateHandlersB[2] = ktrex_stateHandlerB02;
+    gKTRexStateHandlersB[3] = ktrex_stateHandlerB03;
+    gKTRexStateHandlersB[4] = ktrex_stateHandlerB04;
+    gKTRexStateHandlersB[5] = ktrex_stateHandlerB05;
+    gKTRexStateHandlersB[6] = ktrex_stateHandlerB06;
+    gKTRexStateHandlersB[7] = ktrex_stateHandlerB07;
+    gKTRexStateHandlersB[8] = ktrex_stateHandlerB08;
+    gKTRexStateHandlersA[0] = ktrex_stateHandlerA00;
+    gKTRexStateHandlersA[1] = ktrex_stateHandlerA01;
+    gKTRexStateHandlersA[2] = ktrex_stateHandlerA02;
+    gKTRexStateHandlersA[3] = ktrex_stateHandlerA03;
+    gKTRexStateHandlersA[4] = ktrex_stateHandlerA04;
+    gKTRexStateHandlersA[5] = ktrex_stateHandlerA05;
+    gKTRexStateHandlersA[6] = ktrex_stateHandlerA06;
+    gKTRexStateHandlersA[7] = ktrex_stateHandlerA07;
+    gKTRexStateHandlersA[8] = ktrex_stateHandlerA08;
+    gKTRexStateHandlersA[9] = ktrex_stateHandlerA09;
+    gKTRexStateHandlersA[10] = ktrex_stateHandlerA10;
+    gKTRexStateHandlersA[11] = ktrex_stateHandlerA11;
 }
 
 int ktrex_updateArenaPathProgress(int obj)
@@ -919,7 +919,7 @@ void ktrex_init(int obj, char* arg, int flag)
     }
     (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
         obj, arg, gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, lbl_803E684C);
-    ((GameObject*)obj)->animEventCallback = (void*)ktrex_animEventCallback;
+    ((GameObject*)obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
     (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))(obj, rt, 0);
     rt->unk270 = 2;
@@ -1257,7 +1257,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
             ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x10;
             ((KTRexArenaState*)gKTRexState)->timerFA |= 0x8;
         }
-        ((KTRexRuntime*)runtime)->unk34F = (s8)hit;
+        ((KTRexRuntime*)runtime)->unk34F = hit;
     }
     else if (lbl_803DDD4C == 0)
     {
