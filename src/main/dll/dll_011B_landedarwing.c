@@ -492,7 +492,7 @@ void landed_arwing_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)nearest, -1);
             }
-            GameBit_Set(*(s16*)(def + 0x1c), 0);
+            GameBit_Set(((LandedArwingUpdateDamageTexturePlacement*)def)->unk1C, 0);
         }
         break;
     case 1:
@@ -520,7 +520,7 @@ void landed_arwing_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)nearest, -1);
             }
-            GameBit_Set(*(s16*)(def + 0x1c), 0);
+            GameBit_Set(((LandedArwingUpdateDamageTexturePlacement*)def)->unk1C, 0);
         }
         else
         {
