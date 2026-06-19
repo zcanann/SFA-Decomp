@@ -659,7 +659,8 @@ u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
     u8 k;
     u32 pidx;
-    u32 j;
+    u8 i;
+    u8 j;
     ObjfsaPatch* patch;
     f32 y;
 
@@ -674,20 +675,20 @@ u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
                 y = point[1];
                 if (y < patch->maxY && y > patch->minY)
                 {
-                    patchGroupIndex = 0;
+                    i = 0;
                     j = 0;
-                    for (; (patchGroupIndex & 0xff) < 4; patchGroupIndex++, j += 2)
+                    for (; i < 4; i++, j += 2)
                     {
-                        if (patch->planeOffsets[patchGroupIndex & 0xff] +
-                            (point[0] * (f32)((s16*)patch)[j & 0xff] +
-                                point[2] * (f32)((s16*)patch)[(j & 0xff) + 1]) >
+                        if (patch->planeOffsets[i] +
+                            (point[0] * (f32)((s16*)patch)[j] +
+                                point[2] * (f32)((s16*)patch)[j + 1]) >
                             0.0f)
                         {
                             break;
                         }
                     }
                 }
-                return (u32)__cntlzw(4 - (patchGroupIndex & 0xff)) >> 5;
+                return (u32)__cntlzw(4 - i) >> 5;
             }
         }
     }
