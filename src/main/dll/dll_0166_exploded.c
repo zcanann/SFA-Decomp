@@ -404,9 +404,9 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
         state->physicsFlags &= ~4;
     }
 
-    obj->angleX = (s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
-    obj->angleY = (s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
-    obj->angleZ = (s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
+    obj->angleX = (s16)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
+    obj->angleY = (s16)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
+    obj->angleZ = (s16)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
     Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
     worldAfter[0] = worldBefore[0] - worldAfter[0];
     worldAfter[1] = worldBefore[1] - worldAfter[1];
