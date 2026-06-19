@@ -337,9 +337,9 @@ void wispbaddie_update(int obj)
     }
     if (curve != 0)
     {
-        d[0] = *(f32*)((u8*)curve + 0x68) - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)((u8*)curve + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)((u8*)curve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = ((RomCurveWalker*)curve)->posX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = ((RomCurveWalker*)curve)->posY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = ((RomCurveWalker*)curve)->posZ - ((GameObject*)obj)->anim.worldPosZ;
         state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
 
