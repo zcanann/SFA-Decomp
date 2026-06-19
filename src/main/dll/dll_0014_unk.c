@@ -4322,7 +4322,6 @@ void curves_remove(RomCurveDef* curve)
 void curves_addCurveDef(RomCurveDef* curve)
 {
     int sortedCurveCount;
-    RomCurveDef** insertSlot;
     RomCurveDef** tailSlot;
     int insertIndex;
 
@@ -4334,10 +4333,8 @@ void curves_addCurveDef(RomCurveDef* curve)
     }
 
     insertIndex = 0;
-    insertSlot = romCurves;
-    while ((insertIndex < sortedCurveCount) && (curve->id > (*insertSlot)->id))
+    while ((insertIndex < sortedCurveCount) && (curve->id > romCurves[insertIndex]->id))
     {
-        insertSlot++;
         insertIndex++;
     }
 
