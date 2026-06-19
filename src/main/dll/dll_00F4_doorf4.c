@@ -66,8 +66,8 @@ extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
-extern f32 lbl_803E364C;
-extern f32 lbl_803E3650;
+extern f32 gDoorF4Pi;
+extern f32 gDoorF4BinaryAngleScale;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void* ObjList_GetObjects(int* outA, int* outB);
@@ -195,8 +195,8 @@ void doorf4_init(int* obj, int* params)
 
     ObjGroup_AddObject(obj, DOORF4_OBJ_GROUP);
 
-    state->cosYaw = mathSinf(lbl_803E364C * (f32)(int) * (s16*)obj / lbl_803E3650);
-    state->sinYaw = mathCosf(lbl_803E364C * (f32)(int) * (s16*)obj / lbl_803E3650);
+    state->cosYaw = mathSinf(gDoorF4Pi * (f32)(int) * (s16*)obj / gDoorF4BinaryAngleScale);
+    state->sinYaw = mathCosf(gDoorF4Pi * (f32)(int) * (s16*)obj / gDoorF4BinaryAngleScale);
     state->planeD = -(state->cosYaw * ((GameObject*)obj)->anim.localPosX +
         state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
@@ -264,7 +264,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         break;
     case 0:
-        ang = (lbl_803E364C * (f32)(*(s8*)(def + 0x18) << 8)) / lbl_803E3650;
+        ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
         sd = mathSinf(ang);
         s = mathCosf(ang);
         sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
@@ -301,7 +301,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 1:
         if (dist < lbl_803E3654 && gb != 0)
         {
-            ang = (lbl_803E364C * (f32)(*(s8*)(def + 0x18) << 8)) / lbl_803E3650;
+            ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang);
             s = mathCosf(ang);
             sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
@@ -355,7 +355,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                     dy = ((GameObject*)other)->anim.localPosZ - ((ObjPlacement*)def)->posZ;
                     if (sqrtf(dx * dx + dy * dy) < lbl_803E3660)
                     {
-                        ang = (lbl_803E364C * (f32)(*(s8*)(def + 0x18) << 8)) / lbl_803E3650;
+                        ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
                         sd = mathSinf(ang);
                         s = mathCosf(ang);
                         sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
@@ -392,7 +392,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 3:
         if (dist < lbl_803E3654 && gb != 0)
         {
-            ang = (lbl_803E364C * (f32)(*(s8*)(def + 0x18) << 8)) / lbl_803E3650;
+            ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang);
             s = mathCosf(ang);
             sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)

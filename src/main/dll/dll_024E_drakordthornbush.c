@@ -103,7 +103,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         v = ((DrakordThornbushState*)inner)->lightScale;
         if (v < lbl_803E6590)
         {
-            v = lbl_803E658C;
+            v = gThornBushLightScaleMax;
         }
         ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(p1, inner + 0x14, 3, v, inner + 0x64);
     }
@@ -171,9 +171,9 @@ void drakord_thornbush_update(int obj)
         }
         if (((GameObject*)obj)->anim.seqId == THORNBUSH_SEQ_LIGHTNING)
         {
-            if (((DrakordThornbushState*)inner)->lightScale < lbl_803E658C)
+            if (((DrakordThornbushState*)inner)->lightScale < gThornBushLightScaleMax)
             {
-                ((DrakordThornbushState*)inner)->lightScale = lbl_803E65AC * (f32)(u32)
+                ((DrakordThornbushState*)inner)->lightScale = gThornBushLightScaleRate * (f32)(u32)
                 framesThisStep + ((DrakordThornbushState*)inner)->lightScale;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     ((DrakordThornbushState*)inner)->lightScale *
@@ -275,7 +275,7 @@ void drakord_thornbush_init(int obj, u8* init)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case THORNBUSH_SEQ_THORN:
-        ((DrakordThornbushState*)inner)->hitTable = &lbl_803DC1A8;
+        ((DrakordThornbushState*)inner)->hitTable = &gThornBushThornHitTable;
         ObjHitbox_SetSphereRadius(obj, *(s16*)((char*)init + 0x1c));
         ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c);
         ((DrakordThornbushState*)inner)->baseScale = lbl_803E65C0;
@@ -284,12 +284,12 @@ void drakord_thornbush_init(int obj, u8* init)
             lbl_803E6590;
         break;
     case THORNBUSH_SEQ_LIGHTNING:
-        ((DrakordThornbushState*)inner)->hitTable = &lbl_803DC1A0;
+        ((DrakordThornbushState*)inner)->hitTable = &gThornBushLightningHitTable;
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
             lbl_803E65C4;
         ObjHitbox_SetSphereRadius(obj, (s16)(*(s16*)((char*)init + 0x1c) / 7));
-        s16toFloat((f32*)((char*)inner + 0x10), lbl_803DC1B0);
+        s16toFloat((f32*)((char*)inner + 0x10), gThornBushLightningTimerInit);
         ((DrakordThornbushState*)inner)->baseScale = lbl_803E65C8;
         ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c) / 5;
         ((DrakordThornbushState*)inner)->lightScale = lbl_803E6594;

@@ -27,12 +27,12 @@ extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
 extern f32 lbl_803E5008;
 extern f32 lbl_803E500C;
-extern f32 lbl_803E5010;
-extern f32 lbl_803E5014;
+extern f32 gGpShShrinePi;
+extern f32 gGpShShrineAngleHalfRange;
 extern f32 lbl_803E5018;
 extern f32 lbl_803E501C;
 extern f32 lbl_803E5020;
-extern f32 lbl_803E5024;
+extern f32 gGpShShrineAlphaFadeDistance;
 extern f32 lbl_803E5028;
 extern float mathSinf(float x);
 extern void* ObjGroup_GetObjects();
@@ -183,13 +183,13 @@ void fn_801C70F0(s16* obj)
         *(s16*)(sub + 0x10) = (s16)(*(s16*)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
         ((GameObject*)obj)->anim.localPosY =
             lbl_803E500C + (((ObjPlacement*)def)->posY
-                + mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014));
-        c1 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xe)) / lbl_803E5014);
-        c2 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014);
+                + mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange));
+        c1 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xe)) / gGpShShrineAngleHalfRange);
+        c2 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange);
         c2 = c2 + c1;
         ((GameObject*)obj)->anim.rotZ = lbl_803E5018 * c2;
-        c1 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0x10)) / lbl_803E5014);
-        c2 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014);
+        c1 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0x10)) / gGpShShrineAngleHalfRange);
+        c2 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange);
         c2 = c2 + c1;
         ((GameObject*)obj)->anim.rotY = lbl_803E5018 * c2;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta,
@@ -209,9 +209,9 @@ void fn_801C70F0(s16* obj)
             }
             *obj = (s16)(*(s16*)(int)obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
             dist = Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)((int)player + 0x18));
-            if (dist <= lbl_803E5024)
+            if (dist <= gGpShShrineAlphaFadeDistance)
             {
-                ((GameObject*)obj)->anim.alpha = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
+                ((GameObject*)obj)->anim.alpha = (u8)(int)(lbl_803E5028 * (dist / gGpShShrineAlphaFadeDistance));
             }
             else
             {

@@ -29,12 +29,12 @@ extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
 extern f32 lbl_803E4E58;
 extern f32 lbl_803E4E5C;
-extern f32 lbl_803E4E60;
+extern f32 gDfShShrinePi;
 extern f32 lbl_803E4E64;
 extern f32 lbl_803E4E68;
 extern f32 lbl_803E4E6C;
 extern f32 lbl_803E4E70;
-extern f32 lbl_803E4E74;
+extern f32 gDfShShrineFadeDistance;
 extern f32 lbl_803E4E78;
 extern f32 lbl_803E4E88;
 
@@ -51,8 +51,8 @@ typedef struct DFlanternShrineState
 
 extern int randomGetRange(int lo, int hi);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern u8 lbl_803DBF60;
-extern u16 lbl_80325F88[];
+extern u8 gDfShShrinePendingReward;
+extern u16 gDfShShrineRewardTable[];
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void playerAddRemoveMagic(int obj, int amount);
@@ -100,15 +100,15 @@ void fn_801C2914(int obj)
     ((GameObject*)obj)->anim.localPosY =
         lbl_803E4E5C +
         (((ObjPlacement*)def)->posY +
-            mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64));
+            mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64));
 
-    trigA = mathSinf((lbl_803E4E60 * state->orbitB) / lbl_803E4E64);
-    trigB = mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((gDfShShrinePi * state->orbitB) / lbl_803E4E64);
+    trigB = mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64);
     trigB = trigB + trigA;
     ((GameObject*)obj)->anim.rotZ = lbl_803E4E68 * trigB;
 
-    trigA = mathSinf((lbl_803E4E60 * state->orbitC) / lbl_803E4E64);
-    trigB = mathSinf((lbl_803E4E60 * state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((gDfShShrinePi * state->orbitC) / lbl_803E4E64);
+    trigB = mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64);
     trigB = trigB + trigA;
     ((GameObject*)obj)->anim.rotY = lbl_803E4E68 * trigB;
 
@@ -132,9 +132,9 @@ void fn_801C2914(int obj)
         ((GameObject*)obj)->anim.rotX += turnStep;
 
         distance = Vec_xzDistance((void*)(obj + 0x18), player + 0x18);
-        if (distance <= lbl_803E4E74)
+        if (distance <= gDfShShrineFadeDistance)
         {
-            ((GameObject*)obj)->anim.alpha = (u8)(s32)(lbl_803E4E78 * (distance / lbl_803E4E74));
+            ((GameObject*)obj)->anim.alpha = (u8)(s32)(lbl_803E4E78 * (distance / gDfShShrineFadeDistance));
         }
         else
         {
@@ -307,7 +307,7 @@ void dfsh_shrine_update(int obj)
 {
 
     extern int Obj_GetPlayerObject(void);
-    u16* base = lbl_80325F88;
+    u16* base = gDfShShrineRewardTable;
     int player;
     DfshShrineState* state;
     s16 i;
@@ -327,14 +327,14 @@ void dfsh_shrine_update(int obj)
         }
     }
     fn_801C2914(obj);
-    if (lbl_803DBF60 != 0)
+    if (gDfShShrinePendingReward != 0)
     {
         ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
         playerAddRemoveMagic(player, 0x14);
         GameBit_Set(0x1d7, 1);
-        lbl_803DBF60 = 0;
+        gDfShShrinePendingReward = 0;
     }
     SCGameBitLatch_UpdateInverted(state->musicLatch, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update(state->musicLatch, 4, -1, -1, 0xcbb, 0xc4);

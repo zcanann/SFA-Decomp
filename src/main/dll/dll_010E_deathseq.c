@@ -31,12 +31,12 @@ extern f32 lbl_803E3D18;
 extern f32 lbl_803E3D20;
 extern f32 lbl_803E3D24;
 extern f32 lbl_803E3D28;
-extern f32 lbl_803E3D30;
-extern f32 lbl_803E3D34;
+extern f32 gDeathSeqCameraYawAngle;
+extern f32 gDeathSeqCameraPitchAngle;
 extern f32 lbl_803E3D38;
-extern f32 lbl_803E3D3C;
-extern f32 lbl_803E3D40;
-extern f32 lbl_803E3D44;
+extern f32 gDeathSeqPi;
+extern f32 gDeathSeqAngleHalfCircle;
+extern f32 gDeathSeqCameraFovY;
 extern f32 lbl_803E3D48;
 
 void deathseq_init(int* obj)
@@ -187,10 +187,10 @@ void deathseq_update(int* obj)
 
     if (ready != 0)
     {
-        f32 cos30 = mathSinf(lbl_803E3D30);
-        f32 sin30 = mathCosf(lbl_803E3D30);
-        f32 sin34 = mathCosf(lbl_803E3D34);
-        f32 cos34 = mathSinf(lbl_803E3D34);
+        f32 cos30 = mathSinf(gDeathSeqCameraYawAngle);
+        f32 sin30 = mathCosf(gDeathSeqCameraYawAngle);
+        f32 sin34 = mathCosf(gDeathSeqCameraPitchAngle);
+        f32 cos34 = mathSinf(gDeathSeqCameraPitchAngle);
         f32 xTerm;
         f32 negSin;
         f32 fz;
@@ -201,13 +201,13 @@ void deathseq_update(int* obj)
         sin34 = sin34 * cos30;
         cam[0] = 0x2000;
         cam[1] = 0x1000;
-        xTerm = lbl_803E3D38 * -mathSinf((lbl_803E3D3C * (f32) * (s16*)obj) / lbl_803E3D40);
-        negSin = -mathCosf((lbl_803E3D3C * (f32) * (s16*)obj) / lbl_803E3D40);
+        xTerm = lbl_803E3D38 * -mathSinf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
+        negSin = -mathCosf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
         zTerm = (fz = lbl_803E3D38) * negSin;
         ((GameObject*)cam)->anim.localPosX = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
         ((GameObject*)cam)->anim.localPosY = (fz + ((GameObject*)obj)->anim.worldPosY) + dz;
         ((GameObject*)cam)->anim.localPosZ = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
-        Camera_SetFovY(lbl_803E3D44);
+        Camera_SetFovY(gDeathSeqCameraFovY);
         state->camActive = 1;
         state->dist += interpolate(state->distTarget - state->dist, lbl_803E3D48, timeDelta);
         Rcp_SetViewFinderHudEnabled(0);
