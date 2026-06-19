@@ -423,8 +423,8 @@ extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);
 
 extern f32 lbl_803E550C;
-extern f32 lbl_803E5510;
-extern f32 lbl_803E5514;
+extern f32 gShStaffMapUnloadDistSq;
+extern f32 gShStaffMapLoadDistSq;
 
 #pragma optimization_level 1
 #pragma opt_strength_reduction on
@@ -539,7 +539,7 @@ void sh_staff_update(int obj)
             state->fadeTimer = lbl_803E54E0;
             GameBit_Set(0x18b, 1);
         }
-        else if (dist > lbl_803E5510)
+        else if (dist > gShStaffMapUnloadDistSq)
         {
             if (state->mapLoaded != 0)
             {
@@ -547,7 +547,7 @@ void sh_staff_update(int obj)
                 mapUnload(0x13, 0x20000000);
             }
         }
-        else if (dist < lbl_803E5514)
+        else if (dist < gShStaffMapLoadDistSq)
         {
             if (state->mapLoaded == 0)
             {

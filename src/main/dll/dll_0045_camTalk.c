@@ -12,7 +12,7 @@
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern CameraModeBikeState* lbl_803DD540;
+extern CameraModeBikeState* gCamTalkBikeState;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
@@ -25,17 +25,17 @@ extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 timeDelta;
 extern f32 lbl_803E1780;
-extern const f32 lbl_803E1784;
+extern const f32 gCamTalkDefaultFov;
 extern const f32 lbl_803E1788;
 extern f32 lbl_803E178C;
 extern const f32 lbl_803E1790;
 extern const f32 lbl_803E1794;
 extern const f32 lbl_803E1798;
-extern const f32 lbl_803E179C;
-extern const f32 lbl_803E17A0;
+extern const f32 gCamTalkPi;
+extern const f32 gCamTalkAngleUnitScale;
 extern const f32 lbl_803E17A4;
 extern const f32 lbl_803E17A8;
-extern const f32 lbl_803E17AC;
+extern const f32 gCamTalkDefaultFollowDist;
 extern const f32 lbl_803E17B0;
 extern const f32 lbl_803E17B4;
 extern f32 lbl_803E17C0;
@@ -46,16 +46,16 @@ extern f32 lbl_803E17D0;
 
 void CameraModeBike_copyToCurrent(f32* param_1)
 {
-    lbl_803DD540->turnInput = param_1[0];
-    lbl_803DD540->heightInput = param_1[1];
-    lbl_803DD540->rollInput = param_1[2];
-    lbl_803DD540->pitchTarget = param_1[3];
+    gCamTalkBikeState->turnInput = param_1[0];
+    gCamTalkBikeState->heightInput = param_1[1];
+    gCamTalkBikeState->rollInput = param_1[2];
+    gCamTalkBikeState->pitchTarget = param_1[3];
 }
 
 void CameraModeBike_free(void)
 {
-    mm_free(lbl_803DD540);
-    lbl_803DD540 = 0;
+    mm_free(gCamTalkBikeState);
+    gCamTalkBikeState = 0;
 }
 
 #pragma peephole on
@@ -99,32 +99,32 @@ void CameraModeBike_update(CameraObject* camera)
     target = (GameObject*)camera->anim.targetObj;
     if (target != NULL)
     {
-        camera->fov = lbl_803E1784;
+        camera->fov = gCamTalkDefaultFov;
         xformIn.x = target->anim.worldPosX;
         xformIn.y = target->anim.worldPosY;
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
         xformIn.yaw = target->anim.rotX;
         local_a0 = (s64)(int)
-        lbl_803DD540->pitchTarget;
+        gCamTalkBikeState->pitchTarget;
         xformIn.pitch = (u16)(int)
-        lbl_803DD540->pitchTarget;
+        gCamTalkBikeState->pitchTarget;
         xformIn.roll = 0;
         setMatrixFromObjectPos(mtxBuf, &xformIn);
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
                               &posZ, &posY, &posX);
         camera->anim.rotX = 0x8000 - target->anim.rotX;
-        lbl_803DD540->smoothedYawOffset =
+        gCamTalkBikeState->smoothedYawOffset =
             lbl_803E1790 *
-            (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
-            lbl_803DD540->smoothedYawOffset;
+            (lbl_803E1794 * gCamTalkBikeState->turnInput - gCamTalkBikeState->smoothedYawOffset) +
+            gCamTalkBikeState->smoothedYawOffset;
         rotVal = (int)
         ((f32)(s32)
-        camera->anim.rotX + lbl_803DD540->smoothedYawOffset
+        camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset
         )
         ;
         camera->anim.rotX = rotVal;
-        rotVal = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
+        rotVal = (int)(lbl_803E1798 - gCamTalkBikeState->pitchTarget);
         angleDelta = (short)rotVal - camera->anim.rotY;
         if (0x8000 < angleDelta)
         {
@@ -135,22 +135,22 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         camera->anim.rotY = camera->anim.rotY + (angleDelta >> 3);
-        sinYaw = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        cosYaw = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        cosPitch = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        sinPitch = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        followDist = -lbl_803DD540->heightInput / lbl_803E17A4;
+        sinYaw = mathSinf(gCamTalkPi * (f32)(s32)((int)camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
+        cosYaw = mathCosf(gCamTalkPi * (f32)(s32)((int)camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
+        cosPitch = mathCosf(gCamTalkPi * (f32)(s32)camera->anim.rotY / gCamTalkAngleUnitScale);
+        sinPitch = mathSinf(gCamTalkPi * (f32)(s32)camera->anim.rotY / gCamTalkAngleUnitScale);
+        followDist = -gCamTalkBikeState->heightInput / lbl_803E17A4;
         clampedHeight = (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
-        lbl_803DD540->followDistance =
+        gCamTalkBikeState->followDistance =
             lbl_803E17A8 *
-            ((lbl_803E17B0 * clampedHeight + lbl_803E17AC) - lbl_803DD540->followDistance) +
-            lbl_803DD540->followDistance;
-        followDist = lbl_803DD540->followDistance;
+            ((lbl_803E17B0 * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance) +
+            gCamTalkBikeState->followDistance;
+        followDist = gCamTalkBikeState->followDistance;
         cosPitch = followDist * cosPitch;
         camera->anim.worldPosX = posZ + cosPitch * cosYaw;
         camera->anim.worldPosY = posY + followDist * sinPitch;
         camera->anim.worldPosZ = posX + cosPitch * sinYaw;
-        rotVal = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
+        rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         local_60 = (s64)rotVal;
         angleDelta = (short)rotVal - camera->anim.rotZ;
         if (0x8000 < angleDelta)
@@ -179,15 +179,15 @@ void CameraModeBike_update(CameraObject* camera)
 void CameraModeBike_init(CameraObject* camera)
 {
 
-    if (lbl_803DD540 == 0)
+    if (gCamTalkBikeState == 0)
     {
-        lbl_803DD540 = (CameraModeBikeState*)mmAlloc(sizeof(CameraModeBikeState), 0xf, 0);
+        gCamTalkBikeState = (CameraModeBikeState*)mmAlloc(sizeof(CameraModeBikeState), 0xf, 0);
     }
-    memset(lbl_803DD540, 0, sizeof(CameraModeBikeState));
-    lbl_803DD540->entryFov = camera->fov;
-    lbl_803DD540->defaultFov = lbl_803E1784;
-    lbl_803DD540->defaultScale = lbl_803E1788;
-    lbl_803DD540->followDistance = lbl_803E17AC;
+    memset(gCamTalkBikeState, 0, sizeof(CameraModeBikeState));
+    gCamTalkBikeState->entryFov = camera->fov;
+    gCamTalkBikeState->defaultFov = gCamTalkDefaultFov;
+    gCamTalkBikeState->defaultScale = lbl_803E1788;
+    gCamTalkBikeState->followDistance = gCamTalkDefaultFollowDist;
 }
 
 void firstPersonPlaceCamera(GameObject* focus, int resetClamp)

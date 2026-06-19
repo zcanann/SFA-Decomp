@@ -5,7 +5,7 @@
  * triple) into a stack GfxBuf, optionally biases the spawn position by the
  * source object's world position (flags bit 0), then hands the buffer to
  * (*gModgfxInterface)->spawnEffect. The texture pointers index a shared
- * resource blob (lbl_80316FF8); the position/scale constants live in a
+ * resource blob (gDll91Func0ResourceBlob); the position/scale constants live in a
  * shared float pool (lbl_803E11D8..lbl_803E1208).
  */
 #include "main/effect_interfaces.h"
@@ -22,8 +22,8 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern u8 lbl_80316FF8[];
-extern u8 lbl_803DB928[8];
+extern u8 gDll91Func0ResourceBlob[];
+extern u8 gDll91Func0Tex[8];
 extern f32 lbl_803E11D8;
 extern f32 lbl_803E11DC;
 extern f32 lbl_803E11E0;
@@ -69,7 +69,7 @@ typedef struct
 void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     GfxBuf buf;
-    u8* base = (u8*)(int)lbl_80316FF8;
+    u8* base = (u8*)(int)gDll91Func0ResourceBlob;
     GfxCmd* e = buf.entries;
 
     e[0].layer = 0;
@@ -151,7 +151,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[10].z = lbl_803E1200;
     e[11].layer = 3;
     e[11].flags = 4;
-    e[11].tex = lbl_803DB928;
+    e[11].tex = gDll91Func0Tex;
     e[11].mode = 2;
     e[11].x = lbl_803E1204;
     e[11].y = lbl_803E11F0;
@@ -179,7 +179,7 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[14].z = lbl_803E1204;
     e[15].layer = 4;
     e[15].flags = 4;
-    e[15].tex = lbl_803DB928;
+    e[15].tex = gDll91Func0Tex;
     e[15].mode = 2;
     e[15].x = lbl_803E1200;
     e[15].y = lbl_803E11F0;
@@ -246,5 +246,5 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E11D8 + *(f32*)(posSource + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316FF8, 0x10, base + 0xb4, 0x45, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)gDll91Func0ResourceBlob, 0x10, base + 0xb4, 0x45, 0);
 }

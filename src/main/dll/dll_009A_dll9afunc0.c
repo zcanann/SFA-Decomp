@@ -5,7 +5,7 @@
  * screen effect, then hands it to the modgfx interface to spawn.
  *
  * The seven-element animation template (ScreenSeq) is read from the
- * lbl_802C2180 blob and jittered with randomGetRange; the part table
+ * gScreenFx9AAnimTemplate blob and jittered with randomGetRange; the part table
  * is built in two variants selected by `variant` (0 or 1), and the
  * header is anchored to the target/parent object positions when its
  * low flag bit is set. lbl_803E13xx are shared f32 effect constants.
@@ -15,11 +15,11 @@
 #include "main/dll/screens.h"
 #include "main/gameplay_runtime.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_802C2180[];
+extern u8 gScreenFx9AAnimTemplate[];
 extern u8 lbl_80317B98[];
 extern u8 lbl_803DB958;
-extern u8 lbl_803DB960;
-extern u8 lbl_803DB964;
+extern u8 gScreenFx9APartTexB;
+extern u8 gScreenFx9APartTexA;
 extern f32 lbl_803E1370;
 extern f32 lbl_803E1374;
 extern f32 lbl_803E1378;
@@ -47,7 +47,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     f32 rz;
     f32 ry;
 
-    seq = *(ScreenSeq*)lbl_802C2180;
+    seq = *(ScreenSeq*)gScreenFx9AAnimTemplate;
     seq.v[1] += randomGetRange(0, 0x14);
     seq.v[2] += randomGetRange(-0x14, 0x14);
     seq.v[3] += randomGetRange(-0x14, 0x14);
@@ -58,7 +58,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     {
         cur->state = 0;
         cur->id = 3;
-        cur->tex = &lbl_803DB964;
+        cur->tex = &gScreenFx9APartTexA;
         cur->flags = 8;
         cur->x = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
         cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
@@ -69,7 +69,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     {
         cur->state = 0;
         cur->id = 3;
-        cur->tex = &lbl_803DB964;
+        cur->tex = &gScreenFx9APartTexA;
         cur->flags = 8;
         cur->x = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
         cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
@@ -89,14 +89,14 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[0].z = rz;
     cur[1].state = 0;
     cur[1].id = 3;
-    cur[1].tex = &lbl_803DB964;
+    cur[1].tex = &gScreenFx9APartTexA;
     cur[1].flags = 4;
     cur[1].x = lbl_803E1370;
     cur[1].y = lbl_803E1370;
     cur[1].z = lbl_803E1370;
     cur[2].state = 0;
     cur[2].id = 3;
-    cur[2].tex = &lbl_803DB964;
+    cur[2].tex = &gScreenFx9APartTexA;
     cur[2].flags = 2;
     cur[2].x = lbl_803E1374;
     cur[2].y = lbl_803E137C * (f32)(s32)
@@ -105,21 +105,21 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     randomGetRange(4, 6) + lbl_803E1380;
     cur[3].state = 1;
     cur[3].id = 1;
-    cur[3].tex = &lbl_803DB960;
+    cur[3].tex = &gScreenFx9APartTexB;
     cur[3].flags = 4;
     cur[3].x = lbl_803E1384;
     cur[3].y = lbl_803E1370;
     cur[3].z = lbl_803E1370;
     cur[4].state = 1;
     cur[4].id = 0;
-    cur[4].tex = &lbl_803DB960;
+    cur[4].tex = &gScreenFx9APartTexB;
     cur[4].flags = 0x4000;
     cur[4].x = lbl_803E1388;
     cur[4].y = lbl_803E1370;
     cur[4].z = lbl_803E1370;
     cur[5].state = 1;
     cur[5].id = 3;
-    cur[5].tex = &lbl_803DB964;
+    cur[5].tex = &gScreenFx9APartTexA;
     cur[5].flags = 2;
     cur[5].x = lbl_803E138C;
     cur[5].y = lbl_803E1390;
@@ -146,7 +146,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     randomGetRange(-1, 1);
     cur[8].state = 2;
     cur[8].id = 0;
-    cur[8].tex = &lbl_803DB960;
+    cur[8].tex = &gScreenFx9APartTexB;
     cur[8].flags = 0x4000;
     cur[8].x = lbl_803E1388;
     cur[8].y = lbl_803E1370;
@@ -163,7 +163,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     randomGetRange(-1, 1);
     cur[10].state = 3;
     cur[10].id = 0;
-    cur[10].tex = &lbl_803DB960;
+    cur[10].tex = &gScreenFx9APartTexB;
     cur[10].flags = 0x4000;
     cur[10].x = lbl_803E1388;
     cur[10].y = lbl_803E1370;
@@ -180,14 +180,14 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     randomGetRange(-1, 1);
     cur[12].state = 4;
     cur[12].id = 0;
-    cur[12].tex = &lbl_803DB960;
+    cur[12].tex = &gScreenFx9APartTexB;
     cur[12].flags = 0x4000;
     cur[12].x = lbl_803E1388;
     cur[12].y = lbl_803E1370;
     cur[12].z = lbl_803E1370;
     cur[13].state = 4;
     cur[13].id = 1;
-    cur[13].tex = &lbl_803DB960;
+    cur[13].tex = &gScreenFx9APartTexB;
     cur[13].flags = 4;
     cur[13].x = lbl_803E1370;
     cur[13].y = lbl_803E1370;
