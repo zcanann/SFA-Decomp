@@ -4257,9 +4257,9 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
     haveEntry:
         if (e != NULL)
         {
-            t20[0] = *(f32*)((char*)e + 8);
-            t20[1] = *(f32*)((char*)e + 0xc);
-            t20[2] = *(f32*)((char*)e + 0x10);
+            t20[0] = ((ModelLightStruct*)e)->localY;
+            t20[1] = ((ModelLightStruct*)e)->localZ;
+            t20[2] = ((ModelLightStruct*)e)->worldX;
         }
         else
         {
@@ -4296,9 +4296,9 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
             }
             if (e != NULL)
             {
-                *(f32*)((char*)e + 8) = t14[0];
-                *(f32*)((char*)e + 0xc) = t14[1];
-                *(f32*)((char*)e + 0x10) = t14[2];
+                ((ModelLightStruct*)e)->localY = t14[0];
+                ((ModelLightStruct*)e)->localZ = t14[1];
+                ((ModelLightStruct*)e)->worldX = t14[2];
             }
         }
     }
