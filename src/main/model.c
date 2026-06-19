@@ -520,13 +520,13 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         for (k = 0; k < op[0x41]; k++)
         {
             u8* e = op + k * 8;
-            if (*(int*)(e + 0x24) != -1)
+            if (*(int*)&((GameObject*)e)->anim.velocityX != -1)
             {
-                *(int*)(e + 0x24) = ((int*)*(u8**)(m + 0x20))[*(int*)(e + 0x24)];
+                *(int*)&((GameObject*)e)->anim.velocityX = ((int*)*(u8**)(m + 0x20))[*(int*)&((GameObject*)e)->anim.velocityX];
             }
             else
             {
-                *(int*)(e + 0x24) = 0;
+                *(int*)&((GameObject*)e)->anim.velocityX = 0;
             }
         }
         if (*(int*)(op + 0x34) != -1)
