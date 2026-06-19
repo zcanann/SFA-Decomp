@@ -468,7 +468,7 @@ void fn_8023A3E4(int p1, int p2)
             break;
         }
         case 3:
-            if (*(s16*)(hitObj + 0x46) == 0x605 &&
+            if (((GameObject*)hitObj)->anim.seqId == 0x605 &&
                 s->timer[hitType] == 0 &&
                 s->hits[hitType] != 0 &&
                 s->mode == 0xc)
