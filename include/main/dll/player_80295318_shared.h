@@ -1112,7 +1112,7 @@ int fn_802A4F8C(int obj, int state, f32 fv);
 int fn_802A5048(int obj, int state, f32 fv);
 void fn_802A514C(int obj, int state);
 int fn_802A7160(int obj, int state);
-s16 fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, int flags);
+int fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, int flags);
 void fn_802A81B8(int obj, int state, f32 *out);
 int fn_802A8350(int obj, int p4, int src, int dst, int flag);
 int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag);

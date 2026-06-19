@@ -9427,7 +9427,7 @@ int fn_802A1114(int obj, int state)
     return 0;
 }
 
-s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
+int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
 {
     int model;
     int uf;
