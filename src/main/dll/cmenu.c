@@ -250,15 +250,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
-        if (itemMask == -1)
-        {
-            if (yButtonState == 2)
-            {
-                yButtonState = 0;
-                yButtonItemTextureId = -1;
-            }
-        }
-        else
+        if (itemMask != -1)
         {
             idsW = ids;
             aW = (s16*)(base + 0x5c8);
@@ -301,6 +293,14 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
                     yButtonState = 0;
                     yButtonItemTextureId = -1;
                 }
+            }
+        }
+        else
+        {
+            if (yButtonState == 2)
+            {
+                yButtonState = 0;
+                yButtonItemTextureId = -1;
             }
         }
     }
