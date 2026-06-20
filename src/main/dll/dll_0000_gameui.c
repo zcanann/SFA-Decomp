@@ -3801,12 +3801,7 @@ int GameUI_isItemBeingUsed(s32 id)
  * when the current id at gCMenuActivatedId is non-negative, 0 otherwise. */
 int GameUI_isAnyItemBeingUsed(void)
 {
-    s32 activeId = gCMenuActivatedId;
-    s32 inverted = activeId ^ -1;
-    s32 shifted = inverted >> 1;
-    shifted -= inverted & activeId;
-
-    return (u32)shifted >> 31;
+    return gCMenuActivatedId > -1;
 }
 
 /* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
