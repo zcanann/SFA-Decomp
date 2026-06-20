@@ -351,16 +351,20 @@ void fn_80137998(void)
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
  * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
  * record counter at gDebugRecordCount has already exceeded 0xFA. */
+#pragma optimization_level 1
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
     u8* p;
+    u8 tag;
+    u8 term;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
     if (n > 0xfa) return;
+    tag = 0x81;
     p = debugLogEnd;
     debugLogEnd = p + 1;
-    *p = 0x81;
+    *p = tag;
     p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = r;
@@ -373,10 +377,12 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = a;
+    term = 0;
     p = debugLogEnd;
     debugLogEnd = p + 1;
-    *p = 0;
+    *p = term;
 }
+#pragma optimization_level reset
 
 /* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via objAudioFn_800393f8) only when:
