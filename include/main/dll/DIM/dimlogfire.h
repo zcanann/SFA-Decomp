@@ -16,7 +16,7 @@ typedef struct DimLogFireState {
     u8 pad08[8];
     f32 flickerTimerA; /* light flicker cadence pair */
     f32 flickerTimerB;
-    u8 unk18; /* low byte of def+0x1A */
+    u8 initMode; /* 0x18: from def initMode; ==0 starts lit (mode 1) else unlit (mode 2) */
     u8 pad19;
     u8 mode; /* 1 = lit (gamebit), 4 = from anim event 3 */
     u8 smokeToggle; /* anim event 1 toggles; partfx 215 while set */
