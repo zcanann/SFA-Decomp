@@ -167,14 +167,16 @@ void fn_8026EC44(u32 dt)
                 }
                 cnt = gSynthCurrentVoice->counter + 1;
                 gSynthCurrentVoice->counter = cnt - (cnt / 5) * 5;
-                cs = gSynthCurrentVoice;
-                st = &cs->streams[0];
-                sum = st->o[0].acc + st->d[0].step;
-                st->o[0].acc = sum & 0xffff;
-                st->o[0].out = (sum >> 16) + st->d[0].delta + st->o[0].out;
-                sum = st->o[1].acc + st->d[1].step;
-                st->o[1].acc = sum & 0xffff;
-                st->o[1].out = (sum >> 16) + st->d[1].delta + st->o[1].out;
+                sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
+                gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
+                gSynthCurrentVoice->streams[0].o[0].out =
+                    (gSynthCurrentVoice->streams[0].d[0].delta + gSynthCurrentVoice->streams[0].o[0].out) +
+                    (sum >> 16);
+                sum = gSynthCurrentVoice->streams[0].o[1].acc + gSynthCurrentVoice->streams[0].d[1].step;
+                gSynthCurrentVoice->streams[0].o[1].acc = sum & 0xffff;
+                gSynthCurrentVoice->streams[0].o[1].out =
+                    (gSynthCurrentVoice->streams[0].d[1].delta + gSynthCurrentVoice->streams[0].o[1].out) +
+                    (sum >> 16);
             }
             else
             {
@@ -237,13 +239,16 @@ void fn_8026EC44(u32 dt)
                 gSynthCurrentVoice->counter = cnt - (cnt / 5) * 5;
                 for (i = 0; i < 16; i++)
                 {
-                    st = &gSynthCurrentVoice->streams[i];
-                    sum = st->o[0].acc + st->d[0].step;
-                    st->o[0].acc = sum & 0xffff;
-                    st->o[0].out = (sum >> 16) + st->d[0].delta + st->o[0].out;
-                    sum = st->o[1].acc + st->d[1].step;
-                    st->o[1].acc = sum & 0xffff;
-                    st->o[1].out = (sum >> 16) + st->d[1].delta + st->o[1].out;
+                    sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
+                    gSynthCurrentVoice->streams[i].o[0].acc = sum & 0xffff;
+                    gSynthCurrentVoice->streams[i].o[0].out =
+                        (gSynthCurrentVoice->streams[i].d[0].delta + gSynthCurrentVoice->streams[i].o[0].out) +
+                        (sum >> 16);
+                    sum = gSynthCurrentVoice->streams[i].o[1].acc + gSynthCurrentVoice->streams[i].d[1].step;
+                    gSynthCurrentVoice->streams[i].o[1].acc = sum & 0xffff;
+                    gSynthCurrentVoice->streams[i].o[1].out =
+                        (gSynthCurrentVoice->streams[i].d[1].delta + gSynthCurrentVoice->streams[i].o[1].out) +
+                        (sum >> 16);
                 }
             }
             if ((ret == 0) && (cb == 0))
