@@ -633,8 +633,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     {
         if (nextDistance > targetDistance)
         {
-            phase -= phaseStep *
-                ((nextDistance - targetDistance) / (nextDistance - previousDistance));
+            phase -= (phaseStep * (nextDistance - targetDistance)) /
+                (nextDistance - previousDistance);
             break;
         }
         sampleIndex++;
