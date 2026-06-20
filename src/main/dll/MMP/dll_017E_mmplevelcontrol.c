@@ -143,7 +143,7 @@ void MMP_levelcontrol_update(int obj)
             }
             ((GameObject*)obj)->unkF8 = 1;
         }
-        else if (coordsToMapCell(*(f32*)(playerForMap + 0xc), *(f32*)(playerForMap + 0x14)) == 0x12)
+        else if (coordsToMapCell(((GameObject*)playerForMap)->anim.localPosX, ((GameObject*)playerForMap)->anim.localPosZ) == 0x12)
         {
             skyFn_80088c94(7, 0);
             if (((GameObject*)obj)->unkF4 == 2)
