@@ -232,7 +232,7 @@ void curvefish_update(int obj)
         distLimit *= distLimit;
         distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
         i = 0;
-        while (distance < distLimit && i < 5)
+        while (distLimit > distance && i < 5)
         {
             Curve_AdvanceAlongPath((RomCurveWalker*)state, lbl_803E38F8);
             distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
