@@ -206,11 +206,11 @@ void voxmaps_worldToGrid(f32* in, s16* out)
 
 void voxmaps_resetLoadedMaps(void)
 {
-    VoxMapSlotOrigin* slotOrigin = gVoxMaps.slotOrigin;
-    u8* b = gVoxMapsSlotInUse;
-    int* timer = gVoxMaps.timer;
-    int* blockId = gVoxMaps.blockId;
     void** mapBuffer = gVoxMaps.mapBuffer;
+    int* blockId = gVoxMaps.blockId;
+    int* timer = gVoxMaps.timer;
+    u8* b = gVoxMapsSlotInUse;
+    VoxMapSlotOrigin* slotOrigin = gVoxMaps.slotOrigin;
     int i;
     for (i = 0; i < 6; i++)
     {
