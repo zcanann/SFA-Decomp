@@ -19,7 +19,6 @@
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 timeDelta;
 
 extern u32 fn_80174BFC();
 
