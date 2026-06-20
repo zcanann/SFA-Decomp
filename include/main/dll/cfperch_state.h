@@ -23,15 +23,15 @@ typedef struct CfperchState {
     s16 randomTimer;
     s16 sfxId;
     s16 respawnTimer;    /* 0x12 respawn countdown; on expiry scatters contents + warps home */
-    int unk14;
-    int unk18;
+    int hiddenTimer;     /* 0x14 hide/fade countdown while disabled; >0 keeps object hidden, on expiry re-enables hits */
+    int respawnDelay;    /* 0x18 configured respawn delay (placement seconds * 60), reused as hiddenTimer reload */
     s16 enableGameBit;
     u8 subtype;          /* 0x1E object subtype, selects ambient sfx (0x6c/0x6d) */
     u8 unk1F;
-    u8 unk20;
+    u8 disguiseGated;    /* 0x20 set for seqId 0x662; gates the disguise-required interaction path */
     u8 unk21[0x28 - 0x21];
 } CfperchState;
 
-STATIC_ASSERT(offsetof(CfperchState, unk14) == 0x14);
+STATIC_ASSERT(offsetof(CfperchState, hiddenTimer) == 0x14);
 
 #endif /* MAIN_DLL_CFPERCH_STATE_H_ */
