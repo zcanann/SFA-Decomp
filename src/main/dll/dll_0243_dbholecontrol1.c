@@ -192,7 +192,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)&((GroundBaddieState*)param_10)->baddie.targetObj + 0x10) - lbl_803E6F90))
+        (((GameObject*)param_9)->anim.localPosY < ((GameObject*)((GroundBaddieState*)param_10)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
     {
         iVar3 = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
         deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
