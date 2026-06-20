@@ -308,11 +308,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
         }
     }
     p = gNewClouds[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }
@@ -392,11 +388,7 @@ void snowFreeSnowCloud(int cloudId)
         }
     }
     p = gNewClouds[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }
@@ -623,11 +615,7 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
         }
     }
     p = gNewClouds[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (gSnowFlakeSize == gSnowFlakeWaveValue)
+    if (p == NULL || gSnowFlakeSize == gSnowFlakeWaveValue)
     {
         return;
     }
@@ -1415,11 +1403,7 @@ void snowReposSnowCloud(int cloudId)
         }
     }
     p = gNewClouds[i];
-    if (p == NULL)
-    {
-        return;
-    }
-    if (i == 8)
+    if (p == NULL || i == 8)
     {
         return;
     }

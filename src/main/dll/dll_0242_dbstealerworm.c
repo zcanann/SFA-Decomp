@@ -971,7 +971,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         *(f32*)(sub->linkedObj + 0x14) = ((GameObject*)obj)->anim.localPosZ;
         *(f32*)(sub->linkedObj + 0x10) += lbl_803E62D0;
     }
-    if (visible != 0 && ((GameObject*)obj)->unkF4 == 0 && state->targetState != 0)
+    if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0) { return; }
     {
         {
             if (state->unk3E8 != lbl_803E62A8)
@@ -1708,14 +1708,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
     player = Obj_GetPlayerObject();
     d = Obj_GetYawDeltaToObject(obj, player, &yawf);
     flag = 0;
-    if (d >= 0)
-    {
-    }
-    else
-    {
-        d = -d;
-    }
-    if (d < 0x1c71 && yawf < lbl_803E62D0)
+    if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
     {
         flag = 1;
     }
@@ -1880,14 +1873,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        if (d >= 0)
-        {
-        }
-        else
-        {
-            d = -d;
-        }
-        if (d < 0x1c71 && yawf < lbl_803E62D0)
+        if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
         }
@@ -2232,14 +2218,7 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
         player = Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
-        if (d >= 0)
-        {
-        }
-        else
-        {
-            d = -d;
-        }
-        if (d < 0x1c71 && yawf < lbl_803E62D0)
+        if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
         {
             flag = 1;
         }
@@ -2517,8 +2496,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     GroundBaddieState* blob = ((GameObject*)obj)->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     int n = 0x1f40 / blob->aggression;
-    int tmpA;
     int tmpB;
+    int tmpA;
     int q;
     int target;
     f32 frac;

@@ -64,7 +64,7 @@ void FUN_8011f438(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 void hudDrawAirMeter(void);
 void fearTestMeterDraw(void);
-void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c);
+void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c);
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 
 #endif /* MAIN_DLL_TRICKY_H_ */

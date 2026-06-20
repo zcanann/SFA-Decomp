@@ -1478,7 +1478,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
             else
             {
                 bitVal = randomGetRange(0, 6);
-                if (((int)bitVal < 5) && (0 <= bitVal))
+                if (((int)bitVal < 5) && ((int)bitVal >= 0))
                 {
                     tricky_startRandomIdleMove(obj, (int)trickyState);
                 }
@@ -1805,7 +1805,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
 
 void fn_80144B50(u8* obj, u8* state)
 {
-    int hit[3];
+    int hit[1];
     u8* ptr;
     f32 fv;
     int inWater;

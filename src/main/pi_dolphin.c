@@ -3844,7 +3844,7 @@ int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
     *(s16*)((char*)queue + 0x20) = i;
     o4 = i;
     o8 = i;
-    for (i = 0; i < 0xf8; i += 8)
+    for (; i < 0xf8; i += 8)
     {
         *(int*)(queue[1] + o4) = 0;
         *(u8*)(*queue + o8 + 0xe) = 0;
@@ -3890,7 +3890,7 @@ int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
     }
     i = node[1] + node[2];
     heap = (u32*)queue[1];
-    hh = (u16*)heap;
+    hh = (u16*)queue[1];
     v = *(s16*)((char*)queue + 0x20) - 1;
     hh[++(*(s16*)((char*)queue + 0x22)) * 4 + 2] = v;
     *(u32*)((int)heap + *(s16*)((char*)queue + 0x22) * 8) = -1 - i;
@@ -4470,7 +4470,7 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
             node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)q[3]);
         }
         heap = (u32*)q[1];
-        hh = (u16*)heap;
+        hh = (u16*)q[1];
         v = cnt;
         hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
         *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = 0xfffffffe;
@@ -5170,10 +5170,15 @@ void textureFn_8004c330(void* p1, void* mtx)
         lbl_803DCD2C = textureAlloc(0x20, 0x20, 4, 0, 0, 1, 1, 1, 1);
         for (y = 0; y < 0x20; y++)
         {
-            for (x = 0; x < 0x20; x++)
+            int yhi;
+            int ylo;
+            x = 0;
+            yhi = (y >> 2) * 0x20;
+            ylo = (y & 3) * 2;
+            for (; x < 0x20; x++)
             {
-                u8* row = lbl_803DCD2C + (y & 3) * 2;
-                dst = row + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x100;
+                dst = lbl_803DCD2C + ylo;
+                dst = dst + yhi + (x & 3) * 8 + (x >> 2) * 0x100;
                 v1 = randomGetRange(0x80, 0xff);
                 v2 = v1 - randomGetRange(0, 0x40);
                 v3 = v1 - randomGetRange(0x40, 0x80);
@@ -6247,7 +6252,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7) { return; }
     {
         d1 = lbl_803DEADC;
         f = d1 / scale;
@@ -6332,7 +6337,7 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7) { return; }
     {
         d1 = lbl_803DEADC;
         f = d1 / scale;
@@ -6419,7 +6424,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0x10 && lbl_803DCD69 < 7)
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7) { return; }
     {
         if (scale < lbl_803DEAE4)
         {
@@ -7289,8 +7294,8 @@ extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern int lbl_803DB5C8;
 extern int gAttractMovieState;
-extern s16 gDepthReadPendingQueue[];
-extern s16 gDepthReadResults[];
+extern u16 gDepthReadPendingQueue[];
+extern u16 gDepthReadResults[];
 extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
@@ -7572,8 +7577,8 @@ void videoFn_800499e8(void)
     }
     Queue_Peek(lbl_8035F730, &peek);
     i = 0;
-    src = (u16*)gDepthReadPendingQueue;
-    dst = (u16*)gDepthReadResults;
+    src = gDepthReadPendingQueue;
+    dst = gDepthReadResults;
     for (; i < (int)(u32)gDepthReadPendingCount; i++)
     {
         dst[0] = src[0];

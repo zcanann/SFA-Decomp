@@ -584,7 +584,7 @@ extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E1E80;
 
 
-void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, int p7)
+void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, u8 p5, int p6, int p7)
 {
     int dx, dy;
     f32 c0, c1;
@@ -650,7 +650,7 @@ extern int lbl_803E1E34;
 extern int lbl_803E1E38;
 extern char lbl_803A8830[];
 
-void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c)
+void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
 {
     GXColor colA = *(GXColor*)&lbl_803E1E34;
     GXColor colB = *(GXColor*)&lbl_803E1E38;
@@ -722,10 +722,10 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     y0 -= 0x3c0;
     x1 -= 0x500;
     y1 -= 0x3c0;
-    x0 = x0 * lbl_803DBA8C;
-    y0 = y0 * lbl_803DBA8C;
-    x1 = x1 * lbl_803DBA8C;
-    y1 = y1 * lbl_803DBA8C;
+    x0 = (f32)(u32)x0 * lbl_803DBA8C;
+    y0 = (f32)(u32)y0 * lbl_803DBA8C;
+    x1 = (f32)(u32)x1 * lbl_803DBA8C;
+    y1 = (f32)(u32)y1 * lbl_803DBA8C;
     GXBegin(0x80, 1, 4);
     z = (s16)(lbl_803DBA8A << 2);
     GXWGFifo.s16 = (s16)(x0 + 0x500);
@@ -753,7 +753,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = v1;
 }
 
-void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
+void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 u1, u0, v0, sy, sx, v1;
     u32 w, h;
@@ -946,11 +946,12 @@ void fearTestMeterDraw(void)
 {
     GXColor col;
     int sc0, sc1, sc2, sc3;
+    int a;
     void* texB = *(void**)(hudTextures + 0x180);
     u16 hgt = ((Texture*)texB)->height;
     int gap = fearTestMeterOuterHalfWidth - fearTestMeterInnerHalfWidth;
     void* texA = *(void**)(hudTextures + 0x17c);
-    int wid = (u8)((Texture*)texA)->width;
+    int wid = *(u16*)((char*)texA + 0xa) & 0xff;
     if (gFearTestMeterFadeIn != 0)
     {
         gFearTestMeterAlpha = gFearTestMeterAlpha + gFearTestMeterFadeSpeed * framesThisStep;
@@ -959,15 +960,17 @@ void fearTestMeterDraw(void)
     {
         gFearTestMeterAlpha = gFearTestMeterAlpha - gFearTestMeterFadeSpeed * framesThisStep;
     }
-    if (gFearTestMeterAlpha < 0)
+    a = gFearTestMeterAlpha;
+    if (a < 0)
     {
-        gFearTestMeterAlpha = 0;
+        a = 0;
     }
-    else if (gFearTestMeterAlpha > 0xff)
+    else if (a > 0xff)
     {
-        gFearTestMeterAlpha = 0xff;
+        a = 0xff;
     }
-    if (gFearTestMeterAlpha == 0) return;
+    gFearTestMeterAlpha = a;
+    if (a == 0) return;
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     drawScaledTexture(*(void**)(hudTextures + 0x17c),

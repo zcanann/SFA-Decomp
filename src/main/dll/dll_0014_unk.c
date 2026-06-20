@@ -3506,14 +3506,14 @@ int curves_isPoint(RomCurveDef* curve)
 
 f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ)
 {
+    RomCurveDef* curve;
+    RomCurveDef* linkedCurve;
     int curveIndex;
     int linkIndex;
     int high;
     int low;
     int mid;
     u32 linkId;
-    RomCurveDef* curve;
-    RomCurveDef* linkedCurve;
     f32 pointX;
     f32 pointY;
     f32 pointZ;
@@ -3553,8 +3553,8 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                         segment.endY = linkedCurve->y;
                         segment.endZ = linkedCurve->z;
                         distance = RomCurve_distanceToSegment(pointX, pointY, pointZ, &segment);
-                        absBestDistance = (bestDistance < gFloatZero) ? -bestDistance : bestDistance;
-                        absDistance = (distance < gFloatZero) ? -distance : distance;
+                        absBestDistance = (bestDistance < *(volatile f32*)&gFloatZero) ? -bestDistance : bestDistance;
+                        absDistance = (distance < *(volatile f32*)&gFloatZero) ? -distance : distance;
                         if (absDistance < absBestDistance)
                         {
                             gRomCurveLastFindStart = curve;
@@ -4256,8 +4256,8 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
 
 void curves_remove(RomCurveDef* curve)
 {
-    int sortedCurveCount;
     RomCurveDef** tableSlot;
+    int sortedCurveCount;
     int removeIndex;
 
     removeIndex = 0;

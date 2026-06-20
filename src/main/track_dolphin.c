@@ -2790,7 +2790,10 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
     dx = px - cx;
     sum = dx * dx;
     dy = p5[0] - cy;
-    sum = sum + dy * dy;
+    {
+        f32 dyy = dy * dy;
+        sum = sum + dyy;
+    }
     cc = sum - r * r;
     if (cc < __AR_Callback)
     {
@@ -3485,6 +3488,20 @@ typedef union
 } GolfWGPipe;
 
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
+
+static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
+{
+    GXWGFifo.s16 = x;
+    GXWGFifo.s16 = y;
+    GXWGFifo.s16 = z;
+}
+
+static inline void GXTexCoord2s16(const s16 x, const s16 y)
+{
+    GXWGFifo.s16 = x;
+    GXWGFifo.s16 = y;
+}
+
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -3508,6 +3525,7 @@ extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void selectTexture(int tex, int slot);
 extern void GXBegin(int type, int fmt, int count);
 
+#pragma peephole on
 void objDrawFn_80061654(int obj, int placementObj)
 {
     s16* shadowVerts;
@@ -3567,30 +3585,19 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetBlendMode(1, 4, 5, 5);
             selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
             GXBegin(0x80, 6, 4);
-            GXWGFifo.s16 = shadowVerts[0];
-            GXWGFifo.s16 = shadowVerts[1];
-            GXWGFifo.s16 = shadowVerts[2];
-            GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = shadowVerts[3];
-            GXWGFifo.s16 = shadowVerts[4];
-            GXWGFifo.s16 = shadowVerts[5];
-            GXWGFifo.s16 = 0x400;
-            GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = shadowVerts[6];
-            GXWGFifo.s16 = shadowVerts[7];
-            GXWGFifo.s16 = shadowVerts[8];
-            GXWGFifo.s16 = 0x400;
-            GXWGFifo.s16 = 0x400;
-            GXWGFifo.s16 = shadowVerts[9];
-            GXWGFifo.s16 = shadowVerts[10];
-            GXWGFifo.s16 = shadowVerts[11];
-            GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = 0x400;
+            GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
+            GXTexCoord2s16(0, 0);
+            GXPosition3s16(shadowVerts[3], shadowVerts[4], shadowVerts[5]);
+            GXTexCoord2s16(0x400, 0);
+            GXPosition3s16(shadowVerts[6], shadowVerts[7], shadowVerts[8]);
+            GXTexCoord2s16(0x400, 0x400);
+            GXPosition3s16(shadowVerts[9], shadowVerts[10], shadowVerts[11]);
+            GXTexCoord2s16(0, 0x400);
             GXSetCurrentMtx(0);
         }
     }
 }
+#pragma peephole reset
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {

@@ -225,8 +225,8 @@ void* Obj_GetActiveModel(u8* obj)
 
 void Obj_ClearModelColorFadeRecursive(u8* obj)
 {
-    int i;
     u8* childScan;
+    int i;
 
     ((GameObject*)obj)->colorFadeFrames = 0;
     ((GameObject*)obj)->colorFadeFlags &= ~0x6;
@@ -328,8 +328,8 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
 #pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
-    int i;
     u8* childScan;
+    int i;
 
     if (enabled != 0)
     {
@@ -2265,15 +2265,14 @@ void Obj_RegisterObject(u8* obj, int flags)
     object->previousLocalPosY = object->localPosY;
     object->previousLocalPosZ = object->localPosZ;
     Obj_RunInitCallback(obj, (int)object->placementData, 0);
-    hitState = (ObjHitsPriorityState*)object->hitReactState;
-    if (hitState != NULL)
+    if (object->hitReactState != NULL)
     {
-        hitState->localPosX = object->localPosX;
-        hitState->localPosY = object->localPosY;
-        hitState->localPosZ = object->localPosZ;
-        hitState->worldPosX = object->localPosX;
-        hitState->worldPosY = object->localPosY;
-        hitState->worldPosZ = object->localPosZ;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosZ = object->localPosZ;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosZ = object->localPosZ;
     }
     id = object->modelInstance->mapLoadObjectId;
     if (id > -1)
