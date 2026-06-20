@@ -168,9 +168,9 @@ extern f32 timeDelta;
 typedef struct AnimatedobjPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     s32 unk14;
     s16 unk18;
     s16 unk1A;
@@ -1781,9 +1781,9 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         s16* cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
         prm = *(int**)&((GameObject*)obj)->anim.placementData;
-        PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement*)prm)->unk8 - playerMapOffsetX),
-                   -((AnimatedobjPlacement*)prm)->unkC,
-                   -(((AnimatedobjPlacement*)prm)->unk10 - playerMapOffsetZ));
+        PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement*)prm)->posX - playerMapOffsetX),
+                   -((AnimatedobjPlacement*)prm)->posY,
+                   -(((AnimatedobjPlacement*)prm)->posZ - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16*)(*gCameraInterface)->getCamera();
         ((GameObject*)cam)->anim.rotY += 0x8000;
