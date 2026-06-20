@@ -31,8 +31,9 @@ u32 TranslateVolume(u32 volume, u16 curve)
             if (vhigh < 0x7f)
             {
                 base = ptr[vhigh];
+                volume = base << 16;
                 d = vlow * (ptr[vhigh + 1] - base);
-                volume = d + (base << 16);
+                volume = d + volume;
             }
             else
             {
