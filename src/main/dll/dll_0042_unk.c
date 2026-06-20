@@ -856,10 +856,10 @@ void camstatic_update(CameraObject* camera)
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
-    angleDelta = getAngle(camera->anim.worldPosY -
+    angleDelta = (u16)getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
-    angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
+    angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if (0x8000 < (int)angleDelta)
     {
         angleDelta = angleDelta - 0xffff;
