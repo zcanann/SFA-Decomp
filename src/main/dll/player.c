@@ -9056,7 +9056,7 @@ void fn_802B249C(int obj, int inner, int state)
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
                 mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
-                if (mdl != NULL && *mdl != 0 && (*(u16*)(*mdl + 2) & 0x8000) == 0)
+                if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
                     *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) =
                         *(u8*)((char*)obj + 0xf2);
@@ -9078,7 +9078,7 @@ void fn_802B249C(int obj, int inner, int state)
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
                 mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
-                if (mdl != NULL && *mdl != 0 && (*(u16*)(*mdl + 2) & 0x8000) == 0)
+                if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
                     *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) =
                         *(u8*)((char*)obj + 0xf2);
