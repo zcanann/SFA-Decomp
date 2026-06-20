@@ -297,8 +297,8 @@ int fn_8026F30C(void)
     u32 i;
     int j;
     int n;
-    u32* cb;
     u32* prev;
+    u32* cb;
 
     pool = &lbl_803AF550;
     gSynthQueuedVoices = NULL;
