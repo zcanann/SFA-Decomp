@@ -355,8 +355,8 @@ void fn_801DFA28(u8* obj)
         }
         ((SBGalleonState*)state)->phaseTimer += framesThisStep;
         ((SBGalleonState*)state)->driftX += (dx - ((SBGalleonState*)state)->driftX) * (blendK = lbl_803E56FC);
-        ((SBGalleonState*)state)->driftY += (dy - ((SBGalleonState*)state)->driftY) * blendK;
-        ((SBGalleonState*)state)->driftZ += (dz - ((SBGalleonState*)state)->driftZ) * blendK;
+        ((SBGalleonState*)state)->driftY += (dy - ((SBGalleonState*)state)->driftY) * (blendK = blendK);
+        ((SBGalleonState*)state)->driftZ += (dz - ((SBGalleonState*)state)->driftZ) * (blendK = blendK);
         ambA = lbl_803E5700;
         ambB = lbl_803E5704;
         ambC = lbl_803E5708;
