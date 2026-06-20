@@ -578,8 +578,7 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     p = gMmStoreArray;
     while (i < 0x20)
     {
-        int* store = (int*)*p;
-        if (store != NULL && handle == store[3])
+        if (*p != NULL && handle == ((int*)*p)[3])
         {
             found = gMmStoreArray[i];
             break;
