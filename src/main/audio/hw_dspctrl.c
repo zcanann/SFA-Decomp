@@ -1099,14 +1099,14 @@ void salActivateVoice(SalVoice* voice, u8 idx)
         salDeactivateVoice(voice);
         voice->flags |= 0x20;
     }
-    voice->pendingDeactivate = 0;
     st = lbl_803CC1E0 + idx * 0xbc;
-    if ((voice->next = *(SalVoice**)(st + 0x48)) != NULL)
+    voice->pendingDeactivate = 0;
+    if ((voice->next = *(SalVoice**)(st += 0x48)) != NULL)
     {
         voice->next->prev = voice;
     }
     voice->prev = NULL;
-    *(SalVoice**)(st + 0x48) = voice;
+    *(SalVoice**)st = voice;
     voice->needsUpdate = 0;
     voice->active = 1;
     voice->studioIndex = idx;
