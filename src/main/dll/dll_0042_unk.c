@@ -45,8 +45,6 @@ extern f32 fn_802966F4(GameObject* obj); /* returns a target proximity/distance 
 extern void fn_8029656C(int obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(int obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
