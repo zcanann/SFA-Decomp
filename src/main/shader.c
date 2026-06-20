@@ -1811,10 +1811,8 @@ int mapCoordsToId(int x, int z, int layerIdx)
     s8* layers;
     s16* rects;
     u8* bits;
-    u8* bits2;
     int id;
     int layer;
-    int n;
     int idx;
 
     layer = curMapLayer + (&lbl_803DB624)[layerIdx];
