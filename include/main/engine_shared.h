@@ -851,7 +851,7 @@ extern f32 lbl_803DE6C4;
 extern f32 lbl_803DE6C8;
 extern f32 lbl_803DE6CC;
 extern f32 lbl_803DE6D0;
-extern char lbl_803DB294[];
+extern char lbl_803DB294;
 extern char lbl_803DB29C[];
 extern char lbl_803DB2A0[];
 extern int lbl_803DB27C;

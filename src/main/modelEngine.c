@@ -604,17 +604,17 @@ void gameTimerRun(void)
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
     }
 
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hours / 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, hours / 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hours % 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, hours % 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes / 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes / 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes % 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes % 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths / 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths / 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths % 10);
+    sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths % 10);
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
     if (minutes & 1)
     {
