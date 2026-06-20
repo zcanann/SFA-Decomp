@@ -732,7 +732,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             ((BaddieState*)state)->controlMode = result;
             if (result != currentState)
             {
-                ((BaddieState*)state)->unk276 = currentState;
+                ((BaddieState*)state)->unk276 = (s16)currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
                 if (exitFn != NULL)
                 {
@@ -746,9 +746,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 *(u8*)(state + 0x34c) = 0;
                 ((BaddieState*)state)->moveEventFlags = 0;
                 *(s16*)(state + 0x278) = 0;
-                if (*(int*)(pos + 0x54) != 0)
+                if (*(void**)(pos + 0x54) != NULL)
                 {
-                    *(u8*)(*(int*)(pos + 0x54) + 0x70) = 0;
+                    *(u8*)((char*)*(void**)(pos + 0x54) + 0x70) = 0;
                 }
             }
             done = 1;
@@ -790,7 +790,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         *(u32*)state &= 0xfffeffff;
     }
 
-    if ((*(u32*)state & 0x4000) == 0)
+    if ((*(int*)state & 0x4000) == 0)
     {
         int decay;
         f32 t;
