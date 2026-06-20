@@ -1761,7 +1761,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
  * voiceover scheduling, selection SFX, and title refresh. */
 void pauseMenuRunSubmenu(u8 p1)
 {
-    s8 sel = -1;
+    int sel = -1;
     u8 valid = 0;
     int btn = getButtonsJustPressed(0);
 
@@ -1839,19 +1839,19 @@ void pauseMenuRunSubmenu(u8 p1)
             padGetAnalogInput(0, &a1, &a2);
             if ((s8)a2 == 1)
             {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[0];
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[0];
             }
             if ((s8)a2 == -1)
             {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[1];
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[1];
             }
             if ((s8)a1 == -1 && sel == -1)
             {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[2];
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[2];
             }
             if ((s8)a1 == 1 && sel == -1)
             {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[3];
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[3];
             }
         }
         if (sel >= 0)
