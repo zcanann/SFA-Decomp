@@ -30,8 +30,6 @@ extern f32 lbl_803E4CA4;
 extern f32 lbl_803E4CA8;
 extern f32 lbl_803E4CAC;
 extern f32 lbl_803E4CB0;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 #define DIMBOSSTONSIL_HIT_EFFECT_ID 0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
