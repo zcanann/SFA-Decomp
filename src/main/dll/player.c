@@ -5591,7 +5591,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             if (((GameObject*)obj)->anim.currentMoveProgress > t &&
                 ((GameObject*)obj)->anim.currentMoveProgress < *(f32*)(slot + 0xa4))
             {
-                if (inner->unk7D8 == lbl_803E7EA4)
+                if (lbl_803E7EA4 == inner->unk7D8)
                 {
                     Sfx_PlayFromObject(obj, 0x21b);
                 }
@@ -15079,15 +15079,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             f32 q = *(f32*)((char*)d + 0x4) -
             (*(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x10) - *(f32*)((char*)c + 0xc)) +
                 *(f32*)((char*)c + 0xc));
-            if (*(f32*)((char*)d + 0x0) < lbl_803E7ED8)
-            {
-                return 0;
-            }
-            if (*(f32*)((char*)d + 0x0) > lbl_803E7FBC)
-            {
-                return 0;
-            }
-            if (q < lbl_803E80C4)
+            if (!(*(f32*)((char*)d + 0x0) >= lbl_803E7ED8) ||
+                !(*(f32*)((char*)d + 0x0) <= lbl_803E7FBC) ||
+                !(q >= lbl_803E80C4))
             {
                 return 0;
             }
