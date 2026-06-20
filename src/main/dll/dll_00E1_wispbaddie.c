@@ -607,19 +607,19 @@ void fn_8014FF24(int a, int b)
 void fn_8014FF58(int unused, char* p)
 {
     f32 v1c;
-    *(f32*)(p + 0x2ac) = lbl_803E2728;
+    ((BaddieState*)p)->speedScale = lbl_803E2728;
     *(u32*)(p + 0x2e4) = 1;
     *(u32*)(p + 0x2e4) |= 0x80;
-    *(f32*)(p + 0x308) = lbl_803E272C;
-    *(f32*)(p + 0x300) = lbl_803E2730;
-    *(f32*)(p + 0x304) = lbl_803E2734;
-    *(u8*)(p + 0x320) = 0;
+    ((BaddieState*)p)->unk308 = lbl_803E272C;
+    ((BaddieState*)p)->unk300 = lbl_803E2730;
+    ((BaddieState*)p)->unk304 = lbl_803E2734;
+    ((BaddieState*)p)->unk320 = 0;
     v1c = lbl_803E2738;
     *(f32*)(p + 0x314) = v1c;
-    *(u8*)(p + 0x321) = 0;
-    *(f32*)(p + 0x318) = lbl_803E273C;
-    *(u8*)(p + 0x322) = 0;
-    *(f32*)(p + 0x31c) = v1c;
+    ((BaddieState*)p)->unk321 = 0;
+    ((BaddieState*)p)->unk318 = lbl_803E273C;
+    ((BaddieState*)p)->unk322 = 0;
+    ((BaddieState*)p)->unk31C = v1c;
 }
 
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
