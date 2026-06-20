@@ -18,7 +18,6 @@
 #include "main/player_control_interface.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern f32 timeDelta;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
