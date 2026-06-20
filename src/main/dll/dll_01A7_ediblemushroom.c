@@ -184,7 +184,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         else if (((EdibleMushroomState*)state)->flags & 1)
         {
-            if (sval == 3)
+            if (sval == 3u)
             {
                 ((EdibleMushroomState*)state)->animState = 4;
             }
