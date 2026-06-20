@@ -5646,8 +5646,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             rec2 = (s16*)(vt + hi * 0x10);
         }
         {
-            s16 j0 = rec2[2];
-            s16 j1 = rec2[3];
+            int j0 = rec2[2];
+            int j1 = rec2[3];
             if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80)
             {
                 fa = rec2[0];
@@ -5658,12 +5658,12 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 fa = (f32)(s8) * (u8*)rec2;
                 fb = (f32)(s8) * ((u8*)rec2 + 1);
             }
-            outf[1] = *(f32*)(vp + j0 * 0xc);
+            outf[1] = ((f32*)vp)[j0 * 3];
             va2 = (f32*)(vp + j0 * 0xc);
             outf[3] = va2[1];
             outf[0xf] = outf[3] + fa;
             outf[5] = va2[2];
-            outf[2] = *(f32*)(vp + j1 * 0xc);
+            outf[2] = ((f32*)vp)[j1 * 3];
             vb2 = (f32*)(vp + j1 * 0xc);
             outf[4] = vb2[1];
             outf[0x10] = outf[4] + fb;
