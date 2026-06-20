@@ -1093,7 +1093,7 @@ void hudDrawAirMeter(void)
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
                               ((TrickyAirMeter*)m)->unk18, 0x100, clampedC, 0x1a, 0);
             drawTexture((void*)m[0xd], (f32)(int)(by + m[2]),
-                        (f32)(int)(0x1a4 - ((u32)*(u16*)((char*)m[0xd] + 0xc) >> 1)),
+                        (f32)(int)cy,
                         ((TrickyAirMeter*)m)->unk18, 0x100);
             break;
         }
