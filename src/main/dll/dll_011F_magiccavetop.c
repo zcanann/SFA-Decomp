@@ -36,9 +36,9 @@ typedef struct MagiccavetopObjectDef
 typedef struct MagiccavetopState
 {
     u8 pad0[0x1 - 0x0];
-    u8 unk1;
+    u8 flags;
     u8 pad2[0x4 - 0x2];
-    f32 unk4;
+    f32 fadeTimer;
     u8 pad8[0xC - 0x8];
 } MagiccavetopState;
 
@@ -86,7 +86,7 @@ void magiccavetop_init(int* obj, s8* def)
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | 0x6000);
     if (GameBit_Get(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
-        ((MagiccavetopState*)state)->unk4 = gMagicCaveTopFadeMax;
+        ((MagiccavetopState*)state)->fadeTimer = gMagicCaveTopFadeMax;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
@@ -94,7 +94,7 @@ void magiccavetop_init(int* obj, s8* def)
     {
         if (GameBit_Get(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
         {
-            ((MagiccavetopState*)state)->unk1 = (u8)(((MagiccavetopState*)state)->unk1 | 0x0c);
+            ((MagiccavetopState*)state)->flags = (u8)(((MagiccavetopState*)state)->flags | 0x0c);
             *(u8*)((char*)refs + 8) = 23;
         }
         else
@@ -320,20 +320,20 @@ void magiccavetop_update(int* obj)
     }
     if (gb != 0)
     {
-        if (lbl_803E3C38 == ((MagiccavetopState*)sub)->unk4)
+        if (lbl_803E3C38 == ((MagiccavetopState*)sub)->fadeTimer)
         {
             Sfx_PlayFromObject(obj, 0x4a2);
         }
-        ((MagiccavetopState*)sub)->unk4 += timeDelta;
-        if (((MagiccavetopState*)sub)->unk4 > gMagicCaveTopFadeMax)
+        ((MagiccavetopState*)sub)->fadeTimer += timeDelta;
+        if (((MagiccavetopState*)sub)->fadeTimer > gMagicCaveTopFadeMax)
         {
-            ((MagiccavetopState*)sub)->unk4 = gMagicCaveTopFadeMax;
+            ((MagiccavetopState*)sub)->fadeTimer = gMagicCaveTopFadeMax;
             ((GameObject*)obj)->anim.alpha = 0xff;
         }
         else
         {
             ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(gMagicCaveTopAlphaMax * (((MagiccavetopState*)sub)->unk4 / gMagicCaveTopFadeMax));
+                (u8)(int)(gMagicCaveTopAlphaMax * (((MagiccavetopState*)sub)->fadeTimer / gMagicCaveTopFadeMax));
         }
     }
     else
