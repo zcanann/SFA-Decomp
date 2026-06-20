@@ -14,7 +14,7 @@ typedef struct Dll19APlacement
     u8 unk6;
     u8 unk7;
     u8 pad8[0x1F - 0x8];
-    s8 unk1F; /* gate-bit index added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child */
+    s8 gateBitIndex; /* added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child as link index */
 } Dll19APlacement;
 
 #define GAMEBIT_DLL19A_RESET 0x5b9
@@ -46,7 +46,7 @@ void dll_19A_update(int obj)
     }
     else
     {
-        if ((((GameObject*)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement*)setup)->unk1F + GAMEBIT_DLL19A_GATE_BASE) != 0))
+        if ((((GameObject*)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
@@ -86,7 +86,7 @@ void dll_19A_update(int obj)
             *(u8*)(newObj + 0x29) = 0xff;
             *(s8*)(newObj + 0x2e) = -1;
             {
-                int linkIdx = ((Dll19APlacement*)setup)->unk1F;
+                int linkIdx = ((Dll19APlacement*)setup)->gateBitIndex;
                 *(u8*)(newObj + 0x32) = linkIdx;
             }
             r = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,

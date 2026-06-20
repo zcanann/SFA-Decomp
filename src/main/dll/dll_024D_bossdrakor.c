@@ -16,7 +16,7 @@
  * spread. Hits (priority hit 0xE/0xF) decrement airMeterHandle; when it
  * drops below zero the boss explodes, is removed from the update list, sets
  * map-act 0x1d=3 and game bit 0x83c, and grants the defeat bit stored in the
- * placement (unk1E). Defeat anim events warp to map 0x79 and restore the HUD.
+ * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/obj_placement.h"
@@ -36,7 +36,7 @@ typedef struct BossdrakorPlacement
     u8 unk19;
     s16 unk1A;
     s16 unk1C;
-    s16 unk1E;
+    s16 defeatedGameBit;
 } BossdrakorPlacement;
 
 typedef struct BossDrakorState
@@ -750,7 +750,7 @@ void bossdrakor_hitDetect(int obj)
             ((DrakorFlags*)((char*)inner + 0x198))->b08 = 1;
             if (((BossDrakorState*)inner)->airMeterHandle < 0)
             {
-                GameBit_Set(((BossdrakorPlacement*)setup)->unk1E, 1);
+                GameBit_Set(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
                 spawnExplosion((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int*)obj);
                 (*gMapEventInterface)->setMapAct(0x1d, 3);
