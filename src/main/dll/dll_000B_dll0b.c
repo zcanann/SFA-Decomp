@@ -44,9 +44,9 @@ typedef struct ModgfxEffectSlot
     f32 posOffsetX;
     f32 posOffsetY;
     f32 posOffsetZ;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
+    f32 motionOffsetX;
+    f32 motionOffsetY;
+    f32 motionOffsetZ;
     u8 pad30[0x60 - 0x30];
     f32 posCurX;
     f32 posCurY;
@@ -3064,12 +3064,12 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x80000000)
                 {
-                    ((ModgfxEffectSlot*)eff)->unk24 = *(f32*)(E9 + emOff + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
-                        eff)->unk24;
-                    ((ModgfxEffectSlot*)eff)->unk28 = *(f32*)(E9 + emOff + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
-                        eff)->unk28;
-                    ((ModgfxEffectSlot*)eff)->unk2C = *(f32*)(E9 + emOff + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
-                        eff)->unk2C;
+                    ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(E9 + emOff + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                        eff)->motionOffsetX;
+                    ((ModgfxEffectSlot*)eff)->motionOffsetY = *(f32*)(E9 + emOff + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                        eff)->motionOffsetY;
+                    ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(E9 + emOff + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                        eff)->motionOffsetZ;
                 }
                 if (*(int*)(E9 + emOff) & 0x800000)
                 {
