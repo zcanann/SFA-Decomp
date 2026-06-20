@@ -453,7 +453,7 @@ int fn_80295C5C(int obj)
 int objFn_80296700(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    if (inner->unk8B3 != 0 && inner->unk8B4 != 0)
+    if (inner->staffGrown != 0 && inner->staffActionRequest != 0)
     {
         return 1;
     }
@@ -1702,7 +1702,7 @@ int fn_802A5384(int obj, int state)
                     if (gPlayerPathObject != 0 &&
                         ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
                     {
-                        ((PlayerState*)inner)->unk8B4 = 1;
+                        ((PlayerState*)inner)->staffActionRequest = 1;
                         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                     }
                     staffFn_80170380(gPlayerStaffObject, 2);
@@ -2192,7 +2192,7 @@ int fn_802A1CA8(int obj, int state)
         if (gPlayerPathObject != 0 &&
             ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
         {
-            ((PlayerState*)inner)->unk8B4 = 1;
+            ((PlayerState*)inner)->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         if (((GameObject*)obj)->anim.currentMove == lbl_80332F2C[8] ||
@@ -3184,7 +3184,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         {
             if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
             {
-                ((PlayerState*)inner)->unk8B4 = 1;
+                ((PlayerState*)inner)->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
             ((PlayerState*)inner)->unk800 = 0;
@@ -3761,7 +3761,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 if (gPlayerPathObject != NULL &&
                     ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
                 {
-                    ((PlayerState*)inner)->unk8B4 = 2;
+                    ((PlayerState*)inner)->staffActionRequest = 2;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                 }
                 break;
@@ -3769,7 +3769,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 if (gPlayerPathObject != NULL &&
                     ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
                 {
-                    ((PlayerState*)inner)->unk8B4 = 0;
+                    ((PlayerState*)inner)->staffActionRequest = 0;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                 }
                 break;
@@ -4061,7 +4061,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
     {
         ((GameObject*)gPlayerPathObject)->objectFlags &= ~7;
-        if (((PlayerState*)inner)->unk8B3 == 0)
+        if (((PlayerState*)inner)->staffGrown == 0)
         {
             ((GameObject*)gPlayerPathObject)->objectFlags |= 2;
         }
@@ -5778,7 +5778,7 @@ int fn_8029B994(int obj, int state)
         {
             if (gPlayerPathObject != NULL && b != 0)
             {
-                inner->unk8B4 = 4;
+                inner->staffActionRequest = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
@@ -5830,7 +5830,7 @@ int fn_8029EBCC(int obj, int state)
         {
             if (((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
             {
-                inner->unk8B4 = 4;
+                inner->staffActionRequest = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
         }
@@ -6283,7 +6283,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     {
         if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
-            inner->unk8B4 = 1;
+            inner->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
@@ -7380,7 +7380,7 @@ void playerUpdate(int obj)
             {
                 ((GameObject*)gPlayerPathObject)->objectFlags =
                     ((GameObject*)gPlayerPathObject)->objectFlags & ~7;
-                if (((PlayerState*)inner)->unk8B3 == 0)
+                if (((PlayerState*)inner)->staffGrown == 0)
                 {
                     ((GameObject*)gPlayerPathObject)->objectFlags =
                         ((GameObject*)gPlayerPathObject)->objectFlags | 2;
@@ -7389,7 +7389,7 @@ void playerUpdate(int obj)
             hov = ((ByteFlags*)((char*)inner + 0x3f4))->b40;
             if (hov != 0)
             {
-                if (((PlayerState*)inner)->unk8B3 != 0)
+                if (((PlayerState*)inner)->staffGrown != 0)
                 {
                     setAButtonIcon(1);
                 }
@@ -7403,7 +7403,7 @@ void playerUpdate(int obj)
                         setAButtonIcon(0xb);
                     }
                 }
-                if (((PlayerState*)inner)->unk8B3 != 0)
+                if (((PlayerState*)inner)->staffGrown != 0)
                 {
                     setBButtonIcon(0xc);
                 }
@@ -9044,7 +9044,7 @@ void fn_802B249C(int obj, int inner, int state)
                 }
                 if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
-                    ((PlayerState*)inner)->unk8B4 = 1;
+                    ((PlayerState*)inner)->staffActionRequest = 1;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                 }
                 break;
@@ -9066,7 +9066,7 @@ void fn_802B249C(int obj, int inner, int state)
                 *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A4B4C;
                 if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
-                    ((PlayerState*)inner)->unk8B4 = 1;
+                    ((PlayerState*)inner)->staffActionRequest = 1;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                 }
             }
@@ -9088,7 +9088,7 @@ void fn_802B249C(int obj, int inner, int state)
                 *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A4B4C;
                 if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
-                    ((PlayerState*)inner)->unk8B4 = 1;
+                    ((PlayerState*)inner)->staffActionRequest = 1;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                 }
             }
@@ -9204,21 +9204,21 @@ void fn_8029672C(int obj, int mode)
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 0;
+        inner->staffActionRequest = 0;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
     }
     else if (mode == 1)
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 1;
+        inner->staffActionRequest = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
     else
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 1;
+        inner->staffActionRequest = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
     }
 }
@@ -9230,21 +9230,21 @@ void fn_802967E0(int obj, int mode)
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 2;
+        inner->staffActionRequest = 2;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
     }
     else if (mode == 1)
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 4;
+        inner->staffActionRequest = 4;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
     else
     {
         if (gPlayerPathObject == NULL) return;
         if (((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0) return;
-        inner->unk8B4 = 4;
+        inner->staffActionRequest = 4;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
     }
 }
@@ -9334,7 +9334,7 @@ int fn_802A1114(int obj, int state)
         {
             if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 1;
+                inner->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
         }
@@ -11597,7 +11597,7 @@ int fn_80298CCC(int obj, int state)
         inner->yaw = inner->targetYaw;
         if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 4;
+            inner->staffActionRequest = 4;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         break;
@@ -11624,7 +11624,7 @@ void fn_80295CF4(int obj, int a)
             *(s16*)((char*)gPlayerPathObject + 6) |= 0x4000;
             if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 1;
+                inner->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
             GameBit_Set(0x96b, 1);
@@ -11642,7 +11642,7 @@ void fn_80295CF4(int obj, int a)
         {
             if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 4;
+                inner->staffActionRequest = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
             *(s16*)((char*)gPlayerPathObject + 6) &= ~0x4000;
@@ -11678,7 +11678,7 @@ void fn_802AE83C(int obj, int inner)
 
     if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
     {
-        ((PlayerState*)inner)->unk8B4 = 1;
+        ((PlayerState*)inner)->staffActionRequest = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
     ((PlayerState*)inner)->unk800 = 0;
@@ -11748,7 +11748,7 @@ int fn_80298380(int obj, int state, f32 fv)
         {
             if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 0;
+                inner->staffActionRequest = 0;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -11987,7 +11987,7 @@ int fn_80297AD0(int obj, int state, f32 fv)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 0;
+                inner->staffActionRequest = 0;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -12056,7 +12056,7 @@ int fn_80297D0C(int obj, int state, f32 fv)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 0;
+                inner->staffActionRequest = 0;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -12125,7 +12125,7 @@ int fn_80297F48(int obj, int state, f32 fv)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 0;
+                inner->staffActionRequest = 0;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -12260,7 +12260,7 @@ int fn_80297854(int obj, int state, f32 fv)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 0;
+                inner->staffActionRequest = 0;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -12345,7 +12345,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
         (*gCameraInterface)->setTarget(0);
         if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)state + 0x3f4))->b40)
         {
-            ((PlayerState*)state)->unk8B4 = 1;
+            ((PlayerState*)state)->staffActionRequest = 1;
             ((ByteFlags*)((char*)state + 0x3f4))->b08 = 1;
         }
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0xa);
@@ -13022,7 +13022,7 @@ int fn_802A14F8(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0 && gPlayerPathObject != 0 &&
         ((ByteFlags*)((char*)inner + 0x3f4))->b40)
     {
-        ((PlayerState*)inner)->unk8B4 = 1;
+        ((PlayerState*)inner)->staffActionRequest = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
     switch (((GameObject*)obj)->anim.currentMove)
@@ -13263,7 +13263,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
         {
             if (gPlayerPathObject != NULL && v != 0)
             {
-                ((PlayerState*)inner)->unk8B4 = 2;
+                ((PlayerState*)inner)->staffActionRequest = 2;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
             }
             ((PlayerState*)inner2)->baddie.hasTarget = 1;
@@ -13291,7 +13291,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
                             u32 targetFlag = (((PlayerState*)inner)->unk3F4 >> 6) & 1;
                             if (targetFlag != 0)
                             {
-                                ((PlayerState*)inner)->unk8B4 = 2;
+                                ((PlayerState*)inner)->staffActionRequest = 2;
                                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                             }
                         }
@@ -13481,7 +13481,7 @@ int fn_8029B7B0(int obj, int state)
     case 0x448:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E9C)
         {
-            if (inner->unk8B3 == 0)
+            if (inner->staffGrown == 0)
             {
                 Sfx_PlayFromObject(obj, SFXen_lflsh2_b);
                 if (gPlayerPathObject != NULL)
@@ -13489,7 +13489,7 @@ int fn_8029B7B0(int obj, int state)
                     b = (((PlayerState*)inner)->unk3F4 >> 6) & 1;
                     if (b != 0)
                     {
-                        inner->unk8B4 = 2;
+                        inner->staffActionRequest = 2;
                         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                     }
                 }
@@ -13511,7 +13511,7 @@ int fn_8029B7B0(int obj, int state)
                 b = (((PlayerState*)inner)->unk3F4 >> 6) & 1;
                 if (b != 0)
                 {
-                    inner->unk8B4 = 4;
+                    inner->staffActionRequest = 4;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                 }
             }
@@ -13987,7 +13987,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                 buttonDisable(0, 0x100);
                 if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                 {
-                    inner->unk8B4 = 1;
+                    inner->staffActionRequest = 1;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                 }
                 player = Obj_GetPlayerObject();
@@ -14040,7 +14040,7 @@ int fn_802A418C(int obj, int state, f32 fv)
             return 0;
         }
         {
-            if (*(s8*)&((PlayerState*)inner)->unk8B3 == 0)
+            if (*(s8*)&((PlayerState*)inner)->staffGrown == 0)
             {
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                 {
@@ -14058,7 +14058,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                     }
                     if (ok2 != 0)
                     {
-                        if (((PlayerState*)inner)->unk8B4 == 2 ||
+                        if (((PlayerState*)inner)->staffActionRequest == 2 ||
                             (inner->cameraTargetObject != NULL &&
                                 inner->unk4B0 < lbl_803E8054 &&
                                 inner->unk4A8 < 0x4000 &&
@@ -14066,7 +14066,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                         {
                             if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                             {
-                                inner->unk8B4 = 4;
+                                inner->staffActionRequest = 4;
                                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                             }
                             *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
@@ -14074,7 +14074,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                         }
                         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                         {
-                            inner->unk8B4 = 2;
+                            inner->staffActionRequest = 2;
                             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                         }
                     }
@@ -14086,7 +14086,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x200) != 0 && gPlayerPathObject != NULL &&
                     ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                 {
-                    inner->unk8B4 = 0;
+                    inner->staffActionRequest = 0;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                 }
                 {
@@ -14591,7 +14591,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 8);
                     if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
                     {
-                        ((PlayerState*)inner)->unk8B4 = 4;
+                        ((PlayerState*)inner)->staffActionRequest = 4;
                         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
                     }
                     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
@@ -15178,7 +15178,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         ObjHits_MarkObjectPositionDirty(obj);
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
-            inner->unk8B4 = 1;
+            inner->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
@@ -15320,7 +15320,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
 
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
-            inner->unk8B4 = 1;
+            inner->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         switch (*(s16*)((char*)sub + 0x46))
@@ -15890,7 +15890,7 @@ void fn_802AED2C(int obj, int state, int p3)
     u16 sound;
     u32 b;
 
-    if (((PlayerState*)state)->unk8B3 != 0)
+    if (((PlayerState*)state)->staffGrown != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0x47f, lbl_803E7EA4, 0);
     }
@@ -16361,7 +16361,7 @@ int fn_802A4D34(int obj, int state)
         {
             if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 1;
+                inner->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
         }
@@ -16522,7 +16522,7 @@ int fn_8029B9FC(int obj, int state, f32 fv)
     {
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 0;
+            inner->staffActionRequest = 0;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
         }
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -16533,7 +16533,7 @@ int fn_8029B9FC(int obj, int state, f32 fv)
     {
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 1;
+            inner->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
@@ -16561,7 +16561,7 @@ int fn_8029B9FC(int obj, int state, f32 fv)
     if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) && gPlayerPathObject != NULL
         && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
     {
-        inner->unk8B4 = 4;
+        inner->staffActionRequest = 4;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
     v = fn_80299E44(obj, state, fv);
@@ -17225,7 +17225,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         inner->yaw = inner->targetYaw;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 4;
+            inner->staffActionRequest = 4;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         lbl_803DE488 = lbl_803E7EA4;
@@ -17438,7 +17438,7 @@ int fn_802994D0(int obj, int state, f32 fv)
             lbl_803DE48D = 0;
             if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
             {
-                inner->unk8B4 = 4;
+                inner->staffActionRequest = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
             inner->unk7D4 = lbl_803E7EA4;
@@ -17838,7 +17838,7 @@ int fn_80298944(int obj, int state)
         inner->yaw = inner->targetYaw;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 4;
+            inner->staffActionRequest = 4;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         break;
@@ -17949,7 +17949,7 @@ int fn_802985FC(int obj, int state, f32 fv)
         ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 0;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
-            inner->unk8B4 = 4;
+            inner->staffActionRequest = 4;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
         break;
@@ -18765,11 +18765,11 @@ void fn_802AEF34(int obj, int state)
 
     if (*(s16*)&((PlayerState*)state)->unk806 != 3)
     {
-        u8 b = ((PlayerState*)state)->unk8B4;
+        u8 b = ((PlayerState*)state)->staffActionRequest;
         if (b == 1)
         {
             staffDoGrowShrinkAnim(gPlayerPathObject, 0, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
-            ((PlayerState*)state)->unk8B3 = 0;
+            ((PlayerState*)state)->staffGrown = 0;
             if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
             {
                 *(s16*)&((PlayerState*)state)->unk806 = 3;
@@ -18778,7 +18778,7 @@ void fn_802AEF34(int obj, int state)
         else if (b == 4)
         {
             staffDoGrowShrinkAnim(gPlayerPathObject, 1, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
-            ((PlayerState*)state)->unk8B3 = 1;
+            ((PlayerState*)state)->staffGrown = 1;
             if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
             {
                 *(s16*)&((PlayerState*)state)->unk806 = 3;
@@ -18812,7 +18812,7 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E8130)
             {
-                ((PlayerState*)state)->unk8B3 = 1;
+                ((PlayerState*)state)->staffGrown = 1;
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7F1C)
             {
@@ -18846,7 +18846,7 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress <= lbl_803E8130)
             {
-                ((PlayerState*)state)->unk8B3 = 0;
+                ((PlayerState*)state)->staffGrown = 0;
             }
             if (((GameObject*)obj)->anim.activeMoveProgress <= lbl_803E7EB4)
             {
@@ -18922,16 +18922,16 @@ void fn_802AEF34(int obj, int state)
             }
             break;
         default:
-            if (((PlayerState*)state)->unk8B3 != 0)
+            if (((PlayerState*)state)->staffGrown != 0)
             {
-                if (((PlayerState*)state)->unk8B4 == 0)
+                if (((PlayerState*)state)->staffActionRequest == 0)
                 {
                     staffDoGrowShrinkAnim(gPlayerPathObject, 0, 0, 0);
                     *(s16*)&((PlayerState*)state)->unk806 = 1;
                     changed = 1;
                 }
             }
-            else if (((PlayerState*)state)->unk8B4 == 2)
+            else if (((PlayerState*)state)->staffActionRequest == 2)
             {
                 *(s16*)&((PlayerState*)state)->unk806 = 2;
                 changed = 1;

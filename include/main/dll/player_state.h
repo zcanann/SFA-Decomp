@@ -348,8 +348,8 @@ typedef struct PlayerState {
     u8 unk8B0;
     u8 unk8B1;
     u8 pad8B2[0x8B3 - 0x8B2];
-    u8 unk8B3;
-    u8 unk8B4;
+    u8 staffGrown; /* 1 when the staff is grown/extended (set by staffDoGrowShrinkAnim grow path) */
+    u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
     u8 pad8B5[0x8B8 - 0x8B5];
     u8 unk8B8;
     u8 pad8B9[0x8BF - 0x8B9];
