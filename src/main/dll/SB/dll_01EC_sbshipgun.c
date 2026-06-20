@@ -55,7 +55,6 @@ STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
 
-extern u8 framesThisStep;
 
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
